@@ -244,6 +244,8 @@ namespace DevZest.Data
         {
             get
             {
+                if (!DataType.IsNullable())
+                    return false;
                 if (IsPrimaryKey || GetIdentity(true) != null || GetIdentity(false) != null)
                     return false;
                 var fullName = Primitives.NotNull.Singleton.FullName;

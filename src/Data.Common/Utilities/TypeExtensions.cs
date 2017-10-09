@@ -57,5 +57,10 @@ namespace DevZest.Data.Utilities
             var call = Expression.Call(methodInfo, paramColumn);
             return Expression.Lambda<Func<Column, _String>>(call, paramColumn).Compile();
         }
+
+        internal static bool IsNullable(this Type type)
+        {
+            return !type.GetTypeInfo().IsValueType || (Nullable.GetUnderlyingType(type) != null);
+        }
     }
 }
