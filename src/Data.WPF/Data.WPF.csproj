@@ -76,7 +76,6 @@
     <Compile Include="Presenters\Services\ColumnHeaderCommands.cs" />
     <Compile Include="Presenters\Services\CommandExtensions.cs" />
     <Compile Include="Presenters\Services\DataViewCommands.cs" />
-    <Compile Include="Presenters\Services\ISortWindowService.cs" />
     <Compile Include="Presenters\Services\RowSelectorCommands.cs" />
     <Compile Include="Presenters\Services\RowViewCommands.cs" />
     <Compile Include="Presenters\Services\SortService.cs" />
