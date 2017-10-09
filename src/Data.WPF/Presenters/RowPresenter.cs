@@ -320,7 +320,7 @@ namespace DevZest.Data.Presenters
                     column = DataRow.Model.GetColumns()[column.Ordinal];
                 return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
             }
-            internal set
+            set
             {
                 VerifyColumn(column, nameof(column));
 
@@ -329,6 +329,13 @@ namespace DevZest.Data.Presenters
                 CoerceEditMode();
                 column.SetValue(DataRow, value);
             }
+        }
+
+        public bool IsNull(Column column)
+        {
+            VerifyColumn(column, nameof(column));
+            var dataRow = DataRow;
+            return dataRow == null ? false : column.IsNull(dataRow);
         }
 
         private void CoerceEditMode()
@@ -374,7 +381,7 @@ namespace DevZest.Data.Presenters
             RowManager.BeginEdit(this);
         }
 
-        internal void EditValue<T>(Column<T> column, T value)
+        public void EditValue<T>(Column<T> column, T value)
         {
             VerifyColumn(column, nameof(column));
 
