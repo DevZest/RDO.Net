@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarBinding<T> : ScalarBinding
+    public sealed class ScalarBinding<T> : ScalarBindingBase<T>
         where T : UIElement, new()
     {
         public ScalarBinding(Action<T> onRefresh)
@@ -268,6 +268,11 @@ namespace DevZest.Data.Presenters
             if (_plugins == null)
                 _plugins = new List<IScalarBindingPlugin>();
             _plugins.Add(plugin);
+        }
+
+        internal override UIElement GetChild(UIElement parent, int index)
+        {
+            throw new NotSupportedException();
         }
     }
 }

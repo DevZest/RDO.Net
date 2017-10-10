@@ -85,12 +85,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Presenters\BlockBindingTests.cs" />
-    <Compile Include="Views\BlockLabel.cs" />
     <Compile Include="Presenters\CompositeBlockBindingTests.cs" />
-    <Compile Include="Views\CodePane.cs" />
     <Compile Include="Presenters\DataSetExtensions.cs" />
     <Compile Include="Presenters\BindingFactory.cs" />
-    <Compile Include="Views\BlockHeader.cs" />
     <Compile Include="Presenters\DataSetMock.cs" />
     <Compile Include="Presenters\Primitives\ElementManagerTests.cs" />
     <Compile Include="Presenters\Primitives\InputManagerTests.cs" />

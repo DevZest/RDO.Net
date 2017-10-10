@@ -10,201 +10,189 @@ using DevZest.Data.Presenters;
 
 namespace DevZest.Data.Views
 {
-    public class InPlaceEditor : ContentControl, ICompositeView, IRowElement
+    public class InPlaceEditor : ContentControl, IRowElement
     {
-        private sealed class BindingDispatcher : CompositeBindingDispatcher, IReadOnlyList<UIElement>
-        {
-            public BindingDispatcher(InPlaceEditor view)
-            {
-                Debug.Assert(view != null);
-                _view = view;
-                IsEditing = _view.IsEditing;
-            }
+        //private sealed class BindingDispatcher : CompositeBindingDispatcher, IReadOnlyList<UIElement>
+        //{
+        //    public BindingDispatcher(InPlaceEditor view)
+        //    {
+        //        Debug.Assert(view != null);
+        //        _view = view;
+        //        IsEditing = _view.IsEditing;
+        //    }
 
-            private readonly InPlaceEditor _view;
-            protected override ICompositeView View
-            {
-                get { return _view; }
-            }
+        //    private readonly InPlaceEditor _view;
+        //    protected override ICompositeView View
+        //    {
+        //        get { return _view; }
+        //    }
 
-            private FrameworkElement Element
-            {
-                get { return _view.InertElement; }
-            }
+        //    private FrameworkElement Element
+        //    {
+        //        get { return _view.InertElement; }
+        //    }
 
-            private FrameworkElement EditingElement
-            {
-                get { return _view.EditingElement; }
-            }
+        //    private FrameworkElement EditingElement
+        //    {
+        //        get { return _view.EditingElement; }
+        //    }
 
-            private RowBinding ElementBinding
-            {
-                get { return (RowBinding)Bindings[0]; }
-            }
+        //    private RowBinding ElementBinding
+        //    {
+        //        get { return (RowBinding)Bindings[0]; }
+        //    }
 
-            private RowBinding EditingElementBinding
-            {
-                get { return (RowBinding)Bindings[1]; }
-            }
+        //    private RowBinding EditingElementBinding
+        //    {
+        //        get { return (RowBinding)Bindings[1]; }
+        //    }
 
-            #region IReadOnlyList<UIElement>
-            int IReadOnlyCollection<UIElement>.Count
-            {
-                get { return 2; }
-            }
+        //    #region IReadOnlyList<UIElement>
+        //    int IReadOnlyCollection<UIElement>.Count
+        //    {
+        //        get { return 2; }
+        //    }
 
-            UIElement IReadOnlyList<UIElement>.this[int index]
-            {
-                get
-                {
-                    if (index < 0 || index > 1)
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                    return index == 0 ? Element : EditingElement;
-                }
-            }
+        //    UIElement IReadOnlyList<UIElement>.this[int index]
+        //    {
+        //        get
+        //        {
+        //            if (index < 0 || index > 1)
+        //                throw new ArgumentOutOfRangeException(nameof(index));
+        //            return index == 0 ? Element : EditingElement;
+        //        }
+        //    }
 
-            IEnumerator<UIElement> IEnumerable<UIElement>.GetEnumerator()
-            {
-                yield return Element;
-                yield return EditingElement;
-            }
+        //    IEnumerator<UIElement> IEnumerable<UIElement>.GetEnumerator()
+        //    {
+        //        yield return Element;
+        //        yield return EditingElement;
+        //    }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                yield return Element;
-                yield return EditingElement;
-            }
+        //    IEnumerator IEnumerable.GetEnumerator()
+        //    {
+        //        yield return Element;
+        //        yield return EditingElement;
+        //    }
 
-            #endregion
+        //    #endregion
 
-            public override IReadOnlyList<UIElement> Children
-            {
-                get { return this; }
-            }
+        //    public override IReadOnlyList<UIElement> Children
+        //    {
+        //        get { return this; }
+        //    }
 
-            private bool IsEditing { get; set; }
+        //    private bool IsEditing { get; set; }
 
-            private int ActiveBindingIndex
-            {
-                get { return IsEditing ? 1 : 0; }
-            }
+        //    private int ActiveBindingIndex
+        //    {
+        //        get { return IsEditing ? 1 : 0; }
+        //    }
 
-            protected override void Initialize(int index, Binding binding, string name)
-            {
-                if (index < 0 || index > 1)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                if (index == ActiveBindingIndex)
-                    base.Initialize(index, binding, name);
-            }
+        //    protected override void Initialize(int index, Binding binding, string name)
+        //    {
+        //        if (index < 0 || index > 1)
+        //            throw new ArgumentOutOfRangeException(nameof(index));
+        //        if (index == ActiveBindingIndex)
+        //            base.Initialize(index, binding, name);
+        //    }
 
-            protected override void AddChild(UIElement child, string name)
-            {
-                _view.SetContent((FrameworkElement)child);
-            }
+        //    protected override void AddChild(UIElement child, string name)
+        //    {
+        //        _view.SetContent((FrameworkElement)child);
+        //    }
 
-            protected override void BeginSetup(int index, Binding binding, UIElement element)
-            {
-                if (index == ActiveBindingIndex)
-                    base.BeginSetup(index, binding, element);
-            }
+        //    protected override void BeginSetup(int index, Binding binding, UIElement element)
+        //    {
+        //        if (index == ActiveBindingIndex)
+        //            base.BeginSetup(index, binding, element);
+        //    }
 
-            protected override void EndSetup(int index, Binding binding)
-            {
-                if (index == ActiveBindingIndex)
-                    base.EndSetup(index, binding);
-            }
+        //    protected override void EndSetup(int index, Binding binding)
+        //    {
+        //        if (index == ActiveBindingIndex)
+        //            base.EndSetup(index, binding);
+        //    }
 
-            protected override void Refresh(int index, Binding binding, UIElement element)
-            {
-                if (index == ActiveBindingIndex)
-                    base.Refresh(index, binding, element);
-            }
+        //    protected override void Refresh(int index, Binding binding, UIElement element)
+        //    {
+        //        if (index == ActiveBindingIndex)
+        //            base.Refresh(index, binding, element);
+        //    }
 
-            protected override void Cleanup(int index, Binding binding, UIElement element)
-            {
-                if (index == ActiveBindingIndex)
-                    base.Cleanup(index, binding, element);
-            }
+        //    protected override void Cleanup(int index, Binding binding, UIElement element)
+        //    {
+        //        if (index == ActiveBindingIndex)
+        //            base.Cleanup(index, binding, element);
+        //    }
 
-            protected override void FlushInput(int index, TwoWayBinding binding, UIElement element)
-            {
-                if (index == ActiveBindingIndex)
-                    base.FlushInput(index, binding, element);
-            }
+        //    protected override void FlushInput(int index, TwoWayBinding binding, UIElement element)
+        //    {
+        //        if (index == ActiveBindingIndex)
+        //            base.FlushInput(index, binding, element);
+        //    }
 
-            private void RefreshIsEditing()
-            {
-                _view.IsEditing = IsEditing;
-            }
+        //    private void RefreshIsEditing()
+        //    {
+        //        _view.IsEditing = IsEditing;
+        //    }
 
-            public void BeginEdit()
-            {
-                Debug.Assert(!IsEditing);
-                Debug.Assert(Element != null);
+        //    public void BeginEdit()
+        //    {
+        //        Debug.Assert(!IsEditing);
+        //        Debug.Assert(Element != null);
 
-                ElementBinding.Cleanup(Element);
-                base.Initialize(1, EditingElementBinding, Names[1]);
-                IsEditing = true;
-                Setup(_view);
-                base.EndSetup(1, EditingElementBinding);
-                RefreshIsEditing();
-            }
+        //        ElementBinding.Cleanup(Element);
+        //        base.Initialize(1, EditingElementBinding, Names[1]);
+        //        IsEditing = true;
+        //        Setup(_view);
+        //        base.EndSetup(1, EditingElementBinding);
+        //        RefreshIsEditing();
+        //    }
 
-            public void CancelEdit()
-            {
-                Debug.Assert(_view.IsEditing);
-                EditingElementBinding.Cleanup(EditingElement);
-                base.Initialize(0, ElementBinding, Names[0]);
-                IsEditing = false;
-                Setup(_view);
-                base.EndSetup(0, ElementBinding);
-                RefreshIsEditing();
-            }
+        //    public void CancelEdit()
+        //    {
+        //        Debug.Assert(_view.IsEditing);
+        //        EditingElementBinding.Cleanup(EditingElement);
+        //        base.Initialize(0, ElementBinding, Names[0]);
+        //        IsEditing = false;
+        //        Setup(_view);
+        //        base.EndSetup(0, ElementBinding);
+        //        RefreshIsEditing();
+        //    }
 
-            public bool CanEndEdit
-            {
-                get
-                {
-                    var editingElement = EditingElement;
-                    Debug.Assert(editingElement != null);
-                    var rowInput = EditingElementBinding.GetInput();
-                    return rowInput == null ? true : rowInput.GetFlushError(editingElement) == null;
-                }
-            }
+        //    public bool CanEndEdit
+        //    {
+        //        get
+        //        {
+        //            var editingElement = EditingElement;
+        //            Debug.Assert(editingElement != null);
+        //            var rowInput = EditingElementBinding.GetInput();
+        //            return rowInput == null ? true : rowInput.GetFlushError(editingElement) == null;
+        //        }
+        //    }
 
-            public void EndEdit()
-            {
-                base.FlushInput(1, EditingElementBinding, EditingElement);
-                CancelEdit();
-            }
+        //    public void EndEdit()
+        //    {
+        //        base.FlushInput(1, EditingElementBinding, EditingElement);
+        //        CancelEdit();
+        //    }
 
-            public void RefreshValidation(RowPresenter rowPresenter)
-            {
-                var element = Element;
-                if (element == null)
-                    return;
+        //    public void RefreshValidation(RowPresenter rowPresenter)
+        //    {
+        //        var element = Element;
+        //        if (element == null)
+        //            return;
 
-                var input = EditingElementBinding.GetInput();
-                if (input != null)
-                    element.RefreshValidation(() => null, () => input.GetErrors(rowPresenter), () => input.GetWarnings(rowPresenter));
-            }
-        }
+        //        var input = EditingElementBinding.GetInput();
+        //        if (input != null)
+        //            element.RefreshValidation(() => null, () => input.GetErrors(rowPresenter), () => input.GetWarnings(rowPresenter));
+        //    }
+        //}
 
         private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditing), typeof(bool), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(BooleanBoxes.False, new PropertyChangedCallback(_OnIsEditingChanged)));
         public static readonly DependencyProperty IsEditingProperty = IsEditingPropertyKey.DependencyProperty;
-
-        public InPlaceEditor()
-        {
-            _bindingDispatcher = new BindingDispatcher(this);
-        }
-
-        private readonly BindingDispatcher _bindingDispatcher;
-
-        CompositeBindingDispatcher ICompositeView.BindingDispatcher
-        {
-            get { return _bindingDispatcher; }
-        }
 
         public bool IsEditing
         {
@@ -272,12 +260,16 @@ namespace DevZest.Data.Views
             if (IsEditing)
                 return;
 
-            _bindingDispatcher.BeginEdit();
+            throw new NotImplementedException();
         }
 
         public bool CanEndEdit
         {
-            get { return IsEditing ? _bindingDispatcher.CanEndEdit : false; }
+            get
+            {
+                //return IsEditing ? _bindingDispatcher.CanEndEdit : false;
+                throw new NotImplementedException();
+            }
         }
 
         public bool EndEdit()
@@ -285,8 +277,9 @@ namespace DevZest.Data.Views
             if (!CanEndEdit)
                 return false;
 
-            _bindingDispatcher.EndEdit();
-            return true;
+            //_bindingDispatcher.EndEdit();
+            //return true;
+            throw new NotImplementedException();
         }
 
         public void CancelEdit()
@@ -294,7 +287,8 @@ namespace DevZest.Data.Views
             if (!IsEditing)
                 return;
 
-            _bindingDispatcher.CancelEdit();
+            //_bindingDispatcher.CancelEdit();
+            throw new NotImplementedException();
         }
 
         void IRowElement.Setup(RowPresenter rowPresenter)
@@ -303,7 +297,8 @@ namespace DevZest.Data.Views
 
         void IRowElement.Refresh(RowPresenter rowPresenter)
         {
-            _bindingDispatcher.RefreshValidation(rowPresenter);
+            //_bindingDispatcher.RefreshValidation(rowPresenter);
+            throw new NotImplementedException();
         }
 
         void IRowElement.Cleanup(RowPresenter rowPresenter)

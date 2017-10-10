@@ -8,18 +8,18 @@ namespace DevZest.Data.Presenters
 {
     internal static class BindingFactory
     {
-        public static BlockBinding<BlockHeader> BlockHeader(this Model _)
+        public static BlockBinding<TextBlock> AsBlockHeader(this Model _)
         {
-            return new BlockBinding<BlockHeader>(onRefresh: (e, bp) =>
+            return new BlockBinding<TextBlock>(onRefresh: (e, bp) =>
             {
                 e.Text = bp.Ordinal.ToString();
             });
         }
 
-        public static BlockBinding<BlockLabel> BlockLabel<T>(this Column source, BlockBinding<T> target)
+        public static BlockBinding<Label> AsBlockLabel<T>(this Column source, BlockBinding<T> target)
             where T : UIElement, new()
         {
-            return new BlockBinding<BlockLabel>(
+            return new BlockBinding<Label>(
                 onSetup: (e, bp) =>
                 {
                     e.Content = source.DisplayName;

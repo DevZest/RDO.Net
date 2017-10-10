@@ -50,14 +50,15 @@ namespace DevZest.Data.Presenters.Primitives
 
         #endregion
 
-        public CompositeBlockBinding Parent { get; private set; }
+        public BlockBinding Parent { get; private set; }
 
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
         }
 
-        internal void Seal(CompositeBlockBinding parent, int ordinal)
+        internal void Seal<T>(CompositeBlockBinding<T> parent, int ordinal)
+            where T : UIElement, new()
         {
             Parent = parent;
             Ordinal = ordinal;
@@ -92,6 +93,8 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.ElementManager; }
         }
 
+        internal abstract UIElement GetChild(UIElement parent, int index);
+
         public UIElement this[int blockOrdinal]
         {
             get
@@ -100,10 +103,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return null;
 
                 if (Parent != null)
-                {
-                    var view = (ICompositeView)Parent[blockOrdinal];
-                    return view == null ? null : view.BindingDispatcher.Children[Ordinal];
-                }
+                    return Parent.GetChild(Parent[blockOrdinal], Ordinal);
 
                 if (ElementManager == null)
                     return null;

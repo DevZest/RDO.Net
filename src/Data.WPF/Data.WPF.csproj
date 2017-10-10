@@ -60,12 +60,13 @@
     <Compile Include="Presenters\Plugins\BlockBindingPlugin.cs" />
     <Compile Include="Presenters\Plugins\ScalarBindingPlugin.cs" />
     <Compile Include="Presenters\Primitives\AsyncValidator_T.cs" />
-    <Compile Include="Presenters\Primitives\CompositeBindingDispatcher.cs" />
+    <Compile Include="Presenters\Primitives\BlockBindingBase_T.cs" />
     <Compile Include="Presenters\Primitives\ElementPresenter.cs" />
     <Compile Include="Presenters\Primitives\IBlockElement.cs" />
-    <Compile Include="Presenters\Primitives\ICompositeBinding.cs" />
     <Compile Include="Presenters\Primitives\IRowElement.cs" />
     <Compile Include="Presenters\Primitives\IScalarElement.cs" />
+    <Compile Include="Presenters\Primitives\RowBindingBase_T.cs" />
+    <Compile Include="Presenters\Primitives\ScalarBindingBase_T.cs" />
     <Compile Include="Presenters\Scalar.cs" />
     <Compile Include="Presenters\ScalarAsyncValidator.cs" />
     <Compile Include="Presenters\ScalarAsyncValidators.cs" />
@@ -90,7 +91,6 @@
     <Compile Include="Utilities\Windows\Point.IsClose.cs" />
     <Compile Include="Views\DataLoadState.cs" />
     <Compile Include="Views\ForeignKeyBox.cs" />
-    <Compile Include="Views\Primitives\ICompositeView.cs" />
     <Compile Include="Views\InPlaceEditor.cs" />
     <Compile Include="Views\Primitives\LoadingAnimation.xaml.cs">
       <DependentUpon>LoadingAnimation.xaml</DependentUpon>
@@ -123,10 +123,6 @@
     <Compile Include="Presenters\Primitives\ScrollableManager.LogicalCrossTrack.cs" />
     <Compile Include="Presenters\ScalarPresenter.cs" />
     <Compile Include="Presenters\IRowValidationResults.cs" />
-    <Compile Include="Views\Pane.cs" />
-    <Compile Include="Presenters\Primitives\CompositeBlockBinding.cs" />
-    <Compile Include="Presenters\Primitives\CompositeRowBinding.cs" />
-    <Compile Include="Presenters\Primitives\CompositeScalarBinding.cs" />
     <Compile Include="Presenters\Primitives\ContainerKind.cs" />
     <Compile Include="Views\Primitives\ContainerView.cs" />
     <Compile Include="Presenters\Primitives\ScrollableManager.VariantLengthHandler.cs" />

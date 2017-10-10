@@ -52,18 +52,19 @@ namespace DevZest.Data.Presenters.Primitives
 
         #endregion
 
-        public CompositeScalarBinding Parent { get; private set; }
+        public ScalarBinding Parent { get; private set; }
 
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
         }
 
-        internal void Seal(CompositeScalarBinding parent, int ordinal)
-        {
-            Parent = parent;
-            Ordinal = ordinal;
-        }
+        //internal void Seal<T>(CompositeScalarBinding<T> parent, int ordinal)
+        //    where T : UIElement, new()
+        //{
+        //    Parent = parent;
+        //    Ordinal = ordinal;
+        //}
 
         internal abstract void Initialize(int startOffset);
 
@@ -142,6 +143,8 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Parent != null ? Parent.FlowRepeatCount : (FlowRepeatable ? ElementManager.FlowRepeatCount : 1); }
         }
 
+        internal abstract UIElement GetChild(UIElement parent, int index);
+
         public UIElement this[int flowIndex]
         {
             get
@@ -150,7 +153,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return null;
 
                 if (Parent != null)
-                    return ((ICompositeView)Parent[flowIndex]).BindingDispatcher.Children[Ordinal];
+                    return Parent.GetChild(Parent[flowIndex], Ordinal);
 
                 if (flowIndex < 0 || flowIndex >= FlowRepeatCount)
                     throw new ArgumentOutOfRangeException(nameof(flowIndex));

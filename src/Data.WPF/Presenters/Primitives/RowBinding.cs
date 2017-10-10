@@ -48,14 +48,15 @@ namespace DevZest.Data.Presenters.Primitives
 
         #endregion
 
-        public CompositeRowBinding Parent { get; private set; }
+        public RowBinding Parent { get; private set; }
 
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
         }
 
-        internal void Seal(CompositeRowBinding parent, int ordinal)
+        internal void Seal<T>(CompositeRowBinding<T> parent, int ordinal)
+            where T : UIElement, new()
         {
             Parent = parent;
             Ordinal = ordinal;
@@ -69,6 +70,8 @@ namespace DevZest.Data.Presenters.Primitives
                 throw new InvalidOperationException(Strings.RowBinding_OutOfRowRange(Ordinal));
         }
 
+        internal abstract UIElement GetChild(UIElement parent, int index);
+
         public UIElement this[RowPresenter rowPresenter]
         {
             get
@@ -77,10 +80,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return null;
 
                 if (Parent != null)
-                {
-                    var view = (ICompositeView)Parent[rowPresenter];
-                    return view == null ? null : view.BindingDispatcher.Children[Ordinal];
-                }
+                    return Parent.GetChild(Parent[rowPresenter], Ordinal);
 
                 if (rowPresenter == null || rowPresenter.Template != Template)
                     return null;

@@ -8,7 +8,7 @@ using DevZest.Data.Presenters.Plugins;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class BlockBinding<T> : BlockBinding
+    public sealed class BlockBinding<T> : BlockBindingBase<T>
         where T : UIElement, new()
     {
         public BlockBinding(Action<T, BlockPresenter> onRefresh)
@@ -25,44 +25,17 @@ namespace DevZest.Data.Presenters
             _onCleanup = onCleanup;
         }
 
-        private T Create()
-        {
-            var result = new T();
-            OnCreated(result);
-            return result;
-        }
-
-        public T SettingUpElement { get; private set; }
-
-        internal sealed override UIElement GetSettingUpElement()
-        {
-            return SettingUpElement;
-        }
-
-        internal sealed override void BeginSetup(UIElement value)
-        {
-            SettingUpElement = value == null ? Create() : (T)value;
-        }
-
         private BlockPresenter BlockPresenter
         {
             get { return Template.BlockPresenter; }
         }
 
-        internal sealed override UIElement Setup(BlockView blockView)
+        internal sealed override void PerformSetup(BlockView blockView)
         {
-            Debug.Assert(SettingUpElement != null);
-            SettingUpElement.SetBlockView(blockView);
             BlockPresenter.BlockView = blockView;
             Setup(SettingUpElement, BlockPresenter);
             Refresh(SettingUpElement, BlockPresenter);
             BlockPresenter.BlockView = null;
-            return SettingUpElement;
-        }
-
-        internal sealed override void EndSetup()
-        {
-            SettingUpElement = null;
         }
 
         private Action<T, BlockPresenter> _onSetup;
@@ -119,11 +92,6 @@ namespace DevZest.Data.Presenters
             element.SetBlockView(null);
         }
 
-        public new T this[int blockOrdinal]
-        {
-            get { return (T)base[blockOrdinal]; }
-        }
-
         public BlockBinding<T> OverrideSetup(Action<T, BlockPresenter, Action<T, BlockPresenter>> overrideSetup)
         {
             if (overrideSetup == null)
@@ -166,6 +134,11 @@ namespace DevZest.Data.Presenters
             if (_plugins == null)
                 _plugins = new List<IBlockBindingPlugin>();
             _plugins.Add(plugin);
+        }
+
+        internal override UIElement GetChild(UIElement parent, int index)
+        {
+            throw new NotSupportedException();
         }
     }
 }

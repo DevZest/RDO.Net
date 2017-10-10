@@ -41,7 +41,8 @@ namespace DevZest.Data.Presenters
             where TEditing : UIElement, new()
             where TInert : UIElement, new()
         {
-            return new CompositeRowBinding<InPlaceEditor>().AddChild(inertRowBinding, "INERT").AddChild(editingRowBinding, "EDITING");
+            //return new CompositeRowBinding<InPlaceEditor>().AddChild(inertRowBinding, v => v.InertElement).AddChild(editingRowBinding, v => v.EditingElement);
+            throw new NotImplementedException();
         }
 
         public static RowBinding<ComboBox> AsComboBox<T>(this Column<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)

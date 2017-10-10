@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowBinding<T> : RowBinding
+    public sealed class RowBinding<T> : RowBindingBase<T>
         where T : UIElement, new()
     {
         public RowBinding(Action<T, RowPresenter> onRefresh)
@@ -41,39 +41,12 @@ namespace DevZest.Data.Presenters
             get { return Input == null ? Data.Columns.Empty : Input.Target; }
         }
 
-        private T Create()
+        internal sealed override void PerformSetup(RowPresenter rowPresenter)
         {
-            var result = new T();
-            OnCreated(result);
-            return result;
-        }
-
-        public T SettingUpElement { get; private set; }
-
-        internal sealed override UIElement GetSettingUpElement()
-        {
-            return SettingUpElement;
-        }
-
-        internal sealed override void BeginSetup(UIElement value)
-        {
-            SettingUpElement = value == null ? Create() : (T)value;
-        }
-
-        internal sealed override UIElement Setup(RowPresenter rowPresenter)
-        {
-            Debug.Assert(SettingUpElement != null);
-            SettingUpElement.SetRowPresenter(rowPresenter);
             Setup(SettingUpElement, rowPresenter);
             Refresh(SettingUpElement, rowPresenter);
             if (Input != null)
                 Input.Attach(SettingUpElement);
-            return SettingUpElement;
-        }
-
-        internal sealed override void EndSetup()
-        {
-            SettingUpElement = null;
         }
 
         private Action<T, RowPresenter> _onSetup;
@@ -157,11 +130,6 @@ namespace DevZest.Data.Presenters
             return BeginInput(flushTrigger).WithFlush(column, getValue).EndInput();
         }
 
-        public new T this[RowPresenter rowPresenter]
-        {
-            get { return (T)base[rowPresenter]; }
-        }
-                
         public RowBinding<T> OverrideSetup(Action<T, RowPresenter, Action<T, RowPresenter>> overrideSetup)
         {
             if (overrideSetup == null)
@@ -204,6 +172,11 @@ namespace DevZest.Data.Presenters
             if (_plugins == null)
                 _plugins = new List<IRowBindingPlugin>();
             _plugins.Add(plugin);
+        }
+
+        internal override UIElement GetChild(UIElement parent, int index)
+        {
+            throw new NotSupportedException();
         }
     }
 }

@@ -161,7 +161,7 @@ namespace DevZest.Data.Presenters
         }
 
         internal static void Verify<T>(this T binding, UIElement compositeView, string paramName)
-            where T : Binding, ICompositeBinding
+            where T : Binding
         {
             Debug.Assert(binding != null);
 
