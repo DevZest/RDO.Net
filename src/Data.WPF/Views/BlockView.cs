@@ -103,7 +103,7 @@ namespace DevZest.Data.Views
 
             var blockBindings = BlockBindings;
 
-            blockBindings.BeginSetup();
+            BeginSetup(blockBindings);
 
             for (int i = 0; i < BlockBindingsSplit; i++)
                 AddElement(blockBindings[i]);
@@ -119,6 +119,12 @@ namespace DevZest.Data.Views
                 AddElement(blockBindings[i]);
 
             blockBindings.EndSetup();
+        }
+
+        private static void BeginSetup(BindingCollection<BlockBinding> bindings)
+        {
+            foreach (var binding in bindings)
+                binding.BeginSetup(null);
         }
 
         internal sealed override void Cleanup()

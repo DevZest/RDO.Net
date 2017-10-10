@@ -112,5 +112,9 @@ namespace DevZest.Data.Presenters.Primitives
                 return blockView == null || blockView.Elements == null ? null : blockView[this];
             }
         }
+
+        internal abstract UIElement GetSettingUpElement();
+
+        internal abstract void BeginSetup(UIElement value);
     }
 }

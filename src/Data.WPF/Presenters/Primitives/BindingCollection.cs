@@ -53,12 +53,6 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
-        internal void BeginSetup()
-        {
-            foreach (var binding in this)
-                binding.BeginSetup(null);
-        }
-
         internal void EndSetup()
         {
             foreach (var binding in this)

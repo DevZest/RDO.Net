@@ -80,24 +80,12 @@ namespace DevZest.Data.Presenters
 
         public T SettingUpElement { get; private set; }
 
-        internal sealed override UIElement GetSettingUpElement()
-        {
-            Debug.Assert(Parent != null || !FlowRepeatable);
-            return SettingUpElement;
-        }
-
         internal sealed override void Initialize(int startOffset)
         {
             if (FlowRepeatable)
                 _settingUpElements = Create(startOffset);
             else if (startOffset == 0)
                 SettingUpElement = Create();
-        }
-
-        internal sealed override void BeginSetup(UIElement value)
-        {
-            Debug.Assert(Parent != null || !FlowRepeatable);
-            SettingUpElement = value == null ? Create() : (T)value;
         }
 
         internal sealed override UIElement Setup(int flowIndex)

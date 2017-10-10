@@ -187,7 +187,7 @@ namespace DevZest.Data.Views
 
             var rowBindings = RowBindings;
             if (addToCollection)
-                rowBindings.BeginSetup();
+                BeginSetup(rowBindings);
             else
             {
                 for (int i = 0; i < rowBindings.Count; i++)
@@ -201,6 +201,12 @@ namespace DevZest.Data.Views
                     ElementCollection.Add(element);
             }
             rowBindings.EndSetup();
+        }
+
+        private static void BeginSetup(BindingCollection<RowBinding> bindings)
+        {
+            foreach (var binding in bindings)
+                binding.BeginSetup(null);
         }
 
         private void CleanupElements(bool removeFromCollection)
