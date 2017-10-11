@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
@@ -14,8 +15,6 @@ namespace DevZest.Data.Presenters.Primitives
 
         private T[] Create(int startOffset)
         {
-            _settingUpStartOffset = startOffset;
-
             if (startOffset == FlowRepeatCount)
                 return Array<T>.Empty;
 
@@ -47,9 +46,15 @@ namespace DevZest.Data.Presenters.Primitives
 
         public T SettingUpElement { get; private set; }
 
+        internal sealed override UIElement GetSettingUpElement()
+        {
+            return SettingUpElement;
+        }
+
         internal override void BeginSetup(int startOffset, UIElement[] elements)
         {
             Debug.Assert(FlowRepeatable);
+            _settingUpStartOffset = startOffset;
             _settingUpElements = elements == null ? Create(startOffset) : Cast(elements);
         }
 
@@ -66,19 +71,19 @@ namespace DevZest.Data.Presenters.Primitives
             SettingUpElement = element == null ? Create() : (T)element;
         }
 
-        internal sealed override void PerformEnterSetup(int flowIndex)
+        internal override void PerformEnterSetup(int flowIndex)
         {
             Debug.Assert(FlowRepeatable);
             SettingUpElement = SettingUpElements[flowIndex - _settingUpStartOffset];
         }
 
-        internal sealed override void PerformExitSetup()
+        internal override void PerformExitSetup()
         {
             Debug.Assert(FlowRepeatable);
             SettingUpElement = null;
         }
 
-        internal sealed override void EndSetup()
+        internal override void EndSetup()
         {
             _settingUpElements = null;
             SettingUpElement = null;

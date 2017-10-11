@@ -93,8 +93,6 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract IRowInput GetInput();
 
-        internal abstract UIElement GetSettingUpElement();
-
         internal abstract void BeginSetup(UIElement value);
     }
 }

@@ -58,7 +58,7 @@ namespace DevZest.Data.Presenters
             {
                 var childBinding = _childBindings[i];
                 if (childBinding.GetSettingUpElement() != null)
-                    _childBindings[i].Setup(rowPresenter);
+                    childBinding.Setup(rowPresenter);
             }
         }
 

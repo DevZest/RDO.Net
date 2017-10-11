@@ -59,12 +59,12 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Parent; }
         }
 
-        //internal void Seal<T>(CompositeScalarBinding<T> parent, int ordinal)
-        //    where T : UIElement, new()
-        //{
-        //    Parent = parent;
-        //    Ordinal = ordinal;
-        //}
+        internal void Seal<T>(CompositeScalarBinding<T> parent, int ordinal)
+            where T : UIElement, new()
+        {
+            Parent = parent;
+            Ordinal = ordinal;
+        }
 
         internal abstract void BeginSetup(int startOffset, UIElement[] elements);
 

@@ -162,6 +162,8 @@ namespace DevZest.Data.Presenters.Primitives
                 throw new InvalidOperationException(Strings.Binding_InvalidFrozenMargin(nameof(Template.FrozenBottom), bindingsName, Ordinal));
         }
 
+        internal abstract UIElement GetSettingUpElement();
+
         internal abstract void EndSetup();
 
         internal abstract void Refresh(UIElement element);
