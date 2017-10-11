@@ -30,7 +30,7 @@ namespace DevZest.Data.Presenters.Primitives
             SettingUpElement = null;
         }
 
-        internal override UIElement Setup(RowPresenter rowPresenter)
+        internal sealed override UIElement Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(SettingUpElement != null);
             SettingUpElement.SetRowPresenter(rowPresenter);
