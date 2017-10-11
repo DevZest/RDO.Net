@@ -66,7 +66,9 @@ namespace DevZest.Data.Presenters.Primitives
         //    Ordinal = ordinal;
         //}
 
-        internal abstract void Initialize(int startOffset);
+        internal abstract void BeginSetup(int startOffset, UIElement[] elements);
+
+        internal abstract void BeginSetup(UIElement element);
 
         internal abstract UIElement Setup(int flowIndex);
 

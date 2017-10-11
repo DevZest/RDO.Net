@@ -80,12 +80,23 @@ namespace DevZest.Data.Presenters
 
         public T SettingUpElement { get; private set; }
 
-        internal sealed override void Initialize(int startOffset)
+        internal sealed override void BeginSetup(int startOffset, UIElement[] elements)
         {
-            if (FlowRepeatable)
-                _settingUpElements = Create(startOffset);
-            else if (startOffset == 0)
-                SettingUpElement = Create();
+            Debug.Assert(FlowRepeatable);
+            _settingUpElements = elements == null ? Create(startOffset) : Cast(elements);
+        }
+
+        private static T[] Cast(UIElement[] elements)
+        {
+            var result = new T[elements.Length];
+            for (int i = 0; i < elements.Length; i++)
+                result[i] = (T)elements[i];
+            return result;
+        }
+
+        internal sealed override void BeginSetup(UIElement element)
+        {
+            SettingUpElement = element == null ? Create() : (T)element;
         }
 
         internal sealed override UIElement Setup(int flowIndex)
