@@ -93,7 +93,7 @@ namespace DevZest.Data.Presenters
                 {
                     v.Content = source.DisplayName.ToString(format, formatProvider);
                     if (target != null)
-                        v.Target = target.GetSettingUpElement(p.FlowIndex);
+                        v.Target = target.GetSettingUpElement(p);
                 },
                 onRefresh: null,
                 onCleanup: null);
@@ -110,7 +110,7 @@ namespace DevZest.Data.Presenters
                 {
                     v.Content = string.Format("{0}. {1}", p.FlowIndex, source.DisplayName.ToString(format, formatProvider));
                     if (target != null)
-                        v.Target = target.GetSettingUpElement(p.FlowIndex);
+                        v.Target = target.GetSettingUpElement(p);
                 },
                 onRefresh: null,
                 onCleanup: null).WithFlowRepeatable(true);

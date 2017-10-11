@@ -47,7 +47,7 @@ namespace DevZest.Data.Presenters
             CompositeScalarBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                textBlock = _.Name.AsScalarTextBlock().WithFlowRepeatable(true);
+                textBlock = _.Name.AsScalarTextBlock();
                 label = _.Name.AsFlowRepeatableScalarLabel(textBlock);
                 pane = new CompositeScalarBinding<XamlPane>().WithFlowRepeatable(true)
                     .AddChild(label, v => v.Label).AddChild(textBlock, v => v.TextBlock);

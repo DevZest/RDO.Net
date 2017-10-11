@@ -84,6 +84,13 @@ namespace DevZest.Data.Presenters.Primitives
                 return SettingUpElement;
         }
 
+        public T GetSettingUpElement(ScalarPresenter scalarPresenter)
+        {
+            if (scalarPresenter == null)
+                throw new ArgumentNullException(nameof(scalarPresenter));
+            return GetSettingUpElement(scalarPresenter.FlowIndex);
+        }
+
         internal override void EndSetup()
         {
             _settingUpElements = null;
