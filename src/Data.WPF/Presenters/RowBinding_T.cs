@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using DevZest.Data.Presenters.Plugins;
+﻿using DevZest.Data.Presenters.Plugins;
 using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;

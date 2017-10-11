@@ -186,13 +186,8 @@ namespace DevZest.Data.Views
                 return;
 
             var rowBindings = RowBindings;
-            if (addToCollection)
-                BeginSetup(rowBindings);
-            else
-            {
-                for (int i = 0; i < rowBindings.Count; i++)
-                    rowBindings[i].BeginSetup(Elements[i]);
-            }
+            BeginSetup(rowBindings, addToCollection ? null : Elements);
+
             for (int i = 0; i < rowBindings.Count; i++)
             {
                 var rowBinding = rowBindings[i];
@@ -203,10 +198,10 @@ namespace DevZest.Data.Views
             rowBindings.EndSetup();
         }
 
-        private static void BeginSetup(BindingCollection<RowBinding> bindings)
+        private static void BeginSetup(BindingCollection<RowBinding> bindings, IReadOnlyList<UIElement> elements)
         {
-            foreach (var binding in bindings)
-                binding.BeginSetup(null);
+            for (int i = 0; i < bindings.Count; i++)
+                bindings[i].BeginSetup(elements == null ? null : elements[i]);
         }
 
         private void CleanupElements(bool removeFromCollection)
