@@ -24,8 +24,8 @@ namespace DevZest.Data.Presenters
                     .AddBinding(1, 0, textBlock);
             });
 
-            Assert.IsNull(label.SettingUpElement);
-            Assert.IsNull(textBlock.SettingUpElement);
+            Assert.IsNull(label.GetSettingUpElement(0));
+            Assert.IsNull(textBlock.GetSettingUpElement(0));
 
             Assert.AreEqual(1, label.FlowRepeatCount);
             Assert.AreEqual(_.Name.DisplayName, label[0].Content);
@@ -54,8 +54,8 @@ namespace DevZest.Data.Presenters
 
             elementManager.FlowRepeatCount = 2;
 
-            Assert.IsNull(label.SettingUpElement);
-            Assert.IsNull(textBlock.SettingUpElement);
+            Assert.IsNull(label.GetSettingUpElement(0));
+            Assert.IsNull(textBlock.GetSettingUpElement(0));
 
             Assert.AreEqual(2, label.FlowRepeatCount);
             Assert.AreEqual("0. " + _.Name.DisplayName, label[0].Content);

@@ -20,9 +20,9 @@ namespace DevZest.Data.Presenters
             : this(onRefresh)
         {
             if (onSetup != null)
-                _onSetup = (e, sp) => onSetup(e);
+                _onSetup = (v, p) => onSetup(v);
             if (onCleanup != null)
-                _onCleanup = (e, sp) => onCleanup(e);
+                _onCleanup = (v, p) => onCleanup(v);
         }
 
         public ScalarBinding(Action<T, ScalarPresenter> onRefresh)
@@ -45,12 +45,12 @@ namespace DevZest.Data.Presenters
                 Input.Flush((T)element);
         }
 
-        internal sealed override void PerformSetup(ScalarPresenter scalarPresenter)
+        internal sealed override void PerformSetup(T element, ScalarPresenter scalarPresenter)
         {
-            Setup(SettingUpElement, scalarPresenter);
-            Refresh(SettingUpElement, scalarPresenter);
+            Setup(element, scalarPresenter);
+            Refresh(element, scalarPresenter);
             if (Input != null)
-                Input.Attach(SettingUpElement);
+                Input.Attach(element);
         }
 
         private Action<T, ScalarPresenter> _onSetup;
@@ -103,7 +103,7 @@ namespace DevZest.Data.Presenters
         private T Restore(UIElement element)
         {
             var result = (T)element;
-            ScalarPresenter.SetFlowIndex(element.GetScalarFlowIndex());
+            ScalarPresenter.EnterSetup(element.GetScalarFlowIndex());
             return result;
         }
 
@@ -114,6 +114,7 @@ namespace DevZest.Data.Presenters
                 Input.Refresh(e, ScalarPresenter);
             else
                 Refresh(e, ScalarPresenter);
+            ScalarPresenter.ExitSetup();
         }
 
         internal sealed override void Cleanup(UIElement element)
@@ -123,6 +124,7 @@ namespace DevZest.Data.Presenters
                 Input.Detach(e);
             Cleanup(e, ScalarPresenter);
             e.SetScalarFlowIndex(0);
+            ScalarPresenter.ExitSetup();
         }
 
         public ScalarInput<T> BeginInput(Trigger<T> flushTrigger)

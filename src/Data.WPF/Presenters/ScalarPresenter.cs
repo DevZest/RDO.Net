@@ -1,5 +1,6 @@
 ﻿using System;
 using DevZest.Data.Presenters.Primitives;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Presenters
 {
@@ -22,11 +23,19 @@ namespace DevZest.Data.Presenters
 
         public FlushErrorMessage ValueError { get; private set; }
 
-        internal void SetFlowIndex(int flowIndex)
+        private Stack<int> _flowIndexes = new Stack<int>();
+
+        internal void EnterSetup(int flowIndex)
         {
+            _flowIndexes.Push(FlowIndex);
             FlowIndex = flowIndex;
             InputError = null;
             ValueError = null;
+        }
+
+        internal void ExitSetup()
+        {
+            FlowIndex = _flowIndexes.Pop();
         }
 
         internal void SetErrors(FlushErrorMessage inputError, FlushErrorMessage valueError)

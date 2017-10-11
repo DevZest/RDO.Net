@@ -63,20 +63,6 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        internal override void PerformEnterSetup(int flowIndex)
-        {
-            base.PerformEnterSetup(flowIndex);
-            for (int i = 0; i < _childBindings.Count; i++)
-                _childBindings[i].PerformEnterSetup(flowIndex);
-        }
-
-        internal override void PerformExitSetup()
-        {
-            base.PerformExitSetup();
-            for (int i = 0; i < _childBindings.Count; i++)
-                _childBindings[i].PerformExitSetup();
-        }
-
         internal override void BeginSetup(UIElement value)
         {
             base.BeginSetup(value);
@@ -84,7 +70,7 @@ namespace DevZest.Data.Presenters
             {
                 var childBinding = _childBindings[i];
                 var childGetter = _childGetters[i];
-                var child = childGetter(SettingUpElement);
+                var child = childGetter(GetSettingUpElement(0));
                 if (child != null)
                     childBinding.BeginSetup(child);
             }
@@ -97,13 +83,18 @@ namespace DevZest.Data.Presenters
                 _childBindings[i].EndSetup();
         }
 
-        internal sealed override void PerformSetup(ScalarPresenter scalarPresenter)
+        internal sealed override void PerformSetup(T element, ScalarPresenter scalarPresenter)
         {
+            var flowIndex = scalarPresenter.FlowIndex;
             for (int i = 0; i < _childBindings.Count; i++)
             {
                 var childBinding = _childBindings[i];
-                if (childBinding.GetSettingUpElement() != null)
-                    childBinding.Setup(scalarPresenter.FlowIndex);
+                var child = _childGetters[i](element);
+                if (child != null)
+                {
+                    child.SetScalarFlowIndex(flowIndex);
+                    childBinding.Setup(flowIndex);
+                }
             }
         }
 
@@ -145,7 +136,10 @@ namespace DevZest.Data.Presenters
                 var childGetter = _childGetters[i];
                 var child = childGetter(element);
                 if (child != null)
+                {
                     childBinding.Cleanup(child);
+                    child.SetScalarFlowIndex(0);
+                }
             }
         }
 

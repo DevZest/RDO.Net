@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters
                 onSetup: (v, p) =>
                 {
                     v.Content = source;
-                    v.Target = target.SettingUpElement;
+                    v.Target = target.GetSettingUpElement(p.FlowIndex);
                 },
                 onRefresh: null, onCleanup: null);
         }

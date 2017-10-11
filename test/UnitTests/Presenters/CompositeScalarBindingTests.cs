@@ -27,8 +27,8 @@ namespace DevZest.Data.Presenters
                     .AddBinding(0, 1, _.Name.AsTextBlock());
             });
 
-            Assert.IsNull(label.SettingUpElement);
-            Assert.IsNull(textBlock.SettingUpElement);
+            Assert.IsNull(label.GetSettingUpElement(0));
+            Assert.IsNull(textBlock.GetSettingUpElement(0));
 
             Assert.AreEqual(1, label.FlowRepeatCount);
             Assert.AreEqual(_.Name.DisplayName, label[0].Content);

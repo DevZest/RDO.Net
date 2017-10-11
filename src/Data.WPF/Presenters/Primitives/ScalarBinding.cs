@@ -77,10 +77,6 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.ScalarPresenter; }
         }
 
-        internal abstract void PerformEnterSetup(int flowIndex);
-
-        internal abstract void PerformExitSetup();
-
         private bool _flowRepeatable;
         [DefaultValue(false)]
         public bool FlowRepeatable

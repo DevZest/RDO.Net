@@ -74,9 +74,9 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(source));
 
             return new ScalarBinding<TextBlock>(
-                onSetup: e =>
+                onSetup: v =>
                 {
-                    e.Text = source.DisplayName.ToString(format, formatProvider);
+                    v.Text = source.DisplayName.ToString(format, formatProvider);
                 },
                 onRefresh: null,
                 onCleanup: null);
@@ -89,11 +89,11 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(source));
 
             return new ScalarBinding<Label>(
-                onSetup: e =>
+                onSetup: (v, p) =>
                 {
-                    e.Content = source.DisplayName.ToString(format, formatProvider);
+                    v.Content = source.DisplayName.ToString(format, formatProvider);
                     if (target != null)
-                        e.Target = target.SettingUpElement;
+                        v.Target = target.GetSettingUpElement(p.FlowIndex);
                 },
                 onRefresh: null,
                 onCleanup: null);
@@ -106,11 +106,11 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(source));
 
             return new ScalarBinding<Label>(
-                onSetup: (e, sp) =>
+                onSetup: (v, p) =>
                 {
-                    e.Content = string.Format("{0}. {1}", sp.FlowIndex, source.DisplayName.ToString(format, formatProvider));
+                    v.Content = string.Format("{0}. {1}", p.FlowIndex, source.DisplayName.ToString(format, formatProvider));
                     if (target != null)
-                        e.Target = target.SettingUpElement;
+                        v.Target = target.GetSettingUpElement(p.FlowIndex);
                 },
                 onRefresh: null,
                 onCleanup: null).WithFlowRepeatable(true);

@@ -32,19 +32,17 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var result = new T();
             OnCreated(result);
-            if (Parent != null)
-                result.SetScalarFlowIndex(ScalarPresenter.FlowIndex);
             return result;
         }
 
         private int _settingUpStartOffset;
         private T[] _settingUpElements;
-        public IReadOnlyList<T> SettingUpElements
+        internal IReadOnlyList<T> SettingUpElements
         {
             get { return _settingUpElements; }
         }
 
-        public T SettingUpElement { get; private set; }
+        private T SettingUpElement { get; set; }
 
         internal sealed override UIElement GetSettingUpElement()
         {
@@ -71,16 +69,19 @@ namespace DevZest.Data.Presenters.Primitives
             SettingUpElement = element == null ? Create() : (T)element;
         }
 
-        internal override void PerformEnterSetup(int flowIndex)
+        public T GetSettingUpElement(int flowIndex)
         {
-            Debug.Assert(FlowRepeatable);
-            SettingUpElement = SettingUpElements[flowIndex - _settingUpStartOffset];
-        }
-
-        internal override void PerformExitSetup()
-        {
-            Debug.Assert(FlowRepeatable);
-            SettingUpElement = null;
+            if (FlowRepeatable)
+            {
+                if (SettingUpElements == null)
+                    return null;
+                var index = flowIndex - _settingUpStartOffset;
+                if (index < 0 || index >= SettingUpElements.Count)
+                    return null;
+                return SettingUpElements[index];
+            }
+            else
+                return SettingUpElement;
         }
 
         internal override void EndSetup()
@@ -91,39 +92,13 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override UIElement Setup(int flowIndex)
         {
-            EnterSetup(flowIndex);
-            var result = SettingUpElement;
-            PerformSetup(ScalarPresenter);
-            ExitSetup();
+            var result = GetSettingUpElement(flowIndex);
+            ScalarPresenter.EnterSetup(flowIndex);
+            PerformSetup(result, ScalarPresenter);
+            ScalarPresenter.ExitSetup();
             return result;
         }
 
-        internal abstract void PerformSetup(ScalarPresenter scalarPresenter);
-
-        private void EnterSetup(int flowIndex)
-        {
-            var scalarBindings = Template.ScalarBindings;
-            for (int i = 0; i < scalarBindings.Count; i++)
-            {
-                var scalarBinding = scalarBindings[i];
-                if (scalarBinding.FlowRepeatable)
-                    scalarBinding.PerformEnterSetup(flowIndex);
-            }
-
-            ScalarPresenter.SetFlowIndex(flowIndex);
-        }
-
-        private void ExitSetup()
-        {
-            var scalarBindings = Template.ScalarBindings;
-            for (int i = 0; i < scalarBindings.Count; i++)
-            {
-                var scalarBinding = scalarBindings[i];
-                if (scalarBinding.FlowRepeatable)
-                    scalarBinding.PerformExitSetup();
-            }
-
-            ScalarPresenter.SetFlowIndex(0);
-        }
+        internal abstract void PerformSetup(T element, ScalarPresenter scalarPresenter);
     }
 }
