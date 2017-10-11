@@ -45,44 +45,12 @@ namespace DevZest.Data.Presenters
                 Input.Flush((T)element);
         }
 
-        internal sealed override UIElement Setup(int flowIndex)
+        internal sealed override void PerformSetup(ScalarPresenter scalarPresenter)
         {
-            EnterSetup(flowIndex);
-
-            var result = SettingUpElement;
-            Setup(result, ScalarPresenter);
-            Refresh(result, ScalarPresenter);
+            Setup(SettingUpElement, scalarPresenter);
+            Refresh(SettingUpElement, scalarPresenter);
             if (Input != null)
-                Input.Attach(result);
-
-            ExitSetup();
-            return result;
-        }
-
-        private void EnterSetup(int flowIndex)
-        {
-            var scalarBindings = Template.ScalarBindings;
-            for (int i = 0; i < scalarBindings.Count; i++)
-            {
-                var scalarBinding = scalarBindings[i];
-                if (scalarBinding.FlowRepeatable)
-                    scalarBinding.PerformEnterSetup(flowIndex);
-            }
-
-            ScalarPresenter.SetFlowIndex(flowIndex);
-        }
-
-        private void ExitSetup()
-        {
-            var scalarBindings = Template.ScalarBindings;
-            for (int i = 0; i < scalarBindings.Count; i++)
-            {
-                var scalarBinding = scalarBindings[i];
-                if (scalarBinding.FlowRepeatable)
-                    scalarBinding.PerformExitSetup();
-            }
-
-            ScalarPresenter.SetFlowIndex(0);
+                Input.Attach(SettingUpElement);
         }
 
         private Action<T, ScalarPresenter> _onSetup;

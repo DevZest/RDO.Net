@@ -83,5 +83,42 @@ namespace DevZest.Data.Presenters.Primitives
             _settingUpElements = null;
             SettingUpElement = null;
         }
+
+        internal sealed override UIElement Setup(int flowIndex)
+        {
+            EnterSetup(flowIndex);
+            var result = SettingUpElement;
+            PerformSetup(ScalarPresenter);
+            ExitSetup();
+            return result;
+        }
+
+        internal abstract void PerformSetup(ScalarPresenter scalarPresenter);
+
+        private void EnterSetup(int flowIndex)
+        {
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
+            {
+                var scalarBinding = scalarBindings[i];
+                if (scalarBinding.FlowRepeatable)
+                    scalarBinding.PerformEnterSetup(flowIndex);
+            }
+
+            ScalarPresenter.SetFlowIndex(flowIndex);
+        }
+
+        private void ExitSetup()
+        {
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
+            {
+                var scalarBinding = scalarBindings[i];
+                if (scalarBinding.FlowRepeatable)
+                    scalarBinding.PerformExitSetup();
+            }
+
+            ScalarPresenter.SetFlowIndex(0);
+        }
     }
 }
