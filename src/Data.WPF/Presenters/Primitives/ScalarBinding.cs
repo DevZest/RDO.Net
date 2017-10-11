@@ -70,32 +70,14 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract UIElement Setup(int flowIndex);
 
-        internal abstract void PrepareSettingUpElement(int flowIndex);
-
-        internal abstract void ClearSettingUpElement();
-
         internal ScalarPresenter ScalarPresenter
         {
             get { return Template.ScalarPresenter; }
         }
 
-        internal void EnterSetup(int flowIndex)
-        {
-            var scalarBindings = Template.ScalarBindings;
-            for (int i = 0; i < scalarBindings.Count; i++)
-                scalarBindings[i].PrepareSettingUpElement(flowIndex);
+        internal abstract void PerformEnterSetup(int flowIndex);
 
-            ScalarPresenter.SetFlowIndex(flowIndex);
-        }
-
-        internal void ExitSetup()
-        {
-            var scalarBindings = Template.ScalarBindings;
-            for (int i = 0; i < scalarBindings.Count; i++)
-                scalarBindings[i].ClearSettingUpElement();
-
-            ScalarPresenter.SetFlowIndex(0);
-        }
+        internal abstract void PerformExitSetup();
 
         private bool _flowRepeatable;
         [DefaultValue(false)]

@@ -102,19 +102,42 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        internal sealed override void PrepareSettingUpElement(int flowIndex)
+        private void EnterSetup(int flowIndex)
         {
-            if (FlowRepeatable)
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
             {
-                Debug.Assert(SettingUpElements != null);
-                SettingUpElement = SettingUpElements[flowIndex - _settingUpStartOffset];
+                var scalarBinding = scalarBindings[i];
+                if (scalarBinding.FlowRepeatable)
+                    scalarBinding.PerformEnterSetup(flowIndex);
             }
+
+            ScalarPresenter.SetFlowIndex(flowIndex);
         }
 
-        internal override void ClearSettingUpElement()
+        private void ExitSetup()
         {
-            if (FlowRepeatable)
-                SettingUpElement = null;
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
+            {
+                var scalarBinding = scalarBindings[i];
+                if (scalarBinding.FlowRepeatable)
+                    scalarBinding.PerformExitSetup();
+            }
+
+            ScalarPresenter.SetFlowIndex(0);
+        }
+
+        internal sealed override void PerformEnterSetup(int flowIndex)
+        {
+            Debug.Assert(FlowRepeatable);
+            SettingUpElement = SettingUpElements[flowIndex - _settingUpStartOffset];
+        }
+
+        internal sealed override void PerformExitSetup()
+        {
+            Debug.Assert(FlowRepeatable);
+            SettingUpElement = null;
         }
 
         internal sealed override void EndSetup()
