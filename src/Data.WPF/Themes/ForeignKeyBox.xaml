@@ -8,9 +8,10 @@
         <Setter Property="Foreground" Value="#FF000000" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="4" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:ColumnHeader">
+                <ControlTemplate TargetType="local:ForeignKeyBox">
                     <Border Name="Root" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">

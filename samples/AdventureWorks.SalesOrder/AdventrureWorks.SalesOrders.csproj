@@ -64,6 +64,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -93,6 +95,9 @@
     <Compile Include="ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SalesOrderHeaderBox.xaml.cs">
+      <DependentUpon>SalesOrderHeaderBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SalesOrderList.cs" />
     <Compile Include="TotalAmtConditionalFormat.cs" />
     <Compile Include="TotalDueConditionalFormat.cs" />
@@ -105,6 +110,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ProgressDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SalesOrderHeaderBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
