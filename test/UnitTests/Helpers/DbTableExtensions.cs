@@ -11,11 +11,18 @@ namespace DevZest.Data.Helpers
 {
     internal static class DbTableExtensions
     {
-        internal static DbTable<TChild> MockCreateChild<T, TChild>(this DbTable<T> dbTable, Func<T, TChild> getChildModel, Action<T> initializer = null)
+        internal static DbTable<TChild> MockCreateChild<T, TChild>(this DbTable<T> dbTable, Func<T, TChild> getChildModel)
             where T : Model, new()
             where TChild : Model, new()
         {
-            var model = dbTable.VerifyCreateChild(getChildModel);
+            return dbTable.MockCreateChild(null, getChildModel);
+        }
+
+        internal static DbTable<TChild> MockCreateChild<T, TChild>(this DbTable<T> dbTable, Action<TChild> initializer, Func < T, TChild> getChildModel)
+            where T : Model, new()
+            where TChild : Model, new()
+        {
+            var model = dbTable.VerifyCreateChild(initializer, getChildModel);
 
             var dbSession = dbTable.DbSession;
             var name = dbSession.AssignTempTableName(model);

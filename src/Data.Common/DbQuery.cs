@@ -90,8 +90,15 @@ namespace DevZest.Data
         public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData)
             where TChild : Model, new()
         {
+            return CreateChild(null, getChildModel, sourceData);
+        }
+
+
+        public DbQuery<TChild> CreateChild<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, DbSet<TChild> sourceData)
+            where TChild : Model, new()
+        {
             Check.NotNull(sourceData, nameof(sourceData));
-            var model = VerifyCreateChild(getChildModel);
+            var model = VerifyCreateChild(initializer, getChildModel);
 
             EnsureSequentialTempTableCreated(DbSession);
             if (SequentialKeyTempTable.InitialRowCount == 0)
@@ -105,11 +112,17 @@ namespace DevZest.Data
             return CreateChildAsync(getChildModel, sourceData, CancellationToken.None);
         }
 
-        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken cancellationToken)
+        public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken cancellationToken)
+            where TChild : Model, new()
+        {
+            return CreateChildAsync(null, getChildModel, sourceData, cancellationToken);
+        }
+
+        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
             Check.NotNull(sourceData, nameof(sourceData));
-            var model = VerifyCreateChild(getChildModel);
+            var model = VerifyCreateChild(initializer, getChildModel);
 
             await EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
             if (SequentialKeyTempTable.InitialRowCount == 0)
@@ -120,8 +133,14 @@ namespace DevZest.Data
         public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)
             where TChild : Model, new()
         {
+            return CreateChild(null, getChildModel, buildQuery);
+        }
+
+        public DbQuery<TChild> CreateChild<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)
+            where TChild : Model, new()
+        {
             Check.NotNull(buildQuery, nameof(buildQuery));
-            var childModel = VerifyCreateChild(getChildModel);
+            var childModel = VerifyCreateChild(initializer, getChildModel);
 
             EnsureSequentialTempTableCreated(DbSession);
             if (SequentialKeyTempTable.InitialRowCount == 0)
@@ -134,8 +153,14 @@ namespace DevZest.Data
         public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery)
             where TChild : Model, new()
         {
+            return CreateChild(null, getChildModel, buildQuery);
+        }
+
+        public DbQuery<TChild> CreateChild<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery)
+            where TChild : Model, new()
+        {
             Check.NotNull(buildQuery, nameof(buildQuery));
-            var childModel = VerifyCreateChild(getChildModel);
+            var childModel = VerifyCreateChild(initializer, getChildModel);
 
             EnsureSequentialTempTableCreated(DbSession);
             if (SequentialKeyTempTable.InitialRowCount == 0)
@@ -157,11 +182,17 @@ namespace DevZest.Data
             return CreateChildAsync(getChildModel, buildQuery, CancellationToken.None);
         }
 
-        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
+        public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
+            where TChild : Model, new()
+        {
+            return CreateChildAsync(null, getChildModel, buildQuery, cancellationToken);
+        }
+
+        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
-            var childModel = VerifyCreateChild(getChildModel);
+            var childModel = VerifyCreateChild(initializer, getChildModel);
 
             await EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
             if (SequentialKeyTempTable.InitialRowCount == 0)
@@ -171,11 +202,18 @@ namespace DevZest.Data
             return DbSession.PerformCreateQuery(childModel, queryBuilder.BuildQueryStatement(null));
         }
 
-        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
+        public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
+            where TChild : Model, new()
+        {
+            return CreateChildAsync(null, getChildModel, buildQuery, cancellationToken);
+        }
+
+
+        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
-            var childModel = VerifyCreateChild(getChildModel);
+            var childModel = VerifyCreateChild(initializer, getChildModel);
 
             await EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
             if (SequentialKeyTempTable.InitialRowCount == 0)

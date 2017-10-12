@@ -545,14 +545,11 @@ namespace DevZest.Data
             }
         }
 
-        private void InitializeExtension(Model prototype)
+        internal void InitializeExtension(Model prototype)
         {
             var prototypeExtension = prototype.Extension;
             if (prototypeExtension != null)
-            {
                 Extension = (ModelExtension)Activator.CreateInstance(prototypeExtension.GetType());
-                Extension.Initialize(this);
-            }
         }
 
         private IIndexConstraint _clusteredIndex;
@@ -1321,7 +1318,18 @@ namespace DevZest.Data
                 column11, column12, expression, builder);
         }
 
-        internal ModelExtension Extension { get; private set; }
+        private ModelExtension _extension;
+        internal ModelExtension Extension
+        {
+            get { return _extension; }
+            private set
+            {
+                Debug.Assert(_extension == null);
+                Debug.Assert(value != null);
+                _extension = value;
+                _extension.Initialize(this);
+            }
+        }
 
         public void SetExtension<T>()
             where T : ModelExtension, new()
@@ -1330,7 +1338,6 @@ namespace DevZest.Data
             if (Extension != null)
                 throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
             Extension = new T();
-            Extension.Initialize(this);
         }
 
         public T GetExtension<T>()

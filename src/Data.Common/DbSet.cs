@@ -158,7 +158,7 @@ namespace DevZest.Data
             return new DbQueryBuilder(newModel).BuildQueryStatement(oldModel, action, null);
         }
 
-        internal TChild VerifyCreateChild<TChild>(Func<T, TChild> getChildModel)
+        internal TChild VerifyCreateChild<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
             if (Kind == DataSourceKind.DbTable)
@@ -172,6 +172,8 @@ namespace DevZest.Data
             if (childModel.DataSource != null)
                 throw new InvalidOperationException(Strings.DbSet_VerifyCreateChild_AlreadyCreated);
 
+            if (initializer != null)
+                initializer(childModel);
             return childModel;
         }
 

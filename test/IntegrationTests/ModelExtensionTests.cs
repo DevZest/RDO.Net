@@ -61,5 +61,48 @@ namespace DevZest.Data
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
+
+        [TestMethod]
+        public void ModelExtension_sales_order_with_details()
+        {
+            using (var db = OpenDb())
+            {
+                var salesOrders = db.CreateQuery(_ => _.SetExtension<SalesOrder.Ext>(),
+                    (DbQueryBuilder builder, SalesOrder _) =>
+                    {
+                        var ext = _.GetExtension<SalesOrder.Ext>();
+                        SalesOrder o;
+                        Customer c;
+                        Address shipTo, billTo;
+                        builder.From(db.SalesOrders, out o)
+                            .InnerJoin(db.Customers, o.Customer, out c)
+                            .InnerJoin(db.Addresses, o.ShipToAddress, out shipTo)
+                            .InnerJoin(db.Addresses, o.BillToAddress, out billTo)
+                            .AutoSelect()
+                            .AutoSelect(shipTo, ext.ShipToAddress)
+                            .AutoSelect(billTo, ext.BillToAddress)
+                            .Where(o.SalesOrderID == _Int32.Const(71774));
+                    });
+
+                var salesOrderDetails = db.CreateQuery(_ => _.SetExtension<SalesOrderDetail.Ext>(),
+                    (DbQueryBuilder builder, SalesOrderDetail _) =>
+                    {
+                        SalesOrderDetail d;
+                        Product p;
+                        builder.From(db.SalesOrderDetails, out d)
+                            .InnerJoin(db.Products, d.Product, out p)
+                            .AutoSelect();
+                    });
+
+                salesOrders.CreateChild(_ => _.SetExtension<SalesOrderDetail.Ext>(), _ => _.SalesOrderDetails, salesOrderDetails);
+
+                var json = salesOrders.ToDataSet().ToJsonString(true);
+                var expectedJson = string.Empty;
+                Assert.AreEqual(expectedJson, json);
+
+                var dataSet = DataSet<SalesOrder>.ParseJson(json, _ => _.SetExtension<SalesOrder.Ext>());
+                Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
+            }
+        }
     }
 }

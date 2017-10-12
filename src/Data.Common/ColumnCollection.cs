@@ -36,7 +36,7 @@ namespace DevZest.Data
 
         internal void Add(Column item)
         {
-            Debug.Assert(Model.DataSource == null);
+            Debug.Assert(Model.DesignMode);
 
             var columns = Columns;
             var modelId = item.ModelId;

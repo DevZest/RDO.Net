@@ -98,10 +98,16 @@ namespace DevZest.Data
             return Name;
         }
 
-        public DbTable<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<T> initializer = null)
+        public DbTable<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
-            var model = VerifyCreateChild(getChildModel);
+            return CreateChild(null, getChildModel);
+        }
+
+        public DbTable<TChild> CreateChild<TChild>(Action<TChild> initializer, Func <T, TChild> getChildModel)
+            where TChild : Model, new()
+        {
+            var model = VerifyCreateChild(initializer, getChildModel);
 
             var dbSession = DbSession;
             var name = dbSession.AssignTempTableName(model);
@@ -110,16 +116,23 @@ namespace DevZest.Data
             return result;
         }
 
-        public Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<T> initializer = null)
+        public Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
-            return CreateChildAsync(getChildModel, initializer, CancellationToken.None);
+            return CreateChildAsync(null, getChildModel);
         }
 
-        public async Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<T> initializer, CancellationToken cancellationToken)
+
+        public Task<DbTable<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
-            var model = VerifyCreateChild(getChildModel);
+            return CreateChildAsync(initializer, getChildModel, CancellationToken.None);
+        }
+
+        public async Task<DbTable<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, CancellationToken cancellationToken)
+            where TChild : Model, new()
+        {
+            var model = VerifyCreateChild(initializer, getChildModel);
 
             var dbSession = DbSession;
             var name = dbSession.AssignTempTableName(model);
