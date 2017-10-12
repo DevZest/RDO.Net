@@ -6,7 +6,7 @@
             xmlns:local="clr-namespace:AdventureWorks.SalesOrders"
             xmlns:dz="http://schemas.devzest.com/data/windows"
             mc:Ignorable="d" 
-            d:DesignHeight="300" Width="570" Orientation="Vertical">
+            d:DesignHeight="300" Width="580" Orientation="Vertical" Margin="5">
     <StackPanel.Resources>
         <Style TargetType="Label">
             <Setter Property="FontWeight" Value="Bold" />
@@ -43,25 +43,26 @@
             <DatePicker x:Name="_dueDate" Width="135" />
         </StackPanel>
     </StackPanel>
-    <UniformGrid Columns="3" Margin="0,0,0,5">
+    <UniformGrid Columns="3">
+        <UniformGrid.Resources>
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="0,0,5,0" />
+            </Style>
+        </UniformGrid.Resources>
         <StackPanel>
             <Label Content="_Sales Order Number:" Target="{x:Reference Name=_salesOrderNumber}" />
-            <TextBox x:Name="_salesOrderNumber" Width="186" />
+            <TextBox x:Name="_salesOrderNumber" />
         </StackPanel>
         <StackPanel>
             <Label Content="_Purchase Order Number:" Target="{x:Reference Name=_purchaseOrderNumber}" />
-            <TextBox x:Name="_purchaseOrderNumber" Width="186" Margin="0,0,5,0" />
+            <TextBox x:Name="_purchaseOrderNumber" />
         </StackPanel>
         <StackPanel>
             <Label Content="_Account Number:" Target="{x:Reference Name=_accountNumber}" />
-            <TextBox x:Name="_accountNumber" Width="186" Margin="0,0,5,0" />
+            <TextBox x:Name="_accountNumber" />
         </StackPanel>
     </UniformGrid>
     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-        <StackPanel Margin="0,0,5,0">
-            <Label Content="Status: " Target="{x:Reference Name=_status}" />
-            <ComboBox x:Name="_status" Width="100" />
-        </StackPanel>
         <StackPanel Margin="0,0,5,0">
             <Label Content="Ship Method: " Target="{x:Reference Name=_shipMethod}" />
             <TextBox x:Name="_shipMethod" Width="200" />
@@ -70,9 +71,13 @@
             <Label Content="Credit Card Appoval Code:" Target="{x:Reference Name=_creditCardApprovalCode}" />
             <TextBox x:Name="_creditCardApprovalCode" Width="180" />
         </StackPanel>
+        <StackPanel Margin="0,0,5,0">
+            <Label Content="Status: " Target="{x:Reference Name=_status}" />
+            <ComboBox x:Name="_status" Width="100" />
+        </StackPanel>
         <CheckBox Margin="0,0,5,0" x:Name="_onlineOrderFlag" Content="Online" VerticalAlignment="Center" FontWeight="Bold" />
     </StackPanel>
-    <DockPanel Margin="0,5">
+    <DockPanel>
         <Label Content="Comment: " Target="{x:Reference Name=_comment}" />
         <TextBox x:Name="_comment" />
     </DockPanel>
