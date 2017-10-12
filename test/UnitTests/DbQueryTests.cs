@@ -141,8 +141,8 @@ ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrder].[SalesOrder
                     SalesOrder h;
                     Product p;
                     builder.From(db.SalesOrderDetails, out d)
-                        .InnerJoin(db.SalesOrders, d.SalesOrder, x => x.PrimaryKey, out h)
-                        .InnerJoin(db.Products, d.Product, x => x.PrimaryKey, out p)
+                        .InnerJoin(db.SalesOrders, d.SalesOrder, out h)
+                        .InnerJoin(db.Products, d.Product, out p)
                         .Select(d.SalesOrderID, adhoc)
                         .Select(d.SalesOrderDetailID, adhoc)
                         .Select(p.Name, adhoc)

@@ -16,7 +16,7 @@ namespace DevZest.Data
                     SalesOrderDetail d;
                     Product p;
                     builder.From(db.SalesOrderDetails, out d)
-                        .InnerJoin(db.Products, d.Product, product => product.PrimaryKey, out p)
+                        .InnerJoin(db.Products, d.Product, out p)
                         .AutoSelect()
                         .Where(d.SalesOrderID == _Int32.Const(71774));
                 }, null, _ => _.SetExtension<SalesOrderDetail.Ext>());
@@ -42,9 +42,9 @@ namespace DevZest.Data
                     Customer c;
                     Address shipTo, billTo;
                     builder.From(db.SalesOrders, out o)
-                        .InnerJoin(db.Customers, o.Customer, customer => customer.PrimaryKey, out c)
-                        .InnerJoin(db.Addresses, o.ShipToAddress, address => address.PrimaryKey, out shipTo)
-                        .InnerJoin(db.Addresses, o.BillToAddress, address => address.PrimaryKey, out billTo)
+                        .InnerJoin(db.Customers, o.Customer, out c)
+                        .InnerJoin(db.Addresses, o.ShipToAddress, out shipTo)
+                        .InnerJoin(db.Addresses, o.BillToAddress, out billTo)
                         .AutoSelect()
                         .AutoSelect(shipTo, ext.ShipToAddress)
                         .AutoSelect(billTo, ext.BillToAddress)

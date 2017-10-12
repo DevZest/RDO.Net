@@ -85,6 +85,19 @@ namespace DevZest.Data
                 _autoColumnSelector = _autoColumnSelector.Merge(model.Columns);
         }
 
+        public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
+            where T : Model<TKey>, new()
+            where TKey : KeyBase
+        {
+            return InnerJoin(dbSet, left, GetPrimaryKey, out model);
+        }
+
+        private static T GetPrimaryKey<T>(Model<T> _)
+            where T : KeyBase
+        {
+            return _.PrimaryKey;
+        }
+
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
             where TKey : KeyBase
@@ -93,6 +106,14 @@ namespace DevZest.Data
             return this;
         }
 
+        public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
+            where T : Model<TKey>, new()
+            where TKey : KeyBase
+        {
+            return LeftJoin(dbSet, left, GetPrimaryKey, out model);
+        }
+
+
         public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
             where TKey : KeyBase
@@ -100,6 +121,14 @@ namespace DevZest.Data
             Join(dbSet, left, right(dbSet._), DbJoinKind.LeftJoin, out model);
             return this;
         }
+
+        public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
+            where T : Model<TKey>, new()
+            where TKey : KeyBase
+        {
+            return RightJoin(dbSet, left, GetPrimaryKey, out model);
+        }
+
 
         public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
