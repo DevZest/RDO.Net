@@ -121,13 +121,31 @@ namespace DevZest.Data.Primitives
         protected abstract Task<int> ImportKeyAsync<T>(DataSet<T> source, DbTable<KeyOutput> target, CancellationToken cancellationToken)
             where T : Model, new();
 
-        internal DbQuery<T> CreateQuery<T>(T model, DbQueryStatement queryStatement)
+        internal DbQuery<T> PerformCreateQuery<T>(T model, DbQueryStatement queryStatement)
             where T : Model, new()
         {
             return new DbQuery<T>(model, this, queryStatement);
         }
 
-         public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery, T fromModel = null, Action<T> initializer = null)
+        public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery)
+            where T : Model, new()
+        {
+            return CreateQuery(null, null, buildQuery);
+        }
+
+        public DbQuery<T> CreateQuery<T>(T fromModel, Action <DbQueryBuilder, T> buildQuery)
+           where T : Model, new()
+        {
+            return CreateQuery(fromModel, null, buildQuery);
+        }
+
+        public DbQuery<T> CreateQuery<T>(Action<T> initializer, Action<DbQueryBuilder, T> buildQuery)
+           where T : Model, new()
+        {
+            return CreateQuery(null, initializer, buildQuery);
+        }
+
+        public DbQuery<T> CreateQuery<T>(T fromModel, Action<T> initializer, Action<DbQueryBuilder, T> buildQuery)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
@@ -137,10 +155,28 @@ namespace DevZest.Data.Primitives
                 initializer(model);
             var builder = new DbQueryBuilder(model);
             buildQuery(builder, model);
-            return CreateQuery(model, builder.BuildQueryStatement(null));
+            return PerformCreateQuery(model, builder.BuildQueryStatement(null));
         }
 
-        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery, T fromModel = null, Action<T> initializer = null)
+        public DbQuery<T> CreateAggregateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
+            where T : Model, new()
+        {
+            return CreateAggregateQuery(null, null, buildQuery);
+        }
+
+        public DbQuery<T> CreateAggregateQuery<T>(T fromModel, Action<DbAggregateQueryBuilder, T> buildQuery)
+            where T : Model, new()
+        {
+            return CreateAggregateQuery(fromModel, null, buildQuery);
+        }
+
+        public DbQuery<T> CreateAggregateQuery<T>(Action<T> initializer, Action<DbAggregateQueryBuilder, T> buildQuery)
+            where T : Model, new()
+        {
+            return CreateAggregateQuery(null, initializer, buildQuery);
+        }
+
+        public DbQuery<T> CreateAggregateQuery<T>(T fromModel, Action<T> initializer, Action<DbAggregateQueryBuilder, T> buildQuery)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
@@ -150,7 +186,7 @@ namespace DevZest.Data.Primitives
                 initializer(model);
             var builder = new DbAggregateQueryBuilder(model);
             buildQuery(builder, model);
-            return CreateQuery(model, builder.BuildQueryStatement(null));
+            return PerformCreateQuery(model, builder.BuildQueryStatement(null));
         }
 
         internal abstract void RecursiveFillDataSet(IDbSet dbSet, DataSet dataSet);

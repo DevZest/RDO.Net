@@ -236,7 +236,7 @@ namespace DevZest.Data
             if (initializer != null)
                 initializer(childModel);
             var queryStatement = dbSet.QueryStatement.BuildQueryStatement(childModel, builder => builder.Where(parentRow, parentRelationship), null);
-            return dbSession.CreateQuery(childModel, queryStatement);
+            return dbSession.PerformCreateQuery(childModel, queryStatement);
         }
 
         public async Task<DataSet<TChild>> FillAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer, CancellationToken cancellationToken)

@@ -159,7 +159,7 @@ namespace DevZest.Data.SqlServer
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var result = CreateQuery<TTarget>((builder, model) =>
+            var result = CreateQuery<TTarget>(targetModel, (builder, model) =>
             {
                 var dataSetOrdinalColumn = new _Int32();
                 model.AddSystemColumn(dataSetOrdinalColumn, "sys_dataset_ordinal");
@@ -177,7 +177,7 @@ namespace DevZest.Data.SqlServer
                     builder.SelectColumn(xmlModel[GetColumnTagXPath(i), targetColumn], targetColumn);
                 }
                 builder.OrderBy(xmlModel[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
-            }, targetModel);
+            });
             result.UpdateOriginalDataSource(dataSet, false);
             return result;
         }

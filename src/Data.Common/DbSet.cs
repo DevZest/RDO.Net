@@ -63,7 +63,7 @@ namespace DevZest.Data
         {
             T newModel;
             var queryStatement = GetSimpleQueryStatement(GetWhereQueryBuilder(condition), out newModel);
-            return DbSession.CreateQuery(newModel, queryStatement);
+            return DbSession.PerformCreateQuery(newModel, queryStatement);
         }
 
         public DbQuery<T> OrderBy(params Func<T, ColumnSort>[] fnOrderByList)
@@ -94,7 +94,7 @@ namespace DevZest.Data
         {
             T newModel;
             var queryStatement = GetSimpleQueryStatement(GetOrderByQueryBuilder(offset, fetch, orderBy), out newModel);
-            return DbSession.CreateQuery(newModel, queryStatement);
+            return DbSession.PerformCreateQuery(newModel, queryStatement);
         }
 
         private Action<DbQueryBuilder> GetOrderByQueryBuilder(int offset, int fetch, ColumnSort[] orderBy)
@@ -123,7 +123,7 @@ namespace DevZest.Data
             };
             T newModel;
             var queryStatement = GetSimpleQueryStatement(whereOrderByQueryBuilder, out newModel);
-            return DbSession.CreateQuery(newModel, queryStatement);
+            return DbSession.PerformCreateQuery(newModel, queryStatement);
         }
 
         public DbQuery<T> WhereOrderBy(_Boolean condition, params ColumnSort[] orderBy)
@@ -142,7 +142,7 @@ namespace DevZest.Data
             };
             T newModel;
             var queryStatement = GetSimpleQueryStatement(whereOrderByQueryBuilder, out newModel);
-            return DbSession.CreateQuery(newModel, queryStatement);
+            return DbSession.PerformCreateQuery(newModel, queryStatement);
         }
 
         internal DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action = null)
@@ -245,7 +245,7 @@ namespace DevZest.Data
 
         private DbQuery<Adhoc> BuildCountQuery()
         {
-            return DbSession.CreateQuery((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
+            return DbSession.CreateAggregateQuery((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
             {
                 T m;
                 builder.From(this, out m)

@@ -101,7 +101,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
         {
             using (var db = Db.Open(SqlVersion.Sql11))
             {
-                var query = db.CreateQuery<Adhoc>((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
+                var query = db.CreateAggregateQuery<Adhoc>((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
                 {
                     SalesOrder h;
                     SalesOrderDetail d;
@@ -482,7 +482,7 @@ ORDER BY [SalesOrder].[SalesOrderID];"
             var sqlVersion = SqlVersion.Sql11;
             using (var db = Db.Open(sqlVersion))
             {
-                var salesOrders = db.CreateQuery((DbAggregateQueryBuilder queryBuilder, SalesOrder model) =>
+                var salesOrders = db.CreateAggregateQuery((DbAggregateQueryBuilder queryBuilder, SalesOrder model) =>
                 {
                     SalesOrder h;
                     queryBuilder.From(db.SalesOrders, out h)
