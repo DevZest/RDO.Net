@@ -95,6 +95,9 @@
     <Compile Include="ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SalesOrderFooterBox.xaml.cs">
+      <DependentUpon>SalesOrderFooterBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SalesOrderHeaderBox.xaml.cs">
       <DependentUpon>SalesOrderHeaderBox.xaml</DependentUpon>
     </Compile>
@@ -112,6 +115,10 @@
     <Page Include="ProgressDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SalesOrderFooterBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="SalesOrderHeaderBox.xaml">
       <SubType>Designer</SubType>
