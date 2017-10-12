@@ -102,7 +102,7 @@
       <DependentUpon>SalesOrderHeaderBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="SalesOrderForm.cs" />
-    <Compile Include="SalesOrderList.cs" />
+    <Compile Include="MainWindow.Presenter.cs" />
     <Compile Include="TotalAmtConditionalFormat.cs" />
     <Compile Include="TotalDueConditionalFormat.cs" />
     <Page Include="AddressBox.xaml">
@@ -125,7 +125,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SalesOrderList.Styles.xaml">
+    <Page Include="MainWindow.Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

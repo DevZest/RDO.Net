@@ -18,7 +18,7 @@ namespace AdventureWorks.SalesOrders
         {
             InitializeComponent();
             InitializeCommandBindings();
-            _salesOrderList = new SalesOrderList();
+            _salesOrderList = new Presenter();
             _salesOrderList.ShowAsync(_dataView);
         }
 
@@ -109,7 +109,7 @@ namespace AdventureWorks.SalesOrders
             this.Close();
         }
 
-        private SalesOrderList _salesOrderList;
+        private Presenter _salesOrderList;
 
         private void FindTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
