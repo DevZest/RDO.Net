@@ -205,7 +205,12 @@ namespace DevZest.Data
 
         public readonly T _;
 
-        public static DataSet<T> ParseJson(string json, Action<T> initializer = null)
+        public static DataSet<T> ParseJson(string json)
+        {
+            return ParseJson(null, json);
+        }
+
+        public static DataSet<T> ParseJson(Action<T> initializer, string json)
         {
             Check.NotEmpty(json, nameof(json));
 

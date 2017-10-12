@@ -72,11 +72,11 @@ namespace DevZest.Data
 
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrderDynamicModel, json.Trim());
 
-                var dataSet = DataSet<Adhoc>.ParseJson(json, (Adhoc adhoc) =>
+                var dataSet = DataSet<Adhoc>.ParseJson(_ =>
                 {
-                    adhoc.AddColumn(SalesOrder.Ref._SalesOrderID);
-                    adhoc.AddColumn(SalesOrder._SalesOrderNumber);
-                });
+                    _.AddColumn(SalesOrder.Ref._SalesOrderID);
+                    _.AddColumn(SalesOrder._SalesOrderNumber);
+                }, json);
 
                 Assert.AreEqual(json.Trim(), dataSet.ToString().Trim());
             }

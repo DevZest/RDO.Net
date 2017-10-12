@@ -26,7 +26,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrderDetail_71774_with_ext.Trim();
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrderDetail>.ParseJson(json, _ => _.SetExtension<SalesOrderDetail.Ext>());
+                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtension<SalesOrderDetail.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
@@ -57,7 +57,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrder_71774_with_ext;
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrder>.ParseJson(json, _ => _.SetExtension<SalesOrder.Ext>());
+                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtension<SalesOrder.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
@@ -100,7 +100,7 @@ namespace DevZest.Data
                 var expectedJson = string.Empty;
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrder>.ParseJson(json, _ => _.SetExtension<SalesOrder.Ext>());
+                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtension<SalesOrder.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
