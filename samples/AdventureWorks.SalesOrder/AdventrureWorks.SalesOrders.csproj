@@ -101,6 +101,7 @@
     <Compile Include="SalesOrderHeaderBox.xaml.cs">
       <DependentUpon>SalesOrderHeaderBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SalesOrderForm.cs" />
     <Compile Include="SalesOrderList.cs" />
     <Compile Include="TotalAmtConditionalFormat.cs" />
     <Compile Include="TotalDueConditionalFormat.cs" />
