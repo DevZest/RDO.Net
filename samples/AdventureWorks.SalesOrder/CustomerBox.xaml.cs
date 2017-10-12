@@ -13,29 +13,5 @@ namespace AdventureWorks.SalesOrders
         {
             InitializeComponent();
         }
-
-        public string CompanyName
-        {
-            get { return _companyName.Text; }
-            set { _companyName.Text = value; }
-        }
-
-        public string ContactPerson
-        {
-            get { return _contactPerson.Text; }
-            set { _contactPerson.Text = value; }
-        }
-
-        public string Phone
-        {
-            get { return _phone.Text; }
-            set { _phone.Text = value; }
-        }
-
-        public string Email
-        {
-            get { return _email.Text; }
-            set { _email.Text = value; }
-        }
     }
 }

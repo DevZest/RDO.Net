@@ -11,10 +11,10 @@ namespace AdventureWorks.SalesOrders
             return (v, key, p) =>
             {
                 var customerID = p.GetValue(key.CustomerID);
-                v.CompanyName = customerID == null ? null : p.GetValue(_.CompanyName);
-                v.ContactPerson = customerID == null ? null : GetContactPerson(p.GetValue(_.LastName), p.GetValue(_.FirstName), p.GetValue(_.Title));
-                v.Phone = customerID == null ? null : p.GetValue(_.Phone);
-                v.Email = customerID == null ? null : p.GetValue(_.EmailAddress);
+                v._companyName.Text = customerID == null ? null : p.GetValue(_.CompanyName);
+                v._contactPerson.Text = customerID == null ? null : GetContactPerson(p.GetValue(_.LastName), p.GetValue(_.FirstName), p.GetValue(_.Title));
+                v._phone.Text = customerID == null ? null : p.GetValue(_.Phone);
+                v._email.Text = customerID == null ? null : p.GetValue(_.EmailAddress);
             };
         }
 
@@ -41,12 +41,12 @@ namespace AdventureWorks.SalesOrders
             return (v, key, p) =>
             {
                 var addressID = p.GetValue(key.AddressID);
-                v.AddressLine1 = addressID == null ? null : p.GetValue(_.AddressLine1);
-                v.AddressLine2 = addressID == null ? null : p.GetValue(_.AddressLine2);
-                v.City = addressID == null ? null : p.GetValue(_.City);
-                v.StateProvince = addressID == null ? null : p.GetValue(_.StateProvince);
-                v.CountryRegion = addressID == null ? null : p.GetValue(_.CountryRegion);
-                v.PostalCode = addressID == null ? null : p.GetValue(_.PostalCode);
+                v._addressLine1.Text = addressID == null ? null : p.GetValue(_.AddressLine1);
+                v._addressLine2.Text = addressID == null ? null : p.GetValue(_.AddressLine2);
+                v._city.Text = addressID == null ? null : p.GetValue(_.City);
+                v._stateProvince.Text = addressID == null ? null : p.GetValue(_.StateProvince);
+                v._countryRegion.Text = addressID == null ? null : p.GetValue(_.CountryRegion);
+                v._postalCode.Text = addressID == null ? null : p.GetValue(_.PostalCode);
             };
         }
 
