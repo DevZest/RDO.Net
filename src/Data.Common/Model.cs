@@ -309,24 +309,29 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
-                OnInitializingChildDataSets();
+                OnBuilding();
                 DataSetContainer.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
             }
             IsInitialized = true;
 
-            OnChildModelsInitialized();
+            OnInitialized();
         }
 
-        protected virtual void OnInitializingChildDataSets()
+        protected internal virtual void OnInitializing()
         {
-            InitializingChildDataSets(this, EventArgs.Empty);
+            Initializing(this, EventArgs.Empty);
         }
 
-        protected virtual void OnChildModelsInitialized()
+        protected virtual void OnBuilding()
         {
-            ChildModelsInitialized(this, EventArgs.Empty);
+            Building(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnInitialized()
+        {
+            Initialized(this, EventArgs.Empty);
         }
 
         private static ConcurrentDictionary<Type, Action<Model>> s_createDataSetInvokers = new ConcurrentDictionary<Type, Action<Model>>();
@@ -874,8 +879,9 @@ namespace DevZest.Data
             return result;
         }
 
-        public event EventHandler<EventArgs> InitializingChildDataSets = delegate { };
-        public event EventHandler<EventArgs> ChildModelsInitialized = delegate { };
+        public event EventHandler<EventArgs> Initializing = delegate { };
+        public event EventHandler<EventArgs> Building = delegate { };
+        public event EventHandler<EventArgs> Initialized = delegate { };
         public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
         public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };
         public event EventHandler<DataRowEventArgs> AfterDataRowInserted = delegate { };
@@ -1336,8 +1342,12 @@ namespace DevZest.Data
         {
             VerifyDesignMode();
             if (Extension != null)
-                throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
-            Extension = new T();
+            {
+                if (Extension.GetType() != typeof(T))
+                    throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
+            }
+            else
+                Extension = new T();
         }
 
         public T GetExtension<T>()

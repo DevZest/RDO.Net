@@ -174,8 +174,7 @@ namespace DevZest.Data
             _creatingTableNames.Add(tableName);
 
             var model = new TModel();
-            if (initializer != null)
-                initializer(model);
+            model.Initialize(initializer);
             var table = DbTable<TModel>.Create(model, Db, GetMockTableName(tableName));
             _mockTables.Add(new MockTable(tableName, table));
             _creatingTableNames.Remove(tableName);

@@ -135,11 +135,11 @@ namespace DevZest.Data
 
             public ChildLocalModel Child { get; private set; }
 
-            protected override void OnInitializingChildDataSets()
+            protected override void OnBuilding()
             {
                 Column = DataSetContainer.CreateLocalColumn<int>(this);
                 Child.Initialize(this);
-                base.OnInitializingChildDataSets();
+                base.OnBuilding();
             }
         }
         

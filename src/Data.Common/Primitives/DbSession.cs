@@ -48,8 +48,7 @@ namespace DevZest.Data.Primitives
             {
                 Check.NotEmpty(name, nameof(name));
                 var model = new T();
-                if (initializer != null)
-                    initializer(model);
+                model.Initialize(initializer);
                 result = DbTable<T>.Create(model, this, name);
             }
             return result;
@@ -151,8 +150,7 @@ namespace DevZest.Data.Primitives
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = fromModel == null ? new T() : (fromModel.DataSource == null ? fromModel : Model.Clone(fromModel, false));
-            if (initializer != null)
-                initializer(model);
+            model.Initialize(initializer);
             var builder = new DbQueryBuilder(model);
             buildQuery(builder, model);
             return PerformCreateQuery(model, builder.BuildQueryStatement(null));
@@ -182,8 +180,7 @@ namespace DevZest.Data.Primitives
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = fromModel == null ? new T() : (fromModel.DataSource == null ? fromModel : Model.Clone(fromModel, false));
-            if (initializer != null)
-                initializer(model);
+            model.Initialize(initializer);
             var builder = new DbAggregateQueryBuilder(model);
             buildQuery(builder, model);
             return PerformCreateQuery(model, builder.BuildQueryStatement(null));
@@ -201,8 +198,7 @@ namespace DevZest.Data.Primitives
             where T : Model, new()
         {
             var model = fromModel == null ? new T() : Model.Clone(fromModel, false);
-            if (initializer != null)
-                initializer(model);
+            model.Initialize(initializer);
             model.AddTempTableIdentity();
             return CreateTempTableInstance(model);
         }

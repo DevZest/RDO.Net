@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
@@ -127,6 +128,16 @@ namespace DevZest.Data.Primitives
         {
             Check.NotNull(model, nameof(model));
             return model.Depth;
+        }
+
+
+        internal static void Initialize<T>(this T model, Action<T> initializer)
+            where T : Model, new()
+        {
+            Debug.Assert(model != null);
+            if (initializer != null)
+                initializer(model);
+            model.OnInitializing();
         }
     }
 }

@@ -174,8 +174,7 @@ namespace DevZest.Data
         public static DataSet<T> New(Action<T> initializer = null)
         {
             var model = new T();
-            if (initializer != null)
-                initializer(model);
+            model.Initialize(initializer);
             return Create(model);
         }
 
@@ -238,8 +237,7 @@ namespace DevZest.Data
         {
             var dbSession = dbSet.DbSession;
             var childModel = Model.Clone(dbSet._, false);
-            if (initializer != null)
-                initializer(childModel);
+            childModel.Initialize(initializer);
             var queryStatement = dbSet.QueryStatement.BuildQueryStatement(childModel, builder => builder.Where(parentRow, parentRelationship), null);
             return dbSession.PerformCreateQuery(childModel, queryStatement);
         }
@@ -308,6 +306,12 @@ namespace DevZest.Data
         public DataRow AddRow(Action<T, DataRow> updateAction = null)
         {
             return Insert(Count, updateAction);
+        }
+
+        public DataSet<T> EnsureInitialized()
+        {
+            _.EnsureInitialized();
+            return this;
         }
     }
 }

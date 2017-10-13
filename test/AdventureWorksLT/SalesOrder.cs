@@ -55,21 +55,22 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Edit : SalesOrder
         {
-            public Edit()
+            protected override void OnInitializing()
             {
                 SetExtension<SalesOrder.Ext>();
+                base.OnInitializing();
             }
 
-            protected override void OnChildModelsInitialized()
+            protected override void OnInitialized()
             {
                 SalesOrderDetails.SetExtension<SalesOrderDetail.Ext>();
-                base.OnChildModelsInitialized();
+                base.OnInitialized();
             }
 
-            protected override void OnInitializingChildDataSets()
+            protected override void OnBuilding()
             {
                 SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);
-                base.OnInitializingChildDataSets();
+                base.OnBuilding();
             }
         }
 

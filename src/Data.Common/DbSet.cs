@@ -172,16 +172,14 @@ namespace DevZest.Data
             if (childModel.DataSource != null)
                 throw new InvalidOperationException(Strings.DbSet_VerifyCreateChild_AlreadyCreated);
 
-            if (initializer != null)
-                initializer(childModel);
+            childModel.Initialize(initializer);
             return childModel;
         }
 
         public DataSet<T> ToDataSet(Action<T> initializer = null)
         {
             T model = Data.Model.Clone(this._, false);
-            if (initializer != null)
-                initializer(model);
+            model.Initialize(initializer);
             var result = DataSet<T>.Create(model);
             DbSession.RecursiveFillDataSet(this, result);
             return result;
