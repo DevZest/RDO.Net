@@ -47,5 +47,40 @@ namespace AdventureWorks.SalesOrders
                 await db.SalesOrders.DeleteAsync(dataSet, _ => _.PrimaryKey, ct);
             }
         }
+
+        public static async Task<DataSet<SalesOrder.Edit>> GetItemAsync(int salesOrderID, CancellationToken ct)
+        {
+            using (var db = await Db.OpenAsync(App.ConnectionString))
+            {
+                var salesOrders = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Edit _) =>
+                {
+                    var ext = _.GetExtension<SalesOrder.Ext>();
+                    Debug.Assert(ext != null);
+                    SalesOrder o;
+                    Customer c;
+                    Address shipTo, billTo;
+                    builder.From(db.SalesOrders, out o)
+                        .InnerJoin(db.Customers, o.Customer, out c)
+                        .InnerJoin(db.Addresses, o.ShipToAddress, out shipTo)
+                        .InnerJoin(db.Addresses, o.BillToAddress, out billTo)
+                        .AutoSelect()
+                        .AutoSelect(shipTo, ext.ShipToAddress)
+                        .AutoSelect(billTo, ext.BillToAddress)
+                        .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
+                });
+
+                salesOrders.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
+                {
+                    Debug.Assert(_.GetExtension<SalesOrderDetail.Ext>() != null);
+                    SalesOrderDetail d;
+                    Product p;
+                    builder.From(db.SalesOrderDetails, out d)
+                        .InnerJoin(db.Products, d.Product, out p)
+                        .AutoSelect();
+                });
+
+                return await salesOrders.ToDataSetAsync(ct);
+            }
+        }
     }
 }
