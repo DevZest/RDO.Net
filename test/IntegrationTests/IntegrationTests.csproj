@@ -49,6 +49,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AdventureWorksTestsBase.cs" />
+    <Compile Include="DataSetContainerTests.cs" />
     <Compile Include="DbSessionTests.cs" />
     <Compile Include="DbTableDeleteTests.cs" />
     <Compile Include="DbTableInsertTests.cs" />

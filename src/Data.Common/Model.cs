@@ -845,7 +845,6 @@ namespace DevZest.Data
         {
             Debug.Assert(EditingRow != null);
             Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
-            Debug.Assert(dataRow.ValueChangedSuspended);
 
             for (int i = 0; i < Columns.Count; i++)
                 Columns[i].EndEdit(dataRow);

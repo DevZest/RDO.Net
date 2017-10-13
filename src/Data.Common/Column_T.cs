@@ -176,10 +176,10 @@ namespace DevZest.Data
 
         private T InternalGetValue(DataRow dataRow, DataRow translatedDataRow)
         {
-            if (translatedDataRow == ParentModel.EditingRow)
-                return _editingValue;
-            else if (_valueManager == null)
+            if (_valueManager == null)
                 return Expression[dataRow];
+            else if (translatedDataRow == ParentModel.EditingRow)
+                return _editingValue;
             else
                 return _valueManager[translatedDataRow.Ordinal];
         }
