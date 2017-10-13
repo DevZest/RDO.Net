@@ -49,7 +49,7 @@ namespace DevZest.Data.Presenters
                 AttachView(dataView);
             }
 
-            dataSet._.EnsureInitialized();
+            //dataSet._.EnsureInitialized();
             DataSet = dataSet;
             using (var builder = new TemplateBuilder(template, DataSet.Model, inheritTemplate))
             {

@@ -16,10 +16,10 @@ namespace FileExplorer
 
         public Folder SubFolders { get; private set; }
 
-        protected override void OnInitializing()
+        protected override void OnInitializingChildDataSets()
         {
             Path = CreateLocalColumn<string>();
-            base.OnInitializing();
+            base.OnInitializingChildDataSets();
         }
 
         public static DataSet<Folder> GetLogicalDrives()
