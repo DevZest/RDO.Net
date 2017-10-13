@@ -171,6 +171,31 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
+        public static RowBinding<TextBox> AsTextBox(this _Decimal source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            string flushErrorId = null, string flushErrorDescription = null)
+        {
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            return new RowBinding<TextBox>(onRefresh: (v, p) =>
+            {
+                v.Text = p.GetValue(source).ToString();
+            }).BeginInput(flushTrigger)
+            .WithFlushValidator(v =>
+            {
+                if (string.IsNullOrEmpty(v.Text))
+                    return null;
+                Decimal result;
+                return Decimal.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
+            }, flushErrorId)
+            .WithFlush(source, v =>
+            {
+                if (string.IsNullOrEmpty(v.Text))
+                    return null;
+                else
+                    return Decimal.Parse(v.Text);
+            })
+            .EndInput();
+        }
+
         public static ScalarBinding<TextBox> AsTextBox(this Scalar<String> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged)
         {
             var trigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
