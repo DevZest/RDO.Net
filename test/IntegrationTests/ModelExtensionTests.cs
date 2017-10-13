@@ -97,10 +97,16 @@ namespace DevZest.Data
                 salesOrders.CreateChild(_ => _.SetExtension<SalesOrderDetail.Ext>(), _ => _.SalesOrderDetails, salesOrderDetails);
 
                 var json = salesOrders.ToDataSet().ToJsonString(true);
-                var expectedJson = string.Empty;
+                var expectedJson = Strings.ExpectedJSON_SalesOrder_71774_with_details_and_ext;
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtension<SalesOrder.Ext>(), json);
+                var dataSet = DataSet<SalesOrder>.ParseJson(_ =>
+                    {
+                        _.SetExtension<SalesOrder.Ext>();
+                        _.Initialized += (sender, e) => {
+                            ((SalesOrder)sender).SalesOrderDetails.SetExtension<SalesOrderDetail.Ext>();
+                        };
+                    }, json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }

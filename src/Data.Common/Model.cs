@@ -295,7 +295,7 @@ namespace DevZest.Data
         /// child models are not initialized by default. This design decision is to deal with the situation when recursive child models registered.
         /// <see cref="EnsureInitialized"/> will be called automatically when creating the first <see cref="DataRow"/>.
         /// </remarks>
-        public void EnsureInitialized()
+        internal void EnsureInitialized()
         {
             if (IsInitialized)
                 return;
@@ -309,7 +309,7 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
-                OnInitializing();
+                OnInitializingValueComputation();
                 DataSetContainer.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
@@ -319,9 +319,9 @@ namespace DevZest.Data
             OnInitialized();
         }
 
-        protected virtual void OnInitializing()
+        protected virtual void OnInitializingValueComputation()
         {
-            Initializing(this, EventArgs.Empty);
+            InitializingValueComputation(this, EventArgs.Empty);
         }
 
         protected virtual void OnInitialized()
@@ -874,7 +874,7 @@ namespace DevZest.Data
             return result;
         }
 
-        public event EventHandler<EventArgs> Initializing = delegate { };
+        public event EventHandler<EventArgs> InitializingValueComputation = delegate { };
         public event EventHandler<EventArgs> Initialized = delegate { };
         public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
         public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };
