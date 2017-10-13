@@ -15,10 +15,10 @@ namespace FileExplorer
 
         public Column<FolderContentType> Type { get; private set; }
 
-        protected sealed override void OnInitializingChildDataSets()
+        protected sealed override void OnBuilding()
         {
             CreateLocalColumns();
-            base.OnInitializingChildDataSets();
+            base.OnBuilding();
         }
 
         protected virtual void CreateLocalColumns()

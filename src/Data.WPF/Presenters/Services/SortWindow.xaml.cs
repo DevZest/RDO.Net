@@ -20,11 +20,11 @@ namespace DevZest.Data.Presenters.Services
             public Column<ColumnHeader> ColumnHeader { get; private set; }
             public Column<SortDirection> Direction { get; private set; }
 
-            protected override void OnInitializingChildDataSets()
+            protected override void OnBuilding()
             {
                 ColumnHeader = CreateLocalColumn<ColumnHeader>(builder => builder.DisplayName = UIText.SortModel_Column);
                 Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UIText.SortModel_Direction);
-                base.OnInitializingChildDataSets();
+                base.OnBuilding();
             }
 
             protected override IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
