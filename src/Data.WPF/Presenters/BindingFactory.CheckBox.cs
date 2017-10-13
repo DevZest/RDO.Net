@@ -69,5 +69,13 @@ namespace DevZest.Data.Presenters
                 onSetup: (v, p) => trigger.Attach(v),
                 onCleanup: (v, p) => trigger.Detach(v));
         }
+
+        public static RowBinding<CheckBox> AsCheckBox(this _Boolean column)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+            return new RowBinding<CheckBox>(onRefresh: (v, p) => v.IsChecked = p.GetValue(column))
+                .WithInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), column, v => v.IsChecked);
+        }
     }
 }
