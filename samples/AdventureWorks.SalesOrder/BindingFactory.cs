@@ -76,7 +76,7 @@ namespace AdventureWorks.SalesOrders
                 .AddChild(_.SubTotal.AsTextBlock("{0:C}"), v => v._subTotal)
                 //.AddChild(_.Freight.AsTextBox(), v => v._freight)
                 //.AddChild(_.TaxAmt.AsTextBox(), v => v._taxAmt)
-                .AddChild(_.TotalDue.AsTextBlock("{0:C"), v => v._totalDue);
+                .AddChild(_.TotalDue.AsTextBlock("{0:C}"), v => v._totalDue);
         }
     }
 }

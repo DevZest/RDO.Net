@@ -11,6 +11,9 @@
         <Style TargetType="Label">
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
+        <Style TargetType="{x:Type dz:ForeignKeyBox}">
+            <Setter Property="Margin" Value="0, 0, 5, 0" />
+        </Style>
         <Style TargetType="DatePicker">
             <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>

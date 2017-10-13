@@ -6,7 +6,7 @@ namespace AdventureWorks.SalesOrders
 {
     partial class SalesOrderForm
     {
-        private class Presenter : DataPresenter<SalesOrder>
+        private class Presenter : DataPresenter<SalesOrder.Edit>
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {

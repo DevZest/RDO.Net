@@ -12,41 +12,53 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ForeignKeyBox">
-                    <Border Name="Root" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                    <Grid>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="Root" Storyboard.TargetProperty="(Background).(GradientStops)[3].Color" To="#7FFFFFFF"/>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="Root" Storyboard.TargetProperty="(Background).(GradientStops)[2].Color" To="#CCFFFFFF"/>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="Root" Storyboard.TargetProperty="(Background).(GradientStops)[1].Color" To="#F2FFFFFF"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="(Fill).Color" To="#FF448DCA"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Fill).(GradientStops)[3].Color" To="#7FFFFFFF"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Fill).(GradientStops)[2].Color" To="#CCFFFFFF"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Fill).(GradientStops)[1].Color" To="#F2FFFFFF"/>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="Root" Storyboard.TargetProperty="(Background).(GradientStops)[0].Color" To="#D8FFFFFF"/>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="Root" Storyboard.TargetProperty="(Background).(GradientStops)[1].Color" To="#C6FFFFFF"/>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="Root" Storyboard.TargetProperty="(Background).(GradientStops)[2].Color" To="#8CFFFFFF"/>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="Root" Storyboard.TargetProperty="(Background).(GradientStops)[3].Color" To="#3FFFFFFF"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="(Fill).Color" To="#FF448DCA"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Fill).(GradientStops)[0].Color" To="#D8FFFFFF"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Fill).(GradientStops)[1].Color" To="#C6FFFFFF"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Fill).(GradientStops)[2].Color" To="#8CFFFFFF"/>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Fill).(GradientStops)[3].Color" To="#3FFFFFFF"/>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5" />
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                            <Rectangle Fill="Black" />
-                            <ContentPresenter Grid.Column="1" Content="{TemplateBinding Content}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                Margin="{TemplateBinding Padding}" />
-                        </Grid>
-                    </Border>
+                        <Rectangle x:Name="BackgroundRectangle" Stretch="Fill" Fill="#FF1F3B53" Grid.ColumnSpan="2" />
+
+                        <Rectangle x:Name="BackgroundGradient" Stretch="Fill" Grid.ColumnSpan="2">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint=".7,0" EndPoint=".7,1">
+                                    <GradientStop Color="#FCFFFFFF" Offset="0.015" />
+                                    <GradientStop Color="#F7FFFFFF" Offset="0.375" />
+                                    <GradientStop Color="#E5FFFFFF" Offset="0.6" />
+                                    <GradientStop Color="#D1FFFFFF" Offset="1" />
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Fill="Black" />
+                        <ContentPresenter Grid.Column="1" Content="{TemplateBinding Content}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Margin="{TemplateBinding Padding}" />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

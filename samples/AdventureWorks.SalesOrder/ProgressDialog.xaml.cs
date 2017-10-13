@@ -55,13 +55,7 @@ namespace AdventureWorks.SalesOrders
 
         public static ProgressDialogResult<T> Execute<T>(Func<CancellationToken, Task<T>> func, Window ownerWindow, string windowTitle = null, string label = null)
         {
-            var progressDialog = new ProgressDialog()
-            {
-                Owner = ownerWindow,
-                Title = windowTitle,
-                Label = label,
-            };
-
+            var progressDialog = CreateProgressDialog(ownerWindow, windowTitle, label);
             var value = progressDialog.ShowDialog(func);
             return new ProgressDialogResult<T>(value, progressDialog.Exception);
         }
@@ -126,17 +120,21 @@ namespace AdventureWorks.SalesOrders
             return asyncAction.Result;
         }
 
-        public static ProgressDialogResult Execute(Func<CancellationToken, Task> func, Window ownerWindow, string windowTitle, string label)
+        public static ProgressDialogResult Execute(Func<CancellationToken, Task> func, Window ownerWindow, string windowTitle=null, string label = null)
         {
-            var progressDialog = new ProgressDialog()
+            var progressDialog = CreateProgressDialog(ownerWindow, windowTitle, label);
+            progressDialog.ShowDialog(func);
+            return new ProgressDialogResult(progressDialog.Exception);
+        }
+
+        private static ProgressDialog CreateProgressDialog(Window ownerWindow, string windowTitle, string label)
+        {
+            return new ProgressDialog()
             {
                 Owner = ownerWindow,
                 Title = windowTitle ?? "Executing...",
                 Label = label ?? "Please wait...",
             };
-
-            progressDialog.ShowDialog(func);
-            return new ProgressDialogResult(progressDialog.Exception);
         }
 
         private void ShowDialog(Func<CancellationToken, Task> func)

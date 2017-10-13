@@ -7,14 +7,20 @@
         xmlns:dz="http://schemas.devzest.com/data/windows"
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
         Title="SalesOrderForm" Height="500" Width="600">
-    <DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <Border Background="White" Margin="5">
             <dz:DataView x:Name="_dataView" />
         </Border>
-        <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" DockPanel.Dock="Bottom">
+        <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
             <Button Content="OK" Margin="5" />
             <Button Content="Cancel" Margin="5" />
         </UniformGrid>
-    </DockPanel>
+    </Grid>
 </Window>
