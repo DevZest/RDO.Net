@@ -425,7 +425,6 @@
       "ProductID" : 836,
       "UnitPrice" : 356.8980,
       "UnitPriceDiscount" : 0,
-      "LineTotal" : 356.898000,
       "RowGuid" : "e3a1994c-7a68-4ce8-96a3-77fdd3bbd730",
       "ModifiedDate" : "2008-06-01T00:00:00.000",
       "Extension" : {
@@ -442,7 +441,6 @@
       "ProductID" : 822,
       "UnitPrice" : 356.8980,
       "UnitPriceDiscount" : 0,
-      "LineTotal" : 356.898000,
       "RowGuid" : "5c77f557-fdb6-43ba-90b9-9a7aec55ca32",
       "ModifiedDate" : "2008-06-01T00:00:00.000",
       "Extension" : {
@@ -470,7 +468,7 @@
    }
 ]</value>
   </data>
-  <data name="ExpectedJSON_SalesOrder_71774" xml:space="preserve">
+  <data name="ExpectedJSON_SalesOrderEdit_71774" xml:space="preserve">
     <value>[
    {
       "SalesOrderID" : 71774,
@@ -487,55 +485,6 @@
       "BillToAddressID" : 1092,
       "ShipMethod" : "CARGO TRANSPORT 5",
       "CreditCardApprovalCode" : null,
-      "SubTotal" : 880.3484,
-      "TaxAmt" : 70.4279,
-      "Freight" : 22.0087,
-      "Comment" : null,
-      "RowGuid" : "89e42cdc-8506-48a2-b89b-eb3e64e3554e",
-      "ModifiedDate" : "2008-06-08T00:00:00.000",
-      "SalesOrderDetails" : [
-         {
-            "SalesOrderDetailID" : 110562,
-            "OrderQty" : 1,
-            "ProductID" : 836,
-            "UnitPrice" : 356.8980,
-            "UnitPriceDiscount" : 0,
-            "LineTotal" : 356.898000,
-            "RowGuid" : "e3a1994c-7a68-4ce8-96a3-77fdd3bbd730",
-            "ModifiedDate" : "2008-06-01T00:00:00.000"
-         },
-         {
-            "SalesOrderDetailID" : 110563,
-            "OrderQty" : 1,
-            "ProductID" : 822,
-            "UnitPrice" : 356.8980,
-            "UnitPriceDiscount" : 0,
-            "LineTotal" : 356.898000,
-            "RowGuid" : "5c77f557-fdb6-43ba-90b9-9a7aec55ca32",
-            "ModifiedDate" : "2008-06-01T00:00:00.000"
-         }
-      ]
-   }
-]</value>
-  </data>
-  <data name="ExpectedJSON_SalesOrder_71774_with_details_and_ext" xml:space="preserve">
-    <value>[
-   {
-      "SalesOrderID" : 71774,
-      "RevisionNumber" : 2,
-      "OrderDate" : "2008-06-01T00:00:00.000",
-      "DueDate" : "2008-06-13T00:00:00.000",
-      "ShipDate" : "2008-06-08T00:00:00.000",
-      "Status" : 5,
-      "OnlineOrderFlag" : false,
-      "PurchaseOrderNumber" : "PO348186287",
-      "AccountNumber" : "10-4020-000609",
-      "CustomerID" : 29847,
-      "ShipToAddressID" : 1092,
-      "BillToAddressID" : 1092,
-      "ShipMethod" : "CARGO TRANSPORT 5",
-      "CreditCardApprovalCode" : null,
-      "SubTotal" : 880.3484,
       "TaxAmt" : 70.4279,
       "Freight" : 22.0087,
       "Comment" : null,
@@ -575,7 +524,6 @@
             "ProductID" : 836,
             "UnitPrice" : 356.8980,
             "UnitPriceDiscount" : 0,
-            "LineTotal" : 356.898000,
             "RowGuid" : "e3a1994c-7a68-4ce8-96a3-77fdd3bbd730",
             "ModifiedDate" : "2008-06-01T00:00:00.000",
             "Extension" : {
@@ -591,7 +539,6 @@
             "ProductID" : 822,
             "UnitPrice" : 356.8980,
             "UnitPriceDiscount" : 0,
-            "LineTotal" : 356.898000,
             "RowGuid" : "5c77f557-fdb6-43ba-90b9-9a7aec55ca32",
             "ModifiedDate" : "2008-06-01T00:00:00.000",
             "Extension" : {
@@ -600,6 +547,52 @@
                   "ProductNumber" : "FR-R72Y-38"
                }
             }
+         }
+      ]
+   }
+]</value>
+  </data>
+  <data name="ExpectedJSON_SalesOrder_71774" xml:space="preserve">
+    <value>[
+   {
+      "SalesOrderID" : 71774,
+      "RevisionNumber" : 2,
+      "OrderDate" : "2008-06-01T00:00:00.000",
+      "DueDate" : "2008-06-13T00:00:00.000",
+      "ShipDate" : "2008-06-08T00:00:00.000",
+      "Status" : 5,
+      "OnlineOrderFlag" : false,
+      "PurchaseOrderNumber" : "PO348186287",
+      "AccountNumber" : "10-4020-000609",
+      "CustomerID" : 29847,
+      "ShipToAddressID" : 1092,
+      "BillToAddressID" : 1092,
+      "ShipMethod" : "CARGO TRANSPORT 5",
+      "CreditCardApprovalCode" : null,
+      "SubTotal" : 880.3484,
+      "TaxAmt" : 70.4279,
+      "Freight" : 22.0087,
+      "Comment" : null,
+      "RowGuid" : "89e42cdc-8506-48a2-b89b-eb3e64e3554e",
+      "ModifiedDate" : "2008-06-08T00:00:00.000",
+      "SalesOrderDetails" : [
+         {
+            "SalesOrderDetailID" : 110562,
+            "OrderQty" : 1,
+            "ProductID" : 836,
+            "UnitPrice" : 356.8980,
+            "UnitPriceDiscount" : 0,
+            "RowGuid" : "e3a1994c-7a68-4ce8-96a3-77fdd3bbd730",
+            "ModifiedDate" : "2008-06-01T00:00:00.000"
+         },
+         {
+            "SalesOrderDetailID" : 110563,
+            "OrderQty" : 1,
+            "ProductID" : 822,
+            "UnitPrice" : 356.8980,
+            "UnitPriceDiscount" : 0,
+            "RowGuid" : "5c77f557-fdb6-43ba-90b9-9a7aec55ca32",
+            "ModifiedDate" : "2008-06-01T00:00:00.000"
          }
       ]
    }

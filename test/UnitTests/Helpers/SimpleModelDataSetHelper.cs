@@ -22,7 +22,7 @@ namespace DevZest.Data.Helpers
                 Validators.Add(Validator.Create(MESSAGE_ID, ValidationSeverity.Error, Id, Id % 2 == 0, "The Id must be even."));
             }
 
-            protected override void OnInitializingValueComputation()
+            protected override void OnInitializingChildDataSets()
             {
                 ChildCount.ComputedAs(Child.Id.CountRows(), false);
             }

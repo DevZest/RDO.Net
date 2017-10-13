@@ -70,6 +70,11 @@ namespace DevZest.Samples.AdventureWorksLT
             _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);
         }
 
+        public SalesOrderDetail()
+        {
+            LineTotal.ComputedAs((UnitPrice * (_Decimal.Const(1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.Const(0)));
+        }
+
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {

@@ -588,39 +588,6 @@ namespace DevZest.Data
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromBooleanCast.Converter), Id = "_Decimal.FromBoolean")]
-        private sealed class FromBooleanCast : CastExpression<bool?, Decimal?>
-        {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<bool?, decimal?> MakeExpression(Column<bool?> operand)
-                {
-                    return new FromBooleanCast(operand);
-                }
-            }
-
-            public FromBooleanCast(Column<bool?> x)
-                : base(x)
-            {
-            }
-
-            protected override Decimal? Cast(bool? value)
-            {
-                if (value.HasValue)
-                    return value.GetValueOrDefault() ? 1 : 0;
-                return null;
-            }
-        }
-
-        /// <summary>Converts the supplied <see cref="_Boolean" /> to <see cref="_Decimal" />.</summary>
-        /// <returns>A <see cref="_Decimal" /> expression which contains the result.</returns>
-        /// <param name="x">A <see cref="_Boolean" /> object. </param>
-        public static explicit operator _Decimal(_Boolean x)
-        {
-            Check.NotNull(x, nameof(x));
-            return new FromBooleanCast(x).MakeColumn<_Decimal>();
-        }
-
         [ExpressionConverterNonGenerics(typeof(FromByteCast.Converter), Id = "_Decimal.FromByte")]
         private sealed class FromByteCast : CastExpression<byte?, Decimal?>
         {
@@ -646,7 +613,7 @@ namespace DevZest.Data
         /// <summary>Converts the supplied <see cref="_Byte" /> to <see cref="_Decimal" />.</summary>
         /// <returns>A <see cref="_Decimal" /> expression which contains the result.</returns>
         /// <param name="x">A <see cref="_Byte" /> object. </param>
-        public static explicit operator _Decimal(_Byte x)
+        public static implicit operator _Decimal(_Byte x)
         {
             Check.NotNull(x, nameof(x));
             return new FromByteCast(x).MakeColumn<_Decimal>();
@@ -677,7 +644,7 @@ namespace DevZest.Data
         /// <summary>Converts the supplied <see cref="_Int16" /> to <see cref="_Decimal" />.</summary>
         /// <returns>A <see cref="_Decimal" /> expression which contains the result.</returns>
         /// <param name="x">A <see cref="_Int16" /> object. </param>
-        public static explicit operator _Decimal(_Int16 x)
+        public static implicit operator _Decimal(_Int16 x)
         {
             Check.NotNull(x, nameof(x));
             return new FromInt16Cast(x).MakeColumn<_Decimal>();
@@ -708,7 +675,7 @@ namespace DevZest.Data
         /// <summary>Converts the supplied <see cref="_Int64" /> to <see cref="_Decimal" />.</summary>
         /// <returns>A <see cref="_Int64" /> expression which contains the result.</returns>
         /// <param name="x">A <see cref="_Int64" /> object. </param>
-        public static explicit operator _Decimal(_Int64 x)
+        public static implicit operator _Decimal(_Int64 x)
         {
             Check.NotNull(x, nameof(x));
             return new FromInt64Cast(x).MakeColumn<_Decimal>();
@@ -739,7 +706,7 @@ namespace DevZest.Data
         /// <summary>Converts the supplied <see cref="_Int32" /> to <see cref="_Decimal" />.</summary>
         /// <returns>A <see cref="_Decimal" /> expression which contains the result.</returns>
         /// <param name="x">A <see cref="_Int32" /> object. </param>
-        public static explicit operator _Decimal(_Int32 x)
+        public static implicit operator _Decimal(_Int32 x)
         {
             Check.NotNull(x, nameof(x));
             return new FromInt32Cast(x).MakeColumn<_Decimal>();
@@ -770,7 +737,7 @@ namespace DevZest.Data
         /// <summary>Converts the supplied <see cref="_Double" /> to <see cref="_Decimal" />.</summary>
         /// <returns>A <see cref="_Decimal" /> expression which contains the result.</returns>
         /// <param name="x">A <see cref="_Double" /> object. </param>
-        public static explicit operator _Decimal(_Double x)
+        public static implicit operator _Decimal(_Double x)
         {
             Check.NotNull(x, nameof(x));
             return new FromDoubleCast(x).MakeColumn<_Decimal>();
@@ -801,7 +768,7 @@ namespace DevZest.Data
         /// <summary>Converts the supplied <see cref="_Single" /> to <see cref="_Decimal" />.</summary>
         /// <returns>A <see cref="_Decimal" /> expression which contains the result.</returns>
         /// <param name="x">A <see cref="_Single" /> object. </param>
-        public static explicit operator _Decimal(_Single x)
+        public static implicit operator _Decimal(_Single x)
         {
             Check.NotNull(x, nameof(x));
             return new FromSingleCast(x).MakeColumn<_Decimal>();

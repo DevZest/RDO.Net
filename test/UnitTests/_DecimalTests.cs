@@ -278,22 +278,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void _Decimal_FromBoolean()
-        {
-            TestFromBoolean(_Boolean.True, 1);
-            TestFromBoolean(_Boolean.False, 0);
-            TestFromBoolean(_Boolean.Null, null);
-        }
-
-        private void TestFromBoolean(_Boolean x, Decimal? expectedValue)
-        {
-            _Decimal expr = (_Decimal)x;
-            var dbExpr = (DbCastExpression)expr.DbExpression;
-            dbExpr.Verify(x, typeof(bool?), typeof(Decimal?));
-            expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
         public void _Decimal_FromByte()
         {
             TestFromByte(null, null);
@@ -436,17 +420,6 @@ namespace DevZest.Data
 
             var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_FromBoolean_Converter()
-        {
-            var column = (_Decimal)_Boolean.True;
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_FromBoolean, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)1, columnFromJson.Eval());
         }
 
         [TestMethod]

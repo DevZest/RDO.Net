@@ -177,9 +177,11 @@ namespace DevZest.Data
             return childModel;
         }
 
-        public DataSet<T> ToDataSet()
+        public DataSet<T> ToDataSet(Action<T> initializer = null)
         {
             T model = Data.Model.Clone(this._, false);
+            if (initializer != null)
+                initializer(model);
             var result = DataSet<T>.Create(model);
             DbSession.RecursiveFillDataSet(this, result);
             return result;

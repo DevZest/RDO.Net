@@ -53,6 +53,26 @@ namespace DevZest.Samples.AdventureWorksLT
             public Address.Lookup BillToAddress { get; private set; }
         }
 
+        public class Edit : SalesOrder
+        {
+            public Edit()
+            {
+                SetExtension<SalesOrder.Ext>();
+            }
+
+            protected override void OnChildModelsInitialized()
+            {
+                SalesOrderDetails.SetExtension<SalesOrderDetail.Ext>();
+                base.OnChildModelsInitialized();
+            }
+
+            protected override void OnInitializingChildDataSets()
+            {
+                SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);
+                base.OnInitializingChildDataSets();
+            }
+        }
+
         public static readonly Mounter<_Byte> _RevisionNumber;
         public static readonly Mounter<_DateTime> _OrderDate;
         public static readonly Mounter<_DateTime> _DueDate;
