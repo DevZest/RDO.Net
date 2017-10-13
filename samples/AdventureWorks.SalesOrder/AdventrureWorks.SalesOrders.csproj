@@ -98,10 +98,13 @@
     <Compile Include="SalesOrderFooterBox.xaml.cs">
       <DependentUpon>SalesOrderFooterBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SalesOrderForm.xaml.cs">
+      <DependentUpon>SalesOrderForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SalesOrderHeaderBox.xaml.cs">
       <DependentUpon>SalesOrderHeaderBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SalesOrderForm.cs" />
+    <Compile Include="SalesOrderForm.Presenter.cs" />
     <Compile Include="MainWindow.Presenter.cs" />
     <Compile Include="TotalAmtConditionalFormat.cs" />
     <Compile Include="TotalDueConditionalFormat.cs" />
@@ -120,6 +123,10 @@
     <Page Include="SalesOrderFooterBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SalesOrderForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SalesOrderHeaderBox.xaml">
       <SubType>Designer</SubType>
