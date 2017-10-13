@@ -179,7 +179,7 @@ namespace DevZest.Data
             if (_valueManager == null)
                 return Expression[dataRow];
             else if (translatedDataRow == ParentModel.EditingRow)
-                return _editingValue;
+                return Expression != null ? Expression[dataRow] : _editingValue;
             else
                 return _valueManager[translatedDataRow.Ordinal];
         }
