@@ -1186,14 +1186,15 @@ namespace DevZest.Data.SqlServer
             return new CharEnumMapper<T>(column);
         }
 
-        private sealed class ByteEnumMapper<T> : EnumMapperBase<T, byte>
+        private sealed class ByteEnumMapper<T> : EnumMapperBase<T?, byte>
+            where T : struct, IConvertible
         {
-            public ByteEnumMapper(ByteEnum<T> column)
+            public ByteEnumMapper(_ByteEnum<T> column)
             {
                 Column = column;
             }
 
-            public ByteEnum<T> Column { get; private set; }
+            public _ByteEnum<T> Column { get; private set; }
 
             public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
@@ -1205,12 +1206,12 @@ namespace DevZest.Data.SqlServer
                 return "TINYINT";
             }
 
-            protected override byte? GetDbValue(T value)
+            protected override byte? GetDbValue(T? value)
             {
-                return Column.ConvertToByte(value);
+                return Column.ConvertToDbValue(value);
             }
 
-            protected override Column<T> GetEnumColumn()
+            protected override Column<T?> GetEnumColumn()
             {
                 return Column;
             }
@@ -1226,7 +1227,8 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper ByteEnum<T>(ByteEnum<T> column)
+        public static ColumnMapper ByteEnum<T>(_ByteEnum<T> column)
+            where T : struct, IConvertible
         {
             return new ByteEnumMapper<T>(column);
         }

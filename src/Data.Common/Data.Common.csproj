@@ -52,6 +52,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="DataRowComparer.cs" />
+    <Compile Include="EnumItem.cs" />
     <Compile Include="Functions.Contains.cs" />
     <Compile Include="Functions.GetDate.cs" />
     <Compile Include="Functions.GetUtcDate.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="IDataRowComparer.cs" />
     <Compile Include="ModelExtension.cs" />
     <Compile Include="Primitives\AutoColumnSelector.cs" />
+    <Compile Include="Primitives\EnumColumn.cs" />
     <Compile Include="Primitives\IAutoColumnSelector.cs" />
     <Compile Include="Primitives\ModelExtensions.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
@@ -72,7 +74,6 @@
     <Compile Include="Mounter.cs" />
     <Compile Include="Adhoc.cs" />
     <Compile Include="Binary.cs" />
-    <Compile Include="ByteEnum.cs" />
     <Compile Include="Case.cs" />
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />
     <Compile Include="_Byte.cs" />
+    <Compile Include="_ByteEnum_T.cs" />
     <Compile Include="_Char.cs" />
     <Compile Include="_DataSet.cs" />
     <Compile Include="_DateTime.cs" />

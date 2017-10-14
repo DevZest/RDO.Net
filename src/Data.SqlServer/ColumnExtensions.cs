@@ -317,10 +317,11 @@ namespace DevZest.Data.SqlServer
 
             var columnType = column.GetType();
             var columnDataType = column.DataType;
-            if (columnType.IsDerivedFrom(typeof(ByteEnum<>)))
+            var enumType = columnDataType.GenericTypeArguments[0];
+            if (columnType.IsDerivedFrom(typeof(_ByteEnum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetByteEnumMapperProvider));
-                return s_defaultMapperProviders.GetOrAdd(columnDataType, BuildMapperProviderFactory(methodInfo, columnDataType));
+                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFrom(typeof(CharEnum<>)))
@@ -337,9 +338,10 @@ namespace DevZest.Data.SqlServer
             return new MapperProvider<T>(x => ColumnMapper.CharEnum<T>((CharEnum<T>)x));
         }
 
-        private static MapperProvider<T> GetByteEnumMapperProvider<T>()
+        private static MapperProvider<T?> GetByteEnumMapperProvider<T>()
+            where T : struct, IConvertible
         {
-            return new MapperProvider<T>(x => ColumnMapper.ByteEnum<T>((ByteEnum<T>)x));
+            return new MapperProvider<T?>(x => ColumnMapper.ByteEnum<T>((_ByteEnum<T>)x));
         }
 
         private static Func<Type, MapperProvider> BuildMapperProviderFactory(MethodInfo methodInfo, Type columnDataType)

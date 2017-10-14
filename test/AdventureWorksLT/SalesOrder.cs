@@ -78,7 +78,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public static readonly Mounter<_DateTime> _OrderDate;
         public static readonly Mounter<_DateTime> _DueDate;
         public static readonly Mounter<_DateTime> _ShipDate;
-        public static readonly Mounter<_SalesOrderStatus> _Status;
+        public static readonly Mounter<_ByteEnum<SalesOrderStatus>> _Status;
         public static readonly Mounter<_Boolean> _OnlineOrderFlag;
         public static readonly Mounter<_String> _SalesOrderNumber;
         public static readonly Mounter<_String> _PurchaseOrderNumber;
@@ -208,7 +208,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _DateTime ShipDate { get; private set; }
 
         [Required]
-        public _SalesOrderStatus Status { get; private set; }
+        public _ByteEnum<SalesOrderStatus> Status { get; private set; }
 
         [Required]
         public _Boolean OnlineOrderFlag { get; private set; }
