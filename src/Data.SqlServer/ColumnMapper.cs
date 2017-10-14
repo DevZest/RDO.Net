@@ -1141,16 +1141,17 @@ namespace DevZest.Data.SqlServer
             protected abstract string GetXmlValue(TValue value, SqlVersion sqlVersion);
         }
 
-        private sealed class CharEnumMapper<T> : EnumMapperBase<T, char>
+        private sealed class CharEnumMapper<T> : EnumMapperBase<T?, char>
+            where T : struct, IConvertible
         {
-            public CharEnumMapper(CharEnum<T> column)
+            public CharEnumMapper(_CharEnum<T> column)
             {
                 Column = column;
             }
 
-            public CharEnum<T> Column { get; private set; }
+            public _CharEnum<T> Column { get; private set; }
 
-            protected override Column<T> GetEnumColumn()
+            protected override Column<T?> GetEnumColumn()
             {
                 return Column;
             }
@@ -1165,9 +1166,9 @@ namespace DevZest.Data.SqlServer
                 return "CHAR(1)";
             }
 
-            protected override char? GetDbValue(T enumValue)
+            protected override char? GetDbValue(T? enumValue)
             {
-                return Column.ConvertToChar(enumValue);
+                return Column.ConvertToDbValue(enumValue);
             }
 
             protected override string GetXmlValue(char value, SqlVersion sqlVersion)
@@ -1181,7 +1182,8 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper CharEnum<T>(CharEnum<T> column)
+        public static ColumnMapper CharEnum<T>(_CharEnum<T> column)
+            where T : struct, IConvertible
         {
             return new CharEnumMapper<T>(column);
         }

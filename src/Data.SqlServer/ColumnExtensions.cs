@@ -324,18 +324,19 @@ namespace DevZest.Data.SqlServer
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
-            if (columnType.IsDerivedFrom(typeof(CharEnum<>)))
+            if (columnType.IsDerivedFrom(typeof(_CharEnum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetCharEnumMapperProvider));
-                return s_defaultMapperProviders.GetOrAdd(columnDataType, BuildMapperProviderFactory(methodInfo, columnDataType));
+                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
             throw new NotSupportedException(Strings.ColumnTypeNotSupported(column.GetType()));
         }
 
-        private static MapperProvider<T> GetCharEnumMapperProvider<T>()
+        private static MapperProvider<T?> GetCharEnumMapperProvider<T>()
+            where T : struct, IConvertible
         {
-            return new MapperProvider<T>(x => ColumnMapper.CharEnum<T>((CharEnum<T>)x));
+            return new MapperProvider<T?>(x => ColumnMapper.CharEnum<T>((_CharEnum<T>)x));
         }
 
         private static MapperProvider<T?> GetByteEnumMapperProvider<T>()

@@ -75,7 +75,6 @@
     <Compile Include="Adhoc.cs" />
     <Compile Include="Binary.cs" />
     <Compile Include="Case.cs" />
-    <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
     <Compile Include="DataRowEventArgs.cs" />
@@ -283,6 +282,7 @@
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />
     <Compile Include="_Byte.cs" />
+    <Compile Include="_CharEnum_T.cs" />
     <Compile Include="_ByteEnum_T.cs" />
     <Compile Include="_Char.cs" />
     <Compile Include="_DataSet.cs" />
