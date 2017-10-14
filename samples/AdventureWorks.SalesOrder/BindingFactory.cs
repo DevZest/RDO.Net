@@ -60,7 +60,7 @@ namespace AdventureWorks.SalesOrders
                 .AddChild(_.OrderDate.AsDatePicker(), v => v._orderDate)
                 .AddChild(_.ShipDate.AsDatePicker(), v => v._shipDate)
                 .AddChild(_.DueDate.AsDatePicker(), v => v._dueDate)
-                .AddChild(_.SalesOrderNumber.AsTextBox(), v => v._salesOrderNumber)
+                .AddChild(_.SalesOrderNumber.AsTextBlock(), v => v._salesOrderNumber)
                 .AddChild(_.PurchaseOrderNumber.AsTextBox(), v => v._purchaseOrderNumber)
                 .AddChild(_.AccountNumber.AsTextBox(), v => v._accountNumber)
                 .AddChild(_.ShipMethod.AsTextBox(), v => v._shipMethod)

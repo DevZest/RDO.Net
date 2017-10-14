@@ -55,7 +55,7 @@
             </UniformGrid.Resources>
             <StackPanel>
                 <Label Content="_Sales Order Number:" Target="{x:Reference Name=_salesOrderNumber}" />
-                <TextBox x:Name="_salesOrderNumber" />
+                <TextBlock x:Name="_salesOrderNumber" />
             </StackPanel>
             <StackPanel>
                 <Label Content="_Purchase Order Number:" Target="{x:Reference Name=_purchaseOrderNumber}" />
