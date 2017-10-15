@@ -10,11 +10,6 @@ namespace DevZest.Data
         {
         }
 
-        public override _String CastToString()
-        {
-            throw new NotImplementedException();
-        }
-
         protected override Column<T?> CreateParam(T? value)
         {
             return Param(value, this);

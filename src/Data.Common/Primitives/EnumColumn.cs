@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
@@ -12,14 +11,48 @@ namespace DevZest.Data.Primitives
             return !value.HasValue;
         }
 
-        protected IEnumerable<EnumItem<T>> EnumItems
+        Func<T, string> _descriptionGetter;
+        protected IEnumerable<EnumItem<T?>> EnumItems
         {
             get
             {
-                throw new NotImplementedException();
+                if (IsNullable)
+                    yield return new EnumItem<T?>();
+                var values = Enum.GetValues(typeof(T));
+                foreach (var obj in values)
+                {
+                    var value = (T)obj;
+                    yield return new EnumItem<T?>(value, _descriptionGetter == null ? value.ToString() : _descriptionGetter(value));
+                }
             }
         }
 
+        [ExpressionConverterGenerics(typeof(EnumColumn<>.CastToStringExpression.Converter), Id = "EnumColumn.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<T?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<T?, string> MakeExpression(Column<T?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<T?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(T? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString() : null;
+            }
+        }
+
+        public sealed override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
     }
 
     public abstract class EnumColumn<T, TDbValue> : EnumColumn<T>, IColumn<DbReader, T?>
