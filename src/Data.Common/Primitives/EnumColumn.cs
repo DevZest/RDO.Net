@@ -11,7 +11,7 @@ namespace DevZest.Data.Primitives
             return !value.HasValue;
         }
 
-        Func<T, string> _descriptionGetter;
+        public Func<T, string> DescriptionProvider { get; set; }
         protected IEnumerable<EnumItem<T?>> EnumItems
         {
             get
@@ -22,7 +22,7 @@ namespace DevZest.Data.Primitives
                 foreach (var obj in values)
                 {
                     var value = (T)obj;
-                    yield return new EnumItem<T?>(value, _descriptionGetter == null ? value.ToString() : _descriptionGetter(value));
+                    yield return new EnumItem<T?>(value, DescriptionProvider == null ? value.ToString() : DescriptionProvider(value));
                 }
             }
         }
