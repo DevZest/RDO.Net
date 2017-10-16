@@ -60,7 +60,6 @@ namespace DevZest.Data.Primitives
     {
         protected ColumnExpression()
         {
-            ExpressionConverter.EnsureInitialized(this);
         }
 
         public abstract T this[DataRow dataRow] { get; }

@@ -27,17 +27,8 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        [ExpressionConverterGenerics(typeof(EnumColumn<>.CastToStringExpression.Converter), Id = "EnumColumn.CastToString")]
         private sealed class CastToStringExpression : CastExpression<T?, String>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<T?, string> MakeExpression(Column<T?> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<T?> x)
                 : base(x)
             {

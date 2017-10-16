@@ -8,24 +8,10 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Byte"/> column.
     /// </summary>
-    [ColumnConverter(typeof(Converter))]
     public sealed class _Byte : Column<Byte?>, IColumn<DbReader, Byte?>
     {
-        private sealed class Converter : ConverterBase<_Byte>
-        {
-        }
-
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_Byte.CastToString")]
         private sealed class CastToStringExpression : CastExpression<Byte?, String>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<byte?, string> MakeExpression(Column<byte?> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<Byte?> x)
                 : base(x)
             {
@@ -124,17 +110,8 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(OnesComplementExpression.Converter), Id = "_Byte.OnesComplement")]
         private sealed class OnesComplementExpression : UnaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override UnaryExpression<byte?> MakeExpression(Column<byte?> operand)
-                {
-                    return new OnesComplementExpression(operand);
-                }
-            }
-
             public OnesComplementExpression(Column<byte?> x)
                 : base(x)
             {
@@ -160,17 +137,8 @@ namespace DevZest.Data
             return new OnesComplementExpression(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), Id = "_Byte.Add")]
         private sealed class AddExpression : BinaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new AddExpression(left, right);
-                }
-            }
-
             public AddExpression(Column<Byte?> x, Column<Byte?> y)
                 : base(x, y)
             {
@@ -198,17 +166,8 @@ namespace DevZest.Data
             return new AddExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(SubstractExpression.Converter), Id = "_Byte.Substract")]
         private sealed class SubstractExpression : BinaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new SubstractExpression(left, right);
-                }
-            }
-
             public SubstractExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -236,17 +195,8 @@ namespace DevZest.Data
             return new SubstractExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(MultiplyExpression.Converter), Id = "_Byte.Multiply")]
         private sealed class MultiplyExpression : BinaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new MultiplyExpression(left, right);
-                }
-            }
-
             public MultiplyExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -274,17 +224,8 @@ namespace DevZest.Data
             return new MultiplyExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(DivideExpression.Converter), Id = "_Byte.Divide")]
         private sealed class DivideExpression : BinaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new DivideExpression(left, right);
-                }
-            }
-
             public DivideExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -312,17 +253,8 @@ namespace DevZest.Data
             return new DivideExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(ModuloExpression.Converter), Id = "_Byte.Modulo")]
         private sealed class ModuloExpression : BinaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new ModuloExpression(left, right);
-                }
-            }
-
             public ModuloExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -350,17 +282,8 @@ namespace DevZest.Data
             return new ModuloExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(BitwiseAndExpression.Converter), Id = "_Byte.BitwiseAnd")]
         private sealed class BitwiseAndExpression : BinaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new BitwiseAndExpression(left, right);
-                }
-            }
-
             public BitwiseAndExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -388,17 +311,8 @@ namespace DevZest.Data
             return new BitwiseAndExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(BitwiseOrExpression.Converter), Id = "_Byte.BitwiseOr")]
         private sealed class BitwiseOrExpression : BinaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new BitwiseOrExpression(left, right);
-                }
-            }
-
             public BitwiseOrExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -426,17 +340,8 @@ namespace DevZest.Data
             return new BitwiseOrExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(BitwiseXorExpression.Converter), Id = "_Byte.BitwiseXor")]
         private sealed class BitwiseXorExpression : BinaryExpression<Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new BitwiseXorExpression(left, right);
-                }
-            }
-
             public BitwiseXorExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -464,17 +369,8 @@ namespace DevZest.Data
             return new BitwiseXorExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_Byte.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<Byte?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<Byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new LessThanExpression(left, right);
-                }
-            }
-
             public LessThanExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -504,17 +400,8 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_Byte.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<Byte?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new LessThanOrEqualExpression(left, right);
-                }
-            }
-
             public LessThanOrEqualExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -544,16 +431,8 @@ namespace DevZest.Data
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_Byte.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<Byte?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new GreaterThanExpression(left, right);
-                }
-            }
             public GreaterThanExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -583,17 +462,8 @@ namespace DevZest.Data
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_Byte.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<Byte?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new GreaterThanOrEqualExpression(left, right);
-                }
-            }
-
             public GreaterThanOrEqualExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
@@ -623,17 +493,8 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_Byte.Equal")]
         private sealed class EqualExpression : BinaryExpression<Byte?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new EqualExpression(left, right);
-                }
-            }
-
             public EqualExpression(Column<Byte?> x, Column<Byte?> y)
                 : base(x, y)
             {
@@ -662,17 +523,8 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_Byte.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<Byte?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
-                {
-                    return new NotEqualExpression(left, right);
-                }
-            }
-
             public NotEqualExpression(Column<Byte?> x, Column<Byte?> y)
                 : base(x, y)
             {
@@ -701,17 +553,8 @@ namespace DevZest.Data
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromBooleanCast.Converter), Id = "_Byte.FromBoolean")]
         private sealed class FromBooleanCast : CastExpression<bool?, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<bool?, byte?> MakeExpression(Column<bool?> operand)
-                {
-                    return new FromBooleanCast(operand);
-                }
-            }
-
             public FromBooleanCast(Column<bool?> x)
                 : base(x)
             {
@@ -734,17 +577,8 @@ namespace DevZest.Data
             return new FromBooleanCast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromInt16Cast.Converter), Id = "_Byte.FromInt16")]
         private sealed class FromInt16Cast : CastExpression<Int16?, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<short?, byte?> MakeExpression(Column<short?> operand)
-                {
-                    return new FromInt16Cast(operand);
-                }
-            }
-
             public FromInt16Cast(Column<Int16?> x)
                 : base(x)
             {
@@ -765,17 +599,8 @@ namespace DevZest.Data
             return new FromInt16Cast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromInt32Cast.Converter), Id = "_Byte.FromInt32")]
         private sealed class FromInt32Cast : CastExpression<Int32?, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<int?, byte?> MakeExpression(Column<int?> operand)
-                {
-                    return new FromInt32Cast(operand);
-                }
-            }
-
             public FromInt32Cast(Column<Int32?> x)
                 : base(x)
             {
@@ -796,17 +621,8 @@ namespace DevZest.Data
             return new FromInt32Cast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromInt64Cast.Converter), Id = "_Byte.FromInt64")]
         private sealed class FromInt64Cast : CastExpression<Int64?, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<long?, byte?> MakeExpression(Column<long?> operand)
-                {
-                    return new FromInt64Cast(operand);
-                }
-            }
-
             public FromInt64Cast(Column<Int64?> x)
                 : base(x)
             {
@@ -827,17 +643,8 @@ namespace DevZest.Data
             return new FromInt64Cast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromDecimalCast.Converter), Id = "_Byte.FromDecimal")]
         private sealed class FromDecimalCast : CastExpression<Decimal?, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<decimal?, byte?> MakeExpression(Column<decimal?> operand)
-                {
-                    return new FromDecimalCast(operand);
-                }
-            }
-
             public FromDecimalCast(Column<decimal?> x)
                 : base(x)
             {
@@ -858,17 +665,8 @@ namespace DevZest.Data
             return new FromDecimalCast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromDoubleCast.Converter), Id = "_Byte.FromDouble")]
         private sealed class FromDoubleCast : CastExpression<Double?, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<double?, byte?> MakeExpression(Column<double?> operand)
-                {
-                    return new FromDoubleCast(operand);
-                }
-            }
-
             public FromDoubleCast(Column<double?> x)
                 : base(x)
             {
@@ -889,17 +687,8 @@ namespace DevZest.Data
             return new FromDoubleCast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromSingleCast.Converter), Id = "_Byte.FromSingle")]
         private sealed class FromSingleCast : CastExpression<Single?, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<float?, byte?> MakeExpression(Column<float?> operand)
-                {
-                    return new FromSingleCast(operand);
-                }
-            }
-
             public FromSingleCast(Column<Single?> x)
                 : base(x)
             {
@@ -920,17 +709,8 @@ namespace DevZest.Data
             return new FromSingleCast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), Id = "_Byte.FromString")]
         private sealed class FromStringExpression : CastExpression<String, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<string, byte?> MakeExpression(Column<string> operand)
-                {
-                    return new FromStringExpression(operand);
-                }
-            }
-
             public FromStringExpression(Column<string> x)
                 : base(x)
             {

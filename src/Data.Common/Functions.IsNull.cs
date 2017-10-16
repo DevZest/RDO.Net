@@ -7,17 +7,8 @@ namespace DevZest.Data
     {
         #region IsNull
 
-        [ExpressionConverterNonGenerics(typeof(IsNullFunction.Converter), Id = "IsNull(Column)")]
         private sealed class IsNullFunction : ScalarFunctionExpression<bool?>
         {
-            private sealed class Converter : ConverterBase<Column, IsNullFunction>
-            {
-                protected override IsNullFunction MakeExpression(Column param)
-                {
-                    return new IsNullFunction(param);
-                }
-            }
-
             public IsNullFunction(Column column)
                 : base(column)
             {

@@ -7,10 +7,6 @@ namespace DevZest.Data
     public sealed class _ByteEnum<T> : EnumColumn<T, byte?>
         where T : struct, IConvertible
     {
-        private sealed class Converter : ConverterBase<_ByteEnum<T>>
-        {
-        }
-
         protected override Column<T?> CreateParam(T? value)
         {
             return Param(value, this);
@@ -72,17 +68,8 @@ namespace DevZest.Data
             return x.CastToString();
         }
 
-        [ExpressionConverterGenerics(typeof(_ByteEnum<>.ToByteCast.Converter), Id = "_ByteEnum.ToByte")]
         private sealed class ToByteCast : CastExpression<T?, Byte?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<T?, Byte?> MakeExpression(Column<T?> operand)
-                {
-                    return new ToByteCast(operand);
-                }
-            }
-
             public ToByteCast(Column<T?> x)
                 : base(x)
             {
@@ -103,17 +90,8 @@ namespace DevZest.Data
             return new ToByteCast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterGenerics(typeof(_ByteEnum<>.FromByteCast.Converter), Id = "_ByteEnum.FromByte")]
         private sealed class FromByteCast : CastExpression<Byte?, T?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<Byte?, T?> MakeExpression(Column<Byte?> operand)
-                {
-                    return new FromByteCast(operand);
-                }
-            }
-
             public FromByteCast(Column<Byte?> x)
                 : base(x)
             {
@@ -134,17 +112,8 @@ namespace DevZest.Data
             return new FromByteCast(x).MakeColumn<_ByteEnum<T>>();
         }
 
-        [ExpressionConverterGenerics(typeof(_ByteEnum<>.EqualExpression.Converter), Id = "_ByteEnum.Equal")]
         private sealed class EqualExpression : BinaryExpression<T?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<T?, bool?> MakeExpression(Column<T?> left, Column<T?> right)
-                {
-                    return new EqualExpression(left, right);
-                }
-            }
-
             public EqualExpression(Column<T?> x, Column<T?> y)
                 : base(x, y)
             {
@@ -178,17 +147,8 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterGenerics(typeof(_ByteEnum<>.NotEqualExpression.Converter), Id = "_ByteEnum.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<T?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<T?, bool?> MakeExpression(Column<T?> left, Column<T?> right)
-                {
-                    return new NotEqualExpression(left, right);
-                }
-            }
-
             public NotEqualExpression(Column<T?> x, Column<T?> y)
                 : base(x, y)
             {

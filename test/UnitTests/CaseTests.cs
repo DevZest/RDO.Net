@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class CaseTests : ColumnConverterTestsBase
+    public class CaseTests
     {
         private class SimpleModel : Model
         {
@@ -65,31 +64,6 @@ namespace DevZest.Data
 
             column1[dataRow] = null;
             Assert.AreEqual(null, expr[dataRow]);
-        }
-
-        [TestMethod]
-        public void Case_Converter()
-        {
-            var column = Case.When(_Boolean.Const(true)).Then(_Boolean.False)
-                .Else(_Boolean.True);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_CaseExpression, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(false, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void CaseOn_Converter()
-        {
-            var column = Case.On(_Boolean.True)
-                .When(_Boolean.True).Then(_Boolean.False)
-                .Else(_Boolean.True);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_CaseOnExpression, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(false, columnFromJson.Eval());
         }
     }
 }

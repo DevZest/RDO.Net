@@ -92,7 +92,6 @@
     <Compile Include="JsonIgnoreAttributeTests.cs" />
     <Compile Include="JsonOrderByTests.cs" />
     <Compile Include="PagedDataSetTests.cs" />
-    <Compile Include="ColumnConverterTestsBase.cs" />
     <Compile Include="ColumnSetTests.cs" />
     <Compile Include="SqlServer\_SqlXmlTests.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />

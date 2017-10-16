@@ -8,17 +8,8 @@ namespace DevZest.Data
     {
         #region IfNull
 
-        [ExpressionConverterGenerics(typeof(IfNullFunction<>.Converter), Id = "IfNull(Column, Column)")]
         private sealed class IfNullFunction<T> : ScalarFunctionExpression<T>
         {
-            private sealed class Converter : ConverterBase<Column<T>, Column<T>, IfNullFunction<T>>
-            {
-                protected override IfNullFunction<T> MakeExpression(Column<T> param1, Column<T> param2)
-                {
-                    return new IfNullFunction<T>(param1, param2);
-                }
-            }
-
             protected internal override Type[] ArgColumnTypes
             {
                 get { return new Type[] { Owner.GetType() }; }

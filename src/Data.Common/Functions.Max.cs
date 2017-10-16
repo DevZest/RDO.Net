@@ -9,18 +9,9 @@ namespace DevZest.Data
     {
         #region Max
 
-        [ExpressionConverterGenerics(typeof(ComparableMaxFunction<>.Converter), Id = "Max.Comparable(Column)")]
         private sealed class ComparableMaxFunction<T> : AggregateFunctionExpression<T>
             where T : IComparable<T>
         {
-            private sealed class Converter : ConverterBase<Column<T>, ComparableMaxFunction<T>>
-            {
-                protected override ComparableMaxFunction<T> MakeExpression(Column<T> param)
-                {
-                    return new ComparableMaxFunction<T>(param);
-                }
-            }
-
             public ComparableMaxFunction(Column<T> x)
                 : base(x)
             {
@@ -61,18 +52,9 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterGenerics(typeof(NullableMaxFunction<>.Converter), Id = "Max.Nullable(Column)")]
         private sealed class NullableMaxFunction<[UnderlyingValueType]T> : AggregateFunctionExpression<Nullable<T>>
             where T : struct, IComparable<T>
         {
-            private sealed class Converter : ConverterBase<Column<Nullable<T>>, NullableMaxFunction<T>>
-            {
-                protected override NullableMaxFunction<T> MakeExpression(Column<T?> param)
-                {
-                    return new NullableMaxFunction<T>(param);
-                }
-            }
-
             public NullableMaxFunction(Column<Nullable<T>> x)
                 : base(x)
             {

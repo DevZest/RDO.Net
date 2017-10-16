@@ -7,24 +7,10 @@ namespace DevZest.Data.SqlServer
     /// <summary>
     /// Represents a nullable <see cref="TimeSpan"/> column.
     /// </summary>
-    [ColumnConverter(typeof(Converter))]
     public sealed class _TimeSpan : Column<TimeSpan?>, IColumn<SqlReader, TimeSpan?>
     {
-        private sealed class Converter : ConverterBase<_TimeSpan>
-        {
-        }
-
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_TimeSpan.CastToString")]
         private sealed class CastToStringExpression : CastExpression<TimeSpan?, String>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<TimeSpan?, string> MakeExpression(Column<TimeSpan?> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<TimeSpan?> x)
                 : base(x)
             {
@@ -122,17 +108,8 @@ namespace DevZest.Data.SqlServer
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_TimeSpan.FromString")]
         private sealed class FromStringCast : CastExpression<String, TimeSpan?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<string, TimeSpan?> MakeExpression(Column<string> operand)
-                {
-                    return new FromStringCast(operand);
-                }
-            }
-
             public FromStringCast(Column<String> x)
                 : base(x)
             {
@@ -155,17 +132,8 @@ namespace DevZest.Data.SqlServer
             return new FromStringCast(x).MakeColumn<_TimeSpan>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_TimeSpan.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
-                {
-                    return new LessThanExpression(left, right);
-                }
-            }
-
             public LessThanExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
@@ -196,17 +164,8 @@ namespace DevZest.Data.SqlServer
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_TimeSpan.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
-                {
-                    return new LessThanOrEqualExpression(left, right);
-                }
-            }
-
             public LessThanOrEqualExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
@@ -237,17 +196,8 @@ namespace DevZest.Data.SqlServer
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_TimeSpan.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
-                {
-                    return new GreaterThanExpression(left, right);
-                }
-            }
-
             public GreaterThanExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
@@ -278,17 +228,8 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_TimeSpan.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
-                {
-                    return new GreaterThanOrEqualExpression(left, right);
-                }
-            }
-
             public GreaterThanOrEqualExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
@@ -319,17 +260,8 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_TimeSpan.Equal")]
         private sealed class EqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
-                {
-                    return new EqualExpression(left, right);
-                }
-            }
-
             public EqualExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
@@ -361,17 +293,8 @@ namespace DevZest.Data.SqlServer
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_TimeSpan.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
-                {
-                    return new NotEqualExpression(left, right);
-                }
-            }
-
             public NotEqualExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {

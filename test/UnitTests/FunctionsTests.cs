@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class FunctionsTests : ColumnConverterTestsBase
+    public class FunctionsTests
     {
         private class SimpleModel : Model
         {
@@ -40,17 +39,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Functions_IsNull_Converter()
-        {
-            var column = _Int32.Const(null).IsNull();
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Functions_IsNull, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
         public void Functions_IsNotNull()
         {
             var dataSet = DataSet<SimpleModel>.New();
@@ -66,17 +54,6 @@ namespace DevZest.Data
 
             column1[dataRow] = 1;
             Assert.AreEqual(true, isNotNullExpr[dataRow]);
-        }
-
-        [TestMethod]
-        public void Functions_IsNotNull_Converter()
-        {
-            var column = _Int32.Const(2).IsNotNull();
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Functions_IsNotNull, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
         }
 
         [TestMethod]
@@ -99,36 +76,12 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Functions_IfNull_Converter()
-        {
-            var column = _Int32.Const(null).IfNull(_Int32.Const(3));
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Functions_IfNull, json);
-
-            var columnFromJson = Column.ParseJson<_Int32>(null, json);
-            Assert.AreEqual(3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
         public void Functions_GetDate()
         {
             var getDateExpr = Functions.GetDate();
             ((DbFunctionExpression)getDateExpr.DbExpression).Verify(FunctionKeys.GetDate);
 
             var currentDate = getDateExpr.Eval();
-            var span = DateTime.Now - currentDate;
-            Assert.AreEqual(true, span.Value.Seconds < 1);
-        }
-
-        [TestMethod]
-        public void Functions_GetDate_Converter()
-        {
-            var column = Functions.GetDate();
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Functions_GetDate, json);
-
-            var columnFromJson = Column.ParseJson<_DateTime>(null, json);
-            var currentDate = columnFromJson.Eval();
             var span = DateTime.Now - currentDate;
             Assert.AreEqual(true, span.Value.Seconds < 1);
         }
@@ -145,37 +98,12 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Functions_GetUtcDate_Converter()
-        {
-            var column = Functions.GetUtcDate();
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Functions_GetUtcDate, json);
-
-            var columnFromJson = Column.ParseJson<_DateTime>(null, json);
-            var currentDate = columnFromJson.Eval();
-            var span = DateTime.UtcNow - currentDate;
-            Assert.AreEqual(true, span.Value.Seconds < 1);
-        }
-
-        [TestMethod]
         public void Functions_NewGuid()
         {
             var newGuidExpr = Functions.NewGuid();
             ((DbFunctionExpression)newGuidExpr.DbExpression).Verify(FunctionKeys.NewGuid);
 
             var newGuid = newGuidExpr.Eval();
-            Assert.IsTrue(newGuid.HasValue);
-        }
-
-        [TestMethod]
-        public void Functions_NewGuid_Converter()
-        {
-            var column = Functions.NewGuid();
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Functions_NewGuid, json);
-
-            var columnFromJson = Column.ParseJson<_Guid>(null, json);
-            var newGuid = columnFromJson.Eval();
             Assert.IsTrue(newGuid.HasValue);
         }
 
@@ -200,17 +128,6 @@ namespace DevZest.Data
 
             column[dataRow] = "cdefg";
             Assert.AreEqual(false, containsExpr[dataRow]);
-        }
-
-        [TestMethod]
-        public void Functions_Contains_Converter()
-        {
-            var column = _String.Const("abcdef").Contains(_String.Const("abc"));
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Functions_Contains, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
         }
     }
 }

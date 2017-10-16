@@ -5,17 +5,8 @@ namespace DevZest.Data
 {
     public static partial class Functions
     {
-        [ExpressionConverterNonGenerics(typeof(ContainsFunction.Converter), Id = "Contains(_String, _String)")]
         private sealed class ContainsFunction : ScalarFunctionExpression<bool?>
         {
-            private sealed class Converter : ConverterBase<_String, _String, ContainsFunction>
-            {
-                protected override ContainsFunction MakeExpression(_String param1, _String param2)
-                {
-                    return new ContainsFunction(param1, param2);
-                }
-            }
-
             public ContainsFunction(_String column, _String value)
                 : base(column, value)
             {

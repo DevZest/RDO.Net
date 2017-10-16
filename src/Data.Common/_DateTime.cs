@@ -8,24 +8,10 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="DateTime"/> column.
     /// </summary>
-    [ColumnConverter(typeof(Converter))]
     public sealed class _DateTime : Column<DateTime?>, IColumn<DbReader, DateTime?>
     {
-        private sealed class Converter : ConverterBase<_DateTime>
-        {
-        }
-
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_DateTime.CastToString")]
         private sealed class CastToStringExpression : CastExpression<DateTime?, String>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<DateTime?, string> MakeExpression(Column<DateTime?> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<DateTime?> x)
                 : base(x)
             {
@@ -115,17 +101,8 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_DateTime.FromString")]
         private sealed class FromStringCast : CastExpression<String, DateTime?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<string, DateTime?> MakeExpression(Column<string> operand)
-                {
-                    return new FromStringCast(operand);
-                }
-            }
-
             public FromStringCast(Column<string> x)
                 : base(x)
             {
@@ -148,17 +125,8 @@ namespace DevZest.Data
             return new FromStringCast(x).MakeColumn<_DateTime>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_DateTime.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<DateTime?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
-                {
-                    return new LessThanExpression(left, right);
-                }
-            }
-
             public LessThanExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
@@ -189,17 +157,8 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_DateTime.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<DateTime?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
-                {
-                    return new LessThanOrEqualExpression(left, right);
-                }
-            }
-
             public LessThanOrEqualExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
@@ -230,17 +189,8 @@ namespace DevZest.Data
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_DateTime.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<DateTime?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
-                {
-                    return new GreaterThanExpression(left, right);
-                }
-            }
-
             public GreaterThanExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
@@ -271,17 +221,8 @@ namespace DevZest.Data
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_DateTime.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<DateTime?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
-                {
-                    return new GreaterThanOrEqualExpression(left, right);
-                }
-            }
-
             public GreaterThanOrEqualExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
@@ -312,17 +253,8 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_DateTime.Equal")]
         private sealed class EqualExpression : BinaryExpression<DateTime?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
-                {
-                    return new EqualExpression(left, right);
-                }
-            }
-
             public EqualExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
@@ -354,17 +286,8 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_DateTime.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<DateTime?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
-                {
-                    return new NotEqualExpression(left, right);
-                }
-            }
-
             public NotEqualExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {

@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _SingleTests : ColumnConverterTestsBase
+    public class _SingleTests
     {
         [TestMethod]
         public void _Single_Param()
@@ -406,226 +405,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void _Single_Add_Converter()
-        {
-            var column = _Single.Const(1) + _Single.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_Add, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)2, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_Divide_Converter()
-        {
-            var column = _Single.Const(6) / _Single.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_Divide, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)2, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_Equal_Converter()
-        {
-            var column = _Single.Const(1) == _Single.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_Equal, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_FromBoolean_Converter()
-        {
-            var column = (_Single)_Boolean.True;
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_FromBoolean, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)1, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_FromByte_Converter()
-        {
-            var column = (_Single)_Byte.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_FromByte, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)1, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_FromDecimal_Converter()
-        {
-            var column = (_Single)_Decimal.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_FromDecimal, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)1, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_FromDouble_Converter()
-        {
-            var column = (_Single)_Double.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_FromDouble, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)1, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_FromInt16_Converter()
-        {
-            var column = (_Single)_Int16.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_FromInt16, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)1, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_FromInt32_Converter()
-        {
-            var column = (_Single)_Int32.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_FromInt32, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)1, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_FromInt64_Converter()
-        {
-            var column = (_Single)_Int64.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_FromInt64, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)1, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_FromString_Converter()
-        {
-            var column = (_Single)_String.Const("1");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_FromString, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)1, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_GreaterThan_Converter()
-        {
-            var column = _Single.Const(4) > _Single.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_GreaterThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_GreaterThanOrEqual_Converter()
-        {
-            var column = _Single.Const(3) >= _Single.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_GreaterThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_LessThan_Converter()
-        {
-            var column = _Single.Const(3) < _Single.Const(4);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_LessThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_LessThanOrEqual_Converter()
-        {
-            var column = _Single.Const(3) <= _Single.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_LessThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_Modulo_Converter()
-        {
-            var column = _Single.Const(5) % _Single.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_Modulo, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)2, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_Multiply_Converter()
-        {
-            var column = _Single.Const(5) * _Single.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_Multiply, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)15, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_Negate_Converter()
-        {
-            var column = -_Single.Const(5);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_Negate, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)(-5), columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_NotEqual_Converter()
-        {
-            var column = _Single.Const(2) != _Single.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_NotEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Single_Substract_Converter()
-        {
-            var column = _Single.Const(5) - _Single.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_Substract, json);
-
-            var columnFromJson = Column.ParseJson<_Single>(null, json);
-            Assert.AreEqual((Single)2, columnFromJson.Eval());
-        }
-
-        [TestMethod]
         public void _Single_CastToString()
         {
             TestCastToString(8, "8");
@@ -639,17 +418,6 @@ namespace DevZest.Data
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(Single?), typeof(String));
             expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
-        public void _Single_CastToString_Converter()
-        {
-            var column = (_String)_Single.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Single_CastToString, json);
-
-            var columnFromJson = Column.ParseJson<_String>(null, json);
-            Assert.AreEqual("1", columnFromJson.Eval());
         }
     }
 }

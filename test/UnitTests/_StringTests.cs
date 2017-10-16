@@ -8,7 +8,7 @@ using System.Globalization;
 namespace DevZest.Data
 {
     [TestClass]
-    public class _StringTests : ColumnConverterTestsBase
+    public class _StringTests
     {
         [TestMethod]
         public void _String_Param()
@@ -186,83 +186,6 @@ namespace DevZest.Data
             var dbExpr = (DbBinaryExpression)expr.DbExpression;
             dbExpr.Verify(BinaryExpressionKind.NotEqual, column1, column2);
             expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
-        public void _String_Add_Converter()
-        {
-            var column = _String.Const("a") + _String.Const("b");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_String_Add, json);
-
-            var columnFromJson = Column.ParseJson<_String>(null, json);
-            Assert.AreEqual("ab", columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _String_Equal_Converter()
-        {
-            var column = _String.Const("a") == _String.Const("a");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_String_Equal, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _String_GreaterThan_Converter()
-        {
-            var column = _String.Const("b") > _String.Const("a");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_String_GreaterThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _String_GreaterThanOrEqual_Converter()
-        {
-            var column = _String.Const("a") >= _String.Const("a");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_String_GreaterThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _String_LessThan_Converter()
-        {
-            var column = _String.Const("a") < _String.Const("b");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_String_LessThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _String_LessThanOrEqual_Converter()
-        {
-            var column = _String.Const("a") <= _String.Const("a");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_String_LessThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _String_NotEqual_Converter()
-        {
-            var column = _String.Const("a") != _String.Const("b");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_String_NotEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
         }
     }
 }

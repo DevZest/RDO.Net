@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _BooleanTests : ColumnConverterTestsBase
+    public class _BooleanTests
     {
         [TestMethod]
         public void _Boolean_Param()
@@ -126,77 +125,6 @@ namespace DevZest.Data
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(String), typeof(Boolean?));
             expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
-        public void _Boolean_And_Converter()
-        {
-            var column = _Boolean.Const(true) & _Boolean.Const(false);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Boolean_Add, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(false, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Boolean_FromString_Converter()
-        {
-            var column = (_Boolean)(_String.Const("true"));
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Boolean_FromString, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Boolean_Not_Converter()
-        {
-            var column = !_Boolean.Const(true);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Boolean_Not, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(false, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Boolean_Or_Converter()
-        {
-            var column = _Boolean.Const(true) | _Boolean.Const(false);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Boolean_Or, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Boolean_CastToString()
-        {
-            TestCastToString(_Boolean.True, "True");
-            TestCastToString(_Boolean.False, "False");
-            TestCastToString(_Boolean.Null, null);
-        }
-
-        private void TestCastToString(_Boolean x, String expectedValue)
-        {
-            _String expr = x.CastToString();
-            var dbExpr = (DbCastExpression)expr.DbExpression;
-            dbExpr.Verify(x, typeof(bool?), typeof(String));
-            expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
-        public void _Boolean_CastToString_Converter()
-        {
-            var column = _Boolean.True.CastToString();
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Boolean_CastToString, json);
-
-            var columnFromJson = Column.ParseJson<_String>(null, json);
-            Assert.AreEqual("True", columnFromJson.Eval());
         }
     }
 }

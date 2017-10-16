@@ -441,26 +441,8 @@ namespace DevZest.Data
             return defaultDef != null ? defaultDef.Value : default(T);
         }
 
-        [ExpressionConverterGenerics(typeof(Column<>.ComputationExpression.Converter), Id = "Column<>.Computation")]
         private sealed class ComputationExpression : ColumnExpression<T>
         {
-            /// <remarks>
-            /// Every ColumnExpression requires an ExpressionConverter to fail fast. However the ComputationExpression will never be serialized/deserialized,
-            /// because computed columns must be the member of Model, they will always be serialized to column name, so the converter will never be executed.
-            /// </remarks>
-            private sealed class Converter : ExpressionConverter
-            {
-                internal override ColumnExpression ParseJson(JsonParser parser, Model model)
-                {
-                    throw new NotSupportedException();
-                }
-
-                internal override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
-                {
-                    throw new NotSupportedException();
-                }
-            }
-
             internal ComputationExpression(Column<T> computation)
             {
                 Debug.Assert(computation != null);

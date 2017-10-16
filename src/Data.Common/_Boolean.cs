@@ -7,13 +7,8 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Boolean"/> column.
     /// </summary>
-    [ColumnConverter(typeof(Converter))]
     public sealed class _Boolean : Column<bool?>, IColumn<DbReader, Boolean?>
     {
-        private sealed class Converter : ConverterBase<_Boolean>
-        {
-        }
-
         /// <inheritdoc/>
         protected sealed override Column<bool?> CreateParam(bool? value)
         {
@@ -100,17 +95,8 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotExpression.Converter), Id = "_Boolean.Not")]
         private sealed class NotExpression : UnaryExpression<bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected sealed override UnaryExpression<bool?> MakeExpression(Column<bool?> operand)
-                {
-                    return new NotExpression(operand);
-                }
-            }
-
             public NotExpression(Column<bool?> operand)
                 : base(operand)
             {
@@ -136,17 +122,8 @@ namespace DevZest.Data
             return new NotExpression(x).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(AndExpression.Converter), Id = "_Boolean.And")]
         private sealed class AndExpression : BinaryExpression<bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<bool?, bool?> MakeExpression(Column<bool?> left, Column<bool?> right)
-                {
-                    return new AndExpression(left, right);
-                }
-            }
-
             public AndExpression(Column<bool?> left, Column<bool?> right)
                 : base(left, right)
             {
@@ -184,17 +161,8 @@ namespace DevZest.Data
             return new AndExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(OrExpression.Converter), Id = "_Boolean.Or")]
         private sealed class OrExpression : BinaryExpression<bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<bool?, bool?> MakeExpression(Column<bool?> left, Column<bool?> right)
-                {
-                    return new OrExpression(left, right);
-                }
-            }
-
             public OrExpression(Column<bool?> left, Column<bool?> right)
                 : base(left, right)
             {
@@ -232,17 +200,8 @@ namespace DevZest.Data
             return new OrExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), Id = "_Boolean.FromString")]
         private sealed class FromStringExpression : CastExpression<String, Boolean?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<string, bool?> MakeExpression(Column<string> operand)
-                {
-                    return new FromStringExpression(operand);
-                }
-            }
-
             public FromStringExpression(Column<string> x)
                 : base(x)
             {
@@ -265,17 +224,8 @@ namespace DevZest.Data
             return new FromStringExpression(x).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_Boolean.CastToString")]
         private sealed class CastToStringExpression : CastExpression<Boolean?, String>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<bool?, string> MakeExpression(Column<bool?> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<Boolean?> x)
                 : base(x)
             {

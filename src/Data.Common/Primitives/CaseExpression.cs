@@ -9,36 +9,8 @@ namespace DevZest.Data.Primitives
 {
     /// <summary>Represents a CASE WHEN..ELSE... expression.</summary>
     /// <typeparam name="TResult">The data type of the result.</typeparam>
-    [ExpressionConverterGenerics(typeof(CaseExpression<>.Converter), Id = "CaseExpression")]
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
-        private sealed class Converter : ExpressionConverter
-        {
-            private const string WHEN = "When";
-            private const string THEN = "Then";
-            private const string ELSE = "Else";
-
-            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
-            {
-                var caseExpression = (CaseExpression<TResult>)expression;
-                jsonWriter.WriteNameColumnsPair(WHEN, caseExpression._when).WriteComma()
-                    .WriteNameColumnsPair(THEN, caseExpression._then).WriteComma()
-                    .WriteNameColumnPair(ELSE, caseExpression._else);
-            }
-
-            internal override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
-            {
-                var when = jsonParser.ParseNameColumnsPair<_Boolean>(WHEN, model);
-                jsonParser.ExpectComma();
-                var then = jsonParser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
-                jsonParser.ExpectComma();
-                if (when.Count == 0 || when.Count != then.Count)
-                    throw new FormatException(Strings.Case_WhenThenNotMatch);
-                var elseExpr = (Column<TResult>)jsonParser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
-                return new CaseExpression<TResult>(when, then, elseExpr);
-            }
-        }
-
         internal CaseExpression()
         {
             _when = new List<_Boolean>();

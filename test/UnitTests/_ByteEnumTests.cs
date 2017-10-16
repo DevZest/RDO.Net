@@ -6,7 +6,7 @@ using System;
 namespace DevZest.Data
 {
     [TestClass]
-    public class _ByteEnumTests : ColumnConverterTestsBase
+    public class _ByteEnumTests
     {
         private enum WeekDay
         {
@@ -129,16 +129,5 @@ namespace DevZest.Data
             dbExpr.Verify(column1, typeof(WeekDay?), typeof(Byte?));
             expr.VerifyEval(expectedValue);
         }
-
-        //[TestMethod]
-        //public void _ByteEnum_Equal_Converter()
-        //{
-        //    var column = _ByteEnum<WeekDay>.Const(WeekDay.Mon) == _ByteEnum<WeekDay>.Const(WeekDay.Mon);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(string.Empty, json);
-
-        //    var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-        //    Assert.AreEqual(true, columnFromJson.Eval());
-        //}
     }
 }

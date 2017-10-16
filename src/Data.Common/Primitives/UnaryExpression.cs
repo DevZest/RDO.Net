@@ -1,6 +1,4 @@
 ﻿using DevZest.Data.Utilities;
-using System;
-using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -8,24 +6,6 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="T">Data type of the column.</typeparam>
     public abstract class UnaryExpression<T> : ColumnExpression<T>
     {
-        protected abstract class ConverterBase : ExpressionConverter
-        {
-            private const string OPERAND = nameof(Operand);
-
-            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
-            {
-                jsonWriter.WriteNameColumnPair(OPERAND, ((UnaryExpression<T>)expression).Operand);
-            }
-
-            internal sealed override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
-            {
-                var operand = jsonParser.ParseNameColumnPair<Column<T>>(OPERAND, model);
-                return MakeExpression(operand);
-            }
-
-            protected abstract UnaryExpression<T> MakeExpression(Column<T> operand);
-        }
-
         /// <summary>Initializes a new instance of <see cref="UnaryExpression{T}"/> object.</summary>
         /// <param name="operand">The operand.</param>
         protected UnaryExpression(Column<T> operand)

@@ -7,24 +7,10 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Guid"/> column.
     /// </summary>
-    [ColumnConverter(typeof(Converter))]
     public sealed class _Guid : Column<Guid?>, IColumn<DbReader, Guid?>
     {
-        private sealed class Converter : ConverterBase<_Guid>
-        {
-        }
-
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_Guid.CastToString")]
         private sealed class CastToStringExpression : CastExpression<Guid?, String>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<Guid?, string> MakeExpression(Column<Guid?> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<Guid?> x)
                 : base(x)
             {
@@ -123,17 +109,8 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_Guid.FromString")]
         private sealed class FromStringCast : CastExpression<String, Guid?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<string, Guid?> MakeExpression(Column<string> operand)
-                {
-                    return new FromStringCast(operand);
-                }
-            }
-
             public FromStringCast(Column<String> x)
                 : base(x)
             {
@@ -156,17 +133,8 @@ namespace DevZest.Data
             return new FromStringCast(x).MakeColumn<_Guid>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_Guid.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<Guid?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<Guid?, bool?> MakeExpression(Column<Guid?> left, Column<Guid?> right)
-                {
-                    return new LessThanExpression(left, right);
-                }
-            }
-
             public LessThanExpression(Column<Guid?> x, Column<Guid?> y)
                 : base(x, y)
             {
@@ -197,17 +165,8 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_Guid.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<Guid?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<Guid?, bool?> MakeExpression(Column<Guid?> left, Column<Guid?> right)
-                {
-                    return new LessThanOrEqualExpression(left, right);
-                }
-            }
-
             public LessThanOrEqualExpression(Column<Guid?> x, Column<Guid?> y)
                 : base(x, y)
             {
@@ -238,17 +197,8 @@ namespace DevZest.Data
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_Guid.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<Guid?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<Guid?, bool?> MakeExpression(Column<Guid?> left, Column<Guid?> right)
-                {
-                    return new GreaterThanExpression(left, right);
-                }
-            }
-
             public GreaterThanExpression(Column<Guid?> x, Column<Guid?> y)
                 : base(x, y)
             {
@@ -279,17 +229,8 @@ namespace DevZest.Data
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_Guid.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<Guid?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<Guid?, bool?> MakeExpression(Column<Guid?> left, Column<Guid?> right)
-                {
-                    return new GreaterThanOrEqualExpression(left, right);
-                }
-            }
-
             public GreaterThanOrEqualExpression(Column<Guid?> x, Column<Guid?> y)
                 : base(x, y)
             {
@@ -320,17 +261,8 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_Guid.Equal")]
         private sealed class EqualExpression : BinaryExpression<Guid?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<Guid?, bool?> MakeExpression(Column<Guid?> left, Column<Guid?> right)
-                {
-                    return new EqualExpression(left, right);
-                }
-            }
-
             public EqualExpression(Column<Guid?> x, Column<Guid?> y)
                 : base(x, y)
             {
@@ -362,17 +294,8 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_Guid.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<Guid?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<Guid?, bool?> MakeExpression(Column<Guid?> left, Column<Guid?> right)
-                {
-                    return new NotEqualExpression(left, right);
-                }
-            }
-
             public NotEqualExpression(Column<Guid?> x, Column<Guid?> y)
                 : base(x, y)
             {

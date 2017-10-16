@@ -119,19 +119,6 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class Converter : ExpressionConverter
-        {
-            internal override ColumnExpression ParseJson(JsonParser parser, Model model)
-            {
-                throw new NotSupportedException();
-            }
-
-            internal override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
         private abstract class LocalColumnExpressionBase<TDataType> : ColumnExpression<TDataType>
         {
             public sealed override DbExpression GetDbExpression()
@@ -150,7 +137,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<TDataType> : LocalColumnExpressionBase<TDataType>
         {
             private static TDataType GetDefaultValue(DataRow dataRow)
@@ -175,7 +161,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
         {
@@ -198,7 +183,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -226,7 +210,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -257,7 +240,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -291,7 +273,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -329,7 +310,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, T6, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -370,7 +350,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -415,7 +394,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -463,7 +441,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -515,7 +492,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -570,7 +546,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column
@@ -628,7 +603,6 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TDataType> : LocalColumnExpressionBase<TDataType>
             where T1 : Column
             where T2 : Column

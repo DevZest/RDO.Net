@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _DecimalTests : ColumnConverterTestsBase
+    public class _DecimalTests
     {
         [TestMethod]
         public void _Decimal_Param()
@@ -390,215 +389,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void _Decimal_Add_Converter()
-        {
-            var column = _Decimal.Const(1) + _Decimal.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_Add, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)2, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_Divide_Converter()
-        {
-            var column = _Decimal.Const(15) / _Decimal.Const(5);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_Divide, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_Equal_Converter()
-        {
-            var column = _Decimal.Const(5) == _Decimal.Const(5);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_Equal, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_FromByte_Converter()
-        {
-            var column = (_Decimal)_Byte.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_FromByte, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_FromDouble_Converter()
-        {
-            var column = (_Decimal)_Double.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_FromDouble, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_FromInt16_Converter()
-        {
-            var column = (_Decimal)_Int16.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_FromInt16, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_FromInt32_Converter()
-        {
-            var column = (_Decimal)_Int32.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_FromInt32, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_FromInt64_Converter()
-        {
-            var column = (_Decimal)_Int64.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_FromInt64, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_FromSingle_Converter()
-        {
-            var column = (_Decimal)_Single.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_FromSingle, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_FromString_Converter()
-        {
-            var column = (_Decimal)_String.Const("3");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_FromString, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_GreaterThan_Converter()
-        {
-            var column = _Decimal.Const(4) > _Decimal.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_GreaterThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_GreaterThanOrEqual_Converter()
-        {
-            var column = _Decimal.Const(3) >= _Decimal.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_GreaterThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_LessThan_Converter()
-        {
-            var column = _Decimal.Const(3) < _Decimal.Const(4);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_LessThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_LessThanOrEqual_Converter()
-        {
-            var column = _Decimal.Const(3) <= _Decimal.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_LessThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_Modulo_Converter()
-        {
-            var column = _Decimal.Const(5) % _Decimal.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_Modulo, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)2, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_Multiply_Converter()
-        {
-            var column = _Decimal.Const(5) * _Decimal.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_Multiply, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)15, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_Negate_Converter()
-        {
-            var column = -_Decimal.Const(5);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_Negate, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)(-5), columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_NotEqual_Converter()
-        {
-            var column = _Decimal.Const(2) != _Decimal.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_NotEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Decimal_Substract_Converter()
-        {
-            var column = _Decimal.Const(5) - _Decimal.Const(3);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_Substract, json);
-
-            var columnFromJson = Column.ParseJson<_Decimal>(null, json);
-            Assert.AreEqual((Decimal)2, columnFromJson.Eval());
-        }
-
-        [TestMethod]
         public void _Decimal_CastToString()
         {
             TestCastToString(8, "8");
@@ -612,17 +402,6 @@ namespace DevZest.Data
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(Decimal?), typeof(String));
             expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
-        public void _Decimal_CastToString_Converter()
-        {
-            var column = (_String)_Decimal.Const(1);
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Decimal_CastToString, json);
-
-            var columnFromJson = Column.ParseJson<_String>(null, json);
-            Assert.AreEqual("1", columnFromJson.Eval());
         }
     }
 }

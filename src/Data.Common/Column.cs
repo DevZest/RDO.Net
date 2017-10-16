@@ -16,7 +16,6 @@ namespace DevZest.Data
     {
         protected Column()
         {
-            ColumnConverter.EnsureInitialized(this);
         }
 
         /// <summary>
@@ -346,27 +345,6 @@ namespace DevZest.Data
         internal abstract void EndEdit(DataRow dataRow);
 
         internal abstract void CopyValue(DataRow sourceDataRow, Column targetColumn, DataRow targetDataRow);
-
-        internal string TypeId
-        {
-            get { return ColumnConverter.GetTypeId(this); }
-        }
-
-        public string ToJson(bool isPretty)
-        {
-            return JsonColumn.Write(JsonWriter.New(), this).ToString(isPretty);
-        }
-
-        public static T ParseJson<T>(Model model, string jsonString)
-            where T : Column
-        {
-            Check.NotEmpty(jsonString, nameof(jsonString));
-
-            var jsonParser = new JsonParser(jsonString);
-            var result = jsonParser.ParseColumn<T>(model);
-            jsonParser.ExpectToken(JsonTokenKind.Eof);
-            return result;
-        }
 
         public abstract _String CastToString();
 

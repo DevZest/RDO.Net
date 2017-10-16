@@ -7,17 +7,8 @@ namespace DevZest.Data
     {
         #region GetUtcDate
 
-        [ExpressionConverterNonGenerics(typeof(GetUtcDateFunction.Converter), Id = "GetUtcDate()")]
         private class GetUtcDateFunction : ScalarFunctionExpression<DateTime?>
         {
-            private sealed class Converter : ConverterBase<GetUtcDateFunction>
-            {
-                protected override GetUtcDateFunction MakeExpression()
-                {
-                    return new GetUtcDateFunction();
-                }
-            }
-
             public override DateTime? this[DataRow dataRow]
             {
                 get { return DateTime.UtcNow; }

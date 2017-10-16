@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _GuidTests : ColumnConverterTestsBase
+    public class _GuidTests
     {
         [TestMethod]
         public void _Guid_Param()
@@ -200,83 +199,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void _Guid_Equal_Converter()
-        {
-            var column = _Guid.Const(new Guid()) == _Guid.Const(new Guid());
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Guid_Equal, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Guid_FromString_Converter()
-        {
-            var column = (_Guid)_String.Const("00000000-0000-0000-0000-000000000000");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Guid_FromString, json);
-
-            var columnFromJson = Column.ParseJson<_Guid>(null, json);
-            Assert.AreEqual(new Guid(), columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Guid_GreaterThan_Converter()
-        {
-            var column = _Guid.Const(new Guid()) > _Guid.Const(new Guid());
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Guid_GreaterThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(false, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Guid_GreaterThanOrEqual_Converter()
-        {
-            var column = _Guid.Const(new Guid()) >= _Guid.Const(new Guid());
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Guid_GreaterThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Guid_LessThan_Converter()
-        {
-            var column = _Guid.Const(new Guid()) < _Guid.Const(new Guid());
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Guid_LessThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(false, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Guid_LessThanOrEqual_Converter()
-        {
-            var column = _Guid.Const(new Guid()) <= _Guid.Const(new Guid());
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Guid_LessThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Guid_NotEqual_Converter()
-        {
-            var column = _Guid.Const(new Guid()) != _Guid.Const(new Guid());
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Guid_NotEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(false, columnFromJson.Eval());
-        }
-
-        [TestMethod]
         public void _Guid_CastToString()
         {
             var guid = Guid.NewGuid();
@@ -291,17 +213,6 @@ namespace DevZest.Data
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(Guid?), typeof(String));
             expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
-        public void _Guid_CastToString_Converter()
-        {
-            var column = (_String)_Guid.Const(new Guid());
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Guid_CastToString, json);
-
-            var columnFromJson = Column.ParseJson<_String>(null, json);
-            Assert.AreEqual("00000000-0000-0000-0000-000000000000", columnFromJson.Eval());
         }
     }
 }

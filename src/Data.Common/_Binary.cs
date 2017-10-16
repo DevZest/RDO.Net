@@ -7,24 +7,10 @@ namespace DevZest.Data
     /// <summary>
     /// Represents column of variable-length stream of binary data.
     /// </summary>
-    [ColumnConverter(typeof(Converter))]
     public sealed class _Binary : Column<Binary>, IColumn<DbReader, Binary>
     {
-        private sealed class Converter : ConverterBase<_Binary>
-        {
-        }
-
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_Binary.CastToString")]
         private sealed class CastToStringExpression : CastExpression<Binary, String>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<Binary, string> MakeExpression(Column<Binary> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<Binary> x)
                 : base(x)
             {
@@ -50,17 +36,8 @@ namespace DevZest.Data
             return x.CastToString();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), Id = "_Binary.FromString")]
         private sealed class FromStringExpression : CastExpression<String, Binary>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<string, Binary> MakeExpression(Column<string> operand)
-                {
-                    return new FromStringExpression(operand);
-                }
-            }
-
             public FromStringExpression(Column<String> x)
                 : base(x)
             {

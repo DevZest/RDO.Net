@@ -219,10 +219,10 @@ namespace DevZest.Data
                 public ExpressionColumnComparer(Column<T> column, SortDirection direction, IComparer<T> comparer)
                     : base(column, direction, comparer)
                 {
-                    _json = column.ToJson(false);
+                    _columnName = column.Name;
                 }
 
-                private readonly string _json;
+                private readonly string _columnName;
                 private readonly ConditionalWeakTable<Model, Column<T>> _columnsByModel = new ConditionalWeakTable<Model, Column<T>>();
 
                 protected override Column<T> GetTypedColumn(Model model)
@@ -232,7 +232,7 @@ namespace DevZest.Data
 
                 private Column<T> CreateColumn(Model model)
                 {
-                    return Column.ParseJson<Column<T>>(model, _json);
+                    return (Column<T>)model.Columns[_columnName];
                 }
             }
         }

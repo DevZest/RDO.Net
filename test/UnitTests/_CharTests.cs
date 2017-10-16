@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _CharTests : ColumnConverterTestsBase
+    public class _CharTests
     {
         [TestMethod]
         public void _Char_Param()
@@ -187,83 +186,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void _Char_Equal_Converter()
-        {
-            var column = _Char.Const('a') == _Char.Const('a');
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Char_Equal, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Char_FromString_Converter()
-        {
-            var column = (_Char)_String.Const("a");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Char_FromString, json);
-
-            var columnFromJson = Column.ParseJson<_Char>(null, json);
-            Assert.AreEqual('a', columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Char_GreaterThan_Converter()
-        {
-            var column = _Char.Const('b') > _Char.Const('a');
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Char_GreaterThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Char_GreaterThanOrEqual_Converter()
-        {
-            var column = _Char.Const('b') >= _Char.Const('b');
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Char_GreaterThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Char_LessThan_Converter()
-        {
-            var column = _Char.Const('a') < _Char.Const('b');
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Char_LessThan, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Char_LessThanOrEqual_Converter()
-        {
-            var column = _Char.Const('b') <= _Char.Const('b');
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Char_LessThanOrEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
-        public void _Char_NotEqual_Converter()
-        {
-            var column = _Char.Const('a') != _Char.Const('b');
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Char_NotEqual, json);
-
-            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
-            Assert.AreEqual(true, columnFromJson.Eval());
-        }
-
-        [TestMethod]
         public void _Char_CastToString()
         {
             TestCastToString(null, null);
@@ -277,17 +199,6 @@ namespace DevZest.Data
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(Char?), typeof(String));
             expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
-        public void _Char_CastToString_Converter()
-        {
-            var column = _Char.Const('a').CastToString();
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_Char_CastToString, json);
-
-            var columnFromJson = Column.ParseJson<_String>(null, json);
-            Assert.AreEqual("a", columnFromJson.Eval());
         }
     }
 }

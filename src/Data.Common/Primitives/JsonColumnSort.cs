@@ -25,7 +25,7 @@ namespace DevZest.Data.Primitives
         public static JsonWriter Write(this JsonWriter jsonWriter, ColumnSort columnSort)
         {
             return jsonWriter.WriteStartObject()
-                .WriteNameColumnPair(COLUMN, columnSort.Column).WriteComma()
+                .WriteNameValuePair(COLUMN, JsonValue.FastString(columnSort.Column.Name)).WriteComma()
                 .WriteNameValuePair(DIRECTION, JsonValue.FastString(columnSort.Direction.ToString()))
                 .WriteEndObject();
         }
@@ -60,7 +60,8 @@ namespace DevZest.Data.Primitives
         {
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             jsonParser.ExpectObjectName(COLUMN);
-            var column = jsonParser.ParseColumn<Column>(model);
+            var columnName = jsonParser.ExpectToken(JsonTokenKind.String).Text;
+            var column = model.Columns[columnName];
             jsonParser.ExpectToken(JsonTokenKind.Comma);
             var direction = jsonParser.ParseDirection();
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);

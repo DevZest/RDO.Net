@@ -8,24 +8,10 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Decimal"/> column.
     /// </summary>
-    [ColumnConverter(typeof(Converter))]
     public sealed class _Decimal : Column<Decimal?>, IColumn<DbReader, Decimal?>
     {
-        private sealed class Converter : ConverterBase<_Decimal>
-        {
-        }
-
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_Decimal.CastToString")]
         private sealed class CastToStringExpression : CastExpression<Decimal?, String>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<decimal?, string> MakeExpression(Column<decimal?> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<Decimal?> x)
                 : base(x)
             {
@@ -124,17 +110,8 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(NegateExpression.Converter), Id = "_Decimal.Negate")]
         private sealed class NegateExpression : UnaryExpression<Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override UnaryExpression<decimal?> MakeExpression(Column<decimal?> operand)
-                {
-                    return new NegateExpression(operand);
-                }
-            }
-
             public NegateExpression(Column<Decimal?> x)
                 : base(x)
             {
@@ -160,17 +137,8 @@ namespace DevZest.Data
             return new NegateExpression(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), Id = "_Decimal.Add")]
         private sealed class AddExpression : BinaryExpression<Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, decimal?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new AddExpression(left, right);
-                }
-            }
-
             public AddExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -198,17 +166,8 @@ namespace DevZest.Data
             return new AddExpression(x, y).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(SubstractExpression.Converter), Id = "_Decimal.Substract")]
         private sealed class SubstractExpression : BinaryExpression<Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, decimal?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new SubstractExpression(left, right);
-                }
-            }
-
             public SubstractExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -236,17 +195,8 @@ namespace DevZest.Data
             return new SubstractExpression(x, y).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(MultiplyExpression.Converter), Id = "_Decimal.Multiply")]
         private sealed class MultiplyExpression : BinaryExpression<Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, decimal?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new MultiplyExpression(left, right);
-                }
-            }
-
             public MultiplyExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -274,17 +224,8 @@ namespace DevZest.Data
             return new MultiplyExpression(x, y).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(DivideExpression.Converter), Id = "_Decimal.Divide")]
         private sealed class DivideExpression : BinaryExpression<Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, decimal?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new DivideExpression(left, right);
-                }
-            }
-
             public DivideExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -312,17 +253,8 @@ namespace DevZest.Data
             return new DivideExpression(x, y).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(ModuloExpression.Converter), Id = "_Decimal.Modulo")]
         private sealed class ModuloExpression : BinaryExpression<Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, decimal?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new ModuloExpression(left, right);
-                }
-            }
-
             public ModuloExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -350,17 +282,8 @@ namespace DevZest.Data
             return new ModuloExpression(x, y).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_Decimal.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<Decimal?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, bool?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new LessThanExpression(left, right);
-                }
-            }
-
             public LessThanExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -390,17 +313,8 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_Decimal.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<Decimal?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, bool?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new LessThanOrEqualExpression(left, right);
-                }
-            }
-
             public LessThanOrEqualExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -430,17 +344,8 @@ namespace DevZest.Data
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_Decimal.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<Decimal?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, bool?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new GreaterThanExpression(left, right);
-                }
-            }
-
             public GreaterThanExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -470,17 +375,8 @@ namespace DevZest.Data
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_Decimal.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<Decimal?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, bool?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new GreaterThanOrEqualExpression(left, right);
-                }
-            }
-
             public GreaterThanOrEqualExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -510,17 +406,8 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_Decimal.Equal")]
         private sealed class EqualExpression : BinaryExpression<Decimal?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, bool?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new EqualExpression(left, right);
-                }
-            }
-
             public EqualExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -549,17 +436,8 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_Decimal.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<Decimal?, bool?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override BinaryExpression<decimal?, bool?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
-                {
-                    return new NotEqualExpression(left, right);
-                }
-            }
-
             public NotEqualExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
@@ -588,17 +466,8 @@ namespace DevZest.Data
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromByteCast.Converter), Id = "_Decimal.FromByte")]
         private sealed class FromByteCast : CastExpression<byte?, Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<byte?, decimal?> MakeExpression(Column<byte?> operand)
-                {
-                    return new FromByteCast(operand);
-                }
-            }
-
             public FromByteCast(Column<Byte?> x)
                 : base(x)
             {
@@ -619,17 +488,8 @@ namespace DevZest.Data
             return new FromByteCast(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromInt16Cast.Converter), Id = "_Decimal.FromInt16")]
         private sealed class FromInt16Cast : CastExpression<Int16?, Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<short?, decimal?> MakeExpression(Column<short?> operand)
-                {
-                    return new FromInt16Cast(operand);
-                }
-            }
-
             public FromInt16Cast(Column<Int16?> x)
                 : base(x)
             {
@@ -650,17 +510,8 @@ namespace DevZest.Data
             return new FromInt16Cast(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromInt64Cast.Converter), Id = "_Decimal.FromInt64")]
         private sealed class FromInt64Cast : CastExpression<Int64?, Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<long?, decimal?> MakeExpression(Column<long?> operand)
-                {
-                    return new FromInt64Cast(operand);
-                }
-            }
-
             public FromInt64Cast(Column<Int64?> x)
                 : base(x)
             {
@@ -681,17 +532,8 @@ namespace DevZest.Data
             return new FromInt64Cast(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromInt32Cast.Converter), Id = "_Decimal.FromInt32")]
         private sealed class FromInt32Cast : CastExpression<Int32?, Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<int?, decimal?> MakeExpression(Column<int?> operand)
-                {
-                    return new FromInt32Cast(operand);
-                }
-            }
-
             public FromInt32Cast(Column<Int32?> x)
                 : base(x)
             {
@@ -712,17 +554,8 @@ namespace DevZest.Data
             return new FromInt32Cast(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromDoubleCast.Converter), Id = "_Decimal.FromDouble")]
         private sealed class FromDoubleCast : CastExpression<Double?, Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<double?, decimal?> MakeExpression(Column<double?> operand)
-                {
-                    return new FromDoubleCast(operand);
-                }
-            }
-
             public FromDoubleCast(Column<Double?> x)
                 : base(x)
             {
@@ -743,17 +576,8 @@ namespace DevZest.Data
             return new FromDoubleCast(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromSingleCast.Converter), Id = "_Decimal.FromSingle")]
         private sealed class FromSingleCast : CastExpression<Single?, Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<float?, decimal?> MakeExpression(Column<float?> operand)
-                {
-                    return new FromSingleCast(operand);
-                }
-            }
-
             public FromSingleCast(Column<Single?> x)
                 : base(x)
             {
@@ -774,17 +598,8 @@ namespace DevZest.Data
             return new FromSingleCast(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_Decimal.FromString")]
         private sealed class FromStringCast : CastExpression<String, Decimal?>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<string, decimal?> MakeExpression(Column<string> operand)
-                {
-                    return new FromStringCast(operand);
-                }
-            }
-
             public FromStringCast(Column<string> x)
                 : base(x)
             {

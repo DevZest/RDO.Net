@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.SqlTypes;
 
 namespace DevZest.Data.SqlServer
 {
     [TestClass]
-    public class _SqlXmlTests : ColumnConverterTestsBase
+    public class _SqlXmlTests
     {
         [TestMethod]
         public void _SqlXml_Param()
@@ -67,17 +66,6 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void _SqlXml_FromString_Converter()
-        {
-            var column = (_SqlXml)_String.Const("<a></a>");
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_SqlXml_FromString, json);
-
-            var columnFromJson = Column.ParseJson<_SqlXml>(null, json);
-            Assert.AreEqual("<a></a>", columnFromJson.Eval().Value);
-        }
-
-        [TestMethod]
         public void _SqlXml_CastToString()
         {
             TestCastToString(_SqlXml.CreateSqlXml("<a></a>"), "<a></a>");
@@ -91,17 +79,6 @@ namespace DevZest.Data.SqlServer
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(SqlXml), typeof(string));
             expr.VerifyEval(expectedValue);
-        }
-
-        [TestMethod]
-        public void _SqlXml_CastToString_Converter()
-        {
-            var column = (_String)_SqlXml.Const(_SqlXml.CreateSqlXml("<a></a>"));
-            var json = column.ToJson(true);
-            Assert.AreEqual(Json.Converter_SqlXml_CastToString, json);
-
-            var columnFromJson = Column.ParseJson<_String>(null, json);
-            Assert.AreEqual("<a></a>", columnFromJson.Eval());
         }
     }
 }

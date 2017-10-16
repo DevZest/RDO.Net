@@ -25,25 +25,6 @@ namespace DevZest.Data.Primitives
         private const string LEFT = nameof(Left);
         private const string RIGHT = nameof(Right);
 
-        protected abstract class ConverterBase : ExpressionConverter
-        {
-            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
-            {
-                var binaryExpression = (BinaryExpression<T, TResult>)expression;
-                jsonWriter.WriteNameColumnPair(LEFT, binaryExpression.Left).WriteComma().WriteNameColumnPair(RIGHT, binaryExpression.Right);
-            }
-
-            internal sealed override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
-            {
-                var left = jsonParser.ParseNameColumnPair<Column<T>>(LEFT, model);
-                jsonParser.ExpectComma();
-                var right = jsonParser.ParseNameColumnPair<Column<T>>(RIGHT, model);
-                return MakeExpression(left, right);
-            }
-
-            protected abstract BinaryExpression<T, TResult> MakeExpression(Column<T> left, Column<T> right);
-        }
-
         /// <summary>Initializes a new instance of <see cref="BinaryExpression{T, TResult}"/> class.</summary>
         /// <param name="left">The left column operand.</param>
         /// <param name="right">The right column operand.</param>

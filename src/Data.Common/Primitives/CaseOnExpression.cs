@@ -9,40 +9,8 @@ namespace DevZest.Data.Primitives
     /// <summary>Represents a CASE ON...WHEN...THEN...ELSE... expression.</summary>
     /// <typeparam name="TOn">Data type of ON... and WHEN... expression.</typeparam>
     /// <typeparam name="TResult">Data type of result.</typeparam>
-    [ExpressionConverterGenerics(typeof(CaseOnExpression<,>.Converter), Id = "CaseOnExpression")]
     public sealed class CaseOnExpression<TOn, TResult> : ColumnExpression<TResult>
     {
-        private sealed class Converter : ExpressionConverter
-        {
-            private const string On = "On";
-            private const string WHEN = "When";
-            private const string THEN = "Then";
-            private const string ELSE = "Else";
-
-            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
-            {
-                var caseOnExpression = (CaseOnExpression<TOn, TResult>)expression;
-                jsonWriter.WriteNameColumnPair(On, caseOnExpression._on).WriteComma()
-                    .WriteNameColumnsPair(WHEN, caseOnExpression._when).WriteComma()
-                    .WriteNameColumnsPair(THEN, caseOnExpression._then).WriteComma()
-                    .WriteNameColumnPair(ELSE, caseOnExpression._else);
-            }
-
-            internal override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
-            {
-                var on = jsonParser.ParseNameColumnPair<Column<TOn>>(On, model);
-                jsonParser.ExpectComma();
-                var when = jsonParser.ParseNameColumnsPair<Column<TOn>>(WHEN, model);
-                jsonParser.ExpectComma();
-                var then = jsonParser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
-                jsonParser.ExpectComma();
-                if (when.Count == 0 || when.Count != then.Count)
-                    throw new FormatException(Strings.Case_WhenThenNotMatch);
-                var elseExpr = (Column<TResult>)jsonParser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
-                return new CaseOnExpression<TOn, TResult>(on, when, then, elseExpr);
-            }
-        }
-
         internal CaseOnExpression(Column<TOn> on)
         {
             _on = on;

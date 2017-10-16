@@ -6,10 +6,6 @@ namespace DevZest.Data
     public sealed class _CharEnum<T> : EnumColumn<T, char?>
         where T : struct, IConvertible
     {
-        private sealed class Converter : ConverterBase<_ByteEnum<T>>
-        {
-        }
-
         protected override Column<T?> CreateParam(T? value)
         {
             return Param(value, this);

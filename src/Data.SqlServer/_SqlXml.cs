@@ -7,24 +7,10 @@ using DevZest.Data.Utilities;
 
 namespace DevZest.Data.SqlServer
 {
-    [ColumnConverter(typeof(Converter))]
     public sealed class _SqlXml : Column<SqlXml>, IColumn<SqlReader>
     {
-        private sealed class Converter : ConverterBase<_SqlXml>
-        {
-        }
-
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_SqlXml.CastToString")]
         private sealed class CastToStringExpression : CastExpression<SqlXml, string>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<SqlXml, string> MakeExpression(Column<SqlXml> operand)
-                {
-                    return new CastToStringExpression(operand);
-                }
-            }
-
             public CastToStringExpression(Column<SqlXml> x)
                 : base(x)
             {
@@ -50,17 +36,8 @@ namespace DevZest.Data.SqlServer
             return x.CastToString();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_SqlXml.FromString")]
         private sealed class FromStringCast : CastExpression<String, SqlXml>
         {
-            private sealed class Converter : ConverterBase
-            {
-                protected override CastExpression<string, SqlXml> MakeExpression(Column<string> operand)
-                {
-                    return new FromStringCast(operand);
-                }
-            }
-
             public FromStringCast(Column<String> x)
                 : base(x)
             {

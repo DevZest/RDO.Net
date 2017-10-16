@@ -9,24 +9,6 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="TTarget">Data type of target column.</typeparam>
     public abstract class CastExpression<TSource, TTarget> : ColumnExpression<TTarget>
     {
-        protected abstract class ConverterBase : ExpressionConverter
-        {
-            private const string OPERAND = nameof(Operand);
-
-            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
-            {
-                jsonWriter.WriteNameColumnPair(OPERAND, ((CastExpression<TSource, TTarget>)expression).Operand);
-            }
-
-            internal sealed override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
-            {
-                var operand = jsonParser.ParseNameColumnPair<Column<TSource>>(OPERAND, model);
-                return MakeExpression(operand);
-            }
-
-            protected abstract CastExpression<TSource, TTarget> MakeExpression(Column<TSource> operand);
-        }
-
         /// <summary>Initialize a new instance of <see cref="CastExpression{TSource, TTarget}"/> object.</summary>
         /// <param name="operand">The operand to be casted.</param>
         protected CastExpression(Column<TSource> operand)

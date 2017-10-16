@@ -9,17 +9,8 @@ namespace DevZest.Data
     {
         #region Last
 
-        [ExpressionConverterGenerics(typeof(LastFunction<>.Converter), Id = "Last(Column)")]
         private sealed class LastFunction<T> : AggregateFunctionExpression<T>
         {
-            private sealed class Converter : ConverterBase<Column<T>, LastFunction<T>>
-            {
-                protected override LastFunction<T> MakeExpression(Column<T> param)
-                {
-                    return new LastFunction<T>(param);
-                }
-            }
-
             public LastFunction(Column<T> x)
                 : base(x)
             {
