@@ -115,11 +115,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        protected internal override Type[] ArgColumnTypes
-        {
-            get { return new Type[] { Owner.GetType() }; }
-        }
-
         protected internal override ColumnExpression PerformTranslateTo(Model model)
         {
             var when = _when.TranslateToColumns(model);

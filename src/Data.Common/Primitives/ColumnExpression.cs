@@ -97,11 +97,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        protected internal virtual Type[] ArgColumnTypes
-        {
-            get { return Array<Type>.Empty; }
-        }
-
         internal sealed override void SetOwner(Column column)
         {
             Owner = (Column<T>)column;

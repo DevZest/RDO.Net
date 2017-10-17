@@ -128,11 +128,6 @@ namespace DevZest.Data
             {
                 return x.EqualsTo(y);
             }
-
-            protected internal override Type[] ArgColumnTypes
-            {
-                get { return new Type[] { typeof(_ByteEnum<T>) }; }
-            }
         }
 
         /// <summary>Performs a logical comparison of the two <see cref="_ByteEnum{T}" /> parameters for equality.</summary>

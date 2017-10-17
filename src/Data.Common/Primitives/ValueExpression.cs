@@ -31,11 +31,6 @@ namespace DevZest.Data.Primitives
             return Models.Empty;
         }
 
-        protected internal sealed override Type[] ArgColumnTypes
-        {
-            get { return new Type[] { Owner.GetType(), Owner.GetType() }; }
-        }
-
         protected internal override ColumnExpression PerformTranslateTo(Model model)
         {
             return this;

@@ -37,11 +37,6 @@ namespace DevZest.Data.SqlServer
             {
             }
 
-            protected override Type[] ArgColumnTypes
-            {
-                get { return new Type[] { Owner.GetType() }; }
-            }
-
             protected override FunctionKey FunctionKey
             {
                 get { return FunctionKeys.XmlValue; }

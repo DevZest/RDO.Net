@@ -10,11 +10,6 @@ namespace DevZest.Data
 
         private sealed class IfNullFunction<T> : ScalarFunctionExpression<T>
         {
-            protected internal override Type[] ArgColumnTypes
-            {
-                get { return new Type[] { Owner.GetType() }; }
-            }
-
             public IfNullFunction(Column<T> column, Column<T> replaceColumn)
                 : base(column, replaceColumn)
             {

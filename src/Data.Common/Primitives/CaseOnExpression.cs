@@ -121,11 +121,6 @@ namespace DevZest.Data.Primitives
             return result.Seal();
         }
 
-        protected internal override Type[] ArgColumnTypes
-        {
-            get { return new Type[] { _on.GetType(), _else.GetType() }; }
-        }
-
         protected internal override ColumnExpression PerformTranslateTo(Model model)
         {
             var on = _on.TranslateTo(model);

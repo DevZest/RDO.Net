@@ -18,11 +18,6 @@ namespace DevZest.Data
                 _column = x;
             }
 
-            protected internal override Type[] ArgColumnTypes
-            {
-                get { return new Type[] { Owner.GetType() }; }
-            }
-
             private Column<T> _column;
 
             protected override FunctionKey FunctionKey
@@ -59,11 +54,6 @@ namespace DevZest.Data
                 : base(x)
             {
                 _column = x;
-            }
-
-            protected internal override Type[] ArgColumnTypes
-            {
-                get { return new Type[] { Owner.GetType() }; }
             }
 
             private Column<Nullable<T>> _column;
