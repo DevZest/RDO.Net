@@ -32,6 +32,7 @@ namespace DevZest.Data.SqlServer
             VerifyDefaultColumnMapper<_CharEnum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.Char, 1, "CHAR(1)");
             VerifyDefaultColumnMapper<_Int16Enum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.SmallInt, "SMALLINT");
             VerifyDefaultColumnMapper<_Int32Enum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.Int, "INT");
+            VerifyDefaultColumnMapper<_Int64Enum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.BigInt, "BIGINT");
         }
 
         private static void VerifyDefaultColumnMapper<T>(SqlVersion sqlVersion, SqlDbType sqlDbType, string sqlString)

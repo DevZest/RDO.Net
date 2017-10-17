@@ -1328,5 +1328,52 @@ namespace DevZest.Data.SqlServer
         {
             return new Int32EnumMapper<T>(column);
         }
+
+        private sealed class Int64EnumMapper<T> : EnumMapperBase<T?, Int64>
+            where T : struct, IConvertible
+        {
+            public Int64EnumMapper(_Int64Enum<T> column)
+            {
+                Column = column;
+            }
+
+            public _Int64Enum<T> Column { get; private set; }
+
+            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            {
+                return SqlParameterInfo.BigInt();
+            }
+
+            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            {
+                return "BIGINT";
+            }
+
+            protected override Int64? GetDbValue(T? value)
+            {
+                return Column.ConvertToDbValue(value);
+            }
+
+            protected override Column<T?> GetEnumColumn()
+            {
+                return Column;
+            }
+
+            protected override string GetTSqlLiteral(Int64 value, SqlVersion sqlVersion)
+            {
+                return GetXmlValue(value, sqlVersion);
+            }
+
+            protected override string GetXmlValue(Int64 value, SqlVersion sqlVersion)
+            {
+                return value.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+
+        public static ColumnMapper Int64Enum<T>(_Int64Enum<T> column)
+            where T : struct, IConvertible
+        {
+            return new Int64EnumMapper<T>(column);
+        }
     }
 }

@@ -124,6 +124,7 @@
     <Compile Include="SqlServer\DbExpressionSqlGeneratorTests.cs" />
     <Compile Include="_Int16EnumTests.cs" />
     <Compile Include="_Int32EnumTests.cs" />
+    <Compile Include="_Int64EnumTests.cs" />
     <Compile Include="_StringTests.cs" />
     <Compile Include="_SingleTests.cs" />
     <Compile Include="_Int64Tests.cs" />

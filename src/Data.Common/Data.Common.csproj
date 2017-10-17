@@ -287,6 +287,7 @@
     <Compile Include="_Int32.cs" />
     <Compile Include="_Int32Enum_T.cs" />
     <Compile Include="_Int64.cs" />
+    <Compile Include="_Int64Enum_T.cs" />
     <Compile Include="_Single.cs" />
     <Compile Include="_String.cs" />
   </ItemGroup>
