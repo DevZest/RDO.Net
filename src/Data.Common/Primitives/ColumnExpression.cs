@@ -50,6 +50,8 @@ namespace DevZest.Data.Primitives
         /// </summary>
         /// <returns>The <see cref="DbExpression"/> object.</returns>
         public abstract DbExpression GetDbExpression();
+
+        protected internal abstract ColumnExpression PerformTranslateTo(Model model);
     }
 
     /// <summary>

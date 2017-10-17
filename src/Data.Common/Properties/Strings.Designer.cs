@@ -732,14 +732,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The type is invalid. It must be a generic type definition with two generic parameters DataType and ColumnType.
-        /// </summary>
-        public static string GenericExpressionConverterAttribute_InvalidGenericExpressionType
-        {
-            get { return GetString("GenericExpressionConverterAttribute_InvalidGenericExpressionType"); }
-        }
-
-        /// <summary>
         /// There is no ColumnConverterAttribute defined for type "{columnType}".
         /// </summary>
         public static string ColumnConverter_NotDefined(object columnType)
@@ -753,14 +745,6 @@ namespace DevZest.Data
         public static string ColumnExpression_InvalidMakeColumnType(object assignableTo)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("ColumnExpression_InvalidMakeColumnType", "assignableTo"), assignableTo);
-        }
-
-        /// <summary>
-        /// There is no ExpressionConverterAttribute defined for type "{expressionType}".
-        /// </summary>
-        public static string ExpressionConverter_NotDefined(object expressionType)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ExpressionConverter_NotDefined", "expressionType"), expressionType);
         }
 
         /// <summary>
@@ -1025,6 +1009,14 @@ namespace DevZest.Data
         public static string DbQueryBuilder_InvalidAutoSelectSourceModel
         {
             get { return GetString("DbQueryBuilder_InvalidAutoSelectSourceModel"); }
+        }
+
+        /// <summary>
+        /// Model type mismatch.
+        /// </summary>
+        public static string Column_TranslateToModelTypeMismatch
+        {
+            get { return GetString("Column_TranslateToModelTypeMismatch"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

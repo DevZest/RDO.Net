@@ -159,6 +159,11 @@ namespace DevZest.Data
             {
                 return Columns.Empty;
             }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                return this;
+            }
         }
 
         private sealed class LocalColumnExpression<T1, TDataType> : LocalColumnExpressionBase<TDataType>
@@ -180,6 +185,15 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _column.BaseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column = _column.TranslateTo(model);
+                if (column != _column)
+                    return new LocalColumnExpression<T1, TDataType>(column, _expression);
+                else
+                    return this;
             }
         }
 
@@ -207,6 +221,16 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2)
+                    return new LocalColumnExpression<T1, T2, TDataType>(column1, column2, _expression);
+                else
+                    return this;
             }
         }
 
@@ -237,6 +261,17 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3)
+                    return new LocalColumnExpression<T1, T2, T3, TDataType>(column1, column2, column3, _expression);
+                else
+                    return this;
             }
         }
 
@@ -270,6 +305,18 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4)
+                    return new LocalColumnExpression<T1, T2, T3, T4, TDataType>(column1, column2, column3, column4, _expression);
+                else
+                    return this;
             }
         }
 
@@ -307,6 +354,19 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                var column5 = _column5.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4 || column5 != _column5)
+                    return new LocalColumnExpression<T1, T2, T3, T4, T5, TDataType>(column1, column2, column3, column4, column5, _expression);
+                else
+                    return this;
             }
         }
 
@@ -347,6 +407,20 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                var column5 = _column5.TranslateTo(model);
+                var column6 = _column6.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4 || column5 != _column5 || column6 != _column6)
+                    return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, TDataType>(column1, column2, column3, column4, column5, column6, _expression);
+                else
+                    return this;
             }
         }
 
@@ -391,6 +465,23 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                var column5 = _column5.TranslateTo(model);
+                var column6 = _column6.TranslateTo(model);
+                var column7 = _column7.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4 || column5 != _column5
+                    || column6 != _column6 || column7 != _column7)
+                    return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, TDataType>
+                        (column1, column2, column3, column4, column5, column6, column7, _expression);
+                else
+                    return this;
             }
         }
 
@@ -438,6 +529,24 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                var column5 = _column5.TranslateTo(model);
+                var column6 = _column6.TranslateTo(model);
+                var column7 = _column7.TranslateTo(model);
+                var column8 = _column8.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4 || column5 != _column5
+                    || column6 != _column6 || column7 != _column7 || column8 != _column8)
+                    return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, TDataType>
+                        (column1, column2, column3, column4, column5, column6, column7, column8, _expression);
+                else
+                    return this;
             }
         }
 
@@ -489,6 +598,25 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                var column5 = _column5.TranslateTo(model);
+                var column6 = _column6.TranslateTo(model);
+                var column7 = _column7.TranslateTo(model);
+                var column8 = _column8.TranslateTo(model);
+                var column9 = _column9.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4 || column5 != _column5
+                    || column6 != _column6 || column7 != _column7 || column8 != _column8 || column9 != _column9)
+                    return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, TDataType>
+                        (column1, column2, column3, column4, column5, column6, column7, column8, column9, _expression);
+                else
+                    return this;
             }
         }
 
@@ -543,6 +671,26 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                var column5 = _column5.TranslateTo(model);
+                var column6 = _column6.TranslateTo(model);
+                var column7 = _column7.TranslateTo(model);
+                var column8 = _column8.TranslateTo(model);
+                var column9 = _column9.TranslateTo(model);
+                var column10 = _column10.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4 || column5 != _column5
+                    || column6 != _column6 || column7 != _column7 || column8 != _column8 || column9 != _column9 || column10 != _column10)
+                    return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TDataType>
+                        (column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, _expression);
+                else
+                    return this;
             }
         }
 
@@ -601,6 +749,28 @@ namespace DevZest.Data
             {
                 return _baseColumns;
             }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                var column5 = _column5.TranslateTo(model);
+                var column6 = _column6.TranslateTo(model);
+                var column7 = _column7.TranslateTo(model);
+                var column8 = _column8.TranslateTo(model);
+                var column9 = _column9.TranslateTo(model);
+                var column10 = _column10.TranslateTo(model);
+                var column11 = _column11.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4 || column5 != _column5
+                    || column6 != _column6 || column7 != _column7 || column8 != _column8 || column9 != _column9 || column10 != _column10 || column11 != _column11)
+                    return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TDataType>
+                        (column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, _expression);
+                else
+                    return this;
+            }
+
         }
 
         private sealed class LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TDataType> : LocalColumnExpressionBase<TDataType>
@@ -660,6 +830,28 @@ namespace DevZest.Data
             protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var column1 = _column1.TranslateTo(model);
+                var column2 = _column2.TranslateTo(model);
+                var column3 = _column3.TranslateTo(model);
+                var column4 = _column4.TranslateTo(model);
+                var column5 = _column5.TranslateTo(model);
+                var column6 = _column6.TranslateTo(model);
+                var column7 = _column7.TranslateTo(model);
+                var column8 = _column8.TranslateTo(model);
+                var column9 = _column9.TranslateTo(model);
+                var column10 = _column10.TranslateTo(model);
+                var column11 = _column11.TranslateTo(model);
+                var column12 = _column12.TranslateTo(model);
+                if (column1 != _column1 || column2 != _column2 || column3 != _column3 || column4 != _column4 || column5 != _column5 || column6 != _column6
+                    || column7 != _column7 || column8 != _column8 || column9 != _column9 || column10 != _column10 || column11 != _column11 || column12 != _column12)
+                    return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TDataType>
+                        (column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12, _expression);
+                else
+                    return this;
             }
         }
 

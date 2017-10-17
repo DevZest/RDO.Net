@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using System;
+using DevZest.Data.Utilities;
 
 namespace DevZest.Data.Primitives
 {
@@ -53,5 +54,14 @@ namespace DevZest.Data.Primitives
         /// <param name="x">The given value.</param>
         /// <returns>The result.</returns>
         protected abstract T EvalCore(T x);
+
+        protected internal sealed override ColumnExpression PerformTranslateTo(Model model)
+        {
+            var operand = Operand.TranslateTo(model);
+            if (operand == Operand)
+                return this;
+            else
+                return (ColumnExpression)Activator.CreateInstance(GetType(), operand);
+        }
     }
 }

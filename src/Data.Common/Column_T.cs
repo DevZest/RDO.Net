@@ -474,6 +474,15 @@ namespace DevZest.Data
             {
                 return _computation.BaseColumns;
             }
+
+            protected internal override ColumnExpression PerformTranslateTo(Model model)
+            {
+                var computation = _computation.TranslateTo(model);
+                if (computation != _computation)
+                    return new ComputationExpression(computation);
+                else
+                    return this;
+            }
         }
 
         /// <summary>Defines the computation expression for this column.</summary>
@@ -638,6 +647,32 @@ namespace DevZest.Data
         public sealed override bool HasValueComparer
         {
             get { return ValueComparer != null; }
+        }
+
+        internal sealed override Column PerformTranslateTo(Model model)
+        {
+            Debug.Assert(model != null);
+
+            if (ParentModel != null)
+            {
+                if (model == ParentModel)
+                    return this;
+
+                if (model.GetType() != ParentModel.GetType())
+                    throw new ArgumentException(Strings.Column_TranslateToModelTypeMismatch, nameof(model));
+
+                if (IsLocal)
+                    return model.LocalColumns[Ordinal];
+                else
+                    return model.Columns[Ordinal];
+            }
+
+            var translatedExpression = Expression.PerformTranslateTo(model);
+            if (Expression == translatedExpression)
+                return this;
+            var result = (Column<T>)Activator.CreateInstance(GetType());
+            translatedExpression.SetOwner(result);
+            return result;
         }
     }
 }

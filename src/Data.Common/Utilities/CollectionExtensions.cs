@@ -1,6 +1,5 @@
-﻿using DevZest.Data.Primitives;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Utilities
 {
@@ -36,6 +35,60 @@ namespace DevZest.Data.Utilities
                     return true;
             }
             return false;
+        }
+
+        internal static List<T> TranslateToColumns<T>(this List<T> columns, Model model)
+            where T : Column
+        {
+            if (columns == null)
+                return null;
+
+            List<T> result = null;
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                var translated = column.TranslateTo(model);
+                if (result != null)
+                    result.Add(translated);
+                else if (translated != column)
+                {
+                    if (result == null)
+                    {
+                        result = new List<T>();
+                        for (int j = 0; j < i; j++)
+                            result.Add(columns[j]);
+                    }
+                    result.Add(translated);
+                }
+            }
+            return result ?? columns;
+        }
+
+        internal static ReadOnlyCollection<T> TranslateToColumns<T>(this ReadOnlyCollection<T> columns, Model model)
+            where T : Column
+        {
+            if (columns == null)
+                return null;
+
+            T[] result = null;
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                var translated = column.TranslateTo(model);
+                if (result != null)
+                    result[i] = translated;
+                else if (translated != column)
+                {
+                    if (result == null)
+                    {
+                        result = new T[columns.Count];
+                        for (int j = 0; j < i; j++)
+                            result[j] = columns[j];
+                    }
+                    result[i] = translated;
+                }
+            }
+            return result == null ? columns : new ReadOnlyCollection<T>(result);
         }
     }
 }

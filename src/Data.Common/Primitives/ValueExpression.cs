@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
-using System.Text;
+﻿using System;
 
 namespace DevZest.Data.Primitives
 {
@@ -36,6 +34,11 @@ namespace DevZest.Data.Primitives
         protected internal sealed override Type[] ArgColumnTypes
         {
             get { return new Type[] { Owner.GetType(), Owner.GetType() }; }
+        }
+
+        protected internal override ColumnExpression PerformTranslateTo(Model model)
+        {
+            return this;
         }
     }
 }

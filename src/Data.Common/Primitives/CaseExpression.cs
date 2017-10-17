@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -119,6 +118,17 @@ namespace DevZest.Data.Primitives
         protected internal override Type[] ArgColumnTypes
         {
             get { return new Type[] { Owner.GetType() }; }
+        }
+
+        protected internal override ColumnExpression PerformTranslateTo(Model model)
+        {
+            var when = _when.TranslateToColumns(model);
+            var then = _then.TranslateToColumns(model);
+            var elseExpr = _else.TranslateTo(model);
+            if (when != _when || _then != then || elseExpr != _else)
+                return new CaseExpression<TResult>(when, then, elseExpr);
+            else
+                return this;
         }
     }
 }

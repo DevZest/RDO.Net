@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -131,6 +132,15 @@ namespace DevZest.Data
         {
             column.ValueComparer = value;
             return column;
+        }
+
+        public static T TranslateTo<T>(this T column, Model model)
+            where T : Column
+        {
+            if (column == null)
+                return null;
+            Check.NotNull(model, nameof(model));
+            return (T)column.PerformTranslateTo(model);
         }
     }
 }

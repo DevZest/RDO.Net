@@ -479,5 +479,7 @@ namespace DevZest.Data
                 return _relativeName;
             }
         }
+
+        internal abstract Column PerformTranslateTo(Model model);
     }
 }

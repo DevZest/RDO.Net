@@ -85,5 +85,15 @@ namespace DevZest.Data.Primitives
         {
             return Left.BaseColumns.Union(Right.BaseColumns).Seal();
         }
+
+        protected internal sealed override ColumnExpression PerformTranslateTo(Model model)
+        {
+            var left = Left.TranslateTo(model);
+            var right = Right.TranslateTo(model);
+            if (left == Left && right == Right)
+                return this;
+            else
+                return (ColumnExpression)Activator.CreateInstance(GetType(), left, right);
+        }
     }
 }

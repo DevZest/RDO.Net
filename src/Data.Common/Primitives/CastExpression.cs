@@ -53,5 +53,14 @@ namespace DevZest.Data.Primitives
         {
             return new DbCastExpression(Operand.DbExpression, typeof(TSource), this.Owner);
         }
+
+        protected internal sealed override ColumnExpression PerformTranslateTo(Model model)
+        {
+            var operand = Operand.TranslateTo(model);
+            if (operand == Operand)
+                return this;
+            else
+                return (ColumnExpression)Activator.CreateInstance(GetType(), operand);
+        }
     }
 }

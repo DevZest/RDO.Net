@@ -219,20 +219,20 @@ namespace DevZest.Data
                 public ExpressionColumnComparer(Column<T> column, SortDirection direction, IComparer<T> comparer)
                     : base(column, direction, comparer)
                 {
-                    _columnName = column.Name;
+                    _column = column;
                 }
 
-                private readonly string _columnName;
+                private readonly Column<T> _column;
                 private readonly ConditionalWeakTable<Model, Column<T>> _columnsByModel = new ConditionalWeakTable<Model, Column<T>>();
 
                 protected override Column<T> GetTypedColumn(Model model)
                 {
-                    return _columnsByModel.GetValue(model, CreateColumn);
+                    return _columnsByModel.GetValue(model, TranslateColumn);
                 }
 
-                private Column<T> CreateColumn(Model model)
+                private Column<T> TranslateColumn(Model model)
                 {
-                    return (Column<T>)model.Columns[_columnName];
+                    return _column.TranslateTo(model);
                 }
             }
         }

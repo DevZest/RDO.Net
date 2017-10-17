@@ -125,5 +125,17 @@ namespace DevZest.Data.Primitives
         {
             get { return new Type[] { _on.GetType(), _else.GetType() }; }
         }
+
+        protected internal override ColumnExpression PerformTranslateTo(Model model)
+        {
+            var on = _on.TranslateTo(model);
+            var when = _when.TranslateToColumns(model);
+            var then = _then.TranslateToColumns(model);
+            var elseExpr = _else.TranslateTo(model);
+            if (on != _on || when != _when || then != _then || elseExpr != _else)
+                return new CaseOnExpression<TOn, TResult>(on, when, then, elseExpr);
+            else
+                return this;
+        }
     }
 }

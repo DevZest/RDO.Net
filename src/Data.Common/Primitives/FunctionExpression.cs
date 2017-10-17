@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using DevZest.Data.Utilities;
+using System;
+using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Primitives
 {
@@ -46,6 +48,15 @@ namespace DevZest.Data.Primitives
             }
 
             return new DbFunctionExpression(FunctionKey, paramList);
+        }
+
+        protected sealed internal override ColumnExpression PerformTranslateTo(Model model)
+        {
+            var parameters = Parameters.TranslateToColumns(model);
+            if (parameters == Parameters)
+                return this;
+            else
+                return (ColumnExpression)Activator.CreateInstance(GetType(), parameters);
         }
     }
 }
