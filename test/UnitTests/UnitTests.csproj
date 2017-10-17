@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="BinaryTests.cs" />
     <Compile Include="CaseTests.cs" />
+    <Compile Include="ColumnTranslateToTests.cs" />
     <Compile Include="DataRowTests.cs" />
     <Compile Include="DataSetContainerTests.cs" />
     <Compile Include="DbTableDeleteTests.cs" />

@@ -3,6 +3,7 @@ using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DevZest.Data
 {
@@ -282,14 +283,30 @@ namespace DevZest.Data
         {
             get
             {
-                var dataRow = GetDataRow(ParentModel, parentDataRow, index);
+                var model = GetModel();
+                if (model == null)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                var dataRow = GetDataRow(model, parentDataRow, index);
                 return InternalGetValue(dataRow, dataRow);
             }
             set
             {
+                var model = GetModel();
+                if (model == null)
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 var dataRow = GetDataRow(ParentModel, parentDataRow, index);
                 InternalSetValue(dataRow, value);
             }
+        }
+
+        private Model GetModel()
+        {
+            if (ParentModel != null)
+                return ParentModel;
+            else if (ScalarSourceModels != null && ScalarSourceModels.Count == 1)
+                return ScalarSourceModels.Single();
+            else
+                return null;
         }
 
         private static DataRow GetDataRow(Model model, DataRow parentDataRow, int index)

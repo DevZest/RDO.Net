@@ -64,16 +64,16 @@ namespace DevZest.Data.Utilities
             return result ?? columns;
         }
 
-        internal static ReadOnlyCollection<T> TranslateToColumns<T>(this ReadOnlyCollection<T> columns, Model model)
+        internal static T[] TranslateToParams<T>(this ReadOnlyCollection<T> parameters, Model model)
             where T : Column
         {
-            if (columns == null)
+            if (parameters == null)
                 return null;
 
             T[] result = null;
-            for (int i = 0; i < columns.Count; i++)
+            for (int i = 0; i < parameters.Count; i++)
             {
-                var column = columns[i];
+                var column = parameters[i];
                 var translated = column.TranslateTo(model);
                 if (result != null)
                     result[i] = translated;
@@ -81,14 +81,14 @@ namespace DevZest.Data.Utilities
                 {
                     if (result == null)
                     {
-                        result = new T[columns.Count];
+                        result = new T[parameters.Count];
                         for (int j = 0; j < i; j++)
-                            result[j] = columns[j];
+                            result[j] = parameters[j];
                     }
                     result[i] = translated;
                 }
             }
-            return result == null ? columns : new ReadOnlyCollection<T>(result);
+            return result;
         }
     }
 }

@@ -52,8 +52,8 @@ namespace DevZest.Data.Primitives
 
         protected sealed internal override ColumnExpression PerformTranslateTo(Model model)
         {
-            var parameters = Parameters.TranslateToColumns(model);
-            if (parameters == Parameters)
+            var parameters = Parameters.TranslateToParams(model);
+            if (parameters == null)
                 return this;
             else
                 return (ColumnExpression)Activator.CreateInstance(GetType(), parameters);
