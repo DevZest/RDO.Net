@@ -34,6 +34,11 @@ namespace DevZest.Data
 
         public override byte? ConvertToDbValue(T? value)
         {
+            return PerformConvert(value);
+        }
+
+        private static byte? PerformConvert(T? value)
+        {
             if (!value.HasValue)
                 return null;
             return value.Value.ToByte(null);
@@ -41,10 +46,15 @@ namespace DevZest.Data
 
         public override T? ConvertToEnum(byte? dbValue)
         {
-            if (!dbValue.HasValue)
+            return PerformConvert(dbValue);
+        }
+
+        private static T? PerformConvert(byte? value)
+        {
+            if (!value.HasValue)
                 return null;
             else
-                return (T)Enum.ToObject(typeof(T), dbValue.GetValueOrDefault());
+                return (T)Enum.ToObject(typeof(T), value.GetValueOrDefault());
         }
 
         protected override JsonValue SerializeDbValue(byte? value)
@@ -110,6 +120,64 @@ namespace DevZest.Data
         {
             Check.NotNull(x, nameof(x));
             return new FromByteCast(x).MakeColumn<_ByteEnum<T>>();
+        }
+
+        private sealed class BitwiseAndExpression : BinaryExpression<T?>
+        {
+            public BitwiseAndExpression(Column<T?> x, Column<T?> y)
+                : base(x, y)
+            {
+            }
+
+            protected override BinaryExpressionKind Kind
+            {
+                get { return BinaryExpressionKind.BitwiseAnd; }
+            }
+
+            protected override T? EvalCore(T? x, T? y)
+            {
+                return PerformConvert((byte?)(PerformConvert(x) & PerformConvert(y)));
+            }
+        }
+
+        /// <summary>Computes the bitwise AND of its <see cref="_Byte" /> operands.</summary>
+        /// <returns>A <see cref="_Byte" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Byte" /> object. </param>
+        /// <param name="y">A <see cref="_Byte" /> object. </param>
+        public static _ByteEnum<T> operator &(_ByteEnum<T> x, _ByteEnum<T> y)
+        {
+            Check.NotNull(x, nameof(x));
+            Check.NotNull(y, nameof(y));
+            return new BitwiseAndExpression(x, y).MakeColumn<_ByteEnum<T>>();
+        }
+
+        private sealed class BitwiseOrExpression : BinaryExpression<T?>
+        {
+            public BitwiseOrExpression(Column<T?> x, Column<T?> y)
+                : base(x, y)
+            {
+            }
+
+            protected override BinaryExpressionKind Kind
+            {
+                get { return BinaryExpressionKind.BitwiseOr; }
+            }
+
+            protected override T? EvalCore(T? x, T? y)
+            {
+                return PerformConvert((byte?)(PerformConvert(x) | PerformConvert(y)));
+            }
+        }
+
+        /// <summary>Computes the bitwise OR of its <see cref="_Byte" /> operands.</summary>
+        /// <returns>A <see cref="_Byte" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Byte" /> object. </param>
+        /// <param name="y">A <see cref="_Byte" /> object. </param>
+        public static _ByteEnum<T> operator |(_ByteEnum<T> x, _ByteEnum<T> y)
+        {
+            Check.NotNull(x, nameof(x));
+            Check.NotNull(y, nameof(y));
+            return new BitwiseOrExpression(x, y).MakeColumn<_ByteEnum<T>>();
         }
 
         private sealed class EqualExpression : BinaryExpression<T?, bool?>

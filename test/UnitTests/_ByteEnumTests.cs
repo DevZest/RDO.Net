@@ -19,6 +19,19 @@ namespace DevZest.Data
             Sat
         }
 
+        [Flags]
+        private enum Bits
+        {
+            None = 0,
+            Flag1 = 1,
+            Flag2 = 2,
+            Flag3 = 4,
+            Flag4 = 8,
+            Flag5 = 16,
+            Flag6 = 32,
+            All = Flag1 | Flag2 | Flag3 | Flag4 | Flag5 | Flag6
+        }
+
         [TestMethod]
         public void _ByteEnum_Param()
         {
@@ -56,6 +69,55 @@ namespace DevZest.Data
         {
             var column = _ByteEnum<WeekDay>.Const(x);
             column.VerifyConst(x);
+        }
+
+        [TestMethod]
+        public void _ByteEnum_CastToString()
+        {
+            TestCastToString(WeekDay.Mon, nameof(WeekDay.Mon));
+            TestCastToString(null, null);
+        }
+
+        private static void TestCastToString(WeekDay? x, string strValue)
+        {
+            var column = (_String)_ByteEnum<WeekDay>.Const(x);
+            column.VerifyEval(strValue);
+        }
+
+        [TestMethod]
+        public void _Byte_BitwiseAnd()
+        {
+            TestBitwiseAnd(Bits.Flag5, Bits.None, Bits.None);
+            TestBitwiseAnd(Bits.Flag5, null, null);
+            TestBitwiseAnd(null, null, null);
+        }
+
+        private void TestBitwiseAnd(Bits? x, Bits? y, Bits? expectedValue)
+        {
+            _ByteEnum<Bits> column1 = x;
+            _ByteEnum<Bits> column2 = y;
+            var expr = column1 & column2;
+            var dbExpr = (DbBinaryExpression)expr.DbExpression;
+            dbExpr.Verify(BinaryExpressionKind.BitwiseAnd, column1, column2);
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Byte_BitwiseOr()
+        {
+            TestBitwiseOr(Bits.Flag1, Bits.Flag2, Bits.Flag1 | Bits.Flag2);
+            TestBitwiseOr(Bits.Flag1, null, null);
+            TestBitwiseOr(null, null, null);
+        }
+
+        private void TestBitwiseOr(Bits? x, Bits? y, Bits? expectedValue)
+        {
+            _ByteEnum<Bits> column1 = x;
+            _ByteEnum<Bits> column2 = y;
+            var expr = column1 | column2;
+            var dbExpr = (DbBinaryExpression)expr.DbExpression;
+            dbExpr.Verify(BinaryExpressionKind.BitwiseOr, column1, column2);
+            expr.VerifyEval(expectedValue);
         }
 
         [TestMethod]
