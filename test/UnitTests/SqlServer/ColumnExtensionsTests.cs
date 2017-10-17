@@ -30,6 +30,7 @@ namespace DevZest.Data.SqlServer
             VerifyDefaultColumnMapper<_TimeSpan>(SqlVersion.Sql11, SqlDbType.Time, "TIME");
             VerifyDefaultColumnMapper<_ByteEnum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.TinyInt, "TINYINT");
             VerifyDefaultColumnMapper<_CharEnum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.Char, 1, "CHAR(1)");
+            VerifyDefaultColumnMapper<_Int16Enum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.SmallInt, "SMALLINT");
             VerifyDefaultColumnMapper<_Int32Enum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.Int, "INT");
         }
 

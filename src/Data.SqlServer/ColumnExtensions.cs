@@ -330,6 +330,12 @@ namespace DevZest.Data.SqlServer
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
+            if (columnType.IsDerivedFrom(typeof(_Int16Enum<>)))
+            {
+                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt16EnumMapperProvider));
+                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
+            }
+
             if (columnType.IsDerivedFrom(typeof(_Int32Enum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt32EnumMapperProvider));
@@ -349,6 +355,12 @@ namespace DevZest.Data.SqlServer
             where T : struct, IConvertible
         {
             return new MapperProvider<T?>(x => ColumnMapper.ByteEnum<T>((_ByteEnum<T>)x));
+        }
+
+        private static MapperProvider<T?> GetInt16EnumMapperProvider<T>()
+            where T : struct, IConvertible
+        {
+            return new MapperProvider<T?>(x => ColumnMapper.Int16Enum<T>((_Int16Enum<T>)x));
         }
 
         private static MapperProvider<T?> GetInt32EnumMapperProvider<T>()

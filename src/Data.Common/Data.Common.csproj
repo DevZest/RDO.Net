@@ -283,6 +283,7 @@
     <Compile Include="_Double.cs" />
     <Compile Include="_Guid.cs" />
     <Compile Include="_Int16.cs" />
+    <Compile Include="_Int16Enum_T.cs" />
     <Compile Include="_Int32.cs" />
     <Compile Include="_Int32Enum_T.cs" />
     <Compile Include="_Int64.cs" />
