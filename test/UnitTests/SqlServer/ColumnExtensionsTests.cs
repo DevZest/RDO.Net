@@ -29,6 +29,8 @@ namespace DevZest.Data.SqlServer
             VerifyDefaultColumnMapper<_String>(SqlVersion.Sql11, SqlDbType.NVarChar, ColumnExtensions.MAX_NVARCHAR_SIZE, string.Format("NVARCHAR({0})", ColumnExtensions.MAX_NVARCHAR_SIZE));
             VerifyDefaultColumnMapper<_TimeSpan>(SqlVersion.Sql11, SqlDbType.Time, "TIME");
             VerifyDefaultColumnMapper<_ByteEnum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.TinyInt, "TINYINT");
+            VerifyDefaultColumnMapper<_CharEnum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.Char, 1, "CHAR(1)");
+            VerifyDefaultColumnMapper<_Int32Enum<SalesOrderStatus>>(SqlVersion.Sql11, SqlDbType.Int, "INT");
         }
 
         private static void VerifyDefaultColumnMapper<T>(SqlVersion sqlVersion, SqlDbType sqlDbType, string sqlString)

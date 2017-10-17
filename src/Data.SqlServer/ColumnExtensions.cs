@@ -330,6 +330,12 @@ namespace DevZest.Data.SqlServer
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
+            if (columnType.IsDerivedFrom(typeof(_Int32Enum<>)))
+            {
+                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt32EnumMapperProvider));
+                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
+            }
+
             throw new NotSupportedException(Strings.ColumnTypeNotSupported(column.GetType()));
         }
 
@@ -343,6 +349,12 @@ namespace DevZest.Data.SqlServer
             where T : struct, IConvertible
         {
             return new MapperProvider<T?>(x => ColumnMapper.ByteEnum<T>((_ByteEnum<T>)x));
+        }
+
+        private static MapperProvider<T?> GetInt32EnumMapperProvider<T>()
+            where T : struct, IConvertible
+        {
+            return new MapperProvider<T?>(x => ColumnMapper.Int32Enum<T>((_Int32Enum<T>)x));
         }
 
         private static Func<Type, MapperProvider> BuildMapperProviderFactory(MethodInfo methodInfo, Type columnDataType)

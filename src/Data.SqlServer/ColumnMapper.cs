@@ -80,7 +80,7 @@ namespace DevZest.Data.SqlServer
 
         public abstract string GetTSqlLiteral(object value, SqlVersion sqlVersion);
 
-        public abstract string GetXmlValue(int ordinal, SqlVersion sqlVersion);
+        public abstract string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion);
 
         public abstract Column GetColumn();
 
@@ -151,7 +151,7 @@ namespace DevZest.Data.SqlServer
                 return value == null ? NULL : GetTSqlLiteral((T)value, sqlVersion);
             }
 
-            public sealed override string GetXmlValue(int ordinal, SqlVersion sqlVersion)
+            public sealed override string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion)
             {
                 return GetXmlValue(Column[ordinal], sqlVersion);
             }
@@ -1129,7 +1129,7 @@ namespace DevZest.Data.SqlServer
                 return dbValue.HasValue ? GetTSqlLiteral(dbValue.GetValueOrDefault(), sqlVersion) : NULL;
             }
 
-            public sealed override string GetXmlValue(int ordinal, SqlVersion sqlVersion)
+            public sealed override string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion)
             {
                 var enumValue = GetEnumColumn()[ordinal];
                 var dbValue = GetDbValue(enumValue);
@@ -1233,6 +1233,53 @@ namespace DevZest.Data.SqlServer
             where T : struct, IConvertible
         {
             return new ByteEnumMapper<T>(column);
+        }
+
+        private sealed class Int32EnumMapper<T> : EnumMapperBase<T?, Int32>
+            where T : struct, IConvertible
+        {
+            public Int32EnumMapper(_Int32Enum<T> column)
+            {
+                Column = column;
+            }
+
+            public _Int32Enum<T> Column { get; private set; }
+
+            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            {
+                return SqlParameterInfo.Int();
+            }
+
+            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            {
+                return "INT";
+            }
+
+            protected override Int32? GetDbValue(T? value)
+            {
+                return Column.ConvertToDbValue(value);
+            }
+
+            protected override Column<T?> GetEnumColumn()
+            {
+                return Column;
+            }
+
+            protected override string GetTSqlLiteral(Int32 value, SqlVersion sqlVersion)
+            {
+                return GetXmlValue(value, sqlVersion);
+            }
+
+            protected override string GetXmlValue(Int32 value, SqlVersion sqlVersion)
+            {
+                return value.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+
+        public static ColumnMapper Int32Enum<T>(_Int32Enum<T> column)
+            where T : struct, IConvertible
+        {
+            return new Int32EnumMapper<T>(column);
         }
     }
 }

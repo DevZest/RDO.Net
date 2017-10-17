@@ -122,6 +122,7 @@
     <Compile Include="SqlServer\_TimeSpanTests.cs" />
     <Compile Include="SqlServer\_DateTimeOffsetTests.cs" />
     <Compile Include="SqlServer\DbExpressionSqlGeneratorTests.cs" />
+    <Compile Include="_Int32EnumTests.cs" />
     <Compile Include="_StringTests.cs" />
     <Compile Include="_SingleTests.cs" />
     <Compile Include="_Int64Tests.cs" />
