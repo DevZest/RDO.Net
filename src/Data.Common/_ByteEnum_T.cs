@@ -87,10 +87,7 @@ namespace DevZest.Data
 
             protected override Byte? Cast(T? value)
             {
-                if (value.HasValue)
-                    return value.GetValueOrDefault().ToByte(null);
-                else
-                    return null;
+                return PerformConvert(value);
             }
         }
 
@@ -109,10 +106,7 @@ namespace DevZest.Data
 
             protected override T? Cast(Byte? value)
             {
-                if (value.HasValue)
-                    return (T)Enum.ToObject(typeof(T), value.GetValueOrDefault());
-                else
-                    return null;
+                return PerformConvert(value);
             }
         }
 
@@ -140,10 +134,6 @@ namespace DevZest.Data
             }
         }
 
-        /// <summary>Computes the bitwise AND of its <see cref="_Byte" /> operands.</summary>
-        /// <returns>A <see cref="_Byte" /> expression which contains the result.</returns>
-        /// <param name="x">A <see cref="_Byte" /> object. </param>
-        /// <param name="y">A <see cref="_Byte" /> object. </param>
         public static _ByteEnum<T> operator &(_ByteEnum<T> x, _ByteEnum<T> y)
         {
             Check.NotNull(x, nameof(x));
@@ -169,10 +159,6 @@ namespace DevZest.Data
             }
         }
 
-        /// <summary>Computes the bitwise OR of its <see cref="_Byte" /> operands.</summary>
-        /// <returns>A <see cref="_Byte" /> expression which contains the result.</returns>
-        /// <param name="x">A <see cref="_Byte" /> object. </param>
-        /// <param name="y">A <see cref="_Byte" /> object. </param>
         public static _ByteEnum<T> operator |(_ByteEnum<T> x, _ByteEnum<T> y)
         {
             Check.NotNull(x, nameof(x));
@@ -198,10 +184,6 @@ namespace DevZest.Data
             }
         }
 
-        /// <summary>Performs a logical comparison of the two <see cref="_ByteEnum{T}" /> parameters for equality.</summary>
-        /// <returns>The result <see cref="_Boolean" /> expression.</returns>
-        /// <param name="x">A <see cref="_ByteEnum{T}" /> object. </param>
-        /// <param name="y">A <see cref="_ByteEnum{T}" /> object. </param>
         public static _Boolean operator ==(_ByteEnum<T> x, _ByteEnum<T> y)
         {
             Check.NotNull(x, nameof(x));
@@ -228,10 +210,6 @@ namespace DevZest.Data
             }
         }
 
-        /// <summary>Performs a logical comparison of the two <see cref="_ByteEnum{T}"/>" /> parameters for non-equality.</summary>
-        /// <returns>The result <see cref="_Boolean" /> expression.</returns>
-        /// <param name="x">A <see cref="_ByteEnum{T}" /> object. </param>
-        /// <param name="y">A <see cref="_ByteEnum{T}" /> object. </param>
         public static _Boolean operator !=(_ByteEnum<T> x, _ByteEnum<T> y)
         {
             Check.NotNull(x, nameof(x));

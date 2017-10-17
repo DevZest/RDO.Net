@@ -98,6 +98,7 @@
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="_ByteEnumTests.cs" />
+    <Compile Include="_CharEnumTests.cs" />
     <Compile Include="_CharTests.cs" />
     <Compile Include="ColumnTests.cs" />
     <Compile Include="_DateTimeTests.cs" />
