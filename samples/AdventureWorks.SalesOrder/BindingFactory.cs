@@ -65,7 +65,7 @@ namespace AdventureWorks.SalesOrders
                 .AddChild(_.AccountNumber.AsTextBox(), v => v._accountNumber)
                 .AddChild(_.ShipMethod.AsTextBox(), v => v._shipMethod)
                 .AddChild(_.CreditCardApprovalCode.AsTextBox(), v => v._creditCardApprovalCode)
-                //.AddChild(_.Status.AsComboBox(), v => v._status)
+                .AddChild(_.Status.AsComboBox(), v => v._status)
                 .AddChild(_.OnlineOrderFlag.AsCheckBox(), v => v._onlineOrderFlag)
                 .AddChild(_.Comment.AsTextBox(), v => v._comment);
         }

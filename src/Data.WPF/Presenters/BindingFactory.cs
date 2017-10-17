@@ -45,29 +45,6 @@ namespace DevZest.Data.Presenters
             throw new NotImplementedException();
         }
 
-        public static RowBinding<ComboBox> AsComboBox<T>(this Column<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)
-        {
-            return new RowBinding<ComboBox>(
-                onSetup: (e, r) =>
-                {
-                    e.ItemsSource = selectionData;
-                    e.SelectedValuePath = selectedValuePath;
-                    e.DisplayMemberPath = displayMemberPath;
-                },
-                onRefresh: (e, r) =>
-                {
-                    e.SelectedValue = r.GetValue(source);
-                    e.IsDropDownOpen = false;
-                },
-                onCleanup: (e, r) =>
-                {
-                    e.ItemsSource = null;
-                    e.SelectedValuePath = null;
-                    e.DisplayMemberPath = null;
-                }
-                ).WithInput(new PropertyChangedTrigger<ComboBox>(ComboBox.SelectedValueProperty), source, e => (T)e.SelectedValue);
-        }
-
         public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column column, object title = null)
         {
             return new ScalarBinding<ColumnHeader>(
