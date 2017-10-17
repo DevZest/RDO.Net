@@ -12,7 +12,7 @@ namespace DevZest.Data.Primitives
         }
 
         public Func<T, string> DescriptionProvider { get; set; }
-        protected IEnumerable<EnumItem<T?>> EnumItems
+        public IEnumerable<EnumItem<T?>> EnumItems
         {
             get
             {
