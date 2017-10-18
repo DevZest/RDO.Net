@@ -23,8 +23,17 @@
                 </Style>
             </Setter.Value>
         </Setter>
-        <Setter Property="Panel.Background" Value="#FFDDDDDD" />
-        <Setter Property="Border.BorderBrush" Value="#FF707070" />
+        <Setter Property="Panel.Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="#FFF0F0F0" Offset="0" />
+                        <GradientStop Color="#FFE5E5E5" Offset="1" />
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Border.BorderBrush" Value="#FFACACAC" />
 
         <Setter Property="TextElement.Foreground" Value="{DynamicResource SystemColors.ControlTextBrushKey}" />
         <Setter Property="Border.BorderThickness" Value="1,1,1,1" />
@@ -53,17 +62,21 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="UIElement.IsMouseOver" Value="true">
-                            <Setter Property="Panel.Background" TargetName="border" Value="#FFBEE6FD" />
-                            <Setter Property="Border.BorderBrush" TargetName="border" Value="#FF3C7FB1" />
+                            <Setter Property="Panel.Background" TargetName="border">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Color="#FFECF4FC" Offset="0" />
+                                            <GradientStop Color="#FFDCECFC" Offset="1" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Border.BorderBrush" TargetName="border" Value="#FF7EB4EA" />
                         </Trigger>
                         <Trigger Property="ButtonBase.IsPressed" Value="true">
                             <Setter Property="Panel.Background" TargetName="border" Value="#FFC4E5F6" />
                             <Setter Property="Border.BorderBrush" TargetName="border" Value="#FF2C628B" />
-                        </Trigger>
-                        <Trigger Property="UIElement.IsEnabled" Value="false">
-                            <Setter Property="Panel.Background" TargetName="border" Value="#FFF4F4F4" />
-                            <Setter Property="Border.BorderBrush" TargetName="border" Value="#FFADB2B5" />
-                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="#FF838383" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

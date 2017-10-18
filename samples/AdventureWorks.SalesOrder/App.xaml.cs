@@ -4,6 +4,9 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Markup;
+using System.Xml;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -45,5 +48,21 @@ namespace AdventureWorks.SalesOrders
             }
             return dialogResult.Value;
         }
+
+        //private static void SaveDefaultTemplate(Type type, string fileName)
+        //{
+        //    var control = Application.Current.FindResource(type);
+        //    using (var writer = new XmlTextWriter(fileName, System.Text.Encoding.UTF8))
+        //    {
+        //        writer.Formatting = Formatting.Indented;
+        //        XamlWriter.Save(control, writer);
+        //    }
+        //}
+
+        //protected override void OnStartup(StartupEventArgs e)
+        //{
+        //    base.OnStartup(e);
+        //    SaveDefaultTemplate(typeof(ComboBox), "ComboBox.xaml");
+        //}
     }
 }
