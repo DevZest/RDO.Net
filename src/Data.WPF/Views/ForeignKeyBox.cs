@@ -4,15 +4,14 @@ using DevZest.Data.Presenters.Services;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System;
 
 namespace DevZest.Data.Views
 {
     public class ForeignKeyBox : ButtonBase, IRowElement
     {
-        public interface IEditService : IService
+        public interface IEditingService : IService
         {
-            void Edit(RowPresenter rowPresenter, KeyBase foreignKey);
+            void BeginEdit(RowPresenter rowPresenter, KeyBase foreignKey);
         }
 
         private static readonly DependencyPropertyKey CanResetPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CanReset), typeof(bool),
@@ -100,9 +99,9 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            var editService = dataPresenter.GetService<IEditService>();
-            if (editService != null)
-                editService.Edit(rowPresenter, foreignKey);
+            var editingService = dataPresenter.GetService<IEditingService>();
+            if (editingService != null)
+                editingService.BeginEdit(rowPresenter, foreignKey);
         }
 
         void IRowElement.Setup(RowPresenter rowPresenter)
