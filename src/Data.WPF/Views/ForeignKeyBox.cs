@@ -14,11 +14,11 @@ namespace DevZest.Data.Views
             void BeginEdit(RowPresenter rowPresenter, KeyBase foreignKey);
         }
 
-        private static readonly DependencyPropertyKey CanResetPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CanReset), typeof(bool),
+        private static readonly DependencyPropertyKey CanClearValuePropertyKey = DependencyProperty.RegisterReadOnly(nameof(CanClearValue), typeof(bool),
             typeof(ForeignKeyBox), new FrameworkPropertyMetadata(BooleanBoxes.False));
-        public static readonly DependencyProperty CanResetProperty = CanResetPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty CanClearValueProperty = CanClearValuePropertyKey.DependencyProperty;
 
-        public static readonly RoutedUICommand ResetCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand ClearValueCommand = new RoutedUICommand();
 
         static ForeignKeyBox()
         {
@@ -27,12 +27,12 @@ namespace DevZest.Data.Views
 
         public ForeignKeyBox()
         {
-            CommandBindings.Add(new CommandBinding(ResetCommand, ExecReset, CanExecReset));
+            CommandBindings.Add(new CommandBinding(ClearValueCommand, ExecReset, CanExecReset));
         }
 
         private void CanExecReset(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanReset;
+            e.CanExecute = CanClearValue;
         }
 
         private void ExecReset(object sender, ExecutedRoutedEventArgs e)
@@ -57,13 +57,13 @@ namespace DevZest.Data.Views
             get { return RowPresenter?.DataPresenter; }
         }
 
-        public bool CanReset
+        public bool CanClearValue
         {
-            get { return (bool)GetValue(CanResetProperty); }
-            private set { SetValue(CanResetPropertyKey, BooleanBoxes.Box(value)); }
+            get { return (bool)GetValue(CanClearValueProperty); }
+            private set { SetValue(CanClearValuePropertyKey, BooleanBoxes.Box(value)); }
         }
 
-        private bool CalcCanReset(RowPresenter rowPresenter)
+        private bool CalcCanClearValue(RowPresenter rowPresenter)
         {
             if (ForeignKey == null || ForeignKey.Count == 0)
                 return false;
@@ -110,7 +110,7 @@ namespace DevZest.Data.Views
 
         void IRowElement.Refresh(RowPresenter rowPresenter)
         {
-            CanReset = CalcCanReset(rowPresenter);
+            CanClearValue = CalcCanClearValue(rowPresenter);
         }
 
         void IRowElement.Cleanup(RowPresenter rowPresenter)
