@@ -6,6 +6,26 @@
 
     <Style TargetType="local:ForeignKeyBox">
         <Style.Resources>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <Style x:Key="ClearValueButton" TargetType="Button">
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="Margin" Value="2" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" BorderThickness="1" BorderBrush="Transparent">
+                                <Image Width="16" Height="16" Source="/DevZest.Data.WPF;component/Resources/ClearData.png" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="UIElement.IsMouseOver" Value="true">
+                                    <Setter Property="Background" TargetName="border" Value="Yellow" />
+                                    <Setter Property="BorderBrush" TargetName="border" Value="#FF7EB4EA" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </Style.Resources>
         <Setter Property="FrameworkElement.FocusVisualStyle">
             <Setter.Value>
@@ -50,15 +70,23 @@
                             BorderBrush="{TemplateBinding Border.BorderBrush}"
                             Background="{TemplateBinding Panel.Background}"
                             Name="border" SnapsToDevicePixels="True">
-                        <ContentPresenter 
-                            Content="{TemplateBinding ContentControl.Content}"
-                            ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
-                            ContentStringFormat="{TemplateBinding ContentControl.ContentStringFormat}"
-                            Name="contentPresenter"
-                            Margin="{TemplateBinding Control.Padding}"
-                            HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
-                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" Focusable="False" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ContentPresenter 
+                                Content="{TemplateBinding ContentControl.Content}"
+                                ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
+                                ContentStringFormat="{TemplateBinding ContentControl.ContentStringFormat}"
+                                Name="contentPresenter"
+                                Margin="{TemplateBinding Control.Padding}"
+                                HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
+                                SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" Focusable="False" />
+                            <Button Grid.Column="1" Style="{StaticResource ClearValueButton}" Command="{x:Static local:ForeignKeyBox.ClearValueCommand}"
+                                Visibility="{TemplateBinding CanClearValue, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="UIElement.IsMouseOver" Value="true">

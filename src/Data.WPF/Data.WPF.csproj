@@ -258,6 +258,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\ClearData.png" />
     <Resource Include="Resources\Cancel.ico" />
   </ItemGroup>
   <ItemGroup>
