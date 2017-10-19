@@ -28,8 +28,8 @@ namespace DevZest.Data
 
             {
                 var valueBag = new ColumnValueBag();
-                valueBag.Add(_.CustomerID, 2);
-                valueBag.Add(customer.FirstName, "FirstName");
+                valueBag.SetValue(_.CustomerID, 2);
+                valueBag.SetValue(customer.FirstName, "FirstName");
                 Assert.AreEqual(2, valueBag.GetValue(_.CustomerID));
                 Assert.AreEqual(2, valueBag[_.CustomerID]);
                 Assert.AreEqual("FirstName", valueBag.GetValue(customer.FirstName));
@@ -38,8 +38,8 @@ namespace DevZest.Data
 
             {
                 var valueBag = new ColumnValueBag();
-                valueBag.Add(_.CustomerID, salesOrders[0]);
-                valueBag.Add(customer.FirstName, salesOrders[0]);
+                valueBag.SetValue(_.CustomerID, salesOrders[0]);
+                valueBag.SetValue(customer.FirstName, salesOrders[0]);
                 Assert.AreEqual(5, valueBag.GetValue(_.CustomerID));
                 Assert.AreEqual(5, valueBag[_.CustomerID]);
                 Assert.AreEqual("John", valueBag.GetValue(customer.FirstName));

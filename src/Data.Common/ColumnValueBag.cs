@@ -19,8 +19,6 @@ namespace DevZest.Data
             get { return _columnValues.Count; }
         }
 
-        public bool DesignMode { get; private set; } = true;
-
         public IEnumerable<Column> Keys
         {
             get { return _columnValues.Keys; }
@@ -41,11 +39,6 @@ namespace DevZest.Data
             return _columnValues.GetEnumerator();
         }
 
-        public void Seal()
-        {
-            DesignMode = false;
-        }
-
         public bool TryGetValue(Column key, out object value)
         {
             return _columnValues.TryGetValue(key, out value);
@@ -56,30 +49,21 @@ namespace DevZest.Data
             return _columnValues.GetEnumerator();
         }
 
-        private void VerifyDesignMode()
+        public void SetValue<T>(Column<T> column, T value)
         {
-            if (!DesignMode)
-                throw new InvalidOperationException(Strings.VerifyDesignMode);
-        }
-
-        public void Add<T>(Column<T> column, T value)
-        {
-            VerifyDesignMode();
             Check.NotNull(column, nameof(column));
-            _columnValues.Add(column, value);
+            _columnValues[column] = value;
         }
 
-        public void Add(Column column, DataRow dataRow)
+        public void SetValue(Column column, DataRow dataRow)
         {
-            VerifyDesignMode();
             Check.NotNull(column, nameof(column));
             Check.NotNull(dataRow, nameof(dataRow));
-            _columnValues.Add(column, column.GetValue(dataRow));
+            _columnValues[column] = column.GetValue(dataRow);
         }
 
         public void AutoSelect(KeyBase key, DataRow dataRow)
         {
-            VerifyDesignMode();
             Check.NotNull(key, nameof(key));
             Check.NotNull(dataRow, nameof(dataRow));
 
@@ -89,13 +73,12 @@ namespace DevZest.Data
                 var keyColumn = columnSort.Column;
                 var valueColumn = valueColumns.AutoSelect(keyColumn);
                 if (valueColumn != null)
-                    _columnValues.Add(keyColumn, valueColumn.GetValue(dataRow));
+                    _columnValues[keyColumn] = valueColumn.GetValue(dataRow);
             }
         }
 
         public void AutoSelect(ModelExtension extension, DataRow dataRow, bool ignoreExpression = true)
         {
-            VerifyDesignMode();
             Check.NotNull(extension, nameof(extension));
             Check.NotNull(dataRow, nameof(dataRow));
 
@@ -106,8 +89,18 @@ namespace DevZest.Data
                     continue;
                 var valueColumn = valueColumns.AutoSelect(keyColumn);
                 if (valueColumn != null)
-                    _columnValues.Add(keyColumn, valueColumn.GetValue(dataRow));
+                    _columnValues[keyColumn] = valueColumn.GetValue(dataRow);
             }
+        }
+
+        public void Remove(Column column)
+        {
+            _columnValues.Remove(column);
+        }
+        
+        public void Clear()
+        {
+            _columnValues.Clear();
         }
 
         public T GetValue<T>(Column<T> column)
