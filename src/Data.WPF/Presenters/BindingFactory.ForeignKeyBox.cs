@@ -6,7 +6,7 @@ namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, Action<TView, ColumnValueBag> refreshAction)
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, Action<TView, ColumnValueBag, TKey> refreshAction)
             where TKey : KeyBase
             where TView : UIElement, new()
         {
@@ -23,14 +23,14 @@ namespace DevZest.Data.Presenters
                 },
                 onRefresh: (v, p) => {
                     p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
-                    refreshAction((TView)v.Content, v.ValueBag);
+                    refreshAction((TView)v.Content, v.ValueBag, key);
                 },
                 onCleanup: (v, p) => {
                     v.Content = null;
                 }).WithInput(key, null);
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, TExtension, ColumnValueBag> refreshAction)
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, ColumnValueBag, TExtension> refreshAction)
             where TKey : KeyBase
             where TExtension : ModelExtension
             where TView : UIElement, new()
@@ -51,14 +51,14 @@ namespace DevZest.Data.Presenters
                 },
                 onRefresh: (v, p) => {
                     p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
-                    refreshAction((TView)v.Content, extension, v.ValueBag);
+                    refreshAction((TView)v.Content, v.ValueBag, extension);
                     },
                 onCleanup: (v, p) => {
                     v.Content = null;
                 }).WithInput(key, extension);
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, TKey, TExtension, ColumnValueBag> refreshAction)
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, ColumnValueBag, TKey, TExtension> refreshAction)
             where TKey : KeyBase
             where TExtension : ModelExtension
             where TView : UIElement, new()
@@ -78,7 +78,7 @@ namespace DevZest.Data.Presenters
                 },
                 onRefresh: (v, p) => {
                     p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
-                    refreshAction((TView)v.Content, key, extension, v.ValueBag);
+                    refreshAction((TView)v.Content, v.ValueBag, key, extension);
                 },
                 onCleanup: (v, p) => {
                     v.Content = null;

@@ -18,12 +18,12 @@ namespace AdventureWorks.SalesOrders
             InitializeComponent();
         }
 
-        public static Action<CustomerBox, Customer.Lookup, ColumnValueBag> RefreshAction
+        public static Action<CustomerBox, ColumnValueBag, Customer.Lookup> RefreshAction
         {
             get { return Refresh; }
         }
 
-        private static void Refresh(CustomerBox v, Customer.Lookup _, ColumnValueBag valueBag)
+        private static void Refresh(CustomerBox v, ColumnValueBag valueBag, Customer.Lookup _)
         {
             v._companyName.Text = valueBag.GetValue(_.CompanyName);
             v._contactPerson.Text = GetContactPerson(valueBag.GetValue(_.LastName), valueBag.GetValue(_.FirstName), valueBag.GetValue(_.Title));
