@@ -29,9 +29,6 @@ namespace DevZest.Data.Presenters
                 onCleanup: (v, p) =>
                 {
                     v.Content = null;
-                    v.ForeignKey = null;
-                    v.ForeignKeyExtension = null;
-                    v.ForeignKeyValueBag = null;
                 });
         }
 
@@ -58,9 +55,6 @@ namespace DevZest.Data.Presenters
                 onCleanup: (v, p) =>
                 {
                     v.Content = null;
-                    v.ForeignKey = null;
-                    v.ForeignKeyExtension = null;
-                    v.ForeignKeyValueBag = null;
                 });
         }
     }

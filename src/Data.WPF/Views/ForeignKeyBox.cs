@@ -11,7 +11,7 @@ namespace DevZest.Data.Views
     {
         public interface IEditingService : IService
         {
-            void BeginEdit(RowPresenter rowPresenter, KeyBase foreignKey);
+            ColumnValueBag Edit(KeyBase foreignKey);
         }
 
         private static readonly DependencyPropertyKey ForeignKeyValueBagPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ForeignKeyValueBag),
@@ -55,7 +55,7 @@ namespace DevZest.Data.Views
         public ColumnValueBag ForeignKeyValueBag
         {
             get { return (ColumnValueBag)GetValue(ForeignKeyValueBagProperty); }
-            internal set { SetValue(ForeignKeyValueBagPropertyKey, value); }
+            private set { SetValue(ForeignKeyValueBagPropertyKey, value); }
         }
 
         private RowPresenter RowPresenter
@@ -98,21 +98,17 @@ namespace DevZest.Data.Views
 
         private void InvokeEdit()
         {
-            var rowPresenter = RowPresenter;
-            if (rowPresenter == null)
-                return;
-
             var foreignKey = ForeignKey;
             if (foreignKey == null)
                 return;
 
-            var dataPresenter = DataPresenter;
-            if (dataPresenter == null)
+            var editingService = DataPresenter?.GetService<IEditingService>();
+            if (editingService == null)
                 return;
 
-            var editingService = dataPresenter.GetService<IEditingService>();
-            if (editingService != null)
-                editingService.BeginEdit(rowPresenter, foreignKey);
+            var valueBag = editingService.Edit(foreignKey);
+            if (valueBag != null)
+                ForeignKeyValueBag = valueBag;
         }
 
         void IRowElement.Setup(RowPresenter rowPresenter)
@@ -126,6 +122,9 @@ namespace DevZest.Data.Views
 
         void IRowElement.Cleanup(RowPresenter rowPresenter)
         {
+            ForeignKey = null;
+            ForeignKeyExtension = null;
+            ForeignKeyValueBag = null;
         }
     }
 }
