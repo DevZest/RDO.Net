@@ -14,6 +14,9 @@ namespace DevZest.Data.Views
             void BeginEdit(RowPresenter rowPresenter, KeyBase foreignKey);
         }
 
+        private static readonly DependencyPropertyKey ForeignKeyValueBagPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ForeignKeyValueBag),
+            typeof(ColumnValueBag), typeof(ForeignKeyBox), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty ForeignKeyValueBagProperty = ForeignKeyValueBagPropertyKey.DependencyProperty;
         private static readonly DependencyPropertyKey CanClearValuePropertyKey = DependencyProperty.RegisterReadOnly(nameof(CanClearValue), typeof(bool),
             typeof(ForeignKeyBox), new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty CanClearValueProperty = CanClearValuePropertyKey.DependencyProperty;
@@ -45,7 +48,15 @@ namespace DevZest.Data.Views
             }
         }
 
-        public KeyBase ForeignKey { get; set; }
+        public KeyBase ForeignKey { get; internal set; }
+
+        public ModelExtension ForeignKeyExtension { get; internal set; }
+
+        public ColumnValueBag ForeignKeyValueBag
+        {
+            get { return (ColumnValueBag)GetValue(ForeignKeyValueBagProperty); }
+            internal set { SetValue(ForeignKeyValueBagPropertyKey, value); }
+        }
 
         private RowPresenter RowPresenter
         {
