@@ -14,9 +14,9 @@ namespace DevZest.Data.Views
             ColumnValueBag Edit(KeyBase foreignKey);
         }
 
-        private static readonly DependencyPropertyKey ForeignKeyValueBagPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ForeignKeyValueBag),
+        private static readonly DependencyPropertyKey ValueBagPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ValueBag),
             typeof(ColumnValueBag), typeof(ForeignKeyBox), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty ForeignKeyValueBagProperty = ForeignKeyValueBagPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ValueBagProperty = ValueBagPropertyKey.DependencyProperty;
         private static readonly DependencyPropertyKey CanClearValuePropertyKey = DependencyProperty.RegisterReadOnly(nameof(CanClearValue), typeof(bool),
             typeof(ForeignKeyBox), new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty CanClearValueProperty = CanClearValuePropertyKey.DependencyProperty;
@@ -30,15 +30,15 @@ namespace DevZest.Data.Views
 
         public ForeignKeyBox()
         {
-            CommandBindings.Add(new CommandBinding(ClearValueCommand, ExecReset, CanExecReset));
+            CommandBindings.Add(new CommandBinding(ClearValueCommand, ExecClearValue, CanExecClearValue));
         }
 
-        private void CanExecReset(object sender, CanExecuteRoutedEventArgs e)
+        private void CanExecClearValue(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = CanClearValue;
         }
 
-        private void ExecReset(object sender, ExecutedRoutedEventArgs e)
+        private void ExecClearValue(object sender, ExecutedRoutedEventArgs e)
         {
             var rowPresenter = RowPresenter;
             for (int i = 0; i < ForeignKey.Count; i++)
@@ -46,16 +46,28 @@ namespace DevZest.Data.Views
                 var column = ForeignKey[i].Column;
                 rowPresenter[column] = null;
             }
+
+            if (Extension == null)
+                return;
+
+            var columns = Extension.Columns;
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                if (column.IsExpression)
+                    continue;
+                rowPresenter[column] = null;
+            }
         }
 
         public KeyBase ForeignKey { get; internal set; }
 
-        public ModelExtension ForeignKeyExtension { get; internal set; }
+        public ModelExtension Extension { get; internal set; }
 
-        public ColumnValueBag ForeignKeyValueBag
+        public ColumnValueBag ValueBag
         {
-            get { return (ColumnValueBag)GetValue(ForeignKeyValueBagProperty); }
-            private set { SetValue(ForeignKeyValueBagPropertyKey, value); }
+            get { return (ColumnValueBag)GetValue(ValueBagProperty); }
+            private set { SetValue(ValueBagPropertyKey, value); }
         }
 
         private RowPresenter RowPresenter
@@ -108,7 +120,10 @@ namespace DevZest.Data.Views
 
             var valueBag = editingService.Edit(foreignKey);
             if (valueBag != null)
-                ForeignKeyValueBag = valueBag;
+            {
+                valueBag.Seal();
+                ValueBag = valueBag;
+            }
         }
 
         void IRowElement.Setup(RowPresenter rowPresenter)
@@ -123,8 +138,8 @@ namespace DevZest.Data.Views
         void IRowElement.Cleanup(RowPresenter rowPresenter)
         {
             ForeignKey = null;
-            ForeignKeyExtension = null;
-            ForeignKeyValueBag = null;
+            Extension = null;
+            ValueBag = null;
         }
     }
 }

@@ -62,7 +62,29 @@ namespace DevZest.Data.Presenters
                 var value = getValue(element);
                 if (column.AreEqual(rowPresenter.GetValue(column), value))
                     return false;
-                rowPresenter.EditValue(column, getValue(element));
+                rowPresenter.EditValue(column, value);
+                return true;
+            });
+            return this;
+        }
+
+        public RowInput<T> WithFlush(Column column, Func<T, ColumnValueBag> valueBagGetter)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+            if (valueBagGetter == null)
+                throw new ArgumentNullException(nameof(valueBagGetter));
+
+            VerifyNotSealed();
+            Target = Target.Union(column);
+            _flushFuncs.Add((rowPresenter, element) =>
+            {
+                if (valueBagGetter == null)
+                    return false;
+                var value = valueBagGetter(element)[column];
+                if (object.Equals(rowPresenter.GetObject(column), value))
+                    return false;
+                rowPresenter[column] = value;
                 return true;
             });
             return this;

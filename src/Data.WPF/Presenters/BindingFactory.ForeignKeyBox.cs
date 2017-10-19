@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Views;
+﻿using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Views;
 using System;
 using System.Windows;
 
@@ -23,13 +24,13 @@ namespace DevZest.Data.Presenters
                 {
                     v.Content = new TView();
                     v.ForeignKey = key;
-                    v.ForeignKeyExtension = extension;
+                    v.Extension = extension;
                 },
                 onRefresh: (v, p) => refreshAction((TView)v.Content, extension, p),
                 onCleanup: (v, p) =>
                 {
                     v.Content = null;
-                });
+                }).WithInput(key, extension);
         }
 
         public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, TKey, TExtension, RowPresenter> refreshAction)
@@ -49,13 +50,30 @@ namespace DevZest.Data.Presenters
                 {
                     v.Content = new TView();
                     v.ForeignKey = key;
-                    v.ForeignKeyExtension = extension;
+                    v.Extension = extension;
                 },
                 onRefresh: (v, p) => refreshAction((TView)v.Content, key, extension, p),
                 onCleanup: (v, p) =>
                 {
                     v.Content = null;
-                });
+                }).WithInput(key, extension);
+        }
+
+        private static RowBinding<ForeignKeyBox> WithInput(this RowBinding<ForeignKeyBox> rowBinding, KeyBase foreignKey, ModelExtension extension)
+        {
+            var rowInput = rowBinding.BeginInput(new PropertyChangedTrigger<ForeignKeyBox>(ForeignKeyBox.ValueBagProperty));
+            foreach (var columnSort in foreignKey)
+                rowInput.WithFlush(columnSort.Column, v => v.ValueBag);
+            if (extension != null)
+            {
+                foreach (var column in extension.Columns)
+                {
+                    if (column.IsExpression)
+                        continue;
+                    rowInput.WithFlush(column, v => v.ValueBag);
+                }
+            }
+            return rowInput.EndInput();
         }
     }
 }

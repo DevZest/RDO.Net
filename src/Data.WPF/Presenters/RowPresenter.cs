@@ -294,6 +294,17 @@ namespace DevZest.Data.Presenters
             return DataRow == null ? default(T) : column[DataRow];
         }
 
+        public object GetObject(Column column)
+        {
+            if (Depth > 0)
+            {
+                var model = DataRow.Model;
+                IReadOnlyList<Column> columns = column.IsLocal ? model.GetLocalColumns() : model.GetColumns();
+                column = columns[column.Ordinal];
+            }
+            return DataRow == null ? null : column.GetValue(DataRow);
+        }
+
         private void VerifyColumn(Column column, string paramName)
         {
             if (column == null)
