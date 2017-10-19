@@ -84,14 +84,18 @@ namespace DevZest.Data.Presenters.Primitives
                 : flushErrorMessage == null || flushErrorMessage.Id != flushErrorId || flushErrorMessage.Description != flushErrorDescription;
         }
 
+        public bool IsFlushing { get; private set; }
+
         internal void Flush(T element)
         {
             if (Binding.IsRefreshing)
                 return;
 
+            IsFlushing = true;
             ValidateFlush(element);
             if (GetFlushError(element) == null)
                 FlushCore(element);
+            IsFlushing = false;
         }
 
         internal abstract void FlushCore(T element);

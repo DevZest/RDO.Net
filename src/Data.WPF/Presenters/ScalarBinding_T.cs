@@ -73,7 +73,7 @@ namespace DevZest.Data.Presenters
         }
 
         private Action<T, ScalarPresenter> _onRefresh;
-        private void Refresh(T element, ScalarPresenter scalarPresenter)
+        internal void Refresh(T element, ScalarPresenter scalarPresenter)
         {
             _isRefreshing = true;
             var plugins = Plugins;
