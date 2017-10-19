@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Presenters;
+﻿using DevZest.Data;
+using DevZest.Data.Presenters;
 using DevZest.Samples.AdventureWorksLT;
 using System;
 using System.Windows;
@@ -17,17 +18,17 @@ namespace AdventureWorks.SalesOrders
             InitializeComponent();
         }
 
-        public static Action<CustomerBox, Customer.Lookup, RowPresenter> RefreshAction
+        public static Action<CustomerBox, Customer.Lookup, ColumnValueBag> RefreshAction
         {
             get { return Refresh; }
         }
 
-        private static void Refresh(CustomerBox v, Customer.Lookup _, RowPresenter p)
+        private static void Refresh(CustomerBox v, Customer.Lookup _, ColumnValueBag valueBag)
         {
-            v._companyName.Text = p.GetValue(_.CompanyName);
-            v._contactPerson.Text = GetContactPerson(p.GetValue(_.LastName), p.GetValue(_.FirstName), p.GetValue(_.Title));
-            v._phone.Text = p.GetValue(_.Phone);
-            v._email.Text = p.GetValue(_.EmailAddress);
+            v._companyName.Text = valueBag.GetValue(_.CompanyName);
+            v._contactPerson.Text = GetContactPerson(valueBag.GetValue(_.LastName), valueBag.GetValue(_.FirstName), valueBag.GetValue(_.Title));
+            v._phone.Text = valueBag.GetValue(_.Phone);
+            v._email.Text = valueBag.GetValue(_.EmailAddress);
         }
 
         private static string GetContactPerson(string lastName, string firstName, string title)

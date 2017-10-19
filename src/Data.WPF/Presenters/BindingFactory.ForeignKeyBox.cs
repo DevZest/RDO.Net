@@ -7,7 +7,7 @@ namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, TExtension, RowPresenter> refreshAction)
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, TExtension, ColumnValueBag> refreshAction)
             where TKey : KeyBase
             where TExtension : ModelExtension
             where TView : UIElement, new()
@@ -26,14 +26,16 @@ namespace DevZest.Data.Presenters
                     v.ForeignKey = key;
                     v.Extension = extension;
                 },
-                onRefresh: (v, p) => refreshAction((TView)v.Content, extension, p),
-                onCleanup: (v, p) =>
-                {
+                onRefresh: (v, p) => {
+                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
+                    refreshAction((TView)v.Content, extension, v.ValueBag);
+                    },
+                onCleanup: (v, p) => {
                     v.Content = null;
                 }).WithInput(key, extension);
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, TKey, TExtension, RowPresenter> refreshAction)
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, TKey, TExtension, ColumnValueBag> refreshAction)
             where TKey : KeyBase
             where TExtension : ModelExtension
             where TView : UIElement, new()
@@ -46,15 +48,16 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(refreshAction));
 
             return new RowBinding<ForeignKeyBox>(
-                onSetup: (v, p) =>
-                {
+                onSetup: (v, p) => {
                     v.Content = new TView();
                     v.ForeignKey = key;
                     v.Extension = extension;
                 },
-                onRefresh: (v, p) => refreshAction((TView)v.Content, key, extension, p),
-                onCleanup: (v, p) =>
-                {
+                onRefresh: (v, p) => {
+                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
+                    refreshAction((TView)v.Content, key, extension, v.ValueBag);
+                },
+                onCleanup: (v, p) => {
                     v.Content = null;
                 }).WithInput(key, extension);
         }

@@ -30,6 +30,7 @@ namespace DevZest.Data.Views
 
         public ForeignKeyBox()
         {
+            ValueBag = new ColumnValueBag();
             CommandBindings.Add(new CommandBinding(ClearValueCommand, ExecClearValue, CanExecClearValue));
         }
 
@@ -120,10 +121,7 @@ namespace DevZest.Data.Views
 
             var valueBag = editingService.Edit(foreignKey);
             if (valueBag != null)
-            {
-                valueBag.Seal();
                 ValueBag = valueBag;
-            }
         }
 
         void IRowElement.Setup(RowPresenter rowPresenter)
@@ -139,7 +137,7 @@ namespace DevZest.Data.Views
         {
             ForeignKey = null;
             Extension = null;
-            ValueBag = null;
+            ValueBag.Clear();
         }
     }
 }

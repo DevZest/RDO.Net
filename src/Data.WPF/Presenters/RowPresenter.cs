@@ -470,5 +470,41 @@ namespace DevZest.Data.Presenters
         {
             get { return IsCurrent ? InputManager.CurrentRowAsyncValidators : RowAsyncValidators.Empty; }
         }
+
+        public void SetValue(ColumnValueBag valueBag, Column column)
+        {
+            if (valueBag == null)
+                throw new ArgumentNullException(nameof(valueBag));
+            VerifyColumn(column, nameof(column));
+            valueBag.SetValue(column, DataRow);
+        }
+
+        public void SetValueBag(ColumnValueBag valueBag, KeyBase key, ModelExtension extension)
+        {
+            if (valueBag == null)
+                throw new ArgumentNullException(nameof(valueBag));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            for (int i = 0; i < key.Count; i++)
+            {
+                var column = key[i].Column;
+                SetValue(valueBag, column);
+            }
+
+            if (extension != null)
+            {
+                var columns = extension.Columns;
+                for (int i = 0; i < columns.Count; i++)
+                    SetValue(valueBag, columns[i]);
+            }
+        }
+
+        public ColumnValueBag CreateValueBag(KeyBase key, ModelExtension extension)
+        {
+            var result = new ColumnValueBag();
+            SetValueBag(result, key, extension);
+            return result;
+        }
     }
 }
