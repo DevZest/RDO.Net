@@ -75,7 +75,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -95,6 +97,7 @@
     <Compile Include="PagedDataSetTests.cs" />
     <Compile Include="ColumnSetTests.cs" />
     <Compile Include="SqlServer\_SqlXmlTests.cs" />
+    <Compile Include="ColumnValueBagTests.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="_ByteEnumTests.cs" />
