@@ -481,5 +481,7 @@ namespace DevZest.Data
         }
 
         internal abstract Column PerformTranslateTo(Model model);
+
+        public abstract bool IsReadOnly(DataRow dataRow);
     }
 }

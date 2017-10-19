@@ -254,7 +254,7 @@ namespace DevZest.Data
         /// <summary>Gets a value indicates whether this column is readonly for provided <see cref="DataRow"/> object.</summary>
         /// <param name="dataRow">The <see cref="DataRow"/> object.</param>
         /// <returns><see langword="true"/> if this column is readonly for provided <paramref name="dataRow"/>, otherwise <see langword="false"/>.</returns>
-        public bool IsReadOnly(DataRow dataRow)
+        public sealed override bool IsReadOnly(DataRow dataRow)
         {
             VerifyDataRow(dataRow, nameof(dataRow), false);
             return InternalIsReadOnly(dataRow);
@@ -339,7 +339,7 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc/>
-        public override bool IsExpression
+        public sealed override bool IsExpression
         {
             get { return Expression != null; }
         }

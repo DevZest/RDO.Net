@@ -51,6 +51,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="ColumnValueBag.cs" />
     <Compile Include="DataRowComparer.cs" />
     <Compile Include="EnumItem.cs" />
     <Compile Include="Functions.Contains.cs" />
