@@ -121,7 +121,10 @@ namespace DevZest.Data.Views
 
             var valueBag = editingService.Edit(foreignKey);
             if (valueBag != null)
+            {
                 ValueBag = valueBag;
+                DataPresenter?.InvalidateView();
+            }
         }
 
         void IRowElement.Setup(RowPresenter rowPresenter)
