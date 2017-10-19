@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Presenters.Primitives;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using System;
 using System.Windows;
 
@@ -7,6 +6,30 @@ namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, Action<TView, ColumnValueBag> refreshAction)
+            where TKey : KeyBase
+            where TView : UIElement, new()
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (refreshAction == null)
+                throw new ArgumentNullException(nameof(refreshAction));
+
+            return new RowBinding<ForeignKeyBox>(
+                onSetup: (v, p) =>
+                {
+                    v.Content = new TView();
+                    v.ForeignKey = key;
+                },
+                onRefresh: (v, p) => {
+                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
+                    refreshAction((TView)v.Content, v.ValueBag);
+                },
+                onCleanup: (v, p) => {
+                    v.Content = null;
+                }).WithInput(key, null);
+        }
+
         public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, TExtension, ColumnValueBag> refreshAction)
             where TKey : KeyBase
             where TExtension : ModelExtension
