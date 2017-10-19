@@ -339,6 +339,7 @@ namespace DevZest.Data.Presenters
                     column = DataRow.Model.GetColumns()[column.Ordinal];
                 CoerceEditMode();
                 column.SetValue(DataRow, value);
+                Invalidate();
             }
         }
 
@@ -401,6 +402,7 @@ namespace DevZest.Data.Presenters
 
             CoerceEditMode();
             column[DataRow] = value;
+            Invalidate();
         }
 
         public void CancelEdit()
