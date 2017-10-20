@@ -5,15 +5,58 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Threading;
-using DevZest.Data.Presenters.Services;
 using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Views
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
+        public static readonly RoutedUICommand RetryDataLoadCommand = new RoutedUICommand(UIText.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoadCommand), typeof(CommandService));
+        public static readonly RoutedUICommand CancelDataLoadCommand = new RoutedUICommand(UIText.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoadCommand), typeof(CommandService));
+
+        public interface ICommandService : IService
+        {
+            IEnumerable<CommandEntry> GetCommandEntries(DataView dataView);
+        }
+
+        private sealed class CommandService : ICommandService
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+            }
+
+            public IEnumerable<CommandEntry> GetCommandEntries(DataView dataView)
+            {
+                yield return CancelDataLoadCommand.CommandBinding(CancelLoadData, CanCancelLoadData);
+                yield return RetryDataLoadCommand.CommandBinding(ReloadData, CanReloadData);
+            }
+
+            private void ReloadData(object sender, ExecutedRoutedEventArgs e)
+            {
+                DataPresenter.Reload();
+            }
+
+            private void CanReloadData(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = DataPresenter.CanReload;
+            }
+
+            private void CancelLoadData(object sender, ExecutedRoutedEventArgs e)
+            {
+                DataPresenter.CancelLoading();
+            }
+
+            private void CanCancelLoadData(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = DataPresenter.CanCancelLoading;
+            }
+        }
+
         private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(DataView),
             typeof(DataView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
         public static readonly DependencyProperty CurrentProperty = CurrentPropertyKey.DependencyProperty;
@@ -58,6 +101,7 @@ namespace DevZest.Data.Views
             FocusableProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
             KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
             KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+            ServiceManager.Register<ICommandService, CommandService>();
         }
 
         public DataView()
@@ -82,7 +126,7 @@ namespace DevZest.Data.Views
                     this.CleanupCommandEntries();
                 }
                 else
-                    this.SetupCommandEntries(DataPresenter.GetService<DataViewCommands>(() => new DataViewCommands()).GetCommandEntries(this));
+                    this.SetupCommandEntries(DataPresenter.GetService<ICommandService>().GetCommandEntries(this));
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Views;
-using System;
+﻿using DevZest.Data.Presenters;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace DevZest.Data.Presenters.Services
+namespace DevZest.Data.Views
 {
     /// <summary>
     /// Interaction logic for SortWindow.xaml
@@ -127,7 +126,7 @@ namespace DevZest.Data.Presenters.Services
                 return result;
         }
 
-        private static DataSet<Model> GetData(ISortService sortService)
+        private static DataSet<Model> GetData(ColumnHeader.ISortService sortService)
         {
             var result = DataSet<Model>.New();
             if (sortService == null)
@@ -154,7 +153,7 @@ namespace DevZest.Data.Presenters.Services
 
         public void Show(DataPresenter target)
         {
-            _data = GetData(target.GetService<ISortService>());
+            _data = GetData(target.GetService<ColumnHeader.ISortService>());
             _presenter = new Presenter(target);
             _presenter.Show(_dataView, _data);
             Show();
@@ -221,7 +220,7 @@ namespace DevZest.Data.Presenters.Services
             if (!success)
                 return;
             var target = _presenter.Target;
-            var sortService = target.GetService<ISortService>(() => new SortService());
+            var sortService = target.GetService<ColumnHeader.ISortService>();
             sortService.OrderBy = GetOrderBy(_data);
             this.Close();
         }

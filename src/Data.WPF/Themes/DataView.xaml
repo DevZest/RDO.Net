@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:DevZest.Data.Views"
     xmlns:primitives="clr-namespace:DevZest.Data.Views.Primitives"
-    xmlns:svc="clr-namespace:DevZest.Data.Presenters.Services"
     xmlns:res="clr-namespace:DevZest.Data">
     
     <Style TargetType="{x:Type local:DataView}">
@@ -46,7 +45,7 @@
                                         <TextBlock x:Name="_loading" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">Loading...</TextBlock>
                                         <TextBlock x:Name="_cancel" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
                                         <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
-                                                   Command="{x:Static svc:DataViewCommands.CancelDataLoad}">
+                                                   Command="{x:Static local:DataView.CancelDataLoadCommand}">
                                             <Run Text="{x:Static res:UIText.DataViewCommands_CancelDataLoadCommandText}" />
                                         </Hyperlink>
                                         </TextBlock>
@@ -90,7 +89,7 @@
                                         <Run Text="{x:Static res:UIText.DataView_DataLoadCancelled}" />
                                         <LineBreak />
                                         <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
-                                                   Command="{x:Static svc:DataViewCommands.RetryDataLoad}">
+                                                   Command="{x:Static local:DataView.RetryDataLoadCommand}">
                                             <Run Text="{x:Static res:UIText.DataViewCommands_RetryDataLoadCommandText}" />                                            
                                         </Hyperlink>
                                         </TextBlock>
@@ -118,7 +117,7 @@
                                         </Expander>
                                         <TextBlock>
                                             <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
-                                                       Command="{x:Static svc:DataViewCommands.RetryDataLoad}">
+                                                       Command="{x:Static local:DataView.RetryDataLoadCommand}">
                                                 <Run Text="{x:Static res:UIText.DataViewCommands_RetryDataLoadCommandText}" />
                                             </Hyperlink>
                                         </TextBlock>

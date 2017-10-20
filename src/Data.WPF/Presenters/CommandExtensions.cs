@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
-namespace DevZest.Data.Presenters.Services
+namespace DevZest.Data.Presenters
 {
     public static class CommandExtensions
     {

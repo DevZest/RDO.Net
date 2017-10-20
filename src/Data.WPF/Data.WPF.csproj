@@ -77,13 +77,9 @@
     <Compile Include="Presenters\ScalarValidationMessage.cs" />
     <Compile Include="Presenters\ScalarValidationMessages.cs" />
     <Compile Include="Presenters\ScalarValidationProgress.cs" />
-    <Compile Include="Presenters\Services\ColumnHeaderCommands.cs" />
-    <Compile Include="Presenters\Services\CommandExtensions.cs" />
-    <Compile Include="Presenters\Services\DataViewCommands.cs" />
-    <Compile Include="Presenters\Services\RowSelectorCommands.cs" />
-    <Compile Include="Presenters\Services\RowViewCommands.cs" />
-    <Compile Include="Presenters\Services\SortService.cs" />
-    <Compile Include="Presenters\Services\SortWindow.xaml.cs">
+    <Compile Include="Presenters\ServiceManager.cs" />
+    <Compile Include="Presenters\CommandExtensions.cs" />
+    <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presenters\ValidationMessageType.cs" />
@@ -112,14 +108,13 @@
     <Compile Include="Presenters\BindingFactory.cs" />
     <Compile Include="Presenters\BindingFactory.TextBox.cs" />
     <Compile Include="Presenters\CompositeBlockBinding_T.cs" />
-    <Compile Include="Presenters\Services\CommandEntry.cs" />
+    <Compile Include="Presenters\CommandEntry.cs" />
     <Compile Include="Presenters\DataPresenter_T.cs" />
     <Compile Include="Presenters\StyleKeyRelativeToAttribute.cs" />
     <Compile Include="Presenters\ExplicitTrigger.cs" />
     <Compile Include="Presenters\IRowAsyncValidators.cs" />
     <Compile Include="Presenters\BlockPresenter.cs" />
-    <Compile Include="Presenters\Services\ISortService.cs" />
-    <Compile Include="Presenters\Services\IService.cs" />
+    <Compile Include="Presenters\IService.cs" />
     <Compile Include="Presenters\IRowInput.cs" />
     <Compile Include="Presenters\Primitives\DataRowExtensions.cs" />
     <Compile Include="Presenters\Primitives\IScrollable.cs" />
@@ -262,7 +257,7 @@
     <Resource Include="Resources\Cancel.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Presenters\Services\SortWindow.xaml">
+    <Page Include="Views\SortWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

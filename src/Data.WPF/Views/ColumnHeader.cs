@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
-using DevZest.Data.Presenters.Services;
 using DevZest.Windows;
 using System.Diagnostics;
 using System.Windows;
@@ -8,6 +7,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Views
 {
@@ -19,6 +19,169 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateSortDescending)]
     public class ColumnHeader : ButtonBase, IScalarElement
     {
+        public interface ISortService : IService
+        {
+            IReadOnlyList<IColumnComparer> OrderBy { get; set; }
+        }
+
+        private sealed class SortService : ISortService
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+            }
+
+            private IReadOnlyList<IColumnComparer> _orderBy;
+            public IReadOnlyList<IColumnComparer> OrderBy
+            {
+                get { return _orderBy; }
+                set
+                {
+                    _orderBy = value;
+                    DataPresenter.OrderBy = GetOrderBy(_orderBy);
+                }
+            }
+
+            private static IComparer<DataRow> GetOrderBy(IReadOnlyList<IColumnComparer> orderBy)
+            {
+                if (orderBy == null || orderBy.Count == 0)
+                    return null;
+
+                IDataRowComparer result = orderBy[0];
+                for (int i = 1; i < orderBy.Count; i++)
+                    result = result.ThenBy(orderBy[i]);
+
+                return result;
+            }
+        }
+
+        public static readonly RoutedUICommand ToggleSortDirectionCommand = new RoutedUICommand(nameof(ToggleSortDirectionCommand), nameof(ToggleSortDirectionCommand), typeof(CommandService));
+        public static readonly RoutedUICommand SortCommand = new RoutedUICommand(UIText.ColumnHeaderCommands_SortCommandText, nameof(SortCommand), typeof(CommandService));
+
+        private interface ICommandManager : IService
+        {
+            void EnsureCommandEntriesSetup(DataView dataView);
+        }
+
+        public interface ICommandService : IService
+        {
+            IEnumerable<CommandEntry> GetCommandEntries(DataView dataView);
+            IEnumerable<CommandEntry> GetCommandEntries(ColumnHeader columnHeader);
+        }
+
+        private sealed class CommandManager : ICommandManager
+        {
+            private DataPresenter _dataPresenter;
+            public DataPresenter DataPresenter
+            {
+                get { return _dataPresenter; }
+            }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                _dataPresenter = dataPresenter;
+                dataPresenter.ViewChanged += OnViewChanged;
+            }
+
+            private void OnViewChanged(object sender, EventArgs e)
+            {
+                _dataViewCommandEntriesSetup = false;
+            }
+
+            private bool _dataViewCommandEntriesSetup = false;
+            public void EnsureCommandEntriesSetup(DataView dataView)
+            {
+                if (_dataViewCommandEntriesSetup)
+                    return;
+
+                var commandService = _dataPresenter.GetService<ICommandService>();
+                dataView.SetupCommandEntries(commandService.GetCommandEntries(dataView));
+                _dataViewCommandEntriesSetup = true;
+            }
+        }
+
+        private sealed class CommandService : ICommandService
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+            }
+
+            public IEnumerable<CommandEntry> GetCommandEntries(DataView dataView)
+            {
+                yield return SortCommand.CommandBinding(ExecSort, CanExecSort);
+            }
+
+            private void CanExecSort(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = CanShowSortWindow;
+            }
+
+            private bool CanShowSortWindow
+            {
+                get
+                {
+                    var bindings = DataPresenter.Template.ScalarBindings;
+                    for (int i = 0; i < bindings.Count; i++)
+                    {
+                        var columnHeader = bindings[i][0] as ColumnHeader;
+                        if (columnHeader != null && columnHeader.Column != null && columnHeader.CanSort)
+                            return true;
+                    }
+                    return false;
+                }
+            }
+
+            private void ExecSort(object sender, ExecutedRoutedEventArgs e)
+            {
+                var dataView = (DataView)sender;
+                var sortWindow = new SortWindow();
+                var positionFromScreen = dataView.PointToScreen(new Point(0, 0));
+                PresentationSource source = PresentationSource.FromVisual(dataView);
+                Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(positionFromScreen);
+
+                sortWindow.Top = targetPoints.Y + Math.Max(0, (dataView.ActualHeight - sortWindow.Height) / 3);
+                sortWindow.Left = targetPoints.X + Math.Max(0, (dataView.ActualWidth - sortWindow.Width) / 3);
+                sortWindow.Show(dataView.DataPresenter);
+            }
+
+            public IEnumerable<CommandEntry> GetCommandEntries(ColumnHeader columnHeader)
+            {
+                yield return ToggleSortDirectionCommand.InputBinding(ExecToggleSortDirection, CanExecToggleSortDirection, new MouseGesture(MouseAction.LeftClick));
+            }
+
+            private void CanExecToggleSortDirection(object sender, CanExecuteRoutedEventArgs e)
+            {
+                var columnHeader = (ColumnHeader)sender;
+                e.CanExecute = columnHeader.Column != null && columnHeader.CanSort;
+            }
+
+            private void ExecToggleSortDirection(object sender, ExecutedRoutedEventArgs e)
+            {
+                var columnHeader = (ColumnHeader)sender;
+                var direction = Toggle(columnHeader.SortDirection);
+                var sortService = DataPresenter.GetService<ISortService>();
+                if (direction == SortDirection.Unspecified)
+                    sortService.OrderBy = null;
+                else
+                    sortService.OrderBy = new IColumnComparer[] { DataRow.OrderBy(columnHeader.Column, direction) };
+            }
+
+            private static SortDirection Toggle(SortDirection direction)
+            {
+                if (direction == SortDirection.Unspecified)
+                    return SortDirection.Ascending;
+                else if (direction == SortDirection.Ascending)
+                    return SortDirection.Descending;
+                else
+                    return SortDirection.Unspecified;
+            }
+        }
+
         private sealed class DragHandler : DragHandlerBase
         {
             private GridTrack _gridTrack;
@@ -91,6 +254,9 @@ namespace DevZest.Data.Views
         static ColumnHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ColumnHeader), new FrameworkPropertyMetadata(typeof(ColumnHeader)));
+            ServiceManager.Register<ISortService, SortService>();
+            ServiceManager.Register<ICommandManager, CommandManager>();
+            ServiceManager.Register<ICommandService, CommandService>();
         }
 
         public ColumnHeader()
@@ -198,25 +364,20 @@ namespace DevZest.Data.Views
         void IScalarElement.Setup(ScalarPresenter scalarPresenter)
         {
             var dataPresenter = scalarPresenter.DataPresenter;
-            var commands = GetCommands(dataPresenter);
-            EnsureCommandEntriesSetup(commands);
-            commands.EnsureCommandEntriesSetup(dataPresenter.View);
+            var commandService = dataPresenter.GetService<ICommandService>();
+            EnsureCommandEntriesSetup(commandService);
+            var commandManager = dataPresenter.GetService<ICommandManager>();
+            commandManager.EnsureCommandEntriesSetup(dataPresenter.View);
         }
 
         private bool _commandEntriesSetup;
-        private void EnsureCommandEntriesSetup(ColumnHeaderCommands commands)
+        private void EnsureCommandEntriesSetup(ICommandService commandService)
         {
             if (_commandEntriesSetup)
                 return;
 
-            this.SetupCommandEntries(commands.GetCommandEntries(this));
+            this.SetupCommandEntries(commandService.GetCommandEntries(this));
             _commandEntriesSetup = true;
-        }
-
-        private static ColumnHeaderCommands GetCommands(DataPresenter dataPresenter)
-        {
-            Debug.Assert(dataPresenter != null);
-            return dataPresenter.GetService<ColumnHeaderCommands>(() => new ColumnHeaderCommands());
         }
 
         private GridTrack GridTrackToResize

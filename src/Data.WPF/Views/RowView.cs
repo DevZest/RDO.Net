@@ -6,7 +6,6 @@ using System.Windows.Input;
 using DevZest.Data.Views.Primitives;
 using DevZest.Data.Presenters;
 using System;
-using DevZest.Data.Presenters.Services;
 using DevZest.Data.Presenters.Plugins;
 
 namespace DevZest.Data.Views
@@ -14,6 +13,53 @@ namespace DevZest.Data.Views
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
+        public static readonly RoutedUICommand ExpandCommand = new RoutedUICommand(UIText.RowViewCommands_ExpandCommandText, nameof(ExpandCommand), typeof(CommandService));
+        public static readonly RoutedUICommand CollapseCommand = new RoutedUICommand(UIText.RowViewCommands_CollapseCommandText, nameof(CollapseCommand), typeof(CommandService));
+
+        public interface ICommandService : IService
+        {
+            IEnumerable<CommandEntry> GetCommandEntries(RowView rowView);
+        }
+
+        private sealed class CommandService : ICommandService
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+            }
+
+            public IEnumerable<CommandEntry> GetCommandEntries(RowView rowView)
+            {
+                if (DataPresenter.IsRecursive)
+                {
+                    yield return ExpandCommand.InputBinding(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
+                    yield return CollapseCommand.InputBinding(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
+                }
+            }
+
+            private void ToggleExpandState(object sender, ExecutedRoutedEventArgs e)
+            {
+                var rowView = (RowView)sender;
+                rowView.RowPresenter.ToggleExpandState();
+            }
+
+            private void CanExpand(object sender, CanExecuteRoutedEventArgs e)
+            {
+                var rowView = (RowView)sender;
+                var rowPresenter = rowView.RowPresenter;
+                e.CanExecute = rowPresenter.HasChildren && !rowPresenter.IsExpanded;
+            }
+
+            private void CanCollapse(object sender, CanExecuteRoutedEventArgs e)
+            {
+                var rowView = (RowView)sender;
+                var rowPresenter = rowView.RowPresenter;
+                e.CanExecute = rowPresenter.HasChildren && rowPresenter.IsExpanded;
+            }
+        }
+
         public static readonly StyleKey SelectableStyleKey = new StyleKey(typeof(RowView));
 
         private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(RowView),
@@ -33,6 +79,7 @@ namespace DevZest.Data.Views
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(typeof(RowView)));
             FocusableProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
+            ServiceManager.Register<ICommandService, CommandService>();
         }
 
         public RowView()
@@ -257,7 +304,7 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            this.SetupCommandEntries(dataPresenter.GetService<RowViewCommands>(() => new RowViewCommands()).GetCommandEntries(this));
+            this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
         }
 
         private bool _rowSelectorCommandEntriesSetup;
@@ -280,7 +327,7 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            this.SetupCommandEntries(dataPresenter.GetService<RowSelectorCommands>(() => new RowSelectorCommands()).GetCommandEntries(this));
+            this.SetupCommandEntries(dataPresenter.GetService<RowSelector.ICommandService>().GetCommandEntries(this));
         }
 
         internal void Flush()

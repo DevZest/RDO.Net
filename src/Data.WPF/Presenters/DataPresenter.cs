@@ -5,12 +5,11 @@ using System.Windows.Controls;
 using DevZest.Data.Views;
 using DevZest.Data.Views.Primitives;
 using System.Diagnostics;
-using DevZest.Data.Presenters.Services;
 using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class DataPresenter
+    public abstract class DataPresenter : IService
     {
         public event EventHandler ViewRefreshing = delegate { };
         public event EventHandler ViewRefreshed = delegate { };
@@ -315,65 +314,10 @@ namespace DevZest.Data.Presenters
             return rowPresenter.InternalHasChildren;
         }
 
-        private Dictionary<Type, IService> _services;
-
-        public virtual IService this[Type type]
+        public T GetService<T>()
+            where T : class, IService
         {
-            get
-            {
-                if (type == null)
-                    throw new ArgumentNullException(nameof(type));
-
-                if (_services == null)
-                    return null;
-                IService result;
-                return _services.TryGetValue(type, out result) ? result : null;
-            }
-            set
-            {
-                if (type == null)
-                    throw new ArgumentNullException(nameof(type));
-                IService oldValue;
-                if (_services == null)
-                    oldValue = null;
-                else
-                    _services.TryGetValue(type, out oldValue);
-
-                if (value == null)
-                {
-                    if (_services != null && _services.ContainsKey(type))
-                        _services.Remove(type);
-                }
-                else
-                {
-                    if (_services == null)
-                        _services = new Dictionary<Type, IService>();
-                    _services[type] = value;
-                }
-
-                if (oldValue != null)
-                    oldValue.DataPresenter = null;
-                if (value != null)
-                    value.DataPresenter = this;
-            }
-        }
-
-        public T GetService<T>(Func<T> createIfNull = null)
-            where T : IService
-        {
-            var type = typeof(T);
-            var result = (T)this[type];
-
-            if (createIfNull == null)
-                return result;
-
-            if (result == null)
-            {
-                result = createIfNull();
-                this[type] = result;
-            }
-
-            return result;
+            return (this is T) ? (T)((object)this) : ServiceManager.GetService<T>(this);
         }
 
         internal abstract void Reload();
@@ -429,5 +373,18 @@ namespace DevZest.Data.Presenters
                 CurrentRow.EndEdit();
             return true;
         }
+
+        #region IService
+
+        DataPresenter IService.DataPresenter
+        {
+            get { return this; }
+        }
+
+        void IService.Initialize(DataPresenter dataPresenter)
+        {
+            throw new NotSupportedException();
+        }
+        #endregion
     }
 }

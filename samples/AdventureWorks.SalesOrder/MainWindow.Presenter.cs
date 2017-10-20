@@ -7,9 +7,7 @@ using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Plugins;
 using System;
 using System.Windows.Input;
-using DevZest.Data.Presenters.Services;
 using System.Collections.Generic;
-using System.Diagnostics;
 using DevZest.Data.Views;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,7 +24,7 @@ namespace AdventureWorks.SalesOrders
             public static readonly StyleKey Label = new StyleKey(typeof(MainWindow));
         }
 
-        private class Presenter : DataPresenter<SalesOrder>, ISortService
+        private class Presenter : DataPresenter<SalesOrder>, ColumnHeader.ISortService
         {
             private readonly Pen _frozenLine;
 
@@ -34,7 +32,6 @@ namespace AdventureWorks.SalesOrders
             {
                 _frozenLine = new Pen(Brushes.Black, 1);
                 _frozenLine.Freeze();
-                this[typeof(ISortService)] = this;
             }
 
             private decimal? CalcTotalAmt()
@@ -59,7 +56,7 @@ namespace AdventureWorks.SalesOrders
             }
 
             private IReadOnlyList<IColumnComparer> _orderBy = new IColumnComparer[] { };
-            IReadOnlyList<IColumnComparer> ISortService.OrderBy
+            IReadOnlyList<IColumnComparer> ColumnHeader.ISortService.OrderBy
             {
                 get { return _orderBy; }
                 set
@@ -67,12 +64,6 @@ namespace AdventureWorks.SalesOrders
                     _orderBy = value;
                     RefreshAsync();
                 }
-            }
-
-            DataPresenter IService.DataPresenter
-            {
-                get { return this; }
-                set { Debug.Assert(value == this); }
             }
 
             private Task<DataSet<SalesOrder>> LoadDataAsync(CancellationToken ct)
