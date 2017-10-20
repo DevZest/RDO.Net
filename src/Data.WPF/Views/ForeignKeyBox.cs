@@ -8,9 +8,10 @@ namespace DevZest.Data.Views
 {
     public class ForeignKeyBox : ButtonBase, IRowElement
     {
-        public interface IEditingService : IService
+        public interface ILookupService : IService
         {
-            ColumnValueBag Edit(KeyBase foreignKey);
+            bool CanLookup(KeyBase foreignKey);
+            ColumnValueBag Lookup(KeyBase foreignKey);
         }
 
         private static readonly DependencyPropertyKey ValueBagPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ValueBag),
@@ -20,6 +21,7 @@ namespace DevZest.Data.Views
             typeof(ForeignKeyBox), new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty CanClearValueProperty = CanClearValuePropertyKey.DependencyProperty;
 
+        private static readonly RoutedUICommand LookupCommand = new RoutedUICommand();
         public static readonly RoutedUICommand ClearValueCommand = new RoutedUICommand();
 
         static ForeignKeyBox()
@@ -29,8 +31,30 @@ namespace DevZest.Data.Views
 
         public ForeignKeyBox()
         {
+            Command = LookupCommand;
             ValueBag = new ColumnValueBag();
+            CommandBindings.Add(new CommandBinding(LookupCommand, ExecLookup, CanExecLookup));
             CommandBindings.Add(new CommandBinding(ClearValueCommand, ExecClearValue, CanExecClearValue));
+        }
+
+        private void CanExecLookup(object sender, CanExecuteRoutedEventArgs e)
+        {
+            var lookupService = DataPresenter?.GetService<ILookupService>();
+            e.CanExecute = lookupService == null ? false : lookupService.CanLookup(ForeignKey);
+        }
+
+        private void ExecLookup(object sender, ExecutedRoutedEventArgs e)
+        {
+            var lookupService = DataPresenter?.GetService<ILookupService>();
+            if (lookupService == null)
+                return;
+
+            var valueBag = lookupService.Lookup(ForeignKey);
+            if (valueBag != null)
+            {
+                ValueBag = valueBag;
+                DataPresenter?.InvalidateView();
+            }
         }
 
         private void CanExecClearValue(object sender, CanExecuteRoutedEventArgs e)
@@ -83,30 +107,6 @@ namespace DevZest.Data.Views
                     return false;
             }
             return true;
-        }
-
-        protected override void OnClick()
-        {
-            base.OnClick();
-            InvokeEdit();
-        }
-
-        private void InvokeEdit()
-        {
-            var foreignKey = ForeignKey;
-            if (foreignKey == null)
-                return;
-
-            var editingService = DataPresenter?.GetService<IEditingService>();
-            if (editingService == null)
-                return;
-
-            var valueBag = editingService.Edit(foreignKey);
-            if (valueBag != null)
-            {
-                ValueBag = valueBag;
-                DataPresenter?.InvalidateView();
-            }
         }
 
         void IRowElement.Setup(RowPresenter rowPresenter)

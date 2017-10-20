@@ -10,6 +10,7 @@
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowExpander.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowView.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ColumnHeader.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/InertButton.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ForeignKeyBox.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowHeader.xaml" />
     </ResourceDictionary.MergedDictionaries>

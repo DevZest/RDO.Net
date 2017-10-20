@@ -78,6 +78,7 @@
     <Compile Include="Presenters\ScalarValidationProgress.cs" />
     <Compile Include="Presenters\ServiceManager.cs" />
     <Compile Include="Presenters\CommandExtensions.cs" />
+    <Compile Include="Views\Primitives\InertButton.cs" />
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>
@@ -256,6 +257,10 @@
     <Resource Include="Resources\Cancel.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\InertButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\SortWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,0 +1,25 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:DevZest.Data.Views.Primitives">
+
+    <Style TargetType="local:InertButton">
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" BorderThickness="1" BorderBrush="Transparent">
+                        <Image Width="16" Height="16" Source="/DevZest.Data.WPF;component/Resources/ClearData.png" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="Yellow" />
+                            <Setter Property="BorderBrush" TargetName="border" Value="#FF7EB4EA" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
