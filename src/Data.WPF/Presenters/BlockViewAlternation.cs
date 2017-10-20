@@ -2,7 +2,7 @@
 using DevZest.Data.Views;
 using System.Windows.Media;
 
-namespace DevZest.Data.Presenters.Plugins
+namespace DevZest.Data.Presenters
 {
     public sealed class BlockViewAlternation : BlockViewPlugin
     {

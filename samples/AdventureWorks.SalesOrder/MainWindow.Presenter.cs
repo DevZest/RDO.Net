@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using DevZest.Data.Presenters;
-using DevZest.Data.Presenters.Plugins;
 using System;
 using System.Windows.Input;
 using System.Collections.Generic;

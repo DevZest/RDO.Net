@@ -6,7 +6,6 @@ using System.Windows.Input;
 using DevZest.Data.Views.Primitives;
 using DevZest.Data.Presenters;
 using System;
-using DevZest.Data.Presenters.Plugins;
 
 namespace DevZest.Data.Views
 {

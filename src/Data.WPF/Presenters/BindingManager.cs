@@ -1,12 +1,9 @@
 ﻿using DevZest.Data.Views;
 using DevZest.Data.Presenters.Primitives;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Input;
 using System.ComponentModel;
-using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Presenters
 {
@@ -169,6 +166,36 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(paramName);
             if (compositeView.GetBinding() != binding)
                 throw new ArgumentException(Strings.Binding_InvalidCompositeView, paramName);
+        }
+
+        public static RowBinding<T> AddPlugin<T, TPlugin>(this RowBinding<T> rowBinding, RowBindingPlugin<TPlugin> plugin)
+            where TPlugin : UIElement, new()
+            where T : TPlugin, new()
+        {
+            if (plugin == null)
+                throw new ArgumentNullException(nameof(plugin));
+            rowBinding.InternalAddPlugin(plugin);
+            return rowBinding;
+        }
+
+        public static ScalarBinding<T> AddPlugin<T, TPlugin>(this ScalarBinding<T> scalarBinding, ScalarBindingPlugin<TPlugin> plugin)
+            where TPlugin : UIElement, new()
+            where T : TPlugin, new()
+        {
+            if (plugin == null)
+                throw new ArgumentNullException(nameof(plugin));
+            scalarBinding.InternalAddPlugin(plugin);
+            return scalarBinding;
+        }
+
+        public static BlockBinding<T> AddPlugin<T, TPlugin>(this BlockBinding<T> blockBinding, BlockBindingPlugin<TPlugin> plugin)
+            where TPlugin : UIElement, new()
+            where T : TPlugin, new()
+        {
+            if (plugin == null)
+                throw new ArgumentNullException(nameof(plugin));
+            blockBinding.InternalAddPlugin(plugin);
+            return blockBinding;
         }
     }
 }

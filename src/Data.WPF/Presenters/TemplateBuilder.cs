@@ -10,7 +10,6 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Linq;
 using DevZest.Data.Views;
-using DevZest.Data.Presenters.Plugins;
 
 namespace DevZest.Data.Presenters
 {

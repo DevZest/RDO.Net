@@ -4,8 +4,6 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Collections.Generic;
-using DevZest.Data.Presenters.Plugins;
-
 namespace DevZest.Data.Presenters
 {
     public sealed class BlockBinding<T> : BlockBindingBase<T>

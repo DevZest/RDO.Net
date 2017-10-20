@@ -1,8 +1,6 @@
 ﻿using DevZest.Data;
-using DevZest.Data.Presenters.Plugins;
 using System.Windows.Controls;
 using DevZest.Data.Presenters;
-using System;
 using System.Windows;
 
 namespace AdventureWorks.SalesOrders

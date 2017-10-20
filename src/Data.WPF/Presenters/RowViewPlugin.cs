@@ -1,7 +1,7 @@
 ﻿using System;
 using DevZest.Data.Views;
 
-namespace DevZest.Data.Presenters.Plugins
+namespace DevZest.Data.Presenters
 {
     public abstract class RowViewPlugin
     {

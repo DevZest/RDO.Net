@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace DevZest.Data.Presenters.Plugins
+namespace DevZest.Data.Presenters
 {
     public interface IBlockBindingPlugin
     {
