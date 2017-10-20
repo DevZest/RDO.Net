@@ -40,24 +40,7 @@ namespace DevZest.Data.Views
 
         private void ExecClearValue(object sender, ExecutedRoutedEventArgs e)
         {
-            var rowPresenter = RowPresenter;
-            for (int i = 0; i < ForeignKey.Count; i++)
-            {
-                var column = ForeignKey[i].Column;
-                rowPresenter[column] = null;
-            }
-
-            if (Extension == null)
-                return;
-
-            var columns = Extension.Columns;
-            for (int i = 0; i < columns.Count; i++)
-            {
-                var column = columns[i];
-                if (column.IsExpression)
-                    continue;
-                rowPresenter[column] = null;
-            }
+            RowPresenter.ClearValue(ForeignKey, Extension);
         }
 
         public KeyBase ForeignKey { get; internal set; }
