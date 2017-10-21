@@ -6,7 +6,7 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static ScalarBinding<CheckBox> AsSelectionCheckBox(this DataPresenter dataPresenter)
+        public static ScalarBinding<CheckBox> AsCheckBox(this DataPresenter dataPresenter)
         {
             if (dataPresenter == null)
                 throw new ArgumentNullException(nameof(dataPresenter));
@@ -45,7 +45,7 @@ namespace DevZest.Data.Presenters
             });
         }
 
-        public static RowBinding<CheckBox> AsSelectionCheckBox(this Model model)
+        public static RowBinding<CheckBox> AsCheckBox(this Model model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
