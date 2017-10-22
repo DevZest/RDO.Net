@@ -44,16 +44,6 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
-        public class Ext : ModelExtension
-        {
-            static Ext()
-            {
-                RegisterChildExtension((Ext _) => _.Product);
-            }
-
-            public Product.Lookup Product { get; private set; }
-        }
-
         public static readonly Mounter<_Int16> _OrderQty;
         public static readonly Mounter<_Decimal> _UnitPrice;
         public static readonly Mounter<_Decimal> _UnitPriceDiscount;

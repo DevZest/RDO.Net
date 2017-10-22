@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SalesOrder.cs" />
     <Compile Include="SalesOrderDetail.cs" />
+    <Compile Include="SalesOrderToEdit.cs" />
     <Compile Include="SalesOrderStatus.cs" />
     <Compile Include="UdtAccountNumberAttribute.cs" />
     <Compile Include="UdtFlagAttribute.cs" />

@@ -1,7 +1,9 @@
 ﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -158,6 +160,65 @@ namespace DevZest.Samples.AdventureWorksLT
                     ForeignKey(null, m.Product, Products._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
                 });
             }
+        }
+
+        public DbSet<SalesOrder> GetSalesOrderList(string filterText, IReadOnlyList<IColumnComparer> orderBy)
+        {
+            DbSet<SalesOrder> result;
+            if (string.IsNullOrEmpty(filterText))
+                result = SalesOrders;
+            else
+                result = SalesOrders.Where(_ => _.SalesOrderNumber.Contains(filterText) | _.PurchaseOrderNumber.Contains(filterText));
+
+            if (orderBy != null && orderBy.Count > 0)
+                result = result.OrderBy(GetOrderBy(result._, orderBy));
+
+            return result;
+        }
+
+        private static ColumnSort[] GetOrderBy(Model model, IReadOnlyList<IColumnComparer> orderBy)
+        {
+            Debug.Assert(orderBy != null && orderBy.Count > 0);
+            var result = new ColumnSort[orderBy.Count];
+            for (int i = 0; i < orderBy.Count; i++)
+            {
+                var column = orderBy[i].GetColumn(model);
+                var direction = orderBy[i].Direction;
+                result[i] = direction == SortDirection.Descending ? column.Desc() : column.Asc();
+            }
+            return result;
+        }
+
+        public DbSet<SalesOrderToEdit> GetSalesOrderToEdit(int salesOrderID)
+        {
+            var result = CreateQuery((DbQueryBuilder builder, SalesOrderToEdit _) =>
+            {
+                var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+                Debug.Assert(ext != null);
+                SalesOrder o;
+                Customer c;
+                Address shipTo, billTo;
+                builder.From(SalesOrders, out o)
+                    .InnerJoin(Customers, o.Customer, out c)
+                    .InnerJoin(Addresses, o.ShipToAddress, out shipTo)
+                    .InnerJoin(Addresses, o.BillToAddress, out billTo)
+                    .AutoSelect()
+                    .AutoSelect(shipTo, ext.ShipToAddress)
+                    .AutoSelect(billTo, ext.BillToAddress)
+                    .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
+            });
+
+            result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
+            {
+                Debug.Assert(_.GetExtension<SalesOrderToEdit.DetailExt>() != null);
+                SalesOrderDetail d;
+                Product p;
+                builder.From(SalesOrderDetails, out d)
+                    .InnerJoin(Products, d.Product, out p)
+                    .AutoSelect();
+            });
+
+            return result;
         }
     }
 }

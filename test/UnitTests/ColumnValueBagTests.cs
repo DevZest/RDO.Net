@@ -10,9 +10,9 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag()
         {
-            var salesOrders = DataSet<SalesOrder.Edit>.New();
+            var salesOrders = DataSet<SalesOrderToEdit>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtension<SalesOrder.Ext>();
+            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
             var customer = ext.Customer;
             salesOrders.Add(new DataRow(), (dataRow) =>
             {
@@ -47,9 +47,9 @@ namespace DevZest.Data
             }
 
             {
-                var salesOrder = DataSet<SalesOrder.Edit>.New().EnsureInitialized()._;
+                var salesOrder = DataSet<SalesOrderToEdit>.New().EnsureInitialized()._;
                 var customerKey = salesOrder.Customer;
-                var customerExt = salesOrder.GetExtension<SalesOrder.Ext>().Customer;
+                var customerExt = salesOrder.GetExtension<SalesOrderToEdit.Ext>().Customer;
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);
                 valueBag.AutoSelect(customerExt, salesOrders[0]);

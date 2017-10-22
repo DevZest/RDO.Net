@@ -43,38 +43,11 @@ namespace DevZest.Data
             return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
         }
 
-        protected DataSet<SalesOrder.Edit> GetSalesOrder(int salesOrderID)
+        protected DataSet<SalesOrderToEdit> GetSalesOrderToEdit(int salesOrderID)
         {
             using (var db = OpenDb())
             {
-                var salesOrders = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Edit _) =>
-                {
-                    var ext = _.GetExtension<SalesOrder.Ext>();
-                    Debug.Assert(ext != null);
-                    SalesOrder o;
-                    Customer c;
-                    Address shipTo, billTo;
-                    builder.From(db.SalesOrders, out o)
-                        .InnerJoin(db.Customers, o.Customer, out c)
-                        .InnerJoin(db.Addresses, o.ShipToAddress, out shipTo)
-                        .InnerJoin(db.Addresses, o.BillToAddress, out billTo)
-                        .AutoSelect()
-                        .AutoSelect(shipTo, ext.ShipToAddress)
-                        .AutoSelect(billTo, ext.BillToAddress)
-                        .Where(o.SalesOrderID == salesOrderID);
-                });
-
-                salesOrders.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
-                {
-                    Debug.Assert(_.GetExtension<SalesOrderDetail.Ext>() != null);
-                    SalesOrderDetail d;
-                    Product p;
-                    builder.From(db.SalesOrderDetails, out d)
-                        .InnerJoin(db.Products, d.Product, out p)
-                        .AutoSelect();
-                });
-
-                return salesOrders.ToDataSet();
+                return db.GetSalesOrderToEdit(salesOrderID).ToDataSet();
             }
         }
     }
