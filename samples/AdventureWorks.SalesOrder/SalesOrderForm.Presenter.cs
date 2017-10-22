@@ -8,7 +8,7 @@ namespace AdventureWorks.SalesOrders
 {
     partial class SalesOrderForm
     {
-        private class Presenter : DataPresenter<SalesOrder.Edit>, ForeignKeyBox.ILookupService
+        private class Presenter : DataPresenter<SalesOrderToEdit>, ForeignKeyBox.ILookupService
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {

@@ -6,9 +6,9 @@ namespace AdventureWorks.SalesOrders
 {
     public static class BindingFactory
     {
-        public static CompositeRowBinding<SalesOrderHeaderBox> AsSalesOrderHeaderBox(this SalesOrder _)
+        public static CompositeRowBinding<SalesOrderHeaderBox> AsSalesOrderHeaderBox(this SalesOrderToEdit _)
         {
-            var ext = _.GetExtension<SalesOrder.Ext>();
+            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
             return new CompositeRowBinding<SalesOrderHeaderBox>()
                 .AddChild(_.Customer.AsForeignKeyBox(ext.Customer, CustomerBox.RefreshAction), v => v._customer)
                 .AddChild(_.ShipToAddress.AsForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)

@@ -17,7 +17,7 @@ namespace AdventureWorks.SalesOrders
 
         private Presenter _presenter;
 
-        public void Show(DataSet<SalesOrder.Edit> data, Window ownerWindow, string windowTitle, Action action)
+        public void Show(DataSet<SalesOrderToEdit> data, Window ownerWindow, string windowTitle, Action action)
         {
             _presenter = new Presenter();
             _presenter.Show(_dataView, data);
