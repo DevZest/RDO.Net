@@ -10,7 +10,7 @@ namespace DevZest.Data
     {
         protected Db OpenDb()
         {
-            return new Db(GetConnectionString()).OpenConnection();
+            return new Db(GetConnectionString()).Open();
         }
 
         protected Db OpenDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
@@ -18,12 +18,12 @@ namespace DevZest.Data
             return new Db(GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
-            }).OpenConnection();
+            }).Open();
         }
 
         protected Task<Db> OpenDbAsync()
         {
-            return new Db(GetConnectionString()).OpenConnectionAsync();
+            return new Db(GetConnectionString()).OpenAsync();
         }
 
         protected Task<Db> OpenDbAsync(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
@@ -31,7 +31,7 @@ namespace DevZest.Data
             return new Db(GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
-            }).OpenConnectionAsync();
+            }).OpenAsync();
         }
 
         private static string GetConnectionString()

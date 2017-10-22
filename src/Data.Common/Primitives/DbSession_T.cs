@@ -21,30 +21,23 @@ namespace DevZest.Data.Primitives
             _connection = connection;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-                CloseConnection();
-            base.Dispose(disposing);
-        }
-
         private TConnection _connection;
         public TConnection GetConnection()
         {
             return _connection;
         }
 
-        internal sealed override void InternalOpenConnection()
+        public sealed override void OpenConnection()
         {
             CreateConnectionInvoker().Open();
         }
 
-        internal sealed override Task InternalOpenConnectionAsync(CancellationToken cancellationToken)
+        public sealed override Task OpenConnectionAsync(CancellationToken cancellationToken)
         {
             return CreateConnectionInvoker().OpenAsync(cancellationToken);
         }
 
-        protected void CloseConnection()
+        public sealed override void CloseConnection()
         {
             CreateConnectionInvoker().Close();
         }

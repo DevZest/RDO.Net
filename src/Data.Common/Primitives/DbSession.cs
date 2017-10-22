@@ -24,13 +24,17 @@ namespace DevZest.Data.Primitives
 
         protected virtual void Dispose(bool disposing)
         {
+            if (disposing)
+                CloseConnection();
         }
 
         #endregion
 
-        internal abstract void InternalOpenConnection();
+        public abstract void OpenConnection();
 
-        internal abstract Task InternalOpenConnectionAsync(CancellationToken cancellationToken);
+        public abstract Task OpenConnectionAsync(CancellationToken cancellationToken);
+
+        public abstract void CloseConnection();
 
         public abstract int TransactionCount { get; }
 
