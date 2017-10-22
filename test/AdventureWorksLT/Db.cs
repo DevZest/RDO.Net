@@ -45,14 +45,17 @@ namespace DevZest.Samples.AdventureWorksLT
             return result;
         }
 
-        public static Db Open(SqlVersion sqlVersion)
+#if DEBUG
+        // For unit tests
+        public static Db New(SqlVersion sqlVersion)
         {
             var result = new Db(new SqlConnection());
             result.SqlVersion = sqlVersion;
             return result;
         }
+#endif
 
-        private Db(SqlConnection sqlConnection)
+        public Db(SqlConnection sqlConnection)
             : base(sqlConnection)
         {
         }

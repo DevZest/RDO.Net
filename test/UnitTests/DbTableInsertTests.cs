@@ -14,7 +14,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DbTable_Insert_from_DbTable()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<Product>();
                 var commands = table.MockInsert(0, db.Products);
@@ -48,7 +48,7 @@ FROM [SalesLT].[Product] [Product];
         [TestMethod]
         public void DbTable_Insert_from_DbQuery()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
                 var command = table.MockInsert(0, db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()));
@@ -71,7 +71,7 @@ WHERE ([ProductCategory].[ParentProductCategoryID] IS NULL);
         [TestMethod]
         public void DbTable_Insert_from_DbQuery_auto_join()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
                 var command = table.MockInsert(0, db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()), autoJoin: true);
@@ -98,7 +98,7 @@ WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCatego
         [TestMethod]
         public void DbTable_Insert_from_child_DbQuery()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
@@ -133,7 +133,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
         [TestMethod]
         public void DbTable_Insert_Scalar()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
                 var dataSet = DataSet<ProductCategory>.New();
@@ -166,7 +166,7 @@ SELECT
         [TestMethod]
         public void DbTable_Insert_Scalar_auto_join()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
                 var dataSet = DataSet<ProductCategory>.New();
@@ -205,7 +205,7 @@ WHERE ([ProductCategory1].[ProductCategoryID] IS NULL);
         [TestMethod]
         public void DbTable_Insert_union_query()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var tempTable = db.MockTempTable<Product>();
                 var unionQuery = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
@@ -262,7 +262,7 @@ WHERE ([Product].[ProductID] > 800));
         [TestMethod]
         public void DbTable_BuildUpdateIdentityStatement()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
                 var identityOutput = db.MockTempTable<IdentityMapping>();
@@ -285,7 +285,7 @@ FROM
         [TestMethod]
         public void DbTable_Insert_from_DataSet()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
                 var tempTable = db.MockTempTable<ProductCategory>();
@@ -348,7 +348,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
         public void DbTable_Insert_into_child_temp_table_optimized()
         {
             var salesOrders = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
                 var tempSalesOrderDetails = tempSalesOrders.MockCreateChild(x => x.SalesOrderDetails);
@@ -407,7 +407,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
         public void DbTable_Insert_into_child_temp_table_do_not_optimize()
         {
             var salesOrders = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
                 var tempSalesOrderDetails = tempSalesOrders.MockCreateChild(x => x.SalesOrderDetails);
@@ -470,7 +470,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
         [TestMethod]
         public void DbTable_Insert_from_tem_table_updateIdentity()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var sourceData = db.MockTempTable<ProductCategory>();
                 var children = sourceData.MockCreateChild(x => x.SubCategories);

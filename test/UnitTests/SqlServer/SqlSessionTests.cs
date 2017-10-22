@@ -12,7 +12,7 @@ namespace DevZest.Data.SqlServer
         [TestMethod]
         public void SqlSession_BuildQuery()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
                 var query = db.BuildQuery(dataSet, null, (ColumnMappingsBuilder builder, ProductCategory source, Adhoc target) =>
@@ -51,7 +51,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') ASC;
         [TestMethod]
         public void SqlSession_BuildImportQuery()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
                 var query = db.BuildImportQuery(dataSet);
@@ -108,7 +108,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
         [TestMethod]
         public void SqlSession_BuildImportKeyQuery()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
                 var query = db.BuildImportKeyQuery(dataSet);

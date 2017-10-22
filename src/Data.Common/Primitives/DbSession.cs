@@ -28,6 +28,10 @@ namespace DevZest.Data.Primitives
 
         #endregion
 
+        internal abstract void InternalOpenConnection();
+
+        internal abstract Task InternalOpenConnectionAsync(CancellationToken cancellationToken);
+
         public abstract int TransactionCount { get; }
 
         protected internal abstract string AssignTempTableName(Model model);

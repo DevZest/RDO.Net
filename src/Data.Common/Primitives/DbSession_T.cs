@@ -34,12 +34,12 @@ namespace DevZest.Data.Primitives
             return _connection;
         }
 
-        protected void OpenConnection()
+        internal sealed override void InternalOpenConnection()
         {
             CreateConnectionInvoker().Open();
         }
 
-        protected Task OpenConnectionAsync(CancellationToken cancellationToken)
+        internal sealed override Task InternalOpenConnectionAsync(CancellationToken cancellationToken)
         {
             return CreateConnectionInvoker().OpenAsync(cancellationToken);
         }

@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="ColumnValueBag.cs" />
     <Compile Include="DataRowComparer.cs" />
+    <Compile Include="DbSessionExtensions.cs" />
     <Compile Include="EnumItem.cs" />
     <Compile Include="Functions.Contains.cs" />
     <Compile Include="Functions.GetDate.cs" />

@@ -219,7 +219,7 @@ namespace DevZest.Data.SqlServer
         [TestMethod]
         public void Column_Clone_intercepted_column_mappers()
         {
-            using (var db = Db.Open(SqlVersion.Sql11))
+            using (var db = Db.New(SqlVersion.Sql11))
             {
                 var column = db.SalesOrders._.AccountNumber.Clone(new Mock<Model>().Object);
                 VerifyColumnMapper(SqlVersion.Sql11, column, SqlDbType.NVarChar, 15, "NVARCHAR(15)");
