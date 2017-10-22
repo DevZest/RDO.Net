@@ -1,5 +1,4 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -11,28 +10,28 @@ namespace DevZest.Data
     {
         protected Db OpenDb()
         {
-            return Db.Open(GetConnectionString());
+            return new Db(GetConnectionString()).OpenConnection();
         }
 
         protected Db OpenDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
         {
-            return Db.Open(GetConnectionString(), db =>
+            return new Db(GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
-            });
+            }).OpenConnection();
         }
 
         protected Task<Db> OpenDbAsync()
         {
-            return Db.OpenAsync(GetConnectionString());
+            return new Db(GetConnectionString()).OpenConnectionAsync();
         }
 
         protected Task<Db> OpenDbAsync(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
         {
-            return Db.OpenAsync(GetConnectionString(), db =>
+            return new Db(GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
-            });
+            }).OpenConnectionAsync();
         }
 
         private static string GetConnectionString()

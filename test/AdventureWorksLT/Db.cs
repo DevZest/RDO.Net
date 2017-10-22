@@ -11,40 +11,19 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class Db : SqlSession
     {
-        public static Db Open(string connectionString)
+        public Db(string connectionString, Action<Db> initializer = null)
+            : base(CreateSqlConnection(connectionString))
         {
-            return Open(connectionString, null);
+            if (initializer != null)
+                initializer(this);
         }
 
-        public static Db Open(string connectionString, Action<Db> initializer)
-        {
-            var result = InternalOpen(connectionString, initializer);
-            result.OpenConnection();
-            return result;
-        }
-
-        private static Db InternalOpen(string connectionString, Action<Db> initializer)
+        private static SqlConnection CreateSqlConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentNullException("connectionString");
-            var result = new Db(new SqlConnection(connectionString));
-            if (initializer != null)
-                initializer(result);
-            return result;
+                throw new ArgumentNullException(nameof(connectionString));
+            return new SqlConnection(connectionString);
         }
-
-        public static Task<Db> OpenAsync(string connectionString)
-        {
-            return OpenAsync(connectionString, null);
-        }
-
-        public static async Task<Db> OpenAsync(string connectionString, Action<Db> initializer)
-        {
-            var result = InternalOpen(connectionString, initializer);
-            await result.OpenConnectionAsync(CancellationToken.None);
-            return result;
-        }
-
 #if DEBUG
         // For unit tests
         public static Db New(SqlVersion sqlVersion)
