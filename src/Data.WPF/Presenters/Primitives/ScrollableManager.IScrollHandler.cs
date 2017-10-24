@@ -410,7 +410,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public void EnsureCurrentRowVisible()
         {
-            if (CurrentRow == null)
+            if (CurrentRow == null || Panel == null)
                 return;
 
             if (!Panel.IsMeasureValid)

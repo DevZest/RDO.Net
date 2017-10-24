@@ -1,14 +1,17 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
 using System;
 using System.Windows;
+using DevZest.Data.Presenters;
+using System.Diagnostics;
 
 namespace AdventureWorks.SalesOrders
 {
     /// <summary>
     /// Interaction logic for SalesOrderForm.xaml
     /// </summary>
-    public partial class SalesOrderForm : Window
+    public partial class SalesOrderForm : Window, ForeignKeyBox.ILookupService
     {
         public SalesOrderForm()
         {
@@ -17,9 +20,54 @@ namespace AdventureWorks.SalesOrders
 
         private Presenter _presenter;
 
+        private SalesOrderToEdit _
+        {
+            get { return _presenter?._; }
+        }
+
+        DataPresenter IService.DataPresenter
+        {
+            get { return _presenter; }
+        }
+
+        void IService.Initialize(DataPresenter dataPresenter)
+        {
+            Debug.Assert(dataPresenter == _presenter);
+        }
+
+        bool ForeignKeyBox.ILookupService.CanLookup(KeyBase foreignKey)
+        {
+            if (foreignKey == _.Customer)
+                return true;
+            else if (foreignKey == _.BillToAddress)
+                return true;
+            else if (foreignKey == _.ShipToAddress)
+                return true;
+            else
+                return false;
+        }
+
+        ColumnValueBag ForeignKeyBox.ILookupService.Lookup(KeyBase foreignKey)
+        {
+            if (foreignKey == _.Customer)
+            {
+                var data = App.Execute(Data.GetCustomerToLookupDataSet, this);
+                if (data == null)
+                    return null;
+                var dialogWindow = new CustomerLookupWindow();
+                dialogWindow.Show(this, data, _presenter.CurrentRow.GetValue(_.CustomerID), _.Customer, _.GetExtension<SalesOrderToEdit.Ext>().Customer);
+                return dialogWindow.Result;
+            }
+            else
+            {
+                MessageBox.Show("Lookup!");
+                return null;
+            }
+        }
+
         public void Show(DataSet<SalesOrderToEdit> data, Window ownerWindow, string windowTitle, Action action)
         {
-            _presenter = new Presenter();
+            _presenter = new Presenter(this);
             _presenter.Show(_dataView, data);
             Owner = ownerWindow;
             Title = windowTitle;

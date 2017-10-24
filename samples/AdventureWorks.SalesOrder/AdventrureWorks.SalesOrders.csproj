@@ -91,6 +91,11 @@
     <Compile Include="CustomerBox.xaml.cs">
       <DependentUpon>CustomerBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomerLookupWindow.Presenter.cs" />
+    <Compile Include="CustomerLookupWindow.xaml.cs">
+      <DependentUpon>CustomerLookupWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomerToLookup.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
@@ -113,6 +118,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomerBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomerLookupWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

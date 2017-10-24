@@ -33,5 +33,18 @@ namespace AdventureWorks.SalesOrders
                 return await db.GetSalesOrderToEdit(salesOrderID).ToDataSetAsync(ct);
             }
         }
+
+        public static async Task<DataSet<CustomerToLookup>> GetCustomerToLookupDataSet(CancellationToken ct)
+        {
+            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            {
+                var result = db.CreateQuery<CustomerToLookup>((builder, _) =>
+                {
+                    Customer c;
+                    builder.From(db.Customers, out c).AutoSelect();
+                });
+                return await result.ToDataSetAsync(ct);
+            }
+        }
     }
 }

@@ -473,7 +473,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public FrameworkElement Panel
         {
-            get { return ElementCollection.Parent; }
+            get { return ElementCollection?.Parent; }
         }
 
         public void InvalidateMeasure()
