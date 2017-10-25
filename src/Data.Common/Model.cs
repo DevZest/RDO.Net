@@ -301,6 +301,7 @@ namespace DevZest.Data
                 return;
 
             Mount(s_childModelManager);
+            OnChildModelsMounted();
             if (DataSource != null && DataSource.Kind == DataSourceKind.DataSet)
             {
                 foreach (var model in ChildModels)
@@ -309,24 +310,35 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
-                OnBuilding();
+                OnChildDataSetsCreated();
                 DataSetContainer.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
             }
-            IsInitialized = true;
 
+            OnExitInitializing();
+            IsInitialized = true;
             OnInitialized();
         }
 
-        protected internal virtual void OnInitializing()
+        protected internal virtual void OnEnterInitializing()
         {
-            Initializing(this, EventArgs.Empty);
+            EnterInitializing(this, EventArgs.Empty);
         }
 
-        protected virtual void OnBuilding()
+        protected virtual void OnExitInitializing()
         {
-            Building(this, EventArgs.Empty);
+            ExitInitializing(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnChildModelsMounted()
+        {
+            ChildModelsMounted(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnChildDataSetsCreated()
+        {
+            ChildDataSetsCreated(this, EventArgs.Empty);
         }
 
         protected virtual void OnInitialized()
@@ -878,8 +890,10 @@ namespace DevZest.Data
             return result;
         }
 
-        public event EventHandler<EventArgs> Initializing = delegate { };
-        public event EventHandler<EventArgs> Building = delegate { };
+        public event EventHandler<EventArgs> EnterInitializing = delegate { };
+        public event EventHandler<EventArgs> ExitInitializing = delegate { };
+        public event EventHandler<EventArgs> ChildModelsMounted = delegate { };
+        public event EventHandler<EventArgs> ChildDataSetsCreated = delegate { };
         public event EventHandler<EventArgs> Initialized = delegate { };
         public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
         public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };

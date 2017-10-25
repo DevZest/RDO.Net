@@ -137,7 +137,7 @@ namespace DevZest.Data.Primitives
             Debug.Assert(model != null);
             if (initializer != null)
                 initializer(model);
-            model.OnInitializing();
+            model.OnEnterInitializing();
         }
     }
 }

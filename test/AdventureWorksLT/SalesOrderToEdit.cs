@@ -28,22 +28,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public Product.Lookup Product { get; private set; }
         }
 
-        protected override void OnInitializing()
+        protected override void OnEnterInitializing()
         {
             SetExtension<Ext>();
-            base.OnInitializing();
+            base.OnEnterInitializing();
         }
 
-        protected override void OnInitialized()
+        protected override void OnChildModelsMounted()
         {
             SalesOrderDetails.SetExtension<DetailExt>();
-            base.OnInitialized();
+            base.OnChildModelsMounted();
         }
 
-        protected override void OnBuilding()
+        protected override void OnChildDataSetsCreated()
         {
             SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);
-            base.OnBuilding();
+            base.OnChildDataSetsCreated();
         }
     }
 }

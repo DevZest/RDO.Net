@@ -294,10 +294,10 @@ AfterDataRowInserted: DataSet-0[0].
 
             public Column<int> LocalColumn { get; private set; }
 
-            protected override void OnBuilding()
+            protected override void OnChildDataSetsCreated()
             {
                 LocalColumn = CreateLocalColumn<int>();
-                base.OnBuilding();
+                base.OnChildDataSetsCreated();
             }
         }
 

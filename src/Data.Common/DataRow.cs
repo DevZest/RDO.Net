@@ -38,14 +38,14 @@ namespace DevZest.Data
                 }
             }
 
-            protected override void OnBuilding()
+            protected override void OnChildDataSetsCreated()
             {
                 if (_origin != null)
                 {
                     MapColumnsFrom(_origin);
                     _origin = null;
                 }
-                base.OnBuilding();
+                base.OnChildDataSetsCreated();
             }
 
             private void MapColumnsFrom(Model origin)
