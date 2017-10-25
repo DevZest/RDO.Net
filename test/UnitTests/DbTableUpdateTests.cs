@@ -13,7 +13,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DbTable_Update_without_source()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var command = db.ProductCategories.MockUpdate(0, (builder, x) => builder.Select(Functions.GetDate(), x.ModifiedDate),
                     x => x.ModifiedDate.IsNull());
@@ -30,7 +30,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Update_from_temp_table()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var tempTable = db.MockTempTable<ProductCategory>();
                 var command = db.ProductCategories.MockUpdate(0, tempTable);
@@ -53,7 +53,7 @@ FROM
         [TestMethod]
         public void DbTable_Update_from_query()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var query = db.ProductCategories.Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategories.MockUpdate(0, query);
@@ -77,7 +77,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Update_from_simple_query()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategories.MockUpdate(0, query);
@@ -101,7 +101,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Update_scalar()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.New();
                 var index = dataSet.AddRow().Ordinal;
@@ -134,7 +134,7 @@ FROM
         [TestMethod]
         public void DbTable_Update_from_DataSet()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategoriesLevel1);
                 var expectedSql =
@@ -177,7 +177,7 @@ FROM
         [TestMethod]
         public void DbTable_Update_child_temp_table()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var salesOrders = db.MockTempTable<SalesOrder>();
                 var salesOrderDetails = salesOrders.MockCreateChild(x => x.SalesOrderDetails);

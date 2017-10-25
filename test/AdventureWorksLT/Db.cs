@@ -26,23 +26,16 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 #if DEBUG
         // For unit tests
-        public static Db New(SqlVersion sqlVersion)
+        public Db(SqlVersion sqlVersion)
+            : base(new SqlConnection())
         {
-            var result = new Db(new SqlConnection());
-            result.SqlVersion = sqlVersion;
-            return result;
+            SqlVersion = sqlVersion;
         }
 #endif
 
         public Db(SqlConnection sqlConnection)
             : base(sqlConnection)
         {
-        }
-
-        protected Db(SqlVersion sqlVersion)
-            : base(new SqlConnection())
-        {
-            SqlVersion = sqlVersion;
         }
 
         private DbTable<Address> _addresses;

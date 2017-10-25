@@ -12,7 +12,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DbSet_where_order_by()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var query = db.SalesOrders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 var expectedSql =
@@ -50,7 +50,7 @@ ORDER BY [SalesOrder].[SalesOrderID];
         [TestMethod]
         public void DbSet_Where_multi_level()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var query = db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()).Where(x => x.Name.IsNotNull());
                 var expectedSql =
@@ -70,7 +70,7 @@ WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCatego
         [TestMethod]
         public void DbSet_Union()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var query = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
                 var expectedSql =
@@ -189,7 +189,7 @@ ORDER BY [Product].[Name] ASC;
         [TestMethod]
         public void DbSet_offset_fetch()
         {
-            using (var db = Db.New(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql11))
             {
                 var query = db.SalesOrderDetails.OrderBy(10, 20, x => x.SalesOrderDetailID);
                 var expectedSql =
