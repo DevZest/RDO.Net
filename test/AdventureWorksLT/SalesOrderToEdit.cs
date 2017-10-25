@@ -28,10 +28,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public Product.Lookup Product { get; private set; }
         }
 
-        protected override void OnEnterInitializing()
+        public SalesOrderToEdit()
         {
             SetExtension<Ext>();
-            base.OnEnterInitializing();
         }
 
         protected override void OnChildModelsMounted()
