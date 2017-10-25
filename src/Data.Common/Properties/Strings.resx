@@ -447,9 +447,6 @@
   <data name="DataSetContainer_AlreadyHasLocalColumnBeforeClone" xml:space="preserve">
     <value>The model must have no local column before clone.</value>
   </data>
-  <data name="Model_CreateLocalColumnNullDataSetContainer" xml:space="preserve">
-    <value>Cannot create local column when DataSetContainer is null.</value>
-  </data>
   <data name="Model_InvalidChildModel" xml:space="preserve">
     <value>The child model is invalid.</value>
   </data>

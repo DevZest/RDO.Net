@@ -892,14 +892,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot create local column when DataSetContainer is null.
-        /// </summary>
-        public static string Model_CreateLocalColumnNullDataSetContainer
-        {
-            get { return GetString("Model_CreateLocalColumnNullDataSetContainer"); }
-        }
-
-        /// <summary>
         /// The child model is invalid.
         /// </summary>
         public static string Model_InvalidChildModel

@@ -990,31 +990,22 @@ namespace DevZest.Data
             get { return RootModel._dataSetContainer; }
         }
 
-        private void VerifyCreateLocalColumn()
-        {
-            if (DataSetContainer == null)
-                throw new InvalidOperationException(Strings.Model_CreateLocalColumnNullDataSetContainer);
-        }
-
         protected Column<T> CreateLocalColumn<T>(Action<LocalColumnBuilder<T>> builder = null)
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T>(T1 column, Func<DataRow, T1, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T>(T1 column1, T2 column2, Func<DataRow, T1, T2, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T>(T1 column1, T2 column2, T3 column3, Func<DataRow, T1, T2, T3, T> expression, Action<LocalColumnBuilder<T>> builder = null)
@@ -1022,8 +1013,7 @@ namespace DevZest.Data
             where T2 : Column
             where T3 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T>(T1 column1, T2 column2, T3 column3, T4 column4,
@@ -1033,8 +1023,7 @@ namespace DevZest.Data
             where T3 : Column
             where T4 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5,
@@ -1045,8 +1034,7 @@ namespace DevZest.Data
             where T4 : Column
             where T5 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
@@ -1058,8 +1046,7 @@ namespace DevZest.Data
             where T5 : Column
             where T6 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7,
@@ -1072,8 +1059,7 @@ namespace DevZest.Data
             where T6 : Column
             where T7 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7, T8 column8,
@@ -1087,8 +1073,7 @@ namespace DevZest.Data
             where T7 : Column
             where T8 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7, T8 column8,
@@ -1103,8 +1088,7 @@ namespace DevZest.Data
             where T8 : Column
             where T9 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, column9, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, column9, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7,
@@ -1120,8 +1104,7 @@ namespace DevZest.Data
             where T9 : Column
             where T10 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7,
@@ -1138,9 +1121,8 @@ namespace DevZest.Data
             where T10 : Column
             where T11 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10,
-                column11, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7,
+                column8, column9, column10, column11, expression, builder);
         }
 
         protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
@@ -1159,9 +1141,8 @@ namespace DevZest.Data
             where T11 : Column
             where T12 : Column
         {
-            VerifyCreateLocalColumn();
-            return DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10,
-                column11, column12, expression, builder);
+            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7,
+                column8, column9, column10, column11, column12, expression, builder);
         }
 
         private ModelExtension _extension;
@@ -1182,10 +1163,7 @@ namespace DevZest.Data
         {
             VerifyDesignMode();
             if (Extension != null)
-            {
-                if (Extension.GetType() != typeof(T))
-                    throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
-            }
+                throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
             else
                 Extension = new T();
         }
