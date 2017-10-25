@@ -154,7 +154,7 @@ namespace DevZest.Data
             return Db.GetMockTableName(name, Tag);
         }
 
-        DbTable<TModel> IMockDb.GetMockTable<TModel>(string tableName, Action<TModel> initializer)
+        DbTable<TModel> IMockDb.GetMockTable<TModel>(string tableName, params Func<TModel, ForeignKeyConstraint>[] foreignKeys)
         {
             if (_mockTables.Contains(tableName))
             {
@@ -173,8 +173,7 @@ namespace DevZest.Data
 
             _creatingTableNames.Add(tableName);
 
-            var model = new TModel();
-            model.Initialize(initializer);
+            var model = new TModel().ApplyForeignKey(foreignKeys);
             var table = DbTable<TModel>.Create(model, Db, GetMockTableName(tableName));
             _mockTables.Add(new MockTable(tableName, table));
             _creatingTableNames.Remove(tableName);

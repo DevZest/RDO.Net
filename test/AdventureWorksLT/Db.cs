@@ -62,21 +62,20 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get
             {
-                return GetTable(ref _customerAddresses, "[SalesLT].[CustomerAddress]", m =>
-                {
-                    ForeignKey(null, m.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                    ForeignKey(null, m.Address, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                });
+                return GetTable(ref _customerAddresses, "[SalesLT].[CustomerAddress]",
+                    _ => ForeignKey(null, _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => ForeignKey(null, _.Address, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
         private DbTable<ProductCategory> _productCategories;
         public DbTable<ProductCategory> ProductCategories
         {
-            get { return GetTable(ref _productCategories, "[SalesLT].[ProductCategory]", m =>
+            get
             {
-                ForeignKey(null, m.ParentProductCategory, m, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-            }); }
+                return GetTable(ref _productCategories, "[SalesLT].[ProductCategory]",
+                    _ => ForeignKey(null, _.ParentProductCategory, _, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+            }
         }
 
         private DbTable<ProductModel> _productModels;
@@ -96,11 +95,9 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get
             {
-                return GetTable(ref _productModelProductDescriptions, "[SalesLT].[ProductModelProductDescription]", m =>
-                {
-                    ForeignKey(null, m.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                    ForeignKey(null, m.ProductDescription, ProductDescriptions._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                });
+                return GetTable(ref _productModelProductDescriptions, "[SalesLT].[ProductModelProductDescription]",
+                    _ => ForeignKey(null, _.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => ForeignKey(null, _.ProductDescription, ProductDescriptions._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -109,11 +106,9 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get
             {
-                return GetTable(ref _products, "[SalesLT].[Product]", m =>
-                {
-                    ForeignKey(null, m.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                    ForeignKey(null, m.ProductCategory, ProductCategories._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                });
+                return GetTable(ref _products, "[SalesLT].[Product]",
+                    _ => ForeignKey(null, _.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => ForeignKey(null, _.ProductCategory, ProductCategories._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -122,12 +117,10 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get
             {
-                return GetTable(ref _salesOrders, "[SalesLT].[SalesOrderHeader]", m =>
-                {
-                    ForeignKey(null, m.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                    ForeignKey(null, m.BillToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                    ForeignKey(null, m.ShipToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                });
+                return GetTable(ref _salesOrders, "[SalesLT].[SalesOrderHeader]",
+                    _ => ForeignKey(null, _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => ForeignKey(null, _.BillToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => ForeignKey(null, _.ShipToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -136,11 +129,9 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get
             {
-                return GetTable(ref _salesOrderDetails, "[SalesLT].[SalesOrderDetail]", m =>
-                {
-                    ForeignKey(null, m.SalesOrder, SalesOrders._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                    ForeignKey(null, m.Product, Products._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                });
+                return GetTable(ref _salesOrderDetails, "[SalesLT].[SalesOrderDetail]",
+                    _ => ForeignKey(null, _.SalesOrder, SalesOrders._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => ForeignKey(null, _.Product, Products._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 

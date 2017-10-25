@@ -136,7 +136,21 @@ namespace DevZest.Data.Primitives
         {
             Debug.Assert(model != null);
             if (initializer != null)
+            {
+                model.Initializer = _ => initializer((T)_);
                 initializer(model);
+            }
+        }
+
+        internal static T ApplyForeignKey<T>(this T model, Func<T, ForeignKeyConstraint>[] foreignKeys)
+            where T : Model, new()
+        {
+            if (foreignKeys != null && foreignKeys.Length > 0)
+            {
+                foreach (var foreignKey in foreignKeys)
+                    model.AddDbTableConstraint(foreignKey(model), false);
+            }
+            return model;
         }
     }
 }

@@ -46,17 +46,16 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract string GetSqlString(DbQueryStatement query);
 
-        protected virtual DbTable<T> GetTable<T>(ref DbTable<T> result, string name, Action<T> initializer = null)
+        protected virtual DbTable<T> GetTable<T>(ref DbTable<T> result, string name, params Func<T, ForeignKeyConstraint>[] foreignKeys)
             where T : Model, new()
         {
             if (Mock != null)
-                return Mock.GetMockTable<T>(name, initializer);
+                return Mock.GetMockTable<T>(name, foreignKeys);
 
             if (result == null)
             {
                 Check.NotEmpty(name, nameof(name));
-                var model = new T();
-                model.Initialize(initializer);
+                var model = new T().ApplyForeignKey(foreignKeys);
                 result = DbTable<T>.Create(model, this, name);
             }
             return result;
@@ -329,7 +328,7 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract string GetMockTableName(string tableName, object tag);
 
-        protected internal static void ForeignKey<TKey>(string constraintName, TKey foreignKey, Model<TKey> refTableModel, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
+        protected internal static ForeignKeyConstraint ForeignKey<TKey>(string constraintName, TKey foreignKey, Model<TKey> refTableModel, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
             where TKey : KeyBase
         {
             Utilities.Check.NotNull(foreignKey, nameof(foreignKey));
@@ -339,7 +338,7 @@ namespace DevZest.Data.Primitives
             var foreignKeyConstraint = new ForeignKeyConstraint(constraintName, foreignKey, refTableModel.PrimaryKey, onDelete, onUpdate);
             if (refTableModel != model && string.IsNullOrEmpty(foreignKeyConstraint.ReferencedTableName))
                 throw new ArgumentException(Strings.Model_InvalidRefTableModel, nameof(refTableModel));
-            model.AddDbTableConstraint(foreignKeyConstraint, false);
+            return foreignKeyConstraint;
         }
     }
 }

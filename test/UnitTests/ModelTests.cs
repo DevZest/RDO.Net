@@ -257,7 +257,7 @@ namespace DevZest.Data
                 Name.DefaultValue("DEFAULT NAME");
                 Unique("UQ_Temp", false, Unique1, Unique2.Desc());
                 Check("CK_Temp", Name.IsNotNull());
-                DbSession.ForeignKey(null, FkRef, this, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
+                this.AddDbTableConstraint(DbSession.ForeignKey(null, FkRef, this, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction), false);
             }
 
             private Key _primaryKey;

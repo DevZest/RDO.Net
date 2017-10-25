@@ -542,11 +542,17 @@ namespace DevZest.Data
             return result;
         }
 
+        internal Action<Model> Initializer { get; set; }
+
         private void InitializeClone(Model prototype, bool setDataSource)
         {
             Debug.Assert(prototype != null && prototype != this);
             InitializeColumnLists(prototype);
-            InitializeExtension(prototype);
+            if (prototype.Initializer != null)
+            {
+                Initializer = prototype.Initializer;
+                Initializer(this);
+            }
             if (setDataSource && prototype.DataSource != null)
                 SetDataSource(prototype.DataSource);
         }
