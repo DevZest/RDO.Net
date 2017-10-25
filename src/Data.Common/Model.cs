@@ -316,19 +316,13 @@ namespace DevZest.Data
                     column.InitValueManager();
             }
 
-            OnExitInitializing();
             IsInitialized = true;
             OnInitialized();
         }
 
-        protected internal virtual void OnEnterInitializing()
+        protected virtual void OnInitializing()
         {
-            EnterInitializing(this, EventArgs.Empty);
-        }
-
-        protected virtual void OnExitInitializing()
-        {
-            ExitInitializing(this, EventArgs.Empty);
+            Initializing(this, EventArgs.Empty);
         }
 
         protected virtual void OnChildModelsMounted()
@@ -436,11 +430,17 @@ namespace DevZest.Data
             Debug.Assert(dataSource != null);
             Debug.Assert(DataSource == null);
 
+            bool isDataSet = dataSource is DataSet;
+
+            Columns.InitDbColumnNames();
+            if (!isDataSet)
+                OnInitializing();
             DataSource = dataSource;
             DataSet = dataSource as DataSet;
-            Columns.InitDbColumnNames();
             if (DataSet != null && RootModel == this)
                 _dataSetContainer = new DataSetContainer();
+            if (isDataSet)
+                OnInitializing();
         }
 
         protected internal sealed override bool DesignMode
@@ -890,8 +890,7 @@ namespace DevZest.Data
             return result;
         }
 
-        public event EventHandler<EventArgs> EnterInitializing = delegate { };
-        public event EventHandler<EventArgs> ExitInitializing = delegate { };
+        public event EventHandler<EventArgs> Initializing = delegate { };
         public event EventHandler<EventArgs> ChildModelsMounted = delegate { };
         public event EventHandler<EventArgs> ChildDataSetsCreated = delegate { };
         public event EventHandler<EventArgs> Initialized = delegate { };
