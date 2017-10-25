@@ -296,8 +296,7 @@ AfterDataRowInserted: DataSet-0[0].
 
             protected override void OnInitializing()
             {
-                if (DataSetContainer != null)
-                    LocalColumn = CreateLocalColumn<int>();
+                LocalColumn = CreateLocalColumn<int>();
                 base.OnInitializing();
             }
         }
