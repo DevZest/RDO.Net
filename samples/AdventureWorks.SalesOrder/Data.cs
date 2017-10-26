@@ -41,5 +41,21 @@ namespace AdventureWorks.SalesOrders
                 return await db.Customers.ToDataSetAsync(CustomerContactPerson.Initializer, ct);
             }
         }
+
+        public static async Task<DataSet<Address>> GetAddressLookup(int customerID, CancellationToken ct)
+        {
+            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            {
+                var result = db.CreateQuery<Address>((builder, _) =>
+                {
+                    CustomerAddress ca;
+                    Address a;
+                    builder.From(db.CustomerAddresses.Where(db.CustomerAddresses._.CustomerID == customerID), out ca)
+                        .InnerJoin(db.Addresses, ca.Address, out a)
+                        .AutoSelect();
+                });
+                return await result.ToDataSetAsync(ct);
+            }
+        }
     }
 }

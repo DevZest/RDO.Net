@@ -47,6 +47,11 @@ namespace AdventureWorks.SalesOrders
                 return false;
         }
 
+        private RowPresenter CurrentRow
+        {
+            get { return _presenter.CurrentRow; }
+        }
+
         ColumnValueBag ForeignKeyBox.ILookupService.Lookup(KeyBase foreignKey)
         {
             if (foreignKey == _.Customer)
@@ -55,11 +60,20 @@ namespace AdventureWorks.SalesOrders
                 dialogWindow.Show(this, _presenter.CurrentRow.GetValue(_.CustomerID), _.Customer, _.GetExtension<SalesOrderToEdit.Ext>().Customer);
                 return dialogWindow.Result;
             }
-            else
+            else if (foreignKey == _.ShipToAddress)
             {
-                MessageBox.Show("Lookup!");
-                return null;
+                var dialogWindow = new AddressLookupWindow();
+                dialogWindow.Show(this, CurrentRow.GetValue(_.ShipToAddressID), CurrentRow.GetValue(_.CustomerID).Value, _.ShipToAddress, _.GetExtension<SalesOrderToEdit.Ext>().ShipToAddress);
+                return dialogWindow.Result;
             }
+            else if (foreignKey == _.BillToAddress)
+            {
+                var dialogWindow = new AddressLookupWindow();
+                dialogWindow.Show(this, CurrentRow.GetValue(_.BillToAddressID), CurrentRow.GetValue(_.CustomerID).Value, _.BillToAddress, _.GetExtension<SalesOrderToEdit.Ext>().BillToAddress);
+                return dialogWindow.Result;
+            }
+            else
+                throw new NotSupportedException();
         }
 
         public void Show(DataSet<SalesOrderToEdit> data, Window ownerWindow, string windowTitle, Action action)

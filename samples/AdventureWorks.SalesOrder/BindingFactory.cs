@@ -34,5 +34,16 @@ namespace AdventureWorks.SalesOrders
                 .AddChild(_.TaxAmt.AsTextBox(), v => v._taxAmt)
                 .AddChild(_.TotalDue.AsTextBlock("{0:C}"), v => v._totalDue);
         }
+
+        public static CompositeRowBinding<AddressBox> AsAddressBox(this Address _)
+        {
+            return new CompositeRowBinding<AddressBox>()
+                .AddChild(_.AddressLine1.AsTextBlock(), v => v._addressLine1)
+                .AddChild(_.AddressLine2.AsTextBlock(), v => v._addressLine2)
+                .AddChild(_.City.AsTextBlock(), v => v._city)
+                .AddChild(_.StateProvince.AsTextBlock(), v => v._stateProvince)
+                .AddChild(_.CountryRegion.AsTextBlock(), v => v._countryRegion)
+                .AddChild(_.PostalCode.AsTextBlock(), v => v._postalCode);
+        }
     }
 }

@@ -91,6 +91,10 @@
     <Compile Include="CustomerBox.xaml.cs">
       <DependentUpon>CustomerBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AddressLookupWindow.xaml.cs">
+      <DependentUpon>AddressLookupWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AddressLookupWindow.Presenter.cs" />
     <Compile Include="CustomerLookupWindow.Presenter.cs" />
     <Compile Include="CustomerLookupWindow.xaml.cs">
       <DependentUpon>CustomerLookupWindow.xaml</DependentUpon>
@@ -122,6 +126,10 @@
     <Page Include="CustomerBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AddressLookupWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomerLookupWindow.xaml">
       <SubType>Designer</SubType>
