@@ -3,6 +3,7 @@ using DevZest.Data.Presenters;
 using DevZest.Samples.AdventureWorksLT;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -27,11 +28,53 @@ namespace AdventureWorks.SalesOrders
             _key = key;
             _lookup = lookup;
             _presenter = new Presenter(_dataView, currentCustomerID);
+            InitializeCommandBindings();
             ShowDialog();
         }
 
-        private void FindTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void InitializeCommandBindings()
         {
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open, CanOpen));
+            CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
+            CommandBindings.Add(new CommandBinding(SearchBox.SearchCommand, Search, CanRefresh));
+            CommandBindings.Add(new CommandBinding(SearchBox.ClearSearchCommand, ClearSearch, CanRefresh));
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
+        }
+
+        private void Open(object sender, ExecutedRoutedEventArgs e)
+        {
+            Result = _presenter.CurrentRow.CreateValueBag(_key, _lookup);
+            Close();
+        }
+
+        private void CanOpen(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _presenter.CurrentRow != null;
+        }
+
+        private void Refresh(object sender, ExecutedRoutedEventArgs e)
+        {
+            _presenter.RefreshAsync();
+        }
+
+        private void CanRefresh(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _presenter.DataSet != null;
+        }
+
+        private void Search(object sender, ExecutedRoutedEventArgs e)
+        {
+            _presenter.SearchText = _searchBox.SearchText;
+        }
+
+        private void ClearSearch(object sender, ExecutedRoutedEventArgs e)
+        {
+            _presenter.SearchText = null;
+        }
+
+        private void Close(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

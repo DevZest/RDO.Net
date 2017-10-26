@@ -94,6 +94,26 @@ namespace AdventureWorks.SalesOrders
                 await RefreshAsync(LoadDataAsync);
                 SelectCurrent();
             }
+
+            private string _searchText;
+            public string SearchText
+            {
+                get { return _searchText; }
+                set
+                {
+                    if (_searchText == value)
+                        return;
+
+                    _searchText = value;
+                    if (string.IsNullOrEmpty(value))
+                        Where = null;
+                    else
+                        Where = dataRow => _.CompanyName[dataRow].Contains(_searchText) ||
+                            _.GetContactPerson()[dataRow].Contains(_searchText) ||
+                            _.Phone[dataRow].Contains(_searchText) ||
+                            _.EmailAddress[dataRow].Contains(_searchText);
+                }
+            }
         }
     }
 }
