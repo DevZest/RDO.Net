@@ -38,17 +38,8 @@
                 </Button>
                 <Separator />
                 <!-- SEARCH -->
+                <local:SearchBox x:Name="_searchBox" />
                 <Separator />
-                <TextBox x:Name="_findTextBox"
-                    MinWidth="120" Margin="5" TextChanged="FindTextBox_TextChanged"
-                    BorderThickness="1" BorderBrush="LightGray"
-                    FontWeight="Normal" Foreground="Gray">
-                </TextBox>
-                <Button Name="btnResetFilter" Command="{x:Static local:MainWindow.ResetFilterCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Images/reset_filter.png" Width="22" Height="22" Margin="2" />
-                    </StackPanel>
-                </Button>
                 <!-- EXIT -->
                 <Separator />
                 <Button Command="Close">

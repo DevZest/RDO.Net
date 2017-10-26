@@ -110,6 +110,9 @@
     </Compile>
     <Compile Include="SalesOrderForm.Presenter.cs" />
     <Compile Include="MainWindow.Presenter.cs" />
+    <Compile Include="SearchBox.xaml.cs">
+      <DependentUpon>SearchBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TotalAmtConditionalFormat.cs" />
     <Compile Include="TotalDueConditionalFormat.cs" />
     <Page Include="AddressBox.xaml">
@@ -156,6 +159,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SearchBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -214,6 +221,8 @@
       <Link>AdventureWorksLT_log.ldf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\search_glyph.png" />
+    <Resource Include="Images\search_clear.png" />
     <Resource Include="Images\Checkmark.png" />
     <Resource Include="Images\reset_filter.png" />
     <Resource Include="Images\refresh.png" />

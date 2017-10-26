@@ -12,8 +12,6 @@ namespace AdventureWorks.SalesOrders
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static readonly RoutedUICommand ResetFilterCommand = new RoutedUICommand();
-
         public MainWindow()
         {
             InitializeComponent();
@@ -28,7 +26,8 @@ namespace AdventureWorks.SalesOrders
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open, CanOpen));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, Delete, CanDelete));
             CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
-            CommandBindings.Add(new CommandBinding(ResetFilterCommand, ResetFilter, CanResetFilter));
+            CommandBindings.Add(new CommandBinding(SearchBox.SearchCommand, Search, CanRefresh));
+            CommandBindings.Add(new CommandBinding(SearchBox.ClearSearchCommand, ClearSearch, CanRefresh));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
         }
 
@@ -96,14 +95,14 @@ namespace AdventureWorks.SalesOrders
             e.CanExecute = _presenter.DataSet != null;
         }
 
-        private void ResetFilter(object sender, ExecutedRoutedEventArgs e)
+        private void Search(object sender, ExecutedRoutedEventArgs e)
         {
-            _findTextBox.Text = null;
+            _presenter.SearchText = _searchBox.SearchText;
         }
 
-        private void CanResetFilter(object sender, CanExecuteRoutedEventArgs e)
+        private void ClearSearch(object sender, ExecutedRoutedEventArgs e)
         {
-            e.CanExecute = !string.IsNullOrEmpty(_findTextBox.Text);
+            _presenter.SearchText = null;
         }
 
         private void Close(object sender, ExecutedRoutedEventArgs e)
@@ -112,10 +111,5 @@ namespace AdventureWorks.SalesOrders
         }
 
         private Presenter _presenter;
-
-        private void FindTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            _presenter.SearchText = _findTextBox.Text;
-        }
     }
 }
