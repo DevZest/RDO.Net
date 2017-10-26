@@ -21,7 +21,7 @@ namespace AdventureWorks.SalesOrders
         private Customer.Lookup _lookup;
         public ColumnValueBag Result { get; private set; }
 
-        public void Show(Window ownerWindow, DataSet<CustomerToLookup> data, int? currentCustomerID, Customer.Key key, Customer.Lookup lookup)
+        public void Show(Window ownerWindow, DataSet<Customer> data, int? currentCustomerID, Customer.Key key, Customer.Lookup lookup)
         {
             Owner = ownerWindow;
             _key = key;

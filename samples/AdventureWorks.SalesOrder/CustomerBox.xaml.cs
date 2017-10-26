@@ -26,7 +26,7 @@ namespace AdventureWorks.SalesOrders
         private static void Refresh(CustomerBox v, ColumnValueBag valueBag, Customer.Lookup _)
         {
             v._companyName.Text = valueBag.GetValue(_.CompanyName);
-            v._contactPerson.Text = CustomerToLookup.GetContactPerson(valueBag.GetValue(_.LastName), valueBag.GetValue(_.FirstName), valueBag.GetValue(_.Title));
+            v._contactPerson.Text = CustomerContactPerson.GetContactPerson(valueBag.GetValue(_.LastName), valueBag.GetValue(_.FirstName), valueBag.GetValue(_.Title));
             v._phone.Text = valueBag.GetValue(_.Phone);
             v._email.Text = valueBag.GetValue(_.EmailAddress);
         }

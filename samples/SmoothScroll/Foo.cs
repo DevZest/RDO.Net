@@ -15,14 +15,14 @@ namespace SmoothScroll
 
         public Column<byte> BackgroundB { get; private set; }
 
-        protected override void OnBuilding()
+        protected override void OnInitializing()
         {
             Text = CreateLocalColumn<string>();
             IsSectionHeader = CreateLocalColumn<bool>();
             BackgroundR = CreateLocalColumn<byte>();
             BackgroundG = CreateLocalColumn<byte>();
             BackgroundB = CreateLocalColumn<byte>();
-            base.OnBuilding();
+            base.OnInitializing();
         }
 
         #region Mock
