@@ -1,8 +1,6 @@
-﻿using DevZest.Data;
-using DevZest.Data.Presenters;
+﻿using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AdventureWorks.SalesOrders
@@ -20,15 +18,20 @@ namespace AdventureWorks.SalesOrders
         }
 
         private Presenter _presenter;
-        private Customer.Key _key;
-        private Customer.Lookup _lookup;
-        public ColumnValueBag Result { get; private set; }
+        private ForeignKeyBox _foreignKeyBox;
+        private Customer.Key Key
+        {
+            get { return (Customer.Key)_foreignKeyBox.ForeignKey; }
+        }
+        private Customer.Lookup Lookup
+        {
+            get { return (Customer.Lookup)_foreignKeyBox.Extension; }
+        }
 
-        public void Show(Window ownerWindow, int? currentCustomerID, Customer.Key key, Customer.Lookup lookup)
+        public void Show(Window ownerWindow, ForeignKeyBox foreignKeyBox, int? currentCustomerID)
         {
             Owner = ownerWindow;
-            _key = key;
-            _lookup = lookup;
+            _foreignKeyBox = foreignKeyBox;
             _presenter = new Presenter(_dataView, currentCustomerID);
             InitializeCommandBindings();
             ShowDialog();
@@ -45,7 +48,7 @@ namespace AdventureWorks.SalesOrders
 
         private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
-            Result = _presenter.CurrentRow.AutoSelect(_key, _lookup);
+            _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(Key, Lookup));
             Close();
         }
 

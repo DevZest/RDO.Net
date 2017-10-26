@@ -1,8 +1,10 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Presenters;
+using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace AdventureWorks.SalesOrders
@@ -10,41 +12,54 @@ namespace AdventureWorks.SalesOrders
     /// <summary>
     /// Interaction logic for CustomerLookupWindow.xaml
     /// </summary>
-    public partial class AddressLookupWindow : Window
+    public partial class AddressLookupPopup : Popup
     {
         public static RoutedUICommand SelectCurrentCommand { get { return ApplicationCommands.Open; } }
 
-        public AddressLookupWindow()
+        public AddressLookupPopup()
         {
             InitializeComponent();
         }
 
         private Presenter _presenter;
-        private Address.Key _key;
-        private Address.Lookup _lookup;
-        public ColumnValueBag Result { get; private set; }
-
-        public void Show(Window ownerWindow, int? currentAddressID, int customerID, Address.Key key, Address.Lookup lookup)
+        private ForeignKeyBox _foreignKeyBox;
+        public Address.Key Key
         {
-            Owner = ownerWindow;
-            _key = key;
-            _lookup = lookup;
+            get { return _foreignKeyBox == null ? null : (Address.Key)_foreignKeyBox.ForeignKey; }
+        }
+        private Address.Lookup Lookup
+        {
+            get { return (Address.Lookup)_foreignKeyBox.Extension; }
+        }
+
+        public void Show(ForeignKeyBox foreignKeyBox, int? currentAddressID, int customerID)
+        {
+            if (IsOpen)
+                IsOpen = false;
+            PlacementTarget = _foreignKeyBox = foreignKeyBox;
             _presenter = new Presenter(_dataView, currentAddressID, customerID);
             InitializeCommandBindings();
-            ShowDialog();
+            IsOpen = true;
+        }
+
+        private void Popup_Closed(object sender, System.EventArgs e)
+        {
+            PlacementTarget = _foreignKeyBox = null;
+            _presenter.DetachView();
+            _presenter = null;
+            CommandBindings.Clear();
         }
 
         private void InitializeCommandBindings()
         {
             CommandBindings.Add(new CommandBinding(SelectCurrentCommand, SelectCurrent, CanSelectCurrent));
             CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
         }
 
         private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
-            Result = _presenter.CurrentRow.AutoSelect(_key, _lookup);
-            Close();
+            _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(Key, Lookup));
+            IsOpen = false;
         }
 
         private void CanSelectCurrent(object sender, CanExecuteRoutedEventArgs e)
@@ -60,11 +75,6 @@ namespace AdventureWorks.SalesOrders
         private void CanRefresh(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = _presenter.DataSet != null;
-        }
-
-        private void Close(object sender, ExecutedRoutedEventArgs e)
-        {
-            this.Close();
         }
     }
 }

@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace AdventureWorks.SalesOrders
 {
-    partial class AddressLookupWindow
+    partial class AddressLookupPopup
     {
         private sealed class Presenter : DataPresenter<Address>, RowView.IInputBindingService
         {
@@ -26,7 +26,7 @@ namespace AdventureWorks.SalesOrders
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 builder.GridColumns("150")
-                    .GridRows("200")
+                    .GridRows("Auto")
                     .RowView<RowView>(RowView.SelectableStyleKey)
                     .Layout(Orientation.Vertical, 4)
                     .WithSelectionMode(SelectionMode.Single)
@@ -93,7 +93,7 @@ namespace AdventureWorks.SalesOrders
             {
                 get
                 {
-                    yield return new InputBinding(SelectCurrentCommand, new KeyGesture(Key.Enter));
+                    yield return new InputBinding(SelectCurrentCommand, new KeyGesture(System.Windows.Input.Key.Enter));
                     yield return new InputBinding(SelectCurrentCommand, new MouseGesture(MouseAction.LeftDoubleClick));
                 }
             }

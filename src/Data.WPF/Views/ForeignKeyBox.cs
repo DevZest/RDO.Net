@@ -11,7 +11,7 @@ namespace DevZest.Data.Views
         public interface ILookupService : IService
         {
             bool CanLookup(KeyBase foreignKey);
-            ColumnValueBag Lookup(KeyBase foreignKey);
+            void BeginLookup(ForeignKeyBox foreignKeyBox);
         }
 
         private static readonly DependencyPropertyKey ValueBagPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ValueBag),
@@ -46,10 +46,12 @@ namespace DevZest.Data.Views
         private void ExecLookup(object sender, ExecutedRoutedEventArgs e)
         {
             var lookupService = DataPresenter?.GetService<ILookupService>();
-            if (lookupService == null)
-                return;
+            if (lookupService != null)
+                lookupService.BeginLookup(this);
+        }
 
-            var valueBag = lookupService.Lookup(ForeignKey);
+        public void EndLookup(ColumnValueBag valueBag)
+        {
             if (valueBag != null)
             {
                 ValueBag = valueBag;

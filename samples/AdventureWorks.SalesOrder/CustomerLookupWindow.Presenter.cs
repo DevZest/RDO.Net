@@ -123,7 +123,7 @@ namespace AdventureWorks.SalesOrders
             {
                 get
                 {
-                    yield return new InputBinding(SelectCurrentCommand, new KeyGesture(Key.Enter));
+                    yield return new InputBinding(SelectCurrentCommand, new KeyGesture(System.Windows.Input.Key.Enter));
                     yield return new InputBinding(SelectCurrentCommand, new MouseGesture(MouseAction.LeftDoubleClick));
                 }
             }

@@ -52,28 +52,26 @@ namespace AdventureWorks.SalesOrders
             get { return _presenter.CurrentRow; }
         }
 
-        ColumnValueBag ForeignKeyBox.ILookupService.Lookup(KeyBase foreignKey)
+        void ForeignKeyBox.ILookupService.BeginLookup(ForeignKeyBox foreignKeyBox)
         {
-            if (foreignKey == _.Customer)
+            if (foreignKeyBox.ForeignKey == _.Customer)
             {
                 var dialogWindow = new CustomerLookupWindow();
-                dialogWindow.Show(this, _presenter.CurrentRow.GetValue(_.CustomerID), _.Customer, _.GetExtension<SalesOrderToEdit.Ext>().Customer);
-                return dialogWindow.Result;
+                dialogWindow.Show(this, foreignKeyBox, _presenter.CurrentRow.GetValue(_.CustomerID));
             }
-            else if (foreignKey == _.ShipToAddress)
-            {
-                var dialogWindow = new AddressLookupWindow();
-                dialogWindow.Show(this, CurrentRow.GetValue(_.ShipToAddressID), CurrentRow.GetValue(_.CustomerID).Value, _.ShipToAddress, _.GetExtension<SalesOrderToEdit.Ext>().ShipToAddress);
-                return dialogWindow.Result;
-            }
-            else if (foreignKey == _.BillToAddress)
-            {
-                var dialogWindow = new AddressLookupWindow();
-                dialogWindow.Show(this, CurrentRow.GetValue(_.BillToAddressID), CurrentRow.GetValue(_.CustomerID).Value, _.BillToAddress, _.GetExtension<SalesOrderToEdit.Ext>().BillToAddress);
-                return dialogWindow.Result;
-            }
+            else if (foreignKeyBox.ForeignKey == _.ShipToAddress || foreignKeyBox.ForeignKey == _.BillToAddress)
+                BeginLookupAddress(foreignKeyBox);
             else
                 throw new NotSupportedException();
+        }
+
+        private void BeginLookupAddress(ForeignKeyBox foreignKeyBox)
+        {
+            var foreignKey = (Address.Key)foreignKeyBox.ForeignKey;
+            if (_addressLookupPopup.Key == foreignKey)
+                _addressLookupPopup.IsOpen = false;
+            else
+                _addressLookupPopup.Show(foreignKeyBox, CurrentRow.GetValue(foreignKey.AddressID), CurrentRow.GetValue(_.CustomerID).Value);
         }
 
         public void Show(DataSet<SalesOrderToEdit> data, Window ownerWindow, string windowTitle, Action action)

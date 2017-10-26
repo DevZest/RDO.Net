@@ -23,9 +23,9 @@ namespace AdventureWorks.SalesOrders
                 return _lookupService.CanLookup(foreignKey);
             }
 
-            ColumnValueBag ForeignKeyBox.ILookupService.Lookup(KeyBase foreignKey)
+            void ForeignKeyBox.ILookupService.BeginLookup(ForeignKeyBox foreignKeyBox)
             {
-                return _lookupService.Lookup(foreignKey);
+                _lookupService.BeginLookup(foreignKeyBox);
             }
 
             protected override void BuildTemplate(TemplateBuilder builder)
