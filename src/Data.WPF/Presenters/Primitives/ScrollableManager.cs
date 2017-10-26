@@ -695,7 +695,10 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var startTrackMain = GridTracksMain[startGridPointMain];
             var endTrackMain = GridTracksMain[endGridPointMain - 1];
-            var startPositionMain = GetStartLogicalMainTrack(startTrackMain).StartPosition;
+            var startLogicalMainTrack = GetStartLogicalMainTrack(startTrackMain);
+            if (startLogicalMainTrack.IsEof)
+                return null;
+            var startPositionMain = startLogicalMainTrack.StartPosition;
             var endPositionMain = GetEndLogicalMainTrack(endTrackMain).EndPosition;
             if (endPositionMain <= startPositionMain)
                 return null;
