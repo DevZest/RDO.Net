@@ -2,6 +2,7 @@
 using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -435,14 +436,14 @@ namespace DevZest.Data.Views
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (!e.Handled)
-                e.Handled = HandleMouseButtonDown(MouseButton.Left);
+                HandleMouseButtonDown(MouseButton.Left);
             base.OnMouseLeftButtonDown(e);
         }
 
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             if (!e.Handled)
-                e.Handled = HandleMouseButtonDown(MouseButton.Right);
+                HandleMouseButtonDown(MouseButton.Right);
             base.OnMouseRightButtonDown(e);
         }
 
