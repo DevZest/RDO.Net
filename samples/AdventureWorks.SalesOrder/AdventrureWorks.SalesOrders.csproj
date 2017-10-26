@@ -214,6 +214,7 @@
       <Link>AdventureWorksLT_log.ldf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\Checkmark.png" />
     <Resource Include="Images\reset_filter.png" />
     <Resource Include="Images\refresh.png" />
     <Resource Include="Images\exit.png" />

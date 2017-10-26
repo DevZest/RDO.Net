@@ -34,7 +34,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<DataSet<Customer>> GetCustomerToLookupDataSet(CancellationToken ct)
+        public static async Task<DataSet<Customer>> GetCustomerLookup(CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {

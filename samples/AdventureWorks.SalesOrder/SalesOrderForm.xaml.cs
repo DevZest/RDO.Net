@@ -51,11 +51,8 @@ namespace AdventureWorks.SalesOrders
         {
             if (foreignKey == _.Customer)
             {
-                var data = App.Execute(Data.GetCustomerToLookupDataSet, this);
-                if (data == null)
-                    return null;
                 var dialogWindow = new CustomerLookupWindow();
-                dialogWindow.Show(this, data, _presenter.CurrentRow.GetValue(_.CustomerID), _.Customer, _.GetExtension<SalesOrderToEdit.Ext>().Customer);
+                dialogWindow.Show(this, _presenter.CurrentRow.GetValue(_.CustomerID), _.Customer, _.GetExtension<SalesOrderToEdit.Ext>().Customer);
                 return dialogWindow.Result;
             }
             else

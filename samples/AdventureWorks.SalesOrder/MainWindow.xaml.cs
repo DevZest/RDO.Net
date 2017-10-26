@@ -18,8 +18,8 @@ namespace AdventureWorks.SalesOrders
         {
             InitializeComponent();
             InitializeCommandBindings();
-            _salesOrderList = new Presenter();
-            _salesOrderList.ShowAsync(_dataView);
+            _presenter = new Presenter();
+            _presenter.ShowAsync(_dataView);
         }
 
         private void InitializeCommandBindings()
@@ -34,7 +34,7 @@ namespace AdventureWorks.SalesOrders
 
         private SalesOrder _
         {
-            get { return _salesOrderList._; }
+            get { return _presenter._; }
         }
 
         private void New(object sender, ExecutedRoutedEventArgs e)
@@ -44,7 +44,7 @@ namespace AdventureWorks.SalesOrders
 
         private void Open(object sender, ExecutedRoutedEventArgs e)
         {
-            var salesOrderID = _salesOrderList.CurrentRow.GetValue(_.SalesOrderID).Value;
+            var salesOrderID = _presenter.CurrentRow.GetValue(_.SalesOrderID).Value;
             var result = App.Execute(ct => Data.GetItemAsync(salesOrderID, ct), this);
             if (result != null && result.Count == 1)
                 new SalesOrderForm().Show(result, this, string.Format("Sales Order: {0}", salesOrderID), null);
@@ -52,12 +52,12 @@ namespace AdventureWorks.SalesOrders
 
         private void CanOpen(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _salesOrderList.CurrentRow != null;
+            e.CanExecute = _presenter.CurrentRow != null;
         }
 
         private void Delete(object sender, ExecutedRoutedEventArgs e)
         {
-            var selectedRows = _salesOrderList.SelectedRows;
+            var selectedRows = _presenter.SelectedRows;
             var messageBoxText = string.Format("Are you sure you want to delete selected {0} rows?", selectedRows.Count);
             var caption = "Delete Sales Order(s)";
             if (MessageBox.Show(messageBoxText, caption, MessageBoxButton.YesNo, MessageBoxImage.Asterisk, MessageBoxResult.No) == MessageBoxResult.No)
@@ -77,7 +77,7 @@ namespace AdventureWorks.SalesOrders
 
         private void CanDelete(object sender, CanExecuteRoutedEventArgs e)
         {
-            var selectedRows = _salesOrderList.SelectedRows;
+            var selectedRows = _presenter.SelectedRows;
             e.CanExecute = selectedRows != null && selectedRows.Count > 0;
         }
 
@@ -88,12 +88,12 @@ namespace AdventureWorks.SalesOrders
 
         private void RefreshList()
         {
-            _salesOrderList.RefreshAsync();
+            _presenter.RefreshAsync();
         }
 
         private void CanRefresh(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _salesOrderList.DataSet != null;
+            e.CanExecute = _presenter.DataSet != null;
         }
 
         private void ResetFilter(object sender, ExecutedRoutedEventArgs e)
@@ -111,11 +111,11 @@ namespace AdventureWorks.SalesOrders
             this.Close();
         }
 
-        private Presenter _salesOrderList;
+        private Presenter _presenter;
 
         private void FindTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            _salesOrderList.SearchText = _findTextBox.Text;
+            _presenter.SearchText = _findTextBox.Text;
         }
     }
 }

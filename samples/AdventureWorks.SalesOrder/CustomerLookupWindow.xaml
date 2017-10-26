@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner"
-        Title="Customer" Height="400" Width="550">
+        Title="Customer" Height="500" Width="750">
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Padding" Value="2,0,2,0" />
@@ -18,17 +18,49 @@
     <Window.Background>
         <ImageBrush ImageSource="Images/window_background.jpg" Opacity=".5" />
     </Window.Background>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <!-- TOOLBAR -->
+        <DockPanel DockPanel.Dock="Top" MinHeight="30" Margin="5">
+            <ToolBar FontWeight="Bold">
+                <!-- Select -->
+                <Button Command="Open">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/checkmark.png" Width="22" Height="22" Margin="2"/>
+                        <Label VerticalAlignment="Center">_Select</Label>
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <Button Command="Refresh">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/refresh.png" Width="22" Height="22" Margin="2" />
+                        <Label VerticalAlignment="Center">_Refresh</Label>
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <!-- SEARCH -->
+                <Separator />
+                <TextBox x:Name="_findTextBox"
+                    MinWidth="120" Margin="5" TextChanged="FindTextBox_TextChanged"
+                    BorderThickness="1" BorderBrush="LightGray"
+                    FontWeight="Normal" Foreground="Gray">
+                </TextBox>
+                <Button Name="btnResetFilter" Command="{x:Static local:MainWindow.ResetFilterCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/reset_filter.png" Width="22" Height="22" Margin="2" />
+                    </StackPanel>
+                </Button>
+                <!-- EXIT -->
+                <Separator />
+                <Button Command="Close">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/exit.png" Width="22" Height="22" Margin="2" />
+                        <Label VerticalAlignment="Center">_Exit</Label>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </DockPanel>
         <Border Background="White" Margin="5">
             <dz:DataView x:Name="_dataView" />
         </Border>
-        <UniformGrid Columns="2" Width="100" Grid.Row="1" HorizontalAlignment="Right">
-            <Button Margin="0,0,5,5">OK</Button>
-            <Button Margin="0,0,5,5">Cancel</Button>
-        </UniformGrid>
-    </Grid>
+    </DockPanel>
 </Window>
