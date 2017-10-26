@@ -20,6 +20,11 @@ namespace DevZest.Data.Views
             IEnumerable<CommandEntry> GetCommandEntries(RowView rowView);
         }
 
+        public interface IInputBindingService : IService
+        {
+            IEnumerable<InputBinding> InputBindings { get; }
+        }
+
         private sealed class CommandService : ICommandService
         {
             public DataPresenter DataPresenter { get; private set; }
@@ -304,6 +309,13 @@ namespace DevZest.Data.Views
                 return;
 
             this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
+            var inputBindingService = dataPresenter.GetService<IInputBindingService>();
+            if (inputBindingService != null)
+            {
+                var inputBindings = inputBindingService.InputBindings;
+                foreach (var inputBinding in inputBindings)
+                    InputBindings.Add(inputBinding);
+            }
         }
 
         private bool _rowSelectorCommandEntriesSetup;

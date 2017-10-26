@@ -14,7 +14,7 @@ namespace AdventureWorks.SalesOrders
 {
     partial class CustomerLookupWindow
     {
-        private sealed class Presenter : DataPresenter<Customer>
+        private sealed class Presenter : DataPresenter<Customer>, RowView.IInputBindingService
         {
             public Presenter(DataView dataView, int? currentCustomerID)
             {
@@ -116,6 +116,15 @@ namespace AdventureWorks.SalesOrders
                             _.Phone[dataRow].Contains(value) ||
                             _.EmailAddress[dataRow].Contains(value);
                     SelectCurrent();
+                }
+            }
+
+            IEnumerable<InputBinding> RowView.IInputBindingService.InputBindings
+            {
+                get
+                {
+                    yield return new InputBinding(SelectCurrentCommand, new KeyGesture(Key.Enter));
+                    yield return new InputBinding(SelectCurrentCommand, new MouseGesture(MouseAction.LeftDoubleClick));
                 }
             }
         }
