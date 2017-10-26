@@ -12,6 +12,8 @@ namespace AdventureWorks.SalesOrders
     /// </summary>
     public partial class CustomerLookupWindow : Window
     {
+        public static RoutedUICommand SelectCurrentCommand { get { return ApplicationCommands.Open; } }
+
         public CustomerLookupWindow()
         {
             InitializeComponent();
@@ -34,20 +36,20 @@ namespace AdventureWorks.SalesOrders
 
         private void InitializeCommandBindings()
         {
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open, CanOpen));
+            CommandBindings.Add(new CommandBinding(SelectCurrentCommand, SelectCurrent, CanSelectCurrent));
             CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
             CommandBindings.Add(new CommandBinding(SearchBox.SearchCommand, Search, CanRefresh));
             CommandBindings.Add(new CommandBinding(SearchBox.ClearSearchCommand, ClearSearch, CanRefresh));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
         }
 
-        private void Open(object sender, ExecutedRoutedEventArgs e)
+        private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
-            Result = _presenter.CurrentRow.CreateValueBag(_key, _lookup);
+            Result = _presenter.CurrentRow.AutoSelect(_key, _lookup);
             Close();
         }
 
-        private void CanOpen(object sender, CanExecuteRoutedEventArgs e)
+        private void CanSelectCurrent(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = _presenter.CurrentRow != null;
         }

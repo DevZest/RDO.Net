@@ -500,10 +500,15 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public ColumnValueBag CreateValueBag(KeyBase key, ModelExtension extension)
+        public ColumnValueBag AutoSelect(KeyBase key, ModelExtension extension)
         {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
             var result = new ColumnValueBag();
-            SetValueBag(result, key, extension);
+            result.AutoSelect(key, DataRow);
+            if (extension != null)
+                result.AutoSelect(extension, DataRow);
             return result;
         }
 
