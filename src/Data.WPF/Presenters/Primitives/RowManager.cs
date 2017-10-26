@@ -297,6 +297,11 @@ namespace DevZest.Data.Presenters.Primitives
             : base(template, dataSet, where, orderBy)
         {
             Template.RowManager = this;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             var coercedVirtualRowIndex = CoercedVirtualRowIndex;
             if (coercedVirtualRowIndex >= 0)
                 VirtualRow = new RowPresenter(this, coercedVirtualRowIndex);
@@ -405,9 +410,13 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected override void Reload()
         {
+            _currentRow = null;
+            _selectedRows.Clear();
+            _lastExtnedSelection = null;
+            _editing = null;
+            VirtualRow = null;
             base.Reload();
-            CoerceVirtualRow();
-            CoerceCurrentRow();
+            Initialize();
         }
 
         private void CoerceVirtualRow()
