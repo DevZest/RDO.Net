@@ -185,17 +185,23 @@ namespace DevZest.Data
             return result;
         }
 
-        public async Task<DataSet<T>> ToDataSetAsync(CancellationToken cancellationToken)
+        public Task<DataSet<T>> ToDataSetAsync(CancellationToken cancellationToken)
+        {
+            return ToDataSetAsync(null, cancellationToken);
+        }
+
+        public async Task<DataSet<T>> ToDataSetAsync(Action<T> initializer, CancellationToken cancellationToken)
         {
             T model = Data.Model.Clone(this._, false);
+            model.Initialize(initializer);
             var result = DataSet<T>.Create(model);
             await DbSession.RecursiveFillDataSetAsync(this, result, cancellationToken);
             return result;
         }
 
-        public Task<DataSet<T>> ToDataSetAsync()
+        public Task<DataSet<T>> ToDataSetAsync(Action<T> initializer = null)
         {
-            return ToDataSetAsync(CancellationToken.None);
+            return ToDataSetAsync(null, CancellationToken.None);
         }
 
         public string ToJsonString(bool isPretty)
