@@ -108,10 +108,11 @@ namespace AdventureWorks.SalesOrders
                     if (string.IsNullOrEmpty(value))
                         Where = null;
                     else
-                        Where = dataRow => _.CompanyName[dataRow].Contains(_searchText) ||
-                            _.GetContactPerson()[dataRow].Contains(_searchText) ||
-                            _.Phone[dataRow].Contains(_searchText) ||
-                            _.EmailAddress[dataRow].Contains(_searchText);
+                        Where = dataRow => _.CompanyName[dataRow].Contains(value) ||
+                            _.GetContactPerson()[dataRow].Contains(value) ||
+                            _.Phone[dataRow].Contains(value) ||
+                            _.EmailAddress[dataRow].Contains(value);
+                    SelectCurrent();
                 }
             }
         }
