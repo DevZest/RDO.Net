@@ -286,7 +286,7 @@ namespace DevZest.Data
         /// child models are not initialized by default. This design decision is to deal with the situation when recursive child models registered.
         /// <see cref="EnsureInitialized"/> will be called automatically when creating the first <see cref="DataRow"/> the query builder.
         /// </remarks>
-        internal bool IsInitialized { get; private set; }
+        public bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Ensures child models are initialized.

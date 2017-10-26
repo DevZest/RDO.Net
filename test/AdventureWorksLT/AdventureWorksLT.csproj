@@ -49,6 +49,7 @@
     <Compile Include="BaseModel.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="CustomerAddress.cs" />
+    <Compile Include="CustomerContactPerson.cs" />
     <Compile Include="Db.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductCategory.cs" />
