@@ -25,7 +25,7 @@ namespace AdventureWorks.SalesOrders
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                builder.GridColumns("150")
+                builder.GridColumns("120")
                     .GridRows("Auto")
                     .RowView<RowView>(RowView.SelectableStyleKey)
                     .Layout(Orientation.Vertical)

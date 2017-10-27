@@ -28,13 +28,13 @@
             </DockPanel>
             <DockPanel Width="120">
                 <Label Content="Ship To:" Target="{x:Reference Name=_shipTo}" DockPanel.Dock="Top" />
-                <dz:ForeignKeyBox Grid.Column="1" Grid.Row="1" x:Name="_shipTo">
+                <dz:ForeignKeyBox x:Name="_shipTo">
                     <local:AddressBox />
                 </dz:ForeignKeyBox>
             </DockPanel>
             <DockPanel Width="120">
                 <Label Content="Bill To:" Target="{x:Reference Name=_billTo}" DockPanel.Dock="Top"/>
-                <dz:ForeignKeyBox x:Name="_billTo" Grid.Column="2" Grid.Row="1">
+                <dz:ForeignKeyBox x:Name="_billTo">
                     <local:AddressBox />
                 </dz:ForeignKeyBox>
             </DockPanel>
