@@ -511,27 +511,5 @@ namespace DevZest.Data.Presenters
                 result.AutoSelect(extension, DataRow);
             return result;
         }
-
-        public void ClearValue(KeyBase key, ModelExtension extension = null)
-        {
-            for (int i = 0; i < key.Count; i++)
-            {
-                var column = key[i].Column;
-                this[column] = null;
-            }
-
-            if (extension == null)
-                return;
-
-            var columns = extension.Columns;
-            for (int i = 0; i < columns.Count; i++)
-            {
-                var column = columns[i];
-                if (column.IsExpression)
-                    continue;
-                this[column] = null;
-            }
-
-        }
     }
 }

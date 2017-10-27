@@ -72,7 +72,9 @@ namespace DevZest.Data.Views
 
         public void ClearValue()
         {
-            RowPresenter.ClearValue(ForeignKey, Extension);
+            var valueBag = ValueBag.Clone();
+            valueBag.ClearValues();
+            EndLookup(valueBag);
         }
 
         public KeyBase ForeignKey { get; internal set; }
