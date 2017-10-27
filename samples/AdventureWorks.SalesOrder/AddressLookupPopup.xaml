@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdventureWorks.SalesOrders"
         xmlns:dz="http://schemas.devzest.com/data/windows"
-        mc:Ignorable="d" Closed="Popup_Closed" StaysOpen="False" Width="150">
+        mc:Ignorable="d" Closed="Popup_Closed" StaysOpen="False" Width="Auto" PopupAnimation="Slide">
     <Border Background="White">
-        <dz:DataView x:Name="_dataView" />
+        <dz:DataView x:Name="_dataView" VerticalScrollBarVisibility="Visible" />
     </Border>
 </Popup>

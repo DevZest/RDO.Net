@@ -28,7 +28,7 @@ namespace AdventureWorks.SalesOrders
                 builder.GridColumns("150")
                     .GridRows("Auto")
                     .RowView<RowView>(RowView.SelectableStyleKey)
-                    .Layout(Orientation.Vertical, 4)
+                    .Layout(Orientation.Vertical)
                     .WithSelectionMode(SelectionMode.Single)
                     .AddBinding(0, 0, _.AsAddressBox());
             }
