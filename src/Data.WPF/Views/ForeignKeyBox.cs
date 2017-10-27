@@ -66,6 +66,11 @@ namespace DevZest.Data.Views
 
         private void ExecClearValue(object sender, ExecutedRoutedEventArgs e)
         {
+            ClearValue();
+        }
+
+        public void ClearValue()
+        {
             RowPresenter.ClearValue(ForeignKey, Extension);
         }
 

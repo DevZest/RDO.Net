@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Views;
+﻿using DevZest.Data.Presenters;
+using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
 using System.Windows;
 using System.Windows.Input;
@@ -19,6 +20,8 @@ namespace AdventureWorks.SalesOrders
 
         private Presenter _presenter;
         private ForeignKeyBox _foreignKeyBox;
+        private ForeignKeyBox _shipToAddressBox;
+        private ForeignKeyBox _billToAddressBox;
         private Customer.Key Key
         {
             get { return (Customer.Key)_foreignKeyBox.ForeignKey; }
@@ -28,10 +31,12 @@ namespace AdventureWorks.SalesOrders
             get { return (Customer.Lookup)_foreignKeyBox.Extension; }
         }
 
-        public void Show(Window ownerWindow, ForeignKeyBox foreignKeyBox, int? currentCustomerID)
+        public void Show(Window ownerWindow, ForeignKeyBox foreignKeyBox, int? currentCustomerID, ForeignKeyBox shipToAddressBox, ForeignKeyBox billToAddressBox)
         {
             Owner = ownerWindow;
             _foreignKeyBox = foreignKeyBox;
+            _shipToAddressBox = shipToAddressBox;
+            _billToAddressBox = billToAddressBox;
             _presenter = new Presenter(_dataView, currentCustomerID);
             InitializeCommandBindings();
             ShowDialog();
@@ -46,9 +51,24 @@ namespace AdventureWorks.SalesOrders
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
         }
 
+        private RowPresenter CurrentRow
+        {
+            get { return _presenter.CurrentRow; }
+        }
+
+        private Customer _
+        {
+            get { return _presenter._; }
+        }
+
         private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
-            _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(Key, Lookup));
+            if (_presenter.CurrentCustomerID != CurrentRow.GetValue(_.CustomerID))
+            {
+                _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(Key, Lookup));
+                _shipToAddressBox?.ClearValue();
+                _billToAddressBox?.ClearValue();
+            }
             Close();
         }
 
