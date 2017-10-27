@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -33,6 +34,11 @@ namespace AdventureWorks.SalesOrders
 
         public void Show(Window ownerWindow, ForeignKeyBox foreignKeyBox, int? currentCustomerID, ForeignKeyBox shipToAddressBox, ForeignKeyBox billToAddressBox)
         {
+            Debug.Assert(ownerWindow != null);
+            Debug.Assert(foreignKeyBox != null);
+            Debug.Assert(shipToAddressBox != null);
+            Debug.Assert(billToAddressBox != null);
+
             Owner = ownerWindow;
             _foreignKeyBox = foreignKeyBox;
             _shipToAddressBox = shipToAddressBox;
@@ -66,8 +72,8 @@ namespace AdventureWorks.SalesOrders
             if (_presenter.CurrentCustomerID != CurrentRow.GetValue(_.CustomerID))
             {
                 _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(Key, Lookup));
-                _shipToAddressBox?.ClearValue();
-                _billToAddressBox?.ClearValue();
+                _shipToAddressBox.ClearValue();
+                _billToAddressBox.ClearValue();
             }
             Close();
         }

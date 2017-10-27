@@ -57,7 +57,7 @@ namespace AdventureWorks.SalesOrders
             if (foreignKeyBox.ForeignKey == _.Customer)
             {
                 var dialogWindow = new CustomerLookupWindow();
-                dialogWindow.Show(this, foreignKeyBox, _presenter.CurrentRow.GetValue(_.CustomerID), null, null);
+                dialogWindow.Show(this, foreignKeyBox, _presenter.CurrentRow.GetValue(_.CustomerID), foreignKeyBox.FindSibling(_.ShipToAddress), foreignKeyBox.FindSibling(_.BillToAddress));
             }
             else if (foreignKeyBox.ForeignKey == _.ShipToAddress || foreignKeyBox.ForeignKey == _.BillToAddress)
                 BeginLookupAddress(foreignKeyBox);
