@@ -1,11 +1,11 @@
 ﻿using DevZest.Data.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevZest.Data
 {
-    public class ColumnValueBag : IReadOnlyDictionary<Column, object>
+    public sealed class ColumnValueBag : IReadOnlyDictionary<Column, object>
     {
         private Dictionary<Column, object> _columnValues = new Dictionary<Column, object>();
 
@@ -107,6 +107,20 @@ namespace DevZest.Data
         {
             Check.NotNull(column, nameof(column));
             return (T)_columnValues[column];
+        }
+
+        public ColumnValueBag Clone()
+        {
+            var result = new ColumnValueBag();
+            foreach (var keyValuePair in _columnValues)
+                result._columnValues.Add(keyValuePair.Key, keyValuePair.Value);
+            return result;
+        }
+
+        public void ClearValues()
+        {
+            foreach (var keyValuePair in _columnValues.ToArray())
+                _columnValues[keyValuePair.Key] = null;
         }
     }
 }

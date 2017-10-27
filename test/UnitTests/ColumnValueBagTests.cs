@@ -8,7 +8,24 @@ namespace DevZest.Data
     public class ColumnValueBagTests
     {
         [TestMethod]
-        public void ColumnValueBag()
+        public void ColumnValueBag_SetValue()
+        {
+            var salesOrders = DataSet<SalesOrderToEdit>.New();
+            var _ = salesOrders._;
+            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+            var customer = ext.Customer;
+
+            var valueBag = new ColumnValueBag();
+            valueBag.SetValue(_.CustomerID, 2);
+            valueBag.SetValue(customer.FirstName, "FirstName");
+            Assert.AreEqual(2, valueBag.GetValue(_.CustomerID));
+            Assert.AreEqual(2, valueBag[_.CustomerID]);
+            Assert.AreEqual("FirstName", valueBag.GetValue(customer.FirstName));
+            Assert.AreEqual("FirstName", valueBag[customer.FirstName]);
+        }
+
+        [TestMethod]
+        public void ColumnValueBag_SetValue_with_DataRow()
         {
             var salesOrders = DataSet<SalesOrderToEdit>.New();
             var _ = salesOrders._;
@@ -25,16 +42,6 @@ namespace DevZest.Data
                 customer.EmailAddress[dataRow] = @"john.smith@goodtoys.com";
                 customer.Phone[dataRow] = "555-123-4567";
             });
-
-            {
-                var valueBag = new ColumnValueBag();
-                valueBag.SetValue(_.CustomerID, 2);
-                valueBag.SetValue(customer.FirstName, "FirstName");
-                Assert.AreEqual(2, valueBag.GetValue(_.CustomerID));
-                Assert.AreEqual(2, valueBag[_.CustomerID]);
-                Assert.AreEqual("FirstName", valueBag.GetValue(customer.FirstName));
-                Assert.AreEqual("FirstName", valueBag[customer.FirstName]);
-            }
 
             {
                 var valueBag = new ColumnValueBag();
@@ -70,6 +77,44 @@ namespace DevZest.Data
                 Assert.AreEqual(@"john.smith@goodtoys.com", valueBag[customerExt.EmailAddress]);
                 Assert.AreEqual("555-123-4567", valueBag[customerExt.Phone]);
             }
+        }
+
+        [TestMethod]
+        public void ColumnValueBag_Clone()
+        {
+            var salesOrders = DataSet<SalesOrderToEdit>.New();
+            var _ = salesOrders._;
+            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+            var customer = ext.Customer;
+
+            var valueBag = new ColumnValueBag();
+            valueBag.SetValue(_.CustomerID, 2);
+            valueBag.SetValue(customer.FirstName, "FirstName");
+
+            var clone = valueBag.Clone();
+            Assert.AreEqual(2, clone.GetValue(_.CustomerID));
+            Assert.AreEqual(2, clone[_.CustomerID]);
+            Assert.AreEqual("FirstName", clone.GetValue(customer.FirstName));
+            Assert.AreEqual("FirstName", clone[customer.FirstName]);
+        }
+
+        [TestMethod]
+        public void ColumnValueBag_ClearValues()
+        {
+            var salesOrders = DataSet<SalesOrderToEdit>.New();
+            var _ = salesOrders._;
+            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+            var customer = ext.Customer;
+
+            var valueBag = new ColumnValueBag();
+            valueBag.SetValue(_.CustomerID, 2);
+            valueBag.SetValue(customer.FirstName, "FirstName");
+            valueBag.ClearValues();
+
+            Assert.AreEqual(new int?(), valueBag.GetValue(_.CustomerID));
+            Assert.AreEqual(new int?(), valueBag[_.CustomerID]);
+            Assert.AreEqual(null, valueBag.GetValue(customer.FirstName));
+            Assert.AreEqual(null, valueBag[customer.FirstName]);
         }
     }
 }
