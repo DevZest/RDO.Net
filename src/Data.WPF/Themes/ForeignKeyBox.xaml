@@ -34,7 +34,6 @@
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
-        <Setter Property="ClickMode" Value="Press" />
         <Setter Property="Border.BorderBrush" Value="#FFACACAC" />
 
         <Setter Property="TextElement.Foreground" Value="{DynamicResource SystemColors.ControlTextBrushKey}" />
