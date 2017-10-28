@@ -11,29 +11,57 @@ namespace AdventureWorks.SalesOrders
     {
         private class Presenter : DataPresenter<SalesOrderToEdit>, ForeignKeyBox.ILookupService
         {
-            public Presenter(ForeignKeyBox.ILookupService lookupService)
+            public Presenter(Window ownerWindow, AddressLookupPopup addressLookupPopup)
             {
-                _lookupService = lookupService;
+                _ownerWindow = ownerWindow;
+                _addressLookupPopup = addressLookupPopup;
             }
 
-            private ForeignKeyBox.ILookupService _lookupService;
-
-            bool ForeignKeyBox.ILookupService.CanLookup(KeyBase foreignKey)
-            {
-                return _lookupService.CanLookup(foreignKey);
-            }
-
-            void ForeignKeyBox.ILookupService.BeginLookup(ForeignKeyBox foreignKeyBox)
-            {
-                _lookupService.BeginLookup(foreignKeyBox);
-            }
+            private Window _ownerWindow;
+            private AddressLookupPopup _addressLookupPopup;
+            private RowBinding<ForeignKeyBox> _shipToAddressBinding;
+            private RowBinding<ForeignKeyBox> _billToAddressBinding;
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 builder.GridRows("Auto", "Auto", "Auto")
                     .GridColumns("580")
-                    .AddBinding(0, 0, _.AsSalesOrderHeaderBox())
+                    .AddBinding(0, 0, _.AsSalesOrderHeaderBox(out _shipToAddressBinding, out _billToAddressBinding))
                     .AddBinding(0, 2, _.AsSalesOrderFooterBox());
+            }
+
+            bool ForeignKeyBox.ILookupService.CanLookup(KeyBase foreignKey)
+            {
+                if (foreignKey == _.Customer)
+                    return true;
+                else if (foreignKey == _.BillToAddress)
+                    return true;
+                else if (foreignKey == _.ShipToAddress)
+                    return true;
+                else
+                    return false;
+            }
+
+            void ForeignKeyBox.ILookupService.BeginLookup(ForeignKeyBox foreignKeyBox)
+            {
+                if (foreignKeyBox.ForeignKey == _.Customer)
+                {
+                    var dialogWindow = new CustomerLookupWindow();
+                    dialogWindow.Show(_ownerWindow, foreignKeyBox, CurrentRow.GetValue(_.CustomerID), _shipToAddressBinding[CurrentRow], _billToAddressBinding[CurrentRow]);
+                }
+                else if (foreignKeyBox.ForeignKey == _.ShipToAddress || foreignKeyBox.ForeignKey == _.BillToAddress)
+                    BeginLookupAddress(foreignKeyBox);
+                else
+                    throw new NotSupportedException();
+            }
+
+            private void BeginLookupAddress(ForeignKeyBox foreignKeyBox)
+            {
+                var foreignKey = (Address.Key)foreignKeyBox.ForeignKey;
+                if (_addressLookupPopup.Key == foreignKey)
+                    _addressLookupPopup.IsOpen = false;
+                else
+                    _addressLookupPopup.Show(foreignKeyBox, CurrentRow.GetValue(foreignKey.AddressID), CurrentRow.GetValue(_.CustomerID).Value);
             }
         }
     }

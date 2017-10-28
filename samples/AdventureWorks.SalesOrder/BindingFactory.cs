@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Presenters;
+using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
 using System;
 
@@ -6,13 +7,14 @@ namespace AdventureWorks.SalesOrders
 {
     public static class BindingFactory
     {
-        public static CompositeRowBinding<SalesOrderHeaderBox> AsSalesOrderHeaderBox(this SalesOrderToEdit _)
+        public static CompositeRowBinding<SalesOrderHeaderBox> AsSalesOrderHeaderBox(this SalesOrderToEdit _,
+            out RowBinding<ForeignKeyBox> shipToAddressBinding, out RowBinding<ForeignKeyBox> billToAddressBinding)
         {
             var ext = _.GetExtension<SalesOrderToEdit.Ext>();
             return new CompositeRowBinding<SalesOrderHeaderBox>()
                 .AddChild(_.Customer.AsForeignKeyBox(ext.Customer, CustomerBox.RefreshAction), v => v._customer)
-                .AddChild(_.ShipToAddress.AsForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)
-                .AddChild(_.BillToAddress.AsForeignKeyBox(ext.BillToAddress, AddressBox.RefreshAction), v => v._billTo)
+                .AddChild(shipToAddressBinding = _.ShipToAddress.AsForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)
+                .AddChild(billToAddressBinding = _.BillToAddress.AsForeignKeyBox(ext.BillToAddress, AddressBox.RefreshAction), v => v._billTo)
                 .AddChild(_.OrderDate.AsDatePicker(), v => v._orderDate)
                 .AddChild(_.ShipDate.AsDatePicker(), v => v._shipDate)
                 .AddChild(_.DueDate.AsDatePicker(), v => v._dueDate)

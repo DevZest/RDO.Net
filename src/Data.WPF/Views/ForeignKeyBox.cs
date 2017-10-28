@@ -134,39 +134,6 @@ namespace DevZest.Data.Views
             Extension = null;
             ValueBag.Clear();
         }
-
-        public ForeignKeyBox FindSibling(KeyBase foreignKey)
-        {
-            Check.NotNull(foreignKey, nameof(foreignKey));
-
-            var rowView = RowPresenter?.View;
-            return rowView == null ? null : FindChild(rowView, foreignKey);
-        }
-
-        private static ForeignKeyBox FindChild(DependencyObject parent, KeyBase foreignKey)
-        {
-            if (parent == null)
-                return null;
-
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-            {
-                var child = VisualTreeHelper.GetChild(parent, i);
-
-                var result = child as ForeignKeyBox;
-                if (result != null)
-                {
-                    if (result.ForeignKey == foreignKey)
-                        return result;
-                }
-                else
-                {
-                    result = FindChild(child, foreignKey);
-                    if (result != null)
-                        return result;
-                }
-            }
-            return null;
-        }
     }
 }
 
