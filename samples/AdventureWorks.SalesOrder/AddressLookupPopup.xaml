@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdventureWorks.SalesOrders"
         xmlns:dz="http://schemas.devzest.com/data/windows"
-        mc:Ignorable="d" Closed="Popup_Closed" StaysOpen="False" Width="Auto" PopupAnimation="Slide" MaxHeight="300">
+        mc:Ignorable="d" Closed="Popup_Closed" StaysOpen="False" Width="Auto" PopupAnimation="Slide" Height="300">
     <Popup.Resources>
         <Style TargetType="local:AddressBox">
             <Setter Property="Margin" Value="2" />
