@@ -19,7 +19,7 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static RowBinding<TextBlock> AsHyperlinkTextBlock(this Column source, ICommand command, string format = null, IFormatProvider formatProvider = null)
+        public static RowBinding<TextBlock> AsTextBlockOfHyperlink(this Column source, ICommand command, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
