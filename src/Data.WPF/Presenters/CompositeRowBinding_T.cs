@@ -121,11 +121,6 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        internal override IRowInput GetInput()
-        {
-            return null;
-        }
-
         internal override UIElement GetChild(UIElement parent, int index)
         {
             return _childGetters[index]((T)parent);

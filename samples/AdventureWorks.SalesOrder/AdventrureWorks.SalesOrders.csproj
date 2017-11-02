@@ -106,6 +106,7 @@
     <Compile Include="SalesOrderFooterBox.xaml.cs">
       <DependentUpon>SalesOrderFooterBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SalesOrderForm.DetailPresenter.cs" />
     <Compile Include="SalesOrderForm.xaml.cs">
       <DependentUpon>SalesOrderForm.xaml</DependentUpon>
     </Compile>
