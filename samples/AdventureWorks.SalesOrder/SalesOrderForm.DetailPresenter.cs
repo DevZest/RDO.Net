@@ -15,7 +15,7 @@ namespace AdventureWorks.SalesOrders
             {
                 var ext = _.GetExtension<SalesOrderToEdit.DetailExt>();
                 builder.GridRows("Auto", "Auto")
-                    .GridColumns("Auto", "100", "100")
+                    .GridColumns("Auto", "100", "100", "100", "100", "100", "100")
                     .AddBinding(1, 0, ext.Product.ProductNumber.AsColumnHeader("Product Number"))
                     //.AddBinding(1, 1, _.Product.AsForeignKeyBox(ext.Product, null))
                     .AddBinding(2, 0, ext.Product.Name.AsColumnHeader("Product"))
