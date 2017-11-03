@@ -15,9 +15,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Border Background="White" Margin="5">
-            <dz:DataView x:Name="_dataView" />
-        </Border>
+        <dz:DataView x:Name="_dataView" Background="White" Margin="5" />
         <local:AddressLookupPopup x:Name="_addressLookupPopup" />
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
             <Button Content="OK" Margin="5" />

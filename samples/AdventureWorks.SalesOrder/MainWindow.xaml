@@ -50,8 +50,6 @@
                 </Button>
             </ToolBar>
         </DockPanel>
-        <Border Background="White" Margin="5">
-            <dz:DataView x:Name="_dataView" />
-        </Border>
+        <dz:DataView x:Name="_dataView" BorderThickness="1" Background="White" Margin="5" />
     </DockPanel>
 </Window>
