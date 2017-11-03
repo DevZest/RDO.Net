@@ -9,6 +9,11 @@ namespace AdventureWorks.SalesOrders
 {
     partial class SalesOrderForm
     {
+        public static class Styles
+        {
+            public static readonly StyleKey DataSheet = new StyleKey(typeof(SalesOrderForm));
+        }
+
         private class Presenter : DataPresenter<SalesOrderToEdit>, ForeignKeyBox.ILookupService
         {
             public Presenter(Window ownerWindow, AddressLookupPopup addressLookupPopup)
@@ -27,7 +32,7 @@ namespace AdventureWorks.SalesOrders
                 builder.GridRows("Auto", "80", "Auto")
                     .GridColumns("580")
                     .AddBinding(0, 0, _.AsSalesOrderHeaderBox(out _shipToAddressBinding, out _billToAddressBinding))
-                    .AddBinding(0, 1, _.SalesOrderDetails.AsDataView(() => new DetailPresenter()))
+                    .AddBinding(0, 1, _.SalesOrderDetails.AsDataView(() => new DetailPresenter()).WithStyle(Styles.DataSheet))
                     .AddBinding(0, 2, _.AsSalesOrderFooterBox());
             }
 
