@@ -29,7 +29,7 @@ namespace AdventureWorks.SalesOrders
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                builder.GridRows("Auto", "80", "Auto")
+                builder.GridRows("Auto", "*", "Auto")
                     .GridColumns("580")
                     .AddBinding(0, 0, _.AsSalesOrderHeaderBox(out _shipToAddressBinding, out _billToAddressBinding))
                     .AddBinding(0, 1, _.SalesOrderDetails.AsDataView(() => new DetailPresenter()).WithStyle(Styles.DataSheet))
