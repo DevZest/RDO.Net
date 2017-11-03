@@ -45,23 +45,6 @@ namespace DevZest.Data.Presenters
             throw new NotImplementedException();
         }
 
-        public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column column, object title = null)
-        {
-            return new ScalarBinding<ColumnHeader>(
-                onRefresh: null,
-                onCleanup: null,
-                onSetup: e =>
-                {
-                    e.Column = column;
-                    e.Content = title ?? column.DisplayName;
-                });
-        }
-
-        public static RowBinding<RowHeader> AsRowHeader(this Model source)
-        {
-            return new RowBinding<RowHeader>(onRefresh: null);
-        }
-
         public static RowBinding<ValidationView> AsValidationView<T>(this RowInput<T> source)
             where T : UIElement, new()
         {
