@@ -7,7 +7,7 @@ namespace DevZest.Data.Presenters
         public static RowBinding<DatePicker> AsDatePicker(this _DateTime column)
         {
             return new RowBinding<DatePicker>(onRefresh: (v, p) => v.SelectedDate = p.GetValue(column))
-                .WithInput(new PropertyChangedTrigger<DatePicker>(DatePicker.SelectedDateProperty), column, v => v.SelectedDate);
+                .WithInput(DatePicker.SelectedDateProperty, column, v => v.SelectedDate);
         }
     }
 }

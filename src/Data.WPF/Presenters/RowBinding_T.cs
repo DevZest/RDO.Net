@@ -118,9 +118,19 @@ namespace DevZest.Data.Presenters
             return Input = new RowInput<T>(this, flushTrigger);
         }
 
+        public RowInput<T> BeginInput(DependencyProperty dependencyProperty)
+        {
+            return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty));
+        }
+
         public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
         {
             return BeginInput(flushTrigger).WithFlush(column, getValue).EndInput();
+        }
+
+        public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, Column<TData> column, Func<T, TData> getValue)
+        {
+            return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), column, getValue);
         }
 
         public RowBinding<T> OverrideSetup(Action<T, RowPresenter, Action<T, RowPresenter>> overrideSetup)

@@ -75,7 +75,7 @@ namespace DevZest.Data.Presenters
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
             return new RowBinding<CheckBox>(onRefresh: (v, p) => v.IsChecked = p.GetValue(column))
-                .WithInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), column, v => v.IsChecked);
+                .WithInput(CheckBox.IsCheckedProperty, column, v => v.IsChecked);
         }
     }
 }

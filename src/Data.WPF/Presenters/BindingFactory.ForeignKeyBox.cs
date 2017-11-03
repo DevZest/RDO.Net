@@ -87,7 +87,7 @@ namespace DevZest.Data.Presenters
 
         private static RowBinding<ForeignKeyBox> WithInput(this RowBinding<ForeignKeyBox> rowBinding, KeyBase foreignKey, ModelExtension extension)
         {
-            var rowInput = rowBinding.BeginInput(new PropertyChangedTrigger<ForeignKeyBox>(ForeignKeyBox.ValueBagProperty));
+            var rowInput = rowBinding.BeginInput(ForeignKeyBox.ValueBagProperty);
             foreach (var columnSort in foreignKey)
                 rowInput.WithFlush(columnSort.Column, v => v.ValueBag);
             if (extension != null)

@@ -44,8 +44,7 @@ namespace DevZest.Data.Presenters
                     e.ItemsSource = null;
                     e.SelectedValuePath = null;
                     e.DisplayMemberPath = null;
-                }
-                ).WithInput(new PropertyChangedTrigger<ComboBox>(ComboBox.SelectedValueProperty), source, e => (T)e.SelectedValue);
+                }).WithInput(ComboBox.SelectedValueProperty, source, e => (T)e.SelectedValue);
         }
     }
 }
