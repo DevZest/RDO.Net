@@ -11,6 +11,8 @@ namespace DevZest.Data.Presenters
     {
         public PropertyChangedTrigger(DependencyProperty property)
         {
+            if (property == null)
+                throw new ArgumentNullException(nameof(property));
             _property = property;
         }
 

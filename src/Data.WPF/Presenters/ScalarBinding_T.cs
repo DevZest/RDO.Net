@@ -135,9 +135,19 @@ namespace DevZest.Data.Presenters
             return Input = new ScalarInput<T>(this, flushTrigger);
         }
 
+        public ScalarInput<T> BeginInput(DependencyProperty dependencyProperty)
+        {
+            return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty));
+        }
+
         public ScalarBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Scalar<TData> data, Func<T, TData> getValue)
         {
             return BeginInput(flushTrigger).WithFlush(data, getValue).EndInput();
+        }
+
+        public ScalarBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, Scalar<TData> data, Func<T, TData> getValue)
+        {
+            return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), data, getValue);
         }
 
         public new T this[int flowIndex]
