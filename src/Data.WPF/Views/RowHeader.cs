@@ -77,7 +77,7 @@ namespace DevZest.Data.Views
             if (!IsLoaded)
                 return;
 
-            if (rowPresenter.IsSelected && rowPresenter.DataPresenter.SelectedRows.Count == 1)
+            if (rowPresenter.IsSelected)
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateSelected);
             else
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateUnselected);
