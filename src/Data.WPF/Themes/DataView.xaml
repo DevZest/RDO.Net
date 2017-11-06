@@ -6,6 +6,7 @@
     xmlns:res="clr-namespace:DevZest.Data">
     
     <Style TargetType="{x:Type local:DataView}">
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Local" />
         <Style.Triggers>
             <Trigger Property="Scrollable" Value="True">
                 <Setter Property="Template">
