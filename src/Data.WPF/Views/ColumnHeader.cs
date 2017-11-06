@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevZest.Data.Views
 {
@@ -165,20 +166,20 @@ namespace DevZest.Data.Views
                 var columnHeader = (ColumnHeader)sender;
                 var direction = Toggle(columnHeader.SortDirection);
                 var sortService = DataPresenter.GetService<ISortService>();
-                if (direction == SortDirection.Unspecified)
+                if (direction == null)
                     sortService.OrderBy = null;
                 else
-                    sortService.OrderBy = new IColumnComparer[] { DataRow.OrderBy(columnHeader.Column, direction) };
+                    sortService.OrderBy = new IColumnComparer[] { DataRow.OrderBy(columnHeader.Column, direction.GetValueOrDefault() == ListSortDirection.Ascending ? Data.SortDirection.Ascending : Data.SortDirection.Descending) };
             }
 
-            private static SortDirection Toggle(SortDirection direction)
+            private static ListSortDirection? Toggle(ListSortDirection? direction)
             {
-                if (direction == SortDirection.Unspecified)
-                    return SortDirection.Ascending;
-                else if (direction == SortDirection.Ascending)
-                    return SortDirection.Descending;
+                if (direction == null)
+                    return ListSortDirection.Ascending;
+                else if (direction == ListSortDirection.Ascending)
+                    return ListSortDirection.Descending;
                 else
-                    return SortDirection.Unspecified;
+                    return null;
             }
         }
 
@@ -234,8 +235,8 @@ namespace DevZest.Data.Views
         public static readonly DependencyProperty CanSortProperty = DependencyProperty.Register(nameof(CanSort), typeof(bool),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
-        private static readonly DependencyPropertyKey SortDirectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SortDirection), typeof(SortDirection),
-            typeof(ColumnHeader), new FrameworkPropertyMetadata(SortDirection.Unspecified));
+        private static readonly DependencyPropertyKey SortDirectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SortDirection), typeof(ListSortDirection?),
+            typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
 
         public static readonly DependencyProperty SortDirectionProperty = SortDirectionPropertyKey.DependencyProperty;
 
@@ -277,9 +278,9 @@ namespace DevZest.Data.Views
             set { SetValue(CanSortProperty, BooleanBoxes.Box(value)); }
         }
 
-        public SortDirection SortDirection
+        public ListSortDirection? SortDirection
         {
-            get { return (SortDirection)GetValue(SortDirectionProperty); }
+            get { return (ListSortDirection?)GetValue(SortDirectionProperty); }
             private set { SetValue(SortDirectionPropertyKey, value); }
         }
 
@@ -330,9 +331,9 @@ namespace DevZest.Data.Views
             SortDirection = GetSortDirection(dataPresenter);
             if (!IsLoaded)  // First call of VisualStateManager.GotoState must after control loaded.
                 return;
-            if (SortDirection == SortDirection.Ascending)
+            if (SortDirection == ListSortDirection.Ascending)
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateSortAscending);
-            else if (SortDirection == SortDirection.Descending)
+            else if (SortDirection == ListSortDirection.Descending)
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateSortDescending);
             else
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateUnsorted);
@@ -343,22 +344,32 @@ namespace DevZest.Data.Views
             get { return DataView.GetCurrent(this)?.DataPresenter; }
         }
 
-        private SortDirection GetSortDirection(DataPresenter dataPresenter)
+        private ListSortDirection? GetSortDirection(DataPresenter dataPresenter)
         {
             if (!CanSort)
-                return SortDirection.Unspecified;
+                return null;
 
             var orderBy = dataPresenter.GetService<ISortService>()?.OrderBy;
             if (orderBy == null || orderBy.Count == 0)
-                return SortDirection.Unspecified;
+                return null;
 
             for (int i = 0; i < orderBy.Count; i++)
             {
                 var columnComparer = orderBy[i];
                 if (columnComparer.GetColumn(dataPresenter.DataSet.Model) == Column)
-                    return columnComparer.Direction;
+                    return ToListSortDirection(columnComparer.Direction);
             }
-            return SortDirection.Unspecified;
+            return null;
+        }
+
+        private static ListSortDirection? ToListSortDirection(SortDirection sortDirection)
+        {
+            if (sortDirection == Data.SortDirection.Unspecified)
+                return null;
+            else if (sortDirection == Data.SortDirection.Ascending)
+                return ListSortDirection.Ascending;
+            else
+                return ListSortDirection.Descending;
         }
 
         void IScalarElement.Setup(ScalarPresenter scalarPresenter)

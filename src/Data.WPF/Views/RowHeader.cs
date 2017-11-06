@@ -20,6 +20,10 @@ namespace DevZest.Data.Views
     {
         public static readonly StyleKey FlatStyleKey = new StyleKey(typeof(RowHeader));
 
+        private static readonly DependencyPropertyKey IsSelectedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelected), typeof(bool),
+            typeof(RowHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty IsSelectedProperty = IsSelectedPropertyKey.DependencyProperty;
+
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(RowHeader), new FrameworkPropertyMetadata(null));
 
@@ -40,6 +44,12 @@ namespace DevZest.Data.Views
         {
             var rowPresenter = RowView.GetCurrent(this).RowPresenter;
             UpdateVisualStates(rowPresenter);
+        }
+
+        public bool IsSelected
+        {
+            get { return (bool)GetValue(IsSelectedProperty); }
+            private set { SetValue(IsSelectedPropertyKey, BooleanBoxes.Box(value)); }
         }
 
         public Brush SeparatorBrush
@@ -78,9 +88,15 @@ namespace DevZest.Data.Views
                 return;
 
             if (rowPresenter.IsSelected)
+            {
+                IsSelected = true;
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateSelected);
+            }
             else
+            {
+                IsSelected = false;
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateUnselected);
+            }
 
             if (rowPresenter.IsVirtual)
             {
