@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="Presenters\AsyncValidator.cs" />
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
+    <Compile Include="Presenters\BindingFactory.ToggleButton.cs" />
     <Compile Include="Presenters\BindingFactory.DataView.cs" />
     <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
     <Compile Include="Presenters\BindingFactory.ComboBox.cs" />
