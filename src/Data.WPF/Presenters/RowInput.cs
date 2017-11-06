@@ -148,7 +148,7 @@ namespace DevZest.Data.Presenters
         private bool IsVisible(ColumnValidationMessage validationMessage, RowPresenter rowPresenter, bool progressVisible)
         {
             var source = validationMessage.Source;
-            return source.SetEquals(Target) && InputManager.RowValidationProgress.IsVisible(rowPresenter, source) == progressVisible;
+            return source.Overlaps(Target) && InputManager.RowValidationProgress.IsVisible(rowPresenter, source) == progressVisible;
         }
 
         private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)
