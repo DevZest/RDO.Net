@@ -51,12 +51,16 @@
                                 <VisualState x:Name="Unsorted" />
                                 <VisualState x:Name="SortAscending">
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="Opacity" Duration="0" To="1.0"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SortIcon" Storyboard.TargetProperty = "Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="SortDescending">
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="Opacity" Duration="0" To="1.0"/>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SortIcon" Storyboard.TargetProperty = "Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
                                         <DoubleAnimation Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="(RenderTransform).ScaleY" Duration="0" To="-.9"/>
                                     </Storyboard>
                                 </VisualState>
@@ -95,7 +99,7 @@
                                 </ContentPresenter.Resources>
                             </ContentPresenter>
 
-                            <Path Grid.Column="1" Name="SortIcon" Fill="#FF444444" RenderTransformOrigin=".5,.5" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0" Stretch="Uniform" Width="8" Margin="4,0,0,0" Data="F1 M -5.215,6.099L 5.215,6.099L 0,0L -5.215,6.099 Z ">
+                            <Path Grid.Column="1" Name="SortIcon" Fill="#FF444444" RenderTransformOrigin=".5,.5" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" Stretch="Uniform" Width="8" Margin="4,0,0,0" Data="F1 M -5.215,6.099L 5.215,6.099L 0,0L -5.215,6.099 Z ">
                                 <Path.RenderTransform>
                                     <ScaleTransform ScaleX=".9" ScaleY=".9" />
                                 </Path.RenderTransform>
