@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBlock>(
                 onRefresh: (v, p) =>
                 {
-                    v.Text = source.GetValue(p.DataRow).ToString(format, formatProvider);
+                    v.Text = p.GetObject(source).ToString(format, formatProvider);
                 });
         }
 
@@ -35,7 +35,7 @@ namespace DevZest.Data.Presenters
                 {
                     var hyperlink = (Hyperlink)v.Inlines.FirstInline;
                     var run = (Run)hyperlink.Inlines.FirstInline;
-                    run.Text = source.GetValue(p.DataRow).ToString(format, formatProvider);              
+                    run.Text = p.GetObject(source).ToString(format, formatProvider);              
                 },
                 onCleanup: (v, p) =>
                 {

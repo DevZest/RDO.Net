@@ -9,7 +9,7 @@
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Title="SalesOrderForm" Height="500" Width="600">
+        Title="SalesOrderForm" Height="550" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

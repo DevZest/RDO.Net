@@ -314,13 +314,6 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentException(Strings.RowPresenter_VerifyColumn, paramName);
         }
 
-        private static object GetDefault(Type type)
-        {
-            if (type.IsValueType)
-                return Activator.CreateInstance(type);
-            return null;
-        }
-
         public object this[Column column]
         {
             get
@@ -329,7 +322,7 @@ namespace DevZest.Data.Presenters
 
                 if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
-                return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
+                return DataRow == null ? column.GetDefaultValue() : column.GetValue(DataRow);
             }
             set
             {
@@ -476,7 +469,10 @@ namespace DevZest.Data.Presenters
             if (valueBag == null)
                 throw new ArgumentNullException(nameof(valueBag));
             VerifyColumn(column, nameof(column));
-            valueBag.SetValue(column, DataRow);
+            if (DataRow != null)
+                valueBag.SetValue(column, DataRow);
+            else
+                valueBag[column] = column.GetDefaultValue();
         }
 
         public void SetValueBag(ColumnValueBag valueBag, KeyBase key, ModelExtension extension)

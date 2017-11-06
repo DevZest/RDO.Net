@@ -73,7 +73,7 @@ namespace DevZest.Data.Views
         public void ClearValue()
         {
             var valueBag = ValueBag.Clone();
-            valueBag.ClearValues();
+            valueBag.ResetValues();
             EndLookup(valueBag);
         }
 
