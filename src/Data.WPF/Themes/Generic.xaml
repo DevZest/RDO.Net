@@ -13,5 +13,6 @@
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/InertButton.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ForeignKeyBox.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowHeader.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/AllRowsSelector.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

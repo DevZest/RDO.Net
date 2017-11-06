@@ -1,18 +1,15 @@
 ﻿using DevZest.Data.Presenters.Primitives;
-using DevZest.Data.Primitives;
+using DevZest.Data.Views;
 using System;
-using System.Collections;
-using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace DevZest.Data.Presenters
 {
     static partial class BindingFactory
     {
-        public static ScalarBinding<ToggleButton> AsToggleButtonToSelectAll(this DataPresenter dataPresenter)
+        public static ScalarBinding<AllRowsSelector> AsAllRowsSelector(this DataPresenter dataPresenter)
         {
-            return ToSelectAll<ToggleButton>(dataPresenter);
+            return ToSelectAll<AllRowsSelector>(dataPresenter);
         }
 
         private static ScalarBinding<T> ToSelectAll<T>(this DataPresenter dataPresenter)

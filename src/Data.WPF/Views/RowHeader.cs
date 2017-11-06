@@ -23,7 +23,7 @@ namespace DevZest.Data.Views
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(RowHeader), new FrameworkPropertyMetadata(null));
 
-        public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register("SeparatorVisibility", typeof(Visibility),
+        public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register(nameof(SeparatorVisibility), typeof(Visibility),
             typeof(RowHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
         static RowHeader()

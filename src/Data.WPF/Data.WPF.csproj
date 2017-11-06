@@ -46,7 +46,7 @@
     </Compile>
     <Compile Include="Presenters\AsyncValidator.cs" />
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
-    <Compile Include="Presenters\BindingFactory.ToggleButton.cs" />
+    <Compile Include="Presenters\BindingFactory.AllRowsSelector.cs" />
     <Compile Include="Presenters\BindingFactory.DataView.cs" />
     <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
     <Compile Include="Presenters\BindingFactory.ComboBox.cs" />
@@ -82,6 +82,7 @@
     <Compile Include="Presenters\ScalarValidationProgress.cs" />
     <Compile Include="Presenters\ServiceManager.cs" />
     <Compile Include="Presenters\CommandExtensions.cs" />
+    <Compile Include="Views\AllRowsSelector.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
@@ -262,6 +263,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\InertButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\AllRowsSelector.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
