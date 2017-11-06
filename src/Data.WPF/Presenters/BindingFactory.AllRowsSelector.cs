@@ -29,8 +29,17 @@ namespace DevZest.Data.Presenters
 
                 var isSelected = isChecked.GetValueOrDefault();
                 var rows = dataPresenter.Rows;
+                bool anyChange = false;
                 for (int i = 0; i < rows.Count; i++)
-                    rows[i].IsSelected = isSelected;
+                {
+                    var row = rows[i];
+                    var oldValue = row.IsSelected;
+                    row.IsSelected = isSelected;
+                    if (row.IsSelected != oldValue)
+                        anyChange = true;
+                }
+                if (!anyChange)
+                    dataPresenter.InvalidateView();
             });
             return new ScalarBinding<T>(onRefresh: v =>
             {
