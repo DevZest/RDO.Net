@@ -13,7 +13,7 @@
                     <Grid>
                         <mwt:DataGridHeaderBorder x:Name="HeaderBorder" IsHovered="{TemplateBinding IsMouseOver}"
                                                   IsPressed="{TemplateBinding IsPressed}"
-                                                  Orientation="Horizontal"
+                                                  Orientation="Vertical"
                                                   SeparatorBrush="{TemplateBinding SeparatorBrush}"
                                                   SeparatorVisibility="{TemplateBinding SeparatorVisibility}"
                                                   BorderThickness="{TemplateBinding BorderThickness}"
