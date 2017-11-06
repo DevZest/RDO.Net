@@ -130,7 +130,7 @@ namespace DevZest.Data.Presenters
         private bool IsVisible(ScalarValidationMessage validationMessage, bool progressVisible)
         {
             var source = validationMessage.Source;
-            return source.SetEquals(Target) && InputManager.ScalarValidationProgress.IsVisible(source) == progressVisible;
+            return source.Overlaps(Target) && InputManager.ScalarValidationProgress.IsVisible(source) == progressVisible;
         }
 
         private static IScalarValidationMessages AddValidationMessages(IScalarValidationMessages result, IScalarValidationMessages messages, Func<ScalarValidationMessage, bool> predict)
