@@ -1,33 +1,36 @@
 ﻿using DevZest.Data.Views;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, Action<TView, ColumnValueBag, TKey> refreshAction)
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension>(this TKey key, TExtension extension, Func<ColumnValueBag, TKey, string> toString)
             where TKey : KeyBase
-            where TView : UIElement, new()
+            where TExtension : ModelExtension
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-            if (refreshAction == null)
-                throw new ArgumentNullException(nameof(refreshAction));
+            if (toString == null)
+                throw new ArgumentNullException(nameof(toString));
 
-            return new RowBinding<ForeignKeyBox>(
-                onSetup: (v, p) =>
-                {
-                    v.Content = new TView();
-                    v.ForeignKey = key;
-                },
-                onRefresh: (v, p) => {
-                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
-                    refreshAction((TView)v.Content, v.ValueBag, key);
-                },
-                onCleanup: (v, p) => {
-                    v.Content = null;
-                }).WithInput(key, null);
+            return AsForeignKeyBox(key, extension, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtension paramExt) =>
+            {
+                v.Text = toString(valueBag, paramKey);
+            });
+        }
+
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension>(this TKey key, TExtension extension, Func<ColumnValueBag, TKey, TExtension, string> toString)
+            where TKey : KeyBase
+            where TExtension : ModelExtension
+        {
+            if (toString == null)
+                throw new ArgumentNullException(nameof(toString));
+
+            return AsForeignKeyBox(key, extension, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtension paramExt) =>
+            {
+                v.Text = toString(valueBag, paramKey, paramExt);
+            });
         }
 
         public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, ColumnValueBag, TExtension> refreshAction)
