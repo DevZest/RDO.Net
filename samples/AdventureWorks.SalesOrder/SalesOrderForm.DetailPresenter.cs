@@ -19,7 +19,7 @@ namespace AdventureWorks.SalesOrders
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
                     .Layout(Orientation.Vertical)
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
-                    .AddBinding(0, 0, this.AsAllRowsSelector())
+                    .AddBinding(0, 0, this.AsGridHeader())
                     .AddBinding(1, 0, ext.Product.ProductNumber.AsColumnHeader("Product No."))
                     .AddBinding(2, 0, ext.Product.Name.AsColumnHeader("Product"))
                     .AddBinding(3, 0, _.UnitPrice.AsColumnHeader("Unit Price"))

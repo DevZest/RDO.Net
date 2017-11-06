@@ -4,17 +4,17 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Views
 {
-    public class AllRowsSelector : ToggleButton
+    public class GridHeader : ToggleButton
     {
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
-            typeof(AllRowsSelector), new FrameworkPropertyMetadata(null));
+            typeof(GridHeader), new FrameworkPropertyMetadata(null));
 
         public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register(nameof(SeparatorVisibility), typeof(Visibility),
-            typeof(AllRowsSelector), new FrameworkPropertyMetadata(Visibility.Visible));
+            typeof(GridHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
-        static AllRowsSelector()
+        static GridHeader()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(AllRowsSelector), new FrameworkPropertyMetadata(typeof(AllRowsSelector)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(GridHeader), new FrameworkPropertyMetadata(typeof(GridHeader)));
         }
 
         public Brush SeparatorBrush

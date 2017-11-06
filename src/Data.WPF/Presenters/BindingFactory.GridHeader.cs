@@ -7,9 +7,9 @@ namespace DevZest.Data.Presenters
 {
     static partial class BindingFactory
     {
-        public static ScalarBinding<AllRowsSelector> AsAllRowsSelector(this DataPresenter dataPresenter)
+        public static ScalarBinding<GridHeader> AsGridHeader(this DataPresenter dataPresenter)
         {
-            return ToSelectAll<AllRowsSelector>(dataPresenter);
+            return ToSelectAll<GridHeader>(dataPresenter);
         }
 
         private static ScalarBinding<T> ToSelectAll<T>(this DataPresenter dataPresenter)
