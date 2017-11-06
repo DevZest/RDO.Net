@@ -1,8 +1,5 @@
-﻿using DevZest.Data.Presenters.Primitives;
-using System;
-using System.Windows;
+﻿using System;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace DevZest.Data.Presenters
 {
@@ -13,46 +10,20 @@ namespace DevZest.Data.Presenters
             return string.IsNullOrEmpty(value) ? Strings.BindingFactory_InvalidInput(type) : value;
         }
 
-        private static UpdateSourceTrigger GetDefaultUpdateSourceTrigger(this DependencyProperty property, Type type)
+        public static RowBinding<TextBox> AsTextBox(this _String source)
         {
-            var metaData = property.GetMetadata(type) as FrameworkPropertyMetadata;
-            return metaData == null ? UpdateSourceTrigger.PropertyChanged : metaData.DefaultUpdateSourceTrigger;
-        }
-
-        private static Trigger<T> GetUpdateSourceTrigger<T>(this DependencyProperty property, UpdateSourceTrigger updateSourceTrigger)
-            where T : UIElement, new()
-        {
-            switch (updateSourceTrigger)
-            {
-                case UpdateSourceTrigger.Default:
-                    return property.GetUpdateSourceTrigger<T>(property.GetDefaultUpdateSourceTrigger(typeof(T)));
-                case UpdateSourceTrigger.Explicit:
-                    return new ExplicitTrigger<T>();
-                case UpdateSourceTrigger.LostFocus:
-                    return new LostFocusTrigger<T>();
-                case UpdateSourceTrigger.PropertyChanged:
-                    return new PropertyChangedTrigger<T>(property);
-            }
-            return null;
-        }
-
-        public static RowBinding<TextBox> AsTextBox(this _String source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged)
-        {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source);
-            }).WithInput(flushTrigger, source, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
+            }).WithInput(TextBox.TextProperty, source, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Int16 source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Int16 source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -70,14 +41,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Int32 source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Int32 source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -96,14 +65,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Int64 source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Int64 source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -121,14 +88,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Single source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Single source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -146,14 +111,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Double source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Double source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -171,14 +134,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Decimal source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Decimal source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -196,23 +157,20 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<String> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<String> source)
         {
-            var trigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value;
-            }).WithInput(trigger, source, v => v.Text);
+            }).WithInput(TextBox.TextProperty, source, v => v.Text);
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16?> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16?> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -230,14 +188,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int32?> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int32?> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -255,14 +211,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int64?> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int64?> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -280,14 +234,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Single?> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Single?> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -305,14 +257,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Double?> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Double?> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -330,14 +280,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 Int16 result;
@@ -350,14 +298,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int32> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int32> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 Int32 result;
@@ -370,14 +316,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int64> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int64> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 Int64 result;
@@ -390,14 +334,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Single> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Single> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 Single result;
@@ -410,14 +352,12 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Double> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            string flushErrorId = null, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Double> source, string flushErrorId = null, string flushErrorDescription = null)
         {
-            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(flushTrigger)
+            }).BeginInput(TextBox.TextProperty)
             .WithFlushValidator(v =>
             {
                 Double result;
