@@ -38,10 +38,8 @@
 
         <Setter Property="TextElement.Foreground" Value="{DynamicResource SystemColors.ControlTextBrushKey}" />
         <Setter Property="Border.BorderThickness" Value="1,1,1,1" />
-
-        <Setter Property="Control.HorizontalContentAlignment" Value="Center" />
-        <Setter Property="Control.VerticalContentAlignment" Value="Center" />
-
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Control.Padding" Value="1,1,1,1" />
 
         <Setter Property="Control.Template">

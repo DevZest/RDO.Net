@@ -4,7 +4,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:AdventureWorks.SalesOrders"
-    mc:Ignorable="d" 
+    HorizontalAlignment="Center" VerticalAlignment="Center"
+    mc:Ignorable="d"
     d:DesignHeight="100" d:DesignWidth="100">
     <TextBlock x:Name="_addressLine1">99700 Bell Road.</TextBlock>
     <TextBlock x:Name="_addressLine2" />

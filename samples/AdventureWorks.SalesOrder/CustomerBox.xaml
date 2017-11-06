@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:AdventureWorks.SalesOrders"
     mc:Ignorable="d" 
     d:DesignHeight="100" d:DesignWidth="200"
-    Height="Auto" HorizontalAlignment="Left" VerticalAlignment="Top" >
+    Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" >
     <TextBlock x:Name="_companyName" FontWeight="Bold" FontSize="20" Margin="5">Good Toys</TextBlock>
     <TextBlock x:Name="_contactPerson">HODSON, David (Mr.)</TextBlock>
     <TextBlock x:Name="_phone">969-555-0117</TextBlock>
