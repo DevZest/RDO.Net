@@ -4,6 +4,7 @@ using DevZest.Data.Views;
 using DevZest.Data;
 using System.Windows;
 using System;
+using System.Windows.Controls;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -16,7 +17,8 @@ namespace AdventureWorks.SalesOrders
                 var ext = _.GetExtension<SalesOrderToEdit.DetailExt>();
                 builder.GridRows("Auto", "Auto")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
-                    .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
+                    .Layout(Orientation.Vertical)
+                    //.WithVirtualRowPlacement(VirtualRowPlacement.Tail)
                     .AddBinding(0, 0, this.AsAllRowsSelector())
                     .AddBinding(1, 0, ext.Product.ProductNumber.AsColumnHeader("Product No."))
                     .AddBinding(2, 0, ext.Product.Name.AsColumnHeader("Product"))
