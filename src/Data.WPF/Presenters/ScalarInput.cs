@@ -84,8 +84,10 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onRefresh;
         internal void Refresh(T element, ScalarPresenter scalarPresenter)
         {
-            if (!IsFlushing)
-                ScalarBinding.Refresh(element, scalarPresenter);
+            if (IsFlushing || GetFlushError(element) != null)
+                return;
+
+            ScalarBinding.Refresh(element, scalarPresenter);
             var flushError = GetFlushError(element);
             if (_onRefresh != null)
             {

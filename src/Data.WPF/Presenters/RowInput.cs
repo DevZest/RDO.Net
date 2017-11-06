@@ -188,8 +188,10 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter, FlushErrorMessage> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
-            if (!IsFlushing)
-                RowBinding.Refresh(element, rowPresenter);
+            if (IsFlushing || GetFlushError(element) != null)
+                return;
+
+            RowBinding.Refresh(element, rowPresenter);
             if (_onRefresh != null)
                 _onRefresh(element, rowPresenter, GetFlushError(element));
             RefreshValidation(element, rowPresenter);
