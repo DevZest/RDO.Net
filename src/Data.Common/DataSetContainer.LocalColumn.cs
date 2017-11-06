@@ -72,7 +72,7 @@ namespace DevZest.Data
                 for (int i = 0; i < dataSet.Count; i++)
                 {
                     var dataRow = dataSet[i];
-                    T value = Expression == null ? GetDefaultValue() : Expression[dataRow];
+                    T value = Expression == null ? DefaultValue : Expression[dataRow];
                     InsertRow(dataRow, value);
                 }
             }

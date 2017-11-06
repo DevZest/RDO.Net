@@ -40,8 +40,8 @@ namespace DevZest.Data
         /// <typeparam name="T">Type of the column.</typeparam>
         /// <param name="column">The column.</param>
         /// <param name="expression">The expression.</param>
-        /// <remarks>To define default constant value, call <see cref="Column{T}.DefaultValue(T)"/> method.</remarks>
-        public static void Default<T>(this T column, T expression)
+        /// <remarks>To define default constant value, call <see cref="Column{T}.SetDefault(T)"/> method.</remarks>
+        public static void SetDefault<T>(this T column, T expression)
             where T : Column, new()
         {
             Check.NotNull(column, nameof(column));
@@ -53,14 +53,14 @@ namespace DevZest.Data
         public static T WithDefault<T>(this T column, T expression)
             where T : Column, new()
         {
-            column.Default(expression);
+            column.SetDefault(expression);
             return column;
         }
 
         public static TColumn WithDefaultValue<TColumn, TValue>(this TColumn column, TValue value)
             where TColumn : Column<TValue>, new()
         {
-            column.DefaultValue(value);
+            column.SetDefault(value);
             return column;
         }
 

@@ -804,15 +804,18 @@ namespace DevZest.Data
         Identity _identity;
         int _currentIdentityValue;
 
-        internal override int? GetDefaultValue()
+        public override int? DefaultValue
         {
-            if (ParentModel.IsIdentitySuspended)
-                return base.GetDefaultValue();
+            get
+            {
+                if (ParentModel.IsIdentitySuspended)
+                    return base.DefaultValue;
 
-            EnsureIdentityInitialized();
-            if (_identity != null)
-                return _currentIdentityValue -= _identity.Increment;
-            return base.GetDefaultValue();
+                EnsureIdentityInitialized();
+                if (_identity != null)
+                    return _currentIdentityValue -= _identity.Increment;
+                return base.DefaultValue;
+            }
         }
 
         private void EnsureIdentityInitialized()

@@ -63,8 +63,8 @@ namespace DevZest.Samples.AdventureWorksLT
             _OrderDate = RegisterColumn((SalesOrder _) => _.OrderDate, x => x.WithDefault(Functions.GetDate()));
             _DueDate = RegisterColumn((SalesOrder _) => _.DueDate);
             _ShipDate = RegisterColumn((SalesOrder _) => _.ShipDate);
-            _Status = RegisterColumn((SalesOrder _) => _.Status, x => x.DefaultValue(SalesOrderStatus.InProcess));
-            _OnlineOrderFlag = RegisterColumn((SalesOrder _) => _.OnlineOrderFlag, x => x.DefaultValue(true));
+            _Status = RegisterColumn((SalesOrder _) => _.Status, x => x.SetDefault(SalesOrderStatus.InProcess));
+            _OnlineOrderFlag = RegisterColumn((SalesOrder _) => _.OnlineOrderFlag, x => x.SetDefault(true));
             _SalesOrderNumber = RegisterColumn((SalesOrder _) => _.SalesOrderNumber);
             _PurchaseOrderNumber = RegisterColumn((SalesOrder _) => _.PurchaseOrderNumber);
             _AccountNumber = RegisterColumn((SalesOrder _) => _.AccountNumber);
@@ -73,10 +73,10 @@ namespace DevZest.Samples.AdventureWorksLT
             RegisterColumn((SalesOrder _) => _.BillToAddressID, Address.Ref._AddressID);
             _ShipMethod = RegisterColumn((SalesOrder _) => _.ShipMethod);
             _CreditCardApprovalCode = RegisterColumn((SalesOrder _) => _.CreditCardApprovalCode);
-            _SubTotal = RegisterColumn((SalesOrder _) => _.SubTotal, x => x.DefaultValue(0));
-            _TaxAmt = RegisterColumn((SalesOrder _) => _.TaxAmt, x => x.DefaultValue(0));
-            _Freight = RegisterColumn((SalesOrder _) => _.Freight, x => x.DefaultValue(0));
-            _TotalDue = RegisterColumn((SalesOrder _) => _.TotalDue, x => x.DefaultValue(0));
+            _SubTotal = RegisterColumn((SalesOrder _) => _.SubTotal, x => x.SetDefault(0));
+            _TaxAmt = RegisterColumn((SalesOrder _) => _.TaxAmt, x => x.SetDefault(0));
+            _Freight = RegisterColumn((SalesOrder _) => _.Freight, x => x.SetDefault(0));
+            _TotalDue = RegisterColumn((SalesOrder _) => _.TotalDue, x => x.SetDefault(0));
             _Comment = RegisterColumn((SalesOrder _) => _.Comment);
             RegisterChildModel((SalesOrder x) => x.SalesOrderDetails, (SalesOrderDetail x) => x.SalesOrder);
         }

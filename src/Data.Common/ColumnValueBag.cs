@@ -1,7 +1,9 @@
 ﻿using DevZest.Data.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace DevZest.Data
 {
@@ -11,7 +13,33 @@ namespace DevZest.Data
 
         public object this[Column key]
         {
-            get { return _columnValues[key]; }
+            get
+            {
+                Check.NotNull(key, nameof(key));
+                return _columnValues[key];
+            }
+            set
+            {
+                Check.NotNull(key, nameof(key));
+                if (value == null)
+                {
+                    if (!CanAssignNull(key.DataType))
+                        throw new ArgumentException(Strings.ColumnValueBag_NotAssignableFromNull, nameof(value));
+                }
+                else
+                {
+                    var columnDataType = key.DataType;
+                    var valueDataType = value.GetType();
+                    if (!columnDataType.IsAssignableFrom(valueDataType))
+                        throw new ArgumentException(Strings.ColumnValueBag_NotAssignableFromValue(columnDataType.ToString(), valueDataType.ToString()), nameof(value));
+                }
+                _columnValues[key] = value;
+            }
+        }
+
+        private static bool CanAssignNull(Type type)
+        {
+            return type.GetTypeInfo().IsValueType ? type.IsNullable() : true;
         }
 
         public int Count
@@ -117,10 +145,13 @@ namespace DevZest.Data
             return result;
         }
 
-        public void ClearValues()
+        public void ResetValues()
         {
             foreach (var keyValuePair in _columnValues.ToArray())
-                _columnValues[keyValuePair.Key] = null;
+            {
+                var column = keyValuePair.Key;
+                _columnValues[column] = column.GetDefaultValue2();
+            }
         }
     }
 }

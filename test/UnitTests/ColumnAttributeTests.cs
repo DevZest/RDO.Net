@@ -20,7 +20,7 @@ namespace DevZest.Data
             }
 
             public static Mounter<_Int32> _Id = RegisterColumn((MyTable x) => x.Id);
-            public static Mounter<_Boolean> _IsActive = RegisterColumn((MyTable x) => x.IsActive, c => c.DefaultValue(true));
+            public static Mounter<_Boolean> _IsActive = RegisterColumn((MyTable x) => x.IsActive, c => c.SetDefault(true));
 
             public MyTable()
             {

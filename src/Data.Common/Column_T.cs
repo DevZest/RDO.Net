@@ -323,7 +323,7 @@ namespace DevZest.Data
         internal sealed override void InsertRow(DataRow dataRow)
         {
             if (_valueManager != null)
-                InsertRow(dataRow, GetDefaultValue());
+                InsertRow(dataRow, DefaultValue);
         }
 
         internal void InsertRow(DataRow dataRow, T value)
@@ -416,11 +416,11 @@ namespace DevZest.Data
         }
 
         /// <summary>Defines the default constant value for this column.</summary>
-        /// <param name="defaultValue">The default constant value.</param>
-        /// <remarks>To define default expression value, call <see cref="ColumnExtensions.Default{T}(T, T)"/> method.</remarks>
-        public void DefaultValue(T defaultValue)
+        /// <param name="value">The default constant value.</param>
+        /// <remarks>To define default expression value, call <see cref="ColumnExtensions.SetDefault{T}(T, T)"/> method.</remarks>
+        public void SetDefault(T value)
         {
-            AddOrUpdateInterceptor(new Default<T>(CreateConst(defaultValue)));
+            AddOrUpdateInterceptor(new Default<T>(CreateConst(value)));
         }
 
         /// <summary>Gets the default declaration for this column.</summary>
@@ -452,10 +452,18 @@ namespace DevZest.Data
         /// <returns>The deserialized value.</returns>
         protected internal abstract T DeserializeValue(JsonValue value);
 
-        internal virtual T GetDefaultValue()
+        public virtual T DefaultValue
         {
-            var defaultDef = this.GetDefault();
-            return defaultDef != null ? defaultDef.Value : default(T);
+            get
+            {
+                var defaultDef = this.GetDefault();
+                return defaultDef != null ? defaultDef.Value : default(T);
+            }
+        }
+
+        public sealed override object GetDefaultValue2()
+        {
+            return DefaultValue;
         }
 
         private sealed class ComputationExpression : ColumnExpression<T>
@@ -594,7 +602,7 @@ namespace DevZest.Data
         private T _editingValue;
         internal sealed override void BeginEdit(DataRow dataRow)
         {
-            _editingValue = dataRow == DataRow.Placeholder || _valueManager == null ? GetDefaultValue() : _valueManager[dataRow.Ordinal];
+            _editingValue = dataRow == DataRow.Placeholder || _valueManager == null ? DefaultValue : _valueManager[dataRow.Ordinal];
         }
 
         internal sealed override void EndEdit(DataRow dataRow)
@@ -691,5 +699,6 @@ namespace DevZest.Data
             translatedExpression.SetOwner(result);
             return result;
         }
+
     }
 }

@@ -109,7 +109,7 @@ namespace DevZest.Data
             var valueBag = new ColumnValueBag();
             valueBag.SetValue(_.CustomerID, 2);
             valueBag.SetValue(customer.FirstName, "FirstName");
-            valueBag.ClearValues();
+            valueBag.ResetValues();
 
             Assert.AreEqual(new int?(), valueBag.GetValue(_.CustomerID));
             Assert.AreEqual(new int?(), valueBag[_.CustomerID]);

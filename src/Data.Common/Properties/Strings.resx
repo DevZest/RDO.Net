@@ -492,4 +492,10 @@
   <data name="Column_TranslateToModelTypeMismatch" xml:space="preserve">
     <value>Model type mismatch.</value>
   </data>
+  <data name="ColumnValueBag_NotAssignableFromNull" xml:space="preserve">
+    <value>The column is not assignable from null.</value>
+  </data>
+  <data name="ColumnValueBag_NotAssignableFromValue" xml:space="preserve">
+    <value>The data type of column is {columnDataType}, which is not assignable from value of data type {valueDataType}.</value>
+  </data>
 </root>

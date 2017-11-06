@@ -1011,6 +1011,22 @@ namespace DevZest.Data
             get { return GetString("Column_TranslateToModelTypeMismatch"); }
         }
 
+        /// <summary>
+        /// The column is not assignable from null.
+        /// </summary>
+        public static string ColumnValueBag_NotAssignableFromNull
+        {
+            get { return GetString("ColumnValueBag_NotAssignableFromNull"); }
+        }
+
+        /// <summary>
+        /// The data type of column is {columnDataType}, which is not assignable from value of data type {valueDataType}.
+        /// </summary>
+        public static string ColumnValueBag_NotAssignableFromValue(object columnDataType, object valueDataType)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnValueBag_NotAssignableFromValue", "columnDataType", "valueDataType"), columnDataType, valueDataType);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

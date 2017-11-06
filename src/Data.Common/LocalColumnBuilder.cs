@@ -132,14 +132,14 @@ namespace DevZest.Data
             return this;
         }
 
-        public void DefaultValue(T defaultValue)
+        public void SetDefault(T defaultValue)
         {
-            Column.DefaultValue(defaultValue);
+            Column.SetDefault(defaultValue);
         }
 
-        public LocalColumnBuilder<T> WithDefaultValue(T defaultValue)
+        public LocalColumnBuilder<T> WithDefault(T defaultValue)
         {
-            DefaultValue(defaultValue);
+            SetDefault(defaultValue);
             return this;
         }
 
