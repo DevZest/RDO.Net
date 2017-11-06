@@ -461,7 +461,7 @@ namespace DevZest.Data
             }
         }
 
-        public sealed override object GetDefaultValue2()
+        public sealed override object GetDefaultValue()
         {
             return DefaultValue;
         }

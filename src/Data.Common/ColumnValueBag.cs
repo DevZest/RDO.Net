@@ -150,7 +150,7 @@ namespace DevZest.Data
             foreach (var keyValuePair in _columnValues.ToArray())
             {
                 var column = keyValuePair.Key;
-                _columnValues[column] = column.GetDefaultValue2();
+                _columnValues[column] = column.GetDefaultValue();
             }
         }
     }
