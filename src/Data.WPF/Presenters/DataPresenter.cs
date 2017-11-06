@@ -148,6 +148,11 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
         }
 
+        public RowPresenter VirtualRow
+        {
+            get { return LayoutManager?.VirtualRow; }
+        }
+
         public bool IsEditing
         {
             get { return LayoutManager == null ? false : LayoutManager.IsEditing; }

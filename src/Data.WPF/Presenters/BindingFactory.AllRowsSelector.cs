@@ -37,7 +37,7 @@ namespace DevZest.Data.Presenters
                 var selectedCount = dataPresenter.SelectedRows.Count;
                 if (selectedCount == 0)
                     v.IsChecked = false;
-                else if (selectedCount == dataPresenter.Rows.Count)
+                else if (selectedCount == dataPresenter.Rows.Count - (dataPresenter.VirtualRow != null ? 1 : 0))
                     v.IsChecked = true;
                 else
                     v.IsChecked = null;
