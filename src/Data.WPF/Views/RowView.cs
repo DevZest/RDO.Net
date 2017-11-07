@@ -12,8 +12,11 @@ namespace DevZest.Data.Views
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
-        public static readonly RoutedUICommand ExpandCommand = new RoutedUICommand(UIText.RowViewCommands_ExpandCommandText, nameof(ExpandCommand), typeof(CommandService));
-        public static readonly RoutedUICommand CollapseCommand = new RoutedUICommand(UIText.RowViewCommands_CollapseCommandText, nameof(CollapseCommand), typeof(CommandService));
+        public static class Commands
+        {
+            public static readonly RoutedUICommand Expand = new RoutedUICommand(UIText.RowViewCommands_ExpandCommandText, nameof(Expand), typeof(Commands));
+            public static readonly RoutedUICommand Collapse = new RoutedUICommand(UIText.RowViewCommands_CollapseCommandText, nameof(Collapse), typeof(Commands));
+        }
 
         public interface ICommandService : IService
         {
@@ -38,8 +41,8 @@ namespace DevZest.Data.Views
             {
                 if (DataPresenter.IsRecursive)
                 {
-                    yield return ExpandCommand.InputBinding(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
-                    yield return CollapseCommand.InputBinding(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
+                    yield return Commands.Expand.InputBinding(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
+                    yield return Commands.Collapse.InputBinding(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
                 }
             }
 
