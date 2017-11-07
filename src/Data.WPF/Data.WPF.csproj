@@ -84,6 +84,7 @@
     <Compile Include="Presenters\CommandExtensions.cs" />
     <Compile Include="Views\GridHeader.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
+    <Compile Include="Views\SelectionHandler.cs" />
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>

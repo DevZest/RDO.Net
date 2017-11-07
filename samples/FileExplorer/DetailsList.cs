@@ -19,7 +19,7 @@ namespace FileExplorer
                 .RowView<RowView>(RowView.SelectableStyleKey)
                 .Layout(Orientation.Vertical)
                 .WithFrozenTop(1)
-                .WithSelectionMode(SelectionMode.Single)
+                .WithSelectionMode(SelectionMode.Extended)
                 .AddBinding(0, 0, 1, 0, _.DisplayName.AsColumnHeader("Name"))
                 .AddBinding(2, 0, _.DateModified.AsColumnHeader("Date modified"))
                 .AddBinding(3, 0, _.FileType.AsColumnHeader("Type"))

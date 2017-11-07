@@ -224,5 +224,45 @@ namespace DevZest.Data.Views
             else
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateRegularRow);
         }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            if (!e.Handled)
+                HandleMouseButtonDown(MouseButton.Left);
+            base.OnMouseLeftButtonDown(e);
+        }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+        {
+            if (!e.Handled)
+                HandleMouseButtonDown(MouseButton.Right);
+            base.OnMouseRightButtonDown(e);
+        }
+
+        private RowView RowView
+        {
+            get { return RowView.GetCurrent(this); }
+        }
+
+        private RowPresenter RowPresenter
+        {
+            get { return RowView?.RowPresenter; }
+        }
+
+        private ElementManager ElementManager
+        {
+            get { return RowPresenter?.ElementManager; }
+        }
+
+        private void HandleMouseButtonDown(MouseButton mouseButton)
+        {
+            var elementManager = ElementManager;
+            if (elementManager == null)
+                return;
+
+            var oldCurrentRow = ElementManager.CurrentRow;
+            var focusMoved = IsKeyboardFocusWithin ? true : MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+            SelectionHandler.Select(ElementManager, mouseButton, oldCurrentRow, RowPresenter);
+        }
     }
 }

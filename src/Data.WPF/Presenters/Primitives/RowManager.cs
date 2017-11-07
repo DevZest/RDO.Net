@@ -525,7 +525,7 @@ namespace DevZest.Data.Presenters.Primitives
                 case SelectionMode.Single:
                     _lastExtnedSelection = null;
                     _selectedRows.Clear();
-                    _selectedRows.Add(value);
+                    value.IsSelected = true;
                     break;
                 case SelectionMode.Multiple:
                     _lastExtnedSelection = null;
@@ -538,7 +538,7 @@ namespace DevZest.Data.Presenters.Primitives
                     var min = Math.Min(_lastExtnedSelection.Index, value.Index);
                     var max = Math.Max(_lastExtnedSelection.Index, value.Index);
                     for (int i = min; i <= max; i++)
-                        _selectedRows.Add(Rows[i]);
+                        Rows[i].IsSelected = true;
                     break;
             }
         }

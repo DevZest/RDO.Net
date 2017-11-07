@@ -459,60 +459,9 @@ namespace DevZest.Data.Views
             return focusMoved || selected;
         }
 
-        private SelectionMode? TemplateSelectionMode
+        private bool Select(MouseButton mouseButton, RowPresenter oldCurrentRow)
         {
-            get { return ElementManager.Template.SelectionMode; }
-        }
-
-        private bool Select(MouseButton mouseButton, RowPresenter currentRow)
-        {
-            if (!TemplateSelectionMode.HasValue)
-                return false;
-
-            switch (TemplateSelectionMode.Value)
-            {
-                case SelectionMode.Single:
-                    Select((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control ? SelectionMode.Multiple : SelectionMode.Single, currentRow);
-                    return true;
-                case SelectionMode.Multiple:
-                    Select(SelectionMode.Multiple, currentRow);
-                    return true;
-                case SelectionMode.Extended:
-                    if (mouseButton != MouseButton.Left)
-                    {
-                        if (mouseButton == MouseButton.Right && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.None)
-                        {
-                            if (RowPresenter.IsSelected)
-                                return false;
-                            Select(SelectionMode.Single, currentRow);
-                            return true;
-                        }
-                        return false;
-                    }
-
-                    if (IsControlDown && IsShiftDown)
-                        return false;
-
-                    var selectionMode = IsShiftDown ? SelectionMode.Extended : (IsControlDown ? SelectionMode.Multiple : SelectionMode.Single);
-                    Select(selectionMode, currentRow);
-                    return true;
-            }
-            return false;
-        }
-
-        private bool IsControlDown
-        {
-            get { return (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control; }
-        }
-
-        private bool IsShiftDown
-        {
-            get { return (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift; }
-        }
-
-        private void Select(SelectionMode selectionMode, RowPresenter oldCurrentRow)
-        {
-            ElementManager.Select(RowPresenter, selectionMode, oldCurrentRow);
+            return SelectionHandler.Select(ElementManager, mouseButton, oldCurrentRow, RowPresenter);
         }
     }
 }
