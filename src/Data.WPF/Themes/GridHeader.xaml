@@ -5,7 +5,6 @@
     xmlns:local="clr-namespace:DevZest.Data.Views">
 
     <Style TargetType="{x:Type local:GridHeader}">
-        <Setter Property="Focusable" Value="False" />
         <Setter Property="SeparatorBrush" Value="#FFC9CACA" />
         <Setter Property="Template">
             <Setter.Value>

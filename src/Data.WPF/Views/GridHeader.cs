@@ -1,10 +1,12 @@
-﻿using System.Windows;
+﻿using DevZest.Data.Presenters.Primitives;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using DevZest.Data.Presenters;
 
 namespace DevZest.Data.Views
 {
-    public class GridHeader : ToggleButton
+    public class GridHeader : ToggleButton, IScalarElement, RowHeader.IAutoDeselectable
     {
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(GridHeader), new FrameworkPropertyMetadata(null));
@@ -27,6 +29,19 @@ namespace DevZest.Data.Views
         {
             get { return (Visibility)GetValue(SeparatorVisibilityProperty); }
             set { SetValue(SeparatorVisibilityProperty, value); }
+        }
+
+        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
+        {
+        }
+
+        void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
+        {
+        }
+
+        void IScalarElement.Setup(ScalarPresenter scalarPresenter)
+        {
+            RowHeader.EnsureAutoDeselectionServiceInitialized(scalarPresenter.DataPresenter);
         }
     }
 }

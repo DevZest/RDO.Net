@@ -20,6 +20,12 @@ namespace DevZest.Data.Presenters
             _serviceProviders.Add(serviceType, () => new TServiceImpl());
         }
 
+        public static bool IsRegistered<TService>()
+            where TService : class, IService
+        {
+            return _serviceProviders.ContainsKey(typeof(TService));
+        }
+
         public static T GetService<T>(DataPresenter dataPresenter)
             where T : class, IService
         {
