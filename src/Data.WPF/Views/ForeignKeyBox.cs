@@ -22,8 +22,11 @@ namespace DevZest.Data.Views
             typeof(ForeignKeyBox), new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty CanClearValueProperty = CanClearValuePropertyKey.DependencyProperty;
 
-        private static readonly RoutedUICommand LookupCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand ClearValueCommand = new RoutedUICommand();
+        public static class Commands
+        {
+            internal static readonly RoutedUICommand Lookup = new RoutedUICommand();
+            public static readonly RoutedUICommand ClearValue = new RoutedUICommand();
+        }
 
         static ForeignKeyBox()
         {
@@ -32,10 +35,10 @@ namespace DevZest.Data.Views
 
         public ForeignKeyBox()
         {
-            Command = LookupCommand;
+            Command = Commands.Lookup;
             ValueBag = new ColumnValueBag();
-            CommandBindings.Add(new CommandBinding(LookupCommand, ExecLookup, CanExecLookup));
-            CommandBindings.Add(new CommandBinding(ClearValueCommand, ExecClearValue, CanExecClearValue));
+            CommandBindings.Add(new CommandBinding(Commands.Lookup, ExecLookup, CanExecLookup));
+            CommandBindings.Add(new CommandBinding(Commands.ClearValue, ExecClearValue, CanExecClearValue));
         }
 
         private void CanExecLookup(object sender, CanExecuteRoutedEventArgs e)

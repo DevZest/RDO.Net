@@ -63,7 +63,7 @@
                                 HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
                                 VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
                                 SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" Focusable="False" />
-                            <primitives:InertButton Grid.Column="1" IsEnabled="True" Command="{x:Static local:ForeignKeyBox.ClearValueCommand}"
+                            <primitives:InertButton Grid.Column="1" IsEnabled="True" Command="{x:Static local:ForeignKeyBox+Commands.ClearValue}"
                                 Visibility="{TemplateBinding CanClearValue, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>
