@@ -37,6 +37,7 @@ namespace AdventureWorks.SalesOrders
             if (IsOpen)
                 IsOpen = false;
             PlacementTarget = _foreignKeyBox = foreignKeyBox;
+            _foreignKeyBox.IsEnabled = false;
             _presenter = new Presenter(_dataView, currentAddressID, customerID);
             InitializeCommandBindings();
             IsOpen = true;
@@ -44,6 +45,7 @@ namespace AdventureWorks.SalesOrders
 
         private void Popup_Closed(object sender, System.EventArgs e)
         {
+            _foreignKeyBox.IsEnabled = true;
             PlacementTarget = _foreignKeyBox = null;
             _presenter.DetachView();
             _presenter = null;
