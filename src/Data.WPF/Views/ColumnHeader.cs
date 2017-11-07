@@ -58,8 +58,11 @@ namespace DevZest.Data.Views
             }
         }
 
-        public static readonly RoutedUICommand ToggleSortDirectionCommand = new RoutedUICommand(nameof(ToggleSortDirectionCommand), nameof(ToggleSortDirectionCommand), typeof(CommandService));
-        public static readonly RoutedUICommand SortCommand = new RoutedUICommand(UIText.ColumnHeaderCommands_SortCommandText, nameof(SortCommand), typeof(CommandService));
+        public static class Commands
+        {
+            public static readonly RoutedUICommand ToggleSortDirection = new RoutedUICommand(nameof(ToggleSortDirection), nameof(ToggleSortDirection), typeof(Commands));
+            public static readonly RoutedUICommand Sort = new RoutedUICommand(UIText.ColumnHeaderCommands_SortCommandText, nameof(Sort), typeof(Commands));
+        }
 
         private interface ICommandManager : IService
         {
@@ -114,7 +117,7 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(DataView dataView)
             {
-                yield return SortCommand.CommandBinding(ExecSort, CanExecSort);
+                yield return Commands.Sort.CommandBinding(ExecSort, CanExecSort);
             }
 
             private void CanExecSort(object sender, CanExecuteRoutedEventArgs e)
@@ -152,7 +155,7 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(ColumnHeader columnHeader)
             {
-                yield return ToggleSortDirectionCommand.InputBinding(ExecToggleSortDirection, CanExecToggleSortDirection, new MouseGesture(MouseAction.LeftClick));
+                yield return Commands.ToggleSortDirection.InputBinding(ExecToggleSortDirection, CanExecToggleSortDirection, new MouseGesture(MouseAction.LeftClick));
             }
 
             private void CanExecToggleSortDirection(object sender, CanExecuteRoutedEventArgs e)

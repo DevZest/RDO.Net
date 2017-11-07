@@ -17,7 +17,7 @@
         <Setter Property="ContextMenu">
             <Setter.Value>
                 <ContextMenu>
-                    <MenuItem Command="{x:Static local:ColumnHeader.SortCommand}"
+                    <MenuItem Command="{x:Static local:ColumnHeader+Commands.Sort}"
                               CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
                 </ContextMenu>
             </Setter.Value>
