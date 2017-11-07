@@ -116,6 +116,14 @@ namespace DevZest.Data.Views
             }
         }
 
+        internal static void EnsureAutoDeselectionServiceInitialized(DataPresenter dataPresenter)
+        {
+            if (!ServiceManager.IsRegistered<IAutoDeselectionService>())
+                ServiceManager.Register<IAutoDeselectionService, AutoDeselectionService>();
+            var service = ServiceManager.GetService<IAutoDeselectionService>(dataPresenter);
+            Debug.Assert(service != null);
+        }
+
         public static readonly StyleKey FlatStyleKey = new StyleKey(typeof(RowHeader));
 
         private static readonly DependencyPropertyKey IsSelectedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelected), typeof(bool),
@@ -131,14 +139,6 @@ namespace DevZest.Data.Views
         static RowHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowHeader), new FrameworkPropertyMetadata(typeof(RowHeader)));
-        }
-
-        internal static void EnsureAutoDeselectionServiceInitialized(DataPresenter dataPresenter)
-        {
-            if (!ServiceManager.IsRegistered<IAutoDeselectionService>())
-                ServiceManager.Register<IAutoDeselectionService, AutoDeselectionService>();
-            var service = ServiceManager.GetService<IAutoDeselectionService>(dataPresenter);
-            Debug.Assert(service != null);
         }
 
         public RowHeader()
