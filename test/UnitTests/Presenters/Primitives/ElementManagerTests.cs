@@ -453,11 +453,11 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(8, false);
             var _ = dataSet._;
-            RowBinding<RowHeader> rowHeader = null;
+            RowBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                rowHeader = _.AsRowHeader();
-                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, rowHeader);
+                textBlock = _.Name.AsTextBlock();
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBlock);
             });
 
 
@@ -470,7 +470,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Assert.AreEqual(1, elements.Count);
                 var rowView = (RowView)elements[0];
                 Assert.AreEqual(1, rowView.Elements.Count);
-                Assert.AreEqual(rowHeader[rows[0]], rowView.Elements[0]);
+                Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
             }
 
             elementManager.CurrentRow = rows[1];
@@ -480,7 +480,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Assert.AreEqual(1, elements.Count);
                 var rowView = (RowView)elements[0];
                 Assert.AreEqual(1, rowView.Elements.Count);
-                Assert.AreEqual(rowHeader[rows[1]], rowView.Elements[0]);
+                Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
             }
         }
 
@@ -489,12 +489,12 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(8, false);
             var _ = dataSet._;
-            RowBinding<RowHeader> rowHeader = null;
+            RowBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                rowHeader = _.AsRowHeader();
+                textBlock = _.Name.AsTextBlock();
                 builder.GridColumns("100").GridRows("100")
-                    .AddBinding(0, 0, rowHeader);
+                    .AddBinding(0, 0, textBlock);
             });
 
             var template = elementManager.Template;
@@ -507,7 +507,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Assert.AreEqual(1, elements.Count);
                 var rowView = (RowView)elements[0];
                 Assert.AreEqual(1, rowView.Elements.Count);
-                Assert.AreEqual(rowHeader[rows[0]], rowView.Elements[0]);
+                Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
             }
 
             rows[0].BeginEdit();

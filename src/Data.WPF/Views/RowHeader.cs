@@ -118,8 +118,6 @@ namespace DevZest.Data.Views
 
         internal static void EnsureAutoDeselectionServiceInitialized(DataPresenter dataPresenter)
         {
-            if (dataPresenter == null)  // This only happens in unit test.
-                return;
             if (!ServiceManager.IsRegistered<IAutoDeselectionService>())
                 ServiceManager.Register<IAutoDeselectionService, AutoDeselectionService>();
             var service = ServiceManager.GetService<IAutoDeselectionService>(dataPresenter);
