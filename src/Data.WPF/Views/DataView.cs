@@ -13,8 +13,11 @@ namespace DevZest.Data.Views
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
-        public static readonly RoutedUICommand RetryDataLoadCommand = new RoutedUICommand(UIText.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoadCommand), typeof(CommandService));
-        public static readonly RoutedUICommand CancelDataLoadCommand = new RoutedUICommand(UIText.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoadCommand), typeof(CommandService));
+        public static class Commands
+        {
+            public static readonly RoutedUICommand RetryDataLoad = new RoutedUICommand(UIText.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoad), typeof(Commands));
+            public static readonly RoutedUICommand CancelDataLoad = new RoutedUICommand(UIText.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoad), typeof(Commands));
+        }
 
         public interface ICommandService : IService
         {
@@ -32,8 +35,8 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(DataView dataView)
             {
-                yield return CancelDataLoadCommand.CommandBinding(CancelLoadData, CanCancelLoadData);
-                yield return RetryDataLoadCommand.CommandBinding(ReloadData, CanReloadData);
+                yield return Commands.CancelDataLoad.CommandBinding(CancelLoadData, CanCancelLoadData);
+                yield return Commands.RetryDataLoad.CommandBinding(ReloadData, CanReloadData);
             }
 
             private void ReloadData(object sender, ExecutedRoutedEventArgs e)

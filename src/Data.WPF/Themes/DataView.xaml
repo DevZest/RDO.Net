@@ -46,7 +46,7 @@
                                         <TextBlock x:Name="_loading" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">Loading...</TextBlock>
                                         <TextBlock x:Name="_cancel" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
                                         <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
-                                                   Command="{x:Static local:DataView.CancelDataLoadCommand}">
+                                                   Command="{x:Static local:DataView+Commands.CancelDataLoad}">
                                             <Run Text="{x:Static res:UIText.DataViewCommands_CancelDataLoadCommandText}" />
                                         </Hyperlink>
                                         </TextBlock>
@@ -90,7 +90,7 @@
                                         <Run Text="{x:Static res:UIText.DataView_DataLoadCancelled}" />
                                         <LineBreak />
                                         <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
-                                                   Command="{x:Static local:DataView.RetryDataLoadCommand}">
+                                                   Command="{x:Static local:DataView+Commands.RetryDataLoad}">
                                             <Run Text="{x:Static res:UIText.DataViewCommands_RetryDataLoadCommandText}" />                                            
                                         </Hyperlink>
                                         </TextBlock>
@@ -118,7 +118,7 @@
                                         </Expander>
                                         <TextBlock>
                                             <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
-                                                       Command="{x:Static local:DataView.RetryDataLoadCommand}">
+                                                       Command="{x:Static local:DataView+Commands.RetryDataLoad}">
                                                 <Run Text="{x:Static res:UIText.DataViewCommands_RetryDataLoadCommandText}" />
                                             </Hyperlink>
                                         </TextBlock>
