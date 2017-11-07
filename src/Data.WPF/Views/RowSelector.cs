@@ -18,29 +18,32 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupSelection, Name = VisualStates.StateUnselected)]
     public class RowSelector : ContentControl
     {
-        public static RoutedUICommand ScrollUpCommand { get { return ComponentCommands.MoveFocusUp; } }
-        public static RoutedUICommand ScrollDownCommand { get { return ComponentCommands.MoveFocusDown; } }
-        public static RoutedUICommand ScrollLeftCommand { get { return ComponentCommands.MoveFocusBack; } }
-        public static RoutedUICommand ScrollRightCommand { get { return ComponentCommands.MoveFocusForward; } }
-        public static RoutedUICommand ScrollPageUpCommand { get { return ComponentCommands.MoveFocusPageUp; } }
-        public static RoutedUICommand ScrollPageDownCommand { get { return ComponentCommands.MoveFocusPageDown; } }
-        public static RoutedUICommand MoveUpCommand { get { return ComponentCommands.MoveUp; } }
-        public static RoutedUICommand MoveDownCommand { get { return ComponentCommands.MoveDown; } }
-        public static RoutedUICommand MoveLeftCommand { get { return ComponentCommands.MoveLeft; } }
-        public static RoutedUICommand MoveRightCommand { get { return ComponentCommands.MoveRight; } }
-        public static RoutedUICommand MoveToPageUpCommand { get { return ComponentCommands.MoveToPageUp; } }
-        public static RoutedUICommand MoveToPageDownCommand { get { return ComponentCommands.MoveToPageDown; } }
-        public static RoutedUICommand MoveToHomeCommand { get { return ComponentCommands.MoveToHome; } }
-        public static RoutedUICommand MoveToEndCommand { get { return ComponentCommands.MoveToEnd; } }
-        public static RoutedUICommand SelectExtendedUpCommand { get { return ComponentCommands.ExtendSelectionUp; } }
-        public static RoutedUICommand SelectExtendedDownCommand { get { return ComponentCommands.ExtendSelectionDown; } }
-        public static RoutedUICommand SelectiExtendedLeftCommand { get { return ComponentCommands.ExtendSelectionLeft; } }
-        public static RoutedUICommand SelectExtendedRightCommand { get { return ComponentCommands.ExtendSelectionRight; } }
-        public static readonly RoutedUICommand SelectExtendedHomeCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedEndCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedPageUpCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedPageDownCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand ToggleSelectionCommand = new RoutedUICommand();
+        public static class Commands
+        {
+            public static RoutedUICommand ScrollUp { get { return ComponentCommands.MoveFocusUp; } }
+            public static RoutedUICommand ScrollDown { get { return ComponentCommands.MoveFocusDown; } }
+            public static RoutedUICommand ScrollLeft { get { return ComponentCommands.MoveFocusBack; } }
+            public static RoutedUICommand ScrollRight { get { return ComponentCommands.MoveFocusForward; } }
+            public static RoutedUICommand ScrollPageUp { get { return ComponentCommands.MoveFocusPageUp; } }
+            public static RoutedUICommand ScrollPageDown { get { return ComponentCommands.MoveFocusPageDown; } }
+            public static RoutedUICommand MoveUp { get { return ComponentCommands.MoveUp; } }
+            public static RoutedUICommand MoveDown { get { return ComponentCommands.MoveDown; } }
+            public static RoutedUICommand MoveLeft { get { return ComponentCommands.MoveLeft; } }
+            public static RoutedUICommand MoveRight { get { return ComponentCommands.MoveRight; } }
+            public static RoutedUICommand MoveToPageUp { get { return ComponentCommands.MoveToPageUp; } }
+            public static RoutedUICommand MoveToPageDown { get { return ComponentCommands.MoveToPageDown; } }
+            public static RoutedUICommand MoveToHome { get { return ComponentCommands.MoveToHome; } }
+            public static RoutedUICommand MoveToEnd { get { return ComponentCommands.MoveToEnd; } }
+            public static RoutedUICommand SelectExtendedUp { get { return ComponentCommands.ExtendSelectionUp; } }
+            public static RoutedUICommand SelectExtendedDown { get { return ComponentCommands.ExtendSelectionDown; } }
+            public static RoutedUICommand SelectiExtendedLeft { get { return ComponentCommands.ExtendSelectionLeft; } }
+            public static RoutedUICommand SelectExtendedRight { get { return ComponentCommands.ExtendSelectionRight; } }
+            public static readonly RoutedUICommand SelectExtendedHome = new RoutedUICommand();
+            public static readonly RoutedUICommand SelectExtendedEnd = new RoutedUICommand();
+            public static readonly RoutedUICommand SelectExtendedPageUp = new RoutedUICommand();
+            public static readonly RoutedUICommand SelectExtendedPageDown = new RoutedUICommand();
+            public static readonly RoutedUICommand ToggleSelection = new RoutedUICommand();
+        }
 
         public interface ICommandService : IService
         {
@@ -62,33 +65,33 @@ namespace DevZest.Data.Views
                 {
                     if (DataPresenter.LayoutOrientation.HasValue)
                     {
-                        yield return ScrollUpCommand.CommandBinding(ExecScrollUp);
-                        yield return ScrollDownCommand.CommandBinding(ExecScrollDown);
-                        yield return ScrollLeftCommand.CommandBinding(ExecScrollLeft);
-                        yield return ScrollRightCommand.CommandBinding(ExecScrollRight);
-                        yield return ScrollPageUpCommand.CommandBinding(ExecScrollPageUp);
-                        yield return ScrollPageDownCommand.CommandBinding(ExecScrollPageDown);
-                        yield return MoveUpCommand.InputBinding(ExecMoveUp, CanExecMoveUp, new KeyGesture(Key.Up));
-                        yield return MoveDownCommand.InputBinding(ExecMoveDown, CanExecMoveDown, new KeyGesture(Key.Down));
-                        yield return MoveLeftCommand.InputBinding(ExecMoveLeft, CanExecMoveLeft, new KeyGesture(Key.Left));
-                        yield return MoveRightCommand.InputBinding(ExecMoveRight, CanExecMoveRight, new KeyGesture(Key.Right));
-                        yield return MoveToHomeCommand.InputBinding(ExecMoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
-                        yield return MoveToEndCommand.InputBinding(ExecMoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
-                        yield return MoveToPageUpCommand.InputBinding(ExecMoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
-                        yield return MoveToPageDownCommand.InputBinding(ExecMoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
+                        yield return Commands.ScrollUp.CommandBinding(ExecScrollUp);
+                        yield return Commands.ScrollDown.CommandBinding(ExecScrollDown);
+                        yield return Commands.ScrollLeft.CommandBinding(ExecScrollLeft);
+                        yield return Commands.ScrollRight.CommandBinding(ExecScrollRight);
+                        yield return Commands.ScrollPageUp.CommandBinding(ExecScrollPageUp);
+                        yield return Commands.ScrollPageDown.CommandBinding(ExecScrollPageDown);
+                        yield return Commands.MoveUp.InputBinding(ExecMoveUp, CanExecMoveUp, new KeyGesture(Key.Up));
+                        yield return Commands.MoveDown.InputBinding(ExecMoveDown, CanExecMoveDown, new KeyGesture(Key.Down));
+                        yield return Commands.MoveLeft.InputBinding(ExecMoveLeft, CanExecMoveLeft, new KeyGesture(Key.Left));
+                        yield return Commands.MoveRight.InputBinding(ExecMoveRight, CanExecMoveRight, new KeyGesture(Key.Right));
+                        yield return Commands.MoveToHome.InputBinding(ExecMoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
+                        yield return Commands.MoveToEnd.InputBinding(ExecMoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
+                        yield return Commands.MoveToPageUp.InputBinding(ExecMoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
+                        yield return Commands.MoveToPageDown.InputBinding(ExecMoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
                         if (Template.SelectionMode == SelectionMode.Extended)
                         {
-                            yield return SelectExtendedUpCommand.InputBinding(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
-                            yield return SelectExtendedDownCommand.InputBinding(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
-                            yield return SelectiExtendedLeftCommand.InputBinding(ExecSelectiExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
-                            yield return SelectExtendedRightCommand.InputBinding(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right));
-                            yield return SelectExtendedHomeCommand.InputBinding(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
-                            yield return SelectExtendedEndCommand.InputBinding(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
-                            yield return SelectExtendedPageUpCommand.InputBinding(ExecSelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
-                            yield return SelectExtendedPageDownCommand.InputBinding(ExecSelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedUp.InputBinding(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedDown.InputBinding(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
+                            yield return Commands.SelectiExtendedLeft.InputBinding(ExecSelectiExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedRight.InputBinding(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right));
+                            yield return Commands.SelectExtendedHome.InputBinding(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedEnd.InputBinding(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedPageUp.InputBinding(ExecSelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedPageDown.InputBinding(ExecSelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
                         }
                         if (Template.SelectionMode == SelectionMode.Multiple)
-                            yield return ToggleSelectionCommand.InputBinding(ExecToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
+                            yield return Commands.ToggleSelection.InputBinding(ExecToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
                     }
                 }
             }
