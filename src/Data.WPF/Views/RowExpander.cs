@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Presenters;
+using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -9,37 +10,9 @@ namespace DevZest.Data.Views
 {
     public class RowExpander : Control
     {
-        private sealed class ToggleExpandCommand : ICommand
+        public static class Commands
         {
-            public ToggleExpandCommand(RowExpander rowExpander)
-            {
-                _rowExpander = rowExpander;
-            }
-
-            private readonly RowExpander _rowExpander;
-
-            private RowPresenter RowPresenter
-            {
-                get { return _rowExpander.RowPresenter; }
-            }
-
-            public event EventHandler CanExecuteChanged = delegate { };
-
-            public bool CanExecute(object parameter)
-            {
-                var rowPresenter = RowPresenter;
-                return rowPresenter != null && rowPresenter.HasChildren;
-            }
-
-            public void Execute(object parameter)
-            {
-                RowPresenter.ToggleExpandState();
-            }
-
-            public void RaiseCanExecutedChangedEvent()
-            {
-                CanExecuteChanged(this, EventArgs.Empty);
-            }
+            public static readonly RoutedUICommand ToggleExpand = new RoutedUICommand();
         }
 
         private static readonly DependencyPropertyKey IsExpandedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsExpanded), typeof(bool), typeof(RowExpander),
@@ -48,9 +21,6 @@ namespace DevZest.Data.Views
         private static readonly DependencyPropertyKey HasChildrenPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasChildren), typeof(bool), typeof(RowExpander),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty HasChildrenProperty = HasChildrenPropertyKey.DependencyProperty;
-        private static readonly DependencyPropertyKey ToggleExpandStateCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ToggleExpandStateCommand), typeof(ICommand),
-            typeof(RowExpander), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty ToggleExpandStateCommandProperty = ToggleExpandStateCommandPropertyKey.DependencyProperty;
 
         static RowExpander()
         {
@@ -61,14 +31,18 @@ namespace DevZest.Data.Views
 
         public RowExpander()
         {
-            ToggleExpandStateCommand = new ToggleExpandCommand(this);
-            Loaded += OnLoaded;
+            CommandBindings.Add(new CommandBinding(Commands.ToggleExpand, ExecToggleExpand, CanToggleExpand));
+            //Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void CanToggleExpand(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (RowView != null)
-                UpdateState();
+            e.CanExecute = RowPresenter != null && RowPresenter.HasChildren;
+        }
+
+        private void ExecToggleExpand(object sender, ExecutedRoutedEventArgs e)
+        {
+            RowPresenter.ToggleExpandState();
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
@@ -106,12 +80,6 @@ namespace DevZest.Data.Views
             private set { SetValue(HasChildrenPropertyKey, BooleanBoxes.Box(value)); }
         }
 
-        public ICommand ToggleExpandStateCommand
-        {
-            get { return (ICommand)GetValue(ToggleExpandStateCommandProperty); }
-            private set { SetValue(ToggleExpandStateCommandPropertyKey, value); }
-        }
-
         private RowView RowView
         {
             get { return RowView.GetCurrent(this); }
@@ -128,7 +96,6 @@ namespace DevZest.Data.Views
             var rowPresenter = RowPresenter;
             IsExpanded = rowPresenter.IsExpanded;
             HasChildren = rowPresenter.HasChildren;
-            ((ToggleExpandCommand)ToggleExpandStateCommand).RaiseCanExecutedChangedEvent();
         }
     }
 }
