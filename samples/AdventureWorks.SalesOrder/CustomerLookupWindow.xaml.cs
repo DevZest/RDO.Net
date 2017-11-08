@@ -12,7 +12,14 @@ namespace AdventureWorks.SalesOrders
     /// </summary>
     public partial class CustomerLookupWindow : Window
     {
-        public static RoutedUICommand SelectCurrentCommand { get { return ApplicationCommands.Open; } }
+        public static class Commands
+        {
+            public static RoutedUICommand SelectCurrent { get { return ApplicationCommands.Open; } }
+            public static RoutedUICommand Refresh { get { return NavigationCommands.Refresh; } }
+            public static RoutedUICommand Search { get { return SearchBox.SearchCommand; } }
+            public static RoutedUICommand ClearSearch { get { return SearchBox.ClearSearchCommand; } }
+            public static RoutedUICommand Close { get { return ApplicationCommands.Close; } }
+        }
 
         public CustomerLookupWindow()
         {
@@ -50,10 +57,10 @@ namespace AdventureWorks.SalesOrders
 
         private void InitializeCommandBindings()
         {
-            CommandBindings.Add(new CommandBinding(SelectCurrentCommand, SelectCurrent, CanSelectCurrent));
-            CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
-            CommandBindings.Add(new CommandBinding(SearchBox.SearchCommand, Search, CanRefresh));
-            CommandBindings.Add(new CommandBinding(SearchBox.ClearSearchCommand, ClearSearch, CanRefresh));
+            CommandBindings.Add(new CommandBinding(Commands.SelectCurrent, SelectCurrent, CanSelectCurrent));
+            CommandBindings.Add(new CommandBinding(Commands.Refresh, Refresh, CanRefresh));
+            CommandBindings.Add(new CommandBinding(Commands.Search, Search, CanRefresh));
+            CommandBindings.Add(new CommandBinding(Commands.ClearSearch, ClearSearch, CanRefresh));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
         }
 

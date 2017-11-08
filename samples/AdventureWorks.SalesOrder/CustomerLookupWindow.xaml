@@ -23,7 +23,7 @@
         <DockPanel DockPanel.Dock="Top" MinHeight="30" Margin="5">
             <ToolBar FontWeight="Bold">
                 <!-- Select -->
-                <Button Command="{x:Static local:CustomerLookupWindow.SelectCurrentCommand}">
+                <Button Command="{x:Static local:CustomerLookupWindow+Commands.SelectCurrent}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Images/checkmark.png" Width="22" Height="22" Margin="2"/>
                         <Label VerticalAlignment="Center">_Select</Label>

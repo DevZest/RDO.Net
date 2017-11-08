@@ -124,7 +124,7 @@ namespace AdventureWorks.SalesOrders
                 var baseService = ServiceManager.GetService<RowView.ICommandService>(this);
                 foreach (var entry in baseService.GetCommandEntries(rowView))
                     yield return entry;
-                yield return SelectCurrentCommand.Bind(new KeyGesture(System.Windows.Input.Key.Enter), new MouseGesture(MouseAction.LeftDoubleClick));
+                yield return Commands.SelectCurrent.Bind(new KeyGesture(System.Windows.Input.Key.Enter), new MouseGesture(MouseAction.LeftDoubleClick));
             }
         }
     }
