@@ -41,8 +41,8 @@ namespace DevZest.Data.Views
             {
                 if (DataPresenter.IsRecursive)
                 {
-                    yield return Commands.Expand.InputBinding(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
-                    yield return Commands.Collapse.InputBinding(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
+                    yield return Commands.Expand.Bind(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
+                    yield return Commands.Collapse.Bind(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
                 }
             }
 

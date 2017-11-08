@@ -35,8 +35,8 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(DataView dataView)
             {
-                yield return Commands.CancelDataLoad.CommandBinding(CancelLoadData, CanCancelLoadData);
-                yield return Commands.RetryDataLoad.CommandBinding(ReloadData, CanReloadData);
+                yield return Commands.CancelDataLoad.Bind(CancelLoadData, CanCancelLoadData);
+                yield return Commands.RetryDataLoad.Bind(ReloadData, CanReloadData);
             }
 
             private void ReloadData(object sender, ExecutedRoutedEventArgs e)

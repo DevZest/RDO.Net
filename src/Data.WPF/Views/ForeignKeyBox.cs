@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -28,30 +29,74 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand ClearValue = new RoutedUICommand();
         }
 
+        public interface ICommandService : IService
+        {
+            IEnumerable<CommandEntry> GetCommandEntries(ForeignKeyBox foreignKeyBox);
+        }
+
+        private sealed class CommandService : ICommandService
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+            }
+
+            public IEnumerable<CommandEntry> GetCommandEntries(ForeignKeyBox foreignKeyBox)
+            {
+                yield return Commands.Lookup.Bind(ExecLookup, CanExecLookup);
+                yield return Commands.ClearValue.Bind(ExecClearValue, CanExecClearValue, new KeyGesture(Key.Delete));
+            }
+
+            private void ExecLookup(object sender, ExecutedRoutedEventArgs e)
+            {
+                ((ForeignKeyBox)sender).ExecLookup();
+            }
+
+            private void CanExecLookup(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = ((ForeignKeyBox)sender).CanExecLookup;
+            }
+
+            private void ExecClearValue(object sender, ExecutedRoutedEventArgs e)
+            {
+                ((ForeignKeyBox)sender).ClearValue();
+            }
+
+            private void CanExecClearValue(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = ((ForeignKeyBox)sender).CanClearValue;
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+        }
+
         static ForeignKeyBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ForeignKeyBox), new FrameworkPropertyMetadata(typeof(ForeignKeyBox)));
+            ServiceManager.Register<ICommandService, CommandService>();
         }
 
         public ForeignKeyBox()
         {
             Command = Commands.Lookup;
             ValueBag = new ColumnValueBag();
-            CommandBindings.Add(new CommandBinding(Commands.Lookup, ExecLookup, CanExecLookup));
-            CommandBindings.Add(new CommandBinding(Commands.ClearValue, ExecClearValue, CanExecClearValue));
         }
 
-        private void CanExecLookup(object sender, CanExecuteRoutedEventArgs e)
+        private bool CanExecLookup
         {
-            var lookupService = DataPresenter?.GetService<ILookupService>();
-            e.CanExecute = lookupService == null ? false : lookupService.CanLookup(ForeignKey);
+            get
+            {
+                var lookupService = DataPresenter?.GetService<ILookupService>();
+                return lookupService == null ? false : lookupService.CanLookup(ForeignKey);
+            }
         }
 
-        private void ExecLookup(object sender, ExecutedRoutedEventArgs e)
+        private void ExecLookup()
         {
             var lookupService = DataPresenter?.GetService<ILookupService>();
-            if (lookupService != null)
-                lookupService.BeginLookup(this);
+            lookupService.BeginLookup(this);
         }
 
         public void EndLookup(ColumnValueBag valueBag)
@@ -61,16 +106,6 @@ namespace DevZest.Data.Views
                 ValueBag = valueBag;
                 DataPresenter?.InvalidateView();
             }
-        }
-
-        private void CanExecClearValue(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = CanClearValue;
-        }
-
-        private void ExecClearValue(object sender, ExecutedRoutedEventArgs e)
-        {
-            ClearValue();
         }
 
         public void ClearValue()
@@ -124,6 +159,8 @@ namespace DevZest.Data.Views
 
         void IRowElement.Setup(RowPresenter rowPresenter)
         {
+            var commandService = rowPresenter.DataPresenter.GetService<ICommandService>();
+            this.SetupCommandEntries(commandService.GetCommandEntries(this));
         }
 
         void IRowElement.Refresh(RowPresenter rowPresenter)
@@ -136,6 +173,8 @@ namespace DevZest.Data.Views
             ForeignKey = null;
             Extension = null;
             ValueBag.Clear();
+            CommandBindings.Clear();
+            InputBindings.Clear();
         }
     }
 }

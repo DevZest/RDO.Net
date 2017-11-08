@@ -7,38 +7,43 @@ namespace DevZest.Data.Presenters
 {
     public static class CommandExtensions
     {
-        public static CommandEntry CommandBinding(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute = null)
+        public static CommandEntry Bind(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute = null)
         {
             VerifyCommandBinding(command, executed);
             return new CommandEntry(command, executed, canExecute, null);
         }
 
-        public static CommandEntry InputBinding(this ICommand command, ExecutedRoutedEventHandler executed, InputGesture inputGesture)
+        public static CommandEntry Bind(this ICommand command, ExecutedRoutedEventHandler executed, InputGesture inputGesture)
         {
-            return InputBinding(command, executed, null, inputGesture);
+            return Bind(command, executed, (CanExecuteRoutedEventHandler)null, inputGesture);
         }
 
-        public static CommandEntry InputBinding(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute, InputGesture inputGesture)
+        public static CommandEntry Bind(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute, InputGesture inputGesture)
         {
             VerifyInputBinding(command, executed, inputGesture);
             return new CommandEntry(command, executed, canExecute, inputGesture);
         }
 
-        public static CommandEntry InputBindings(this ICommand command, ExecutedRoutedEventHandler executed, params InputGesture[] inputGestures)
+        public static CommandEntry Bind(this ICommand command, ExecutedRoutedEventHandler executed, params InputGesture[] inputGestures)
         {
-            return InputBindings(command, executed, null, inputGestures);
+            return Bind(command, executed, null, inputGestures);
         }
 
-        public static CommandEntry InputBindings(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute, params InputGesture[] inputGestures)
+        public static CommandEntry Bind(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute, params InputGesture[] inputGestures)
         {
             VerifyInputBindings(command, executed, inputGestures);
             return new CommandEntry(command, executed, canExecute, inputGestures);
         }
 
-        private static void VerifyCommandBinding(ICommand command, ExecutedRoutedEventHandler executed)
+        private static void VerifyCommand(ICommand command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
+        }
+
+        private static void VerifyCommandBinding(ICommand command, ExecutedRoutedEventHandler executed)
+        {
+            VerifyCommand(command);
             if (executed == null)
                 throw new ArgumentNullException(nameof(executed));
         }
@@ -70,8 +75,11 @@ namespace DevZest.Data.Presenters
 
             foreach (var entry in commandEntries)
             {
-                var commandBinding = new CommandBinding(entry.Command, entry.Executed, entry.CanExecute);
-                element.CommandBindings.Add(commandBinding);
+                if (entry.Executed != null)
+                {
+                    var commandBinding = new CommandBinding(entry.Command, entry.Executed, entry.CanExecute);
+                    element.CommandBindings.Add(commandBinding);
+                }
                 for (int i = 0; i < entry.InputGesturesCount; i++)
                 {
                     var inputBinding = new InputBinding(entry.Command, entry.GetInputGesture(i));

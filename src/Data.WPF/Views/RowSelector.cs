@@ -65,33 +65,33 @@ namespace DevZest.Data.Views
                 {
                     if (DataPresenter.LayoutOrientation.HasValue)
                     {
-                        yield return Commands.ScrollUp.CommandBinding(ExecScrollUp);
-                        yield return Commands.ScrollDown.CommandBinding(ExecScrollDown);
-                        yield return Commands.ScrollLeft.CommandBinding(ExecScrollLeft);
-                        yield return Commands.ScrollRight.CommandBinding(ExecScrollRight);
-                        yield return Commands.ScrollPageUp.CommandBinding(ExecScrollPageUp);
-                        yield return Commands.ScrollPageDown.CommandBinding(ExecScrollPageDown);
-                        yield return Commands.MoveUp.InputBinding(ExecMoveUp, CanExecMoveUp, new KeyGesture(Key.Up));
-                        yield return Commands.MoveDown.InputBinding(ExecMoveDown, CanExecMoveDown, new KeyGesture(Key.Down));
-                        yield return Commands.MoveLeft.InputBinding(ExecMoveLeft, CanExecMoveLeft, new KeyGesture(Key.Left));
-                        yield return Commands.MoveRight.InputBinding(ExecMoveRight, CanExecMoveRight, new KeyGesture(Key.Right));
-                        yield return Commands.MoveToHome.InputBinding(ExecMoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
-                        yield return Commands.MoveToEnd.InputBinding(ExecMoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
-                        yield return Commands.MoveToPageUp.InputBinding(ExecMoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
-                        yield return Commands.MoveToPageDown.InputBinding(ExecMoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
+                        yield return Commands.ScrollUp.Bind(ExecScrollUp);
+                        yield return Commands.ScrollDown.Bind(ExecScrollDown);
+                        yield return Commands.ScrollLeft.Bind(ExecScrollLeft);
+                        yield return Commands.ScrollRight.Bind(ExecScrollRight);
+                        yield return Commands.ScrollPageUp.Bind(ExecScrollPageUp);
+                        yield return Commands.ScrollPageDown.Bind(ExecScrollPageDown);
+                        yield return Commands.MoveUp.Bind(ExecMoveUp, CanExecMoveUp, new KeyGesture(Key.Up));
+                        yield return Commands.MoveDown.Bind(ExecMoveDown, CanExecMoveDown, new KeyGesture(Key.Down));
+                        yield return Commands.MoveLeft.Bind(ExecMoveLeft, CanExecMoveLeft, new KeyGesture(Key.Left));
+                        yield return Commands.MoveRight.Bind(ExecMoveRight, CanExecMoveRight, new KeyGesture(Key.Right));
+                        yield return Commands.MoveToHome.Bind(ExecMoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
+                        yield return Commands.MoveToEnd.Bind(ExecMoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
+                        yield return Commands.MoveToPageUp.Bind(ExecMoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
+                        yield return Commands.MoveToPageDown.Bind(ExecMoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
                         if (Template.SelectionMode == SelectionMode.Extended)
                         {
-                            yield return Commands.SelectExtendedUp.InputBinding(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
-                            yield return Commands.SelectExtendedDown.InputBinding(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
-                            yield return Commands.SelectiExtendedLeft.InputBinding(ExecSelectiExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
-                            yield return Commands.SelectExtendedRight.InputBinding(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right));
-                            yield return Commands.SelectExtendedHome.InputBinding(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
-                            yield return Commands.SelectExtendedEnd.InputBinding(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
-                            yield return Commands.SelectExtendedPageUp.InputBinding(ExecSelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
-                            yield return Commands.SelectExtendedPageDown.InputBinding(ExecSelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedUp.Bind(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedDown.Bind(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
+                            yield return Commands.SelectiExtendedLeft.Bind(ExecSelectiExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedRight.Bind(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right));
+                            yield return Commands.SelectExtendedHome.Bind(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedEnd.Bind(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedPageUp.Bind(ExecSelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedPageDown.Bind(ExecSelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
                         }
                         if (Template.SelectionMode == SelectionMode.Multiple)
-                            yield return Commands.ToggleSelection.InputBinding(ExecToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
+                            yield return Commands.ToggleSelection.Bind(ExecToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
                     }
                 }
             }

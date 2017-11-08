@@ -117,7 +117,7 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(DataView dataView)
             {
-                yield return Commands.Sort.CommandBinding(ExecSort, CanExecSort);
+                yield return Commands.Sort.Bind(ExecSort, CanExecSort);
             }
 
             private void CanExecSort(object sender, CanExecuteRoutedEventArgs e)
@@ -155,7 +155,7 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(ColumnHeader columnHeader)
             {
-                yield return Commands.ToggleSortDirection.InputBinding(ExecToggleSortDirection, CanExecToggleSortDirection, new MouseGesture(MouseAction.LeftClick));
+                yield return Commands.ToggleSortDirection.Bind(ExecToggleSortDirection, CanExecToggleSortDirection, new MouseGesture(MouseAction.LeftClick));
             }
 
             private void CanExecToggleSortDirection(object sender, CanExecuteRoutedEventArgs e)
