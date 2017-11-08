@@ -47,7 +47,7 @@ namespace DevZest.Data.Views
 
         public interface ICommandService : IService
         {
-            IEnumerable<CommandEntry> GetCommandEntries(RowView rowView);
+            IEnumerable<CommandEntry> GetCommandEntries(RowSelector rowSelector);
         }
 
         private sealed class CommandService : ICommandService
@@ -59,7 +59,7 @@ namespace DevZest.Data.Views
                 DataPresenter = dataPresenter;
             }
 
-            public IEnumerable<CommandEntry> GetCommandEntries(RowView rowView)
+            public IEnumerable<CommandEntry> GetCommandEntries(RowSelector rowSelector)
             {
                 if (DataPresenter.Scrollable != null)
                 {
@@ -317,7 +317,7 @@ namespace DevZest.Data.Views
 
             private bool CanExecuteByKeyGesture(CanExecuteRoutedEventArgs e)
             {
-                return e.OriginalSource is RowView && Rows.Count > 0;
+                return Rows.Count > 0;
             }
 
             private void ExecSelectExtendedHome(object sender, ExecutedRoutedEventArgs e)
@@ -342,7 +342,7 @@ namespace DevZest.Data.Views
 
             private void ExecToggleSelection(object sender, ExecutedRoutedEventArgs e)
             {
-                var rowPresenter = ((RowView)e.OriginalSource).RowPresenter;
+                var rowPresenter = ((RowSelector)e.OriginalSource).RowPresenter;
                 rowPresenter.IsSelected = !rowPresenter.IsSelected;
             }
         }
@@ -355,25 +355,40 @@ namespace DevZest.Data.Views
 
         public RowSelector()
         {
-            Loaded += OnLoaded;
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            if (RowView != null)
-                UpdateVisualState();
         }
 
         private void OnRowViewChanged(RowView oldValue, RowView newValue)
         {
             if (oldValue != null)
+            {
+                oldValue.SettingUp -= OnSettingUp;
                 oldValue.Refreshing -= OnRefreshing;
+                oldValue.CleaningUp -= OnCleaningUp;
+            }
             if (newValue != null)
             {
-                newValue.EnsureRowSelectorCommandEntriesSetup();
-                UpdateVisualState();
+                if (newValue.HasSetup)
+                    OnSettingUp();
+                newValue.SettingUp += OnSettingUp;
                 newValue.Refreshing += OnRefreshing;
+                newValue.CleaningUp += OnCleaningUp;
             }
+        }
+
+        private void OnSettingUp(object sender, EventArgs e)
+        {
+            OnSettingUp();
+        }
+
+        private void OnSettingUp()
+        {
+            this.SetupCommandEntries(RowPresenter?.DataPresenter?.GetService<ICommandService>().GetCommandEntries(this));
+            UpdateVisualState();
+        }
+
+        private void OnCleaningUp(object sender, EventArgs e)
+        {
+            this.CleanupCommandEntries();
         }
 
         private void OnRefreshing(object sender, EventArgs e)

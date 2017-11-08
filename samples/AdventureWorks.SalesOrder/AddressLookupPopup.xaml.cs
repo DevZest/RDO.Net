@@ -14,8 +14,6 @@ namespace AdventureWorks.SalesOrders
     /// </summary>
     public partial class AddressLookupPopup : Popup
     {
-        public static RoutedUICommand SelectCurrentCommand { get { return ApplicationCommands.Open; } }
-
         public AddressLookupPopup()
         {
             InitializeComponent();
@@ -54,7 +52,7 @@ namespace AdventureWorks.SalesOrders
 
         private void InitializeCommandBindings()
         {
-            CommandBindings.Add(new CommandBinding(SelectCurrentCommand, SelectCurrent, CanSelectCurrent));
+            CommandBindings.Add(new CommandBinding(Commands.SelectCurrent, SelectCurrent, CanSelectCurrent));
             CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
         }
 

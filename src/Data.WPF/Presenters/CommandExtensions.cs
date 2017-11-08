@@ -9,7 +9,7 @@ namespace DevZest.Data.Presenters
     {
         public static CommandEntry Bind(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute = null)
         {
-            VerifyCommandBinding(command, executed);
+            Verify(command, executed);
             return new CommandEntry(command, executed, canExecute, null);
         }
 
@@ -20,7 +20,7 @@ namespace DevZest.Data.Presenters
 
         public static CommandEntry Bind(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute, InputGesture inputGesture)
         {
-            VerifyInputBinding(command, executed, inputGesture);
+            Verify(command, executed, inputGesture);
             return new CommandEntry(command, executed, canExecute, inputGesture);
         }
 
@@ -31,33 +31,57 @@ namespace DevZest.Data.Presenters
 
         public static CommandEntry Bind(this ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute, params InputGesture[] inputGestures)
         {
-            VerifyInputBindings(command, executed, inputGestures);
+            Verify(command, executed, inputGestures);
             return new CommandEntry(command, executed, canExecute, inputGestures);
         }
 
-        private static void VerifyCommand(ICommand command)
+        public static CommandEntry Bind(this ICommand command, InputGesture inputGesture)
+        {
+            Verify(command);
+            Verify(inputGesture);
+            return new CommandEntry(command, null, null, inputGesture);
+        }
+
+        public static CommandEntry Bind(this ICommand command, params InputGesture[] inputGestures)
+        {
+            Verify(command);
+            Verify(inputGestures);
+            return new CommandEntry(command, null, null, inputGestures);
+        }
+
+        private static void Verify(ICommand command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
         }
 
-        private static void VerifyCommandBinding(ICommand command, ExecutedRoutedEventHandler executed)
+        private static void Verify(ICommand command, ExecutedRoutedEventHandler executed)
         {
-            VerifyCommand(command);
+            Verify(command);
             if (executed == null)
                 throw new ArgumentNullException(nameof(executed));
         }
 
-        private static void VerifyInputBinding(ICommand command, ExecutedRoutedEventHandler executed, InputGesture inputGesture)
+        private static void Verify(ICommand command, ExecutedRoutedEventHandler executed, InputGesture inputGesture)
         {
-            VerifyCommandBinding(command, executed);
+            Verify(command, executed);
+            Verify(inputGesture);
+        }
+
+        private static void Verify(InputGesture inputGesture)
+        {
             if (inputGesture == null)
                 throw new ArgumentNullException(nameof(inputGesture));
         }
 
-        private static void VerifyInputBindings(ICommand command, ExecutedRoutedEventHandler executed, InputGesture[] inputGestures)
+        private static void Verify(ICommand command, ExecutedRoutedEventHandler executed, InputGesture[] inputGestures)
         {
-            VerifyCommandBinding(command, executed);
+            Verify(command, executed);
+            Verify(inputGestures);
+        }
+
+        private static void Verify(InputGesture[] inputGestures)
+        {
             if (inputGestures == null || inputGestures.Length == 0)
                 throw new ArgumentNullException(nameof(inputGestures));
 

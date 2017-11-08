@@ -23,11 +23,6 @@ namespace DevZest.Data.Views
             IEnumerable<CommandEntry> GetCommandEntries(RowView rowView);
         }
 
-        public interface IInputBindingService : IService
-        {
-            IEnumerable<InputBinding> InputBindings { get; }
-        }
-
         private sealed class CommandService : ICommandService
         {
             public DataPresenter DataPresenter { get; private set; }
@@ -80,7 +75,9 @@ namespace DevZest.Data.Views
             return (RowView)target.GetValue(CurrentProperty);
         }
 
+        public event EventHandler<EventArgs> SettingUp = delegate { };
         public event EventHandler<EventArgs> Refreshing = delegate { };
+        public event EventHandler<EventArgs> CleaningUp = delegate { };
 
         static RowView()
         {
@@ -170,6 +167,8 @@ namespace DevZest.Data.Views
             Setup(elementManager.Rows[containerOrdinal]);
         }
 
+        public bool HasSetup { get; private set; }
+
         internal void Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter == null && rowPresenter != null);
@@ -184,6 +183,9 @@ namespace DevZest.Data.Views
                 plugins[i].Setup(this);
                 plugins[i].Refresh(this);
             }
+            this.SetupCommandEntries(rowPresenter?.DataPresenter?.GetService<ICommandService>().GetCommandEntries(this));
+            SettingUp(this, EventArgs.Empty);
+            HasSetup = true;
         }
 
         internal sealed override void Cleanup()
@@ -191,12 +193,15 @@ namespace DevZest.Data.Views
             Debug.Assert(RowPresenter != null);
             Debug.Assert(ElementCollection != null);
 
+            CleaningUp(this, EventArgs.Empty);
+            this.CleanupCommandEntries();
             var plugins = Plugins;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Cleanup(this);
             CleanupElements(true);
             RowPresenter.View = null;
             RowPresenter = null;
+            HasSetup = false;
         }
 
         public override void OnApplyTemplate()
@@ -288,60 +293,10 @@ namespace DevZest.Data.Views
                 rowBinding.Refresh(element);
             }
 
-            EnsureCommandEntriesSetup();
             var plugins = Plugins;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Refresh(this);
             Refreshing(this, EventArgs.Empty);
-        }
-
-        private bool _commandEntriesSetup;
-        private void EnsureCommandEntriesSetup()
-        {
-            if (_commandEntriesSetup)
-                return;
-
-            SetupCommandEntries();
-            _commandEntriesSetup = true;
-        }
-
-        private void SetupCommandEntries()
-        {
-            var dataPresenter = DataPresenter;
-            if (dataPresenter == null)
-                return;
-
-            this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
-            var inputBindingService = dataPresenter.GetService<IInputBindingService>();
-            if (inputBindingService != null)
-            {
-                var inputBindings = inputBindingService.InputBindings;
-                foreach (var inputBinding in inputBindings)
-                    InputBindings.Add(inputBinding);
-            }
-        }
-
-        private bool _rowSelectorCommandEntriesSetup;
-        /// <remarks>
-        /// Adding CommandBinding into RowSelector's CommandBindings does not work. There is no way to figure out why.
-        /// I suspect it's because RowSelector is in ControlTemplate of RowView. Workaround this by adding into RowView (the root element)'s CommandBindings.
-        /// </remarks>
-        internal void EnsureRowSelectorCommandEntriesSetup()
-        {
-            if (_rowSelectorCommandEntriesSetup)
-                return;
-
-            SetupRowSelectorCommandEntries();
-            _rowSelectorCommandEntriesSetup = true;
-        }
-
-        private void SetupRowSelectorCommandEntries()
-        {
-            var dataPresenter = DataPresenter;
-            if (dataPresenter == null)
-                return;
-
-            this.SetupCommandEntries(dataPresenter.GetService<RowSelector.ICommandService>().GetCommandEntries(this));
         }
 
         internal void Flush()

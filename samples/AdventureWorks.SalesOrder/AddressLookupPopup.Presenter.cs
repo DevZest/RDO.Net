@@ -14,7 +14,12 @@ namespace AdventureWorks.SalesOrders
 {
     partial class AddressLookupPopup
     {
-        private sealed class Presenter : DataPresenter<Address>, RowView.IInputBindingService
+        public static class Commands
+        {
+            public static RoutedUICommand SelectCurrent { get { return ApplicationCommands.Open; } }
+        }
+
+        private sealed class Presenter : DataPresenter<Address>, RowView.ICommandService
         {
             public Presenter(DataView dataView, int? currentAddressID, int customerID)
             {
@@ -89,13 +94,12 @@ namespace AdventureWorks.SalesOrders
                 SelectCurrent();
             }
 
-            IEnumerable<InputBinding> RowView.IInputBindingService.InputBindings
+            IEnumerable<CommandEntry> RowView.ICommandService.GetCommandEntries(RowView rowView)
             {
-                get
-                {
-                    yield return new InputBinding(SelectCurrentCommand, new KeyGesture(System.Windows.Input.Key.Enter));
-                    yield return new InputBinding(SelectCurrentCommand, new MouseGesture(MouseAction.LeftDoubleClick));
-                }
+                var baseService = ServiceManager.GetService<RowView.ICommandService>(this);
+                foreach (var entry in baseService.GetCommandEntries(rowView))
+                    yield return entry;
+                yield return Commands.SelectCurrent.Bind(new KeyGesture(System.Windows.Input.Key.Enter), new MouseGesture(MouseAction.LeftDoubleClick));
             }
         }
     }
