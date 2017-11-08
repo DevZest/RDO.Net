@@ -16,21 +16,21 @@
         <DockPanel DockPanel.Dock="Top" MinHeight="30" Margin="5">
             <ToolBar FontWeight="Bold">
                 <!-- NEW -->
-                <Button Command="New">
+                <Button Command="{x:Static local:MainWindow+Commands.New}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Images/new.png" Width="22" Height="22" Margin="2"/>
                         <Label VerticalAlignment="Center">_New</Label>
                     </StackPanel>
                 </Button>
                 <!-- DELETE -->
-                <Button Command="Delete">
+                <Button Command="{x:Static local:MainWindow+Commands.Delete}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Images/delete.png" Width="22" Height="22" Margin="2" />
                         <Label VerticalAlignment="Center">_Delete</Label>
                     </StackPanel>
                 </Button>
                 <Separator />
-                <Button Command="Refresh">
+                <Button Command="{x:Static local:MainWindow+Commands.Refresh}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Images/refresh.png" Width="22" Height="22" Margin="2" />
                         <Label VerticalAlignment="Center">_Refresh</Label>
@@ -42,7 +42,7 @@
                 <local:SearchBox x:Name="_searchBox" />
                 <!-- EXIT -->
                 <Separator />
-                <Button Command="Close">
+                <Button Command="{x:Static local:MainWindow+Commands.Close}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Images/exit.png" Width="22" Height="22" Margin="2" />
                         <Label VerticalAlignment="Center">_Exit</Label>

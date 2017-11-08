@@ -12,6 +12,17 @@ namespace AdventureWorks.SalesOrders
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static class Commands
+        {
+            public static RoutedUICommand New { get { return ApplicationCommands.New; } }
+            public static RoutedUICommand Open { get { return ApplicationCommands.Open; } }
+            public static RoutedUICommand Delete { get { return ApplicationCommands.Delete; } }
+            public static RoutedUICommand Refresh { get { return NavigationCommands.Refresh; } }
+            public static RoutedUICommand Search { get { return SearchBox.Commands.Search; } }
+            public static RoutedUICommand ClearSearch { get { return SearchBox.Commands.ClearSearch; } }
+            public static RoutedUICommand Close { get { return ApplicationCommands.Close; } }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -22,13 +33,13 @@ namespace AdventureWorks.SalesOrders
 
         private void InitializeCommandBindings()
         {
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.New, New));
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open, CanOpen));
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, Delete, CanDelete));
-            CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
-            CommandBindings.Add(new CommandBinding(SearchBox.Commands.Search, Search, CanRefresh));
-            CommandBindings.Add(new CommandBinding(SearchBox.Commands.ClearSearch, ClearSearch, CanRefresh));
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
+            CommandBindings.Add(new CommandBinding(Commands.New, New));
+            CommandBindings.Add(new CommandBinding(Commands.Open, Open, CanOpen));
+            CommandBindings.Add(new CommandBinding(Commands.Delete, Delete, CanDelete));
+            CommandBindings.Add(new CommandBinding(Commands.Refresh, Refresh, CanRefresh));
+            CommandBindings.Add(new CommandBinding(Commands.Search, Search, CanRefresh));
+            CommandBindings.Add(new CommandBinding(Commands.ClearSearch, ClearSearch, CanRefresh));
+            CommandBindings.Add(new CommandBinding(Commands.Close, Close));
         }
 
         private SalesOrder _
