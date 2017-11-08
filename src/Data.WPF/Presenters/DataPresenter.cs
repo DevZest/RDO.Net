@@ -319,7 +319,7 @@ namespace DevZest.Data.Presenters
             return rowPresenter.InternalHasChildren;
         }
 
-        public T GetService<T>()
+        public virtual T GetService<T>()
             where T : class, IService
         {
             return (this is T) ? (T)((object)this) : ServiceManager.GetService<T>(this);
