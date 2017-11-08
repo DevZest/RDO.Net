@@ -7,6 +7,7 @@ using System;
 using System.Windows.Input;
 using System.Linq;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Views
 {
@@ -124,6 +125,53 @@ namespace DevZest.Data.Views
             Debug.Assert(service != null);
         }
 
+        public static class Commands
+        {
+            public static RoutedUICommand DeleteSelected { get { return ApplicationCommands.Delete; } }
+        }
+
+        public interface ICommandService : IService
+        {
+            IEnumerable<CommandEntry> GetCommandEntries(RowHeader rowHeader);
+        }
+
+        public interface IConfirmDeleteSelectedService : IService
+        {
+            bool Confirm();
+        }
+
+        private sealed class CommandService : ICommandService
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+            }
+
+            public IEnumerable<CommandEntry> GetCommandEntries(RowHeader rowHeader)
+            {
+                yield return Commands.DeleteSelected.Bind(ExecDeleteSelected, CanExecDeleteSelected, new KeyGesture(Key.Delete));
+            }
+
+            private void CanExecDeleteSelected(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = DataPresenter.SelectedRows.Count > 0;
+            }
+
+            private void ExecDeleteSelected(object sender, ExecutedRoutedEventArgs e)
+            {
+                var confirmService = DataPresenter.GetService<IConfirmDeleteSelectedService>();
+                var confirmed = confirmService == null ? true : confirmService.Confirm();
+                if (confirmed)
+                {
+                    foreach (var row in DataPresenter.SelectedRows.ToArray())
+                        row.Delete();
+                }
+                e.Handled = true;
+            }
+        }
+
         public static class Styles
         {
             public static readonly StyleKey Flat = new StyleKey(typeof(RowHeader));
@@ -142,6 +190,7 @@ namespace DevZest.Data.Views
         static RowHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowHeader), new FrameworkPropertyMetadata(typeof(RowHeader)));
+            ServiceManager.Register<ICommandService, CommandService>();
         }
 
         public RowHeader()
@@ -173,8 +222,11 @@ namespace DevZest.Data.Views
             set { SetValue(SeparatorVisibilityProperty, value); }
         }
 
-        void IRowElement.Cleanup(RowPresenter rowPresenter)
+        void IRowElement.Setup(RowPresenter rowPresenter)
         {
+            var dataPresenter = rowPresenter.DataPresenter;
+            EnsureAutoDeselectionServiceInitialized(dataPresenter);
+            this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
         }
 
         void IRowElement.Refresh(RowPresenter rowPresenter)
@@ -182,9 +234,9 @@ namespace DevZest.Data.Views
             UpdateVisualStates(rowPresenter);
         }
 
-        void IRowElement.Setup(RowPresenter rowPresenter)
+        void IRowElement.Cleanup(RowPresenter rowPresenter)
         {
-            EnsureAutoDeselectionServiceInitialized(rowPresenter.DataPresenter);
+            this.CleanupCommandEntries();
         }
 
         private void UpdateVisualStates(RowPresenter rowPresenter)

@@ -10,7 +10,7 @@ namespace AdventureWorks.SalesOrders
 {
     partial class SalesOrderForm
     {
-        private class DetailPresenter : DataPresenter<SalesOrderDetail>, ForeignKeyBox.ILookupService
+        private class DetailPresenter : DataPresenter<SalesOrderDetail>, ForeignKeyBox.ILookupService, RowHeader.IConfirmDeleteSelectedService
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
@@ -56,6 +56,11 @@ namespace AdventureWorks.SalesOrders
                 }
                 else
                     throw new NotSupportedException();
+            }
+
+            bool RowHeader.IConfirmDeleteSelectedService.Confirm()
+            {
+                return MessageBox.Show(string.Format("Are you sure you want to delete selected {0} rows?", SelectedRows.Count), "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
             }
         }
     }

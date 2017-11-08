@@ -31,17 +31,21 @@ namespace DevZest.Data.Views
             set { SetValue(SeparatorVisibilityProperty, value); }
         }
 
-        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
+        void IScalarElement.Setup(ScalarPresenter scalarPresenter)
         {
+            var dataPresenter = scalarPresenter.DataPresenter;
+            RowHeader.EnsureAutoDeselectionServiceInitialized(dataPresenter);
+            this.SetupCommandEntries(dataPresenter.GetService<RowHeader.ICommandService>().GetCommandEntries(null));
         }
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
         {
         }
 
-        void IScalarElement.Setup(ScalarPresenter scalarPresenter)
+        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
         {
-            RowHeader.EnsureAutoDeselectionServiceInitialized(scalarPresenter.DataPresenter);
+            this.CleanupCommandEntries();
+            this.CleanupCommandEntries();
         }
     }
 }
