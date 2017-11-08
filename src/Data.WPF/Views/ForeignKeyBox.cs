@@ -173,8 +173,7 @@ namespace DevZest.Data.Views
             ForeignKey = null;
             Extension = null;
             ValueBag.Clear();
-            CommandBindings.Clear();
-            InputBindings.Clear();
+            this.CleanupCommandEntries();
         }
     }
 }

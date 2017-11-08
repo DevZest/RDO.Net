@@ -68,7 +68,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        internal static void SetupCommandEntries(this UIElement element, IEnumerable<CommandEntry> commandEntries)
+        public static void SetupCommandEntries(this UIElement element, IEnumerable<CommandEntry> commandEntries)
         {
             if (commandEntries == null)
                 return;
@@ -88,7 +88,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        internal static void CleanupCommandEntries(this UIElement element)
+        public static void CleanupCommandEntries(this UIElement element)
         {
             element.CommandBindings.Clear();
             element.InputBindings.Clear();
