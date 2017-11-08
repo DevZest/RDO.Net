@@ -124,7 +124,10 @@ namespace DevZest.Data.Views
             Debug.Assert(service != null);
         }
 
-        public static readonly StyleKey FlatStyleKey = new StyleKey(typeof(RowHeader));
+        public static class Styles
+        {
+            public static readonly StyleKey Flat = new StyleKey(typeof(RowHeader));
+        }
 
         private static readonly DependencyPropertyKey IsSelectedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelected), typeof(bool),
             typeof(RowHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));

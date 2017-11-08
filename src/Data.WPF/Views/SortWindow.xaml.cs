@@ -80,7 +80,7 @@ namespace DevZest.Data.Views
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
                     .AddBinding(1, 0, "Sort By".AsTextBlock())
                     .AddBinding(2, 0, "Order".AsTextBlock())
-                    .AddBinding(0, 1, _.AsRowHeader().WithStyle(RowHeader.FlatStyleKey))
+                    .AddBinding(0, 1, _.AsRowHeader().WithStyle(RowHeader.Styles.Flat))
                     .AddBinding(1, 1, _.ColumnHeader.AsComboBox(ColumnHeaderSelection, "Value", "Display"))
                     .AddBinding(2, 1, _.Direction.AsComboBox(DirectionSelection, "Value", "Display"));
             }

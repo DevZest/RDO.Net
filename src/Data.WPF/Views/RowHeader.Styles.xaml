@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:DevZest.Data.Views"
     xmlns:primitives="clr-namespace:DevZest.Data.Views.Primitives">
     
-    <Style x:Key="{x:Static local:RowHeader.FlatStyleKey}" TargetType="{x:Type local:RowHeader}">
+    <Style x:Key="{x:Static local:RowHeader+Styles.Flat}" TargetType="{x:Type local:RowHeader}">
         <Style.Resources>
             <Color x:Key="GlyphColor">#FF444444</Color>
             <DataTemplate x:Key="CurrentRow">
