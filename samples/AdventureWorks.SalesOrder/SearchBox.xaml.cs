@@ -16,8 +16,11 @@ namespace AdventureWorks.SalesOrders
     /// </summary>
     public partial class SearchBox : UserControl
     {
-        public static readonly RoutedUICommand SearchCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand ClearSearchCommand = new RoutedUICommand();
+        public static class Commands
+        {
+            public static readonly RoutedUICommand Search = new RoutedUICommand();
+            public static readonly RoutedUICommand ClearSearch = new RoutedUICommand();
+        }
 
         private static readonly DependencyPropertyKey StatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(State), typeof(SearchBoxState), typeof(SearchBox),
             new FrameworkPropertyMetadata(SearchBoxState.Empty));
@@ -72,10 +75,10 @@ namespace AdventureWorks.SalesOrders
 
         private bool ExecuteSearchCommand()
         {
-            if (SearchCommand.CanExecute(null, null))
+            if (Commands.Search.CanExecute(null, null))
             {
                 SearchText = InputText;
-                SearchCommand.Execute(null, null);
+                Commands.Search.Execute(null, null);
                 RefreshState();
                 return true;
             }
@@ -84,11 +87,11 @@ namespace AdventureWorks.SalesOrders
 
         private bool ExecuteClearSearchCommand()
         {
-            if (ClearSearchCommand.CanExecute(null, null))
+            if (Commands.ClearSearch.CanExecute(null, null))
             {
                 SearchText = InputText = null;
                 RefreshState();
-                ClearSearchCommand.Execute(null, null);
+                Commands.ClearSearch.Execute(null, null);
                 return true;
             }
             return false;

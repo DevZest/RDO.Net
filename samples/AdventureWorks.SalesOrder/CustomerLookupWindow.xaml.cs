@@ -16,8 +16,8 @@ namespace AdventureWorks.SalesOrders
         {
             public static RoutedUICommand SelectCurrent { get { return ApplicationCommands.Open; } }
             public static RoutedUICommand Refresh { get { return NavigationCommands.Refresh; } }
-            public static RoutedUICommand Search { get { return SearchBox.SearchCommand; } }
-            public static RoutedUICommand ClearSearch { get { return SearchBox.ClearSearchCommand; } }
+            public static RoutedUICommand Search { get { return SearchBox.Commands.Search; } }
+            public static RoutedUICommand ClearSearch { get { return SearchBox.Commands.ClearSearch; } }
             public static RoutedUICommand Close { get { return ApplicationCommands.Close; } }
         }
 

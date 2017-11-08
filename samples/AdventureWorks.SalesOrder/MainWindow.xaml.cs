@@ -26,8 +26,8 @@ namespace AdventureWorks.SalesOrders
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open, CanOpen));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, Delete, CanDelete));
             CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
-            CommandBindings.Add(new CommandBinding(SearchBox.SearchCommand, Search, CanRefresh));
-            CommandBindings.Add(new CommandBinding(SearchBox.ClearSearchCommand, ClearSearch, CanRefresh));
+            CommandBindings.Add(new CommandBinding(SearchBox.Commands.Search, Search, CanRefresh));
+            CommandBindings.Add(new CommandBinding(SearchBox.Commands.ClearSearch, ClearSearch, CanRefresh));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
         }
 
