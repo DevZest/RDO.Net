@@ -11,6 +11,10 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Views
 {
+    internal interface IRowHeader
+    {
+    }
+
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateNormal)]
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateMouseOver)]
     [TemplateVisualState(GroupName = VisualStates.GroupSelection, Name = VisualStates.StateSelected)]
@@ -21,17 +25,13 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewRow)]
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewCurrentRow)]
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewEditingRow)]
-    public class RowHeader : ButtonBase, IRowElement, RowHeader.IAutoDeselectable
+    public class RowHeader : ButtonBase, IRowElement, IRowHeader
     {
-        internal interface IAutoDeselectable
+        private interface IFocusTracker : IService
         {
         }
 
-        private interface IAutoDeselectionService : IService
-        {
-        }
-
-        private sealed class AutoDeselectionService : IAutoDeselectionService
+        private sealed class FocusTracker : IFocusTracker
         {
             private DataPresenter _dataPresenter;
             public DataPresenter DataPresenter
@@ -51,50 +51,45 @@ namespace DevZest.Data.Views
                     if (_dataView != null)
                         _dataView.GotKeyboardFocus -= OnGotKeyboardFocus;
                     _dataView = value;
-                    _selectable = null;
+                    _activeHeader = null;
                     if (_dataView != null)
                         _dataView.GotKeyboardFocus += OnGotKeyboardFocus;
                 }
             }
 
-            private IAutoDeselectable _selectable;
-            private IAutoDeselectable Selectable
+            private IRowHeader _activeHeader;
+            private IRowHeader ActiveHeader
             {
-                get { return _selectable; }
+                get { return _activeHeader; }
                 set
                 {
-                    if (_selectable == value)
+                    if (_activeHeader == value)
                         return;
-                    if (_selectable != null && value == null)
+                    if (_activeHeader != null && value == null)
                         DeselectAll();
-                    _selectable = value;
+                    _activeHeader = value;
                 }
             }
 
             private void OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
             {
-                Selectable = FindSelectableAncestor(e.OriginalSource as DependencyObject);
+                ActiveHeader = FindAncestorRowHeader(e.OriginalSource as DependencyObject);
             }
 
-            private static IAutoDeselectable FindSelectableAncestor(DependencyObject child)
+            private static IRowHeader FindAncestorRowHeader(DependencyObject child)
             {
                 if (child == null)
                     return null;
 
-                if (child is IAutoDeselectable)
-                    return (IAutoDeselectable)child;
+                if (child is IRowHeader)
+                    return (IRowHeader)child;
 
                 DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+                if (parentObject == null)
+                    return null;
 
-                //we've reached the end of the tree
-                if (parentObject == null) return null;
-
-                //check if the parent matches the type we're looking for
-                var parent = parentObject as IAutoDeselectable;
-                if (parent != null)
-                    return parent;
-                else
-                    return FindSelectableAncestor(parentObject);
+                var parent = parentObject as IRowHeader;
+                return parent ?? FindAncestorRowHeader(parentObject);
             }
 
             private void DeselectAll()
@@ -117,30 +112,33 @@ namespace DevZest.Data.Views
             }
         }
 
-        internal static void EnsureAutoDeselectionServiceInitialized(DataPresenter dataPresenter)
+        internal static void EnsureFocusTrackerInitialized(DataPresenter dataPresenter)
         {
-            if (!ServiceManager.IsRegistered<IAutoDeselectionService>())
-                ServiceManager.Register<IAutoDeselectionService, AutoDeselectionService>();
-            var service = ServiceManager.GetService<IAutoDeselectionService>(dataPresenter);
+            if (!ServiceManager.IsRegistered<IFocusTracker>())
+                ServiceManager.Register<IFocusTracker, FocusTracker>();
+            var service = ServiceManager.GetService<IFocusTracker>(dataPresenter);
             Debug.Assert(service != null);
         }
 
-        public static class Commands
+        public abstract class Commands
         {
             public static RoutedUICommand DeleteSelected { get { return ApplicationCommands.Delete; } }
         }
 
-        public interface ICommandService : IService
+        public abstract class Services
         {
-            IEnumerable<CommandEntry> GetCommandEntries(RowHeader rowHeader);
+            public interface ICommandManager : IService
+            {
+                IEnumerable<CommandEntry> GetCommandEntries(RowHeader rowHeader);
+            }
+
+            public interface IDeletionConfirmation : IService
+            {
+                bool Confirm();
+            }
         }
 
-        public interface IConfirmDeleteSelectedService : IService
-        {
-            bool Confirm();
-        }
-
-        private sealed class CommandService : ICommandService
+        private sealed class CommandManager : Services.ICommandManager
         {
             public DataPresenter DataPresenter { get; private set; }
 
@@ -161,7 +159,7 @@ namespace DevZest.Data.Views
 
             private void ExecDeleteSelected(object sender, ExecutedRoutedEventArgs e)
             {
-                var confirmService = DataPresenter.GetService<IConfirmDeleteSelectedService>();
+                var confirmService = DataPresenter.GetService<Services.IDeletionConfirmation>();
                 var confirmed = confirmService == null ? true : confirmService.Confirm();
                 if (confirmed)
                 {
@@ -190,7 +188,7 @@ namespace DevZest.Data.Views
         static RowHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowHeader), new FrameworkPropertyMetadata(typeof(RowHeader)));
-            ServiceManager.Register<ICommandService, CommandService>();
+            ServiceManager.Register<Services.ICommandManager, CommandManager>();
         }
 
         public RowHeader()
@@ -225,8 +223,8 @@ namespace DevZest.Data.Views
         void IRowElement.Setup(RowPresenter rowPresenter)
         {
             var dataPresenter = rowPresenter.DataPresenter;
-            EnsureAutoDeselectionServiceInitialized(dataPresenter);
-            this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
+            EnsureFocusTrackerInitialized(dataPresenter);
+            this.SetupCommandEntries(dataPresenter.GetService<Services.ICommandManager>().GetCommandEntries(this));
         }
 
         void IRowElement.Refresh(RowPresenter rowPresenter)

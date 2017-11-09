@@ -10,7 +10,7 @@ namespace AdventureWorks.SalesOrders
 {
     partial class SalesOrderForm
     {
-        private class DetailPresenter : DataPresenter<SalesOrderDetail>, ForeignKeyBox.ILookupService, RowHeader.IConfirmDeleteSelectedService
+        private class DetailPresenter : DataPresenter<SalesOrderDetail>, ForeignKeyBox.ILookupService, RowHeader.Services.IDeletionConfirmation
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
@@ -58,7 +58,7 @@ namespace AdventureWorks.SalesOrders
                     throw new NotSupportedException();
             }
 
-            bool RowHeader.IConfirmDeleteSelectedService.Confirm()
+            bool RowHeader.Services.IDeletionConfirmation.Confirm()
             {
                 return MessageBox.Show(string.Format("Are you sure you want to delete selected {0} rows?", SelectedRows.Count), "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
             }

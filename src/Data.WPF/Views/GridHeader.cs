@@ -6,7 +6,7 @@ using DevZest.Data.Presenters;
 
 namespace DevZest.Data.Views
 {
-    public class GridHeader : ToggleButton, IScalarElement, RowHeader.IAutoDeselectable
+    public class GridHeader : ToggleButton, IScalarElement, IRowHeader
     {
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(GridHeader), new FrameworkPropertyMetadata(null));
@@ -34,8 +34,8 @@ namespace DevZest.Data.Views
         void IScalarElement.Setup(ScalarPresenter scalarPresenter)
         {
             var dataPresenter = scalarPresenter.DataPresenter;
-            RowHeader.EnsureAutoDeselectionServiceInitialized(dataPresenter);
-            this.SetupCommandEntries(dataPresenter.GetService<RowHeader.ICommandService>().GetCommandEntries(null));
+            RowHeader.EnsureFocusTrackerInitialized(dataPresenter);
+            this.SetupCommandEntries(dataPresenter.GetService<RowHeader.Services.ICommandManager>().GetCommandEntries(null));
         }
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
