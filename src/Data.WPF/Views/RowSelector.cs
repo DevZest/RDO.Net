@@ -18,7 +18,7 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupSelection, Name = VisualStates.StateUnselected)]
     public class RowSelector : ContentControl
     {
-        public static class Commands
+        public abstract class Commands
         {
             public static RoutedUICommand ScrollUp { get { return ComponentCommands.MoveFocusUp; } }
             public static RoutedUICommand ScrollDown { get { return ComponentCommands.MoveFocusDown; } }

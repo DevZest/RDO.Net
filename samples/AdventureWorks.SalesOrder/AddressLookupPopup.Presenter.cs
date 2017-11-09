@@ -32,7 +32,7 @@ namespace AdventureWorks.SalesOrders
             {
                 builder.GridColumns("120")
                     .GridRows("Auto")
-                    .RowView<RowView>(RowView.SelectableStyleKey)
+                    .RowView<RowView>(RowView.Styles.Selectable)
                     .Layout(Orientation.Vertical)
                     .WithSelectionMode(SelectionMode.Single)
                     .AddBinding(0, 0, _.AsAddressBox());

@@ -10,7 +10,7 @@ namespace DevZest.Data.Views
 {
     public class RowExpander : Control
     {
-        public static class Commands
+        public abstract class Commands
         {
             public static readonly RoutedUICommand ToggleExpand = new RoutedUICommand();
         }

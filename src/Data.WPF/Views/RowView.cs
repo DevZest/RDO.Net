@@ -12,7 +12,7 @@ namespace DevZest.Data.Views
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
-        public static class Commands
+        public abstract class Commands
         {
             public static readonly RoutedUICommand Expand = new RoutedUICommand(UIText.RowViewCommands_ExpandCommandText, nameof(Expand), typeof(Commands));
             public static readonly RoutedUICommand Collapse = new RoutedUICommand(UIText.RowViewCommands_CollapseCommandText, nameof(Collapse), typeof(Commands));
@@ -62,7 +62,10 @@ namespace DevZest.Data.Views
             }
         }
 
-        public static readonly StyleKey SelectableStyleKey = new StyleKey(typeof(RowView));
+        public abstract class Styles
+        {
+            public static readonly StyleKey Selectable = new StyleKey(typeof(RowView));
+        }
 
         private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(RowView),
             typeof(RowView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));

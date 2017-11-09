@@ -16,7 +16,7 @@ namespace FileExplorer
             builder
                 .GridColumns("20", "Auto", "Auto", "Auto", "Auto")
                 .GridRows("Auto", "20")
-                .RowView<RowView>(RowView.SelectableStyleKey)
+                .RowView<RowView>(RowView.Styles.Selectable)
                 .Layout(Orientation.Vertical)
                 .WithFrozenTop(1)
                 .WithSelectionMode(SelectionMode.Extended)

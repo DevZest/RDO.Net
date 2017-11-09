@@ -167,7 +167,7 @@ namespace DevZest.Data.Views
             }
         }
 
-        public static class Styles
+        public abstract class Styles
         {
             public static readonly StyleKey Flat = new StyleKey(typeof(RowHeader));
         }

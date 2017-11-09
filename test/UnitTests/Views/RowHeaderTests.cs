@@ -4,12 +4,12 @@ using System;
 namespace DevZest.Data.Views
 {
     [TestClass]
-    public class RowViewTests
+    public class RowHeaderTests
     {
         [TestMethod]
-        public void RowView_Styles_Selectable_Style_is_not_null()
+        public void RowHeader_Styles_Flat_Style_is_not_null()
         {
-            Assert.IsNotNull(RowView.Styles.Selectable.Style);
+            Assert.IsNotNull(RowHeader.Styles.Flat.Style);
         }
     }
 }

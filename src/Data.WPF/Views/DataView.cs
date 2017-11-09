@@ -13,7 +13,7 @@ namespace DevZest.Data.Views
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
-        public static class Commands
+        public abstract class Commands
         {
             public static readonly RoutedUICommand RetryDataLoad = new RoutedUICommand(UIText.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoad), typeof(Commands));
             public static readonly RoutedUICommand CancelDataLoad = new RoutedUICommand(UIText.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoad), typeof(Commands));

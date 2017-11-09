@@ -23,7 +23,7 @@ namespace DevZest.Data.Views
             typeof(ForeignKeyBox), new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty CanClearValueProperty = CanClearValuePropertyKey.DependencyProperty;
 
-        public static class Commands
+        public abstract class Commands
         {
             internal static readonly RoutedUICommand Lookup = new RoutedUICommand();
             public static readonly RoutedUICommand ClearValue = new RoutedUICommand();

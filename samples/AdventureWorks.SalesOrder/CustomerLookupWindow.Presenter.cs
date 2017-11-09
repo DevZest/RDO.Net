@@ -26,7 +26,7 @@ namespace AdventureWorks.SalesOrders
             {
                 builder.GridColumns("200", "200", "120", "190")
                     .GridRows("Auto", "20")
-                    .RowView<RowView>(RowView.SelectableStyleKey)
+                    .RowView<RowView>(RowView.Styles.Selectable)
                     .Layout(Orientation.Vertical)
                     .WithFrozenTop(1)
                     .GridLineX(new GridPoint(0, 1), 4)

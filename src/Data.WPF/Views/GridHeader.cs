@@ -8,6 +8,10 @@ namespace DevZest.Data.Views
 {
     public class GridHeader : ToggleButton, IScalarElement, IRowHeader
     {
+        public abstract class Commands : RowHeader.Commands
+        {
+        }
+
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(GridHeader), new FrameworkPropertyMetadata(null));
 
