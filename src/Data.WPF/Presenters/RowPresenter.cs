@@ -29,8 +29,6 @@ namespace DevZest.Data.Presenters
 
         internal void Dispose()
         {
-            if (IsSelected)
-                IsSelected = false;
             _rowMapper = null;
             Parent = null;
         }

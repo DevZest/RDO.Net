@@ -125,20 +125,17 @@ namespace DevZest.Data.Views
             public static RoutedUICommand DeleteSelected { get { return ApplicationCommands.Delete; } }
         }
 
-        public abstract class Services
+        public interface ICommandService : IService
         {
-            public interface ICommandManager : IService
-            {
-                IEnumerable<CommandEntry> GetCommandEntries(RowHeader rowHeader);
-            }
-
-            public interface IDeletionConfirmation : IService
-            {
-                bool Confirm();
-            }
+            IEnumerable<CommandEntry> GetCommandEntries(RowHeader rowHeader);
         }
 
-        private sealed class CommandManager : Services.ICommandManager
+        public interface IDeletingConfirmation : IService
+        {
+            bool Confirm();
+        }
+
+        private sealed class CommandService : ICommandService
         {
             public DataPresenter DataPresenter { get; private set; }
 
@@ -159,7 +156,7 @@ namespace DevZest.Data.Views
 
             private void ExecDeleteSelected(object sender, ExecutedRoutedEventArgs e)
             {
-                var confirmService = DataPresenter.GetService<Services.IDeletionConfirmation>();
+                var confirmService = DataPresenter.GetService<IDeletingConfirmation>();
                 var confirmed = confirmService == null ? true : confirmService.Confirm();
                 if (confirmed)
                 {
@@ -188,7 +185,7 @@ namespace DevZest.Data.Views
         static RowHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowHeader), new FrameworkPropertyMetadata(typeof(RowHeader)));
-            ServiceManager.Register<Services.ICommandManager, CommandManager>();
+            ServiceManager.Register<ICommandService, CommandService>();
         }
 
         public RowHeader()
@@ -224,7 +221,7 @@ namespace DevZest.Data.Views
         {
             var dataPresenter = rowPresenter.DataPresenter;
             EnsureFocusTrackerInitialized(dataPresenter);
-            this.SetupCommandEntries(dataPresenter.GetService<Services.ICommandManager>().GetCommandEntries(this));
+            this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
         }
 
         void IRowElement.Refresh(RowPresenter rowPresenter)

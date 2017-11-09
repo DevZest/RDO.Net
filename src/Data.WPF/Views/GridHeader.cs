@@ -35,7 +35,7 @@ namespace DevZest.Data.Views
         {
             var dataPresenter = scalarPresenter.DataPresenter;
             RowHeader.EnsureFocusTrackerInitialized(dataPresenter);
-            this.SetupCommandEntries(dataPresenter.GetService<RowHeader.Services.ICommandManager>().GetCommandEntries(null));
+            this.SetupCommandEntries(dataPresenter.GetService<RowHeader.ICommandService>().GetCommandEntries(null));
         }
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)

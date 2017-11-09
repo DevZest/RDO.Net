@@ -638,5 +638,11 @@ namespace DevZest.Data.Presenters.Primitives
         {
             get { return false; }
         }
+
+        protected override void DisposeRow(RowPresenter row)
+        {
+            row.IsSelected = false;
+            base.DisposeRow(row);
+        }
     }
 }
