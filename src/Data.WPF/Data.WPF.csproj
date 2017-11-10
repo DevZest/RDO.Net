@@ -265,6 +265,10 @@
     <Resource Include="Resources\Cancel.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Presenters\Validation.Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\InertButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,0 +1,23 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:DevZest.Data.Presenters">
+
+    <ControlTemplate x:Key="{x:Static local:Validation+Templates.FlushError}">
+        <Border BorderBrush="Red" BorderThickness="2">
+            <AdornedElementPlaceholder />
+        </Border>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="{x:Static local:Validation+Templates.Error}">
+        <Border BorderBrush="Red" BorderThickness="1">
+            <AdornedElementPlaceholder />
+        </Border>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="{x:Static local:Validation+Templates.Warning}">
+        <Border BorderBrush="Yellow" BorderThickness="1">
+            <AdornedElementPlaceholder />
+        </Border>
+    </ControlTemplate>
+</ResourceDictionary>

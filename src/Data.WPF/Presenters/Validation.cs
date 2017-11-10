@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,26 @@ namespace DevZest.Data.Presenters
 {
     public static class Validation
     {
+        internal sealed class TemplateId : ResourceId<ControlTemplate>
+        {
+            public TemplateId(Type type)
+                : base(type)
+            {
+            }
+
+            protected override string UriSuffix
+            {
+                get { return "Templates"; }
+            }
+        }
+
+        internal static class Templates
+        {
+            public static readonly TemplateId FlushError = new TemplateId(typeof(Validation));
+            public static readonly TemplateId Error = new TemplateId(typeof(Validation));
+            public static readonly TemplateId Warning = new TemplateId(typeof(Validation));
+        }
+
         private static class MessageTypeBoxes
         {
             public static readonly object Null = new ValidationMessageType?();
@@ -31,13 +52,13 @@ namespace DevZest.Data.Presenters
         public static readonly DependencyProperty MessageTypeProperty = MessageTypePropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty FlushErrorTemplateProperty = DependencyProperty.RegisterAttached("FlushErrorTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(CreateDefaultFlushErrorTemplate(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnFlushErrorTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.FlushError.GetOrLoad(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnFlushErrorTemplateChanged)));
 
         public static readonly DependencyProperty ErrorTemplateProperty = DependencyProperty.RegisterAttached("ErrorTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(CreateDefaultErrorTemplate(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnErrorTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnErrorTemplateChanged)));
 
         public static readonly DependencyProperty WarningTemplateProperty = DependencyProperty.RegisterAttached("WarningTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(CreateDefaultWarningTemplate(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnWarningTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Warning.GetOrLoad(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnWarningTemplateChanged)));
 
         public static ValidationMessageType? GetMessageType(this DependencyObject element)
         {
@@ -80,34 +101,6 @@ namespace DevZest.Data.Presenters
         public static void SetWarningTemplate(this DependencyObject element, ControlTemplate value)
         {
             element.SetValue(WarningTemplateProperty, value);
-        }
-
-        private static ControlTemplate CreateDefaultTemplate(Brush borderBrush, double uniformThickness)
-        {
-            ControlTemplate controlTemplate = new ControlTemplate(typeof(Control));
-            FrameworkElementFactory frameworkElementFactory = new FrameworkElementFactory(typeof(Border), "Border");
-            frameworkElementFactory.SetValue(Border.BorderBrushProperty, borderBrush);
-            frameworkElementFactory.SetValue(Border.BorderThicknessProperty, new Thickness(uniformThickness));
-            FrameworkElementFactory child = new FrameworkElementFactory(typeof(AdornedElementPlaceholder), "Placeholder");
-            frameworkElementFactory.AppendChild(child);
-            controlTemplate.VisualTree = frameworkElementFactory;
-            controlTemplate.Seal();
-            return controlTemplate;
-        }
-
-        private static ControlTemplate CreateDefaultFlushErrorTemplate()
-        {
-            return CreateDefaultTemplate(Brushes.Red, 2.0);
-        }
-
-        private static ControlTemplate CreateDefaultErrorTemplate()
-        {
-            return CreateDefaultTemplate(Brushes.Red, 1.0);
-        }
-
-        private static ControlTemplate CreateDefaultWarningTemplate()
-        {
-            return CreateDefaultTemplate(Brushes.Yellow, 1.0);
         }
 
         private static void OnMessageTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

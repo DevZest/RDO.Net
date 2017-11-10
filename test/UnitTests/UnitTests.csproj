@@ -102,6 +102,7 @@
     <Compile Include="Presenters\CompositeRowBindingTests.cs" />
     <Compile Include="Presenters\ScalarBindingTests.cs" />
     <Compile Include="Presenters\CompositeScalarBindingTests.cs" />
+    <Compile Include="Presenters\ValidationTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
