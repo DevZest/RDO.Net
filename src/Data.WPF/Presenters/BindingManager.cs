@@ -53,12 +53,12 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
-        public static T WithStyle<T>(this T binding, StyleKey value)
+        public static T WithStyle<T>(this T binding, StyleId value)
             where T : Binding
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
-            return binding.WithStyle<T>(value.Style);
+            return binding.WithStyle<T>(value.GetOrLoad());
         }
 
         public static T WithAutoSizeOrder<T>(this T binding, int value)

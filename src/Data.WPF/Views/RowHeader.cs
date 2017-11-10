@@ -169,7 +169,7 @@ namespace DevZest.Data.Views
 
         public abstract class Styles
         {
-            public static readonly StyleKey Flat = new StyleKey(typeof(RowHeader));
+            public static readonly StyleId Flat = new StyleId(typeof(RowHeader));
         }
 
         private static readonly DependencyPropertyKey IsSelectedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelected), typeof(bool),

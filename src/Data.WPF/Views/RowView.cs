@@ -64,7 +64,7 @@ namespace DevZest.Data.Views
 
         public abstract class Styles
         {
-            public static readonly StyleKey Selectable = new StyleKey(typeof(RowView));
+            public static readonly StyleId Selectable = new StyleId(typeof(RowView));
         }
 
         private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(RowView),

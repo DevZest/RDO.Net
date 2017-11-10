@@ -9,7 +9,7 @@ namespace DevZest.Data.Views
         [TestMethod]
         public void RowHeader_Styles_Flat_Style_is_not_null()
         {
-            Assert.IsNotNull(RowHeader.Styles.Flat.Style);
+            Assert.IsNotNull(RowHeader.Styles.Flat.GetOrLoad());
         }
     }
 }

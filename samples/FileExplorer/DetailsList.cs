@@ -9,7 +9,7 @@ namespace FileExplorer
 {
     public class DetailsList : DataPresenter<DetailsListItem>
     {
-        public static readonly StyleKey FileSizeTextBlockStyleKey = new StyleKey(typeof(DetailsList));
+        public static readonly StyleId FileSizeTextBlockStyleKey = new StyleId(typeof(DetailsList));
 
         protected override void BuildTemplate(TemplateBuilder builder)
         {

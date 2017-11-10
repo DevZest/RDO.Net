@@ -17,10 +17,10 @@ namespace AdventureWorks.SalesOrders
     {
         public static class Styles
         {
-            public static readonly StyleKey CheckBox = new StyleKey(typeof(MainWindow));
-            public static readonly StyleKey LeftAlignedTextBlock = new StyleKey(typeof(MainWindow));
-            public static readonly StyleKey RightAlignedTextBlock = new StyleKey(typeof(MainWindow));
-            public static readonly StyleKey Label = new StyleKey(typeof(MainWindow));
+            public static readonly StyleId CheckBox = new StyleId(typeof(MainWindow));
+            public static readonly StyleId LeftAlignedTextBlock = new StyleId(typeof(MainWindow));
+            public static readonly StyleId RightAlignedTextBlock = new StyleId(typeof(MainWindow));
+            public static readonly StyleId Label = new StyleId(typeof(MainWindow));
         }
 
         private class Presenter : DataPresenter<SalesOrder>, ColumnHeader.ISortService

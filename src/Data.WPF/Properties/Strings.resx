@@ -207,6 +207,9 @@
   <data name="Pane_NullPalceholder" xml:space="preserve">
     <value>Placeholder '{name}' is null.</value>
   </data>
+  <data name="ResourceId_ResourceNotFound" xml:space="preserve">
+    <value>Cannot find resource in the ResourceDictionary.</value>
+  </data>
   <data name="RowBinding_OutOfRowRange" xml:space="preserve">
     <value>RowBindings[{index}] is out of the RowRange.</value>
   </data>
@@ -257,9 +260,6 @@
   </data>
   <data name="ScalarValidationMessage_EmptySourceScalars" xml:space="preserve">
     <value>The source scalars cannot be empty.</value>
-  </data>
-  <data name="StyleKey_StyleNotFound" xml:space="preserve">
-    <value>Cannot find Style in the ResourceDictionary.</value>
   </data>
   <data name="TemplateBuilder_AsyncValidatorScopeConflict" xml:space="preserve">
     <value>Conflict between Template.ValidationScope and AsyncValidation.Scope detected.</value>

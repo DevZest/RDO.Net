@@ -11,7 +11,7 @@ namespace AdventureWorks.SalesOrders
     {
         public static class Styles
         {
-            public static readonly StyleKey DataSheet = new StyleKey(typeof(SalesOrderForm));
+            public static readonly StyleId DataSheet = new StyleId(typeof(SalesOrderForm));
         }
 
         private class Presenter : DataPresenter<SalesOrderToEdit>, ForeignKeyBox.ILookupService

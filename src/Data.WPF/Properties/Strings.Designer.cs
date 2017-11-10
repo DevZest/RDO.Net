@@ -252,6 +252,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Cannot find resource in the ResourceDictionary.
+        /// </summary>
+        public static string ResourceId_ResourceNotFound
+        {
+            get { return GetString("ResourceId_ResourceNotFound"); }
+        }
+
+        /// <summary>
         /// RowBindings[{index}] is out of the RowRange.
         /// </summary>
         public static string RowBinding_OutOfRowRange(object index)
@@ -385,14 +393,6 @@ namespace DevZest.Data
         public static string ScalarValidationMessage_EmptySourceScalars
         {
             get { return GetString("ScalarValidationMessage_EmptySourceScalars"); }
-        }
-
-        /// <summary>
-        /// Cannot find Style in the ResourceDictionary.
-        /// </summary>
-        public static string StyleKey_StyleNotFound
-        {
-            get { return GetString("StyleKey_StyleNotFound"); }
         }
 
         /// <summary>

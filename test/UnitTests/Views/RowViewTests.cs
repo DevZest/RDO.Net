@@ -9,7 +9,7 @@ namespace DevZest.Data.Views
         [TestMethod]
         public void RowView_Styles_Selectable_Style_is_not_null()
         {
-            Assert.IsNotNull(RowView.Styles.Selectable.Style);
+            Assert.IsNotNull(RowView.Styles.Selectable.GetOrLoad());
         }
     }
 }

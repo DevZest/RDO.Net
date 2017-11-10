@@ -59,6 +59,7 @@
     <Compile Include="Presenters\IScalars.cs" />
     <Compile Include="Presenters\IScalarValidationMessages.cs" />
     <Compile Include="Presenters\BlockViewAlternation.cs" />
+    <Compile Include="Presenters\Primitives\ResourceId.cs" />
     <Compile Include="Presenters\RowBindingPlugin.cs" />
     <Compile Include="Presenters\RowViewAlternation.cs" />
     <Compile Include="Presenters\BlockViewPlugin.cs" />
@@ -116,7 +117,7 @@
     <Compile Include="Presenters\CompositeBlockBinding_T.cs" />
     <Compile Include="Presenters\CommandEntry.cs" />
     <Compile Include="Presenters\DataPresenter_T.cs" />
-    <Compile Include="Presenters\StyleKeyRelativeToAttribute.cs" />
+    <Compile Include="Presenters\ResourceIdRelativeToAttribute.cs" />
     <Compile Include="Presenters\ExplicitTrigger.cs" />
     <Compile Include="Presenters\IRowAsyncValidators.cs" />
     <Compile Include="Presenters\BlockPresenter.cs" />
@@ -134,7 +135,7 @@
     <Compile Include="Presenters\CompositeRowBinding_T.cs" />
     <Compile Include="Presenters\CompositeScalarBinding_T.cs" />
     <Compile Include="Presenters\Scalar_T.cs" />
-    <Compile Include="Presenters\StyleKey.cs" />
+    <Compile Include="Presenters\StyleId.cs" />
     <Compile Include="Utilities\DependencyObject.FindAncestor.cs" />
     <Compile Include="Utilities\Double.IfZero.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />

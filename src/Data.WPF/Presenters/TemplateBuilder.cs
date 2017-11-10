@@ -283,15 +283,15 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder BlockView<T>(StyleKey styleKey)
+        public TemplateBuilder BlockView<T>(StyleId styleId)
             where T : BlockView, new()
         {
             if (_inherited)
                 return this;
 
-            if (styleKey == null)
-                throw new ArgumentNullException(nameof(styleKey));
-            return BlockView<T>(styleKey.Style);
+            if (styleId == null)
+                throw new ArgumentNullException(nameof(styleId));
+            return BlockView<T>(styleId.GetOrLoad());
         }
 
         public TemplateBuilder RowView<T>(Style style = null)
@@ -304,15 +304,15 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder RowView<T>(StyleKey styleKey)
+        public TemplateBuilder RowView<T>(StyleId styleId)
             where T : RowView, new()
         {
             if (_inherited)
                 return this;
 
-            if (styleKey == null)
-                throw new ArgumentNullException(nameof(styleKey));
-            return RowView<T>(styleKey.Style);
+            if (styleId == null)
+                throw new ArgumentNullException(nameof(styleId));
+            return RowView<T>(styleId.GetOrLoad());
         }
 
         public TemplateBuilder AddBinding(int column, int row, ScalarBinding scalarBinding)

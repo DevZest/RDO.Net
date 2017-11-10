@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 
-namespace DevZest.Data.Presenters
+namespace DevZest.Data.Presenters.Primitives
 {
-    public class StyleKey
+    public abstract class ResourceId<T>
+        where T : class
     {
-        static StyleKey()
+        static ResourceId()
         {
             // Workaround UriFormatException: Invalid URI: Invalid port specified
             // https://stackoverflow.com/questions/6005398/uriformatexception-invalid-uri-invalid-port-specified
             var currentApp = Application.Current;
         }
 
-        public StyleKey(Type type)
+        protected ResourceId(Type type)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
@@ -22,24 +22,26 @@ namespace DevZest.Data.Presenters
         }
 
         private readonly string _uriString;
-        private Style _style;
-        public Style Style
+        private T _loadedResource;
+        public T GetOrLoad()
         {
-            get { return _style ?? (_style = LoadStyle()); }
+            return _loadedResource ?? (_loadedResource = LoadResource());
         }
 
-        private Style LoadStyle()
+        private T LoadResource()
         {
-            var result = (Style)(LoadResourceDictionary(_uriString)[this]);
+            var result = LoadResourceDictionary(_uriString)[this] as T; 
             if (result == null)
-                throw new InvalidOperationException(Strings.StyleKey_StyleNotFound);
+                throw new InvalidOperationException(Strings.ResourceId_ResourceNotFound);
             return result;
         }
 
-        private static string GetUriString(Type type)
+        private string GetUriString(Type type)
         {
-            return string.Format(CultureInfo.InvariantCulture, "pack://application:,,,/{0};component/{1}{2}.Styles.xaml", type.Assembly.GetName().Name, GetPath(type), type.Name);
+            return string.Format(CultureInfo.InvariantCulture, "pack://application:,,,/{0};component/{1}{2}.{3}.xaml", type.Assembly.GetName().Name, GetPath(type), type.Name, UriSuffix);
         }
+
+        protected abstract string UriSuffix { get; }
 
         private static string GetPath(Type type)
         {
@@ -47,7 +49,7 @@ namespace DevZest.Data.Presenters
             if (result.Length == 0)
                 return result;
 
-            var relativeTo = StyleKeyRelativeToAttribute.GetStyleKeyRelativeTo(type.Assembly);
+            var relativeTo = ResourceIdRelativeToAttribute.GetResourceIdRelativeTo(type.Assembly);
 
             if (result.StartsWith(relativeTo))
                 result = result.Substring(relativeTo.Length, result.Length - relativeTo.Length);
