@@ -55,9 +55,9 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onSetup;
         private void Setup(T element, ScalarPresenter scalarPresenter)
         {
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Setup(element, scalarPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Setup(element, scalarPresenter);
             if (_onSetup != null)
                 _onSetup(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
@@ -75,9 +75,9 @@ namespace DevZest.Data.Presenters
         internal void Refresh(T element, ScalarPresenter scalarPresenter)
         {
             _isRefreshing = true;
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Refresh(element, scalarPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Refresh(element, scalarPresenter);
             if (_onRefresh != null)
                 _onRefresh(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
@@ -89,9 +89,9 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onCleanup;
         private void Cleanup(T element, ScalarPresenter scalarPresenter)
         {
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Cleanup(element, scalarPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Cleanup(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
             if (scalarElement != null)
                 scalarElement.Cleanup(scalarPresenter);

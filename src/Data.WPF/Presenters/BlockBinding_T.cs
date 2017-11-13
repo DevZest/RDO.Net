@@ -39,9 +39,9 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onSetup;
         private void Setup(T element, BlockPresenter blockPresenter)
         {
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Setup(element, blockPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Setup(element, blockPresenter);
             if (_onSetup != null)
                 _onSetup(element, blockPresenter);
             var blockElement = element as IBlockElement;
@@ -52,9 +52,9 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onRefresh;
         private void Refresh(T element, BlockPresenter blockPresenter)
         {
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Refresh(element, blockPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Refresh(element, blockPresenter);
             if (_onRefresh != null)
                 _onRefresh(element, blockPresenter);
             var blockElement = element as IBlockElement;
@@ -65,9 +65,9 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onCleanup;
         private void Cleanup(T element, BlockPresenter blockPresenter)
         {
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Cleanup(element, blockPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Cleanup(element, blockPresenter);
             var blockElement = element as IBlockElement;
             if (blockElement != null)
                 blockElement.Cleanup(blockPresenter);
@@ -126,12 +126,12 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        internal void InternalAddBehavior(IBlockBindingBehavior plugin)
+        internal void InternalAddBehavior(IBlockBindingBehavior behavior)
         {
-            Debug.Assert(plugin != null);
+            Debug.Assert(behavior != null);
             if (_behaviors == null)
                 _behaviors = new List<IBlockBindingBehavior>();
-            _behaviors.Add(plugin);
+            _behaviors.Add(behavior);
         }
 
         internal override UIElement GetChild(UIElement parent, int index)

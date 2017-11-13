@@ -180,11 +180,11 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements(true);
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
             {
-                plugins[i].Setup(this);
-                plugins[i].Refresh(this);
+                behaviors[i].Setup(this);
+                behaviors[i].Refresh(this);
             }
             this.SetupCommandEntries(rowPresenter?.DataPresenter?.GetService<ICommandService>().GetCommandEntries(this));
             SettingUp(this, EventArgs.Empty);
@@ -198,9 +198,9 @@ namespace DevZest.Data.Views
 
             CleaningUp(this, EventArgs.Empty);
             this.CleanupCommandEntries();
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Cleanup(this);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Cleanup(this);
             CleanupElements(true);
             RowPresenter.View = null;
             RowPresenter = null;
@@ -296,9 +296,9 @@ namespace DevZest.Data.Views
                 rowBinding.Refresh(element);
             }
 
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Refresh(this);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Refresh(this);
             Refreshing(this, EventArgs.Empty);
         }
 

@@ -45,9 +45,9 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter> _onSetup;
         private void Setup(T element, RowPresenter rowPresenter)
         {
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Setup(element, rowPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Setup(element, rowPresenter);
             if (_onSetup != null)
                 _onSetup(element, rowPresenter);
             var rowElement = element as IRowElement;
@@ -65,9 +65,9 @@ namespace DevZest.Data.Presenters
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
             _isRefreshing = true;
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Refresh(element, rowPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Refresh(element, rowPresenter);
             if (_onRefresh != null)
                 _onRefresh(element, rowPresenter);
             var rowElement = element as IRowElement;
@@ -79,9 +79,9 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter> _onCleanup;
         private void Cleanup(T element, RowPresenter rowPresenter)
         {
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Cleanup(element, rowPresenter);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Cleanup(element, rowPresenter);
             var rowElement = element as IRowElement;
             if (rowElement != null)
                 rowElement.Cleanup(rowPresenter);

@@ -51,11 +51,11 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements();
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
             {
-                plugins[i].Setup(this);
-                plugins[i].Refresh(this);
+                behaviors[i].Setup(this);
+                behaviors[i].Refresh(this);
             }
         }
 
@@ -128,9 +128,9 @@ namespace DevZest.Data.Views
 
         internal sealed override void Cleanup()
         {
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Cleanup(this);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Cleanup(this);
             CleanupElements();
             _elementManager = null;
             _ordinal = -1;
@@ -287,9 +287,9 @@ namespace DevZest.Data.Views
                 Refresh(blockBindings[i], index++);
 
             OnRefresh();
-            var plugins = Behaviors;
-            for (int i = 0; i < plugins.Count; i++)
-                plugins[i].Refresh(this);
+            var behaviors = Behaviors;
+            for (int i = 0; i < behaviors.Count; i++)
+                behaviors[i].Refresh(this);
         }
 
         private void Refresh(BlockBinding blockBinding, int index)
