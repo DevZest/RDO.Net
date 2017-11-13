@@ -39,9 +39,9 @@ namespace DevZest.Data.Views
             get { return _elementManager.DataPresenter; }
         }
 
-        private IReadOnlyList<BlockViewPlugin> Plugins
+        private IReadOnlyList<BlockViewBehavior> Behaviors
         {
-            get { return _elementManager.Template.BlockViewPlugins; }
+            get { return _elementManager.Template.BlockViewBehaviors; }
         }
 
         internal sealed override void Setup(ElementManager elementManager, int ordinal)
@@ -51,7 +51,7 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements();
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
             {
                 plugins[i].Setup(this);
@@ -128,7 +128,7 @@ namespace DevZest.Data.Views
 
         internal sealed override void Cleanup()
         {
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Cleanup(this);
             CleanupElements();
@@ -287,7 +287,7 @@ namespace DevZest.Data.Views
                 Refresh(blockBindings[i], index++);
 
             OnRefresh();
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Refresh(this);
         }

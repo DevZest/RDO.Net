@@ -3,7 +3,7 @@ using DevZest.Data.Views;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class BlockViewPlugin
+    public abstract class BlockViewBehavior
     {
         protected internal abstract void Setup(BlockView blockView);
 

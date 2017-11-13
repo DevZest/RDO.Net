@@ -549,24 +549,24 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private List<BlockViewPlugin> _blockViewPlugins;
-        public IReadOnlyList<BlockViewPlugin> BlockViewPlugins
+        private List<BlockViewBehavior> _blockViewBehaviors;
+        public IReadOnlyList<BlockViewBehavior> BlockViewBehaviors
         {
             get
             {
-                if (_blockViewPlugins == null)
-                    return Array<BlockViewPlugin>.Empty;
+                if (_blockViewBehaviors == null)
+                    return Array<BlockViewBehavior>.Empty;
                 else
-                    return _blockViewPlugins;
+                    return _blockViewBehaviors;
             }
         }
 
-        internal void AddPlugin(BlockViewPlugin plugin)
+        internal void AddBehavior(BlockViewBehavior behavior)
         {
-            Debug.Assert(plugin != null);
-            if (_blockViewPlugins == null)
-                _blockViewPlugins = new List<BlockViewPlugin>();
-            _blockViewPlugins.Add(plugin);
+            Debug.Assert(behavior != null);
+            if (_blockViewBehaviors == null)
+                _blockViewBehaviors = new List<BlockViewBehavior>();
+            _blockViewBehaviors.Add(behavior);
         }
 
         internal List<RowViewBehavior> _rowViewBehaviors;

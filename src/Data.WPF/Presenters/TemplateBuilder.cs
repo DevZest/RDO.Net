@@ -412,27 +412,27 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddPlugin(BlockViewPlugin plugin)
+        public TemplateBuilder AddBehavior(BlockViewBehavior behavior)
         {
             if (_inherited)
                 return this;
 
-            if (plugin == null)
-                throw new ArgumentNullException(nameof(plugin));
+            if (behavior == null)
+                throw new ArgumentNullException(nameof(behavior));
 
-            Template.AddPlugin(plugin);
+            Template.AddBehavior(behavior);
             return this;
         }
 
-        public TemplateBuilder AddPlugin(RowViewBehavior plugin)
+        public TemplateBuilder AddBehavior(RowViewBehavior behavior)
         {
             if (_inherited)
                 return this;
 
-            if (plugin == null)
-                throw new ArgumentNullException(nameof(plugin));
+            if (behavior == null)
+                throw new ArgumentNullException(nameof(behavior));
 
-            Template.AddBehavior(plugin);
+            Template.AddBehavior(behavior);
             return this;
         }
     }

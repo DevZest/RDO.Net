@@ -120,7 +120,7 @@ namespace AdventureWorks.SalesOrders
                 .AddBinding(9, 1, _.TotalDue.AsTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock).AddPlugin(new TotalDueConditionalFormat(_.TotalDue)))
                 .AddBinding(2, 2, 8, 2, "Total: ".AsLabel().WithStyle(Styles.Label).WithFrozenRightShrink(true))
                 .AddBinding(9, 2, CalcTotalAmtFunc.AsTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock).AddPlugin(new TotalAmtConditionalFormat(CalcTotalAmtFunc)))
-                .AddPlugin(new RowViewAlternation());
+                .AddBehavior(new RowViewAlternation());
             }
         }
     }

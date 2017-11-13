@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class BlockViewAlternation : BlockViewPlugin
+    public sealed class BlockViewAlternation : BlockViewBehavior
     {
         public BlockViewAlternation()
             : this(new Brush[] { Brushes.White, Brushes.LightGray })
