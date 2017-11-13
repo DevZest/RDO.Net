@@ -178,13 +178,13 @@ namespace DevZest.Data.Presenters
             return rowBinding;
         }
 
-        public static ScalarBinding<T> AddPlugin<T, TPlugin>(this ScalarBinding<T> scalarBinding, ScalarBindingPlugin<TPlugin> plugin)
-            where TPlugin : UIElement, new()
-            where T : TPlugin, new()
+        public static ScalarBinding<T> AddBehavior<T, TBase>(this ScalarBinding<T> scalarBinding, ScalarBindingBehavior<TBase> behavior)
+            where TBase : UIElement, new()
+            where T : TBase, new()
         {
-            if (plugin == null)
-                throw new ArgumentNullException(nameof(plugin));
-            scalarBinding.InternalAddPlugin(plugin);
+            if (behavior == null)
+                throw new ArgumentNullException(nameof(behavior));
+            scalarBinding.InternalAddBehavior(behavior);
             return scalarBinding;
         }
 

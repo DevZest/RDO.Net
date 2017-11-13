@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace AdventureWorks.SalesOrders
 {
-    public sealed class TotalAmtConditionalFormat : ScalarBindingPlugin<TextBlock>
+    public sealed class TotalAmtConditionalFormat : ScalarBindingBehavior<TextBlock>
     {
         public TotalAmtConditionalFormat(Func<decimal?> calculation)
         {

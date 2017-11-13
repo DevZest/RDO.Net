@@ -55,7 +55,7 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onSetup;
         private void Setup(T element, ScalarPresenter scalarPresenter)
         {
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Setup(element, scalarPresenter);
             if (_onSetup != null)
@@ -75,7 +75,7 @@ namespace DevZest.Data.Presenters
         internal void Refresh(T element, ScalarPresenter scalarPresenter)
         {
             _isRefreshing = true;
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Refresh(element, scalarPresenter);
             if (_onRefresh != null)
@@ -89,7 +89,7 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onCleanup;
         private void Cleanup(T element, ScalarPresenter scalarPresenter)
         {
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Cleanup(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
@@ -179,24 +179,24 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        private List<IScalarBindingPlugin> _plugins;
-        public IReadOnlyList<IScalarBindingPlugin> Plugins
+        private List<IScalarBindingBehavior> _behaviors;
+        public IReadOnlyList<IScalarBindingBehavior> Behaviors
         {
             get
             {
-                if (_plugins == null)
-                    return Array<IScalarBindingPlugin>.Empty;
+                if (_behaviors == null)
+                    return Array<IScalarBindingBehavior>.Empty;
                 else
-                    return _plugins;
+                    return _behaviors;
             }
         }
 
-        internal void InternalAddPlugin(IScalarBindingPlugin plugin)
+        internal void InternalAddBehavior(IScalarBindingBehavior behavior)
         {
-            Debug.Assert(plugin != null);
-            if (_plugins == null)
-                _plugins = new List<IScalarBindingPlugin>();
-            _plugins.Add(plugin);
+            Debug.Assert(behavior != null);
+            if (_behaviors == null)
+                _behaviors = new List<IScalarBindingBehavior>();
+            _behaviors.Add(behavior);
         }
 
         internal override UIElement GetChild(UIElement parent, int index)
