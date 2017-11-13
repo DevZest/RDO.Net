@@ -60,7 +60,7 @@
     <Compile Include="Presenters\IScalarValidationMessages.cs" />
     <Compile Include="Presenters\BlockViewAlternation.cs" />
     <Compile Include="Presenters\Primitives\ResourceId.cs" />
-    <Compile Include="Presenters\RowBindingPlugin.cs" />
+    <Compile Include="Presenters\RowBindingBehavior.cs" />
     <Compile Include="Presenters\RowViewAlternation.cs" />
     <Compile Include="Presenters\BlockViewBehavior.cs" />
     <Compile Include="Presenters\RowViewBehavior.cs" />

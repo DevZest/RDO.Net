@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace AdventureWorks.SalesOrders
 {
-    public sealed class TotalDueConditionalFormat : RowBindingPlugin<TextBlock>
+    public sealed class TotalDueConditionalFormat : RowBindingBehavior<TextBlock>
     {
         public TotalDueConditionalFormat(_Decimal totalAmt)
         {

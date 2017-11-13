@@ -45,7 +45,7 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter> _onSetup;
         private void Setup(T element, RowPresenter rowPresenter)
         {
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Setup(element, rowPresenter);
             if (_onSetup != null)
@@ -65,7 +65,7 @@ namespace DevZest.Data.Presenters
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
             _isRefreshing = true;
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Refresh(element, rowPresenter);
             if (_onRefresh != null)
@@ -79,7 +79,7 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter> _onCleanup;
         private void Cleanup(T element, RowPresenter rowPresenter)
         {
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Cleanup(element, rowPresenter);
             var rowElement = element as IRowElement;
@@ -157,24 +157,24 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        private List<IRowBindingPlugin> _plugins;
-        public IReadOnlyList<IRowBindingPlugin> Plugins
+        private List<IRowBindingBehavior> _behaviors;
+        public IReadOnlyList<IRowBindingBehavior> Behaviors
         {
             get
             {
-                if (_plugins == null)
-                    return Array<IRowBindingPlugin>.Empty;
+                if (_behaviors == null)
+                    return Array<IRowBindingBehavior>.Empty;
                 else
-                    return _plugins;
+                    return _behaviors;
             }
         }
 
-        internal void InternalAddPlugin(IRowBindingPlugin plugin)
+        internal void InternalAddBehavior(IRowBindingBehavior behavior)
         {
-            Debug.Assert(plugin != null);
-            if (_plugins == null)
-                _plugins = new List<IRowBindingPlugin>();
-            _plugins.Add(plugin);
+            Debug.Assert(behavior != null);
+            if (_behaviors == null)
+                _behaviors = new List<IRowBindingBehavior>();
+            _behaviors.Add(behavior);
         }
 
         internal override UIElement GetChild(UIElement parent, int index)

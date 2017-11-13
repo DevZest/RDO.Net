@@ -168,13 +168,13 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentException(Strings.Binding_InvalidCompositeView, paramName);
         }
 
-        public static RowBinding<T> AddPlugin<T, TPlugin>(this RowBinding<T> rowBinding, RowBindingPlugin<TPlugin> plugin)
-            where TPlugin : UIElement, new()
-            where T : TPlugin, new()
+        public static RowBinding<T> AddBehavior<T, TBase>(this RowBinding<T> rowBinding, RowBindingBehavior<TBase> behavior)
+            where TBase : UIElement, new()
+            where T : TBase, new()
         {
-            if (plugin == null)
-                throw new ArgumentNullException(nameof(plugin));
-            rowBinding.InternalAddPlugin(plugin);
+            if (behavior == null)
+                throw new ArgumentNullException(nameof(behavior));
+            rowBinding.InternalAddBehavior(behavior);
             return rowBinding;
         }
 
