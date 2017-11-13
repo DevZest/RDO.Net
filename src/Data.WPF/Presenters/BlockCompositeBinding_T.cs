@@ -1,23 +1,18 @@
-﻿using DevZest.Data.Presenters.Primitives;
+﻿using DevZest.Data.Views;
+using DevZest.Data.Presenters.Primitives;
 using System.Windows;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class CompositeRowBinding<T> : RowBindingBase<T>
+    public sealed class BlockCompositeBinding<T> : BlockBindingBase<T>
         where T : UIElement, new()
     {
-        private List<RowBinding> _childBindings = new List<RowBinding>();
+        private List<BlockBinding> _childBindings = new List<BlockBinding>();
         private List<Func<T, UIElement>> _childGetters = new List<Func<T, UIElement>>();
 
-        public IReadOnlyList<RowBinding> ChildBindings
-        {
-            get { return _childBindings; }
-        }
-
-        public CompositeRowBinding<T> AddChild<TChild>(RowBinding<TChild> childBinding, Func<T, TChild> childGetter)
+        public BlockCompositeBinding<T> AddChild<TChild>(BlockBinding<TChild> childBinding, Func<T, TChild> childGetter)
             where TChild : UIElement, new()
         {
             Binding.VerifyAdding(childBinding, nameof(childBinding));
@@ -32,47 +27,44 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        internal override void BeginSetup(UIElement value)
+
+        public IReadOnlyList<Binding> ChildBindings
+        {
+            get { return _childBindings; }
+        }
+
+        internal sealed override void BeginSetup(UIElement value)
         {
             base.BeginSetup(value);
             for (int i = 0; i < _childBindings.Count; i++)
             {
                 var childBinding = _childBindings[i];
-                var childGetter = _childGetters[i];
-                var child = childGetter(SettingUpElement);
+                var child = _childGetters[i](SettingUpElement);
                 if (child != null)
                     childBinding.BeginSetup(child);
             }
         }
 
-        internal override void EndSetup()
+        internal sealed override void EndSetup()
         {
             base.EndSetup();
             for (int i = 0; i < _childBindings.Count; i++)
                 _childBindings[i].EndSetup();
         }
 
-        internal sealed override void PerformSetup(RowPresenter rowPresenter)
+        internal sealed override void PerformSetup(BlockView blockView)
         {
             for (int i = 0; i < _childBindings.Count; i++)
             {
                 var childBinding = _childBindings[i];
                 if (childBinding.GetSettingUpElement() != null)
-                    childBinding.Setup(rowPresenter);
+                    childBinding.Setup(blockView);
             }
-        }
-
-        private bool _isRefreshing;
-        public override bool IsRefreshing
-        {
-            get { return _isRefreshing; }
         }
 
         internal sealed override void Refresh(UIElement element)
         {
-            _isRefreshing = true;
             PerformRefresh((T)element);
-            _isRefreshing = false;
         }
 
         private void PerformRefresh(T element)
@@ -101,23 +93,6 @@ namespace DevZest.Data.Presenters
                 var child = childGetter(element);
                 if (child != null)
                     childBinding.Cleanup(child);
-            }
-        }
-
-        internal sealed override void FlushInput(UIElement element)
-        {
-            PerformFlushInput((T)element);
-        }
-
-        private void PerformFlushInput(T element)
-        {
-            for (int i = 0; i < _childBindings.Count; i++)
-            {
-                var childBinding = _childBindings[i];
-                var childGetter = _childGetters[i];
-                var child = childGetter(element);
-                if (child != null)
-                    childBinding.FlushInput(child);
             }
         }
 

@@ -6,13 +6,18 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class CompositeScalarBinding<T> : ScalarBindingBase<T>
+    public sealed class RowCompositeBinding<T> : RowBindingBase<T>
         where T : UIElement, new()
     {
-        private List<ScalarBinding> _childBindings = new List<ScalarBinding>();
+        private List<RowBinding> _childBindings = new List<RowBinding>();
         private List<Func<T, UIElement>> _childGetters = new List<Func<T, UIElement>>();
 
-        public CompositeScalarBinding<T> AddChild<TChild>(ScalarBinding<TChild> childBinding, Func<T, TChild> childGetter)
+        public IReadOnlyList<RowBinding> ChildBindings
+        {
+            get { return _childBindings; }
+        }
+
+        public RowCompositeBinding<T> AddChild<TChild>(RowBinding<TChild> childBinding, Func<T, TChild> childGetter)
             where TChild : UIElement, new()
         {
             Binding.VerifyAdding(childBinding, nameof(childBinding));
@@ -27,42 +32,6 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public IReadOnlyList<Binding> ChildBindings
-        {
-            get { return _childBindings; }
-        }
-
-        internal override UIElement GetChild(UIElement parent, int index)
-        {
-            return _childGetters[index]((T)parent);
-        }
-
-        internal override void BeginSetup(int startOffset, UIElement[] elements)
-        {
-            base.BeginSetup(startOffset, elements);
-            for (int i = 0; i < _childBindings.Count; i++)
-            {
-                var childBinding = _childBindings[i];
-                var childGetter = _childGetters[i];
-                var children = GetChildren(SettingUpElements, childGetter);
-                if (children != null)
-                    childBinding.BeginSetup(startOffset, children);
-            }
-        }
-
-        private static UIElement[] GetChildren(IReadOnlyList<T> parents, Func<T, UIElement> childGetter)
-        {
-            var result = new UIElement[parents.Count];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var child = childGetter(parents[i]);
-                if (child == null)
-                    return null;
-                result[i] = child;
-            }
-            return result;
-        }
-
         internal override void BeginSetup(UIElement value)
         {
             base.BeginSetup(value);
@@ -70,7 +39,7 @@ namespace DevZest.Data.Presenters
             {
                 var childBinding = _childBindings[i];
                 var childGetter = _childGetters[i];
-                var child = childGetter(GetSettingUpElement(0));
+                var child = childGetter(SettingUpElement);
                 if (child != null)
                     childBinding.BeginSetup(child);
             }
@@ -83,18 +52,13 @@ namespace DevZest.Data.Presenters
                 _childBindings[i].EndSetup();
         }
 
-        internal sealed override void PerformSetup(T element, ScalarPresenter scalarPresenter)
+        internal sealed override void PerformSetup(RowPresenter rowPresenter)
         {
-            var flowIndex = scalarPresenter.FlowIndex;
             for (int i = 0; i < _childBindings.Count; i++)
             {
                 var childBinding = _childBindings[i];
-                var child = _childGetters[i](element);
-                if (child != null)
-                {
-                    child.SetScalarFlowIndex(flowIndex);
-                    childBinding.Setup(flowIndex);
-                }
+                if (childBinding.GetSettingUpElement() != null)
+                    childBinding.Setup(rowPresenter);
             }
         }
 
@@ -136,10 +100,7 @@ namespace DevZest.Data.Presenters
                 var childGetter = _childGetters[i];
                 var child = childGetter(element);
                 if (child != null)
-                {
                     childBinding.Cleanup(child);
-                    child.SetScalarFlowIndex(0);
-                }
             }
         }
 
@@ -158,6 +119,11 @@ namespace DevZest.Data.Presenters
                 if (child != null)
                     childBinding.FlushInput(child);
             }
+        }
+
+        internal override UIElement GetChild(UIElement parent, int index)
+        {
+            return _childGetters[index]((T)parent);
         }
     }
 }

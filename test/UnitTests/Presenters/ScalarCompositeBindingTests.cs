@@ -6,21 +6,21 @@ using System.Windows.Controls;
 namespace DevZest.Data.Presenters
 {
     [TestClass]
-    public class CompositeScalarBindingTests
+    public class ScalarCompositeBindingTests
     {
         [TestMethod]
-        public void CompositeScalarBinding()
+        public void ScalarCompositeBinding()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
             ScalarBinding<TextBlock> textBlock = null;
-            CompositeScalarBinding<XamlPane> pane = null;
+            ScalarCompositeBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 textBlock = _.Name.AsScalarTextBlock();
                 label = _.Name.AsScalarLabel(textBlock);
-                pane = new CompositeScalarBinding<XamlPane>().AddChild(label, v => v.Label).AddChild(textBlock, v => v.TextBlock);
+                pane = new ScalarCompositeBinding<XamlPane>().AddChild(label, v => v.Label).AddChild(textBlock, v => v.TextBlock);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)
@@ -44,12 +44,12 @@ namespace DevZest.Data.Presenters
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
             ScalarBinding<TextBlock> textBlock = null;
-            CompositeScalarBinding<XamlPane> pane = null;
+            ScalarCompositeBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 textBlock = _.Name.AsScalarTextBlock();
                 label = _.Name.AsFlowRepeatableScalarLabel(textBlock);
-                pane = new CompositeScalarBinding<XamlPane>().WithFlowRepeatable(true)
+                pane = new ScalarCompositeBinding<XamlPane>().WithFlowRepeatable(true)
                     .AddChild(label, v => v.Label).AddChild(textBlock, v => v.TextBlock);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")

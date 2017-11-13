@@ -7,11 +7,11 @@ namespace AdventureWorks.SalesOrders
 {
     public static class BindingFactory
     {
-        public static CompositeRowBinding<SalesOrderHeaderBox> AsSalesOrderHeaderBox(this SalesOrderToEdit _,
+        public static RowCompositeBinding<SalesOrderHeaderBox> AsSalesOrderHeaderBox(this SalesOrderToEdit _,
             out RowBinding<ForeignKeyBox> shipToAddressBinding, out RowBinding<ForeignKeyBox> billToAddressBinding)
         {
             var ext = _.GetExtension<SalesOrderToEdit.Ext>();
-            return new CompositeRowBinding<SalesOrderHeaderBox>()
+            return new RowCompositeBinding<SalesOrderHeaderBox>()
                 .AddChild(_.Customer.AsForeignKeyBox(ext.Customer, CustomerBox.RefreshAction), v => v._customer)
                 .AddChild(shipToAddressBinding = _.ShipToAddress.AsForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)
                 .AddChild(billToAddressBinding = _.BillToAddress.AsForeignKeyBox(ext.BillToAddress, AddressBox.RefreshAction), v => v._billTo)
@@ -28,18 +28,18 @@ namespace AdventureWorks.SalesOrders
                 .AddChild(_.Comment.AsTextBox(), v => v._comment);
         }
 
-        public static CompositeRowBinding<SalesOrderFooterBox> AsSalesOrderFooterBox(this SalesOrder _)
+        public static RowCompositeBinding<SalesOrderFooterBox> AsSalesOrderFooterBox(this SalesOrder _)
         {
-            return new CompositeRowBinding<SalesOrderFooterBox>()
+            return new RowCompositeBinding<SalesOrderFooterBox>()
                 .AddChild(_.SubTotal.AsTextBlock("{0:C}"), v => v._subTotal)
                 .AddChild(_.Freight.AsTextBox(), v => v._freight)
                 .AddChild(_.TaxAmt.AsTextBox(), v => v._taxAmt)
                 .AddChild(_.TotalDue.AsTextBlock("{0:C}"), v => v._totalDue);
         }
 
-        public static CompositeRowBinding<AddressBox> AsAddressBox(this Address _)
+        public static RowCompositeBinding<AddressBox> AsAddressBox(this Address _)
         {
-            return new CompositeRowBinding<AddressBox>()
+            return new RowCompositeBinding<AddressBox>()
                 .AddChild(_.AddressLine1.AsTextBlock(), v => v._addressLine1)
                 .AddChild(_.AddressLine2.AsTextBlock(), v => v._addressLine2)
                 .AddChild(_.City.AsTextBlock(), v => v._city)

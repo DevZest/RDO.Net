@@ -114,7 +114,7 @@
     <Compile Include="Presenters\BindingManager.cs" />
     <Compile Include="Presenters\BindingFactory.cs" />
     <Compile Include="Presenters\BindingFactory.TextBox.cs" />
-    <Compile Include="Presenters\CompositeBlockBinding_T.cs" />
+    <Compile Include="Presenters\BlockCompositeBinding_T.cs" />
     <Compile Include="Presenters\CommandEntry.cs" />
     <Compile Include="Presenters\DataPresenter_T.cs" />
     <Compile Include="Presenters\ResourceIdRelativeToAttribute.cs" />
@@ -132,8 +132,8 @@
     <Compile Include="Views\Primitives\ContainerView.cs" />
     <Compile Include="Presenters\Primitives\ScrollableManager.VariantLengthHandler.cs" />
     <Compile Include="Presenters\Primitives\TwoWayBinding.cs" />
-    <Compile Include="Presenters\CompositeRowBinding_T.cs" />
-    <Compile Include="Presenters\CompositeScalarBinding_T.cs" />
+    <Compile Include="Presenters\RowCompositeBinding_T.cs" />
+    <Compile Include="Presenters\ScalarCompositeBinding_T.cs" />
     <Compile Include="Presenters\Scalar_T.cs" />
     <Compile Include="Presenters\StyleId.cs" />
     <Compile Include="Utilities\DependencyObject.FindAncestor.cs" />

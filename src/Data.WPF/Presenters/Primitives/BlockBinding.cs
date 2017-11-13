@@ -57,7 +57,7 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Parent; }
         }
 
-        internal void Seal<T>(CompositeBlockBinding<T> parent, int ordinal)
+        internal void Seal<T>(BlockCompositeBinding<T> parent, int ordinal)
             where T : UIElement, new()
         {
             Parent = parent;

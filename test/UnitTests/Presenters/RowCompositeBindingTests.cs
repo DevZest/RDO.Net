@@ -5,21 +5,21 @@ using System.Windows.Controls;
 namespace DevZest.Data.Presenters
 {
     [TestClass]
-    public class CompositeRowBindingTests
+    public class RowCompositeBindingTests
     {
         [TestMethod]
-        public void CompositeRowBinding_XAML()
+        public void RowCompositeBinding_XAML()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;
             RowBinding<Label> label = null;
             RowBinding<TextBlock> textBlock = null;
-            CompositeRowBinding<XamlPane> pane = null;
+            RowCompositeBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 textBlock = _.Name.AsTextBlock();
                 label = _.Name.AsLabel(textBlock);
-                pane = new CompositeRowBinding<XamlPane>().AddChild(label, v => v.Label).AddChild(textBlock, v => v.TextBlock);
+                pane = new RowCompositeBinding<XamlPane>().AddChild(label, v => v.Label).AddChild(textBlock, v => v.TextBlock);
                 builder.GridRows("100").GridColumns("100").AddBinding(0, 0, pane);
             });
 

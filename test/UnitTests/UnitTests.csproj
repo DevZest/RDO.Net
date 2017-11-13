@@ -85,7 +85,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Presenters\BlockBindingTests.cs" />
-    <Compile Include="Presenters\CompositeBlockBindingTests.cs" />
+    <Compile Include="Presenters\BlockCompositeBindingTests.cs" />
     <Compile Include="Presenters\DataSetExtensions.cs" />
     <Compile Include="Presenters\BindingFactory.cs" />
     <Compile Include="Presenters\DataSetMock.cs" />
@@ -99,9 +99,9 @@
     <Compile Include="Presenters\Primitives\RowMapperTests.cs" />
     <Compile Include="Presenters\Primitives\RowNormalizerTests.cs" />
     <Compile Include="Presenters\RowBindingTests.cs" />
-    <Compile Include="Presenters\CompositeRowBindingTests.cs" />
+    <Compile Include="Presenters\RowCompositeBindingTests.cs" />
     <Compile Include="Presenters\ScalarBindingTests.cs" />
-    <Compile Include="Presenters\CompositeScalarBindingTests.cs" />
+    <Compile Include="Presenters\ScalarCompositeBindingTests.cs" />
     <Compile Include="Presenters\ValidationTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
