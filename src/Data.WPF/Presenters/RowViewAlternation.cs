@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowViewAlternation : RowViewPlugin
+    public sealed class RowViewAlternation : RowViewBehavior
     {
         public RowViewAlternation()
             : this(new Brush[] { Brushes.White, Brushes.LightGray })

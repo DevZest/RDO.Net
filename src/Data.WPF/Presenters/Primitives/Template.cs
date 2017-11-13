@@ -569,24 +569,24 @@ namespace DevZest.Data.Presenters.Primitives
             _blockViewPlugins.Add(plugin);
         }
 
-        internal List<RowViewPlugin> _rowViewPlugins;
-        public IReadOnlyList<RowViewPlugin> RowViewPlugins
+        internal List<RowViewBehavior> _rowViewBehaviors;
+        public IReadOnlyList<RowViewBehavior> RowViewBehaviors
         {
             get
             {
-                if (_rowViewPlugins == null)
-                    return Array<RowViewPlugin>.Empty;
+                if (_rowViewBehaviors == null)
+                    return Array<RowViewBehavior>.Empty;
                 else
-                    return _rowViewPlugins;
+                    return _rowViewBehaviors;
             }
         }
 
-        internal void AddPlugin(RowViewPlugin plugin)
+        internal void AddBehavior(RowViewBehavior behavior)
         {
-            Debug.Assert(plugin != null);
-            if (_rowViewPlugins == null)
-                _rowViewPlugins = new List<RowViewPlugin>();
-            _rowViewPlugins.Add(plugin);
+            Debug.Assert(behavior != null);
+            if (_rowViewBehaviors == null)
+                _rowViewBehaviors = new List<RowViewBehavior>();
+            _rowViewBehaviors.Add(behavior);
         }
 
         internal void InitializeAsInherited()

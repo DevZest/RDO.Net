@@ -116,9 +116,9 @@ namespace DevZest.Data.Views
             get { return _elementManager; }
         }
 
-        private IReadOnlyList<RowViewPlugin> Plugins
+        private IReadOnlyList<RowViewBehavior> Behaviors
         {
-            get { return _elementManager.Template.RowViewPlugins; }
+            get { return _elementManager.Template.RowViewBehaviors; }
         }
 
         internal RowBindingCollection RowBindings
@@ -180,7 +180,7 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements(true);
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
             {
                 plugins[i].Setup(this);
@@ -198,7 +198,7 @@ namespace DevZest.Data.Views
 
             CleaningUp(this, EventArgs.Empty);
             this.CleanupCommandEntries();
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Cleanup(this);
             CleanupElements(true);
@@ -296,7 +296,7 @@ namespace DevZest.Data.Views
                 rowBinding.Refresh(element);
             }
 
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Refresh(this);
             Refreshing(this, EventArgs.Empty);

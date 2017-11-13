@@ -424,7 +424,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddPlugin(RowViewPlugin plugin)
+        public TemplateBuilder AddPlugin(RowViewBehavior plugin)
         {
             if (_inherited)
                 return this;
@@ -432,7 +432,7 @@ namespace DevZest.Data.Presenters
             if (plugin == null)
                 throw new ArgumentNullException(nameof(plugin));
 
-            Template.AddPlugin(plugin);
+            Template.AddBehavior(plugin);
             return this;
         }
     }

@@ -3,7 +3,7 @@ using DevZest.Data.Views;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class RowViewPlugin
+    public abstract class RowViewBehavior
     {
         protected internal abstract void Setup(RowView rowView);
 

@@ -63,7 +63,7 @@
     <Compile Include="Presenters\RowBindingPlugin.cs" />
     <Compile Include="Presenters\RowViewAlternation.cs" />
     <Compile Include="Presenters\BlockViewPlugin.cs" />
-    <Compile Include="Presenters\RowViewPlugin.cs" />
+    <Compile Include="Presenters\RowViewBehavior.cs" />
     <Compile Include="Presenters\BlockBindingPlugin.cs" />
     <Compile Include="Presenters\ScalarBindingPlugin.cs" />
     <Compile Include="Presenters\Primitives\AsyncValidator_T.cs" />
