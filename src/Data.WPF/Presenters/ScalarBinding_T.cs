@@ -179,23 +179,23 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        private List<IScalarBindingBehavior> _behaviors;
-        public IReadOnlyList<IScalarBindingBehavior> Behaviors
+        private List<IScalarBindingBehavior<T>> _behaviors;
+        public IReadOnlyList<IScalarBindingBehavior<T>> Behaviors
         {
             get
             {
                 if (_behaviors == null)
-                    return Array<IScalarBindingBehavior>.Empty;
+                    return Array<IScalarBindingBehavior<T>>.Empty;
                 else
                     return _behaviors;
             }
         }
 
-        internal void InternalAddBehavior(IScalarBindingBehavior behavior)
+        internal void InternalAddBehavior(IScalarBindingBehavior<T> behavior)
         {
             Debug.Assert(behavior != null);
             if (_behaviors == null)
-                _behaviors = new List<IScalarBindingBehavior>();
+                _behaviors = new List<IScalarBindingBehavior<T>>();
             _behaviors.Add(behavior);
         }
 

@@ -168,9 +168,8 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentException(Strings.Binding_InvalidCompositeView, paramName);
         }
 
-        public static RowBinding<T> AddBehavior<T, TBase>(this RowBinding<T> rowBinding, RowBindingBehavior<TBase> behavior)
-            where TBase : UIElement, new()
-            where T : TBase, new()
+        public static RowBinding<T> AddBehavior<T>(this RowBinding<T> rowBinding, IRowBindingBehavior<T> behavior)
+            where T : UIElement, new()
         {
             if (behavior == null)
                 throw new ArgumentNullException(nameof(behavior));
@@ -178,9 +177,8 @@ namespace DevZest.Data.Presenters
             return rowBinding;
         }
 
-        public static ScalarBinding<T> AddBehavior<T, TBase>(this ScalarBinding<T> scalarBinding, ScalarBindingBehavior<TBase> behavior)
-            where TBase : UIElement, new()
-            where T : TBase, new()
+        public static ScalarBinding<T> AddBehavior<T>(this ScalarBinding<T> scalarBinding, IScalarBindingBehavior<T> behavior)
+            where T : UIElement, new()
         {
             if (behavior == null)
                 throw new ArgumentNullException(nameof(behavior));
@@ -188,9 +186,8 @@ namespace DevZest.Data.Presenters
             return scalarBinding;
         }
 
-        public static BlockBinding<T> AddBehavior<T, TBase>(this BlockBinding<T> blockBinding, BlockBindingBehavior<TBase> behavior)
-            where TBase : UIElement, new()
-            where T : TBase, new()
+        public static BlockBinding<T> AddBehavior<T>(this BlockBinding<T> blockBinding, IBlockBindingBehavior<T> behavior)
+            where T : UIElement, new()
         {
             if (behavior == null)
                 throw new ArgumentNullException(nameof(behavior));

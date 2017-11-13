@@ -114,23 +114,23 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        private List<IBlockBindingBehavior> _behaviors;
-        public IReadOnlyList<IBlockBindingBehavior> Behaviors
+        private List<IBlockBindingBehavior<T>> _behaviors;
+        public IReadOnlyList<IBlockBindingBehavior<T>> Behaviors
         {
             get
             {
                 if (_behaviors == null)
-                    return Array<IBlockBindingBehavior>.Empty;
+                    return Array<IBlockBindingBehavior<T>>.Empty;
                 else
                     return _behaviors;
             }
         }
 
-        internal void InternalAddBehavior(IBlockBindingBehavior behavior)
+        internal void InternalAddBehavior(IBlockBindingBehavior<T> behavior)
         {
             Debug.Assert(behavior != null);
             if (_behaviors == null)
-                _behaviors = new List<IBlockBindingBehavior>();
+                _behaviors = new List<IBlockBindingBehavior<T>>();
             _behaviors.Add(behavior);
         }
 

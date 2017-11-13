@@ -157,23 +157,23 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        private List<IRowBindingBehavior> _behaviors;
-        public IReadOnlyList<IRowBindingBehavior> Behaviors
+        private List<IRowBindingBehavior<T>> _behaviors;
+        public IReadOnlyList<IRowBindingBehavior<T>> Behaviors
         {
             get
             {
                 if (_behaviors == null)
-                    return Array<IRowBindingBehavior>.Empty;
+                    return Array<IRowBindingBehavior<T>>.Empty;
                 else
                     return _behaviors;
             }
         }
 
-        internal void InternalAddBehavior(IRowBindingBehavior behavior)
+        internal void InternalAddBehavior(IRowBindingBehavior<T> behavior)
         {
             Debug.Assert(behavior != null);
             if (_behaviors == null)
-                _behaviors = new List<IRowBindingBehavior>();
+                _behaviors = new List<IRowBindingBehavior<T>>();
             _behaviors.Add(behavior);
         }
 

@@ -3,33 +3,34 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public interface IScalarBindingBehavior
+    public interface IScalarBindingBehavior<in T>
+        where T : UIElement, new()
     {
-        void Setup(UIElement view, ScalarPresenter presenter);
-        void Refresh(UIElement view, ScalarPresenter presenter);
-        void Cleanup(UIElement view, ScalarPresenter presenter);
+        void Setup(T view, ScalarPresenter presenter);
+        void Refresh(T view, ScalarPresenter presenter);
+        void Cleanup(T view, ScalarPresenter presenter);
     }
 
-    public abstract class ScalarBindingBehavior<T> : IScalarBindingBehavior
+    public abstract class ScalarBindingBehavior<T> : IScalarBindingBehavior<T>
         where T : UIElement, new()
     {
         protected abstract void Setup(T view, ScalarPresenter presenter);
         protected abstract void Refresh(T view, ScalarPresenter presenter);
         protected abstract void Cleanup(T view, ScalarPresenter presenter);
 
-        void IScalarBindingBehavior.Setup(UIElement view, ScalarPresenter presenter)
+        void IScalarBindingBehavior<T>.Setup(T view, ScalarPresenter presenter)
         {
-            Setup((T)view, presenter);
+            Setup(view, presenter);
         }
 
-        void IScalarBindingBehavior.Refresh(UIElement view, ScalarPresenter presenter)
+        void IScalarBindingBehavior<T>.Refresh(T view, ScalarPresenter presenter)
         {
-            Refresh((T)view, presenter);
+            Refresh(view, presenter);
         }
 
-        void IScalarBindingBehavior.Cleanup(UIElement view, ScalarPresenter presenter)
+        void IScalarBindingBehavior<T>.Cleanup(T view, ScalarPresenter presenter)
         {
-            Cleanup((T)view, presenter);
+            Cleanup(view, presenter);
         }
     }
 }
