@@ -39,7 +39,7 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onSetup;
         private void Setup(T element, BlockPresenter blockPresenter)
         {
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Setup(element, blockPresenter);
             if (_onSetup != null)
@@ -52,7 +52,7 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onRefresh;
         private void Refresh(T element, BlockPresenter blockPresenter)
         {
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Refresh(element, blockPresenter);
             if (_onRefresh != null)
@@ -65,7 +65,7 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onCleanup;
         private void Cleanup(T element, BlockPresenter blockPresenter)
         {
-            var plugins = Plugins;
+            var plugins = Behaviors;
             for (int i = 0; i < plugins.Count; i++)
                 plugins[i].Cleanup(element, blockPresenter);
             var blockElement = element as IBlockElement;
@@ -114,24 +114,24 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        private List<IBlockBindingPlugin> _plugins;
-        public IReadOnlyList<IBlockBindingPlugin> Plugins
+        private List<IBlockBindingBehavior> _behaviors;
+        public IReadOnlyList<IBlockBindingBehavior> Behaviors
         {
             get
             {
-                if (_plugins == null)
-                    return Array<IBlockBindingPlugin>.Empty;
+                if (_behaviors == null)
+                    return Array<IBlockBindingBehavior>.Empty;
                 else
-                    return _plugins;
+                    return _behaviors;
             }
         }
 
-        internal void InternalAddPlugin(IBlockBindingPlugin plugin)
+        internal void InternalAddBehavior(IBlockBindingBehavior plugin)
         {
             Debug.Assert(plugin != null);
-            if (_plugins == null)
-                _plugins = new List<IBlockBindingPlugin>();
-            _plugins.Add(plugin);
+            if (_behaviors == null)
+                _behaviors = new List<IBlockBindingBehavior>();
+            _behaviors.Add(plugin);
         }
 
         internal override UIElement GetChild(UIElement parent, int index)
