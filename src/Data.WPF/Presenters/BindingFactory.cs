@@ -13,7 +13,7 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowCompositeBinding<InPlaceEditor> AsInPlaceEditor<T>(this RowBinding<T> editingRowBinding, string format = null, IFormatProvider formatProvider = null)
+        public static RowCompositeBinding<InertEditor> AsInPlaceEditor<T>(this RowBinding<T> editingRowBinding, string format = null, IFormatProvider formatProvider = null)
             where T : UIElement, new()
         {
             if (editingRowBinding.Input == null)
@@ -26,7 +26,7 @@ namespace DevZest.Data.Presenters
             return ComposeInPlaceEditor(editingRowBinding, inertRowBinding);
         }
 
-        public static RowCompositeBinding<InPlaceEditor> AsInPlaceEditor<TEditing, TInert>(this RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
+        public static RowCompositeBinding<InertEditor> AsInPlaceEditor<TEditing, TInert>(this RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
             where TEditing : UIElement, new()
             where TInert : UIElement, new()
         {
@@ -37,7 +37,7 @@ namespace DevZest.Data.Presenters
             return ComposeInPlaceEditor(editingRowBinding, inertRowBinding);
         }
 
-        private static RowCompositeBinding<InPlaceEditor> ComposeInPlaceEditor<TEditing, TInert>(RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
+        private static RowCompositeBinding<InertEditor> ComposeInPlaceEditor<TEditing, TInert>(RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
             where TEditing : UIElement, new()
             where TInert : UIElement, new()
         {
