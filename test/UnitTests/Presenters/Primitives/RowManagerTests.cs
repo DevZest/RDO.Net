@@ -171,15 +171,16 @@ namespace DevZest.Data.Presenters.Primitives
             var rows = rowManager.Rows;
 
             rowManager.BeginInsertBefore(null, rows[0]);
-            Assert.AreEqual(2, rows.Count);
-            Assert.IsTrue(rows[0].IsVirtual);
+            Assert.AreEqual(3, rows.Count);
+            Assert.IsTrue(rows[0].IsInserting);
+            Assert.IsTrue(rows[2].IsVirtual);
             rowManager.RollbackEdit();
             Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
             Assert.IsTrue(rows[1].IsVirtual);
 
             rowManager.BeginInsertBefore(null, rows[0]);
-            Assert.AreEqual(2, rows.Count);
+            Assert.AreEqual(3, rows.Count);
             Assert.IsTrue(rows[0].IsVirtual);
             rowManager.EndEdit();
             Assert.AreEqual(3, rows.Count);
@@ -196,16 +197,17 @@ namespace DevZest.Data.Presenters.Primitives
             var rows = rowManager.Rows;
 
             rowManager.BeginInsertAfter(null, rows[0]);
-            Assert.AreEqual(2, rows.Count);
-            Assert.IsTrue(rows[1].IsVirtual);
+            Assert.AreEqual(3, rows.Count);
+            Assert.IsTrue(rows[1].IsInserting);
+            Assert.IsTrue(rows[2].IsVirtual);
             rowManager.RollbackEdit();
             Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
             Assert.IsTrue(rows[1].IsVirtual);
 
             rowManager.BeginInsertAfter(null, rows[0]);
-            Assert.AreEqual(2, rows.Count);
-            Assert.IsTrue(rows[1].IsVirtual);
+            Assert.AreEqual(3, rows.Count);
+            Assert.IsTrue(rows[1].IsInserting);
             rowManager.EndEdit();
             Assert.AreEqual(3, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
