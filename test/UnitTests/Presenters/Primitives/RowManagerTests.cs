@@ -250,5 +250,53 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.IsTrue(rows[0].IsInserting);
             Assert.IsTrue(rows[1].IsVirtual);
         }
+
+        [TestMethod]
+        public void RowManager_InsertBeforeChild()
+        {
+            var dataSet = DataSetMock.ProductCategories(3);
+            var rowManager = CreateRowManager(dataSet);
+            var rows = rowManager.Rows;
+            rows[0].Expand();
+            var subRows = rows[0].Children;
+            Assert.AreEqual(3, subRows.Count);
+
+            rowManager.BeginInsertBefore(rows[0], subRows[0]);
+            Assert.AreEqual(rows[1], rowManager.CurrentRow);
+            Assert.AreEqual(7, rows.Count);
+            Assert.IsTrue(rows[1].IsInserting);
+            rowManager.RollbackEdit();
+            Assert.AreEqual(rows[1], rowManager.CurrentRow);
+            Assert.AreEqual(6, rows.Count);
+
+            rowManager.BeginInsertBefore(rows[0], subRows[0]);
+            rowManager.EndEdit();
+            Assert.AreEqual(rows[1], rowManager.CurrentRow);
+            Assert.AreEqual(7, rows.Count);
+        }
+
+        [TestMethod]
+        public void RowManager_InsertAfterChild()
+        {
+            var dataSet = DataSetMock.ProductCategories(3);
+            var rowManager = CreateRowManager(dataSet);
+            var rows = rowManager.Rows;
+            rows[0].Expand();
+            var subRows = rows[0].Children;
+            Assert.AreEqual(3, subRows.Count);
+
+            rowManager.BeginInsertAfter(rows[0], subRows[0]);
+            Assert.AreEqual(rows[2], rowManager.CurrentRow);
+            Assert.AreEqual(7, rows.Count);
+            Assert.IsTrue(rows[2].IsInserting);
+            rowManager.RollbackEdit();
+            Assert.AreEqual(rows[1], rowManager.CurrentRow);
+            Assert.AreEqual(6, rows.Count);
+
+            rowManager.BeginInsertAfter(rows[0], subRows[0]);
+            rowManager.EndEdit();
+            Assert.AreEqual(rows[2], rowManager.CurrentRow);
+            Assert.AreEqual(7, rows.Count);
+        }
     }
 }

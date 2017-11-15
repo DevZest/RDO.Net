@@ -367,7 +367,7 @@ namespace DevZest.Data.Presenters.Primitives
 
                 protected override DataSet GetDataSet(RowManager rowManager)
                 {
-                    return ParentRow.DataSet;
+                    return ParentRow.DataRow[rowManager.Template.RecursiveModelOrdinal];
                 }
 
                 public override void OnRowsChanged(RowManager rowManager)
