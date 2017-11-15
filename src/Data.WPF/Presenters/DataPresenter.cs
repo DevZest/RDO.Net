@@ -194,8 +194,11 @@ namespace DevZest.Data.Presenters
         {
             if (!CanInsert)
                 throw new InvalidOperationException(Strings.DataPresenter_VerifyCanInsert);
-            if (row != null && row.DataPresenter != this)
-                throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, nameof(row));
+            if (row != null)
+            {
+                if (row.DataPresenter != this || row.Parent != null)
+                    throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, nameof(row));
+            }
         }
 
         public void InvalidateView()
