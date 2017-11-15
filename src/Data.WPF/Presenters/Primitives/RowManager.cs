@@ -141,7 +141,23 @@ namespace DevZest.Data.Presenters.Primitives
                 }
 
                 private RowPresenter _reference;
-                private int _referenceRawIndex;
+                protected RowPresenter Reference
+                {
+                    get { return _reference; }
+                    set
+                    {
+                        Debug.Assert(value == null || !value.IsVirtual);
+                        _reference = value;
+                        RefreshReferenceRawIndex();
+                    }
+                }
+
+                protected int ReferenceRawIndex { get; private set; }
+
+                private void RefreshReferenceRawIndex()
+                {
+                    ReferenceRawIndex = _reference == null ? -1 : _reference.RawIndex;
+                }
 
                 private RowPresenter _insertingRow;
                 public sealed override RowPresenter InsertingRow
@@ -205,22 +221,6 @@ namespace DevZest.Data.Presenters.Primitives
                     rowManager.CoerceCurrentRow();
                 }
 
-                protected RowPresenter Reference
-                {
-                    get { return _reference; }
-                    set
-                    {
-                        Debug.Assert(value == null || !value.IsVirtual);
-                        _reference = value;
-                        RefreshReferenceRawIndex();
-                    }
-                }
-
-                private void RefreshReferenceRawIndex()
-                {
-                    _referenceRawIndex = _reference == null ? -1 : _reference.RawIndex;
-                }
-
                 protected sealed override void OpenEdit(RowManager rowManager)
                 {
                     if (rowManager.VirtualRow != null)
@@ -248,11 +248,7 @@ namespace DevZest.Data.Presenters.Primitives
                     if (Reference != null)
                     {
                         if (Reference.IsDisposed)
-                        {
-                            var baseRows = rowManager.BaseRows;
-                            var rawIndex = Math.Min(_referenceRawIndex, baseRows.Count - 1);
-                            Reference = rawIndex >= 0 ? baseRows[rawIndex] : null;
-                        }
+                            Reference = GetReferenceForDisposed(rowManager);
                         else
                             RefreshReferenceRawIndex();
                     }
@@ -260,6 +256,14 @@ namespace DevZest.Data.Presenters.Primitives
                         rowManager.VirtualRow.RawIndex = rowManager.Rows.Count - 1;
                     if (InsertingRow != null)
                         InsertingRow.RawIndex = GetInsertingRowRawIndex(rowManager);
+                }
+
+                protected virtual RowPresenter GetReferenceForDisposed(RowManager rowManager)
+                {
+                    Debug.Assert(Reference.IsDisposed);
+                    var baseRows = rowManager.BaseRows;
+                    var rawIndex = Math.Min(ReferenceRawIndex, baseRows.Count - 1);
+                    return rawIndex >= 0 ? baseRows[rawIndex] : null;
                 }
 
                 protected abstract int GetInsertingRowRawIndex(RowManager rowManager);
@@ -378,6 +382,16 @@ namespace DevZest.Data.Presenters.Primitives
                         base.OnRowsChanged(rowManager);
                         RefreshParentRowRawIndex();
                     }
+                }
+
+                protected override RowPresenter GetReferenceForDisposed(RowManager rowManager)
+                {
+                    Debug.Assert(Reference.IsDisposed);
+                    var children = ParentRow.Children;
+                    if (children.Count == 0)
+                        return null;
+                    var index = Math.Min(ReferenceRawIndex - children[0].RawIndex, children.Count - 1);
+                    return children[index];
                 }
 
                 protected sealed override RowPresenter GetCurrentRowAfterRollback(RowManager rowManager)
