@@ -192,6 +192,22 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         [TestMethod]
+        public void RowManager_InsertBefore_reference_deleted()
+        {
+            var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
+            var rows = rowManager.Rows;
+
+            rowManager.BeginInsertBefore(null, rows[0]);
+            dataSet.RemoveAt(0);
+            Assert.IsTrue(rowManager.IsEditing);
+            Assert.AreEqual(2, rows.Count);
+            Assert.AreEqual(rows[0], rowManager.CurrentRow);
+            Assert.IsTrue(rows[0].IsInserting);
+            Assert.IsTrue(rows[1].IsVirtual);
+        }
+
+        [TestMethod]
         public void RowManager_InsertAfter()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
@@ -217,6 +233,22 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
             Assert.AreEqual(dataSet[1], rows[1].DataRow);
             Assert.IsTrue(rows[2].IsVirtual);
+        }
+
+        [TestMethod]
+        public void RowManager_InsertAfter_reference_deleted()
+        {
+            var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
+            var rows = rowManager.Rows;
+
+            rowManager.BeginInsertAfter(null, rows[0]);
+            dataSet.RemoveAt(0);
+            Assert.IsTrue(rowManager.IsEditing);
+            Assert.AreEqual(2, rows.Count);
+            Assert.AreEqual(rows[0], rowManager.CurrentRow);
+            Assert.IsTrue(rows[0].IsInserting);
+            Assert.IsTrue(rows[1].IsVirtual);
         }
     }
 }

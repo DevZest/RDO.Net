@@ -141,7 +141,7 @@ namespace DevZest.Data.Presenters.Primitives
                 }
 
                 private RowPresenter _reference;
-                private int _referenceIndex;
+                private int _referenceRawIndex;
 
                 private RowPresenter _insertingRow;
                 public sealed override RowPresenter InsertingRow
@@ -212,13 +212,13 @@ namespace DevZest.Data.Presenters.Primitives
                     {
                         Debug.Assert(value == null || !value.IsVirtual);
                         _reference = value;
-                        RefreshReferenceIndex();
+                        RefreshReferenceRawIndex();
                     }
                 }
 
-                private void RefreshReferenceIndex()
+                private void RefreshReferenceRawIndex()
                 {
-                    _referenceIndex = _reference == null ? -1 : _reference.Index;
+                    _referenceRawIndex = _reference == null ? -1 : _reference.RawIndex;
                 }
 
                 protected sealed override void OpenEdit(RowManager rowManager)
@@ -245,26 +245,21 @@ namespace DevZest.Data.Presenters.Primitives
 
                 public override void OnRowsChanged(RowManager rowManager)
                 {
-                    if (rowManager.VirtualRowPlacement == VirtualRowPlacement.Tail)
-                        rowManager.VirtualRow.RawIndex = rowManager.Rows.Count - 1;
-                    if (InsertingRow != null)
-                        InsertingRow.RawIndex = GetInsertingRowRawIndex(rowManager);
                     if (Reference != null)
                     {
                         if (Reference.IsDisposed)
                         {
-                            var rows = rowManager.Rows;
-                            var index = _referenceIndex;
-                            if (index > rows.Count)
-                                index = rows.Count - 1;
-                            var newValue = index == -1 ? null : rows[index];
-                            if (newValue.IsVirtual)
-                                newValue = null;
-                            Reference = newValue;
+                            var baseRows = rowManager.BaseRows;
+                            var rawIndex = Math.Min(_referenceRawIndex, baseRows.Count - 1);
+                            Reference = rawIndex >= 0 ? baseRows[rawIndex] : null;
                         }
                         else
-                            RefreshReferenceIndex();
+                            RefreshReferenceRawIndex();
                     }
+                    if (rowManager.VirtualRowPlacement == VirtualRowPlacement.Tail)
+                        rowManager.VirtualRow.RawIndex = rowManager.Rows.Count - 1;
+                    if (InsertingRow != null)
+                        InsertingRow.RawIndex = GetInsertingRowRawIndex(rowManager);
                 }
 
                 protected abstract int GetInsertingRowRawIndex(RowManager rowManager);
@@ -342,7 +337,7 @@ namespace DevZest.Data.Presenters.Primitives
                 protected InsertChildHandler(RowPresenter parentRow, RowPresenter reference)
                     : base(reference)
                 {
-                    Debug.Assert(parentRow != null);
+                    Debug.Assert(parentRow != null && !parentRow.IsVirtual);
                     Debug.Assert(reference == null || reference.Parent == parentRow);
                     ParentRow = parentRow;
                 }
@@ -353,16 +348,17 @@ namespace DevZest.Data.Presenters.Primitives
                     get { return _parentRow; }
                     private set
                     {
-                        Debug.Assert(_parentRow == null && value != null);
-                        RefreshParentRowIndex();
+                        Debug.Assert(_parentRow == null && value != null && !value.IsVirtual);
+                        _parentRow = value;
+                        RefreshParentRowRawIndex();
                     }
                 }
 
-                public int ParentRowIndex { get; private set; } = -1;
-                private void RefreshParentRowIndex()
+                public int ParentRowRawIndex { get; private set; } = -1;
+                private void RefreshParentRowRawIndex()
                 {
                     Debug.Assert(ParentRow != null);
-                    ParentRowIndex = ParentRow.Index;
+                    ParentRowRawIndex = ParentRow.RawIndex;
                 }
 
                 protected override DataSet GetDataSet(RowManager rowManager)
@@ -380,7 +376,7 @@ namespace DevZest.Data.Presenters.Primitives
                     else
                     {
                         base.OnRowsChanged(rowManager);
-                        RefreshParentRowIndex();
+                        RefreshParentRowRawIndex();
                     }
                 }
 
@@ -390,9 +386,9 @@ namespace DevZest.Data.Presenters.Primitives
                         return Reference;
                     if (ParentRow.IsDisposed)
                     {
-                        var rows = rowManager.Rows;
-                        var index = Math.Min(ParentRowIndex, rows.Count - 1);
-                        return index >= 0 ? rows[index] : null;
+                        var baseRows = rowManager.BaseRows;
+                        var index = Math.Min(ParentRowRawIndex, baseRows.Count - 1);
+                        return index >= 0 ? baseRows[index] : null;
                     }
                     else
                     {
