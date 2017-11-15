@@ -398,5 +398,23 @@ namespace DevZest.Data
             Assert.AreEqual(null, dataSet.EditingRow);
             Assert.AreEqual(0, dataSet.Count);
         }
+
+        [TestMethod]
+        public void DataSet_Insert_into_child_data_set_at_index_0()
+        {
+            int count = 3;
+            var dataSet = GetDataSet(count);
+            var childDataSet = dataSet[0][0];
+            var dataRow = new DataRow();
+            childDataSet.Insert(0, dataRow);
+            Assert.AreEqual(0, dataRow.Ordinal);
+            Assert.AreEqual(0, dataRow.Index);
+
+            childDataSet = dataSet[1][0];
+            dataRow = new DataRow();
+            childDataSet.Insert(0, dataRow);
+            Assert.AreEqual(4, dataRow.Ordinal);
+            Assert.AreEqual(0, dataRow.Index);
+        }
     }
 }

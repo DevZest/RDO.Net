@@ -130,7 +130,7 @@ namespace DevZest.Data
                     if (dataRow.Index > 0)
                         return this[dataRow.Index - 1].Ordinal + 1;  // after the previous DataRow
                     else
-                        return this[dataRow.Index + 1].Ordinal - 1;  // before the next DataRow
+                        return this[dataRow.Index + 1].Ordinal;  // before the next DataRow
                 }
 
                 return BinarySearchBaseDataSetOrdinal(dataRow);
