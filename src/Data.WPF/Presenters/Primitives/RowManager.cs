@@ -236,6 +236,8 @@ namespace DevZest.Data.Presenters.Primitives
                         rowManager.VirtualRow = new RowPresenter(rowManager, 0);
                     else if (rowManager.VirtualRowPlacement == VirtualRowPlacement.Tail)
                         rowManager.VirtualRow = new RowPresenter(rowManager, -1);
+                    else if (rowManager.VirtualRow != null)
+                        rowManager.VirtualRow = null;
                     rowManager.Editing = this;
                     rowManager.OnRowsChanged();
                     rowManager.SetCurrentRow(_insertingRow, false);
