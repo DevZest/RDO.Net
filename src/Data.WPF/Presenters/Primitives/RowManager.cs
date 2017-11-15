@@ -40,7 +40,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             private static EditHandler GetInsertBeforeHandler(RowManager rowManager, RowPresenter parent, RowPresenter child)
             {
-                return parent == null ? InsertHandler.Before(child) : null;
+                return parent == null ? InsertHandler.Before(child) : InsertChildHandler.Before(parent, child);
             }
 
             public static void BeginInsertAfter(RowManager rowManager, RowPresenter parent, RowPresenter child)
@@ -50,7 +50,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             private static EditHandler GetInsertAfterHandler(RowManager rowManager, RowPresenter parent, RowPresenter child)
             {
-                return parent == null ? InsertHandler.After(child) : null;
+                return parent == null ? InsertHandler.After(child) : InsertChildHandler.After(parent, child);
             }
 
             protected EditHandler()
@@ -323,6 +323,134 @@ namespace DevZest.Data.Presenters.Primitives
                             return Reference;
                         var rows = rowManager.Rows;
                         return rows.Count == 0 ? null : rows[rows.Count - 1];
+                    }
+                }
+            }
+
+            private abstract class InsertChildHandler : InsertHandler
+            {
+                public static InsertChildHandler Before(RowPresenter parentRow, RowPresenter reference)
+                {
+                    return new InsertBeforeChildHandler(parentRow, reference);
+                }
+
+                public static InsertChildHandler After(RowPresenter parentRow, RowPresenter reference)
+                {
+                    return new InsertAfterChildHandler(parentRow, reference);
+                }
+
+                protected InsertChildHandler(RowPresenter parentRow, RowPresenter reference)
+                    : base(reference)
+                {
+                    Debug.Assert(parentRow != null);
+                    Debug.Assert(reference == null || reference.Parent == parentRow);
+                    ParentRow = parentRow;
+                }
+
+                private RowPresenter _parentRow;
+                public RowPresenter ParentRow
+                {
+                    get { return _parentRow; }
+                    private set
+                    {
+                        Debug.Assert(_parentRow == null && value != null);
+                        RefreshParentRowIndex();
+                    }
+                }
+
+                public int ParentRowIndex { get; private set; } = -1;
+                private void RefreshParentRowIndex()
+                {
+                    Debug.Assert(ParentRow != null);
+                    ParentRowIndex = ParentRow.Index;
+                }
+
+                protected override DataSet GetDataSet(RowManager rowManager)
+                {
+                    return ParentRow.DataSet;
+                }
+
+                public override void OnRowsChanged(RowManager rowManager)
+                {
+                    if (ParentRow.IsDisposed)
+                    {
+                        CancelEdit(rowManager);
+                        base.OnRowsChanged(rowManager);
+                    }
+                    else
+                    {
+                        base.OnRowsChanged(rowManager);
+                        RefreshParentRowIndex();
+                    }
+                }
+
+                protected sealed override RowPresenter GetCurrentRowAfterRollback(RowManager rowManager)
+                {
+                    if (Reference != null)
+                        return Reference;
+                    if (ParentRow.IsDisposed)
+                    {
+                        var rows = rowManager.Rows;
+                        var index = Math.Min(ParentRowIndex, rows.Count - 1);
+                        return index >= 0 ? rows[index] : null;
+                    }
+                    else
+                    {
+                        var rows = ParentRow.Children;
+                        return rows.Count == 0 ? ParentRow : rows[GetCurrentRowIndexAfterRollback(rows.Count)];
+                    }
+                }
+
+                protected abstract int GetCurrentRowIndexAfterRollback(int totalRows);
+
+                private sealed class InsertBeforeChildHandler : InsertChildHandler
+                {
+                    public InsertBeforeChildHandler(RowPresenter parentRow, RowPresenter reference)
+                        : base(parentRow, reference)
+                    {
+                    }
+
+                    protected override int GetInsertingRowRawIndex(RowManager rowManager)
+                    {
+                        if (Reference == null)
+                            return 0;
+                        else if (rowManager.IsEditing)
+                            return Reference.Index - 1;
+                        else
+                            return Reference.Index;
+                    }
+
+                    protected override int GetCommitEditIndex(RowManager rowManager)
+                    {
+                        return Reference == null ? 0 : Reference.DataRow.Index;
+                    }
+
+                    protected override int GetCurrentRowIndexAfterRollback(int totalRows)
+                    {
+                        return 0;
+                    }
+                }
+
+                private sealed class InsertAfterChildHandler : InsertChildHandler
+                {
+                    public InsertAfterChildHandler(RowPresenter parentRow, RowPresenter reference)
+                        : base(parentRow, reference)
+                    {
+                    }
+
+                    protected override int GetInsertingRowRawIndex(RowManager rowManager)
+                    {
+                        return Reference == null ? ParentRow.Children.Count - 1 : Reference.Index + 1;
+                    }
+
+                    protected override int GetCommitEditIndex(RowManager rowManager)
+                    {
+                        return Reference == null ? GetDataSet(rowManager).Count : Reference.DataRow.Index + 1;
+                    }
+
+                    protected override int GetCurrentRowIndexAfterRollback(int totalRows)
+                    {
+                        return totalRows - 1;
                     }
                 }
             }
