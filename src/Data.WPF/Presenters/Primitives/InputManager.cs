@@ -541,7 +541,7 @@ namespace DevZest.Data.Presenters.Primitives
                 return base.EndEdit();
 
             Debug.Assert(RowValidationScope == RowValidationScope.Current);
-            ValidateRows(true);
+            ValidateRows();
             var hasError = CurrentRowErrors.Count > 0;
             if (hasError)
                 return false;

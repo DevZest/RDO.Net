@@ -600,7 +600,6 @@ namespace DevZest.Data.Presenters.Primitives
                     SetCurrentRowFromView();
                 _currentRowChangedByInsertSuspended = false;
             }
-            InvalidateView();
         }
 
         private bool CanChangeCurrentRow
