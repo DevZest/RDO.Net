@@ -175,16 +175,13 @@ namespace DevZest.Data.Presenters.Primitives
                     get { return RowManager.DataSet; }
                 }
 
-                protected abstract RowPresenter CurrentRowAfterRollback { get; }
-
                 protected sealed override void RollbackEdit(RowManager rowManager)
                 {
                     Debug.Assert(!rowManager.IsEditing);
                     Debug.Assert(rowManager == RowManager);
 
                     DataSet.CancelAdd();
-                    DisposeInsertingRow(rowManager, CurrentRowAfterRollback);
-                    rowManager.OnRowsChanged();
+                    NotifyRowsChanged();
                 }
 
                 protected abstract int CommitEditIndex { get; }
@@ -200,26 +197,15 @@ namespace DevZest.Data.Presenters.Primitives
                     {
                         if (newCurrentRow != null)
                             rowManager.CurrentRow = newCurrentRow;
-                        else
-                            rowManager.CurrentRow = CurrentRowAfterRollback;
                     }
-                    DisposeInsertingRow();
-                    rowManager.OnRowsChanged();
+                    NotifyRowsChanged();
                 }
 
-                private void DisposeInsertingRow(RowManager rowManager, RowPresenter suggestedCurrentRow)
+                private void NotifyRowsChanged()
                 {
-                    DisposeInsertingRow();
-                    rowManager.CurrentRow = suggestedCurrentRow;
-                }
-
-                private void DisposeInsertingRow()
-                {
-                    var insertingRow = _insertingRow;
-                    _insertingRow = null;
-                    insertingRow.DataRow = null;
-                    insertingRow.RawIndex = -1;
-                    insertingRow.Dispose();
+                    _insertingRow.DataRow = null;
+                    _insertingRow.Dispose();
+                    RowManager.OnRowsChanged();
                 }
 
                 protected sealed override void OpenEdit(RowManager rowManager)
@@ -294,17 +280,6 @@ namespace DevZest.Data.Presenters.Primitives
                         }
                     }
 
-                    protected override RowPresenter CurrentRowAfterRollback
-                    {
-                        get
-                        {
-                            if (Reference != null)
-                                return Reference;
-                            var rows = RowManager.Rows;
-                            return rows.Count == 0 ? null : rows[0];
-                        }
-                    }
-
                     protected override int CommitEditIndex
                     {
                         get { return Reference == null ? 0 : Reference.DataRow.Index; }
@@ -331,17 +306,6 @@ namespace DevZest.Data.Presenters.Primitives
                     protected override int CommitEditIndex
                     {
                         get { return Reference == null ? DataSet.Count : Reference.DataRow.Index + 1; }
-                    }
-
-                    protected override RowPresenter CurrentRowAfterRollback
-                    {
-                        get
-                        {
-                            if (Reference != null)
-                                return Reference;
-                            var rows = RowManager.Rows;
-                            return rows.Count == 0 ? null : rows[rows.Count - 1];
-                        }
                     }
                 }
             }
@@ -414,26 +378,6 @@ namespace DevZest.Data.Presenters.Primitives
                             return null;
                         var index = Math.Min(ReferenceRawIndex - children[0].RawIndex, children.Count - 1);
                         return children[index];
-                    }
-                }
-
-                protected sealed override RowPresenter CurrentRowAfterRollback
-                {
-                    get
-                    {
-                        if (Reference != null)
-                            return Reference;
-                        if (ParentRow.IsDisposed)
-                        {
-                            var baseRows = RowManager.BaseRows;
-                            var index = Math.Min(ParentRowRawIndex, baseRows.Count - 1);
-                            return index >= 0 ? baseRows[index] : null;
-                        }
-                        else
-                        {
-                            var rows = ParentRow.Children;
-                            return rows.Count == 0 ? ParentRow : rows[GetCurrentRowIndexAfterRollback(rows.Count)];
-                        }
                     }
                 }
 
