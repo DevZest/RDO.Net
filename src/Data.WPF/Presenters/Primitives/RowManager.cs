@@ -172,15 +172,10 @@ namespace DevZest.Data.Presenters.Primitives
 
                 private void RollbackCurrentRow(RowManager rowManager)
                 {
-                    RollbackCurrentRow(rowManager, GetCurrentRowAfterRollback(rowManager));
+                    rowManager.CurrentRow = GetCurrentRowAfterRollback(rowManager);
                 }
 
                 protected abstract RowPresenter GetCurrentRowAfterRollback(RowManager rowManager);
-
-                protected virtual void RollbackCurrentRow(RowManager rowManager, RowPresenter newValue)
-                {
-                    rowManager.CurrentRow = newValue;
-                }
 
                 protected sealed override void RollbackEdit(RowManager rowManager)
                 {
