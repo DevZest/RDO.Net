@@ -170,11 +170,6 @@ namespace DevZest.Data.Presenters.Primitives
                     return rowManager.DataSet;
                 }
 
-                private void RollbackCurrentRow(RowManager rowManager)
-                {
-                    rowManager.CurrentRow = GetCurrentRowAfterRollback(rowManager);
-                }
-
                 protected abstract RowPresenter GetCurrentRowAfterRollback(RowManager rowManager);
 
                 protected sealed override void RollbackEdit(RowManager rowManager)
@@ -182,8 +177,7 @@ namespace DevZest.Data.Presenters.Primitives
                     Debug.Assert(!rowManager.IsEditing);
 
                     GetDataSet(rowManager).CancelAdd();
-                    RollbackCurrentRow(rowManager);
-                    DisposeInsertingRow(rowManager);
+                    DisposeInsertingRow(rowManager, GetCurrentRowAfterRollback(rowManager));
                     rowManager.OnRowsChanged();
                 }
 
@@ -200,10 +194,16 @@ namespace DevZest.Data.Presenters.Primitives
                         if (newCurrentRow != null)
                             rowManager.CurrentRow = newCurrentRow;
                         else
-                            RollbackCurrentRow(rowManager);
+                            rowManager.CurrentRow = GetCurrentRowAfterRollback(rowManager);
                     }
                     DisposeInsertingRow(rowManager);
                     rowManager.OnRowsChanged();
+                }
+
+                private void DisposeInsertingRow(RowManager rowManager, RowPresenter suggestedCurrentRow)
+                {
+                    DisposeInsertingRow(rowManager);
+                    rowManager.CurrentRow = suggestedCurrentRow;
                 }
 
                 private void DisposeInsertingRow(RowManager rowManager)
@@ -213,7 +213,6 @@ namespace DevZest.Data.Presenters.Primitives
                     insertingRow.DataRow = null;
                     insertingRow.RawIndex = -1;
                     insertingRow.Dispose();
-                    rowManager.CoerceCurrentRow();
                 }
 
                 protected sealed override void OpenEdit(RowManager rowManager)
