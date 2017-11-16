@@ -181,7 +181,7 @@ namespace DevZest.Data.Presenters.Primitives
                     Debug.Assert(rowManager == RowManager);
 
                     DataSet.CancelAdd();
-                    NotifyRowsChanged();
+                    DisposeInsertingRow(true);
                 }
 
                 protected abstract int CommitEditIndex { get; }
@@ -191,6 +191,7 @@ namespace DevZest.Data.Presenters.Primitives
                     Debug.Assert(!rowManager.IsEditing);
                     Debug.Assert(rowManager == RowManager);
 
+                    DisposeInsertingRow(false);
                     var newDataRow = DataSet.EndAdd(CommitEditIndex);
                     var newCurrentRow = rowManager[newDataRow];
                     if (!rowManager.CurrentRowChangeSuspended)
@@ -198,14 +199,14 @@ namespace DevZest.Data.Presenters.Primitives
                         if (newCurrentRow != null)
                             rowManager.CurrentRow = newCurrentRow;
                     }
-                    NotifyRowsChanged();
                 }
 
-                private void NotifyRowsChanged()
+                private void DisposeInsertingRow(bool notifyRowsChanged)
                 {
                     _insertingRow.DataRow = null;
                     _insertingRow.Dispose();
-                    RowManager.OnRowsChanged();
+                    if (notifyRowsChanged)
+                        RowManager.OnRowsChanged();
                 }
 
                 protected sealed override void OpenEdit(RowManager rowManager)
