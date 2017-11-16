@@ -35,6 +35,12 @@ namespace DevZest.Data.Presenters
             return new CommandEntry(command, executed, canExecute, inputGestures);
         }
 
+        public static CommandEntry Bind(this ICommand command, IReadOnlyList<InputGesture> inputGestures, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute)
+        {
+            Verify(command, executed, inputGestures);
+            return new CommandEntry(command, executed, canExecute, inputGestures);
+        }
+
         public static CommandEntry Bind(this ICommand command, InputGesture inputGesture)
         {
             Verify(command);
@@ -74,18 +80,18 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(inputGesture));
         }
 
-        private static void Verify(ICommand command, ExecutedRoutedEventHandler executed, InputGesture[] inputGestures)
+        private static void Verify(ICommand command, ExecutedRoutedEventHandler executed, IReadOnlyList<InputGesture> inputGestures)
         {
             Verify(command, executed);
             Verify(inputGestures);
         }
 
-        private static void Verify(InputGesture[] inputGestures)
+        private static void Verify(IReadOnlyList<InputGesture> inputGestures)
         {
-            if (inputGestures == null || inputGestures.Length == 0)
-                throw new ArgumentNullException(nameof(inputGestures));
+            if (inputGestures == null || inputGestures.Count == 0)
+                return;
 
-            for (int i = 0; i < inputGestures.Length; i++)
+            for (int i = 0; i < inputGestures.Count; i++)
             {
                 if (inputGestures[i] == null)
                     throw new ArgumentException(Strings.ArgumentNullAtIndex(nameof(inputGestures), i), nameof(inputGestures));

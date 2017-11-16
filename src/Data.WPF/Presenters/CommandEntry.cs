@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
@@ -19,7 +20,7 @@ namespace DevZest.Data.Presenters
                 else if (_inputGestures is InputGesture)
                     return 1;
                 else
-                    return ((InputGesture[])_inputGestures).Length;
+                    return ((IReadOnlyList<InputGesture>)_inputGestures).Count;
             }
         }
 
@@ -31,7 +32,7 @@ namespace DevZest.Data.Presenters
             if (_inputGestures is InputGesture)
                 return (InputGesture)_inputGestures;
             else
-                return ((InputGesture[])_inputGestures)[index];
+                return ((IReadOnlyList<InputGesture>)_inputGestures)[index];
         }
 
         internal CommandEntry(ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute, object inputGestures)

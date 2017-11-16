@@ -82,7 +82,9 @@ namespace DevZest.Data.Views
                     .AddBinding(2, 0, "Order".AsTextBlock())
                     .AddBinding(0, 1, _.AsRowHeader().WithStyle(RowHeader.Styles.Flat))
                     .AddBinding(1, 1, _.ColumnHeader.AsComboBox(ColumnHeaderSelection, "Value", "Display"))
-                    .AddBinding(2, 1, _.Direction.AsComboBox(DirectionSelection, "Value", "Display"));
+                    .AddBinding(2, 1, _.Direction.AsComboBox(DirectionSelection, "Value", "Display"))
+                    .WithRowViewCancelEditGestures(new KeyGesture(Key.Escape))
+                    .WithRowViewEndEditGestures(new KeyGesture(Key.Enter));
             }
         }
 

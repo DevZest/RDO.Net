@@ -6,6 +6,7 @@ using System.Windows.Input;
 using DevZest.Data.Views.Primitives;
 using DevZest.Data.Presenters;
 using System;
+using System.Linq;
 
 namespace DevZest.Data.Views
 {
@@ -14,6 +15,10 @@ namespace DevZest.Data.Views
     {
         public abstract class Commands
         {
+            public static readonly RoutedUICommand ToggleEdit = new RoutedUICommand();
+            public static readonly RoutedUICommand BeginEdit = new RoutedUICommand();
+            public static readonly RoutedUICommand CancelEdit = new RoutedUICommand();
+            public static readonly RoutedUICommand EndEdit = new RoutedUICommand();
             public static readonly RoutedUICommand Expand = new RoutedUICommand(UIText.RowViewCommands_ExpandCommandText, nameof(Expand), typeof(Commands));
             public static readonly RoutedUICommand Collapse = new RoutedUICommand(UIText.RowViewCommands_CollapseCommandText, nameof(Collapse), typeof(Commands));
         }
@@ -27,6 +32,11 @@ namespace DevZest.Data.Views
         {
             public DataPresenter DataPresenter { get; private set; }
 
+            private Template Template
+            {
+                get { return DataPresenter.Template; }
+            }
+
             public void Initialize(DataPresenter dataPresenter)
             {
                 DataPresenter = dataPresenter;
@@ -34,11 +44,71 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(RowView rowView)
             {
+                yield return Commands.ToggleEdit.Bind(Template.RowViewToggleEditGestures, ToggleEdit, CanToggleEdit);
+                yield return Commands.BeginEdit.Bind(Template.RowViewBeginEditGestures, BeginEdit, CanBeginEdit);
+                yield return Commands.CancelEdit.Bind(Template.RowViewCancelEditGestures, CancelEdit, CanCancelEdit);
+                yield return Commands.EndEdit.Bind(Template.RowViewEndEditGestures, EndEdit, CanCancelEdit);
                 if (DataPresenter.IsRecursive)
                 {
                     yield return Commands.Expand.Bind(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
                     yield return Commands.Collapse.Bind(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
                 }
+            }
+
+            private bool IsCurrent(RowView rowView)
+            {
+                return rowView.RowPresenter != null && rowView.RowPresenter == DataPresenter.CurrentRow;
+            }
+
+            private void CanToggleEdit(object sender, CanExecuteRoutedEventArgs e)
+            {
+                var rowView = (RowView)sender;
+                e.CanExecute = IsCurrent(rowView);
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+
+            private void ToggleEdit(object sender, ExecutedRoutedEventArgs e)
+            {
+                var rowPresenter = ((RowView)sender).RowPresenter;
+                if (rowPresenter.IsEditing)
+                    rowPresenter.EndEdit();
+                else
+                    rowPresenter.BeginEdit();
+            }
+
+            private void CanBeginEdit(object sender, CanExecuteRoutedEventArgs e)
+            {
+                var rowView = (RowView)sender;
+                e.CanExecute = IsCurrent(rowView) && !rowView.RowPresenter.IsEditing;
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+
+            private void BeginEdit(object sender, ExecutedRoutedEventArgs e)
+            {
+                var rowPresenter = ((RowView)sender).RowPresenter;
+                rowPresenter.BeginEdit();
+            }
+
+            private void CanCancelEdit(object sender, CanExecuteRoutedEventArgs e)
+            {
+                var rowView = (RowView)sender;
+                e.CanExecute = IsCurrent(rowView) && rowView.RowPresenter.IsEditing;
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+
+            private void CancelEdit(object sender, ExecutedRoutedEventArgs e)
+            {
+                var rowPresenter = ((RowView)sender).RowPresenter;
+                rowPresenter.CancelEdit();
+            }
+
+            private void EndEdit(object sender, ExecutedRoutedEventArgs e)
+            {
+                var rowPresenter = ((RowView)sender).RowPresenter;
+                rowPresenter.EndEdit();
             }
 
             private void ToggleExpandState(object sender, ExecutedRoutedEventArgs e)
