@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Linq;
 using DevZest.Data.Views;
+using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
@@ -433,6 +434,30 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(behavior));
 
             Template.AddBehavior(behavior);
+            return this;
+        }
+
+        public TemplateBuilder WithRowViewToggleEditGestures(params InputGesture[] gestures)
+        {
+            Template.SetRowViewToggleEditGestures(gestures);
+            return this;
+        }
+
+        public TemplateBuilder WithRowViewBeginEditGestures(params InputGesture[] gestures)
+        {
+            Template.SetRowViewBeginEditGestures(gestures);
+            return this;
+        }
+
+        public TemplateBuilder WithRowViewCancelEditGestures(params InputGesture[] gestures)
+        {
+            Template.SetRowViewCancelEditGestures(gestures);
+            return this;
+        }
+
+        public TemplateBuilder WithRowViewEndEditGestures(params InputGesture[] gestures)
+        {
+            Template.SetRowViewEndEditGestures(gestures);
             return this;
         }
     }
