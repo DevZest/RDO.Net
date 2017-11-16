@@ -203,17 +203,17 @@ namespace DevZest.Data.Presenters.Primitives
                         else
                             rowManager.CurrentRow = CurrentRowAfterRollback;
                     }
-                    DisposeInsertingRow(rowManager);
+                    DisposeInsertingRow();
                     rowManager.OnRowsChanged();
                 }
 
                 private void DisposeInsertingRow(RowManager rowManager, RowPresenter suggestedCurrentRow)
                 {
-                    DisposeInsertingRow(rowManager);
+                    DisposeInsertingRow();
                     rowManager.CurrentRow = suggestedCurrentRow;
                 }
 
-                private void DisposeInsertingRow(RowManager rowManager)
+                private void DisposeInsertingRow()
                 {
                     var insertingRow = _insertingRow;
                     _insertingRow = null;
