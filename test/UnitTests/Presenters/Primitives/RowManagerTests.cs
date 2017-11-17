@@ -220,7 +220,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.IsTrue(rows[1].IsInserting);
             Assert.IsTrue(rows[2].IsVirtual);
             rowManager.RollbackEdit();
-            Assert.AreEqual(rows[1], rowManager.CurrentRow);
+            Assert.AreEqual(rows[0], rowManager.CurrentRow);
             Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
             Assert.IsTrue(rows[1].IsVirtual);
@@ -290,7 +290,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(7, rows.Count);
             Assert.IsTrue(rows[2].IsInserting);
             rowManager.RollbackEdit();
-            Assert.AreEqual(rows[2], rowManager.CurrentRow);
+            Assert.AreEqual(rows[1], rowManager.CurrentRow);
             Assert.AreEqual(6, rows.Count);
 
             rowManager.BeginInsertAfter(rows[0], subRows[0]);

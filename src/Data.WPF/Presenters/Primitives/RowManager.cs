@@ -201,12 +201,17 @@ namespace DevZest.Data.Presenters.Primitives
                     }
                 }
 
-                private void DisposeInsertingRow(bool notifyRowsChanged)
+                protected abstract RowPresenter CurrentRowAfterRollback { get; }
+
+                private void DisposeInsertingRow(bool isRollback)
                 {
                     _insertingRow.DataRow = null;
                     _insertingRow.Dispose();
-                    if (notifyRowsChanged)
+                    if (isRollback)
+                    {
+                        RowManager._suggestedCurrentRow = CurrentRowAfterRollback;
                         RowManager.OnRowsChanged();
+                    }
                 }
 
                 protected sealed override void OpenEdit(RowManager rowManager)
@@ -281,6 +286,17 @@ namespace DevZest.Data.Presenters.Primitives
                         }
                     }
 
+                    protected override RowPresenter CurrentRowAfterRollback
+                    {
+                        get
+                        {
+                            if (Reference != null)
+                                return Reference;
+                            var rows = RowManager.Rows;
+                            return rows.Count == 0 ? null : rows[0];
+                        }
+                    }
+
                     protected override int CommitEditIndex
                     {
                         get { return Reference == null ? 0 : Reference.DataRow.Index; }
@@ -301,6 +317,17 @@ namespace DevZest.Data.Presenters.Primitives
                             return Reference == null
                                 ? (RowManager.VirtualRowPlacement == VirtualRowPlacement.Tail ? RowManager.Rows.Count - 2 : RowManager.Rows.Count - 1)
                                 : Reference.Index + 1;
+                        }
+                    }
+
+                    protected override RowPresenter CurrentRowAfterRollback
+                    {
+                        get
+                        {
+                            if (Reference != null)
+                                return Reference;
+                            var rows = RowManager.Rows;
+                            return rows.Count == 0 ? null : rows[rows.Count - 1];
                         }
                     }
 
@@ -379,6 +406,26 @@ namespace DevZest.Data.Presenters.Primitives
                             return null;
                         var index = Math.Min(ReferenceRawIndex - children[0].RawIndex, children.Count - 1);
                         return children[index];
+                    }
+                }
+
+                protected sealed override RowPresenter CurrentRowAfterRollback
+                {
+                    get
+                    {
+                        if (Reference != null)
+                            return Reference;
+                        if (ParentRow.IsDisposed)
+                        {
+                            var baseRows = RowManager.BaseRows;
+                            var index = Math.Min(ParentRowRawIndex, baseRows.Count - 1);
+                            return index >= 0 ? baseRows[index] : null;
+                        }
+                        else
+                        {
+                            var rows = ParentRow.Children;
+                            return rows.Count == 0 ? ParentRow : rows[GetCurrentRowIndexAfterRollback(rows.Count)];
+                        }
                     }
                 }
 
@@ -600,6 +647,7 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
+        private RowPresenter _suggestedCurrentRow;
         private void CoerceCurrentRow()
         {
             if (CurrentRow == null)
@@ -612,13 +660,19 @@ namespace DevZest.Data.Presenters.Primitives
             }
             else if (CurrentRow.IsDisposed)
             {
-                var index = CurrentRow.RawIndex;
-                Debug.Assert(index >= 0);
-                if (VirtualRow != null && index >= VirtualRow.RawIndex)
-                    index++;
-                index = Math.Min(index, Rows.Count - 1);
-                CurrentRow = index >= 0 ? Rows[index] : null;
+                if (_suggestedCurrentRow != null && !_suggestedCurrentRow.IsDisposed)
+                    CurrentRow = _suggestedCurrentRow;
+                else
+                {
+                    var index = CurrentRow.RawIndex;
+                    Debug.Assert(index >= 0);
+                    if (VirtualRow != null && index >= VirtualRow.RawIndex)
+                        index++;
+                    index = Math.Min(index, Rows.Count - 1);
+                    CurrentRow = index >= 0 ? Rows[index] : null;
+                }
             }
+            _suggestedCurrentRow = null;
         }
 
         private void InitSelection()
