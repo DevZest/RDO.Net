@@ -201,7 +201,23 @@ namespace DevZest.Data.Presenters.Primitives
                     }
                 }
 
-                protected abstract RowPresenter CurrentRowAfterRollback { get; }
+                protected virtual RowPresenter CurrentRowAfterRollback
+                {
+                    get { return Reference ?? FirstOrLastOf(RowManager.Rows); }
+                }
+
+                protected enum InsertMode
+                {
+                    Before,
+                    After
+                }
+
+                protected abstract InsertMode Mode { get; }
+
+                protected RowPresenter FirstOrLastOf(IReadOnlyList<RowPresenter> rows)
+                {
+                    return rows.Count == 0 ? null : rows[Mode == InsertMode.Before ? 0 : rows.Count - 1];
+                }
 
                 private void DisposeInsertingRow(bool isRollback)
                 {
@@ -286,20 +302,14 @@ namespace DevZest.Data.Presenters.Primitives
                         }
                     }
 
-                    protected override RowPresenter CurrentRowAfterRollback
-                    {
-                        get
-                        {
-                            if (Reference != null)
-                                return Reference;
-                            var rows = RowManager.Rows;
-                            return rows.Count == 0 ? null : rows[0];
-                        }
-                    }
-
                     protected override int CommitEditIndex
                     {
                         get { return Reference == null ? 0 : Reference.DataRow.Index; }
+                    }
+
+                    protected override InsertMode Mode
+                    {
+                        get { return InsertMode.Before; }
                     }
                 }
 
@@ -310,6 +320,11 @@ namespace DevZest.Data.Presenters.Primitives
                     {
                     }
 
+                    protected override InsertMode Mode
+                    {
+                        get { return InsertMode.After; }
+                    }
+
                     protected override int InsertingRowRawIndex
                     {
                         get
@@ -317,17 +332,6 @@ namespace DevZest.Data.Presenters.Primitives
                             return Reference == null
                                 ? (RowManager.VirtualRowPlacement == VirtualRowPlacement.Tail ? RowManager.Rows.Count - 2 : RowManager.Rows.Count - 1)
                                 : Reference.Index + 1;
-                        }
-                    }
-
-                    protected override RowPresenter CurrentRowAfterRollback
-                    {
-                        get
-                        {
-                            if (Reference != null)
-                                return Reference;
-                            var rows = RowManager.Rows;
-                            return rows.Count == 0 ? null : rows[rows.Count - 1];
                         }
                     }
 
@@ -424,12 +428,10 @@ namespace DevZest.Data.Presenters.Primitives
                         else
                         {
                             var rows = ParentRow.Children;
-                            return rows.Count == 0 ? ParentRow : rows[GetCurrentRowIndexAfterRollback(rows.Count)];
+                            return rows.Count == 0 ? ParentRow : FirstOrLastOf(rows);
                         }
                     }
                 }
-
-                protected abstract int GetCurrentRowIndexAfterRollback(int totalRows);
 
                 private sealed class InsertBeforeChildHandler : InsertChildHandler
                 {
@@ -456,9 +458,9 @@ namespace DevZest.Data.Presenters.Primitives
                         get { return Reference == null ? 0 : Reference.DataRow.Index; }
                     }
 
-                    protected override int GetCurrentRowIndexAfterRollback(int totalRows)
+                    protected override InsertMode Mode
                     {
-                        return 0;
+                        get { return InsertMode.Before; }
                     }
                 }
 
@@ -479,9 +481,9 @@ namespace DevZest.Data.Presenters.Primitives
                         get { return Reference == null ? DataSet.Count : Reference.DataRow.Index + 1; }
                     }
 
-                    protected override int GetCurrentRowIndexAfterRollback(int totalRows)
+                    protected override InsertMode Mode
                     {
-                        return totalRows - 1;
+                        get { return InsertMode.After; }
                     }
                 }
             }
