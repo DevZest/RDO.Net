@@ -69,6 +69,7 @@
     <Compile Include="Primitives\EnumColumn.cs" />
     <Compile Include="Primitives\IAutoColumnSelector.cs" />
     <Compile Include="Primitives\ModelExtensions.cs" />
+    <Compile Include="Primitives\ValidatorAttribute.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
     <Compile Include="Utilities\EmptyDictionary.cs" />
     <Compile Include="Utilities\EmptyEnumerable.cs" />
