@@ -42,13 +42,15 @@ namespace DevZest.Data.Utilities
             {
                 columnAttribute.Initialize(column);
 
-                var columnValidator = columnAttribute as IColumnValidator;
-                if (columnValidator != null)
+                var columnValidatorAttribute = columnAttribute as IColumnValidatorAttribute;
+                if (columnValidatorAttribute != null)
                 {
-                    var validator = columnValidator.GetValidator(column);
                     var model = column.ParentModel;
                     Debug.Assert(model != null);
-                    model.Validators.Add(validator);
+                    var validators = model.Validators;
+                    var validatorToAdd = columnValidatorAttribute.GetValidatorToAdd(validators, column);
+                    if (validatorToAdd != null)
+                        model.Validators.Add(validatorToAdd);
                 }
             }
         }

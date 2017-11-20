@@ -1,10 +1,11 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public abstract class ColumnValidatorAttribute : ColumnAttribute, IColumnValidator
+    public abstract class ColumnValidatorAttribute : ColumnAttribute, IColumnValidatorAttribute
     {
         private sealed class Validator : IValidator
         {
@@ -46,7 +47,7 @@ namespace DevZest.Data
             }
         }
 
-        public IValidator GetValidator(Column column)
+        public IValidator GetValidatorToAdd(IReadOnlyList<IValidator> exitsingValidators, Column column)
         {
             return new Validator(this, column);
         }

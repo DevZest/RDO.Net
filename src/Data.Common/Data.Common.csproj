@@ -99,7 +99,7 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="IColumns.cs" />
-    <Compile Include="IColumnValidator.cs" />
+    <Compile Include="IColumnValidatorAttribute.cs" />
     <Compile Include="JsonIgnoreAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
     <Compile Include="ValidationMessage_T.cs" />

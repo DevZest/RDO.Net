@@ -383,7 +383,7 @@ namespace DevZest.Data
         protected internal ModelCollection ChildModels { get; private set; }
 
         private List<IValidator> _validators = new List<IValidator>();
-        protected internal IList<IValidator> Validators
+        protected internal List<IValidator> Validators
         {
             get { return _validators; }
         }
