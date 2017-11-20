@@ -162,7 +162,7 @@
     <Compile Include="ColumnValidationMessages.cs" />
     <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />
-    <Compile Include="ColumnValidatorAttribute.cs" />
+    <Compile Include="Primitives\ColumnValidatorAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />
     <Compile Include="Primitives\DbTableExtensions.cs" />
     <Compile Include="Primitives\SubQueryEliminator.cs" />
