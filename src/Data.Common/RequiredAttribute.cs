@@ -7,6 +7,7 @@ namespace DevZest.Data
     {
         protected internal override void Initialize(Column column)
         {
+            base.Initialize(column);
             column.Nullable(false);
         }
 

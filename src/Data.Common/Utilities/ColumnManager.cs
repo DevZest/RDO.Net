@@ -39,19 +39,7 @@ namespace DevZest.Data.Utilities
             if (columnAttributes == null)
                 return;
             foreach (var columnAttribute in columnAttributes)
-            {
                 columnAttribute.Initialize(column);
-
-                var columnValidatorAttribute = columnAttribute as IColumnValidatorAttribute;
-                if (columnValidatorAttribute != null)
-                {
-                    var model = column.ParentModel;
-                    Debug.Assert(model != null);
-                    var validator = columnValidatorAttribute.GetValidator(column);
-                    if (validator != null)
-                        model.Validators.Add(validator);
-                }
-            }
         }
     }
 }

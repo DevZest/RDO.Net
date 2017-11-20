@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public abstract class ColumnValidatorAttribute : ColumnAttribute, IColumnValidatorAttribute
+    public abstract class ColumnValidatorAttribute : ColumnAttribute
     {
         private sealed class Validator : IValidator
         {
@@ -44,6 +44,12 @@ namespace DevZest.Data
             {
                 return _owner.GetMessage(_column, dataRow);
             }
+        }
+
+        protected internal override void Initialize(Column column)
+        {
+            var model = column.ParentModel;
+            model.Validators.Add(new Validator(this, column));
         }
 
         private string _messageId;
@@ -121,10 +127,5 @@ namespace DevZest.Data
         protected abstract bool IsValid(Column column, DataRow dataRow);
 
         protected abstract string FormatMessage(Column column, DataRow dataRow);
-
-        IValidator IColumnValidatorAttribute.GetValidator(Column column)
-        {
-            return new Validator(this, column);
-        }
     }
 }
