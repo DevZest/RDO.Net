@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Primitives
 {
-    internal sealed class NotNull : IColumnValidator, IInterceptor
+    internal sealed class NotNull : IInterceptor
     {
         public static readonly NotNull Singleton = new NotNull();
 

@@ -47,15 +47,16 @@ namespace DevZest.Data.Utilities
             return type.GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
         }
 
-        internal static Func<Column, _String> GetMessageFunc(this Type funcType, string funcName)
+        internal static Func<Column, DataRow, string> GetMessageFunc(this Type funcType, string funcName)
         {
             Debug.Assert(funcType != null);
             Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
 
             var methodInfo = funcType.GetStaticMethodInfo(funcName);
             var paramColumn = Expression.Parameter(typeof(Column), methodInfo.GetParameters()[0].Name);
-            var call = Expression.Call(methodInfo, paramColumn);
-            return Expression.Lambda<Func<Column, _String>>(call, paramColumn).Compile();
+            var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[1].Name);
+            var call = Expression.Call(methodInfo, paramColumn, paramDataRow);
+            return Expression.Lambda<Func<Column, DataRow, string>>(call, paramColumn, paramDataRow).Compile();
         }
 
         internal static bool IsNullable(this Type type)

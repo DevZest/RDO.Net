@@ -395,22 +395,12 @@ namespace DevZest.Data
             {
                 if (severity.HasValue && validator.Severity != severity.GetValueOrDefault())
                     continue;
-                var validationMessage = Validate(validator, dataRow);
-                if (validationMessage == null)
-                    continue;
-
-                result = result.Add(validationMessage);
+                var validationMessage = validator.IsValid(dataRow) ? null : new ColumnValidationMessage(validator.MessageId, validator.Severity, validator.GetMessage(dataRow), validator.Columns);
+                if (validationMessage != null)
+                    result = result.Add(validationMessage);
             }
 
             return result;
-        }
-
-        private static ColumnValidationMessage Validate(IValidator validator, DataRow dataRow)
-        {
-            if (validator.ValidCondition[dataRow] == true)
-                return null;
-            else
-                return new ColumnValidationMessage(validator.MessageId, validator.Severity, validator.Message[dataRow], validator.Columns);
         }
 
         public KeyBase PrimaryKey

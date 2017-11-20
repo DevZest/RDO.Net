@@ -1,29 +1,21 @@
-﻿using DevZest.Data.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
 
 namespace DevZest.Data
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class RequiredAttribute : ColumnValidatorAttribute
     {
-        protected internal sealed override void Initialize(Column column)
+        protected internal override void Initialize(Column column)
         {
             column.Nullable(false);
         }
 
-        protected override ValidationSeverity ValidationSeverity
+        protected override bool IsValid(Column column, DataRow dataRow)
         {
-            get { return ValidationSeverity.Error; }
+            return !column.IsNull(dataRow);
         }
 
-        protected override _Boolean GetValidCondition(Column column)
-        {
-            return !column.IsNull();
-        }
-
-        protected override _String FormatMessage(Column column)
+        protected override string FormatMessage(Column column, DataRow dataRow)
         {
             return Strings.RequiredAttribute_DefaultErrorMessage(column);
         }

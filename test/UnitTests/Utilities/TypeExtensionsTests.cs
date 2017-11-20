@@ -10,12 +10,12 @@ namespace DevZest.Data.Utilities
         public void Type_GetErrorMessageFunc()
         {
             var func = GetType().GetMessageFunc(nameof(GetErrorMessage));
-            Assert.AreSame(ErrorMessage, func(null).Eval());
+            Assert.AreSame(ErrorMessage, func(null, null));
         }
 
         private const string ErrorMessage = "This is a error message.";
 
-        private static _String GetErrorMessage(Column column)
+        private static string GetErrorMessage(Column column, DataRow dataRow)
         {
             return ErrorMessage;
         }

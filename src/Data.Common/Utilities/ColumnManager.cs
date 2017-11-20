@@ -47,10 +47,9 @@ namespace DevZest.Data.Utilities
                 {
                     var model = column.ParentModel;
                     Debug.Assert(model != null);
-                    var validators = model.Validators;
-                    var validatorToAdd = columnValidatorAttribute.GetValidatorToAdd(validators, column);
-                    if (validatorToAdd != null)
-                        model.Validators.Add(validatorToAdd);
+                    var validator = columnValidatorAttribute.GetValidator(column);
+                    if (validator != null)
+                        model.Validators.Add(validator);
                 }
             }
         }

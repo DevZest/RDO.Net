@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace DevZest.Data
+﻿namespace DevZest.Data
 {
     public interface IColumnValidatorAttribute
     {
-        IValidator GetValidatorToAdd(IReadOnlyList<IValidator> existingValidators, Column column);
+        IValidator GetValidator(Column column);
     }
 }

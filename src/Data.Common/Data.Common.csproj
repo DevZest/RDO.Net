@@ -63,6 +63,7 @@
     <Compile Include="Functions.IsNotNull.cs" />
     <Compile Include="Functions.IsNull.cs" />
     <Compile Include="IColumnComparer.cs" />
+    <Compile Include="IColumnValidatorAttribute.cs" />
     <Compile Include="IDataRowComparer.cs" />
     <Compile Include="ModelExtension.cs" />
     <Compile Include="Primitives\AutoColumnSelector.cs" />
@@ -99,7 +100,6 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="IColumns.cs" />
-    <Compile Include="IColumnValidatorAttribute.cs" />
     <Compile Include="JsonIgnoreAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
     <Compile Include="ValidationMessage_T.cs" />
@@ -232,7 +232,6 @@
     <Compile Include="Primitives\FunctionKey.cs" />
     <Compile Include="Primitives\IMounter.cs" />
     <Compile Include="Primitives\IColumn.cs" />
-    <Compile Include="Primitives\IColumnValidator.cs" />
     <Compile Include="Primitives\IDbConnectionInterceptor.cs" />
     <Compile Include="Primitives\IDbNonQueryInterceptor.cs" />
     <Compile Include="Primitives\IDbReaderInterceptor.cs" />
