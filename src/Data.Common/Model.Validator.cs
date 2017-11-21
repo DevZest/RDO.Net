@@ -26,9 +26,9 @@
                     return Message[dataRow];
                 }
 
-                bool IValidator.IsValid(DataRow dataRow)
+                IColumnValidationMessages IValidator.Validate(DataRow dataRow)
                 {
-                    return IsValid[dataRow] == true;
+                    return IsValid[dataRow] == true ? ColumnValidationMessages.Empty : new ColumnValidationMessage(MessageId, Severity, Message[dataRow], Columns);
                 }
             }
 

@@ -20,29 +20,9 @@ namespace DevZest.Data.Primitives
             private ColumnValidatorAttribute _owner;
             private Column _column;
 
-            public string MessageId
+            public IColumnValidationMessages Validate(DataRow dataRow)
             {
-                get { return _owner.MessageId; }
-            }
-
-            public ValidationSeverity Severity
-            {
-                get { return _owner.ValidationSeverity; }
-            }
-
-            public IColumns Columns
-            {
-                get { return _column; }
-            }
-
-            public bool IsValid(DataRow dataRow)
-            {
-                return _owner.IsValid(_column, dataRow);
-            }
-
-            public string GetMessage(DataRow dataRow)
-            {
-                return _owner.GetMessage(_column, dataRow);
+                return _owner.Validate(_column, dataRow);
             }
         }
 
@@ -52,6 +32,48 @@ namespace DevZest.Data.Primitives
             model.Validators.Add(new Validator(this, column));
         }
 
-        protected abstract bool IsValid(Column column, DataRow dataRow);
+        protected abstract IColumnValidationMessages Validate(Column column, DataRow dataRow);
+
+        protected string GetMessage(Column column, DataRow dataRow)
+        {
+            var messageFunc = MessageFunc;
+            if (messageFunc != null)
+                return messageFunc(column, dataRow);
+
+            if (Message != null)
+                return Message;
+
+            return FormatMessage(column, dataRow);
+        }
+
+        private Func<Column, DataRow, string> _messageFunc;
+        private Func<Column, DataRow, string> MessageFunc
+        {
+            get
+            {
+                if (MessageFuncType == null && MessageFuncName == null)
+                    return null;
+
+                if (_messageFunc == null)
+                    _messageFunc = GetMessageFunc(MessageFuncType, MessageFuncName);
+
+                return _messageFunc;
+            }
+        }
+
+        private static Func<Column, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        {
+            if (!(funcType != null && funcName != null))
+                throw new InvalidOperationException(Strings.ColumnValidatorAttribute_InvalidMessageFunc(funcType, funcName));
+
+            try
+            {
+                return funcType.GetMessageFunc(funcName);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(Strings.ColumnValidatorAttribute_InvalidMessageFunc(funcType, funcName), ex);
+            }
+        }
     }
 }

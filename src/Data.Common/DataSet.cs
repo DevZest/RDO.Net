@@ -266,15 +266,13 @@ namespace DevZest.Data
                     bool nextError = _errorCount < _errorLimit;
                     bool nextWarning = _warningCount < _warningLimit;
 
-                    foreach (var validator in model.Validators)
-                    {
-                        if (nextError && validator.Severity == ValidationSeverity.Error)
-                            return true;
-
-                        if (nextWarning && validator.Severity == ValidationSeverity.Warning)
-                            return true;
-                    }
-                    return false;
+                    var validators = model.Validators;
+                    if (nextError && validators.Count > 0)
+                        return true;
+                    else if (nextWarning && validators.Count > 0)
+                        return true;
+                    else
+                        return false;
                 }
 
                 private static void Check(IReadOnlyList<ColumnValidationMessage> validationMessages, out bool hasError, out bool hasWarning)

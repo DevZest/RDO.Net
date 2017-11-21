@@ -12,9 +12,9 @@ namespace DevZest.Data
             column.Nullable(false);
         }
 
-        protected override bool IsValid(Column column, DataRow dataRow)
+        protected override IColumnValidationMessages Validate(Column column, DataRow dataRow)
         {
-            return !column.IsNull(dataRow);
+            return column.IsNull(dataRow) ? new ColumnValidationMessage(MessageId, ValidationSeverity.Error, null, column) : ColumnValidationMessages.Empty;
         }
 
         protected override string FormatMessage(Column column, DataRow dataRow)

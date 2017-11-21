@@ -393,11 +393,16 @@ namespace DevZest.Data
             var result = ColumnValidationMessages.Empty;
             foreach (var validator in Validators)
             {
-                if (severity.HasValue && validator.Severity != severity.GetValueOrDefault())
-                    continue;
-                var validationMessage = validator.IsValid(dataRow) ? null : new ColumnValidationMessage(validator.MessageId, validator.Severity, validator.GetMessage(dataRow), validator.Columns);
-                if (validationMessage != null)
-                    result = result.Add(validationMessage);
+                var validationMessages = validator.Validate(dataRow);
+                if (validationMessages != null)
+                {
+                    foreach (var validationMessage in validationMessages)
+                    {
+                        if (severity.HasValue && validationMessage.Severity != severity.GetValueOrDefault())
+                            continue;
+                        result = result.Add(validationMessage);
+                    }
+                }
             }
 
             return result;
