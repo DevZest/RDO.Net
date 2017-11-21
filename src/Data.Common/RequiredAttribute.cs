@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class RequiredAttribute : ColumnValidatorAttribute
+    public sealed class RequiredAttribute : ValidatorColumnAttribute
     {
         protected internal override void Initialize(Column column)
         {

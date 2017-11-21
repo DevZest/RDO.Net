@@ -63,6 +63,11 @@ namespace DevZest.Data
             {
                 return EmptyEnumerator<Column>.Singleton;
             }
+
+            public override string ToString()
+            {
+                return "[]";
+            }
         }
 
         private class HashSetColumnSet : IColumns
@@ -175,6 +180,11 @@ namespace DevZest.Data
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return _hashSet.GetEnumerator();
+            }
+
+            public override string ToString()
+            {
+                return string.Format("[{0}]", string.Join(", ", _hashSet.Select(x => string.Format("'{0}'", x)).ToArray()));
             }
         }
 

@@ -342,7 +342,7 @@
   <data name="RequiredAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>Value is required for column '{column}'.</value>
   </data>
-  <data name="ColumnValidatorAttribute_InvalidMessageFunc" xml:space="preserve">
+  <data name="ValidatorColumnAttribute_InvalidMessageFunc" xml:space="preserve">
     <value>Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
   </data>
   <data name="DbTable_VerifyUpdateIdentity" xml:space="preserve">
@@ -497,5 +497,14 @@
   </data>
   <data name="ColumnValueBag_NotAssignableFromValue" xml:space="preserve">
     <value>The data type of column is {columnDataType}, which is not assignable from value of data type {valueDataType}.</value>
+  </data>
+  <data name="UniqueAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>Value must be unique for column '{column}'.</value>
+  </data>
+  <data name="ValidatorColumnsAttribute_InvalidMessageFunc" xml:space="preserve">
+    <value>Cannot resolve static method of Func&lt;string, IColumns, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
+  </data>
+  <data name="UniqueColumnsAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>Value must be unique for columns {columns}.</value>
   </data>
 </root>

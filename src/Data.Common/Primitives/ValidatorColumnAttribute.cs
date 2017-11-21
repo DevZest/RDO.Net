@@ -4,11 +4,11 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class ColumnValidatorAttribute : ValidatorAttribute
+    public abstract class ValidatorColumnAttribute : ColumnAttribute
     {
         private sealed class Validator : IValidator
         {
-            internal Validator(ColumnValidatorAttribute owner, Column column)
+            internal Validator(ValidatorColumnAttribute owner, Column column)
             {
                 Debug.Assert(owner != null);
                 Debug.Assert(column != null);
@@ -17,7 +17,7 @@ namespace DevZest.Data.Primitives
                 _column = column;
             }
 
-            private ColumnValidatorAttribute _owner;
+            private ValidatorColumnAttribute _owner;
             private Column _column;
 
             public IColumnValidationMessages Validate(DataRow dataRow)
@@ -33,6 +33,31 @@ namespace DevZest.Data.Primitives
         }
 
         protected abstract IColumnValidationMessages Validate(Column column, DataRow dataRow);
+
+        private string _messageId;
+        public string MessageId
+        {
+            get { return string.IsNullOrEmpty(_messageId) ? DefaultMessageId : _messageId; }
+            set { _messageId = value; }
+        }
+
+        protected virtual string DefaultMessageId
+        {
+            get
+            {
+                var type = GetType();
+                var typeName = type.Name;
+                if (typeName.EndsWith("Attribute"))
+                    typeName = typeName.Substring(0, typeName.Length - "Attribute".Length);
+                return type.Namespace + "." + typeName;
+            }
+        }
+
+        public string Message { get; set; }
+
+        public Type MessageFuncType { get; set; }
+
+        public string MessageFuncName { get; set; }
 
         protected string GetMessage(Column column, DataRow dataRow)
         {
@@ -66,7 +91,7 @@ namespace DevZest.Data.Primitives
         private static Func<Column, DataRow, string> GetMessageFunc(Type funcType, string funcName)
         {
             if (!(funcType != null && funcName != null))
-                throw new InvalidOperationException(Strings.ColumnValidatorAttribute_InvalidMessageFunc(funcType, funcName));
+                throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName));
 
             try
             {
@@ -74,7 +99,7 @@ namespace DevZest.Data.Primitives
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException(Strings.ColumnValidatorAttribute_InvalidMessageFunc(funcType, funcName), ex);
+                throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName), ex);
             }
         }
     }

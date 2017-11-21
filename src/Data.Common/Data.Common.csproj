@@ -66,10 +66,15 @@
     <Compile Include="IDataRowComparer.cs" />
     <Compile Include="ModelExtension.cs" />
     <Compile Include="Primitives\AutoColumnSelector.cs" />
+    <Compile Include="Primitives\ColumnsAttribute.cs" />
     <Compile Include="Primitives\EnumColumn.cs" />
     <Compile Include="Primitives\IAutoColumnSelector.cs" />
     <Compile Include="Primitives\ModelExtensions.cs" />
-    <Compile Include="Primitives\ValidatorAttribute.cs" />
+    <Compile Include="Primitives\ColumnsMemberAttribute.cs" />
+    <Compile Include="Primitives\ValidatorColumnsAttribute.cs" />
+    <Compile Include="UniqueAttribute.cs" />
+    <Compile Include="UniqueColumnsAttribute.cs" />
+    <Compile Include="UniqueColumnsMemberAttribute.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
     <Compile Include="Utilities\EmptyDictionary.cs" />
     <Compile Include="Utilities\EmptyEnumerable.cs" />
@@ -163,7 +168,7 @@
     <Compile Include="ColumnValidationMessages.cs" />
     <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />
-    <Compile Include="Primitives\ColumnValidatorAttribute.cs" />
+    <Compile Include="Primitives\ValidatorColumnAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />
     <Compile Include="Primitives\DbTableExtensions.cs" />
     <Compile Include="Primitives\SubQueryEliminator.cs" />

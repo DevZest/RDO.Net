@@ -614,9 +614,9 @@ namespace DevZest.Data
         /// <summary>
         /// Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
         /// </summary>
-        public static string ColumnValidatorAttribute_InvalidMessageFunc(object funcType, object funcName)
+        public static string ValidatorColumnAttribute_InvalidMessageFunc(object funcType, object funcName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnValidatorAttribute_InvalidMessageFunc", "funcType", "funcName"), funcType, funcName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ValidatorColumnAttribute_InvalidMessageFunc", "funcType", "funcName"), funcType, funcName);
         }
 
         /// <summary>
@@ -1025,6 +1025,30 @@ namespace DevZest.Data
         public static string ColumnValueBag_NotAssignableFromValue(object columnDataType, object valueDataType)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("ColumnValueBag_NotAssignableFromValue", "columnDataType", "valueDataType"), columnDataType, valueDataType);
+        }
+
+        /// <summary>
+        /// Value must be unique for column '{column}'.
+        /// </summary>
+        public static string UniqueAttribute_DefaultErrorMessage(object column)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("UniqueAttribute_DefaultErrorMessage", "column"), column);
+        }
+
+        /// <summary>
+        /// Cannot resolve static method of Func&lt;string, IColumns, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
+        /// </summary>
+        public static string ValidatorColumnsAttribute_InvalidMessageFunc(object funcType, object funcName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ValidatorColumnsAttribute_InvalidMessageFunc", "funcType", "funcName"), funcType, funcName);
+        }
+
+        /// <summary>
+        /// Value must be unique for columns {columns}.
+        /// </summary>
+        public static string UniqueColumnsAttribute_DefaultErrorMessage(object columns)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("UniqueColumnsAttribute_DefaultErrorMessage", "columns"), columns);
         }
 
         private static string GetString(string name, params string[] formatterNames)

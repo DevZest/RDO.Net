@@ -743,7 +743,7 @@ namespace DevZest.Data
             return sysParentRowId.Column;
         }
 
-        protected void Unique(string constraintName, bool isClustered, params ColumnSort[] orderByList)
+        protected internal void Unique(string constraintName, bool isClustered, params ColumnSort[] orderByList)
         {
             Utilities.Check.NotNull(orderByList, nameof(orderByList));
             if (orderByList.Length == 0)

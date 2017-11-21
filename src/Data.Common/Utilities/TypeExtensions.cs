@@ -59,6 +59,19 @@ namespace DevZest.Data.Utilities
             return Expression.Lambda<Func<Column, DataRow, string>>(call, paramColumn, paramDataRow).Compile();
         }
 
+        internal static Func<string, IColumns, DataRow, string> GetColumnsMessageFunc(this Type funcType, string funcName)
+        {
+            Debug.Assert(funcType != null);
+            Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
+
+            var methodInfo = funcType.GetStaticMethodInfo(funcName);
+            var paramAttributeName = Expression.Parameter(typeof(string), methodInfo.GetParameters()[0].Name);
+            var paramColumns = Expression.Parameter(typeof(IColumns), methodInfo.GetParameters()[1].Name);
+            var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[2].Name);
+            var call = Expression.Call(methodInfo, paramAttributeName, paramColumns, paramDataRow);
+            return Expression.Lambda<Func<string, IColumns, DataRow, string>>(call, paramAttributeName, paramColumns, paramDataRow).Compile();
+        }
+
         internal static bool IsNullable(this Type type)
         {
             return !type.GetTypeInfo().IsValueType || (Nullable.GetUnderlyingType(type) != null);

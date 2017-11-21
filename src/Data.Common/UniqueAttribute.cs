@@ -1,18 +1,42 @@
 ﻿using DevZest.Data.Primitives;
-using System;
 
 namespace DevZest.Data
 {
-    public sealed class UniqueAttribute : ValidatorAttribute
+    public sealed class UniqueAttribute : ValidatorColumnAttribute
     {
         protected internal override void Initialize(Column column)
         {
-            throw new NotImplementedException();
+            base.Initialize(column);
+            column.ParentModel.Unique(Name, IsCluster, SortDirection == SortDirection.Descending ? column.Desc() : column.Asc());
         }
 
-        protected override string FormatMessage(IColumns columns, DataRow dataRow)
+        public string Name { get; set; }
+
+        public bool IsCluster { get; set; }
+
+        public SortDirection SortDirection { get; set; }
+
+        protected override IColumnValidationMessages Validate(Column column, DataRow dataRow)
         {
-            throw new NotImplementedException();
+            return IsValid(column, dataRow) ? ColumnValidationMessages.Empty : new ColumnValidationMessage(MessageId, ValidationSeverity.Error, GetMessage(column, dataRow), column);
+        }
+
+        private bool IsValid(Column column, DataRow dataRow)
+        {
+            var dataSet = column.ParentModel.DataSet;
+            foreach (var other in dataSet)
+            {
+                if (other == dataRow)
+                    continue;
+                if (column.Compare(dataRow, other, SortDirection) == 0)
+                    return false;
+            }
+            return true;
+        }
+
+        protected override string GetDefaultMessage(Column column, DataRow dataRow)
+        {
+            return Strings.UniqueAttribute_DefaultErrorMessage(column);
         }
     }
 }
