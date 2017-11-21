@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DevZest.Data.Utilities
 {
@@ -7,7 +6,7 @@ namespace DevZest.Data.Utilities
     public class TypeExtensionsTests
     {
         [TestMethod]
-        public void Type_GetErrorMessageFunc()
+        public void Type_GetMessageFunc()
         {
             var func = GetType().GetMessageFunc(nameof(GetErrorMessage));
             Assert.AreSame(ErrorMessage, func(null, null));
@@ -16,6 +15,18 @@ namespace DevZest.Data.Utilities
         private const string ErrorMessage = "This is a error message.";
 
         private static string GetErrorMessage(Column column, DataRow dataRow)
+        {
+            return ErrorMessage;
+        }
+
+        [TestMethod]
+        public void Type_GetColumnsErrorMessageFunc()
+        {
+            var func = GetType().GetColumnsMessageFunc(nameof(GetColumnsErrorMessage));
+            Assert.AreSame(ErrorMessage, func(null, null, null));
+        }
+
+        private static string GetColumnsErrorMessage(string attributeName, IColumns columns, DataRow dataRow)
         {
             return ErrorMessage;
         }
