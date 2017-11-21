@@ -33,12 +33,7 @@ namespace DevZest.Data
                 public IColumnValidationMessages Validate(DataRow dataRow)
                 {
                     return IsValid(dataRow) ? ColumnValidationMessages.Empty
-                        : new ColumnValidationMessage(MessageId, ValidationSeverity.Error, GetMessage(AttributeName, _columns, dataRow), _columns);
-                }
-
-                private string AttributeName
-                {
-                    get { return _uniqueColumnsAttribute.Name; }
+                        : new ColumnValidationMessage(MessageId, ValidationSeverity.Error, GetMessage(_columns, dataRow), _columns);
                 }
 
                 private string MessageId
@@ -46,9 +41,9 @@ namespace DevZest.Data
                     get { return _uniqueColumnsAttribute.MessageId; }
                 }
 
-                private string GetMessage(string attributeName, IColumns columns, DataRow dataRow)
+                private string GetMessage(IColumns columns, DataRow dataRow)
                 {
-                    throw new NotImplementedException();
+                    return _uniqueColumnsAttribute.GetMessage(columns, dataRow);
                 }
 
                 private bool IsValid(DataRow dataRow)
