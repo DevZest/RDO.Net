@@ -507,4 +507,10 @@
   <data name="UniqueColumnsAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>Value must be unique for columns {columns}.</value>
   </data>
+  <data name="ColumnsMemberAttribute_CannotResolveColumnsAttribute" xml:space="preserve">
+    <value>Attribute not found for ModelType '{modelType}': AttributeType={attributeType}, Name={attributeName}.</value>
+  </data>
+  <data name="ColumnsMemberAttribute_Duplicate" xml:space="preserve">
+    <value>Duplicate attribute found for column '{column}': AttributeType={attributeType}, AttributeName={attributeName}.</value>
+  </data>
 </root>

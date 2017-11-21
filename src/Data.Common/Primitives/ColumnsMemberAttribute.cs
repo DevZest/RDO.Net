@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace DevZest.Data.Primitives
@@ -35,9 +36,58 @@ namespace DevZest.Data.Primitives
                 public readonly Column Column;
             }
 
+            private sealed class EntryCollection : KeyedCollection<Column, Entry>
+            {
+                protected override Column GetKeyForItem(Entry item)
+                {
+                    return item.Column;
+                }
+
+                public void Add(TColumnsMemberAttribute memberAttribute, Column column)
+                {
+                    if (Contains(column))
+                        throw new InvalidOperationException(Strings.ColumnsMemberAttribute_Duplicate(column, typeof(TColumnsMemberAttribute), memberAttribute.Name));
+
+                    Insert(GetInsertIndex(memberAttribute), new Entry(memberAttribute, column));
+                }
+
+                private int GetInsertIndex(TColumnsMemberAttribute memberAttribute)
+                {
+                    for (int i = 0; i < Count; i++)
+                    {
+                        if (memberAttribute.Order < this[i].MemberAttribute.Order)
+                            return i;
+                    }
+                    return Count;
+                }
+            }
+
             private Dictionary<Type, ColumnsAttributeCollection> _columnsAttributesByType = new Dictionary<Type, ColumnsAttributeCollection>();
-            private ConditionalWeakTable<Model, TColumnsAttribute> _columnsAttributeByModel = new ConditionalWeakTable<Model, TColumnsAttribute>();
-            private ConditionalWeakTable<Model, List<Entry>> _entriesByModel = new ConditionalWeakTable<Model, List<Entry>>();
+            private ConditionalWeakTable<Model, Dictionary<TColumnsAttribute, EntryCollection>> _entriesByModel = new ConditionalWeakTable<Model, Dictionary<TColumnsAttribute, EntryCollection>>();
+
+            private void EnsureColumnsAttributesInitialilzed(Type modelType)
+            {
+                Debug.Assert(modelType != null);
+                if (_columnsAttributesByType.ContainsKey(modelType))
+                    return;
+
+                var columnsAttributeCollection = new ColumnsAttributeCollection();
+                _columnsAttributesByType.Add(modelType, columnsAttributeCollection);
+                foreach (var columnsAttribute in modelType.GetTypeInfo().GetCustomAttributes<TColumnsAttribute>(true))
+                    columnsAttributeCollection.Add(columnsAttribute);
+            }
+
+            private TColumnsAttribute GetColumnsAttribute(Type modelType, string attributeName)
+            {
+                EnsureColumnsAttributesInitialilzed(modelType);
+                var columnsAttributes = _columnsAttributesByType[modelType];
+                Debug.Assert(columnsAttributes != null);
+                if (!columnsAttributes.Contains(attributeName))
+                    throw new InvalidOperationException(Strings.ColumnsMemberAttribute_CannotResolveColumnsAttribute(modelType, typeof(TColumnsAttribute), attributeName));
+                var result = columnsAttributes[attributeName];
+                Debug.Assert(result != null);
+                return result;
+            }
 
             public void Initialize(TColumnsMemberAttribute columnsMemberAttribute, Column column)
             {
@@ -45,27 +95,31 @@ namespace DevZest.Data.Primitives
                 Check.NotNull(column, nameof(column));
 
                 var model = column.ParentModel;
-                List<Entry> entries;
-                if (!_entriesByModel.TryGetValue(model, out entries))
+                var columnsAttribute = GetColumnsAttribute(model.GetType(), columnsMemberAttribute.Name);
+                Dictionary<TColumnsAttribute, EntryCollection> entryDictionary;
+                if (!_entriesByModel.TryGetValue(model, out entryDictionary))
                 {
-                    entries = new List<Entry>();
-                    _entriesByModel.Add(model, entries);
+                    entryDictionary = new Dictionary<TColumnsAttribute, EntryCollection>();
+                    _entriesByModel.Add(model, entryDictionary);
                     model.Initializing += OnModelInitializing;
                 }
-                entries.Add(new Entry(columnsMemberAttribute, column));
+                EntryCollection entries;
+                if (!entryDictionary.TryGetValue(columnsAttribute, out entries))
+                {
+                    entries = new EntryCollection();
+                    entryDictionary.Add(columnsAttribute, entries);
+                }
+                entries.Add(columnsMemberAttribute, column);
             }
 
             private void OnModelInitializing(object sender, EventArgs e)
             {
                 var model = (Model)sender;
-                TColumnsAttribute columnsAttribute;
-                _columnsAttributeByModel.TryGetValue(model, out columnsAttribute);
-                Debug.Assert(columnsAttribute != null);
-                List<Entry> entries;
-                _entriesByModel.TryGetValue(model, out entries);
-                Debug.Assert(entries != null);
-                Initialize(model, columnsAttribute, entries);
-                _columnsAttributeByModel.Remove(model);
+                Dictionary<TColumnsAttribute, EntryCollection> entriesDictionary;
+                _entriesByModel.TryGetValue(model, out entriesDictionary);
+                Debug.Assert(entriesDictionary != null);
+                foreach (var keyValuePair in entriesDictionary)
+                    Initialize(model, keyValuePair.Key, keyValuePair.Value);
                 _entriesByModel.Remove(model);
             }
 
@@ -79,5 +133,7 @@ namespace DevZest.Data.Primitives
         }
 
         public string Name { get; private set; }
+
+        public int Order { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
@@ -35,7 +36,7 @@ namespace DevZest.Data.Primitives
 
         public string MessageFuncName { get; set; }
 
-        public string GetMessage(IColumns columns, DataRow dataRow)
+        public string GetMessage(IReadOnlyList<Column> columns, DataRow dataRow)
         {
             var messageFunc = MessageFunc;
             if (messageFunc != null)
@@ -47,8 +48,8 @@ namespace DevZest.Data.Primitives
             return GetDefaultMessage(columns, dataRow);
         }
 
-        private Func<string, IColumns, DataRow, string> _messageFunc;
-        private Func<string, IColumns, DataRow, string> MessageFunc
+        private Func<string, IReadOnlyList<Column>, DataRow, string> _messageFunc;
+        private Func<string, IReadOnlyList<Column>, DataRow, string> MessageFunc
         {
             get
             {
@@ -62,7 +63,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static Func<string, IColumns, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        private static Func<string, IReadOnlyList<Column>, DataRow, string> GetMessageFunc(Type funcType, string funcName)
         {
             if (!(funcType != null && funcName != null))
                 throw new InvalidOperationException(Strings.ValidatorColumnsAttribute_InvalidMessageFunc(funcType, funcName));
@@ -77,6 +78,6 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        protected abstract string GetDefaultMessage(IColumns columns, DataRow dataRow);
+        protected abstract string GetDefaultMessage(IReadOnlyList<Column> columns, DataRow dataRow);
     }
 }

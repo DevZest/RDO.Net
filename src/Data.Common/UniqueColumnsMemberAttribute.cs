@@ -5,71 +5,10 @@ using System;
 
 namespace DevZest.Data
 {
-    public sealed class UniqueColumnsMemberAttribute : ColumnsMemberAttribute
+    public sealed class UniqueColumnsMemberAttribute : ValidatorColumnsMemberAttribute
     {
         private sealed class Manager : Manager<UniqueColumnsAttribute, UniqueColumnsMemberAttribute>
         {
-            private sealed class Validator : IValidator
-            {
-                public Validator(Model model, UniqueColumnsAttribute uniqueColumnsAttribute, ColumnSort[] orderByList)
-                {
-                    Debug.Assert(model != null);
-                    Debug.Assert(uniqueColumnsAttribute != null);
-                    Debug.Assert(orderByList != null && orderByList.Length > 0);
-                    _model = model;
-                    _uniqueColumnsAttribute = uniqueColumnsAttribute;
-                    _orderByList = orderByList;
-                    _columns = Columns.Empty;
-                    for (int i = 0; i < _orderByList.Length; i++)
-                        _columns = _columns.Add(_orderByList[i].Column);
-                    _columns = _columns.Seal();
-                }
-
-                private readonly Model _model;
-                private readonly UniqueColumnsAttribute _uniqueColumnsAttribute;
-                private readonly ColumnSort[] _orderByList;
-                private readonly IColumns _columns;
-
-                public IColumnValidationMessages Validate(DataRow dataRow)
-                {
-                    return IsValid(dataRow) ? ColumnValidationMessages.Empty
-                        : new ColumnValidationMessage(MessageId, ValidationSeverity.Error, GetMessage(_columns, dataRow), _columns);
-                }
-
-                private string MessageId
-                {
-                    get { return _uniqueColumnsAttribute.MessageId; }
-                }
-
-                private string GetMessage(IColumns columns, DataRow dataRow)
-                {
-                    return _uniqueColumnsAttribute.GetMessage(columns, dataRow);
-                }
-
-                private bool IsValid(DataRow dataRow)
-                {
-                    var dataSet = _model.DataSet;
-                    foreach (var other in dataSet)
-                    {
-                        if (dataRow != other && AreEqual(dataRow, other))
-                            return false;
-                    }
-                    return true;
-                }
-
-                private bool AreEqual(DataRow dataRow, DataRow other)
-                {
-                    Debug.Assert(dataRow != other);
-                    for (int i = 0; i < _orderByList.Length; i++)
-                    {
-                        var orderBy = _orderByList[i];
-                        if (orderBy.Column.Compare(other, dataRow, orderBy.Direction) != 0)
-                            return false;
-                    }
-                    return true;
-                }
-            }
-
             public static readonly Manager Singleton = new Manager();
 
             private Manager()
@@ -78,9 +17,30 @@ namespace DevZest.Data
 
             protected override void Initialize(Model model, UniqueColumnsAttribute columnsAttribute, IReadOnlyList<Entry> entries)
             {
-                var orderByList = GetOrderByList(entries);
-                model.Unique(columnsAttribute.Name, columnsAttribute.IsClustered, orderByList);
-                model.Validators.Add(new Validator(model, columnsAttribute, orderByList));
+                base.Initialize(model, columnsAttribute, entries);
+                model.Unique(columnsAttribute.Name, columnsAttribute.IsClustered, GetOrderByList(entries));
+            }
+
+            protected override bool IsValid(IValidationContext validationContext, DataRow dataRow)
+            {
+                var dataSet = validationContext.Model.DataSet;
+                foreach (var other in dataSet)
+                {
+                    if (dataRow != other && AreEqual(validationContext.ColumnList, dataRow, other))
+                        return false;
+                }
+                return true;
+            }
+
+            private bool AreEqual(IReadOnlyList<Column> columnList, DataRow dataRow, DataRow other)
+            {
+                Debug.Assert(dataRow != other);
+                for (int i = 0; i < columnList.Count; i++)
+                {
+                    if (columnList[i].Compare(other, dataRow, SortDirection.Unspecified) != 0)
+                        return false;
+                }
+                return true;
             }
 
             private static ColumnSort[] GetOrderByList(IReadOnlyList<Entry> entries)

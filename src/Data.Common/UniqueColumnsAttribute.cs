@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Primitives;
+using System.Collections.Generic;
 
 namespace DevZest.Data
 {
@@ -11,7 +12,7 @@ namespace DevZest.Data
 
         public bool IsClustered { get; set; }
 
-        protected override string GetDefaultMessage(IColumns columns, DataRow dataRow)
+        protected override string GetDefaultMessage(IReadOnlyList<Column> columns, DataRow dataRow)
         {
             return Strings.UniqueColumnsAttribute_DefaultErrorMessage(columns);
         }

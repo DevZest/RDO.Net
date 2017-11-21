@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Utilities
 {
@@ -26,7 +27,7 @@ namespace DevZest.Data.Utilities
             Assert.AreSame(ErrorMessage, func(null, null, null));
         }
 
-        private static string GetColumnsErrorMessage(string attributeName, IColumns columns, DataRow dataRow)
+        private static string GetColumnsErrorMessage(string attributeName, IReadOnlyList<Column> columns, DataRow dataRow)
         {
             return ErrorMessage;
         }

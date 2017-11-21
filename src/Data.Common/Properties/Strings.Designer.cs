@@ -1051,6 +1051,22 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("UniqueColumnsAttribute_DefaultErrorMessage", "columns"), columns);
         }
 
+        /// <summary>
+        /// Attribute not found for ModelType '{modelType}': AttributeType={attributeType}, Name={attributeName}.
+        /// </summary>
+        public static string ColumnsMemberAttribute_CannotResolveColumnsAttribute(object modelType, object attributeType, object attributeName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnsMemberAttribute_CannotResolveColumnsAttribute", "modelType", "attributeType", "attributeName"), modelType, attributeType, attributeName);
+        }
+
+        /// <summary>
+        /// Duplicate attribute found for column '{column}': AttributeType={attributeType}, AttributeName={attributeName}.
+        /// </summary>
+        public static string ColumnsMemberAttribute_Duplicate(object column, object attributeType, object attributeName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnsMemberAttribute_Duplicate", "column", "attributeType", "attributeName"), column, attributeType, attributeName);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

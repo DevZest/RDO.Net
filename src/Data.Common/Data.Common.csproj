@@ -72,6 +72,7 @@
     <Compile Include="Primitives\ModelExtensions.cs" />
     <Compile Include="Primitives\ColumnsMemberAttribute.cs" />
     <Compile Include="Primitives\ValidatorColumnsAttribute.cs" />
+    <Compile Include="Primitives\ValidatorColumnsMemberAttribute.cs" />
     <Compile Include="UniqueAttribute.cs" />
     <Compile Include="UniqueColumnsAttribute.cs" />
     <Compile Include="UniqueColumnsMemberAttribute.cs" />
