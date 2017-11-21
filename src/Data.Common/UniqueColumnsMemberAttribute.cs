@@ -97,8 +97,6 @@ namespace DevZest.Data
             }
         }
 
-        private static readonly Manager s_manager = Manager.Singleton;
-
         public UniqueColumnsMemberAttribute(string name)
             : base(name)
         {
@@ -106,7 +104,7 @@ namespace DevZest.Data
 
         protected internal override void Initialize(Column column)
         {
-            s_manager.Initialize(this, column);
+            Manager.Singleton.Initialize(this, column);
         }
 
         public SortDirection SortDirection { get; set; }
