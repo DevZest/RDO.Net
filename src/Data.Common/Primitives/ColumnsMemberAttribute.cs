@@ -55,7 +55,7 @@ namespace DevZest.Data.Primitives
                 {
                     for (int i = 0; i < Count; i++)
                     {
-                        if (memberAttribute.Order < this[i].MemberAttribute.Order)
+                        if (memberAttribute.Index < this[i].MemberAttribute.Index)
                             return i;
                     }
                     return Count;
@@ -134,6 +134,6 @@ namespace DevZest.Data.Primitives
 
         public string Name { get; private set; }
 
-        public int Order { get; set; }
+        public int Index { get; set; }
     }
 }
