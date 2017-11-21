@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data
+﻿using DevZest.Data.Primitives;
+
+namespace DevZest.Data
 {
     public sealed class JsonIgnoreAttribute : ColumnAttribute
     {

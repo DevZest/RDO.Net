@@ -186,7 +186,7 @@
     <Compile Include="Primitives\CaseOnExpression.cs" />
     <Compile Include="Primitives\CastExpression.cs" />
     <Compile Include="Primitives\CheckConstraint.cs" />
-    <Compile Include="ColumnAttribute.cs" />
+    <Compile Include="Primitives\ColumnAttribute.cs" />
     <Compile Include="Primitives\ColumnExpression.cs" />
     <Compile Include="Primitives\UnaryExpression.cs" />
     <Compile Include="Primitives\ConstantExpression.cs" />
