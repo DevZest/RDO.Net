@@ -17,7 +17,7 @@ namespace DevZest.Data
             return column.IsNull(dataRow) ? new ColumnValidationMessage(MessageId, ValidationSeverity.Error, null, column) : ColumnValidationMessages.Empty;
         }
 
-        protected override string FormatMessage(Column column, DataRow dataRow)
+        protected override string GetDefaultMessage(Column column, DataRow dataRow)
         {
             return Strings.RequiredAttribute_DefaultErrorMessage(column);
         }

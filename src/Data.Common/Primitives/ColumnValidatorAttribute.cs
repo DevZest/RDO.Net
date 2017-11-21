@@ -43,8 +43,10 @@ namespace DevZest.Data.Primitives
             if (Message != null)
                 return Message;
 
-            return FormatMessage(column, dataRow);
+            return GetDefaultMessage(column, dataRow);
         }
+
+        protected abstract string GetDefaultMessage(Column column, DataRow dataRow);
 
         private Func<Column, DataRow, string> _messageFunc;
         private Func<Column, DataRow, string> MessageFunc

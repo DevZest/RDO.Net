@@ -29,7 +29,5 @@ namespace DevZest.Data.Primitives
         public Type MessageFuncType { get; set; }
 
         public string MessageFuncName { get; set; }
-
-        protected abstract string FormatMessage(Column column, DataRow dataRow);
     }
 }
