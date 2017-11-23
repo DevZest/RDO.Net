@@ -16,7 +16,7 @@ namespace DevZest.Data.Annotations
         public string DbColumnName { get; private set; }
 
         /// <inheritdoc/>
-        protected internal sealed override void Initialize(Column column)
+        protected sealed override void Initialize(Column column)
         {
             column.DbColumnName = DbColumnName;
         }

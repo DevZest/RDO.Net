@@ -4,7 +4,12 @@ namespace DevZest.Data.Annotations
 {
     public sealed class JsonIgnoreAttribute : ColumnAttribute
     {
-        protected internal override void Initialize(Column column)
+        public JsonIgnoreAttribute()
+        {
+            IsSolitary = true;
+        }
+
+        protected override void Initialize(Column column)
         {
             column.JsonIgnore();
         }

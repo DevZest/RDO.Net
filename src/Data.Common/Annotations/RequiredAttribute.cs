@@ -6,7 +6,7 @@ namespace DevZest.Data.Annotations
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class RequiredAttribute : ValidatorColumnAttribute
     {
-        protected internal override void Initialize(Column column)
+        protected override void Initialize(Column column)
         {
             base.Initialize(column);
             column.Nullable(false);

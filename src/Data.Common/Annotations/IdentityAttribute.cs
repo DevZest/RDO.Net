@@ -16,9 +16,14 @@ namespace DevZest.Data.Annotations
 
         public int Increment { get; private set; }
 
-        protected internal sealed override void Initialize(Column column)
+        protected sealed override void Initialize(Column column)
         {
             ((_Int32)column).Identity(Seed, Increment);
+        }
+
+        protected override bool CoerceIsSolitary(bool value)
+        {
+            return true;
         }
     }
 }

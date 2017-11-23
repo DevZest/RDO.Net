@@ -4,7 +4,7 @@ namespace DevZest.Data.Annotations
 {
     public sealed class UniqueAttribute : ValidatorColumnAttribute
     {
-        protected internal override void Initialize(Column column)
+        protected override void Initialize(Column column)
         {
             base.Initialize(column);
             column.ParentModel.Unique(Name, IsCluster, SortDirection == SortDirection.Descending ? column.Desc() : column.Asc());

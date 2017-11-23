@@ -1,7 +1,7 @@
 ﻿using DevZest.Data.Annotations.Primitives;
-using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -21,7 +21,10 @@ namespace DevZest.Data.Utilities
             if (propertyInfo == null)
                 throw new ArgumentException(Strings.InvalidGetterExpression, paramName);
 
-            return propertyInfo.GetCustomAttributes<ColumnAttribute>();
+            var result = propertyInfo.GetCustomAttributes<ColumnAttribute>().ToArray();
+            foreach (var columnAttribute in result)
+                columnAttribute.ModelType = propertyInfo.DeclaringType;
+            return result;
         }
 
         internal static Action<T> Merge<T>(this Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
@@ -40,7 +43,7 @@ namespace DevZest.Data.Utilities
             if (columnAttributes == null)
                 return;
             foreach (var columnAttribute in columnAttributes)
-                columnAttribute.Initialize(column);
+                columnAttribute.TryInitialize(column);
         }
     }
 }

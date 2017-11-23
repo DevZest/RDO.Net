@@ -61,11 +61,16 @@ namespace DevZest.Data.Annotations
         {
         }
 
-        protected internal override void Initialize(Column column)
+        protected override void Initialize(Column column)
         {
             Manager.Singleton.Initialize(this, column);
         }
 
         public SortDirection SortDirection { get; set; }
+
+        protected override bool CoerceIsSolitary(bool value)
+        {
+            return true;
+        }
     }
 }

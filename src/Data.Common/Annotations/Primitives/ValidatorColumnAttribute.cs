@@ -26,7 +26,7 @@ namespace DevZest.Data.Annotations.Primitives
             }
         }
 
-        protected internal override void Initialize(Column column)
+        protected override void Initialize(Column column)
         {
             var model = column.ParentModel;
             model.Validators.Add(new Validator(this, column));
