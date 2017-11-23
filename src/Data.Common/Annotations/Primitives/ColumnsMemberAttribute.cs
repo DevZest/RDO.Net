@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Annotations.Primitives
 {
     public abstract class ColumnsMemberAttribute : ColumnAttribute
     {

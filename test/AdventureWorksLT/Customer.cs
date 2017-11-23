@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT

@@ -1,7 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Annotations.Primitives
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple =true)]
     public abstract class ColumnsAttribute : Attribute

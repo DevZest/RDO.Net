@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Annotations.Primitives
 {
     public abstract class ValidatorColumnsAttribute : ColumnsAttribute
     {

@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Primitives;
+﻿using DevZest.Data.Annotations.Primitives;
+using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;

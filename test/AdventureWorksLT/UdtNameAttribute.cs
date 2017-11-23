@@ -1,7 +1,7 @@
-﻿
-using System;
+﻿using System;
 using DevZest.Data;
 using DevZest.Data.SqlServer;
+using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Samples.AdventureWorksLT
 {

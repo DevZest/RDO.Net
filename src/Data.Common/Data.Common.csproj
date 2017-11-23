@@ -66,16 +66,16 @@
     <Compile Include="IDataRowComparer.cs" />
     <Compile Include="ModelExtension.cs" />
     <Compile Include="Primitives\AutoColumnSelector.cs" />
-    <Compile Include="Primitives\ColumnsAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ColumnsAttribute.cs" />
     <Compile Include="Primitives\EnumColumn.cs" />
     <Compile Include="Primitives\IAutoColumnSelector.cs" />
     <Compile Include="Primitives\ModelExtensions.cs" />
-    <Compile Include="Primitives\ColumnsMemberAttribute.cs" />
-    <Compile Include="Primitives\ValidatorColumnsAttribute.cs" />
-    <Compile Include="Primitives\ValidatorColumnsMemberAttribute.cs" />
-    <Compile Include="UniqueAttribute.cs" />
-    <Compile Include="UniqueColumnsAttribute.cs" />
-    <Compile Include="UniqueColumnsMemberAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ColumnsMemberAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ValidatorColumnsAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ValidatorColumnsMemberAttribute.cs" />
+    <Compile Include="Annotations\UniqueAttribute.cs" />
+    <Compile Include="Annotations\UniqueColumnsAttribute.cs" />
+    <Compile Include="Annotations\UniqueColumnsMemberAttribute.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
     <Compile Include="Utilities\EmptyDictionary.cs" />
     <Compile Include="Utilities\EmptyEnumerable.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="IColumns.cs" />
-    <Compile Include="JsonIgnoreAttribute.cs" />
+    <Compile Include="Annotations\JsonIgnoreAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
     <Compile Include="ValidationMessage_T.cs" />
     <Compile Include="Columns.cs" />
@@ -129,7 +129,7 @@
     <Compile Include="DataRowValidationResult.cs" />
     <Compile Include="ColumnValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
-    <Compile Include="DbColumnNameAttribute.cs" />
+    <Compile Include="Annotations\DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
     <Compile Include="Column_T.cs" />
     <Compile Include="DataRow.cs" />
@@ -163,13 +163,13 @@
     <Compile Include="IDbSet.cs" />
     <Compile Include="IDbTable.cs" />
     <Compile Include="Identity.cs" />
-    <Compile Include="IdentityAttribute.cs" />
+    <Compile Include="Annotations\IdentityAttribute.cs" />
     <Compile Include="IMockDb.cs" />
     <Compile Include="IModels.cs" />
     <Compile Include="ColumnValidationMessages.cs" />
     <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />
-    <Compile Include="Primitives\ValidatorColumnAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ValidatorColumnAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />
     <Compile Include="Primitives\DbTableExtensions.cs" />
     <Compile Include="Primitives\SubQueryEliminator.cs" />
@@ -183,7 +183,7 @@
     <Compile Include="KeyBase.cs" />
     <Compile Include="Models.cs" />
     <Compile Include="Model_T.cs" />
-    <Compile Include="RequiredAttribute.cs" />
+    <Compile Include="Annotations\RequiredAttribute.cs" />
     <Compile Include="Primitives\MounterManager.cs" />
     <Compile Include="Primitives\AggregateFunctionExpression.cs" />
     <Compile Include="Primitives\BinaryExpression.cs" />
@@ -192,7 +192,7 @@
     <Compile Include="Primitives\CaseOnExpression.cs" />
     <Compile Include="Primitives\CastExpression.cs" />
     <Compile Include="Primitives\CheckConstraint.cs" />
-    <Compile Include="Primitives\ColumnAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ColumnAttribute.cs" />
     <Compile Include="Primitives\ColumnExpression.cs" />
     <Compile Include="Primitives\UnaryExpression.cs" />
     <Compile Include="Primitives\ConstantExpression.cs" />
@@ -267,7 +267,7 @@
     </Compile>
     <Compile Include="Primitives\KeyOutput.cs" />
     <Compile Include="SortDirection.cs" />
-    <Compile Include="UdtAttribute.cs" />
+    <Compile Include="Annotations\Primitives\UdtAttribute.cs" />
     <Compile Include="Utilities\ByteArrayExtensions.cs" />
     <Compile Include="Utilities\Check.cs" />
     <Compile Include="Utilities\CollectionExtensions.cs" />

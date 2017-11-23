@@ -1,7 +1,7 @@
-﻿using DevZest.Data.Primitives;
+﻿using DevZest.Data.Annotations.Primitives;
 using System.Collections.Generic;
 
-namespace DevZest.Data
+namespace DevZest.Data.Annotations
 {
     public sealed class UniqueColumnsAttribute : ValidatorColumnsAttribute
     {

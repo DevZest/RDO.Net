@@ -1,4 +1,5 @@
-﻿
+﻿using DevZest.Data.Annotations;
+
 namespace DevZest.Data.SqlServer
 {
     public sealed class IdentityOutput : Model

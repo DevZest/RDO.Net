@@ -92,7 +92,7 @@
     <Compile Include="Helpers\DbTableExtensions.cs" />
     <Compile Include="Helpers\SimpleModelDataSetHelper.cs" />
     <Compile Include="Helpers\SqlCommandExtensions.cs" />
-    <Compile Include="JsonIgnoreAttributeTests.cs" />
+    <Compile Include="Annotations\JsonIgnoreAttributeTests.cs" />
     <Compile Include="JsonOrderByTests.cs" />
     <Compile Include="LocalColumnManagerTests.cs" />
     <Compile Include="PagedDataSetTests.cs" />
@@ -112,7 +112,7 @@
     <Compile Include="DbSetTests.cs" />
     <Compile Include="DbTableUpdateTests.cs" />
     <Compile Include="DbTableInsertTests.cs" />
-    <Compile Include="ColumnAttributeTests.cs" />
+    <Compile Include="Annotations\ColumnAttributeTests.cs" />
     <Compile Include="DbSessionTests.cs" />
     <Compile Include="Primitives\InterceptableTests.cs" />
     <Compile Include="SqlServer\SqlSessionTests.cs" />

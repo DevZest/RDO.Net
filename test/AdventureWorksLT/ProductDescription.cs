@@ -1,6 +1,7 @@
 ﻿using System;
 using DevZest.Data;
 using DevZest.Data.SqlServer;
+using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {

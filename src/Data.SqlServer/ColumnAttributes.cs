@@ -1,5 +1,5 @@
 ﻿using System;
-using DevZest.Data.Primitives;
+using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.SqlServer
 {
