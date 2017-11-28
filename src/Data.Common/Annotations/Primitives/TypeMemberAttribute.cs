@@ -27,5 +27,15 @@ namespace DevZest.Data.Annotations.Primitives
         {
             return value;
         }
+
+        internal bool VerifyDeclaringType(Column column)
+        {
+            return VerifyDeclaringType(column.DeclaringType);
+        }
+
+        private bool VerifyDeclaringType(Type declaringType)
+        {
+            return !DeclaringTypeOnly || DeclaringType == declaringType;
+        }
     }
 }

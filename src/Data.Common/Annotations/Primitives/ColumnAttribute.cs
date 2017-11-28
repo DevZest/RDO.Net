@@ -8,9 +8,8 @@ namespace DevZest.Data.Annotations.Primitives
     {
         internal void TryInitialize(Column column)
         {
-            if (DeclaringTypeOnly && column.DeclaringType != DeclaringType)
-                return;
-            Initialize(column);
+            if (VerifyDeclaringType(column))
+                Initialize(column);
         }
 
         /// <summary>Initializes the provided <see cref="Column"/> object.</summary>

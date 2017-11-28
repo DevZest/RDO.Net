@@ -55,9 +55,8 @@ namespace DevZest.Data.Utilities
 
             public void Initialize(T column)
             {
-                if (_attribute.DeclaringTypeOnly && column.DeclaringType != _attribute.DeclaringType)
-                    return;
-                _action(column);
+                if (_attribute.VerifyDeclaringType(column))
+                    _action(column);
             }
         }
 
@@ -185,8 +184,10 @@ namespace DevZest.Data.Utilities
             public Validator(T column, ColumnValidatorAttribute attribute, Func<T, DataRow, IColumnValidationMessages> func)
             {
                 Debug.Assert(column != null);
+                Debug.Assert(attribute != null);
                 Debug.Assert(func != null);
                 _column = column;
+                _attribute = attribute;
                 _func = func;
             }
 
@@ -196,9 +197,7 @@ namespace DevZest.Data.Utilities
 
             public IColumnValidationMessages Validate(DataRow dataRow)
             {
-                if (_attribute.DeclaringTypeOnly && _column.DeclaringType != _attribute.DeclaringType)
-                    return ColumnValidationMessages.Empty;
-                return _func(_column, dataRow);
+                return _attribute.VerifyDeclaringType(_column) ? _func(_column, dataRow) : ColumnValidationMessages.Empty;
             }
         }
 
