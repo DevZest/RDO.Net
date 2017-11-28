@@ -19,7 +19,7 @@ namespace DevZest.Data
             var initializer = getter.Verify(nameof(getter));
 
             var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
-            result.OriginalOwnerType = result.OwnerType;
+            result.OriginalDeclaringType = result.DeclaringType;
             result.OriginalName = result.Name;
         }
 
@@ -27,9 +27,9 @@ namespace DevZest.Data
             where TExtension : ModelExtension
             where T : Column, new()
         {
-            var result = Column.Create<T>(mounter.OriginalOwnerType, mounter.OriginalName);
+            var result = Column.Create<T>(mounter.OriginalDeclaringType, mounter.OriginalName);
             var parent = mounter.Parent;
-            result.Construct(parent.Model, mounter.OwnerType, parent.GetName(mounter), ColumnKind.Extension, null, initializer);
+            result.Construct(parent.Model, mounter.DeclaringType, parent.GetName(mounter), ColumnKind.Extension, null, initializer);
             parent.Add(result);
             return result;
         }
@@ -42,7 +42,7 @@ namespace DevZest.Data
             Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
 
             var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
-            result.OriginalOwnerType = fromMounter.OriginalOwnerType;
+            result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;
             result.OriginalName = fromMounter.OriginalName;
         }
 

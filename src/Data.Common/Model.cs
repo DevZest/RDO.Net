@@ -58,7 +58,7 @@ namespace DevZest.Data
             Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
 
             var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, fromMounter, initializer));
-            result.OriginalOwnerType = fromMounter.OriginalOwnerType;
+            result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;
             result.OriginalName = fromMounter.OriginalName;
             return result;
         }
@@ -67,8 +67,8 @@ namespace DevZest.Data
             where TModel : Model
             where T : Column, new()
         {
-            var result = Column.Create<T>(mounter.OwnerType, mounter.Name);
-            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.ModelProperty, null, initializer);
+            var result = Column.Create<T>(mounter.DeclaringType, mounter.Name);
+            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.ModelProperty, null, initializer);
             return result;
         }
 
@@ -76,8 +76,8 @@ namespace DevZest.Data
             where TModel : Model
             where T : Column, new()
         {
-            var result = Column.Create<T>(fromMounter.OriginalOwnerType, fromMounter.OriginalName);
-            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.ModelProperty, fromMounter.Initializer, initializer);
+            var result = Column.Create<T>(fromMounter.OriginalDeclaringType, fromMounter.OriginalName);
+            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.ModelProperty, fromMounter.Initializer, initializer);
             return result;
         }
 
@@ -111,7 +111,7 @@ namespace DevZest.Data
         {
             var result = new ColumnList<T>();
             var parent = mounter.Parent;
-            result.ConstructModelMember(parent, mounter.OwnerType, mounter.Name);
+            result.ConstructModelMember(parent, mounter.DeclaringType, mounter.Name);
             parent.Add(result);
             return result;
         }
@@ -155,13 +155,13 @@ namespace DevZest.Data
         {
             TChildModel result = new TChildModel();
             var parentModel = mounter.Parent;
-            result.Construct(parentModel, mounter.OwnerType, mounter.Name);
+            result.Construct(parentModel, mounter.DeclaringType, mounter.Name);
             return result;
         }
 
-        internal void Construct(Model parentModel, Type ownerType, string name)
+        internal void Construct(Model parentModel, Type declaringType, string name)
         {
-            Construct(parentModel, ownerType, name, Array<ColumnMapping>.Empty, Array<ColumnMapping>.Empty);
+            Construct(parentModel, declaringType, name, Array<ColumnMapping>.Empty, Array<ColumnMapping>.Empty);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace DevZest.Data
             var parentModel = mounter.Parent;
             var parentRelationship = relationshipGetter(result).Join(parentModel.PrimaryKey);
             var parentMappings = AppendColumnMappings(parentRelationship, parentMappingsBuilder, result, parentModel);
-            result.Construct(parentModel, mounter.OwnerType, mounter.Name, parentRelationship, parentMappings);
+            result.Construct(parentModel, mounter.DeclaringType, mounter.Name, parentRelationship, parentMappings);
             return result;
         }
 
@@ -220,9 +220,9 @@ namespace DevZest.Data
             return result;
         }
 
-        private void Construct(Model parentModel, Type ownerType, string name, IReadOnlyList<ColumnMapping> parentRelationship, IReadOnlyList<ColumnMapping> parentMappings)
+        private void Construct(Model parentModel, Type declaringType, string name, IReadOnlyList<ColumnMapping> parentRelationship, IReadOnlyList<ColumnMapping> parentMappings)
         {
-            this.ConstructModelMember(parentModel, ownerType, name);
+            this.ConstructModelMember(parentModel, declaringType, name);
 
             Debug.Assert(parentMappings != null);
             Debug.Assert(parentRelationship != null);
@@ -259,9 +259,9 @@ namespace DevZest.Data
             Mount(s_columnListManager);
         }
 
-        internal override void ConstructModelMember(Model parentModel, Type ownerType, string name)
+        internal override void ConstructModelMember(Model parentModel, Type declaringType, string name)
         {
-            base.ConstructModelMember(parentModel, ownerType, name);
+            base.ConstructModelMember(parentModel, declaringType, name);
             ParentModel.ChildModels.Add(this);
             Depth = ParentModel.Depth + 1;
             _rootModel = ParentModel.RootModel;

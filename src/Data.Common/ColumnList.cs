@@ -92,7 +92,7 @@ namespace DevZest.Data
             Check.NotNull(column, nameof(column));
             var baseInitializer = ColumnInitializerManager<T>.GetInitializer(column);
             if (inheritColumnKey)
-                return Add(x => CreateColumn(x, column.OriginalOwnerType, column.OriginalName, baseInitializer, initializer));
+                return Add(x => CreateColumn(x, column.OriginalDeclaringType, column.OriginalName, baseInitializer, initializer));
             else
                 return Add(x => CreateColumn(x, null, null, baseInitializer, initializer));
         }
@@ -110,23 +110,23 @@ namespace DevZest.Data
             VerifyDesignMode();
             Check.NotNull(fromMounter, nameof(fromMounter));
             if (inheritOriginalId)
-                return Add(x => CreateColumn(x, fromMounter.OriginalOwnerType, fromMounter.OriginalName, fromMounter.Initializer, initializer));
+                return Add(x => CreateColumn(x, fromMounter.OriginalDeclaringType, fromMounter.OriginalName, fromMounter.Initializer, initializer));
             else
                 return Add(x => CreateColumn(x, null, null, fromMounter.Initializer, initializer));
         }
 
-        private static T CreateColumn<T>(ColumnList<TColumn> columnList, Type originalOwnerType, string originalName, Action<T> baseInitializer, Action<T> initializer)
+        private static T CreateColumn<T>(ColumnList<TColumn> columnList, Type originalDeclaringType, string originalName, Action<T> baseInitializer, Action<T> initializer)
             where T : TColumn, new()
         {
             var name = columnList.GetNewColumnName();
-            if (originalOwnerType == null)
+            if (originalDeclaringType == null)
             {
-                originalOwnerType = columnList.OwnerType;
+                originalDeclaringType = columnList.DeclaringType;
                 originalName = name;
             }
-            var result = Column.Create<T>(originalOwnerType, originalName);
+            var result = Column.Create<T>(originalDeclaringType, originalName);
 
-            result.Construct(columnList.ParentModel, columnList.OwnerType, name, ColumnKind.ColumnList, baseInitializer, initializer);
+            result.Construct(columnList.ParentModel, columnList.DeclaringType, name, ColumnKind.ColumnList, baseInitializer, initializer);
             return result;
         }
 

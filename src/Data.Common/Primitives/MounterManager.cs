@@ -15,17 +15,17 @@ namespace DevZest.Data.Primitives
         {
             public Key(IMounter<TTarget, TProperty> item)
             {
-                OwnerType = item.OwnerType;
+                DeclaringType = item.DeclaringType;
                 Name = item.Name;
             }
 
-            public readonly Type OwnerType;
+            public readonly Type DeclaringType;
 
             public readonly string Name;
 
             public override int GetHashCode()
             {
-                return OwnerType.GetHashCode() ^ Name.GetHashCode();
+                return DeclaringType.GetHashCode() ^ Name.GetHashCode();
             }
 
             public override bool Equals(object obj)
@@ -35,7 +35,7 @@ namespace DevZest.Data.Primitives
 
             public static bool operator ==(Key x, Key y)
             {
-                return x.OwnerType == y.OwnerType && x.Name == y.Name;
+                return x.DeclaringType == y.DeclaringType && x.Name == y.Name;
             }
 
             public static bool operator !=(Key x, Key y)
@@ -70,25 +70,25 @@ namespace DevZest.Data.Primitives
                 if (!callMethod.IsStatic)
                     return null;
 
-                var ownerType = callMethod.DeclaringType;
+                var declaringType = callMethod.DeclaringType;
                 var name = callExp == null ? null : callMethod.Name;
                 if (!name.StartsWith("Get"))
                     return null;
                 name = name.Substring("Get".Length);
-                return new MounterInfo<TDerivedTarget, TDerivedProperty>(true, ownerType, name, getter);
+                return new MounterInfo<TDerivedTarget, TDerivedProperty>(true, declaringType, name, getter);
             }
 
-            private MounterInfo(bool isAttached, Type ownerType, string name, Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
+            private MounterInfo(bool isAttached, Type declaringType, string name, Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
             {
                 IsAttached = isAttached;
-                OwnerType = ownerType;
+                DeclaringType = declaringType;
                 Name = name;
                 Getter = getter;
             }
 
             public readonly bool IsAttached;
 
-            public readonly Type OwnerType;
+            public readonly Type DeclaringType;
 
             public readonly string Name;
 
@@ -191,7 +191,7 @@ namespace DevZest.Data.Primitives
                 }
             }
 
-            public override Type OwnerType
+            public override Type DeclaringType
             {
                 get { return typeof(TDerivedTarget); }
             }
@@ -218,13 +218,13 @@ namespace DevZest.Data.Primitives
                 Action<TDerivedProperty> initializer)
             {
                 Init(propertyInfo.Name, GetStoredProperty, SetStoredProperty, constructor, initializer);
-                _ownerType = propertyInfo.OwnerType;
+                _declaringType = propertyInfo.DeclaringType;
             }
 
-            Type _ownerType;
-            public override Type OwnerType
+            Type _declaringType;
+            public override Type DeclaringType
             {
-                get { return _ownerType; }
+                get { return _declaringType; }
             }
         }
 
@@ -282,7 +282,7 @@ namespace DevZest.Data.Primitives
                 }
 
                 if (registrations.Contains(new Key(item)))
-                    throw new InvalidOperationException(Strings.MounterManager_RegisterDuplicate(item.OwnerType.FullName, item.Name));
+                    throw new InvalidOperationException(Strings.MounterManager_RegisterDuplicate(item.DeclaringType.FullName, item.Name));
 
                 registrations.Add(item);
             }

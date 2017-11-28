@@ -8,7 +8,7 @@ namespace DevZest.Data
     /// <summary>Extension methods for <see cref="Column"/>.</summary>
     public static class ColumnExtensions
     {
-        internal static void Construct<T>(this T column, Model parentModel, Type ownerType, string name, ColumnKind kind, Action<T> baseInitializer, Action<T> initializer)
+        internal static void Construct<T>(this T column, Model parentModel, Type declaringType, string name, ColumnKind kind, Action<T> baseInitializer, Action<T> initializer)
             where T : Column
         {
             initializer = column.MergeInitializer(baseInitializer, initializer);
@@ -18,7 +18,7 @@ namespace DevZest.Data
                 ColumnInitializerManager<T>.SetInitializer(column, initializer);
                 action = (x) => initializer((T)x);
             }
-            column.Initialize(parentModel, ownerType, name, kind, action);
+            column.Initialize(parentModel, declaringType, name, kind, action);
         }
 
         private static Action<T> MergeInitializer<T>(this T column, Action<T> baseInitializer, Action<T> initializer)

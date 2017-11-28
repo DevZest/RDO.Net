@@ -44,7 +44,7 @@ namespace DevZest.Data
                 if (model != null)
                 {
                     ParentModel = model;
-                    OriginalOwnerType = OwnerType = model.GetType();
+                    OriginalDeclaringType = DeclaringType = model.GetType();
                     List<Column> localColumns = model.LocalColumnList;
                     if (localColumns == null)
                         model.LocalColumnList = localColumns = new List<Column>();

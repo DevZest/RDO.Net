@@ -156,9 +156,9 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual(Extension.GetProperty4(target), target.Properties[3].GetInstance(target));
         }
 
-        void VerifyProperty(IMounter<TargetType, PropertyType> property, Type expectedOwnerType, string expectedName, Type expectedTargetType, Type expectedPropertyType)
+        void VerifyProperty(IMounter<TargetType, PropertyType> property, Type expectedDeclaringType, string expectedName, Type expectedTargetType, Type expectedPropertyType)
         {
-            Assert.AreEqual(expectedOwnerType, property.OwnerType, string.Format("The owner type should be '{0}'", expectedOwnerType));
+            Assert.AreEqual(expectedDeclaringType, property.DeclaringType, string.Format("The owner type should be '{0}'", expectedDeclaringType));
         }
 
         [TestMethod]

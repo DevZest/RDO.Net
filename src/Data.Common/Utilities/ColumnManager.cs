@@ -51,6 +51,7 @@ namespace DevZest.Data.Utilities
                 var columnInitializerAttribute = method.GetCustomAttribute<ColumnInitializerAttribute>();
                 if (columnInitializerAttribute == null || columnInitializerAttribute.ColumnName != columnName)
                     continue;
+                columnInitializerAttribute.DeclaringType = typeof(TParent);
                 var columnInitializer = GetColumnInitializer<TColumn>(method);
                 if (result == null)
                     result = new List<Action<TColumn>>();
@@ -85,6 +86,7 @@ namespace DevZest.Data.Utilities
                 var columnValidatorAttribute = method.GetCustomAttribute<ColumnValidatorAttribute>();
                 if (columnValidatorAttribute == null || columnValidatorAttribute.ColumnName != columnName)
                     continue;
+                columnValidatorAttribute.DeclaringType = typeof(TParent);
                 var columnValidator = GetColumnValidator<TColumn>(method);
                 if (result == null)
                     result = new List<Func<TColumn, DataRow, IColumnValidationMessages>>();

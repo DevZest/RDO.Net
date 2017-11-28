@@ -7,16 +7,16 @@ namespace DevZest.Data.Helpers
 {
     internal static class ColumnExtensions
     {
-        public static void Verify(this Column column, Model model, Type ownerType, string name)
+        public static void Verify(this Column column, Model model, Type declaringType, string name)
         {
-            column.Verify(model, ownerType, name, ownerType, name);
+            column.Verify(model, declaringType, name, declaringType, name);
         }
 
-        public static void Verify(this Column column, Model model, Type ownerType, string name, Type originalOwnerType, string originalName)
+        public static void Verify(this Column column, Model model, Type declaringType, string name, Type originalDeclaringType, string originalName)
         {
             ModelMember modelProperty = column;
-            modelProperty.Verify(model, ownerType, name);
-            Assert.AreEqual(originalOwnerType, column.OriginalOwnerType);
+            modelProperty.Verify(model, declaringType, name);
+            Assert.AreEqual(originalDeclaringType, column.OriginalDeclaringType);
             Assert.AreEqual(originalName, column.OriginalName);
         }
 

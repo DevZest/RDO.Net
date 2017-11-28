@@ -28,11 +28,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The property with OwnerType '{ownerType}' and Name '{name}' has been registered already.
+        /// The property with DeclaringType '{declaringType}' and Name '{name}' has been registered already.
         /// </summary>
-        public static string MounterManager_RegisterDuplicate(object ownerType, object name)
+        public static string MounterManager_RegisterDuplicate(object declaringType, object name)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("MounterManager_RegisterDuplicate", "ownerType", "name"), ownerType, name);
+            return string.Format(CultureInfo.CurrentCulture, GetString("MounterManager_RegisterDuplicate", "declaringType", "name"), declaringType, name);
         }
 
         /// <summary>
@@ -60,11 +60,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Duplicate ModelId is not allowed: OwnerType={ownerType}, Name={name}.
+        /// Duplicate ModelId is not allowed: DeclaringType={declaringType}, Name={name}.
         /// </summary>
-        public static string ColumnCollection_DuplicateModelId(object ownerType, object name)
+        public static string ColumnCollection_DuplicateModelId(object declaringType, object name)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnCollection_DuplicateModelId", "ownerType", "name"), ownerType, name);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnCollection_DuplicateModelId", "declaringType", "name"), declaringType, name);
         }
 
         /// <summary>

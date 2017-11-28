@@ -9,11 +9,11 @@ namespace DevZest.Data
 
         internal abstract Action<T> Initializer { get; }
 
-        Type _originalOwnerType;
-        internal Type OriginalOwnerType
+        Type _originalDeclaringType;
+        internal Type OriginalDeclaringType
         {
-            get { return _originalOwnerType ?? OwnerType; }
-            set { _originalOwnerType = value; }
+            get { return _originalDeclaringType ?? DeclaringType; }
+            set { _originalDeclaringType = value; }
         }
 
         string _originalName;
@@ -24,7 +24,7 @@ namespace DevZest.Data
         }
 
         /// <summary>Gets the type which declares this property.</summary>
-        public abstract Type OwnerType { get; }
+        public abstract Type DeclaringType { get; }
 
         /// <summary>Gets the name of the property.</summary>
         public abstract string Name { get; }

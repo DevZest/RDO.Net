@@ -4,19 +4,19 @@ namespace DevZest.Data.Primitives
 {
     public sealed class FunctionKey
     {
-        public FunctionKey(Type ownerType, string name)
+        public FunctionKey(Type declaringType, string name)
         {
-            OwnerType = ownerType;
+            DeclaringType = declaringType;
             Name = name;
         }
 
-        public Type OwnerType { get; private set; }
+        public Type DeclaringType { get; private set; }
 
         public string Name { get; private set; }
 
         public override string ToString()
         {
-            return string.Format("{0}.{1}", OwnerType, Name);
+            return string.Format("{0}.{1}", DeclaringType, Name);
         }
     }
 }

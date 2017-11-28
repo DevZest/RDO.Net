@@ -8,7 +8,7 @@ namespace DevZest.Data.Annotations.Primitives
     {
         internal void TryInitialize(Column column)
         {
-            if (DeclaringTypeOnly && column.ParentModel.GetType() != DeclaringType)
+            if (DeclaringTypeOnly && column.DeclaringType != DeclaringType)
                 return;
             Initialize(column);
         }

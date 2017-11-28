@@ -124,7 +124,7 @@
     <value>Cannot register property for type '{type}' after an instance of this type or its derived type has been created.</value>
   </data>
   <data name="MounterManager_RegisterDuplicate" xml:space="preserve">
-    <value>The property with OwnerType '{ownerType}' and Name '{name}' has been registered already.</value>
+    <value>The property with DeclaringType '{declaringType}' and Name '{name}' has been registered already.</value>
   </data>
   <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
     <value>The argument '{argumentName}' cannot be null, empty or contain only white space.</value>
@@ -136,7 +136,7 @@
     <value>Cannot resolve model chain from Column "{column}" to provided dataRow.</value>
   </data>
   <data name="ColumnCollection_DuplicateModelId" xml:space="preserve">
-    <value>Duplicate ModelId is not allowed: OwnerType={ownerType}, Name={name}.</value>
+    <value>Duplicate ModelId is not allowed: DeclaringType={declaringType}, Name={name}.</value>
   </data>
   <data name="GenericInvoker_TypeResolverReturnsNull" xml:space="preserve">
     <value>The type resolver callback returns null.</value>

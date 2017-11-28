@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
-using System.Text;
 
 namespace DevZest.Data
 {
@@ -22,7 +21,7 @@ namespace DevZest.Data
         /// Gets the original owner type of this <see cref="Column"/>.
         /// </summary>
         /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
-        public Type OriginalOwnerType { get; internal set; }
+        public Type OriginalDeclaringType { get; internal set; }
 
         /// <summary>
         /// Gets the original name of this <see cref="Column"/>.
@@ -32,12 +31,12 @@ namespace DevZest.Data
 
         public ColumnId ModelId
         {
-            get { return new ColumnId(OwnerType, Name); }
+            get { return new ColumnId(DeclaringType, Name); }
         }
 
         public ColumnId OriginalId
         {
-            get { return new ColumnId(OriginalOwnerType, OriginalName); }
+            get { return new ColumnId(OriginalDeclaringType, OriginalName); }
         }
 
         /// <summary>
@@ -71,24 +70,24 @@ namespace DevZest.Data
             get { return ParentModel == null && IsExpression; }
         }
 
-        internal static T Create<T>(Type originalOwnerType, string originalName)
+        internal static T Create<T>(Type originalDeclaringType, string originalName)
             where T : Column, new()
         {
             var result = new T();
-            result.OriginalOwnerType = originalOwnerType;
+            result.OriginalDeclaringType = originalDeclaringType;
             result.OriginalName = originalName;
             return result;
         }
 
         private Action<Column> _initializer;
 
-        internal void Initialize(Model parentModel, Type ownerType, string name, ColumnKind kind, Action<Column> initializer)
+        internal void Initialize(Model parentModel, Type declaringType, string name, ColumnKind kind, Action<Column> initializer)
         {
             Debug.Assert(parentModel != null);
-            ConstructModelMember(parentModel, ownerType, name);
+            ConstructModelMember(parentModel, declaringType, name);
             Kind = kind;
-            if (OriginalOwnerType == null)
-                OriginalOwnerType = ownerType;
+            if (OriginalDeclaringType == null)
+                OriginalDeclaringType = declaringType;
             if (string.IsNullOrEmpty(OriginalName))
                 OriginalName = name;
 
@@ -154,7 +153,7 @@ namespace DevZest.Data
         internal Column Clone(Model parentModel)
         {
             var result = (Column)Activator.CreateInstance(this.GetType());
-            result.OriginalOwnerType = parentModel.GetType();
+            result.OriginalDeclaringType = parentModel.GetType();
             result.OriginalName = this.Name;
             result.Initialize(parentModel, parentModel.GetType(), this.Name, this.Kind, this._initializer);
             return result;

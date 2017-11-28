@@ -5,14 +5,14 @@ namespace DevZest.Data
     /// <summary>A structure contains owner type and name to identify a <see cref="Column"/>.</summary>
     public struct ColumnId : IEquatable<ColumnId>
     {
-        internal ColumnId(Type ownerType, string name)
+        internal ColumnId(Type declaringType, string name)
         {
-            OwnerType = ownerType;
+            DeclaringType = declaringType;
             Name = name;
         }
 
-        /// <inheritdoc cref="Column.OwnerType" select="summary"/>
-        public readonly Type OwnerType;
+        /// <inheritdoc cref="Column.DeclaringType" select="summary"/>
+        public readonly Type DeclaringType;
 
         /// <inheritdoc cref="Column.Name" select="summary"/>
         public readonly string Name;
@@ -22,7 +22,7 @@ namespace DevZest.Data
         {
             unchecked
             {
-                int hash = OwnerType != null ? OwnerType.GetHashCode() : 0;
+                int hash = DeclaringType != null ? DeclaringType.GetHashCode() : 0;
                 if (Name != null)
                     hash += hash * 31 + Name.GetHashCode();
                 return hash;
@@ -40,7 +40,7 @@ namespace DevZest.Data
         /// <returns><see langword="true"/> if equals, otherwise <see langword="false"/>.</returns>
         public bool Equals(ColumnId other)
         {
-            return OwnerType == other.OwnerType && Name == other.Name;
+            return DeclaringType == other.DeclaringType && Name == other.Name;
         }
 
         /// <summary>Determines whether two <see cref="ColumnId"/> structs are equal.</summary>
