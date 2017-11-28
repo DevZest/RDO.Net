@@ -23,7 +23,7 @@ namespace DevZest.Data.Utilities
 
             var result = propertyInfo.GetCustomAttributes<ColumnAttribute>().ToArray();
             foreach (var columnAttribute in result)
-                columnAttribute.ModelType = propertyInfo.DeclaringType;
+                columnAttribute.DeclaringModelType = propertyInfo.DeclaringType;
             return result;
         }
 

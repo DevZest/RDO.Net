@@ -9,7 +9,7 @@ namespace DevZest.Data.Annotations.Primitives
     {
         internal void TryInitialize(Column column)
         {
-            if (IsSolitary && column.ParentModel.GetType() != ModelType)
+            if (DeclaringModelTypeOnly && column.ParentModel.GetType() != DeclaringModelType)
                 return;
             Initialize(column);
         }
@@ -18,25 +18,25 @@ namespace DevZest.Data.Annotations.Primitives
         /// <param name="column">The <see cref="Column"/> object.</param>
         protected abstract void Initialize(Column column);
 
-        private Type _modelType;
-        public Type ModelType
+        private Type _declaringModelType;
+        public Type DeclaringModelType
         {
-            get { return _modelType; }
+            get { return _declaringModelType; }
             internal set
             {
-                Debug.Assert(_modelType == null && value != null);
-                _modelType = value;
+                Debug.Assert(_declaringModelType == null && value != null);
+                _declaringModelType = value;
             }
         }
 
-        private bool _isSolitary;
-        public bool IsSolitary
+        private bool _declaringModelTypeOnly;
+        public bool DeclaringModelTypeOnly
         {
-            get { return CoerceIsSolitary(_isSolitary); }
-            set { _isSolitary = value; }
+            get { return CoerceDeclaringModelTypeOnly(_declaringModelTypeOnly); }
+            set { _declaringModelTypeOnly = value; }
         }
 
-        protected virtual bool CoerceIsSolitary(bool value)
+        protected virtual bool CoerceDeclaringModelTypeOnly(bool value)
         {
             return value;
         }
