@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Annotations.Primitives;
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
@@ -13,38 +12,36 @@ namespace DevZest.Data
     {
         private static MounterManager<ModelExtension, Column> s_columnManager = new MounterManager<ModelExtension, Column>();
 
-        protected static void RegisterColumn<TExtension, TColumn>(Expression<Func<TExtension, TColumn>> getter, Action<TColumn> initializer = null)
+        protected static void RegisterColumn<TExtension, TColumn>(Expression<Func<TExtension, TColumn>> getter)
             where TExtension : ModelExtension
             where TColumn : Column, new()
         {
-            var columnAttributes = getter.Verify(nameof(getter));
+            var initializer = getter.Verify(nameof(getter));
 
-            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer, columnAttributes));
+            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
             result.OriginalOwnerType = result.OwnerType;
             result.OriginalName = result.Name;
         }
 
-        private static T CreateColumn<TExtension, T>(Mounter<TExtension, T> mounter, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
+        private static T CreateColumn<TExtension, T>(Mounter<TExtension, T> mounter, Action<T> initializer)
             where TExtension : ModelExtension
             where T : Column, new()
         {
             var result = Column.Create<T>(mounter.OriginalOwnerType, mounter.OriginalName);
             var parent = mounter.Parent;
-            result.Construct(parent.Model, mounter.OwnerType, parent.GetName(mounter), ColumnKind.Extension, null, initializer.Merge(columnAttributes));
+            result.Construct(parent.Model, mounter.OwnerType, parent.GetName(mounter), ColumnKind.Extension, null, initializer);
             parent.Add(result);
             return result;
         }
 
-        protected static void RegisterColumn<TExtension, TColumn>(Expression<Func<TExtension, TColumn>> getter,
-            Mounter<TColumn> fromMounter,
-            Action<TColumn> initializer = null)
+        protected static void RegisterColumn<TExtension, TColumn>(Expression<Func<TExtension, TColumn>> getter, Mounter<TColumn> fromMounter)
             where TExtension : ModelExtension
             where TColumn : Column, new()
         {
-            var columnAttributes = getter.Verify(nameof(getter));
+            var initializer = getter.Verify(nameof(getter));
             Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
 
-            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer, columnAttributes));
+            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
             result.OriginalOwnerType = fromMounter.OriginalOwnerType;
             result.OriginalName = fromMounter.OriginalName;
         }

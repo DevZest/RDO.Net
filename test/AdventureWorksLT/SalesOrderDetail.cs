@@ -57,7 +57,7 @@ namespace DevZest.Samples.AdventureWorksLT
             _OrderQty = RegisterColumn((SalesOrderDetail _) => _.OrderQty);
             RegisterColumn((SalesOrderDetail _) => _.ProductID, AdventureWorksLT.Product.Ref._ProductID);
             _UnitPrice = RegisterColumn((SalesOrderDetail _) => _.UnitPrice);
-            _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount, x => x.SetDefault(0));
+            _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount);
             _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);
         }
 
@@ -117,6 +117,12 @@ namespace DevZest.Samples.AdventureWorksLT
         [Required]
         [AsMoney]
         public _Decimal UnitPriceDiscount { get; private set; }
+
+        [ColumnInitializer(nameof(UnitPriceDiscount))]
+        private static void InitializeUnitPriceDiscount(_Decimal unitPriceDiscount)
+        {
+            unitPriceDiscount.SetDefault(0);
+        }
 
         [Required]
         [AsMoney]

@@ -20,7 +20,7 @@ namespace DevZest.Data.Annotations
             }
 
             public static Mounter<_Int32> _Id = RegisterColumn((MyTable x) => x.Id);
-            public static Mounter<_Boolean> _IsActive = RegisterColumn((MyTable x) => x.IsActive, c => c.SetDefault(true));
+            public static Mounter<_Boolean> _IsActive = RegisterColumn((MyTable x) => x.IsActive);
 
             public MyTable()
             {
@@ -38,6 +38,12 @@ namespace DevZest.Data.Annotations
 
             [Required]
             public _Boolean IsActive { get; private set; }
+
+            [ColumnInitializer(nameof(IsActive))]
+            private static void InitializeIsActive(_Boolean isActive)
+            {
+                isActive.SetDefault(true);
+            }
         }
 
         private sealed class MyDb : Db

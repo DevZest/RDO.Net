@@ -77,9 +77,9 @@ namespace DevZest.Samples.AdventureWorksLT
             _Weight = RegisterColumn((Product _) => _.Weight);
             RegisterColumn((Product _) => _.ProductCategoryID, AdventureWorksLT.ProductCategory.Ref._ProductCategoryID);
             RegisterColumn((Product _) => _.ProductModelID, AdventureWorksLT.ProductModel.Ref._ProductModelID);
-            _SellStartDate = RegisterColumn((Product _) => _.SellStartDate, x => x.AsDateTime());
-            _SellEndDate = RegisterColumn((Product _) => _.SellEndDate, x => x.AsDateTime());
-            _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate, x => x.AsDateTime());
+            _SellStartDate = RegisterColumn((Product _) => _.SellStartDate);
+            _SellEndDate = RegisterColumn((Product _) => _.SellEndDate);
+            _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate);
             _ThumbNailPhoto = RegisterColumn((Product _) => _.ThumbNailPhoto);
             _ThumbnailPhotoFileName = RegisterColumn((Product _) => _.ThumbnailPhotoFileName);
         }

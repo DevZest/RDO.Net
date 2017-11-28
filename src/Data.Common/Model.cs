@@ -27,17 +27,16 @@ namespace DevZest.Data
         /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
         /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="getter">The lambda expression of the column getter.</param>
-        /// <param name="initializer">The additional initializer.</param>
         /// <returns>Mounter of the column.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        public static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Action<TColumn> initializer = null)
+        public static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter)
             where TModel : Model
             where TColumn : Column, new()
         {
-            var columnAttributes = getter.Verify(nameof(getter));
+            var initializer = getter.Verify(nameof(getter));
 
-            return s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer, columnAttributes));
+            return s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
         }
 
         /// <summary>
@@ -47,42 +46,38 @@ namespace DevZest.Data
         /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="getter">The lambda expression of the column getter.</param>
         /// <param name="fromMounter">The existing column mounter.</param>
-        /// <param name="initializer">The additional initializer.</param>
         /// <returns>Mounter of the column.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="fromMounter"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="initializer"/> is null.</exception>
-        public static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter,
-            Mounter<TColumn> fromMounter,
-            Action<TColumn> initializer = null)
+        public static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Mounter<TColumn> fromMounter)
             where TModel : Model
             where TColumn : Column, new()
         {
-            var columnAttributes = getter.Verify(nameof(getter));
+            var initializer = getter.Verify(nameof(getter));
             Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
 
-            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, fromMounter, initializer, columnAttributes));
+            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, fromMounter, initializer));
             result.OriginalOwnerType = fromMounter.OriginalOwnerType;
             result.OriginalName = fromMounter.OriginalName;
             return result;
         }
 
-        private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
+        private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Action<T> initializer)
             where TModel : Model
             where T : Column, new()
         {
             var result = Column.Create<T>(mounter.OwnerType, mounter.Name);
-            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.ModelProperty, null, initializer.Merge(columnAttributes));
+            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.ModelProperty, null, initializer);
             return result;
         }
 
-        private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Mounter<T> fromMounter, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
+        private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Mounter<T> fromMounter, Action<T> initializer)
             where TModel : Model
             where T : Column, new()
         {
             var result = Column.Create<T>(fromMounter.OriginalOwnerType, fromMounter.OriginalName);
-            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.ModelProperty, fromMounter.Initializer, initializer.Merge(columnAttributes));
+            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.ModelProperty, fromMounter.Initializer, initializer);
             return result;
         }
 

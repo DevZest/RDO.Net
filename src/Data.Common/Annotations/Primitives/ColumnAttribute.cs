@@ -4,11 +4,11 @@ namespace DevZest.Data.Annotations.Primitives
 {
     /// <summary>Base class for attributes which can be decorated with a column.</summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public abstract class ColumnAttribute : ModelMemberAttribute
+    public abstract class ColumnAttribute : TypeMemberAttribute
     {
         internal void TryInitialize(Column column)
         {
-            if (DeclaringModelTypeOnly && column.ParentModel.GetType() != DeclaringModelType)
+            if (DeclaringTypeOnly && column.ParentModel.GetType() != DeclaringType)
                 return;
             Initialize(column);
         }

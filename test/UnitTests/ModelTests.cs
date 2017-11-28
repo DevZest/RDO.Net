@@ -13,14 +13,16 @@ namespace DevZest.Data
     {
         private class SimpleModel : Model
         {
-            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1, x => x.DbColumnName = "DbColumnName");
+            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
 
-            public static readonly Mounter<_Int32> _Column2 = RegisterColumn((SimpleModel x) => x.Column2, x => x.DbColumnName = "DbColumnName");
+            public static readonly Mounter<_Int32> _Column2 = RegisterColumn((SimpleModel x) => x.Column2);
 
             [Required]
+            [DbColumnName("DbColumnName")]
             public _Int32 Column1 { get; private set; }
 
             [Required]
+            [DbColumnName("DbColumnName")]
             public _Int32 Column2 { get; private set; }
         }
 

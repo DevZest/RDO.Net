@@ -59,12 +59,12 @@ namespace DevZest.Samples.AdventureWorksLT
         static SalesOrder()
         {
             RegisterColumn((SalesOrder _) => _.SalesOrderID, Ref._SalesOrderID);
-            _RevisionNumber = RegisterColumn((SalesOrder _) => _.RevisionNumber, x => x.WithDefaultValue((byte?)0));
-            _OrderDate = RegisterColumn((SalesOrder _) => _.OrderDate, x => x.WithDefault(Functions.GetDate()));
+            _RevisionNumber = RegisterColumn((SalesOrder _) => _.RevisionNumber);
+            _OrderDate = RegisterColumn((SalesOrder _) => _.OrderDate);
             _DueDate = RegisterColumn((SalesOrder _) => _.DueDate);
             _ShipDate = RegisterColumn((SalesOrder _) => _.ShipDate);
-            _Status = RegisterColumn((SalesOrder _) => _.Status, x => x.SetDefault(SalesOrderStatus.InProcess));
-            _OnlineOrderFlag = RegisterColumn((SalesOrder _) => _.OnlineOrderFlag, x => x.SetDefault(true));
+            _Status = RegisterColumn((SalesOrder _) => _.Status);
+            _OnlineOrderFlag = RegisterColumn((SalesOrder _) => _.OnlineOrderFlag);
             _SalesOrderNumber = RegisterColumn((SalesOrder _) => _.SalesOrderNumber);
             _PurchaseOrderNumber = RegisterColumn((SalesOrder _) => _.PurchaseOrderNumber);
             _AccountNumber = RegisterColumn((SalesOrder _) => _.AccountNumber);
@@ -73,10 +73,10 @@ namespace DevZest.Samples.AdventureWorksLT
             RegisterColumn((SalesOrder _) => _.BillToAddressID, Address.Ref._AddressID);
             _ShipMethod = RegisterColumn((SalesOrder _) => _.ShipMethod);
             _CreditCardApprovalCode = RegisterColumn((SalesOrder _) => _.CreditCardApprovalCode);
-            _SubTotal = RegisterColumn((SalesOrder _) => _.SubTotal, x => x.SetDefault(0));
-            _TaxAmt = RegisterColumn((SalesOrder _) => _.TaxAmt, x => x.SetDefault(0));
-            _Freight = RegisterColumn((SalesOrder _) => _.Freight, x => x.SetDefault(0));
-            _TotalDue = RegisterColumn((SalesOrder _) => _.TotalDue, x => x.SetDefault(0));
+            _SubTotal = RegisterColumn((SalesOrder _) => _.SubTotal);
+            _TaxAmt = RegisterColumn((SalesOrder _) => _.TaxAmt);
+            _Freight = RegisterColumn((SalesOrder _) => _.Freight);
+            _TotalDue = RegisterColumn((SalesOrder _) => _.TotalDue);
             _Comment = RegisterColumn((SalesOrder _) => _.Comment);
             RegisterChildModel((SalesOrder x) => x.SalesOrderDetails, (SalesOrderDetail x) => x.SalesOrder);
         }
@@ -161,9 +161,21 @@ namespace DevZest.Samples.AdventureWorksLT
         [Required]
         public _Byte RevisionNumber { get; private set; }
 
+        [ColumnInitializer(nameof(RevisionNumber))]
+        private static void InitializeRevisionNumber(_Byte revisionNumber)
+        {
+            revisionNumber.WithDefaultValue((byte?)0);
+        }
+
         [Required]
         [AsDateTime]
         public _DateTime OrderDate { get; private set; }
+
+        [ColumnInitializer(nameof(OrderDate))]
+        private static void InitializeOrderDate(_DateTime orderDate)
+        {
+            orderDate.WithDefault(Functions.GetDate());
+        }
 
         [Required]
         [AsDateTime]
@@ -175,8 +187,20 @@ namespace DevZest.Samples.AdventureWorksLT
         [Required]
         public _ByteEnum<SalesOrderStatus> Status { get; private set; }
 
+        [ColumnInitializer(nameof(Status))]
+        private static void InitializeStatus(_ByteEnum<SalesOrderStatus> status)
+        {
+            status.SetDefault(SalesOrderStatus.InProcess);
+        }
+
         [Required]
         public _Boolean OnlineOrderFlag { get; private set; }
+
+        [ColumnInitializer(nameof(OnlineOrderFlag))]
+        private static void InitializeOnlineOrderFlag(_Boolean onlineOrderFlag)
+        {
+            onlineOrderFlag.SetDefault(true);
+        }
 
         [UdtOrderNumber]
         public _String SalesOrderNumber { get; private set; }
@@ -205,13 +229,31 @@ namespace DevZest.Samples.AdventureWorksLT
         [AsMoney]
         public _Decimal SubTotal { get; private set; }
 
+        [ColumnInitializer(nameof(SubTotal))]
+        private static void InitializeSubTotal(_Decimal subTotal)
+        {
+            subTotal.SetDefault(0);
+        }
+
         [Required]
         [AsMoney]
         public _Decimal TaxAmt { get; private set; }
 
+        [ColumnInitializer(nameof(TaxAmt))]
+        private static void InitializeTaxAmt(_Decimal taxAmt)
+        {
+            taxAmt.SetDefault(0);
+        }
+
         [Required]
         [AsMoney]
         public _Decimal Freight { get; private set; }
+
+        [ColumnInitializer(nameof(Freight))]
+        private static void InitializeFreight(_Decimal freight)
+        {
+            freight.SetDefault(0);
+        }
 
         [Required]
         [AsMoney]

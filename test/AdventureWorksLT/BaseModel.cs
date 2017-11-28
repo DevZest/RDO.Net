@@ -7,8 +7,8 @@ namespace DevZest.Samples.AdventureWorksLT
     public abstract class BaseModel<T> : Model<T>
         where T : KeyBase
     {
-        public static readonly Mounter<_Guid> _RowGuid = RegisterColumn((BaseModel<T> x) => x.RowGuid, c => c.SetDefault(DevZest.Data.Functions.NewGuid()));
-        public static readonly Mounter<_DateTime> _ModifiedDate = RegisterColumn((BaseModel<T> x) => x.ModifiedDate, x => x.SetDefault(DevZest.Data.Functions.GetDate()));
+        public static readonly Mounter<_Guid> _RowGuid = RegisterColumn((BaseModel<T> x) => x.RowGuid);
+        public static readonly Mounter<_DateTime> _ModifiedDate = RegisterColumn((BaseModel<T> x) => x.ModifiedDate);
 
         [Required]
         public _Guid RowGuid { get; private set; }
@@ -17,5 +17,16 @@ namespace DevZest.Samples.AdventureWorksLT
         [AsDateTime]
         public _DateTime ModifiedDate { get; private set; }
 
+        [ColumnInitializer(nameof(RowGuid))]
+        private static void InitializeRowGuid(_Guid rowGuid)
+        {
+            rowGuid.SetDefault(Functions.NewGuid());
+        }
+
+        [ColumnInitializer(nameof(ModifiedDate))]
+        private static void InitializeModifiedDate(_DateTime modifiedDate)
+        {
+            modifiedDate.SetDefault(Functions.GetDate());
+        }
     }
 }

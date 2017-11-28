@@ -5,7 +5,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class ColumnValidatorAttribute : ModelMemberAttribute
+    public sealed class ColumnValidatorAttribute : TypeMemberAttribute
     {
         public ColumnValidatorAttribute(string columnName)
         {

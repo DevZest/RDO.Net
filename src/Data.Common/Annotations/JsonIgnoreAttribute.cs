@@ -6,7 +6,7 @@ namespace DevZest.Data.Annotations
     {
         public JsonIgnoreAttribute()
         {
-            DeclaringModelTypeOnly = true;
+            DeclaringTypeOnly = true;
         }
 
         protected override void Initialize(Column column)

@@ -46,7 +46,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             RegisterColumn((ProductCategory _) => _.ProductCategoryID, Ref._ProductCategoryID);
             RegisterColumn((ProductCategory _) => _.ParentProductCategoryID, Ref._ProductCategoryID);
-            _Name = RegisterColumn((ProductCategory _) => _.Name, _ => { _.AsNVarChar(50); });
+            _Name = RegisterColumn((ProductCategory _) => _.Name);
             RegisterChildModel((ProductCategory x) => x.SubCategories, (ProductCategory x) => x.ParentProductCategory);
         }
 
@@ -73,6 +73,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [UdtName]
         [Required]
+        [AsNVarChar(50)]
         public _String Name { get; private set; }
     }
 }
