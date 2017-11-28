@@ -22,8 +22,8 @@ namespace DevZest.Data.Utilities
 
             var columnAttributes = GetColumnAttributes<TParent>(columnName, paramName);
             var columnInitializers = GetColumnInitializers<TParent, TColumn>(columnName);
-            var columnValidators = GetColumnValidators<TParent, TColumn>(columnName);
-            return Merge(columnAttributes, columnInitializers, columnValidators);
+            var columnValidatorProviders = GetColumnValidatorProviders<TParent, TColumn>(columnName);
+            return Merge(columnAttributes, columnInitializers, columnValidatorProviders);
         }
 
         private static IEnumerable<ColumnAttribute> GetColumnAttributes<T>(string columnName, string paramName)
@@ -38,9 +38,33 @@ namespace DevZest.Data.Utilities
             return result;
         }
 
-        private static IEnumerable<Action<TColumn>> GetColumnInitializers<TParent, TColumn>(string columnName)
+        private struct ColumnInitializer<T>
+            where T : Column
         {
-            List<Action<TColumn>> result = null;
+            public ColumnInitializer(ColumnInitializerAttribute attribute, Action<T> action)
+            {
+                Debug.Assert(attribute != null);
+                Debug.Assert(action != null);
+
+                _attribute = attribute;
+                _action = action;
+            }
+
+            private readonly ColumnInitializerAttribute _attribute;
+            private readonly Action<T> _action;
+
+            public void Initialize(T column)
+            {
+                if (_attribute.DeclaringTypeOnly && column.DeclaringType != _attribute.DeclaringType)
+                    return;
+                _action(column);
+            }
+        }
+
+        private static IEnumerable<ColumnInitializer<TColumn>> GetColumnInitializers<TParent, TColumn>(string columnName)
+            where TColumn : Column
+        {
+            List<ColumnInitializer<TColumn>> result = null;
 
             var methods = GetStaticMethods<TParent>();
             if (methods == null)
@@ -54,8 +78,8 @@ namespace DevZest.Data.Utilities
                 columnInitializerAttribute.DeclaringType = typeof(TParent);
                 var columnInitializer = GetColumnInitializer<TColumn>(method);
                 if (result == null)
-                    result = new List<Action<TColumn>>();
-                result.Add(columnInitializer);
+                    result = new List<ColumnInitializer<TColumn>>();
+                result.Add(new ColumnInitializer<TColumn>(columnInitializerAttribute, columnInitializer));
             }
 
             return result;
@@ -73,9 +97,30 @@ namespace DevZest.Data.Utilities
             return Expression.Lambda<Action<T>>(call, paramColumn).Compile();
         }
 
-        private static IEnumerable<Func<TColumn, DataRow, IColumnValidationMessages>> GetColumnValidators<TParent, TColumn>(string columnName)
+        private struct ColumnValidatorProvider<T>
+            where T : Column
         {
-            List<Func<TColumn, DataRow, IColumnValidationMessages>> result = null;
+            public ColumnValidatorProvider(ColumnValidatorAttribute attribute, Func<T, DataRow, IColumnValidationMessages> func)
+            {
+                Debug.Assert(attribute != null);
+                Debug.Assert(func != null);
+                _attribute = attribute;
+                _func = func;
+            }
+
+            private readonly ColumnValidatorAttribute _attribute;
+            private readonly Func<T, DataRow, IColumnValidationMessages> _func;
+
+            public IValidator GetValidator(T column)
+            {
+                return new Validator<T>(column, _attribute, _func);
+            }
+        }
+
+        private static IEnumerable<ColumnValidatorProvider<TColumn>> GetColumnValidatorProviders<TParent, TColumn>(string columnName)
+            where TColumn : Column
+        {
+            List<ColumnValidatorProvider<TColumn>> result = null;
 
             var methods = GetStaticMethods<TParent>();
             if (methods == null)
@@ -89,8 +134,8 @@ namespace DevZest.Data.Utilities
                 columnValidatorAttribute.DeclaringType = typeof(TParent);
                 var columnValidator = GetColumnValidator<TColumn>(method);
                 if (result == null)
-                    result = new List<Func<TColumn, DataRow, IColumnValidationMessages>>();
-                result.Add(columnValidator);
+                    result = new List<ColumnValidatorProvider<TColumn>>();
+                result.Add(new ColumnValidatorProvider<TColumn>(columnValidatorAttribute, columnValidator));
             }
 
             return result;
@@ -105,15 +150,15 @@ namespace DevZest.Data.Utilities
         }
 
         private static Action<T> Merge<T>(IEnumerable<ColumnAttribute> columnAttributes,
-            IEnumerable<Action<T>> columnInitializers,
-            IEnumerable<Func<T, DataRow, IColumnValidationMessages>> columnValidators)
+            IEnumerable<ColumnInitializer<T>> columnInitializers,
+            IEnumerable<ColumnValidatorProvider<T>> columnValidatorProviders)
             where T : Column, new()
         {
             return x =>
             {
                 Initialize(x, columnAttributes);
                 Initialize(x, columnInitializers);
-                Initialize(x, columnValidators);
+                Initialize(x, columnValidatorProviders);
             };
         }
 
@@ -125,18 +170,19 @@ namespace DevZest.Data.Utilities
                 columnAttribute.TryInitialize(column);
         }
 
-        private static void Initialize<T>(T column, IEnumerable<Action<T>> columnInitializers)
+        private static void Initialize<T>(T column, IEnumerable<ColumnInitializer<T>> columnInitializers)
+            where T : Column
         {
             if (columnInitializers == null)
                 return;
             foreach (var columnInitializer in columnInitializers)
-                columnInitializer(column);
+                columnInitializer.Initialize(column);
         }
 
         private sealed class Validator<T> : IValidator
             where T : Column
         {
-            public Validator(T column, Func<T, DataRow, IColumnValidationMessages> func)
+            public Validator(T column, ColumnValidatorAttribute attribute, Func<T, DataRow, IColumnValidationMessages> func)
             {
                 Debug.Assert(column != null);
                 Debug.Assert(func != null);
@@ -145,23 +191,26 @@ namespace DevZest.Data.Utilities
             }
 
             private readonly T _column;
+            private readonly ColumnValidatorAttribute _attribute;
             private Func<T, DataRow, IColumnValidationMessages> _func;
 
             public IColumnValidationMessages Validate(DataRow dataRow)
             {
+                if (_attribute.DeclaringTypeOnly && _column.DeclaringType != _attribute.DeclaringType)
+                    return ColumnValidationMessages.Empty;
                 return _func(_column, dataRow);
             }
         }
 
-        private static void Initialize<T>(T column, IEnumerable<Func<T, DataRow, IColumnValidationMessages>> columnValidators)
+        private static void Initialize<T>(T column, IEnumerable<ColumnValidatorProvider<T>> columnValidatorProviders)
             where T : Column
         {
-            if (columnValidators == null)
+            if (columnValidatorProviders == null)
                 return;
 
             var validators = column.ParentModel.Validators;
-            foreach (var columnValidator in columnValidators)
-                validators.Add(new Validator<T>(column, columnValidator));
+            foreach (var provider in columnValidatorProviders)
+                validators.Add(provider.GetValidator(column));
         }
     }
 }
