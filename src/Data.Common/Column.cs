@@ -484,5 +484,7 @@ namespace DevZest.Data
         public abstract bool IsReadOnly(DataRow dataRow);
 
         public abstract object GetDefaultValue();
+
+        public abstract void SetDefaultObject(object defaultValue);
     }
 }

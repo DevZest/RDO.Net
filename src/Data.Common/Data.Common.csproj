@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="Annotations\ColumnInitializerAttribute.cs" />
     <Compile Include="Annotations\ColumnValidatorAttribute.cs" />
+    <Compile Include="Annotations\DefaultValueAttribute.cs" />
     <Compile Include="Annotations\Primitives\TypeMemberAttribute.cs" />
     <Compile Include="AttachedLocalColumnManager.cs" />
     <Compile Include="ColumnValueBag.cs" />

@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
+using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -159,13 +160,8 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 SalesOrderID { get; private set; }
 
         [Required]
+        [DefaultValue((byte)0)]
         public _Byte RevisionNumber { get; private set; }
-
-        [ColumnInitializer(nameof(RevisionNumber))]
-        private static void InitializeRevisionNumber(_Byte revisionNumber)
-        {
-            revisionNumber.WithDefaultValue((byte?)0);
-        }
 
         [Required]
         [AsDateTime]
@@ -185,22 +181,12 @@ namespace DevZest.Samples.AdventureWorksLT
         public _DateTime ShipDate { get; private set; }
 
         [Required]
+        [DefaultValue(typeof(SalesOrderStatus), nameof(SalesOrderStatus.InProcess))]
         public _ByteEnum<SalesOrderStatus> Status { get; private set; }
 
-        [ColumnInitializer(nameof(Status))]
-        private static void InitializeStatus(_ByteEnum<SalesOrderStatus> status)
-        {
-            status.SetDefaultValue(SalesOrderStatus.InProcess);
-        }
-
         [Required]
+        [DefaultValue(true)]
         public _Boolean OnlineOrderFlag { get; private set; }
-
-        [ColumnInitializer(nameof(OnlineOrderFlag))]
-        private static void InitializeOnlineOrderFlag(_Boolean onlineOrderFlag)
-        {
-            onlineOrderFlag.SetDefaultValue(true);
-        }
 
         [UdtOrderNumber]
         public _String SalesOrderNumber { get; private set; }
@@ -227,33 +213,18 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [AsMoney]
+        [DefaultValue(typeof(decimal), "0")]
         public _Decimal SubTotal { get; private set; }
 
-        [ColumnInitializer(nameof(SubTotal))]
-        private static void InitializeSubTotal(_Decimal subTotal)
-        {
-            subTotal.SetDefaultValue(0);
-        }
-
         [Required]
         [AsMoney]
+        [DefaultValue(typeof(decimal), "0")]
         public _Decimal TaxAmt { get; private set; }
 
-        [ColumnInitializer(nameof(TaxAmt))]
-        private static void InitializeTaxAmt(_Decimal taxAmt)
-        {
-            taxAmt.SetDefaultValue(0);
-        }
-
         [Required]
         [AsMoney]
+        [DefaultValue(typeof(decimal), "0")]
         public _Decimal Freight { get; private set; }
-
-        [ColumnInitializer(nameof(Freight))]
-        private static void InitializeFreight(_Decimal freight)
-        {
-            freight.SetDefaultValue(0);
-        }
 
         [Required]
         [AsMoney]

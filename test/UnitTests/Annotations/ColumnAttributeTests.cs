@@ -37,13 +37,8 @@ namespace DevZest.Data.Annotations
             public _Int32 Id { get; private set; }
 
             [Required]
+            [DefaultValue(true)]
             public _Boolean IsActive { get; private set; }
-
-            [ColumnInitializer(nameof(IsActive))]
-            private static void InitializeIsActive(_Boolean isActive)
-            {
-                isActive.SetDefaultValue(true);
-            }
         }
 
         private sealed class MyDb : Db

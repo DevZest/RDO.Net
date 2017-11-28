@@ -423,6 +423,11 @@ namespace DevZest.Data
             AddOrUpdateInterceptor(new Default<T>(CreateConst(value)));
         }
 
+        public sealed override void SetDefaultObject(object defaultValue)
+        {
+            SetDefaultValue((T)defaultValue);
+        }
+
         /// <summary>Gets the default declaration for this column.</summary>
         /// <returns>The default declaration for this column. Returns <see langword="null"/> if no default defined.</returns>
         public new Default<T> GetDefault()
