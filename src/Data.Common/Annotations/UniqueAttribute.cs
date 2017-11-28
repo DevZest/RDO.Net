@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class UniqueAttribute : ValidatorColumnAttribute
+    public sealed class UniqueAttribute : ValidationColumnAttribute
     {
         protected override void Initialize(Column column)
         {

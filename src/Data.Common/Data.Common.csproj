@@ -74,8 +74,8 @@
     <Compile Include="Primitives\IAutoColumnSelector.cs" />
     <Compile Include="Primitives\ModelExtensions.cs" />
     <Compile Include="Annotations\Primitives\ColumnsMemberAttribute.cs" />
-    <Compile Include="Annotations\Primitives\ValidatorColumnsAttribute.cs" />
-    <Compile Include="Annotations\Primitives\ValidatorColumnsMemberAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ValidationColumnsAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ValidationColumnsMemberAttribute.cs" />
     <Compile Include="Annotations\UniqueAttribute.cs" />
     <Compile Include="Annotations\UniqueColumnsAttribute.cs" />
     <Compile Include="Annotations\UniqueColumnsMemberAttribute.cs" />
@@ -172,7 +172,7 @@
     <Compile Include="ColumnValidationMessages.cs" />
     <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />
-    <Compile Include="Annotations\Primitives\ValidatorColumnAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ValidationColumnAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />
     <Compile Include="Primitives\DbTableExtensions.cs" />
     <Compile Include="Primitives\SubQueryEliminator.cs" />

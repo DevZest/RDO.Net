@@ -4,11 +4,11 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public abstract class ValidatorColumnAttribute : ColumnAttribute
+    public abstract class ValidationColumnAttribute : ColumnAttribute
     {
         private sealed class Validator : IValidator
         {
-            internal Validator(ValidatorColumnAttribute owner, Column column)
+            internal Validator(ValidationColumnAttribute owner, Column column)
             {
                 Debug.Assert(owner != null);
                 Debug.Assert(column != null);
@@ -17,7 +17,7 @@ namespace DevZest.Data.Annotations.Primitives
                 _column = column;
             }
 
-            private ValidatorColumnAttribute _owner;
+            private ValidationColumnAttribute _owner;
             private Column _column;
 
             public IColumnValidationMessages Validate(DataRow dataRow)

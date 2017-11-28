@@ -21,7 +21,7 @@ namespace DevZest.Data.Annotations
             ((_Int32)column).Identity(Seed, Increment);
         }
 
-        protected override bool CoerceDeclaringModelTypeOnly(bool value)
+        protected override bool CoerceDeclaringTypeOnly(bool value)
         {
             return true;
         }

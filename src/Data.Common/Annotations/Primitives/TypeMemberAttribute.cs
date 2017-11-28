@@ -19,11 +19,11 @@ namespace DevZest.Data.Annotations.Primitives
         private bool _declaringTypeOnly;
         public bool DeclaringTypeOnly
         {
-            get { return CoerceDeclaringModelTypeOnly(_declaringTypeOnly); }
+            get { return CoerceDeclaringTypeOnly(_declaringTypeOnly); }
             set { _declaringTypeOnly = value; }
         }
 
-        protected virtual bool CoerceDeclaringModelTypeOnly(bool value)
+        protected virtual bool CoerceDeclaringTypeOnly(bool value)
         {
             return value;
         }
