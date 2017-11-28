@@ -40,7 +40,7 @@ namespace DevZest.Data
         /// <typeparam name="T">Type of the column.</typeparam>
         /// <param name="column">The column.</param>
         /// <param name="expression">The expression.</param>
-        /// <remarks>To define default constant value, call <see cref="Column{T}.SetDefault(T)"/> method.</remarks>
+        /// <remarks>To define default constant value, call <see cref="Column{T}.SetDefaultValue(T)"/> method.</remarks>
         public static void SetDefault<T>(this T column, T expression)
             where T : Column, new()
         {
@@ -60,7 +60,7 @@ namespace DevZest.Data
         public static TColumn WithDefaultValue<TColumn, TValue>(this TColumn column, TValue value)
             where TColumn : Column<TValue>, new()
         {
-            column.SetDefault(value);
+            column.SetDefaultValue(value);
             return column;
         }
 

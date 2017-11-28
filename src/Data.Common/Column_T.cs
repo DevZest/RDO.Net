@@ -418,7 +418,7 @@ namespace DevZest.Data
         /// <summary>Defines the default constant value for this column.</summary>
         /// <param name="value">The default constant value.</param>
         /// <remarks>To define default expression value, call <see cref="ColumnExtensions.SetDefault{T}(T, T)"/> method.</remarks>
-        public void SetDefault(T value)
+        public void SetDefaultValue(T value)
         {
             AddOrUpdateInterceptor(new Default<T>(CreateConst(value)));
         }

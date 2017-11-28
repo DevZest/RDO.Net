@@ -13,7 +13,7 @@ namespace DevZest.Data
             var dataSet = GetDataSet(count, false);
             var localColumn = dataSet.Container.CreateLocalColumn<int>(dataSet._, builder =>
             {
-                builder.SetDefault(2);
+                builder.SetDefaultValue(2);
             });
             Assert.AreEqual(2, localColumn[dataSet[0]]);
             Assert.AreEqual(2, localColumn[dataSet[1]]);

@@ -121,7 +121,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [ColumnInitializer(nameof(UnitPriceDiscount))]
         private static void InitializeUnitPriceDiscount(_Decimal unitPriceDiscount)
         {
-            unitPriceDiscount.SetDefault(0);
+            unitPriceDiscount.SetDefaultValue(0);
         }
 
         [Required]

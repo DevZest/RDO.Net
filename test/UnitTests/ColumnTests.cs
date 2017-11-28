@@ -24,7 +24,7 @@ namespace DevZest.Data
         public void Column_Default_const()
         {
             var column = new _Int32();
-            column.SetDefault(5);
+            column.SetDefaultValue(5);
             column.VerifyDefault(5);
         }
 

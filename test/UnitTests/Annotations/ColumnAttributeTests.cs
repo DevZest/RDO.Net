@@ -42,7 +42,7 @@ namespace DevZest.Data.Annotations
             [ColumnInitializer(nameof(IsActive))]
             private static void InitializeIsActive(_Boolean isActive)
             {
-                isActive.SetDefault(true);
+                isActive.SetDefaultValue(true);
             }
         }
 

@@ -190,7 +190,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [ColumnInitializer(nameof(Status))]
         private static void InitializeStatus(_ByteEnum<SalesOrderStatus> status)
         {
-            status.SetDefault(SalesOrderStatus.InProcess);
+            status.SetDefaultValue(SalesOrderStatus.InProcess);
         }
 
         [Required]
@@ -199,7 +199,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [ColumnInitializer(nameof(OnlineOrderFlag))]
         private static void InitializeOnlineOrderFlag(_Boolean onlineOrderFlag)
         {
-            onlineOrderFlag.SetDefault(true);
+            onlineOrderFlag.SetDefaultValue(true);
         }
 
         [UdtOrderNumber]
@@ -232,7 +232,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [ColumnInitializer(nameof(SubTotal))]
         private static void InitializeSubTotal(_Decimal subTotal)
         {
-            subTotal.SetDefault(0);
+            subTotal.SetDefaultValue(0);
         }
 
         [Required]
@@ -242,7 +242,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [ColumnInitializer(nameof(TaxAmt))]
         private static void InitializeTaxAmt(_Decimal taxAmt)
         {
-            taxAmt.SetDefault(0);
+            taxAmt.SetDefaultValue(0);
         }
 
         [Required]
@@ -252,7 +252,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [ColumnInitializer(nameof(Freight))]
         private static void InitializeFreight(_Decimal freight)
         {
-            freight.SetDefault(0);
+            freight.SetDefaultValue(0);
         }
 
         [Required]
