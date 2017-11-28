@@ -51,6 +51,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="Annotations\AutoDateTimeAttribute.cs" />
+    <Compile Include="Annotations\AutoGuidAttribute.cs" />
     <Compile Include="Annotations\ColumnInitializerAttribute.cs" />
     <Compile Include="Annotations\ColumnValidatorAttribute.cs" />
     <Compile Include="Annotations\DefaultValueAttribute.cs" />

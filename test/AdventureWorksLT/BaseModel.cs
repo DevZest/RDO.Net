@@ -11,22 +11,12 @@ namespace DevZest.Samples.AdventureWorksLT
         public static readonly Mounter<_DateTime> _ModifiedDate = RegisterColumn((BaseModel<T> x) => x.ModifiedDate);
 
         [Required]
+        [AutoGuid]
         public _Guid RowGuid { get; private set; }
 
         [Required]
         [AsDateTime]
+        [AutoDateTime]
         public _DateTime ModifiedDate { get; private set; }
-
-        [ColumnInitializer(nameof(RowGuid))]
-        private static void InitializeRowGuid(_Guid rowGuid)
-        {
-            rowGuid.SetDefault(Functions.NewGuid());
-        }
-
-        [ColumnInitializer(nameof(ModifiedDate))]
-        private static void InitializeModifiedDate(_DateTime modifiedDate)
-        {
-            modifiedDate.SetDefault(Functions.GetDate());
-        }
     }
 }

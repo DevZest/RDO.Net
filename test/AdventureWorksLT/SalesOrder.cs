@@ -165,13 +165,8 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [AsDateTime]
+        [AutoDateTime]
         public _DateTime OrderDate { get; private set; }
-
-        [ColumnInitializer(nameof(OrderDate))]
-        private static void InitializeOrderDate(_DateTime orderDate)
-        {
-            orderDate.WithDefault(Functions.GetDate());
-        }
 
         [Required]
         [AsDateTime]

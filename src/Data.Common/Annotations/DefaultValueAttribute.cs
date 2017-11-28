@@ -4,6 +4,7 @@ using System.ComponentModel;
 
 namespace DevZest.Data.Annotations
 {
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class DefaultValueAttribute : ColumnAttribute
     {
         public DefaultValueAttribute(Type type, string value)
