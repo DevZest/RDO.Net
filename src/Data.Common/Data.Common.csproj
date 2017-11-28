@@ -51,6 +51,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="Annotations\ColumnInitializerAttribute.cs" />
+    <Compile Include="Annotations\ColumnValidatorAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ModelMemberAttribute.cs" />
     <Compile Include="AttachedLocalColumnManager.cs" />
     <Compile Include="ColumnValueBag.cs" />
     <Compile Include="DataRowComparer.cs" />
