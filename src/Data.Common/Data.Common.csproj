@@ -74,6 +74,7 @@
     <Compile Include="IColumnComparer.cs" />
     <Compile Include="IDataRowComparer.cs" />
     <Compile Include="ModelExtension.cs" />
+    <Compile Include="PhoneAttribute.cs" />
     <Compile Include="Primitives\AutoColumnSelector.cs" />
     <Compile Include="Annotations\Primitives\ColumnsAttribute.cs" />
     <Compile Include="Primitives\EnumColumn.cs" />

@@ -1083,6 +1083,14 @@ namespace DevZest.Data
             get { return GetString("EmailAddressAttribute_DefaultErrorMessage"); }
         }
 
+        /// <summary>
+        /// Invalid phone number.
+        /// </summary>
+        public static string PhoneAttribute_DefaultErrorMessage
+        {
+            get { return GetString("PhoneAttribute_DefaultErrorMessage"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

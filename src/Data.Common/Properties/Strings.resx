@@ -519,4 +519,7 @@
   <data name="EmailAddressAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>Invalid e-mail address.</value>
   </data>
+  <data name="PhoneAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>Invalid phone number.</value>
+  </data>
 </root>

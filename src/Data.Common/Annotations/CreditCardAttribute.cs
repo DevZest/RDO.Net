@@ -9,7 +9,8 @@ namespace DevZest.Data.Annotations
     {
         protected override bool IsValid(Column column, DataRow dataRow)
         {
-            return IsValid(((Column<String>)column)[dataRow]);
+            var stringColumn = column as Column<string>;
+            return stringColumn == null ? false : IsValid(stringColumn[dataRow]);
         }
 
         protected override string GetDefaultMessage(Column column, DataRow dataRow)
