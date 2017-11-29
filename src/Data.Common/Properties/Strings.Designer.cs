@@ -1107,6 +1107,22 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("UrlAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
         }
 
+        /// <summary>
+        /// The field {columnDisplayName} must be a string with a maximum length of {maxLength}.
+        /// </summary>
+        public static string StringLengthAttribute_DefaultErrorMessage(object columnDisplayName, object maxLength)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("StringLengthAttribute_DefaultErrorMessage", "columnDisplayName", "maxLength"), columnDisplayName, maxLength);
+        }
+
+        /// <summary>
+        /// The field {columnDisplayName} must be a string with a minimum length of {minLength} and maximum length of {maxLength}.
+        /// </summary>
+        public static string StringLengthAttribute_DefaultErrorMessageWithMinLength(object columnDisplayName, object minLength, object maxLength)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("StringLengthAttribute_DefaultErrorMessageWithMinLength", "columnDisplayName", "minLength", "maxLength"), columnDisplayName, minLength, maxLength);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

@@ -528,4 +528,10 @@
   <data name="UrlAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>The {columnDisplayName} field is not a fully-qualified http, https or ftp URL.</value>
   </data>
+  <data name="StringLengthAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>The field {columnDisplayName} must be a string with a maximum length of {maxLength}.</value>
+  </data>
+  <data name="StringLengthAttribute_DefaultErrorMessageWithMinLength" xml:space="preserve">
+    <value>The field {columnDisplayName} must be a string with a minimum length of {minLength} and maximum length of {maxLength}.</value>
+  </data>
 </root>
