@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class RequiredAttribute : ValidationColumnAttribute
+    public sealed class RequiredAttribute : GeneralValidationColumnAttribute
     {
         protected override void Initialize(Column column)
         {
@@ -12,9 +12,9 @@ namespace DevZest.Data.Annotations
             column.Nullable(false);
         }
 
-        protected override IColumnValidationMessages Validate(Column column, DataRow dataRow)
+        protected override bool IsValid(Column column, DataRow dataRow)
         {
-            return column.IsNull(dataRow) ? new ColumnValidationMessage(MessageId, ValidationSeverity.Error, null, column) : ColumnValidationMessages.Empty;
+            return !column.IsNull(dataRow);
         }
 
         protected override string GetDefaultMessage(Column column, DataRow dataRow)

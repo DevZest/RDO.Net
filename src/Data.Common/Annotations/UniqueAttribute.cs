@@ -1,8 +1,10 @@
 ﻿using DevZest.Data.Annotations.Primitives;
+using System;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class UniqueAttribute : ValidationColumnAttribute
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public sealed class UniqueAttribute : GeneralValidationColumnAttribute
     {
         protected override void Initialize(Column column)
         {
@@ -16,12 +18,7 @@ namespace DevZest.Data.Annotations
 
         public SortDirection SortDirection { get; set; }
 
-        protected override IColumnValidationMessages Validate(Column column, DataRow dataRow)
-        {
-            return IsValid(column, dataRow) ? ColumnValidationMessages.Empty : new ColumnValidationMessage(MessageId, ValidationSeverity.Error, GetMessage(column, dataRow), column);
-        }
-
-        private bool IsValid(Column column, DataRow dataRow)
+        protected override bool IsValid(Column column, DataRow dataRow)
         {
             var dataSet = column.ParentModel.DataSet;
             foreach (var other in dataSet)

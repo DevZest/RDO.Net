@@ -1067,6 +1067,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("ColumnsMemberAttribute_Duplicate", "column", "attributeType", "attributeName"), column, attributeType, attributeName);
         }
 
+        /// <summary>
+        /// Invalid credit card number.
+        /// </summary>
+        public static string CreditCardAttribute_DefaultErrorMessage
+        {
+            get { return GetString("CreditCardAttribute_DefaultErrorMessage"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

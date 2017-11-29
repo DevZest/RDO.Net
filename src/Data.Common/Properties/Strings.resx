@@ -513,4 +513,7 @@
   <data name="ColumnsMemberAttribute_Duplicate" xml:space="preserve">
     <value>Duplicate attribute found for column '{column}': AttributeType={attributeType}, AttributeName={attributeName}.</value>
   </data>
+  <data name="CreditCardAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>Invalid credit card number.</value>
+  </data>
 </root>
