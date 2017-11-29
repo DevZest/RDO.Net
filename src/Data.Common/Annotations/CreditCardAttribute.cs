@@ -15,7 +15,7 @@ namespace DevZest.Data.Annotations
 
         protected override string GetDefaultMessage(Column column, DataRow dataRow)
         {
-            return Strings.CreditCardAttribute_DefaultErrorMessage;
+            return Strings.CreditCardAttribute_DefaultErrorMessage(column.DisplayName);
         }
 
         private static bool IsValid(string text)

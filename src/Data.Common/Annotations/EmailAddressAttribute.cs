@@ -15,7 +15,7 @@ namespace DevZest.Data.Annotations
 
         protected override string GetDefaultMessage(Column column, DataRow dataRow)
         {
-            return Strings.EmailAddressAttribute_DefaultErrorMessage;
+            return Strings.EmailAddressAttribute_DefaultErrorMessage(column.DisplayName);
         }
 
         private static bool IsValid(string text)

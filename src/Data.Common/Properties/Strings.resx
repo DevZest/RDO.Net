@@ -514,15 +514,18 @@
     <value>Duplicate attribute found for column '{column}': AttributeType={attributeType}, AttributeName={attributeName}.</value>
   </data>
   <data name="CreditCardAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>Invalid credit card number.</value>
+    <value>The {columnDisplayName} field is not a valid credit card number.</value>
   </data>
   <data name="EmailAddressAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>Invalid e-mail address.</value>
+    <value>The {columnDisplayName} field is not a valid e-mail address.</value>
   </data>
   <data name="PhoneAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>Invalid phone number.</value>
+    <value>The {columnDisplayName} field is not a valid phone number.</value>
+  </data>
+  <data name="RegularExpressionAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>The field {columnName} must match the regular expression '{pattern}'.</value>
   </data>
   <data name="UrlAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>Invalid URL.</value>
+    <value>The {columnDisplayName} field is not a fully-qualified http, https or ftp URL.</value>
   </data>
 </root>

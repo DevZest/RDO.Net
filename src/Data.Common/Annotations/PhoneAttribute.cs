@@ -22,7 +22,7 @@ namespace DevZest.Data.Annotations
 
         protected override string GetDefaultMessage(Column column, DataRow dataRow)
         {
-            return Strings.PhoneAttribute_DefaultErrorMessage;
+            return Strings.PhoneAttribute_DefaultErrorMessage(column.DisplayName);
         }
 
         private static Regex CreateRegEx()

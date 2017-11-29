@@ -1068,35 +1068,43 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Invalid credit card number.
+        /// The {columnDisplayName} field is not a valid credit card number.
         /// </summary>
-        public static string CreditCardAttribute_DefaultErrorMessage
+        public static string CreditCardAttribute_DefaultErrorMessage(object columnDisplayName)
         {
-            get { return GetString("CreditCardAttribute_DefaultErrorMessage"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("CreditCardAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
         }
 
         /// <summary>
-        /// Invalid e-mail address.
+        /// The {columnDisplayName} field is not a valid e-mail address.
         /// </summary>
-        public static string EmailAddressAttribute_DefaultErrorMessage
+        public static string EmailAddressAttribute_DefaultErrorMessage(object columnDisplayName)
         {
-            get { return GetString("EmailAddressAttribute_DefaultErrorMessage"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("EmailAddressAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
         }
 
         /// <summary>
-        /// Invalid phone number.
+        /// The {columnDisplayName} field is not a valid phone number.
         /// </summary>
-        public static string PhoneAttribute_DefaultErrorMessage
+        public static string PhoneAttribute_DefaultErrorMessage(object columnDisplayName)
         {
-            get { return GetString("PhoneAttribute_DefaultErrorMessage"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("PhoneAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
         }
 
         /// <summary>
-        /// Invalid URL.
+        /// The field {columnName} must match the regular expression '{pattern}'.
         /// </summary>
-        public static string UrlAttribute_DefaultErrorMessage
+        public static string RegularExpressionAttribute_DefaultErrorMessage(object columnName, object pattern)
         {
-            get { return GetString("UrlAttribute_DefaultErrorMessage"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("RegularExpressionAttribute_DefaultErrorMessage", "columnName", "pattern"), columnName, pattern);
+        }
+
+        /// <summary>
+        /// The {columnDisplayName} field is not a fully-qualified http, https or ftp URL.
+        /// </summary>
+        public static string UrlAttribute_DefaultErrorMessage(object columnDisplayName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("UrlAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
         }
 
         private static string GetString(string name, params string[] formatterNames)
