@@ -522,4 +522,7 @@
   <data name="PhoneAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>Invalid phone number.</value>
   </data>
+  <data name="UrlAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>Invalid URL.</value>
+  </data>
 </root>

@@ -1091,6 +1091,14 @@ namespace DevZest.Data
             get { return GetString("PhoneAttribute_DefaultErrorMessage"); }
         }
 
+        /// <summary>
+        /// Invalid URL.
+        /// </summary>
+        public static string UrlAttribute_DefaultErrorMessage
+        {
+            get { return GetString("UrlAttribute_DefaultErrorMessage"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
