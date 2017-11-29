@@ -534,4 +534,7 @@
   <data name="StringLengthAttribute_DefaultErrorMessageWithMinLength" xml:space="preserve">
     <value>The field {columnDisplayName} must be a string with a minimum length of {minLength} and maximum length of {maxLength}.</value>
   </data>
+  <data name="LocalizableString_LocalizationFailed" xml:space="preserve">
+    <value>Cannot retrieve property '{propertyName}' because localization failed. Type '{resourceType}' is not public or does not contain a public static string property with the name '{propertyValue}'. </value>
+  </data>
 </root>

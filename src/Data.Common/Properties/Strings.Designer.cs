@@ -1123,6 +1123,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("StringLengthAttribute_DefaultErrorMessageWithMinLength", "columnDisplayName", "minLength", "maxLength"), columnDisplayName, minLength, maxLength);
         }
 
+        /// <summary>
+        /// Cannot retrieve property '{propertyName}' because localization failed. Type '{resourceType}' is not public or does not contain a public static string property with the name '{propertyValue}'. 
+        /// </summary>
+        public static string LocalizableString_LocalizationFailed(object propertyName, object resourceType, object propertyValue)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("LocalizableString_LocalizationFailed", "propertyName", "resourceType", "propertyValue"), propertyName, resourceType, propertyValue);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
