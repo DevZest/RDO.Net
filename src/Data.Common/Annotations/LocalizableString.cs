@@ -46,7 +46,16 @@ namespace DevZest.Data.Annotations
             _cachedResult = null;
         }
 
-        public string GetLocalizableValue()
+        public Func<string> LocalizableValueGetter
+        {
+            get
+            {
+                EnsureCachedResult();
+                return string.IsNullOrEmpty(_propertyValue) ? null : _cachedResult;
+            }
+        }
+
+        private void EnsureCachedResult()
         {
             if (_cachedResult == null)
             {
@@ -65,11 +74,10 @@ namespace DevZest.Data.Annotations
                     }
                     else
                     {
-                        this._cachedResult = (() => (string)property.GetValue(null, null));
+                        _cachedResult = (() => (string)property.GetValue(null, null));
                     }
                 }
             }
-            return _cachedResult();
         }
 
         private bool IsValidProperty(PropertyInfo property)
