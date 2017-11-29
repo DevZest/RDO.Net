@@ -1075,6 +1075,14 @@ namespace DevZest.Data
             get { return GetString("CreditCardAttribute_DefaultErrorMessage"); }
         }
 
+        /// <summary>
+        /// Invalid e-mail address.
+        /// </summary>
+        public static string EmailAddressAttribute_DefaultErrorMessage
+        {
+            get { return GetString("EmailAddressAttribute_DefaultErrorMessage"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

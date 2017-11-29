@@ -516,4 +516,7 @@
   <data name="CreditCardAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>Invalid credit card number.</value>
   </data>
+  <data name="EmailAddressAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>Invalid e-mail address.</value>
+  </data>
 </root>
