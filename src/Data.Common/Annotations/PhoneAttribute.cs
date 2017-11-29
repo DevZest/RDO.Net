@@ -2,7 +2,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace DevZest.Data
+namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class PhoneAttribute : GeneralValidationColumnAttribute
