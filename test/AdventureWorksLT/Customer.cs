@@ -129,6 +129,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _String SalesPerson { get; private set; }
 
         [AsNVarChar(256)]
+        [EmailAddress]
         public _String EmailAddress { get; private set; }
 
         [UdtPhone]
