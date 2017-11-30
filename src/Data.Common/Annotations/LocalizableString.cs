@@ -63,7 +63,7 @@ namespace DevZest.Data.Annotations
                     _cachedResult = (() => _propertyValue);
                 else
                 {
-                    PropertyInfo property = _resourceType.GetProperty(_propertyValue);
+                    PropertyInfo property = _resourceType.GetProperty(_propertyValue, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                     if (!IsValidProperty(property))
                     {
                         string exceptionMessage = Strings.LocalizableString_LocalizationFailed(_propertyName, _resourceType.FullName, _propertyValue);
@@ -82,11 +82,11 @@ namespace DevZest.Data.Annotations
 
         private bool IsValidProperty(PropertyInfo property)
         {
-            if (!_resourceType.GetTypeInfo().IsVisible || property == null || property.PropertyType != typeof(string))
+            if (property == null || property.PropertyType != typeof(string))
                 return false;
 
-            MethodInfo getMethod = property.GetGetMethod();
-            if (getMethod == null || !getMethod.IsPublic || !getMethod.IsStatic)
+            MethodInfo getMethod = property.GetGetMethod(true);
+            if (getMethod == null || !getMethod.IsStatic)
                 return false;
 
             return true;

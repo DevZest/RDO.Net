@@ -1124,7 +1124,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot retrieve property '{propertyName}' because localization failed. Type '{resourceType}' is not public or does not contain a public static string property with the name '{propertyValue}'. 
+        /// Cannot retrieve property '{propertyName}' because localization failed. Type '{resourceType}' does not contain a static string property with the name '{propertyValue}'. 
         /// </summary>
         public static string LocalizableString_LocalizationFailed(object propertyName, object resourceType, object propertyValue)
         {
