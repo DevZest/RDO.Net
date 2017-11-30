@@ -28,7 +28,7 @@ namespace DevZest.Data.Primitives
         }
 
         public static DbSelectStatement BuildDeleteStatement<TSource, TTarget>(this DbTable<TTarget> targetTable, DbSet<TSource> source,
-            Func<TTarget, KeyBase> joinOn = null)
+            Func<TTarget, ModelKey> joinOn = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {

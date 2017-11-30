@@ -7,7 +7,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class ProductDescription : BaseModel<ProductDescription.Key>
     {
-        public sealed class Key : KeyBase
+        public sealed class Key : ModelKey
         {
             public Key(_Int32 productDescriptionID)
             {

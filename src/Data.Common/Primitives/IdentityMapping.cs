@@ -5,7 +5,7 @@ namespace DevZest.Data.Primitives
 {
     public sealed class IdentityMapping : Model<IdentityMapping.Key>
     {
-        public sealed class Key : KeyBase
+        public sealed class Key : ModelKey
         {
             public Key(_Int32 oldValue)
             {

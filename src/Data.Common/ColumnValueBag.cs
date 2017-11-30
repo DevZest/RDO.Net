@@ -90,7 +90,7 @@ namespace DevZest.Data
             _columnValues[column] = column.GetValue(dataRow);
         }
 
-        public void AutoSelect(KeyBase key, DataRow dataRow)
+        public void AutoSelect(ModelKey key, DataRow dataRow)
         {
             Check.NotNull(key, nameof(key));
             Check.NotNull(dataRow, nameof(dataRow));

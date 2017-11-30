@@ -156,7 +156,7 @@ namespace DevZest.Data
             return new ColumnMappingsBuilder(null, _).Build(builder => columnMappingsBuilder(builder, _));
         }
 
-        private IReadOnlyList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, KeyBase> joinOn)
+        private IReadOnlyList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, ModelKey> joinOn)
         {
             var sourceKey = sourceModel.PrimaryKey;
             if (sourceKey == null)

@@ -4,7 +4,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class CustomerAddress : BaseModel<CustomerAddress.Key>
     {
-        public sealed class Key : KeyBase
+        public sealed class Key : ModelKey
         {
             public Key(_Int32 customerID, _Int32 addressID)
             {

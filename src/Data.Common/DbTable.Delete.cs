@@ -37,7 +37,7 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, null, null, whereExpr, null, -1, -1);
         }
 
-        public int Delete<TSource>(DbSet<TSource> source, Func<T, KeyBase> joinOn = null)
+        public int Delete<TSource>(DbSet<TSource> source, Func<T, ModelKey> joinOn = null)
             where TSource : Model, new()
         {
             VerifyDelete(source);
@@ -46,7 +46,7 @@ namespace DevZest.Data
             return UpdateOrigin(null, DbSession.Update(statement));
         }
 
-        public async Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<T, KeyBase> joinOn, CancellationToken cancellationToken)
+        public async Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<T, ModelKey> joinOn, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             VerifyDelete(source);
@@ -55,13 +55,13 @@ namespace DevZest.Data
             return UpdateOrigin(null, await DbSession.DeleteAsync(statement, cancellationToken));
         }
 
-        public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<T, KeyBase> joinOn = null)
+        public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<T, ModelKey> joinOn = null)
             where TSource : Model, new()
         {
             return DeleteAsync(source, joinOn, CancellationToken.None);
         }
 
-        public bool Delete<TSource>(DataSet<TSource> source, int ordinal, Func<T, KeyBase> joinOn = null)
+        public bool Delete<TSource>(DataSet<TSource> source, int ordinal, Func<T, ModelKey> joinOn = null)
             where TSource : Model, new()
         {
             VerifyDelete(source, ordinal);
@@ -70,7 +70,7 @@ namespace DevZest.Data
             return UpdateOrigin<TSource>(null, DbSession.Delete(statement) > 0);
         }
 
-        public async Task<bool> DeleteAsync<TSource>(DataSet<TSource> source,  int ordinal, Func<T, KeyBase> joinOn, CancellationToken cancellationToken)
+        public async Task<bool> DeleteAsync<TSource>(DataSet<TSource> source,  int ordinal, Func<T, ModelKey> joinOn, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             VerifyDelete(source, ordinal);
@@ -79,13 +79,13 @@ namespace DevZest.Data
             return UpdateOrigin<TSource>(null, await DbSession.DeleteAsync(statement, cancellationToken) > 0);
         }
 
-        public Task<bool> DeleteAsync<TSource>(DataSet<TSource> source, int ordinal, Func<T, KeyBase> joinOn = null)
+        public Task<bool> DeleteAsync<TSource>(DataSet<TSource> source, int ordinal, Func<T, ModelKey> joinOn = null)
             where TSource : Model, new()
         {
             return DeleteAsync(source, ordinal, joinOn, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildDeleteStatement<TSource>(DbSet<TSource> source, Func<T, KeyBase> joinOn)
+        internal DbSelectStatement BuildDeleteStatement<TSource>(DbSet<TSource> source, Func<T, ModelKey> joinOn)
             where TSource : Model, new()
         {
             Debug.Assert(source != null);
@@ -94,7 +94,7 @@ namespace DevZest.Data
             return source.QueryStatement.BuildDeleteStatement(Model, keyMappings);
         }
 
-        public int Delete<TSource>(DataSet<TSource> source, Func<T, KeyBase> joinOn = null)
+        public int Delete<TSource>(DataSet<TSource> source, Func<T, ModelKey> joinOn = null)
             where TSource : Model, new()
         {
             VerifyDelete(source);
@@ -108,7 +108,7 @@ namespace DevZest.Data
             return UpdateOrigin(null, DbSession.Delete(source, this, joinOn));
         }
 
-        public async Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<T, KeyBase> joinOn, CancellationToken cancellationToken)
+        public async Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<T, ModelKey> joinOn, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             VerifyDelete(source);
@@ -122,13 +122,13 @@ namespace DevZest.Data
             return UpdateOrigin(null, await DbSession.DeleteAsync(source, this, joinOn, cancellationToken));
         }
 
-        public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<T, KeyBase> joinOn = null)
+        public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<T, ModelKey> joinOn = null)
             where TSource : Model, new()
         {
             return DeleteAsync(source, joinOn, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildDeleteScalarStatement<TSource>(DataSet<TSource> source, int ordinal, Func<T, KeyBase> joinOn)
+        internal DbSelectStatement BuildDeleteScalarStatement<TSource>(DataSet<TSource> source, int ordinal, Func<T, ModelKey> joinOn)
             where TSource : Model, new()
         {
             Debug.Assert(source != null && source._ != null);

@@ -9,7 +9,7 @@ namespace DevZest.Data.Annotations
     {
         private sealed class MyTable : Model<MyTable.Key>
         {
-            public sealed class Key : KeyBase
+            public sealed class Key : ModelKey
             {
                 public Key(_Int32 id)
                 {

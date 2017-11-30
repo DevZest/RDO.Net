@@ -141,7 +141,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Indent--;
         }
 
-        private static void GenerateColumnList(this KeyBase key, IndentedStringBuilder sqlBuilder)
+        private static void GenerateColumnList(this ModelKey key, IndentedStringBuilder sqlBuilder)
         {
             sqlBuilder.Append(" (");
             for (int i = 0; i < key.Count(); i++)

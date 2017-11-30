@@ -27,8 +27,8 @@ namespace DevZest.Data.Primitives
         }
 
 
-        private KeyBase _primaryKey;
-        internal override KeyBase GetPrimaryKeyCore()
+        private ModelKey _primaryKey;
+        internal override ModelKey GetPrimaryKeyCore()
         {
             return _primaryKey;
         }
