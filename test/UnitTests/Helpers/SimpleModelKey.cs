@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Helpers
 {
-    public sealed class SimpleModelKey : ModelKey
+    public sealed class SimpleModelKey : PrimaryKey
     {
         public SimpleModelKey(_Int32 id)
         {

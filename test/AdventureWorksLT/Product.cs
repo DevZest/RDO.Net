@@ -6,7 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class Product : BaseModel<Product.Key>
     {
-        public sealed class Key : ModelKey
+        public sealed class Key : PrimaryKey
         {
             public Key(_Int32 productID)
             {

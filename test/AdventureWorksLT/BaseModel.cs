@@ -5,7 +5,7 @@ using DevZest.Data.SqlServer;
 namespace DevZest.Samples.AdventureWorksLT
 {
     public abstract class BaseModel<T> : Model<T>
-        where T : ModelKey
+        where T : PrimaryKey
     {
         public static readonly Mounter<_Guid> _RowGuid = RegisterColumn((BaseModel<T> x) => x.RowGuid);
         public static readonly Mounter<_DateTime> _ModifiedDate = RegisterColumn((BaseModel<T> x) => x.ModifiedDate);

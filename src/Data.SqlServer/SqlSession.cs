@@ -393,19 +393,19 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Delete(this, statement).CreateCommand(GetConnection());
         }
 
-        protected sealed override int Delete<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, ModelKey> joinOn)
+        protected sealed override int Delete<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, PrimaryKey> joinOn)
         {
             var command = BuildDeleteCommand(source, target, joinOn);
             return ExecuteNonQuery(command);
         }
 
-        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, ModelKey> joinOn, CancellationToken cancellationToken)
+        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, PrimaryKey> joinOn, CancellationToken cancellationToken)
         {
             var command = BuildDeleteCommand(source, target, joinOn);
             return ExecuteNonQueryAsync(command, cancellationToken);
         }
 
-        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, ModelKey> joinOn)
+        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, PrimaryKey> joinOn)
             where TSource : Model, new()
             where TTarget : Model, new()
         {

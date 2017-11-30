@@ -207,7 +207,7 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Func<TTarget, ModelKey> joinOn = null)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Func<TTarget, PrimaryKey> joinOn = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -216,7 +216,7 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal, Func<TTarget, ModelKey> joinOn = null)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal, Func<TTarget, PrimaryKey> joinOn = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -225,7 +225,7 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source, Func<TTarget, ModelKey> joinOn = null)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source, Func<TTarget, PrimaryKey> joinOn = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {

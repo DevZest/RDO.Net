@@ -299,7 +299,7 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        protected internal virtual int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Func<TTarget, ModelKey> joinOn)
+        protected internal virtual int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Func<TTarget, PrimaryKey> joinOn)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -308,7 +308,7 @@ namespace DevZest.Data.Primitives
         }
 
         protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Func<TTarget, ModelKey> joinOn, CancellationToken cancellationToken)
+            Func<TTarget, PrimaryKey> joinOn, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -329,7 +329,7 @@ namespace DevZest.Data.Primitives
         protected internal abstract string GetMockTableName(string tableName, object tag);
 
         protected internal static ForeignKeyConstraint ForeignKey<TKey>(string constraintName, TKey foreignKey, Model<TKey> refTableModel, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
-            where TKey : ModelKey
+            where TKey : PrimaryKey
         {
             Utilities.Check.NotNull(foreignKey, nameof(foreignKey));
             Utilities.Check.NotNull(refTableModel, nameof(refTableModel));

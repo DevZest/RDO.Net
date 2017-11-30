@@ -10,7 +10,7 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public abstract class ModelKey : IReadOnlyCollection<ColumnSort>
+    public abstract class PrimaryKey : IReadOnlyCollection<ColumnSort>
     {
         [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
         protected internal sealed class SortAttribute : Attribute
@@ -23,10 +23,10 @@ namespace DevZest.Data
             public SortDirection Direction { get; private set; }
         }
 
-        internal ModelKey Clone(KeyOutput model)
+        internal PrimaryKey Clone(KeyOutput model)
         {
             EnsureIntialized();
-            var result = (ModelKey)this.MemberwiseClone();
+            var result = (PrimaryKey)this.MemberwiseClone();
             result._parentModel = model;
             result._columns = new ColumnSort[_columns.Length];
             for (int i = 0; i < Count; i++)
@@ -39,7 +39,7 @@ namespace DevZest.Data
 
         private struct ColumnGetter
         {
-            public ColumnGetter(string name, Func<ModelKey, Column> invoker, SortAttribute sort)
+            public ColumnGetter(string name, Func<PrimaryKey, Column> invoker, SortAttribute sort)
             {
                 Name = name;
                 Invoker = invoker;
@@ -47,13 +47,13 @@ namespace DevZest.Data
             }
 
             public readonly string Name;
-            public readonly Func<ModelKey, Column> Invoker;
+            public readonly Func<PrimaryKey, Column> Invoker;
             public readonly SortAttribute Sort;
         }
 
         private static readonly ConcurrentDictionary<Type, ReadOnlyCollection<ColumnGetter>> s_columnGetters =
             new ConcurrentDictionary<Type, ReadOnlyCollection<ColumnGetter>>();
-        protected ModelKey()
+        protected PrimaryKey()
         {
         }
 
@@ -169,11 +169,11 @@ namespace DevZest.Data
 
         private static ColumnGetter GetColumnGetter(PropertyInfo propertyInfo, MethodInfo getMethod)
         {
-            var modelKeyParam = Expression.Parameter(typeof(ModelKey), "modelKey");
+            var modelKeyParam = Expression.Parameter(typeof(PrimaryKey), "modelKey");
 
             var getterInstance = Expression.Convert(modelKeyParam, getMethod.DeclaringType);
             var getterExpression = Expression.Call(getterInstance, getMethod);
-            var getter = Expression.Lambda<Func<ModelKey, Column>>(getterExpression, modelKeyParam).Compile();
+            var getter = Expression.Lambda<Func<PrimaryKey, Column>>(getterExpression, modelKeyParam).Compile();
 
             var sort = propertyInfo.GetCustomAttribute<SortAttribute>();
             return new ColumnGetter(getMethod.Name, getter, sort);
@@ -190,7 +190,7 @@ namespace DevZest.Data
             return _columns.GetEnumerator();
         }
 
-        internal IReadOnlyList<ColumnMapping> Join(ModelKey target)
+        internal IReadOnlyList<ColumnMapping> Join(PrimaryKey target)
         {
             Debug.Assert(target != null);
             Debug.Assert(Count == target.Count);

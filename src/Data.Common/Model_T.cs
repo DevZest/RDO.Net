@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data
 {
     public abstract class Model<T> : Model
-        where T : ModelKey
+        where T : PrimaryKey
     {
         protected Model()
         {
@@ -13,7 +13,7 @@ namespace DevZest.Data
 
         public abstract new T PrimaryKey { get; }
 
-        internal sealed override ModelKey GetPrimaryKeyCore()
+        internal sealed override PrimaryKey GetPrimaryKeyCore()
         {
             return this.PrimaryKey;
         }

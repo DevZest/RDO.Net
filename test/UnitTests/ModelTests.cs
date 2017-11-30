@@ -238,7 +238,7 @@ namespace DevZest.Data
 
         private sealed class TempModel : Model<TempModel.Key>
         {
-            public sealed class Key : ModelKey
+            public sealed class Key : PrimaryKey
             {
                 public Key(_Int32 id)
                 {

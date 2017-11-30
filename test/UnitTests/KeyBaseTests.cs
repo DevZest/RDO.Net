@@ -6,7 +6,7 @@ namespace DevZest.Data
     [TestClass]
     public class KeyBaseTests
     {
-        private class SimpleKey : ModelKey
+        private class SimpleKey : PrimaryKey
         {
             public SimpleKey(_Int32 column1, _Int32 column2)
             {

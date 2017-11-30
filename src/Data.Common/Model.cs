@@ -178,7 +178,7 @@ namespace DevZest.Data
         public static Mounter<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
             Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> childColumnsBuilder = null)
             where TModel : Model<TModelKey>
-            where TModelKey : ModelKey
+            where TModelKey : PrimaryKey
             where TChildModel : Model, new()
         {
             Utilities.Check.NotNull(getter, nameof(getter));
@@ -190,7 +190,7 @@ namespace DevZest.Data
         private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Mounter<TModel, TChildModel> mounter,
             Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> parentMappingsBuilder)
             where TModel : Model<TModelKey>
-            where TModelKey : ModelKey
+            where TModelKey : PrimaryKey
             where TChildModel : Model, new()
         {
             TChildModel result = new TChildModel();
@@ -413,12 +413,12 @@ namespace DevZest.Data
             return ColumnValidationMessages.Empty;
         }
 
-        public ModelKey PrimaryKey
+        public PrimaryKey PrimaryKey
         {
             get { return GetPrimaryKeyCore(); }
         }
 
-        internal virtual ModelKey GetPrimaryKeyCore()
+        internal virtual PrimaryKey GetPrimaryKeyCore()
         {
             return null;
         }
