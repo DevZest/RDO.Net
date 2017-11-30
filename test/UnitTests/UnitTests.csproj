@@ -82,6 +82,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Annotations\AutoDateTimeAttributeTests.cs" />
     <Compile Include="Annotations\EmailAddressAttributeTests.cs" />
     <Compile Include="BinaryTests.cs" />
     <Compile Include="CaseTests.cs" />
