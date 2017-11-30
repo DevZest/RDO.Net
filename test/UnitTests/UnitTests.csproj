@@ -86,6 +86,7 @@
     <Compile Include="Annotations\AutoGuidAttributeTests.cs" />
     <Compile Include="Annotations\ColumnInitializerAttributeTests.cs" />
     <Compile Include="Annotations\ColumnValidatorAttributeTests.cs" />
+    <Compile Include="Annotations\CreditCardAttributeTests.cs" />
     <Compile Include="Annotations\EmailAddressAttributeTests.cs" />
     <Compile Include="BinaryTests.cs" />
     <Compile Include="CaseTests.cs" />
