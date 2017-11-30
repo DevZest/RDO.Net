@@ -18,11 +18,9 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _CustomerID;
-
             static Ref()
             {
-                _CustomerID = RegisterColumn((Ref _) => _.CustomerID);
+                RegisterColumn((Ref _) => _.CustomerID, _CustomerID);
             }
 
             private Key _primaryKey;
@@ -61,6 +59,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Phone { get; private set; }
         }
 
+        public static readonly Mounter<_Int32> _CustomerID;
         public static readonly Mounter<_Boolean> _NameStyle;
         public static readonly Mounter<_String> _Title;
         public static readonly Mounter<_String> _FirstName;
@@ -76,7 +75,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         static Customer()
         {
-            RegisterColumn((Customer _) => _.CustomerID, Ref._CustomerID);
+            _CustomerID = RegisterColumn((Customer _) => _.CustomerID);
             _NameStyle = RegisterColumn((Customer _) => _.NameStyle);
             _Title = RegisterColumn((Customer _) => _.Title);
             _FirstName = RegisterColumn((Customer _) => _.FirstName);

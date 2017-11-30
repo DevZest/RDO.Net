@@ -21,12 +21,10 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _SalesOrderDetailID;
-
             static Ref()
             {
-                RegisterColumn((Ref _) => _.SalesOrderID, AdventureWorksLT.SalesOrder.Ref._SalesOrderID);
-                _SalesOrderDetailID = RegisterColumn((Ref _) => _.SalesOrderDetailID);
+                RegisterColumn((Ref _) => _.SalesOrderID, AdventureWorksLT.SalesOrder._SalesOrderID);
+                RegisterColumn((Ref _) => _.SalesOrderDetailID, _SalesOrderDetailID);
             }
 
             private Key _primaryKey;
@@ -45,6 +43,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
+        public static readonly Mounter<_Int32> _SalesOrderDetailID;
         public static readonly Mounter<_Int16> _OrderQty;
         public static readonly Mounter<_Decimal> _UnitPrice;
         public static readonly Mounter<_Decimal> _UnitPriceDiscount;
@@ -52,10 +51,10 @@ namespace DevZest.Samples.AdventureWorksLT
 
         static SalesOrderDetail()
         {
-            RegisterColumn((SalesOrderDetail _) => _.SalesOrderID, AdventureWorksLT.SalesOrder.Ref._SalesOrderID);
-            RegisterColumn((SalesOrderDetail _) => _.SalesOrderDetailID, Ref._SalesOrderDetailID);
+            RegisterColumn((SalesOrderDetail _) => _.SalesOrderID, AdventureWorksLT.SalesOrder._SalesOrderID);
+            _SalesOrderDetailID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderDetailID);
             _OrderQty = RegisterColumn((SalesOrderDetail _) => _.OrderQty);
-            RegisterColumn((SalesOrderDetail _) => _.ProductID, AdventureWorksLT.Product.Ref._ProductID);
+            RegisterColumn((SalesOrderDetail _) => _.ProductID, AdventureWorksLT.Product._ProductID);
             _UnitPrice = RegisterColumn((SalesOrderDetail _) => _.UnitPrice);
             _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount);
             _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);

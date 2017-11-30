@@ -21,8 +21,8 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Ref()
             {
-                RegisterColumn((Ref _) => _.CustomerID, AdventureWorksLT.Customer.Ref._CustomerID);
-                RegisterColumn((Ref _) => _.AddressID, AdventureWorksLT.Address.Ref._AddressID);
+                RegisterColumn((Ref _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
+                RegisterColumn((Ref _) => _.AddressID, AdventureWorksLT.Address._AddressID);
             }
 
             private Key _primaryKey;
@@ -55,8 +55,8 @@ namespace DevZest.Samples.AdventureWorksLT
 
         static CustomerAddress()
         {
-            RegisterColumn((CustomerAddress _) => _.CustomerID, AdventureWorksLT.Customer.Ref._CustomerID);
-            RegisterColumn((CustomerAddress _) => _.AddressID, AdventureWorksLT.Address.Ref._AddressID);
+            RegisterColumn((CustomerAddress _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
+            RegisterColumn((CustomerAddress _) => _.AddressID, AdventureWorksLT.Address._AddressID);
             _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
         }
 

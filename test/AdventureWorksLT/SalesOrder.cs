@@ -1,7 +1,6 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
-using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -19,11 +18,9 @@ namespace DevZest.Samples.AdventureWorksLT
         
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _SalesOrderID;
-
             static Ref()
             {
-                _SalesOrderID = RegisterColumn((Ref _) => _.SalesOrderID);
+                RegisterColumn((Ref _) => _.SalesOrderID, _SalesOrderID);
             }
 
             private Key _primaryKey;
@@ -40,6 +37,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderID { get; private set; }
         }
 
+        public static readonly Mounter<_Int32> _SalesOrderID;
         public static readonly Mounter<_Byte> _RevisionNumber;
         public static readonly Mounter<_DateTime> _OrderDate;
         public static readonly Mounter<_DateTime> _DueDate;
@@ -59,7 +57,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         static SalesOrder()
         {
-            RegisterColumn((SalesOrder _) => _.SalesOrderID, Ref._SalesOrderID);
+            _SalesOrderID = RegisterColumn((SalesOrder _) => _.SalesOrderID);
             _RevisionNumber = RegisterColumn((SalesOrder _) => _.RevisionNumber);
             _OrderDate = RegisterColumn((SalesOrder _) => _.OrderDate);
             _DueDate = RegisterColumn((SalesOrder _) => _.DueDate);
@@ -69,9 +67,9 @@ namespace DevZest.Samples.AdventureWorksLT
             _SalesOrderNumber = RegisterColumn((SalesOrder _) => _.SalesOrderNumber);
             _PurchaseOrderNumber = RegisterColumn((SalesOrder _) => _.PurchaseOrderNumber);
             _AccountNumber = RegisterColumn((SalesOrder _) => _.AccountNumber);
-            RegisterColumn((SalesOrder _) => _.CustomerID, AdventureWorksLT.Customer.Ref._CustomerID);
-            RegisterColumn((SalesOrder _) => _.ShipToAddressID, Address.Ref._AddressID);
-            RegisterColumn((SalesOrder _) => _.BillToAddressID, Address.Ref._AddressID);
+            RegisterColumn((SalesOrder _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
+            RegisterColumn((SalesOrder _) => _.ShipToAddressID, Address._AddressID);
+            RegisterColumn((SalesOrder _) => _.BillToAddressID, Address._AddressID);
             _ShipMethod = RegisterColumn((SalesOrder _) => _.ShipMethod);
             _CreditCardApprovalCode = RegisterColumn((SalesOrder _) => _.CreditCardApprovalCode);
             _SubTotal = RegisterColumn((SalesOrder _) => _.SubTotal);
