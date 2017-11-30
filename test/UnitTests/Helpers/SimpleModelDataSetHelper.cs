@@ -17,9 +17,9 @@ namespace DevZest.Data.Helpers
 
             public const string MESSAGE_ID = "IdMustBeEven";
 
-            public SimpleModel()
+            protected override IColumnValidationMessages Validate(DataRow dataRow)
             {
-                Validators.Add(Validator.Create(MESSAGE_ID, ValidationSeverity.Error, Id, Id % 2 == 0, "The Id must be even."));
+                return (Id[dataRow] % 2) == 0 ? ColumnValidationMessages.Empty : new ColumnValidationMessage(MESSAGE_ID, ValidationSeverity.Error, "The Id must be even.", Id);
             }
 
             protected override void OnChildDataSetsCreated()

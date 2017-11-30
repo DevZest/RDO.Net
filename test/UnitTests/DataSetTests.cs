@@ -160,7 +160,6 @@ namespace DevZest.Data
         public void DataSet_Validate()
         {
             var dataSet = GetDataSet(3);
-            Assert.IsTrue(dataSet.Model.Validators.Count == 2);
 
             var validationResult = dataSet.Validate(ValidationSeverity.Error, limit:6);
             Assert.IsFalse(validationResult.IsValid());

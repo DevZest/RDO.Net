@@ -1,7 +1,7 @@
 ﻿namespace DevZest.Data
 {
     /// <summary></summary>
-    public interface IValidator
+    internal interface IValidator
     {
         IColumnValidationMessages Validate(DataRow dataRow);
     }

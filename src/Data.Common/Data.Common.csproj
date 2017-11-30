@@ -122,7 +122,6 @@
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="IColumns.cs" />
     <Compile Include="Annotations\JsonIgnoreAttribute.cs" />
-    <Compile Include="Model.Validator.cs" />
     <Compile Include="ValidationMessage_T.cs" />
     <Compile Include="Columns.cs" />
     <Compile Include="PagedDataSet.cs" />

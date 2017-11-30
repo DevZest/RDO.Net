@@ -379,29 +379,38 @@ namespace DevZest.Data
         protected internal ModelCollection ChildModels { get; private set; }
 
         private List<IValidator> _validators = new List<IValidator>();
-        protected internal List<IValidator> Validators
+        internal List<IValidator> Validators
         {
             get { return _validators; }
         }
 
-        protected internal virtual IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
+        internal IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
         {
             var result = ColumnValidationMessages.Empty;
             foreach (var validator in Validators)
+                result = Merge(result, validator.Validate(dataRow), severity);
+
+            result = Merge(result, Validate(dataRow), severity);
+            return result;
+        }
+
+        private static IColumnValidationMessages Merge(IColumnValidationMessages result, IColumnValidationMessages validationMessages, ValidationSeverity? severity)
+        {
+            if (validationMessages != null)
             {
-                var validationMessages = validator.Validate(dataRow);
-                if (validationMessages != null)
+                foreach (var validationMessage in validationMessages)
                 {
-                    foreach (var validationMessage in validationMessages)
-                    {
-                        if (severity.HasValue && validationMessage.Severity != severity.GetValueOrDefault())
-                            continue;
-                        result = result.Add(validationMessage);
-                    }
+                    if (severity.HasValue && validationMessage.Severity != severity.GetValueOrDefault())
+                        continue;
+                    result = result.Add(validationMessage);
                 }
             }
-
             return result;
+        }
+
+        protected virtual IColumnValidationMessages Validate(DataRow dataRow)
+        {
+            return ColumnValidationMessages.Empty;
         }
 
         public ModelKey PrimaryKey

@@ -152,10 +152,5 @@ namespace DevZest.Data.Primitives
             }
             return model;
         }
-
-        public static List<IValidator> GetValidators(this Model model)
-        {
-            return model.Validators;
-        }
     }
 }
