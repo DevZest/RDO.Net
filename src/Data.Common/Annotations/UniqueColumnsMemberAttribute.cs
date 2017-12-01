@@ -67,10 +67,5 @@ namespace DevZest.Data.Annotations
         }
 
         public SortDirection SortDirection { get; set; }
-
-        protected override bool CoerceDeclaringTypeOnly(bool value)
-        {
-            return true;
-        }
     }
 }

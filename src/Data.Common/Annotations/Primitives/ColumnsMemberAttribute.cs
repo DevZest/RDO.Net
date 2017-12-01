@@ -135,5 +135,10 @@ namespace DevZest.Data.Annotations.Primitives
         public string Name { get; private set; }
 
         public int Index { get; set; }
+
+        protected sealed override bool CoerceDeclaringTypeOnly(bool value)
+        {
+            return true;
+        }
     }
 }
