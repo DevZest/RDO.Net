@@ -129,7 +129,6 @@
     <Compile Include="DbSetTests.cs" />
     <Compile Include="DbTableUpdateTests.cs" />
     <Compile Include="DbTableInsertTests.cs" />
-    <Compile Include="Annotations\ColumnAttributeTests.cs" />
     <Compile Include="DbSessionTests.cs" />
     <Compile Include="Primitives\InterceptableTests.cs" />
     <Compile Include="SqlServer\SqlSessionTests.cs" />
