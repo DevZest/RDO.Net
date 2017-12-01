@@ -3,35 +3,35 @@
 namespace DevZest.Data.Annotations
 {
     [TestClass]
-    public class PhoneAttributeTests
+    public class UrlAttributeTests
     {
         private sealed class TestModel : Model
         {
             static TestModel()
             {
-                RegisterColumn((TestModel _) => _.Phone);
+                RegisterColumn((TestModel _) => _.Url);
             }
 
-            [Phone(MessageId = "ERR_Phone")]
-            public _String Phone { get; private set; }
+            [Url(MessageId = "ERR_Url")]
+            public _String Url { get; private set; }
         }
 
         [TestMethod]
-        public void PhoneAttribute()
+        public void UrlAttribute()
         {
             {
                 var dataSet = DataSet<TestModel>.New();
-                var dataRow = dataSet.AddRow((_, row) => _.Phone[row] = "(555)-1234567 ext. 1203");
+                var dataRow = dataSet.AddRow((_, row) => _.Url[row] = "http://devzest.com");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
                 var dataSet = DataSet<TestModel>.New();
-                var dataRow = dataSet.AddRow((_, row) => _.Phone[row] = "(555)-123456A");
+                var dataRow = dataSet.AddRow((_, row) => _.Url[row] = "devzest.com");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_Phone", validationMessages[0].Id);
+                Assert.AreEqual("ERR_Url", validationMessages[0].Id);
             }
         }
     }

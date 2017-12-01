@@ -98,6 +98,7 @@
     <Compile Include="Annotations\StringLengthAttributeTests.cs" />
     <Compile Include="Annotations\UniqueAttributeTests.cs" />
     <Compile Include="Annotations\UniqueColumnsAttributeTests.cs" />
+    <Compile Include="Annotations\UrlAttributeTests.cs" />
     <Compile Include="BinaryTests.cs" />
     <Compile Include="CaseTests.cs" />
     <Compile Include="ColumnTranslateToTests.cs" />
