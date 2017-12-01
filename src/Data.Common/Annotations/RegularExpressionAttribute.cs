@@ -28,7 +28,7 @@ namespace DevZest.Data.Annotations
         {
             SetupRegex();
             string text = Convert.ToString(value, CultureInfo.CurrentCulture);
-            if (string.IsNullOrEmpty(text))
+            if (text == null)
                 return true;
             Match match = Regex.Match(text);
             return match.Success && match.Index == 0 && match.Length == text.Length;

@@ -13,5 +13,10 @@ namespace DevZest.Data.Annotations
         {
             column.JsonIgnore();
         }
+
+        protected override bool CoerceDeclaringTypeOnly(bool value)
+        {
+            return true;
+        }
     }
 }

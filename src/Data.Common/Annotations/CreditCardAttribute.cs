@@ -21,7 +21,7 @@ namespace DevZest.Data.Annotations
         private static bool IsValid(string text)
         {
             if (text == null)
-                return false;
+                return true;
 
             text = text.Replace("-", "");
             text = text.Replace(" ", "");

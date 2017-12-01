@@ -17,7 +17,7 @@ namespace DevZest.Data.Annotations
 
         private static bool IsValid(string text)
         {
-            return text != null && s_regex.Match(text).Length > 0;
+            return text == null || s_regex.Match(text).Length > 0;
         }
 
         protected override string GetDefaultMessage(Column column, DataRow dataRow)

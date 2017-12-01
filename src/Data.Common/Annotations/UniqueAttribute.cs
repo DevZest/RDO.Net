@@ -35,5 +35,10 @@ namespace DevZest.Data.Annotations
         {
             return Strings.UniqueAttribute_DefaultErrorMessage(column);
         }
+
+        protected override bool CoerceDeclaringTypeOnly(bool value)
+        {
+            return true;
+        }
     }
 }

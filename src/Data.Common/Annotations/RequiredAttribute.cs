@@ -21,5 +21,10 @@ namespace DevZest.Data.Annotations
         {
             return Strings.RequiredAttribute_DefaultErrorMessage(column);
         }
+
+        protected override bool CoerceDeclaringTypeOnly(bool value)
+        {
+            return true;
+        }
     }
 }
