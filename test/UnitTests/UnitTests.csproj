@@ -92,6 +92,7 @@
     <Compile Include="Annotations\DisplayAttributeTests.cs" />
     <Compile Include="Annotations\EmailAddressAttributeTests.cs" />
     <Compile Include="Annotations\IdentityAttributeTests.cs" />
+    <Compile Include="Annotations\PhoneAttributeTests.cs" />
     <Compile Include="BinaryTests.cs" />
     <Compile Include="CaseTests.cs" />
     <Compile Include="ColumnTranslateToTests.cs" />
