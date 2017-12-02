@@ -420,7 +420,7 @@ namespace DevZest.Data
         /// <remarks>To define default expression value, call <see cref="ColumnExtensions.SetDefault{T}(T, T)"/> method.</remarks>
         public void SetDefaultValue(T value)
         {
-            AddOrUpdateInterceptor(new Default<T>(CreateConst(value)));
+            AddOrUpdateResource(new Default<T>(CreateConst(value)));
         }
 
         public sealed override void SetDefaultObject(object defaultValue)
@@ -432,7 +432,7 @@ namespace DevZest.Data
         /// <returns>The default declaration for this column. Returns <see langword="null"/> if no default defined.</returns>
         public new Default<T> GetDefault()
         {
-            return GetInterceptor<Default<T>>();
+            return GetResource<Default<T>>();
         }
 
         /// <inheritdoc/>

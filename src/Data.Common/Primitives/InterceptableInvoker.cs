@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 namespace DevZest.Data.Primitives
 {
     public abstract class InterceptableInvoker<T>
-        where T : class, IInterceptor
+        where T : class, IResource
     {
-        protected InterceptableInvoker(Interceptable interceptable)
+        protected InterceptableInvoker(ResourceContainer interceptable)
         {
             Check.NotNull(interceptable, nameof(interceptable));
             _interceptable = interceptable;
         }
 
-        private Interceptable _interceptable;
+        private ResourceContainer _interceptable;
 
         public bool IsAsync { get; private set; }
 
@@ -69,7 +69,7 @@ namespace DevZest.Data.Primitives
             if (isAsync)
                 TaskStatus = TaskStatus.Created;
             SetExceptionThrown(null);
-            var interceptors = _interceptable.GetInterceptors<T>();
+            var interceptors = _interceptable.GetResources<T>();
             foreach (var interceptor in interceptors)
                 executing(interceptor);
             return interceptors;

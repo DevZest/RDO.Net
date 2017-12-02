@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Primitives
 {
-    internal sealed class NotNull : IInterceptor
+    internal sealed class NotNull : IResource
     {
         public static readonly NotNull Singleton = new NotNull();
 
@@ -10,9 +10,9 @@ namespace DevZest.Data.Primitives
         {
         }
 
-        public string FullName
+        public object Key
         {
-            get { return this.GetType().FullName; }
+            get { return this.GetType(); }
         }
     }
 }

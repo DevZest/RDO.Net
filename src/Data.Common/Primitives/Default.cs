@@ -1,13 +1,13 @@
 ﻿
 namespace DevZest.Data.Primitives
 {
-    public abstract class Default : IInterceptor
+    public abstract class Default : IResource
     {
         public abstract DbExpression DbExpression { get; }
 
-        public string FullName
+        object IResource.Key
         {
-            get { return typeof(Default).FullName; }
+            get { return typeof(Default); }
         }
     }
 }

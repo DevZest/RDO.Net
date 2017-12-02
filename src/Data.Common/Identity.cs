@@ -1,10 +1,9 @@
 ﻿using DevZest.Data.Primitives;
-using System;
 using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public sealed class Identity : IInterceptor
+    public sealed class Identity : IResource
     {
         internal static readonly string FULL_NAME_TABLE = typeof(Identity).FullName + ".Table";
         internal static readonly string FULL_NAME_TEMP_TABLE = typeof(Identity).FullName + ".TempTable";
@@ -19,7 +18,7 @@ namespace DevZest.Data
             IsTempTable = isTempTable;
         }
 
-        public string FullName
+        object IResource.Key
         {
             get { return IsTempTable ? FULL_NAME_TEMP_TABLE : FULL_NAME_TABLE; }
         }

@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbSession : Interceptable, IDisposable
+    public abstract class DbSession : ResourceContainer, IDisposable
     {
         #region IDisposable
 

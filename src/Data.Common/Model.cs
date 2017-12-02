@@ -601,14 +601,14 @@ namespace DevZest.Data
         {
             Debug.Assert(constraint != null);
 
-            if (!overwritable && this.ContainsInterceptor(constraint.FullName))
+            if (!overwritable && this.ContainsResource(((IResource)constraint).Key))
                 throw new InvalidOperationException(Strings.Model_DuplicateConstraintName(constraint.SystemName));
 
             var index = constraint as IIndexConstraint;
             if (index != null && index.IsClustered)
                 ClusteredIndex = index;
 
-            this.AddOrUpdateInterceptor(constraint);
+            this.AddOrUpdateResource(constraint);
         }
 
         internal KeyOutput CreateSequentialKey()
@@ -641,7 +641,7 @@ namespace DevZest.Data
 
         protected internal Identity GetIdentity(bool isTempTable)
         {
-            var results = GetInterceptors<Identity>();
+            var results = GetResources<Identity>();
             foreach (var result in results)
             {
                 if (result.IsTempTable == isTempTable)
@@ -658,7 +658,7 @@ namespace DevZest.Data
             _Int32 identityColumn = AddSysRowIdColumn(false);
             var identity = identityColumn.Identity(1, 1, true);
 
-            var primaryKeyConstraint = GetInterceptor<PrimaryKeyConstraint>();
+            var primaryKeyConstraint = GetResource<PrimaryKeyConstraint>();
             if (primaryKeyConstraint == null)
                 AddDbTableConstraint(new PrimaryKeyConstraint(this, null, true, () => GetIdentityOrderByList(identity)), false);
             else
@@ -690,31 +690,31 @@ namespace DevZest.Data
             return result;
         }
 
-        private class SysRowId : IInterceptor
+        private class SysRowId : IResource
         {
             public SysRowId(_Int32 column)
             {
                 Column = column;
             }
 
-            public string FullName
+            public object Key
             {
-                get { return this.GetType().FullName; }
+                get { return this.GetType(); }
             }
 
             public _Int32 Column { get; private set; }
         }
 
-        private sealed class SysParentRowId : IInterceptor
+        private sealed class SysParentRowId : IResource
         {
             public SysParentRowId(_Int32 column)
             {
                 Column = column;
             }
 
-            public string FullName
+            public object Key
             {
-                get { return this.GetType().FullName; }
+                get { return this.GetType(); }
             }
 
             public _Int32 Column { get; private set; }
@@ -722,28 +722,28 @@ namespace DevZest.Data
 
         internal _Int32 GetSysRowIdColumn(bool createIfNotExist)
         {
-            var sysRowId = GetInterceptor<SysRowId>();
+            var sysRowId = GetResource<SysRowId>();
             if (sysRowId == null)
             {
                 if (!createIfNotExist)
                     return null;
 
                 sysRowId = new SysRowId(AddSysRowIdColumn(false));
-                AddOrUpdateInterceptor(sysRowId);
+                AddOrUpdateResource(sysRowId);
             }
             return sysRowId.Column;
         }
 
         internal _Int32 GetSysParentRowIdColumn(bool createIfNotExist)
         {
-            var sysParentRowId = GetInterceptor<SysParentRowId>();
+            var sysParentRowId = GetResource<SysParentRowId>();
             if (sysParentRowId == null)
             {
                 if (!createIfNotExist)
                     return null;
 
                 sysParentRowId = new SysParentRowId(AddSysRowIdColumn(true));
-                AddOrUpdateInterceptor(sysParentRowId);
+                AddOrUpdateResource(sysParentRowId);
             }
             return sysParentRowId.Column;
         }

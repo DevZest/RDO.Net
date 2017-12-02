@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace DevZest.Data.Primitives
 {
-    public interface IDbNonQueryInterceptor<TCommand> : IInterceptor
+    public interface IDbNonQueryInterceptor<TCommand> : IResource
         where TCommand : DbCommand
     {
         void Executing(DbNonQueryInvoker<TCommand> invoker);

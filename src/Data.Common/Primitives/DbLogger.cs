@@ -181,14 +181,14 @@ namespace DevZest.Data.Primitives
         }
 
         private void Executed<TInterceptor, TResult>(TCommand command, InterceptableInvoker<TInterceptor> invoker, TResult result)
-            where TInterceptor : class, IInterceptor
+            where TInterceptor : class, IResource
         {
             Stopwatch.Stop();
             CommandExecuted(command, invoker, result);
         }
 
         protected virtual void CommandExecuted<TInterceptor, TResult>(TCommand command, InterceptableInvoker<TInterceptor> invoker, TResult result)
-            where TInterceptor : class, IInterceptor
+            where TInterceptor : class, IResource
         {
             var exception = invoker.Exception;
             if (exception != null)
@@ -228,9 +228,9 @@ namespace DevZest.Data.Primitives
             Executed(invoker.Command, invoker, invoker.Result);
         }
 
-        public string FullName
+        object IResource.Key
         {
-            get { return typeof(DbLogger<TConnection, TTransaction, TCommand, TReader>).FullName; }
+            get { return typeof(DbLogger<TConnection, TTransaction, TCommand, TReader>); }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]

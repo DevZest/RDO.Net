@@ -130,7 +130,7 @@
     <Compile Include="DbTableUpdateTests.cs" />
     <Compile Include="DbTableInsertTests.cs" />
     <Compile Include="DbSessionTests.cs" />
-    <Compile Include="Primitives\InterceptableTests.cs" />
+    <Compile Include="Primitives\ResourceContainerTests.cs" />
     <Compile Include="SqlServer\SqlSessionTests.cs" />
     <Compile Include="SqlServer\StringExtensionsTests.cs" />
     <Compile Include="Resources\Json.Designer.cs">

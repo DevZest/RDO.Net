@@ -41,7 +41,7 @@ namespace DevZest.Data.SqlServer
 
         private static void GenerateConstraints(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable)
         {
-            IReadOnlyList<DbTableConstraint> constraints = model.GetInterceptors<DbTableConstraint>();
+            IReadOnlyList<DbTableConstraint> constraints = model.GetResources<DbTableConstraint>();
             if (isTempTable)
                 constraints = constraints.Where(x => !(x is ForeignKeyConstraint)).ToList();
             if (constraints.Count == 0)

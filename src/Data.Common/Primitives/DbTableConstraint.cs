@@ -3,7 +3,7 @@ using System;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbTableConstraint : IInterceptor
+    public abstract class DbTableConstraint : IResource
     {
         protected DbTableConstraint(string name)
         {
@@ -12,7 +12,7 @@ namespace DevZest.Data.Primitives
 
         public string Name { get; private set; }
 
-        public string FullName
+        object IResource.Key
         {
             get { return typeof(DbTableConstraint).FullName + "." + SystemName; }
         }

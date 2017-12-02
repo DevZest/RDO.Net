@@ -792,11 +792,11 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.Model_InvalidIdentityIncrement, nameof(increment));
 
             var identity = new Identity(this, seed, increment, isTempTable);
-            AddOrUpdateInterceptor(identity);
+            AddOrUpdateResource(identity);
             var model = ParentModel;
-            if (model.ContainsInterceptor(identity.FullName))
+            if (model.ContainsResource(((IResource)identity).Key))
                 throw new InvalidOperationException(Strings.Model_MultipleIdentityColumn);
-            model.AddInterceptor(identity);
+            model.AddResource(identity);
             return identity;
         }
 

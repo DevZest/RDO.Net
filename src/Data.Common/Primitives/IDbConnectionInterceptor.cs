@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace DevZest.Data.Primitives
 {
-    public interface IDbConnectionInterceptor<T> : IInterceptor
+    public interface IDbConnectionInterceptor<T> : IResource
         where T : DbConnection
     {
         void Opening(DbConnectionInvoker<T> invoker);
