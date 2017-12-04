@@ -24,6 +24,7 @@ namespace DevZest.Data.SqlServer
                 columns[i].GenerateColumnDefinitionSql(sqlBuilder, sqlVersion, isTempTable, i == columns.Count - 1);
 
             model.GenerateConstraints(sqlBuilder, sqlVersion, tableName, isTempTable);
+            model.GenerateIndexes(sqlBuilder, sqlVersion, tableName, isTempTable);
 
             sqlBuilder.Indent--;
             sqlBuilder.AppendLine(");");
@@ -111,19 +112,7 @@ namespace DevZest.Data.SqlServer
                 sqlBuilder.Append("CLUSTERED (");
             else
                 sqlBuilder.Append("NONCLUSTERED (");
-            var columns = constraint.Columns;
-            for (int i = 0; i < columns.Count; i++)
-            {
-                var column = columns[i].Column;
-                var sort = columns[i].Direction;
-                sqlBuilder.Append(column.DbColumnName.ToQuotedIdentifier());
-                if (sort == SortDirection.Ascending)
-                    sqlBuilder.Append(" ASC");
-                else if (sort == SortDirection.Descending)
-                    sqlBuilder.Append(" DESC");
-                if (i != columns.Count - 1)
-                    sqlBuilder.Append(", ");
-            }
+            GenerateColumnSortList(sqlBuilder, constraint.Columns);
             sqlBuilder.Append(")");
         }
 
@@ -176,6 +165,56 @@ namespace DevZest.Data.SqlServer
             
             sqlBuilder.Append("CHECK ");
             constraint.LogicalExpression.GenerateSql(sqlBuilder, sqlVersion);
+        }
+
+        private static void GenerateIndexes(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable)
+        {
+            IReadOnlyList<Index> indexes = model.GetExtensions<Index>();
+            if (isTempTable)
+                indexes = indexes.Where(x => x.IsMemberOfTempTable).ToList();
+            else
+                indexes = indexes.Where(x => x.IsMemberOfTable).ToList();
+            if (indexes.Count == 0)
+                return;
+
+            sqlBuilder.AppendLine();
+            for (int i = 0; i < indexes.Count; i++)
+            {
+                var index = indexes[i];
+                sqlBuilder.Append("INDEX ");
+                sqlBuilder.Append(index.Name.ToQuotedIdentifier());
+                sqlBuilder.Append(' ');
+
+                if (index.IsUnique)
+                    sqlBuilder.Append("UNIQUE ");
+                if (index.IsClustered)
+                    sqlBuilder.Append("CLUSTERED (");
+                else
+                    sqlBuilder.Append("NONCLUSTERED (");
+                GenerateColumnSortList(sqlBuilder, index.Columns);
+                sqlBuilder.Append(")");
+
+                bool isLastIndex = (i == indexes.Count - 1);
+                if (!isLastIndex)
+                    sqlBuilder.Append(",");
+                sqlBuilder.AppendLine();
+            }
+        }
+
+        private static void GenerateColumnSortList(IndentedStringBuilder sqlBuilder, IReadOnlyList<ColumnSort> columns)
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i].Column;
+                var sort = columns[i].Direction;
+                sqlBuilder.Append(column.DbColumnName.ToQuotedIdentifier());
+                if (sort == SortDirection.Ascending)
+                    sqlBuilder.Append(" ASC");
+                else if (sort == SortDirection.Descending)
+                    sqlBuilder.Append(" DESC");
+                if (i != columns.Count - 1)
+                    sqlBuilder.Append(", ");
+            }
         }
     }
 }

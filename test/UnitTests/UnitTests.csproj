@@ -96,6 +96,7 @@
     <Compile Include="Annotations\RegularExpressionAttributeTests.cs" />
     <Compile Include="Annotations\RequiredAttributeTests.cs" />
     <Compile Include="Annotations\StringLengthAttributeTests.cs" />
+    <Compile Include="Annotations\IndexAttributeTests.cs" />
     <Compile Include="Annotations\UniqueAttributeTests.cs" />
     <Compile Include="Annotations\UniqueColumnsAttributeTests.cs" />
     <Compile Include="Annotations\UrlAttributeTests.cs" />

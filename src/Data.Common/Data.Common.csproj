@@ -64,6 +64,7 @@
     <Compile Include="Annotations\Primitives\TypeMemberAttribute.cs" />
     <Compile Include="Annotations\RegularExpressionAttribute.cs" />
     <Compile Include="Annotations\StringLengthAttribute.cs" />
+    <Compile Include="Annotations\IndexAttribute.cs" />
     <Compile Include="Annotations\UrlAttribute.cs" />
     <Compile Include="AttachedLocalColumnManager.cs" />
     <Compile Include="ColumnValueBag.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Annotations\UniqueAttribute.cs" />
     <Compile Include="Annotations\UniqueColumnsAttribute.cs" />
     <Compile Include="Annotations\UniqueColumnsMemberAttribute.cs" />
+    <Compile Include="Primitives\Index.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
     <Compile Include="Utilities\EmptyDictionary.cs" />
     <Compile Include="Utilities\EmptyEnumerable.cs" />

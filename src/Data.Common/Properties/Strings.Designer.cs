@@ -1131,6 +1131,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("LocalizableString_LocalizationFailed", "propertyName", "resourceType", "propertyValue"), propertyName, resourceType, propertyValue);
         }
 
+        /// <summary>
+        /// The index name '{indexName}' already exists.
+        /// </summary>
+        public static string Model_DuplicateIndexName(object indexName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Model_DuplicateIndexName", "indexName"), indexName);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

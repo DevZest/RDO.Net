@@ -601,7 +601,7 @@ namespace DevZest.Data
         {
             Debug.Assert(constraint != null);
 
-            if (!overwritable && this.ContainsExtension(((IExtension)constraint).Key))
+            if (!overwritable && ContainsExtension(((IExtension)constraint).Key))
                 throw new InvalidOperationException(Strings.Model_DuplicateConstraintName(constraint.SystemName));
 
             var index = constraint as IIndexConstraint;
@@ -609,6 +609,19 @@ namespace DevZest.Data
                 ClusteredIndex = index;
 
             this.AddOrUpdateExtension(constraint);
+        }
+
+        internal void AddIndex(Index index)
+        {
+            Debug.Assert(index != null);
+
+            if (ContainsExtension(((IExtension)index).Key))
+                throw new InvalidOperationException(Strings.Model_DuplicateIndexName(index.Name));
+
+            if (index.IsClustered)
+                ClusteredIndex = index;
+
+            this.AddOrUpdateExtension(index);
         }
 
         internal KeyOutput CreateSequentialKey()
@@ -746,6 +759,23 @@ namespace DevZest.Data
                 AddOrUpdateExtension(sysParentRowId);
             }
             return sysParentRowId.Column;
+        }
+
+        protected internal void Index(string name, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, params ColumnSort[] orderByList)
+        {
+            Utilities.Check.NotEmpty(name, nameof(name));
+            Utilities.Check.NotNull(orderByList, nameof(orderByList));
+            if (orderByList.Length == 0)
+                throw new ArgumentException(Strings.Model_EmptyColumns, nameof(orderByList));
+
+            for (int i = 0; i < orderByList.Length; i++)
+            {
+                var column = orderByList[i].Column;
+                if (column == null || column.ParentModel != this)
+                    throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
+            }
+
+            AddIndex(new Index(name, isUnique, isClustered, isMemberOfTable, isMemberOfTempTable, orderByList));
         }
 
         protected internal void Unique(string constraintName, bool isClustered, params ColumnSort[] orderByList)
