@@ -8,28 +8,28 @@ using System.Runtime.CompilerServices;
 
 namespace DevZest.Data.Primitives
 {
-    partial class ResourceContainer
+    partial class ExtensibleObject
     {
-        private sealed class ResourceCollection : KeyedCollection<object, IResource>
+        private sealed class ExtensionCollection : KeyedCollection<object, IExtension>
         {
             private static class Cache<T>
-                where T : class, IResource
+                where T : class, IExtension
             {
-                private static ConditionalWeakTable<ResourceCollection, ReadOnlyCollection<T>> s_results = new ConditionalWeakTable<ResourceCollection, ReadOnlyCollection<T>>();
+                private static ConditionalWeakTable<ExtensionCollection, ReadOnlyCollection<T>> s_results = new ConditionalWeakTable<ExtensionCollection, ReadOnlyCollection<T>>();
 
-                public static void Remove(ResourceCollection collection)
+                public static void Remove(ExtensionCollection collection)
                 {
                     ReadOnlyCollection<T> results;
                     if (s_results.TryGetValue(collection, out results))
                         s_results.Remove(collection);
                 }
 
-                public static ReadOnlyCollection<T> GetResult(ResourceCollection collection)
+                public static ReadOnlyCollection<T> GetResult(ExtensionCollection collection)
                 {
                     return s_results.GetValue(collection, x => new ReadOnlyCollection<T>(Filter(x).ToArray()));
                 }
 
-                private static IEnumerable<T> Filter(ResourceCollection collection)
+                private static IEnumerable<T> Filter(ExtensionCollection collection)
                 {
                     foreach (var item in collection)
                     {
@@ -40,7 +40,7 @@ namespace DevZest.Data.Primitives
                 }
             }
 
-            public ResourceCollection(ResourceContainer interceptable)
+            public ExtensionCollection(ExtensibleObject interceptable)
             {
                 _designable = interceptable as IDesignable;
             }
@@ -57,12 +57,12 @@ namespace DevZest.Data.Primitives
                 _allowFrozenChange = value;
             }
 
-            protected override object GetKeyForItem(IResource item)
+            protected override object GetKeyForItem(IExtension item)
             {
                 return item.Key;
             }
 
-            protected override void InsertItem(int index, IResource item)
+            protected override void InsertItem(int index, IExtension item)
             {
                 OnItemChanging(item);
                 base.InsertItem(index, item);
@@ -75,16 +75,16 @@ namespace DevZest.Data.Primitives
 
             protected override void RemoveItem(int index)
             {
-                OnItemChanging(((Collection<IResource>)this)[index]);
+                OnItemChanging(((Collection<IExtension>)this)[index]);
                 base.RemoveItem(index);
             }
 
-            protected override void SetItem(int index, IResource item)
+            protected override void SetItem(int index, IExtension item)
             {
                 Debug.Fail("Not supported.");
             }
 
-            private void OnItemChanging(IResource item)
+            private void OnItemChanging(IExtension item)
             {
                 if (IsFrozen)
                     throw new InvalidOperationException(Strings.VerifyDesignMode);
@@ -106,7 +106,7 @@ namespace DevZest.Data.Primitives
 
             Dictionary<Type, Action> _cacheInvalidators = new Dictionary<Type, Action>();
             private void OnCacheAccessing<T>()
-                where T : class, IResource
+                where T : class, IExtension
             {
                 var type = typeof(T);
                 if (_cacheInvalidators.ContainsKey(type))
@@ -115,7 +115,7 @@ namespace DevZest.Data.Primitives
             }
 
             public ReadOnlyCollection<T> Filter<T>()
-                where T : class, IResource
+                where T : class, IExtension
             {
                 OnCacheAccessing<T>();
                 return Cache<T>.GetResult(this);

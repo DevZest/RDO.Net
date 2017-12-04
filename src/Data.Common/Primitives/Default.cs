@@ -1,11 +1,11 @@
 ﻿
 namespace DevZest.Data.Primitives
 {
-    public abstract class Default : IResource
+    public abstract class Default : IExtension
     {
         public abstract DbExpression DbExpression { get; }
 
-        object IResource.Key
+        object IExtension.Key
         {
             get { return typeof(Default); }
         }

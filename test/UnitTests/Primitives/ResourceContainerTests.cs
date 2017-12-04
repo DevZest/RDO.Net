@@ -6,11 +6,11 @@ namespace DevZest.Data.Primitives
     [TestClass]
     public class ResourceContainerTests
     {
-        private interface IResource1 : IResource
+        private interface IResource1 : IExtension
         {
         }
 
-        private interface IResource2 : IResource
+        private interface IResource2 : IExtension
         {
         }
 
@@ -22,11 +22,11 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private class Unfreezable : ResourceContainer
+        private class Unfreezable : ExtensibleObject
         {
         }
 
-        private class Freezable : ResourceContainer, IDesignable
+        private class Freezable : ExtensibleObject, IDesignable
         {
 
             private bool _designMode = true;
@@ -46,17 +46,17 @@ namespace DevZest.Data.Primitives
         {
             var unfreezable = new Unfreezable();
 
-            Assert.IsNull(unfreezable.GetResource<IResource1>());
-            Assert.IsNull(unfreezable.GetResource<IResource2>());
+            Assert.IsNull(unfreezable.GetExtension<IResource1>());
+            Assert.IsNull(unfreezable.GetExtension<IResource2>());
             var resource = new Resource();
-            unfreezable.AddOrUpdateResource(resource);
-            Assert.AreEqual(resource, unfreezable.GetResource<IResource1>());
-            Assert.AreEqual(resource, unfreezable.GetResource<IResource2>());
+            unfreezable.AddOrUpdateExtension(resource);
+            Assert.AreEqual(resource, unfreezable.GetExtension<IResource1>());
+            Assert.AreEqual(resource, unfreezable.GetExtension<IResource2>());
 
             resource = new Resource();
-            unfreezable.AddOrUpdateResource(resource);
-            Assert.AreEqual(resource, unfreezable.GetResource<IResource1>());
-            Assert.AreEqual(resource, unfreezable.GetResource<IResource2>());
+            unfreezable.AddOrUpdateExtension(resource);
+            Assert.AreEqual(resource, unfreezable.GetExtension<IResource1>());
+            Assert.AreEqual(resource, unfreezable.GetExtension<IResource2>());
         }
 
         [TestMethod]
@@ -65,9 +65,9 @@ namespace DevZest.Data.Primitives
             var freezable = new Freezable();
 
             var resource = new Resource();
-            freezable.AddOrUpdateResource(resource);
-            Assert.AreEqual(resource, freezable.GetResource<IResource1>());
-            Assert.AreEqual(resource, freezable.GetResource<IResource2>());
+            freezable.AddOrUpdateExtension(resource);
+            Assert.AreEqual(resource, freezable.GetExtension<IResource1>());
+            Assert.AreEqual(resource, freezable.GetExtension<IResource2>());
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace DevZest.Data.Primitives
 
             freezable.Freeze();
             var resource = new Resource();
-            freezable.AddOrUpdateResource(resource);
+            freezable.AddOrUpdateExtension(resource);
         }
     }
 }

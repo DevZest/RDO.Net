@@ -61,11 +61,11 @@ namespace DevZest.Data
             foreach (var mockTable in _mockTables)
             {
                 var model = mockTable.Table.Model;
-                var foreignKeys = model.GetResources<ForeignKeyConstraint>();
+                var foreignKeys = model.GetExtensions<ForeignKeyConstraint>();
                 foreach (var item in foreignKeys)
                 {
                     if (!tableNames.Contains(item.ReferencedTableName))
-                        model.BrutalRemoveResource(((IResource)item).Key);
+                        model.BrutalRemoveExtension(((IExtension)item).Key);
                 }
             }
         }

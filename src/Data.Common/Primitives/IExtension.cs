@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Primitives
 {
-    public interface IResource
+    public interface IExtension
     {
         object Key { get; }
     }

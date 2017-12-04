@@ -203,7 +203,7 @@ namespace DevZest.Data
         /// <returns>The <see cref="Identity"/> object, or <see langword="null"/> if this is not a identity column.</returns>
         public Identity GetIdentity(bool isTempTable)
         {
-            return (Identity)GetResource(isTempTable ? Identity.FULL_NAME_TEMP_TABLE : Identity.FULL_NAME_TABLE);
+            return (Identity)GetExtension(isTempTable ? Identity.FULL_NAME_TEMP_TABLE : Identity.FULL_NAME_TABLE);
         }
 
         /// <summary>Gets this column as asending sorted.</summary>
@@ -228,11 +228,11 @@ namespace DevZest.Data
             if (isNullable)
             {
                 var resourceKey = Primitives.NotNull.Singleton.Key;
-                if (ContainsResource(resourceKey))
-                    RemoveResource(resourceKey);
+                if (ContainsExtension(resourceKey))
+                    RemoveExtension(resourceKey);
             }
             else
-                AddOrUpdateResource(Primitives.NotNull.Singleton);
+                AddOrUpdateExtension(Primitives.NotNull.Singleton);
         }
 
         /// <summary>Gets a value indicates whether this column is nullable.</summary>
@@ -247,7 +247,7 @@ namespace DevZest.Data
                 if (IsPrimaryKey || GetIdentity(true) != null || GetIdentity(false) != null)
                     return false;
                 var resourceKey = Primitives.NotNull.Singleton.Key;
-                return !ContainsResource(resourceKey);
+                return !ContainsExtension(resourceKey);
             }
         }
 
@@ -255,7 +255,7 @@ namespace DevZest.Data
         /// <returns>The <see cref="Default"/> object associated with this column.</returns>
         public Default GetDefault()
         {
-            return GetResource<Default>();
+            return GetExtension<Default>();
         }
 
         public abstract bool IsDbComputed { get; }

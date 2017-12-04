@@ -6,7 +6,7 @@ using System.Data.Common;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbTransactionInvoker<TConnection, TTransaction> : InterceptableInvoker<IDbTransactionInterceptor<TConnection, TTransaction>>
+    public abstract class DbTransactionInvoker<TConnection, TTransaction> : ExtensibleObjectInvoker<IDbTransactionInterceptor<TConnection, TTransaction>>
         where TConnection : DbConnection
         where TTransaction : DbTransaction
     {

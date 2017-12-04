@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace DevZest.Data.SqlServer
 {
-    internal abstract class ColumnMapper : IResource
+    internal abstract class ColumnMapper : IExtension
     {
         private const string NULL = "NULL";
 
@@ -132,7 +132,7 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        object IResource.Key
+        object IExtension.Key
         {
             get { return typeof(ColumnMapper); }
         }

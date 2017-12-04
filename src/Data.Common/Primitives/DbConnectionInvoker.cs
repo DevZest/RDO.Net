@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class DbConnectionInvoker<T> : InterceptableInvoker<IDbConnectionInterceptor<T>>
+    public sealed class DbConnectionInvoker<T> : ExtensibleObjectInvoker<IDbConnectionInterceptor<T>>
         where T : DbConnection
     {
         public DbConnectionInvoker(DbSession dbSession, T connection)

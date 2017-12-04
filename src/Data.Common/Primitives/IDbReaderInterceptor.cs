@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace DevZest.Data.Primitives
 {
-    public interface IDbReaderInterceptor<TCommand, TReader> : IResource
+    public interface IDbReaderInterceptor<TCommand, TReader> : IExtension
         where TCommand : DbCommand
         where TReader : DbReader
     {

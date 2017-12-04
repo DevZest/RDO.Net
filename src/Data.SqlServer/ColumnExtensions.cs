@@ -42,7 +42,7 @@ namespace DevZest.Data.SqlServer
 
         private static void SetMapper(this Column column, ColumnMapper columnMapper)
         {
-            column.AddOrUpdateResource(columnMapper);
+            column.AddOrUpdateExtension(columnMapper);
         }
 
         public static T AsBinary<T>(this T column, int size)
@@ -241,7 +241,7 @@ namespace DevZest.Data.SqlServer
 
         internal static ColumnMapper GetMapper(this Column column)
         {
-            var result = column.GetResource<ColumnMapper>() ?? column.GetDefaultMapper();
+            var result = column.GetExtension<ColumnMapper>() ?? column.GetDefaultMapper();
             return result;
         }
 

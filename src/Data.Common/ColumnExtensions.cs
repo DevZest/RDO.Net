@@ -47,7 +47,7 @@ namespace DevZest.Data
             Check.NotNull(column, nameof(column));
             Check.NotNull(expression, nameof(expression));
 
-            column.AddOrUpdateResource(expression.CreateDefault());
+            column.AddOrUpdateExtension(expression.CreateDefault());
         }
 
         public static T WithDefault<T>(this T column, T expression)

@@ -138,7 +138,7 @@ namespace DevZest.Data.Primitives
 
         private DbLogger<TConnection, TTransaction, TCommand, TReader> CurrentDbLogger
         {
-            get { return this.GetResource<DbLogger<TConnection, TTransaction, TCommand, TReader>>(); }
+            get { return this.GetExtension<DbLogger<TConnection, TTransaction, TCommand, TReader>>(); }
         }
 
         public void SetLog(Action<string> value)
@@ -152,14 +152,14 @@ namespace DevZest.Data.Primitives
             if (value == null)
             {
                 if (currentDbLogger != null)
-                    this.RemoveResource(((IResource)currentDbLogger).Key);
+                    this.RemoveExtension(((IExtension)currentDbLogger).Key);
             }
             else
             {
                 if (currentDbLogger == null)
                 {
                     currentDbLogger = CreateDbLogger();
-                    this.AddResource(currentDbLogger);
+                    this.AddExtension(currentDbLogger);
                 }
                 currentDbLogger.WriteAction = value;
                 currentDbLogger.LogCategory = logCategory;

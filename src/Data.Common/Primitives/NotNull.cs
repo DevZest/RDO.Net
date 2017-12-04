@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Primitives
 {
-    internal sealed class NotNull : IResource
+    internal sealed class NotNull : IExtension
     {
         public static readonly NotNull Singleton = new NotNull();
 
