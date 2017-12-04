@@ -12,7 +12,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderToEdit>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();
@@ -29,7 +29,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderToEdit>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
             var customer = ext.Customer;
             salesOrders.Add(new DataRow(), (dataRow) =>
             {
@@ -56,7 +56,7 @@ namespace DevZest.Data
             {
                 var salesOrder = DataSet<SalesOrderToEdit>.New().EnsureInitialized()._;
                 var customerKey = salesOrder.Customer;
-                var customerExt = salesOrder.GetExtension<SalesOrderToEdit.Ext>().Customer;
+                var customerExt = salesOrder.GetExtender<SalesOrderToEdit.Ext>().Customer;
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);
                 valueBag.AutoSelect(customerExt, salesOrders[0]);
@@ -84,7 +84,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderToEdit>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();
@@ -103,7 +103,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderToEdit>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();

@@ -41,7 +41,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public class Lookup : ModelExtension
+        public class Lookup : ModelExtender
         {
             static Lookup()
             {

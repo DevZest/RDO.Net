@@ -11,7 +11,7 @@ namespace DevZest.Data
         /// <summary></summary>
         ColumnList = 2,
         /// <summary>The column is defined by extension.</summary>
-        Extension = 4,
+        Extender = 4,
         /// <summary>sys_parent_row_id column of sequential key temp table (internal use only).</summary>
         SystemParentRowId = 8,
         /// <summary>sys_row_id column of sequential key temp table (internal use only).</summary>
@@ -21,6 +21,6 @@ namespace DevZest.Data
         /// <summary>Union of <see cref="SystemRowId"/>, <see cref="SystemParentRowId"/> and <see cref="SystemCustom"/>.</summary>
         System = SystemRowId | SystemParentRowId | SystemCustom,
         /// <summary>All kinds of column.</summary>
-        All = ModelProperty | ColumnList | Extension | System
+        All = ModelProperty | ColumnList | Extender | System
     }
 }

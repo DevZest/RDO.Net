@@ -259,7 +259,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder AutoSelect(Model from, ModelExtension to)
+        public DbQueryBuilder AutoSelect(Model from, ModelExtender to)
         {
             if (to == null)
                 throw new ArgumentNullException(nameof(to));

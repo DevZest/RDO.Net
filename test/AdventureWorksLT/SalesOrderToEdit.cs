@@ -4,13 +4,13 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class SalesOrderToEdit : SalesOrder
     {
-        public class Ext : ModelExtension
+        public class Ext : ModelExtender
         {
             static Ext()
             {
-                RegisterChildExtension((Ext _) => _.Customer);
-                RegisterChildExtension((Ext _) => _.ShipToAddress);
-                RegisterChildExtension((Ext _) => _.BillToAddress);
+                RegisterChildExtender((Ext _) => _.Customer);
+                RegisterChildExtender((Ext _) => _.ShipToAddress);
+                RegisterChildExtender((Ext _) => _.BillToAddress);
             }
 
             public Customer.Lookup Customer { get; private set; }
@@ -18,11 +18,11 @@ namespace DevZest.Samples.AdventureWorksLT
             public Address.Lookup BillToAddress { get; private set; }
         }
 
-        public class DetailExt : ModelExtension
+        public class DetailExt : ModelExtender
         {
             static DetailExt()
             {
-                RegisterChildExtension((DetailExt _) => _.Product);
+                RegisterChildExtender((DetailExt _) => _.Product);
             }
 
             public Product.Lookup Product { get; private set; }
@@ -30,12 +30,12 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public SalesOrderToEdit()
         {
-            SetExtension<Ext>();
+            SetExtender<Ext>();
         }
 
         protected override void OnChildModelsMounted()
         {
-            SalesOrderDetails.SetExtension<DetailExt>();
+            SalesOrderDetails.SetExtender<DetailExt>();
             base.OnChildModelsMounted();
         }
 

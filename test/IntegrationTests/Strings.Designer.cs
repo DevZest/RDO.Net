@@ -19,7 +19,7 @@ namespace DevZest.Data {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -143,7 +143,7 @@ namespace DevZest.Data {
         ///      &quot;UnitPriceDiscount&quot; : 0,
         ///      &quot;RowGuid&quot; : &quot;e3a1994c-7a68-4ce8-96a3-77fdd3bbd730&quot;,
         ///      &quot;ModifiedDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
-        ///      &quot;Extension&quot; : {
+        ///      &quot;Extender&quot; : {
         ///         &quot;Product&quot; : {
         ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
         ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
@@ -152,7 +152,7 @@ namespace DevZest.Data {
         ///   },
         ///   {
         ///      &quot;SalesOrderID&quot; : 71774,
-        ///   [rest of string was truncated]&quot;;.
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_SalesOrderDetail_71774_with_ext {
             get {

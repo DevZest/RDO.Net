@@ -980,11 +980,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Invalid member name "{memberName}" for ModelExtension "{extension}".
+        /// Invalid member name "{memberName}" for ModelExtender "{extender}".
         /// </summary>
-        public static string JsonParser_InvalidExtensionMember(object memberName, object extension)
+        public static string JsonParser_InvalidExtenderMember(object memberName, object extender)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidExtensionMember", "memberName", "extension"), memberName, extension);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidExtenderMember", "memberName", "extender"), memberName, extender);
         }
 
         /// <summary>

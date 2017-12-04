@@ -178,8 +178,8 @@ namespace DevZest.Data.Primitives
 
         private void RecursiveFillDataSet(IDbSet dbSet, Model dataSetModel)
         {
-            if (dataSetModel.Extension == null)
-                dataSetModel.InitializeExtension(dbSet.Model);
+            if (dataSetModel.Extender == null)
+                dataSetModel.InitializeExtender(dbSet.Model);
             using (var reader = CreateReaderInvoker(dbSet.SequentialQueryStatement).Execute())
             {
                 var columns = GetReaderColumns(dataSetModel);

@@ -159,7 +159,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderToEdit _) =>
             {
-                var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+                var ext = _.GetExtender<SalesOrderToEdit.Ext>();
                 Debug.Assert(ext != null);
                 SalesOrder o;
                 Customer c;
@@ -176,7 +176,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
             {
-                Debug.Assert(_.GetExtension<SalesOrderToEdit.DetailExt>() != null);
+                Debug.Assert(_.GetExtender<SalesOrderToEdit.DetailExt>() != null);
                 SalesOrderDetail d;
                 Product p;
                 builder.From(SalesOrderDetails, out d)

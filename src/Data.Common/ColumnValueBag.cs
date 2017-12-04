@@ -105,13 +105,13 @@ namespace DevZest.Data
             }
         }
 
-        public void AutoSelect(ModelExtension extension, DataRow dataRow, bool ignoreExpression = true)
+        public void AutoSelect(ModelExtender extender, DataRow dataRow, bool ignoreExpression = true)
         {
-            Check.NotNull(extension, nameof(extension));
+            Check.NotNull(extender, nameof(extender));
             Check.NotNull(dataRow, nameof(dataRow));
 
             var valueColumns = dataRow.Model.Columns;
-            foreach (var keyColumn in extension.Columns)
+            foreach (var keyColumn in extender.Columns)
             {
                 if (keyColumn.IsExpression && ignoreExpression)
                     continue;

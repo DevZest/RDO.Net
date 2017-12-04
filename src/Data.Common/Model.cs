@@ -568,11 +568,11 @@ namespace DevZest.Data
             }
         }
 
-        internal void InitializeExtension(Model prototype)
+        internal void InitializeExtender(Model prototype)
         {
-            var prototypeExtension = prototype.Extension;
-            if (prototypeExtension != null && Extension == null)
-                Extension = (ModelExtension)Activator.CreateInstance(prototypeExtension.GetType());
+            var prototypeExtender = prototype.Extender;
+            if (prototypeExtender != null && Extender == null)
+                Extender = (ModelExtender)Activator.CreateInstance(prototypeExtender.GetType());
         }
 
         private IIndexConstraint _clusteredIndex;
@@ -1145,33 +1145,33 @@ namespace DevZest.Data
                 column8, column9, column10, column11, column12, expression, builder);
         }
 
-        private ModelExtension _extension;
-        internal ModelExtension Extension
+        private ModelExtender _extender;
+        internal ModelExtender Extender
         {
-            get { return _extension; }
+            get { return _extender; }
             private set
             {
-                Debug.Assert(_extension == null);
+                Debug.Assert(_extender == null);
                 Debug.Assert(value != null);
-                _extension = value;
-                _extension.Initialize(this);
+                _extender = value;
+                _extender.Initialize(this);
             }
         }
 
-        public void SetExtension<T>()
-            where T : ModelExtension, new()
+        public void SetExtender<T>()
+            where T : ModelExtender, new()
         {
             VerifyDesignMode();
-            if (Extension != null)
+            if (Extender != null)
                 throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
             else
-                Extension = new T();
+                Extender = new T();
         }
 
-        public T GetExtension<T>()
-            where T : ModelExtension, new()
+        public T GetExtender<T>()
+            where T : ModelExtender, new()
         {
-            return Extension as T;
+            return Extender as T;
         }
     }
 }
