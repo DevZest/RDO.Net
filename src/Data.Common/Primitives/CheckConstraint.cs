@@ -13,5 +13,15 @@ namespace DevZest.Data.Primitives
 
         /// <summary>Gets the logical expression of this CHECK constraint.</summary>
         public DbExpression LogicalExpression { get; private set; }
+
+        public override bool IsMemberOfTable
+        {
+            get { return true; }
+        }
+
+        public override bool IsMemberOfTempTable
+        {
+            get { return true; }
+        }
     }
 }

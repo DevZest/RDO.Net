@@ -664,7 +664,7 @@ namespace DevZest.Data
             else
             {
                 ChangeClusteredIndexAsNonClustered();
-                AddDbTableConstraint(new UniqueConstraint(null, true, GetIdentityOrderByList(identity)), false);
+                AddDbTableConstraint(new UniqueConstraint(null, true, false, true, GetIdentityOrderByList(identity)), false);
             }
         }
 
@@ -748,7 +748,7 @@ namespace DevZest.Data
             return sysParentRowId.Column;
         }
 
-        protected internal void Unique(string constraintName, bool isClustered, params ColumnSort[] orderByList)
+        protected internal void Unique(string constraintName, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, params ColumnSort[] orderByList)
         {
             Utilities.Check.NotNull(orderByList, nameof(orderByList));
             if (orderByList.Length == 0)
@@ -761,7 +761,7 @@ namespace DevZest.Data
                     throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
-            AddDbTableConstraint(new UniqueConstraint(constraintName, isClustered, orderByList), false);
+            AddDbTableConstraint(new UniqueConstraint(constraintName, isClustered, isMemberOfTable, isMemberOfTempTable, orderByList), false);
         }
 
         protected void Check(string constraintName, _Boolean condition)

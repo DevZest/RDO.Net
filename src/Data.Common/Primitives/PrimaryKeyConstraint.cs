@@ -47,5 +47,15 @@ namespace DevZest.Data.Primitives
         {
             get { return string.IsNullOrEmpty(Name) ? "PrimaryKey" : Name; }
         }
+
+        public override bool IsMemberOfTable
+        {
+            get { return true; }
+        }
+
+        public override bool IsMemberOfTempTable
+        {
+            get { return true; }
+        }
     }
 }

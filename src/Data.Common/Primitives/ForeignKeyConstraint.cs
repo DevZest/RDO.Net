@@ -34,5 +34,15 @@ namespace DevZest.Data.Primitives
         public ForeignKeyAction OnDelete { get; private set; }
 
         public ForeignKeyAction OnUpdate { get; private set; }
+
+        public override bool IsMemberOfTable
+        {
+            get { return true; }
+        }
+
+        public override bool IsMemberOfTempTable
+        {
+            get { return false; }
+        }
     }
 }

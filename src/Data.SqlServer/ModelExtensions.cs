@@ -43,7 +43,9 @@ namespace DevZest.Data.SqlServer
         {
             IReadOnlyList<DbTableConstraint> constraints = model.GetExtensions<DbTableConstraint>();
             if (isTempTable)
-                constraints = constraints.Where(x => !(x is ForeignKeyConstraint)).ToList();
+                constraints = constraints.Where(x => x.IsMemberOfTempTable).ToList();
+            else
+                constraints = constraints.Where(x => x.IsMemberOfTable).ToList();
             if (constraints.Count == 0)
                 return;
 

@@ -9,12 +9,16 @@ namespace DevZest.Data.Annotations
         protected override void Initialize(Column column)
         {
             base.Initialize(column);
-            column.ParentModel.Unique(Name, IsCluster, SortDirection == SortDirection.Descending ? column.Desc() : column.Asc());
+            column.ParentModel.Unique(Name, IsCluster, IsMemberOfTable, IsMemberOfTempTable, SortDirection == SortDirection.Descending ? column.Desc() : column.Asc());
         }
 
         public string Name { get; set; }
 
         public bool IsCluster { get; set; }
+
+        public bool IsMemberOfTable { get; set; } = true;
+
+        public bool IsMemberOfTempTable { get; set; } = true;
 
         public SortDirection SortDirection { get; set; }
 

@@ -1,9 +1,8 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbTableConstraint : IExtension
+    public abstract class DbTableConstraint : DbTableElement, IExtension
     {
         protected DbTableConstraint(string name)
         {
