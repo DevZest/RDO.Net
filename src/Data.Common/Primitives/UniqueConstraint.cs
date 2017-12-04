@@ -5,13 +5,11 @@ namespace DevZest.Data.Primitives
 {
     public sealed class UniqueConstraint : DbTableConstraint, IIndexConstraint
     {
-        internal UniqueConstraint(string name, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, IList<ColumnSort> columns)
+        internal UniqueConstraint(string name, bool isClustered, IList<ColumnSort> columns)
             : base(name)
         {
             IsClustered = isClustered;
             Columns = new ReadOnlyCollection<ColumnSort>(columns);
-            _isMemberOfTable = isMemberOfTable;
-            _isMemberOfTempTable = isMemberOfTempTable;
         }
 
         public bool IsClustered { get; private set; }
@@ -23,16 +21,14 @@ namespace DevZest.Data.Primitives
             IsClustered = false;
         }
 
-        private bool _isMemberOfTable;
         public override bool IsMemberOfTable
         {
-            get { return _isMemberOfTable; }
+            get { return true; }
         }
 
-        private bool _isMemberOfTempTable;
         public override bool IsMemberOfTempTable
         {
-            get { return _isMemberOfTempTable; }
+            get { return true; }
         }
     }
 }
