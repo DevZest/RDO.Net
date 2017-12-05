@@ -21,7 +21,7 @@ namespace DevZest.Data.SqlServer
 
             var columns = model.GetColumns();
             for (int i = 0; i < columns.Count; i++)
-                columns[i].GenerateColumnDefinitionSql(sqlBuilder, sqlVersion, isTempTable, i == columns.Count - 1);
+                columns[i].GenerateColumnDefinitionSql(sqlBuilder, sqlVersion, tableName, isTempTable, i == columns.Count - 1);
 
             model.GenerateConstraints(sqlBuilder, sqlVersion, tableName, isTempTable);
             model.GenerateIndexes(sqlBuilder, sqlVersion, tableName, isTempTable);
@@ -30,11 +30,11 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.AppendLine(");");
         }
 
-        private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, bool isTempTable, bool isLastColumn)
+        private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable, bool isLastColumn)
         {
             var columnName = column.DbColumnName.ToQuotedIdentifier();
             sqlBuilder.Append(columnName).Append(' ');
-            column.GetMapper().GenerateColumnDefinitionSql(sqlBuilder, isTempTable, sqlVersion);
+            column.GetMapper().GenerateColumnDefinitionSql(sqlBuilder, tableName, isTempTable, sqlVersion);
             if (!isLastColumn)
                 sqlBuilder.Append(",");
             sqlBuilder.AppendLine();
@@ -57,7 +57,7 @@ namespace DevZest.Data.SqlServer
                 if (!isTempTable && !string.IsNullOrEmpty(constraint.Name))
                 {
                     sqlBuilder.Append("CONSTRAINT ");
-                    sqlBuilder.Append(constraint.Name.ToQuotedIdentifier());
+                    sqlBuilder.Append(constraint.Name.FormatName(tableName));
                     sqlBuilder.Append(' ');
                 }
                 if (constraint is PrimaryKeyConstraint)
@@ -182,7 +182,7 @@ namespace DevZest.Data.SqlServer
             {
                 var index = indexes[i];
                 sqlBuilder.Append("INDEX ");
-                sqlBuilder.Append(index.Name.ToQuotedIdentifier());
+                sqlBuilder.Append(index.Name.FormatName(tableName));
                 sqlBuilder.Append(' ');
 
                 if (index.IsUnique)

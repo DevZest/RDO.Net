@@ -8,7 +8,9 @@ namespace DevZest.Data.Annotations
     {
         protected override void Initialize(Column column)
         {
-            ((_DateTime)column).SetDefault(Functions.GetDate());
+            ((_DateTime)column).SetDefault(Functions.GetDate(), ConstraintName);
         }
+
+        public string ConstraintName { get; set; }
     }
 }

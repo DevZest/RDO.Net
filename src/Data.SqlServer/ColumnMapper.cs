@@ -20,12 +20,12 @@ namespace DevZest.Data.SqlServer
 
         public abstract SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion);
 
-        public void GenerateColumnDefinitionSql(IndentedStringBuilder sqlBuilder, bool isTempTable, SqlVersion sqlVersion)
+        public void GenerateColumnDefinitionSql(IndentedStringBuilder sqlBuilder, string tableName, bool isTempTable, SqlVersion sqlVersion)
         {
             GenerateDataTypeSql(sqlBuilder, isTempTable, sqlVersion);
 
             var column = GetColumn();
-            GenerateDefault(column, sqlBuilder, isTempTable, sqlVersion);
+            GenerateDefaultConstraint(column, sqlBuilder, tableName, isTempTable, sqlVersion);
 
             // IDENTITY()
             var identity = column.GetIdentity(isTempTable);
@@ -33,15 +33,21 @@ namespace DevZest.Data.SqlServer
                 sqlBuilder.Append(" IDENTITY(").Append(identity.Seed).Append(", ").Append(identity.Increment).Append(")");
         }
 
-        private static void GenerateDefault(Column column, IndentedStringBuilder sqlBuilder, bool isTempTable, SqlVersion sqlVersion)
+        private static void GenerateDefaultConstraint(Column column, IndentedStringBuilder sqlBuilder, string tableName, bool isTempTable, SqlVersion sqlVersion)
         {
             // DEFAULT
-            var defaultDef = column.GetDefault();
-            if (defaultDef == null || (!isTempTable && column.IsDbComputed))
+            var defaultConstraint = column.GetDefault();
+            if (defaultConstraint == null || (!isTempTable && column.IsDbComputed))
                 return;
 
+            if (!isTempTable && !string.IsNullOrEmpty(defaultConstraint.Name))
+            {
+                sqlBuilder.Append("CONSTRAINT ");
+                sqlBuilder.Append(defaultConstraint.Name.FormatName(tableName));
+                sqlBuilder.Append(' ');
+            }
             sqlBuilder.Append(" DEFAULT(");
-            defaultDef.DbExpression.GenerateSql(sqlBuilder, sqlVersion);
+            defaultConstraint.DbExpression.GenerateSql(sqlBuilder, sqlVersion);
             sqlBuilder.Append(")");
         }
 

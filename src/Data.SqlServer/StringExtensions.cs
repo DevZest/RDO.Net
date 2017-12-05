@@ -98,5 +98,18 @@ namespace DevZest.Data.SqlServer
                 index++;
             return result;
         }
+
+        internal static string FormatName(this string name, string tableName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(name));
+
+            if (!name.Contains("%"))
+                return name.ToQuotedIdentifier();
+
+            var identifiers = tableName.ParseIdentifier();
+            var lastIdentifier = identifiers[identifiers.Count - 1].Replace("#", string.Empty).Replace(' ', '_');
+            name = name.Replace("%", lastIdentifier);
+            return name.ToQuotedIdentifier();
+        }
     }
 }

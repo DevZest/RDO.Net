@@ -41,26 +41,26 @@ namespace DevZest.Data
         /// <param name="column">The column.</param>
         /// <param name="expression">The expression.</param>
         /// <remarks>To define default constant value, call <see cref="Column{T}.SetDefaultValue(T)"/> method.</remarks>
-        public static void SetDefault<T>(this T column, T expression)
+        public static void SetDefault<T>(this T column, T expression, string constraintName)
             where T : Column, new()
         {
             Check.NotNull(column, nameof(column));
             Check.NotNull(expression, nameof(expression));
 
-            column.AddOrUpdateExtension(expression.CreateDefault());
+            column.AddOrUpdateExtension(expression.CreateDefault(constraintName));
         }
 
-        public static T WithDefault<T>(this T column, T expression)
+        public static T WithDefault<T>(this T column, T expression, string constraintName)
             where T : Column, new()
         {
-            column.SetDefault(expression);
+            column.SetDefault(expression, constraintName);
             return column;
         }
 
-        public static TColumn WithDefaultValue<TColumn, TValue>(this TColumn column, TValue value)
+        public static TColumn WithDefaultValue<TColumn, TValue>(this TColumn column, TValue value, string constraintName)
             where TColumn : Column<TValue>, new()
         {
-            column.SetDefaultValue(value);
+            column.SetDefaultValue(value, constraintName);
             return column;
         }
 
