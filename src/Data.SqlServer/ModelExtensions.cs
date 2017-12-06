@@ -239,23 +239,31 @@ namespace DevZest.Data.SqlServer
         private static void GenerateColumnDescriptionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
         {
             var description = column.Description;
-            if (!string.IsNullOrEmpty(description))
-                sqlBuilder.GenerateColumnExtendedPropertySql(sqlVersion, schema, table, column.DbColumnName, "MS_Description", description);
+            if (string.IsNullOrEmpty(description))
+                return;
+
+            if (string.IsNullOrEmpty(schema))
+                schema = "dbo";
+            Debug.Assert(!string.IsNullOrEmpty(table));
+
+            sqlBuilder.GenerateExtendedPropertySql(sqlVersion, schema, table, "Column", column.DbColumnName, "MS_Description", description);
         }
 
-        private static void GenerateColumnExtendedPropertySql(this IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table, string columnName, string name, string value)
+        private static void GenerateExtendedPropertySql(this IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table, string level2Type, string level2Name, string name, string value)
         {
             Debug.Assert(!string.IsNullOrEmpty(value));
             if (string.IsNullOrEmpty(schema))
                 schema = "dbo";
             Debug.Assert(!string.IsNullOrEmpty(table));
-            Debug.Assert(!string.IsNullOrEmpty(columnName));
+            Debug.Assert(!string.IsNullOrEmpty(level2Type));
+            Debug.Assert(!string.IsNullOrEmpty(level2Name));
 
             sqlBuilder.Append(@"EXEC sp_addextendedproperty @name = ").Append(name.ToTSqlLiteral(true)).Append(", ");
             sqlBuilder.Append(@"@value = ").Append(value.ToTSqlLiteral(true)).Append(", ");
             sqlBuilder.Append(@"@level0type = N'Schema', @level0name = ").Append(schema.ToTSqlLiteral(true)).Append(", ");
             sqlBuilder.Append(@"@level1type = N'Table', @level1name = ").Append(table.ToTSqlLiteral(true)).Append(", ");
-            sqlBuilder.Append(@"@level2type = N'Column', @level2name = ").Append(columnName.ToTSqlLiteral(true)).AppendLine(";");
+            sqlBuilder.Append(@"@level2type = ").Append(level2Type.ToTSqlLiteral(true)).Append(@", @level2name = ").Append(level2Name.ToTSqlLiteral(true)).AppendLine(";");
         }
+
     }
 }
