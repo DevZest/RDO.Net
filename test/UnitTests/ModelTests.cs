@@ -297,7 +297,7 @@ namespace DevZest.Data
     [Unique1] INT NULL,
     [Unique2] INT NULL
 
-    PRIMARY KEY CLUSTERED ([Id]),
+    CONSTRAINT [PK_Test] PRIMARY KEY CLUSTERED ([Id]),
     CONSTRAINT [UQ_Temp] UNIQUE NONCLUSTERED ([Unique1], [Unique2] DESC),
     CONSTRAINT [CK_Temp] CHECK ([Name] IS NOT NULL),
     FOREIGN KEY ([Unique1])

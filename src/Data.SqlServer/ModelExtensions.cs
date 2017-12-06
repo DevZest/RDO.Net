@@ -29,8 +29,10 @@ namespace DevZest.Data.SqlServer
                     anyDescription = true;
             }
 
-            model.GenerateConstraints(sqlBuilder, sqlVersion, tableName, isTempTable);
-            model.GenerateIndexes(sqlBuilder, sqlVersion, tableName, isTempTable);
+            int countConstraints = model.GenerateConstraints(sqlBuilder, sqlVersion, tableName, isTempTable);
+            int countIndexes = model.GenerateIndexes(sqlBuilder, sqlVersion, tableName, isTempTable, countConstraints > 0);
+            if (countConstraints + countIndexes > 0)
+                sqlBuilder.AppendLine();
 
             sqlBuilder.Indent--;
             sqlBuilder.AppendLine(");");
@@ -49,7 +51,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.AppendLine();
         }
 
-        private static void GenerateConstraints(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable)
+        private static int GenerateConstraints(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable)
         {
             IReadOnlyList<DbTableConstraint> constraints = model.GetExtensions<DbTableConstraint>();
             if (isTempTable)
@@ -57,11 +59,13 @@ namespace DevZest.Data.SqlServer
             else
                 constraints = constraints.Where(x => x.IsMemberOfTable).ToList();
             if (constraints.Count == 0)
-                return;
+                return 0;
 
             sqlBuilder.AppendLine();
             for (int i = 0; i < constraints.Count; i++)
             {
+                if (i > 0)
+                    sqlBuilder.AppendLine(",");
                 var constraint = constraints[i];
                 if (!isTempTable && !string.IsNullOrEmpty(constraint.Name))
                 {
@@ -79,12 +83,8 @@ namespace DevZest.Data.SqlServer
                     GenerateForeignKeyConstraint(sqlBuilder, (ForeignKeyConstraint)constraint);
                 else
                     throw new NotSupportedException(Strings.ConstraintTypeNotSupported(constraint.GetType().FullName));
-
-                bool isLastConstraint = (i == constraints.Count - 1);
-                if (!isLastConstraint)
-                    sqlBuilder.Append(",");
-                sqlBuilder.AppendLine();
             }
+            return constraints.Count;
         }
 
         private static void GeneratePrimaryKeyConstraint(IndentedStringBuilder sqlBuilder, PrimaryKeyConstraint constraint)
@@ -176,7 +176,7 @@ namespace DevZest.Data.SqlServer
             constraint.LogicalExpression.GenerateSql(sqlBuilder, sqlVersion);
         }
 
-        private static void GenerateIndexes(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable)
+        private static int GenerateIndexes(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable, bool hasConstraint)
         {
             IReadOnlyList<Index> indexes = model.GetExtensions<Index>();
             if (isTempTable)
@@ -184,11 +184,14 @@ namespace DevZest.Data.SqlServer
             else
                 indexes = indexes.Where(x => x.IsMemberOfTable).ToList();
             if (indexes.Count == 0)
-                return;
+                return 0;
 
-            sqlBuilder.AppendLine();
             for (int i = 0; i < indexes.Count; i++)
             {
+                if (hasConstraint || i > 0)
+                    sqlBuilder.AppendLine(",");
+                else
+                    sqlBuilder.AppendLine();
                 var index = indexes[i];
                 sqlBuilder.Append("INDEX ");
                 sqlBuilder.Append(index.Name.FormatName(tableName));
@@ -202,12 +205,8 @@ namespace DevZest.Data.SqlServer
                     sqlBuilder.Append("NONCLUSTERED (");
                 GenerateColumnSortList(sqlBuilder, index.Columns);
                 sqlBuilder.Append(")");
-
-                bool isLastIndex = (i == indexes.Count - 1);
-                if (!isLastIndex)
-                    sqlBuilder.Append(",");
-                sqlBuilder.AppendLine();
             }
+            return indexes.Count;
         }
 
         private static void GenerateColumnSortList(IndentedStringBuilder sqlBuilder, IReadOnlyList<ColumnSort> columns)

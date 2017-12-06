@@ -4,8 +4,12 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [IndexColumns(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion)]
     public class Address : BaseModel<Address.Key>
     {
+        private const string IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion = nameof(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion);
+
+        [DbConstraint("PK_Address_AddressID")]
         public sealed class Key : PrimaryKey
         {
             public Key(_Int32 addressID)
@@ -94,22 +98,28 @@ namespace DevZest.Samples.AdventureWorksLT
         [Required]
         [AsNVarChar(60)]
         [Description("First street address line.")]
+        [IndexColumnsMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 1)]
         public _String AddressLine1 { get; private set; }
 
         [AsNVarChar(60)]
         [Description("Second street address line.")]
+        [IndexColumnsMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 2)]
         public _String AddressLine2 { get; private set; }
 
         [Required]
         [AsNVarChar(30)]
         [Description("Name of the city.")]
+        [IndexColumnsMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 3)]
         public _String City { get; private set; }
 
         [UdtName]
         [Description("Name of state or province.")]
+        [IndexColumnsMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 4)]
+        [Index("IX_Address_StateProvince")]
         public _String StateProvince { get; private set; }
 
         [UdtName]
+        [IndexColumnsMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 5)]
         public _String CountryRegion { get; private set; }
 
         [Required]

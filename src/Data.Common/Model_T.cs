@@ -1,5 +1,7 @@
-﻿using DevZest.Data.Primitives;
+﻿using DevZest.Data.Annotations;
+using DevZest.Data.Primitives;
 using System;
+using System.Reflection;
 
 namespace DevZest.Data
 {
@@ -8,7 +10,7 @@ namespace DevZest.Data
     {
         protected Model()
         {
-            AddDbTableConstraint(new PrimaryKeyConstraint(this, null, true, () => PrimaryKey._columns), true);
+            AddDbTableConstraint(new PrimaryKeyConstraint(this, GetPrimaryKeyConstraintName(), true, () => PrimaryKey._columns), true);
         }
 
         public abstract new T PrimaryKey { get; }
@@ -16,6 +18,12 @@ namespace DevZest.Data
         internal sealed override PrimaryKey GetPrimaryKeyCore()
         {
             return this.PrimaryKey;
+        }
+
+        protected virtual string GetPrimaryKeyConstraintName()
+        {
+            var constraintNameAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbConstraintAttribute>();
+            return constraintNameAttribute == null ? "PK_%" : constraintNameAttribute.Name;
         }
     }
 }

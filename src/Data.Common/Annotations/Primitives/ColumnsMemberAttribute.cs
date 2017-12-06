@@ -55,7 +55,7 @@ namespace DevZest.Data.Annotations.Primitives
                 {
                     for (int i = 0; i < Count; i++)
                     {
-                        if (memberAttribute.Index < this[i].MemberAttribute.Index)
+                        if (memberAttribute.Order < this[i].MemberAttribute.Order)
                             return i;
                     }
                     return Count;
@@ -134,7 +134,7 @@ namespace DevZest.Data.Annotations.Primitives
 
         public string Name { get; private set; }
 
-        public int Index { get; set; }
+        public int Order { get; set; }
 
         protected sealed override bool CoerceDeclaringTypeOnly(bool value)
         {

@@ -56,6 +56,7 @@
     <Compile Include="Annotations\ColumnInitializerAttribute.cs" />
     <Compile Include="Annotations\ColumnValidatorAttribute.cs" />
     <Compile Include="Annotations\CreditCardAttribute.cs" />
+    <Compile Include="Annotations\DbConstraintAttribute.cs" />
     <Compile Include="Annotations\DefaultValueAttribute.cs" />
     <Compile Include="Annotations\DescriptionAttribute.cs" />
     <Compile Include="Annotations\DisplayAttribute.cs" />

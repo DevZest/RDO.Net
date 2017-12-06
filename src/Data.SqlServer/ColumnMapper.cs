@@ -42,9 +42,8 @@ namespace DevZest.Data.SqlServer
 
             if (!isTempTable && !string.IsNullOrEmpty(defaultConstraint.Name))
             {
-                sqlBuilder.Append("CONSTRAINT ");
+                sqlBuilder.Append(" CONSTRAINT ");
                 sqlBuilder.Append(defaultConstraint.Name.FormatName(tableName));
-                sqlBuilder.Append(' ');
             }
             sqlBuilder.Append(" DEFAULT(");
             defaultConstraint.DbExpression.GenerateSql(sqlBuilder, sqlVersion);
