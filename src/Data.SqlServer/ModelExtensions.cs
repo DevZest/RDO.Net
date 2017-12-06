@@ -77,8 +77,8 @@ namespace DevZest.Data.SqlServer
                     GeneratePrimaryKeyConstraint(sqlBuilder, (PrimaryKeyConstraint)constraint);
                 else if (constraint is UniqueConstraint)
                     GenerateUniqueConstraint(sqlBuilder, (UniqueConstraint)constraint);
-                else if (constraint is CheckConstraint)
-                    GenerateCheckConstraint(sqlBuilder, sqlVersion, (CheckConstraint)constraint);
+                else if (constraint is DbCheckConstraint)
+                    GenerateCheckConstraint(sqlBuilder, sqlVersion, (DbCheckConstraint)constraint);
                 else if (constraint is ForeignKeyConstraint)
                     GenerateForeignKeyConstraint(sqlBuilder, (ForeignKeyConstraint)constraint);
                 else
@@ -168,7 +168,7 @@ namespace DevZest.Data.SqlServer
                 sqlBuilder.Append(" SET DEFAULT");
         }
 
-        private static void GenerateCheckConstraint(IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, CheckConstraint constraint)
+        private static void GenerateCheckConstraint(IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, DbCheckConstraint constraint)
         {
             Debug.Assert(constraint != null);
             
