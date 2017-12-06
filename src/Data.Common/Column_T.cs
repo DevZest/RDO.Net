@@ -410,22 +410,22 @@ namespace DevZest.Data
         /// <returns>The column of parameter expression.</returns>
         protected abstract Column<T> CreateParam(T value);
 
-        internal sealed override DefaultConstraint CreateDefault(string constraintName)
+        internal sealed override DefaultConstraint CreateDefault(string name, string description)
         {
-            return new DefaultConstraint<T>(this, constraintName);
+            return new DefaultConstraint<T>(this, name, description);
         }
 
         /// <summary>Defines the default constant value for this column.</summary>
         /// <param name="value">The default constant value.</param>
         /// <remarks>To define default expression value, call <see cref="ColumnExtensions.SetDefault{T}(T, T)"/> method.</remarks>
-        public void SetDefaultValue(T value, string constraintName)
+        public void SetDefaultValue(T value, string name, string description)
         {
-            AddOrUpdateExtension(new DefaultConstraint<T>(CreateConst(value), constraintName));
+            AddOrUpdateExtension(new DefaultConstraint<T>(CreateConst(value), name, description));
         }
 
-        public sealed override void SetDefaultObject(object defaultValue, string constraintName)
+        public sealed override void SetDefaultObject(object defaultValue, string name, string description)
         {
-            SetDefaultValue((T)defaultValue, constraintName);
+            SetDefaultValue((T)defaultValue, name, description);
         }
 
         /// <summary>Gets the default declaration for this column.</summary>

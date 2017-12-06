@@ -59,11 +59,13 @@ namespace DevZest.Data.Annotations
 
         private readonly object _defaultValue;
 
-        public string ConstraintName { get; set; }
+        public string Name { get; set; }
+
+        public string Description { get; set; }
 
         protected override void Initialize(Column column)
         {
-            column.SetDefaultObject(TypeDescriptor.GetConverter(column.DataType).ConvertFrom(_defaultValue), ConstraintName);
+            column.SetDefaultObject(TypeDescriptor.GetConverter(column.DataType).ConvertFrom(_defaultValue), Name, Description);
         }
     }
 }

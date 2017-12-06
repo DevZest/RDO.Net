@@ -4,8 +4,8 @@ namespace DevZest.Data.Primitives
 {
     public sealed class DefaultConstraint<T> : DefaultConstraint
     {
-        internal DefaultConstraint(Column<T> defaultValue, string name)
-            : base(name)
+        internal DefaultConstraint(Column<T> defaultValue, string name, string description)
+            : base(name, description)
         {
             Debug.Assert(defaultValue != null && defaultValue.IsExpression);
             _defaultValue = defaultValue;

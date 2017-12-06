@@ -24,7 +24,7 @@ namespace DevZest.Data
         public void Column_Default_const()
         {
             var column = new _Int32();
-            column.SetDefaultValue(5, null);
+            column.SetDefaultValue(5, null, null);
             column.VerifyDefault(5);
         }
 
@@ -32,7 +32,7 @@ namespace DevZest.Data
         public void Column_Default_function()
         {
             var dateTime = new _DateTime();
-            dateTime.SetDefault(Functions.GetDate(), null);
+            dateTime.SetDefault(Functions.GetDate(), null, null);
             var defaultValue = dateTime.GetDefault().Value;
             var span = DateTime.Now - defaultValue;
             Assert.IsTrue(span.Value.Seconds < 1);

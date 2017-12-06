@@ -134,7 +134,7 @@ namespace DevZest.Data
 
         public void SetDefaultValue(T defaultValue)
         {
-            Column.SetDefaultValue(defaultValue, null);
+            Column.SetDefaultValue(defaultValue, null, null);
         }
 
         public LocalColumnBuilder<T> WithDefaultValue(T defaultValue)

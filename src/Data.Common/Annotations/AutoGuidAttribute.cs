@@ -8,9 +8,11 @@ namespace DevZest.Data.Annotations
     {
         protected override void Initialize(Column column)
         {
-            ((_Guid)column).SetDefault(Functions.NewGuid(), DbConstraintName);
+            ((_Guid)column).SetDefault(Functions.NewGuid(), Name, Description);
         }
 
-        public string DbConstraintName { get; set; }
+        public string Name { get; set; }
+
+        public string Description { get; set; }
     }
 }
