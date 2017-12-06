@@ -3,12 +3,14 @@ using DevZest.Data.Utilities;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace DevZest.Data.Primitives
 {
     public abstract class MockDb : IMockDb
     {
-        internal void InternalInitialize(DbSession db)
+        internal void InternalInitialize(DbSession db, IProgress<string> progress)
         {
             Debug.Assert(db != null);
             Debug.Assert(db.Mock == null);
@@ -19,19 +21,32 @@ namespace DevZest.Data.Primitives
             _isInitializing = true;
             CreateMockDb();
             Initialize();
-            FinalizeInitialization();
+            RemoveDependencyMockTables();
+            RemoveDependencyForeignKeys();
+            CreateMockTables(progress);
+            _pendingMockTables.Clear();
+            _isInitializing = false;
+        }
+
+        internal async Task InternalInitializeAsync(DbSession db, IProgress<string> progress, CancellationToken ct)
+        {
+            Debug.Assert(db != null);
+            Debug.Assert(db.Mock == null);
+            Debug.Assert(_db == null);
+            _db = db;
+            db.Mock = this;
+
+            _isInitializing = true;
+            CreateMockDb();
+            Initialize();
+            RemoveDependencyMockTables();
+            RemoveDependencyForeignKeys();
+            await CreateMockTablesAsync(progress, ct);
+            _pendingMockTables.Clear();
             _isInitializing = false;
         }
 
         private DbSession _db;
-
-        private void FinalizeInitialization()
-        {
-            RemoveDependencyMockTables();
-            RemoveDependencyForeignKeys();
-            CreateMockTables();
-            _pendingMockTables.Clear();
-        }
 
         private void RemoveDependencyMockTables()
         {
@@ -64,12 +79,29 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private void CreateMockTables()
+        private void CreateMockTables(IProgress<string> progress)
         {
             foreach (var mockTable in _mockTables)
             {
                 var table = mockTable.Table;
+                if (progress != null)
+                    progress.Report(table.Name);
                 _db.CreateTable(table.Model, table.Name, false);
+                var action = _pendingMockTables[table];
+                if (action != null)
+                    action();
+            }
+        }
+
+        private async Task CreateMockTablesAsync(IProgress<string> progress, CancellationToken ct)
+        {
+            foreach (var mockTable in _mockTables)
+            {
+                ct.ThrowIfCancellationRequested();
+                var table = mockTable.Table;
+                if (progress != null)
+                    progress.Report(table.Name);
+                await _db.CreateTableAsync(table.Model, table.Name, false, ct);
                 var action = _pendingMockTables[table];
                 if (action != null)
                     action();

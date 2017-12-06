@@ -20,7 +20,7 @@ namespace DevZest.Data
                 throw new InvalidOperationException(Strings.MockDb_InitializeTwice);
 
             Db = db;
-            InternalInitialize(db);
+            InternalInitialize(db, null);
             return db;
         }
 
