@@ -142,7 +142,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        internal static T ApplyForeignKey<T>(this T model, Func<T, ForeignKeyConstraint>[] foreignKeys)
+        internal static T ApplyForeignKey<T>(this T model, Func<T, DbForeignKey>[] foreignKeys)
             where T : Model, new()
         {
             if (foreignKeys != null && foreignKeys.Length > 0)

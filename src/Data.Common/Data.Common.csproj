@@ -256,7 +256,7 @@
     <Compile Include="Primitives\DbUnionStatement.cs" />
     <Compile Include="Primitives\DefaultConstraint.cs" />
     <Compile Include="Primitives\DefaultConstraint_T.cs" />
-    <Compile Include="Primitives\ForeignKeyConstraint.cs" />
+    <Compile Include="Primitives\DbForeignKey.cs" />
     <Compile Include="Primitives\FunctionExpression.cs" />
     <Compile Include="Primitives\FunctionKey.cs" />
     <Compile Include="Primitives\IMounter.cs" />

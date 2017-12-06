@@ -6,7 +6,7 @@ namespace DevZest.Data
 {
     internal interface IMockDb
     {
-        DbTable<T> GetMockTable<T>(string tableName, params Func<T, ForeignKeyConstraint>[] foreignKeys)
+        DbTable<T> GetMockTable<T>(string tableName, params Func<T, DbForeignKey>[] foreignKeys)
             where T : Model, new();
     }
 }

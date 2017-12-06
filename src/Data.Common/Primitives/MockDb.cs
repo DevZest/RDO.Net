@@ -70,7 +70,7 @@ namespace DevZest.Data.Primitives
             foreach (var mockTable in _mockTables)
             {
                 var model = mockTable.Table.Model;
-                var foreignKeys = model.GetExtensions<ForeignKeyConstraint>();
+                var foreignKeys = model.GetExtensions<DbForeignKey>();
                 foreach (var item in foreignKeys)
                 {
                     if (!tableNames.Contains(item.ReferencedTableName))
@@ -154,7 +154,7 @@ namespace DevZest.Data.Primitives
 
         internal abstract string GetMockTableName(string name);
 
-        DbTable<TModel> IMockDb.GetMockTable<TModel>(string tableName, params Func<TModel, ForeignKeyConstraint>[] foreignKeys)
+        DbTable<TModel> IMockDb.GetMockTable<TModel>(string tableName, params Func<TModel, DbForeignKey>[] foreignKeys)
         {
             if (_mockTables.Contains(tableName))
             {

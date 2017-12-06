@@ -79,8 +79,8 @@ namespace DevZest.Data.SqlServer
                     GenerateUniqueConstraint(sqlBuilder, (DbUniqueConstraint)constraint);
                 else if (constraint is DbCheckConstraint)
                     GenerateCheckConstraint(sqlBuilder, sqlVersion, (DbCheckConstraint)constraint);
-                else if (constraint is ForeignKeyConstraint)
-                    GenerateForeignKeyConstraint(sqlBuilder, (ForeignKeyConstraint)constraint);
+                else if (constraint is DbForeignKey)
+                    GenerateForeignKeyConstraint(sqlBuilder, (DbForeignKey)constraint);
                 else
                     throw new NotSupportedException(Strings.ConstraintTypeNotSupported(constraint.GetType().FullName));
             }
@@ -125,7 +125,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append(")");
         }
 
-        private static void GenerateForeignKeyConstraint(IndentedStringBuilder sqlBuilder, ForeignKeyConstraint constraint)
+        private static void GenerateForeignKeyConstraint(IndentedStringBuilder sqlBuilder, DbForeignKey constraint)
         {
             Debug.Assert(constraint != null);
 
