@@ -99,7 +99,7 @@
     <Compile Include="Annotations\UniqueAttribute.cs" />
     <Compile Include="Annotations\UniqueColumnsAttribute.cs" />
     <Compile Include="Annotations\UniqueColumnsMemberAttribute.cs" />
-    <Compile Include="Primitives\Index.cs" />
+    <Compile Include="Primitives\DbIndex.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
     <Compile Include="Utilities\EmptyDictionary.cs" />
     <Compile Include="Utilities\EmptyEnumerable.cs" />

@@ -4,9 +4,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class Index : DbTableElement, IIndexConstraint, IExtension
+    public sealed class DbIndex : DbTableElement, IIndexConstraint, IExtension
     {
-        internal Index(string name, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, IList<ColumnSort> columns)
+        internal DbIndex(string name, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, IList<ColumnSort> columns)
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
             Name = name;

@@ -178,7 +178,7 @@ namespace DevZest.Data.SqlServer
 
         private static int GenerateIndexes(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable, bool hasConstraint)
         {
-            IReadOnlyList<Index> indexes = model.GetExtensions<Index>();
+            IReadOnlyList<DbIndex> indexes = model.GetExtensions<DbIndex>();
             if (isTempTable)
                 indexes = indexes.Where(x => x.IsMemberOfTempTable).ToList();
             else

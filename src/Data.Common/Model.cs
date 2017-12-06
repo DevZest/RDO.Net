@@ -611,7 +611,7 @@ namespace DevZest.Data
             this.AddOrUpdateExtension(constraint);
         }
 
-        internal void AddIndex(Index index)
+        internal void AddIndex(DbIndex index)
         {
             Debug.Assert(index != null);
 
@@ -775,7 +775,7 @@ namespace DevZest.Data
                     throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
-            AddIndex(new Index(name, isUnique, isClustered, isMemberOfTable, isMemberOfTempTable, orderByList));
+            AddIndex(new DbIndex(name, isUnique, isClustered, isMemberOfTable, isMemberOfTempTable, orderByList));
         }
 
         protected internal void Unique(string constraintName, bool isClustered, params ColumnSort[] orderByList)
