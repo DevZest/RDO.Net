@@ -7,19 +7,20 @@ namespace DevZest.Data
     public abstract class MockDb<T> : MockDb
         where T : DbSession
     {
-        public T Db { get; private set; }
+        public new T Db
+        {
+            get { return (T)base.Db; }
+        }
 
         public object Tag { get; private set; }
 
         public T Initialize(T db)
         {
             Check.NotNull(db, nameof(db));
-            if (db.Mock != null)
-                throw new ArgumentException("", nameof(db));
+            db.VerifyNotMocked();
             if (Db != null)
                 throw new InvalidOperationException(Strings.MockDb_InitializeTwice);
 
-            Db = db;
             InternalInitialize(db, null);
             return db;
         }

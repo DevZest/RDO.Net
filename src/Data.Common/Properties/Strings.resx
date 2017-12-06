@@ -310,7 +310,7 @@
     <value>The table "{tableName}" cannot be mocked twice.</value>
   </data>
   <data name="MockDb_InitializeTwice" xml:space="preserve">
-    <value>DbMock object cannot be initialized twice.</value>
+    <value>MockDb object cannot be initialized twice.</value>
   </data>
   <data name="MockDb_InvalidTable" xml:space="preserve">
     <value>The mocking table is invalid. It must belong to the given DbSession.</value>
@@ -539,5 +539,8 @@
   </data>
   <data name="Model_DuplicateIndexName" xml:space="preserve">
     <value>The index name '{indexName}' already exists.</value>
+  </data>
+  <data name="DbSession_VerifyNotMocked" xml:space="preserve">
+    <value>The DbSession is mocked.</value>
   </data>
 </root>

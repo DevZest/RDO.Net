@@ -14,8 +14,8 @@ namespace DevZest.Data.Primitives
         {
             Debug.Assert(db != null);
             Debug.Assert(db.Mock == null);
-            Debug.Assert(_db == null);
-            _db = db;
+            Debug.Assert(Db == null);
+            Db = db;
             db.Mock = this;
 
             _isInitializing = true;
@@ -32,8 +32,8 @@ namespace DevZest.Data.Primitives
         {
             Debug.Assert(db != null);
             Debug.Assert(db.Mock == null);
-            Debug.Assert(_db == null);
-            _db = db;
+            Debug.Assert(Db == null);
+            Db = db;
             db.Mock = this;
 
             _isInitializing = true;
@@ -46,7 +46,7 @@ namespace DevZest.Data.Primitives
             _isInitializing = false;
         }
 
-        private DbSession _db;
+        public DbSession Db { get; private set; }
 
         private void RemoveDependencyMockTables()
         {
@@ -86,7 +86,7 @@ namespace DevZest.Data.Primitives
                 var table = mockTable.Table;
                 if (progress != null)
                     progress.Report(table.Name);
-                _db.CreateTable(table.Model, table.Name, false);
+                Db.CreateTable(table.Model, table.Name, false);
                 var action = _pendingMockTables[table];
                 if (action != null)
                     action();
@@ -101,7 +101,7 @@ namespace DevZest.Data.Primitives
                 var table = mockTable.Table;
                 if (progress != null)
                     progress.Report(table.Name);
-                await _db.CreateTableAsync(table.Model, table.Name, false, ct);
+                await Db.CreateTableAsync(table.Model, table.Name, false, ct);
                 var action = _pendingMockTables[table];
                 if (action != null)
                     action();
@@ -112,11 +112,10 @@ namespace DevZest.Data.Primitives
 
         private Dictionary<IDbTable, Action> _pendingMockTables = new Dictionary<IDbTable, Action>();
 
-        internal void AddMockTable<TModel>(DbTable<TModel> dbTable, Action action)
-            where TModel : Model, new()
+        internal void AddMockTable(IDbTable dbTable, Action action)
         {
             Check.NotNull(dbTable, nameof(dbTable));
-            if (dbTable.DbSession != _db)
+            if (dbTable.DbSession != Db)
                 throw new ArgumentException(Strings.MockDb_InvalidTable, nameof(dbTable));
             if (!_isInitializing)
                 throw new InvalidOperationException(Strings.MockDb_MockOnlyAllowedDuringInitialization);
@@ -175,7 +174,7 @@ namespace DevZest.Data.Primitives
             _creatingTableNames.Add(tableName);
 
             var model = new TModel().ApplyForeignKey(foreignKeys);
-            var table = DbTable<TModel>.Create(model, _db, GetMockTableName(tableName));
+            var table = DbTable<TModel>.Create(model, Db, GetMockTableName(tableName));
             _mockTables.Add(new MockTable(tableName, table));
             _creatingTableNames.Remove(tableName);
             return table;

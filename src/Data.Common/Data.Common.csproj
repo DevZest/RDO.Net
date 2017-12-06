@@ -85,6 +85,7 @@
     <Compile Include="Annotations\PhoneAttribute.cs" />
     <Compile Include="Primitives\AutoColumnSelector.cs" />
     <Compile Include="Annotations\Primitives\ColumnsAttribute.cs" />
+    <Compile Include="Primitives\DbSessionExtensions.cs" />
     <Compile Include="Primitives\DbTableElement.cs" />
     <Compile Include="Primitives\EnumColumn.cs" />
     <Compile Include="Primitives\IAutoColumnSelector.cs" />

@@ -524,7 +524,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// DbMock object cannot be initialized twice.
+        /// MockDb object cannot be initialized twice.
         /// </summary>
         public static string MockDb_InitializeTwice
         {
@@ -1137,6 +1137,14 @@ namespace DevZest.Data
         public static string Model_DuplicateIndexName(object indexName)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("Model_DuplicateIndexName", "indexName"), indexName);
+        }
+
+        /// <summary>
+        /// The DbSession is mocked.
+        /// </summary>
+        public static string DbSession_VerifyNotMocked
+        {
+            get { return GetString("DbSession_VerifyNotMocked"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)
