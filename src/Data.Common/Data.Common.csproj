@@ -214,7 +214,7 @@
     <Compile Include="Primitives\CaseExpression.cs" />
     <Compile Include="Primitives\CaseOnExpression.cs" />
     <Compile Include="Primitives\CastExpression.cs" />
-    <Compile Include="Primitives\DbCheckConstraint.cs" />
+    <Compile Include="Primitives\DbCheck.cs" />
     <Compile Include="Annotations\Primitives\ColumnAttribute.cs" />
     <Compile Include="Primitives\ColumnExpression.cs" />
     <Compile Include="Primitives\UnaryExpression.cs" />

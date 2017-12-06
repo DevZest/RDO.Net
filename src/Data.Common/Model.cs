@@ -798,7 +798,7 @@ namespace DevZest.Data
         {
             Utilities.Check.NotNull(condition, nameof(condition));
 
-            AddDbTableConstraint(new DbCheckConstraint(name, description, condition.DbExpression), false);
+            AddDbTableConstraint(new DbCheck(name, description, condition.DbExpression), false);
         }
 
         private int _suspendIdentityCount;

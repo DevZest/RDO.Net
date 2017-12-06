@@ -3,9 +3,9 @@
 namespace DevZest.Data.Primitives
 {
     /// <summary>Represents database table CHECK constraint.</summary>
-    public sealed class DbCheckConstraint : DbTableConstraint
+    public sealed class DbCheck : DbTableConstraint
     {
-        internal DbCheckConstraint(string name, string description, DbExpression logicalExpression)
+        internal DbCheck(string name, string description, DbExpression logicalExpression)
             : base(name, description)
         {
             LogicalExpression = logicalExpression;
