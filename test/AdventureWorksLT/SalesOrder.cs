@@ -155,75 +155,95 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [Identity(1, 1)]
+        [Description("Primary key.")]
         public _Int32 SalesOrderID { get; private set; }
 
         [Required]
         [DefaultValue((byte)0)]
+        [Description("Incremental number to track changes to the sales order over time.")]
         public _Byte RevisionNumber { get; private set; }
 
         [Required]
         [AsDateTime]
         [AutoDateTime]
+        [Description("Dates the sales order was created.")]
         public _DateTime OrderDate { get; private set; }
 
         [Required]
         [AsDateTime]
+        [Description("Date the order is due to the customer.")]
         public _DateTime DueDate { get; private set; }
 
         [AsDateTime]
+        [Description("Date the order was shipped to the customer.")]
         public _DateTime ShipDate { get; private set; }
 
         [Required]
         [DefaultValue(typeof(SalesOrderStatus), nameof(SalesOrderStatus.InProcess))]
+        [Description("Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled")]
         public _ByteEnum<SalesOrderStatus> Status { get; private set; }
 
         [Required]
         [DefaultValue(true)]
+        [Description("0 = Order placed by sales person. 1 = Order placed online by customer.")]
         public _Boolean OnlineOrderFlag { get; private set; }
 
         [UdtOrderNumber]
+        [Description("Unique sales order identification number.")]
         public _String SalesOrderNumber { get; private set; }
 
         [UdtOrderNumber]
+        [Description("Customer purchase order number reference.")]
         public _String PurchaseOrderNumber { get; private set; }
 
         [UdtAccountNumber]
+        [Description("Financial accounting number reference.")]
         public _String AccountNumber { get; private set; }
 
         [Required]
+        [Description("Customer identification number. Foreign key to Customer.CustomerID.")]
         public _Int32 CustomerID { get; private set; }
         
+        [Description("The ID of the location to send goods.  Foreign key to the Address table.")]
         public _Int32 ShipToAddressID { get; private set; }
 
+        [Description("The ID of the location to send invoices.  Foreign key to the Address table.")]
         public _Int32 BillToAddressID { get; private set; }
 
         [Required]
         [AsNVarChar(50)]
+        [Description("Shipping method. Foreign key to ShipMethod.ShipMethodID.")]
         public _String ShipMethod { get; private set; }
 
         [AsNVarChar(15)]
+        [Description("Approval code provided by the credit card company.")]
         public _String CreditCardApprovalCode { get; private set; }
 
         [Required]
         [AsMoney]
         [DefaultValue(typeof(decimal), "0")]
+        [Description("Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.")]
         public _Decimal SubTotal { get; private set; }
 
         [Required]
         [AsMoney]
         [DefaultValue(typeof(decimal), "0")]
+        [Description("Tax amount.")]
         public _Decimal TaxAmt { get; private set; }
 
         [Required]
         [AsMoney]
         [DefaultValue(typeof(decimal), "0")]
+        [Description("Shipping cost.")]
         public _Decimal Freight { get; private set; }
 
         [Required]
         [AsMoney]
+        [Description("Total due from customer. Computed as Subtotal + TaxAmt + Freight.")]
         public _Decimal TotalDue { get; private set; }
 
         [AsNVarCharMax]
+        [Description("Sales representative comments.")]
         public _String Comment { get; private set; }
     }
 }

@@ -12,11 +12,13 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [AutoGuid]
+        [Description("ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.")]
         public _Guid RowGuid { get; private set; }
 
         [Required]
         [AsDateTime]
         [AutoDateTime]
+        [Description("Date and time the record was last updated.")]
         public _DateTime ModifiedDate { get; private set; }
     }
 }

@@ -65,10 +65,13 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [Identity(1, 1)]
+        [Description("Primary key for ProductCategory records.")]
         public _Int32 ProductCategoryID { get; private set; }
 
+        [Description("Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.")]
         public _Int32 ParentProductCategoryID { get; private set; }
 
+        [Description("Category description.")]
         public Key ParentProductCategory { get; private set; }
 
         [UdtName]

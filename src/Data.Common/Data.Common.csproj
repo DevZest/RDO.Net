@@ -57,6 +57,7 @@
     <Compile Include="Annotations\ColumnValidatorAttribute.cs" />
     <Compile Include="Annotations\CreditCardAttribute.cs" />
     <Compile Include="Annotations\DefaultValueAttribute.cs" />
+    <Compile Include="Annotations\DescriptionAttribute.cs" />
     <Compile Include="Annotations\DisplayAttribute.cs" />
     <Compile Include="Annotations\EmailAddressAttribute.cs" />
     <Compile Include="Annotations\LocalizableString.cs" />

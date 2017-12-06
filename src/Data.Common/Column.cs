@@ -347,6 +347,17 @@ namespace DevZest.Data
 
         public abstract _String CastToString();
 
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set
+            {
+                VerifyDesignMode();
+                _description = value;
+            }
+        }
+
         private Func<string> _displayShortNameGetter;
         /// <summary>Gets or sets a value that is used for display the short name in the UI.</summary>
 		/// <returns>A value that is used for display the short name in the UI.</returns>

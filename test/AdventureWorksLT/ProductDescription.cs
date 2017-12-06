@@ -59,10 +59,12 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [Identity(1, 1)]
+        [Description("Primary key for ProductDescription records.")]
         public _Int32 ProductDescriptionID { get; private set; }
 
         [Required]
         [AsNVarChar(400)]
+        [Description("Description of the product.")]
         public _String Description { get; private set; }
     }
 }

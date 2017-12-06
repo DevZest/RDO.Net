@@ -98,28 +98,35 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
+        [Description("Primary key. Foreign key to SalesOrderHeader.SalesOrderID.")]
         public _Int32 SalesOrderID { get; private set; }
 
         [Identity(1, 1)]
+        [Description("Primary key. One incremental unique number per product sold.")]
         public _Int32 SalesOrderDetailID { get; private set; }
 
         [Required]
+        [Description("Quantity ordered per product.")]
         public _Int16 OrderQty { get; private set; }
 
         [Required]
+        [Description("Product sold to customer. Foreign key to Product.ProductID.")]
         public _Int32 ProductID { get; private set; }
 
         [Required]
         [AsMoney]
+        [Description("Selling price of a single product.")]
         public _Decimal UnitPrice { get; private set; }
 
         [Required]
         [AsMoney]
         [DefaultValue(typeof(decimal), "0")]
+        [Description("Discount amount.")]
         public _Decimal UnitPriceDiscount { get; private set; }
 
         [Required]
         [AsMoney]
+        [Description("Per product subtotal. Computed as UnitPrice * (1 - UnitPriceDiscount) * OrderQty.")]
         public _Decimal LineTotal { get; private set; }
     }
 }

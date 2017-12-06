@@ -20,14 +20,23 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Indent++;
 
             var columns = model.GetColumns();
+            bool anyDescription = false;
             for (int i = 0; i < columns.Count; i++)
-                columns[i].GenerateColumnDefinitionSql(sqlBuilder, sqlVersion, tableName, isTempTable, i == columns.Count - 1);
+            {
+                var column = columns[i];
+                column.GenerateColumnDefinitionSql(sqlBuilder, sqlVersion, tableName, isTempTable, i == columns.Count - 1);
+                if (!string.IsNullOrEmpty(column.Description))
+                    anyDescription = true;
+            }
 
             model.GenerateConstraints(sqlBuilder, sqlVersion, tableName, isTempTable);
             model.GenerateIndexes(sqlBuilder, sqlVersion, tableName, isTempTable);
 
             sqlBuilder.Indent--;
             sqlBuilder.AppendLine(");");
+
+            if (!isTempTable && anyDescription)
+                columns.GenerateColumnsDescriptionSql(sqlBuilder, sqlVersion, tableName);
         }
 
         private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable, bool isLastColumn)
@@ -215,6 +224,39 @@ namespace DevZest.Data.SqlServer
                 if (i != columns.Count - 1)
                     sqlBuilder.Append(", ");
             }
+        }
+
+        private static void GenerateColumnsDescriptionSql(this IReadOnlyList<Column> columns, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName)
+        {
+            var parsedIdentifiers = tableName.ParseIdentifier();
+            if (parsedIdentifiers.Count > 2)
+                return;
+            var table = parsedIdentifiers[parsedIdentifiers.Count - 1];
+            var schema = parsedIdentifiers.Count > 1 ? parsedIdentifiers[parsedIdentifiers.Count - 2] : null;
+            for (int i = 0; i < columns.Count; i++)
+                columns[i].GenerateColumnDescriptionSql(sqlBuilder, sqlVersion, schema, table);
+        }
+
+        private static void GenerateColumnDescriptionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
+        {
+            var description = column.Description;
+            if (!string.IsNullOrEmpty(description))
+                sqlBuilder.GenerateColumnExtendedPropertySql(sqlVersion, schema, table, column.DbColumnName, "MS_Description", description);
+        }
+
+        private static void GenerateColumnExtendedPropertySql(this IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table, string columnName, string name, string value)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(value));
+            if (string.IsNullOrEmpty(schema))
+                schema = "dbo";
+            Debug.Assert(!string.IsNullOrEmpty(table));
+            Debug.Assert(!string.IsNullOrEmpty(columnName));
+
+            sqlBuilder.Append(@"EXEC sp_addextendedproperty @name = ").Append(name.ToTSqlLiteral(true)).Append(", ");
+            sqlBuilder.Append(@"@value = ").Append(value.ToTSqlLiteral(true)).Append(", ");
+            sqlBuilder.Append(@"@level0type = N'Schema', @level0name = ").Append(schema.ToTSqlLiteral(true)).Append(", ");
+            sqlBuilder.Append(@"@level1type = N'Table', @level1name = ").Append(table.ToTSqlLiteral(true)).Append(", ");
+            sqlBuilder.Append(@"@level2type = N'Column', @level2name = ").Append(columnName.ToTSqlLiteral(true)).AppendLine(";");
         }
     }
 }
