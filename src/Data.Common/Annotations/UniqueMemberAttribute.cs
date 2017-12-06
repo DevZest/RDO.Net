@@ -17,7 +17,7 @@ namespace DevZest.Data.Annotations
             protected override void Initialize(Model model, CompositeUniqueAttribute columnsAttribute, IReadOnlyList<Entry> entries)
             {
                 base.Initialize(model, columnsAttribute, entries);
-                model.Unique(columnsAttribute.Name, columnsAttribute.IsClustered, GetOrderByList(entries));
+                model.DbUnique(columnsAttribute.Name, columnsAttribute.Description, columnsAttribute.IsClustered, GetOrderByList(entries));
             }
 
             protected override bool IsValid(IValidationContext validationContext, DataRow dataRow)

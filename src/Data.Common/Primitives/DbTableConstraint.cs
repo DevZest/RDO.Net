@@ -4,12 +4,14 @@ namespace DevZest.Data.Primitives
 {
     public abstract class DbTableConstraint : DbTableElement, IExtension
     {
-        protected DbTableConstraint(string name)
+        protected DbTableConstraint(string name, string description)
         {
             Name = name;
         }
 
         public string Name { get; private set; }
+
+        public string Description { get; private set; }
 
         object IExtension.Key
         {

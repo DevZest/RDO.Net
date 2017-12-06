@@ -673,11 +673,11 @@ namespace DevZest.Data
 
             var primaryKeyConstraint = GetExtension<PrimaryKeyConstraint>();
             if (primaryKeyConstraint == null)
-                AddDbTableConstraint(new PrimaryKeyConstraint(this, null, true, () => GetIdentityOrderByList(identity)), false);
+                AddDbTableConstraint(new PrimaryKeyConstraint(this, null, null, true, () => GetIdentityOrderByList(identity)), false);
             else
             {
                 ChangeClusteredIndexAsNonClustered();
-                AddDbTableConstraint(new UniqueConstraint(null, true, GetIdentityOrderByList(identity)), false);
+                AddDbTableConstraint(new DbUniqueConstraint(null, null, true, GetIdentityOrderByList(identity)), false);
             }
         }
 
@@ -778,7 +778,7 @@ namespace DevZest.Data
             AddIndex(new DbIndex(name, description, isUnique, isClustered, isMemberOfTable, isMemberOfTempTable, orderByList));
         }
 
-        protected internal void Unique(string constraintName, bool isClustered, params ColumnSort[] orderByList)
+        protected internal void DbUnique(string name, string description, bool isClustered, params ColumnSort[] orderByList)
         {
             Utilities.Check.NotNull(orderByList, nameof(orderByList));
             if (orderByList.Length == 0)
@@ -791,14 +791,14 @@ namespace DevZest.Data
                     throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
-            AddDbTableConstraint(new UniqueConstraint(constraintName, isClustered, orderByList), false);
+            AddDbTableConstraint(new DbUniqueConstraint(name, description, isClustered, orderByList), false);
         }
 
-        protected void Check(string constraintName, _Boolean condition)
+        protected void DbCheck(string name, string description, _Boolean condition)
         {
             Utilities.Check.NotNull(condition, nameof(condition));
 
-            AddDbTableConstraint(new DbCheckConstraint(constraintName, condition.DbExpression), false);
+            AddDbTableConstraint(new DbCheckConstraint(name, description, condition.DbExpression), false);
         }
 
         private int _suspendIdentityCount;

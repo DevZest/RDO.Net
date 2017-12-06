@@ -10,7 +10,7 @@ namespace DevZest.Data
     {
         protected Model()
         {
-            AddDbTableConstraint(new PrimaryKeyConstraint(this, GetPrimaryKeyConstraintName(), true, () => PrimaryKey._columns), true);
+            AddDbTableConstraint(new PrimaryKeyConstraint(this, GetDbPrimaryKeyName(), GetDbPrimaryKeyDescription(), true, () => PrimaryKey._columns), true);
         }
 
         public abstract new T PrimaryKey { get; }
@@ -20,10 +20,16 @@ namespace DevZest.Data
             return this.PrimaryKey;
         }
 
-        protected virtual string GetPrimaryKeyConstraintName()
+        protected virtual string GetDbPrimaryKeyName()
         {
-            var constraintNameAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbConstraintAttribute>();
-            return constraintNameAttribute == null ? "PK_%" : constraintNameAttribute.Name;
+            var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbConstraintAttribute>();
+            return dbConstraintAttribute == null ? "PK_%" : dbConstraintAttribute.Name;
+        }
+
+        protected virtual string GetDbPrimaryKeyDescription()
+        {
+            var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbConstraintAttribute>();
+            return dbConstraintAttribute == null ? null : dbConstraintAttribute.Description;
         }
     }
 }

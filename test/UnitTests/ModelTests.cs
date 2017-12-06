@@ -258,9 +258,9 @@ namespace DevZest.Data
                 _primaryKey = new Key(Id);
                 FkRef = new Key(Unique1);
                 Name.SetDefaultValue("DEFAULT NAME", null);
-                Unique("UQ_Temp", false, Unique1, Unique2.Desc());
-                Check("CK_Temp", Name.IsNotNull());
-                this.AddDbTableConstraint(DbSession.ForeignKey(null, FkRef, this, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction), false);
+                DbUnique("UQ_Temp", null, false, Unique1, Unique2.Desc());
+                DbCheck("CK_Temp", null, Name.IsNotNull());
+                this.AddDbTableConstraint(DbSession.DbForeignKey(null, null, FkRef, this, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction), false);
             }
 
             private Key _primaryKey;

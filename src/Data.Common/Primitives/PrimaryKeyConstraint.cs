@@ -7,8 +7,8 @@ namespace DevZest.Data.Primitives
 {
     public sealed class PrimaryKeyConstraint : DbTableConstraint, IIndexConstraint
     {
-        internal PrimaryKeyConstraint(Model model, string name, bool isClustered, Func<IList<ColumnSort>> getPrimaryKey)
-            : base(name)
+        internal PrimaryKeyConstraint(Model model, string name, string description, bool isClustered, Func<IList<ColumnSort>> getPrimaryKey)
+            : base(name, description)
         {
             Debug.Assert(model != null);
             Debug.Assert(getPrimaryKey != null);

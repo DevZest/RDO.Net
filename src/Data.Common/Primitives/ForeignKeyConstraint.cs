@@ -5,8 +5,8 @@ namespace DevZest.Data.Primitives
 {
     public sealed class ForeignKeyConstraint : DbTableConstraint
     {
-        internal ForeignKeyConstraint(string name, PrimaryKey foreignKey, PrimaryKey referencedKey, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
-            : base(name)
+        internal ForeignKeyConstraint(string name, string description, PrimaryKey foreignKey, PrimaryKey referencedKey, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
+            : base(name, description)
         {
             Debug.Assert(foreignKey != null);
             Debug.Assert(referencedKey != null);

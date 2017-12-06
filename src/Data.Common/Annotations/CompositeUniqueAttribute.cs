@@ -10,6 +10,8 @@ namespace DevZest.Data.Annotations
         {
         }
 
+        public string Description { get; set; }
+
         public bool IsClustered { get; set; }
 
         protected override string GetDefaultMessage(IReadOnlyList<Column> columns, DataRow dataRow)

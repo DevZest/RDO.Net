@@ -15,5 +15,7 @@ namespace DevZest.Data.Annotations
         {
             get { return _name; }
         }
+
+        public string Description { get; set; }
     }
 }

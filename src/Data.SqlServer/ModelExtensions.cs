@@ -75,8 +75,8 @@ namespace DevZest.Data.SqlServer
                 }
                 if (constraint is PrimaryKeyConstraint)
                     GeneratePrimaryKeyConstraint(sqlBuilder, (PrimaryKeyConstraint)constraint);
-                else if (constraint is UniqueConstraint)
-                    GenerateUniqueConstraint(sqlBuilder, (UniqueConstraint)constraint);
+                else if (constraint is DbUniqueConstraint)
+                    GenerateUniqueConstraint(sqlBuilder, (DbUniqueConstraint)constraint);
                 else if (constraint is DbCheckConstraint)
                     GenerateCheckConstraint(sqlBuilder, sqlVersion, (DbCheckConstraint)constraint);
                 else if (constraint is ForeignKeyConstraint)
@@ -112,7 +112,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append(")");
         }
 
-        private static void GenerateUniqueConstraint(IndentedStringBuilder sqlBuilder, UniqueConstraint constraint)
+        private static void GenerateUniqueConstraint(IndentedStringBuilder sqlBuilder, DbUniqueConstraint constraint)
         {
             Debug.Assert(constraint != null);
 

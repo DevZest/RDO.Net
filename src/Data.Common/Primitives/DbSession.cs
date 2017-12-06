@@ -328,14 +328,14 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract string GetMockTableName(string tableName, object tag);
 
-        protected internal static ForeignKeyConstraint ForeignKey<TKey>(string constraintName, TKey foreignKey, Model<TKey> refTableModel, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
+        protected internal static ForeignKeyConstraint DbForeignKey<TKey>(string name, string description, TKey foreignKey, Model<TKey> refTableModel, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
             where TKey : PrimaryKey
         {
             Utilities.Check.NotNull(foreignKey, nameof(foreignKey));
             Utilities.Check.NotNull(refTableModel, nameof(refTableModel));
 
             var model = foreignKey.ParentModel;
-            var foreignKeyConstraint = new ForeignKeyConstraint(constraintName, foreignKey, refTableModel.PrimaryKey, onDelete, onUpdate);
+            var foreignKeyConstraint = new ForeignKeyConstraint(name, description, foreignKey, refTableModel.PrimaryKey, onDelete, onUpdate);
             if (refTableModel != model && string.IsNullOrEmpty(foreignKeyConstraint.ReferencedTableName))
                 throw new ArgumentException(Strings.Model_InvalidRefTableModel, nameof(refTableModel));
             return foreignKeyConstraint;
