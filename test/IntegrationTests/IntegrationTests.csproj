@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AdventureWorksTestsBase.cs" />
     <Compile Include="DataSetContainerTests.cs" />
+    <Compile Include="Primitives\DbSessionCreateTablesTests.cs" />
     <Compile Include="DbSessionTests.cs" />
     <Compile Include="DbTableDeleteTests.cs" />
     <Compile Include="DbTableInsertTests.cs" />
@@ -105,6 +106,14 @@
       <HintPath>..\..\packages\System.Reflection.TypeExtensions.4.1.0\lib\net46\System.Reflection.TypeExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EmptyDb.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EmptyDb_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

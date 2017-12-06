@@ -21,7 +21,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Culture { get; private set; }
         }
 
-        public static readonly Mounter<_String> _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
+        public static readonly Mounter<_String> _Culture;
 
         static ProductModelProductDescription()
         {
