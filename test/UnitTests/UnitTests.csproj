@@ -96,9 +96,9 @@
     <Compile Include="Annotations\RegularExpressionAttributeTests.cs" />
     <Compile Include="Annotations\RequiredAttributeTests.cs" />
     <Compile Include="Annotations\StringLengthAttributeTests.cs" />
-    <Compile Include="Annotations\IndexAttributeTests.cs" />
+    <Compile Include="Annotations\DbIndexAttributeTests.cs" />
     <Compile Include="Annotations\UniqueAttributeTests.cs" />
-    <Compile Include="Annotations\IndexColumnsAttributeTests.cs" />
+    <Compile Include="Annotations\DbCompositeIndexAttributeTests.cs" />
     <Compile Include="Annotations\UniqueColumnsAttributeTests.cs" />
     <Compile Include="Annotations\UrlAttributeTests.cs" />
     <Compile Include="BinaryTests.cs" />

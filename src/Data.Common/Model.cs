@@ -761,7 +761,7 @@ namespace DevZest.Data
             return sysParentRowId.Column;
         }
 
-        protected internal void Index(string name, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, params ColumnSort[] orderByList)
+        protected internal void Index(string name, string description, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, params ColumnSort[] orderByList)
         {
             Utilities.Check.NotEmpty(name, nameof(name));
             Utilities.Check.NotNull(orderByList, nameof(orderByList));
@@ -775,7 +775,7 @@ namespace DevZest.Data
                     throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
-            AddIndex(new DbIndex(name, isUnique, isClustered, isMemberOfTable, isMemberOfTempTable, orderByList));
+            AddIndex(new DbIndex(name, description, isUnique, isClustered, isMemberOfTable, isMemberOfTempTable, orderByList));
         }
 
         protected internal void Unique(string constraintName, bool isClustered, params ColumnSort[] orderByList)

@@ -6,7 +6,7 @@ namespace DevZest.Data.Primitives
 {
     public sealed class DbIndex : DbTableElement, IIndexConstraint, IExtension
     {
-        internal DbIndex(string name, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, IList<ColumnSort> columns)
+        internal DbIndex(string name, string description, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, IList<ColumnSort> columns)
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
             Name = name;
@@ -18,6 +18,8 @@ namespace DevZest.Data.Primitives
         }
 
         public string Name { get; private set; }
+
+        public string Description { get; private set; }
 
         public bool IsUnique { get; private set; }
 

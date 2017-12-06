@@ -2,12 +2,14 @@
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class IndexColumnsAttribute : ColumnsAttribute
+    public sealed class DbCompositeIndexAttribute : ColumnsAttribute
     {
-        public IndexColumnsAttribute(string name)
+        public DbCompositeIndexAttribute(string name)
             : base(name)
         {
         }
+
+        public string Description { get; set; }
 
         public bool IsUnique { get; set; }
 

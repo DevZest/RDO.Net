@@ -5,9 +5,9 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class IndexAttribute : ColumnAttribute
+    public sealed class DbIndexAttribute : ColumnAttribute
     {
-        public IndexAttribute(string name)
+        public DbIndexAttribute(string name)
         {
             Check.NotEmpty(name, nameof(name));
             Name = name;
@@ -15,10 +15,12 @@ namespace DevZest.Data.Annotations
 
         protected override void Initialize(Column column)
         {
-            column.ParentModel.Index(Name, IsUnique, IsCluster, IsMemberOfTable, IsMemberOfTempTable, SortDirection == SortDirection.Descending ? column.Desc() : column.Asc());
+            column.ParentModel.Index(Name, Description, IsUnique, IsCluster, IsMemberOfTable, IsMemberOfTempTable, SortDirection == SortDirection.Descending ? column.Desc() : column.Asc());
         }
 
         public string Name { get; private set; }
+
+        public string Description { get; set; }
 
         public bool IsUnique { get; set; } = false;
 

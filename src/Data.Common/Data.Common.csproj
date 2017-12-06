@@ -66,9 +66,9 @@
     <Compile Include="Annotations\Primitives\TypeMemberAttribute.cs" />
     <Compile Include="Annotations\RegularExpressionAttribute.cs" />
     <Compile Include="Annotations\StringLengthAttribute.cs" />
-    <Compile Include="Annotations\IndexAttribute.cs" />
-    <Compile Include="Annotations\IndexColumnsAttribute.cs" />
-    <Compile Include="Annotations\IndexColumnsMemberAttribute.cs" />
+    <Compile Include="Annotations\DbIndexAttribute.cs" />
+    <Compile Include="Annotations\DbCompositeIndexAttribute.cs" />
+    <Compile Include="Annotations\DbIndexMemberAttribute.cs" />
     <Compile Include="Annotations\UrlAttribute.cs" />
     <Compile Include="AttachedLocalColumnManager.cs" />
     <Compile Include="ColumnValueBag.cs" />

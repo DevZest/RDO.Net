@@ -3,9 +3,9 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class IndexColumnsMemberAttribute : ColumnsMemberAttribute
+    public sealed class DbIndexMemberAttribute : ColumnsMemberAttribute
     {
-        private sealed class Manager : Manager<IndexColumnsAttribute, IndexColumnsMemberAttribute>
+        private sealed class Manager : Manager<DbCompositeIndexAttribute, DbIndexMemberAttribute>
         {
             public static readonly Manager Singleton = new Manager();
 
@@ -13,9 +13,9 @@ namespace DevZest.Data.Annotations
             {
             }
 
-            protected override void Initialize(Model model, IndexColumnsAttribute columnsAttribute, IReadOnlyList<Entry> entries)
+            protected override void Initialize(Model model, DbCompositeIndexAttribute columnsAttribute, IReadOnlyList<Entry> entries)
             {
-                model.Index(columnsAttribute.Name, columnsAttribute.IsUnique, columnsAttribute.IsClustered, columnsAttribute.IsMemberOfTable, columnsAttribute.IsMemberOfTempTable, GetOrderByList(entries));
+                model.Index(columnsAttribute.Name, columnsAttribute.Description, columnsAttribute.IsUnique, columnsAttribute.IsClustered, columnsAttribute.IsMemberOfTable, columnsAttribute.IsMemberOfTempTable, GetOrderByList(entries));
             }
 
             private static ColumnSort[] GetOrderByList(IReadOnlyList<Entry> entries)
@@ -32,7 +32,7 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        public IndexColumnsMemberAttribute(string name)
+        public DbIndexMemberAttribute(string name)
             : base(name)
         {
         }

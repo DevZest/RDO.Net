@@ -5,9 +5,9 @@ using System.Data.SqlClient;
 namespace DevZest.Data.Annotations
 {
     [TestClass]
-    public class IndexColumnsAttributeTests
+    public class DbCompositeIndexAttributeTests
     {
-        [IndexColumns(IDX_ID, IsUnique = true)]
+        [DbCompositeIndex(IDX_ID, IsUnique = true)]
         private sealed class TestModel : Model
         {
             static TestModel()
@@ -18,10 +18,10 @@ namespace DevZest.Data.Annotations
 
             private const string IDX_ID = nameof(IDX_ID);
 
-            [IndexColumnsMember(IDX_ID, Order = 2)]
+            [DbIndexMember(IDX_ID, Order = 2)]
             public _Int32 Id1 { get; private set; }
 
-            [IndexColumnsMember(IDX_ID, Order = 1, SortDirection = SortDirection.Descending)]
+            [DbIndexMember(IDX_ID, Order = 1, SortDirection = SortDirection.Descending)]
             public _Int32 Id2 { get; private set; }
         }
 

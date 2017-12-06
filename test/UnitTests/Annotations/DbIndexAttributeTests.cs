@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 namespace DevZest.Data.Annotations
 {
     [TestClass]
-    public class IndexAttributeTests
+    public class DbIndexAttributeTests
     {
         private sealed class TestModel : Model
         {
@@ -15,10 +15,10 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Value);
             }
 
-            [Index("IDX_ID", IsUnique = true)]
+            [DbIndex("IDX_ID", IsUnique = true)]
             public _Int32 Id { get; private set; }
 
-            [Index("IDX_VALUE", SortDirection = SortDirection.Descending)]
+            [DbIndex("IDX_VALUE", SortDirection = SortDirection.Descending)]
             public _Int32 Value { get; private set; }
         }
 
@@ -38,7 +38,7 @@ namespace DevZest.Data.Annotations
         }
 
         [TestMethod]
-        public void IndexAttribute_sql_generation()
+        public void DbIndexAttribute_sql_generation()
         {
             using (var testDb = new TestDb(SqlVersion.Sql11))
             {
