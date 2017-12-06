@@ -229,12 +229,28 @@ namespace DevZest.Data.SqlServer
                 return;
             var table = parsedIdentifiers[parsedIdentifiers.Count - 1];
             var schema = parsedIdentifiers.Count > 1 ? parsedIdentifiers[parsedIdentifiers.Count - 2] : null;
+            if (string.IsNullOrEmpty(schema))
+                schema = "dbo";
 
             var columns = model.GetColumns();
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
                 column.GenerateColumnDescriptionSql(sqlBuilder, sqlVersion, schema, table);
+            }
+
+            var constraints = model.GetExtensions<DbTableConstraint>().Where(x => x.IsMemberOfTable).ToList();
+            for (int i = 0; i < constraints.Count; i++)
+            {
+                var constraint = constraints[i];
+                constraint.GenerateConstraintDescriptionSql(sqlBuilder, sqlVersion, schema, table);
+            }
+
+            var indexes = model.GetExtensions<DbIndex>().Where(x => x.IsMemberOfTable).ToList();
+            for (int i = 0; i < indexes.Count; i++)
+            {
+                var index = indexes[i];
+                index.GenerateIndexDescriptionSql(sqlBuilder, sqlVersion, schema, table);
             }
         }
 
@@ -243,12 +259,23 @@ namespace DevZest.Data.SqlServer
             var description = column.Description;
             if (string.IsNullOrEmpty(description))
                 return;
-
-            if (string.IsNullOrEmpty(schema))
-                schema = "dbo";
-            Debug.Assert(!string.IsNullOrEmpty(table));
-
             sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "COLUMN", column.DbColumnName, description);
+        }
+
+        private static void GenerateConstraintDescriptionSql(this DbTableConstraint constraint, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
+        {
+            var description = constraint.Description;
+            if (string.IsNullOrEmpty(constraint.Name) || string.IsNullOrEmpty(description))
+                return;
+            sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "CONSTRAINT", constraint.Name.FormatName(table, false), description);
+        }
+
+        private static void GenerateIndexDescriptionSql(this DbIndex index, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
+        {
+            var description = index.Description;
+            if (string.IsNullOrEmpty(index.Name) || string.IsNullOrEmpty(description))
+                return;
+            sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "INDEX", index.Name.FormatName(table, false), description);
         }
 
         private static void GenerateDescriptionSql(this IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table, string level2Type, string level2Name, string value)

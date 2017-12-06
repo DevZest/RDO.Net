@@ -10,6 +10,7 @@ namespace DevZest.Data.Primitives
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
             Name = name;
+            Description = description;
             IsUnique = isUnique;
             IsClustered = isClustered;
             _isMemberOfTable = isMemberOfTable;

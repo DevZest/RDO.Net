@@ -4,12 +4,12 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [DbCompositeIndex(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion)]
+    [DbCompositeIndex(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Description = "Nonclustered index.")]
     public class Address : BaseModel<Address.Key>
     {
         private const string IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion = nameof(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion);
 
-        [DbConstraint("PK_Address_AddressID")]
+        [DbConstraint("PK_Address_AddressID", Description = "Clustered index created by a primary key constraint.")]
         public sealed class Key : PrimaryKey
         {
             public Key(_Int32 addressID)
@@ -115,7 +115,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         [Description("Name of state or province.")]
         [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 4)]
-        [DbIndex("IX_Address_StateProvince")]
+        [DbIndex("IX_Address_StateProvince", Description = "Nonclustered index.")]
         public _String StateProvince { get; private set; }
 
         [UdtName]

@@ -99,17 +99,17 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        internal static string FormatName(this string name, string tableName)
+        internal static string FormatName(this string name, string tableName, bool toQuotedIdentifier = true)
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
 
-            if (!name.Contains("%"))
-                return name.ToQuotedIdentifier();
-
-            var identifiers = tableName.ParseIdentifier();
-            var lastIdentifier = identifiers[identifiers.Count - 1].Replace("#", string.Empty).Replace(' ', '_');
-            name = name.Replace("%", lastIdentifier);
-            return name.ToQuotedIdentifier();
+            if (name.Contains("%"))
+            {
+                var identifiers = tableName.ParseIdentifier();
+                var lastIdentifier = identifiers[identifiers.Count - 1].Replace("#", string.Empty).Replace(' ', '_');
+                name = name.Replace("%", lastIdentifier);
+            }
+            return toQuotedIdentifier ? name.ToQuotedIdentifier() : name;
         }
     }
 }
