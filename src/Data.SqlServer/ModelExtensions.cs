@@ -232,7 +232,10 @@ namespace DevZest.Data.SqlServer
 
             var columns = model.GetColumns();
             for (int i = 0; i < columns.Count; i++)
-                columns[i].GenerateColumnDescriptionSql(sqlBuilder, sqlVersion, schema, table);
+            {
+                var column = columns[i];
+                column.GenerateColumnDescriptionSql(sqlBuilder, sqlVersion, schema, table);
+            }
         }
 
         private static void GenerateColumnDescriptionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
@@ -245,7 +248,12 @@ namespace DevZest.Data.SqlServer
                 schema = "dbo";
             Debug.Assert(!string.IsNullOrEmpty(table));
 
-            sqlBuilder.GenerateExtendedPropertySql(sqlVersion, schema, table, "Column", column.DbColumnName, "MS_Description", description);
+            sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "COLUMN", column.DbColumnName, description);
+        }
+
+        private static void GenerateDescriptionSql(this IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table, string level2Type, string level2Name, string value)
+        {
+            sqlBuilder.GenerateExtendedPropertySql(sqlVersion, schema, table, level2Type, level2Name, "MS_Description", value);
         }
 
         private static void GenerateExtendedPropertySql(this IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table, string level2Type, string level2Name, string name, string value)
@@ -263,6 +271,5 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append(@"@level1type = N'Table', @level1name = ").Append(table.ToTSqlLiteral(true)).Append(", ");
             sqlBuilder.Append(@"@level2type = ").Append(level2Type.ToTSqlLiteral(true)).Append(@", @level2name = ").Append(level2Name.ToTSqlLiteral(true)).AppendLine(";");
         }
-
     }
 }
