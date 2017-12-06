@@ -88,6 +88,7 @@
     <Compile Include="Primitives\DbTableElement.cs" />
     <Compile Include="Primitives\EnumColumn.cs" />
     <Compile Include="Primitives\IAutoColumnSelector.cs" />
+    <Compile Include="Primitives\MockDb.cs" />
     <Compile Include="Primitives\ModelExtensions.cs" />
     <Compile Include="Annotations\Primitives\ColumnsMemberAttribute.cs" />
     <Compile Include="Annotations\Primitives\ValidationColumnsAttribute.cs" />
@@ -196,7 +197,7 @@
     <Compile Include="JasonValueType.cs" />
     <Compile Include="JsonValue.cs" />
     <Compile Include="LogCategory.cs" />
-    <Compile Include="MockDb.cs" />
+    <Compile Include="MockDb_T.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelCollection.cs" />
     <Compile Include="PrimaryKey.cs" />
