@@ -97,8 +97,8 @@
     <Compile Include="Annotations\Primitives\ValidationColumnsAttribute.cs" />
     <Compile Include="Annotations\Primitives\ValidationColumnsMemberAttribute.cs" />
     <Compile Include="Annotations\UniqueAttribute.cs" />
-    <Compile Include="Annotations\UniqueColumnsAttribute.cs" />
-    <Compile Include="Annotations\UniqueColumnsMemberAttribute.cs" />
+    <Compile Include="Annotations\CompositeUniqueAttribute.cs" />
+    <Compile Include="Annotations\UniqueMemberAttribute.cs" />
     <Compile Include="Primitives\DbIndex.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
     <Compile Include="Utilities\EmptyDictionary.cs" />

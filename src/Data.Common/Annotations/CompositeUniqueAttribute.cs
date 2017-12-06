@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class UniqueColumnsAttribute : ValidationColumnsAttribute
+    public sealed class CompositeUniqueAttribute : ValidationColumnsAttribute
     {
-        public UniqueColumnsAttribute(string name)
+        public CompositeUniqueAttribute(string name)
             : base(name)
         {
         }

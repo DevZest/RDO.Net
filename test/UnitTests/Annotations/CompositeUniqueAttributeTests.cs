@@ -5,9 +5,9 @@ using System.Data.SqlClient;
 namespace DevZest.Data.Annotations
 {
     [TestClass]
-    public class UniqueColumnsAttributeTests
+    public class CompositeUniqueAttributeTests
     {
-        [UniqueColumns(UNIQUE_ID, MessageId = "ERR_DuplicateIds")]
+        [CompositeUnique(UNIQUE_ID, MessageId = "ERR_DuplicateIds")]
         private sealed class TestModel : Model
         {
             static TestModel()
@@ -18,10 +18,10 @@ namespace DevZest.Data.Annotations
 
             private const string UNIQUE_ID = nameof(UNIQUE_ID);
 
-            [UniqueColumnsMember(UNIQUE_ID, Order = 2)]
+            [UniqueMember(UNIQUE_ID, Order = 2)]
             public _Int32 Id1 { get; private set; }
 
-            [UniqueColumnsMember(UNIQUE_ID, Order = 1, SortDirection = SortDirection.Descending)]
+            [UniqueMember(UNIQUE_ID, Order = 1, SortDirection = SortDirection.Descending)]
             public _Int32 Id2 { get; private set; }
         }
 
@@ -41,7 +41,7 @@ namespace DevZest.Data.Annotations
         }
 
         [TestMethod]
-        public void UniqueColumnsAttribute_sql_generation()
+        public void CompositeUniqueAttribute_sql_generation()
         {
             using (var testDb = new TestDb(SqlVersion.Sql11))
             {
@@ -59,7 +59,7 @@ namespace DevZest.Data.Annotations
         }
 
         [TestMethod]
-        public void UniqueColumnsAttribute_data_set()
+        public void CompositeUniqueAttribute_data_set()
         {
             var dataSet = DataSet<TestModel>.New();
             var dataRow1 = dataSet.AddRow((_, row) => {

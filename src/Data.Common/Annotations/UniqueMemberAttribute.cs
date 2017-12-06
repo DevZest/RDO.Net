@@ -4,9 +4,9 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class UniqueColumnsMemberAttribute : ValidationColumnsMemberAttribute
+    public sealed class UniqueMemberAttribute : ValidationColumnsMemberAttribute
     {
-        private sealed class Manager : Manager<UniqueColumnsAttribute, UniqueColumnsMemberAttribute>
+        private sealed class Manager : Manager<CompositeUniqueAttribute, UniqueMemberAttribute>
         {
             public static readonly Manager Singleton = new Manager();
 
@@ -14,7 +14,7 @@ namespace DevZest.Data.Annotations
             {
             }
 
-            protected override void Initialize(Model model, UniqueColumnsAttribute columnsAttribute, IReadOnlyList<Entry> entries)
+            protected override void Initialize(Model model, CompositeUniqueAttribute columnsAttribute, IReadOnlyList<Entry> entries)
             {
                 base.Initialize(model, columnsAttribute, entries);
                 model.Unique(columnsAttribute.Name, columnsAttribute.IsClustered, GetOrderByList(entries));
@@ -56,7 +56,7 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        public UniqueColumnsMemberAttribute(string name)
+        public UniqueMemberAttribute(string name)
             : base(name)
         {
         }

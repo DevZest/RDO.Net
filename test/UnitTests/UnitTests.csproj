@@ -99,7 +99,7 @@
     <Compile Include="Annotations\DbIndexAttributeTests.cs" />
     <Compile Include="Annotations\UniqueAttributeTests.cs" />
     <Compile Include="Annotations\DbCompositeIndexAttributeTests.cs" />
-    <Compile Include="Annotations\UniqueColumnsAttributeTests.cs" />
+    <Compile Include="Annotations\CompositeUniqueAttributeTests.cs" />
     <Compile Include="Annotations\UrlAttributeTests.cs" />
     <Compile Include="BinaryTests.cs" />
     <Compile Include="CaseTests.cs" />
