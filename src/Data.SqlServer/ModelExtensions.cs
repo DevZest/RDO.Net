@@ -20,13 +20,10 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Indent++;
 
             var columns = model.GetColumns();
-            bool anyDescription = false;
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
                 column.GenerateColumnDefinitionSql(sqlBuilder, sqlVersion, tableName, isTempTable, i == columns.Count - 1);
-                if (!string.IsNullOrEmpty(column.Description))
-                    anyDescription = true;
             }
 
             int countConstraints = model.GenerateConstraints(sqlBuilder, sqlVersion, tableName, isTempTable);
@@ -37,8 +34,8 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Indent--;
             sqlBuilder.AppendLine(");");
 
-            if (!isTempTable && anyDescription)
-                columns.GenerateColumnsDescriptionSql(sqlBuilder, sqlVersion, tableName);
+            if (!isTempTable)
+                model.GenerateDescriptionSql(sqlBuilder, sqlVersion, tableName);
         }
 
         private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable, bool isLastColumn)
@@ -225,13 +222,15 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private static void GenerateColumnsDescriptionSql(this IReadOnlyList<Column> columns, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName)
+        private static void GenerateDescriptionSql(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName)
         {
             var parsedIdentifiers = tableName.ParseIdentifier();
             if (parsedIdentifiers.Count > 2)
                 return;
             var table = parsedIdentifiers[parsedIdentifiers.Count - 1];
             var schema = parsedIdentifiers.Count > 1 ? parsedIdentifiers[parsedIdentifiers.Count - 2] : null;
+
+            var columns = model.GetColumns();
             for (int i = 0; i < columns.Count; i++)
                 columns[i].GenerateColumnDescriptionSql(sqlBuilder, sqlVersion, schema, table);
         }
