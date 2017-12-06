@@ -21,7 +21,7 @@ namespace DevZest.Data.Primitives
             var sortKeys = new ColumnSort[primaryKey.Count];
             for (int i = 0; i < sortKeys.Length; i++)
                 sortKeys[i] = primaryKey[i];
-            AddDbTableConstraint(new PrimaryKeyConstraint(this, null, null, false, () => { return sortKeys; }), true);
+            AddDbTableConstraint(new DbPrimaryKey(this, null, null, false, () => { return sortKeys; }), true);
             if (addTempTableIdentity)
                 this.AddTempTableIdentity();
         }

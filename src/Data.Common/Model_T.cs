@@ -10,7 +10,7 @@ namespace DevZest.Data
     {
         protected Model()
         {
-            AddDbTableConstraint(new PrimaryKeyConstraint(this, GetDbPrimaryKeyName(), GetDbPrimaryKeyDescription(), true, () => PrimaryKey._columns), true);
+            AddDbTableConstraint(new DbPrimaryKey(this, GetDbPrimaryKeyName(), GetDbPrimaryKeyDescription(), true, () => PrimaryKey._columns), true);
         }
 
         public abstract new T PrimaryKey { get; }

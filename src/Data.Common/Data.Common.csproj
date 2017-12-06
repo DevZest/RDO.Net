@@ -280,7 +280,7 @@
     <Compile Include="Primitives\ModelMemberExtensions.cs" />
     <Compile Include="Primitives\NotNull.cs" />
     <Compile Include="Primitives\ParamExpression.cs" />
-    <Compile Include="Primitives\PrimaryKeyConstraint.cs" />
+    <Compile Include="Primitives\DbPrimaryKey.cs" />
     <Compile Include="Primitives\ScalarFunctionExpression.cs" />
     <Compile Include="Primitives\DbUniqueConstraint.cs" />
     <Compile Include="Primitives\ValueExpression.cs" />

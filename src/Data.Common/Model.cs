@@ -671,9 +671,9 @@ namespace DevZest.Data
             _Int32 identityColumn = AddSysRowIdColumn(false);
             var identity = identityColumn.Identity(1, 1, true);
 
-            var primaryKeyConstraint = GetExtension<PrimaryKeyConstraint>();
+            var primaryKeyConstraint = GetExtension<DbPrimaryKey>();
             if (primaryKeyConstraint == null)
-                AddDbTableConstraint(new PrimaryKeyConstraint(this, null, null, true, () => GetIdentityOrderByList(identity)), false);
+                AddDbTableConstraint(new DbPrimaryKey(this, null, null, true, () => GetIdentityOrderByList(identity)), false);
             else
             {
                 ChangeClusteredIndexAsNonClustered();
