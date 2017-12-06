@@ -2,9 +2,9 @@
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class DefaultConstraint<T> : DefaultConstraint
+    public sealed class ColumnDefault<T> : ColumnDefault
     {
-        internal DefaultConstraint(Column<T> defaultValue, string name, string description)
+        internal ColumnDefault(Column<T> defaultValue, string name, string description)
             : base(name, description)
         {
             Debug.Assert(defaultValue != null && defaultValue.IsExpression);

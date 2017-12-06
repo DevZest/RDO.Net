@@ -195,7 +195,7 @@ namespace DevZest.Data
         /// <returns>The created column of parameter expression.</returns>
         protected internal abstract Column CreateParam(DataRow dataRow);
 
-        internal abstract DefaultConstraint CreateDefault(string name, string description);
+        internal abstract ColumnDefault CreateDefault(string name, string description);
 
         /// <summary>Gets the <see cref="Identity"/> object if this column is identity column.</summary>
         /// <param name="isTempTable"><see langword="true"/> to return the <see cref="Identity"/> declared for temp table(s),
@@ -251,11 +251,11 @@ namespace DevZest.Data
             }
         }
 
-        /// <summary>Gets the <see cref="DefaultConstraint"/> object associated with this column.</summary>
-        /// <returns>The <see cref="DefaultConstraint"/> object associated with this column.</returns>
-        public DefaultConstraint GetDefault()
+        /// <summary>Gets the <see cref="ColumnDefault"/> object associated with this column.</summary>
+        /// <returns>The <see cref="ColumnDefault"/> object associated with this column.</returns>
+        public ColumnDefault GetDefault()
         {
-            return GetExtension<DefaultConstraint>();
+            return GetExtension<ColumnDefault>();
         }
 
         public abstract bool IsDbComputed { get; }

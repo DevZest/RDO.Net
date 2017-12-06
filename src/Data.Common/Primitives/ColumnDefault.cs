@@ -1,9 +1,9 @@
 ﻿
 namespace DevZest.Data.Primitives
 {
-    public abstract class DefaultConstraint : IExtension
+    public abstract class ColumnDefault : IExtension
     {
-        internal DefaultConstraint(string name, string description)
+        internal ColumnDefault(string name, string description)
         {
             Name = name;
             Description = description;
@@ -17,7 +17,7 @@ namespace DevZest.Data.Primitives
 
         object IExtension.Key
         {
-            get { return typeof(DefaultConstraint); }
+            get { return typeof(ColumnDefault); }
         }
     }
 }

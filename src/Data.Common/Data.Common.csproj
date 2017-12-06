@@ -254,8 +254,8 @@
     <Compile Include="Primitives\DbUnaryExpressionKind.cs" />
     <Compile Include="Primitives\DbUnionKind.cs" />
     <Compile Include="Primitives\DbUnionStatement.cs" />
-    <Compile Include="Primitives\DefaultConstraint.cs" />
-    <Compile Include="Primitives\DefaultConstraint_T.cs" />
+    <Compile Include="Primitives\ColumnDefault.cs" />
+    <Compile Include="Primitives\ColumnDefault_T.cs" />
     <Compile Include="Primitives\DbForeignKey.cs" />
     <Compile Include="Primitives\FunctionExpression.cs" />
     <Compile Include="Primitives\FunctionKey.cs" />
