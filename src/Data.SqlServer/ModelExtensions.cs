@@ -237,6 +237,10 @@ namespace DevZest.Data.SqlServer
             {
                 var column = columns[i];
                 column.GenerateColumnDescriptionSql(sqlBuilder, sqlVersion, schema, table);
+                var columnDefault = column.GetDefault();
+                if (columnDefault != null && !column.IsDbComputed)
+                    columnDefault.GenerateColumnDefaultDescriptionSql(sqlBuilder, sqlVersion, schema, table);
+
             }
 
             var constraints = model.GetExtensions<DbTableConstraint>().Where(x => x.IsMemberOfTable).ToList();
@@ -266,6 +270,18 @@ namespace DevZest.Data.SqlServer
             if (string.IsNullOrEmpty(description))
                 return;
             sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "COLUMN", column.DbColumnName, description);
+        }
+
+        private static void GenerateColumnDefaultDescriptionSql(this ColumnDefault columnDefault, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
+        {
+            if (string.IsNullOrEmpty(columnDefault.Name))
+                return;
+
+            var description = columnDefault.Description;
+            if (string.IsNullOrEmpty(description))
+                return;
+
+            sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "CONSTRAINT", columnDefault.Name.FormatName(table, false), description);
         }
 
         private static void GenerateConstraintDescriptionSql(this DbTableConstraint constraint, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)

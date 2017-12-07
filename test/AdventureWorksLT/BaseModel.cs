@@ -11,14 +11,14 @@ namespace DevZest.Samples.AdventureWorksLT
         public static readonly Mounter<_DateTime> _ModifiedDate = RegisterColumn((BaseModel<T> x) => x.ModifiedDate);
 
         [Required]
-        [AutoGuid(Name = "DF_%_rowguid")]
+        [AutoGuid(Name = "DF_%_rowguid", Description = "Default constraint value of NEWID()")]
         [Unique(Name = "AK_%_rowguid", Description = "Unique nonclustered constraint. Used to support replication samples.")]
         [DbColumn(Description = "ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.")]
         public _Guid RowGuid { get; private set; }
 
         [Required]
         [AsDateTime]
-        [AutoDateTime(Name = "DF_%_ModifiedDate")]
+        [AutoDateTime(Name = "DF_%_ModifiedDate", Description = "Default constraint value of GETDATE()")]
         [DbColumn(Description = "Date and time the record was last updated.")]
         public _DateTime ModifiedDate { get; private set; }
     }
