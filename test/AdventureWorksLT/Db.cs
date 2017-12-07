@@ -169,13 +169,10 @@ namespace DevZest.Samples.AdventureWorksLT
             {
                 var ext = _.GetExtender<SalesOrderToEdit.Ext>();
                 Debug.Assert(ext != null);
-                SalesOrder o;
-                Customer c;
-                Address shipTo, billTo;
-                builder.From(SalesOrders, out o)
-                    .InnerJoin(Customers, o.Customer, out c)
-                    .InnerJoin(Addresses, o.ShipToAddress, out shipTo)
-                    .InnerJoin(Addresses, o.BillToAddress, out billTo)
+                builder.From(SalesOrders, out var o)
+                    .InnerJoin(Customers, o.Customer, out var c)
+                    .InnerJoin(Addresses, o.ShipToAddress, out var shipTo)
+                    .InnerJoin(Addresses, o.BillToAddress, out var billTo)
                     .AutoSelect()
                     .AutoSelect(shipTo, ext.ShipToAddress)
                     .AutoSelect(billTo, ext.BillToAddress)
@@ -185,10 +182,8 @@ namespace DevZest.Samples.AdventureWorksLT
             result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
             {
                 Debug.Assert(_.GetExtender<SalesOrderToEdit.DetailExt>() != null);
-                SalesOrderDetail d;
-                Product p;
-                builder.From(SalesOrderDetails, out d)
-                    .InnerJoin(Products, d.Product, out p)
+                builder.From(SalesOrderDetails, out var d)
+                    .InnerJoin(Products, d.Product, out var p)
                     .AutoSelect();
             });
 
