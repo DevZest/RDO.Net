@@ -58,8 +58,8 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _customerAddresses, "[SalesLT].[CustomerAddress]",
-                    _ => DbForeignKey(null, null, _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
-                    _ => DbForeignKey(null, null, _.Address, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey("FK_CustomerAddress_Customer_CustomerID", "Foreign key constraint referencing Customer.CustomerID.", _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey("FK_CustomerAddress_Address_AddressID", "Foreign key constraint referencing Address.AddressID.", _.Address, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
