@@ -102,58 +102,58 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [Identity(1, 1)]
-        [Description("Primary key for Customer records.")]
+        [DbColumn(Description = "Primary key for Customer records.")]
         public _Int32 CustomerID { get; private set; }
 
         [UdtNameStyle]
-        [Description("0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.")]
+        [DbColumn(Description = "0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.")]
         public _Boolean NameStyle { get; private set; }
 
         [AsNVarChar(8)]
-        [Description("A courtesy title. For example, Mr. or Ms.")]
+        [DbColumn(Description = "A courtesy title. For example, Mr. or Ms.")]
         public _String Title { get; private set; }
 
         [UdtName]
-        [Description("First name of the person.")]
+        [DbColumn(Description = "First name of the person.")]
         public _String FirstName { get; private set; }
 
         [UdtName]
-        [Description("Middle name or middle initial of the person.")]
+        [DbColumn(Description = "Middle name or middle initial of the person.")]
         public _String MiddleName { get; private set; }
 
         [UdtName]
-        [Description("Last name of the person.")]
+        [DbColumn(Description = "Last name of the person.")]
         public _String LastName { get; private set; }
 
         [AsNVarChar(10)]
-        [Description("Surname suffix. For example, Sr. or Jr.")]
+        [DbColumn(Description = "Surname suffix. For example, Sr. or Jr.")]
         public _String Suffix { get; private set; }
 
         [AsNVarChar(128)]
-        [Description("The customer's organization.")]
+        [DbColumn(Description = "The customer's organization.")]
         public _String CompanyName { get; private set; }
 
         [AsNVarChar(256)]
-        [Description("The customer's sales person, an employee of AdventureWorks Cycles.")]
+        [DbColumn(Description = "The customer's sales person, an employee of AdventureWorks Cycles.")]
         public _String SalesPerson { get; private set; }
 
         [AsNVarChar(256)]
         [EmailAddress]
-        [Description("E-mail address for the person.")]
+        [DbColumn(Description = "E-mail address for the person.")]
         public _String EmailAddress { get; private set; }
 
         [UdtPhone]
-        [Description("Phone number associated with the person.")]
+        [DbColumn(Description = "Phone number associated with the person.")]
         public _String Phone { get; private set; }
 
         [Required]
         [AsVarChar(128)]
-        [Description("Password for the e-mail account.")]
+        [DbColumn(Description = "Password for the e-mail account.")]
         public _String PasswordHash { get; private set; }
 
         [Required]
         [AsVarChar(10)]
-        [Description("Random value concatenated with the password string before the password is hashed.")]
+        [DbColumn(Description = "Random value concatenated with the password string before the password is hashed.")]
         public _String PasswordSalt { get; private set; }
     }
 }

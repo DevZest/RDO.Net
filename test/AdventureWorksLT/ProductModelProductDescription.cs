@@ -64,14 +64,14 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        [Description("Primary key. Foreign key to ProductModel.ProductModelID.")]
+        [DbColumn(Description = "Primary key. Foreign key to ProductModel.ProductModelID.")]
         public _Int32 ProductModelID { get; private set; }
 
-        [Description("Primary key. Foreign key to ProductDescription.ProductDescriptionID.")]
+        [DbColumn(Description = "Primary key. Foreign key to ProductDescription.ProductDescriptionID.")]
         public _Int32 ProductDescriptionID { get; private set; }
 
         [AsNChar(6)]
-        [Description("The culture for which the description is written.")]
+        [DbColumn(Description = "The culture for which the description is written.")]
         public _String Culture { get; private set; }
     }
 }

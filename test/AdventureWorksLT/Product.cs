@@ -117,65 +117,65 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [Identity(1, 1)]
-        [Description("Primary key for Product records.")]
+        [DbColumn(Description = "Primary key for Product records.")]
         public _Int32 ProductID { get; private set; }
 
         [UdtName]
-        [Description("Name of the product.")]
+        [DbColumn(Description = "Name of the product.")]
         public _String Name { get; private set; }
 
         [Required]
         [AsNVarChar(25)]
-        [Description("Unique product identification number.")]
+        [DbColumn(Description = "Unique product identification number.")]
         public _String ProductNumber { get; private set; }
 
         [AsNVarChar(15)]
-        [Description("Product color.")]
+        [DbColumn(Description = "Product color.")]
         public _String Color { get; private set; }
 
         [Required]
         [AsMoney()]
-        [Description("Standard cost of the product.")]
+        [DbColumn(Description = "Standard cost of the product.")]
         public _Decimal StandardCost { get; private set; }
 
         [Required]
         [AsMoney()]
-        [Description("Selling price.")]
+        [DbColumn(Description = "Selling price.")]
         public _Decimal ListPrice { get; private set; }
 
         [AsNVarChar(5)]
-        [Description("Product size.")]
+        [DbColumn(Description = "Product size.")]
         public _String Size { get; private set; }
 
         [AsDecimal(8, 2)]
-        [Description("Product weight.")]
+        [DbColumn(Description = "Product weight.")]
         public _Decimal Weight { get; private set; }
 
-        [Description("Product is a member of this product category. Foreign key to ProductCategory.ProductCategoryID.")]
+        [DbColumn(Description = "Product is a member of this product category. Foreign key to ProductCategory.ProductCategoryID.")]
         public _Int32 ProductCategoryID { get; private set; }
 
-        [Description("Product is a member of this product model. Foreign key to ProductModel.ProductModelID.")]
+        [DbColumn(Description = "Product is a member of this product model. Foreign key to ProductModel.ProductModelID.")]
         public _Int32 ProductModelID { get; private set; }
 
         [Required]
         [AsDateTime]
-        [Description("Date the product was available for sale.")]
+        [DbColumn(Description = "Date the product was available for sale.")]
         public _DateTime SellStartDate { get; private set; }
 
         [AsDateTime]
-        [Description("Date the product was no longer available for sale.")]
+        [DbColumn(Description = "Date the product was no longer available for sale.")]
         public _DateTime SellEndDate { get; private set; }
 
         [AsDateTime]
-        [Description("Date the product was discontinued.")]
+        [DbColumn(Description = "Date the product was discontinued.")]
         public _DateTime DiscontinuedDate { get; private set; }
 
         [AsVarBinaryMax]
-        [Description("Small image of the product.")]
+        [DbColumn(Description = "Small image of the product.")]
         public _Binary ThumbNailPhoto { get; private set; }
 
         [AsNVarChar(50)]
-        [Description("Small image file name.")]
+        [DbColumn(Description = "Small image file name.")]
         public _String ThumbnailPhotoFileName { get; private set; }
     }
 }

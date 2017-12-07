@@ -58,7 +58,6 @@
     <Compile Include="Annotations\CreditCardAttribute.cs" />
     <Compile Include="Annotations\DbConstraintAttribute.cs" />
     <Compile Include="Annotations\DefaultValueAttribute.cs" />
-    <Compile Include="Annotations\DescriptionAttribute.cs" />
     <Compile Include="Annotations\DisplayAttribute.cs" />
     <Compile Include="Annotations\EmailAddressAttribute.cs" />
     <Compile Include="Annotations\LocalizableString.cs" />
@@ -152,7 +151,7 @@
     <Compile Include="DataRowValidationResult.cs" />
     <Compile Include="ColumnValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
-    <Compile Include="Annotations\DbColumnNameAttribute.cs" />
+    <Compile Include="Annotations\DbColumnAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
     <Compile Include="Column_T.cs" />
     <Compile Include="DataRow.cs" />

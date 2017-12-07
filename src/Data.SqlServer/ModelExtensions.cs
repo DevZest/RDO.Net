@@ -256,7 +256,7 @@ namespace DevZest.Data.SqlServer
 
         private static void GenerateColumnDescriptionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
         {
-            var description = column.Description;
+            var description = column.DbColumnDescription;
             if (string.IsNullOrEmpty(description))
                 return;
             sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "COLUMN", column.DbColumnName, description);

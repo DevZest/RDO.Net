@@ -18,11 +18,11 @@ namespace DevZest.Data
             public static readonly Mounter<_Int32> _Column2 = RegisterColumn((SimpleModel x) => x.Column2);
 
             [Required]
-            [DbColumnName("DbColumnName")]
+            [DbColumn("DbColumnName")]
             public _Int32 Column1 { get; private set; }
 
             [Required]
-            [DbColumnName("DbColumnName")]
+            [DbColumn("DbColumnName")]
             public _Int32 Column2 { get; private set; }
         }
 

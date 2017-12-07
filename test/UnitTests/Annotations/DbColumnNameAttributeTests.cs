@@ -14,7 +14,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.ID);
             }
 
-            [DbColumnName("DB_ID")]
+            [DbColumn("DB_ID")]
             public _Int32 ID { get; private set; }
         }
 

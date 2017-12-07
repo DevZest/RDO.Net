@@ -92,28 +92,28 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [Identity(1, 1)]
-        [Description("Primary key for Address records.")]
+        [DbColumn(Description = "Primary key for Address records.")]
         public _Int32 AddressID { get; private set; }
 
         [Required]
         [AsNVarChar(60)]
-        [Description("First street address line.")]
+        [DbColumn(Description = "First street address line.")]
         [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 1)]
         public _String AddressLine1 { get; private set; }
 
         [AsNVarChar(60)]
-        [Description("Second street address line.")]
+        [DbColumn(Description = "Second street address line.")]
         [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 2)]
         public _String AddressLine2 { get; private set; }
 
         [Required]
         [AsNVarChar(30)]
-        [Description("Name of the city.")]
+        [DbColumn(Description = "Name of the city.")]
         [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 3)]
         public _String City { get; private set; }
 
         [UdtName]
-        [Description("Name of state or province.")]
+        [DbColumn(Description = "Name of state or province.")]
         [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 4)]
         [DbIndex("IX_Address_StateProvince", Description = "Nonclustered index.")]
         public _String StateProvince { get; private set; }
@@ -124,7 +124,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [AsNVarChar(15)]
-        [Description("Postal code for the street address.")]
+        [DbColumn(Description = "Postal code for the street address.")]
         public _String PostalCode { get; private set; }
     }
 }

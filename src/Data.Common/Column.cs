@@ -62,6 +62,17 @@ namespace DevZest.Data
             }
         }
 
+        private string _dbColumnDescription;
+        public string DbColumnDescription
+        {
+            get { return _dbColumnDescription; }
+            set
+            {
+                VerifyDesignMode();
+                _dbColumnDescription = value;
+            }
+        }
+
         /// <summary>Gets a value indicates whether current column is expression.</summary>
         public abstract bool IsExpression { get; }
 
@@ -346,17 +357,6 @@ namespace DevZest.Data
         internal abstract void CopyValue(DataRow sourceDataRow, Column targetColumn, DataRow targetDataRow);
 
         public abstract _String CastToString();
-
-        private string _description;
-        public string Description
-        {
-            get { return _description; }
-            set
-            {
-                VerifyDesignMode();
-                _description = value;
-            }
-        }
 
         private Func<string> _displayShortNameGetter;
         /// <summary>Gets or sets a value that is used for display the short name in the UI.</summary>

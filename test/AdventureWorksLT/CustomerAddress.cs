@@ -94,14 +94,14 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        [Description("Primary key. Foreign key to Customer.CustomerID.")]
+        [DbColumn(Description = "Primary key. Foreign key to Customer.CustomerID.")]
         public _Int32 CustomerID { get; private set; }
 
-        [Description("Primary key. Foreign key to Address.AddressID.")]
+        [DbColumn(Description = "Primary key. Foreign key to Address.AddressID.")]
         public _Int32 AddressID { get; private set; }
 
         [UdtName]
-        [Description("The kind of Address. One of: Archive, Billing, Home, Main Office, Primary, Shipping")]
+        [DbColumn(Description = "The kind of Address. One of: Archive, Billing, Home, Main Office, Primary, Shipping")]
         public _String AddressType { get; private set; }
     }
 }
