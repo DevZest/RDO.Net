@@ -270,16 +270,23 @@ namespace DevZest.Data.SqlServer
 
         private static void GenerateConstraintDescriptionSql(this DbTableConstraint constraint, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
         {
-            var description = constraint.Description;
-            if (string.IsNullOrEmpty(constraint.Name) || string.IsNullOrEmpty(description))
+            if (string.IsNullOrEmpty(constraint.Name))
                 return;
+
+            var description = constraint.Description;
+            if (string.IsNullOrEmpty(description))
+                return;
+
             sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "CONSTRAINT", constraint.Name.FormatName(table, false), description);
         }
 
         private static void GenerateIndexDescriptionSql(this DbIndex index, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
         {
+            if (string.IsNullOrEmpty(index.Name))
+                return;
+
             var description = index.Description;
-            if (string.IsNullOrEmpty(index.Name) || string.IsNullOrEmpty(description))
+            if (string.IsNullOrEmpty(description))
                 return;
             sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, "INDEX", index.Name.FormatName(table, false), description);
         }
