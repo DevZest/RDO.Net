@@ -6,6 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class Customer : BaseModel<Customer.Key>
     {
+        [DbConstraint("PK_Customer_CustomerID", Description = "Primary key (clustered) constraint")]
         public sealed class Key : PrimaryKey
         {
             public Key(_Int32 customerID)
@@ -106,6 +107,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 CustomerID { get; private set; }
 
         [UdtNameStyle]
+        [DefaultValue(false, Name = "DF_Customer_NameStyle", Description = "Default constraint value of 0")]
         [DbColumn(Description = "0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.")]
         public _Boolean NameStyle { get; private set; }
 
@@ -140,6 +142,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [AsNVarChar(256)]
         [EmailAddress]
         [DbColumn(Description = "E-mail address for the person.")]
+        [DbIndex("IX_Customer_EmailAddress", Description = "Nonclustered index.")]
         public _String EmailAddress { get; private set; }
 
         [UdtPhone]
