@@ -2,10 +2,9 @@
 using DevZest.Data.SqlServer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -39,18 +38,21 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<Address> _addresses;
+        [Description("Street address information for customers.")]
         public DbTable<Address> Addresses
         {
             get { return GetTable(ref _addresses, "[SalesLT].[Address]"); }
         }
 
         private DbTable<Customer> _customers;
+        [Description("Customer information.")]
         public DbTable<Customer> Customers
         {
             get { return GetTable(ref _customers, "[SalesLT].[Customer]"); }
         }
 
         private DbTable<CustomerAddress> _customerAddresses;
+        [Description("Cross-reference table mapping customers to their address(es).")]
         public DbTable<CustomerAddress> CustomerAddresses
         {
             get
@@ -62,6 +64,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<ProductCategory> _productCategories;
+        [Description("High-level product categorization.")]
         public DbTable<ProductCategory> ProductCategories
         {
             get
@@ -78,12 +81,14 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<ProductDescription> _productDescriptions;
+        [Description("Product descriptions in several languages.")]
         public DbTable<ProductDescription> ProductDescriptions
         {
             get { return GetTable(ref _productDescriptions, "[SalesLT].[ProductDescription]"); }
         }
 
         private DbTable<ProductModelProductDescription> _productModelProductDescriptions;
+        [Description("Cross-reference table mapping product descriptions and the language the description is written in.")]
         public DbTable<ProductModelProductDescription> ProductModelProductDescriptions
         {
             get
@@ -95,6 +100,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<Product> _products;
+        [Description("Products sold or used in the manfacturing of sold products.")]
         public DbTable<Product> Products
         {
             get
@@ -106,6 +112,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<SalesOrder> _salesOrders;
+        [Description("General sales order information.")]
         public DbTable<SalesOrder> SalesOrders
         {
             get
@@ -118,6 +125,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<SalesOrderDetail> _salesOrderDetails;
+        [Description("Individual products associated with a specific sales order. See SalesOrderHeader.")]
         public DbTable<SalesOrderDetail> SalesOrderDetails
         {
             get

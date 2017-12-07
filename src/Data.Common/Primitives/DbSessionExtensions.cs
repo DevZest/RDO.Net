@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -20,13 +21,23 @@ namespace DevZest.Data.Primitives
                 return name;
             }
 
+            private Dictionary<IDbTable, string> _descriptions = new Dictionary<IDbTable, string>();
+
             protected override void Initialize()
             {
                 foreach (var property in GetTableProperties(Db))
                 {
                     var dbTable = (IDbTable)property.GetValue(Db);
+                    var descriptionAttribute = property.GetCustomAttribute<DescriptionAttribute>();
+                    string description = descriptionAttribute == null ? null : descriptionAttribute.Description;
+                    _descriptions.Add(dbTable, description);
                     AddMockTable(dbTable, null);
                 }
+            }
+
+            internal override string GetTableDescription(IDbTable table)
+            {
+                return _descriptions[table];
             }
         }
 

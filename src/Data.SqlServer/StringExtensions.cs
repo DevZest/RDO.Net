@@ -17,6 +17,8 @@ namespace DevZest.Data.SqlServer
 
         internal static string ToTSqlLiteral(this string s, bool isUnicode)
         {
+            if (s == null)
+                return "NULL";
             var format = isUnicode ? "N'{0}'" : "'{0}'";
             return string.Format(CultureInfo.InvariantCulture, format, s.Replace("'", "''"));
         }

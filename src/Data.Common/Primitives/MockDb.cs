@@ -86,11 +86,16 @@ namespace DevZest.Data.Primitives
                 var table = mockTable.Table;
                 if (progress != null)
                     progress.Report(table.Name);
-                Db.CreateTable(table.Model, table.Name, false);
+                Db.CreateTable(table.Model, table.Name, GetTableDescription(table), false);
                 var action = _pendingMockTables[table];
                 if (action != null)
                     action();
             }
+        }
+
+        internal virtual string GetTableDescription(IDbTable table)
+        {
+            return null;
         }
 
         private async Task CreateMockTablesAsync(IProgress<string> progress, CancellationToken ct)
@@ -101,7 +106,7 @@ namespace DevZest.Data.Primitives
                 var table = mockTable.Table;
                 if (progress != null)
                     progress.Report(table.Name);
-                await Db.CreateTableAsync(table.Model, table.Name, false, ct);
+                await Db.CreateTableAsync(table.Model, table.Name, GetTableDescription(table), false, ct);
                 var action = _pendingMockTables[table];
                 if (action != null)
                     action();

@@ -80,16 +80,16 @@ namespace DevZest.Data.Primitives
             return CreateNonQueryInvoker(command).ExecuteAsync(cancellationToken);
         }
 
-        protected internal abstract TCommand GetCreateTableCommand(Model model, string tableName, bool isTempTable);
+        protected internal abstract TCommand GetCreateTableCommand(Model model, string tableName, string tableDescription, bool isTempTable);
 
-        internal sealed override void CreateTable(Model model, string tableName, bool isTempTable)
+        internal sealed override void CreateTable(Model model, string name, string description, bool isTempTable)
         {
-            ExecuteNonQuery(GetCreateTableCommand(model, tableName, isTempTable));
+            ExecuteNonQuery(GetCreateTableCommand(model, name, description, isTempTable));
         }
 
-        internal sealed override Task CreateTableAsync(Model model, string tableName, bool isTempTable, CancellationToken cancellationToken)
+        internal sealed override Task CreateTableAsync(Model model, string name, string description, bool isTempTable, CancellationToken cancellationToken)
         {
-            return ExecuteNonQueryAsync(GetCreateTableCommand(model, tableName, isTempTable), cancellationToken);
+            return ExecuteNonQueryAsync(GetCreateTableCommand(model, name, description, isTempTable), cancellationToken);
         }
 
         private DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(DbQueryStatement queryStatement)

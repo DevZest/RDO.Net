@@ -40,9 +40,9 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract string AssignTempTableName(Model model);
 
-        internal abstract void CreateTable(Model model, string tableName, bool isTempTable);
+        internal abstract void CreateTable(Model model, string name, string description, bool isTempTable);
 
-        internal abstract Task CreateTableAsync(Model model, string tableName, bool isTempTable, CancellationToken cancellationToken);
+        internal abstract Task CreateTableAsync(Model model, string name, string description, bool isTempTable, CancellationToken cancellationToken);
 
         protected internal abstract string GetSqlString(DbQueryStatement query);
 
@@ -65,7 +65,7 @@ namespace DevZest.Data.Primitives
             where T : Model, new()
         {
             var result = CreateTempTableInstance(fromModel, initializer);
-            CreateTable(result._, result.Name, true);
+            CreateTable(result._, result.Name, null, true);
             return result;
         }
 
@@ -79,7 +79,7 @@ namespace DevZest.Data.Primitives
             where T : Model, new()
         {
             var result = CreateTempTableInstance(fromModel, initializer);
-            await CreateTableAsync(result._, result.Name, true, cancellationToken);
+            await CreateTableAsync(result._, result.Name, null, true, cancellationToken);
             return result;
         }
 
@@ -226,14 +226,14 @@ namespace DevZest.Data.Primitives
         private DbTable<KeyOutput> CreateKeyOutput(Model sourceModel)
         {
             var result = CreateKeyOutputInstance(sourceModel);
-            CreateTable(result.Model, result.Name, true);
+            CreateTable(result.Model, result.Name, null, true);
             return result;
         }
 
         private async Task<DbTable<KeyOutput>> CreateKeyOutputAsync(Model sourceModel, CancellationToken cancellationToken)
         {
             var result = CreateKeyOutputInstance(sourceModel);
-            await CreateTableAsync(result.Model, result.Name, true, cancellationToken);
+            await CreateTableAsync(result.Model, result.Name, null, true, cancellationToken);
             return result;
         }
 

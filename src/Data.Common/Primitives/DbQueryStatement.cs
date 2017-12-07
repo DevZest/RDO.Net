@@ -67,7 +67,7 @@ namespace DevZest.Data.Primitives
             Debug.Assert(model.DataSource == null);
             var name = dbSession.AssignTempTableName(model);
             var result = DbTable<T>.CreateTemp(model, dbSession, name);
-            dbSession.CreateTable(model, name, true);
+            dbSession.CreateTable(model, name, null, true);
             result.InitialRowCount = dbSession.Insert(BuildToTempTableStatement());
             return result;
         }
@@ -79,7 +79,7 @@ namespace DevZest.Data.Primitives
             Debug.Assert(model.DataSource == null);
             var name = dbSession.AssignTempTableName(model);
             var result = DbTable<T>.CreateTemp(model, dbSession, name);
-            await dbSession.CreateTableAsync(model, name, true, cancellationToken);
+            await dbSession.CreateTableAsync(model, name, null, true, cancellationToken);
             result.InitialRowCount = await dbSession.InsertAsync(BuildToTempTableStatement(), cancellationToken);
             return result;
         }

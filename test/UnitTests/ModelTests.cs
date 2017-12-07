@@ -289,7 +289,7 @@ namespace DevZest.Data
             DbTable<TempModel>.Create(temp, new Mock<DbSession>().Object, tableName);
             var sqlBuilder = new IndentedStringBuilder();
 
-            temp.GenerateCreateTableSql(sqlBuilder, SqlVersion.Sql11, tableName, false);
+            temp.GenerateCreateTableSql(sqlBuilder, SqlVersion.Sql11, tableName, null, false);
             var expectedSql =
 @"CREATE TABLE [Test] (
     [Id] INT NOT NULL,
@@ -316,7 +316,7 @@ namespace DevZest.Data
             temp.AddTempTableIdentity();
             var sqlBuilder = new IndentedStringBuilder();
 
-            temp.GenerateCreateTableSql(sqlBuilder, SqlVersion.Sql11, "#Temp", true);
+            temp.GenerateCreateTableSql(sqlBuilder, SqlVersion.Sql11, "#Temp", null, true);
             var expectedSql =
 @"CREATE TABLE [#Temp] (
     [Id] INT NOT NULL,

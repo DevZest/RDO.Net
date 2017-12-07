@@ -10,7 +10,7 @@ namespace DevZest.Data.SqlServer
 {
     internal static class ModelExtensions
     {
-        internal static void GenerateCreateTableSql(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable)
+        internal static void GenerateCreateTableSql(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, string tableDescription, bool isTempTable)
         {
             tableName = tableName.ToQuotedIdentifier();
 
@@ -35,7 +35,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.AppendLine(");");
 
             if (!isTempTable)
-                model.GenerateDescriptionSql(sqlBuilder, sqlVersion, tableName);
+                model.GenerateDescriptionSql(sqlBuilder, sqlVersion, tableName, tableDescription);
         }
 
         private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable, bool isLastColumn)
@@ -222,7 +222,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private static void GenerateDescriptionSql(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName)
+        private static void GenerateDescriptionSql(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, string tableDescription)
         {
             var parsedIdentifiers = tableName.ParseIdentifier();
             if (parsedIdentifiers.Count > 2)
@@ -231,6 +231,8 @@ namespace DevZest.Data.SqlServer
             var schema = parsedIdentifiers.Count > 1 ? parsedIdentifiers[parsedIdentifiers.Count - 2] : null;
             if (string.IsNullOrEmpty(schema))
                 schema = "dbo";
+
+            sqlBuilder.GenerateTableDescriptionSql(sqlVersion, schema, table, tableDescription);
 
             var columns = model.GetColumns();
             for (int i = 0; i < columns.Count; i++)
@@ -252,6 +254,12 @@ namespace DevZest.Data.SqlServer
                 var index = indexes[i];
                 index.GenerateIndexDescriptionSql(sqlBuilder, sqlVersion, schema, table);
             }
+        }
+
+        private static void GenerateTableDescriptionSql(this IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table, string description)
+        {
+            if (!string.IsNullOrEmpty(description))
+                sqlBuilder.GenerateDescriptionSql(sqlVersion, schema, table, null, null, description);
         }
 
         private static void GenerateColumnDescriptionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string schema, string table)
@@ -289,8 +297,6 @@ namespace DevZest.Data.SqlServer
             if (string.IsNullOrEmpty(schema))
                 schema = "dbo";
             Debug.Assert(!string.IsNullOrEmpty(table));
-            Debug.Assert(!string.IsNullOrEmpty(level2Type));
-            Debug.Assert(!string.IsNullOrEmpty(level2Name));
 
             sqlBuilder.Append(@"EXEC sp_addextendedproperty @name = ").Append(name.ToTSqlLiteral(true)).Append(", ");
             sqlBuilder.Append(@"@value = ").Append(value.ToTSqlLiteral(true)).Append(", ");
