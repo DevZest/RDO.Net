@@ -289,7 +289,6 @@
     </Compile>
     <Compile Include="Primitives\KeyOutput.cs" />
     <Compile Include="SortDirection.cs" />
-    <Compile Include="Annotations\Primitives\UdtAttribute.cs" />
     <Compile Include="Utilities\ByteArrayExtensions.cs" />
     <Compile Include="Utilities\Check.cs" />
     <Compile Include="Utilities\CollectionExtensions.cs" />

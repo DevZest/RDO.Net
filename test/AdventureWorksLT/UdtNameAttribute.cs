@@ -5,13 +5,8 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public sealed class UdtNameAttribute : UdtAttribute
+    public sealed class UdtNameAttribute : ColumnAttribute
     {
-        public override Type DataType
-        {
-            get { return typeof(string); }
-        }
-
         protected override void Initialize(Column column)
         {
             column.Nullable(true);
