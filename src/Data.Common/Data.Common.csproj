@@ -62,7 +62,7 @@
     <Compile Include="Annotations\EmailAddressAttribute.cs" />
     <Compile Include="Annotations\LocalizableString.cs" />
     <Compile Include="Annotations\Primitives\GeneralValidationColumnAttribute.cs" />
-    <Compile Include="Annotations\Primitives\TypeMemberAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ColumnWiringAttribute.cs" />
     <Compile Include="Annotations\RegularExpressionAttribute.cs" />
     <Compile Include="Annotations\StringLengthAttribute.cs" />
     <Compile Include="Annotations\DbIndexAttribute.cs" />

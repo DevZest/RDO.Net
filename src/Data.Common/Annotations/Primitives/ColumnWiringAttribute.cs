@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public abstract class TypeMemberAttribute : Attribute
+    public abstract class ColumnWiringAttribute : Attribute
     {
         private Type _declaringType;
         public Type DeclaringType

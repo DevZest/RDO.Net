@@ -5,7 +5,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class ColumnInitializerAttribute : TypeMemberAttribute
+    public sealed class ColumnInitializerAttribute : ColumnWiringAttribute
     {
         public ColumnInitializerAttribute(string columnName)
         {
