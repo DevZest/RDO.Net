@@ -4,7 +4,7 @@ namespace DevZest.Data.Annotations.Primitives
 {
     /// <summary>Base class for attributes which can be decorated with a column.</summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public abstract class ColumnAttribute : ColumnWiringAttribute
+    public abstract class ColumnAttribute : ColumnWireupAttribute
     {
         internal void TryInitialize(Column column)
         {
