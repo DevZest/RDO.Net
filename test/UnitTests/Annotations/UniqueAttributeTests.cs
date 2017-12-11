@@ -14,7 +14,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Id);
             }
 
-            [Unique(MessageId = "ERR_DuplicateId")]
+            [Unique(Message = "ERR_DuplicateId")]
             public _Int32 Id { get; private set; }
         }
 
@@ -60,9 +60,9 @@ namespace DevZest.Data.Annotations
             var messages1 = dataSet._.Validate(dataRow1, ValidationSeverity.Error);
             var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
             Assert.AreEqual(1, messages1.Count);
-            Assert.AreEqual("ERR_DuplicateId", messages1[0].Id);
+            Assert.AreEqual("ERR_DuplicateId", messages1[0].Description);
             Assert.AreEqual(1, messages2.Count);
-            Assert.AreEqual("ERR_DuplicateId", messages2[0].Id);
+            Assert.AreEqual("ERR_DuplicateId", messages2[0].Description);
         }
     }
 }

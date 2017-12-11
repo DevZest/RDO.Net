@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
     public static class JsonColumnValidationMessage
     {
-        private const string ID = nameof(ColumnValidationMessage.Id);
         private const string SEVERITY = nameof(ColumnValidationMessage.Severity);
         private const string DESCRIPTION = nameof(ColumnValidationMessage.Description);
         private const string SOURCE = nameof(ColumnValidationMessage.Source);
@@ -14,7 +12,6 @@ namespace DevZest.Data.Primitives
         {
             return jsonWriter
                 .WriteStartObject()
-                .WriteNameStringPair(ID, validationMessage.Id).WriteComma()
                 .WriteNameStringPair(SEVERITY, validationMessage.Severity.ToString()).WriteComma()
                 .WriteNameStringPair(DESCRIPTION, validationMessage.Description).WriteComma()
                 .WriteColumns(validationMessage.Source)
@@ -32,19 +29,13 @@ namespace DevZest.Data.Primitives
 
         public static ColumnValidationMessage ParseValidationMessage(this JsonParser jsonParser, DataSet dataSet)
         {
-            string messageId;
-            ValidationSeverity severity;
-            string description;
-            IColumns source;
-
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
-            messageId = jsonParser.ExpectNameStringPair(ID, true);
-            severity = (ValidationSeverity)Enum.Parse(typeof(ValidationSeverity), jsonParser.ExpectNameStringPair(SEVERITY, true));
-            description = jsonParser.ExpectNameStringPair(DESCRIPTION, true);
-            source = jsonParser.ParseColumns(dataSet, false);
+            var severity = (ValidationSeverity)Enum.Parse(typeof(ValidationSeverity), jsonParser.ExpectNameStringPair(SEVERITY, true));
+            var description = jsonParser.ExpectNameStringPair(DESCRIPTION, true);
+            var source = jsonParser.ParseColumns(dataSet, false);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
 
-            return new ColumnValidationMessage(messageId, severity, description, source);
+            return new ColumnValidationMessage(severity, description, source);
         }
 
         private static IColumns ParseColumns(this JsonParser jsonParser, DataSet dataSet, bool expectComma)

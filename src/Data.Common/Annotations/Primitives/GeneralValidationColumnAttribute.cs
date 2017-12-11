@@ -4,7 +4,7 @@
     {
         protected sealed override IColumnValidationMessages Validate(Column column, DataRow dataRow)
         {
-            return IsValid(column, dataRow) ? ColumnValidationMessages.Empty : new ColumnValidationMessage(MessageId, Severity, GetMessage(column, dataRow), column);
+            return IsValid(column, dataRow) ? ColumnValidationMessages.Empty : new ColumnValidationMessage(Severity, GetMessage(column, dataRow), column);
         }
 
         protected abstract bool IsValid(Column column, DataRow dataRow);

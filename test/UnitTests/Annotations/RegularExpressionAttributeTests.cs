@@ -12,7 +12,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Name);
             }
 
-            [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", MessageId = "ERR_Name")]
+            [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", Message = "ERR_Name")]
             public new _String Name { get; private set; }
         }
 
@@ -31,7 +31,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Name[row] = "John Doe O'Dell John Doe O'Dell John Doe O'Dell John Doe O'Dell");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_Name", validationMessages[0].Id);
+                Assert.AreEqual("ERR_Name", validationMessages[0].Description);
             }
         }
     }

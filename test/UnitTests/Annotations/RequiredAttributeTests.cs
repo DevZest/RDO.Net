@@ -14,7 +14,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Id);
             }
 
-            [Required(MessageId = "ERR_Required")]
+            [Required(Message = "ERR_Required")]
             public _Int32 Id { get; private set; }
         }
 
@@ -57,7 +57,7 @@ namespace DevZest.Data.Annotations
             var dataRow2 = dataSet.AddRow();
             var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
             Assert.AreEqual(1, messages2.Count);
-            Assert.AreEqual("ERR_Required", messages2[0].Id);
+            Assert.AreEqual("ERR_Required", messages2[0].Description);
         }
     }
 }

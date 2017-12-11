@@ -76,17 +76,12 @@ namespace DevZest.Data.Annotations.Primitives
                 public IColumnValidationMessages Validate(DataRow dataRow)
                 {
                     return IsValid(dataRow) ? ColumnValidationMessages.Empty
-                        : new ColumnValidationMessage(MessageId, ValidationSeverity.Error, GetMessage(_columnList, dataRow), Columns);
+                        : new ColumnValidationMessage(ValidationSeverity.Error, GetMessage(_columnList, dataRow), Columns);
                 }
 
                 private bool IsValid(DataRow dataRow)
                 {
                     return _manager.IsValid(this, dataRow);
-                }
-
-                private string MessageId
-                {
-                    get { return ColumnsAttribute.MessageId; }
                 }
 
                 private string GetMessage(IReadOnlyList<Column> columns, DataRow dataRow)

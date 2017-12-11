@@ -4,19 +4,12 @@ namespace DevZest.Data
 {
     public abstract class ValidationMessage
     {
-        protected ValidationMessage(string id, ValidationSeverity severity, string description)
+        protected ValidationMessage(ValidationSeverity severity, string description)
         {
             Check.NotEmpty(description, nameof(description));
 
-            _id = id;
             _description = description;
             _severity = severity;
-        }
-
-        private readonly string _id;
-        public string Id
-        {
-            get { return _id; }
         }
 
         private readonly ValidationSeverity _severity;

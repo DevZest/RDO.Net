@@ -9,8 +9,8 @@ namespace DevZest.Data
 {
     public class ColumnValidationMessage : ValidationMessageBase<IColumns>, IColumnValidationMessages
     {
-        public ColumnValidationMessage(string id, ValidationSeverity severity, string description, IColumns source)
-            : base(id, severity, description, source)
+        public ColumnValidationMessage(ValidationSeverity severity, string description, IColumns source)
+            : base(severity, description, source)
         {
             Check.NotNull(source, nameof(source));
             if (source.Count == 0)

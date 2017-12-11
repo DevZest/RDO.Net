@@ -794,7 +794,7 @@ namespace DevZest.Data
             AddDbTableConstraint(new DbUnique(name, description, isClustered, orderByList), false);
         }
 
-        protected void DbCheck(string name, string description, _Boolean condition)
+        protected internal void DbCheck(string name, string description, _Boolean condition)
         {
             Utilities.Check.NotNull(condition, nameof(condition));
 

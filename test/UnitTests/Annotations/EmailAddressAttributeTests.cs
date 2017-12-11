@@ -12,7 +12,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.EmailAddress);
             }
 
-            [EmailAddress(MessageId = "ERR_EMAIL")]
+            [EmailAddress(Message = "ERR_EMAIL")]
             public _String EmailAddress { get; private set; }
         }
 
@@ -31,7 +31,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.EmailAddress[row] = "example");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_EMAIL", validationMessages[0].Id);
+                Assert.AreEqual("ERR_EMAIL", validationMessages[0].Description);
             }
         }
     }

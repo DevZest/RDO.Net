@@ -12,7 +12,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Text);
             }
 
-            [StringLength(10, MinimumLength = 5, MessageId = "ERR_StringLength")]
+            [StringLength(10, MinimumLength = 5, Message = "ERR_StringLength")]
             public _String Text { get; private set; }
         }
 
@@ -31,7 +31,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Text[row] = "1234");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_StringLength", validationMessages[0].Id);
+                Assert.AreEqual("ERR_StringLength", validationMessages[0].Description);
             }
 
             {
@@ -39,7 +39,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Text[row] = "12345678901");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_StringLength", validationMessages[0].Id);
+                Assert.AreEqual("ERR_StringLength", validationMessages[0].Description);
             }
         }
     }

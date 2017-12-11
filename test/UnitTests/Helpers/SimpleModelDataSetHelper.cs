@@ -15,11 +15,11 @@ namespace DevZest.Data.Helpers
             public static readonly Mounter<SimpleModel> _Child = RegisterChildModel((SimpleModel _) => _.Child,
                 x => x.ParentKey, (ColumnMappingsBuilder builder, SimpleModel child, SimpleModel parent) => builder.Select(child.InheritedValue, parent.InheritedValue));
 
-            public const string MESSAGE_ID = "IdMustBeEven";
+            private const string ERR_MESSAGE = "The Id must be even.";
 
             protected override IColumnValidationMessages Validate(DataRow dataRow)
             {
-                return (Id[dataRow] % 2) == 0 ? ColumnValidationMessages.Empty : new ColumnValidationMessage(MESSAGE_ID, ValidationSeverity.Error, "The Id must be even.", Id);
+                return (Id[dataRow] % 2) == 0 ? ColumnValidationMessages.Empty : new ColumnValidationMessage(ValidationSeverity.Error, ERR_MESSAGE, Id);
             }
 
             protected override void OnChildDataSetsCreated()

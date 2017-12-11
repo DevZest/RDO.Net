@@ -4,8 +4,8 @@ namespace DevZest.Data
 {
     public abstract class ValidationMessageBase<T> : ValidationMessage
     {
-        protected ValidationMessageBase(string id, ValidationSeverity severity, string description, T source)
-            : base(id, severity, description)
+        protected ValidationMessageBase(ValidationSeverity severity, string description, T source)
+            : base(severity, description)
         {
             _source = source;
         }

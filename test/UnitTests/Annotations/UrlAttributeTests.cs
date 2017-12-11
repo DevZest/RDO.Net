@@ -12,7 +12,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Url);
             }
 
-            [Url(MessageId = "ERR_Url")]
+            [Url(Message = "ERR_Url")]
             public _String Url { get; private set; }
         }
 
@@ -31,7 +31,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Url[row] = "devzest.com");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_Url", validationMessages[0].Id);
+                Assert.AreEqual("ERR_Url", validationMessages[0].Description);
             }
         }
     }

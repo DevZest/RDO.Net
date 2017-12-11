@@ -16,18 +16,16 @@ namespace DevZest.Data
 
             {
                 var dataSet = GetDataSet(3);
-                var messageId = "MessageId";
                 var result = DataRowValidationResults.Empty
-                    .Add(new DataRowValidationResult(dataSet[0], new ColumnValidationMessage(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id)))
-                    .Add(new DataRowValidationResult(dataSet[1], new ColumnValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id)))
-                    .Add(new DataRowValidationResult(dataSet[2], new ColumnValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id)));
+                    .Add(new DataRowValidationResult(dataSet[0], new ColumnValidationMessage(ValidationSeverity.Error, "This is an error message", dataSet._.Id)))
+                    .Add(new DataRowValidationResult(dataSet[1], new ColumnValidationMessage(ValidationSeverity.Warning, "This is a warning message", dataSet._.Id)))
+                    .Add(new DataRowValidationResult(dataSet[2], new ColumnValidationMessage(ValidationSeverity.Warning, "This is a warning message", dataSet._.Id)));
                 var expectedJson =
 @"[
    {
       ""DataRow"" : ""/[0]"",
       ""Messages"" : [
          {
-            ""Id"" : ""MessageId"",
             ""Severity"" : ""Error"",
             ""Description"" : ""This is an error message"",
             ""Source"" : ""Id""
@@ -38,7 +36,6 @@ namespace DevZest.Data
       ""DataRow"" : ""/[1]"",
       ""Messages"" : [
          {
-            ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
             ""Source"" : ""Id""
@@ -49,7 +46,6 @@ namespace DevZest.Data
       ""DataRow"" : ""/[2]"",
       ""Messages"" : [
          {
-            ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
             ""Source"" : ""Id""
@@ -78,7 +74,6 @@ namespace DevZest.Data
       ""DataRow"" : ""/[0]"",
       ""Messages"" : [
          {
-            ""Id"" : ""MessageId"",
             ""Severity"" : ""Error"",
             ""Description"" : ""This is an error message"",
             ""Source"" : ""Id""
@@ -89,7 +84,6 @@ namespace DevZest.Data
       ""DataRow"" : ""/[1]"",
       ""Messages"" : [
          {
-            ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
             ""Source"" : ""Id""
@@ -100,7 +94,6 @@ namespace DevZest.Data
       ""DataRow"" : ""/[2]"",
       ""Messages"" : [
          {
-            ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
             ""Source"" : ""Id""

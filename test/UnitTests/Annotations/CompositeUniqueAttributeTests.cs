@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
     [TestClass]
     public class CompositeUniqueAttributeTests
     {
-        [CompositeUnique(UNIQUE_ID, MessageId = "ERR_DuplicateIds")]
+        [CompositeUnique(UNIQUE_ID, Message = "ERR_DuplicateIds")]
         private sealed class TestModel : Model
         {
             static TestModel()
@@ -74,9 +74,9 @@ namespace DevZest.Data.Annotations
             var messages1 = dataSet._.Validate(dataRow1, ValidationSeverity.Error);
             var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
             Assert.AreEqual(1, messages1.Count);
-            Assert.AreEqual("ERR_DuplicateIds", messages1[0].Id);
+            Assert.AreEqual("ERR_DuplicateIds", messages1[0].Description);
             Assert.AreEqual(1, messages2.Count);
-            Assert.AreEqual("ERR_DuplicateIds", messages2[0].Id);
+            Assert.AreEqual("ERR_DuplicateIds", messages2[0].Description);
 
         }
     }

@@ -64,9 +64,11 @@
     <Compile Include="Annotations\LocalizableString.cs" />
     <Compile Include="Annotations\ModelInitializerAttribute.cs" />
     <Compile Include="Annotations\ModelValidatorAttribute.cs" />
+    <Compile Include="Annotations\ModelWireupEvent.cs" />
     <Compile Include="Annotations\Primitives\GeneralValidationColumnAttribute.cs" />
     <Compile Include="Annotations\Primitives\ColumnWireupAttribute.cs" />
     <Compile Include="Annotations\Primitives\ModelWireupAttribute.cs" />
+    <Compile Include="Annotations\Primitives\ValidationModelWireupAttribute.cs" />
     <Compile Include="Annotations\RegularExpressionAttribute.cs" />
     <Compile Include="Annotations\StringLengthAttribute.cs" />
     <Compile Include="Annotations\DbIndexAttribute.cs" />

@@ -18,7 +18,7 @@ namespace DevZest.Data.Annotations
             private static IColumnValidationMessages ValidateId(_Int32 column, DataRow dataRow)
             {
                 var value = column[dataRow];
-                return value < 5 ? ColumnValidationMessages.Empty : new ColumnValidationMessage("ERR_>=5", ValidationSeverity.Error, "value must be less than 5", column);
+                return value < 5 ? ColumnValidationMessages.Empty : new ColumnValidationMessage(ValidationSeverity.Error, "value must be less than 5", column);
             }
         }
 
@@ -37,7 +37,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Id[row] = 5);
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_>=5", validationMessages[0].Id);
+                Assert.AreEqual("value must be less than 5", validationMessages[0].Description);
             }
         }
     }
