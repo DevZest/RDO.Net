@@ -16,10 +16,11 @@ namespace DevZest.Data.Annotations
 
             public _Int32 Id { get; private set; }
 
+            private _Boolean _ck_TestModel_Id;
             [Check("ERR_Check", Name = nameof(CK_TestModel_Id))]
             private _Boolean CK_TestModel_Id
             {
-                get { return Id > _Int32.Const(0); }
+                get { return _ck_TestModel_Id ?? (_ck_TestModel_Id = Id > _Int32.Const(0)); }
             }
         }
 
