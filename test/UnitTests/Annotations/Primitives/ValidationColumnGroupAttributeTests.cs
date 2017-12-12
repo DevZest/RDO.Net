@@ -8,7 +8,7 @@ namespace DevZest.Data.Annotations.Primitives
     {
         private const string ERROR_MESSAGE = "This is a error message.";
 
-        private static string GetErrorMessage(string attributeName, IReadOnlyList<Column> columns, DataRow dataRow)
+        private static string GetErrorMessage(IReadOnlyList<Column> columns, DataRow dataRow)
         {
             return ERROR_MESSAGE;
         }
@@ -17,7 +17,7 @@ namespace DevZest.Data.Annotations.Primitives
         public void ValidationColumnGroupAttribute_GetMessageGetter()
         {
             var messageGetter = ValidationColumnGroupAttribute.GetMessageGetter(typeof(ValidationColumnGroupAttributeTests), nameof(GetErrorMessage));
-            Assert.AreEqual(ERROR_MESSAGE, messageGetter(null, null, null));
+            Assert.AreEqual(ERROR_MESSAGE, messageGetter(null, null));
         }
 
     }
