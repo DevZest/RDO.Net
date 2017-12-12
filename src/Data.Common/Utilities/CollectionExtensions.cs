@@ -90,5 +90,16 @@ namespace DevZest.Data.Utilities
             }
             return result;
         }
+
+        internal static List<T> Append<T>(this List<T> result, IReadOnlyList<T> items)
+        {
+            if (items == null || items.Count == 0)
+                return result;
+
+            if (result == null)
+                result = new List<T>();
+            result.AddRange(items);
+            return result;
+        }
     }
 }

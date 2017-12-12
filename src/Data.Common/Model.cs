@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Annotations.Primitives;
+﻿using DevZest.Data.Annotations;
+using DevZest.Data.Annotations.Primitives;
 using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
@@ -297,7 +298,7 @@ namespace DevZest.Data
                 return;
 
             Mount(s_childModelManager);
-            OnChildModelsMounted();
+            PerformChildModelsMounted();
             if (DataSource != null && DataSource.Kind == DataSourceKind.DataSet)
             {
                 foreach (var model in ChildModels)
@@ -306,14 +307,20 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
-                OnChildDataSetsCreated();
+                PerformChildDataSetsCreated();
                 DataSetContainer.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
             }
 
             IsInitialized = true;
-            OnInitialized();
+            PerformInitialized();
+        }
+
+        private void PerformInitializing()
+        {
+            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initializing);
+            OnInitializing();
         }
 
         protected virtual void OnInitializing()
@@ -321,14 +328,32 @@ namespace DevZest.Data
             Initializing(this, EventArgs.Empty);
         }
 
+        private void PerformChildModelsMounted()
+        {
+            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.ChildModelsMounted);
+            OnChildModelsMounted();
+        }
+
         protected virtual void OnChildModelsMounted()
         {
             ChildModelsMounted(this, EventArgs.Empty);
         }
 
+        private void PerformChildDataSetsCreated()
+        {
+            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.ChildDataSetsCreated);
+            OnChildDataSetsCreated();
+        }
+
         protected virtual void OnChildDataSetsCreated()
         {
             ChildDataSetsCreated(this, EventArgs.Empty);
+        }
+
+        private void PerformInitialized()
+        {
+            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initialized);
+            OnInitialized();
         }
 
         protected virtual void OnInitialized()
@@ -434,13 +459,13 @@ namespace DevZest.Data
 
             Columns.InitDbColumnNames();
             if (!isDataSet)
-                OnInitializing();
+                PerformInitializing();
             DataSource = dataSource;
             DataSet = dataSource as DataSet;
             if (DataSet != null && RootModel == this)
                 _dataSetContainer = new DataSetContainer();
             if (isDataSet)
-                OnInitializing();
+                PerformInitializing();
         }
 
         protected internal sealed override bool DesignMode

@@ -19,7 +19,7 @@ namespace DevZest.Data.Annotations
         public string Description { get; set; }
 
         private Func<Model, _Boolean> _conditionGetter;
-        protected override void PerformInitialize(Type modelType, MemberInfo memberInfo)
+        protected override void Initialize(Type modelType, MemberInfo memberInfo)
         {
             var propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo == null)
@@ -40,12 +40,12 @@ namespace DevZest.Data.Annotations
             return Expression.Lambda<Func<Model, _Boolean>>(call, paramModel).Compile();
         }
 
-        protected internal override ModelWireupEvent WireupEvent
+        protected override ModelWireupEvent WireupEvent
         {
             get { return ModelWireupEvent.Initializing; }
         }
 
-        protected internal override Action<Model> WireupAction
+        protected override Action<Model> WireupAction
         {
             get { return Wireup; }
         }
