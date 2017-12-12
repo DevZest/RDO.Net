@@ -177,5 +177,29 @@ namespace DevZest.Samples.AdventureWorksLT
         [AsNVarChar(50)]
         [DbColumn(Description = "Small image file name.")]
         public _String ThumbnailPhotoFileName { get; private set; }
+
+        [Check("ListPrice cannot be negative value.", Name = nameof(CK_Product_ListPrice), Description = "Check constraint [ListPrice] >= (0.00)")]
+        private _Boolean CK_Product_ListPrice
+        {
+            get { return ListPrice >= _Decimal.Const(0); }
+        }
+
+        [Check("SellEndDate cannot be earlier than SellStartDate.", Name = nameof(CK_Product_SellEndDate), Description = "Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")]
+        private _Boolean CK_Product_SellEndDate
+        {
+            get { return SellEndDate >= SellStartDate | SellEndDate.IsNull(); }
+        }
+
+        [Check("StandardCost cannot be negative value.", Name = nameof(CK_Product_StandardCost), Description = "Check constraint [StandardCost] >= (0.00)")]
+        private _Boolean CK_Product_StandardCost
+        {
+            get { return StandardCost >= _Decimal.Const(0); }
+        }
+
+        [Check("Weight cannot be negative value.", Name = nameof(CK_Product_Weight), Description = "Check constraint [Weight] >= (0.00)")]
+        private _Boolean CK_Product_Weight
+        {
+            get { return Weight >= _Decimal.Const(0); }
+        }
     }
 }

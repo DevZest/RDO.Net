@@ -25,7 +25,7 @@ namespace DevZest.Data.Annotations
             if (propertyInfo == null)
                 return;
 
-            var getMethod = propertyInfo.GetGetMethod();
+            var getMethod = propertyInfo.GetGetMethod(true);
             if (getMethod == null)
                 return;
 

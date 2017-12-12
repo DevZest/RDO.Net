@@ -14,6 +14,7 @@ namespace DevZest.Data.Annotations.Primitives
         {
             Debug.Assert(ModelType == null && modelType != null);
             ModelType = modelType;
+            Initialize(modelType, memberInfo);
         }
 
         public Type ModelType { get; private set; }
@@ -52,8 +53,11 @@ namespace DevZest.Data.Annotations.Primitives
 
             result = result.Append(ResolveModelAttributes(modelType));
 
-            foreach (var member in modelType.GetMembers(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-                result = result.Append(ResolveModelMemberAttributes(member));
+            foreach (var property in modelType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                result = result.Append(ResolveModelMemberAttributes(property));
+
+            foreach (var method in modelType.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                result = result.Append(ResolveModelMemberAttributes(method));
 
             if (result != null)
                 return result;
