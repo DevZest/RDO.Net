@@ -2,6 +2,7 @@
 {
     public enum ModelWireupEvent
     {
+        Constructing,
         Initializing,
         ChildModelsMounted,
         ChildDataSetsCreated,

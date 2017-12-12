@@ -258,6 +258,7 @@ namespace DevZest.Data
 
             Mount(s_columnManager);
             Mount(s_columnListManager);
+            PerformConstructing();
         }
 
         internal override void ConstructModelMember(Model parentModel, Type declaringType, string name)
@@ -315,6 +316,17 @@ namespace DevZest.Data
 
             IsInitialized = true;
             PerformInitialized();
+        }
+
+        private void PerformConstructing()
+        {
+            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Constructing);
+            OnConstructing();
+        }
+
+        protected virtual void OnConstructing()
+        {
+            Constructing(this, EventArgs.Empty);
         }
 
         private void PerformInitializing()
@@ -951,6 +963,7 @@ namespace DevZest.Data
             return result;
         }
 
+        public event EventHandler<EventArgs> Constructing = delegate { };
         public event EventHandler<EventArgs> Initializing = delegate { };
         public event EventHandler<EventArgs> ChildModelsMounted = delegate { };
         public event EventHandler<EventArgs> ChildDataSetsCreated = delegate { };
@@ -1221,6 +1234,15 @@ namespace DevZest.Data
                 throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
             else
                 Extender = new T();
+        }
+
+        internal void SetExtender(Type extenderType)
+        {
+            Debug.Assert(extenderType != null);
+            if (Extender != null)
+                throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
+            else
+                Extender = (ModelExtender)Activator.CreateInstance(extenderType);
         }
 
         public T GetExtender<T>()

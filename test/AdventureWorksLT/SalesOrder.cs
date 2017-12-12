@@ -80,7 +80,7 @@ namespace DevZest.Samples.AdventureWorksLT
             RegisterChildModel((SalesOrder x) => x.SalesOrderDetails, (SalesOrderDetail x) => x.SalesOrder);
         }
 
-        public SalesOrderDetail SalesOrderDetails { get; private set; }
+        public virtual SalesOrderDetail SalesOrderDetails { get; private set; }
 
         public SalesOrder()
         {

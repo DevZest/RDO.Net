@@ -1,7 +1,9 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [ModelExtender(typeof(Ext))]
     public class SalesOrderToEdit : SalesOrder
     {
         public class Ext : ModelExtender
@@ -28,15 +30,10 @@ namespace DevZest.Samples.AdventureWorksLT
             public Product.Lookup Product { get; private set; }
         }
 
-        public SalesOrderToEdit()
+        [ModelExtender(typeof(DetailExt))]
+        public override SalesOrderDetail SalesOrderDetails
         {
-            SetExtender<Ext>();
-        }
-
-        protected override void OnChildModelsMounted()
-        {
-            SalesOrderDetails.SetExtender<DetailExt>();
-            base.OnChildModelsMounted();
+            get { return base.SalesOrderDetails; }
         }
 
         protected override void OnChildDataSetsCreated()

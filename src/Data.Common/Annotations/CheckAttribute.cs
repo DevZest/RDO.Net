@@ -28,10 +28,10 @@ namespace DevZest.Data.Annotations
             if (getMethod == null)
                 return;
 
-            _conditionGetter = GetConditionGetter(modelType, getMethod);
+            _conditionGetter = BuildConditionGetter(modelType, getMethod);
         }
 
-        private static Func<Model, _Boolean> GetConditionGetter(Type modelType, MethodInfo getMethod)
+        private static Func<Model, _Boolean> BuildConditionGetter(Type modelType, MethodInfo getMethod)
         {
             var paramModel = Expression.Parameter(typeof(Model));
             var model = Expression.Convert(paramModel, modelType);

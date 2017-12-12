@@ -62,6 +62,7 @@
     <Compile Include="Annotations\DisplayAttribute.cs" />
     <Compile Include="Annotations\EmailAddressAttribute.cs" />
     <Compile Include="Annotations\LocalizableString.cs" />
+    <Compile Include="Annotations\ModelExtenderAttribute.cs" />
     <Compile Include="Annotations\ModelInitializerAttribute.cs" />
     <Compile Include="Annotations\ModelValidatorAttribute.cs" />
     <Compile Include="Annotations\ModelWireupEvent.cs" />
