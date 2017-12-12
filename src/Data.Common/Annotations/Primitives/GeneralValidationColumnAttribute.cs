@@ -23,7 +23,7 @@ namespace DevZest.Data.Annotations.Primitives
 
         public Type ResourceType { get; set; }
 
-        protected string GetMessage(Column column, DataRow dataRow)
+        private string GetMessage(Column column, DataRow dataRow)
         {
             var messageFunc = MessageGetter;
             if (messageFunc != null)

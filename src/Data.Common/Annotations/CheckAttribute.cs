@@ -1,14 +1,19 @@
 ﻿using DevZest.Data.Annotations.Primitives;
 using System;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class CheckAttribute : ModelWireupAttribute
+    public sealed class CheckAttribute : GeneralValidationModelWireupAttribute
     {
+        public CheckAttribute(string message)
+            : base(message)
+        {
+        }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -20,14 +25,19 @@ namespace DevZest.Data.Annotations
             if (propertyInfo == null)
                 return;
 
-            var methodInfo = propertyInfo.GetGetMethod();
-            if (methodInfo == null)
+            var getMethod = propertyInfo.GetGetMethod();
+            if (getMethod == null)
                 return;
 
+            _conditionGetter = GetConditionGetter(modelType, getMethod);
+        }
+
+        private static Func<Model, _Boolean> GetConditionGetter(Type modelType, MethodInfo getMethod)
+        {
             var paramModel = Expression.Parameter(typeof(Model));
             var model = Expression.Convert(paramModel, modelType);
-            var call = Expression.Call(model, methodInfo);
-            var _conditionGetter = Expression.Lambda<Func<Model, _Boolean>>(call, paramModel).Compile();
+            var call = Expression.Call(model, getMethod);
+            return Expression.Lambda<Func<Model, _Boolean>>(call, paramModel).Compile();
         }
 
         protected internal override ModelWireupEvent WireupEvent
@@ -40,33 +50,37 @@ namespace DevZest.Data.Annotations
             get { return Wireup; }
         }
 
-        private sealed class Validator : IValidator
+        private ConditionalWeakTable<Model, _Boolean> _conditions = new ConditionalWeakTable<Model, _Boolean>();
+        private _Boolean GetCondition(Model model)
         {
-            public Validator(CheckAttribute checkAttribute, _Boolean condition)
-            {
-                Debug.Assert(checkAttribute != null);
-                Debug.Assert(condition != null);
+            return _conditions.GetValue(model, GetConditionFromGetter);
+        }
 
-                _checkAttribute = checkAttribute;
-                _condition = condition;
-            }
+        private _Boolean GetConditionFromGetter(Model model)
+        {
+            return _conditionGetter == null ? null : _conditionGetter(model);
+        }
 
-            private readonly CheckAttribute _checkAttribute;
-            private readonly _Boolean _condition;
+        protected override bool IsValid(Model model, DataRow dataRow)
+        {
+            var condition = GetCondition(model);
+            return condition[dataRow] != false;
+        }
 
-            public IColumnValidationMessages Validate(DataRow dataRow)
-            {
-                return _condition[dataRow] == false ? new ColumnValidationMessage(ValidationSeverity.Error, null, _condition.Expression.BaseColumns) : ColumnValidationMessages.Empty;
-            }
+        protected override IColumns GetValidationSource(Model model)
+        {
+            var condition = GetCondition(model);
+            var expression = condition.Expression;
+            return expression == null ? Columns.Empty : expression.BaseColumns;
         }
 
         private void Wireup(Model model)
         {
-            var condition = _conditionGetter(model);
+            var condition = GetCondition(model);
             if (condition != null)
             {
                 model.DbCheck(Name, Description, condition);
-                model.Validators.Add(new Validator(this, condition));
+                AddValidator(model);
             }
         }
     }

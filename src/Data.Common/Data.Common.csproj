@@ -67,6 +67,7 @@
     <Compile Include="Annotations\ModelWireupEvent.cs" />
     <Compile Include="Annotations\Primitives\GeneralValidationColumnAttribute.cs" />
     <Compile Include="Annotations\Primitives\ColumnWireupAttribute.cs" />
+    <Compile Include="Annotations\Primitives\GeneralValidationModelWireupAttribute.cs" />
     <Compile Include="Annotations\Primitives\ModelWireupAttribute.cs" />
     <Compile Include="Annotations\Primitives\ValidationModelWireupAttribute.cs" />
     <Compile Include="Annotations\RegularExpressionAttribute.cs" />

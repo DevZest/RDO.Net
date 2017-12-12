@@ -17,7 +17,7 @@ namespace DevZest.Data.Annotations.Primitives
 
         public Type ResourceType { get; set; }
 
-        public string GetMessage(IReadOnlyList<Column> columns, DataRow dataRow)
+        internal string GetMessage(IReadOnlyList<Column> columns, DataRow dataRow)
         {
             var messageFunc = MessageFunc;
             if (messageFunc != null)
