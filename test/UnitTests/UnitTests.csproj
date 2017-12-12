@@ -93,6 +93,7 @@
     <Compile Include="Annotations\EmailAddressAttributeTests.cs" />
     <Compile Include="Annotations\IdentityAttributeTests.cs" />
     <Compile Include="Annotations\PhoneAttributeTests.cs" />
+    <Compile Include="Annotations\Primitives\GeneralValidationColumnAttributeTests.cs" />
     <Compile Include="Annotations\RegularExpressionAttributeTests.cs" />
     <Compile Include="Annotations\RequiredAttributeTests.cs" />
     <Compile Include="Annotations\StringLengthAttributeTests.cs" />

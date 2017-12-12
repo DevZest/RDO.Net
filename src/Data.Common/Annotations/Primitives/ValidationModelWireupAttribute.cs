@@ -42,18 +42,18 @@ namespace DevZest.Data.Annotations.Primitives
 
         private static Func<Column, DataRow, string> GetMessageFunc(Type funcType, string funcName)
         {
-            if (!(funcType != null && funcName != null))
-                throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName));
+            throw new NotImplementedException();
+            //if (!(funcType != null && funcName != null))
+            //    throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName));
 
-            try
-            {
-                return funcType.GetMessageFunc(funcName);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName), ex);
-            }
+            //try
+            //{
+            //    throw new NotImplementedException();
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName), ex);
+            //}
         }
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace DevZest.Data.Annotations.Primitives
 {
@@ -51,20 +52,37 @@ namespace DevZest.Data.Annotations.Primitives
             }
         }
 
-        private static Func<Column, DataRow, string> GetMessageGetter(Type funcType, string funcName)
+#if DEBUG
+        internal    // For unit test
+#else
+        private
+#endif
+        static Func<Column, DataRow, string> GetMessageGetter(Type funcType, string funcName)
         {
             Debug.Assert(funcType != null);
             if (string.IsNullOrWhiteSpace(funcName))
-                throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName));
+                throw new InvalidOperationException(Strings.GeneralValidationColumnAttribute_InvalidMessageFunc(funcType, funcName));
 
             try
             {
-                return funcType.GetMessageFunc(funcName);
+                return GetMessageFunc(funcType, funcName);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName), ex);
+                throw new InvalidOperationException(Strings.GeneralValidationColumnAttribute_InvalidMessageFunc(funcType, funcName), ex);
             }
+        }
+
+        internal static Func<Column, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        {
+            Debug.Assert(funcType != null);
+            Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
+
+            var methodInfo = funcType.GetStaticMethodInfo(funcName);
+            var paramColumn = Expression.Parameter(typeof(Column), methodInfo.GetParameters()[0].Name);
+            var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[1].Name);
+            var call = Expression.Call(methodInfo, paramColumn, paramDataRow);
+            return Expression.Lambda<Func<Column, DataRow, string>>(call, paramColumn, paramDataRow).Compile();
         }
     }
 }
