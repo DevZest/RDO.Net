@@ -1,6 +1,8 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace DevZest.Data.Annotations.Primitives
 {
@@ -13,9 +15,7 @@ namespace DevZest.Data.Annotations.Primitives
 
         public string Message { get; set; }
 
-        public Type MessageFuncType { get; set; }
-
-        public string MessageFuncName { get; set; }
+        public Type ResourceType { get; set; }
 
         public string GetMessage(IReadOnlyList<Column> columns, DataRow dataRow)
         {
@@ -34,29 +34,47 @@ namespace DevZest.Data.Annotations.Primitives
         {
             get
             {
-                if (MessageFuncType == null && MessageFuncName == null)
+                if (ResourceType == null)
                     return null;
 
                 if (_messageFunc == null)
-                    _messageFunc = GetMessageFunc(MessageFuncType, MessageFuncName);
+                    _messageFunc = GetMessageGetter(ResourceType, Message);
 
                 return _messageFunc;
             }
         }
 
-        private static Func<string, IReadOnlyList<Column>, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+#if DEBUG
+    internal // For unit test
+#else
+    private
+#endif
+        static Func<string, IReadOnlyList<Column>, DataRow, string> GetMessageGetter(Type funcType, string funcName)
         {
-            if (!(funcType != null && funcName != null))
-                throw new InvalidOperationException(Strings.ValidatorColumnsAttribute_InvalidMessageFunc(funcType, funcName));
+            if (string.IsNullOrWhiteSpace(funcName))
+                throw new InvalidOperationException(Strings.ValidationColumnGroupAttribute_InvalidMessageFunc(funcType, funcName));
 
             try
             {
-                return funcType.GetColumnsMessageFunc(funcName);
+                return GetMessageFunc(funcType, funcName);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException(Strings.ValidatorColumnsAttribute_InvalidMessageFunc(funcType, funcName), ex);
+                throw new InvalidOperationException(Strings.ValidationColumnGroupAttribute_InvalidMessageFunc(funcType, funcName), ex);
             }
+        }
+
+        internal static Func<string, IReadOnlyList<Column>, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        {
+            Debug.Assert(funcType != null);
+            Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
+
+            var methodInfo = funcType.GetStaticMethodInfo(funcName);
+            var paramAttributeName = Expression.Parameter(typeof(string), methodInfo.GetParameters()[0].Name);
+            var paramColumns = Expression.Parameter(typeof(IReadOnlyList<Column>), methodInfo.GetParameters()[1].Name);
+            var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[2].Name);
+            var call = Expression.Call(methodInfo, paramAttributeName, paramColumns, paramDataRow);
+            return Expression.Lambda<Func<string, IReadOnlyList<Column>, DataRow, string>>(call, paramAttributeName, paramColumns, paramDataRow).Compile();
         }
 
         protected abstract string GetDefaultMessage(IReadOnlyList<Column> columns, DataRow dataRow);

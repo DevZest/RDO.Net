@@ -501,7 +501,7 @@
   <data name="UniqueAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>Value must be unique for column '{column}'.</value>
   </data>
-  <data name="ValidatorColumnsAttribute_InvalidMessageFunc" xml:space="preserve">
+  <data name="ValidationColumnGroupAttribute_InvalidMessageFunc" xml:space="preserve">
     <value>Cannot resolve static method of Func&lt;string, IColumns, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
   </data>
   <data name="UniqueColumnsAttribute_DefaultErrorMessage" xml:space="preserve">
