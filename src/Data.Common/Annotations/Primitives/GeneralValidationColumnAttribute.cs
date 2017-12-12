@@ -54,7 +54,7 @@ namespace DevZest.Data.Annotations.Primitives
         private static Func<Column, DataRow, string> GetMessageGetter(Type funcType, string funcName)
         {
             Debug.Assert(funcType != null);
-            if (string.IsNullOrEmpty(funcName))
+            if (string.IsNullOrWhiteSpace(funcName))
                 throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName));
 
             try
