@@ -18,10 +18,10 @@ namespace DevZest.Data.Annotations
 
             private const string IDX_ID = nameof(IDX_ID);
 
-            [DbIndexMember(IDX_ID, Order = 2)]
+            [DbCompositeIndexMember(IDX_ID, Order = 2)]
             public _Int32 Id1 { get; private set; }
 
-            [DbIndexMember(IDX_ID, Order = 1, SortDirection = SortDirection.Descending)]
+            [DbCompositeIndexMember(IDX_ID, Order = 1, SortDirection = SortDirection.Descending)]
             public _Int32 Id2 { get; private set; }
         }
 

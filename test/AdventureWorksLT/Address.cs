@@ -98,28 +98,28 @@ namespace DevZest.Samples.AdventureWorksLT
         [Required]
         [AsNVarChar(60)]
         [DbColumn(Description = "First street address line.")]
-        [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 1)]
+        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 1)]
         public _String AddressLine1 { get; private set; }
 
         [AsNVarChar(60)]
         [DbColumn(Description = "Second street address line.")]
-        [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 2)]
+        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 2)]
         public _String AddressLine2 { get; private set; }
 
         [Required]
         [AsNVarChar(30)]
         [DbColumn(Description = "Name of the city.")]
-        [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 3)]
+        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 3)]
         public _String City { get; private set; }
 
         [UdtName]
         [DbColumn(Description = "Name of state or province.")]
-        [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 4)]
+        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 4)]
         [DbIndex("IX_Address_StateProvince", Description = "Nonclustered index.")]
         public _String StateProvince { get; private set; }
 
         [UdtName]
-        [DbIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 5)]
+        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 5)]
         public _String CountryRegion { get; private set; }
 
         [Required]

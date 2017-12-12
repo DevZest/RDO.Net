@@ -73,7 +73,7 @@
     <Compile Include="Annotations\StringLengthAttribute.cs" />
     <Compile Include="Annotations\DbIndexAttribute.cs" />
     <Compile Include="Annotations\DbCompositeIndexAttribute.cs" />
-    <Compile Include="Annotations\DbIndexMemberAttribute.cs" />
+    <Compile Include="Annotations\DbCompositeIndexMemberAttribute.cs" />
     <Compile Include="Annotations\UrlAttribute.cs" />
     <Compile Include="AttachedLocalColumnManager.cs" />
     <Compile Include="ColumnValueBag.cs" />
@@ -103,7 +103,7 @@
     <Compile Include="Annotations\Primitives\ValidationColumnGroupMemberAttribute.cs" />
     <Compile Include="Annotations\UniqueAttribute.cs" />
     <Compile Include="Annotations\CompositeUniqueAttribute.cs" />
-    <Compile Include="Annotations\UniqueMemberAttribute.cs" />
+    <Compile Include="Annotations\CompositeUniqueMemberAttribute.cs" />
     <Compile Include="Primitives\DbIndex.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
     <Compile Include="Utilities\EmptyDictionary.cs" />

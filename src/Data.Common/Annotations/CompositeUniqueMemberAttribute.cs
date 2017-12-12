@@ -4,9 +4,9 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class UniqueMemberAttribute : ValidationColumnGroupMemberAttribute
+    public sealed class CompositeUniqueMemberAttribute : ValidationColumnGroupMemberAttribute
     {
-        private sealed class Manager : Manager<CompositeUniqueAttribute, UniqueMemberAttribute>
+        private sealed class Manager : Manager<CompositeUniqueAttribute, CompositeUniqueMemberAttribute>
         {
             public static readonly Manager Singleton = new Manager();
 
@@ -56,7 +56,7 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        public UniqueMemberAttribute(string name)
+        public CompositeUniqueMemberAttribute(string name)
             : base(name)
         {
         }

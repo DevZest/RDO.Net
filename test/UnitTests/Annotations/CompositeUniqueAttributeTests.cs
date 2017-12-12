@@ -18,10 +18,10 @@ namespace DevZest.Data.Annotations
 
             private const string UNIQUE_ID = nameof(UNIQUE_ID);
 
-            [UniqueMember(UNIQUE_ID, Order = 2)]
+            [CompositeUniqueMember(UNIQUE_ID, Order = 2)]
             public _Int32 Id1 { get; private set; }
 
-            [UniqueMember(UNIQUE_ID, Order = 1, SortDirection = SortDirection.Descending)]
+            [CompositeUniqueMember(UNIQUE_ID, Order = 1, SortDirection = SortDirection.Descending)]
             public _Int32 Id2 { get; private set; }
         }
 

@@ -3,9 +3,9 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class DbIndexMemberAttribute : ColumnGroupMemberAttribute
+    public sealed class DbCompositeIndexMemberAttribute : ColumnGroupMemberAttribute
     {
-        private sealed class Manager : Manager<DbCompositeIndexAttribute, DbIndexMemberAttribute>
+        private sealed class Manager : Manager<DbCompositeIndexAttribute, DbCompositeIndexMemberAttribute>
         {
             public static readonly Manager Singleton = new Manager();
 
@@ -32,7 +32,7 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        public DbIndexMemberAttribute(string name)
+        public DbCompositeIndexMemberAttribute(string name)
             : base(name)
         {
         }
