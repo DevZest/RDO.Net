@@ -99,7 +99,7 @@ namespace DevZest.Data.Utilities
         private struct ColumnValidatorProvider<T>
             where T : Column
         {
-            public ColumnValidatorProvider(ColumnValidatorAttribute attribute, Func<T, DataRow, IColumnValidationMessages> func)
+            public ColumnValidatorProvider(ColumnValidatorAttribute attribute, Func<T, DataRow, bool> func)
             {
                 Debug.Assert(attribute != null);
                 Debug.Assert(func != null);
@@ -108,7 +108,7 @@ namespace DevZest.Data.Utilities
             }
 
             private readonly ColumnValidatorAttribute _attribute;
-            private readonly Func<T, DataRow, IColumnValidationMessages> _func;
+            private readonly Func<T, DataRow, bool> _func;
 
             public IValidator GetValidator(T column)
             {
@@ -140,12 +140,12 @@ namespace DevZest.Data.Utilities
             return result;
         }
 
-        private static Func<T, DataRow, IColumnValidationMessages> GetColumnValidator<T>(MethodInfo methodInfo)
+        private static Func<T, DataRow, bool> GetColumnValidator<T>(MethodInfo methodInfo)
         {
             var paramColumn = Expression.Parameter(typeof(T), methodInfo.GetParameters()[0].Name);
             var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[1].Name);
             var call = Expression.Call(methodInfo, paramColumn, paramDataRow);
-            return Expression.Lambda<Func<T, DataRow, IColumnValidationMessages>>(call, paramColumn, paramDataRow).Compile();
+            return Expression.Lambda<Func<T, DataRow, bool>>(call, paramColumn, paramDataRow).Compile();
         }
 
         private static Action<T> Merge<T>(IEnumerable<ColumnAttribute> columnAttributes,
@@ -181,7 +181,7 @@ namespace DevZest.Data.Utilities
         private sealed class Validator<T> : IValidator
             where T : Column
         {
-            public Validator(T column, ColumnValidatorAttribute attribute, Func<T, DataRow, IColumnValidationMessages> func)
+            public Validator(T column, ColumnValidatorAttribute attribute, Func<T, DataRow, bool> func)
             {
                 Debug.Assert(column != null);
                 Debug.Assert(attribute != null);
@@ -193,11 +193,14 @@ namespace DevZest.Data.Utilities
 
             private readonly T _column;
             private readonly ColumnValidatorAttribute _attribute;
-            private Func<T, DataRow, IColumnValidationMessages> _func;
+            private Func<T, DataRow, bool> _func;
 
             public IColumnValidationMessages Validate(DataRow dataRow)
             {
-                return _attribute.VerifyDeclaringType(_column) ? _func(_column, dataRow) : ColumnValidationMessages.Empty;
+                if (!_attribute.VerifyDeclaringType(_column))
+                    return ColumnValidationMessages.Empty;
+                var isValid = _func(_column, dataRow);
+                return isValid ? ColumnValidationMessages.Empty : new ColumnValidationMessage(_attribute.Severity, _attribute.GetMessage(_column, dataRow), _column);
             }
         }
 
@@ -210,6 +213,34 @@ namespace DevZest.Data.Utilities
             var validators = column.ParentModel.Validators;
             foreach (var provider in columnValidatorProviders)
                 validators.Add(provider.GetValidator(column));
+        }
+
+        internal static Func<Column, DataRow, string> GetMessageGetter(this Type funcType, string funcName)
+        {
+            Debug.Assert(funcType != null);
+            if (string.IsNullOrWhiteSpace(funcName))
+                throw new InvalidOperationException(Strings.ColumnManager_InvalidMessageFunc(funcType, funcName));
+
+            try
+            {
+                return GetMessageFunc(funcType, funcName);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(Strings.ColumnManager_InvalidMessageFunc(funcType, funcName), ex);
+            }
+        }
+
+        private static Func<Column, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        {
+            Debug.Assert(funcType != null);
+            Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
+
+            var methodInfo = funcType.GetStaticMethodInfo(funcName);
+            var paramColumn = Expression.Parameter(typeof(Column), methodInfo.GetParameters()[0].Name);
+            var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[1].Name);
+            var call = Expression.Call(methodInfo, paramColumn, paramDataRow);
+            return Expression.Lambda<Func<Column, DataRow, string>>(call, paramColumn, paramDataRow).Compile();
         }
     }
 }

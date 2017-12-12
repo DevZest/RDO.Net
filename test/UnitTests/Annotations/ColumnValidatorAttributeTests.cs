@@ -14,11 +14,11 @@ namespace DevZest.Data.Annotations
 
             public _Int32 Id { get; private set; }
 
-            [ColumnValidator(nameof(Id))]
-            private static IColumnValidationMessages ValidateId(_Int32 column, DataRow dataRow)
+            [ColumnValidator(nameof(Id), "value must be less than 5")]
+            private static bool IsIdValid(_Int32 column, DataRow dataRow)
             {
                 var value = column[dataRow];
-                return value < 5 ? ColumnValidationMessages.Empty : new ColumnValidationMessage(ValidationSeverity.Error, "value must be less than 5", column);
+                return value == null || value < 5;
             }
         }
 

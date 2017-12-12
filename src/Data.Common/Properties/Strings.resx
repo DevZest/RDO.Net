@@ -342,7 +342,7 @@
   <data name="RequiredAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>Value is required for column '{column}'.</value>
   </data>
-  <data name="GeneralValidationColumnAttribute_InvalidMessageFunc" xml:space="preserve">
+  <data name="ColumnManager_InvalidMessageFunc" xml:space="preserve">
     <value>Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
   </data>
   <data name="DbTable_VerifyUpdateIdentity" xml:space="preserve">

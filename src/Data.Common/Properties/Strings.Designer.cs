@@ -614,9 +614,9 @@ namespace DevZest.Data
         /// <summary>
         /// Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
         /// </summary>
-        public static string GeneralValidationColumnAttribute_InvalidMessageFunc(object funcType, object funcName)
+        public static string ColumnManager_InvalidMessageFunc(object funcType, object funcName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GeneralValidationColumnAttribute_InvalidMessageFunc", "funcType", "funcName"), funcType, funcName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnManager_InvalidMessageFunc", "funcType", "funcName"), funcType, funcName);
         }
 
         /// <summary>

@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DevZest.Data.Annotations.Primitives
+namespace DevZest.Data.Utilities
 {
     [TestClass]
-    public class GeneralValidationColumnAttributeTests
+    public class ColumnManagerTests
     {
         private const string ERROR_MESSAGE = "This is a error message.";
 
@@ -13,9 +13,9 @@ namespace DevZest.Data.Annotations.Primitives
         }
 
         [TestMethod]
-        public void GeneralValidationColumnAttribute_ResourceType()
+        public void ColumnManager_GetMessageGetter()
         {
-            var messageGetter = GeneralValidationColumnAttribute.GetMessageGetter(typeof(GeneralValidationColumnAttributeTests), nameof(GetErrorMessage));
+            var messageGetter = typeof(ColumnManagerTests).GetMessageGetter(nameof(GetErrorMessage));
             Assert.AreEqual(ERROR_MESSAGE, messageGetter(null, null));
         }
     }
