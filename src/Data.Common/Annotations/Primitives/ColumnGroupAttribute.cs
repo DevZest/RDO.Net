@@ -4,9 +4,9 @@ using System;
 namespace DevZest.Data.Annotations.Primitives
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple =true)]
-    public abstract class ColumnsAttribute : Attribute
+    public abstract class ColumnGroupAttribute : Attribute
     {
-        protected ColumnsAttribute(string name)
+        protected ColumnGroupAttribute(string name)
         {
             Check.NotEmpty(name, nameof(name));
             Name = name;

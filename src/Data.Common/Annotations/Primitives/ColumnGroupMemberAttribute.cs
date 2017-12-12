@@ -8,15 +8,15 @@ using System.Runtime.CompilerServices;
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public abstract class ColumnsMemberAttribute : ColumnAttribute
+    public abstract class ColumnGroupMemberAttribute : ColumnAttribute
     {
-        protected abstract class Manager<TColumnsAttribute, TColumnsMemberAttribute>
-            where TColumnsAttribute : ColumnsAttribute
-            where TColumnsMemberAttribute : ColumnsMemberAttribute
+        protected abstract class Manager<TColumnGroupAttribute, TColumnGroupMemberAttribute>
+            where TColumnGroupAttribute : ColumnGroupAttribute
+            where TColumnGroupMemberAttribute : ColumnGroupMemberAttribute
         {
-            private sealed class ColumnsAttributeCollection : KeyedCollection<string, TColumnsAttribute>
+            private sealed class ColumnsAttributeCollection : KeyedCollection<string, TColumnGroupAttribute>
             {
-                protected override string GetKeyForItem(TColumnsAttribute item)
+                protected override string GetKeyForItem(TColumnGroupAttribute item)
                 {
                     return item.Name;
                 }
@@ -24,7 +24,7 @@ namespace DevZest.Data.Annotations.Primitives
 
             protected struct Entry
             {
-                internal Entry(TColumnsMemberAttribute memberAttribute, Column column)
+                internal Entry(TColumnGroupMemberAttribute memberAttribute, Column column)
                 {
                     Debug.Assert(memberAttribute != null);
                     Debug.Assert(column != null);
@@ -32,7 +32,7 @@ namespace DevZest.Data.Annotations.Primitives
                     Column = column;
                 }
 
-                public readonly TColumnsMemberAttribute MemberAttribute;
+                public readonly TColumnGroupMemberAttribute MemberAttribute;
                 public readonly Column Column;
             }
 
@@ -43,15 +43,15 @@ namespace DevZest.Data.Annotations.Primitives
                     return item.Column;
                 }
 
-                public void Add(TColumnsMemberAttribute memberAttribute, Column column)
+                public void Add(TColumnGroupMemberAttribute memberAttribute, Column column)
                 {
                     if (Contains(column))
-                        throw new InvalidOperationException(Strings.ColumnsMemberAttribute_Duplicate(column, typeof(TColumnsMemberAttribute), memberAttribute.Name));
+                        throw new InvalidOperationException(Strings.ColumnsMemberAttribute_Duplicate(column, typeof(TColumnGroupMemberAttribute), memberAttribute.Name));
 
                     Insert(GetInsertIndex(memberAttribute), new Entry(memberAttribute, column));
                 }
 
-                private int GetInsertIndex(TColumnsMemberAttribute memberAttribute)
+                private int GetInsertIndex(TColumnGroupMemberAttribute memberAttribute)
                 {
                     for (int i = 0; i < Count; i++)
                     {
@@ -63,7 +63,7 @@ namespace DevZest.Data.Annotations.Primitives
             }
 
             private Dictionary<Type, ColumnsAttributeCollection> _columnsAttributesByType = new Dictionary<Type, ColumnsAttributeCollection>();
-            private ConditionalWeakTable<Model, Dictionary<TColumnsAttribute, EntryCollection>> _entriesByModel = new ConditionalWeakTable<Model, Dictionary<TColumnsAttribute, EntryCollection>>();
+            private ConditionalWeakTable<Model, Dictionary<TColumnGroupAttribute, EntryCollection>> _entriesByModel = new ConditionalWeakTable<Model, Dictionary<TColumnGroupAttribute, EntryCollection>>();
 
             private void EnsureColumnsAttributesInitialilzed(Type modelType)
             {
@@ -73,33 +73,33 @@ namespace DevZest.Data.Annotations.Primitives
 
                 var columnsAttributeCollection = new ColumnsAttributeCollection();
                 _columnsAttributesByType.Add(modelType, columnsAttributeCollection);
-                foreach (var columnsAttribute in modelType.GetTypeInfo().GetCustomAttributes<TColumnsAttribute>(true))
+                foreach (var columnsAttribute in modelType.GetTypeInfo().GetCustomAttributes<TColumnGroupAttribute>(true))
                     columnsAttributeCollection.Add(columnsAttribute);
             }
 
-            private TColumnsAttribute GetColumnsAttribute(Type modelType, string attributeName)
+            private TColumnGroupAttribute GetColumnsAttribute(Type modelType, string attributeName)
             {
                 EnsureColumnsAttributesInitialilzed(modelType);
                 var columnsAttributes = _columnsAttributesByType[modelType];
                 Debug.Assert(columnsAttributes != null);
                 if (!columnsAttributes.Contains(attributeName))
-                    throw new InvalidOperationException(Strings.ColumnsMemberAttribute_CannotResolveColumnsAttribute(modelType, typeof(TColumnsAttribute), attributeName));
+                    throw new InvalidOperationException(Strings.ColumnsMemberAttribute_CannotResolveColumnsAttribute(modelType, typeof(TColumnGroupAttribute), attributeName));
                 var result = columnsAttributes[attributeName];
                 Debug.Assert(result != null);
                 return result;
             }
 
-            public void Initialize(TColumnsMemberAttribute columnsMemberAttribute, Column column)
+            public void Initialize(TColumnGroupMemberAttribute columnsMemberAttribute, Column column)
             {
                 Check.NotNull(columnsMemberAttribute, nameof(columnsMemberAttribute));
                 Check.NotNull(column, nameof(column));
 
                 var model = column.ParentModel;
                 var columnsAttribute = GetColumnsAttribute(model.GetType(), columnsMemberAttribute.Name);
-                Dictionary<TColumnsAttribute, EntryCollection> entryDictionary;
+                Dictionary<TColumnGroupAttribute, EntryCollection> entryDictionary;
                 if (!_entriesByModel.TryGetValue(model, out entryDictionary))
                 {
-                    entryDictionary = new Dictionary<TColumnsAttribute, EntryCollection>();
+                    entryDictionary = new Dictionary<TColumnGroupAttribute, EntryCollection>();
                     _entriesByModel.Add(model, entryDictionary);
                     model.Initializing += OnModelInitializing;
                 }
@@ -115,7 +115,7 @@ namespace DevZest.Data.Annotations.Primitives
             private void OnModelInitializing(object sender, EventArgs e)
             {
                 var model = (Model)sender;
-                Dictionary<TColumnsAttribute, EntryCollection> entriesDictionary;
+                Dictionary<TColumnGroupAttribute, EntryCollection> entriesDictionary;
                 _entriesByModel.TryGetValue(model, out entriesDictionary);
                 Debug.Assert(entriesDictionary != null);
                 foreach (var keyValuePair in entriesDictionary)
@@ -123,10 +123,10 @@ namespace DevZest.Data.Annotations.Primitives
                 _entriesByModel.Remove(model);
             }
 
-            protected abstract void Initialize(Model model, TColumnsAttribute columnsAttribute, IReadOnlyList<Entry> entries);
+            protected abstract void Initialize(Model model, TColumnGroupAttribute columnsAttribute, IReadOnlyList<Entry> entries);
         }
 
-        protected ColumnsMemberAttribute(string name)
+        protected ColumnGroupMemberAttribute(string name)
         {
             Check.NotEmpty(name, nameof(name));
             Name = name;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class CompositeUniqueAttribute : ValidationColumnsAttribute
+    public sealed class CompositeUniqueAttribute : ValidationColumnGroupAttribute
     {
         public CompositeUniqueAttribute(string name)
             : base(name)

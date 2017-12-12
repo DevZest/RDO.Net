@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class DbCompositeIndexAttribute : ColumnsAttribute
+    public sealed class DbCompositeIndexAttribute : ColumnGroupAttribute
     {
         public DbCompositeIndexAttribute(string name)
             : base(name)

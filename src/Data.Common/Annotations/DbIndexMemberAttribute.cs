@@ -3,7 +3,7 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class DbIndexMemberAttribute : ColumnsMemberAttribute
+    public sealed class DbIndexMemberAttribute : ColumnGroupMemberAttribute
     {
         private sealed class Manager : Manager<DbCompositeIndexAttribute, DbIndexMemberAttribute>
         {

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public abstract class ValidationColumnsAttribute : ColumnsAttribute
+    public abstract class ValidationColumnGroupAttribute : ColumnGroupAttribute
     {
-        protected ValidationColumnsAttribute(string name)
+        protected ValidationColumnGroupAttribute(string name)
             : base(name)
         {
         }

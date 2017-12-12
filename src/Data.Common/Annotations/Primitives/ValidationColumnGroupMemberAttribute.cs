@@ -3,11 +3,11 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public abstract class ValidationColumnsMemberAttribute : ColumnsMemberAttribute
+    public abstract class ValidationColumnGroupMemberAttribute : ColumnGroupMemberAttribute
     {
-        protected abstract new class Manager<TValidatorColumnsAttribute, TValidatorColumnsMemberAttribute> : ColumnsMemberAttribute.Manager<TValidatorColumnsAttribute, TValidatorColumnsMemberAttribute>
-            where TValidatorColumnsAttribute : ValidationColumnsAttribute
-            where TValidatorColumnsMemberAttribute : ValidationColumnsMemberAttribute
+        protected abstract new class Manager<TValidatorColumnsAttribute, TValidatorColumnsMemberAttribute> : ColumnGroupMemberAttribute.Manager<TValidatorColumnsAttribute, TValidatorColumnsMemberAttribute>
+            where TValidatorColumnsAttribute : ValidationColumnGroupAttribute
+            where TValidatorColumnsMemberAttribute : ValidationColumnGroupMemberAttribute
         {
             protected interface IValidationContext
             {
@@ -99,7 +99,7 @@ namespace DevZest.Data.Annotations.Primitives
         }
 
 
-        protected ValidationColumnsMemberAttribute(string name)
+        protected ValidationColumnGroupMemberAttribute(string name)
             : base(name)
         {
         }
