@@ -1147,6 +1147,14 @@ namespace DevZest.Data
             get { return GetString("DbSession_VerifyNotMocked"); }
         }
 
+        /// <summary>
+        /// Cannot resolve static method of Func&lt;{modelType}, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
+        /// </summary>
+        public static string GeneralValidationModelWireupAttribute_InvalidMessageFunc(object modelType, object funcType, object funcName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("GeneralValidationModelWireupAttribute_InvalidMessageFunc", "modelType", "funcType", "funcName"), modelType, funcType, funcName);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

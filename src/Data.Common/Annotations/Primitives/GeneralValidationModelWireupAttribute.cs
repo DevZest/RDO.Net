@@ -1,5 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace DevZest.Data.Annotations.Primitives
 {
@@ -59,26 +61,44 @@ namespace DevZest.Data.Annotations.Primitives
                     return null;
 
                 if (_messageFunc == null)
-                    _messageFunc = GetMessageFunc(ResourceType, Message);
+                    _messageFunc = GetMessageGetter(ModelType, ResourceType, Message);
 
                 return _messageFunc;
             }
         }
 
-        private static Func<Model, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+#if DEBUG
+        internal    // For unit test
+#else
+        private
+#endif
+        static Func<Model, DataRow, string> GetMessageGetter(Type modelType, Type funcType, string funcName)
         {
-            throw new NotImplementedException();
-            //if (!(funcType != null && funcName != null))
-            //    throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName));
+            Debug.Assert(funcType != null);
+            if (string.IsNullOrWhiteSpace(funcName))
+                throw new InvalidOperationException(Strings.GeneralValidationModelWireupAttribute_InvalidMessageFunc(modelType, funcType, funcName));
 
-            //try
-            //{
-            //    throw new NotImplementedException();
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName), ex);
-            //}
+            try
+            {
+                return GetMessageFunc(funcType, funcName, modelType);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(Strings.GeneralValidationModelWireupAttribute_InvalidMessageFunc(modelType, funcType, funcName), ex);
+            }
+        }
+
+        private static Func<Model, DataRow, string> GetMessageFunc(Type funcType, string funcName, Type modelType)
+        {
+            Debug.Assert(funcType != null);
+            Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
+
+            var methodInfo = funcType.GetStaticMethodInfo(funcName);
+            var paramModel = Expression.Parameter(typeof(Model), methodInfo.GetParameters()[0].Name);
+            var model = Expression.Convert(paramModel, modelType);
+            var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[1].Name);
+            var call = Expression.Call(methodInfo, model, paramDataRow);
+            return Expression.Lambda<Func<Model, DataRow, string>>(call, paramModel, paramDataRow).Compile();
         }
     }
 }

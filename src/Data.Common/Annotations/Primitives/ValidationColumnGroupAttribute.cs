@@ -64,7 +64,7 @@ namespace DevZest.Data.Annotations.Primitives
             }
         }
 
-        internal static Func<IReadOnlyList<Column>, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        private static Func<IReadOnlyList<Column>, DataRow, string> GetMessageFunc(Type funcType, string funcName)
         {
             Debug.Assert(funcType != null);
             Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
