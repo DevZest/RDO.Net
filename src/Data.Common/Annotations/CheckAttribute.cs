@@ -19,7 +19,7 @@ namespace DevZest.Data.Annotations
         public string Description { get; set; }
 
         private Func<Model, _Boolean> _conditionGetter;
-        protected internal override void Initialize(Type modelType, MemberInfo memberInfo)
+        protected override void PerformInitialize(Type modelType, MemberInfo memberInfo)
         {
             var propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo == null)
