@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Annotations.Primitives
 {
@@ -19,13 +20,11 @@ namespace DevZest.Data.Annotations.Primitives
 
         public string Message { get; set; }
 
-        public Type MessageFuncType { get; set; }
-
-        public string MessageFuncName { get; set; }
+        public Type ResourceType { get; set; }
 
         protected string GetMessage(Column column, DataRow dataRow)
         {
-            var messageFunc = MessageFunc;
+            var messageFunc = MessageGetter;
             if (messageFunc != null)
                 return messageFunc(column, dataRow);
 
@@ -37,24 +36,25 @@ namespace DevZest.Data.Annotations.Primitives
 
         protected abstract string GetDefaultMessage(Column column, DataRow dataRow);
 
-        private Func<Column, DataRow, string> _messageFunc;
-        private Func<Column, DataRow, string> MessageFunc
+        private Func<Column, DataRow, string> _messageGetter;
+        private Func<Column, DataRow, string> MessageGetter
         {
             get
             {
-                if (MessageFuncType == null && MessageFuncName == null)
+                if (ResourceType == null)
                     return null;
 
-                if (_messageFunc == null)
-                    _messageFunc = GetMessageFunc(MessageFuncType, MessageFuncName);
+                if (_messageGetter == null)
+                    _messageGetter = GetMessageGetter(ResourceType, Message);
 
-                return _messageFunc;
+                return _messageGetter;
             }
         }
 
-        private static Func<Column, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        private static Func<Column, DataRow, string> GetMessageGetter(Type funcType, string funcName)
         {
-            if (!(funcType != null && funcName != null))
+            Debug.Assert(funcType != null);
+            if (funcName == null)
                 throw new InvalidOperationException(Strings.ValidatorColumnAttribute_InvalidMessageFunc(funcType, funcName));
 
             try
