@@ -62,12 +62,7 @@ namespace DevZest.Data.SqlServer
                 if (i > 0)
                     sqlBuilder.AppendLine(",");
                 var constraint = constraints[i];
-                if (!isTempTable && !string.IsNullOrEmpty(constraint.Name))
-                {
-                    sqlBuilder.Append("CONSTRAINT ");
-                    sqlBuilder.Append(constraint.Name.FormatName(tableName));
-                    sqlBuilder.Append(' ');
-                }
+                sqlBuilder.GenerateConstraintName(constraint.Name, tableName, isTempTable);
                 if (constraint is DbPrimaryKey)
                     GeneratePrimaryKeyConstraint(sqlBuilder, (DbPrimaryKey)constraint);
                 else if (constraint is DbUnique)
@@ -80,6 +75,18 @@ namespace DevZest.Data.SqlServer
                     throw new NotSupportedException(Strings.ConstraintTypeNotSupported(constraint.GetType().FullName));
             }
             return constraints.Count;
+        }
+
+        private static void GenerateConstraintName(this IndentedStringBuilder sqlBuilder, string name, string tableName, bool isTempTable)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            sqlBuilder.Append("CONSTRAINT ");
+            if (isTempTable)
+                name += "_" + Guid.NewGuid().ToString();
+            sqlBuilder.Append(name.FormatName(tableName));
+            sqlBuilder.Append(' ');
         }
 
         private static void GeneratePrimaryKeyConstraint(IndentedStringBuilder sqlBuilder, DbPrimaryKey constraint)

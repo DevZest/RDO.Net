@@ -118,6 +118,7 @@
     <Compile Include="Helpers\SimpleModelDataSetHelper.cs" />
     <Compile Include="Helpers\SqlCommandExtensions.cs" />
     <Compile Include="Annotations\JsonIgnoreAttributeTests.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="JsonOrderByTests.cs" />
     <Compile Include="LocalColumnManagerTests.cs" />
     <Compile Include="PagedDataSetTests.cs" />

@@ -6,6 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class SalesOrder : BaseModel<SalesOrder.Key>
     {
+        [DbConstraint("PK_SalesOrderHeader_SalesOrderID", Description = "Clustered index created by a primary key constraint.")]
         public sealed class Key : PrimaryKey
         {
             public Key(_Int32 salesOrderID)
@@ -188,6 +189,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [UdtOrderNumber]
         [DbColumn(Description = "Unique sales order identification number.")]
+        [Unique(Name = "AK_SalesOrderHeader_SalesOrderNumber", Description = "Unique nonclustered constraint.")]
         public _String SalesOrderNumber { get; private set; }
 
         [UdtOrderNumber]
@@ -200,6 +202,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [DbColumn(Description = "Customer identification number. Foreign key to Customer.CustomerID.")]
+        [DbIndex("IX_SalesOrderHeader_CustomerID", Description = "Nonclustered index.")]
         public _Int32 CustomerID { get; private set; }
         
         [DbColumn(Description = "The ID of the location to send goods.  Foreign key to the Address table.")]
@@ -254,6 +257,41 @@ namespace DevZest.Samples.AdventureWorksLT
         private void ComputeTotalDue()
         {
             TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.Const(0)));
+        }
+
+        private _Boolean _ck_SalesOrderHeader_DueDate;
+        [Check("DueDate cannot be earlier than OrderDate.", Name = nameof(CK_SalesOrderHeader_DueDate), Description = "Check constraint [DueDate] >= [OrderDate]")]
+        private _Boolean CK_SalesOrderHeader_DueDate
+        {
+            get { return _ck_SalesOrderHeader_DueDate ?? (_ck_SalesOrderHeader_DueDate = DueDate >= OrderDate); }
+        }
+
+        private _Boolean _ck_SalesOrderHeader_Freight;
+        [Check("Freight cannot be a negtive value", Name = nameof(CK_SalesOrderHeader_Freight), Description = "Check constraint [Freight] >= (0.00)")]
+        private _Boolean CK_SalesOrderHeader_Freight
+        {
+            get { return _ck_SalesOrderHeader_Freight ?? (_ck_SalesOrderHeader_Freight = Freight >= _Decimal.Const(0)); }
+        }
+
+        private _Boolean _ck_SalesOrderHeader_ShipDate;
+        [Check("ShipDate cannot be earlier than OrderDate", Name = nameof(CK_SalesOrderHeader_ShipDate), Description = "Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")]
+        private _Boolean CK_SalesOrderHeader_ShipDate
+        {
+            get { return _ck_SalesOrderHeader_ShipDate ?? (_ck_SalesOrderHeader_ShipDate = ShipDate >= OrderDate | ShipDate.IsNull()); }
+        }
+
+        private _Boolean _ck_SalesOrderHeader_SubTotal;
+        [Check("SubTotal cannot be a negative value.", Name = nameof(CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
+        private _Boolean CK_SalesOrderHeader_SubTotal
+        {
+            get { return _ck_SalesOrderHeader_SubTotal ?? (_ck_SalesOrderHeader_SubTotal = SubTotal >= _Decimal.Const(0)); }
+        }
+
+        private _Boolean _ck_SalesOrderHeader_TaxAmt;
+        [Check("TaxAmt cannot be a negtive value.", Name = nameof(CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
+        private _Boolean CK_SalesOrderHeader_TaxAmt
+        {
+            get { return _ck_SalesOrderHeader_TaxAmt ?? (_ck_SalesOrderHeader_TaxAmt = TaxAmt >= _Decimal.Const(0)); }
         }
     }
 }

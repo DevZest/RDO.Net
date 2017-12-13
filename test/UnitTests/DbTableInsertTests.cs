@@ -485,7 +485,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
     [OriginalSysRowId] INT NULL,
     [sys_row_id] INT NOT NULL IDENTITY(1, 1)
 
-    PRIMARY KEY NONCLUSTERED ([OldValue]),
+    CONSTRAINT [PK_sys_identity_mapping_] PRIMARY KEY NONCLUSTERED ([OldValue]),
     UNIQUE CLUSTERED ([sys_row_id] ASC)
 );",
 
@@ -540,7 +540,7 @@ FROM
     ON [sys_identity_mapping].[OldValue] = [ProductCategory].[ParentProductCategoryID]);"
             };
 
-                commands.Verify(expectedSql);
+                commands.Verify(true, expectedSql);
             }
         }
     }

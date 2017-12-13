@@ -124,9 +124,12 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _salesOrders, "[SalesLT].[SalesOrderHeader]",
-                    _ => DbForeignKey(null, null, _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
-                    _ => DbForeignKey(null, null, _.BillToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
-                    _ => DbForeignKey(null, null, _.ShipToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey("FK_SalesOrderHeader_Customer_CustomerID", null,
+                        _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey("FK_SalesOrderHeader_Address_BillTo_AddressID", null,
+                        _.BillToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey("FK_SalesOrderHeader_Address_ShipTo_AddressID", null,
+                        _.ShipToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 

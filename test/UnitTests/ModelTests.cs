@@ -325,13 +325,13 @@ namespace DevZest.Data
     [Unique2] INT NULL,
     [sys_row_id] INT NOT NULL IDENTITY(1, 1)
 
-    PRIMARY KEY NONCLUSTERED ([Id]),
-    UNIQUE NONCLUSTERED ([Unique1], [Unique2] DESC),
-    CHECK ([Name] IS NOT NULL),
+    CONSTRAINT [PK_Temp_] PRIMARY KEY NONCLUSTERED ([Id]),
+    CONSTRAINT [UQ_Temp_] UNIQUE NONCLUSTERED ([Unique1], [Unique2] DESC),
+    CONSTRAINT [CK_Temp_] CHECK ([Name] IS NOT NULL),
     UNIQUE CLUSTERED ([sys_row_id] ASC)
 );
 ";
-            Assert.AreEqual(expectedSql, sqlBuilder.ToString());
+            Assert.AreEqual(expectedSql, sqlBuilder.ToString().RemoveGuids());
         }
 
         #endregion
