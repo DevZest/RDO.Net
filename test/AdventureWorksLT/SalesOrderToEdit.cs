@@ -36,10 +36,10 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return base.SalesOrderDetails; }
         }
 
-        protected override void OnChildDataSetsCreated()
+        [Computation(IsAggregate = true)]
+        private void ComputeSubTotal()
         {
             SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);
-            base.OnChildDataSetsCreated();
         }
     }
 }

@@ -62,7 +62,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public SalesOrderDetail()
         {
-            LineTotal.ComputedAs((UnitPrice * (_Decimal.Const(1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.Const(0)));
         }
 
         private Key _primaryKey;
@@ -128,5 +127,11 @@ namespace DevZest.Samples.AdventureWorksLT
         [AsMoney]
         [DbColumn(Description = "Per product subtotal. Computed as UnitPrice * (1 - UnitPriceDiscount) * OrderQty.")]
         public _Decimal LineTotal { get; private set; }
+
+        [Computation]
+        private void ComputeLineTotal()
+        {
+            LineTotal.ComputedAs((UnitPrice * (_Decimal.Const(1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.Const(0)));
+        }
     }
 }

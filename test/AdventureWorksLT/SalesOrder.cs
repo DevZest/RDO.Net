@@ -84,8 +84,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public SalesOrder()
         {
-            SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsNVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
-            TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.Const(0)));
         }
 
         private Key _primaryKey;
@@ -245,5 +243,17 @@ namespace DevZest.Samples.AdventureWorksLT
         [AsNVarCharMax]
         [DbColumn(Description = "Sales representative comments.")]
         public _String Comment { get; private set; }
+
+        [Computation]
+        private void ComputeSalesOrderNumber()
+        {
+            SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsNVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
+        }
+
+        [Computation]
+        private void ComputeTotalDue()
+        {
+            TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.Const(0)));
+        }
     }
 }
