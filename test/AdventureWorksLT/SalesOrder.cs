@@ -158,13 +158,13 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 SalesOrderID { get; private set; }
 
         [Required]
-        [DefaultValue((byte)0)]
+        [DefaultValue((byte)0, Name = "DF_SalesOrderHeader_RevisionNumber")]
         [DbColumn(Description = "Incremental number to track changes to the sales order over time.")]
         public _Byte RevisionNumber { get; private set; }
 
         [Required]
         [AsDateTime]
-        [AutoDateTime]
+        [AutoDateTime(Name = "DF_SalesOrderHeader_OrderDate")]
         [DbColumn(Description = "Dates the sales order was created.")]
         public _DateTime OrderDate { get; private set; }
 
@@ -178,12 +178,12 @@ namespace DevZest.Samples.AdventureWorksLT
         public _DateTime ShipDate { get; private set; }
 
         [Required]
-        [DefaultValue(typeof(SalesOrderStatus), nameof(SalesOrderStatus.InProcess))]
+        [DefaultValue(typeof(SalesOrderStatus), nameof(SalesOrderStatus.InProcess), Name = "DF_SalesOrderHeader_Status")]
         [DbColumn(Description = "Order current status. 1 = In process; 2 = Approved; 3 = Backordered; 4 = Rejected; 5 = Shipped; 6 = Cancelled")]
         public _ByteEnum<SalesOrderStatus> Status { get; private set; }
 
         [Required]
-        [DefaultValue(true)]
+        [DefaultValue(true, Name = "DF_SalesOrderHeader_OnlineOrderFlag")]
         [DbColumn(Description = "0 = Order placed by sales person. 1 = Order placed online by customer.")]
         public _Boolean OnlineOrderFlag { get; private set; }
 
@@ -222,19 +222,19 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [AsMoney]
-        [DefaultValue(typeof(decimal), "0")]
+        [DefaultValue(typeof(decimal), "0", Name = "DF_SalesOrderHeader_SubTotal")]
         [DbColumn(Description = "Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.")]
         public _Decimal SubTotal { get; private set; }
 
         [Required]
         [AsMoney]
-        [DefaultValue(typeof(decimal), "0")]
+        [DefaultValue(typeof(decimal), "0", Name = "DF_SalesOrderHeader_TaxAmt")]
         [DbColumn(Description = "Tax amount.")]
         public _Decimal TaxAmt { get; private set; }
 
         [Required]
         [AsMoney]
-        [DefaultValue(typeof(decimal), "0")]
+        [DefaultValue(typeof(decimal), "0", Name = "DF_SalesOrderHeader_Freight")]
         [DbColumn(Description = "Shipping cost.")]
         public _Decimal Freight { get; private set; }
 
