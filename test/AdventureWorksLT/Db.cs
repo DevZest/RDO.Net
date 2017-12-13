@@ -70,7 +70,9 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _productCategories, "[SalesLT].[ProductCategory]",
-                    _ => DbForeignKey("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID", "Foreign key constraint referencing ProductCategory.ProductCategoryID.", _.ParentProductCategory, _, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID",
+                        "Foreign key constraint referencing ProductCategory.ProductCategoryID.",
+                        _.ParentProductCategory, _, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -94,8 +96,12 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _productModelProductDescriptions, "[SalesLT].[ProductModelProductDescription]",
-                    _ => DbForeignKey(null, null, _.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
-                    _ => DbForeignKey(null, null, _.ProductDescription, ProductDescriptions._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey("FK_ProductModelProductDescription_ProductModel_ProductModelID",
+                        "Foreign key constraint referencing ProductModel.ProductModelID.",
+                        _.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey("FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID",
+                        "Foreign key constraint referencing ProductDescription.ProductDescriptionID.",
+                        _.ProductDescription, ProductDescriptions._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 

@@ -6,6 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class ProductModelProductDescription : BaseModel<ProductModelProductDescription.Key>
     {
+        [DbConstraint("PK_ProductModelProductDescription_ProductModelID_ProductDescriptionID_Culture", Description = "Primary key (clustered) constraint")]
         public sealed class Key : PrimaryKey
         {
             public Key(_Int32 productModelID, _Int32 productDescriptionID, _String culture)
