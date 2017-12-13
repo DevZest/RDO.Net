@@ -293,5 +293,18 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get { return _ck_SalesOrderHeader_TaxAmt ?? (_ck_SalesOrderHeader_TaxAmt = TaxAmt >= _Decimal.Const(0)); }
         }
+
+        private _Boolean _ck_SalesOrderHeader_Status;
+        [Check("Invalid Status.", Name = nameof(CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
+        private _Boolean CK_SalesOrderHeader_Status
+        {
+            get { return _ck_SalesOrderHeader_Status ?? (_ck_SalesOrderHeader_Status = IsValid(Status)); }
+        }
+
+        private static _Boolean IsValid(_ByteEnum<SalesOrderStatus> status)
+        {
+            var byteExpr = (_Byte)status;
+            return byteExpr >= _Byte.Const(1) & byteExpr <= _Byte.Const(6);
+        }
     }
 }
