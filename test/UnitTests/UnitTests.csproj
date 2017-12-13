@@ -87,6 +87,7 @@
     <Compile Include="Annotations\CheckAttributeTests.cs" />
     <Compile Include="Annotations\ColumnInitializerAttributeTests.cs" />
     <Compile Include="Annotations\ColumnValidatorAttributeTests.cs" />
+    <Compile Include="Annotations\ComputationAttributeTests.cs" />
     <Compile Include="Annotations\CreditCardAttributeTests.cs" />
     <Compile Include="Annotations\DbColumnNameAttributeTests.cs" />
     <Compile Include="Annotations\DefaultValueAttributeTests.cs" />
