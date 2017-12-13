@@ -94,6 +94,7 @@
     <Compile Include="Annotations\EmailAddressAttributeTests.cs" />
     <Compile Include="Annotations\IdentityAttributeTests.cs" />
     <Compile Include="Annotations\ModelExtenderAttributeTests.cs" />
+    <Compile Include="Annotations\ModelValidatorAttributeTests.cs" />
     <Compile Include="Annotations\PhoneAttributeTests.cs" />
     <Compile Include="Annotations\Primitives\GeneralValidationModelWireupAttributeTests.cs" />
     <Compile Include="Annotations\Primitives\ValidationColumnGroupAttributeTests.cs" />
