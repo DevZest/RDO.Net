@@ -7,6 +7,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class ProductCategory : BaseModel<ProductCategory.Key>
     {
+        [DbConstraint("PK_ProductCategory_ProductCategoryID", Description = "Primary key (clustered) constraint")]
         public sealed class Key : PrimaryKey
         {
             public Key(_Int32 productCategoryID)
@@ -77,6 +78,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         [Required]
         [AsNVarChar(50)]
+        [Unique(Name = "AK_ProductCategory_Name", Description = "Unique nonclustered constraint.")]
         public _String Name { get; private set; }
     }
 }

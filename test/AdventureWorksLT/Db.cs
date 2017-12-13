@@ -70,7 +70,7 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _productCategories, "[SalesLT].[ProductCategory]",
-                    _ => DbForeignKey(null, null, _.ParentProductCategory, _, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID", "Foreign key constraint referencing ProductCategory.ProductCategoryID.", _.ParentProductCategory, _, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
