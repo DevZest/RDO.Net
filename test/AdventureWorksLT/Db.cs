@@ -106,8 +106,8 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _products, "[SalesLT].[Product]",
-                    _ => DbForeignKey(null, null, _.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
-                    _ => DbForeignKey(null, null, _.ProductCategory, ProductCategories._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey("FK_Product_ProductModel_ProductModelID", null, _.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey("FK_Product_ProductCategory_ProductCategoryID", null, _.ProductCategory, ProductCategories._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 

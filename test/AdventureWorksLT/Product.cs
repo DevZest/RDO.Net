@@ -6,6 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class Product : BaseModel<Product.Key>
     {
+        [DbConstraint("PK_Product_ProductID", Description = "Primary key (clustered) constraint")]
         public sealed class Key : PrimaryKey
         {
             public Key(_Int32 productID)
@@ -122,11 +123,13 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [UdtName]
         [DbColumn(Description = "Name of the product.")]
+        [Unique(Name = "AK_Product_Name", Description = "Unique nonclustered constraint.")]
         public _String Name { get; private set; }
 
         [Required]
         [AsNVarChar(25)]
         [DbColumn(Description = "Unique product identification number.")]
+        [Unique(Name = "AK_Product_ProductNumber", Description = "Unique nonclustered constraint.")]
         public _String ProductNumber { get; private set; }
 
         [AsNVarChar(15)]
