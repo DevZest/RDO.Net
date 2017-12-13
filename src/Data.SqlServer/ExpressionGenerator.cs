@@ -80,11 +80,23 @@ namespace DevZest.Data.SqlServer
 
         public override void Visit(DbCastExpression e)
         {
-            SqlBuilder.Append("CAST(");
-            e.Operand.Accept(this);
-            SqlBuilder.Append(" AS ");
-            SqlBuilder.Append(e.TargetColumn.GetMapper().GetDataTypeSql(this.SqlVersion));
-            SqlBuilder.Append(")");
+            var sourceMapper = e.SourceColumn.GetMapper();
+            var targetMapper = e.TargetColumn.GetMapper();
+            if (CanEliminateCast(sourceMapper, targetMapper))
+                e.Operand.Accept(this);
+            else
+            {
+                SqlBuilder.Append("CAST(");
+                e.Operand.Accept(this);
+                SqlBuilder.Append(" AS ");
+                SqlBuilder.Append(targetMapper.GetDataTypeSql(this.SqlVersion));
+                SqlBuilder.Append(")");
+            }
+        }
+
+        private bool CanEliminateCast(ColumnMapper sourceMapper, ColumnMapper targetMapper)
+        {
+            return sourceMapper.GetSqlParameterInfo(SqlVersion).SqlDbType == targetMapper.GetSqlParameterInfo(SqlVersion).SqlDbType;
         }
 
         public override void Visit(DbColumnExpression e)

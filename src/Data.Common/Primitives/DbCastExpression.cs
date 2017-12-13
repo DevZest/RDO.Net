@@ -4,16 +4,21 @@ namespace DevZest.Data.Primitives
 {
     public sealed class DbCastExpression : DbExpression
     {
-        internal DbCastExpression(DbExpression operand, Type sourceDataType, Column targetColumn)
+        internal DbCastExpression(DbExpression operand, Column sourceColumn, Column targetColumn)
         {
             Operand = operand;
-            SourceDataType = sourceDataType;
+            SourceColumn = sourceColumn;
             TargetColumn = targetColumn;
         }
 
         public DbExpression Operand { get; private set; }
 
-        public Type SourceDataType { get; private set; }
+        public Type SourceDataType
+        {
+            get { return SourceColumn.DataType; }
+        }
+
+        public Column SourceColumn { get; private set; }
 
         public Column TargetColumn { get; private set; }
 

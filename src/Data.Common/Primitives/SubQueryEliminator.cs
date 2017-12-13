@@ -82,7 +82,7 @@ namespace DevZest.Data.Primitives
             var operand = expression.Operand;
             var replacedOperand = operand.Accept(this);
             if (operand != replacedOperand)
-                return new DbCastExpression(expression.Operand.Accept(this), expression.SourceDataType, expression.TargetColumn);
+                return new DbCastExpression(expression.Operand.Accept(this), expression.SourceColumn, expression.TargetColumn);
             else
                 return expression;
         }

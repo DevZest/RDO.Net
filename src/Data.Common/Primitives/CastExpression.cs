@@ -51,7 +51,7 @@ namespace DevZest.Data.Primitives
         /// <inheritdoc/>
         public sealed override DbExpression GetDbExpression()
         {
-            return new DbCastExpression(Operand.DbExpression, typeof(TSource), this.Owner);
+            return new DbCastExpression(Operand.DbExpression, Operand, this.Owner);
         }
 
         protected internal sealed override ColumnExpression PerformTranslateTo(Model model)
