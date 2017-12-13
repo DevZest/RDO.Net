@@ -10,13 +10,13 @@ using System.Text;
 
 namespace DevZest.Data.SqlServer
 {
-    internal class ExpressionGenerator : DbExpressionVisitor
+    public sealed class ExpressionGenerator : DbExpressionVisitor
     {
         private const string NULL = "NULL";
 
         public IndentedStringBuilder SqlBuilder { get; internal set; }
 
-        public IModelAliasManager ModelAliasManager { get; internal set; }
+        internal IModelAliasManager ModelAliasManager { get; set; }
 
         public SqlVersion SqlVersion { get; internal set; }
 
@@ -146,6 +146,14 @@ namespace DevZest.Data.SqlServer
             { Data.FunctionKeys.Contains, (g, e) => g.VisitFunction_Contains(e) },
             { FunctionKeys.XmlValue, (g, e) => g.VisitFunction_XmlValue(e) }
         };
+
+        public static void RegisterFunctionHandler(FunctionKey functionKey, Action<ExpressionGenerator, DbFunctionExpression> handler)
+        {
+            Check.NotNull(functionKey, nameof(functionKey));
+            Check.NotNull(handler, nameof(handler));
+
+            s_functionHandlers.Add(functionKey, handler);
+        }
 
         public override void Visit(DbFunctionExpression e)
         {
