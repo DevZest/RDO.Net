@@ -6,6 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class SalesOrderDetail : BaseModel<SalesOrderDetail.Key>
     {
+        [DbConstraint("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID", Description = "Clustered index created by a primary key constraint.")]
         public sealed class Key : PrimaryKey
         {
             public Key(_Int32 salesOrderID, _Int32 salesOrderDetailID)
@@ -110,6 +111,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [DbColumn(Description = "Product sold to customer. Foreign key to Product.ProductID.")]
+        [DbIndex("IX_SalesOrderDetail_ProductID", Description = "Nonclustered index.")]
         public _Int32 ProductID { get; private set; }
 
         [Required]
@@ -119,7 +121,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [AsMoney]
-        [DefaultValue(typeof(decimal), "0")]
+        [DefaultValue(typeof(decimal), "0", Name = "DF_SalesOrderDetail_UnitPriceDiscount")]
         [DbColumn(Description = "Discount amount.")]
         public _Decimal UnitPriceDiscount { get; private set; }
 
@@ -132,6 +134,27 @@ namespace DevZest.Samples.AdventureWorksLT
         private void ComputeLineTotal()
         {
             LineTotal.ComputedAs((UnitPrice * (_Decimal.Const(1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.Const(0)));
+        }
+
+        private _Boolean _ck_SalesOrderDetail_OrderQty;
+        [Check("OrderQty must be greater than zero.", Name = nameof(CK_SalesOrderDetail_OrderQty), Description = "Check constraint [OrderQty] > (0)")]
+        private _Boolean CK_SalesOrderDetail_OrderQty
+        {
+            get { return _ck_SalesOrderDetail_OrderQty ?? (_ck_SalesOrderDetail_OrderQty = OrderQty > _Decimal.Const(0)); }
+        }
+
+        private _Boolean _ck_SalesOrderDetail_UnitPrice;
+        [Check("UnitPrice cannot be negative.", Name = nameof(CK_SalesOrderDetail_UnitPrice), Description = "heck constraint [UnitPrice] >= (0.00)")]
+        private _Boolean CK_SalesOrderDetail_UnitPrice
+        {
+            get { return _ck_SalesOrderDetail_UnitPrice ?? (_ck_SalesOrderDetail_UnitPrice = UnitPrice >= _Decimal.Const(0)); }
+        }
+
+        private _Boolean _ck_SalesOrderDetail_UnitPriceDiscount;
+        [Check("UnitPriceDiscount cannot be negative.", Name = nameof(CK_SalesOrderDetail_UnitPriceDiscount), Description = "Check constraint [UnitPriceDiscount] >= (0.00)")]
+        private _Boolean CK_SalesOrderDetail_UnitPriceDiscount
+        {
+            get { return _ck_SalesOrderDetail_UnitPriceDiscount ?? (_ck_SalesOrderDetail_UnitPriceDiscount = UnitPriceDiscount >= _Decimal.Const(0)); }
         }
     }
 }
