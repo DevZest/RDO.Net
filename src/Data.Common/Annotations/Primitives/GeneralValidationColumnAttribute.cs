@@ -21,7 +21,7 @@ namespace DevZest.Data.Annotations.Primitives
 
         public string Message { get; set; }
 
-        public Type ResourceType { get; set; }
+        public Type MessageResourceType { get; set; }
 
         private string GetMessage(Column column, DataRow dataRow)
         {
@@ -42,11 +42,11 @@ namespace DevZest.Data.Annotations.Primitives
         {
             get
             {
-                if (ResourceType == null)
+                if (MessageResourceType == null)
                     return null;
 
                 if (_messageGetter == null)
-                    _messageGetter = ResourceType.GetMessageGetter(Message);
+                    _messageGetter = MessageResourceType.GetMessageGetter(Message);
 
                 return _messageGetter;
             }
