@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
     [TestClass]
     public class CompositeUniqueAttributeTests
     {
-        [CompositeUnique(UNIQUE_ID, Message = "ERR_DuplicateIds")]
+        [CompositeUnique(UNIQUE_ID, "ERR_DuplicateIds")]
         private sealed class TestModel : Model
         {
             static TestModel()

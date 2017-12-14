@@ -5,7 +5,7 @@ using System.Globalization;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class StringLengthAttribute : GeneralValidationColumnAttribute
+    public sealed class StringLengthAttribute : ValidationColumnAttribute
     {
         /// <summary>Initializes a new instance of the <see cref="StringLengthAttribute" /> class by using a specified maximum length.</summary>
         /// <param name="maximumLength">The maximum length of a string. </param>

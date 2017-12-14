@@ -5,7 +5,7 @@ using System.Linq;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class CreditCardAttribute : GeneralValidationColumnAttribute
+    public sealed class CreditCardAttribute : ValidationColumnAttribute
     {
         protected override bool IsValid(Column column, DataRow dataRow)
         {

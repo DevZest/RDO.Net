@@ -20,9 +20,9 @@ namespace DevZest.Data.Annotations
             public _String ConfirmPassword { get; private set; }
 
             [ModelValidator]
-            private IColumnValidationMessages ValidateConfirmPassword(DataRow dataRow)
+            private ColumnValidationMessage ValidateConfirmPassword(DataRow dataRow)
             {
-                return ConfirmPassword[dataRow] == Password[dataRow] ? ColumnValidationMessages.Empty : new ColumnValidationMessage(ValidationSeverity.Error, ERR_MESSAGE, ConfirmPassword);
+                return ConfirmPassword[dataRow] == Password[dataRow] ? null : new ColumnValidationMessage(ValidationSeverity.Error, ERR_MESSAGE, ConfirmPassword);
             }
         }
 

@@ -1,81 +1,41 @@
 ﻿using DevZest.Data.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq.Expressions;
 
 namespace DevZest.Data.Annotations.Primitives
 {
     public abstract class ValidationColumnGroupAttribute : ColumnGroupAttribute
     {
-        protected ValidationColumnGroupAttribute(string name)
+        protected ValidationColumnGroupAttribute(string name, string message)
             : base(name)
         {
+            Check.NotEmpty(message, nameof(message));
+            _message = message;
         }
 
-        public string Message { get; set; }
-
-        public Type ResourceType { get; set; }
-
-        internal string GetMessage(IReadOnlyList<Column> columns, DataRow dataRow)
+        protected ValidationColumnGroupAttribute(string name, Type messageResourceType, string message)
+            : this(name, message)
         {
-            var messageFunc = MessageFunc;
-            if (messageFunc != null)
-                return messageFunc(columns, dataRow);
-
-            if (Message != null)
-                return Message;
-
-            return GetDefaultMessage(columns, dataRow);
+            Check.NotNull(messageResourceType, nameof(messageResourceType));
+            _messageResourceType = messageResourceType;
+            _messageGetter = messageResourceType.ResolveStringGetter(message);
         }
 
-        private Func<IReadOnlyList<Column>, DataRow, string> _messageFunc;
-        private Func<IReadOnlyList<Column>, DataRow, string> MessageFunc
+        private readonly string _message;
+        public string Message
         {
-            get
-            {
-                if (ResourceType == null)
-                    return null;
-
-                if (_messageFunc == null)
-                    _messageFunc = GetMessageGetter(ResourceType, Message);
-
-                return _messageFunc;
-            }
+            get { return _message; }
         }
 
-#if DEBUG
-    internal // For unit test
-#else
-    private
-#endif
-        static Func<IReadOnlyList<Column>, DataRow, string> GetMessageGetter(Type funcType, string funcName)
+        private readonly Type _messageResourceType;
+        public Type MessageResourceType
         {
-            if (string.IsNullOrWhiteSpace(funcName))
-                throw new InvalidOperationException(Strings.ValidationColumnGroupAttribute_InvalidMessageFunc(funcType, funcName));
-
-            try
-            {
-                return GetMessageFunc(funcType, funcName);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException(Strings.ValidationColumnGroupAttribute_InvalidMessageFunc(funcType, funcName), ex);
-            }
+            get { return _messageResourceType; }
         }
 
-        private static Func<IReadOnlyList<Column>, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        private readonly Func<String> _messageGetter;
+        internal string MessageString
         {
-            Debug.Assert(funcType != null);
-            Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
-
-            var methodInfo = funcType.GetStaticMethodInfo(funcName);
-            var paramColumns = Expression.Parameter(typeof(IReadOnlyList<Column>), methodInfo.GetParameters()[0].Name);
-            var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[1].Name);
-            var call = Expression.Call(methodInfo, paramColumns, paramDataRow);
-            return Expression.Lambda<Func<IReadOnlyList<Column>, DataRow, string>>(call, paramColumns, paramDataRow).Compile();
+            get { return _messageGetter != null ? _messageGetter() : _message; }
         }
-
-        protected abstract string GetDefaultMessage(IReadOnlyList<Column> columns, DataRow dataRow);
     }
 }

@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class RegularExpressionAttribute : GeneralValidationColumnAttribute
+    public sealed class RegularExpressionAttribute : ValidationColumnAttribute
     {
         public RegularExpressionAttribute(string pattern)
         {

@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class UniqueAttribute : GeneralValidationColumnAttribute
+    public sealed class UniqueAttribute : ValidationColumnAttribute
     {
         protected override void Initialize(Column column)
         {

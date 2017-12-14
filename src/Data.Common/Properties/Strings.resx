@@ -501,12 +501,6 @@
   <data name="UniqueAttribute_DefaultErrorMessage" xml:space="preserve">
     <value>Value must be unique for field '{0}'.</value>
   </data>
-  <data name="ValidationColumnGroupAttribute_InvalidMessageFunc" xml:space="preserve">
-    <value>Cannot resolve static method of Func&lt;string, IColumns, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
-  </data>
-  <data name="UniqueColumnsAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>Value must be unique for columns {columns}.</value>
-  </data>
   <data name="ColumnsMemberAttribute_CannotResolveColumnsAttribute" xml:space="preserve">
     <value>Attribute not found for ModelType '{modelType}': AttributeType={attributeType}, Name={attributeName}.</value>
   </data>
@@ -542,9 +536,6 @@
   </data>
   <data name="DbSession_VerifyNotMocked" xml:space="preserve">
     <value>The DbSession is mocked.</value>
-  </data>
-  <data name="GeneralValidationModelWireupAttribute_InvalidMessageFunc" xml:space="preserve">
-    <value>Cannot resolve static method of Func&lt;{modelType}, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
   </data>
   <data name="TypeExtensions_InvalidResourceName" xml:space="preserve">
     <value>Resource name cannot be null, empty, or consists of only white-space characters.</value>

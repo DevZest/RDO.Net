@@ -19,13 +19,13 @@ namespace DevZest.Data.Annotations.Primitives
             private ValidationModelWireupAttribute _owner;
             private Model _model;
 
-            public IColumnValidationMessages Validate(DataRow dataRow)
+            public ColumnValidationMessage Validate(DataRow dataRow)
             {
                 return _owner.Validate(_model, dataRow);
             }
         }
 
-        protected abstract IColumnValidationMessages Validate(Model model, DataRow dataRow);
+        protected abstract ColumnValidationMessage Validate(Model model, DataRow dataRow);
 
         protected void AddValidator(Model model)
         {

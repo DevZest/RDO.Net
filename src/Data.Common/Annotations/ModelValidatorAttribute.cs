@@ -14,7 +14,7 @@ namespace DevZest.Data.Annotations
             _validatorFunc = BuildValidatorFunc(modelType, memberInfo);
         }
 
-        private Func<Model, DataRow, IColumnValidationMessages> BuildValidatorFunc(Type modelType, MemberInfo memberInfo)
+        private Func<Model, DataRow, ColumnValidationMessage> BuildValidatorFunc(Type modelType, MemberInfo memberInfo)
         {
             var methodInfo = memberInfo as MethodInfo;
             if (methodInfo == null)
@@ -26,7 +26,7 @@ namespace DevZest.Data.Annotations
             var model = Expression.Convert(paramModel, modelType);
             var call = Expression.Call(model, methodInfo, paramDataRow);
 
-            return Expression.Lambda<Func<Model, DataRow, IColumnValidationMessages>>(call, paramModel, paramDataRow).Compile();
+            return Expression.Lambda<Func<Model, DataRow, ColumnValidationMessage>>(call, paramModel, paramDataRow).Compile();
         }
 
         protected override ModelWireupEvent WireupEvent
@@ -45,8 +45,8 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        private Func<Model, DataRow, IColumnValidationMessages> _validatorFunc;
-        protected override IColumnValidationMessages Validate(Model model, DataRow dataRow)
+        private Func<Model, DataRow, ColumnValidationMessage> _validatorFunc;
+        protected override ColumnValidationMessage Validate(Model model, DataRow dataRow)
         {
             Debug.Assert(_validatorFunc != null);
             return _validatorFunc(model, dataRow);

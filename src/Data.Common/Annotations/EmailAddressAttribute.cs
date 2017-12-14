@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class EmailAddressAttribute : GeneralValidationColumnAttribute
+    public sealed class EmailAddressAttribute : ValidationColumnAttribute
     {
         private static Regex s_regex = CreateRegEx();
 

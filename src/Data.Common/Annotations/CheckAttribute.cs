@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Annotations.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -6,11 +7,43 @@ using System.Reflection;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class CheckAttribute : GeneralValidationModelWireupAttribute
+    public sealed class CheckAttribute : ValidationModelWireupAttribute
     {
         public CheckAttribute(string message)
-            : base(message)
         {
+            Check.NotEmpty(message, nameof(message));
+            _message = message;
+        }
+
+        public CheckAttribute(Type messageResourceType, string message)
+        {
+            Check.NotNull(messageResourceType, nameof(messageResourceType));
+            _messageResourceType = messageResourceType;
+            _messageGetter = messageResourceType.ResolveStringGetter(message);
+        }
+
+        protected sealed override ColumnValidationMessage Validate(Model model, DataRow dataRow)
+        {
+            return IsValid(model, dataRow) ? null : new ColumnValidationMessage(ValidationSeverity.Error, MessageString, GetValidationSource(model));
+        }
+
+        private readonly string _message;
+        public string Message
+        {
+            get { return _message; }
+        }
+
+        private readonly Type _messageResourceType;
+        public Type ResourceType
+        {
+            get { return _messageResourceType; }
+        }
+
+        private readonly Func<string> _messageGetter;
+
+        private string MessageString
+        {
+            get { return _messageGetter != null ? _messageGetter() : _message; }
         }
 
         public string Name { get; set; }
@@ -54,13 +87,13 @@ namespace DevZest.Data.Annotations
             return _conditionGetter == null ? null : _conditionGetter(model);
         }
 
-        protected override bool IsValid(Model model, DataRow dataRow)
+        private bool IsValid(Model model, DataRow dataRow)
         {
             var condition = GetCondition(model);
             return condition[dataRow] != false;
         }
 
-        protected override IColumns GetValidationSource(Model model)
+        private IColumns GetValidationSource(Model model)
         {
             var condition = GetCondition(model);
             var expression = condition.Expression;

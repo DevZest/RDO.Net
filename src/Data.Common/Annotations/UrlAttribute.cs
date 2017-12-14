@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class UrlAttribute : GeneralValidationColumnAttribute
+    public sealed class UrlAttribute : ValidationColumnAttribute
     {
         private static Regex s_regex = CreateRegEx();
 

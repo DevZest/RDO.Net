@@ -73,10 +73,9 @@ namespace DevZest.Data.Annotations.Primitives
                     get { return _columns; }
                 }
 
-                public IColumnValidationMessages Validate(DataRow dataRow)
+                public ColumnValidationMessage Validate(DataRow dataRow)
                 {
-                    return IsValid(dataRow) ? ColumnValidationMessages.Empty
-                        : new ColumnValidationMessage(ValidationSeverity.Error, GetMessage(_columnList, dataRow), Columns);
+                    return IsValid(dataRow) ? null : new ColumnValidationMessage(ValidationSeverity.Error, MessageString, Columns);
                 }
 
                 private bool IsValid(DataRow dataRow)
@@ -84,9 +83,9 @@ namespace DevZest.Data.Annotations.Primitives
                     return _manager.IsValid(this, dataRow);
                 }
 
-                private string GetMessage(IReadOnlyList<Column> columns, DataRow dataRow)
+                private string MessageString
                 {
-                    return ColumnsAttribute.GetMessage(columns, dataRow);
+                    get { return ColumnsAttribute.MessageString; }
                 }
             }
 

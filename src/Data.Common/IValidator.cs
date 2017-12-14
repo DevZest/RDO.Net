@@ -3,6 +3,6 @@
     /// <summary></summary>
     internal interface IValidator
     {
-        IColumnValidationMessages Validate(DataRow dataRow);
+        ColumnValidationMessage Validate(DataRow dataRow);
     }
 }

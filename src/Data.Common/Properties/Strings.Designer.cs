@@ -1036,22 +1036,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot resolve static method of Func&lt;string, IColumns, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
-        /// </summary>
-        public static string ValidationColumnGroupAttribute_InvalidMessageFunc(object funcType, object funcName)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ValidationColumnGroupAttribute_InvalidMessageFunc", "funcType", "funcName"), funcType, funcName);
-        }
-
-        /// <summary>
-        /// Value must be unique for columns {columns}.
-        /// </summary>
-        public static string UniqueColumnsAttribute_DefaultErrorMessage(object columns)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("UniqueColumnsAttribute_DefaultErrorMessage", "columns"), columns);
-        }
-
-        /// <summary>
         /// Attribute not found for ModelType '{modelType}': AttributeType={attributeType}, Name={attributeName}.
         /// </summary>
         public static string ColumnsMemberAttribute_CannotResolveColumnsAttribute(object modelType, object attributeType, object attributeName)
@@ -1145,14 +1129,6 @@ namespace DevZest.Data
         public static string DbSession_VerifyNotMocked
         {
             get { return GetString("DbSession_VerifyNotMocked"); }
-        }
-
-        /// <summary>
-        /// Cannot resolve static method of Func&lt;{modelType}, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
-        /// </summary>
-        public static string GeneralValidationModelWireupAttribute_InvalidMessageFunc(object modelType, object funcType, object funcName)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GeneralValidationModelWireupAttribute_InvalidMessageFunc", "modelType", "funcType", "funcName"), modelType, funcType, funcName);
         }
 
         /// <summary>
