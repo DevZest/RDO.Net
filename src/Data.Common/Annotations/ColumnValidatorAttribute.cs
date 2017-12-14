@@ -15,11 +15,12 @@ namespace DevZest.Data.Annotations
             _message = message;
         }
 
-        public ColumnValidatorAttribute(string columnName, Type resourceType, string message)
+        public ColumnValidatorAttribute(string columnName, Type messageResourceType, string message)
             : this(columnName, message)
         {
-            Check.NotNull(resourceType, nameof(resourceType));
-            _resourceType = resourceType;
+            Check.NotNull(messageResourceType, nameof(messageResourceType));
+            _messageResourceType = messageResourceType;
+            _messageGetter = messageResourceType.ResolveStringGetter(message);
         }
 
         private readonly string _columnName;
@@ -36,31 +37,17 @@ namespace DevZest.Data.Annotations
             get { return _message; }
         }
 
-        private readonly Type _resourceType;
-        public Type ResourceType
+        private readonly Type _messageResourceType;
+        public Type MessageResourceType
         {
-            get { return _resourceType; }
+            get { return _messageResourceType; }
         }
 
-        internal string GetMessage(Column column, DataRow dataRow)
+        private readonly Func<string> _messageGetter;
+        internal string MessageString
         {
-            var messageFunc = MessageGetter;
-            return messageFunc != null ? messageFunc(column, dataRow) : Message;
+            get { return _messageGetter != null ? _messageGetter() : _message; }
         }
 
-        private Func<Column, DataRow, string> _messageGetter;
-        private Func<Column, DataRow, string> MessageGetter
-        {
-            get
-            {
-                if (ResourceType == null)
-                    return null;
-
-                if (_messageGetter == null)
-                    _messageGetter = ResourceType.GetMessageGetter(Message);
-
-                return _messageGetter;
-            }
-        }
     }
 }

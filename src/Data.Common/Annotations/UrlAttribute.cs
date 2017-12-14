@@ -20,9 +20,9 @@ namespace DevZest.Data.Annotations
             return text == null || s_regex.Match(text).Length > 0;
         }
 
-        protected override string GetDefaultMessage(Column column, DataRow dataRow)
+        protected override string DefaultMessageString
         {
-            return Strings.UrlAttribute_DefaultErrorMessage(column.DisplayName);
+            get { return Strings.UrlAttribute_DefaultErrorMessage; }
         }
 
         private static Regex CreateRegEx()

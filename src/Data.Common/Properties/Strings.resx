@@ -340,10 +340,10 @@
     <value>Cannot add DataRow into multiple DataSet.</value>
   </data>
   <data name="RequiredAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>Value is required for column '{column}'.</value>
+    <value>Value is required for field '{0}'.</value>
   </data>
-  <data name="ColumnManager_InvalidMessageFunc" xml:space="preserve">
-    <value>Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
+  <data name="TypeExtensions_CannotResolveStaticStringProperty" xml:space="preserve">
+    <value>Cannot resolve static string property {resourceType}.{resourceName}.</value>
   </data>
   <data name="DbTable_VerifyUpdateIdentity" xml:space="preserve">
     <value>Target table must be a permanent table and has a identity column.</value>
@@ -418,13 +418,13 @@
     <value>Computation is not allowed for child column {columnName}.</value>
   </data>
   <data name="DbQueryBuilder_InvalidScalarSourceModel" xml:space="preserve">
-    <value>The column has invalid scalar source model: "{0}".</value>
+    <value>The column has invalid scalar source model: "{model}".</value>
   </data>
   <data name="Column_EmptyScalarSourceModels" xml:space="preserve">
     <value>The column's ScalarSourceModels is empty.</value>
   </data>
   <data name="DbQueryBuilder_InvalidAggregateSourceModel" xml:space="preserve">
-    <value>The column contains invalid aggregate source model: "{0}".</value>
+    <value>The column contains invalid aggregate source model: "{model}".</value>
   </data>
   <data name="ComputationManager_CircularComputation" xml:space="preserve">
     <value>Circular computation detected for column {columnName}.</value>
@@ -499,7 +499,7 @@
     <value>The data type of column is {columnDataType}, which is not assignable from value of data type {valueDataType}.</value>
   </data>
   <data name="UniqueAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>Value must be unique for column '{column}'.</value>
+    <value>Value must be unique for field '{0}'.</value>
   </data>
   <data name="ValidationColumnGroupAttribute_InvalidMessageFunc" xml:space="preserve">
     <value>Cannot resolve static method of Func&lt;string, IColumns, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
@@ -514,25 +514,25 @@
     <value>Duplicate attribute found for column '{column}': AttributeType={attributeType}, AttributeName={attributeName}.</value>
   </data>
   <data name="CreditCardAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>The {columnDisplayName} field is not a valid credit card number.</value>
+    <value>The '{0}' field is not a valid credit card number.</value>
   </data>
   <data name="EmailAddressAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>The {columnDisplayName} field is not a valid e-mail address.</value>
+    <value>The '{0}' field is not a valid e-mail address.</value>
   </data>
   <data name="PhoneAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>The {columnDisplayName} field is not a valid phone number.</value>
+    <value>The '{0}' field is not a valid phone number.</value>
   </data>
   <data name="RegularExpressionAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>The field {columnName} must match the regular expression '{pattern}'.</value>
+    <value>The field '{0}' must match the regular expression '{1}'.</value>
   </data>
   <data name="UrlAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>The {columnDisplayName} field is not a fully-qualified http, https or ftp URL.</value>
+    <value>The '{0}' field is not a fully-qualified http, https or ftp URL.</value>
   </data>
   <data name="StringLengthAttribute_DefaultErrorMessage" xml:space="preserve">
-    <value>The field {columnDisplayName} must be a string with a maximum length of {maxLength}.</value>
+    <value>The field '{0}' must be a string with a maximum length of {1}.</value>
   </data>
   <data name="StringLengthAttribute_DefaultErrorMessageWithMinLength" xml:space="preserve">
-    <value>The field {columnDisplayName} must be a string with a minimum length of {minLength} and maximum length of {maxLength}.</value>
+    <value>The field '{0}' must be a string with a minimum length of {2} and maximum length of {1}.</value>
   </data>
   <data name="LocalizableString_LocalizationFailed" xml:space="preserve">
     <value>Cannot retrieve property '{propertyName}' because localization failed. Type '{resourceType}' does not contain a static string property with the name '{propertyValue}'. </value>
@@ -545,5 +545,8 @@
   </data>
   <data name="GeneralValidationModelWireupAttribute_InvalidMessageFunc" xml:space="preserve">
     <value>Cannot resolve static method of Func&lt;{modelType}, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
+  </data>
+  <data name="TypeExtensions_InvalidResourceName" xml:space="preserve">
+    <value>Resource name cannot be null, empty, or consists of only white-space characters.</value>
   </data>
 </root>

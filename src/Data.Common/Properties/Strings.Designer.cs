@@ -604,19 +604,19 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Value is required for column '{column}'.
+        /// Value is required for field '{0}'.
         /// </summary>
-        public static string RequiredAttribute_DefaultErrorMessage(object column)
+        public static string RequiredAttribute_DefaultErrorMessage
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("RequiredAttribute_DefaultErrorMessage", "column"), column);
+            get { return GetString("RequiredAttribute_DefaultErrorMessage"); }
         }
 
         /// <summary>
-        /// Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
+        /// Cannot resolve static string property {resourceType}.{resourceName}.
         /// </summary>
-        public static string ColumnManager_InvalidMessageFunc(object funcType, object funcName)
+        public static string TypeExtensions_CannotResolveStaticStringProperty(object resourceType, object resourceName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnManager_InvalidMessageFunc", "funcType", "funcName"), funcType, funcName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("TypeExtensions_CannotResolveStaticStringProperty", "resourceType", "resourceName"), resourceType, resourceName);
         }
 
         /// <summary>
@@ -812,11 +812,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The column has invalid scalar source model: "{0}".
+        /// The column has invalid scalar source model: "{model}".
         /// </summary>
-        public static string DbQueryBuilder_InvalidScalarSourceModel(object p0)
+        public static string DbQueryBuilder_InvalidScalarSourceModel(object model)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_InvalidScalarSourceModel"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_InvalidScalarSourceModel", "model"), model);
         }
 
         /// <summary>
@@ -828,11 +828,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The column contains invalid aggregate source model: "{0}".
+        /// The column contains invalid aggregate source model: "{model}".
         /// </summary>
-        public static string DbQueryBuilder_InvalidAggregateSourceModel(object p0)
+        public static string DbQueryBuilder_InvalidAggregateSourceModel(object model)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_InvalidAggregateSourceModel"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_InvalidAggregateSourceModel", "model"), model);
         }
 
         /// <summary>
@@ -1028,11 +1028,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Value must be unique for column '{column}'.
+        /// Value must be unique for field '{0}'.
         /// </summary>
-        public static string UniqueAttribute_DefaultErrorMessage(object column)
+        public static string UniqueAttribute_DefaultErrorMessage
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("UniqueAttribute_DefaultErrorMessage", "column"), column);
+            get { return GetString("UniqueAttribute_DefaultErrorMessage"); }
         }
 
         /// <summary>
@@ -1068,59 +1068,59 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The {columnDisplayName} field is not a valid credit card number.
+        /// The '{0}' field is not a valid credit card number.
         /// </summary>
-        public static string CreditCardAttribute_DefaultErrorMessage(object columnDisplayName)
+        public static string CreditCardAttribute_DefaultErrorMessage
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("CreditCardAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
+            get { return GetString("CreditCardAttribute_DefaultErrorMessage"); }
         }
 
         /// <summary>
-        /// The {columnDisplayName} field is not a valid e-mail address.
+        /// The '{0}' field is not a valid e-mail address.
         /// </summary>
-        public static string EmailAddressAttribute_DefaultErrorMessage(object columnDisplayName)
+        public static string EmailAddressAttribute_DefaultErrorMessage
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("EmailAddressAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
+            get { return GetString("EmailAddressAttribute_DefaultErrorMessage"); }
         }
 
         /// <summary>
-        /// The {columnDisplayName} field is not a valid phone number.
+        /// The '{0}' field is not a valid phone number.
         /// </summary>
-        public static string PhoneAttribute_DefaultErrorMessage(object columnDisplayName)
+        public static string PhoneAttribute_DefaultErrorMessage
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("PhoneAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
+            get { return GetString("PhoneAttribute_DefaultErrorMessage"); }
         }
 
         /// <summary>
-        /// The field {columnName} must match the regular expression '{pattern}'.
+        /// The field '{0}' must match the regular expression '{1}'.
         /// </summary>
-        public static string RegularExpressionAttribute_DefaultErrorMessage(object columnName, object pattern)
+        public static string RegularExpressionAttribute_DefaultErrorMessage
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("RegularExpressionAttribute_DefaultErrorMessage", "columnName", "pattern"), columnName, pattern);
+            get { return GetString("RegularExpressionAttribute_DefaultErrorMessage"); }
         }
 
         /// <summary>
-        /// The {columnDisplayName} field is not a fully-qualified http, https or ftp URL.
+        /// The '{0}' field is not a fully-qualified http, https or ftp URL.
         /// </summary>
-        public static string UrlAttribute_DefaultErrorMessage(object columnDisplayName)
+        public static string UrlAttribute_DefaultErrorMessage
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("UrlAttribute_DefaultErrorMessage", "columnDisplayName"), columnDisplayName);
+            get { return GetString("UrlAttribute_DefaultErrorMessage"); }
         }
 
         /// <summary>
-        /// The field {columnDisplayName} must be a string with a maximum length of {maxLength}.
+        /// The field '{0}' must be a string with a maximum length of {1}.
         /// </summary>
-        public static string StringLengthAttribute_DefaultErrorMessage(object columnDisplayName, object maxLength)
+        public static string StringLengthAttribute_DefaultErrorMessage
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("StringLengthAttribute_DefaultErrorMessage", "columnDisplayName", "maxLength"), columnDisplayName, maxLength);
+            get { return GetString("StringLengthAttribute_DefaultErrorMessage"); }
         }
 
         /// <summary>
-        /// The field {columnDisplayName} must be a string with a minimum length of {minLength} and maximum length of {maxLength}.
+        /// The field '{0}' must be a string with a minimum length of {2} and maximum length of {1}.
         /// </summary>
-        public static string StringLengthAttribute_DefaultErrorMessageWithMinLength(object columnDisplayName, object minLength, object maxLength)
+        public static string StringLengthAttribute_DefaultErrorMessageWithMinLength
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("StringLengthAttribute_DefaultErrorMessageWithMinLength", "columnDisplayName", "minLength", "maxLength"), columnDisplayName, minLength, maxLength);
+            get { return GetString("StringLengthAttribute_DefaultErrorMessageWithMinLength"); }
         }
 
         /// <summary>
@@ -1153,6 +1153,14 @@ namespace DevZest.Data
         public static string GeneralValidationModelWireupAttribute_InvalidMessageFunc(object modelType, object funcType, object funcName)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("GeneralValidationModelWireupAttribute_InvalidMessageFunc", "modelType", "funcType", "funcName"), modelType, funcType, funcName);
+        }
+
+        /// <summary>
+        /// Resource name cannot be null, empty, or consists of only white-space characters.
+        /// </summary>
+        public static string TypeExtensions_InvalidResourceName
+        {
+            get { return GetString("TypeExtensions_InvalidResourceName"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

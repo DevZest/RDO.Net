@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.SqlClient;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
@@ -14,7 +15,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Id);
             }
 
-            [Required(Message = "ERR_Required")]
+            [Required]
             public _Int32 Id { get; private set; }
         }
 
@@ -57,7 +58,7 @@ namespace DevZest.Data.Annotations
             var dataRow2 = dataSet.AddRow();
             var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
             Assert.AreEqual(1, messages2.Count);
-            Assert.AreEqual("ERR_Required", messages2[0].Description);
+            Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.RequiredAttribute_DefaultErrorMessage, nameof(TestModel.Id)), messages2[0].Description);
         }
     }
 }

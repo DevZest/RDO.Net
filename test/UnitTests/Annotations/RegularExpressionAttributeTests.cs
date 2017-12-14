@@ -1,10 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
     [TestClass]
     public class RegularExpressionAttributeTests
     {
+        private const string PATTERN = @"^[a-zA-Z''-'\s]{1,40}$";
         private sealed class TestModel : Model
         {
             static TestModel()
@@ -12,7 +14,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Name);
             }
 
-            [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", Message = "ERR_Name")]
+            [RegularExpression(PATTERN)]
             public new _String Name { get; private set; }
         }
 
@@ -31,7 +33,8 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Name[row] = "John Doe O'Dell John Doe O'Dell John Doe O'Dell John Doe O'Dell");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_Name", validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.RegularExpressionAttribute_DefaultErrorMessage, nameof(TestModel.Name), PATTERN),
+                    validationMessages[0].Description);
             }
         }
     }

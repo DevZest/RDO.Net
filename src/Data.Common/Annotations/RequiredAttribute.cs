@@ -17,9 +17,9 @@ namespace DevZest.Data.Annotations
             return !column.IsNull(dataRow);
         }
 
-        protected override string GetDefaultMessage(Column column, DataRow dataRow)
+        protected override string DefaultMessageString
         {
-            return Strings.RequiredAttribute_DefaultErrorMessage(column);
+            get { return Strings.RequiredAttribute_DefaultErrorMessage; }
         }
 
         protected override bool CoerceDeclaringTypeOnly(bool value)

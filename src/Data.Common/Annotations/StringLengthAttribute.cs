@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Annotations.Primitives;
 using System;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
@@ -43,12 +44,20 @@ namespace DevZest.Data.Annotations
             return value == null || (value.Length >= MinimumLength && value.Length <= MaximumLength);
         }
 
-        protected override string GetDefaultMessage(Column column, DataRow dataRow)
+        protected override string DefaultMessageString
         {
-            if (MinimumLength == 0)
-                return Strings.StringLengthAttribute_DefaultErrorMessage(column.DisplayName, MaximumLength);
-            else
-                return Strings.StringLengthAttribute_DefaultErrorMessageWithMinLength(column.DisplayName, MinimumLength, MaximumLength);
+            get
+            {
+                if (MinimumLength == 0)
+                    return Strings.StringLengthAttribute_DefaultErrorMessage;
+                else
+                    return Strings.StringLengthAttribute_DefaultErrorMessageWithMinLength;
+            }
+        }
+
+        protected override string FormatMessage(string columnDisplayName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, MessageString, columnDisplayName, MaximumLength, MinimumLength);
         }
     }
 }

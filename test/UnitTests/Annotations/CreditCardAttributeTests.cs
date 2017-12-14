@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
@@ -12,7 +13,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.CreditCardNumber);
             }
 
-            [CreditCard(Message = "ERR_CREDIT_CARD")]
+            [CreditCard]
             public _String CreditCardNumber { get; private set; }
         }
 
@@ -31,7 +32,8 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.CreditCardNumber[row] = "4392 2500 0980 2980");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_CREDIT_CARD", validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.CreditCardAttribute_DefaultErrorMessage, nameof(TestModel.CreditCardNumber)),
+                    validationMessages[0].Description);
             }
         }
 

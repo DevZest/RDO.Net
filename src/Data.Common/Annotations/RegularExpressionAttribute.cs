@@ -40,9 +40,14 @@ namespace DevZest.Data.Annotations
                 Regex = new Regex(this.Pattern);
         }
 
-        protected override string GetDefaultMessage(Column column, DataRow dataRow)
+        protected override string DefaultMessageString
         {
-            return Strings.RegularExpressionAttribute_DefaultErrorMessage(column.DisplayName, Pattern);
+            get { return Strings.RegularExpressionAttribute_DefaultErrorMessage; }
+        }
+
+        protected override string FormatMessage(string columnDisplayName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, MessageString, columnDisplayName, Pattern);
         }
     }
 }

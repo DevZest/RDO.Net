@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
@@ -12,7 +13,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.EmailAddress);
             }
 
-            [EmailAddress(Message = "ERR_EMAIL")]
+            [EmailAddress]
             public _String EmailAddress { get; private set; }
         }
 
@@ -31,7 +32,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.EmailAddress[row] = "example");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_EMAIL", validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.EmailAddressAttribute_DefaultErrorMessage, nameof(TestModel.EmailAddress)), validationMessages[0].Description);
             }
         }
     }

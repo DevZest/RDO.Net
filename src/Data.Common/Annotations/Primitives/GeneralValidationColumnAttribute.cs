@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
-using System.Diagnostics;
-using System.Linq.Expressions;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations.Primitives
 {
@@ -9,7 +8,7 @@ namespace DevZest.Data.Annotations.Primitives
     {
         protected sealed override IColumnValidationMessages Validate(Column column, DataRow dataRow)
         {
-            return IsValid(column, dataRow) ? ColumnValidationMessages.Empty : new ColumnValidationMessage(Severity, GetMessage(column, dataRow), column);
+            return IsValid(column, dataRow) ? ColumnValidationMessages.Empty : new ColumnValidationMessage(Severity, FormatMessage(column.DisplayName), column);
         }
 
         protected abstract bool IsValid(Column column, DataRow dataRow);
@@ -23,22 +22,30 @@ namespace DevZest.Data.Annotations.Primitives
 
         public Type MessageResourceType { get; set; }
 
-        private string GetMessage(Column column, DataRow dataRow)
+        protected string MessageString
         {
-            var messageFunc = MessageGetter;
-            if (messageFunc != null)
-                return messageFunc(column, dataRow);
+            get
+            {
+                var messageGetter = MessageGetter;
+                if (messageGetter != null)
+                    return messageGetter();
 
-            if (Message != null)
-                return Message;
+                if (Message != null)
+                    return Message;
 
-            return GetDefaultMessage(column, dataRow);
+                return DefaultMessageString;
+            }
         }
 
-        protected abstract string GetDefaultMessage(Column column, DataRow dataRow);
+        protected virtual string FormatMessage(string columnDisplayName)
+        {
+            return String.Format(CultureInfo.CurrentCulture, MessageString, columnDisplayName);
+        }
 
-        private Func<Column, DataRow, string> _messageGetter;
-        private Func<Column, DataRow, string> MessageGetter
+        protected abstract string DefaultMessageString { get; }
+
+        private Func<string> _messageGetter;
+        private Func<string> MessageGetter
         {
             get
             {
@@ -46,7 +53,7 @@ namespace DevZest.Data.Annotations.Primitives
                     return null;
 
                 if (_messageGetter == null)
-                    _messageGetter = MessageResourceType.GetMessageGetter(Message);
+                    _messageGetter = MessageResourceType.ResolveStringGetter(Message);
 
                 return _messageGetter;
             }

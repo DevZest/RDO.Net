@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
@@ -12,7 +13,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Phone);
             }
 
-            [Phone(Message = "ERR_Phone")]
+            [Phone]
             public _String Phone { get; private set; }
         }
 
@@ -31,7 +32,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Phone[row] = "(555)-123456A");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_Phone", validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.PhoneAttribute_DefaultErrorMessage, nameof(TestModel.Phone)), validationMessages[0].Description);
             }
         }
     }

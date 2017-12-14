@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
@@ -12,7 +13,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Url);
             }
 
-            [Url(Message = "ERR_Url")]
+            [Url]
             public _String Url { get; private set; }
         }
 
@@ -31,7 +32,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Url[row] = "devzest.com");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_Url", validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.UrlAttribute_DefaultErrorMessage, nameof(TestModel.Url)) , validationMessages[0].Description);
             }
         }
     }

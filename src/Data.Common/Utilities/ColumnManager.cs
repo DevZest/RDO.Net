@@ -200,7 +200,7 @@ namespace DevZest.Data.Utilities
                 if (!_attribute.VerifyDeclaringType(_column))
                     return ColumnValidationMessages.Empty;
                 var isValid = _func(_column, dataRow);
-                return isValid ? ColumnValidationMessages.Empty : new ColumnValidationMessage(_attribute.Severity, _attribute.GetMessage(_column, dataRow), _column);
+                return isValid ? ColumnValidationMessages.Empty : new ColumnValidationMessage(_attribute.Severity, _attribute.MessageString, _column);
             }
         }
 
@@ -213,34 +213,6 @@ namespace DevZest.Data.Utilities
             var validators = column.ParentModel.Validators;
             foreach (var provider in columnValidatorProviders)
                 validators.Add(provider.GetValidator(column));
-        }
-
-        internal static Func<Column, DataRow, string> GetMessageGetter(this Type funcType, string funcName)
-        {
-            Debug.Assert(funcType != null);
-            if (string.IsNullOrWhiteSpace(funcName))
-                throw new InvalidOperationException(Strings.ColumnManager_InvalidMessageFunc(funcType, funcName));
-
-            try
-            {
-                return GetMessageFunc(funcType, funcName);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException(Strings.ColumnManager_InvalidMessageFunc(funcType, funcName), ex);
-            }
-        }
-
-        private static Func<Column, DataRow, string> GetMessageFunc(Type funcType, string funcName)
-        {
-            Debug.Assert(funcType != null);
-            Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
-
-            var methodInfo = funcType.GetStaticMethodInfo(funcName);
-            var paramColumn = Expression.Parameter(typeof(Column), methodInfo.GetParameters()[0].Name);
-            var paramDataRow = Expression.Parameter(typeof(DataRow), methodInfo.GetParameters()[1].Name);
-            var call = Expression.Call(methodInfo, paramColumn, paramDataRow);
-            return Expression.Lambda<Func<Column, DataRow, string>>(call, paramColumn, paramDataRow).Compile();
         }
     }
 }

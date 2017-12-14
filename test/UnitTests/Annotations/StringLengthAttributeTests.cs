@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
@@ -9,11 +10,15 @@ namespace DevZest.Data.Annotations
         {
             static TestModel()
             {
-                RegisterColumn((TestModel _) => _.Text);
+                RegisterColumn((TestModel _) => _.Text1);
+                RegisterColumn((TestModel _) => _.Text2);
             }
 
-            [StringLength(10, MinimumLength = 5, Message = "ERR_StringLength")]
-            public _String Text { get; private set; }
+            [StringLength(10)]
+            public _String Text1 { get; private set; }
+
+            [StringLength(10, MinimumLength = 5)]
+            public _String Text2 { get; private set; }
         }
 
         [TestMethod]
@@ -21,25 +26,39 @@ namespace DevZest.Data.Annotations
         {
             {
                 var dataSet = DataSet<TestModel>.New();
-                var dataRow = dataSet.AddRow((_, row) => _.Text[row] = "123456");
+                var dataRow = dataSet.AddRow((_, row) =>
+                {
+                    _.Text1[row] = "123456";
+                    _.Text2[row] = "123456";
+                });
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
                 var dataSet = DataSet<TestModel>.New();
-                var dataRow = dataSet.AddRow((_, row) => _.Text[row] = "1234");
+                var dataRow = dataSet.AddRow((_, row) =>
+                {
+                    _.Text1[row] = "12345678901";
+                    _.Text2[row] = "123456";
+                });
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_StringLength", validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.StringLengthAttribute_DefaultErrorMessage, nameof(TestModel.Text1), 10),
+                    validationMessages[0].Description);
             }
 
             {
                 var dataSet = DataSet<TestModel>.New();
-                var dataRow = dataSet.AddRow((_, row) => _.Text[row] = "12345678901");
+                var dataRow = dataSet.AddRow((_, row) =>
+                {
+                    _.Text1[row] = "123456";
+                    _.Text2[row] = "1234";
+                });
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("ERR_StringLength", validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.StringLengthAttribute_DefaultErrorMessageWithMinLength, nameof(TestModel.Text2), 10, 5),
+                    validationMessages[0].Description);
             }
         }
     }

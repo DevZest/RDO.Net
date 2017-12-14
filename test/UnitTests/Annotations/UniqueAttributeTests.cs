@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.SqlClient;
+using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
@@ -14,7 +15,7 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Id);
             }
 
-            [Unique(Message = "ERR_DuplicateId")]
+            [Unique]
             public _Int32 Id { get; private set; }
         }
 
@@ -57,12 +58,16 @@ namespace DevZest.Data.Annotations
             var dataRow1 = dataSet.AddRow((_, row) => _.Id[row] = 1);
             Assert.AreEqual(0, dataSet._.Validate(dataRow1, ValidationSeverity.Error).Count);
             var dataRow2 = dataSet.AddRow((_, row) => _.Id[row] = 1);
-            var messages1 = dataSet._.Validate(dataRow1, ValidationSeverity.Error);
-            var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
-            Assert.AreEqual(1, messages1.Count);
-            Assert.AreEqual("ERR_DuplicateId", messages1[0].Description);
-            Assert.AreEqual(1, messages2.Count);
-            Assert.AreEqual("ERR_DuplicateId", messages2[0].Description);
+            {
+                var messages1 = dataSet._.Validate(dataRow1, ValidationSeverity.Error);
+                Assert.AreEqual(1, messages1.Count);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.UniqueAttribute_DefaultErrorMessage, nameof(TestModel.Id)), messages1[0].Description);
+            }
+            {
+                var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
+                Assert.AreEqual(1, messages2.Count);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.UniqueAttribute_DefaultErrorMessage, nameof(TestModel.Id)), messages2[0].Description);
+            }
         }
     }
 }

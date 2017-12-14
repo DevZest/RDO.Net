@@ -125,7 +125,7 @@
     <Compile Include="ColumnSetTests.cs" />
     <Compile Include="SqlServer\_SqlXmlTests.cs" />
     <Compile Include="ColumnValueBagTests.cs" />
-    <Compile Include="Utilities\ColumnManagerTests.cs" />
+    <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="_ByteEnumTests.cs" />
     <Compile Include="_CharEnumTests.cs" />
