@@ -1,20 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\test\AdventureWorksLT\AdventureWorksLT.props" />
+  
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);DEPLOY</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AssemblyName>DevZest.Samples.AdventureWorksLT</AssemblyName>
-    <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,18 +17,6 @@
     <PackageProjectUrl>http://www.devzest.com</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>http://www.devzest.com</RepositoryUrl>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <PackageVersion Condition=" '$(PackageVersion)'=='' ">1.0.0</PackageVersion>
-    <AssemblyVersion Condition=" '$(AssemblyVersion)'=='' ">1.0.0.0</AssemblyVersion>
-    <FileVersion Condition=" '$(FileVersion)'=='' ">1.0.0.0</FileVersion>
-    <InformationalVersion>$(PackageVersion)</InformationalVersion>
-    <Authors>Weifen Luo | DevZest</Authors>
-    <Company>DevZest</Company>
-    <Product>AdventureWorksLT RDO.Net Model Sample</Product>
-    <Description>AdventureWorksLT RDO.Net Model Sample</Description>
-    <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
