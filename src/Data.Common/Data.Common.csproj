@@ -1,353 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F6F84B00-DA10-4559-A183-403AF6E9BF16}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevZest.Data</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>DevZest.Data.Common</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <RootNamespace>DevZest.Data</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\tools\Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <None Include="project.json" />
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\tools\Resources.cs">
-      <Link>Properties\Resources.cs</Link>
-      <AutoGen>True</AutoGen>
+    <Compile Update="Properties\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Resources.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Annotations\AutoDateTimeAttribute.cs" />
-    <Compile Include="Annotations\AutoGuidAttribute.cs" />
-    <Compile Include="Annotations\CheckAttribute.cs" />
-    <Compile Include="Annotations\ColumnInitializerAttribute.cs" />
-    <Compile Include="Annotations\ColumnValidatorAttribute.cs" />
-    <Compile Include="Annotations\CreditCardAttribute.cs" />
-    <Compile Include="Annotations\DbConstraintAttribute.cs" />
-    <Compile Include="Annotations\DefaultValueAttribute.cs" />
-    <Compile Include="Annotations\DisplayAttribute.cs" />
-    <Compile Include="Annotations\EmailAddressAttribute.cs" />
-    <Compile Include="Annotations\LocalizableString.cs" />
-    <Compile Include="Annotations\ModelExtenderAttribute.cs" />
-    <Compile Include="Annotations\ComputationAttribute.cs" />
-    <Compile Include="Annotations\ModelValidatorAttribute.cs" />
-    <Compile Include="Annotations\ModelWireupEvent.cs" />
-    <Compile Include="Annotations\Primitives\ColumnWireupAttribute.cs" />
-    <Compile Include="Annotations\Primitives\ModelWireupAttribute.cs" />
-    <Compile Include="Annotations\Primitives\ValidationModelWireupAttribute.cs" />
-    <Compile Include="Annotations\RegularExpressionAttribute.cs" />
-    <Compile Include="Annotations\StringLengthAttribute.cs" />
-    <Compile Include="Annotations\DbIndexAttribute.cs" />
-    <Compile Include="Annotations\DbCompositeIndexAttribute.cs" />
-    <Compile Include="Annotations\DbCompositeIndexMemberAttribute.cs" />
-    <Compile Include="Annotations\UrlAttribute.cs" />
-    <Compile Include="AttachedLocalColumnManager.cs" />
-    <Compile Include="ColumnValueBag.cs" />
-    <Compile Include="DataRowComparer.cs" />
-    <Compile Include="DbSessionExtensions.cs" />
-    <Compile Include="EnumItem.cs" />
-    <Compile Include="Functions.Contains.cs" />
-    <Compile Include="Functions.GetDate.cs" />
-    <Compile Include="Functions.GetUtcDate.cs" />
-    <Compile Include="Functions.IfNull.cs" />
-    <Compile Include="Functions.IsNotNull.cs" />
-    <Compile Include="Functions.IsNull.cs" />
-    <Compile Include="IColumnComparer.cs" />
-    <Compile Include="IDataRowComparer.cs" />
-    <Compile Include="ModelExtender.cs" />
-    <Compile Include="Annotations\PhoneAttribute.cs" />
-    <Compile Include="Primitives\AutoColumnSelector.cs" />
-    <Compile Include="Annotations\Primitives\ColumnGroupAttribute.cs" />
-    <Compile Include="Primitives\DbSessionExtensions.cs" />
-    <Compile Include="Primitives\DbTableElement.cs" />
-    <Compile Include="Primitives\EnumColumn.cs" />
-    <Compile Include="Primitives\IAutoColumnSelector.cs" />
-    <Compile Include="Primitives\MockDb.cs" />
-    <Compile Include="Primitives\ModelExtensions.cs" />
-    <Compile Include="Annotations\Primitives\ColumnGroupMemberAttribute.cs" />
-    <Compile Include="Annotations\Primitives\ValidationColumnGroupAttribute.cs" />
-    <Compile Include="Annotations\Primitives\ValidationColumnGroupMemberAttribute.cs" />
-    <Compile Include="Annotations\UniqueAttribute.cs" />
-    <Compile Include="Annotations\CompositeUniqueAttribute.cs" />
-    <Compile Include="Annotations\CompositeUniqueMemberAttribute.cs" />
-    <Compile Include="Primitives\DbIndex.cs" />
-    <Compile Include="Utilities\ColumnManager.cs" />
-    <Compile Include="Utilities\EmptyDictionary.cs" />
-    <Compile Include="Utilities\EmptyEnumerable.cs" />
-    <Compile Include="Utilities\String.LastPart.cs" />
-    <Compile Include="ValidationMessage.cs" />
-    <Compile Include="Mounter.cs" />
-    <Compile Include="Adhoc.cs" />
-    <Compile Include="Binary.cs" />
-    <Compile Include="Case.cs" />
-    <Compile Include="Column.cs" />
-    <Compile Include="ColumnCollection.cs" />
-    <Compile Include="DataRowEventArgs.cs" />
-    <Compile Include="DataRowRemovedEventArgs.cs" />
-    <Compile Include="DataSetContainer.cs" />
-    <Compile Include="DataSetContainer.LocalColumn.cs" />
-    <Compile Include="IColumnValidationMessages.cs" />
-    <Compile Include="IDataRowValidationResults.cs" />
-    <Compile Include="JsonOrderBy.cs" />
-    <Compile Include="LocalColumnBuilder.cs" />
-    <Compile Include="Primitives\CaseOn.cs" />
-    <Compile Include="Primitives\CaseOnWhen.cs" />
-    <Compile Include="Primitives\CaseWhen.cs" />
-    <Compile Include="ColumnExtensions.cs" />
-    <Compile Include="ColumnInitializerManager.cs" />
-    <Compile Include="ColumnId.cs" />
-    <Compile Include="ColumnKind.cs" />
-    <Compile Include="ColumnList.cs" />
-    <Compile Include="ColumnMapping.cs" />
-    <Compile Include="ColumnMappingsBuilder.cs" />
-    <Compile Include="IColumns.cs" />
-    <Compile Include="Annotations\JsonIgnoreAttribute.cs" />
-    <Compile Include="ValidationMessage_T.cs" />
-    <Compile Include="Columns.cs" />
-    <Compile Include="PagedDataSet.cs" />
-    <Compile Include="Primitives\JsonColumnSort.cs" />
-    <Compile Include="Primitives\JsonDataSet.cs" />
-    <Compile Include="Primitives\JsonDataRow.cs" />
-    <Compile Include="Primitives\IDataSetColumn.cs" />
-    <Compile Include="Primitives\JsonToken.cs" />
-    <Compile Include="Primitives\JsonTokenKind.cs" />
-    <Compile Include="Primitives\JsonWriter.cs" />
-    <Compile Include="Primitives\UnderlyingValueTypeAttribute.cs" />
-    <Compile Include="Primitives\JsonDataRowValidationResult.cs" />
-    <Compile Include="Primitives\JsonColumnValidationMessage.cs" />
-    <Compile Include="Primitives\JsonDataRowValidationResults.cs" />
-    <Compile Include="Utilities\Array.Empty.cs" />
-    <Compile Include="Primitives\ScalarExtensions.cs" />
-    <Compile Include="Scalar.cs" />
-    <Compile Include="Utilities\EmptyEnumerator.cs" />
-    <Compile Include="DataRowValidationResult.cs" />
-    <Compile Include="ColumnValidationMessage.cs" />
-    <Compile Include="DbAggregateQueryBuilder.cs" />
-    <Compile Include="Annotations\DbColumnAttribute.cs" />
-    <Compile Include="ColumnSort.cs" />
-    <Compile Include="Column_T.cs" />
-    <Compile Include="DataRow.cs" />
-    <Compile Include="DataSet_T.cs" />
-    <Compile Include="DataSource.cs" />
-    <Compile Include="DataSourceKind.cs" />
-    <Compile Include="DbQuery.cs" />
-    <Compile Include="DbQueryBuilder.cs" />
-    <Compile Include="DbQueryBuilder.Delete.cs" />
-    <Compile Include="DbQueryBuilder.Update.cs" />
-    <Compile Include="DbQueryBuilder.Insert.cs" />
-    <Compile Include="DbQueryBuilder.Query.cs" />
-    <Compile Include="DbReader.cs" />
-    <Compile Include="DbSet.cs" />
-    <Compile Include="DbTable.cs" />
-    <Compile Include="DbTable.Delete.cs" />
-    <Compile Include="DbTable.Insert.cs" />
-    <Compile Include="DbTable.Update.cs" />
-    <Compile Include="ForeignKeyAction.cs" />
-    <Compile Include="FunctionKeys.cs" />
-    <Compile Include="Functions.Average.cs" />
-    <Compile Include="Functions.Count.cs" />
-    <Compile Include="Functions.CountRows.cs" />
-    <Compile Include="Functions.NewGuid.cs" />
-    <Compile Include="Functions.First.cs" />
-    <Compile Include="Functions.Last.cs" />
-    <Compile Include="Functions.Max.cs" />
-    <Compile Include="Functions.Min.cs" />
-    <Compile Include="Functions.Sum.cs" />
-    <Compile Include="DataSet.cs" />
-    <Compile Include="IDbSet.cs" />
-    <Compile Include="IDbTable.cs" />
-    <Compile Include="Identity.cs" />
-    <Compile Include="Annotations\IdentityAttribute.cs" />
-    <Compile Include="IMockDb.cs" />
-    <Compile Include="IModels.cs" />
-    <Compile Include="ColumnValidationMessages.cs" />
-    <Compile Include="ValidationSeverity.cs" />
-    <Compile Include="IValidator.cs" />
-    <Compile Include="Annotations\Primitives\ValidationColumnAttribute.cs" />
-    <Compile Include="Primitives\DataSourceExtensions.cs" />
-    <Compile Include="Primitives\DbTableExtensions.cs" />
-    <Compile Include="Primitives\SubQueryEliminator.cs" />
-    <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="JasonValueType.cs" />
-    <Compile Include="JsonValue.cs" />
-    <Compile Include="LogCategory.cs" />
-    <Compile Include="MockDb_T.cs" />
-    <Compile Include="Model.cs" />
-    <Compile Include="ModelCollection.cs" />
-    <Compile Include="PrimaryKey.cs" />
-    <Compile Include="Models.cs" />
-    <Compile Include="Model_T.cs" />
-    <Compile Include="Annotations\RequiredAttribute.cs" />
-    <Compile Include="Primitives\MounterManager.cs" />
-    <Compile Include="Primitives\AggregateFunctionExpression.cs" />
-    <Compile Include="Primitives\BinaryExpression.cs" />
-    <Compile Include="Primitives\BinaryExpressionKind.cs" />
-    <Compile Include="Primitives\CaseExpression.cs" />
-    <Compile Include="Primitives\CaseOnExpression.cs" />
-    <Compile Include="Primitives\CastExpression.cs" />
-    <Compile Include="Primitives\DbCheck.cs" />
-    <Compile Include="Annotations\Primitives\ColumnAttribute.cs" />
-    <Compile Include="Primitives\ColumnExpression.cs" />
-    <Compile Include="Primitives\UnaryExpression.cs" />
-    <Compile Include="Primitives\ConstantExpression.cs" />
-    <Compile Include="Primitives\DataSetChain.cs" />
-    <Compile Include="Primitives\DbBinaryExpression.cs" />
-    <Compile Include="Primitives\DbCaseExpression.cs" />
-    <Compile Include="Primitives\DbCastExpression.cs" />
-    <Compile Include="Primitives\DbColumnExpression.cs" />
-    <Compile Include="Primitives\DbConnectionInvoker.cs" />
-    <Compile Include="Primitives\DbConstantExpression.cs" />
-    <Compile Include="Primitives\DbExpression.cs" />
-    <Compile Include="Primitives\DbExpressionSort.cs" />
-    <Compile Include="Primitives\DbExpressionVisitor.cs" />
-    <Compile Include="Primitives\DbExpressionVisitor_T.cs" />
-    <Compile Include="Primitives\DbFromClause.cs" />
-    <Compile Include="Primitives\DbFromClauseVisitor.cs" />
-    <Compile Include="Primitives\DbFromClauseVisitor_T.cs" />
-    <Compile Include="Primitives\DbFunctionExpression.cs" />
-    <Compile Include="Primitives\DbJoinClause.cs" />
-    <Compile Include="Primitives\DbJoinKind.cs" />
-    <Compile Include="Primitives\DbLogger.cs" />
-    <Compile Include="Primitives\DbNonQueryInvoker.cs" />
-    <Compile Include="Primitives\DbOverExpression.cs" />
-    <Compile Include="Primitives\DbParamExpression.cs" />
-    <Compile Include="Primitives\DbQueryBuilderExtensions.cs" />
-    <Compile Include="Primitives\DbQueryStatement.cs" />
-    <Compile Include="Primitives\DbReaderInvoker.cs" />
-    <Compile Include="Primitives\DbSelectStatement.cs" />
-    <Compile Include="Primitives\DbSession.cs" />
-    <Compile Include="Primitives\DbSession_T.cs" />
-    <Compile Include="Primitives\DbSetExtensions.cs" />
-    <Compile Include="Primitives\DbTableClause.cs" />
-    <Compile Include="Primitives\DbTableConstraint.cs" />
-    <Compile Include="Primitives\DbTransactionInvoker.cs" />
-    <Compile Include="Primitives\DbUnaryExpression.cs" />
-    <Compile Include="Primitives\DbUnaryExpressionKind.cs" />
-    <Compile Include="Primitives\DbUnionKind.cs" />
-    <Compile Include="Primitives\DbUnionStatement.cs" />
-    <Compile Include="Primitives\ColumnDefault.cs" />
-    <Compile Include="Primitives\ColumnDefault_T.cs" />
-    <Compile Include="Primitives\DbForeignKey.cs" />
-    <Compile Include="Primitives\FunctionExpression.cs" />
-    <Compile Include="Primitives\FunctionKey.cs" />
-    <Compile Include="Primitives\IMounter.cs" />
-    <Compile Include="Primitives\IColumn.cs" />
-    <Compile Include="Primitives\IDbConnectionInterceptor.cs" />
-    <Compile Include="Primitives\IDbNonQueryInterceptor.cs" />
-    <Compile Include="Primitives\IDbReaderInterceptor.cs" />
-    <Compile Include="Primitives\IDbTransactionInterceptor.cs" />
-    <Compile Include="Primitives\IdentityMapping.cs" />
-    <Compile Include="Primitives\IDesignable.cs" />
-    <Compile Include="Primitives\IIndexConstraint.cs" />
-    <Compile Include="Primitives\IExtension.cs" />
-    <Compile Include="Primitives\IndentedStringBuilder.cs" />
-    <Compile Include="Primitives\InsertScalarResult.cs" />
-    <Compile Include="Primitives\ExtensibleObject.cs" />
-    <Compile Include="Primitives\ExtensibleObject.ExtensionCollection.cs" />
-    <Compile Include="Primitives\ExtensibleObjectExtensions.cs" />
-    <Compile Include="Primitives\ExtensibleObjectInvoker.cs" />
-    <Compile Include="Primitives\JsonParser.cs" />
-    <Compile Include="Primitives\ModelMember.cs" />
-    <Compile Include="Primitives\ModelMemberExtensions.cs" />
-    <Compile Include="Primitives\NotNull.cs" />
-    <Compile Include="Primitives\ParamExpression.cs" />
-    <Compile Include="Primitives\DbPrimaryKey.cs" />
-    <Compile Include="Primitives\ScalarFunctionExpression.cs" />
-    <Compile Include="Primitives\DbUnique.cs" />
-    <Compile Include="Primitives\ValueExpression.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Strings.Designer.cs">
-      <DependentUpon>Strings.Resx</DependentUpon>
+    <Compile Update="Properties\Resources.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Primitives\KeyOutput.cs" />
-    <Compile Include="SortDirection.cs" />
-    <Compile Include="Utilities\ByteArrayExtensions.cs" />
-    <Compile Include="Utilities\Check.cs" />
-    <Compile Include="Utilities\CollectionExtensions.cs" />
-    <Compile Include="Utilities\GenericInvoker_T.cs" />
-    <Compile Include="Utilities\GenericInvoker_T_T1.cs" />
-    <Compile Include="Utilities\GenericInvoker_T_T1_T2.cs" />
-    <Compile Include="Utilities\NullableExtensions.cs" />
-    <Compile Include="Utilities\TypeExtensions.cs" />
-    <Compile Include="Utilities\UniqueNameManager.cs" />
-    <Compile Include="DataRowValidationResults.cs" />
-    <Compile Include="ValueChangedEventArgs.cs" />
-    <Compile Include="_Binary.cs" />
-    <Compile Include="_Boolean.cs" />
-    <Compile Include="_Byte.cs" />
-    <Compile Include="_CharEnum_T.cs" />
-    <Compile Include="_ByteEnum_T.cs" />
-    <Compile Include="_Char.cs" />
-    <Compile Include="_DataSet.cs" />
-    <Compile Include="_DateTime.cs" />
-    <Compile Include="_Decimal.cs" />
-    <Compile Include="_Double.cs" />
-    <Compile Include="_Guid.cs" />
-    <Compile Include="_Int16.cs" />
-    <Compile Include="_Int16Enum_T.cs" />
-    <Compile Include="_Int32.cs" />
-    <Compile Include="_Int32Enum_T.cs" />
-    <Compile Include="_Int64.cs" />
-    <Compile Include="_Int64Enum_T.cs" />
-    <Compile Include="_Single.cs" />
-    <Compile Include="_String.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Strings.resx">
+    <EmbeddedResource Update="Properties\Strings.resx">
       <LogicalName>DevZest.Data.Strings.resources</LogicalName>
-      <SubType>Designer</SubType>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
+
   <ItemGroup>
-    <Content Include="..\..\tools\Resources.tt">
-      <Link>Properties\Resources.tt</Link>
+    <None Update="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.cs</LastGenOutput>
-    </Content>
+    </None>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
