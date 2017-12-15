@@ -93,9 +93,11 @@ if ($projectDir -eq '')
 	$projectDir = (Get-Item -Path ".\" -Verbose).FullName
 }
 
+$projectName = Split-Path ($projectDir) -Leaf
+
 if ($files.Count -eq 0)
 {
-	$files = @('project.json', 'project.cs')
+	$files = @(($projectName + '.csproj'), 'project.cs')
 }
 
 for ($i=0; $i -lt $files.Count; $i++)

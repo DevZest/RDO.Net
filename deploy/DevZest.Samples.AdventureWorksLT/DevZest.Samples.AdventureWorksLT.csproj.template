@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>DevZest.Samples.AdventureWorksLT</AssemblyName>
+    <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageVersion>$PACKAGE_VERSION$</PackageVersion>
+    <DefineConstants>$(DefineConstants);DEPLOY</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PackageId>DevZest.Samples.AdventureWorksLT</PackageId>
+    <PackageTags>RDO.NET;ADO.NET</PackageTags>
+    <PackageLicenseUrl>http://www.devzest.com</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>http://www.devzest.com</RepositoryUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\test\AdventureWorksLT\**\*.cs" Exclude="bin\**;obj\**;" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevZest.Data.Common" Version="$PACKAGE_VERSION$" />
+    <PackageReference Include="DevZest.Data.SqlServer" Version="$PACKAGE_VERSION$" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
+  </ItemGroup>
+</Project>
