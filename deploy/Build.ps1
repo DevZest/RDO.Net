@@ -1,8 +1,7 @@
 param (
   [string]$version = '',
   [string]$additionalLabel = '',
-  [string]$projectDir = '',
-  [string[]]$files = @()
+  [string]$projectDir = ''
 )
 
 function showUsage()
@@ -22,15 +21,6 @@ function showUsage()
 	echo '  The project directory to build.'
 	echo '  If empty, current directory will be used.'
 	echo ''
-	echo 'Files...'
-	echo '  List of files to process.'
-	echo '  If empty, two files will be used: project.json and project.cs'.
-	exit
-}
-
-function fileNotFound([string]$fileName)
-{
-	echo ""
 	exit
 }
 
@@ -61,23 +51,6 @@ function getPackageVersion([string]$version, [string]$additionalLabel)
 	return $version + '-' + $additionalLabel;
 }
 
-function getTemplateFile([string]$dir, [string]$file)
-{
-	return (Join-Path $dir -ChildPath ($file + ".template"))
-}
-
-function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$assemblyFileVersion, [string]$packageVersion)
-{
-	for ($i=0; $i -lt $files.Count; $i++)
-	{
-		$srcFile = Join-Path $projectDir -ChildPath $files[$i]
-		$templateFile = getTemplateFile -dir $projectDir -file $files[$i]
-		$content = [System.IO.File]::ReadAllText($templateFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
-		[System.IO.File]::WriteAllText($srcFile, $content)
-	}
-}
-
-
 ########################################################################
 # Main Start
 ########################################################################
@@ -93,23 +66,6 @@ if ($projectDir -eq '')
 	$projectDir = (Get-Item -Path ".\" -Verbose).FullName
 }
 
-$projectName = Split-Path ($projectDir) -Leaf
-
-if ($files.Count -eq 0)
-{
-	$files = @(($projectName + '.csproj'), 'project.cs')
-}
-
-for ($i=0; $i -lt $files.Count; $i++)
-{
-	$file = getTemplateFile -dir $projectDir -file $files[$i]
-	if (!(Test-Path $file))
-	{
-		echo "File $file not found!"
-		exit
-	}
-}
-
 $major = $versions[0]
 $minor = $versions[1]
 $patch = $versions[2]
@@ -122,9 +78,5 @@ echo "ASSEMBLY_VERSION=$assemblyVersion"
 echo "ASSEMBLY_FILE_VERSION=$assemblyFileVersion"
 echo "PACKAGE_VERSION=$packageVersion"
 
-generateFiles -files $files -assemblyVersion $assemblyVersion -assemblyFileVersion $assemblyFileVersion -packageVersion $packageVersion
-
-dotnet restore "$projectDir"
-dotnet pack "$projectDir" --configuration Release
-
-generateFiles -files $files -assemblyVersion '0.0.0.0' -assemblyFileVersion '0.0.0.0' -packageVersion '0.0.0-dev'
+dotnet restore "$projectDir" /p:AssemblyVersion=$assemblyVersion /p:FileVersion=$assemblyFileVersion /p:PackageVersion=$packageVersion
+dotnet pack "$projectDir" --configuration Release /p:AssemblyVersion=$assemblyVersion /p:FileVersion=$assemblyFileVersion /p:PackageVersion=$packageVersion

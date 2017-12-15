@@ -5,9 +5,20 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>DevZest.Data.SqlServer</AssemblyName>
     <RootNamespace>DevZest.Data.SqlServer</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageVersion Condition=" '$(PackageVersion)'=='' ">1.0.0</PackageVersion>
+    <AssemblyVersion Condition=" '$(AssemblyVersion)'=='' ">1.0.0.0</AssemblyVersion>
+    <FileVersion Condition=" '$(FileVersion)'=='' ">1.0.0.0</FileVersion>
+    <InformationalVersion>$(PackageVersion)</InformationalVersion>
+    <Authors>Weifen Luo | DevZest</Authors>
+    <Company>DevZest</Company>
+    <Product>DevZest RDO.NET SQL Server Implementation</Product>
+    <Description>DevZest RDO.NET SQL Server Implementation</Description>
+    <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
