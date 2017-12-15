@@ -1,225 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{406601E1-B089-41BB-8E8B-2A0AF0E402C5}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>DevZest.Data</RootNamespace>
     <AssemblyName>Data.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\tools\Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Moq, Version=4.5.16.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.5.16\lib\net45\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.SqlClient, Version=4.2.0.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Data.SqlClient.4.4.2\lib\net461\System.Data.SqlClient.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
+    <PackageReference Include="Moq" Version="4.7.145" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
   </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
+
   <ItemGroup>
-    <Compile Include="Annotations\AutoDateTimeAttributeTests.cs" />
-    <Compile Include="Annotations\AutoGuidAttributeTests.cs" />
-    <Compile Include="Annotations\CheckAttributeTests.cs" />
-    <Compile Include="Annotations\ColumnInitializerAttributeTests.cs" />
-    <Compile Include="Annotations\ColumnValidatorAttributeTests.cs" />
-    <Compile Include="Annotations\ComputationAttributeTests.cs" />
-    <Compile Include="Annotations\CreditCardAttributeTests.cs" />
-    <Compile Include="Annotations\DbColumnNameAttributeTests.cs" />
-    <Compile Include="Annotations\DefaultValueAttributeTests.cs" />
-    <Compile Include="Annotations\DisplayAttributeTests.cs" />
-    <Compile Include="Annotations\EmailAddressAttributeTests.cs" />
-    <Compile Include="Annotations\IdentityAttributeTests.cs" />
-    <Compile Include="Annotations\ModelExtenderAttributeTests.cs" />
-    <Compile Include="Annotations\ModelValidatorAttributeTests.cs" />
-    <Compile Include="Annotations\PhoneAttributeTests.cs" />
-    <Compile Include="Annotations\RegularExpressionAttributeTests.cs" />
-    <Compile Include="Annotations\RequiredAttributeTests.cs" />
-    <Compile Include="Annotations\StringLengthAttributeTests.cs" />
-    <Compile Include="Annotations\DbIndexAttributeTests.cs" />
-    <Compile Include="Annotations\UniqueAttributeTests.cs" />
-    <Compile Include="Annotations\DbCompositeIndexAttributeTests.cs" />
-    <Compile Include="Annotations\CompositeUniqueAttributeTests.cs" />
-    <Compile Include="Annotations\UrlAttributeTests.cs" />
-    <Compile Include="BinaryTests.cs" />
-    <Compile Include="CaseTests.cs" />
-    <Compile Include="ColumnTranslateToTests.cs" />
-    <Compile Include="DataRowTests.cs" />
-    <Compile Include="DataSetContainerTests.cs" />
-    <Compile Include="DbTableDeleteTests.cs" />
-    <Compile Include="Helpers\DbSessionExtensions.cs" />
-    <Compile Include="Helpers\DbTableExtensions.cs" />
-    <Compile Include="Helpers\SimpleModelDataSetHelper.cs" />
-    <Compile Include="Helpers\SqlCommandExtensions.cs" />
-    <Compile Include="Annotations\JsonIgnoreAttributeTests.cs" />
-    <Compile Include="Helpers\StringExtensions.cs" />
-    <Compile Include="JsonOrderByTests.cs" />
-    <Compile Include="LocalColumnManagerTests.cs" />
-    <Compile Include="PagedDataSetTests.cs" />
-    <Compile Include="ColumnSetTests.cs" />
-    <Compile Include="SqlServer\_SqlXmlTests.cs" />
-    <Compile Include="ColumnValueBagTests.cs" />
-    <Compile Include="Utilities\TypeExtensionsTests.cs" />
-    <Compile Include="ValidationResultTests.cs" />
-    <Compile Include="_ByteEnumTests.cs" />
-    <Compile Include="_CharEnumTests.cs" />
-    <Compile Include="_CharTests.cs" />
-    <Compile Include="ColumnTests.cs" />
-    <Compile Include="_DateTimeTests.cs" />
-    <Compile Include="FunctionsAggregateTests.cs" />
-    <Compile Include="Helpers\DbQueryExtensions.cs" />
-    <Compile Include="DbQueryTests.cs" />
-    <Compile Include="DbSetTests.cs" />
-    <Compile Include="DbTableUpdateTests.cs" />
-    <Compile Include="DbTableInsertTests.cs" />
-    <Compile Include="DbSessionTests.cs" />
-    <Compile Include="Primitives\ResourceContainerTests.cs" />
-    <Compile Include="SqlServer\SqlSessionTests.cs" />
-    <Compile Include="SqlServer\StringExtensionsTests.cs" />
-    <Compile Include="Resources\Json.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Json.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SqlServer\ColumnExtensionsTests.cs" />
-    <Compile Include="SqlServer\_TimeSpanTests.cs" />
-    <Compile Include="SqlServer\_DateTimeOffsetTests.cs" />
-    <Compile Include="SqlServer\DbExpressionSqlGeneratorTests.cs" />
-    <Compile Include="_Int16EnumTests.cs" />
-    <Compile Include="_Int32EnumTests.cs" />
-    <Compile Include="_Int64EnumTests.cs" />
-    <Compile Include="_StringTests.cs" />
-    <Compile Include="_SingleTests.cs" />
-    <Compile Include="_Int64Tests.cs" />
-    <Compile Include="_Int16Tests.cs" />
-    <Compile Include="_GuidTests.cs" />
-    <Compile Include="_DoubleTests.cs" />
-    <Compile Include="_DecimalTests.cs" />
-    <Compile Include="_ByteTests.cs" />
-    <Compile Include="_BinaryTests.cs" />
-    <Compile Include="_Int32Tests.cs" />
-    <Compile Include="_BooleanTests.cs" />
-    <Compile Include="DataSetTests.cs" />
-    <Compile Include="FunctionsTests.cs" />
-    <Compile Include="Helpers\SimpleModelBase.cs" />
-    <Compile Include="Helpers\SimpleModelKey.cs" />
-    <Compile Include="Helpers\ModelCollectionExtensions.cs" />
-    <Compile Include="Helpers\ColumnExtensions.cs" />
-    <Compile Include="ModelTests.cs" />
-    <Compile Include="Primitives\MounterManagerTests.cs" />
-    <Compile Include="KeyBaseTests.cs" />
-    <Compile Include="Helpers\DbExpressionExtensions.cs" />
-    <Compile Include="Helpers\ModelMemberExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\ByteArrayExtensionsTests.cs" />
-    <Compile Include="Utilities\UniqueNameManagerTests.cs" />
+    <ProjectReference Include="..\..\src\Data.Common\Data.Common.csproj" />
+    <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
+    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Json.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Json.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj">
-      <Project>{1b21d8eb-46ca-4059-b753-25481b3ef739}</Project>
-      <Name>AdventureWorksLT</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Data.Common\Data.Common.csproj">
-      <Project>{f6f84b00-da10-4559-a183-403af6e9bf16}</Project>
-      <Name>Data.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj">
-      <Project>{a6fa783f-4ada-4bea-9422-df79344ec625}</Project>
-      <Name>Data.SqlServer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

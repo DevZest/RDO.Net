@@ -83,8 +83,19 @@ namespace DevZest.Data.Primitives
 
         class Extension
         {
-            public static readonly Mounter<TargetTypeAttached, PropertyType> _Property3 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty3(x));
-            public static readonly Mounter<TargetTypeAttached, PropertyType> _Property4 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty4(x));
+            // It's very interesting the following code does not work under .Net Core 2.0, it works for .Net Framework 4.6.1 though.
+            // In .Net Core 2.0, the static field initializer does not get called, you have to initialize in the static constructor.
+            //public static readonly Mounter<TargetTypeAttached, PropertyType> _Property3 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty3(x));
+            //public static readonly Mounter<TargetTypeAttached, PropertyType> _Property4 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty4(x));
+
+            public static readonly Mounter<TargetTypeAttached, PropertyType> _Property3;
+            public static readonly Mounter<TargetTypeAttached, PropertyType> _Property4;
+
+            static Extension()
+            {
+                _Property3 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty3(x));
+                _Property4 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty4(x));
+            }
 
             public static PropertyType GetProperty3(TargetTypeAttached target)
             {
