@@ -112,7 +112,7 @@ namespace DevZest.Data
             Assert.IsFalse(model.IsInitialized);
             Assert.IsNull(model.ChildModel);
 
-            model.EnsureInitialized();
+            model.EnsureInitialized(false);
             Assert.IsTrue(model.IsInitialized);
 
             var childModel = model.ChildModel;
@@ -213,7 +213,7 @@ namespace DevZest.Data
         {
             model.ColumnList.Add<_Int32>();
             model.ColumnList.Add<_Int32>();
-            model.EnsureInitialized();
+            model.EnsureInitialized(false);
             model.SetDataSource(ds);
         }
 

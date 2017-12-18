@@ -297,8 +297,17 @@ namespace DevZest.Data
         {
             if (IsInitialized)
                 return;
+            EnsureInitialized(true);
+        }
 
-            if (DataSource == null)
+#if DEBUG
+        internal
+#else
+        private
+#endif
+        void EnsureInitialized(bool verifyDataSource)
+        {
+            if (verifyDataSource &&  DataSource == null)
                 throw new InvalidOperationException(DiagnosticMessages.Model_EnsureInitializedNullDataSource);
 
             Mount(s_childModelManager);
@@ -504,7 +513,7 @@ namespace DevZest.Data
             set { _ordinal = value; }
         }
 
-        #region IModelSet
+#region IModelSet
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IModels.Contains(Model model)
         {
@@ -565,7 +574,7 @@ namespace DevZest.Data
         {
             return Models.Empty;
         }
-        #endregion
+#endregion
 
         internal static T Clone<T>(T prototype, bool setDataSource)
             where T : Model, new()

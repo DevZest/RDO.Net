@@ -37,7 +37,7 @@ namespace DevZest.Data.Annotations
         public void ModeExtenderAttribute()
         {
             var headerWithExt = new HeaderWithExt();
-            headerWithExt.EnsureInitialized();
+            headerWithExt.EnsureInitialized(false);
             Assert.IsNotNull(headerWithExt.GetExtender<Header.Ext>());
             Assert.IsNotNull(headerWithExt.Details.GetExtender<Detail.Ext>());
         }
