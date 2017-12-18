@@ -1,4 +1,4 @@
-<#@ template hostspecific="true" #>
+﻿<#@ template hostspecific="true" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="System.Windows.Forms" #>
 <#@ assembly name="Microsoft.VisualStudio.Shell.Interop.8.0" #>
@@ -26,7 +26,6 @@
     var fileNamespace = !string.IsNullOrEmpty(templateNamespace) ? templateNamespace : projectNamespace;
     var projectName = Path.GetFileName(projectDirectory.TrimEnd('/'));
     var namedParameterMatcher = new Regex(@"\{([a-z]\w+)\}", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(1000.0));
-    var numberParameterMatcher = new Regex(@"\{(\d+)\}", default(RegexOptions), TimeSpan.FromMilliseconds(1000.0));
 
     foreach (var resxFile in Directory.EnumerateFiles(projectDirectory, "*.resx", SearchOption.AllDirectories))
     {
@@ -47,7 +46,6 @@
                 if (match.Count == 0)
                 {
                     usingNamedArgs = false;
-                    match = numberParameterMatcher.Matches(value);
                 }
 
                 var arguments = match.Cast<Match>()

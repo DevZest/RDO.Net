@@ -38,12 +38,6 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\tools\Resources.cs">
-      <Link>Properties\Resources.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.tt</DependentUpon>
-    </Compile>
     <Compile Include="Presenters\AsyncValidator.cs" />
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
     <Compile Include="Presenters\BindingFactory.GridHeader.cs" />
@@ -83,6 +77,11 @@
     <Compile Include="Presenters\ScalarValidationProgress.cs" />
     <Compile Include="Presenters\ServiceManager.cs" />
     <Compile Include="Presenters\CommandExtensions.cs" />
+    <Compile Include="Properties\Resources.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.tt</DependentUpon>
+    </Compile>
     <Compile Include="Views\GridHeader.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
     <Compile Include="Views\SelectionHandler.cs" />
@@ -255,11 +254,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\tools\Resources.tt">
-      <Link>Properties\Resources.tt</Link>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Resources.cs</LastGenOutput>
-    </Content>
     <Resource Include="Resources\ClearData.png" />
     <Resource Include="Resources\Cancel.ico" />
   </ItemGroup>
@@ -335,6 +329,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\Resources.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
