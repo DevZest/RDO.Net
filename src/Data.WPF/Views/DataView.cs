@@ -15,8 +15,8 @@ namespace DevZest.Data.Views
     {
         public abstract class Commands
         {
-            public static readonly RoutedUICommand RetryDataLoad = new RoutedUICommand(UIText.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoad), typeof(Commands));
-            public static readonly RoutedUICommand CancelDataLoad = new RoutedUICommand(UIText.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoad), typeof(Commands));
+            public static readonly RoutedUICommand RetryDataLoad = new RoutedUICommand(UserMessages.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoad), typeof(Commands));
+            public static readonly RoutedUICommand CancelDataLoad = new RoutedUICommand(UserMessages.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoad), typeof(Commands));
         }
 
         public interface ICommandService : IService

@@ -6,10 +6,10 @@ namespace DevZest.Data
     using System.Reflection;
     using System.Resources;
 
-    internal static class UIText
+    internal static class UserMessages
     {
         private static readonly ResourceManager _resourceManager
-            = new ResourceManager("DevZest.Data.UIText", typeof(UIText).GetTypeInfo().Assembly);
+            = new ResourceManager("DevZest.Data.UserMessages", typeof(UserMessages).GetTypeInfo().Assembly);
 
         /// <summary>
         /// _Sort...

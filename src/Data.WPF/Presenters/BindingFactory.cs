@@ -17,11 +17,11 @@ namespace DevZest.Data.Presenters
             where T : UIElement, new()
         {
             if (editingRowBinding.Input == null)
-                throw new ArgumentException(Strings.InPlaceEditor_EditingRowBindingNullInput, nameof(editingRowBinding));
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingRowBindingNullInput, nameof(editingRowBinding));
 
             var column = editingRowBinding.Input.Target as Column;
             if (column == null)
-                throw new ArgumentException(Strings.InPlaceEditor_EditingRowBindingNotColumn, nameof(editingRowBinding));
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingRowBindingNotColumn, nameof(editingRowBinding));
             var inertRowBinding = column.AsTextBlock(format, formatProvider);
             return ComposeInPlaceEditor(editingRowBinding, inertRowBinding);
         }
@@ -31,7 +31,7 @@ namespace DevZest.Data.Presenters
             where TInert : UIElement, new()
         {
             if (editingRowBinding.Input == null)
-                throw new ArgumentException(Strings.InPlaceEditor_EditingRowBindingNullInput, nameof(editingRowBinding));
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingRowBindingNullInput, nameof(editingRowBinding));
             if (inertRowBinding == null)
                 throw new ArgumentNullException(nameof(inertRowBinding));
             return ComposeInPlaceEditor(editingRowBinding, inertRowBinding);

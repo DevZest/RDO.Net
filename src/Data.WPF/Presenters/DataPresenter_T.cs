@@ -29,7 +29,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(dataSet));
 
             if (dataView.DataPresenter != null && dataView.DataPresenter != this)
-                throw new ArgumentException(Strings.DataPresenter_InvalidDataView, nameof(dataView));
+                throw new ArgumentException(DiagnosticMessages.DataPresenter_InvalidDataView, nameof(dataView));
 
             if (_dataLoader != null)
                 _dataLoader.Reset();
@@ -377,7 +377,7 @@ namespace DevZest.Data.Presenters
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
             if (LayoutManager == null)
-                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
             Mount(View, dataSet, where, orderBy, true);
         }
 
@@ -394,7 +394,7 @@ namespace DevZest.Data.Presenters
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
             if (LayoutManager == null)
-                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);
@@ -414,7 +414,7 @@ namespace DevZest.Data.Presenters
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
             if (LayoutManager == null)
-                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);

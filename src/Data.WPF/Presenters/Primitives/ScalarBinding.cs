@@ -94,7 +94,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal override void VerifyRowRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
-                throw new InvalidOperationException(Strings.ScalarBinding_IntersectsWithRowRange(Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.ScalarBinding_IntersectsWithRowRange(Ordinal));
 
             if (!FlowRepeatable)
                 return;
@@ -102,15 +102,15 @@ namespace DevZest.Data.Presenters.Primitives
             if (Template.Flowable(Orientation.Horizontal))
             {
                 if (!rowRange.Contains(GridRange.Left) || !rowRange.Contains(GridRange.Right))
-                    throw new InvalidOperationException(Strings.ScalarBinding_OutOfHorizontalRowRange(Ordinal));
+                    throw new InvalidOperationException(DiagnosticMessages.ScalarBinding_OutOfHorizontalRowRange(Ordinal));
             }
             else if (Template.Flowable(Orientation.Vertical))
             {
                 if (!rowRange.Contains(GridRange.Top) || !rowRange.Contains(GridRange.Bottom))
-                    throw new InvalidOperationException(Strings.ScalarBinding_OutOfVerticalRowRange(Ordinal));
+                    throw new InvalidOperationException(DiagnosticMessages.ScalarBinding_OutOfVerticalRowRange(Ordinal));
             }
             else
-                throw new InvalidOperationException(Strings.ScalarBinding_FlowRepeatableNotAllowedByTemplate(Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.ScalarBinding_FlowRepeatableNotAllowedByTemplate(Ordinal));
         }
 
         private ElementManager ElementManager
@@ -168,13 +168,13 @@ namespace DevZest.Data.Presenters.Primitives
         private void VerifyHorizontalStretches()
         {
             if (GridRange.HorizontallyIntersectsWith(Template.GridColumns.Count - Template.Stretches))
-                throw new InvalidOperationException(Strings.ScalarBinding_InvalidStretches(Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.ScalarBinding_InvalidStretches(Ordinal));
         }
 
         private void VerifyVerticalStretches()
         {
             if (GridRange.VerticallyIntersectsWith(Template.GridRows.Count - Template.Stretches))
-                throw new InvalidOperationException(Strings.ScalarBinding_InvalidStretches(Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.ScalarBinding_InvalidStretches(Ordinal));
         }
 
         internal override AutoSizeWaiver CoercedAutoSizeWaiver

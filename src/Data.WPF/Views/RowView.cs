@@ -19,8 +19,8 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand BeginEdit = new RoutedUICommand();
             public static readonly RoutedUICommand CancelEdit = new RoutedUICommand();
             public static readonly RoutedUICommand EndEdit = new RoutedUICommand();
-            public static readonly RoutedUICommand Expand = new RoutedUICommand(UIText.RowViewCommands_ExpandCommandText, nameof(Expand), typeof(Commands));
-            public static readonly RoutedUICommand Collapse = new RoutedUICommand(UIText.RowViewCommands_CollapseCommandText, nameof(Collapse), typeof(Commands));
+            public static readonly RoutedUICommand Expand = new RoutedUICommand(UserMessages.RowViewCommands_ExpandCommandText, nameof(Expand), typeof(Commands));
+            public static readonly RoutedUICommand Collapse = new RoutedUICommand(UserMessages.RowViewCommands_CollapseCommandText, nameof(Collapse), typeof(Commands));
         }
 
         public interface ICommandService : IService

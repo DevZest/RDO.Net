@@ -144,7 +144,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void VerifyRowRange()
         {
             if (RowRange.IsEmpty)
-                throw new InvalidOperationException(Strings.Template_EmptyRowRange);
+                throw new InvalidOperationException(DiagnosticMessages.Template_EmptyRowRange);
 
             for (int i = 0; i < RowBindings.Count; i++)
             {

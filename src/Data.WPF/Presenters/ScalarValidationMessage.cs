@@ -12,7 +12,7 @@ namespace DevZest.Data.Presenters
         {
             Check.NotNull(source, nameof(source));
             if (source.Count == 0)
-                throw new ArgumentException(Strings.ScalarValidationMessage_EmptySourceScalars, nameof(source));
+                throw new ArgumentException(DiagnosticMessages.ScalarValidationMessage_EmptySourceScalars, nameof(source));
         }
 
         #region IScalarValidationMessageGroup

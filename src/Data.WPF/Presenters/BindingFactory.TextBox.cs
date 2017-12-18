@@ -7,7 +7,7 @@ namespace DevZest.Data.Presenters
     {
         private static string GetInvalidInputErrorMessage(string value, Type type)
         {
-            return string.IsNullOrEmpty(value) ? Strings.BindingFactory_InvalidInput(type) : value;
+            return string.IsNullOrEmpty(value) ? DiagnosticMessages.BindingFactory_InvalidInput(type) : value;
         }
 
         public static RowBinding<TextBox> AsTextBox(this _String source)

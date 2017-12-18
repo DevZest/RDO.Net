@@ -113,7 +113,7 @@ namespace DevZest.Data.Presenters
         {
             VerifyNotSealed();
             if (Input != null)
-                throw new InvalidOperationException(Strings.TwoWayBinding_InputAlreadyExists);
+                throw new InvalidOperationException(DiagnosticMessages.TwoWayBinding_InputAlreadyExists);
 
             return Input = new RowInput<T>(this, flushTrigger);
         }

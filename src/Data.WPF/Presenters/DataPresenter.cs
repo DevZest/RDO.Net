@@ -78,7 +78,7 @@ namespace DevZest.Data.Presenters
         private LayoutManager RequireLayoutManager()
         {
             if (LayoutManager == null)
-                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
             return LayoutManager;
         }
 
@@ -130,7 +130,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(paramName);
 
             if (value.DataPresenter != this)
-                throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, paramName);
+                throw new ArgumentException(DiagnosticMessages.DataPresenter_InvalidRowPresenter, paramName);
         }
 
         public void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true)
@@ -193,11 +193,11 @@ namespace DevZest.Data.Presenters
         private void VerifyInsert(RowPresenter row)
         {
             if (!CanInsert)
-                throw new InvalidOperationException(Strings.DataPresenter_VerifyCanInsert);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_VerifyCanInsert);
             if (row != null)
             {
                 if (row.DataPresenter != this || row.Parent != null)
-                    throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, nameof(row));
+                    throw new ArgumentException(DiagnosticMessages.DataPresenter_InvalidRowPresenter, nameof(row));
             }
         }
 

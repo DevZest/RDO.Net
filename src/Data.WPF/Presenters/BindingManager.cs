@@ -165,7 +165,7 @@ namespace DevZest.Data.Presenters
             if (compositeView == null)
                 throw new ArgumentNullException(paramName);
             if (compositeView.GetBinding() != binding)
-                throw new ArgumentException(Strings.Binding_InvalidCompositeView, paramName);
+                throw new ArgumentException(DiagnosticMessages.Binding_InvalidCompositeView, paramName);
         }
 
         public static RowBinding<T> AddBehavior<T>(this RowBinding<T> rowBinding, IRowBindingBehavior<T> behavior)

@@ -69,22 +69,22 @@ namespace DevZest.Data.Presenters.Primitives
         internal override void VerifyRowRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
-                throw new InvalidOperationException(Strings.BlockBinding_IntersectsWithRowRange(Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.BlockBinding_IntersectsWithRowRange(Ordinal));
 
             if (!Template.Orientation.HasValue)
-                throw new InvalidOperationException(Strings.BlockBinding_NullOrientation);
+                throw new InvalidOperationException(DiagnosticMessages.BlockBinding_NullOrientation);
 
             var orientation = Template.Orientation.GetValueOrDefault();
             if (orientation == Orientation.Horizontal)
             {
                 if (!rowRange.Contains(GridRange.Left) || !rowRange.Contains(GridRange.Right))
-                    throw new InvalidOperationException(Strings.BlockBinding_OutOfHorizontalRowRange(Ordinal));
+                    throw new InvalidOperationException(DiagnosticMessages.BlockBinding_OutOfHorizontalRowRange(Ordinal));
             }
             else
             {
                 Debug.Assert(orientation == Orientation.Vertical);
                 if (!rowRange.Contains(GridRange.Top) || !rowRange.Contains(GridRange.Bottom))
-                    throw new InvalidOperationException(Strings.BlockBinding_OutOfVerticalRowRange(Ordinal));
+                    throw new InvalidOperationException(DiagnosticMessages.BlockBinding_OutOfVerticalRowRange(Ordinal));
             }
         }
 

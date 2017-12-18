@@ -94,7 +94,7 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < inputGestures.Count; i++)
             {
                 if (inputGestures[i] == null)
-                    throw new ArgumentException(Strings.ArgumentNullAtIndex(nameof(inputGestures), i), nameof(inputGestures));
+                    throw new ArgumentException(DiagnosticMessages.ArgumentNullAtIndex(nameof(inputGestures), i), nameof(inputGestures));
             }
         }
 

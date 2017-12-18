@@ -184,7 +184,7 @@ namespace DevZest.Data.Presenters
                 return this;
 
             if (Template.RowValidationScope == RowValidationScope.All && Template.InternalRowAsyncValidators.Any(x => x.ValidationScope == RowValidationScope.All))
-                throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
+                throw new InvalidOperationException(DiagnosticMessages.TemplateBuilder_AsyncValidatorScopeConflict);
             Template.RowValidationScope = value;
             return this;
         }
@@ -210,7 +210,7 @@ namespace DevZest.Data.Presenters
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
             if (Template.RowValidationScope == RowValidationScope.Current)
-                throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
+                throw new InvalidOperationException(DiagnosticMessages.TemplateBuilder_AsyncValidatorScopeConflict);
             Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(RowAsyncValidator.Create(Template, sourceColumns, action, postAction));
             return this;
         }
@@ -268,7 +268,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(childModel));
 
             if (childModel.GetParentModel() != _model || childModel.GetType() != _model.GetType())
-                throw new ArgumentException(Strings.TemplateBuilder_InvalidRecursiveChildModel);
+                throw new ArgumentException(DiagnosticMessages.TemplateBuilder_InvalidRecursiveChildModel);
 
             Template.RecursiveModelOrdinal = childModel.GetOrdinal();
             return this;

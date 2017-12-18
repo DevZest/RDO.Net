@@ -255,11 +255,11 @@ namespace DevZest.Data.Presenters.Primitives
         internal void VerifyFrozenMargins()
         {
             if (FrozenHeadTracksCount > HeadTracksCount)
-                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(FrozenHeadName));
+                throw new InvalidOperationException(DiagnosticMessages.Template_InvalidFrozenMargin(FrozenHeadName));
             if (FrozenTailTracksCount > TailTracksCount)
-                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(FrozenTailName));
+                throw new InvalidOperationException(DiagnosticMessages.Template_InvalidFrozenMargin(FrozenTailName));
             if (Stretches > FrozenTailTracksCount)
-                throw new InvalidOperationException(Strings.Template_InvalidStretches(FrozenTailName));
+                throw new InvalidOperationException(DiagnosticMessages.Template_InvalidStretches(FrozenTailName));
         }
 
         public GridTrack ContainerStart

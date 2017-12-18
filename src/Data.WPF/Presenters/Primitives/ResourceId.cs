@@ -32,7 +32,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var result = LoadResourceDictionary(_uriString)[this] as T; 
             if (result == null)
-                throw new InvalidOperationException(Strings.ResourceId_ResourceNotFound);
+                throw new InvalidOperationException(DiagnosticMessages.ResourceId_ResourceNotFound);
             return result;
         }
 

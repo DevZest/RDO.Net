@@ -84,7 +84,7 @@ namespace DevZest.Data.Presenters.Primitives
                 return gridRange;
 
             if (Template != gridRange.Template)
-                throw new ArgumentException(Strings.GridRange_InvalidOwner, nameof(gridRange));
+                throw new ArgumentException(DiagnosticMessages.GridRange_InvalidOwner, nameof(gridRange));
 
             return new GridRange(
                 Left.Ordinal < gridRange.Left.Ordinal ? Left : gridRange.Left,

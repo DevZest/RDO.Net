@@ -21,8 +21,8 @@ namespace DevZest.Data.Views
 
             protected override void OnInitializing()
             {
-                ColumnHeader = CreateLocalColumn<ColumnHeader>(builder => builder.DisplayName = UIText.SortModel_Column);
-                Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UIText.SortModel_Direction);
+                ColumnHeader = CreateLocalColumn<ColumnHeader>(builder => builder.DisplayName = UserMessages.SortModel_Column);
+                Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UserMessages.SortModel_Direction);
                 base.OnInitializing();
             }
 
@@ -31,9 +31,9 @@ namespace DevZest.Data.Views
                 var result = base.Validate(dataRow);
 
                 if (ColumnHeader[dataRow] == null)
-                    result = result.Add(new ColumnValidationMessage(ValidationSeverity.Error, UIText.SortModel_InputRequired(ColumnHeader.DisplayName), ColumnHeader));
+                    result = result.Add(new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(ColumnHeader.DisplayName), ColumnHeader));
                 if (Direction[dataRow] == SortDirection.Unspecified)
-                    result = result.Add(new ColumnValidationMessage(ValidationSeverity.Error, UIText.SortModel_InputRequired(Direction.DisplayName), Direction));
+                    result = result.Add(new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(Direction.DisplayName), Direction));
 
                 return result;
             }
@@ -58,8 +58,8 @@ namespace DevZest.Data.Views
                 {
                     return new[]
                     {
-                        new { Value = SortDirection.Ascending, Display = UIText.SortWindow_EnumAscending },
-                        new { Value = SortDirection.Descending, Display = UIText.SortWindow_EnumDescending }
+                        new { Value = SortDirection.Ascending, Display = UserMessages.SortWindow_EnumAscending },
+                        new { Value = SortDirection.Descending, Display = UserMessages.SortWindow_EnumDescending }
                     };
                 }
             }

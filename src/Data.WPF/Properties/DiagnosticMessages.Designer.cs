@@ -6,10 +6,10 @@ namespace DevZest.Data
     using System.Reflection;
     using System.Resources;
 
-    internal static class Strings
+    internal static class DiagnosticMessages
     {
         private static readonly ResourceManager _resourceManager
-            = new ResourceManager("DevZest.Data.Strings", typeof(Strings).GetTypeInfo().Assembly);
+            = new ResourceManager("DevZest.Data.DiagnosticMessages", typeof(DiagnosticMessages).GetTypeInfo().Assembly);
 
         /// <summary>
         /// The {array}[{index}] is null.

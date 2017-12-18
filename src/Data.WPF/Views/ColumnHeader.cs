@@ -61,7 +61,7 @@ namespace DevZest.Data.Views
         public abstract class Commands
         {
             public static readonly RoutedUICommand ToggleSortDirection = new RoutedUICommand(nameof(ToggleSortDirection), nameof(ToggleSortDirection), typeof(Commands));
-            public static readonly RoutedUICommand Sort = new RoutedUICommand(UIText.ColumnHeaderCommands_SortCommandText, nameof(Sort), typeof(Commands));
+            public static readonly RoutedUICommand Sort = new RoutedUICommand(UserMessages.ColumnHeaderCommands_SortCommandText, nameof(Sort), typeof(Commands));
         }
 
         private interface ICommandManager : IService

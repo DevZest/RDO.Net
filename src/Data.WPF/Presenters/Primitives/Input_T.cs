@@ -21,7 +21,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void VerifyNotInitialized(Trigger<T> trigger, string paramName)
         {
             if (trigger.ExecuteAction != null)
-                throw new ArgumentException(Strings.Input_TriggerAlreadyInitialized, paramName);
+                throw new ArgumentException(DiagnosticMessages.Input_TriggerAlreadyInitialized, paramName);
         }
 
         private Trigger<T> _flushTrigger;

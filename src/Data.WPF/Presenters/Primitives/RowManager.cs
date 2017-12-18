@@ -696,7 +696,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (oldValue == value)
                 return;
             if (verifyIsEditing && IsEditing)
-                throw new InvalidOperationException(Strings.RowManager_ChangeEditingRowNotAllowed);
+                throw new InvalidOperationException(DiagnosticMessages.RowManager_ChangeEditingRowNotAllowed);
             _currentRow = value;
             OnCurrentRowChanged(oldValue);
         }

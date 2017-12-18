@@ -95,7 +95,7 @@ namespace DevZest.Data.Presenters
             Debug.Assert(CurrentRow != null);
             var currentRow = CurrentRow;
             if (currentRow != element.GetRowPresenter())
-                throw new InvalidOperationException(Strings.RowInput_FlushCurrentRowOnly);
+                throw new InvalidOperationException(DiagnosticMessages.RowInput_FlushCurrentRowOnly);
             var flushed = DoFlush(currentRow, element);
             if (flushed)
                 InputManager.MakeProgress(this);

@@ -81,7 +81,7 @@ namespace DevZest.Data.Presenters.Primitives
             }
             catch (FormatException ex)
             {
-                Assert.AreEqual(ex.Message, Strings.GridLengthParser_InvalidInput(input));
+                Assert.AreEqual(ex.Message, DiagnosticMessages.GridLengthParser_InvalidInput(input));
             }
         }
     }

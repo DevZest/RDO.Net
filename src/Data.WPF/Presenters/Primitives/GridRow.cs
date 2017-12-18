@@ -63,12 +63,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal override string InvalidStarLengthMessage
         {
-            get { return Strings.GridRow_InvalidStarHeight(Ordinal); }
+            get { return DiagnosticMessages.GridRow_InvalidStarHeight(Ordinal); }
         }
 
         internal override string InvalidAutoLengthMessage
         {
-            get { return Strings.GridRow_InvalidAutoHeight(Ordinal); }
+            get { return DiagnosticMessages.GridRow_InvalidAutoHeight(Ordinal); }
         }
     }
 }

@@ -8,7 +8,7 @@
         xmlns:v="clr-namespace:DevZest.Data.Views"
         WindowStartupLocation="Manual"
         WindowStyle="ToolWindow"
-        Title="{x:Static res:UIText.SortWindow_Title}"
+        Title="{x:Static res:UserMessages.SortWindow_Title}"
         Width="300" Height="250">
     <Window.Resources>
         <Color x:Key="DisabledForegroundColor">#FF888888</Color>
@@ -49,15 +49,15 @@
             <Button Command="{x:Static v:SortWindow.Delete}">
                 <StackPanel Orientation="Horizontal">
                     <Image Width="12" Source="/DevZest.Data.WPF;component/Resources/Cancel.ico" />
-                    <TextBlock Text="{x:Static res:UIText.SortWindow_DeleteLevel}"
+                    <TextBlock Text="{x:Static res:UserMessages.SortWindow_DeleteLevel}"
                                Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}}, Path=Foreground}" />
                 </StackPanel>
             </Button>
         </StackPanel>
         <v:DataView x:Name="_dataView" HorizontalAlignment="Stretch" Height="150" BorderThickness="1" BorderBrush="Gray" Margin="0,5,0,0" />
         <UniformGrid HorizontalAlignment="Right" Margin="0,5,0,0">
-            <Button IsDefault="True" Content="{x:Static res:UIText._OK}" Command="{x:Static v:SortWindow.Apply}" />
-            <Button Margin="5,0,0,0" IsCancel="True" Content="{x:Static res:UIText._Cancel}" Command="{x:Static v:SortWindow.Cancel}" />
+            <Button IsDefault="True" Content="{x:Static res:UserMessages._OK}" Command="{x:Static v:SortWindow.Apply}" />
+            <Button Margin="5,0,0,0" IsCancel="True" Content="{x:Static res:UserMessages._Cancel}" Command="{x:Static v:SortWindow.Cancel}" />
         </UniformGrid>
     </StackPanel>
 </Window>

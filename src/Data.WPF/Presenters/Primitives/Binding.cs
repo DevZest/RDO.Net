@@ -36,7 +36,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal void VerifyNotSealed()
         {
             if (IsSealed)
-                throw new InvalidOperationException(Strings.Binding_VerifyNotSealed);
+                throw new InvalidOperationException(DiagnosticMessages.Binding_VerifyNotSealed);
         }
 
         internal static void VerifyAdding(Binding binding, string paramName)
@@ -45,7 +45,7 @@ namespace DevZest.Data.Presenters.Primitives
                 throw new ArgumentNullException(paramName);
 
             if (binding.Template != null || binding.ParentBinding != null)
-                throw new ArgumentException(Strings.Binding_VerifyAdding, paramName);
+                throw new ArgumentException(DiagnosticMessages.Binding_VerifyAdding, paramName);
         }
 
         internal void Seal(Template template, GridRange gridRange, int ordinal)
@@ -153,13 +153,13 @@ namespace DevZest.Data.Presenters.Primitives
         internal virtual void VerifyFrozenMargins(string bindingsName)
         {
             if (GridRange.HorizontallyIntersectsWith(Template.FrozenLeft))
-                throw new InvalidOperationException(Strings.Binding_InvalidFrozenMargin(nameof(Template.FrozenLeft), bindingsName, Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.Binding_InvalidFrozenMargin(nameof(Template.FrozenLeft), bindingsName, Ordinal));
             if (GridRange.VerticallyIntersectsWith(Template.FrozenTop))
-                throw new InvalidOperationException(Strings.Binding_InvalidFrozenMargin(nameof(Template.FrozenTop), bindingsName, Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.Binding_InvalidFrozenMargin(nameof(Template.FrozenTop), bindingsName, Ordinal));
             if (GridRange.HorizontallyIntersectsWith(Template.GridColumns.Count - Template.FrozenRight))
-                throw new InvalidOperationException(Strings.Binding_InvalidFrozenMargin(nameof(Template.FrozenRight), bindingsName, Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.Binding_InvalidFrozenMargin(nameof(Template.FrozenRight), bindingsName, Ordinal));
             if (GridRange.VerticallyIntersectsWith(Template.GridRows.Count - Template.FrozenBottom))
-                throw new InvalidOperationException(Strings.Binding_InvalidFrozenMargin(nameof(Template.FrozenBottom), bindingsName, Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.Binding_InvalidFrozenMargin(nameof(Template.FrozenBottom), bindingsName, Ordinal));
         }
 
         internal abstract UIElement GetSettingUpElement();

@@ -65,7 +65,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal sealed override void VerifyRowRange(GridRange rowRange)
         {
             if (!rowRange.Contains(GridRange))
-                throw new InvalidOperationException(Strings.RowBinding_OutOfRowRange(Ordinal));
+                throw new InvalidOperationException(DiagnosticMessages.RowBinding_OutOfRowRange(Ordinal));
         }
 
         internal abstract UIElement GetChild(UIElement parent, int index);

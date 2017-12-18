@@ -311,7 +311,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(paramName);
 
             if (column.GetParentModel() != RowMapper.DataSet.Model)
-                throw new ArgumentException(Strings.RowPresenter_VerifyColumn, paramName);
+                throw new ArgumentException(DiagnosticMessages.RowPresenter_VerifyColumn, paramName);
         }
 
         public object this[Column column]
@@ -365,13 +365,13 @@ namespace DevZest.Data.Presenters
         private void VerifyNoPendingEdit()
         {
             if (HasPendingEdit)
-                throw new InvalidOperationException(Strings.RowPresenter_VerifyNoPendingEdit);
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyNoPendingEdit);
         }
 
         internal void VerifyIsCurrent()
         {
             if (!IsCurrent)
-                throw new InvalidOperationException(Strings.RowPresenter_VerifyIsCurrent);
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsCurrent);
         }
 
         public void BeginEdit()
@@ -382,7 +382,7 @@ namespace DevZest.Data.Presenters
             VerifyIsCurrent();
             VerifyNoPendingEdit();
             if (IsVirtual && RowManager.Template.VirtualRowPlacement == VirtualRowPlacement.Exclusive)
-                throw new InvalidOperationException(Strings.RowPresenter_BeginEditExclusiveVirtual);
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_BeginEditExclusiveVirtual);
             RowManager.BeginEdit(this);
         }
 
@@ -401,7 +401,7 @@ namespace DevZest.Data.Presenters
         public void CancelEdit()
         {
             if (!IsEditing)
-                throw new InvalidOperationException(Strings.RowPresenter_VerifyIsEditing);
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
             RowManager.RollbackEdit();
         }
@@ -409,7 +409,7 @@ namespace DevZest.Data.Presenters
         public bool EndEdit()
         {
             if (!IsEditing)
-                throw new InvalidOperationException(Strings.RowPresenter_VerifyIsEditing);
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
             return RowManager.EndEdit();
         }
@@ -433,7 +433,7 @@ namespace DevZest.Data.Presenters
             else
             {
                 if (child.Parent != this)
-                    throw new ArgumentException(Strings.RowPresenter_InvalidChildRow, nameof(child));
+                    throw new ArgumentException(DiagnosticMessages.RowPresenter_InvalidChildRow, nameof(child));
                 child.VerifyNoPendingEdit();
             }
         }
@@ -447,7 +447,7 @@ namespace DevZest.Data.Presenters
         {
             VerifyDisposed();
             if (IsVirtual)
-                throw new InvalidOperationException(Strings.RowPresenter_DeleteVirtualRow);
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_DeleteVirtualRow);
 
             DataRow.DataSet.Remove(DataRow);
         }

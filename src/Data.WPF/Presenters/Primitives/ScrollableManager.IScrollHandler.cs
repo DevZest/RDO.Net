@@ -235,10 +235,10 @@ namespace DevZest.Data.Presenters.Primitives
             VerifyGridExtent(gridExtent, gridExtentParamName, maxGridExtent);
 
             if (gridExtent == 0 && placement == GridPlacement.Tail)
-                throw new ArgumentException(Strings.GridPlacement_InvalidTailValue, placementParamName);
+                throw new ArgumentException(DiagnosticMessages.GridPlacement_InvalidTailValue, placementParamName);
 
             if (gridExtent == maxGridExtent && placement == GridPlacement.Head)
-                throw new ArgumentException(Strings.GridPlacement_InvalidHeadValue, placementParamName);
+                throw new ArgumentException(DiagnosticMessages.GridPlacement_InvalidHeadValue, placementParamName);
         }
 
         public abstract void ScrollToX(int gridExtent, double fraction, GridPlacement placement);

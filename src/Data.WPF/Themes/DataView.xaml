@@ -47,7 +47,7 @@
                                         <TextBlock x:Name="_cancel" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
                                         <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
                                                    Command="{x:Static local:DataView+Commands.CancelDataLoad}">
-                                            <Run Text="{x:Static res:UIText.DataViewCommands_CancelDataLoadCommandText}" />
+                                            <Run Text="{x:Static res:UserMessages.DataViewCommands_CancelDataLoadCommandText}" />
                                         </Hyperlink>
                                         </TextBlock>
                                     </StackPanel>
@@ -71,7 +71,7 @@
                                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center" >
                                     <primitives:LoadingAnimation />
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
-                                        <Run Text="{x:Static res:UIText.DataView_DataLoadCancelling}" />
+                                        <Run Text="{x:Static res:UserMessages.DataView_DataLoadCancelling}" />
                                     </TextBlock>
                                 </Grid>
                             </Border>
@@ -87,11 +87,11 @@
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
                                         <TextBlock TextWrapping="Wrap">
-                                        <Run Text="{x:Static res:UIText.DataView_DataLoadCancelled}" />
+                                        <Run Text="{x:Static res:UserMessages.DataView_DataLoadCancelled}" />
                                         <LineBreak />
                                         <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
                                                    Command="{x:Static local:DataView+Commands.RetryDataLoad}">
-                                            <Run Text="{x:Static res:UIText.DataViewCommands_RetryDataLoadCommandText}" />                                            
+                                            <Run Text="{x:Static res:UserMessages.DataViewCommands_RetryDataLoadCommandText}" />                                            
                                         </Hyperlink>
                                         </TextBlock>
                                     </StackPanel>
@@ -111,7 +111,7 @@
                                         <Expander>
                                             <Expander.Header>
                                                 <TextBlock>
-                                                    <Run Text="{x:Static res:UIText.DataView_DataLoadFailed}" />
+                                                    <Run Text="{x:Static res:UserMessages.DataView_DataLoadFailed}" />
                                                 </TextBlock>
                                             </Expander.Header>
                                             <TextBox TextWrapping="Wrap" Text="{TemplateBinding DataLoadError}" />
@@ -119,7 +119,7 @@
                                         <TextBlock>
                                             <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
                                                        Command="{x:Static local:DataView+Commands.RetryDataLoad}">
-                                                <Run Text="{x:Static res:UIText.DataViewCommands_RetryDataLoadCommandText}" />
+                                                <Run Text="{x:Static res:UserMessages.DataViewCommands_RetryDataLoadCommandText}" />
                                             </Hyperlink>
                                         </TextBlock>
                                     </StackPanel>
