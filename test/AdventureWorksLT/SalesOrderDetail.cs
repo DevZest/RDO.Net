@@ -31,12 +31,7 @@ namespace DevZest.Samples.AdventureWorksLT
             private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get
-                {
-                    if (_primaryKey == null)
-                        _primaryKey = new Key(SalesOrderID, SalesOrderDetailID);
-                    return _primaryKey;
-                }
+                get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID, SalesOrderDetailID)); }
             }
 
             public _Int32 SalesOrderID { get; private set; }
@@ -68,34 +63,19 @@ namespace DevZest.Samples.AdventureWorksLT
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get
-            {
-                if (_primaryKey == null)
-                    _primaryKey = new Key(SalesOrderID, SalesOrderDetailID);
-                return _primaryKey;
-            }
+            get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID, SalesOrderDetailID)); }
         }
 
         private SalesOrder.Key _salesOrder;
         public SalesOrder.Key SalesOrder
         {
-            get
-            {
-                if (_salesOrder == null)
-                    _salesOrder = new SalesOrder.Key(SalesOrderID);
-                return _salesOrder;
-            }
+            get { return _salesOrder ?? (_salesOrder = new SalesOrder.Key(SalesOrderID)); }
         }
 
         private Product.Key _product;
         public Product.Key Product
         {
-            get
-            {
-                if (_product == null)
-                    _product = new Product.Key(ProductID);
-                return _product;
-            }
+            get { return _product ?? (_product = new Product.Key(ProductID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to SalesOrderHeader.SalesOrderID.")]

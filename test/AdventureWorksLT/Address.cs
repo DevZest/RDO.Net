@@ -30,12 +30,7 @@ namespace DevZest.Samples.AdventureWorksLT
             private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get
-                {
-                    if (_primaryKey == null)
-                        _primaryKey = new Key(AddressID);
-                    return _primaryKey;
-                }
+                get { return _primaryKey ?? (_primaryKey = new Key(AddressID)); }
             }
 
             public _Int32 AddressID { get; private set; }
@@ -83,12 +78,7 @@ namespace DevZest.Samples.AdventureWorksLT
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get
-            {
-                if (_primaryKey == null)
-                    _primaryKey = new Key(AddressID);
-                return _primaryKey;
-            }
+            get { return _primaryKey ?? (_primaryKey = new Key(AddressID)); }
         }
 
         [Identity(1, 1)]

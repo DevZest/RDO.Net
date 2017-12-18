@@ -35,34 +35,19 @@ namespace DevZest.Samples.AdventureWorksLT
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get
-            {
-                if (_primaryKey == null)
-                    _primaryKey = new Key(ProductModelID, ProductDescriptionID, Culture);
-                return _primaryKey;
-            }
+            get { return _primaryKey ?? (_primaryKey = new Key(ProductModelID, ProductDescriptionID, Culture)); }
         }
 
         private ProductModel.Key _productModel;
         public ProductModel.Key ProductModel
         {
-            get
-            {
-                if (_productModel == null)
-                    _productModel = new ProductModel.Key(ProductModelID);
-                return _productModel;
-            }
+            get { return _productModel ?? (_productModel = new ProductModel.Key(ProductModelID)); }
         }
 
         private ProductDescription.Key _productDescription;
         public ProductDescription.Key ProductDescription
         {
-            get
-            {
-                if (_productDescription == null)
-                    _productDescription = new ProductDescription.Key(ProductDescriptionID);
-                return _productDescription;
-            }
+            get { return _productDescription ?? (_productDescription = new ProductDescription.Key(ProductDescriptionID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to ProductModel.ProductModelID.")]

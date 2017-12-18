@@ -27,12 +27,7 @@ namespace DevZest.Samples.AdventureWorksLT
             private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get
-                {
-                    if (_primaryKey == null)
-                        _primaryKey = new Key(SalesOrderID);
-                    return _primaryKey;
-                }
+                get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID)); }
             }
 
             public _Int32 SalesOrderID { get; private set; }
@@ -90,67 +85,37 @@ namespace DevZest.Samples.AdventureWorksLT
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get
-            {
-                if (_primaryKey == null)
-                    _primaryKey = new Key(SalesOrderID);
-                return _primaryKey;
-            }
+            get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID)); }
         }
 
         private Customer.Key _customer;
         public Customer.Key Customer
         {
-            get
-            {
-                if (_customer == null)
-                    _customer = new Customer.Key(CustomerID);
-                return _customer;
-            }
+            get { return _customer ?? (_customer = new Customer.Key(CustomerID)); }
         }
 
         private Address.Key _shipToAddress;
         public Address.Key ShipToAddress
         {
-            get
-            {
-                if (_shipToAddress == null)
-                    _shipToAddress = new Address.Key(ShipToAddressID);
-                return _shipToAddress;
-            }
+            get { return _shipToAddress ?? (_shipToAddress = new Address.Key(ShipToAddressID)); }
         }
 
         private CustomerAddress.Key _shipToCustomerAddress;
         public CustomerAddress.Key ShipToCustomerAddress
         {
-            get
-            {
-                if (_shipToCustomerAddress == null)
-                    _shipToCustomerAddress = new CustomerAddress.Key(CustomerID, ShipToAddressID);
-                return _shipToCustomerAddress;
-            }
+            get { return _shipToCustomerAddress ?? (_shipToCustomerAddress = new CustomerAddress.Key(CustomerID, ShipToAddressID)); }
         }
 
         private Address.Key _billToAddress;
         public Address.Key BillToAddress
         {
-            get
-            {
-                if (_billToAddress == null)
-                    _billToAddress = new Address.Key(BillToAddressID);
-                return _billToAddress;
-            }
+            get { return _billToAddress ?? (_billToAddress = new Address.Key(BillToAddressID)); }
         }
 
         private CustomerAddress.Key _billToCustomerAddress;
         public CustomerAddress.Key BillToCustomerAddress
         {
-            get
-            {
-                if (_billToCustomerAddress == null)
-                    _billToCustomerAddress = new CustomerAddress.Key(CustomerID, BillToAddressID);
-                return _billToCustomerAddress;
-            }
+            get { return _billToCustomerAddress ?? (_billToCustomerAddress = new CustomerAddress.Key(CustomerID, BillToAddressID)); }
         }
 
         [Identity(1, 1)]

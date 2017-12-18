@@ -28,12 +28,7 @@ namespace DevZest.Samples.AdventureWorksLT
             private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get
-                {
-                    if (_primaryKey == null)
-                        _primaryKey = new Key(ProductDescriptionID);
-                    return _primaryKey;
-                }
+                get { return _primaryKey ?? (_primaryKey = new Key(ProductDescriptionID)); }
             }
 
             public _Int32 ProductDescriptionID { get; private set; }
@@ -51,12 +46,7 @@ namespace DevZest.Samples.AdventureWorksLT
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get
-            {
-                if (_primaryKey == null)
-                    _primaryKey = new Key(ProductDescriptionID);
-                return _primaryKey;
-            }
+            get { return _primaryKey ?? (_primaryKey = new Key(ProductDescriptionID)); }
         }
 
         [Identity(1, 1)]

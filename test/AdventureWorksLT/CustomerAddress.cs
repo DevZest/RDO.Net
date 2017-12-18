@@ -30,12 +30,7 @@ namespace DevZest.Samples.AdventureWorksLT
             private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get
-                {
-                    if (_primaryKey == null)
-                        _primaryKey = new Key(CustomerID, AddressID);
-                    return _primaryKey;
-                }
+                get { return _primaryKey ?? (_primaryKey = new Key(CustomerID, AddressID)); }
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -65,34 +60,19 @@ namespace DevZest.Samples.AdventureWorksLT
         private Key _primaryKey;
         public override Key PrimaryKey
         {
-            get
-            {
-                if (_primaryKey == null)
-                    _primaryKey = new Key(CustomerID, AddressID);
-                return _primaryKey;
-            }
+            get { return _primaryKey ?? (_primaryKey = new Key(CustomerID, AddressID)); }
         }
 
         private Customer.Key _customer;
         public Customer.Key Customer
         {
-            get
-            {
-                if (_customer == null)
-                    _customer = new Customer.Key(CustomerID);
-                return _customer;
-            }
+            get { return _customer ?? (_customer = new Customer.Key(CustomerID)); }
         }
 
         private Address.Key _address;
         public Address.Key Address
         {
-            get
-            {
-                if (_address == null)
-                    _address = new Address.Key(AddressID);
-                return _address;
-            }
+            get { return _address ?? (_address = new Address.Key(AddressID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to Customer.CustomerID.")]
