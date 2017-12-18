@@ -475,7 +475,7 @@ namespace DevZest.Data.Presenters
                 valueBag[column] = column.GetDefaultValue();
         }
 
-        public void SetValueBag(ColumnValueBag valueBag, KeyBase key, ModelExtension extension)
+        public void SetValueBag(ColumnValueBag valueBag, PrimaryKey key, ModelExtender extender)
         {
             if (valueBag == null)
                 throw new ArgumentNullException(nameof(valueBag));
@@ -488,23 +488,23 @@ namespace DevZest.Data.Presenters
                 SetValue(valueBag, column);
             }
 
-            if (extension != null)
+            if (extender != null)
             {
-                var columns = extension.Columns;
+                var columns = extender.Columns;
                 for (int i = 0; i < columns.Count; i++)
                     SetValue(valueBag, columns[i]);
             }
         }
 
-        public ColumnValueBag AutoSelect(KeyBase key, ModelExtension extension)
+        public ColumnValueBag AutoSelect(PrimaryKey key, ModelExtender extender)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
             var result = new ColumnValueBag();
             result.AutoSelect(key, DataRow);
-            if (extension != null)
-                result.AutoSelect(extension, DataRow);
+            if (extender != null)
+                result.AutoSelect(extender, DataRow);
             return result;
         }
     }

@@ -35,9 +35,9 @@ namespace DevZest.Data.Presenters
             InputManager.SetScalarFlushError(element, inputError);
         }
 
-        public ScalarInput<T> WithFlushValidator(Func<T, string> flushValidator, string flushValidatorId = null)
+        public ScalarInput<T> WithFlushValidator(Func<T, string> flushValidator)
         {
-            SetFlushValidator(flushValidator, flushValidatorId);
+            SetFlushValidator(flushValidator);
             return this;
         }
 

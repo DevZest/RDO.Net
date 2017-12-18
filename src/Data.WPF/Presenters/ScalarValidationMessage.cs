@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -8,8 +7,8 @@ namespace DevZest.Data.Presenters
 {
     public sealed class ScalarValidationMessage : ValidationMessageBase<IScalars>, IScalarValidationMessages
     {
-        public ScalarValidationMessage(string id, ValidationSeverity severity, string description, IScalars source)
-            : base(id, severity, description, source)
+        public ScalarValidationMessage(ValidationSeverity severity, string description, IScalars source)
+            : base(severity, description, source)
         {
             Check.NotNull(source, nameof(source));
             if (source.Count == 0)

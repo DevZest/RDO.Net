@@ -14,7 +14,7 @@ namespace AdventureWorks.SalesOrders
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var ext = _.GetExtension<SalesOrderToEdit.DetailExt>();
+                var ext = _.GetExtender<SalesOrderToEdit.DetailExt>();
                 builder.GridRows("Auto", "Auto")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
                     .Layout(Orientation.Vertical)
@@ -40,7 +40,7 @@ namespace AdventureWorks.SalesOrders
                 return valueBag.GetValue(productLookup.ProductNumber);
             }
 
-            bool ForeignKeyBox.ILookupService.CanLookup(KeyBase foreignKey)
+            bool ForeignKeyBox.ILookupService.CanLookup(PrimaryKey foreignKey)
             {
                 if (foreignKey == _.Product)
                     return true;

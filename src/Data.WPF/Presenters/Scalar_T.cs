@@ -8,14 +8,12 @@ namespace DevZest.Data.Presenters
     {
         private struct Validator
         {
-            public Validator(Func<T, string> action, ValidationSeverity severity, string id)
+            public Validator(Func<T, string> action, ValidationSeverity severity)
             {
                 Action = action;
                 Severity = severity;
-                Id = id;
             }
 
-            public readonly string Id;
             public readonly ValidationSeverity Severity;
             public readonly Func<T, string> Action;
         }
@@ -41,13 +39,13 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public Scalar<T> AddValidator(Func<T, string> validator, ValidationSeverity severity = ValidationSeverity.Error, string validatorId = null)
+        public Scalar<T> AddValidator(Func<T, string> validator, ValidationSeverity severity = ValidationSeverity.Error)
         {
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
             if (_validators == null)
                 _validators = new List<Validator>();
-            _validators.Add(new Validator(validator, severity, validatorId));
+            _validators.Add(new Validator(validator, severity));
             return this;
         }
 
@@ -75,7 +73,7 @@ namespace DevZest.Data.Presenters
                 var validator = _validators[i];
                 var description = validator.Action(Value);
                 if (!string.IsNullOrEmpty(description))
-                    result = result.Add(new ScalarValidationMessage(validator.Id, validator.Severity, description, this));
+                    result = result.Add(new ScalarValidationMessage(validator.Severity, description, this));
             }
             return result;
         }

@@ -26,16 +26,14 @@ namespace DevZest.Data.Views
                 base.OnInitializing();
             }
 
-            protected override IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
+            protected override IColumnValidationMessages Validate(DataRow dataRow)
             {
-                var result = base.Validate(dataRow, severity);
-                if (severity == ValidationSeverity.Warning)
-                    return result;
+                var result = base.Validate(dataRow);
 
                 if (ColumnHeader[dataRow] == null)
-                    result = result.Add(new ColumnValidationMessage(null, ValidationSeverity.Error, UIText.SortModel_InputRequired(ColumnHeader.DisplayName), ColumnHeader));
+                    result = result.Add(new ColumnValidationMessage(ValidationSeverity.Error, UIText.SortModel_InputRequired(ColumnHeader.DisplayName), ColumnHeader));
                 if (Direction[dataRow] == SortDirection.Unspecified)
-                    result = result.Add(new ColumnValidationMessage(null, ValidationSeverity.Error, UIText.SortModel_InputRequired(Direction.DisplayName), Direction));
+                    result = result.Add(new ColumnValidationMessage(ValidationSeverity.Error, UIText.SortModel_InputRequired(Direction.DisplayName), Direction));
 
                 return result;
             }

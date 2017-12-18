@@ -36,7 +36,7 @@ namespace AdventureWorks.SalesOrders
                     .AddBinding(0, 2, _.AsSalesOrderFooterBox());
             }
 
-            bool ForeignKeyBox.ILookupService.CanLookup(KeyBase foreignKey)
+            bool ForeignKeyBox.ILookupService.CanLookup(PrimaryKey foreignKey)
             {
                 if (foreignKey == _.Customer)
                     return true;

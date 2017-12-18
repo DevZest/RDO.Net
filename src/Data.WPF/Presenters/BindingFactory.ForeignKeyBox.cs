@@ -7,41 +7,41 @@ namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension>(this TKey key, TExtension extension, Func<ColumnValueBag, TKey, string> toString)
-            where TKey : KeyBase
-            where TExtension : ModelExtension
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtender>(this TKey key, TExtender extender, Func<ColumnValueBag, TKey, string> toString)
+            where TKey : PrimaryKey
+            where TExtender : ModelExtender
         {
             if (toString == null)
                 throw new ArgumentNullException(nameof(toString));
 
-            return AsForeignKeyBox(key, extension, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtension paramExt) =>
+            return AsForeignKeyBox(key, extender, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtender paramExt) =>
             {
                 v.Text = toString(valueBag, paramKey);
             });
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension>(this TKey key, TExtension extension, Func<ColumnValueBag, TKey, TExtension, string> toString)
-            where TKey : KeyBase
-            where TExtension : ModelExtension
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtender>(this TKey key, TExtender extender, Func<ColumnValueBag, TKey, TExtender, string> toString)
+            where TKey : PrimaryKey
+            where TExtender : ModelExtender
         {
             if (toString == null)
                 throw new ArgumentNullException(nameof(toString));
 
-            return AsForeignKeyBox(key, extension, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtension paramExt) =>
+            return AsForeignKeyBox(key, extender, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtender paramExt) =>
             {
                 v.Text = toString(valueBag, paramKey, paramExt);
             });
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, ColumnValueBag, TExtension> refreshAction)
-            where TKey : KeyBase
-            where TExtension : ModelExtension
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtender, TView>(this TKey key, TExtender extender, Action<TView, ColumnValueBag, TExtender> refreshAction)
+            where TKey : PrimaryKey
+            where TExtender : ModelExtender
             where TView : UIElement, new()
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
-            if (extension == null)
-                throw new ArgumentNullException(nameof(extension));
+            if (extender == null)
+                throw new ArgumentNullException(nameof(extender));
             if (refreshAction == null)
                 throw new ArgumentNullException(nameof(refreshAction));
 
@@ -50,26 +50,26 @@ namespace DevZest.Data.Presenters
                 {
                     v.Content = new TView();
                     v.ForeignKey = key;
-                    v.Extension = extension;
+                    v.Extender = extender;
                 },
                 onRefresh: (v, p) => {
-                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
-                    refreshAction((TView)v.Content, v.ValueBag, extension);
+                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extender);
+                    refreshAction((TView)v.Content, v.ValueBag, extender);
                     },
                 onCleanup: (v, p) => {
                     v.Content = null;
-                }).WithInput(key, extension);
+                }).WithInput(key, extender);
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtension, TView>(this TKey key, TExtension extension, Action<TView, ColumnValueBag, TKey, TExtension> refreshAction)
-            where TKey : KeyBase
-            where TExtension : ModelExtension
+        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtender, TView>(this TKey key, TExtender extender, Action<TView, ColumnValueBag, TKey, TExtender> refreshAction)
+            where TKey : PrimaryKey
+            where TExtender : ModelExtender
             where TView : UIElement, new()
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
-            if (extension == null)
-                throw new ArgumentNullException(nameof(extension));
+            if (extender == null)
+                throw new ArgumentNullException(nameof(extender));
             if (refreshAction == null)
                 throw new ArgumentNullException(nameof(refreshAction));
 
@@ -77,25 +77,25 @@ namespace DevZest.Data.Presenters
                 onSetup: (v, p) => {
                     v.Content = new TView();
                     v.ForeignKey = key;
-                    v.Extension = extension;
+                    v.Extender = extender;
                 },
                 onRefresh: (v, p) => {
-                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extension);
-                    refreshAction((TView)v.Content, v.ValueBag, key, extension);
+                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extender);
+                    refreshAction((TView)v.Content, v.ValueBag, key, extender);
                 },
                 onCleanup: (v, p) => {
                     v.Content = null;
-                }).WithInput(key, extension);
+                }).WithInput(key, extender);
         }
 
-        private static RowBinding<ForeignKeyBox> WithInput(this RowBinding<ForeignKeyBox> rowBinding, KeyBase foreignKey, ModelExtension extension)
+        private static RowBinding<ForeignKeyBox> WithInput(this RowBinding<ForeignKeyBox> rowBinding, PrimaryKey foreignKey, ModelExtender extender)
         {
             var rowInput = rowBinding.BeginInput(ForeignKeyBox.ValueBagProperty);
             foreach (var columnSort in foreignKey)
                 rowInput.WithFlush(columnSort.Column, v => v.ValueBag);
-            if (extension != null)
+            if (extender != null)
             {
-                foreach (var column in extension.Columns)
+                foreach (var column in extender.Columns)
                 {
                     if (column.IsExpression)
                         continue;

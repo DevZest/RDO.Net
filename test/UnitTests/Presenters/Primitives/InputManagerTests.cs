@@ -63,7 +63,7 @@ namespace DevZest.Data.Presenters.Primitives
                 .AddValidator(x =>
                 {
                     return x > 5 ? "Value cannot be greater than 5." : null;
-                }, ValidationSeverity.Error, "ERR-01");
+                }, ValidationSeverity.Error);
 
             Assert.AreEqual(-1, oldValue);
 
@@ -79,7 +79,7 @@ namespace DevZest.Data.Presenters.Primitives
             Scalar<Int32> scalar = new Scalar<int>().AddValidator(x =>
             {
                 return x > 5 ? "Value cannot be greater than 5." : null;
-            }, ValidationSeverity.Error, "ERR-01");
+            }, ValidationSeverity.Error);
             ScalarBinding<TextBox> textBox = null;
             RowBinding<TextBlock> textBlock = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
@@ -155,7 +155,6 @@ namespace DevZest.Data.Presenters.Primitives
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
                 var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
-                Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
                 Assert.AreEqual(_.Name, errorMessage.Source);
             }
 
@@ -186,7 +185,6 @@ namespace DevZest.Data.Presenters.Primitives
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
                 var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
-                Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
                 Assert.AreEqual(_.Name, errorMessage.Source);
             }
 
@@ -268,7 +266,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             await Task.Delay(200);
             var value = nameColumn[index];
-            return value == BAD_NAME ? new ColumnValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn) : null;
+            return value == BAD_NAME ? new ColumnValidationMessage(ValidationSeverity.Error, "Bad Name", nameColumn) : null;
         }
 
         [TestMethod]
@@ -392,11 +390,10 @@ namespace DevZest.Data.Presenters.Primitives
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
                 var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
-                Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
                 Assert.AreEqual(_.Name, errorMessage.Source);
             }
 
-            var validationMessage = new ColumnValidationMessage("ERR-RESULT", ValidationSeverity.Error, "Result Error", _.Name);
+            var validationMessage = new ColumnValidationMessage(ValidationSeverity.Error, "Result Error", _.Name);
             var validationResults = DataRowValidationResults.Empty.Add(new DataRowValidationResult(currentRow.DataRow, validationMessage));
             inputManager.Assign(validationResults);
             {

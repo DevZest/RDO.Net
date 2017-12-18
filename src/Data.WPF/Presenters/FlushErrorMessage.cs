@@ -1,14 +1,12 @@
-﻿using DevZest.Data;
-using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
     public class FlushErrorMessage : ValidationMessageBase<UIElement>
     {
-        public FlushErrorMessage(string id, string description, UIElement source)
-            : base(id, ValidationSeverity.Error, description, source)
+        public FlushErrorMessage(string description, UIElement source)
+            : base(ValidationSeverity.Error, description, source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

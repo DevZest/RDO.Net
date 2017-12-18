@@ -36,7 +36,7 @@ namespace AdventureWorks.SalesOrders
         }
         private Customer.Lookup Lookup
         {
-            get { return (Customer.Lookup)_foreignKeyBox.Extension; }
+            get { return (Customer.Lookup)_foreignKeyBox.Extender; }
         }
 
         public void Show(Window ownerWindow, ForeignKeyBox foreignKeyBox, int? currentCustomerID, ForeignKeyBox shipToAddressBox, ForeignKeyBox billToAddressBox)

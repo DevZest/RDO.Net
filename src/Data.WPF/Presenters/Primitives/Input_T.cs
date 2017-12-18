@@ -25,7 +25,6 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private Trigger<T> _flushTrigger;
-        private string _flushValidatorId;
         private Func<T, string> _flushValidator;
 
         public abstract TwoWayBinding Binding { get; }
@@ -45,13 +44,12 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Binding.Template; }
         }
 
-        internal void SetFlushValidator(Func<T, string> flushValidator, string flushValidatorId)
+        internal void SetFlushValidator(Func<T, string> flushValidator)
         {
             if (flushValidator == null)
                 throw new ArgumentNullException(nameof(flushValidator));
 
             _flushValidator = flushValidator;
-            _flushValidatorId = flushValidatorId;
         }
 
         internal void Attach(T element)
@@ -74,14 +72,14 @@ namespace DevZest.Data.Presenters.Primitives
                 return;
             var oldflushError = GetFlushError(element);
             var flushErrorDescription = _flushValidator(element);
-            if (IsFlushErrorChanged(_flushValidatorId, flushErrorDescription, oldflushError))
-                SetFlushError(element, string.IsNullOrEmpty(flushErrorDescription) ? null : new FlushErrorMessage(_flushValidatorId, flushErrorDescription, element));
+            if (IsFlushErrorChanged(flushErrorDescription, oldflushError))
+                SetFlushError(element, string.IsNullOrEmpty(flushErrorDescription) ? null : new FlushErrorMessage(flushErrorDescription, element));
         }
 
-        private static bool IsFlushErrorChanged(string flushErrorId, string flushErrorDescription, FlushErrorMessage flushErrorMessage)
+        private static bool IsFlushErrorChanged(string flushErrorDescription, FlushErrorMessage flushErrorMessage)
         {
             return string.IsNullOrEmpty(flushErrorDescription) ? flushErrorMessage != null
-                : flushErrorMessage == null || flushErrorMessage.Id != flushErrorId || flushErrorMessage.Description != flushErrorDescription;
+                : flushErrorMessage == null || flushErrorMessage.Description != flushErrorDescription;
         }
 
         public bool IsFlushing { get; private set; }

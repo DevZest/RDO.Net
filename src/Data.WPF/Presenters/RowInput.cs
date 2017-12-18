@@ -42,9 +42,9 @@ namespace DevZest.Data.Presenters
             get { return InputManager.CurrentRow; }
         }
 
-        public RowInput<T> WithFlushValidator(Func<T, string> flushValidaitor, string flushValidatorId = null)
+        public RowInput<T> WithFlushValidator(Func<T, string> flushValidaitor)
         {
-            SetFlushValidator(flushValidaitor, flushValidatorId);
+            SetFlushValidator(flushValidaitor);
             return this;
         }
 

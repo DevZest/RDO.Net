@@ -10,7 +10,7 @@ namespace AdventureWorks.SalesOrders
         public static RowCompositeBinding<SalesOrderHeaderBox> AsSalesOrderHeaderBox(this SalesOrderToEdit _,
             out RowBinding<ForeignKeyBox> shipToAddressBinding, out RowBinding<ForeignKeyBox> billToAddressBinding)
         {
-            var ext = _.GetExtension<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
             return new RowCompositeBinding<SalesOrderHeaderBox>()
                 .AddChild(_.Customer.AsForeignKeyBox(ext.Customer, CustomerBox.RefreshAction), v => v._customer)
                 .AddChild(shipToAddressBinding = _.ShipToAddress.AsForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)

@@ -12,7 +12,7 @@ namespace DevZest.Data.Views
     {
         public interface ILookupService : IService
         {
-            bool CanLookup(KeyBase foreignKey);
+            bool CanLookup(PrimaryKey foreignKey);
             void BeginLookup(ForeignKeyBox foreignKeyBox);
         }
 
@@ -115,9 +115,9 @@ namespace DevZest.Data.Views
             EndLookup(valueBag);
         }
 
-        public KeyBase ForeignKey { get; internal set; }
+        public PrimaryKey ForeignKey { get; internal set; }
 
-        public ModelExtension Extension { get; internal set; }
+        public ModelExtender Extender { get; internal set; }
 
         public ColumnValueBag ValueBag
         {
@@ -171,7 +171,7 @@ namespace DevZest.Data.Views
         void IRowElement.Cleanup(RowPresenter rowPresenter)
         {
             ForeignKey = null;
-            Extension = null;
+            Extender = null;
             ValueBag.Clear();
             this.CleanupCommandEntries();
         }
