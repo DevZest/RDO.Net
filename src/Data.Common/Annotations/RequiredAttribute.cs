@@ -19,7 +19,7 @@ namespace DevZest.Data.Annotations
 
         protected override string DefaultMessageString
         {
-            get { return Strings.RequiredAttribute_DefaultErrorMessage; }
+            get { return UserMessages.RequiredAttribute; }
         }
 
         protected override bool CoerceDeclaringTypeOnly(bool value)

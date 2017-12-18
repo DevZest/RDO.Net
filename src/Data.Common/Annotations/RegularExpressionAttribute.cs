@@ -42,7 +42,7 @@ namespace DevZest.Data.Annotations
 
         protected override string DefaultMessageString
         {
-            get { return Strings.RegularExpressionAttribute_DefaultErrorMessage; }
+            get { return UserMessages.RegularExpressionAttribute; }
         }
 
         protected override string FormatMessage(string columnDisplayName)

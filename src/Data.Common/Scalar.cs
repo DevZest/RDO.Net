@@ -44,7 +44,7 @@ namespace DevZest.Data
             Check.NotNull(column, paramName);
 
             if (column.ParentModel == null || column.ParentModel != _model)
-                throw new ArgumentException(Strings.Scalar_InvalidColumn, paramName);
+                throw new ArgumentException(DiagnosticMessages.Scalar_InvalidColumn, paramName);
         }
 
         protected T GetValue<T>(Column<T> column)

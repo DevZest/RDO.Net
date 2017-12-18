@@ -61,12 +61,12 @@ namespace DevZest.Data.Annotations
             {
                 var messages1 = dataSet._.Validate(dataRow1, ValidationSeverity.Error);
                 Assert.AreEqual(1, messages1.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.UniqueAttribute_DefaultErrorMessage, nameof(TestModel.Id)), messages1[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.UniqueAttribute, nameof(TestModel.Id)), messages1[0].Description);
             }
             {
                 var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
                 Assert.AreEqual(1, messages2.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.UniqueAttribute_DefaultErrorMessage, nameof(TestModel.Id)), messages2[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.UniqueAttribute, nameof(TestModel.Id)), messages2[0].Description);
             }
         }
     }

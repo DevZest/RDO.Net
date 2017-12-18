@@ -24,14 +24,14 @@ namespace DevZest.Data
                 if (value == null)
                 {
                     if (!CanAssignNull(key.DataType))
-                        throw new ArgumentException(Strings.ColumnValueBag_NotAssignableFromNull, nameof(value));
+                        throw new ArgumentException(DiagnosticMessages.ColumnValueBag_NotAssignableFromNull, nameof(value));
                 }
                 else
                 {
                     var columnDataType = key.DataType;
                     var valueDataType = value.GetType();
                     if (!columnDataType.IsAssignableFrom(valueDataType))
-                        throw new ArgumentException(Strings.ColumnValueBag_NotAssignableFromValue(columnDataType.ToString(), valueDataType.ToString()), nameof(value));
+                        throw new ArgumentException(DiagnosticMessages.ColumnValueBag_NotAssignableFromValue(columnDataType.ToString(), valueDataType.ToString()), nameof(value));
                 }
                 _columnValues[key] = value;
             }

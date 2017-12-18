@@ -48,7 +48,7 @@ namespace DevZest.Data.Primitives
         protected void VerifyDesignMode()
         {
             if (!DesignMode)
-                throw new InvalidOperationException(Strings.VerifyDesignMode);
+                throw new InvalidOperationException(DiagnosticMessages.VerifyDesignMode);
         }
 
         /// <inheritdoc/>

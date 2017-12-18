@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidGetterExpression" xml:space="preserve">
+    <value>The provided getter expression is invalid.</value>
+  </data>
+  <data name="MounterManager_RegisterAfterUse" xml:space="preserve">
+    <value>Cannot register property for type '{type}' after an instance of this type or its derived type has been created.</value>
+  </data>
+  <data name="MounterManager_RegisterDuplicate" xml:space="preserve">
+    <value>The property with DeclaringType '{declaringType}' and Name '{name}' has been registered already.</value>
+  </data>
+  <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
+    <value>The argument '{argumentName}' cannot be null, empty or contain only white space.</value>
+  </data>
+  <data name="ColumnAggregateFunction_EvalOnNonDataSet" xml:space="preserve">
+    <value>Cannot evaluate a non DataSet column: Column={column}, DataSource.Kind={dataSourceKind}.</value>
+  </data>
+  <data name="ColumnAggregateFunction_NoModelChain" xml:space="preserve">
+    <value>Cannot resolve model chain from Column "{column}" to provided dataRow.</value>
+  </data>
+  <data name="ColumnCollection_DuplicateModelId" xml:space="preserve">
+    <value>Duplicate ModelId is not allowed: DeclaringType={declaringType}, Name={name}.</value>
+  </data>
+  <data name="GenericInvoker_TypeResolverReturnsNull" xml:space="preserve">
+    <value>The type resolver callback returns null.</value>
+  </data>
+  <data name="ColumnGroup_GetterReturnsNull" xml:space="preserve">
+    <value>The type "{type}" is not implemented correctly. The column getter "{columnGetter}" returns null.</value>
+  </data>
+  <data name="ColumnGroup_InconsistentParentModel" xml:space="preserve">
+    <value>The type "{type}" is not implemented correctly. The parent models of column "{column1}" and "{column2}" are inconsistent.</value>
+  </data>
+  <data name="ColumnExpression_AlreadyAttached" xml:space="preserve">
+    <value>The expression is already attached to a Column.</value>
+  </data>
+  <data name="Column_InvalidDataRow" xml:space="preserve">
+    <value>The DataRow is invalid, it does not contain this Column.</value>
+  </data>
+  <data name="Column_InvalidDbReader" xml:space="preserve">
+    <value>The DbReader is invalid, it does not contain this Column.</value>
+  </data>
+  <data name="DbLogger_CommandCanceled" xml:space="preserve">
+    <value>-- Canceled in {elapsedMilliSeconds} ms</value>
+  </data>
+  <data name="DbLogger_CommandComplete" xml:space="preserve">
+    <value>-- Completed in {elapsedMilliSeconds} ms with result: {result}</value>
+  </data>
+  <data name="DbLogger_CommandExecuting" xml:space="preserve">
+    <value>-- Executing at {time}</value>
+  </data>
+  <data name="DbLogger_CommandExecutingAsync" xml:space="preserve">
+    <value>-- Executing asynchronously at {time}</value>
+  </data>
+  <data name="DbLogger_CommandFailed" xml:space="preserve">
+    <value>-- Failed in {elapsedMilliSeconds} ms with error: {error}</value>
+  </data>
+  <data name="DbLogger_ConnectionClosed" xml:space="preserve">
+    <value>Closed connection at {time}</value>
+  </data>
+  <data name="DbLogger_ConnectionCloseError" xml:space="preserve">
+    <value>Failed to close connection at {time} with error: {error}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpen" xml:space="preserve">
+    <value>Opened connection at {time}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpenAsync" xml:space="preserve">
+    <value>Opened connection asynchronously at {time}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpenCanceled" xml:space="preserve">
+    <value>Cancelled open connection at {time}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpenError" xml:space="preserve">
+    <value>Failed to open connection at {time} with error: {error}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpenErrorAsync" xml:space="preserve">
+    <value>Failed to open connection asynchronously at {time} with error: {error}</value>
+  </data>
+  <data name="DbLogger_TransactionCommitError" xml:space="preserve">
+    <value>Failed to commit transaction at {time} with error: {error}</value>
+  </data>
+  <data name="DbLogger_TransactionCommitted" xml:space="preserve">
+    <value>Committed transaction at {time}</value>
+  </data>
+  <data name="DbLogger_TransactionRollbackError" xml:space="preserve">
+    <value>Failed to rollback transaction at {time} with error: {error}</value>
+  </data>
+  <data name="DbLogger_TransactionRolledBack" xml:space="preserve">
+    <value>Rolled back transaction at {time}</value>
+  </data>
+  <data name="DbLogger_TransactionStarted" xml:space="preserve">
+    <value>Started transaction at {time}</value>
+  </data>
+  <data name="DbLogger_TransactionStartError" xml:space="preserve">
+    <value>Failed to start transaction at {time} with error: {error}</value>
+  </data>
+  <data name="DbQueryBuilder_DuplicateFrom" xml:space="preserve">
+    <value>Cannot call From method multiple times.</value>
+  </data>
+  <data name="DbQueryBuilder_Join_InvalidLeftKey" xml:space="preserve">
+    <value>Invalid left key. Its ParentModel must be previously added as source query.</value>
+  </data>
+  <data name="DbQueryBuilder_Join_InvalidRightKey" xml:space="preserve">
+    <value>Invalid right key. Its ParentModel must be the same as the provided model parameter.</value>
+  </data>
+  <data name="DbQueryBuilder_AggregateNotAllowed" xml:space="preserve">
+    <value>Aggregate expression is not allowed.</value>
+  </data>
+  <data name="DbQueryBuilder_VerifyTargetColumn" xml:space="preserve">
+    <value>Invalid targetColumn. It must be a column of target model, and cannot be selected already.</value>
+  </data>
+  <data name="InvalidChildModel" xml:space="preserve">
+    <value>The child model's ParentModel must be the same as this object's Model.</value>
+  </data>
+  <data name="InvalidChildModelGetter" xml:space="preserve">
+    <value>The child model returned by the getter is invalid. It cannot be null and its ParentModel must be the calling model.</value>
+  </data>
+  <data name="Model_InvalidIdentityIncrement" xml:space="preserve">
+    <value>The identity increment value cannot be 0.</value>
+  </data>
+  <data name="Model_VerifyChildColumn" xml:space="preserve">
+    <value>The column must be child of this model.</value>
+  </data>
+  <data name="VerifyDesignMode" xml:space="preserve">
+    <value>The operation is only allowed in design mode.</value>
+  </data>
+  <data name="Model_MultipleIdentityColumn" xml:space="preserve">
+    <value>Cannot define multiple identity column on the same table.</value>
+  </data>
+  <data name="Model_MultipleClusteredIndex" xml:space="preserve">
+    <value>Cannot have more than one clustered index.  The clustered index '{existingClusterIndexName}' already exists.</value>
+  </data>
+  <data name="Model_DuplicateConstraintName" xml:space="preserve">
+    <value>The constraint '{constraintName}' already exists.</value>
+  </data>
+  <data name="Model_EmptyColumns" xml:space="preserve">
+    <value>The columns cannot be empty.</value>
+  </data>
+  <data name="Model_InvalidRefTableModel" xml:space="preserve">
+    <value>The reference table model is invalid. It must either be a self reference or a reference to a existing table.</value>
+  </data>
+  <data name="DbSet_VerifyCreateChild_AlreadyCreated" xml:space="preserve">
+    <value>The child DbSet has been created already.</value>
+  </data>
+  <data name="DbSet_VerifyCreateChild_InvalidDataSourceKind" xml:space="preserve">
+    <value>Creating child DbSet on DbTable is not allowed.</value>
+  </data>
+  <data name="Column_SetReadOnlyValue" xml:space="preserve">
+    <value>Cannot set value of readonly column '{column}'.</value>
+  </data>
+  <data name="DbSession_ColumnNotSupported" xml:space="preserve">
+    <value>The column[{columnIndex}] '{column}' is not supported by this DbSession.</value>
+  </data>
+  <data name="JsonParser_UnexpectedEof" xml:space="preserve">
+    <value>Reached EOF unexpectedly.</value>
+  </data>
+  <data name="JsonParser_InvalidChar" xml:space="preserve">
+    <value>Invalid char '{ch}' at index {index}.</value>
+  </data>
+  <data name="JsonParser_InvalidHexChar" xml:space="preserve">
+    <value>Char '{ch}' at index {index} is not a valid hex number.</value>
+  </data>
+  <data name="JsonParser_InvalidLiteral" xml:space="preserve">
+    <value>'{ch}' expected at index {index}.</value>
+  </data>
+  <data name="JsonParser_InvalidStringEscape" xml:space="preserve">
+    <value>Invalid string escape '{stringEscape}' at index {index}.</value>
+  </data>
+  <data name="JsonParser_InvalidModelMember" xml:space="preserve">
+    <value>Invalid member name "{memberName}" for Model "{model}".</value>
+  </data>
+  <data name="BooleanColumn_CannotDeserialize" xml:space="preserve">
+    <value>Cannot deserialize from JSON value. Provided JSON value must be 'true', 'false' or 'null'.</value>
+  </data>
+  <data name="JsonParser_InvalidTokenKind" xml:space="preserve">
+    <value>Current token kind "{tokenKind}" is invalid. Expected token kind: {expectedTokenKind}.</value>
+  </data>
+  <data name="ColumnMappingsBuilder_InvalidSourceParentModelSet" xml:space="preserve">
+    <value>The source column derives from invalid model '{model}'.</value>
+  </data>
+  <data name="ColumnMappingsBuilder_InvalidTarget" xml:space="preserve">
+    <value>The target column '{targetColumn}' is invalid.</value>
+  </data>
+  <data name="DbTable_GetKeyMappings_CannotMatch" xml:space="preserve">
+    <value>Cannot match primary key of current table and the source Model.</value>
+  </data>
+  <data name="NotSupportedByReadOnlyList" xml:space="preserve">
+    <value>The operation is not supported by readonly list.</value>
+  </data>
+  <data name="MockDb_CircularReference" xml:space="preserve">
+    <value>Circular reference detected for table "{tableName}".</value>
+  </data>
+  <data name="MockDb_DuplicateTable" xml:space="preserve">
+    <value>The table "{tableName}" cannot be mocked twice.</value>
+  </data>
+  <data name="MockDb_InitializeTwice" xml:space="preserve">
+    <value>MockDb object cannot be initialized twice.</value>
+  </data>
+  <data name="MockDb_InvalidTable" xml:space="preserve">
+    <value>The mocking table is invalid. It must belong to the given DbSession.</value>
+  </data>
+  <data name="MockDb_MockOnlyAllowedDuringInitialization" xml:space="preserve">
+    <value>Mock can only be called during initialization.</value>
+  </data>
+  <data name="MockDb_ModelTypeMismatch" xml:space="preserve">
+    <value>The type argument "{typeArgument}" does not match with type argument "{expectedTypeArgument}" used for for table "{tableName}".</value>
+  </data>
+  <data name="DbTable_VerifyWhere" xml:space="preserve">
+    <value>The returned where expression is invalid.</value>
+  </data>
+  <data name="ChildColumnNotExistInColumnMappings" xml:space="preserve">
+    <value>The child column '{childColumn}' does not exist in the column mappings.</value>
+  </data>
+  <data name="DbTable_NoPrimaryKey" xml:space="preserve">
+    <value>The operation requires a primary key of model '{model}'.</value>
+  </data>
+  <data name="ColumnMappingsBuilder_InvalidSourceDataType" xml:space="preserve">
+    <value>The source column's data type '{sourceColumnDataType}' is invalid. Data type '{expectedDataType}' required.</value>
+  </data>
+  <data name="ColumnMappingsBuilder_NoColumnMapping" xml:space="preserve">
+    <value>No ColumnMapping specified.</value>
+  </data>
+  <data name="DataSet_InvalidNewDataRow" xml:space="preserve">
+    <value>Cannot add DataRow into multiple DataSet.</value>
+  </data>
+  <data name="TypeExtensions_CannotResolveStaticStringProperty" xml:space="preserve">
+    <value>Cannot resolve static string property {resourceType}.{resourceName}.</value>
+  </data>
+  <data name="DbTable_VerifyUpdateIdentity" xml:space="preserve">
+    <value>Target table must be a permanent table and has a identity column.</value>
+  </data>
+  <data name="DbTable_DeleteNotSupportedForParentTable" xml:space="preserve">
+    <value>Delete is not supported for parent table.</value>
+  </data>
+  <data name="DbTable_InvalidDbSetSource" xml:space="preserve">
+    <value>The source is invalid: cross DbSession is not supported.</value>
+  </data>
+  <data name="DataRow_FromString_ExpectChar" xml:space="preserve">
+    <value>Char '{ch}' expected after '{prevInput}'.</value>
+  </data>
+  <data name="DataRow_FromString_InvalidChildModelName" xml:space="preserve">
+    <value>The child model name '{childModelName}' is invalid for DataRow '{dataRowPath}'.</value>
+  </data>
+  <data name="DataRow_FromString_InvalidDataRowOrdinal" xml:space="preserve">
+    <value>The DataRow ordinal '{dataRowOrdinal}' is invalid for DataSet '{dataSetPath}'.</value>
+  </data>
+  <data name="DataRow_FromString_ParseInt" xml:space="preserve">
+    <value>Cannot parse string '{input}' into an integer value.</value>
+  </data>
+  <data name="Scalar_InvalidColumn" xml:space="preserve">
+    <value>The column is invalid. It must be created by calling CreateColumn method.</value>
+  </data>
+  <data name="DataRow_DeserializeColumn_InvalidColumnName" xml:space="preserve">
+    <value>The column name '{columnName}' is invalid for DataRow '{dataRowString}'.</value>
+  </data>
+  <data name="DataRow_MismatchWithSavedDataRow" xml:space="preserve">
+    <value>Mismatch with Model.SavedDataRow. The DataRow must be previously saved by calling DataRow.Save.</value>
+  </data>
+  <data name="JsonParser_InvalidObjectName" xml:space="preserve">
+    <value>The object name "{objectName}" is invalid, "{expectedObjectName}" expected.</value>
+  </data>
+  <data name="ColumnJsonParser_InvalidObjectName" xml:space="preserve">
+    <value>Invalid object name "{objName}". "{expected1}" or "{expected2}" expected.</value>
+  </data>
+  <data name="ColumnJsonParser_InvalidColumnType" xml:space="preserve">
+    <value>Invalid Model["{name}"]: Type "{expectedType}" expected.</value>
+  </data>
+  <data name="ColumnJsonParser_InvalidTypeId" xml:space="preserve">
+    <value>The TypeId "{typeId}" is invalid, null ColumnConverter resolved.</value>
+  </data>
+  <data name="ColumnConverter_NotDefined" xml:space="preserve">
+    <value>There is no ColumnConverterAttribute defined for type "{columnType}".</value>
+  </data>
+  <data name="ColumnExpression_InvalidMakeColumnType" xml:space="preserve">
+    <value>The columnType must be assignable to "{assignableTo}".</value>
+  </data>
+  <data name="Case_WhenThenNotMatch" xml:space="preserve">
+    <value>Cannot match When and Then columns. They cannot be empty and must have identical size.</value>
+  </data>
+  <data name="JsonWriter_Empty" xml:space="preserve">
+    <value>The JsonWriter is empty. Use JsonWriter.New to create a non empty JsonWriter.</value>
+  </data>
+  <data name="ValidationMessage_EmptySourceColumns" xml:space="preserve">
+    <value>The source colums cannot be empty.</value>
+  </data>
+  <data name="ValidationEntry_EmptyMessages" xml:space="preserve">
+    <value>The messages cannot be empty.</value>
+  </data>
+  <data name="Model_InvalidColumnName" xml:space="preserve">
+    <value>The column name '{columnName}' is invalid.</value>
+  </data>
+  <data name="Column_AlreadyComputed" xml:space="preserve">
+    <value>This column is already a computed column.</value>
+  </data>
+  <data name="Column_ComputedColumnMustBeMemberOfModel" xml:space="preserve">
+    <value>Computed column must be member of column.</value>
+  </data>
+  <data name="Column_ComputationNotAllowedForChildColumn" xml:space="preserve">
+    <value>Computation is not allowed for child column {columnName}.</value>
+  </data>
+  <data name="DbQueryBuilder_InvalidScalarSourceModel" xml:space="preserve">
+    <value>The column has invalid scalar source model: "{model}".</value>
+  </data>
+  <data name="Column_EmptyScalarSourceModels" xml:space="preserve">
+    <value>The column's ScalarSourceModels is empty.</value>
+  </data>
+  <data name="DbQueryBuilder_InvalidAggregateSourceModel" xml:space="preserve">
+    <value>The column contains invalid aggregate source model: "{model}".</value>
+  </data>
+  <data name="ComputationManager_CircularComputation" xml:space="preserve">
+    <value>Circular computation detected for column {columnName}.</value>
+  </data>
+  <data name="DataRow_UpdateInDataRowChangedEventNotAllowed" xml:space="preserve">
+    <value>Update in DataRowChanged event handler is not allowed.</value>
+  </data>
+  <data name="DataSetContainer_ResumeComputationWithoutSuspendComputation" xml:space="preserve">
+    <value>SuspendComputation and ResumeComputation must be called in tandem.</value>
+  </data>
+  <data name="DataSetContainer_InvalidLocalColumnExpression" xml:space="preserve">
+    <value>The expression must be static.</value>
+  </data>
+  <data name="DataSetContainer_InvalidLocalColumnModel" xml:space="preserve">
+    <value>DataSetContainer does not contain this model.</value>
+  </data>
+  <data name="DataSetContainer_InvalidBaseColumn" xml:space="preserve">
+    <value>The base column is invalid, it belongs to a different DataSetContainer.</value>
+  </data>
+  <data name="DataSetContainer_AlreadyHasLocalColumnBeforeClone" xml:space="preserve">
+    <value>The model must have no local column before clone.</value>
+  </data>
+  <data name="Model_InvalidChildModel" xml:space="preserve">
+    <value>The child model is invalid.</value>
+  </data>
+  <data name="DataRowComparer_DifferentDataRowModel" xml:space="preserve">
+    <value>The Model of comparing DataRows must be identical.</value>
+  </data>
+  <data name="DataRow_OrderByColumnMustBeSingleSourceModel" xml:space="preserve">
+    <value>Order by column must be single source model.</value>
+  </data>
+  <data name="DataRowComparer_InvalidDataRowModel" xml:space="preserve">
+    <value>The DataRow.Model is invalid for the comparer.</value>
+  </data>
+  <data name="Column_NoDefaultComparer" xml:space="preserve">
+    <value>The comparer cannot be null because there is no default comparer for this column.</value>
+  </data>
+  <data name="Model_InvalidComparerModelType" xml:space="preserve">
+    <value>The comparer's ModelType is invalid.</value>
+  </data>
+  <data name="DataRow_WhereExpressionMustBeStatic" xml:space="preserve">
+    <value>The expression must be static.</value>
+  </data>
+  <data name="DataRowComparer_DifferentModelType" xml:space="preserve">
+    <value>The model type must be identical.</value>
+  </data>
+  <data name="DataSet_NullAddingRow" xml:space="preserve">
+    <value>The AddingRow is null.</value>
+  </data>
+  <data name="DataRow_NullModel" xml:space="preserve">
+    <value>The Model is null.</value>
+  </data>
+  <data name="Model_ExtensionAlreadyExists" xml:space="preserve">
+    <value>Extension already exists.</value>
+  </data>
+  <data name="JsonParser_InvalidExtenderMember" xml:space="preserve">
+    <value>Invalid member name "{memberName}" for ModelExtender "{extender}".</value>
+  </data>
+  <data name="DbQueryBuilder_EmptyFrom" xml:space="preserve">
+    <value>The From clause is empty.</value>
+  </data>
+  <data name="DbQueryBuilder_InvalidAutoSelectSourceModel" xml:space="preserve">
+    <value>The source Model is invalid.</value>
+  </data>
+  <data name="Column_TranslateToModelTypeMismatch" xml:space="preserve">
+    <value>Model type mismatch.</value>
+  </data>
+  <data name="ColumnValueBag_NotAssignableFromNull" xml:space="preserve">
+    <value>The column is not assignable from null.</value>
+  </data>
+  <data name="ColumnValueBag_NotAssignableFromValue" xml:space="preserve">
+    <value>The data type of column is {columnDataType}, which is not assignable from value of data type {valueDataType}.</value>
+  </data>
+  <data name="ColumnsMemberAttribute_CannotResolveColumnsAttribute" xml:space="preserve">
+    <value>Attribute not found for ModelType '{modelType}': AttributeType={attributeType}, Name={attributeName}.</value>
+  </data>
+  <data name="ColumnsMemberAttribute_Duplicate" xml:space="preserve">
+    <value>Duplicate attribute found for column '{column}': AttributeType={attributeType}, AttributeName={attributeName}.</value>
+  </data>
+  <data name="LocalizableString_LocalizationFailed" xml:space="preserve">
+    <value>Cannot retrieve property '{propertyName}' because localization failed. Type '{resourceType}' does not contain a static string property with the name '{propertyValue}'. </value>
+  </data>
+  <data name="Model_DuplicateIndexName" xml:space="preserve">
+    <value>The index name '{indexName}' already exists.</value>
+  </data>
+  <data name="DbSession_VerifyNotMocked" xml:space="preserve">
+    <value>The DbSession is mocked.</value>
+  </data>
+  <data name="TypeExtensions_InvalidResourceName" xml:space="preserve">
+    <value>Resource name cannot be null, empty, or consists of only white-space characters.</value>
+  </data>
+</root>

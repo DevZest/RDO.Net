@@ -859,21 +859,21 @@ namespace DevZest.Data
         {
             Check.NotNull(model, paramName);
             if (model.DataSetContainer != this)
-                throw new ArgumentException(Strings.DataSetContainer_InvalidLocalColumnModel, paramName);
+                throw new ArgumentException(DiagnosticMessages.DataSetContainer_InvalidLocalColumnModel, paramName);
         }
 
         private void VerifyBaseColumn(Column column, string paramName)
         {
             Check.NotNull(column, paramName);
             if (column.ParentModel != null && column.ParentModel.DataSetContainer != this)
-                throw new ArgumentException(Strings.DataSetContainer_InvalidBaseColumn, paramName);
+                throw new ArgumentException(DiagnosticMessages.DataSetContainer_InvalidBaseColumn, paramName);
         }
 
         private void VerifyExpression(Delegate expression, string paramName)
         {
             Check.NotNull(expression, paramName);
             if (expression.Target != null)
-                throw new ArgumentException(Strings.DataSetContainer_InvalidLocalColumnExpression, paramName);
+                throw new ArgumentException(DiagnosticMessages.DataSetContainer_InvalidLocalColumnExpression, paramName);
         }
 
         private Column<T> AddLocalColumn<T>(Column<T> localColumn)

@@ -121,11 +121,11 @@ namespace DevZest.Data.Primitives
         {
             Check.NotNull(dbTable, nameof(dbTable));
             if (dbTable.DbSession != Db)
-                throw new ArgumentException(Strings.MockDb_InvalidTable, nameof(dbTable));
+                throw new ArgumentException(DiagnosticMessages.MockDb_InvalidTable, nameof(dbTable));
             if (!_isInitializing)
-                throw new InvalidOperationException(Strings.MockDb_MockOnlyAllowedDuringInitialization);
+                throw new InvalidOperationException(DiagnosticMessages.MockDb_MockOnlyAllowedDuringInitialization);
             if (_pendingMockTables.ContainsKey(dbTable))
-                throw new ArgumentException(Strings.MockDb_DuplicateTable(dbTable.Name), nameof(dbTable));
+                throw new ArgumentException(DiagnosticMessages.MockDb_DuplicateTable(dbTable.Name), nameof(dbTable));
 
             _pendingMockTables.Add(dbTable, action);
         }
@@ -166,7 +166,7 @@ namespace DevZest.Data.Primitives
                 var result = _mockTables[tableName];
                 var resultModelType = result.Table.GetType().GenericTypeArguments[0];
                 if (typeof(TModel) != resultModelType)
-                    throw new InvalidOperationException(Strings.MockDb_ModelTypeMismatch(typeof(TModel).FullName, resultModelType.FullName, tableName));
+                    throw new InvalidOperationException(DiagnosticMessages.MockDb_ModelTypeMismatch(typeof(TModel).FullName, resultModelType.FullName, tableName));
                 return (DbTable<TModel>)result.Table;
             }
 
@@ -174,7 +174,7 @@ namespace DevZest.Data.Primitives
                 return null;
 
             if (_creatingTableNames.Contains(tableName))
-                throw new InvalidOperationException(Strings.MockDb_CircularReference(tableName));
+                throw new InvalidOperationException(DiagnosticMessages.MockDb_CircularReference(tableName));
 
             _creatingTableNames.Add(tableName);
 

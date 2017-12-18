@@ -295,7 +295,7 @@ namespace DevZest.Data.Primitives
             {
                 var column = columns[i] as IColumn<TReader>;
                 if (column == null)
-                    throw new NotSupportedException(Strings.DbSession_ColumnNotSupported(i, columns[i].Name));
+                    throw new NotSupportedException(DiagnosticMessages.DbSession_ColumnNotSupported(i, columns[i].Name));
                 result[i] = column;
             }
             return result;

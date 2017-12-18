@@ -90,7 +90,7 @@ namespace DevZest.Data.Primitives
             where TColumn : Column<T>, new()
         {
             if (Owner != null)
-                throw new InvalidOperationException(Strings.ColumnExpression_AlreadyAttached);
+                throw new InvalidOperationException(DiagnosticMessages.ColumnExpression_AlreadyAttached);
 
             var result = new TColumn();
             Owner = result;

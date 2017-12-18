@@ -129,14 +129,14 @@ namespace DevZest.Data.Primitives
             {
                 var extender = model.Extender;
                 if (model.Extender == null)
-                    throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
+                    throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
                 jsonParser.Parse(extender, dataRow);
             }
             else
             {
                 var member = model[memberName];
                 if (member == null)
-                    throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
+                    throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
                 if (member is Column)
                     jsonParser.Parse((Column)member, dataRow.Ordinal);
                 else if (member is ColumnList)
@@ -173,7 +173,7 @@ namespace DevZest.Data.Primitives
             else if (extender.ChildExtendersByName.ContainsKey(memberName))
                 jsonParser.Parse(extender.ChildExtendersByName[memberName], dataRow);
             else
-                throw new FormatException(Strings.JsonParser_InvalidExtenderMember(memberName, extender.FullName));
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidExtenderMember(memberName, extender.FullName));
         }
 
         private static void Parse(this JsonParser jsonParser, Column column, int ordinal)

@@ -87,7 +87,7 @@ namespace DevZest.Data.Primitives
             private void OnItemChanging(IExtension item)
             {
                 if (IsFrozen)
-                    throw new InvalidOperationException(Strings.VerifyDesignMode);
+                    throw new InvalidOperationException(DiagnosticMessages.VerifyDesignMode);
 
                 var type = item.GetType();
                 var invalidatedTypes = new List<Type>();

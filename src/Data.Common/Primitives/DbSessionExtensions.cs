@@ -69,7 +69,7 @@ namespace DevZest.Data.Primitives
         internal static void VerifyNotMocked(this DbSession dbSession)
         {
             if (dbSession.IsMocked())
-                throw new InvalidOperationException(Strings.DbSession_VerifyNotMocked);
+                throw new InvalidOperationException(DiagnosticMessages.DbSession_VerifyNotMocked);
         }
 
         public static void CreateTables(this DbSession dbSession, IProgress<string> progress)

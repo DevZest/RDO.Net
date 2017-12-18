@@ -44,7 +44,7 @@ namespace DevZest.Data.Annotations
                 });
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.StringLengthAttribute_DefaultErrorMessage, nameof(TestModel.Text1), 10),
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.StringLengthAttribute, nameof(TestModel.Text1), 10),
                     validationMessages[0].Description);
             }
 
@@ -57,7 +57,7 @@ namespace DevZest.Data.Annotations
                 });
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.StringLengthAttribute_DefaultErrorMessageWithMinLength, nameof(TestModel.Text2), 10, 5),
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.StringLengthAttribute_WithMinLength, nameof(TestModel.Text2), 10, 5),
                     validationMessages[0].Description);
             }
         }

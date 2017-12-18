@@ -15,7 +15,7 @@ namespace DevZest.Data.Annotations
 
         protected override string DefaultMessageString
         {
-            get { return Strings.EmailAddressAttribute_DefaultErrorMessage; }
+            get { return UserMessages.EmailAddressAttribute; }
         }
 
         private static bool IsValid(string text)

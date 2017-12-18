@@ -619,7 +619,7 @@ namespace DevZest.Data
             set
             {
                 if (_clusteredIndex != null && _clusteredIndex != value)
-                    throw new InvalidOperationException(Strings.Model_MultipleClusteredIndex(_clusteredIndex.SystemName));
+                    throw new InvalidOperationException(DiagnosticMessages.Model_MultipleClusteredIndex(_clusteredIndex.SystemName));
                 else
                     _clusteredIndex = value;
             }
@@ -639,7 +639,7 @@ namespace DevZest.Data
             Debug.Assert(constraint != null);
 
             if (!overwritable && ContainsExtension(((IExtension)constraint).Key))
-                throw new InvalidOperationException(Strings.Model_DuplicateConstraintName(constraint.SystemName));
+                throw new InvalidOperationException(DiagnosticMessages.Model_DuplicateConstraintName(constraint.SystemName));
 
             var index = constraint as IIndexConstraint;
             if (index != null && index.IsClustered)
@@ -653,7 +653,7 @@ namespace DevZest.Data
             Debug.Assert(index != null);
 
             if (ContainsExtension(((IExtension)index).Key))
-                throw new InvalidOperationException(Strings.Model_DuplicateIndexName(index.Name));
+                throw new InvalidOperationException(DiagnosticMessages.Model_DuplicateIndexName(index.Name));
 
             if (index.IsClustered)
                 ClusteredIndex = index;
@@ -803,13 +803,13 @@ namespace DevZest.Data
             Utilities.Check.NotEmpty(name, nameof(name));
             Utilities.Check.NotNull(orderByList, nameof(orderByList));
             if (orderByList.Length == 0)
-                throw new ArgumentException(Strings.Model_EmptyColumns, nameof(orderByList));
+                throw new ArgumentException(DiagnosticMessages.Model_EmptyColumns, nameof(orderByList));
 
             for (int i = 0; i < orderByList.Length; i++)
             {
                 var column = orderByList[i].Column;
                 if (column == null || column.ParentModel != this)
-                    throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
+                    throw new ArgumentException(DiagnosticMessages.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
             AddIndex(new DbIndex(name, description, isUnique, isClustered, isMemberOfTable, isMemberOfTempTable, orderByList));
@@ -819,13 +819,13 @@ namespace DevZest.Data
         {
             Utilities.Check.NotNull(orderByList, nameof(orderByList));
             if (orderByList.Length == 0)
-                throw new ArgumentException(Strings.Model_EmptyColumns, nameof(orderByList));
+                throw new ArgumentException(DiagnosticMessages.Model_EmptyColumns, nameof(orderByList));
 
             for (int i = 0; i < orderByList.Length; i++)
             {
                 var column = orderByList[i].Column;
                 if (column == null || column.ParentModel != this)
-                    throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
+                    throw new ArgumentException(DiagnosticMessages.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
             AddDbTableConstraint(new DbUnique(name, description, isClustered, orderByList), false);
@@ -890,7 +890,7 @@ namespace DevZest.Data
                 var mapping = parentRelationship[i];
                 var source = GetSource(columnMappings, mapping.SourceExpression);
                 if (source == null)
-                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.SourceExpression));
+                    throw new InvalidOperationException(DiagnosticMessages.ChildColumnNotExistInColumnMappings(mapping.SourceExpression));
                 result[i] = new ColumnMapping(source, mapping.Target);
             }
 
@@ -959,7 +959,7 @@ namespace DevZest.Data
 
             var result = Columns[columnName];
             if (result == null)
-                throw new FormatException(Strings.Model_InvalidColumnName(columnName));
+                throw new FormatException(DiagnosticMessages.Model_InvalidColumnName(columnName));
             return result;
         }
 
@@ -1231,7 +1231,7 @@ namespace DevZest.Data
         {
             VerifyDesignMode();
             if (Extender != null)
-                throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
+                throw new InvalidOperationException(DiagnosticMessages.Model_ExtensionAlreadyExists);
             else
                 Extender = new T();
         }
@@ -1240,7 +1240,7 @@ namespace DevZest.Data
         {
             Debug.Assert(extenderType != null);
             if (Extender != null)
-                throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
+                throw new InvalidOperationException(DiagnosticMessages.Model_ExtensionAlreadyExists);
             else
                 Extender = (ModelExtender)Activator.CreateInstance(extenderType);
         }

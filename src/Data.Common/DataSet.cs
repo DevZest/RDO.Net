@@ -84,11 +84,11 @@ namespace DevZest.Data
         {
             Check.NotNull(dataRow, nameof(dataRow));
             if (IsReadOnly)
-                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
             if (dataRow.ParentDataRow != null)
-                throw new ArgumentException(Strings.DataSet_InvalidNewDataRow, nameof(dataRow));
+                throw new ArgumentException(DiagnosticMessages.DataSet_InvalidNewDataRow, nameof(dataRow));
 
             InternalInsert(index, dataRow);
 
@@ -117,7 +117,7 @@ namespace DevZest.Data
         public void RemoveAt(int index)
         {
             if (IsReadOnly)
-                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
@@ -156,7 +156,7 @@ namespace DevZest.Data
         public void Clear()
         {
             if (IsReadOnly)
-                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
 
             for (int i = Count - 1; i >= 0; i--)
                 OuterRemoveAt(i);
@@ -382,14 +382,14 @@ namespace DevZest.Data
         {
             var addingRow = AddingRow;
             if (addingRow == null)
-                throw new InvalidOperationException(Strings.DataSet_NullAddingRow);
+                throw new InvalidOperationException(DiagnosticMessages.DataSet_NullAddingRow);
             return Model.Validate(addingRow, severity).Seal();
         }
 
         public DataRow BeginAdd()
         {
             if (IsReadOnly)
-                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
 
             if (EditingRow != null)
                 return null;
@@ -406,7 +406,7 @@ namespace DevZest.Data
         public DataRow EndAdd(int index)
         {
             if (IsReadOnly)
-                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
 
             if (EditingRow != DataRow.Placeholder)
                 return null;
@@ -419,7 +419,7 @@ namespace DevZest.Data
         public bool CancelAdd()
         {
             if (IsReadOnly)
-                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
 
             if (EditingRow != DataRow.Placeholder)
                 return false;

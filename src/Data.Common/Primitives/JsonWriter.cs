@@ -25,7 +25,7 @@ namespace DevZest.Data.Primitives
         private StringBuilder RequireStringBuilder()
         {
             if (_stringBuilder == null)
-                throw new InvalidOperationException(Strings.JsonWriter_Empty);
+                throw new InvalidOperationException(DiagnosticMessages.JsonWriter_Empty);
             return _stringBuilder;
         }
 

@@ -58,7 +58,7 @@ namespace DevZest.Data.Annotations
             var dataRow2 = dataSet.AddRow();
             var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
             Assert.AreEqual(1, messages2.Count);
-            Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.RequiredAttribute_DefaultErrorMessage, nameof(TestModel.Id)), messages2[0].Description);
+            Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.RequiredAttribute, nameof(TestModel.Id)), messages2[0].Description);
         }
     }
 }

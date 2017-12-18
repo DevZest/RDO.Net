@@ -14,7 +14,7 @@ namespace DevZest.Data.Utilities
 
             var resolvedType = typeResolver();
             if (resolvedType == null)
-                throw new ArgumentException(Strings.GenericInvoker_TypeResolverReturnsNull, nameof(typeResolver));
+                throw new ArgumentException(DiagnosticMessages.GenericInvoker_TypeResolverReturnsNull, nameof(typeResolver));
 
             BuildFunc(methodInfo, resolvedType);
         }

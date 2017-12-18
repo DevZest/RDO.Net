@@ -35,7 +35,7 @@ namespace DevZest.Data.Annotations
 
         protected override string DefaultMessageString
         {
-            get { return Strings.UniqueAttribute_DefaultErrorMessage; }
+            get { return UserMessages.UniqueAttribute; }
         }
 
         protected override bool CoerceDeclaringTypeOnly(bool value)

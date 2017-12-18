@@ -36,7 +36,7 @@ namespace DevZest.Data
             foreach (var resultItem in result)
             {
                 if (!targetModelIds.Contains(resultItem.Target.ModelId))
-                    throw new InvalidOperationException(Strings.ColumnMappingsBuilder_InvalidTarget(resultItem.Target));
+                    throw new InvalidOperationException(DiagnosticMessages.ColumnMappingsBuilder_InvalidTarget(resultItem.Target));
             }
 
             return result;

@@ -24,7 +24,7 @@ namespace DevZest.Samples.AdventureWorksLT
             if (_ == null)
                 throw new ArgumentNullException(nameof(_));
             if (_.IsInitialized)
-                throw new InvalidOperationException(Strings.VerifyDesignMode);
+                throw new InvalidOperationException(DiagnosticMessages.VerifyDesignMode);
 
             EventHandler<EventArgs> eventHandler;
             if (_modelInitializers.TryGetValue(_, out eventHandler))

@@ -147,7 +147,7 @@ namespace DevZest.Data
         internal void VerifyDelete()
         {
             if (Model.ChildModels.Any(x => x != null))
-                throw new NotSupportedException(Strings.DbTable_DeleteNotSupportedForParentTable);
+                throw new NotSupportedException(DiagnosticMessages.DbTable_DeleteNotSupportedForParentTable);
         }
 
         internal void VerifyDelete<TSource>(DbSet<TSource> source)

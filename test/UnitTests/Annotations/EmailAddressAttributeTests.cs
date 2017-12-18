@@ -32,7 +32,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.EmailAddress[row] = "example");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.EmailAddressAttribute_DefaultErrorMessage, nameof(TestModel.EmailAddress)), validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.EmailAddressAttribute, nameof(TestModel.EmailAddress)), validationMessages[0].Description);
             }
         }
     }

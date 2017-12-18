@@ -70,11 +70,11 @@ namespace DevZest.Data.Primitives
         private T Eval(DataRow dataRow)
         {
             if (Param.ParentModel.DataSource.Kind != DataSourceKind.DataSet)
-                throw new InvalidOperationException(Strings.ColumnAggregateFunction_EvalOnNonDataSet(Param, Param.ParentModel.DataSource.Kind));
+                throw new InvalidOperationException(DiagnosticMessages.ColumnAggregateFunction_EvalOnNonDataSet(Param, Param.ParentModel.DataSource.Kind));
 
             var modelChain = ResolveModelChain(dataRow);
             if (modelChain == null)
-                throw new ArgumentException(Strings.ColumnAggregateFunction_NoModelChain(Param.ToString()), nameof(dataRow));
+                throw new ArgumentException(DiagnosticMessages.ColumnAggregateFunction_NoModelChain(Param.ToString()), nameof(dataRow));
 
             EvalInit();
 

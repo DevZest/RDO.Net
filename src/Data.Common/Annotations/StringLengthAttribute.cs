@@ -49,9 +49,9 @@ namespace DevZest.Data.Annotations
             get
             {
                 if (MinimumLength == 0)
-                    return Strings.StringLengthAttribute_DefaultErrorMessage;
+                    return UserMessages.StringLengthAttribute;
                 else
-                    return Strings.StringLengthAttribute_DefaultErrorMessageWithMinLength;
+                    return UserMessages.StringLengthAttribute_WithMinLength;
             }
         }
 

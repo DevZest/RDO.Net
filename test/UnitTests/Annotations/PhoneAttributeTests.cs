@@ -32,7 +32,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Phone[row] = "(555)-123456A");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.PhoneAttribute_DefaultErrorMessage, nameof(TestModel.Phone)), validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.PhoneAttribute, nameof(TestModel.Phone)), validationMessages[0].Description);
             }
         }
     }

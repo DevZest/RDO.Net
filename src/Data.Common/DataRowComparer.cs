@@ -43,7 +43,7 @@ namespace DevZest.Data
             Check.NotNull(orderBy, nameof(orderBy));
             Check.NotNull(thenBy, nameof(thenBy));
             if (orderBy.ModelType != thenBy.ModelType)
-                throw new ArgumentException(Strings.DataRowComparer_DifferentDataRowModel, nameof(thenBy));
+                throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentDataRowModel, nameof(thenBy));
             return ComparerBase.Create(orderBy, thenBy);
         }
 
@@ -52,7 +52,7 @@ namespace DevZest.Data
             Check.NotNull(orderBy, nameof(orderBy));
             var thenBy = DataRow.OrderBy(column, direction);
             if (orderBy.ModelType != thenBy.ModelType)
-                throw new ArgumentException(Strings.DataRowComparer_DifferentDataRowModel, nameof(column));
+                throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentDataRowModel, nameof(column));
             return ComparerBase.Create(orderBy, thenBy);
         }
 
@@ -61,7 +61,7 @@ namespace DevZest.Data
             Check.NotNull(orderBy, nameof(orderBy));
             var thenBy = DataRow.OrderBy(column, direction, comparer);
             if (orderBy.ModelType != thenBy.ModelType)
-                throw new ArgumentException(Strings.DataRowComparer_DifferentDataRowModel, nameof(column));
+                throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentDataRowModel, nameof(column));
             return ComparerBase.Create(orderBy, thenBy);
         }
 
@@ -96,9 +96,9 @@ namespace DevZest.Data
                 Check.NotNull(y, nameof(y));
                 var model = x.Model;
                 if (model == null || model.GetType() != ModelType)
-                    throw new ArgumentException(Strings.DataRowComparer_InvalidDataRowModel, nameof(x));
+                    throw new ArgumentException(DiagnosticMessages.DataRowComparer_InvalidDataRowModel, nameof(x));
                 if (y.Model != model)
-                    throw new ArgumentException(Strings.DataRowComparer_DifferentDataRowModel, nameof(y));
+                    throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentDataRowModel, nameof(y));
                 return model;
             }
 
@@ -156,7 +156,7 @@ namespace DevZest.Data
                 {
                     Check.NotNull(model, nameof(model));
                     if (model.GetType() != ModelType)
-                        throw new ArgumentException(Strings.DataRowComparer_DifferentModelType, nameof(model));
+                        throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentModelType, nameof(model));
                     return GetTypedColumn(model);
                 }
 

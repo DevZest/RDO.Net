@@ -159,7 +159,7 @@ namespace DevZest.Data
             internal void ResumeComputation()
             {
                 if (_suspendComputationCount == 0)
-                    throw new InvalidOperationException(Strings.DataSetContainer_ResumeComputationWithoutSuspendComputation);
+                    throw new InvalidOperationException(DiagnosticMessages.DataSetContainer_ResumeComputationWithoutSuspendComputation);
                 if (_suspendComputationCount == 1)
                     RefreshComputations();
                 _suspendComputationCount--;
@@ -316,7 +316,7 @@ namespace DevZest.Data
         private void MergeComputation(Column baseColumn, Column computationColumn, bool isDirect)
         {
             if (baseColumn == computationColumn)
-                throw new InvalidOperationException(Strings.ComputationManager_CircularComputation(baseColumn.Name));
+                throw new InvalidOperationException(DiagnosticMessages.ComputationManager_CircularComputation(baseColumn.Name));
 
             if (baseColumn.ParentModel != null)
             {

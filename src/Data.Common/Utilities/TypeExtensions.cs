@@ -56,7 +56,7 @@ namespace DevZest.Data.Utilities
         {
             Check.NotNull(resourceType, nameof(resourceType));
             if (string.IsNullOrWhiteSpace(resourceName))
-                throw new ArgumentException(Strings.TypeExtensions_InvalidResourceName, nameof(resourceName));
+                throw new ArgumentException(DiagnosticMessages.TypeExtensions_InvalidResourceName, nameof(resourceName));
 
             try
             {
@@ -64,7 +64,7 @@ namespace DevZest.Data.Utilities
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException(Strings.TypeExtensions_CannotResolveStaticStringProperty(resourceType, resourceName), ex);
+                throw new InvalidOperationException(DiagnosticMessages.TypeExtensions_CannotResolveStaticStringProperty(resourceType, resourceName), ex);
             }
         }
 

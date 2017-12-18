@@ -66,7 +66,7 @@ namespace DevZest.Data.Annotations
                     PropertyInfo property = _resourceType.GetProperty(_propertyValue, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                     if (!IsValidProperty(property))
                     {
-                        string exceptionMessage = Strings.LocalizableString_LocalizationFailed(_propertyName, _resourceType.FullName, _propertyValue);
+                        string exceptionMessage = DiagnosticMessages.LocalizableString_LocalizationFailed(_propertyName, _resourceType.FullName, _propertyValue);
                         _cachedResult = delegate
                         {
                             throw new InvalidOperationException(exceptionMessage);

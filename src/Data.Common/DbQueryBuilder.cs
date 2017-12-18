@@ -58,7 +58,7 @@ namespace DevZest.Data
 
             model = dbSet._;
             if (_sourceModels.Count > 0)
-                throw new InvalidOperationException(Strings.DbQueryBuilder_DuplicateFrom);
+                throw new InvalidOperationException(DiagnosticMessages.DbQueryBuilder_DuplicateFrom);
 
             From(model);
             return this;
@@ -145,10 +145,10 @@ namespace DevZest.Data
             Check.NotNull(dbSet, nameof(dbSet));
             Check.NotNull(left, nameof(left));
             if (!_sourceModels.Contains(left.ParentModel))
-                throw new ArgumentException(Strings.DbQueryBuilder_Join_InvalidLeftKey, nameof(left));
+                throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_Join_InvalidLeftKey, nameof(left));
             Check.NotNull(right, nameof(right));
             if (right.ParentModel != dbSet.Model)
-                throw new ArgumentException(Strings.DbQueryBuilder_Join_InvalidRightKey, nameof(right));
+                throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_Join_InvalidRightKey, nameof(right));
 
             Join(dbSet, kind, left.Join(right), out model);
         }
@@ -246,7 +246,7 @@ namespace DevZest.Data
         public DbQueryBuilder AutoSelect()
         {
             if (_autoColumnSelector == null)
-                throw new InvalidOperationException(Strings.DbQueryBuilder_EmptyFrom);
+                throw new InvalidOperationException(DiagnosticMessages.DbQueryBuilder_EmptyFrom);
             foreach (var targetColumn in Model.Columns)
             {
                 if (_targetColumns.Contains(targetColumn))
@@ -266,9 +266,9 @@ namespace DevZest.Data
             if (from == null)
                 throw new ArgumentNullException(nameof(from));
             if (_sourceModels == null)
-                throw new InvalidOperationException(Strings.DbQueryBuilder_EmptyFrom);
+                throw new InvalidOperationException(DiagnosticMessages.DbQueryBuilder_EmptyFrom);
             if (!_sourceModels.Contains(from))
-                throw new ArgumentException(Strings.DbQueryBuilder_InvalidAutoSelectSourceModel, nameof(from));
+                throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_InvalidAutoSelectSourceModel, nameof(from));
 
             var targetColumns = to.Columns;
             for (int i = 0; i < targetColumns.Count; i++)
@@ -304,7 +304,7 @@ namespace DevZest.Data
         {
             Check.NotNull(target, paramName);
             if (target.ParentModel != Model || _targetColumns.Contains(target))
-                throw new ArgumentException(Strings.DbQueryBuilder_VerifyTargetColumn, paramName);
+                throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_VerifyTargetColumn, paramName);
         }
 
         internal void SelectCore(Column source, Column target)
@@ -367,18 +367,18 @@ namespace DevZest.Data
             if (allowsAggregate)
                 VerifyAggregateSourceModels(sourceColumn, exceptionParamName, sourceModelSet);
             else if (sourceColumn.AggregateSourceModels.Count > 0)
-                throw new ArgumentException(Strings.DbQueryBuilder_AggregateNotAllowed, exceptionParamName);
+                throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_AggregateNotAllowed, exceptionParamName);
         }
 
         private void VerifyScalarSourceModels(IModels containsBy, Column sourceColumn, string exceptionParamName)
         {
             if (sourceColumn.ScalarSourceModels.Count == 0 && sourceColumn.GetExpression() == null)
-                throw new ArgumentException(Strings.Column_EmptyScalarSourceModels, exceptionParamName);
+                throw new ArgumentException(DiagnosticMessages.Column_EmptyScalarSourceModels, exceptionParamName);
 
             foreach (var model in sourceColumn.ScalarSourceModels)
             {
                 if (!containsBy.Contains(model))
-                    throw new ArgumentException(Strings.DbQueryBuilder_InvalidScalarSourceModel(model), exceptionParamName);
+                    throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_InvalidScalarSourceModel(model), exceptionParamName);
             }
         }
 
@@ -387,7 +387,7 @@ namespace DevZest.Data
             foreach (var model in sourceColumn.AggregateSourceModels)
             {
                 if (!modelSet.Contains(model))
-                    throw new ArgumentException(Strings.DbQueryBuilder_InvalidAggregateSourceModel(model), exceptionParamName);
+                    throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_InvalidAggregateSourceModel(model), exceptionParamName);
             }
         }
 

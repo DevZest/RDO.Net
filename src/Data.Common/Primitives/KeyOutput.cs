@@ -14,7 +14,7 @@ namespace DevZest.Data.Primitives
             Utilities.Check.NotNull(model, nameof(model));
             var primaryKey = model.PrimaryKey;
             if (primaryKey == null)
-                throw new ArgumentException(Strings.DbTable_NoPrimaryKey(model), nameof(model));
+                throw new ArgumentException(DiagnosticMessages.DbTable_NoPrimaryKey(model), nameof(model));
 
             _sourceDbAlias = model.DbAlias;
             _primaryKey = primaryKey.Clone(this);
@@ -45,21 +45,21 @@ namespace DevZest.Data.Primitives
         {
             var sourceKey = source.PrimaryKey;
             if (sourceKey == null)
-                throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(source));
+                throw new InvalidOperationException(DiagnosticMessages.DbTable_NoPrimaryKey(source));
 
             var targetKey = target.PrimaryKey;
             if (targetKey == null)
-                throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(target));
+                throw new InvalidOperationException(DiagnosticMessages.DbTable_NoPrimaryKey(target));
 
             if (targetKey.Count != sourceKey.Count)
-                throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
+                throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
 
             for (int i = 0; i < targetKey.Count; i++)
             {
                 var targetColumn = targetKey[i].Column;
                 var sourceColumn = sourceKey[i].Column;
                 if (targetColumn.DataType != sourceColumn.DataType)
-                    throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
+                    throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
 
                 builder.Select(sourceColumn, i);
             }

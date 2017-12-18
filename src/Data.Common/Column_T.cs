@@ -116,7 +116,7 @@ namespace DevZest.Data
         internal sealed override void InitAsChild(Column parentColumn)
         {
             if (IsExpression)
-                throw new InvalidOperationException(Strings.Column_ComputationNotAllowedForChildColumn(this.Name));
+                throw new InvalidOperationException(DiagnosticMessages.Column_ComputationNotAllowedForChildColumn(this.Name));
             SetComputation((Column<T>)parentColumn, false, false);
         }
 
@@ -189,7 +189,7 @@ namespace DevZest.Data
         {
             Debug.Assert(dataRow != null);
             if (InternalIsReadOnly(dataRow))
-                throw new InvalidOperationException(Strings.Column_SetReadOnlyValue(this));
+                throw new InvalidOperationException(DiagnosticMessages.Column_SetReadOnlyValue(this));
 
             SetValueCore(dataRow, value);
         }
@@ -217,7 +217,7 @@ namespace DevZest.Data
         {
             Check.NotNull(dataRow, paramName);
             if (ParentModel == null)
-                throw new ArgumentException(Strings.Column_InvalidDataRow, paramName);
+                throw new ArgumentException(DiagnosticMessages.Column_InvalidDataRow, paramName);
 
             if (dataRow == ParentModel.EditingRow)
                 return dataRow;
@@ -226,13 +226,13 @@ namespace DevZest.Data
             {
                 var translatedDataRow = Translate(dataRow);
                 if (translatedDataRow == null)
-                    throw new ArgumentException(Strings.Column_InvalidDataRow, paramName);
+                    throw new ArgumentException(DiagnosticMessages.Column_InvalidDataRow, paramName);
                 return translatedDataRow;
             }
             else
             {
                 if (dataRow.Model != ParentModel)
-                    throw new ArgumentException(Strings.Column_InvalidDataRow, paramName);
+                    throw new ArgumentException(DiagnosticMessages.Column_InvalidDataRow, paramName);
                 return dataRow;
             }
         }
@@ -521,9 +521,9 @@ namespace DevZest.Data
         {
             Check.NotNull(computation, nameof(computation));
             if (ParentModel == null)
-                throw new InvalidOperationException(Strings.Column_ComputedColumnMustBeMemberOfModel);
+                throw new InvalidOperationException(DiagnosticMessages.Column_ComputedColumnMustBeMemberOfModel);
             if (Expression != null)
-                throw new InvalidOperationException(Strings.Column_AlreadyComputed);
+                throw new InvalidOperationException(DiagnosticMessages.Column_AlreadyComputed);
 
             VerifyDesignMode();
             SetComputation(computation, isConcrete, isDbComputed);
@@ -636,7 +636,7 @@ namespace DevZest.Data
             {
                 comparer = Comparer<T>.Default;
                 if (comparer == null)
-                    throw new ArgumentNullException(paramName, Strings.Column_NoDefaultComparer);
+                    throw new ArgumentNullException(DiagnosticMessages.Column_NoDefaultComparer, paramName);
             }
             return comparer;
         }
@@ -689,7 +689,7 @@ namespace DevZest.Data
                     return this;
 
                 if (model.GetType() != ParentModel.GetType())
-                    throw new ArgumentException(Strings.Column_TranslateToModelTypeMismatch, nameof(model));
+                    throw new ArgumentException(DiagnosticMessages.Column_TranslateToModelTypeMismatch, nameof(model));
 
                 if (IsLocal)
                     return model.LocalColumns[Ordinal];

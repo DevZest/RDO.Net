@@ -22,7 +22,7 @@ namespace DevZest.Data.Annotations
 
         protected override string DefaultMessageString
         {
-            get { return Strings.UrlAttribute_DefaultErrorMessage; }
+            get { return UserMessages.UrlAttribute; }
         }
 
         private static Regex CreateRegEx()

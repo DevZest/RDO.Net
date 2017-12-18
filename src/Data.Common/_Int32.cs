@@ -789,13 +789,13 @@ namespace DevZest.Data
             VerifyDesignMode();
 
             if (increment == 0)
-                throw new ArgumentException(Strings.Model_InvalidIdentityIncrement, nameof(increment));
+                throw new ArgumentException(DiagnosticMessages.Model_InvalidIdentityIncrement, nameof(increment));
 
             var identity = new Identity(this, seed, increment, isTempTable);
             AddOrUpdateExtension(identity);
             var model = ParentModel;
             if (model.ContainsExtension(((IExtension)identity).Key))
-                throw new InvalidOperationException(Strings.Model_MultipleIdentityColumn);
+                throw new InvalidOperationException(DiagnosticMessages.Model_MultipleIdentityColumn);
             model.AddExtension(identity);
             return identity;
         }

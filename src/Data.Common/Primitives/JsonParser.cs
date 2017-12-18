@@ -38,7 +38,7 @@ namespace DevZest.Data.Primitives
             ConsumeToken();
 
             if ((currentToken.Kind & expectedTokenKind) != currentToken.Kind)
-                throw new FormatException(Strings.JsonParser_InvalidTokenKind(currentToken.Kind, expectedTokenKind));
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidTokenKind(currentToken.Kind, expectedTokenKind));
             return currentToken;
         }
 
@@ -51,7 +51,7 @@ namespace DevZest.Data.Primitives
         {
             var tokenText = ExpectToken(JsonTokenKind.String).Text;
             if (tokenText != objectName)
-                throw new FormatException(Strings.JsonParser_InvalidObjectName(tokenText, objectName));
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidObjectName(tokenText, objectName));
             ExpectToken(JsonTokenKind.Colon);
         }
 
@@ -146,7 +146,7 @@ namespace DevZest.Data.Primitives
                     return JsonToken.Null;
             }
 
-            throw new FormatException(Strings.JsonParser_InvalidChar(c, _index - 1));
+            throw new FormatException(DiagnosticMessages.JsonParser_InvalidChar(c, _index - 1));
         }
 
         private string ParseNumberToken()
@@ -206,7 +206,7 @@ namespace DevZest.Data.Primitives
                 ParseStringEscape();
             }
 
-            throw new FormatException(Strings.JsonParser_UnexpectedEof);
+            throw new FormatException(DiagnosticMessages.JsonParser_UnexpectedEof);
         }
 
         private void ParseStringEscape()
@@ -214,7 +214,7 @@ namespace DevZest.Data.Primitives
             Debug.Assert(_json[_index - 1] == '\\');
 
             if (_index == _json.Length)
-                throw new FormatException(Strings.JsonParser_UnexpectedEof);
+                throw new FormatException(DiagnosticMessages.JsonParser_UnexpectedEof);
 
             var c = _json[_index++];
             switch (c)
@@ -256,7 +256,7 @@ namespace DevZest.Data.Primitives
                     break;
 
                 default:
-                    throw new FormatException(Strings.JsonParser_InvalidStringEscape(c, _index - 1));
+                    throw new FormatException(DiagnosticMessages.JsonParser_InvalidStringEscape(c, _index - 1));
             }
 
         }
@@ -265,7 +265,7 @@ namespace DevZest.Data.Primitives
         {
             int remainingLength = _json.Length - _index;
             if (remainingLength < 4)
-                throw new FormatException(Strings.JsonParser_UnexpectedEof);
+                throw new FormatException(DiagnosticMessages.JsonParser_UnexpectedEof);
 
             uint codePoint = ParseHex(_json[_index], _json[_index + 1], _json[_index + 2], _json[_index + 3]);
             _stringBuilder.Append((char)codePoint);
@@ -292,7 +292,7 @@ namespace DevZest.Data.Primitives
             else if (c >= 'a' && c <= 'f')
                 return (uint)((c - 'a') + 10);
             else
-                throw new FormatException(Strings.JsonParser_InvalidHexChar(c, _index - 1));
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidHexChar(c, _index - 1));
         }
 
         private void ExpectLiteral(string literal)
@@ -302,7 +302,7 @@ namespace DevZest.Data.Primitives
             for (int i = 1; i < literal.Length; i++)
             {
                 if (literal[i] != _json[_index++])
-                    throw new FormatException(Strings.JsonParser_InvalidLiteral(literal, _index - i));
+                    throw new FormatException(DiagnosticMessages.JsonParser_InvalidLiteral(literal, _index - i));
             }
         }
     }

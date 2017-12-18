@@ -158,7 +158,7 @@ namespace DevZest.Data
         {
             Check.NotNull(reader, nameof(reader));
             if (reader.Model != this.ParentModel)
-                throw new ArgumentException(Strings.Column_InvalidDbReader, nameof(reader));
+                throw new ArgumentException(DiagnosticMessages.Column_InvalidDbReader, nameof(reader));
         }
 
         internal Column Clone(Model parentModel)

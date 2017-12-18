@@ -11,7 +11,7 @@ namespace DevZest.Data
             Check.NotNull(dataRow, nameof(dataRow));
             Check.NotNull(messages, nameof(messages));
             if (messages.Count == 0)
-                throw new ArgumentException(Strings.ValidationEntry_EmptyMessages, nameof(messages));
+                throw new ArgumentException(DiagnosticMessages.ValidationEntry_EmptyMessages, nameof(messages));
             DataRow = dataRow;
             Messages = messages.Seal();
         }

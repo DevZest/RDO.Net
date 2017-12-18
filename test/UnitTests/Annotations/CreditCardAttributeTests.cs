@@ -32,7 +32,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.CreditCardNumber[row] = "4392 2500 0980 2980");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.CreditCardAttribute_DefaultErrorMessage, nameof(TestModel.CreditCardNumber)),
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.CreditCardAttribute, nameof(TestModel.CreditCardNumber)),
                     validationMessages[0].Description);
             }
         }

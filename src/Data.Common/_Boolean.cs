@@ -41,7 +41,7 @@ namespace DevZest.Data
                 return true;
             else if (value.Type == JsonValueType.False)
                 return false;
-            throw new FormatException(Strings.BooleanColumn_CannotDeserialize);
+            throw new FormatException(DiagnosticMessages.BooleanColumn_CannotDeserialize);
         }
 
         /// <inheritdoc cref="P:DevZest.Data._Binary.Item(DevZest.Data.DbReader)"/>

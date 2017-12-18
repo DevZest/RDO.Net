@@ -160,14 +160,14 @@ namespace DevZest.Data
         {
             var sourceKey = sourceModel.PrimaryKey;
             if (sourceKey == null)
-                throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(sourceModel));
+                throw new InvalidOperationException(DiagnosticMessages.DbTable_NoPrimaryKey(sourceModel));
 
             var targetKey = joinOn == null ? Model.PrimaryKey : joinOn(_);
             if (targetKey == null)
-                throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
+                throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
 
             if (targetKey.GetType() != sourceKey.GetType() || targetKey.Count != sourceKey.Count)
-                throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
+                throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
 
             var result = new ColumnMapping[targetKey.Count];
             for (int i = 0; i < result.Length; i++)
@@ -175,7 +175,7 @@ namespace DevZest.Data
                 var targetColumn = targetKey[i].Column;
                 var sourceColumn = sourceKey[i].Column;
                 if (targetColumn.DataType != sourceColumn.DataType)
-                    throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
+                    throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
 
                 result[i] = new ColumnMapping(sourceColumn, targetColumn);
             }
@@ -253,7 +253,7 @@ namespace DevZest.Data
             if (parentModelSet.Count == 0 || (parentModelSet.Count == 1 && parentModelSet.Contains(_)))
                 return whereExpr.DbExpression;
 
-            throw new ArgumentException(Strings.DbTable_VerifyWhere, nameof(where));
+            throw new ArgumentException(DiagnosticMessages.DbTable_VerifyWhere, nameof(where));
         }
 
         private IReadOnlyList<ColumnMapping> GetColumnMappings<TSource>(TSource sourceModel, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool isInsertable)
@@ -283,7 +283,7 @@ namespace DevZest.Data
         {
             Check.NotNull(source, nameof(source));
             if (source.DbSession != DbSession)
-                throw new ArgumentException(Strings.DbTable_InvalidDbSetSource);
+                throw new ArgumentException(DiagnosticMessages.DbTable_InvalidDbSetSource);
         }
 
         internal void VerifySource<TSource>(DataSet<TSource> source)

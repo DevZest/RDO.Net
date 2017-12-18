@@ -65,7 +65,7 @@ namespace DevZest.Data
                 return;
 
             if (Kind == DataSourceKind.DbTempTable || Model.GetIdentity(false) == null)
-                throw new ArgumentException(Strings.DbTable_VerifyUpdateIdentity, paramName);
+                throw new ArgumentException(DiagnosticMessages.DbTable_VerifyUpdateIdentity, paramName);
         }
 
         private struct InsertTableResult

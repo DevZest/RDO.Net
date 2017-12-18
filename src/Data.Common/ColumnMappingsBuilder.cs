@@ -26,7 +26,7 @@ namespace DevZest.Data
 
             buildAction(this);
             if (_result.Count == 0)
-                throw new InvalidOperationException(Strings.ColumnMappingsBuilder_NoColumnMapping);
+                throw new InvalidOperationException(DiagnosticMessages.ColumnMappingsBuilder_NoColumnMapping);
             return _result;
         }
 
@@ -58,7 +58,7 @@ namespace DevZest.Data
             var targetColumn = targetColumns[targetColumnOrdinal];
             VerifySource(sourceColumn);
             if (sourceColumn.DataType != targetColumn.DataType)
-                throw new ArgumentException(Strings.ColumnMappingsBuilder_InvalidSourceDataType(sourceColumn.DataType, targetColumn.DataType), nameof(sourceColumn));
+                throw new ArgumentException(DiagnosticMessages.ColumnMappingsBuilder_InvalidSourceDataType(sourceColumn.DataType, targetColumn.DataType), nameof(sourceColumn));
 
             _result.Add(new ColumnMapping(sourceColumn, targetColumn));
             return this;
@@ -68,7 +68,7 @@ namespace DevZest.Data
         {
             Check.NotNull(targetColumn, nameof(targetColumn));
             if (targetColumn.ParentModel != _targetModel)
-                throw new ArgumentException(Strings.ColumnMappingsBuilder_InvalidTarget(targetColumn), nameof(targetColumn));
+                throw new ArgumentException(DiagnosticMessages.ColumnMappingsBuilder_InvalidTarget(targetColumn), nameof(targetColumn));
         }
 
         private void VerifySource(Column sourceColumn)
@@ -79,7 +79,7 @@ namespace DevZest.Data
             foreach (var model in sourceModels)
             {
                 if (model != _sourceModel)
-                    throw new ArgumentException(Strings.ColumnMappingsBuilder_InvalidSourceParentModelSet(model), nameof(sourceColumn));
+                    throw new ArgumentException(DiagnosticMessages.ColumnMappingsBuilder_InvalidSourceParentModelSet(model), nameof(sourceColumn));
             }
         }
     }

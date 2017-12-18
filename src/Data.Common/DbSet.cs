@@ -162,15 +162,15 @@ namespace DevZest.Data
             where TChild : Model, new()
         {
             if (Kind == DataSourceKind.DbTable)
-                throw new InvalidOperationException(Strings.DbSet_VerifyCreateChild_InvalidDataSourceKind);
+                throw new InvalidOperationException(DiagnosticMessages.DbSet_VerifyCreateChild_InvalidDataSourceKind);
             Check.NotNull(getChildModel, nameof(getChildModel));
 
             _.EnsureInitialized();
             var childModel = getChildModel(_);
             if (childModel == null || childModel.ParentModel != _)
-                throw new ArgumentException(Strings.InvalidChildModelGetter, nameof(getChildModel));
+                throw new ArgumentException(DiagnosticMessages.InvalidChildModelGetter, nameof(getChildModel));
             if (childModel.DataSource != null)
-                throw new InvalidOperationException(Strings.DbSet_VerifyCreateChild_AlreadyCreated);
+                throw new InvalidOperationException(DiagnosticMessages.DbSet_VerifyCreateChild_AlreadyCreated);
 
             childModel.Initialize(initializer);
             return childModel;

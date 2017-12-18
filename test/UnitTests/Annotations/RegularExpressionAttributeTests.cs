@@ -33,7 +33,7 @@ namespace DevZest.Data.Annotations
                 var dataRow = dataSet.AddRow((_, row) => _.Name[row] = "John Doe O'Dell John Doe O'Dell John Doe O'Dell John Doe O'Dell");
                 var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, Strings.RegularExpressionAttribute_DefaultErrorMessage, nameof(TestModel.Name), PATTERN),
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.RegularExpressionAttribute, nameof(TestModel.Name), PATTERN),
                     validationMessages[0].Description);
             }
         }

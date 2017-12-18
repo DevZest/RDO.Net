@@ -337,7 +337,7 @@ namespace DevZest.Data.Primitives
             var model = foreignKey.ParentModel;
             var foreignKeyConstraint = new DbForeignKey(name, description, foreignKey, refTableModel.PrimaryKey, onDelete, onUpdate);
             if (refTableModel != model && string.IsNullOrEmpty(foreignKeyConstraint.ReferencedTableName))
-                throw new ArgumentException(Strings.Model_InvalidRefTableModel, nameof(refTableModel));
+                throw new ArgumentException(DiagnosticMessages.Model_InvalidRefTableModel, nameof(refTableModel));
             return foreignKeyConstraint;
         }
     }

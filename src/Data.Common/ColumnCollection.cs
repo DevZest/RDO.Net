@@ -41,7 +41,7 @@ namespace DevZest.Data
             var columns = Columns;
             var modelId = item.ModelId;
             if (columns.Contains(modelId))
-                throw new InvalidOperationException(Strings.ColumnCollection_DuplicateModelId(modelId.DeclaringType, modelId.Name));
+                throw new InvalidOperationException(DiagnosticMessages.ColumnCollection_DuplicateModelId(modelId.DeclaringType, modelId.Name));
 
             columns.Add(item);
             if (item.IsSystem)

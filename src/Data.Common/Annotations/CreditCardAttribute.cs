@@ -15,7 +15,7 @@ namespace DevZest.Data.Annotations
 
         protected override string DefaultMessageString
         {
-            get { return Strings.CreditCardAttribute_DefaultErrorMessage; }
+            get { return UserMessages.CreditCardAttribute; }
         }
 
         private static bool IsValid(string text)

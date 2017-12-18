@@ -46,7 +46,7 @@ namespace DevZest.Data.Annotations.Primitives
                 public void Add(TColumnGroupMemberAttribute memberAttribute, Column column)
                 {
                     if (Contains(column))
-                        throw new InvalidOperationException(Strings.ColumnsMemberAttribute_Duplicate(column, typeof(TColumnGroupMemberAttribute), memberAttribute.Name));
+                        throw new InvalidOperationException(DiagnosticMessages.ColumnsMemberAttribute_Duplicate(column, typeof(TColumnGroupMemberAttribute), memberAttribute.Name));
 
                     Insert(GetInsertIndex(memberAttribute), new Entry(memberAttribute, column));
                 }
@@ -83,7 +83,7 @@ namespace DevZest.Data.Annotations.Primitives
                 var columnsAttributes = _columnsAttributesByType[modelType];
                 Debug.Assert(columnsAttributes != null);
                 if (!columnsAttributes.Contains(attributeName))
-                    throw new InvalidOperationException(Strings.ColumnsMemberAttribute_CannotResolveColumnsAttribute(modelType, typeof(TColumnGroupAttribute), attributeName));
+                    throw new InvalidOperationException(DiagnosticMessages.ColumnsMemberAttribute_CannotResolveColumnsAttribute(modelType, typeof(TColumnGroupAttribute), attributeName));
                 var result = columnsAttributes[attributeName];
                 Debug.Assert(result != null);
                 return result;

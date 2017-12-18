@@ -16,7 +16,7 @@ namespace DevZest.Data.Utilities
         internal static string NotEmpty(string value, string parameterName)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException(Strings.ArgumentIsNullOrWhitespace(parameterName), parameterName);
+                throw new ArgumentException(DiagnosticMessages.ArgumentIsNullOrWhitespace(parameterName), parameterName);
 
             return value;
         }

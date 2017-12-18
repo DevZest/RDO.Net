@@ -52,11 +52,11 @@ namespace DevZest.Data.Primitives
         public virtual void ConnectionOpened(DbConnectionInvoker<TConnection> invoker)
         {
             if (invoker.Exception != null)
-                Write(LogCategory.ConnectionOpened, invoker.IsAsync ? Strings.DbLogger_ConnectionOpenErrorAsync(DateTimeOffset.Now, invoker.Exception.Message) : Strings.DbLogger_ConnectionOpenError(DateTimeOffset.Now, invoker.Exception.Message));
+                Write(LogCategory.ConnectionOpened, invoker.IsAsync ? DiagnosticMessages.DbLogger_ConnectionOpenErrorAsync(DateTimeOffset.Now, invoker.Exception.Message) : DiagnosticMessages.DbLogger_ConnectionOpenError(DateTimeOffset.Now, invoker.Exception.Message));
             else if (invoker.TaskStatus.HasFlag(TaskStatus.Canceled))
-                Write(LogCategory.ConnectionOpened, Strings.DbLogger_ConnectionOpenCanceled(DateTimeOffset.Now));
+                Write(LogCategory.ConnectionOpened, DiagnosticMessages.DbLogger_ConnectionOpenCanceled(DateTimeOffset.Now));
             else
-                Write(LogCategory.ConnectionOpened, invoker.IsAsync ? Strings.DbLogger_ConnectionOpenAsync(DateTimeOffset.Now) : Strings.DbLogger_ConnectionOpen(DateTimeOffset.Now));
+                Write(LogCategory.ConnectionOpened, invoker.IsAsync ? DiagnosticMessages.DbLogger_ConnectionOpenAsync(DateTimeOffset.Now) : DiagnosticMessages.DbLogger_ConnectionOpen(DateTimeOffset.Now));
             Write(LogCategory.ConnectionOpened, Environment.NewLine);
         }
 
@@ -67,9 +67,9 @@ namespace DevZest.Data.Primitives
         public virtual void ConnectionClosed(DbConnectionInvoker<TConnection> invoker)
         {
             if (invoker.Exception != null)
-                Write(LogCategory.ConnectionClosed, Strings.DbLogger_ConnectionCloseError(DateTimeOffset.Now, invoker.Exception.Message));
+                Write(LogCategory.ConnectionClosed, DiagnosticMessages.DbLogger_ConnectionCloseError(DateTimeOffset.Now, invoker.Exception.Message));
             else
-                Write(LogCategory.ConnectionClosed, Strings.DbLogger_ConnectionClosed(DateTimeOffset.Now));
+                Write(LogCategory.ConnectionClosed, DiagnosticMessages.DbLogger_ConnectionClosed(DateTimeOffset.Now));
             Write(LogCategory.ConnectionClosed, Environment.NewLine);
         }
 
@@ -80,9 +80,9 @@ namespace DevZest.Data.Primitives
         public virtual void TransactionBegan(DbTransactionInvoker<TConnection, TTransaction> invoker)
         {
             if (invoker.Exception != null)
-                Write(LogCategory.TransactionBegan, Strings.DbLogger_TransactionStartError(DateTimeOffset.Now, invoker.Exception.Message));
+                Write(LogCategory.TransactionBegan, DiagnosticMessages.DbLogger_TransactionStartError(DateTimeOffset.Now, invoker.Exception.Message));
             else
-                Write(LogCategory.TransactionBegan, Strings.DbLogger_TransactionStarted(DateTimeOffset.Now));
+                Write(LogCategory.TransactionBegan, DiagnosticMessages.DbLogger_TransactionStarted(DateTimeOffset.Now));
             Write(LogCategory.TransactionBegan, Environment.NewLine);
         }
 
@@ -93,9 +93,9 @@ namespace DevZest.Data.Primitives
         public virtual void TransactionCommitted(DbTransactionInvoker<TConnection, TTransaction> invoker)
         {
             if (invoker.Exception != null)
-                Write(LogCategory.TransactionCommitted, Strings.DbLogger_TransactionCommitError(DateTimeOffset.Now, invoker.Exception.Message));
+                Write(LogCategory.TransactionCommitted, DiagnosticMessages.DbLogger_TransactionCommitError(DateTimeOffset.Now, invoker.Exception.Message));
             else
-                Write(LogCategory.TransactionCommitted, Strings.DbLogger_TransactionCommitted(DateTimeOffset.Now));
+                Write(LogCategory.TransactionCommitted, DiagnosticMessages.DbLogger_TransactionCommitted(DateTimeOffset.Now));
             Write(LogCategory.TransactionCommitted, Environment.NewLine);
         }
 
@@ -106,9 +106,9 @@ namespace DevZest.Data.Primitives
         public virtual void TransactionRolledBack(DbTransactionInvoker<TConnection, TTransaction> invoker)
         {
             if (invoker.Exception != null)
-                Write(LogCategory.TransactionRolledBack, Strings.DbLogger_TransactionRollbackError(DateTimeOffset.Now, invoker.Exception.Message));
+                Write(LogCategory.TransactionRolledBack, DiagnosticMessages.DbLogger_TransactionRollbackError(DateTimeOffset.Now, invoker.Exception.Message));
             else
-                Write(LogCategory.TransactionRolledBack, Strings.DbLogger_TransactionRolledBack(DateTimeOffset.Now));
+                Write(LogCategory.TransactionRolledBack, DiagnosticMessages.DbLogger_TransactionRolledBack(DateTimeOffset.Now));
             Write(LogCategory.TransactionRolledBack, Environment.NewLine);
         }
 
@@ -176,7 +176,7 @@ namespace DevZest.Data.Primitives
         {
             Write(LogCategory.CommandExecuting, Environment.NewLine);
             LogCommand(command);
-            Write(LogCategory.CommandExecuting, isAsync ? Strings.DbLogger_CommandExecutingAsync(DateTimeOffset.Now) : Strings.DbLogger_CommandExecuting(DateTimeOffset.Now));
+            Write(LogCategory.CommandExecuting, isAsync ? DiagnosticMessages.DbLogger_CommandExecutingAsync(DateTimeOffset.Now) : DiagnosticMessages.DbLogger_CommandExecuting(DateTimeOffset.Now));
             Write(LogCategory.CommandExecuting, Environment.NewLine);
         }
 
@@ -192,9 +192,9 @@ namespace DevZest.Data.Primitives
         {
             var exception = invoker.Exception;
             if (exception != null)
-                Write(LogCategory.CommandExecuted, Strings.DbLogger_CommandFailed(Stopwatch.ElapsedMilliseconds, exception.Message));
+                Write(LogCategory.CommandExecuted, DiagnosticMessages.DbLogger_CommandFailed(Stopwatch.ElapsedMilliseconds, exception.Message));
             else if (invoker.TaskStatus.HasFlag(TaskStatus.Canceled))
-                Write(LogCategory.CommandExecuted, Strings.DbLogger_CommandCanceled(Stopwatch.ElapsedMilliseconds));
+                Write(LogCategory.CommandExecuted, DiagnosticMessages.DbLogger_CommandCanceled(Stopwatch.ElapsedMilliseconds));
             else
             {
                 var resultString = (object)result == null
@@ -202,7 +202,7 @@ namespace DevZest.Data.Primitives
                     : (result is DbReader)
                         ? result.GetType().Name
                         : result.ToString();
-                Write(LogCategory.CommandExecuted, Strings.DbLogger_CommandComplete(Stopwatch.ElapsedMilliseconds, resultString));
+                Write(LogCategory.CommandExecuted, DiagnosticMessages.DbLogger_CommandComplete(Stopwatch.ElapsedMilliseconds, resultString));
             }
             Write(LogCategory.CommandExecuted, Environment.NewLine);
             Write(LogCategory.CommandExecuted, Environment.NewLine);

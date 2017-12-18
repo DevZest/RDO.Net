@@ -19,7 +19,7 @@ namespace DevZest.Data
             Check.NotNull(db, nameof(db));
             db.VerifyNotMocked();
             if (Db != null)
-                throw new InvalidOperationException(Strings.MockDb_InitializeTwice);
+                throw new InvalidOperationException(DiagnosticMessages.MockDb_InitializeTwice);
 
             InternalInitialize(db, null);
             return db;

@@ -188,7 +188,7 @@ namespace DevZest.Data
             {
                 Check.NotNull(childModel, nameof(childModel));
                 if (childModel.ParentModel != Model)
-                    throw new ArgumentException(Strings.InvalidChildModel, nameof(childModel));
+                    throw new ArgumentException(DiagnosticMessages.InvalidChildModel, nameof(childModel));
                 return _childDataSets[childModel.Ordinal];
             }
         }
@@ -219,7 +219,7 @@ namespace DevZest.Data
         {
             Check.NotNull(childModel, nameof(childModel));
             if (childModel.ParentModel != Model)
-                throw new ArgumentException(Strings.InvalidChildModel, nameof(childModel));
+                throw new ArgumentException(DiagnosticMessages.InvalidChildModel, nameof(childModel));
 
             return (DataSet<T>)this[childModel.Ordinal];
         }
@@ -249,7 +249,7 @@ namespace DevZest.Data
         private static DataRow GetDataRow(DataSet dataSet, int ordinal, string input, int leftSquareBracketIndex)
         {
             if (ordinal < 0 || ordinal >= dataSet.Count)
-                throw new FormatException(Strings.DataRow_FromString_InvalidDataRowOrdinal(ordinal, input.Substring(0, leftSquareBracketIndex)));
+                throw new FormatException(DiagnosticMessages.DataRow_FromString_InvalidDataRowOrdinal(ordinal, input.Substring(0, leftSquareBracketIndex)));
             return dataSet[ordinal];
         }
 
@@ -262,7 +262,7 @@ namespace DevZest.Data
 
             var childModel = parentDataRow.Model[childModelName] as Model;
             if (childModel == null)
-                throw new FormatException(Strings.DataRow_FromString_InvalidChildModelName(childModelName, input.Substring(0, dataRowPathEndIndex)));
+                throw new FormatException(DiagnosticMessages.DataRow_FromString_InvalidChildModelName(childModelName, input.Substring(0, dataRowPathEndIndex)));
 
             var result = GetDataRow(parentDataRow[childModel], dataRowOrdinal, input, leftSquareBracketIndex);
             return inputIndex == input.Length ? result : Deserialize(result, input, inputIndex);
@@ -271,7 +271,7 @@ namespace DevZest.Data
         private static string ExpectString(string input, ref int inputIndex, char startChar, char endChar)
         {
             if (input[inputIndex] != startChar)
-                throw new FormatException(Strings.DataRow_FromString_ExpectChar(startChar, input.Substring(0, inputIndex)));
+                throw new FormatException(DiagnosticMessages.DataRow_FromString_ExpectChar(startChar, input.Substring(0, inputIndex)));
 
             inputIndex++;
             return ExpectString(input, ref inputIndex, endChar);
@@ -284,7 +284,7 @@ namespace DevZest.Data
                 inputIndex++;
 
             if (inputIndex == input.Length)
-                throw new FormatException(Strings.DataRow_FromString_ExpectChar(endChar, input.Substring(0, startIndex)));
+                throw new FormatException(DiagnosticMessages.DataRow_FromString_ExpectChar(endChar, input.Substring(0, startIndex)));
 
             var result = input.Substring(startIndex, inputIndex - startIndex);
             inputIndex++;
@@ -305,14 +305,14 @@ namespace DevZest.Data
         {
             int result;
             if (!Int32.TryParse(input, out result))
-                throw new FormatException(Strings.DataRow_FromString_ParseInt(input));
+                throw new FormatException(DiagnosticMessages.DataRow_FromString_ParseInt(input));
             return result;
         }
 
         public IColumnValidationMessages Validate(ValidationSeverity? severity = ValidationSeverity.Error)
         {
             if (Model == null)
-                throw new InvalidOperationException(Strings.DataRow_NullModel);
+                throw new InvalidOperationException(DiagnosticMessages.DataRow_NullModel);
             return Model.Validate(this, severity).Seal();
         }
 
@@ -320,9 +320,9 @@ namespace DevZest.Data
         {
             Check.NotNull(from, nameof(from));
             if (from.Model == null)
-                throw new ArgumentException(Strings.DataRow_NullModel, nameof(from));
+                throw new ArgumentException(DiagnosticMessages.DataRow_NullModel, nameof(from));
             if (Model == null)
-                throw new InvalidOperationException(Strings.DataRow_NullModel);
+                throw new InvalidOperationException(DiagnosticMessages.DataRow_NullModel);
             DoCopyValuesFrom(from, recursive);
         }
 
@@ -541,7 +541,7 @@ namespace DevZest.Data
                 return null;
 
             if (ensureStatic && predicate.Target != null)
-                throw new ArgumentException(Strings.DataRow_WhereExpressionMustBeStatic, nameof(predicate));
+                throw new ArgumentException(DiagnosticMessages.DataRow_WhereExpressionMustBeStatic, nameof(predicate));
 
             return new DataRowFilter<T>(predicate).ToPredicate();
         }
@@ -562,7 +562,7 @@ namespace DevZest.Data
         {
             Check.NotNull(column, paramName);
             if (column.ScalarSourceModels.Count != 1)
-                throw new ArgumentException(Strings.DataRow_OrderByColumnMustBeSingleSourceModel, paramName);
+                throw new ArgumentException(DiagnosticMessages.DataRow_OrderByColumnMustBeSingleSourceModel, paramName);
         }
     }
 }
