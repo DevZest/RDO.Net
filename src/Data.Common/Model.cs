@@ -438,8 +438,6 @@ namespace DevZest.Data
             var result = ColumnValidationMessages.Empty;
             foreach (var validator in Validators)
                 result = Merge(result, validator.Validate(dataRow), severity);
-
-            result = Merge(result, Validate(dataRow), severity);
             return result;
         }
 
@@ -455,11 +453,6 @@ namespace DevZest.Data
                 }
             }
             return result;
-        }
-
-        protected virtual IColumnValidationMessages Validate(DataRow dataRow)
-        {
-            return ColumnValidationMessages.Empty;
         }
 
         public PrimaryKey PrimaryKey

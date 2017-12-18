@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Annotations;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -17,9 +18,10 @@ namespace DevZest.Data.Helpers
 
             private const string ERR_MESSAGE = "The Id must be even.";
 
-            protected override IColumnValidationMessages Validate(DataRow dataRow)
+            [ModelValidator]
+            private ColumnValidationMessage Validate(DataRow dataRow)
             {
-                return (Id[dataRow] % 2) == 0 ? ColumnValidationMessages.Empty : new ColumnValidationMessage(ValidationSeverity.Error, ERR_MESSAGE, Id);
+                return (Id[dataRow] % 2) == 0 ? null : new ColumnValidationMessage(ValidationSeverity.Error, ERR_MESSAGE, Id);
             }
 
             protected override void OnChildDataSetsCreated()
