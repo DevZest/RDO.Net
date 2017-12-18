@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Presenters;
+﻿using DevZest.Data.Annotations;
+using DevZest.Data.Presenters;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,24 +20,43 @@ namespace DevZest.Data.Views
             public Column<ColumnHeader> ColumnHeader { get; private set; }
             public Column<SortDirection> Direction { get; private set; }
 
-            protected override void OnInitializing()
+            [LocalColumnsInitializer]
+            private void InitLocalColumns()
             {
                 ColumnHeader = CreateLocalColumn<ColumnHeader>(builder => builder.DisplayName = UserMessages.SortModel_Column);
                 Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UserMessages.SortModel_Direction);
-                base.OnInitializing();
             }
 
-            protected override IColumnValidationMessages Validate(DataRow dataRow)
+            [ModelValidator]
+            private ColumnValidationMessage ValidateRequiredColumnHeader(DataRow dataRow)
             {
-                var result = base.Validate(dataRow);
-
-                if (ColumnHeader[dataRow] == null)
-                    result = result.Add(new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(ColumnHeader.DisplayName), ColumnHeader));
-                if (Direction[dataRow] == SortDirection.Unspecified)
-                    result = result.Add(new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(Direction.DisplayName), Direction));
-
-                return result;
+                return ColumnHeader[dataRow] == null
+                    ? new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(ColumnHeader.DisplayName), ColumnHeader)
+                    : null;
             }
+
+            [ModelValidator]
+            private ColumnValidationMessage ValidateDuplicateColumnHeader(DataRow dataRow)
+            {
+                var dataSet = DataSet;
+                foreach (var other in dataSet)
+                {
+                    if (other == dataRow)
+                        continue;
+                    if (ColumnHeader[dataRow] == ColumnHeader[other])
+                        return new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_DuplicateColumnHeader, ColumnHeader);
+                }
+                return null;
+            }
+
+            [ModelValidator]
+            private ColumnValidationMessage ValidateDirection(DataRow dataRow)
+            {
+                return Direction[dataRow] == SortDirection.Unspecified
+                    ? new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(Direction.DisplayName), Direction)
+                    : null;
+            }
+
         }
 
         private sealed class Presenter : DataPresenter<Model>

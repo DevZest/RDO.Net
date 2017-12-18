@@ -147,6 +147,9 @@
   <data name="SortModel_Direction" xml:space="preserve">
     <value>Direction</value>
   </data>
+  <data name="SortModel_DuplicateColumnHeader" xml:space="preserve">
+    <value>Duplicate Column value is now allowed.</value>
+  </data>
   <data name="SortModel_InputRequired" xml:space="preserve">
     <value>{input} is required.</value>
   </data>

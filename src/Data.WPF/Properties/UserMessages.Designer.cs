@@ -92,6 +92,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Duplicate Column value is now allowed.
+        /// </summary>
+        public static string SortModel_DuplicateColumnHeader
+        {
+            get { return GetString("SortModel_DuplicateColumnHeader"); }
+        }
+
+        /// <summary>
         /// {input} is required.
         /// </summary>
         public static string SortModel_InputRequired(object input)
