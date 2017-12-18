@@ -1067,6 +1067,14 @@ namespace DevZest.Data
             get { return GetString("TypeExtensions_InvalidResourceName"); }
         }
 
+        /// <summary>
+        /// Calling EnsureInitialized() is not allowed when Model.DataSource is null.
+        /// </summary>
+        public static string Model_EnsureInitializedNullDataSource
+        {
+            get { return GetString("Model_EnsureInitializedNullDataSource"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

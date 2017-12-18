@@ -293,10 +293,13 @@ namespace DevZest.Data
         /// child models are not initialized by default. This design decision is to deal with the situation when recursive child models registered.
         /// <see cref="EnsureInitialized"/> will be called automatically when creating the first <see cref="DataRow"/>.
         /// </remarks>
-        internal void EnsureInitialized()
+        protected internal void EnsureInitialized()
         {
             if (IsInitialized)
                 return;
+
+            if (DataSource == null)
+                throw new InvalidOperationException(DiagnosticMessages.Model_EnsureInitializedNullDataSource);
 
             Mount(s_childModelManager);
             PerformChildModelsMounted();
