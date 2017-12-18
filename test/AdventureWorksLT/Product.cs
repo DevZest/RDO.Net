@@ -182,28 +182,28 @@ namespace DevZest.Samples.AdventureWorksLT
         public _String ThumbnailPhotoFileName { get; private set; }
 
         private _Boolean _ck_Product_ListPrice;
-        [Check("ListPrice cannot be negative value.", Name = nameof(CK_Product_ListPrice), Description = "Check constraint [ListPrice] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_Product_ListPrice), Name = nameof(CK_Product_ListPrice), Description = "Check constraint [ListPrice] >= (0.00)")]
         private _Boolean CK_Product_ListPrice
         {
             get { return _ck_Product_ListPrice ?? (_ck_Product_ListPrice = ListPrice >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_Product_SellEndDate;
-        [Check("SellEndDate cannot be earlier than SellStartDate.", Name = nameof(CK_Product_SellEndDate), Description = "Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_Product_SellEndDate), Name = nameof(CK_Product_SellEndDate), Description = "Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")]
         private _Boolean CK_Product_SellEndDate
         {
             get { return _ck_Product_SellEndDate ?? (_ck_Product_SellEndDate = SellEndDate >= SellStartDate | SellEndDate.IsNull()); }
         }
 
         private _Boolean _ck_Product_StandardCost;
-        [Check("StandardCost cannot be negative value.", Name = nameof(CK_Product_StandardCost), Description = "Check constraint [StandardCost] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_Product_StandardCost), Name = nameof(CK_Product_StandardCost), Description = "Check constraint [StandardCost] >= (0.00)")]
         private _Boolean CK_Product_StandardCost
         {
             get { return _ck_Product_StandardCost ?? (_ck_Product_StandardCost = StandardCost >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_Product_Weight;
-        [Check("Weight cannot be negative value.", Name = nameof(CK_Product_Weight), Description = "Check constraint [Weight] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_Product_Weight), Name = nameof(CK_Product_Weight), Description = "Check constraint [Weight] >= (0.00)")]
         private _Boolean CK_Product_Weight
         {
             get { return _ck_Product_Weight ?? (_ck_Product_Weight = Weight >= _Decimal.Const(0)); }

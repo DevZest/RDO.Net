@@ -10,6 +10,21 @@
     <ProjectReference Include="..\..\src\Data.Common\Data.Common.csproj" />
     <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="UserMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="UserMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="AdventureWorksLT.mdf">

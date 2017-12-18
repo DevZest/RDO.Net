@@ -260,42 +260,42 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private _Boolean _ck_SalesOrderHeader_DueDate;
-        [Check("DueDate cannot be earlier than OrderDate.", Name = nameof(CK_SalesOrderHeader_DueDate), Description = "Check constraint [DueDate] >= [OrderDate]")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_DueDate), Name = nameof(CK_SalesOrderHeader_DueDate), Description = "Check constraint [DueDate] >= [OrderDate]")]
         private _Boolean CK_SalesOrderHeader_DueDate
         {
             get { return _ck_SalesOrderHeader_DueDate ?? (_ck_SalesOrderHeader_DueDate = DueDate >= OrderDate); }
         }
 
         private _Boolean _ck_SalesOrderHeader_Freight;
-        [Check("Freight cannot be a negtive value", Name = nameof(CK_SalesOrderHeader_Freight), Description = "Check constraint [Freight] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Freight), Name = nameof(CK_SalesOrderHeader_Freight), Description = "Check constraint [Freight] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_Freight
         {
             get { return _ck_SalesOrderHeader_Freight ?? (_ck_SalesOrderHeader_Freight = Freight >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_SalesOrderHeader_ShipDate;
-        [Check("ShipDate cannot be earlier than OrderDate", Name = nameof(CK_SalesOrderHeader_ShipDate), Description = "Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_ShipDate), Name = nameof(CK_SalesOrderHeader_ShipDate), Description = "Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")]
         private _Boolean CK_SalesOrderHeader_ShipDate
         {
             get { return _ck_SalesOrderHeader_ShipDate ?? (_ck_SalesOrderHeader_ShipDate = ShipDate >= OrderDate | ShipDate.IsNull()); }
         }
 
         private _Boolean _ck_SalesOrderHeader_SubTotal;
-        [Check("SubTotal cannot be a negative value.", Name = nameof(CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_SubTotal), Name = nameof(CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_SubTotal
         {
             get { return _ck_SalesOrderHeader_SubTotal ?? (_ck_SalesOrderHeader_SubTotal = SubTotal >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_SalesOrderHeader_TaxAmt;
-        [Check("TaxAmt cannot be a negtive value.", Name = nameof(CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_TaxAmt), Name = nameof(CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_TaxAmt
         {
             get { return _ck_SalesOrderHeader_TaxAmt ?? (_ck_SalesOrderHeader_TaxAmt = TaxAmt >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_SalesOrderHeader_Status;
-        [Check("Invalid Status.", Name = nameof(CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Status), Name = nameof(CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
         private _Boolean CK_SalesOrderHeader_Status
         {
             get { return _ck_SalesOrderHeader_Status ?? (_ck_SalesOrderHeader_Status = IsValid(Status)); }

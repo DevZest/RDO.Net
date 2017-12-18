@@ -137,21 +137,21 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private _Boolean _ck_SalesOrderDetail_OrderQty;
-        [Check("OrderQty must be greater than zero.", Name = nameof(CK_SalesOrderDetail_OrderQty), Description = "Check constraint [OrderQty] > (0)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_OrderQty), Name = nameof(CK_SalesOrderDetail_OrderQty), Description = "Check constraint [OrderQty] > (0)")]
         private _Boolean CK_SalesOrderDetail_OrderQty
         {
             get { return _ck_SalesOrderDetail_OrderQty ?? (_ck_SalesOrderDetail_OrderQty = OrderQty > _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_SalesOrderDetail_UnitPrice;
-        [Check("UnitPrice cannot be negative.", Name = nameof(CK_SalesOrderDetail_UnitPrice), Description = "heck constraint [UnitPrice] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPrice), Name = nameof(CK_SalesOrderDetail_UnitPrice), Description = "heck constraint [UnitPrice] >= (0.00)")]
         private _Boolean CK_SalesOrderDetail_UnitPrice
         {
             get { return _ck_SalesOrderDetail_UnitPrice ?? (_ck_SalesOrderDetail_UnitPrice = UnitPrice >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_SalesOrderDetail_UnitPriceDiscount;
-        [Check("UnitPriceDiscount cannot be negative.", Name = nameof(CK_SalesOrderDetail_UnitPriceDiscount), Description = "Check constraint [UnitPriceDiscount] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Name = nameof(CK_SalesOrderDetail_UnitPriceDiscount), Description = "Check constraint [UnitPriceDiscount] >= (0.00)")]
         private _Boolean CK_SalesOrderDetail_UnitPriceDiscount
         {
             get { return _ck_SalesOrderDetail_UnitPriceDiscount ?? (_ck_SalesOrderDetail_UnitPriceDiscount = UnitPriceDiscount >= _Decimal.Const(0)); }
