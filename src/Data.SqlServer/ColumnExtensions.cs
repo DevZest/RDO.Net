@@ -348,7 +348,7 @@ namespace DevZest.Data.SqlServer
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
-            throw new NotSupportedException(Strings.ColumnTypeNotSupported(column.GetType()));
+            throw new NotSupportedException(DiagnosticMessages.ColumnTypeNotSupported(column.GetType()));
         }
 
         private static MapperProvider<T?> GetCharEnumMapperProvider<T>()

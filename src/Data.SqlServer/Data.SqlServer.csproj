@@ -15,15 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Strings.Designer.cs">
+    <Compile Update="Properties\DiagnosticMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Resources.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.tt</DependentUpon>
+      <DependentUpon>DiagnosticMessages.resx</DependentUpon>
     </Compile>
     <Compile Update="Properties\Resources.cs">
       <DesignTime>True</DesignTime>
@@ -33,9 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Strings.resx">
-      <LogicalName>DevZest.Data.SqlServer.Strings.resources</LogicalName>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Properties\DiagnosticMessages.resx">
+      <LogicalName>DevZest.Data.SqlServer.DiagnosticMessages.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 

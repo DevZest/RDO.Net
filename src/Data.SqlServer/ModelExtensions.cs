@@ -72,7 +72,7 @@ namespace DevZest.Data.SqlServer
                 else if (constraint is DbForeignKey)
                     GenerateForeignKeyConstraint(sqlBuilder, (DbForeignKey)constraint);
                 else
-                    throw new NotSupportedException(Strings.ConstraintTypeNotSupported(constraint.GetType().FullName));
+                    throw new NotSupportedException(DiagnosticMessages.ConstraintTypeNotSupported(constraint.GetType().FullName));
             }
             return constraints.Count;
         }

@@ -25,8 +25,8 @@
 
   <ItemGroup>
     <Compile Include="..\..\src\Data.SqlServer\**\*.cs" Exclude=".\..\src\Data.SqlServer\bin\**;..\..\src\Data.SqlServer\obj\**;" />
-    <EmbeddedResource Include="..\..\src\Data.SqlServer\Properties\Strings.resx">
-      <Link>Strings.resx</Link>
+    <EmbeddedResource Include="..\..\src\Data.SqlServer\Properties\DiagnosticMessages.resx">
+      <Link>DiagnosticMessages.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
 

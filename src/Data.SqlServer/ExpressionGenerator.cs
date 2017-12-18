@@ -164,7 +164,7 @@ namespace DevZest.Data.SqlServer
             }
             catch (KeyNotFoundException)
             {
-                throw new NotSupportedException(Strings.FunctionNotSupported(e.FunctionKey));
+                throw new NotSupportedException(DiagnosticMessages.FunctionNotSupported(e.FunctionKey));
             }
             handler(this, e);
         }
