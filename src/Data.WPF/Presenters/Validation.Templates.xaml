@@ -5,7 +5,7 @@
 
     <ControlTemplate x:Key="{x:Static local:Validation+Templates.Error}">
         <StackPanel Orientation="Vertical">
-            <Border x:Name="_border" BorderBrush="Red" BorderThickness="1" HorizontalAlignment="Left">
+            <Border x:Name="_border" BorderBrush="Red" BorderThickness="2" HorizontalAlignment="Left">
                 <AdornedElementPlaceholder x:Name="_placeholder" />
             </Border>
             <TextBlock x:Name="_textBlock" Visibility="Collapsed" MinWidth="70"
@@ -25,7 +25,7 @@
 
     <ControlTemplate x:Key="{x:Static local:Validation+Templates.Warning}">
         <StackPanel Orientation="Vertical">
-            <Border x:Name="_border" BorderBrush="Purple" BorderThickness="1" HorizontalAlignment="Left">
+            <Border x:Name="_border" BorderBrush="Purple" BorderThickness="2" HorizontalAlignment="Left">
                 <AdornedElementPlaceholder x:Name="_placeholder" />
             </Border>
             <TextBlock x:Name="_textBlock" Visibility="Collapsed" MinWidth="70"
