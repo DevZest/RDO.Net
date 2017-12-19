@@ -42,6 +42,7 @@
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
     <Compile Include="Presenters\BindingFactory.GridHeader.cs" />
     <Compile Include="Presenters\BindingFactory.DataView.cs" />
+    <Compile Include="Presenters\BindingFactory.Image.cs" />
     <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
     <Compile Include="Presenters\BindingFactory.ComboBox.cs" />
     <Compile Include="Presenters\BindingFactory.DatePicker.cs" />
