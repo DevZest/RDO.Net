@@ -29,7 +29,6 @@ namespace DevZest.Data.Presenters
 
         internal static class Templates
         {
-            public static readonly TemplateId FlushError = new TemplateId(typeof(Validation));
             public static readonly TemplateId Error = new TemplateId(typeof(Validation));
             public static readonly TemplateId Warning = new TemplateId(typeof(Validation));
         }
@@ -52,13 +51,13 @@ namespace DevZest.Data.Presenters
         public static readonly DependencyProperty MessageTypeProperty = MessageTypePropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty FlushErrorTemplateProperty = DependencyProperty.RegisterAttached("FlushErrorTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.FlushError.GetOrLoad(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnFlushErrorTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnFlushErrorTemplateChanged)));
 
         public static readonly DependencyProperty ErrorTemplateProperty = DependencyProperty.RegisterAttached("ErrorTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnErrorTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnErrorTemplateChanged)));
 
         public static readonly DependencyProperty WarningTemplateProperty = DependencyProperty.RegisterAttached("WarningTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Warning.GetOrLoad(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnWarningTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Warning.GetOrLoad(false), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnWarningTemplateChanged)));
 
         public static ValidationMessageType? GetMessageType(this DependencyObject element)
         {

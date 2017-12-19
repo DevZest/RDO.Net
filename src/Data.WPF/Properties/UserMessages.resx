@@ -141,17 +141,17 @@
   <data name="RowViewCommands_ExpandCommandText" xml:space="preserve">
     <value>Expand</value>
   </data>
-  <data name="SortModel_Column" xml:space="preserve">
-    <value>Column</value>
-  </data>
-  <data name="SortModel_Direction" xml:space="preserve">
-    <value>Direction</value>
-  </data>
-  <data name="SortModel_DuplicateColumnHeader" xml:space="preserve">
-    <value>Duplicate Column value is now allowed.</value>
+  <data name="SortModel_DuplicateSortBy" xml:space="preserve">
+    <value>Duplicate Sort By is not allowed.</value>
   </data>
   <data name="SortModel_InputRequired" xml:space="preserve">
-    <value>{input} is required.</value>
+    <value>Field '{input}' is required.</value>
+  </data>
+  <data name="SortModel_Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="SortModel_SortBy" xml:space="preserve">
+    <value>Sort By</value>
   </data>
   <data name="SortWindow_DeleteLevel" xml:space="preserve">
     <value>Delete Level</value>

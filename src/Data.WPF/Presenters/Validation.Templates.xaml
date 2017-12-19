@@ -3,21 +3,43 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:DevZest.Data.Presenters">
 
-    <ControlTemplate x:Key="{x:Static local:Validation+Templates.FlushError}">
-        <Border BorderBrush="Red" BorderThickness="2">
-            <AdornedElementPlaceholder />
-        </Border>
-    </ControlTemplate>
-
     <ControlTemplate x:Key="{x:Static local:Validation+Templates.Error}">
-        <Border BorderBrush="Red" BorderThickness="1">
-            <AdornedElementPlaceholder />
-        </Border>
+        <StackPanel Orientation="Vertical">
+            <Border x:Name="_border" BorderBrush="Red" BorderThickness="1" HorizontalAlignment="Left">
+                <AdornedElementPlaceholder x:Name="_placeholder" />
+            </Border>
+            <TextBlock x:Name="_textBlock" Visibility="Collapsed" MinWidth="70"
+                       Width="{Binding ElementName=_border, Path=ActualWidth}" Background="Red" Foreground="White"
+                       HorizontalAlignment="Stretch" TextWrapping="Wrap"
+                       Text="{Binding Path=/ErrorContent.Description}" />
+        </StackPanel>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.IsMouseOver}" Value="true">
+                <Setter TargetName="_textBlock" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.IsKeyboardFocusWithin}" Value="true">
+                <Setter TargetName="_textBlock" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <ControlTemplate x:Key="{x:Static local:Validation+Templates.Warning}">
-        <Border BorderBrush="Yellow" BorderThickness="1">
-            <AdornedElementPlaceholder />
-        </Border>
+        <StackPanel Orientation="Vertical">
+            <Border x:Name="_border" BorderBrush="Purple" BorderThickness="1" HorizontalAlignment="Left">
+                <AdornedElementPlaceholder x:Name="_placeholder" />
+            </Border>
+            <TextBlock x:Name="_textBlock" Visibility="Collapsed" MinWidth="70"
+                       Width="{Binding ElementName=_border, Path=ActualWidth}" Background="Purple" Foreground="White"
+                       HorizontalAlignment="Stretch" TextWrapping="Wrap"
+                       Text="{Binding Path=/ErrorContent.Description}" />
+        </StackPanel>
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.IsMouseOver}" Value="true">
+                <Setter TargetName="_textBlock" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.IsKeyboardFocusWithin}" Value="true">
+                <Setter TargetName="_textBlock" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 </ResourceDictionary>

@@ -17,21 +17,21 @@ namespace DevZest.Data.Views
     {
         private sealed class Model : Data.Model
         {
-            public Column<ColumnHeader> ColumnHeader { get; private set; }
-            public Column<SortDirection> Direction { get; private set; }
+            public Column<ColumnHeader> SortBy { get; private set; }
+            public Column<SortDirection> Order { get; private set; }
 
             [LocalColumnsInitializer]
             private void InitLocalColumns()
             {
-                ColumnHeader = CreateLocalColumn<ColumnHeader>(builder => builder.DisplayName = UserMessages.SortModel_Column);
-                Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UserMessages.SortModel_Direction);
+                SortBy = CreateLocalColumn<ColumnHeader>(builder => builder.DisplayName = UserMessages.SortModel_SortBy);
+                Order = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UserMessages.SortModel_Order);
             }
 
             [ModelValidator]
             private ColumnValidationMessage ValidateRequiredColumnHeader(DataRow dataRow)
             {
-                return ColumnHeader[dataRow] == null
-                    ? new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(ColumnHeader.DisplayName), ColumnHeader)
+                return SortBy[dataRow] == null
+                    ? new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(SortBy.DisplayName), SortBy)
                     : null;
             }
 
@@ -43,8 +43,8 @@ namespace DevZest.Data.Views
                 {
                     if (other == dataRow)
                         continue;
-                    if (ColumnHeader[dataRow] == ColumnHeader[other])
-                        return new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_DuplicateColumnHeader, ColumnHeader);
+                    if (SortBy[dataRow] == SortBy[other])
+                        return new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_DuplicateSortBy, SortBy);
                 }
                 return null;
             }
@@ -52,8 +52,8 @@ namespace DevZest.Data.Views
             [ModelValidator]
             private ColumnValidationMessage ValidateDirection(DataRow dataRow)
             {
-                return Direction[dataRow] == SortDirection.Unspecified
-                    ? new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(Direction.DisplayName), Direction)
+                return Order[dataRow] == SortDirection.Unspecified
+                    ? new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(Order.DisplayName), Order)
                     : null;
             }
 
@@ -96,11 +96,11 @@ namespace DevZest.Data.Views
                     .GridRows("Auto", "Auto")
                     .Layout(Orientation.Vertical)
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
-                    .AddBinding(1, 0, "Sort By".AsTextBlock())
-                    .AddBinding(2, 0, "Order".AsTextBlock())
+                    .AddBinding(1, 0, _.SortBy.DisplayName.AsTextBlock())
+                    .AddBinding(2, 0, _.Order.DisplayName.AsTextBlock())
                     .AddBinding(0, 1, _.AsRowHeader().WithStyle(RowHeader.Styles.Flat))
-                    .AddBinding(1, 1, _.ColumnHeader.AsComboBox(ColumnHeaderSelection, "Value", "Display"))
-                    .AddBinding(2, 1, _.Direction.AsComboBox(DirectionSelection, "Value", "Display"))
+                    .AddBinding(1, 1, _.SortBy.AsComboBox(ColumnHeaderSelection, "Value", "Display"))
+                    .AddBinding(2, 1, _.Order.AsComboBox(DirectionSelection, "Value", "Display"))
                     .WithRowViewCancelEditGestures(new KeyGesture(Key.Escape))
                     .WithRowViewEndEditGestures(new KeyGesture(Key.Enter));
             }
@@ -163,8 +163,8 @@ namespace DevZest.Data.Views
                 result.AddRow((_, dataRow) =>
                 {
                     var column = orderByItem.GetColumn(dataPresenter.DataSet.Model);
-                    _.ColumnHeader[dataRow] = columnHeaders.First(x => x.Column == column);
-                    _.Direction[dataRow] = orderByItem.Direction;
+                    _.SortBy[dataRow] = columnHeaders.First(x => x.Column == column);
+                    _.Order[dataRow] = orderByItem.Direction;
                 });
             }
 
@@ -261,8 +261,8 @@ namespace DevZest.Data.Views
             var result = new IColumnComparer[sortData.Count];
             for (int i = 0; i < sortData.Count; i++)
             {
-                var columnHeader = _.ColumnHeader[i];
-                var direction = _.Direction[i];
+                var columnHeader = _.SortBy[i];
+                var direction = _.Order[i];
                 Debug.Assert(direction == SortDirection.Ascending || direction == SortDirection.Descending);
                 result[i] = DataRow.OrderBy(columnHeader.Column, direction);
             }

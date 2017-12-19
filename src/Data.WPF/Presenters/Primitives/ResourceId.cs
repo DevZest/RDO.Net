@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 
@@ -19,19 +20,20 @@ namespace DevZest.Data.Presenters.Primitives
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
             _uriString = GetUriString(type);
+            Trace.WriteLine(string.Format("_uriString={0}", _uriString));
         }
 
         private readonly string _uriString;
         private T _loadedResource;
-        public T GetOrLoad()
+        public T GetOrLoad(bool throwsExceptionIfFailed = true)
         {
-            return _loadedResource ?? (_loadedResource = LoadResource());
+            return _loadedResource ?? (_loadedResource = LoadResource(throwsExceptionIfFailed));
         }
 
-        private T LoadResource()
+        private T LoadResource(bool throwsExceptionIfFailed)
         {
-            var result = LoadResourceDictionary(_uriString)[this] as T; 
-            if (result == null)
+            var result = LoadResourceDictionary(_uriString)[this] as T;
+            if (throwsExceptionIfFailed && result == null)
                 throw new InvalidOperationException(DiagnosticMessages.ResourceId_ResourceNotFound);
             return result;
         }

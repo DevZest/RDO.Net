@@ -76,35 +76,35 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Column
+        /// Duplicate Sort By is not allowed.
         /// </summary>
-        public static string SortModel_Column
+        public static string SortModel_DuplicateSortBy
         {
-            get { return GetString("SortModel_Column"); }
+            get { return GetString("SortModel_DuplicateSortBy"); }
         }
 
         /// <summary>
-        /// Direction
-        /// </summary>
-        public static string SortModel_Direction
-        {
-            get { return GetString("SortModel_Direction"); }
-        }
-
-        /// <summary>
-        /// Duplicate Column value is now allowed.
-        /// </summary>
-        public static string SortModel_DuplicateColumnHeader
-        {
-            get { return GetString("SortModel_DuplicateColumnHeader"); }
-        }
-
-        /// <summary>
-        /// {input} is required.
+        /// Field '{input}' is required.
         /// </summary>
         public static string SortModel_InputRequired(object input)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("SortModel_InputRequired", "input"), input);
+        }
+
+        /// <summary>
+        /// Order
+        /// </summary>
+        public static string SortModel_Order
+        {
+            get { return GetString("SortModel_Order"); }
+        }
+
+        /// <summary>
+        /// Sort By
+        /// </summary>
+        public static string SortModel_SortBy
+        {
+            get { return GetString("SortModel_SortBy"); }
         }
 
         /// <summary>
