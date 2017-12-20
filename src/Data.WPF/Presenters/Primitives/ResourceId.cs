@@ -20,7 +20,6 @@ namespace DevZest.Data.Presenters.Primitives
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
             _uriString = GetUriString(type);
-            Trace.WriteLine(string.Format("_uriString={0}", _uriString));
         }
 
         private readonly string _uriString;
