@@ -41,8 +41,7 @@ namespace DevZest.Data.Primitives
         {
             await InvokeAsync(GetAsyncOperation(cancellationToken),
                 x => x.Executing(this),
-                x => x.Executed(this),
-                cancellationToken);
+                x => x.Executed(this));
             return Result;
         }
 

@@ -25,7 +25,7 @@ namespace DevZest.Data.Primitives
 
         internal Task OpenAsync(CancellationToken cancellationToken)
         {
-            return InvokeAsync(GetOpenAsyncTask(cancellationToken), x => x.Opening(this), x => x.Opened(this), cancellationToken);
+            return InvokeAsync(GetOpenAsyncTask(cancellationToken), x => x.Opening(this), x => x.Opened(this));
         }
 
         private async Task GetOpenAsyncTask(CancellationToken cancellationToken)

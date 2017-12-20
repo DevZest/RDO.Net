@@ -75,7 +75,7 @@ namespace DevZest.Data.Primitives
             return extensions;
         }
 
-        protected Task InvokeAsync(Task operation, Action<T> executing, Action<T> executed, CancellationToken cancellationToken)
+        protected Task InvokeAsync(Task operation, Action<T> executing, Action<T> executed)
         {
             var extensions = Executing(true, executing);
 
@@ -104,7 +104,7 @@ namespace DevZest.Data.Primitives
                         tcs.SetCanceled();
                     else
                         tcs.SetResult(null);
-                }, cancellationToken);
+                }, TaskContinuationOptions.ExecuteSynchronously);
 
             return tcs.Task;
         }

@@ -28,7 +28,7 @@ namespace DevZest.Data.Primitives
 
         internal async Task<int> ExecuteAsync(CancellationToken cancellationToken)
         {
-            await InvokeAsync(GetAsyncOperation(cancellationToken), x => x.Executing(this), x => x.Executed(this), cancellationToken);
+            await InvokeAsync(GetAsyncOperation(cancellationToken), x => x.Executing(this), x => x.Executed(this));
             return Result;
         }
 
