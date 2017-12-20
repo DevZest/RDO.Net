@@ -439,8 +439,6 @@ namespace DevZest.Data.Presenters.Primitives
                 InitContainerViewsBackward();
                 FillBackward();
             }
-
-            Debug.WriteLine(string.Format("Exiting PrepareMeasureContainers... ContainerViewList.Count={0}", ContainerViewList.Count));
         }
 
         private bool UpdateScrollToMain()
@@ -487,7 +485,6 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void InitContainerViewsForward()
         {
-            Debug.WriteLine(string.Format("---Entering InitContainerViewsForward... ContainerViewList.Count={0}", ContainerViewList.Count));
             var initialOrdinal = GetInitialOrdinal();
             if (initialOrdinal < 0)
                 return;
@@ -513,12 +510,10 @@ namespace DevZest.Data.Presenters.Primitives
 
             for (int i = 0; i < ContainerViewList.Count; i++)
                 ContainerViewList[i].Measure(Size.Empty);
-            Debug.WriteLine(string.Format("Exiting InitContainerViewsForward... ContainerViewList.Count={0}", ContainerViewList.Count));
         }
 
         private void InitContainerViewsBackward()
         {
-            Debug.WriteLine(string.Format("---Entering InitContainerViewsBackward... ContainerViewList.Count={0}", ContainerViewList.Count));
             var initialOrdinal = GetInitialOrdinal();
             if (initialOrdinal < 0)
                 return;
@@ -544,7 +539,6 @@ namespace DevZest.Data.Presenters.Primitives
 
             for (int i = 0; i < ContainerViewList.Count; i++)
                 ContainerViewList[i].Measure(Size.Empty);
-            Debug.WriteLine(string.Format("Exiting InitContainerViewsBackward... ContainerViewList.Count={0}", ContainerViewList.Count));
         }
 
         private int GetInitialOrdinal()
@@ -567,7 +561,6 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void FillForward()
         {
-            Debug.WriteLine("FillForward...");
             if (ContainerViewList.Count == 0)
                 return;
 
@@ -584,8 +577,6 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void FillBackward()
         {
-            Debug.WriteLine("FillBackward...");
-
             if (ContainerViewList.Count == 0)
                 return;
 
@@ -658,7 +649,6 @@ namespace DevZest.Data.Presenters.Primitives
 
         private double RealizeForward(double length)
         {
-            Debug.WriteLine(string.Format("Entering RealizeForward... lengthToFill={0}, ContainerViewList.Count={1}", length, ContainerViewList.Count));
             Debug.Assert(length >= 0);
             if (length == 0 || !CanRealizeForward)
                 return 0;
@@ -675,13 +665,11 @@ namespace DevZest.Data.Presenters.Primitives
                 if (length <= 0)
                     break;
             }
-            Debug.WriteLine(string.Format("Exiting RealizeForward... lengthToFill={0}, ContainerViewList.Count={1}", length, ContainerViewList.Count));
             return result;
         }
 
         private double RealizeBackward(double length)
         {
-            Debug.WriteLine(string.Format("Entering RealizeBackward... lengthToFill={0}, ContainerViewList.Count={1}", length, ContainerViewList.Count));
             Debug.Assert(length >= 0);
             if (length == 0 || !CanRealizeBackward)
                 return 0;
@@ -698,7 +686,6 @@ namespace DevZest.Data.Presenters.Primitives
                 if (length <= 0)
                     break;
             }
-            Debug.WriteLine(string.Format("Exiting RealizeBackward... lengthToFill={0}, ContainerViewList.Count={1}", length, ContainerViewList.Count));
             return result;
         }
 
@@ -811,7 +798,6 @@ namespace DevZest.Data.Presenters.Primitives
             for (int i = 0; i < countTail; i++)
                 ContainerViewList.VirtualizeLast();
 
-            Debug.WriteLine(string.Format("===Exiting RemoveInvisibleContainerViews... ContainerViewList.Count={0}", ContainerViewList.Count));
             return countHead > 0 || countTail > 0;
         }
 
