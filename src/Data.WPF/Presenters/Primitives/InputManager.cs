@@ -579,5 +579,12 @@ namespace DevZest.Data.Presenters.Primitives
                 return false;
             }
         }
+
+        internal sealed override void RollbackEdit()
+        {
+            base.RollbackEdit();
+            if (RowValidationScope == RowValidationScope.Current)
+                RowValidationProgress.Reset();
+        }
     }
 }
