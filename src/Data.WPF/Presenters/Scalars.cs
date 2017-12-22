@@ -8,10 +8,10 @@ namespace DevZest.Data.Presenters
 {
     public static class Scalars
     {
-        private class EmptyScalarSet : IScalars
+        private class EmptyScalars : IScalars
         {
-            public static EmptyScalarSet Singleton = new EmptyScalarSet();
-            private EmptyScalarSet()
+            public static EmptyScalars Singleton = new EmptyScalars();
+            private EmptyScalars()
             {
             }
 
@@ -64,19 +64,19 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private class HashSetScalarSet : IScalars
+        private class HashSetScalars : IScalars
         {
             private bool _isSealed;
             private HashSet<Scalar> _hashSet = new HashSet<Scalar>();
 
-            public HashSetScalarSet(Scalar value1, Scalar value2)
+            public HashSetScalars(Scalar value1, Scalar value2)
             {
                 Debug.Assert(value1 != null && value2 != null && value1 != value2);
                 Add(value1);
                 Add(value2);
             }
 
-            private HashSetScalarSet()
+            private HashSetScalars()
             {
             }
 
@@ -113,7 +113,7 @@ namespace DevZest.Data.Presenters
                     return value;
                 else
                 {
-                    var result = new HashSetScalarSet();
+                    var result = new HashSetScalars();
                     foreach (var column in this)
                         result.Add(column);
                     result.Add(value);
@@ -140,7 +140,7 @@ namespace DevZest.Data.Presenters
                     return this;
                 }
 
-                var result = new HashSetScalarSet();
+                var result = new HashSetScalars();
                 foreach (var element in this)
                 {
                     if (element != value)
@@ -166,6 +166,20 @@ namespace DevZest.Data.Presenters
                 return _hashSet.Contains(value);
             }
 
+            private IEqualityComparer<HashSet<Scalar>> s_setComparer = HashSet<Scalar>.CreateSetComparer();
+            public override int GetHashCode()
+            {
+                return s_setComparer.GetHashCode(_hashSet);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(this, obj))
+                    return true;
+                var scalars = obj as HashSetScalars;
+                return scalars == null ? false : s_setComparer.Equals(_hashSet, scalars._hashSet);
+            }
+
             public IEnumerator<Scalar> GetEnumerator()
             {
                 return _hashSet.GetEnumerator();
@@ -179,13 +193,13 @@ namespace DevZest.Data.Presenters
 
         public static IScalars Empty
         {
-            get { return EmptyScalarSet.Singleton; }
+            get { return EmptyScalars.Singleton; }
         }
 
         internal static IScalars New(Scalar value1, Scalar value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
-            return new HashSetScalarSet(value1, value2);
+            return new HashSetScalars(value1, value2);
         }
 
         public static IScalars New(params Scalar[] values)
