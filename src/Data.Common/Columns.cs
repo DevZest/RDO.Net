@@ -175,6 +175,8 @@ namespace DevZest.Data
             private static IEqualityComparer<HashSet<Column>> s_setComparer = HashSet<Column>.CreateSetComparer();
             public override bool Equals(object obj)
             {
+                if (ReferenceEquals(this, obj))
+                    return true;
                 var columns = obj as HashSetColumns;
                 return columns == null ? false : s_setComparer.Equals(_hashSet, columns._hashSet);
             }
