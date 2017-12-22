@@ -9,10 +9,10 @@ namespace DevZest.Data
 {
     public static class Columns
     {
-        private class EmptyColumnSet : IColumns
+        private class EmptyColumns : IColumns
         {
-            public static EmptyColumnSet Singleton = new EmptyColumnSet();
-            private EmptyColumnSet()
+            public static EmptyColumns Singleton = new EmptyColumns();
+            private EmptyColumns()
             {
             }
 
@@ -70,19 +70,19 @@ namespace DevZest.Data
             }
         }
 
-        private class HashSetColumnSet : IColumns
+        private class HashSetColumns : IColumns
         {
             private bool _isSealed;
             private HashSet<Column> _hashSet = new HashSet<Column>();
 
-            public HashSetColumnSet(Column value1, Column value2)
+            public HashSetColumns(Column value1, Column value2)
             {
                 Debug.Assert(value1 != null && value2 != null && value1 != value2);
                 Add(value1);
                 Add(value2);
             }
 
-            private HashSetColumnSet()
+            private HashSetColumns()
             {
             }
 
@@ -119,7 +119,7 @@ namespace DevZest.Data
                     return value;
                 else
                 {
-                    var result = new HashSetColumnSet();
+                    var result = new HashSetColumns();
                     foreach (var column in this)
                         result.Add(column);
                     result.Add(value);
@@ -146,7 +146,7 @@ namespace DevZest.Data
                     return this;
                 }
 
-                var result = new HashSetColumnSet();
+                var result = new HashSetColumns();
                 foreach (var element in this)
                 {
                     if (element != value)
@@ -172,6 +172,18 @@ namespace DevZest.Data
                 return _hashSet.Contains(value);
             }
 
+            private static IEqualityComparer<HashSet<Column>> s_setComparer = HashSet<Column>.CreateSetComparer();
+            public override bool Equals(object obj)
+            {
+                var columns = obj as HashSetColumns;
+                return columns == null ? false : s_setComparer.Equals(_hashSet, columns._hashSet);
+            }
+
+            public override int GetHashCode()
+            {
+                return s_setComparer.GetHashCode(_hashSet);
+            }
+
             public IEnumerator<Column> GetEnumerator()
             {
                 return _hashSet.GetEnumerator();
@@ -190,13 +202,13 @@ namespace DevZest.Data
 
         public static IColumns Empty
         {
-            get { return EmptyColumnSet.Singleton; }
+            get { return EmptyColumns.Singleton; }
         }
 
         internal static IColumns New(Column value1, Column value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
-            return new HashSetColumnSet(value1, value2);
+            return new HashSetColumns(value1, value2);
         }
 
         public static IColumns New(params Column[] values)
