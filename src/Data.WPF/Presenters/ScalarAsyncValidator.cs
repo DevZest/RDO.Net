@@ -206,6 +206,12 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        ScalarAsyncValidator IScalarAsyncValidators.this[IScalars sourceScalars]
+        {
+            get { return SourceScalars.SetEquals(sourceScalars) ? this : null; }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<ScalarAsyncValidator> IEnumerable<ScalarAsyncValidator>.GetEnumerator()
         {
             yield return this;

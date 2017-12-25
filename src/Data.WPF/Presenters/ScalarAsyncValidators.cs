@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
     public static class ScalarAsyncValidators
     {
-        private sealed class EmptyGroup : IScalarAsyncValidators
+        private sealed class EmptyScalarAsyncValidators : IScalarAsyncValidators
         {
-            public readonly static EmptyGroup Singleton = new EmptyGroup();
+            public readonly static EmptyScalarAsyncValidators Singleton = new EmptyScalarAsyncValidators();
 
-            private EmptyGroup()
+            private EmptyScalarAsyncValidators()
             {
             }
 
             public ScalarAsyncValidator this[int index]
             {
                 get { throw new ArgumentOutOfRangeException(nameof(index)); }
+            }
+
+            public ScalarAsyncValidator this[IScalars sourceScalars]
+            {
+                get { return null; }
             }
 
             public int Count
@@ -54,19 +60,27 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private class ListGroup : IScalarAsyncValidators
+        private class KeyedScalarAsyncValidators : IScalarAsyncValidators
         {
-            private bool _isSealed;
-            private List<ScalarAsyncValidator> _list = new List<ScalarAsyncValidator>();
+            private sealed class KeyedCollection : KeyedCollection<IScalars, ScalarAsyncValidator>
+            {
+                protected override IScalars GetKeyForItem(ScalarAsyncValidator item)
+                {
+                    return item.SourceScalars;
+                }
+            }
 
-            public ListGroup(ScalarAsyncValidator value1, ScalarAsyncValidator value2)
+            private bool _isSealed;
+            private KeyedCollection _list = new KeyedCollection();
+
+            public KeyedScalarAsyncValidators(ScalarAsyncValidator value1, ScalarAsyncValidator value2)
             {
                 Debug.Assert(value1 != null && value2 != null);
                 Add(value1);
                 Add(value2);
             }
 
-            private ListGroup()
+            private KeyedScalarAsyncValidators()
             {
             }
 
@@ -103,11 +117,16 @@ namespace DevZest.Data.Presenters
                 }
 
                 Debug.Assert(Count > 0);
-                var result = new ListGroup();
+                var result = new KeyedScalarAsyncValidators();
                 for (int i = 0; i < Count; i++)
                     result.Add(this[i]);
                 result.Add(value);
                 return result;
+            }
+
+            public ScalarAsyncValidator this[IScalars sourceScalars]
+            {
+                get { return _list.Contains(sourceScalars) ? _list[sourceScalars] : null; }
             }
 
             public IEnumerator<ScalarAsyncValidator> GetEnumerator()
@@ -123,13 +142,13 @@ namespace DevZest.Data.Presenters
 
         public static IScalarAsyncValidators Empty
         {
-            get { return EmptyGroup.Singleton; }
+            get { return EmptyScalarAsyncValidators.Singleton; }
         }
 
         internal static IScalarAsyncValidators New(ScalarAsyncValidator value1, ScalarAsyncValidator value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
-            return new ListGroup(value1, value2);
+            return new KeyedScalarAsyncValidators(value1, value2);
         }
 
         public static IScalarAsyncValidators New(params ScalarAsyncValidator[] values)
