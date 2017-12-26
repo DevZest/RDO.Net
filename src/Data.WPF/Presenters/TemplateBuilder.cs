@@ -177,18 +177,6 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        [DefaultValue(RowValidationScope.Current)]
-        public TemplateBuilder WithRowValidationScope(RowValidationScope value)
-        {
-            if (_inherited)
-                return this;
-
-            if (Template.RowValidationScope == RowValidationScope.All && Template.InternalRowAsyncValidators.Any(x => x.ValidationScope == RowValidationScope.All))
-                throw new InvalidOperationException(DiagnosticMessages.TemplateBuilder_AsyncValidatorScopeConflict);
-            Template.RowValidationScope = value;
-            return this;
-        }
-
         public TemplateBuilder AddAsyncValidator(Func<Task<IScalarValidationMessages>> action, Action postAction = null, IScalars sourceScalars = null)
         {
             if (action == null)
@@ -201,16 +189,6 @@ namespace DevZest.Data.Presenters
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
-            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(RowAsyncValidator.Create(Template, sourceColumns, action, postAction));
-            return this;
-        }
-
-        public TemplateBuilder AddAsyncValidator(Func<Task<IDataRowValidationResults>> action, Action postAction = null, IColumns sourceColumns = null)
-        {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-            if (Template.RowValidationScope == RowValidationScope.Current)
-                throw new InvalidOperationException(DiagnosticMessages.TemplateBuilder_AsyncValidatorScopeConflict);
             Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(RowAsyncValidator.Create(Template, sourceColumns, action, postAction));
             return this;
         }
@@ -232,30 +210,6 @@ namespace DevZest.Data.Presenters
                 return this;
 
             Template.ScalarValidationMode = value;
-            return this;
-        }
-
-        [DefaultValue(100)]
-        public TemplateBuilder WithRowValidationErrorLimit(int value)
-        {
-            if (_inherited)
-                return this;
-
-            if (value < 1)
-                throw new ArgumentOutOfRangeException(nameof(value));
-            Template.RowValidationErrorLimit = value;
-            return this;
-        }
-
-        [DefaultValue(100)]
-        public TemplateBuilder WithRowValidationWarningLimit(int value)
-        {
-            if (_inherited)
-                return this;
-
-            if (value < 0)
-                throw new ArgumentOutOfRangeException(nameof(value));
-            Template.RowValidationWarningLimit = value;
             return this;
         }
 

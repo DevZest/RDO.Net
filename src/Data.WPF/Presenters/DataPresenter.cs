@@ -221,9 +221,44 @@ namespace DevZest.Data.Presenters
             RequireLayoutManager().ValidateScalars();
         }
 
-        public void ValidateRows()
+        public void ValidateRows(int errorLimit = 1, int warningLimit = 0)
         {
-            RequireLayoutManager().ValidateRows();
+            if (errorLimit < 1)
+                throw new ArgumentOutOfRangeException(nameof(errorLimit));
+            if (warningLimit < 0)
+                throw new ArgumentOutOfRangeException(nameof(warningLimit));
+
+            if (CurrentRow == null)
+                return;
+
+            var errors = 0;
+            var warnings = 0;
+            var moreToValidate = Validate(CurrentRow, ref errors, errorLimit, ref warnings, warningLimit);
+            if (moreToValidate)
+            {
+                foreach (var rowPresenter in Rows)
+                {
+                    if (rowPresenter == CurrentRow || rowPresenter.IsVirtual)
+                        continue;
+
+                    moreToValidate = Validate(rowPresenter, ref errors, errorLimit, ref warnings, warningLimit);
+                    if (!moreToValidate)
+                        break;
+                }
+            }
+
+            InvalidateView();
+        }
+
+        private bool Validate(RowPresenter rowPresenter, ref int errors, int errorLimit, ref int warnings, int warningLimit)
+        {
+            Debug.Assert(rowPresenter != null);
+            rowPresenter.Validate(false);
+            if (RowErrors.ContainsKey(rowPresenter))
+                errors++;
+            if (RowWarnings.ContainsKey(rowPresenter))
+                warnings++;
+            return errors < errorLimit || warnings < warningLimit;
         }
 
         public IReadOnlyList<FlushErrorMessage> ScalarFlushErrors
@@ -271,9 +306,14 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.RowValidationProgress; }
         }
 
-        public IRowAsyncValidators AllRowsAsyncValidators
+        public IRowAsyncValidators RowAsyncValidators
         {
-            get { return LayoutManager == null ? null : LayoutManager.AllRowsAsyncValidators; }
+            get { return Template.RowAsyncValidators; }
+        }
+
+        public IScalarAsyncValidators ScalarAsyncValidators
+        {
+            get { return Template.ScalarAsyncValidators; }
         }
 
         public IReadOnlyList<ScalarValidationMessage> AssignedScalarValidationResults

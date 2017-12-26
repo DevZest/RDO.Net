@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using DevZest.Data.Presenters.Primitives;
+﻿using DevZest.Data.Presenters.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -16,47 +15,34 @@ namespace DevZest.Data.Presenters
         }
 
         private InputManager _inputManager;
-        private bool _showAll;
         private Dictionary<RowPresenter, IColumns> _progress;
 
         internal void Reset()
         {
-            _showAll = false;
-
             if (_progress != null)
                 _progress.Clear();
         }
 
-        internal void MakeProgress<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
+        internal void MakeProgress<T>(RowInput<T> rowInput)
             where T : UIElement, new()
         {
+            var currentRow = _inputManager.CurrentRow;
+            Debug.Assert(currentRow != null);
             var sourceColumns = rowInput.Target;
 
-            if (!_showAll && _progress != null)
+            if (_progress != null)
             {
-                var progress = GetProgress(rowPresenter).Union(rowInput.Target);
-                if (progress.Count > 0)
-                    _progress[rowPresenter] = progress;
+                var columns = GetProgress(currentRow);
+                if (columns == null)
+                    return;
+                _progress[currentRow] = columns.Union(rowInput.Target);
             }
         }
 
-        internal void ShowAll()
-        {
-            if (_showAll)
-                return;
-
-            _showAll = true;
-            if (_progress != null)
-                _progress.Clear();
-        }
-
-        internal void OnCurrentRowChanged()
+        internal void ShowAll(RowPresenter rowPresenter)
         {
             if (_progress != null)
-            {
-                if (Scope == RowValidationScope.Current)
-                    _progress.Clear();
-            }
+                _progress[rowPresenter] = null;
         }
 
         internal void OnRowDisposed(RowPresenter rowPresenter)
@@ -70,22 +56,16 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.RowValidationMode; }
         }
 
-        public RowValidationScope Scope
-        {
-            get { return _inputManager.RowValidationScope; }
-        }
-
         public bool IsVisible(RowPresenter rowPresenter, IColumns columns)
         {
-            if (_showAll)
-                return true;
+            if (columns == null || columns.Count == 0)
+                return false;
 
             if (_progress == null)
-                return false;
+                return true;
 
-            if (columns.Count == 0)
-                return false;
-            return GetProgress(rowPresenter).IsSupersetOf(columns);
+            var progress = GetProgress(rowPresenter);
+            return progress == null ? true : progress.IsSupersetOf(columns);
         }
 
         private IColumns GetProgress(RowPresenter rowPresenter)

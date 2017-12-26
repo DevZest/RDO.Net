@@ -689,7 +689,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private bool _isDirty;
-        public void InvalidateView()
+        public virtual void InvalidateView()
         {
             if (_isDirty || ElementCollection == null)
                 return;

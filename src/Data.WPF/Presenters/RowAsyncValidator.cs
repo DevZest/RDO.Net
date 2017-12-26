@@ -24,11 +24,6 @@ namespace DevZest.Data.Presenters
             return new CurrentRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
-        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IDataRowValidationResults>> action, Action postAction)
-        {
-            return new AllRowAsyncValidator(template, sourceColumns, action, postAction);
-        }
-
         private static async Task<IRowValidationResults> Validate(Func<Task<IColumnValidationMessages>> action, RowPresenter currentRow)
         {
             var messages = await action();
@@ -69,11 +64,6 @@ namespace DevZest.Data.Presenters
             internal override IRowInput RowInput
             {
                 get { return _rowInput; }
-            }
-
-            public override RowValidationScope ValidationScope
-            {
-                get { return RowValidationScope.Current; }
             }
 
             protected override async Task<IRowValidationResults> ValidateAsync()
@@ -127,42 +117,9 @@ namespace DevZest.Data.Presenters
                 get { return null; }
             }
 
-            public override RowValidationScope ValidationScope
-            {
-                get { return RowValidationScope.Current; }
-            }
-
             protected override async Task<IRowValidationResults> ValidateAsync()
             {
                 return await Validate(_action, CurrentRow);
-            }
-        }
-
-        private sealed class AllRowAsyncValidator : ColumnsAsyncValidator
-        {
-            public AllRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IDataRowValidationResults>> action, Action postAction)
-                : base(template, sourceColumns, postAction)
-            {
-                Debug.Assert(action != null);
-                _action = action;
-            }
-
-            private readonly Func<Task<IDataRowValidationResults>> _action;
-
-            internal override IRowInput RowInput
-            {
-                get { return null; }
-            }
-
-            public override RowValidationScope ValidationScope
-            {
-                get { return RowValidationScope.All; }
-            }
-
-            protected override async Task<IRowValidationResults> ValidateAsync()
-            {
-                var result = await _action();
-                return result == null ? RowValidationResults.Empty : InputManager.ToRowValidationResults(result);
             }
         }
 
@@ -239,8 +196,6 @@ namespace DevZest.Data.Presenters
 
         internal abstract IRowInput RowInput { get; }
 
-        public abstract RowValidationScope ValidationScope { get; }
-
         protected sealed override void ClearValidationMessages()
         {
             Errors = Warnings = RowValidationResults.Empty;
@@ -267,8 +222,7 @@ namespace DevZest.Data.Presenters
 
         internal void OnCurrentRowChanged()
         {
-            if (ValidationScope == RowValidationScope.Current)
-                Reset();
+            Reset();
         }
 
         #region IRowAsyncValidators

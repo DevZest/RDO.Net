@@ -459,11 +459,6 @@ namespace DevZest.Data.Presenters
             get { return Template.InternalRowBindings; }
         }
 
-        public IRowAsyncValidators AsyncValidators
-        {
-            get { return IsCurrent ? InputManager.CurrentRowAsyncValidators : RowAsyncValidators.Empty; }
-        }
-
         public void SetValue(ColumnValueBag valueBag, Column column)
         {
             if (valueBag == null)
@@ -506,6 +501,13 @@ namespace DevZest.Data.Presenters
             if (extender != null)
                 result.AutoSelect(extender, DataRow);
             return result;
+        }
+
+        public void Validate(bool invalidateView = true)
+        {
+            InputManager.Validate(this, true);
+            if (invalidateView)
+                ElementManager.InvalidateView();
         }
     }
 }

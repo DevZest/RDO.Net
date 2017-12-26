@@ -130,25 +130,19 @@ namespace DevZest.Data.Presenters
         public IColumnValidationMessages GetErrors(RowPresenter rowPresenter)
         {
             var result = ColumnValidationMessages.Empty;
-            result = AddValidationMessages(result, InputManager.RowValidationErrors, rowPresenter, x => IsVisible(x, rowPresenter, true));
+            result = InputManager.GetValidationMessages(rowPresenter, this, ValidationSeverity.Error);
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
-            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Error && IsVisible(x, rowPresenter, false));
+            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Error);
             return result;
         }
 
         public IColumnValidationMessages GetWarnings(RowPresenter rowPresenter)
         {
             var result = ColumnValidationMessages.Empty;
-            result = AddValidationMessages(result, InputManager.RowValidationWarnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
+            result = InputManager.GetValidationMessages(rowPresenter, this, ValidationSeverity.Warning);
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Warning);
-            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, rowPresenter, false));
+            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Warning);
             return result;
-        }
-
-        private bool IsVisible(ColumnValidationMessage validationMessage, RowPresenter rowPresenter, bool progressVisible)
-        {
-            var source = validationMessage.Source;
-            return source.Overlaps(Target) && InputManager.RowValidationProgress.IsVisible(rowPresenter, source) == progressVisible;
         }
 
         private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)
@@ -159,7 +153,7 @@ namespace DevZest.Data.Presenters
                 for (int i = 0; i < messages.Count; i++)
                 {
                     var message = messages[i];
-                    if (predict(message))
+                    if (predict == null || predict(message))
                         result = result.Add(message);
                 }
             }
@@ -174,7 +168,7 @@ namespace DevZest.Data.Presenters
             {
                 var asyncValidator = asyncValidators[i];
                 var dictionary = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
-                result = AddValidationMessages(result, dictionary, rowPresenter, x => IsVisible(x, rowPresenter, true));
+                result = AddValidationMessages(result, dictionary, rowPresenter, null);
             }
 
             return result;

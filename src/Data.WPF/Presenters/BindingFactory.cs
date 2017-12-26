@@ -74,7 +74,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<ValidationView>(
                 onSetup: (e, r) =>
                 {
-                    e.AsyncValidators = r.AsyncValidators;
+                    e.AsyncValidators = r.DataPresenter.RowAsyncValidators;
                 },
                 onRefresh: (e, r) =>
                 {
@@ -94,7 +94,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<ValidationView>(
                 onRefresh: e =>
                 {
-                    e.AsyncValidators = source.AllRowsAsyncValidators;
+                    e.AsyncValidators = source.RowAsyncValidators;
                 },
                 onSetup: e =>
                 {

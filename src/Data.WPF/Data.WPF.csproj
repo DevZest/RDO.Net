@@ -223,7 +223,6 @@
     <Compile Include="Presenters\RowValidationResults.cs" />
     <Compile Include="Presenters\ValidationMode.cs" />
     <Compile Include="Presenters\RowValidationProgress.cs" />
-    <Compile Include="Presenters\RowValidationScope.cs" />
     <Compile Include="Views\ValidationView.cs" />
     <Compile Include="Presenters\FlushErrorMessage.cs" />
   </ItemGroup>

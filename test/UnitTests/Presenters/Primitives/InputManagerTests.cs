@@ -398,14 +398,15 @@ namespace DevZest.Data.Presenters.Primitives
             inputManager.Assign(validationResults);
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
-                Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(validationMessage, errors[0].ErrorContent);
+                Assert.AreEqual(2, errors.Count);
+                Assert.AreEqual(validationMessage, errors[1].ErrorContent);
             }
 
             textBox[currentRow].Text = "any value";
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
-                Assert.AreEqual(0, errors.Count);
+                Assert.AreEqual(1, errors.Count);
+                Assert.AreEqual(validationMessage, errors[0].ErrorContent);
             }
         }
 
