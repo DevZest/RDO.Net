@@ -7,5 +7,6 @@ namespace DevZest.Data.Presenters
         bool IsSealed { get; }
         IRowAsyncValidators Seal();
         IRowAsyncValidators Add(RowAsyncValidator value);
+        RowAsyncValidator this[IColumns sourceColumns] { get; }
     }
 }

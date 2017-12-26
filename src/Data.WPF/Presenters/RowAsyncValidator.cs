@@ -265,6 +265,12 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        RowAsyncValidator IRowAsyncValidators.this[IColumns sourceColumns]
+        {
+            get { return sourceColumns == SourceColumns ? this : null; }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<RowAsyncValidator> IEnumerable<RowAsyncValidator>.GetEnumerator()
         {
             yield return this;

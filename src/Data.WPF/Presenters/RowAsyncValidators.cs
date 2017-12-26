@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
     public static class RowAsyncValidators
     {
-        private sealed class EmptyGroup : IRowAsyncValidators
+        private sealed class EmptyRowAsyncValidators : IRowAsyncValidators
         {
-            public readonly static EmptyGroup Singleton = new EmptyGroup();
+            public readonly static EmptyRowAsyncValidators Singleton = new EmptyRowAsyncValidators();
 
-            private EmptyGroup()
+            private EmptyRowAsyncValidators()
             {
             }
 
@@ -43,6 +44,11 @@ namespace DevZest.Data.Presenters
                 return EmptyEnumerator<RowAsyncValidator>.Singleton;
             }
 
+            public RowAsyncValidator this[IColumns sourceColumns]
+            {
+                get { return null; }
+            }
+
             public IRowAsyncValidators Seal()
             {
                 return this;
@@ -54,19 +60,27 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private class ListGroup : IRowAsyncValidators
+        private class KeyedRowAsyncValidators : IRowAsyncValidators
         {
-            private bool _isSealed;
-            private List<RowAsyncValidator> _list = new List<RowAsyncValidator>();
+            private sealed class KeyedCollection : KeyedCollection<IColumns, RowAsyncValidator>
+            {
+                protected override IColumns GetKeyForItem(RowAsyncValidator item)
+                {
+                    return item.SourceColumns;
+                }
+            }
 
-            public ListGroup(RowAsyncValidator value1, RowAsyncValidator value2)
+            private bool _isSealed;
+            private KeyedCollection _list = new KeyedCollection();
+
+            public KeyedRowAsyncValidators(RowAsyncValidator value1, RowAsyncValidator value2)
             {
                 Debug.Assert(value1 != null && value2 != null);
                 Add(value1);
                 Add(value2);
             }
 
-            private ListGroup()
+            private KeyedRowAsyncValidators()
             {
             }
 
@@ -103,11 +117,16 @@ namespace DevZest.Data.Presenters
                 }
 
                 Debug.Assert(Count > 0);
-                var result = new ListGroup();
+                var result = new KeyedRowAsyncValidators();
                 for (int i = 0; i < Count; i++)
                     result.Add(this[i]);
                 result.Add(value);
                 return result;
+            }
+
+            public RowAsyncValidator this[IColumns sourceColumns]
+            {
+                get { return _list.Contains(sourceColumns) ? _list[sourceColumns] : null; }
             }
 
             public IEnumerator<RowAsyncValidator> GetEnumerator()
@@ -123,13 +142,13 @@ namespace DevZest.Data.Presenters
 
         public static IRowAsyncValidators Empty
         {
-            get { return EmptyGroup.Singleton; }
+            get { return EmptyRowAsyncValidators.Singleton; }
         }
 
         internal static IRowAsyncValidators New(RowAsyncValidator value1, RowAsyncValidator value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
-            return new ListGroup(value1, value2);
+            return new KeyedRowAsyncValidators(value1, value2);
         }
 
         public static IRowAsyncValidators New(params RowAsyncValidator[] values)
