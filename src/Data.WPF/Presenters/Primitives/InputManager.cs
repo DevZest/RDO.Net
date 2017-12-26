@@ -256,7 +256,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var asyncValidator = asyncValidators[i];
                 var sourceColumns = asyncValidator.SourceColumns;
-                if (sourceColumns.Intersect(rowInput.Target).Count > 0 && RowValidationProgress.IsVisible(CurrentRow, sourceColumns))
+                if (sourceColumns.Overlaps(rowInput.Target) && RowValidationProgress.IsVisible(CurrentRow, sourceColumns))
                     asyncValidator.Run();
             }
         }
