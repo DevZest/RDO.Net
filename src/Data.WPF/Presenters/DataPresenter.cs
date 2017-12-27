@@ -254,9 +254,9 @@ namespace DevZest.Data.Presenters
         {
             Debug.Assert(rowPresenter != null);
             rowPresenter.Validate(false);
-            if (RowErrors.ContainsKey(rowPresenter))
+            if (RowValidationErrors.ContainsKey(rowPresenter))
                 errors++;
-            if (RowWarnings.ContainsKey(rowPresenter))
+            if (RowValidationWarnings.ContainsKey(rowPresenter))
                 warnings++;
             return errors < errorLimit || warnings < warningLimit;
         }
@@ -271,22 +271,22 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager?.RowFlushErrors; }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowErrors
+        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowValidationErrors
         {
             get { return LayoutManager?.RowValidationErrors; }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowWarnings
+        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowValidationWarnings
         {
             get { return LayoutManager?.RowValidationWarnings; }
         }
 
-        public IReadOnlyList<ScalarValidationMessage> ScalarErrors
+        public IReadOnlyList<ScalarValidationMessage> ScalarValidationErrors
         {
             get { return LayoutManager?.ScalarValidationErrors; }
         }
 
-        public IReadOnlyList<ScalarValidationMessage> ScalarWarnings
+        public IReadOnlyList<ScalarValidationMessage> ScalarValidationWarnings
         {
             get { return LayoutManager?.ScalarValidationWarnings; }
         }
@@ -430,13 +430,13 @@ namespace DevZest.Data.Presenters
         public IScalarValidationMessages GetValidationErrors(IScalars scalars)
         {
             Check.NotNull(scalars, nameof(scalars));
-            return RequireLayoutManager().GetValidationErrors(scalars);
+            return LayoutManager?.GetValidationErrors(scalars);
         }
 
         public IScalarValidationMessages GetValidationWarnings(IScalars scalars)
         {
             Check.NotNull(scalars, nameof(scalars));
-            return RequireLayoutManager().GetValidationWarnings(scalars);
+            return LayoutManager?.GetValidationWarnings(scalars);
         }
 
         #region IService
