@@ -6,7 +6,7 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<Label> AsLabel<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
+        public static RowBinding<Label> AsLabel<TTarget>(this Column source, RowBinding<TTarget> target, string format = null, IFormatProvider formatProvider = null)
             where TTarget : UIElement, new()
         {
             if (source == null)

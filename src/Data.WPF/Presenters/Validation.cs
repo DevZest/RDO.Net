@@ -51,13 +51,16 @@ namespace DevZest.Data.Presenters
         public static readonly DependencyProperty MessageTypeProperty = MessageTypePropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty FlushErrorTemplateProperty = DependencyProperty.RegisterAttached("FlushErrorTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnFlushErrorTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false),
+                FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnFlushErrorTemplateChanged)));
 
         public static readonly DependencyProperty ErrorTemplateProperty = DependencyProperty.RegisterAttached("ErrorTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnErrorTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false),
+                FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnErrorTemplateChanged)));
 
         public static readonly DependencyProperty WarningTemplateProperty = DependencyProperty.RegisterAttached("WarningTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Warning.GetOrLoad(false), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnWarningTemplateChanged)));
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Warning.GetOrLoad(false),
+                FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnWarningTemplateChanged)));
 
         public static ValidationMessageType? GetMessageType(this DependencyObject element)
         {
