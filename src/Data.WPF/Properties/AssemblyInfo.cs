@@ -26,6 +26,7 @@ using System.Windows.Markup;
 
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 
+[assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Data.Presenters")]
 [assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Data.Views")]
 [assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Data.Views.Primitives")]
 [assembly: ResourceIdRelativeTo("DevZest.Data")]

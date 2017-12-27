@@ -29,7 +29,7 @@
         <TextBlock Grid.ColumnSpan="2">This sample application demonstrates various options for data validation. Click following button to see different implementations.</TextBlock>
         <Button Grid.Row="1" Click="DefaultUserLogin_Click">User Login (Default)</Button>
         <TextBlock Grid.Row="1" Grid.Column="1">User Login form to demonstrate default validation.</TextBlock>
-        <Button Grid.Row="2">User Login (Lite)</Button>
+        <Button Grid.Row="2" Click="LiteUserLogin_Click">User Login (Lite)</Button>
         <TextBlock Grid.Row="2" Grid.Column="1">User Login form to demonstrate Implicit mode and ValidationSeverityIndicator.</TextBlock>
         <Button Grid.Row="3">User Login (Standard)</Button>
         <TextBlock Grid.Row="3" Grid.Column="1">User Login form to demonstrate ValidationMessageView.</TextBlock>

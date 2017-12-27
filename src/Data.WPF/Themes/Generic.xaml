@@ -14,5 +14,6 @@
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ForeignKeyBox.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowHeader.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/GridHeader.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ValidationSeverityIndicator.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

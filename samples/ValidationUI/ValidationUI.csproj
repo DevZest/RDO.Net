@@ -49,11 +49,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="LiteUserLoginWindow.Presenter.cs" />
+    <Compile Include="LiteUserLoginWindow.xaml.cs">
+      <DependentUpon>LiteUserLoginWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DefaultUserLoginWindow.Presenter.cs" />
     <Compile Include="User.cs" />
     <Compile Include="DefaultUserLoginWindow.xaml.cs">
       <DependentUpon>DefaultUserLoginWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="LiteUserLoginWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
