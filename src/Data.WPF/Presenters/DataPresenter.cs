@@ -57,17 +57,17 @@ namespace DevZest.Data.Presenters
 
         public Template Template
         {
-            get { return LayoutManager == null ? null : LayoutManager.Template; }
+            get { return LayoutManager?.Template; }
         }
 
         public Orientation? LayoutOrientation
         {
-            get { return Template.Orientation; }
+            get { return Template?.Orientation; }
         }
 
         public DataSet DataSet
         {
-            get { return LayoutManager == null ? null : LayoutManager.DataSet; }
+            get { return LayoutManager?.DataSet; }
         }
 
         public bool IsRecursive
@@ -84,13 +84,13 @@ namespace DevZest.Data.Presenters
 
         public Predicate<DataRow> Where
         {
-            get { return LayoutManager == null ? null : LayoutManager.Where; }
+            get { return LayoutManager?.Where; }
             set { Apply(value, OrderBy); }
         }
         
         public IComparer<DataRow> OrderBy
         {
-            get { return LayoutManager == null ? null : LayoutManager.OrderBy; }
+            get { return LayoutManager?.OrderBy; }
             set { Apply(Where, value); }
         }
 
@@ -101,12 +101,12 @@ namespace DevZest.Data.Presenters
 
         public IReadOnlyList<RowPresenter> Rows
         {
-            get { return LayoutManager == null ? null : LayoutManager.Rows; }
+            get { return LayoutManager?.Rows; }
         }
 
         public RowPresenter CurrentRow
         {
-            get { return LayoutManager == null ? null : LayoutManager.CurrentRow; }
+            get { return LayoutManager?.CurrentRow; }
             set
             {
                 VerifyRowPresenter(value, nameof(value));
@@ -145,7 +145,7 @@ namespace DevZest.Data.Presenters
 
         public IReadOnlyCollection<RowPresenter> SelectedRows
         {
-            get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
+            get { return LayoutManager?.SelectedRows; }
         }
 
         public RowPresenter VirtualRow
@@ -263,67 +263,72 @@ namespace DevZest.Data.Presenters
 
         public IReadOnlyList<FlushErrorMessage> ScalarFlushErrors
         {
-            get { return LayoutManager == null ? null : LayoutManager.ScalarFlushErrors; }
+            get { return LayoutManager?.ScalarFlushErrors; }
         }
 
         public IReadOnlyList<FlushErrorMessage> RowFlushErrors
         {
-            get { return LayoutManager == null ? null : LayoutManager.RowFlushErrors; }
+            get { return LayoutManager?.RowFlushErrors; }
         }
 
         public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowErrors
         {
-            get { return LayoutManager == null ? null : LayoutManager.RowValidationErrors; }
+            get { return LayoutManager?.RowValidationErrors; }
         }
 
         public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowWarnings
         {
-            get { return LayoutManager == null ? null : LayoutManager.RowValidationWarnings; }
+            get { return LayoutManager?.RowValidationWarnings; }
         }
 
         public IReadOnlyList<ScalarValidationMessage> ScalarErrors
         {
-            get { return LayoutManager == null ? null : LayoutManager.ScalarValidationErrors; }
+            get { return LayoutManager?.ScalarValidationErrors; }
         }
 
         public IReadOnlyList<ScalarValidationMessage> ScalarWarnings
         {
-            get { return LayoutManager == null ? null : LayoutManager.ScalarValidationWarnings; }
+            get { return LayoutManager?.ScalarValidationWarnings; }
         }
 
         public IColumnValidationMessages CurrentRowErrors
         {
-            get { return LayoutManager == null ? null : LayoutManager.CurrentRowErrors; }
+            get { return LayoutManager?.CurrentRowErrors; }
         }
 
         public IColumnValidationMessages CurrentRowWarnings
         {
-            get { return LayoutManager == null ? null : LayoutManager.CurrentRowWarnings; }
+            get { return LayoutManager?.CurrentRowWarnings; }
+        }
+
+        public ScalarValidationProgress ScalarValidationProgress
+        {
+            get { return LayoutManager?.ScalarValidationProgress; }
         }
 
         public RowValidationProgress RowValidationProgress
         {
-            get { return LayoutManager == null ? null : LayoutManager.RowValidationProgress; }
+            get { return LayoutManager?.RowValidationProgress; }
         }
 
         public IRowAsyncValidators RowAsyncValidators
         {
-            get { return Template.RowAsyncValidators; }
+            get { return Template?.RowAsyncValidators; }
         }
 
         public IScalarAsyncValidators ScalarAsyncValidators
         {
-            get { return Template.ScalarAsyncValidators; }
+            get { return Template?.ScalarAsyncValidators; }
         }
 
         public IReadOnlyList<ScalarValidationMessage> AssignedScalarValidationResults
         {
-            get { return LayoutManager == null ? null : LayoutManager.AssignedScalarValidationResults; }
+            get { return LayoutManager?.AssignedScalarValidationResults; }
         }
 
         public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> AssignedRowValidationResults
         {
-            get { return LayoutManager == null ? null : LayoutManager.AssignedRowValidationResults; }
+            get { return LayoutManager?.AssignedRowValidationResults; }
         }
 
         public void Assign(IScalarValidationMessages validationResults)
