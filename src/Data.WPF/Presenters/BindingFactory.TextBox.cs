@@ -10,7 +10,7 @@ namespace DevZest.Data.Presenters
             return string.IsNullOrEmpty(value) ? DiagnosticMessages.BindingFactory_InvalidInput(type) : value;
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _String source)
+        public static RowBinding<TextBox> AsTextBox(this Column<string> source)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -18,7 +18,7 @@ namespace DevZest.Data.Presenters
             }).WithInput(TextBox.TextProperty, source, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Int16 source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this Column<Int16?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -41,7 +41,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Int32 source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this Column<Int32?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -65,7 +65,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Int64 source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this Column<Int64?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -88,7 +88,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Single source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this Column<Single?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -111,7 +111,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Double source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this Column<Double?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -134,7 +134,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this _Decimal source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this Column<Decimal?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {

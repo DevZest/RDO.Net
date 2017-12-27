@@ -123,6 +123,11 @@ namespace DevZest.Data.Presenters
             return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty));
         }
 
+        public RowInput<T> BeginInput(RoutedEvent routedEvent)
+        {
+            return BeginInput(new RoutedEventTrigger<T>(routedEvent));
+        }
+
         public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
         {
             return BeginInput(flushTrigger).WithFlush(column, getValue).EndInput();
@@ -131,6 +136,11 @@ namespace DevZest.Data.Presenters
         public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, Column<TData> column, Func<T, TData> getValue)
         {
             return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), column, getValue);
+        }
+
+        public RowBinding<T> WithInput<TData>(RoutedEvent routedEvent, Column<TData> column, Func<T, TData> getValue)
+        {
+            return WithInput(new RoutedEventTrigger<T>(routedEvent), column, getValue);
         }
 
         public RowBinding<T> OverrideSetup(Action<T, RowPresenter, Action<T, RowPresenter>> overrideSetup)

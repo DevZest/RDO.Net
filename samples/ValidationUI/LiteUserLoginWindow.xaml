@@ -15,6 +15,10 @@
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,5,0" />
+        </Style>
         <Style TargetType="dz:ValidationSeverityIndicator">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="5,0,5,0" />

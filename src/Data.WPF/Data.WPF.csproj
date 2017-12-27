@@ -43,6 +43,7 @@
     <Compile Include="Presenters\BindingFactory.GridHeader.cs" />
     <Compile Include="Presenters\BindingFactory.DataView.cs" />
     <Compile Include="Presenters\BindingFactory.Image.cs" />
+    <Compile Include="Presenters\BindingFactory.PasswordBox.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationSeverityIndicator.cs" />
     <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
     <Compile Include="Presenters\BindingFactory.ComboBox.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Presenters\BindingFactory.ColumnHeader.cs" />
     <Compile Include="Presenters\BindingFactory.Label.cs" />
     <Compile Include="Presenters\BindingFactory.TextBlock.cs" />
+    <Compile Include="Presenters\RoutedEventTrigger.cs" />
     <Compile Include="Presenters\IScalarAsyncValidators.cs" />
     <Compile Include="Presenters\IScalars.cs" />
     <Compile Include="Presenters\IScalarValidationMessages.cs" />

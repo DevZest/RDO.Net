@@ -9,7 +9,7 @@ namespace ValidationUI
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 var emailAddressBinding = _.EmailAddress.AsTextBox();
-                var passwordBinding = _.Password.AsTextBox();
+                var passwordBinding = _.Password.AsPasswordBox();
                 builder
                     .GridColumns("Auto", "*")
                     .GridRows("Auto", "Auto")
