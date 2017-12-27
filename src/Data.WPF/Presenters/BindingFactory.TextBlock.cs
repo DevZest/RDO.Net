@@ -19,6 +19,17 @@ namespace DevZest.Data.Presenters
                 });
         }
 
+        public static RowBinding<TextBlock> BindToTextBlock(this Model _, string text)
+        {
+            return new RowBinding<TextBlock>(
+                onSetup: (v, p) =>
+                {
+                    v.Text = text;
+                },
+                onRefresh: null,
+                onCleanup: null);
+        }
+
         public static RowBinding<TextBlock> BindToTextBlockHyperlink(this Column source, ICommand command, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
@@ -55,12 +66,12 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static ScalarBinding<TextBlock> BindToTextBlock(this string text)
+        public static ScalarBinding<TextBlock> BindToTextBlock(this DataPresenter dataPresenter, string text)
         {
             return new ScalarBinding<TextBlock>(
-                onSetup: e =>
+                onSetup: v =>
                 {
-                    e.Text = text;
+                    v.Text = text;
                 },
                 onRefresh: null,
                 onCleanup: null);
@@ -72,9 +83,9 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(source));
 
             return new ScalarBinding<TextBlock>(
-                onRefresh: e =>
+                onRefresh: v =>
                 {
-                    e.Text = source.Value.ToString(format, formatProvider);
+                    v.Text = source.Value.ToString(format, formatProvider);
                 });
         }
     }
