@@ -8,13 +8,13 @@ namespace ValidationUI
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var emailAddressBinding = _.EmailAddress.AsTextBox();
-                var passwordBinding = _.Password.AsPasswordBox();
+                var emailAddressBinding = _.EmailAddress.BindToTextBox();
+                var passwordBinding = _.Password.BindToPasswordBox();
                 builder
                     .GridColumns("Auto", "*")
                     .GridRows("Auto", "Auto")
-                    .AddBinding(0, 0, _.EmailAddress.AsLabel(emailAddressBinding)).AddBinding(1, 0, emailAddressBinding)
-                    .AddBinding(0, 1, _.Password.AsLabel(passwordBinding)).AddBinding(1, 1, passwordBinding);
+                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddressBinding)).AddBinding(1, 0, emailAddressBinding)
+                    .AddBinding(0, 1, _.Password.BindToLabel(passwordBinding)).AddBinding(1, 1, passwordBinding);
             }
         }
     }

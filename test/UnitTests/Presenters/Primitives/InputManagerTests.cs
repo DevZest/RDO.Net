@@ -22,7 +22,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
             {
-                textBox = _.ParentProductCategoryID.AsTextBox();
+                textBox = _.ParentProductCategoryID.BindToTextBox();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
             });
 
@@ -84,8 +84,8 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBlock> textBlock = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
             {
-                textBox = scalar.AsTextBox();
-                textBlock = _.Name.AsTextBlock(); // to avoid empty RowRange
+                textBox = scalar.BindToTextBox();
+                textBlock = _.Name.BindToTextBlock(); // to avoid empty RowRange
                 builder.GridColumns("100").GridRows("100", "100").AddBinding(0, 0, textBox).AddBinding(0, 1, textBlock);
             }).WithScalars(new Scalar[] { scalar });
 
@@ -133,7 +133,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox();
+                textBox = _.Name.BindToTextBox();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
             });
 
@@ -175,7 +175,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox();
+                textBox = _.Name.BindToTextBox();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
             });
 
@@ -213,8 +213,8 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox();
-                validationView = textBox.Input.AsValidationView();
+                textBox = _.Name.BindToTextBox();
+                validationView = textBox.Input.BindToValidationView();
 
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
@@ -285,8 +285,8 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox();
-                validationView = textBox.Input.AsValidationView();
+                textBox = _.Name.BindToTextBox();
+                validationView = textBox.Input.BindToValidationView();
 
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
@@ -334,8 +334,8 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox();
-                validationView = textBox.Input.AsValidationView();
+                textBox = _.Name.BindToTextBox();
+                validationView = textBox.Input.BindToValidationView();
 
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
@@ -380,7 +380,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox();
+                textBox = _.Name.BindToTextBox();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
             });
 

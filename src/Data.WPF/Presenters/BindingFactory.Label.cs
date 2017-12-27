@@ -6,7 +6,7 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<Label> AsLabel<TTarget>(this Column source, RowBinding<TTarget> target, string format = null, IFormatProvider formatProvider = null)
+        public static RowBinding<Label> BindToLabel<TTarget>(this Column source, RowBinding<TTarget> target, string format = null, IFormatProvider formatProvider = null)
             where TTarget : UIElement, new()
         {
             if (source == null)
@@ -22,7 +22,7 @@ namespace DevZest.Data.Presenters
                 onRefresh: null, onCleanup: null);
         }
 
-        public static ScalarBinding<Label> AsLabel(this string source)
+        public static ScalarBinding<Label> BindToLabel(this string source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -31,7 +31,7 @@ namespace DevZest.Data.Presenters
         }
 
 
-        public static ScalarBinding<Label> AsLabel<TTarget>(this string source, ScalarBinding<TTarget> target)
+        public static ScalarBinding<Label> BindToLabel<TTarget>(this string source, ScalarBinding<TTarget> target)
             where TTarget : UIElement, new()
         {
             if (source == null)

@@ -7,7 +7,7 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<TextBlock> AsTextBlock(this Column source, string format = null, IFormatProvider formatProvider = null)
+        public static RowBinding<TextBlock> BindToTextBlock(this Column source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -19,7 +19,7 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static RowBinding<TextBlock> AsTextBlockOfHyperlink(this Column source, ICommand command, string format = null, IFormatProvider formatProvider = null)
+        public static RowBinding<TextBlock> BindToTextBlockHyperlink(this Column source, ICommand command, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static ScalarBinding<TextBlock> AsTextBlock<T>(this Func<T> source, string format = null, IFormatProvider formatProvider = null)
+        public static ScalarBinding<TextBlock> BindToTextBlock<T>(this Func<T> source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -55,7 +55,7 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static ScalarBinding<TextBlock> AsTextBlock(this string text)
+        public static ScalarBinding<TextBlock> BindToTextBlock(this string text)
         {
             return new ScalarBinding<TextBlock>(
                 onSetup: e =>
@@ -66,7 +66,7 @@ namespace DevZest.Data.Presenters
                 onCleanup: null);
         }
 
-        public static ScalarBinding<TextBlock> AsTextBlock<T>(this Scalar<T> source, string format = null, IFormatProvider formatProvider = null)
+        public static ScalarBinding<TextBlock> BindToTextBlock<T>(this Scalar<T> source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

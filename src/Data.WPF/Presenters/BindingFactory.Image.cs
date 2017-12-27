@@ -6,7 +6,7 @@ namespace DevZest.Data.Presenters
 {
     static partial class BindingFactory
     {
-        public static RowBinding<Image> AsImage(this Column<ImageSource> source)
+        public static RowBinding<Image> BindToImage(this Column<ImageSource> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

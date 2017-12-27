@@ -7,33 +7,33 @@ namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtender>(this TKey key, TExtender extender, Func<ColumnValueBag, TKey, string> toString)
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TExtender>(this TKey key, TExtender extender, Func<ColumnValueBag, TKey, string> toString)
             where TKey : PrimaryKey
             where TExtender : ModelExtender
         {
             if (toString == null)
                 throw new ArgumentNullException(nameof(toString));
 
-            return AsForeignKeyBox(key, extender, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtender paramExt) =>
+            return BindToForeignKeyBox(key, extender, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtender paramExt) =>
             {
                 v.Text = toString(valueBag, paramKey);
             });
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtender>(this TKey key, TExtender extender, Func<ColumnValueBag, TKey, TExtender, string> toString)
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TExtender>(this TKey key, TExtender extender, Func<ColumnValueBag, TKey, TExtender, string> toString)
             where TKey : PrimaryKey
             where TExtender : ModelExtender
         {
             if (toString == null)
                 throw new ArgumentNullException(nameof(toString));
 
-            return AsForeignKeyBox(key, extender, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtender paramExt) =>
+            return BindToForeignKeyBox(key, extender, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtender paramExt) =>
             {
                 v.Text = toString(valueBag, paramKey, paramExt);
             });
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtender, TView>(this TKey key, TExtender extender, Action<TView, ColumnValueBag, TExtender> refreshAction)
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TExtender, TView>(this TKey key, TExtender extender, Action<TView, ColumnValueBag, TExtender> refreshAction)
             where TKey : PrimaryKey
             where TExtender : ModelExtender
             where TView : UIElement, new()
@@ -61,7 +61,7 @@ namespace DevZest.Data.Presenters
                 }).WithInput(key, extender);
         }
 
-        public static RowBinding<ForeignKeyBox> AsForeignKeyBox<TKey, TExtender, TView>(this TKey key, TExtender extender, Action<TView, ColumnValueBag, TKey, TExtender> refreshAction)
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TExtender, TView>(this TKey key, TExtender extender, Action<TView, ColumnValueBag, TKey, TExtender> refreshAction)
             where TKey : PrimaryKey
             where TExtender : ModelExtender
             where TView : UIElement, new()

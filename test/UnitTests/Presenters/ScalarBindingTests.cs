@@ -48,7 +48,7 @@ namespace DevZest.Data.Presenters
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100", "100").GridRows("100", "100")
                     .AddBinding(0, 0, label)
-                    .AddBinding(0, 1, 1, 1, _.Name.AsTextBlock())
+                    .AddBinding(0, 1, 1, 1, _.Name.BindToTextBlock())
                     .AddBinding(1, 0, textBlock);
             });
 

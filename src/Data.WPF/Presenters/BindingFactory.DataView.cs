@@ -5,7 +5,7 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<DataView> AsDataView<T>(this T _, Func<DataPresenter<T>> dataPresenterCreator)
+        public static RowBinding<DataView> BindToDataView<T>(this T _, Func<DataPresenter<T>> dataPresenterCreator)
             where T : Model, new()
         {
             if (_ == null)

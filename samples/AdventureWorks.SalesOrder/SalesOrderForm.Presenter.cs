@@ -32,7 +32,7 @@ namespace AdventureWorks.SalesOrders
                 builder.GridRows("Auto", "*", "Auto")
                     .GridColumns("580")
                     .AddBinding(0, 0, _.AsSalesOrderHeaderBox(out _shipToAddressBinding, out _billToAddressBinding))
-                    .AddBinding(0, 1, _.SalesOrderDetails.AsDataView(() => new DetailPresenter()).WithStyle(Styles.DataSheet))
+                    .AddBinding(0, 1, _.SalesOrderDetails.BindToDataView(() => new DetailPresenter()).WithStyle(Styles.DataSheet))
                     .AddBinding(0, 2, _.AsSalesOrderFooterBox());
             }
 

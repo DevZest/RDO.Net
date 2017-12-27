@@ -13,7 +13,7 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowCompositeBinding<InertEditor> AsInPlaceEditor<T>(this RowBinding<T> editingRowBinding, string format = null, IFormatProvider formatProvider = null)
+        public static RowCompositeBinding<InertEditor> BindToInPlaceEditor<T>(this RowBinding<T> editingRowBinding, string format = null, IFormatProvider formatProvider = null)
             where T : UIElement, new()
         {
             if (editingRowBinding.Input == null)
@@ -22,11 +22,11 @@ namespace DevZest.Data.Presenters
             var column = editingRowBinding.Input.Target as Column;
             if (column == null)
                 throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingRowBindingNotColumn, nameof(editingRowBinding));
-            var inertRowBinding = column.AsTextBlock(format, formatProvider);
+            var inertRowBinding = column.BindToTextBlock(format, formatProvider);
             return ComposeInPlaceEditor(editingRowBinding, inertRowBinding);
         }
 
-        public static RowCompositeBinding<InertEditor> AsInPlaceEditor<TEditing, TInert>(this RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
+        public static RowCompositeBinding<InertEditor> BindToInPlaceEditor<TEditing, TInert>(this RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
             where TEditing : UIElement, new()
             where TInert : UIElement, new()
         {
@@ -45,7 +45,7 @@ namespace DevZest.Data.Presenters
             throw new NotImplementedException();
         }
 
-        public static RowBinding<ValidationView> AsValidationView<T>(this RowInput<T> source)
+        public static RowBinding<ValidationView> BindToValidationView<T>(this RowInput<T> source)
             where T : UIElement, new()
         {
             if (source == null)
@@ -69,7 +69,7 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static RowBinding<ValidationView> AsValidationView(this Model source)
+        public static RowBinding<ValidationView> BindToValidationView(this Model source)
         {
             return new RowBinding<ValidationView>(
                 onSetup: (e, r) =>
@@ -86,7 +86,7 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static ScalarBinding<ValidationView> AsValidationView(this DataPresenter source)
+        public static ScalarBinding<ValidationView> BindToValidationView(this DataPresenter source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

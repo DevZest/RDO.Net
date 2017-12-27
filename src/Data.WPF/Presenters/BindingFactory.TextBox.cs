@@ -10,7 +10,7 @@ namespace DevZest.Data.Presenters
             return string.IsNullOrEmpty(value) ? DiagnosticMessages.BindingFactory_InvalidInput(type) : value;
         }
 
-        public static RowBinding<TextBox> AsTextBox(this Column<string> source)
+        public static RowBinding<TextBox> BindToTextBox(this Column<string> source)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -18,7 +18,7 @@ namespace DevZest.Data.Presenters
             }).WithInput(TextBox.TextProperty, source, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
         }
 
-        public static RowBinding<TextBox> AsTextBox(this Column<Int16?> source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> BindToTextBox(this Column<Int16?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -41,7 +41,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this Column<Int32?> source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> BindToTextBox(this Column<Int32?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -65,7 +65,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this Column<Int64?> source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> BindToTextBox(this Column<Int64?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -88,7 +88,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this Column<Single?> source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> BindToTextBox(this Column<Single?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -111,7 +111,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this Column<Double?> source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> BindToTextBox(this Column<Double?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -134,7 +134,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> AsTextBox(this Column<Decimal?> source, string flushErrorDescription = null)
+        public static RowBinding<TextBox> BindToTextBox(this Column<Decimal?> source, string flushErrorDescription = null)
         {
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
@@ -157,7 +157,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<String> source)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<String> source)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -165,7 +165,7 @@ namespace DevZest.Data.Presenters
             }).WithInput(TextBox.TextProperty, source, v => v.Text);
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16?> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int16?> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -188,7 +188,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int32?> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int32?> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -211,7 +211,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int64?> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int64?> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -234,7 +234,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Single?> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Single?> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -257,7 +257,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Double?> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Double?> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -280,7 +280,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int16> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -298,7 +298,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int32> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int32> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -316,7 +316,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int64> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int64> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -334,7 +334,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Single> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Single> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
@@ -352,7 +352,7 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Double> source, string flushErrorDescription = null)
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Double> source, string flushErrorDescription = null)
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {

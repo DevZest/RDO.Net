@@ -8,17 +8,17 @@ namespace DevZest.Data.Presenters
 {
     static partial class BindingFactory
     {
-        public static RowBinding<ComboBox> AsComboBox<T>(this EnumColumn<T> enumColumn)
+        public static RowBinding<ComboBox> BindToComboBox<T>(this EnumColumn<T> enumColumn)
             where T : struct, IConvertible
         {
-            return enumColumn.AsComboBox(enumColumn.EnumItems.Select(x => new
+            return enumColumn.BindToComboBox(enumColumn.EnumItems.Select(x => new
             {
                 Value = x.Value,
                 Description = x.Description
             }), nameof(EnumItem<T?>.Value), nameof(EnumItem<T?>.Description));
         }
 
-        public static RowBinding<ComboBox> AsComboBox<T>(this Column<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)
+        public static RowBinding<ComboBox> BindToComboBox<T>(this Column<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(selectionData, nameof(selectionData));

@@ -6,12 +6,12 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static ScalarBinding<CheckBox> AsCheckBoxToSelectAll(this DataPresenter dataPresenter)
+        public static ScalarBinding<CheckBox> BindToCheckBoxToSelectAll(this DataPresenter dataPresenter)
         {
             return ToSelectAll<CheckBox>(dataPresenter);
         }
 
-        public static RowBinding<CheckBox> AsCheckBoxToSelectRow(this Model model)
+        public static RowBinding<CheckBox> BindToCheckBoxToSelectRow(this Model model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -36,7 +36,7 @@ namespace DevZest.Data.Presenters
                 onCleanup: (v, p) => trigger.Detach(v));
         }
 
-        public static RowBinding<CheckBox> AsCheckBox(this _Boolean column)
+        public static RowBinding<CheckBox> BindToCheckBox(this _Boolean column)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));

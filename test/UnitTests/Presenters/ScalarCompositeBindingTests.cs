@@ -24,7 +24,7 @@ namespace DevZest.Data.Presenters
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)
-                    .AddBinding(0, 1, _.Name.AsTextBlock());
+                    .AddBinding(0, 1, _.Name.BindToTextBlock());
             });
 
             Assert.IsNull(label.GetSettingUpElement(0));
@@ -54,7 +54,7 @@ namespace DevZest.Data.Presenters
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)
-                    .AddBinding(0, 1, _.Name.AsTextBlock());
+                    .AddBinding(0, 1, _.Name.BindToTextBlock());
             });
 
             Assert.AreEqual(1, pane.FlowRepeatCount);

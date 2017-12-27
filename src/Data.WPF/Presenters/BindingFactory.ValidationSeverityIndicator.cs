@@ -5,7 +5,7 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<ValidationSeverityIndicator> AsValidationSeverityIndicator(this IColumns source)
+        public static RowBinding<ValidationSeverityIndicator> BindToValidationSeverityIndicator(this IColumns source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -23,7 +23,7 @@ namespace DevZest.Data.Presenters
                 onSetup: null, onCleanup: null);
         }
 
-        public static ScalarBinding<ValidationSeverityIndicator> AsValidationSeverityIndicator(this IScalars source, bool isProgressive = true)
+        public static ScalarBinding<ValidationSeverityIndicator> BindToValidationSeverityIndicator(this IScalars source, bool isProgressive = true)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

@@ -17,8 +17,8 @@ namespace DevZest.Data.Presenters
             RowCompositeBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                textBlock = _.Name.AsTextBlock();
-                label = _.Name.AsLabel(textBlock);
+                textBlock = _.Name.BindToTextBlock();
+                label = _.Name.BindToLabel(textBlock);
                 pane = new RowCompositeBinding<XamlPane>().AddChild(label, v => v.Label).AddChild(textBlock, v => v.TextBlock);
                 builder.GridRows("100").GridColumns("100").AddBinding(0, 0, pane);
             });

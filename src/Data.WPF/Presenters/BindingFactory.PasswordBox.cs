@@ -5,12 +5,12 @@ namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
-        public static RowBinding<PasswordBox> AsPasswordBox(this Column<SecureString> source)
+        public static RowBinding<PasswordBox> BindToPasswordBox(this Column<SecureString> source)
         {
             return new RowBinding<PasswordBox>(onRefresh: null).WithInput(PasswordBox.PasswordChangedEvent, source, v => v.SecurePassword);
         }
 
-        public static RowBinding<PasswordBox> AsPasswordBox(this Column<string> source)
+        public static RowBinding<PasswordBox> BindToPasswordBox(this Column<string> source)
         {
             return new RowBinding<PasswordBox>(onRefresh: (v, p) =>
             {

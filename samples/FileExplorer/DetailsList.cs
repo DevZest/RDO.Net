@@ -20,15 +20,15 @@ namespace FileExplorer
                 .Layout(Orientation.Vertical)
                 .WithFrozenTop(1)
                 .WithSelectionMode(SelectionMode.Extended)
-                .AddBinding(0, 0, 1, 0, _.DisplayName.AsColumnHeader("Name"))
-                .AddBinding(2, 0, _.DateModified.AsColumnHeader("Date modified"))
-                .AddBinding(3, 0, _.FileType.AsColumnHeader("Type"))
-                .AddBinding(4, 0, _.FileSize.AsColumnHeader("Size"))
-                .AddBinding(0, 1, _.SmallIcon.AsImage())
-                .AddBinding(1, 1, _.DisplayName.AsTextBlock())
-                .AddBinding(2, 1, _.DateModified.AsTextBlock("{0:g}"))
-                .AddBinding(3, 1, _.FileType.AsTextBlock())
-                .AddBinding(4, 1, _.FileSize.AsTextBlock("{0:KB}", FileSizeFormatProvider.Singleton).WithStyle(FileSizeTextBlockStyleKey));
+                .AddBinding(0, 0, 1, 0, _.DisplayName.BindToColumnHeader("Name"))
+                .AddBinding(2, 0, _.DateModified.BindToColumnHeader("Date modified"))
+                .AddBinding(3, 0, _.FileType.BindToColumnHeader("Type"))
+                .AddBinding(4, 0, _.FileSize.BindToColumnHeader("Size"))
+                .AddBinding(0, 1, _.SmallIcon.BindToImage())
+                .AddBinding(1, 1, _.DisplayName.BindToTextBlock())
+                .AddBinding(2, 1, _.DateModified.BindToTextBlock("{0:g}"))
+                .AddBinding(3, 1, _.FileType.BindToTextBlock())
+                .AddBinding(4, 1, _.FileSize.BindToTextBlock("{0:KB}", FileSizeFormatProvider.Singleton).WithStyle(FileSizeTextBlockStyleKey));
         }
 
         public override void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)

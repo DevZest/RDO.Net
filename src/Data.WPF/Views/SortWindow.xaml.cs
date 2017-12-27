@@ -96,11 +96,11 @@ namespace DevZest.Data.Views
                     .GridRows("Auto", "Auto")
                     .Layout(Orientation.Vertical)
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
-                    .AddBinding(1, 0, _.SortBy.DisplayName.AsTextBlock())
-                    .AddBinding(2, 0, _.Order.DisplayName.AsTextBlock())
-                    .AddBinding(0, 1, _.AsRowHeader().WithStyle(RowHeader.Styles.Flat))
-                    .AddBinding(1, 1, _.SortBy.AsComboBox(ColumnHeaderSelection, "Value", "Display"))
-                    .AddBinding(2, 1, _.Order.AsComboBox(DirectionSelection, "Value", "Display"))
+                    .AddBinding(1, 0, _.SortBy.DisplayName.BindToTextBlock())
+                    .AddBinding(2, 0, _.Order.DisplayName.BindToTextBlock())
+                    .AddBinding(0, 1, _.BindToRowHeader().WithStyle(RowHeader.Styles.Flat))
+                    .AddBinding(1, 1, _.SortBy.BindToComboBox(ColumnHeaderSelection, "Value", "Display"))
+                    .AddBinding(2, 1, _.Order.BindToComboBox(DirectionSelection, "Value", "Display"))
                     .WithRowViewCancelEditGestures(new KeyGesture(Key.Escape))
                     .WithRowViewEndEditGestures(new KeyGesture(Key.Enter));
             }

@@ -20,7 +20,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 columnHeader1 = _.Name.AsScalarTextBlock();
                 blockHeader = _.AsBlockHeader();
-                textBlock = _.Name.AsTextBlock();
+                textBlock = _.Name.BindToTextBlock();
                 columnHeader2 = _.Name.AsScalarTextBlock().WithFlowRepeatable(true);
                 builder.GridColumns("100", "100")
                     .GridRows("100", "100", "100")
@@ -434,7 +434,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                textBlock = _.Name.AsTextBlock();
+                textBlock = _.Name.BindToTextBlock();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBlock);
             });
 
@@ -456,7 +456,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                textBlock = _.Name.AsTextBlock();
+                textBlock = _.Name.BindToTextBlock();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBlock);
             });
 
@@ -492,7 +492,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                textBlock = _.Name.AsTextBlock();
+                textBlock = _.Name.BindToTextBlock();
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBlock);
             });
