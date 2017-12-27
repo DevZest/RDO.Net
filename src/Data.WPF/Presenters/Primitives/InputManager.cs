@@ -19,8 +19,8 @@ namespace DevZest.Data.Presenters.Primitives
         protected InputManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
-            ScalarValidationProgress = new ScalarValidationProgress(this);
-            RowValidationProgress = new RowValidationProgress(this);
+            ScalarValidation = new ScalarValidation(this);
+            RowValidation = new RowValidation(this);
             if (ScalarValidationMode == ValidationMode.Implicit)
                 ValidateScalars();
             if (RowValidationMode == ValidationMode.Implicit)
@@ -124,11 +124,11 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        public ScalarValidationProgress ScalarValidationProgress { get; private set; }
+        public ScalarValidation ScalarValidation { get; private set; }
         public IScalarValidationMessages ScalarValidationErrors { get; private set; } = ScalarValidationMessages.Empty;
         public IScalarValidationMessages ScalarValidationWarnings { get; private set; } = ScalarValidationMessages.Empty;
 
-        public RowValidationProgress RowValidationProgress { get; private set; }
+        public RowValidation RowValidation { get; private set; }
         public IRowValidationResults RowValidationErrors { get; private set; } = RowValidationResults.Empty;
         public IRowValidationResults RowValidationWarnings { get; private set; } = RowValidationResults.Empty;
 
@@ -153,7 +153,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             base.Reload();
 
-            RowValidationProgress.Reset();
+            RowValidation.Reset();
             RowValidationErrors = RowValidationWarnings = RowValidationResults.Empty;
             AssignedRowValidationResults = RowValidationResults.Empty;
             if (RowValidationMode == ValidationMode.Implicit)
@@ -181,7 +181,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal IColumnValidationMessages GetValidationMessages(RowPresenter rowPresenter, IColumns source, ValidationSeverity severity)
         {
-            return RowValidationProgress.IsVisible(rowPresenter, source)
+            return RowValidation.IsVisible(rowPresenter, source)
                 ? GetValidationMessages(severity == ValidationSeverity.Error ? RowValidationErrors : RowValidationWarnings, rowPresenter, source)
                 : ColumnValidationMessages.Empty;
         }
@@ -189,7 +189,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal void MakeProgress<T>(ScalarInput<T> scalarInput)
             where T : UIElement, new()
         {
-            ScalarValidationProgress.MakeProgress(scalarInput);
+            ScalarValidation.MakeProgress(scalarInput);
             if (ScalarValidationMode != ValidationMode.Explicit)
                 ValidateScalars(false);
             OnProgress(scalarInput);
@@ -232,7 +232,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal void MakeProgress<T>(RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            RowValidationProgress.MakeProgress(rowInput);
+            RowValidation.MakeProgress(rowInput);
             if (RowValidationMode != ValidationMode.Explicit)
                 Validate(CurrentRow, false);
             OnProgress(rowInput);
@@ -253,7 +253,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var asyncValidator = asyncValidators[i];
                 var sourceColumns = asyncValidator.SourceColumns;
-                if (sourceColumns.Overlaps(rowInput.Target) && RowValidationProgress.IsVisible(CurrentRow, sourceColumns))
+                if (sourceColumns.Overlaps(rowInput.Target) && RowValidation.IsVisible(CurrentRow, sourceColumns))
                     asyncValidator.Run();
             }
         }
@@ -291,7 +291,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void ValidateScalars(bool showAll)
         {
             if (showAll)
-                ScalarValidationProgress.ShowAll();
+                ScalarValidation.ShowAll();
 
             ClearScalarValidationMessages();
             var messages = PerformValidateScalars();
@@ -335,7 +335,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(rowPresenter != null);
             if (showAll)
-                RowValidationProgress.ShowAll(rowPresenter);
+                RowValidation.ShowAll(rowPresenter);
             RowValidationErrors = RowValidationErrors.Remove(rowPresenter);
             RowValidationWarnings = RowValidationWarnings.Remove(rowPresenter);
             var dataRow = rowPresenter.DataRow;
@@ -369,7 +369,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             base.DisposeRow(rowPresenter);
 
-            RowValidationProgress.OnRowDisposed(rowPresenter);
+            RowValidation.OnRowDisposed(rowPresenter);
 
             if (RowValidationErrors.ContainsKey(rowPresenter))
                 RowValidationErrors = RowValidationErrors.Remove(rowPresenter).Seal();
@@ -427,7 +427,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (hasError)
                 return false;
 
-            RowValidationProgress.Reset();
+            RowValidation.Reset();
             return base.EndEdit();
         }
 
@@ -441,7 +441,7 @@ namespace DevZest.Data.Presenters.Primitives
                 for (int i = 0; i < ScalarValidationErrors.Count; i++)
                 {
                     var error = ScalarValidationErrors[i];
-                    if (ScalarValidationProgress.IsVisible(error.Source))
+                    if (ScalarValidation.IsVisible(error.Source))
                         return true;
                 }
 
@@ -453,7 +453,7 @@ namespace DevZest.Data.Presenters.Primitives
                     for (int i = 0; i < messages.Count; i++)
                     {
                         var message = messages[i];
-                        if (RowValidationProgress.IsVisible(rowPresenter, message.Source))
+                        if (RowValidation.IsVisible(rowPresenter, message.Source))
                             return true;
                     }
                 }
@@ -465,13 +465,13 @@ namespace DevZest.Data.Presenters.Primitives
         internal sealed override void RollbackEdit()
         {
             base.RollbackEdit();
-            RowValidationProgress.Reset();
+            RowValidation.Reset();
         }
 
         public IScalarValidationMessages GetValidationErrors(IScalars scalars)
         {
             var result = ScalarValidationMessages.Empty;
-            if (ScalarValidationProgress.IsVisible(scalars))
+            if (ScalarValidation.IsVisible(scalars))
                 result = AddValidationMessages(result, ScalarValidationErrors, scalars);
             result = AddAsyncValidationMessages(result, ValidationSeverity.Error, scalars);
             result = AddValidationMessages(result, AssignedScalarValidationResults.Where(ValidationSeverity.Error), scalars);
@@ -481,7 +481,7 @@ namespace DevZest.Data.Presenters.Primitives
         public IScalarValidationMessages GetValidationWarnings(IScalars scalars)
         {
             var result = ScalarValidationMessages.Empty;
-            if (ScalarValidationProgress.IsVisible(scalars))
+            if (ScalarValidation.IsVisible(scalars))
                 result = AddValidationMessages(result, ScalarValidationWarnings, scalars);
             result = AddAsyncValidationMessages(result, ValidationSeverity.Warning, scalars);
             result = AddValidationMessages(result, AssignedScalarValidationResults.Where(ValidationSeverity.Warning), scalars);

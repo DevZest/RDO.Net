@@ -301,14 +301,14 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager?.CurrentRowWarnings; }
         }
 
-        public ScalarValidationProgress ScalarValidationProgress
+        public ScalarValidation ScalarValidation
         {
-            get { return LayoutManager?.ScalarValidationProgress; }
+            get { return LayoutManager?.ScalarValidation; }
         }
 
-        public RowValidationProgress RowValidationProgress
+        public RowValidation RowValidation
         {
-            get { return LayoutManager?.RowValidationProgress; }
+            get { return LayoutManager?.RowValidation; }
         }
 
         public IRowAsyncValidators RowAsyncValidators

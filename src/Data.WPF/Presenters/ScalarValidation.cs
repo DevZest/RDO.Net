@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarValidationProgress
+    public sealed class ScalarValidation
     {
-        internal ScalarValidationProgress(InputManager inputManager)
+        internal ScalarValidation(InputManager inputManager)
         {
             _inputManager = inputManager;
             if (Mode == ValidationMode.Progressive)

@@ -5,9 +5,9 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowValidationProgress
+    public sealed class RowValidation
     {
-        internal RowValidationProgress(InputManager inputManager)
+        internal RowValidation(InputManager inputManager)
         {
             _inputManager = inputManager;
             if (Mode == ValidationMode.Progressive)
