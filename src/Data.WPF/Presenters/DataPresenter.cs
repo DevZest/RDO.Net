@@ -398,7 +398,7 @@ namespace DevZest.Data.Presenters
         {
             var result = ScalarValidationMessages.Empty;
             for (int i = 0; i < Scalars.Count; i++)
-                result = Scalars[i].Validate(result);
+                result = result.Add(Scalars[i].Validate(result));
             return PerformValidateScalars(result);
         }
 
