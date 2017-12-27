@@ -427,6 +427,18 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
+        public IScalarValidationMessages GetValidationErrors(IScalars scalars)
+        {
+            Check.NotNull(scalars, nameof(scalars));
+            return RequireLayoutManager().GetValidationErrors(scalars);
+        }
+
+        public IScalarValidationMessages GetValidationWarnings(IScalars scalars)
+        {
+            Check.NotNull(scalars, nameof(scalars));
+            return RequireLayoutManager().GetValidationWarnings(scalars);
+        }
+
         #region IService
 
         DataPresenter IService.DataPresenter

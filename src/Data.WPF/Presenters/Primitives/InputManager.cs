@@ -467,5 +467,49 @@ namespace DevZest.Data.Presenters.Primitives
             base.RollbackEdit();
             RowValidationProgress.Reset();
         }
+
+        public IScalarValidationMessages GetValidationErrors(IScalars scalars)
+        {
+            var result = ScalarValidationMessages.Empty;
+            if (ScalarValidationProgress.IsVisible(scalars))
+                result = AddValidationMessages(result, ScalarValidationErrors, scalars);
+            result = AddAsyncValidationMessages(result, ValidationSeverity.Error, scalars);
+            result = AddValidationMessages(result, AssignedScalarValidationResults.Where(ValidationSeverity.Error), scalars);
+            return result;
+        }
+
+        public IScalarValidationMessages GetValidationWarnings(IScalars scalars)
+        {
+            var result = ScalarValidationMessages.Empty;
+            if (ScalarValidationProgress.IsVisible(scalars))
+                result = AddValidationMessages(result, ScalarValidationWarnings, scalars);
+            result = AddAsyncValidationMessages(result, ValidationSeverity.Warning, scalars);
+            result = AddValidationMessages(result, AssignedScalarValidationResults.Where(ValidationSeverity.Warning), scalars);
+            return result;
+        }
+
+        private static IScalarValidationMessages AddValidationMessages(IScalarValidationMessages result, IScalarValidationMessages messages, IScalars scalars)
+        {
+            for (int i = 0; i < messages.Count; i++)
+            {
+                var message = messages[i];
+                if (message.Source.SetEquals(scalars))
+                    result = result.Add(message);
+            }
+            return result;
+        }
+
+        private IScalarValidationMessages AddAsyncValidationMessages(IScalarValidationMessages result, ValidationSeverity severity, IScalars scalars)
+        {
+            var asyncValidators = Template.ScalarAsyncValidators;
+            for (int i = 0; i < asyncValidators.Count; i++)
+            {
+                var asyncValidator = asyncValidators[i];
+                var messages = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
+                result = AddValidationMessages(result, messages, scalars);
+            }
+
+            return result;
+        }
     }
 }

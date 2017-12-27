@@ -517,7 +517,7 @@ namespace DevZest.Data.Presenters
             var result = ColumnValidationMessages.Empty;
             result = InputManager.GetValidationMessages(this, source, ValidationSeverity.Error);
             result = AddAsyncValidationMessages(result, this, ValidationSeverity.Error);
-            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, this, x => x.Severity == ValidationSeverity.Error);
+            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults.Where(ValidationSeverity.Error), this);
             return result;
         }
 
@@ -528,21 +528,17 @@ namespace DevZest.Data.Presenters
             var result = ColumnValidationMessages.Empty;
             result = InputManager.GetValidationMessages(this, source, ValidationSeverity.Warning);
             result = AddAsyncValidationMessages(result, this, ValidationSeverity.Warning);
-            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, this, x => x.Severity == ValidationSeverity.Warning);
+            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults.Where(ValidationSeverity.Warning), this);
             return result;
         }
 
-        private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)
+        private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter)
         {
             if (dictionary.ContainsKey(rowPresenter))
             {
                 var messages = dictionary[rowPresenter];
                 for (int i = 0; i < messages.Count; i++)
-                {
-                    var message = messages[i];
-                    if (predict == null || predict(message))
-                        result = result.Add(message);
-                }
+                    result = result.Add(messages[i]);
             }
 
             return result;
@@ -555,7 +551,7 @@ namespace DevZest.Data.Presenters
             {
                 var asyncValidator = asyncValidators[i];
                 var dictionary = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
-                result = AddValidationMessages(result, dictionary, rowPresenter, null);
+                result = AddValidationMessages(result, dictionary, rowPresenter);
             }
 
             return result;

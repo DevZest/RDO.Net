@@ -98,61 +98,17 @@ namespace DevZest.Data.Presenters
 
         private void RefreshValidation(T element)
         {
-            element.RefreshValidation(() => GetFlushError(element), () => Errors, () => Warnings);
+            element.RefreshValidation(() => GetFlushError(element), () => ValidationErrors, () => ValidationWarnings);
         }
 
-        public IScalarValidationMessages Errors
+        public IScalarValidationMessages ValidationErrors
         {
-            get
-            {
-                var result = ScalarValidationMessages.Empty;
-                result = AddValidationMessages(result, InputManager.ScalarValidationErrors, x => IsVisible(x, true));
-                result = AddAsyncValidationMessages(result, ValidationSeverity.Error);
-                result = AddValidationMessages(result, InputManager.AssignedScalarValidationResults, x => x.Severity == ValidationSeverity.Error && IsVisible(x, false));
-                return result;
-            }
+            get { return InputManager.GetValidationErrors(Target); }
         }
 
-        public IScalarValidationMessages Warnings
+        public IScalarValidationMessages ValidationWarnings
         {
-            get
-            {
-                var result = ScalarValidationMessages.Empty;
-                result = AddValidationMessages(result, InputManager.ScalarValidationWarnings, x => IsVisible(x, true));
-                result = AddAsyncValidationMessages(result, ValidationSeverity.Warning);
-                result = AddValidationMessages(result, InputManager.AssignedScalarValidationResults, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, false));
-                return result;
-            }
-        }
-
-        private bool IsVisible(ScalarValidationMessage validationMessage, bool progressVisible)
-        {
-            var source = validationMessage.Source;
-            return source.Overlaps(Target) && InputManager.ScalarValidationProgress.IsVisible(source) == progressVisible;
-        }
-
-        private static IScalarValidationMessages AddValidationMessages(IScalarValidationMessages result, IScalarValidationMessages messages, Func<ScalarValidationMessage, bool> predict)
-        {
-            for (int i = 0; i < messages.Count; i++)
-            {
-                var message = messages[i];
-                if (predict(message))
-                    result = result.Add(message);
-            }
-            return result;
-        }
-
-        private IScalarValidationMessages AddAsyncValidationMessages(IScalarValidationMessages result, ValidationSeverity severity)
-        {
-            var asyncValidators = Template.ScalarAsyncValidators;
-            for (int i = 0; i < asyncValidators.Count; i++)
-            {
-                var asyncValidator = asyncValidators[i];
-                var messages = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
-                result = AddValidationMessages(result, messages, x => IsVisible(x, true));
-            }
-
-            return result;
+            get { return InputManager.GetValidationWarnings(Target); }
         }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)

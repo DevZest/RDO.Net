@@ -27,7 +27,19 @@ namespace DevZest.Data.Presenters
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            throw new NotImplementedException();
+
+            return new ScalarBinding<ValidationSeverityIndicator>(
+                onRefresh: (v, p) =>
+                {
+                    var dataPresenter = p.DataPresenter;
+                    if (dataPresenter.GetValidationErrors(source).Count > 0)
+                        v.ValidationSeverity = ValidationSeverity.Error;
+                    else if (dataPresenter.GetValidationWarnings(source).Count > 0)
+                        v.ValidationSeverity = ValidationSeverity.Warning;
+                    else
+                        v.ValidationSeverity = null;
+                },
+                onSetup: null, onCleanup: null);
         }
     }
 }
