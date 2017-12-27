@@ -278,6 +278,8 @@ namespace DevZest.Data.Presenters
 
         public bool SubmitInput()
         {
+            RequireLayoutManager();
+
             if (ScalarValidation.FlushErrors.Count > 0 || RowValidation.FlushErrors.Count > 0)
                 return false;
 
