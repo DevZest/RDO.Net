@@ -425,10 +425,53 @@ namespace DevZest.Data.Presenters.Primitives
             ValidateCurrentRow();
             var hasError = CurrentRowErrors.Count > 0;
             if (hasError)
+            {
+                FocusToInputError(CurrentRowErrors);
                 return false;
+            }
 
-            RowValidation.Reset();
             return base.EndEdit();
+        }
+
+        private void FocusToInputError(IColumnValidationMessages errors)
+        {
+            for (int i = 0; i < errors.Count; i++)
+            {
+                var error = errors[i];
+                if (FocusToInputError(error, CurrentRow))
+                    return;
+            }
+        }
+
+        internal bool FocusToInputError(ColumnValidationMessage error, RowPresenter row)
+        {
+            foreach (var rowBinding in Template.RowBindings)
+            {
+                var rowInput = rowBinding.RowInput;
+                if (rowInput == null)
+                    continue;
+
+                if (error.Source.IsSupersetOf(rowInput.Target))
+                {
+                    if (Focus(rowBinding, row))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Focus(RowBinding rowBinding, RowPresenter row)
+        {
+            if (rowBinding[row] == null)
+            {
+                if (IsEditing)
+                    CurrentRow.EndEdit();
+                CurrentRow = row;
+            }
+
+            var element = rowBinding[row];
+            Debug.Assert(element != null);
+            return element.Focus();
         }
 
         public bool HasVisibleError

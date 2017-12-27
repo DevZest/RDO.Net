@@ -341,35 +341,11 @@ namespace DevZest.Data.Presenters
             var errors = errorsByRow[row];
             foreach (var error in errors)
             {
-                foreach (var rowBinding in Template.RowBindings)
-                {
-                    var rowInput = rowBinding.RowInput;
-                    if (rowInput == null)
-                        continue;
-
-                    if (error.Source.IsSupersetOf(rowInput.Target))
-                    {
-                        if (Focus(rowBinding, row))
-                            return true;
-                    }
-                }
+                if (LayoutManager.FocusToInputError(error, row))
+                    return true;
             }
 
             return false;
-        }
-
-        private bool Focus(RowBinding rowBinding, RowPresenter row)
-        {
-            if (rowBinding[row] == null)
-            {
-                if (IsEditing)
-                    CurrentRow.EndEdit();
-                CurrentRow = row;
-            }
-
-            var element = rowBinding[row];
-            Debug.Assert(element != null);
-            return element.Focus();
         }
 
         private static void FocusToErrorInput(ScalarValidation scalarValidation)
