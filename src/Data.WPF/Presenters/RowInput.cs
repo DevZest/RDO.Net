@@ -34,7 +34,7 @@ namespace DevZest.Data.Presenters
             InputManager.SetRowFlushError(element, inputError);
         }
 
-        internal IColumns Target { get; private set; } = Columns.Empty;
+        public IColumns Target { get; private set; } = Columns.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
 
         private RowPresenter CurrentRow

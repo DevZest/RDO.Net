@@ -276,21 +276,104 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? false : LayoutManager.HasVisibleError; }
         }
 
-        public bool SubmitInput()
+        public bool SubmitInput(bool focusToErrorInput = true)
         {
             RequireLayoutManager();
 
-            if (ScalarValidation.FlushErrors.Count > 0 || RowValidation.FlushErrors.Count > 0)
+            if (RowValidation.FlushErrors.Count > 0 || ScalarValidation.FlushErrors.Count > 0)
+            {
+                if (focusToErrorInput)
+                    FocusToErrorInput(RowValidation.FlushErrors, ScalarValidation.FlushErrors);
                 return false;
+            }
 
-            ScalarValidation.Validate();
             RowValidation.Validate();
+            ScalarValidation.Validate();
             if (HasVisibleInputError)
+            {
+                if (focusToErrorInput)
+                    FocusToErrorInput(RowValidation, ScalarValidation);
                 return false;
+            }
 
             if (IsEditing)
                 CurrentRow.EndEdit();
             return true;
+        }
+
+        private static void FocusToErrorInput(IReadOnlyList<FlushErrorMessage> rowFlushErrors, IReadOnlyList<FlushErrorMessage> scalarFlushErrors)
+        {
+            if (rowFlushErrors.Count > 0)
+                rowFlushErrors[0].Source.Focus();
+            else if (scalarFlushErrors.Count > 0)
+                scalarFlushErrors[0].Source.Focus();
+        }
+
+        private void FocusToErrorInput(RowValidation rowValidation, ScalarValidation scalarValidation)
+        {
+            if (!FocusToErrorInput(rowValidation))
+                FocusToErrorInput(scalarValidation);
+        }
+
+        private bool FocusToErrorInput(RowValidation rowValidation)
+        {
+            if (CurrentRow == null || rowValidation.Errors == null || rowValidation.Errors.Count == 0)
+                return false;
+
+            if (FocusToErrorInput(rowValidation, CurrentRow))
+                return true;
+
+            var rows = rowValidation.Errors.Keys;
+            foreach (var row in rows)
+            {
+                if (FocusToErrorInput(rowValidation, row))
+                    return true;
+            }
+            return false;
+        }
+
+        private bool FocusToErrorInput(RowValidation rowValidation, RowPresenter row)
+        {
+            var errorsByRow = rowValidation.Errors;
+            if (!errorsByRow.ContainsKey(row))
+                return false;
+
+            var errors = errorsByRow[row];
+            foreach (var error in errors)
+            {
+                foreach (var rowBinding in Template.RowBindings)
+                {
+                    var rowInput = rowBinding.RowInput;
+                    if (rowInput == null)
+                        continue;
+
+                    if (error.Source.IsSupersetOf(rowInput.Target))
+                    {
+                        if (Focus(rowBinding, row))
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool Focus(RowBinding rowBinding, RowPresenter row)
+        {
+            if (rowBinding[row] == null)
+            {
+                if (IsEditing)
+                    CurrentRow.EndEdit();
+                CurrentRow = row;
+            }
+
+            var element = rowBinding[row];
+            Debug.Assert(element != null);
+            return element.Focus();
+        }
+
+        private static void FocusToErrorInput(ScalarValidation scalarValidation)
+        {
         }
 
         #region IService

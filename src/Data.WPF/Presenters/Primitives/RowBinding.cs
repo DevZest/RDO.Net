@@ -92,5 +92,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         internal abstract void BeginSetup(UIElement value);
+
+        internal abstract IRowInput RowInput { get; }
     }
 }

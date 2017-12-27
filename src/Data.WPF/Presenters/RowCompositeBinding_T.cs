@@ -17,6 +17,11 @@ namespace DevZest.Data.Presenters
             get { return _childBindings; }
         }
 
+        internal override IRowInput RowInput
+        {
+            get { return null; }
+        }
+
         public RowCompositeBinding<T> AddChild<TChild>(RowBinding<TChild> childBinding, Func<T, TChild> childGetter)
             where TChild : UIElement, new()
         {

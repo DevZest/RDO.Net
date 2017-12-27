@@ -7,5 +7,6 @@ namespace DevZest.Data.Presenters
         FlushErrorMessage GetFlushError(UIElement element);
         IColumnValidationMessages GetValidationErrors(RowPresenter rowPresenter);
         IColumnValidationMessages GetValidationWarnings(RowPresenter rowPresenter);
+        IColumns Target { get; }
     }
 }
