@@ -58,6 +58,8 @@ namespace DevZest.Data.Presenters
 
         public bool IsVisible(RowPresenter rowPresenter, IColumns columns)
         {
+            Check.NotNull(rowPresenter, nameof(rowPresenter));
+
             if (columns == null || columns.Count == 0)
                 return false;
 

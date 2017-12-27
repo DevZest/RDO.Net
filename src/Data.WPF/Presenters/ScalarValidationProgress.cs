@@ -50,15 +50,10 @@ namespace DevZest.Data.Presenters
 
         public bool IsVisible(IScalars scalars)
         {
-            if (_showAll)
-                return true;
-
-            if (_progress == null)
+            if (scalars == null || scalars.Count == 0)
                 return false;
 
-            if (scalars.Count == 0)
-                return false;
-            return _progress.IsSupersetOf(scalars);
+            return _showAll || _progress == null ? true : _progress.IsSupersetOf(scalars);
         }
     }
 }
