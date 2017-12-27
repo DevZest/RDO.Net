@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ValidationUI"
         xmlns:dz="http://schemas.devzest.com/data/windows"
         mc:Ignorable="d"
         Title="User Login (Default)" WindowStartupLocation="CenterOwner" Width="300" SizeToContent="Height" ResizeMode="NoResize">
@@ -30,7 +31,7 @@
         </Grid.RowDefinitions>
         <dz:DataView x:Name="_dataView" Background="White" Margin="5" />
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
-            <Button Content="OK" IsDefault="True" Click="OK_Click" />
+            <Button Content="OK" IsDefault="True" Command="{x:Static local:DefaultUserLoginWindow+Commands.Submit}" />
             <Button Content="Cancel" IsCancel="True" />
         </UniformGrid>
     </Grid>

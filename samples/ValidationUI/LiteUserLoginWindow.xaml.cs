@@ -27,7 +27,8 @@ namespace ValidationUI
 
         private void Submit(object sender, ExecutedRoutedEventArgs e)
         {
-            Close();
+            if (_presenter.SubmitInput())
+                Close();
         }
 
         private void CanSubmit(object sender, CanExecuteRoutedEventArgs e)
