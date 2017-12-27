@@ -1,4 +1,6 @@
 ﻿using DevZest.Data.Presenters.Primitives;
+using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace DevZest.Data.Presenters
@@ -15,6 +17,11 @@ namespace DevZest.Data.Presenters
         private InputManager _inputManager;
         private bool _showAll;
         private IScalars _progress;
+
+        private Template Template
+        {
+            get { return _inputManager.Template; }
+        }
 
         internal void Reset()
         {
@@ -54,6 +61,60 @@ namespace DevZest.Data.Presenters
                 return false;
 
             return _showAll || _progress == null ? true : _progress.IsSupersetOf(scalars);
+        }
+
+        public IReadOnlyList<FlushErrorMessage> FlushErrors
+        {
+            get { return _inputManager.ScalarFlushErrors; }
+        }
+
+        public IReadOnlyList<ScalarValidationMessage> Errors
+        {
+            get { return _inputManager.ScalarValidationErrors; }
+        }
+
+        public IReadOnlyList<ScalarValidationMessage> Warnings
+        {
+            get { return _inputManager.ScalarValidationWarnings; }
+        }
+
+        public IScalarValidationMessages GetErrors(IScalars scalars)
+        {
+            Check.NotNull(scalars, nameof(scalars));
+            return _inputManager.GetValidationErrors(scalars);
+        }
+
+        public IScalarValidationMessages GetWarnings(IScalars scalars)
+        {
+            Check.NotNull(scalars, nameof(scalars));
+            return _inputManager.GetValidationWarnings(scalars);
+        }
+
+        public IScalarAsyncValidators AsyncValidators
+        {
+            get { return Template.ScalarAsyncValidators; }
+        }
+
+        public void Assign(IScalarValidationMessages validationResults)
+        {
+            if (validationResults == null)
+                throw new ArgumentNullException(nameof(validationResults));
+            _inputManager.Assign(validationResults);
+        }
+
+        public IReadOnlyList<ScalarValidationMessage> AssignedResults
+        {
+            get { return _inputManager.AssignedScalarValidationResults; }
+        }
+
+        public void Flush()
+        {
+            _inputManager.FlushScalars();
+        }
+
+        public void Validate()
+        {
+            _inputManager.ValidateScalars();
         }
     }
 }

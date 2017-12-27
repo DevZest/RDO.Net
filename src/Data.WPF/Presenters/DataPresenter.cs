@@ -206,101 +206,6 @@ namespace DevZest.Data.Presenters
             RequireLayoutManager().InvalidateView();
         }
 
-        public void FlushScalars()
-        {
-            RequireLayoutManager().FlushScalars();
-        }
-
-        public void FlushCurrentRow()
-        {
-            RequireLayoutManager().FlushCurrentRow();
-        }
-
-        public void ValidateScalars()
-        {
-            RequireLayoutManager().ValidateScalars();
-        }
-
-        public void ValidateRows(int errorLimit = 1, int warningLimit = 0)
-        {
-            if (errorLimit < 1)
-                throw new ArgumentOutOfRangeException(nameof(errorLimit));
-            if (warningLimit < 0)
-                throw new ArgumentOutOfRangeException(nameof(warningLimit));
-
-            if (CurrentRow == null)
-                return;
-
-            var errors = 0;
-            var warnings = 0;
-            var moreToValidate = Validate(CurrentRow, ref errors, errorLimit, ref warnings, warningLimit);
-            if (moreToValidate)
-            {
-                foreach (var rowPresenter in Rows)
-                {
-                    if (rowPresenter == CurrentRow || rowPresenter.IsVirtual)
-                        continue;
-
-                    moreToValidate = Validate(rowPresenter, ref errors, errorLimit, ref warnings, warningLimit);
-                    if (!moreToValidate)
-                        break;
-                }
-            }
-
-            InvalidateView();
-        }
-
-        private bool Validate(RowPresenter rowPresenter, ref int errors, int errorLimit, ref int warnings, int warningLimit)
-        {
-            Debug.Assert(rowPresenter != null);
-            rowPresenter.Validate(false);
-            if (RowValidationErrors.ContainsKey(rowPresenter))
-                errors++;
-            if (RowValidationWarnings.ContainsKey(rowPresenter))
-                warnings++;
-            return errors < errorLimit || warnings < warningLimit;
-        }
-
-        public IReadOnlyList<FlushErrorMessage> ScalarFlushErrors
-        {
-            get { return LayoutManager?.ScalarFlushErrors; }
-        }
-
-        public IReadOnlyList<FlushErrorMessage> RowFlushErrors
-        {
-            get { return LayoutManager?.RowFlushErrors; }
-        }
-
-        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowValidationErrors
-        {
-            get { return LayoutManager?.RowValidationErrors; }
-        }
-
-        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowValidationWarnings
-        {
-            get { return LayoutManager?.RowValidationWarnings; }
-        }
-
-        public IReadOnlyList<ScalarValidationMessage> ScalarValidationErrors
-        {
-            get { return LayoutManager?.ScalarValidationErrors; }
-        }
-
-        public IReadOnlyList<ScalarValidationMessage> ScalarValidationWarnings
-        {
-            get { return LayoutManager?.ScalarValidationWarnings; }
-        }
-
-        public IColumnValidationMessages CurrentRowErrors
-        {
-            get { return LayoutManager?.CurrentRowErrors; }
-        }
-
-        public IColumnValidationMessages CurrentRowWarnings
-        {
-            get { return LayoutManager?.CurrentRowWarnings; }
-        }
-
         public ScalarValidation ScalarValidation
         {
             get { return LayoutManager?.ScalarValidation; }
@@ -309,47 +214,6 @@ namespace DevZest.Data.Presenters
         public RowValidation RowValidation
         {
             get { return LayoutManager?.RowValidation; }
-        }
-
-        public IRowAsyncValidators RowAsyncValidators
-        {
-            get { return Template?.RowAsyncValidators; }
-        }
-
-        public IScalarAsyncValidators ScalarAsyncValidators
-        {
-            get { return Template?.ScalarAsyncValidators; }
-        }
-
-        public IReadOnlyList<ScalarValidationMessage> AssignedScalarValidationResults
-        {
-            get { return LayoutManager?.AssignedScalarValidationResults; }
-        }
-
-        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> AssignedRowValidationResults
-        {
-            get { return LayoutManager?.AssignedRowValidationResults; }
-        }
-
-        public void Assign(IScalarValidationMessages validationResults)
-        {
-            if (validationResults == null)
-                throw new ArgumentNullException(nameof(validationResults));
-            RequireLayoutManager().Assign(validationResults);
-        }
-
-        public void Assign(IDataRowValidationResults validationResults)
-        {
-            if (validationResults == null)
-                throw new ArgumentNullException(nameof(validationResults));
-            RequireLayoutManager().Assign(validationResults);
-        }
-
-        public void Assign(IRowValidationResults validationResults)
-        {
-            if (validationResults == null)
-                throw new ArgumentNullException(nameof(validationResults));
-            RequireLayoutManager().Assign(validationResults);
         }
 
         public IScrollable Scrollable
@@ -394,15 +258,15 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        internal IScalarValidationMessages PerformValidateScalars()
+        internal IScalarValidationMessages ValidateScalars()
         {
             var result = ScalarValidationMessages.Empty;
             for (int i = 0; i < Scalars.Count; i++)
                 result = result.Add(Scalars[i].Validate(result));
-            return PerformValidateScalars(result);
+            return ValidateScalars(result);
         }
 
-        protected virtual IScalarValidationMessages PerformValidateScalars(IScalarValidationMessages result)
+        protected virtual IScalarValidationMessages ValidateScalars(IScalarValidationMessages result)
         {
             return result;
         }
@@ -414,29 +278,17 @@ namespace DevZest.Data.Presenters
 
         public bool SubmitInput()
         {
-            if (ScalarFlushErrors.Count > 0 || RowFlushErrors.Count > 0)
+            if (ScalarValidation.FlushErrors.Count > 0 || RowValidation.FlushErrors.Count > 0)
                 return false;
 
-            ValidateScalars();
-            ValidateRows();
+            ScalarValidation.Validate();
+            RowValidation.Validate();
             if (HasVisibleInputError)
                 return false;
 
             if (IsEditing)
                 CurrentRow.EndEdit();
             return true;
-        }
-
-        public IScalarValidationMessages GetValidationErrors(IScalars scalars)
-        {
-            Check.NotNull(scalars, nameof(scalars));
-            return LayoutManager?.GetValidationErrors(scalars);
-        }
-
-        public IScalarValidationMessages GetValidationWarnings(IScalars scalars)
-        {
-            Check.NotNull(scalars, nameof(scalars));
-            return LayoutManager?.GetValidationWarnings(scalars);
         }
 
         #region IService

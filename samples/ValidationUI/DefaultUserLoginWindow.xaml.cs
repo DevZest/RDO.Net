@@ -26,7 +26,7 @@ namespace ValidationUI
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            _presenter.ValidateRows();
+            _presenter.RowValidation.Validate();
             if (!_presenter.HasVisibleInputError)
                 Close();
         }

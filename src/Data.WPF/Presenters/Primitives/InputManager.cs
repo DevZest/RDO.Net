@@ -309,7 +309,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected virtual IScalarValidationMessages PerformValidateScalars()
         {
-            return DataPresenter == null ? ScalarValidationMessages.Empty : DataPresenter.PerformValidateScalars();
+            return DataPresenter == null ? ScalarValidationMessages.Empty : DataPresenter.ValidateScalars();
         }
 
         private void ClearScalarValidationMessages()
