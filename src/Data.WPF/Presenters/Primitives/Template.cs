@@ -634,5 +634,17 @@ namespace DevZest.Data.Presenters.Primitives
         {
             _rowViewEndEditGestures = value;
         }
+
+        private bool _initialFocusFlag = true;
+        public InitialFocus InitialFocus { get; set; } = InitialFocus.First;
+
+        internal void InitFocus()
+        {
+            if (_initialFocusFlag)
+            {
+                _initialFocusFlag = false;
+                InitialFocus.MoveFocus(DataPresenter);
+            }
+        }
     }
 }

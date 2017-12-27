@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -307,6 +308,11 @@ namespace DevZest.Data.Presenters.Primitives
             }
 
             ArrangeContainerViews();
+
+            Panel.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+            {
+                Template.InitFocus();
+            }));
             return finalSize;
         }
 

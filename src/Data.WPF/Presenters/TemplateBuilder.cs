@@ -414,5 +414,12 @@ namespace DevZest.Data.Presenters
             Template.SetRowViewEndEditGestures(gestures);
             return this;
         }
+
+        public TemplateBuilder WithInitialFocus(InitialFocus initialFocus)
+        {
+            Check.NotNull(initialFocus, nameof(initialFocus));
+            Template.InitialFocus = initialFocus;
+            return this;
+        }
     }
 }
