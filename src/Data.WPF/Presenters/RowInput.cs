@@ -127,56 +127,21 @@ namespace DevZest.Data.Presenters
             return null;
         }
 
-        public IColumnValidationMessages GetErrors(RowPresenter rowPresenter)
+        public IColumnValidationMessages GetValidationErrors(RowPresenter rowPresenter)
         {
-            var result = ColumnValidationMessages.Empty;
-            result = InputManager.GetValidationMessages(rowPresenter, this, ValidationSeverity.Error);
-            result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
-            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Error);
-            return result;
+            Check.NotNull(rowPresenter, nameof(rowPresenter));
+            return rowPresenter.GetValidationErrors(Target);
         }
 
-        public IColumnValidationMessages GetWarnings(RowPresenter rowPresenter)
+        public IColumnValidationMessages GetValidationWarnings(RowPresenter rowPresenter)
         {
-            var result = ColumnValidationMessages.Empty;
-            result = InputManager.GetValidationMessages(rowPresenter, this, ValidationSeverity.Warning);
-            result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Warning);
-            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Warning);
-            return result;
-        }
-
-        private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)
-        {
-            if (dictionary.ContainsKey(rowPresenter))
-            {
-                var messages = dictionary[rowPresenter];
-                for (int i = 0; i < messages.Count; i++)
-                {
-                    var message = messages[i];
-                    if (predict == null || predict(message))
-                        result = result.Add(message);
-                }
-            }
-
-            return result;
-        }
-
-        private IColumnValidationMessages AddAsyncValidationMessages(IColumnValidationMessages result, RowPresenter rowPresenter, ValidationSeverity severity)
-        {
-            var asyncValidators = Template.RowAsyncValidators;
-            for (int i = 0; i < asyncValidators.Count; i++)
-            {
-                var asyncValidator = asyncValidators[i];
-                var dictionary = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
-                result = AddValidationMessages(result, dictionary, rowPresenter, null);
-            }
-
-            return result;
+            Check.NotNull(rowPresenter, nameof(rowPresenter));
+            return rowPresenter.GetValidationWarnings(Target);
         }
 
         private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            element.RefreshValidation(() => GetFlushError(element), () => GetErrors(rowPresenter), () => GetWarnings(rowPresenter));
+            element.RefreshValidation(() => GetFlushError(element), () => GetValidationErrors(rowPresenter), () => GetValidationWarnings(rowPresenter));
         }
 
         private Action<T, RowPresenter, FlushErrorMessage> _onRefresh;

@@ -509,5 +509,56 @@ namespace DevZest.Data.Presenters
             if (invalidateView)
                 ElementManager.InvalidateView();
         }
+
+        public IColumnValidationMessages GetValidationErrors(IColumns source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            var result = ColumnValidationMessages.Empty;
+            result = InputManager.GetValidationMessages(this, source, ValidationSeverity.Error);
+            result = AddAsyncValidationMessages(result, this, ValidationSeverity.Error);
+            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, this, x => x.Severity == ValidationSeverity.Error);
+            return result;
+        }
+
+        public IColumnValidationMessages GetValidationWarnings(IColumns source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            var result = ColumnValidationMessages.Empty;
+            result = InputManager.GetValidationMessages(this, source, ValidationSeverity.Warning);
+            result = AddAsyncValidationMessages(result, this, ValidationSeverity.Warning);
+            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, this, x => x.Severity == ValidationSeverity.Warning);
+            return result;
+        }
+
+        private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)
+        {
+            if (dictionary.ContainsKey(rowPresenter))
+            {
+                var messages = dictionary[rowPresenter];
+                for (int i = 0; i < messages.Count; i++)
+                {
+                    var message = messages[i];
+                    if (predict == null || predict(message))
+                        result = result.Add(message);
+                }
+            }
+
+            return result;
+        }
+
+        private IColumnValidationMessages AddAsyncValidationMessages(IColumnValidationMessages result, RowPresenter rowPresenter, ValidationSeverity severity)
+        {
+            var asyncValidators = Template.RowAsyncValidators;
+            for (int i = 0; i < asyncValidators.Count; i++)
+            {
+                var asyncValidator = asyncValidators[i];
+                var dictionary = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
+                result = AddValidationMessages(result, dictionary, rowPresenter, null);
+            }
+
+            return result;
+        }
     }
 }

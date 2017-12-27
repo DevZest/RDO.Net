@@ -179,11 +179,10 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
-        internal IColumnValidationMessages GetValidationMessages<T>(RowPresenter rowPresenter, RowInput<T> rowInput, ValidationSeverity severity)
-            where T : UIElement, new()
+        internal IColumnValidationMessages GetValidationMessages(RowPresenter rowPresenter, IColumns source, ValidationSeverity severity)
         {
-            return RowValidationProgress.IsVisible(rowPresenter, rowInput.Target)
-                ? GetValidationMessages(severity == ValidationSeverity.Error ? RowValidationErrors : RowValidationWarnings, rowPresenter, rowInput.Target)
+            return RowValidationProgress.IsVisible(rowPresenter, source)
+                ? GetValidationMessages(severity == ValidationSeverity.Error ? RowValidationErrors : RowValidationWarnings, rowPresenter, source)
                 : ColumnValidationMessages.Empty;
         }
 

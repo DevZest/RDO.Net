@@ -58,8 +58,8 @@ namespace DevZest.Data.Presenters
                 },
                 onRefresh: (e, r) =>
                 {
-                    e.Errors = source.GetErrors(r);
-                    e.Warnings = source.GetWarnings(r);
+                    e.Errors = source.GetValidationErrors(r);
+                    e.Warnings = source.GetValidationWarnings(r);
                     e.RefreshStatus();
                 },
                 onCleanup: (e, r) =>
