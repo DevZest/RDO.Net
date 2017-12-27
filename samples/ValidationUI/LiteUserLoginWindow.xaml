@@ -6,11 +6,14 @@
         xmlns:dz="http://schemas.devzest.com/data/windows"
         xmlns:local="clr-namespace:ValidationUI"
         mc:Ignorable="d"
-        Title="User Login (Lite)" WindowStartupLocation="CenterOwner" Width="300" SizeToContent="Height" ResizeMode="NoResize">
+        Title="User Login (Lite)" WindowStartupLocation="CenterOwner" Width="370" SizeToContent="Height" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="Margin" Value="5" />
             <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center" />
