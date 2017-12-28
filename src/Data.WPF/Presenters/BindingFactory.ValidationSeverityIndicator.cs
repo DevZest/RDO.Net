@@ -23,7 +23,7 @@ namespace DevZest.Data.Presenters
                 onSetup: null, onCleanup: null);
         }
 
-        public static ScalarBinding<ValidationSeverityIndicator> BindToValidationSeverityIndicator(this IScalars source, bool isProgressive = true)
+        public static ScalarBinding<ValidationSeverityIndicator> BindToValidationSeverityIndicator(this IScalars source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

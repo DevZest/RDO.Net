@@ -1,6 +1,4 @@
-﻿using DevZest.Data;
-using DevZest.Data.Presenters.Primitives;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,25 +6,11 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace DevZest.Data.Presenters
 {
     public static class Validation
     {
-        internal sealed class TemplateId : ResourceId<ControlTemplate>
-        {
-            public TemplateId(Type type)
-                : base(type)
-            {
-            }
-
-            protected override string UriSuffix
-            {
-                get { return "Templates"; }
-            }
-        }
-
         internal static class Templates
         {
             public static readonly TemplateId Error = new TemplateId(typeof(Validation));
