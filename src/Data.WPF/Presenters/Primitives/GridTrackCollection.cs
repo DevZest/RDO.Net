@@ -96,6 +96,15 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
+        private bool KeepMeasuredAutoLength
+        {
+            get
+            {
+                var templateOrientation = Template.Orientation;
+                return templateOrientation.HasValue ? templateOrientation != Orientation : false;
+            }
+        }
+
         internal void InitMeasuredLengths()
         {
             TotalAutoLength = 0;
@@ -105,7 +114,12 @@ namespace DevZest.Data.Presenters.Primitives
                     continue;
 
                 if (gridTrack.IsAutoLength)
-                    TotalAutoLength += gridTrack.MeasuredLength;
+                {
+                    if (KeepMeasuredAutoLength)
+                        TotalAutoLength += gridTrack.MeasuredLength;
+                    else
+                        gridTrack.MeasuredLength = 0;
+                }
                 else if (gridTrack.IsStarLength)
                     gridTrack.MeasuredLength = 0;
                 else
