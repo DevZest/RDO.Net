@@ -8,8 +8,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ValidationMessageView}">
-                    <TextBlock x:Name="_textBlock" Text="{TemplateBinding Description}" FontWeight="Bold" />
+                    <TextBlock x:Name="_textBlock" TextWrapping="Wrap" Text="{TemplateBinding Description}" FontWeight="Bold" />
                     <ControlTemplate.Triggers>
+                        <Trigger Property="Severity" Value="{x:Null}">
+                            <Setter TargetName="_textBlock" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
                         <Trigger Property="Severity" Value="Error">
                             <Setter TargetName="_textBlock" Property="Foreground" Value="Red" />
                         </Trigger>

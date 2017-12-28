@@ -1,0 +1,48 @@
+﻿<Window x:Class="ValidationUI.UserRegisterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ValidationUI"
+        xmlns:dz="http://schemas.devzest.com/data/windows"
+        mc:Ignorable="d"
+        Title="User Register" WindowStartupLocation="CenterOwner" Width="350" SizeToContent="Height" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,5,0" />
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,5,0" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <dz:DataView x:Name="_dataView" Background="White" Margin="5" />
+        <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
+            <Button Content="OK" IsDefault="True" Command="{x:Static local:UserRegisterWindow+Commands.Submit}" />
+            <Button Content="Cancel" IsCancel="True" />
+        </UniformGrid>
+        <TextBlock Grid.Row="2">
+            <Run>Note:</Run><LineBreak/>
+            <Run>Email Address: required, must be a valid email address;</Run><LineBreak/>
+            <Run>Password: required, must be 6-20 characters long.</Run>
+        </TextBlock>
+    </Grid>
+</Window>

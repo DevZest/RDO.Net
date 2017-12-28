@@ -23,5 +23,11 @@ namespace ValidationUI
             var window = new LiteUserLoginWindow();
             window.Show(this);
         }
+
+        private void UserRegister_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new UserRegisterWindow();
+            window.Show(this);
+        }
     }
 }
