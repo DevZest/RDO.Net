@@ -8,8 +8,18 @@ namespace DevZest.Data.Views
     {
         public static class Templates
         {
-            public static readonly TemplateId ValidationError = new TemplateId(typeof(ValidationMessageView));
-            public static readonly TemplateId ValidationWarning = new TemplateId(typeof(ValidationMessageView));
+            public static readonly TemplateId ValidationErrorId = new TemplateId(typeof(ValidationMessageView));
+            public static readonly TemplateId ValidationWarningId = new TemplateId(typeof(ValidationMessageView));
+
+            public static ControlTemplate ValidationError
+            {
+                get { return ValidationErrorId.GetOrLoad(); }
+            }
+
+            public static ControlTemplate ValidationWarning
+            {
+                get { return ValidationWarningId.GetOrLoad(); }
+            }
         }
 
         private static readonly DependencyPropertyKey SeverityPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Severity), typeof(ValidationSeverity?),

@@ -19,8 +19,6 @@ namespace ValidationUI
         public UserRegisterWindow()
         {
             InitializeComponent();
-            _dataView.SetErrorTemplate(ValidationMessageView.Templates.ValidationError.GetOrLoad());
-            _dataView.SetWarningTemplate(ValidationMessageView.Templates.ValidationWarning.GetOrLoad());
             InitializeCommandBindings();
         }
 

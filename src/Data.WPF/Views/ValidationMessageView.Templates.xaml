@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:DevZest.Data.Views">
 
-    <ControlTemplate x:Key="{x:Static local:ValidationMessageView+Templates.ValidationError}">
+    <ControlTemplate x:Key="{x:Static local:ValidationMessageView+Templates.ValidationErrorId}">
         <StackPanel Orientation="Vertical">
             <Border x:Name="_border" BorderBrush="Red" BorderThickness="2" HorizontalAlignment="Left">
                 <AdornedElementPlaceholder />
@@ -11,7 +11,7 @@
         </StackPanel>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="{x:Static local:ValidationMessageView+Templates.ValidationWarning}">
+    <ControlTemplate x:Key="{x:Static local:ValidationMessageView+Templates.ValidationWarningId}">
         <StackPanel Orientation="Vertical">
             <Border x:Name="_border" BorderBrush="Purple" BorderThickness="2" HorizontalAlignment="Left">
                 <AdornedElementPlaceholder />

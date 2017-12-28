@@ -8,8 +8,8 @@ namespace DevZest.Data.Views
         [TestMethod]
         public void ValidationMessageView_Templates_not_null()
         {
-            Assert.IsNotNull(ValidationMessageView.Templates.ValidationError.GetOrLoad());
-            Assert.IsNotNull(ValidationMessageView.Templates.ValidationWarning.GetOrLoad());
+            Assert.IsNotNull(ValidationMessageView.Templates.ValidationError);
+            Assert.IsNotNull(ValidationMessageView.Templates.ValidationWarning);
         }
     }
 }
