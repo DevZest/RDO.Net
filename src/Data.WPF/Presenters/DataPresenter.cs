@@ -352,6 +352,11 @@ namespace DevZest.Data.Presenters
         {
         }
 
+        public void InvalidateMeasure()
+        {
+            RequireLayoutManager().InvalidateMeasure();
+        }
+
         #region IService
 
         DataPresenter IService.DataPresenter

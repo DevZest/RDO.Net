@@ -48,6 +48,7 @@ namespace DevZest.Data.Views
                 _message = value;
                 Severity = value?.Severity;
                 Description = value?.Description;
+                this.GetRowPresenter()?.DataPresenter.InvalidateMeasure();
             }
         }
     }
