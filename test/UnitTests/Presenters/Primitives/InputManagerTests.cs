@@ -113,6 +113,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Assert.AreEqual(0, errors.Count);
             }
 
+            inputManager.ScalarValidation.MakeProgress(textBox.Input);
             textBox[0].Text = "6";
             Assert.AreEqual("6", textBox[0].Text);
             Assert.IsTrue(inputManager.ScalarValidationErrors.Count == 1);
@@ -148,6 +149,8 @@ namespace DevZest.Data.Presenters.Primitives
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(0, errors.Count);
             }
+
+            inputManager.RowValidation.MakeProgress(textBox.Input);
 
             textBox[currentRow].Text = null;
             Assert.AreEqual(string.Empty, textBox[currentRow].Text);

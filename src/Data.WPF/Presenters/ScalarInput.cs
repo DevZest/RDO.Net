@@ -11,8 +11,8 @@ namespace DevZest.Data.Presenters
     public sealed class ScalarInput<T> : Input<T>
         where T : UIElement, new()
     {
-        internal  ScalarInput(ScalarBinding<T> scalarBinding, Trigger<T> flushTrigger)
-            : base(flushTrigger)
+        internal  ScalarInput(ScalarBinding<T> scalarBinding, Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
+            : base(flushTrigger, progressiveFlushTrigger)
         {
             Debug.Assert(scalarBinding != null);
             ScalarBinding = scalarBinding;
@@ -61,11 +61,15 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        internal override void FlushCore(T element)
+        internal override bool IsValidationVisible
         {
-            var flushed = DoFlush(element);
-            if (flushed)
-                InputManager.MakeProgress(this);
+            get { return InputManager.ScalarValidation.IsVisible(Target); }
+        }
+
+        internal override void FlushCore(T element, bool makeProgress)
+        {
+            var valueChanged = DoFlush(element);
+            InputManager.OnFlushed(this, makeProgress, valueChanged);
         }
 
         private bool DoFlush(T element)

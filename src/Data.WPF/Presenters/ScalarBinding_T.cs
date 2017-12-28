@@ -126,23 +126,33 @@ namespace DevZest.Data.Presenters
             ScalarPresenter.ExitSetup();
         }
 
-        public ScalarInput<T> BeginInput(Trigger<T> flushTrigger)
+        public ScalarInput<T> BeginInput(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger = null)
         {
             VerifyNotSealed();
             if (Input != null)
                 throw new InvalidOperationException(DiagnosticMessages.TwoWayBinding_InputAlreadyExists);
 
-            return Input = new ScalarInput<T>(this, flushTrigger);
+            return Input = new ScalarInput<T>(this, flushTrigger, progressiveFlushTrigger);
         }
 
-        public ScalarInput<T> BeginInput(DependencyProperty dependencyProperty)
+        public ScalarInput<T> BeginInput(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushRoutedEvent = null)
         {
-            return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty));
+            return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty), progressiveFlushRoutedEvent == null ? null : new RoutedEventTrigger<T>(progressiveFlushRoutedEvent));
+        }
+
+        public ScalarBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger, Scalar<TData> data, Func<T, TData> getValue)
+        {
+            return BeginInput(flushTrigger, progressiveFlushTrigger).WithFlush(data, getValue).EndInput();
         }
 
         public ScalarBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Scalar<TData> data, Func<T, TData> getValue)
         {
             return BeginInput(flushTrigger).WithFlush(data, getValue).EndInput();
+        }
+
+        public ScalarBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushRoutedEvent, Scalar<TData> data, Func<T, TData> getValue)
+        {
+            return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), new RoutedEventTrigger<T>(progressiveFlushRoutedEvent), data, getValue);
         }
 
         public ScalarBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, Scalar<TData> data, Func<T, TData> getValue)

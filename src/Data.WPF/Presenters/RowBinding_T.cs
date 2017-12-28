@@ -114,23 +114,28 @@ namespace DevZest.Data.Presenters
             e.SetRowPresenter(null);
         }
 
-        public RowInput<T> BeginInput(Trigger<T> flushTrigger)
+        public RowInput<T> BeginInput(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger = null)
         {
             VerifyNotSealed();
             if (Input != null)
                 throw new InvalidOperationException(DiagnosticMessages.TwoWayBinding_InputAlreadyExists);
 
-            return Input = new RowInput<T>(this, flushTrigger);
+            return Input = new RowInput<T>(this, flushTrigger, progressiveFlushTrigger);
         }
 
-        public RowInput<T> BeginInput(DependencyProperty dependencyProperty)
+        public RowInput<T> BeginInput(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushRoutedEvent = null)
         {
-            return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty));
+            return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty), progressiveFlushRoutedEvent == null ? null : new RoutedEventTrigger<T>(progressiveFlushRoutedEvent));
         }
 
-        public RowInput<T> BeginInput(RoutedEvent routedEvent)
+        public RowInput<T> BeginInput(RoutedEvent routedEvent, RoutedEvent progressiveFlushRoutedEvent = null)
         {
-            return BeginInput(new RoutedEventTrigger<T>(routedEvent));
+            return BeginInput(new RoutedEventTrigger<T>(routedEvent), progressiveFlushRoutedEvent == null ? null : new RoutedEventTrigger<T>(progressiveFlushRoutedEvent));
+        }
+
+        public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger, Column<TData> column, Func<T, TData> getValue)
+        {
+            return BeginInput(flushTrigger, progressiveFlushTrigger).WithFlush(column, getValue).EndInput();
         }
 
         public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
@@ -138,9 +143,19 @@ namespace DevZest.Data.Presenters
             return BeginInput(flushTrigger).WithFlush(column, getValue).EndInput();
         }
 
+        public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushRoutedEvent, Column<TData> column, Func<T, TData> getValue)
+        {
+            return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), new RoutedEventTrigger<T>(progressiveFlushRoutedEvent), column, getValue);
+        }
+
         public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, Column<TData> column, Func<T, TData> getValue)
         {
             return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), column, getValue);
+        }
+
+        public RowBinding<T> WithInput<TData>(RoutedEvent routedEvent, RoutedEvent progressiveFlushRoutedEvent, Column<TData> column, Func<T, TData> getValue)
+        {
+            return WithInput(new RoutedEventTrigger<T>(routedEvent), new RoutedEventTrigger<T>(progressiveFlushRoutedEvent), column, getValue);
         }
 
         public RowBinding<T> WithInput<TData>(RoutedEvent routedEvent, Column<TData> column, Func<T, TData> getValue)

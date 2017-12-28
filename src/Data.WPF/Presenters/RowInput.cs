@@ -11,8 +11,8 @@ namespace DevZest.Data.Presenters
     public sealed class RowInput<T> : Input<T>, IRowInput
         where T : UIElement, new()
     {
-        internal RowInput(RowBinding<T> rowBinding, Trigger<T> flushTrigger)
-            : base(flushTrigger)
+        internal RowInput(RowBinding<T> rowBinding, Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
+            : base(flushTrigger, progressiveFlushTrigger)
         {
             RowBinding = rowBinding;
         }
@@ -90,15 +90,19 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        internal override void FlushCore(T element)
+        internal override bool IsValidationVisible
+        {
+            get { return InputManager.RowValidation.IsVisible(CurrentRow, Target); }
+        }
+
+        internal override void FlushCore(T element, bool makeProgress)
         {
             Debug.Assert(CurrentRow != null);
             var currentRow = CurrentRow;
             if (currentRow != element.GetRowPresenter())
                 throw new InvalidOperationException(DiagnosticMessages.RowInput_FlushCurrentRowOnly);
-            var flushed = DoFlush(currentRow, element);
-            if (flushed)
-                InputManager.MakeProgress(this);
+            var valueChanged = DoFlush(currentRow, element);
+            InputManager.OnFlushed(this, makeProgress, valueChanged);
         }
 
         private bool DoFlush(RowPresenter rowPresenter, T element)

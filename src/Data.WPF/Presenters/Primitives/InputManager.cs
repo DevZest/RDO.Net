@@ -186,13 +186,19 @@ namespace DevZest.Data.Presenters.Primitives
                 : ColumnValidationMessages.Empty;
         }
 
-        internal void MakeProgress<T>(ScalarInput<T> scalarInput)
+        internal void OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged)
             where T : UIElement, new()
         {
-            ScalarValidation.MakeProgress(scalarInput);
+            if (!makeProgress && !valueChanged)
+                return;
+
             if (ScalarValidationMode != ValidationMode.Explicit)
                 ValidateScalars(false);
-            OnProgress(scalarInput);
+            if (makeProgress)
+            {
+                ScalarValidation.MakeProgress(scalarInput);
+                OnProgress(scalarInput);
+            }
             InvalidateView();
         }
 
@@ -229,13 +235,19 @@ namespace DevZest.Data.Presenters.Primitives
             return false;
         }
 
-        internal void MakeProgress<T>(RowInput<T> rowInput)
+        internal void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged)
             where T : UIElement, new()
         {
-            RowValidation.MakeProgress(rowInput);
+            if (!makeProgress && !valueChanged)
+                return;
+
             if (RowValidationMode != ValidationMode.Explicit)
                 Validate(CurrentRow, false);
-            OnProgress(rowInput);
+            if (makeProgress)
+            {
+                RowValidation.MakeProgress(rowInput);
+                OnProgress(rowInput);
+            }
             InvalidateView();
         }
 

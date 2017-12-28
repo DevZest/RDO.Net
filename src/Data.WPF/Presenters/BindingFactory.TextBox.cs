@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters
@@ -15,7 +16,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source);
-            }).WithInput(TextBox.TextProperty, source, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
+            }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, source, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
         }
 
         public static RowBinding<TextBox> BindToTextBox(this Column<Int16?> source, string flushErrorDescription = null)
@@ -23,7 +24,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -46,7 +47,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -70,7 +71,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -93,7 +94,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -116,7 +117,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -139,7 +140,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = p.GetValue(source).ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -162,7 +163,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value;
-            }).WithInput(TextBox.TextProperty, source, v => v.Text);
+            }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, source, v => v.Text);
         }
 
         public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int16?> source, string flushErrorDescription = null)
@@ -170,7 +171,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -193,7 +194,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -216,7 +217,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -239,7 +240,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -262,7 +263,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
@@ -285,7 +286,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 Int16 result;
@@ -303,7 +304,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 Int32 result;
@@ -321,7 +322,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 Int64 result;
@@ -339,7 +340,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 Single result;
@@ -357,7 +358,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
                 v.Text = source.Value.ToString();
-            }).BeginInput(TextBox.TextProperty)
+            }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushValidator(v =>
             {
                 Double result;

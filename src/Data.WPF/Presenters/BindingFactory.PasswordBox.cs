@@ -7,7 +7,7 @@ namespace DevZest.Data.Presenters
     {
         public static RowBinding<PasswordBox> BindToPasswordBox(this Column<SecureString> source)
         {
-            return new RowBinding<PasswordBox>(onRefresh: null).WithInput(PasswordBox.PasswordChangedEvent, source, v => v.SecurePassword);
+            return new RowBinding<PasswordBox>(onRefresh: null).WithInput(PasswordBox.PasswordChangedEvent, PasswordBox.LostFocusEvent, source, v => v.SecurePassword);
         }
 
         public static RowBinding<PasswordBox> BindToPasswordBox(this Column<string> source)
@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<PasswordBox>(onRefresh: (v, p) =>
             {
                 v.Password = p.GetValue(source);
-            }).WithInput(PasswordBox.PasswordChangedEvent, source, v => v.Password);
+            }).WithInput(PasswordBox.PasswordChangedEvent, PasswordBox.LostFocusEvent, source, v => v.Password);
         }
     }
 }

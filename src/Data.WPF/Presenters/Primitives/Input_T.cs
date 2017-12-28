@@ -1,7 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
 using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
@@ -9,13 +6,19 @@ namespace DevZest.Data.Presenters.Primitives
     public abstract class Input<T>
         where T : UIElement, new()
     {
-        internal Input(Trigger<T> flushTrigger)
+        internal Input(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
         {
             if (flushTrigger == null)
                 throw new ArgumentNullException(nameof(flushTrigger));
             VerifyNotInitialized(flushTrigger, nameof(flushTrigger));
             _flushTrigger = flushTrigger;
             _flushTrigger.ExecuteAction = Flush;
+
+            if (progressiveFlushTrigger != null)
+            {
+                _progressFlushTrigger = progressiveFlushTrigger;
+                _progressFlushTrigger.ExecuteAction = ProgressiveFlush;
+            }
         }
 
         private void VerifyNotInitialized(Trigger<T> trigger, string paramName)
@@ -24,7 +27,8 @@ namespace DevZest.Data.Presenters.Primitives
                 throw new ArgumentException(DiagnosticMessages.Input_TriggerAlreadyInitialized, paramName);
         }
 
-        private Trigger<T> _flushTrigger;
+        private readonly Trigger<T> _flushTrigger;
+        private readonly Trigger<T> _progressFlushTrigger;
         private Func<T, string> _flushValidator;
 
         public abstract TwoWayBinding Binding { get; }
@@ -55,11 +59,15 @@ namespace DevZest.Data.Presenters.Primitives
         internal void Attach(T element)
         {
             _flushTrigger.Attach(element);
+            if (_progressFlushTrigger != null)
+                _progressFlushTrigger.Attach(element);
         }
 
         internal void Detach(T element)
         {
             _flushTrigger.Detach(element);
+            if (_progressFlushTrigger != null)
+                _progressFlushTrigger.Detach(element);
         }
 
         public abstract FlushErrorMessage GetFlushError(UIElement element);
@@ -86,16 +94,28 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal void Flush(T element)
         {
+            PerformFlush(element, _progressFlushTrigger == null || IsValidationVisible);
+        }
+
+        internal abstract bool IsValidationVisible { get; }
+
+        private void ProgressiveFlush(T element)
+        {
+            PerformFlush(element, true);
+        }
+
+        private void PerformFlush(T element, bool makeProgress)
+        {
             if (Binding.IsRefreshing)
                 return;
 
             IsFlushing = true;
             ValidateFlush(element);
             if (GetFlushError(element) == null)
-                FlushCore(element);
+                FlushCore(element, makeProgress);
             IsFlushing = false;
         }
 
-        internal abstract void FlushCore(T element);
+        internal abstract void FlushCore(T element, bool makeProgress);
     }
 }
