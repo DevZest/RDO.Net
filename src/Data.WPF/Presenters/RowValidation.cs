@@ -31,29 +31,35 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        internal void UpdateProgress<T>(RowInput<T> rowInput, bool valueChanged, bool makeProgress)
+        internal bool UpdateProgress<T>(RowInput<T> rowInput, bool valueChanged, bool makeProgress)
             where T : UIElement, new()
         {
             Debug.Assert(valueChanged || makeProgress);
 
             if (_progress == null)
-                return;
+                return valueChanged;
 
             var currentRow = _inputManager.CurrentRow;
             Debug.Assert(currentRow != null);
             var sourceColumns = rowInput.Target;
             if (sourceColumns == null || sourceColumns.Count == 0)
-                return;
+                return false;
 
             if (makeProgress)
             {
                 var columns = GetProgress(_progress, currentRow);
-                if (columns == null || (!valueChanged && !Exists(_valueChanged, currentRow, sourceColumns)))
-                    return;
-                _progress[currentRow] = columns.Union(sourceColumns);
+                if (columns == null)
+                    return valueChanged;
+                if (valueChanged || Exists(_valueChanged, currentRow, sourceColumns))
+                {
+                    _progress[currentRow] = columns.Union(sourceColumns);
+                    return true;
+                }
             }
             else
                 _valueChanged[currentRow] = GetProgress(_valueChanged, currentRow).Union(sourceColumns);
+
+            return false;
         }
 
         internal void ShowAll(RowPresenter rowPresenter)

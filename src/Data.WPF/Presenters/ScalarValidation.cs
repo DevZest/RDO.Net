@@ -34,7 +34,7 @@ namespace DevZest.Data.Presenters
             Debug.Assert(valueChanged || makeProgress);
 
             if (Mode != ValidationMode.Progressive || _showAll)
-                return true;
+                return valueChanged;
 
             var scalars = scalarInput.Target;
             if (scalars == null || scalars.Count == 0)
