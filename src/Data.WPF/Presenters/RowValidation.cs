@@ -12,44 +12,69 @@ namespace DevZest.Data.Presenters
         {
             _inputManager = inputManager;
             if (Mode == ValidationMode.Progressive)
+            {
                 _progress = new Dictionary<RowPresenter, IColumns>();
+                _valueChanged = new Dictionary<RowPresenter, IColumns>();
+            }
         }
 
         private InputManager _inputManager;
         private Dictionary<RowPresenter, IColumns> _progress;
+        private Dictionary<RowPresenter, IColumns> _valueChanged;
 
         internal void Reset()
         {
             if (_progress != null)
+            {
                 _progress.Clear();
+                _valueChanged.Clear();
+            }
         }
 
-        internal void MakeProgress<T>(RowInput<T> rowInput)
+        internal void UpdateProgress<T>(RowInput<T> rowInput, bool valueChanged, bool makeProgress)
             where T : UIElement, new()
         {
+            Debug.Assert(valueChanged || makeProgress);
+
+            if (_progress == null)
+                return;
+
             var currentRow = _inputManager.CurrentRow;
             Debug.Assert(currentRow != null);
             var sourceColumns = rowInput.Target;
+            if (sourceColumns == null || sourceColumns.Count == 0)
+                return;
 
-            if (_progress != null)
+            if (makeProgress)
             {
-                var columns = GetProgress(currentRow);
-                if (columns == null)
+                var columns = GetProgress(_progress, currentRow);
+                if (columns == null || (!valueChanged && !Exists(_valueChanged, currentRow, sourceColumns)))
                     return;
-                _progress[currentRow] = columns.Union(rowInput.Target);
+                _progress[currentRow] = columns.Union(sourceColumns);
             }
+            else
+                _valueChanged[currentRow] = GetProgress(_valueChanged, currentRow).Union(sourceColumns);
         }
 
         internal void ShowAll(RowPresenter rowPresenter)
         {
-            if (_progress != null)
-                _progress[rowPresenter] = null;
+            if (_progress == null)
+                return;
+
+            if (_valueChanged.ContainsKey(rowPresenter))
+                _valueChanged.Remove(rowPresenter);
+            _progress[rowPresenter] = null;
         }
 
         internal void OnRowDisposed(RowPresenter rowPresenter)
         {
-            if (_progress != null && _progress.ContainsKey(rowPresenter))
+            if (_progress == null)
+                return;
+
+            if (_progress.ContainsKey(rowPresenter))
                 _progress.Remove(rowPresenter);
+            if (_valueChanged.ContainsKey(rowPresenter))
+                _valueChanged.Remove(rowPresenter);
         }
 
         public ValidationMode Mode
@@ -67,15 +92,24 @@ namespace DevZest.Data.Presenters
             if (_progress == null)
                 return true;
 
-            var progress = GetProgress(rowPresenter);
+            return Exists(_progress, rowPresenter, columns);
+        }
+
+        private static bool Exists(Dictionary<RowPresenter, IColumns> progressByRow, RowPresenter rowPresenter, IColumns columns)
+        {
+            Debug.Assert(progressByRow != null);
+            Debug.Assert(rowPresenter != null);
+            Debug.Assert(columns != null && columns.Count > 0);
+
+            var progress = GetProgress(progressByRow, rowPresenter);
             return progress == null ? true : progress.IsSupersetOf(columns);
         }
 
-        private IColumns GetProgress(RowPresenter rowPresenter)
+        private static IColumns GetProgress(Dictionary<RowPresenter, IColumns> progressByRow, RowPresenter rowPresenter)
         {
-            Debug.Assert(_progress != null);
+            Debug.Assert(progressByRow != null);
             IColumns result;
-            if (_progress.TryGetValue(rowPresenter, out result))
+            if (progressByRow.TryGetValue(rowPresenter, out result))
                 return result;
             return Columns.Empty;
         }

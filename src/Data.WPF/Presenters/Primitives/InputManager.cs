@@ -243,11 +243,9 @@ namespace DevZest.Data.Presenters.Primitives
 
             if (RowValidationMode != ValidationMode.Explicit)
                 Validate(CurrentRow, false);
+            RowValidation.UpdateProgress(rowInput, valueChanged, makeProgress);
             if (makeProgress)
-            {
-                RowValidation.MakeProgress(rowInput);
                 OnProgress(rowInput);
-            }
             InvalidateView();
         }
 

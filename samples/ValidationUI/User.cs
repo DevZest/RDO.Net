@@ -19,6 +19,7 @@ namespace ValidationUI
         [Required]
         [StringLength(20, MinimumLength = 6)]
         [Display(Name = "Password:")]
+        [DefaultValue("")]
         public _String Password { get; private set; }
     }
 }

@@ -150,7 +150,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Assert.AreEqual(0, errors.Count);
             }
 
-            inputManager.RowValidation.MakeProgress(textBox.Input);
+            inputManager.RowValidation.UpdateProgress(textBox.Input, false, true);
 
             textBox[currentRow].Text = null;
             Assert.AreEqual(string.Empty, textBox[currentRow].Text);
