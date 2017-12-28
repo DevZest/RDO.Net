@@ -151,8 +151,8 @@
     <Compile Include="Utilities\Object.ToString.cs" />
     <Compile Include="Presenters\Validation.cs" />
     <Compile Include="Presenters\Primitives\Input_T.cs" />
-    <Compile Include="Presenters\RowInput.cs" />
-    <Compile Include="Presenters\ScalarInput.cs" />
+    <Compile Include="Presenters\RowInput_T.cs" />
+    <Compile Include="Presenters\ScalarInput_T.cs" />
     <Compile Include="Utilities\Singleton.cs" />
     <Compile Include="Presenters\Primitives\InputManager.cs" />
     <Compile Include="Presenters\PropertyChangedTrigger.cs" />
