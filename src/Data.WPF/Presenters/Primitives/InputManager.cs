@@ -194,11 +194,8 @@ namespace DevZest.Data.Presenters.Primitives
 
             if (ScalarValidationMode != ValidationMode.Explicit)
                 ValidateScalars(false);
-            if (makeProgress)
-            {
-                ScalarValidation.MakeProgress(scalarInput);
+            if (ScalarValidation.UpdateProgress(scalarInput, valueChanged, makeProgress))
                 OnProgress(scalarInput);
-            }
             InvalidateView();
         }
 

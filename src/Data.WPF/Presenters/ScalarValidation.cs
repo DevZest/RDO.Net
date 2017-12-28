@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Presenters
@@ -11,33 +12,46 @@ namespace DevZest.Data.Presenters
         {
             _inputManager = inputManager;
             if (Mode == ValidationMode.Progressive)
+            {
                 _progress = Scalars.Empty;
+                _valueChanged = Scalars.Empty;
+            }
         }
 
         private InputManager _inputManager;
         private bool _showAll;
         private IScalars _progress;
+        private IScalars _valueChanged;
 
         private Template Template
         {
             get { return _inputManager.Template; }
         }
 
-        internal void Reset()
-        {
-            _showAll = false;
-
-            if (_progress != null)
-                _progress = Scalars.Empty;
-        }
-
-        internal void MakeProgress<T>(ScalarInput<T> scalarInput)
+        internal bool UpdateProgress<T>(ScalarInput<T> scalarInput, bool valueChanged, bool makeProgress)
             where T : UIElement, new()
         {
-            var scalars = scalarInput.Target;
+            Debug.Assert(valueChanged || makeProgress);
 
-            if (!_showAll && _progress != null)
-                _progress = _progress.Union(scalars);
+            if (Mode != ValidationMode.Progressive || _showAll)
+                return true;
+
+            var scalars = scalarInput.Target;
+            if (scalars == null || scalars.Count == 0)
+                return false;
+
+            if (makeProgress)
+            {
+                if (valueChanged || _valueChanged.IsSupersetOf(scalars))
+                {
+                    _progress = _progress.Union(scalars);
+                    return true;
+                }
+            }
+            else
+                _valueChanged = _valueChanged.Union(scalars);
+
+            return false;
         }
 
         internal void ShowAll()
@@ -46,8 +60,11 @@ namespace DevZest.Data.Presenters
                 return;
 
             _showAll = true;
-            if (_progress != null)
+            if (Mode == ValidationMode.Progressive)
+            {
                 _progress = Scalars.Empty;
+                _valueChanged = Scalars.Empty;
+            }
         }
 
         public ValidationMode Mode

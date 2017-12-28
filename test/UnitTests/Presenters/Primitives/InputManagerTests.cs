@@ -113,7 +113,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Assert.AreEqual(0, errors.Count);
             }
 
-            inputManager.ScalarValidation.MakeProgress(textBox.Input);
+            inputManager.ScalarValidation.UpdateProgress(textBox.Input, true, true);
             textBox[0].Text = "6";
             Assert.AreEqual("6", textBox[0].Text);
             Assert.IsTrue(inputManager.ScalarValidationErrors.Count == 1);
