@@ -213,56 +213,31 @@ namespace DevZest.Data.Presenters.Primitives
             dataSet.Add(new DataRow());
 
             RowBinding<TextBox> textBox = null;
-            RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
                 textBox = _.Name.BindToTextBox();
-                validationView = textBox.Input.BindToValidationView();
 
                 builder.GridColumns("100").GridRows("100")
-                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
-                    .AddBinding(0, 0, validationView);
+                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
                 textBox.Input.AddAsyncValidator(() => ValidateBadNameAsync(_.Name, 0));
             });
 
             var currentRow = inputManager.CurrentRow;
-            var asyncValidator = validationView[currentRow].AsyncValidators[0];
-            Assert.AreEqual(asyncValidator, validationView[currentRow].AsyncValidators);
-
+            var asyncValidator = inputManager.RowValidation.AsyncValidators[0];
             Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
-            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
-            Assert.AreEqual(1, validationView[currentRow].Errors.Count);
 
             textBox[currentRow].Text = BAD_NAME;
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
-            Assert.AreEqual(asyncValidator, validationView[currentRow].RunningAsyncValidators);
-            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].Errors.Count);
 
             await asyncValidator.LastRunningTask;
             Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
-            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
-            Assert.AreEqual(asyncValidator, validationView[currentRow].CompletedAsyncValidators);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
-            Assert.AreEqual(1, validationView[currentRow].Errors.Count);
 
             textBox[currentRow].Text = "Good Name";
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
-            Assert.AreEqual(asyncValidator, validationView[currentRow].RunningAsyncValidators);
-            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].Errors.Count);
 
             await asyncValidator.LastRunningTask;
             Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
-            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
-            Assert.AreEqual(asyncValidator, validationView[currentRow].CompletedAsyncValidators);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].Errors.Count);
         }
 
         private static async Task<IColumnValidationMessages> ValidateBadNameAsync(_String nameColumn, int index)
@@ -285,34 +260,25 @@ namespace DevZest.Data.Presenters.Primitives
             dataSet.Add(new DataRow());
 
             RowBinding<TextBox> textBox = null;
-            RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
                 textBox = _.Name.BindToTextBox();
-                validationView = textBox.Input.BindToValidationView();
 
                 builder.GridColumns("100").GridRows("100")
-                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
-                    .AddBinding(0, 0, validationView);
+                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
                 textBox.Input.AddAsyncValidator(ValidateFaultedAsync);
             });
 
             var currentRow = inputManager.CurrentRow;
-            var asyncValidator = validationView[currentRow].AsyncValidators[0];
+            var asyncValidator = inputManager.RowValidation.AsyncValidators[0];
 
             textBox[currentRow].Text = "Anything";
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
-            Assert.AreEqual(asyncValidator, validationView[currentRow].RunningAsyncValidators);
-            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
 
             await asyncValidator.LastRunningTask;
             Assert.AreEqual(AsyncValidatorStatus.Faulted, asyncValidator.Status);
             Assert.AreEqual(typeof(InvalidOperationException), asyncValidator.Exception.GetType());
-            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
-            Assert.AreEqual(asyncValidator, validationView[currentRow].FaultedAsyncValidators);
         }
 
         private static async Task<IColumnValidationMessages> ValidateFaultedAsync()
@@ -334,43 +300,31 @@ namespace DevZest.Data.Presenters.Primitives
             dataSet.Add(new DataRow());
 
             RowBinding<TextBox> textBox = null;
-            RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
                 textBox = _.Name.BindToTextBox();
-                validationView = textBox.Input.BindToValidationView();
 
                 builder.GridColumns("100").GridRows("100")
-                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
-                    .AddBinding(0, 0, validationView);
+                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
                 textBox.Input.AddAsyncValidator(ValidateFaultedAsync);
             });
 
             var currentRow = inputManager.CurrentRow;
-            var asyncValidator = validationView[currentRow].AsyncValidators[0];
+            var asyncValidator = inputManager.RowValidation.AsyncValidators[0];
 
             textBox[currentRow].Text = "Anything";
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
-            Assert.AreEqual(asyncValidator, validationView[currentRow].RunningAsyncValidators);
-            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
 
             asyncValidator.Reset();
             inputManager.InvalidateView();
             Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
             Assert.IsNull(asyncValidator.Exception);
-            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
 
             await asyncValidator.LastRunningTask;
             inputManager.InvalidateView();
             Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
             Assert.IsNull(asyncValidator.Exception);
-            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
-            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
         }
 
         [TestMethod]

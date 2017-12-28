@@ -114,7 +114,6 @@
     <Compile Include="Presenters\Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\Placeholder.cs" />
-    <Compile Include="Presenters\ValidationViewTests.cs" />
     <Compile Include="Views\RowHeaderTests.cs" />
     <Compile Include="Views\RowViewTests.cs" />
     <Compile Include="Views\ValidationMessageViewTests.cs" />
