@@ -15,11 +15,11 @@ namespace ValidationUI
                     .GridColumns("Auto", "*")
                     .GridRows("Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto")
                     .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddressBinding)).AddBinding(1, 0, emailAddressBinding)
-                    .AddBinding(1, 1, _.EmailAddress.BindToValidationMessageView())
+                    .AddBinding(1, 1, _.EmailAddress.BindToValidationMessagesControl())
                     .AddBinding(0, 2, _.Password.BindToLabel(passwordBinding)).AddBinding(1, 2, passwordBinding)
-                    .AddBinding(1, 3, _.Password.BindToValidationMessageView())
+                    .AddBinding(1, 3, _.Password.BindToValidationMessagesControl())
                     .AddBinding(0, 4, _.ConfirmPassword.BindToLabel(confirmPasswordBinding)).AddBinding(1, 4, confirmPasswordBinding)
-                    .AddBinding(1, 5, _.ConfirmPassword.BindToValidationMessageView());
+                    .AddBinding(1, 5, _.ConfirmPassword.BindToValidationMessagesControl());
             }
         }
     }

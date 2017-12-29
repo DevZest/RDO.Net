@@ -116,7 +116,7 @@
     <Compile Include="Views\Placeholder.cs" />
     <Compile Include="Views\RowHeaderTests.cs" />
     <Compile Include="Views\RowViewTests.cs" />
-    <Compile Include="Views\ValidationMessageViewTests.cs" />
+    <Compile Include="Views\ValidationMessagesControlTests.cs" />
     <Compile Include="Views\XamlPane.xaml.cs">
       <DependentUpon>XamlPane.xaml</DependentUpon>
     </Compile>
