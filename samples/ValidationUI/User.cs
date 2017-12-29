@@ -13,6 +13,7 @@ namespace ValidationUI
 
         [Required]
         [EmailAddress]
+        [StringLength(20)]
         [Display(Name = "Email Address:")]
         public _String EmailAddress { get; private set; }
 
