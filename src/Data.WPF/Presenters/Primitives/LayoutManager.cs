@@ -133,13 +133,16 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal Size Measure(Size availableSize)
         {
+            IsMeasuring = true;
             Template.InitMeasure(availableSize);
             FlowRepeatCount = Template.CoerceFlowRepeatCount();
             PrepareMeasure();
             var result = FinalizeMeasure();
+            IsMeasuring = false;
             return result;
         }
 
+        internal bool IsMeasuring { get; private set; }
         private bool IsPreparingMeasure;
 
         protected virtual void PrepareMeasure()
@@ -170,6 +173,8 @@ namespace DevZest.Data.Presenters.Primitives
         {
             foreach (var scalarBinding in ScalarBindings)
             {
+                if (scalarBinding.IsAutoSize)
+                    continue;
                 for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
                 {
                     var element = scalarBinding[i];
@@ -196,6 +201,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal Size Measure(BlockView blockView, Size constraintSize)
         {
+            Debug.Assert(IsMeasuring);
             if (IsPreparingMeasure)
                 PrepareMeasure(blockView);
             else
@@ -232,6 +238,8 @@ namespace DevZest.Data.Presenters.Primitives
 
             foreach (var blockBinding in BlockBindings)
             {
+                if (blockBinding.IsAutoSize)
+                    continue;
                 var element = blockView[blockBinding];
                 element.Measure(GetSize(blockView, blockBinding));
             }
@@ -248,6 +256,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal Size Measure(RowView rowView, Size constraintSize)
         {
+            Debug.Assert(IsMeasuring);
             if (IsPreparingMeasure)
                 PrepareMeasure(rowView);
             else
@@ -278,6 +287,8 @@ namespace DevZest.Data.Presenters.Primitives
 
             foreach (var rowBinding in rowBindings)
             {
+                if (rowBinding.IsAutoSize)
+                    continue;
                 var element = rowView.Elements[rowBinding.Ordinal];
                 element.Measure(GetSize(rowView, rowBinding));
             }

@@ -20,10 +20,7 @@ namespace DevZest.Data.Presenters
                     var warnings = p.GetValidationWarnings(source);
                     var messages = GetValidationMessages(errors, warnings);
                     if (ShouldUpdateItemsSource(v, messages))
-                    {
                         v.ItemsSource = messages;
-                        p.DataPresenter.InvalidateMeasure();
-                    }
                 },
                 onSetup: null, onCleanup: null);
         }
@@ -85,10 +82,7 @@ namespace DevZest.Data.Presenters
                     var warnings = validation.GetWarnings(source);
                     var messages = GetValidationMessages(errors, warnings);
                     if (ShouldUpdateItemsSource(v, messages))
-                    {
                         v.ItemsSource = messages;
-                        p.DataPresenter.InvalidateMeasure();
-                    }
                 },
                 onSetup: null, onCleanup: null);
         }
