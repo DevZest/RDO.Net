@@ -144,8 +144,8 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 Debug.Assert(IsAutoSize);
-                var width = AutoWidthGridColumns.Count > 0 || IsAutoWidthWaived ? double.PositiveInfinity : GridRange.MeasuredWidth;
-                var height = AutoHeightGridRows.Count > 0 || IsAutoHeigthWaived ? double.PositiveInfinity : GridRange.MeasuredHeight;
+                var width = AutoWidthGridColumns.Count > 0 && !IsAutoWidthWaived ? double.PositiveInfinity : GridRange.MeasuredWidth;
+                var height = AutoHeightGridRows.Count > 0 && !IsAutoHeigthWaived ? double.PositiveInfinity : GridRange.MeasuredHeight;
                 return new Size(width, height);
             }
         }
