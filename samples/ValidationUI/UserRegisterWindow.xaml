@@ -9,7 +9,7 @@
         Title="User Register" WindowStartupLocation="CenterOwner" Width="350" SizeToContent="Height" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="Label">
-            <Setter Property="Margin" Value="5" />
+            <Setter Property="Margin" Value="5,5,0,5" />
             <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
         <Style TargetType="TextBlock">
@@ -18,11 +18,11 @@
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,5,0" />
+            <Setter Property="Margin" Value="5,0,5,0" />
         </Style>
         <Style TargetType="PasswordBox">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,5,0" />
+            <Setter Property="Margin" Value="5,0,5,0" />
         </Style>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5" />
