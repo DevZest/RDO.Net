@@ -13,7 +13,9 @@ namespace ValidationUI
                 var confirmPasswordBinding = _.ConfirmPassword.BindToPasswordBox();
                 builder
                     .GridColumns("Auto", "*")
-                    .GridRows("Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto")
+                    .GridRows("Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto")
+                    .AddBinding(1, 2, 1, 5, _.PasswordMismatchErrorSource.BindToValidationPlaceholder())
+                    .AddBinding(1, 6, _.PasswordMismatchErrorSource.BindToValidationMessagesControl().WithAutoSizeOrder(1))
                     .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddressBinding)).AddBinding(1, 0, emailAddressBinding)
                     .AddBinding(1, 1, _.EmailAddress.BindToValidationMessagesControl().WithAutoSizeOrder(1))
                     .AddBinding(0, 2, _.Password.BindToLabel(passwordBinding)).AddBinding(1, 2, passwordBinding)

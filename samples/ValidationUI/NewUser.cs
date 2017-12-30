@@ -1,5 +1,6 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
+using DevZest.Data.Presenters;
 
 namespace ValidationUI
 {
@@ -15,5 +16,19 @@ namespace ValidationUI
         [Display(Name = "Confirm Password:")]
         [DefaultValue("")]
         public _String ConfirmPassword { get; private set; }
+
+        private IColumns _passwordMismatchErrorSource;
+        public IColumns PasswordMismatchErrorSource
+        {
+            get { return _passwordMismatchErrorSource ?? (_passwordMismatchErrorSource = Password.Union(ConfirmPassword).Seal()); }
+        }
+
+        private const string ERR_PASSWORD_MISMATCH = "Password and Confirm Password must be identical";
+
+        [ModelValidator]
+        private ColumnValidationMessage ValidatePassword(DataRow dataRow)
+        {
+            return ConfirmPassword[dataRow] == Password[dataRow] ? null : new ColumnValidationMessage(ValidationSeverity.Error, ERR_PASSWORD_MISMATCH, PasswordMismatchErrorSource);
+        }
     }
 }
