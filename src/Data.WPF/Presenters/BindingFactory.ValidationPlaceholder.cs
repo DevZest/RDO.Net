@@ -14,9 +14,7 @@ namespace DevZest.Data.Presenters
             var input = new RowBinding<ValidationPlaceholder>(null).BeginInput(explicitTrigger);
 
             foreach (var column in source)
-            {
                 input.WithFlush(column, (r, v) => true);
-            }
             return input.EndInput();
         }
 
@@ -29,9 +27,7 @@ namespace DevZest.Data.Presenters
             var input = new ScalarBinding<ValidationPlaceholder>((Action<ValidationPlaceholder>)null).BeginInput(explicitTrigger);
 
             foreach (var scalar in source)
-            {
                 input.WithFlush(scalar, v => true);
-            }
             return input.EndInput();
         }
     }
