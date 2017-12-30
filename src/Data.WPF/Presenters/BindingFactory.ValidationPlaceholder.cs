@@ -11,13 +11,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(source));
 
             var explicitTrigger = new ExplicitTrigger<ValidationPlaceholder>();
-            var input = new RowBinding<ValidationPlaceholder>(
-                onSetup: (v, p) =>
-                {
-                    if (p.IsCurrent)
-                        explicitTrigger.Execute(v);
-                },
-                onRefresh: null, onCleanup: null).BeginInput(explicitTrigger);
+            var input = new RowBinding<ValidationPlaceholder>(null).BeginInput(explicitTrigger);
 
             foreach (var column in source)
             {
@@ -32,12 +26,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(source));
 
             var explicitTrigger = new ExplicitTrigger<ValidationPlaceholder>();
-            var input = new ScalarBinding<ValidationPlaceholder>(
-                onSetup: (v, p) =>
-                {
-                    explicitTrigger.Execute(v);
-                },
-                onRefresh: null, onCleanup: null).BeginInput(explicitTrigger);
+            var input = new ScalarBinding<ValidationPlaceholder>((Action<ValidationPlaceholder>)null).BeginInput(explicitTrigger);
 
             foreach (var scalar in source)
             {
