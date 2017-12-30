@@ -10,9 +10,7 @@ namespace DevZest.Data.Presenters
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var explicitTrigger = new ExplicitTrigger<ValidationPlaceholder>();
-            var input = new RowBinding<ValidationPlaceholder>(null).BeginInput(explicitTrigger);
-
+            var input = new RowBinding<ValidationPlaceholder>(null).BeginInput(new ExplicitTrigger<ValidationPlaceholder>());
             foreach (var column in source)
                 input.WithFlush(column, (r, v) => true);
             return input.EndInput();
@@ -23,9 +21,7 @@ namespace DevZest.Data.Presenters
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var explicitTrigger = new ExplicitTrigger<ValidationPlaceholder>();
-            var input = new ScalarBinding<ValidationPlaceholder>((Action<ValidationPlaceholder>)null).BeginInput(explicitTrigger);
-
+            var input = new ScalarBinding<ValidationPlaceholder>((Action<ValidationPlaceholder>)null).BeginInput(new ExplicitTrigger<ValidationPlaceholder>());
             foreach (var scalar in source)
                 input.WithFlush(scalar, v => true);
             return input.EndInput();
