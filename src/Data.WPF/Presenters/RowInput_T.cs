@@ -68,6 +68,16 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
+        public RowInput<T> WithFlush(Column column, Func<RowPresenter, T, bool> flushFunc)
+        {
+            Check.NotNull(column, nameof(column));
+            Check.NotNull(flushFunc, nameof(flushFunc));
+            VerifyNotSealed();
+            Target = Target.Union(column);
+            _flushFuncs.Add(flushFunc);
+            return this;
+        }
+
         public RowInput<T> WithFlush(Column column, Func<T, ColumnValueBag> valueBagGetter)
         {
             if (column == null)
@@ -178,6 +188,7 @@ namespace DevZest.Data.Presenters
 
         public RowBinding<T> EndInput()
         {
+            Target = Target.Seal();
             return RowBinding;
         }
 

@@ -16,5 +16,6 @@
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/GridHeader.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ValidationSeverityIndicator.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ValidationMessagesControl.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ValidationPlaceholder.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

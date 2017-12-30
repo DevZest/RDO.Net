@@ -44,6 +44,17 @@ namespace DevZest.Data.Presenters
         internal IScalars Target { get; private set; } = Scalars.Empty;
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
 
+        public ScalarInput<T> WithFlush(Scalar scalar, Func<T, bool> flushFunc)
+        {
+            Check.NotNull(scalar, nameof(scalar));
+            Check.NotNull(flushFunc, nameof(flushFunc));
+
+            VerifyNotSealed();
+            Target = Target.Union(scalar);
+            _flushFuncs.Add(flushFunc);
+            return this;
+        }
+
         public ScalarInput<T> WithFlush<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
         {
             if (scalar == null)
@@ -124,6 +135,7 @@ namespace DevZest.Data.Presenters
 
         public ScalarBinding<T> EndInput()
         {
+            Target = Target.Seal();
             return ScalarBinding;
         }
 

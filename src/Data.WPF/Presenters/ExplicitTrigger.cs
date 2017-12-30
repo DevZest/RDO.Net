@@ -17,5 +17,10 @@ namespace DevZest.Data.Presenters
         protected internal override void Detach(T element)
         {
         }
+
+        public new void Execute(T element)
+        {
+            base.Execute(element);
+        }
     }
 }
