@@ -514,8 +514,11 @@ namespace DevZest.Data.Presenters
         {
             Check.NotNull(source, nameof(source));
 
+            if (source.Count == 0)
+                return ColumnValidationMessages.Empty;
+
             var result = ColumnValidationMessages.Empty;
-            result = InputManager.GetValidationMessages(this, source, ValidationSeverity.Error);
+            result = InputManager.RowValidation.GetValidationMessages(this, source, ValidationSeverity.Error);
             result = AddAsyncValidationMessages(result, this, ValidationSeverity.Error);
             result = AddValidationMessages(result, InputManager.AssignedRowValidationResults.Where(ValidationSeverity.Error), this);
             return result;
@@ -525,8 +528,11 @@ namespace DevZest.Data.Presenters
         {
             Check.NotNull(source, nameof(source));
 
+            if (source.Count == 0)
+                return ColumnValidationMessages.Empty;
+
             var result = ColumnValidationMessages.Empty;
-            result = InputManager.GetValidationMessages(this, source, ValidationSeverity.Warning);
+            result = InputManager.RowValidation.GetValidationMessages(this, source, ValidationSeverity.Warning);
             result = AddAsyncValidationMessages(result, this, ValidationSeverity.Warning);
             result = AddValidationMessages(result, InputManager.AssignedRowValidationResults.Where(ValidationSeverity.Warning), this);
             return result;

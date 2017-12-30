@@ -160,32 +160,6 @@ namespace DevZest.Data.Presenters.Primitives
                     ValidateCurrentRow();
         }
 
-        private static IColumnValidationMessages GetValidationMessages(IRowValidationResults dictionary, RowPresenter rowPresenter, IColumns columns)
-        {
-            Debug.Assert(dictionary != null);
-
-            IColumnValidationMessages messages;
-            if (!dictionary.TryGetValue(rowPresenter, out messages))
-                return ColumnValidationMessages.Empty;
-
-            var result = ColumnValidationMessages.Empty;
-            for (int i = 0; i < messages.Count; i++)
-            {
-                var message = messages[i];
-                if (message.Source.SetEquals(columns))
-                    result = result.Add(message);
-            }
-
-            return result;
-        }
-
-        internal IColumnValidationMessages GetValidationMessages(RowPresenter rowPresenter, IColumns source, ValidationSeverity severity)
-        {
-            return RowValidation.IsVisible(rowPresenter, source)
-                ? GetValidationMessages(severity == ValidationSeverity.Error ? RowValidationErrors : RowValidationWarnings, rowPresenter, source)
-                : ColumnValidationMessages.Empty;
-        }
-
         internal void OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged)
             where T : UIElement, new()
         {

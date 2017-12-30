@@ -223,5 +223,53 @@ namespace DevZest.Data.Presenters
                 warnings++;
             return errors < errorLimit || warnings < warningLimit;
         }
+
+        internal IColumnValidationMessages GetValidationMessages(RowPresenter rowPresenter, IColumns source, ValidationSeverity severity)
+        {
+            Debug.Assert(source != null && source.Count > 0);
+
+            if (!IsVisible(rowPresenter, source))
+                return ColumnValidationMessages.Empty;
+
+            var validationMessages = severity == ValidationSeverity.Error ? _inputManager.RowValidationErrors : _inputManager.RowValidationWarnings;
+            IColumnValidationMessages messages;
+            if (!validationMessages.TryGetValue(rowPresenter, out messages))
+                return ColumnValidationMessages.Empty;
+
+            if (messages == null || messages.Count == 0 || ExistsAnySubsetSourceColumns(messages, source))
+                return ColumnValidationMessages.Empty;
+
+            return GetValidationMessages(messages, source);
+        }
+
+        private static IColumnValidationMessages GetValidationMessages(IColumnValidationMessages messages, IColumns columns)
+        {
+            Debug.Assert(messages != null);
+
+            var result = ColumnValidationMessages.Empty;
+            for (int i = 0; i < messages.Count; i++)
+            {
+                var message = messages[i];
+                if (message.Source.SetEquals(columns))
+                    result = result.Add(message);
+            }
+
+            return result;
+        }
+
+        private static bool ExistsAnySubsetSourceColumns(IColumnValidationMessages messages, IColumns columns)
+        {
+            if (columns.Count == 1)
+                return false;
+
+            for (int i = 0; i < messages.Count; i++)
+            {
+                var source = messages[i].Source;
+                if (columns.IsProperSupersetOf(source))
+                    return true;
+            }
+
+            return false;
+        }
     }
 }
