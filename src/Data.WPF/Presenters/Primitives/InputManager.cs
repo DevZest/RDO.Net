@@ -23,8 +23,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowValidation = new RowValidation(this);
             if (ScalarValidationMode == ValidationMode.Implicit)
                 ValidateScalars();
-            if (RowValidationMode == ValidationMode.Implicit)
-                ValidateCurrentRow();
+            ValidateCurrentRowIfImplicit();
         }
 
         public void FlushScalars()
@@ -156,8 +155,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowValidation.Reset();
             RowValidationErrors = RowValidationWarnings = RowValidationResults.Empty;
             AssignedRowValidationResults = RowValidationResults.Empty;
-            if (RowValidationMode == ValidationMode.Implicit)
-                    ValidateCurrentRow();
+            ValidateCurrentRowIfImplicit();
         }
 
         internal void OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged)
@@ -302,6 +300,12 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.RowValidationMode; }
         }
 
+        private void ValidateCurrentRowIfImplicit()
+        {
+            if (RowValidationMode == ValidationMode.Implicit)
+                ValidateCurrentRow();
+        }
+
         private void ValidateCurrentRow()
         {
             if (CurrentRow != null)
@@ -339,10 +343,11 @@ namespace DevZest.Data.Presenters.Primitives
             return dataRow == DataSet.AddingRow ? DataSet.ValidateAddingRow(severity) : dataRow.Validate(severity);
         }
 
-        protected override void OnCurrentRowChanged(RowPresenter oldValue)
+        protected sealed override void OnCurrentRowChanged(RowPresenter oldValue)
         {
             base.OnCurrentRowChanged(oldValue);
             Template.RowAsyncValidators.Each(x => x.OnCurrentRowChanged());
+            ValidateCurrentRowIfImplicit();
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)
