@@ -493,9 +493,6 @@ namespace DevZest.Data.Presenters.Primitives
             _gridLines.Add(gridLine);
         }
 
-        [DefaultValue(true)]
-        public bool TransactionalEdit { get; internal set; } = true;
-
         [DefaultValue(ValidationMode.Progressive)]
         public ValidationMode RowValidationMode { get; internal set; } = ValidationMode.Progressive;
 

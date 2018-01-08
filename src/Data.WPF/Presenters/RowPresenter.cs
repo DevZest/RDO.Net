@@ -330,7 +330,7 @@ namespace DevZest.Data.Presenters
 
                 if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
-                CoerceEditMode();
+                BeginEdit();
                 column.SetValue(DataRow, value);
                 Invalidate();
             }
@@ -341,20 +341,6 @@ namespace DevZest.Data.Presenters
             VerifyColumn(column, nameof(column));
             var dataRow = DataRow;
             return dataRow == null ? false : column.IsNull(dataRow);
-        }
-
-        private void CoerceEditMode()
-        {
-            var transactionalEdit = CoerceTransactionalEdit();
-            if (transactionalEdit)
-                BeginEdit();
-            else
-                VerifyIsCurrent();
-        }
-
-        private bool CoerceTransactionalEdit()
-        {
-            return IsVirtual ? true : Template.TransactionalEdit;
         }
 
         private bool HasPendingEdit
@@ -393,7 +379,7 @@ namespace DevZest.Data.Presenters
             if (Depth > 0)
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
-            CoerceEditMode();
+            BeginEdit();
             column[DataRow] = value;
             Invalidate();
         }

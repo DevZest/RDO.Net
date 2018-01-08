@@ -157,16 +157,6 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        [DefaultValue(true)]
-        public TemplateBuilder WithTransactionalEdit(bool value)
-        {
-            if (_inherited)
-                return this;
-
-            Template.TransactionalEdit = value;
-            return this;
-        }
-
         [DefaultValue(null)]
         public TemplateBuilder WithSelectionMode(SelectionMode value)
         {
