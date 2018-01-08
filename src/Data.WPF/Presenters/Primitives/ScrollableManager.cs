@@ -1168,13 +1168,16 @@ namespace DevZest.Data.Presenters.Primitives
             EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
         }
 
-        protected override void Reload()
+        protected sealed override void Reload()
         {
+            base.Reload();
+
             _scrollDeltaMain = 0;
             _scrollOffsetMain = 0;
             _scrollToMainPlacement = default(GridPlacement);
             _scrollToMain = default(LogicalExtent);
-            base.Reload();
+
+            DataPresenter?.OnRowsLoaded(false);
         }
     }
 }

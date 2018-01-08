@@ -156,6 +156,8 @@ namespace DevZest.Data.Presenters.Primitives
             RowValidationErrors = RowValidationWarnings = RowValidationResults.Empty;
             AssignedRowValidationResults = RowValidationResults.Empty;
             ValidateCurrentRowIfImplicit();
+
+            DataPresenter?.OnRowsLoaded(true);
         }
 
         internal void OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged)
@@ -348,6 +350,7 @@ namespace DevZest.Data.Presenters.Primitives
             base.OnCurrentRowChanged(oldValue);
             Template.RowAsyncValidators.Each(x => x.OnCurrentRowChanged());
             ValidateCurrentRowIfImplicit();
+            DataPresenter?.OnCurrentRowChanged(oldValue);
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)
