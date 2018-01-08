@@ -410,6 +410,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override bool EndEdit()
         {
+            var endEdit = DataPresenter == null ? QueryEndEdit() : DataPresenter.QueryEndEdit();
+            return endEdit ? base.EndEdit() : false;
+        }
+
+        internal bool QueryEndEdit()
+        {
             ValidateCurrentRow();
             var hasError = CurrentRowErrors.Count > 0;
             if (hasError)
@@ -417,8 +423,7 @@ namespace DevZest.Data.Presenters.Primitives
                 FocusToInputError(CurrentRowErrors);
                 return false;
             }
-
-            return base.EndEdit();
+            return true;
         }
 
         private void FocusToInputError(IColumnValidationMessages errors)

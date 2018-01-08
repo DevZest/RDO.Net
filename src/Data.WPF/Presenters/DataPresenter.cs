@@ -365,6 +365,11 @@ namespace DevZest.Data.Presenters
         {
         }
 
+        protected internal virtual bool QueryEndEdit()
+        {
+            return RequireLayoutManager().QueryEndEdit();
+        }
+
         #region IService
 
         DataPresenter IService.DataPresenter
