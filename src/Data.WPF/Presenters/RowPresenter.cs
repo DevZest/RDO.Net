@@ -389,7 +389,7 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
-            RowManager.RollbackEdit();
+            RowManager.CancelEdit();
         }
 
         public bool EndEdit()

@@ -498,10 +498,14 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        internal sealed override void RollbackEdit()
+        internal sealed override void CancelEdit()
         {
-            base.RollbackEdit();
-            RowValidation.Reset();
+            var cancelEdit = DataPresenter == null ? true : DataPresenter.QueryCancelEdit();
+            if (cancelEdit)
+            {
+                base.CancelEdit();
+                RowValidation.Reset();
+            }
         }
 
         public IScalarValidationMessages GetValidationErrors(IScalars scalars)

@@ -135,7 +135,7 @@ namespace DevZest.Data.Presenters.Primitives
             row.EditValue(dataSet._.Status, SalesOrderStatus.InProcess);
             Assert.AreEqual(SalesOrderStatus.InProcess, row.GetValue(dataSet._.Status));
             Assert.IsTrue(row.IsEditing);
-            rowManager.RollbackEdit();
+            rowManager.CancelEdit();
             Assert.IsFalse(row.IsEditing);
             Assert.AreEqual(SalesOrderStatus.Shipped, row.GetValue(dataSet._.Status));
         }
@@ -156,7 +156,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(SalesOrderStatus.InProcess, row.GetValue(dataSet._.Status));
             Assert.IsTrue(row.IsEditing);
-            rowManager.RollbackEdit();
+            rowManager.CancelEdit();
             Assert.AreEqual(1, rows.Count);
             row = rows[0];
             Assert.IsFalse(row.IsEditing);
@@ -175,7 +175,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(3, rows.Count);
             Assert.IsTrue(rows[0].IsInserting);
             Assert.IsTrue(rows[2].IsVirtual);
-            rowManager.RollbackEdit();
+            rowManager.CancelEdit();
             Assert.AreEqual(rows[0], rowManager.CurrentRow);
             Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
@@ -219,7 +219,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(3, rows.Count);
             Assert.IsTrue(rows[1].IsInserting);
             Assert.IsTrue(rows[2].IsVirtual);
-            rowManager.RollbackEdit();
+            rowManager.CancelEdit();
             Assert.AreEqual(rows[0], rowManager.CurrentRow);
             Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
@@ -265,7 +265,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(rows[1], rowManager.CurrentRow);
             Assert.AreEqual(7, rows.Count);
             Assert.IsTrue(rows[1].IsInserting);
-            rowManager.RollbackEdit();
+            rowManager.CancelEdit();
             Assert.AreEqual(rows[1], rowManager.CurrentRow);
             Assert.AreEqual(6, rows.Count);
 
@@ -289,7 +289,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(rows[2], rowManager.CurrentRow);
             Assert.AreEqual(7, rows.Count);
             Assert.IsTrue(rows[2].IsInserting);
-            rowManager.RollbackEdit();
+            rowManager.CancelEdit();
             Assert.AreEqual(rows[1], rowManager.CurrentRow);
             Assert.AreEqual(6, rows.Count);
 

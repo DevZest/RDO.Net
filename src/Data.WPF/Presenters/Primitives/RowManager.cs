@@ -797,7 +797,7 @@ namespace DevZest.Data.Presenters.Primitives
             return true;
         }
 
-        internal virtual void RollbackEdit()
+        internal virtual void CancelEdit()
         {
             Debug.Assert(IsEditing);
             Editing.CancelEdit(this);
