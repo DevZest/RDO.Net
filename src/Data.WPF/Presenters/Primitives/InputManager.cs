@@ -408,10 +408,30 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
+        internal override void BeginEdit()
+        {
+            base.BeginEdit();
+            RowValidation.EnterEdit();
+        }
+
+        internal sealed override void CancelEdit()
+        {
+            var cancelEdit = DataPresenter == null ? true : DataPresenter.QueryCancelEdit();
+            if (cancelEdit)
+            {
+                RowValidation.CancelEdit();
+                base.CancelEdit();
+            }
+        }
+
         internal sealed override bool EndEdit()
         {
             var endEdit = DataPresenter == null ? QueryEndEdit() : DataPresenter.QueryEndEdit();
-            return endEdit ? base.EndEdit() : false;
+            if (!endEdit)
+                return false;
+
+            RowValidation.ExitEdit();
+            return base.EndEdit();
         }
 
         internal bool QueryEndEdit()
@@ -495,16 +515,6 @@ namespace DevZest.Data.Presenters.Primitives
                 }
 
                 return false;
-            }
-        }
-
-        internal sealed override void CancelEdit()
-        {
-            var cancelEdit = DataPresenter == null ? true : DataPresenter.QueryCancelEdit();
-            if (cancelEdit)
-            {
-                base.CancelEdit();
-                RowValidation.Reset();
             }
         }
 

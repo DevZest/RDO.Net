@@ -369,7 +369,7 @@ namespace DevZest.Data.Presenters
             VerifyNoPendingEdit();
             if (IsVirtual && RowManager.Template.VirtualRowPlacement == VirtualRowPlacement.Exclusive)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_BeginEditExclusiveVirtual);
-            RowManager.BeginEdit(this);
+            RowManager.BeginEdit();
         }
 
         public void EditValue<T>(Column<T> column, T value)

@@ -21,6 +21,8 @@ namespace DevZest.Data.Presenters
         private InputManager _inputManager;
         private Dictionary<RowPresenter, IColumns> _progress;
         private Dictionary<RowPresenter, IColumns> _valueChanged;
+        private IColumns _beginEditProgress;
+        private IColumns _beginEditValueChanged;
 
         internal void Reset()
         {
@@ -29,6 +31,38 @@ namespace DevZest.Data.Presenters
                 _progress.Clear();
                 _valueChanged.Clear();
             }
+        }
+
+        internal void EnterEdit()
+        {
+            if (_progress != null)
+            {
+                _beginEditProgress = GetProgress(_progress, CurrentRow);
+                _beginEditValueChanged = GetProgress(_valueChanged, CurrentRow);
+            }
+        }
+
+        internal void CancelEdit()
+        {
+            if (_progress != null)
+            {
+                Restore(_beginEditProgress, _progress, CurrentRow);
+                Restore(_beginEditValueChanged, _valueChanged, CurrentRow);
+                ExitEdit();
+            }
+        }
+
+        private static void Restore(IColumns beginEditProgress, Dictionary<RowPresenter, IColumns> progress, RowPresenter currentRow)
+        {
+            if (beginEditProgress == Columns.Empty && progress.ContainsKey(currentRow))
+                progress.Remove(currentRow);
+            else
+                progress[currentRow] = beginEditProgress;
+        }
+
+        internal void ExitEdit()
+        {
+            _beginEditProgress = _beginEditValueChanged = null;
         }
 
         internal bool UpdateProgress<T>(RowInput<T> rowInput, bool valueChanged, bool makeProgress)

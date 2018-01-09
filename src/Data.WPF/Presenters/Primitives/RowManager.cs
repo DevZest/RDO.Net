@@ -785,7 +785,7 @@ namespace DevZest.Data.Presenters.Primitives
             EditHandler.BeginInsertAfter(this, parent, child);
         }
 
-        internal void BeginEdit(RowPresenter row)
+        internal virtual void BeginEdit()
         {
             EditHandler.EnterEditMode(this);
         }
