@@ -116,11 +116,11 @@ namespace DevZest.Data.Presenters.Primitives
             inputManager.ScalarValidation.UpdateProgress(textBox.Input, true, true);
             textBox[0].Text = "6";
             Assert.AreEqual("6", textBox[0].Text);
-            Assert.IsTrue(inputManager.ScalarValidationErrors.Count == 1);
+            Assert.IsTrue(inputManager.ScalarValidation.ValidationErrors.Count == 1);
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(inputManager.ScalarValidationErrors, errors[0].ErrorContent);
+                Assert.AreEqual(inputManager.ScalarValidation.ValidationErrors, errors[0].ErrorContent);
             }
         }
 

@@ -12,14 +12,15 @@ namespace DevZest.Data.Presenters.Primitives
         {
             ScalarValidation = new ScalarValidation(this);
             RowValidation = new RowValidation(this);
-            if (ScalarValidationMode == ValidationMode.Implicit)
-                ValidateScalars();
             ValidateCurrentRowIfImplicit();
         }
 
         public ScalarValidation ScalarValidation { get; private set; }
-        public IScalarValidationMessages ScalarValidationErrors { get; private set; } = ScalarValidationMessages.Empty;
-        public IScalarValidationMessages ScalarValidationWarnings { get; private set; } = ScalarValidationMessages.Empty;
+
+        internal virtual IScalarValidationMessages PerformValidateScalars()
+        {
+            return DataPresenter == null ? ScalarValidationMessages.Empty : DataPresenter.ValidateScalars();
+        }
 
         public RowValidation RowValidation { get; private set; }
         public IRowValidationResults RowValidationErrors { get; private set; } = RowValidationResults.Empty;
@@ -52,52 +53,6 @@ namespace DevZest.Data.Presenters.Primitives
             ValidateCurrentRowIfImplicit();
 
             DataPresenter?.OnRowsLoaded(true);
-        }
-
-        internal void OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged)
-            where T : UIElement, new()
-        {
-            if (!makeProgress && !valueChanged)
-                return;
-
-            if (ScalarValidationMode != ValidationMode.Explicit)
-                ValidateScalars(false);
-            if (ScalarValidation.UpdateProgress(scalarInput, valueChanged, makeProgress))
-                OnProgress(scalarInput);
-            InvalidateView();
-        }
-
-        private void OnProgress<T>(ScalarInput<T> scalarInput)
-            where T : UIElement, new()
-        {
-            if (RowValidationMode == ValidationMode.Explicit)
-                return;
-
-            if (HasError(scalarInput.Target))
-                return;
-
-            var asyncValidators = Template.ScalarAsyncValidators;
-            for (int i = 0; i < asyncValidators.Count; i++)
-            {
-                var asyncValidator = asyncValidators[i];
-                if (asyncValidator.SourceScalars.Intersect(scalarInput.Target).Count > 0)
-                    asyncValidator.Run();
-            }
-        }
-
-        private bool HasError(IScalars scalars)
-        {
-            if (ScalarValidationErrors.Count == 0)
-                return false;
-
-            for (int i = 0; i < ScalarValidationErrors.Count; i++)
-            {
-                var message = ScalarValidationErrors[i];
-                if (message.Source.SetEquals(scalars))
-                    return true;
-            }
-
-            return false;
         }
 
         internal void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged)
@@ -149,46 +104,6 @@ namespace DevZest.Data.Presenters.Primitives
             }
 
             return false;
-        }
-
-        internal ValidationMode ScalarValidationMode
-        {
-            get { return Template.ScalarValidationMode; }
-        }
-
-        public void ValidateScalars()
-        {
-            ValidateScalars(true);
-            InvalidateView();
-        }
-
-        private void ValidateScalars(bool showAll)
-        {
-            if (showAll)
-                ScalarValidation.ShowAll();
-
-            ClearScalarValidationMessages();
-            var messages = PerformValidateScalars();
-            for (int i = 0; i < messages.Count; i++)
-            {
-                var message = messages[i];
-                if (message.Severity == ValidationSeverity.Error)
-                    ScalarValidationErrors = ScalarValidationErrors.Add(message);
-                else
-                    ScalarValidationWarnings = ScalarValidationWarnings.Add(message);
-            }
-            ScalarValidationErrors = ScalarValidationErrors.Seal();
-            ScalarValidationWarnings = ScalarValidationWarnings.Seal();
-        }
-
-        protected virtual IScalarValidationMessages PerformValidateScalars()
-        {
-            return DataPresenter == null ? ScalarValidationMessages.Empty : DataPresenter.ValidateScalars();
-        }
-
-        private void ClearScalarValidationMessages()
-        {
-            ScalarValidationErrors = ScalarValidationWarnings = ScalarValidationMessages.Empty;
         }
 
         internal ValidationMode RowValidationMode
@@ -263,15 +178,6 @@ namespace DevZest.Data.Presenters.Primitives
                 AssignedRowValidationResults = AssignedRowValidationResults.Remove(rowPresenter).Seal();
 
             Template.RowAsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
-        }
-
-        public IScalarValidationMessages AssignedScalarValidationResults { get; private set; } = ScalarValidationMessages.Empty;
-
-        public void Assign(IScalarValidationMessages validationResults)
-        {
-            Debug.Assert(validationResults != null);
-            AssignedScalarValidationResults = validationResults;
-            InvalidateView();
         }
 
         public IRowValidationResults AssignedRowValidationResults { get; private set; } = RowValidationResults.Empty;
@@ -388,9 +294,9 @@ namespace DevZest.Data.Presenters.Primitives
                 if (ScalarValidation.FlushErrors.Count > 0 || RowValidation.FlushErrors.Count > 0)
                     return true;
 
-                for (int i = 0; i < ScalarValidationErrors.Count; i++)
+                for (int i = 0; i < ScalarValidation.ValidationErrors.Count; i++)
                 {
-                    var error = ScalarValidationErrors[i];
+                    var error = ScalarValidation.ValidationErrors[i];
                     if (ScalarValidation.IsVisible(error.Source))
                         return true;
                 }
@@ -410,50 +316,6 @@ namespace DevZest.Data.Presenters.Primitives
 
                 return false;
             }
-        }
-
-        public IScalarValidationMessages GetValidationErrors(IScalars scalars)
-        {
-            var result = ScalarValidationMessages.Empty;
-            if (ScalarValidation.IsVisible(scalars))
-                result = AddValidationMessages(result, ScalarValidationErrors, scalars);
-            result = AddAsyncValidationMessages(result, ValidationSeverity.Error, scalars);
-            result = AddValidationMessages(result, AssignedScalarValidationResults.Where(ValidationSeverity.Error), scalars);
-            return result;
-        }
-
-        public IScalarValidationMessages GetValidationWarnings(IScalars scalars)
-        {
-            var result = ScalarValidationMessages.Empty;
-            if (ScalarValidation.IsVisible(scalars))
-                result = AddValidationMessages(result, ScalarValidationWarnings, scalars);
-            result = AddAsyncValidationMessages(result, ValidationSeverity.Warning, scalars);
-            result = AddValidationMessages(result, AssignedScalarValidationResults.Where(ValidationSeverity.Warning), scalars);
-            return result;
-        }
-
-        private static IScalarValidationMessages AddValidationMessages(IScalarValidationMessages result, IScalarValidationMessages messages, IScalars scalars)
-        {
-            for (int i = 0; i < messages.Count; i++)
-            {
-                var message = messages[i];
-                if (message.Source.SetEquals(scalars))
-                    result = result.Add(message);
-            }
-            return result;
-        }
-
-        private IScalarValidationMessages AddAsyncValidationMessages(IScalarValidationMessages result, ValidationSeverity severity, IScalars scalars)
-        {
-            var asyncValidators = Template.ScalarAsyncValidators;
-            for (int i = 0; i < asyncValidators.Count; i++)
-            {
-                var asyncValidator = asyncValidators[i];
-                var messages = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
-                result = AddValidationMessages(result, messages, scalars);
-            }
-
-            return result;
         }
     }
 }

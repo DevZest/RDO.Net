@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        protected override IScalarValidationMessages PerformValidateScalars()
+        internal override IScalarValidationMessages PerformValidateScalars()
         {
             var result = ScalarValidationMessages.Empty;
             if (_scalars != null)

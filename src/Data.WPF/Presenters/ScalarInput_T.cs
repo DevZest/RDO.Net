@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters
         internal override void FlushCore(T element, bool makeProgress)
         {
             var valueChanged = DoFlush(element);
-            InputManager.OnFlushed(this, makeProgress, valueChanged);
+            ScalarValidation.OnFlushed(this, makeProgress, valueChanged);
         }
 
         private bool DoFlush(T element)
@@ -123,12 +123,12 @@ namespace DevZest.Data.Presenters
 
         public IScalarValidationMessages ValidationErrors
         {
-            get { return InputManager.GetValidationErrors(Target); }
+            get { return ScalarValidation.GetValidationErrors(Target); }
         }
 
         public IScalarValidationMessages ValidationWarnings
         {
-            get { return InputManager.GetValidationWarnings(Target); }
+            get { return ScalarValidation.GetValidationWarnings(Target); }
         }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)
