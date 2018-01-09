@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
