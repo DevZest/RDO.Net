@@ -179,5 +179,24 @@ namespace DevZest.Data.Presenters.Primitives
                 return false;
             }
         }
+
+        public void FlushScalars()
+        {
+            var scalarBindings = Template.ScalarBindings;
+            foreach (var scalarBinding in scalarBindings)
+            {
+                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
+                {
+                    var element = scalarBinding[i];
+                    scalarBinding.FlushInput(element);
+                }
+            }
+        }
+
+        public void FlushCurrentRow()
+        {
+            if (CurrentRow != null && CurrentRow.View != null)
+                CurrentRow.View.Flush();
+        }
     }
 }

@@ -68,19 +68,6 @@ namespace DevZest.Data.Presenters
             InternalFlushErrors.SetFlushError(element, inputError);
         }
 
-        public void Flush()
-        {
-            var scalarBindings = Template.ScalarBindings;
-            foreach (var scalarBinding in scalarBindings)
-            {
-                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
-                {
-                    var element = scalarBinding[i];
-                    scalarBinding.FlushInput(element);
-                }
-            }
-        }
-
         private IScalarValidationMessages _validationErrors = ScalarValidationMessages.Empty;
         private IScalarValidationMessages _validationWarnings = ScalarValidationMessages.Empty;
 

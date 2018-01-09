@@ -351,12 +351,6 @@ namespace DevZest.Data.Presenters
             return Columns.Empty;
         }
 
-        public void FlushCurrentRow()
-        {
-            if (CurrentRow != null && CurrentRow.View != null)
-                CurrentRow.View.Flush();
-        }
-
         public void Validate(int errorLimit = 1, int warningLimit = 0)
         {
             if (errorLimit < 1)
