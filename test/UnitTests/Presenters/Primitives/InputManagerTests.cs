@@ -28,22 +28,22 @@ namespace DevZest.Data.Presenters.Primitives
 
             var element = textBox[inputManager.CurrentRow];
             Assert.IsTrue(string.IsNullOrEmpty(element.Text));
-            Assert.IsNull(inputManager.GetRowFlushError(element));
+            Assert.IsNull(inputManager.RowValidation.GetFlushError(element));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(element);
                 Assert.AreEqual(0, errors.Count);
             }
 
             element.Text = "A";
-            Assert.IsNotNull(inputManager.GetRowFlushError(element));
+            Assert.IsNotNull(inputManager.RowValidation.GetFlushError(element));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[inputManager.CurrentRow]);
                 Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(inputManager.GetRowFlushError(element), errors[0].ErrorContent);
+                Assert.AreEqual(inputManager.RowValidation.GetFlushError(element), errors[0].ErrorContent);
             }
 
             element.Text = "100";
-            Assert.IsNull(inputManager.GetRowFlushError(element));
+            Assert.IsNull(inputManager.RowValidation.GetFlushError(element));
             Assert.AreEqual(100, dataSet._.ParentProductCategoryID[inputManager.CurrentRow.DataRow]);
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(element);
@@ -90,24 +90,24 @@ namespace DevZest.Data.Presenters.Primitives
             }).WithScalars(new Scalar[] { scalar });
 
             Assert.AreEqual("0", textBox[0].Text);
-            Assert.IsNull(inputManager.GetScalarFlushError(textBox[0]));
+            Assert.IsNull(inputManager.ScalarValidation.GetFlushError(textBox[0]));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(0, errors.Count);
             }
 
             textBox[0].Text = "A";
-            Assert.IsNotNull(inputManager.GetScalarFlushError(textBox[0]));
+            Assert.IsNotNull(inputManager.ScalarValidation.GetFlushError(textBox[0]));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(inputManager.GetScalarFlushError(textBox[0]), errors[0].ErrorContent);
+                Assert.AreEqual(inputManager.ScalarValidation.GetFlushError(textBox[0]), errors[0].ErrorContent);
             }
 
             textBox[0].Text = "4";
-            Assert.IsNull(inputManager.GetScalarFlushError(textBox[0]));
+            Assert.IsNull(inputManager.ScalarValidation.GetFlushError(textBox[0]));
             Assert.AreEqual(4, scalar.Value);
-            Assert.IsNull(inputManager.GetScalarFlushError(textBox[0]));
+            Assert.IsNull(inputManager.ScalarValidation.GetFlushError(textBox[0]));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(0, errors.Count);

@@ -18,6 +18,37 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        private FlushErrorCollection _flushErrors;
+        private FlushErrorCollection InternalFlushErrors
+        {
+            get
+            {
+                if (_flushErrors == null)
+                    _flushErrors = new FlushErrorCollection(_inputManager);
+                return _flushErrors;
+            }
+        }
+
+        public IReadOnlyList<FlushErrorMessage> FlushErrors
+        {
+            get
+            {
+                if (_flushErrors == null)
+                    return Array<FlushErrorMessage>.Empty;
+                return _flushErrors;
+            }
+        }
+
+        internal FlushErrorMessage GetFlushError(UIElement element)
+        {
+            return _flushErrors.GetFlushError(element);
+        }
+
+        internal void SetFlushError(UIElement element, FlushErrorMessage value)
+        {
+            InternalFlushErrors.SetFlushError(element, value);
+        }
+
         private InputManager _inputManager;
         private Dictionary<RowPresenter, IColumns> _progress;
         private Dictionary<RowPresenter, IColumns> _valueChanged;
@@ -152,11 +183,6 @@ namespace DevZest.Data.Presenters
             if (progressByRow.TryGetValue(rowPresenter, out result))
                 return result;
             return Columns.Empty;
-        }
-
-        public IReadOnlyList<FlushErrorMessage> FlushErrors
-        {
-            get { return _inputManager.RowFlushErrors; }
         }
 
         public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> Errors

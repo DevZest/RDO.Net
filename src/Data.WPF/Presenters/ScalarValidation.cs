@@ -23,6 +23,50 @@ namespace DevZest.Data.Presenters
         private IScalars _progress;
         private IScalars _valueChanged;
 
+        private FlushErrorCollection _flushErrors;
+        private FlushErrorCollection InternalFlushErrors
+        {
+            get
+            {
+                if (_flushErrors == null)
+                    _flushErrors = new FlushErrorCollection(_inputManager);
+                return _flushErrors;
+            }
+        }
+
+        public IReadOnlyList<FlushErrorMessage> FlushErrors
+        {
+            get
+            {
+                if (_flushErrors == null)
+                    return Array<FlushErrorMessage>.Empty;
+                return _flushErrors;
+            }
+        }
+
+        internal FlushErrorMessage GetFlushError(UIElement element)
+        {
+            return _flushErrors.GetFlushError(element);
+        }
+
+        internal void SetFlushError(UIElement element, FlushErrorMessage inputError)
+        {
+            InternalFlushErrors.SetFlushError(element, inputError);
+        }
+
+        public void Flush()
+        {
+            var scalarBindings = Template.ScalarBindings;
+            foreach (var scalarBinding in scalarBindings)
+            {
+                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
+                {
+                    var element = scalarBinding[i];
+                    scalarBinding.FlushInput(element);
+                }
+            }
+        }
+
         private Template Template
         {
             get { return _inputManager.Template; }
@@ -80,11 +124,6 @@ namespace DevZest.Data.Presenters
             return _showAll || _progress == null ? true : _progress.IsSupersetOf(scalars);
         }
 
-        public IReadOnlyList<FlushErrorMessage> FlushErrors
-        {
-            get { return _inputManager.ScalarFlushErrors; }
-        }
-
         public IReadOnlyList<ScalarValidationMessage> Errors
         {
             get { return _inputManager.ScalarValidationErrors; }
@@ -122,11 +161,6 @@ namespace DevZest.Data.Presenters
         public IReadOnlyList<ScalarValidationMessage> AssignedResults
         {
             get { return _inputManager.AssignedScalarValidationResults; }
-        }
-
-        public void Flush()
-        {
-            _inputManager.FlushScalars();
         }
 
         public void Validate()

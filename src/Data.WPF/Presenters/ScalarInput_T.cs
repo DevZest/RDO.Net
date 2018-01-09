@@ -25,14 +25,19 @@ namespace DevZest.Data.Presenters
             get { return ScalarBinding; }
         }
 
+        private ScalarValidation ScalarValidation
+        {
+            get { return InputManager.ScalarValidation; }
+        }
+
         public sealed override FlushErrorMessage GetFlushError(UIElement element)
         {
-            return InputManager.GetScalarFlushError(element);
+            return ScalarValidation.GetFlushError(element);
         }
 
         internal sealed override void SetFlushError(UIElement element, FlushErrorMessage inputError)
         {
-            InputManager.SetScalarFlushError(element, inputError);
+            ScalarValidation.SetFlushError(element, inputError);
         }
 
         public ScalarInput<T> WithFlushValidator(Func<T, string> flushValidator)

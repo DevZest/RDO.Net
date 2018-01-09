@@ -17,101 +17,10 @@ namespace DevZest.Data.Presenters.Primitives
             ValidateCurrentRowIfImplicit();
         }
 
-        public void FlushScalars()
-        {
-            var scalarBindings = Template.ScalarBindings;
-            foreach (var scalarBinding in scalarBindings)
-            {
-                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
-                {
-                    var element = scalarBinding[i];
-                    scalarBinding.FlushInput(element);
-                }
-            }
-        }
-
         public void FlushCurrentRow()
         {
             if (CurrentRow != null && CurrentRow.View != null)
                 CurrentRow.View.Flush();
-        }
-
-        private FlushErrorCollection _scalarFlushErrors;
-        private FlushErrorCollection InternalScalarFlushErrors
-        {
-            get
-            {
-                if (_scalarFlushErrors == null)
-                    _scalarFlushErrors = new FlushErrorCollection();
-                return _scalarFlushErrors;
-            }
-        }
-
-        internal FlushErrorMessage GetScalarFlushError(UIElement element)
-        {
-            return GetFlushError(_scalarFlushErrors, element);
-        }
-
-        private static FlushErrorMessage GetFlushError(FlushErrorCollection flushErrors, UIElement element)
-        {
-            if (flushErrors == null)
-                return null;
-            return flushErrors.Contains(element) ? flushErrors[element] : null;
-        }
-
-        internal void SetScalarFlushError(UIElement element, FlushErrorMessage inputError)
-        {
-            SetFlushError(InternalScalarFlushErrors, element, inputError);
-        }
-
-        private void SetFlushError(FlushErrorCollection inputErrors, UIElement element, FlushErrorMessage inputError)
-        {
-            Debug.Assert(inputErrors != null);
-            inputErrors.Remove(element);
-            if (inputError != null)
-                inputErrors.Add(inputError);
-            InvalidateView();
-        }
-
-        public IReadOnlyList<FlushErrorMessage> ScalarFlushErrors
-        {
-            get
-            {
-                if (_scalarFlushErrors == null)
-                    return Array<FlushErrorMessage>.Empty;
-                return _scalarFlushErrors;
-            }
-        }
-
-        private FlushErrorCollection _rowFlushErrors;
-        private FlushErrorCollection InternalRowFlushErrors
-        {
-            get
-            {
-                if (_rowFlushErrors == null)
-                    _rowFlushErrors = new FlushErrorCollection();
-                return _rowFlushErrors;
-            }
-        }
-
-        internal FlushErrorMessage GetRowFlushError(UIElement element)
-        {
-            return GetFlushError(_rowFlushErrors, element);
-        }
-
-        internal void SetRowFlushError(UIElement element, FlushErrorMessage value)
-        {
-            SetFlushError(InternalRowFlushErrors, element, value);
-        }
-
-        public IReadOnlyList<FlushErrorMessage> RowFlushErrors
-        {
-            get
-            {
-                if (_rowFlushErrors == null)
-                    return Array<FlushErrorMessage>.Empty;
-                return _rowFlushErrors;
-            }
         }
 
         public ScalarValidation ScalarValidation { get; private set; }
@@ -482,7 +391,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             get
             {
-                if (ScalarFlushErrors.Count > 0 || RowFlushErrors.Count > 0)
+                if (ScalarValidation.FlushErrors.Count > 0 || RowValidation.FlushErrors.Count > 0)
                     return true;
 
                 for (int i = 0; i < ScalarValidationErrors.Count; i++)

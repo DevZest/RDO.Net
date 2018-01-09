@@ -24,14 +24,19 @@ namespace DevZest.Data.Presenters
             get { return RowBinding; }
         }
 
+        private RowValidation RowValidation
+        {
+            get { return InputManager.RowValidation; }
+        }
+
         public sealed override FlushErrorMessage GetFlushError(UIElement element)
         {
-            return InputManager.GetRowFlushError(element);
+            return RowValidation.GetFlushError(element);
         }
 
         internal sealed override void SetFlushError(UIElement element, FlushErrorMessage inputError)
         {
-            InputManager.SetRowFlushError(element, inputError);
+            RowValidation.SetFlushError(element, inputError);
         }
 
         public IColumns Target { get; private set; } = Columns.Empty;
