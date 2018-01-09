@@ -241,7 +241,8 @@ namespace DevZest.Data.Presenters
 
         public void FlushCurrentRow()
         {
-            _inputManager.FlushCurrentRow();
+            if (CurrentRow != null && CurrentRow.View != null)
+                CurrentRow.View.Flush();
         }
 
         public void Validate(int errorLimit = 1, int warningLimit = 0)

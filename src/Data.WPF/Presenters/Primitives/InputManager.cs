@@ -17,12 +17,6 @@ namespace DevZest.Data.Presenters.Primitives
             ValidateCurrentRowIfImplicit();
         }
 
-        public void FlushCurrentRow()
-        {
-            if (CurrentRow != null && CurrentRow.View != null)
-                CurrentRow.View.Flush();
-        }
-
         public ScalarValidation ScalarValidation { get; private set; }
         public IScalarValidationMessages ScalarValidationErrors { get; private set; } = ScalarValidationMessages.Empty;
         public IScalarValidationMessages ScalarValidationWarnings { get; private set; } = ScalarValidationMessages.Empty;
