@@ -123,12 +123,12 @@ namespace DevZest.Data.Presenters
 
         public IScalarValidationMessages ValidationErrors
         {
-            get { return ScalarValidation.GetValidationErrors(Target); }
+            get { return ScalarValidation.GetErrors(Target); }
         }
 
         public IScalarValidationMessages ValidationWarnings
         {
-            get { return ScalarValidation.GetValidationWarnings(Target); }
+            get { return ScalarValidation.GetWarnings(Target); }
         }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)

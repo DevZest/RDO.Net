@@ -94,7 +94,7 @@ namespace DevZest.Data.Presenters
             get { return _validationWarnings; }
         }
 
-        public IScalarValidationMessages GetValidationErrors(IScalars scalars)
+        public IScalarValidationMessages GetErrors(IScalars scalars)
         {
             var result = ScalarValidationMessages.Empty;
             if (IsVisible(scalars))
@@ -103,7 +103,7 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        public IScalarValidationMessages GetValidationWarnings(IScalars scalars)
+        public IScalarValidationMessages GetWarnings(IScalars scalars)
         {
             var result = ScalarValidationMessages.Empty;
             if (IsVisible(scalars))

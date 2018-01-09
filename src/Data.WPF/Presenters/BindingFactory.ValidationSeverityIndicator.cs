@@ -32,9 +32,9 @@ namespace DevZest.Data.Presenters
                 onRefresh: (v, p) =>
                 {
                     var validation = p.DataPresenter.ScalarValidation;
-                    if (validation.GetValidationErrors(source).Count > 0)
+                    if (validation.GetErrors(source).Count > 0)
                         v.ValidationSeverity = ValidationSeverity.Error;
-                    else if (validation.GetValidationWarnings(source).Count > 0)
+                    else if (validation.GetWarnings(source).Count > 0)
                         v.ValidationSeverity = ValidationSeverity.Warning;
                     else
                         v.ValidationSeverity = null;

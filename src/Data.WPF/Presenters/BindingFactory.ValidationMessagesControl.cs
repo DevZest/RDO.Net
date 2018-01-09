@@ -78,8 +78,8 @@ namespace DevZest.Data.Presenters
                 onRefresh: (v, p) =>
                 {
                     var validation = p.DataPresenter.ScalarValidation;
-                    var errors = validation.GetValidationErrors(source);
-                    var warnings = validation.GetValidationWarnings(source);
+                    var errors = validation.GetErrors(source);
+                    var warnings = validation.GetWarnings(source);
                     var messages = GetValidationMessages(errors, warnings);
                     if (ShouldUpdateItemsSource(v, messages))
                         v.ItemsSource = messages;
