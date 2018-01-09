@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 
@@ -8,14 +7,6 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class InputManager : ElementManager
     {
-        private sealed class FlushErrorCollection : KeyedCollection<UIElement, FlushErrorMessage>
-        {
-            protected override UIElement GetKeyForItem(FlushErrorMessage item)
-            {
-                return item.Source;
-            }
-        }
-
         protected InputManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {

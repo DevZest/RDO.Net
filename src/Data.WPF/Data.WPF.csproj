@@ -55,6 +55,7 @@
     <Compile Include="Presenters\BindingFactory.Label.cs" />
     <Compile Include="Presenters\BindingFactory.TextBlock.cs" />
     <Compile Include="Presenters\InitialFocus.cs" />
+    <Compile Include="Presenters\Primitives\FlushErrorCollection.cs" />
     <Compile Include="Presenters\RoutedEventTrigger.cs" />
     <Compile Include="Presenters\IScalarAsyncValidators.cs" />
     <Compile Include="Presenters\IScalars.cs" />
