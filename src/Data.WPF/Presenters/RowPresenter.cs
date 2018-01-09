@@ -494,7 +494,7 @@ namespace DevZest.Data.Presenters
             var rowValidation = InputManager.RowValidation;
             rowValidation.Validate(this, true);
             if (invalidateView)
-                rowValidation.InvalidateView();
+                InputManager.InvalidateView();
         }
 
         public IColumnValidationMessages GetValidationErrors(IColumns source)

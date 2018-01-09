@@ -31,10 +31,8 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.DataSet; }
         }
 
-        internal void InvalidateView()
+        private void InvalidateView()
         {
-            _validationErrors = _validationErrors.Seal();
-            _validationWarnings = _validationWarnings.Seal();
             _inputManager.InvalidateView();
         }
 
