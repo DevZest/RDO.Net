@@ -9,35 +9,43 @@ namespace DevZest.Data.Presenters.Primitives
         protected InputManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
-            ScalarValidation = new ScalarValidation(this);
-            RowValidation = new RowValidation(this);
         }
 
-        public ScalarValidation ScalarValidation { get; private set; }
+        private ScalarValidation _scalarValidation;
+        public ScalarValidation ScalarValidation
+        {
+            get { return _scalarValidation ?? (_scalarValidation = new ScalarValidation(this)); }
+        }
 
         internal virtual IScalarValidationMessages PerformValidateScalars()
         {
             return DataPresenter == null ? ScalarValidationMessages.Empty : DataPresenter.ValidateScalars();
         }
 
-        public RowValidation RowValidation { get; private set; }
+        private RowValidation _rowValidation;
+        public RowValidation RowValidation
+        {
+            get { return _rowValidation ?? (_rowValidation = new RowValidation(this)); }
+        }
 
         protected override void Reload()
         {
             base.Reload();
-            RowValidation.OnReloaded();
+            _rowValidation?.OnReloaded();
+            DataPresenter?.OnRowsLoaded(true);
         }
 
         protected sealed override void OnCurrentRowChanged(RowPresenter oldValue)
         {
             base.OnCurrentRowChanged(oldValue);
-            RowValidation.OnCurrentRowChanged(oldValue);
+            _rowValidation?.OnCurrentRowChanged(oldValue);
+            DataPresenter?.OnCurrentRowChanged(oldValue);
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)
         {
             base.DisposeRow(rowPresenter);
-            RowValidation.OnRowDisposed(rowPresenter);
+            _rowValidation?.OnRowDisposed(rowPresenter);
         }
 
         internal override void BeginEdit()
@@ -119,21 +127,43 @@ namespace DevZest.Data.Presenters.Primitives
             return element.Focus();
         }
 
+        private IReadOnlyList<FlushErrorMessage> ScalarFlushErrors
+        {
+            get { return _scalarValidation == null ? Array<FlushErrorMessage>.Empty : _scalarValidation.FlushErrors; }
+        }
+
+        private IReadOnlyList<FlushErrorMessage> RowFlushErrors
+        {
+            get { return _rowValidation == null ? Array<FlushErrorMessage>.Empty : _rowValidation.FlushErrors; }
+        }
+
+        private IReadOnlyList<ScalarValidationMessage> ScalarValidationErrors
+        {
+            get { return _scalarValidation == null ? Array<ScalarValidationMessage>.Empty : _scalarValidation.ValidationErrors; }
+        }
+
+        private IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowValidationErrors
+        {
+            get { return _rowValidation == null ? RowValidationResults.Empty : _rowValidation.ValidationErrors; }
+        }
+
         public bool HasVisibleError
         {
             get
             {
-                if (ScalarValidation.FlushErrors.Count > 0 || RowValidation.FlushErrors.Count > 0)
+                if (ScalarFlushErrors.Count > 0 || RowFlushErrors.Count > 0)
                     return true;
 
-                for (int i = 0; i < ScalarValidation.ValidationErrors.Count; i++)
+                var scalarValidationErrors = ScalarValidationErrors;
+                for (int i = 0; i < scalarValidationErrors.Count; i++)
                 {
-                    var error = ScalarValidation.ValidationErrors[i];
+                    var error = scalarValidationErrors[i];
                     if (ScalarValidation.IsVisible(error.Source))
                         return true;
                 }
 
-                foreach (var keyValuePair in RowValidation.ValidationErrors)
+                var rowValidationErrors = RowValidationErrors;
+                foreach (var keyValuePair in rowValidationErrors)
                 {
                     var rowPresenter = keyValuePair.Key;
                     var messages = keyValuePair.Value;

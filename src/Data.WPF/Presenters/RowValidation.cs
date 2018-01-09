@@ -142,14 +142,12 @@ namespace DevZest.Data.Presenters
 
             _validationErrors = _validationWarnings = RowValidationResults.Empty;
             ValidateCurrentRowIfImplicit();
-            DataPresenter?.OnRowsLoaded(true);
         }
 
         internal void OnCurrentRowChanged(RowPresenter oldValue)
         {
             Template.RowAsyncValidators.Each(x => x.OnCurrentRowChanged());
             ValidateCurrentRowIfImplicit();
-            DataPresenter?.OnCurrentRowChanged(oldValue);
         }
 
         internal void EnterEdit()
@@ -299,13 +297,13 @@ namespace DevZest.Data.Presenters
 
         internal void OnRowDisposed(RowPresenter rowPresenter)
         {
-            if (_progress == null)
-                return;
-
-            if (_progress.ContainsKey(rowPresenter))
-                _progress.Remove(rowPresenter);
-            if (_valueChanged.ContainsKey(rowPresenter))
-                _valueChanged.Remove(rowPresenter);
+            if (_progress != null)
+            {
+                if (_progress.ContainsKey(rowPresenter))
+                    _progress.Remove(rowPresenter);
+                if (_valueChanged.ContainsKey(rowPresenter))
+                    _valueChanged.Remove(rowPresenter);
+            }
 
             if (_validationErrors.ContainsKey(rowPresenter))
                 _validationErrors = _validationErrors.Remove(rowPresenter).Seal();
