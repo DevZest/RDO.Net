@@ -369,7 +369,7 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _mappings == null ? _rows[index] : this[dataRow]; }
         }
 
-        protected RowPresenter this[DataRow dataRow]
+        internal RowPresenter this[DataRow dataRow]
         {
             get
             {

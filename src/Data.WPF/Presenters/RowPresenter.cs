@@ -491,9 +491,10 @@ namespace DevZest.Data.Presenters
 
         public void Validate(bool invalidateView = true)
         {
-            InputManager.Validate(this, true);
+            var rowValidation = InputManager.RowValidation;
+            rowValidation.Validate(this, true);
             if (invalidateView)
-                ElementManager.InvalidateView();
+                rowValidation.InvalidateView();
         }
 
         public IColumnValidationMessages GetValidationErrors(IColumns source)
@@ -506,7 +507,6 @@ namespace DevZest.Data.Presenters
             var result = ColumnValidationMessages.Empty;
             result = InputManager.RowValidation.GetValidationMessages(this, source, ValidationSeverity.Error);
             result = AddAsyncValidationMessages(result, this, ValidationSeverity.Error);
-            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults.Where(ValidationSeverity.Error), this);
             return result;
         }
 
@@ -520,7 +520,6 @@ namespace DevZest.Data.Presenters
             var result = ColumnValidationMessages.Empty;
             result = InputManager.RowValidation.GetValidationMessages(this, source, ValidationSeverity.Warning);
             result = AddAsyncValidationMessages(result, this, ValidationSeverity.Warning);
-            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults.Where(ValidationSeverity.Warning), this);
             return result;
         }
 

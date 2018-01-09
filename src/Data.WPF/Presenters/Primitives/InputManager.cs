@@ -12,7 +12,6 @@ namespace DevZest.Data.Presenters.Primitives
         {
             ScalarValidation = new ScalarValidation(this);
             RowValidation = new RowValidation(this);
-            ValidateCurrentRowIfImplicit();
         }
 
         public ScalarValidation ScalarValidation { get; private set; }
@@ -23,189 +22,23 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         public RowValidation RowValidation { get; private set; }
-        public IRowValidationResults RowValidationErrors { get; private set; } = RowValidationResults.Empty;
-        public IRowValidationResults RowValidationWarnings { get; private set; } = RowValidationResults.Empty;
-
-        public IColumnValidationMessages CurrentRowErrors
-        {
-            get { return RowValidationErrors.GetValidationMessages(CurrentRow); }
-        }
-
-        public IColumnValidationMessages CurrentRowWarnings
-        {
-            get { return RowValidationWarnings.GetValidationMessages(CurrentRow); }
-        }
-
-        private void ClearRowValidationMessages(RowPresenter rowPresenter)
-        {
-            Debug.Assert(rowPresenter != null);
-            RowValidationErrors = RowValidationErrors.Remove(rowPresenter);
-            RowValidationWarnings = RowValidationWarnings.Remove(rowPresenter);
-        }
 
         protected override void Reload()
         {
             base.Reload();
-
-            RowValidation.Reset();
-            RowValidationErrors = RowValidationWarnings = RowValidationResults.Empty;
-            AssignedRowValidationResults = RowValidationResults.Empty;
-            ValidateCurrentRowIfImplicit();
-
-            DataPresenter?.OnRowsLoaded(true);
-        }
-
-        internal void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged)
-            where T : UIElement, new()
-        {
-            if (!makeProgress && !valueChanged)
-                return;
-
-            if (RowValidationMode != ValidationMode.Explicit)
-                Validate(CurrentRow, false);
-            if (RowValidation.UpdateProgress(rowInput, valueChanged, makeProgress))
-                OnProgress(rowInput);
-            InvalidateView();
-        }
-
-        private void OnProgress<T>(RowInput<T> rowInput)
-            where T : UIElement, new()
-        {
-            if (RowValidationMode == ValidationMode.Explicit)
-                return;
-
-            if (HasError(CurrentRow, rowInput.Target))
-                return;
-
-            var asyncValidators = Template.RowAsyncValidators;
-            for (int i = 0; i < asyncValidators.Count; i++)
-            {
-                var asyncValidator = asyncValidators[i];
-                var sourceColumns = asyncValidator.SourceColumns;
-                if (sourceColumns.Overlaps(rowInput.Target) && RowValidation.IsVisible(CurrentRow, sourceColumns))
-                    asyncValidator.Run();
-            }
-        }
-
-        private bool HasError(RowPresenter rowPresenter, IColumns columns)
-        {
-            if (RowValidationErrors.Count == 0)
-                return false;
-
-            IColumnValidationMessages messages;
-            if (!RowValidationErrors.TryGetValue(rowPresenter, out messages))
-                return false;
-
-            for (int i = 0; i < messages.Count; i++)
-            {
-                var message = messages[i];
-                if (message.Source.SetEquals(columns))
-                    return true;
-            }
-
-            return false;
-        }
-
-        internal ValidationMode RowValidationMode
-        {
-            get { return Template.RowValidationMode; }
-        }
-
-        private void ValidateCurrentRowIfImplicit()
-        {
-            if (RowValidationMode == ValidationMode.Implicit)
-                ValidateCurrentRow();
-        }
-
-        private void ValidateCurrentRow()
-        {
-            if (CurrentRow != null)
-            {
-                Validate(CurrentRow, true);
-                InvalidateView();
-            }
-        }
-
-        public void Validate(RowPresenter rowPresenter, bool showAll)
-        {
-            Debug.Assert(rowPresenter != null);
-            if (showAll)
-                RowValidation.ShowAll(rowPresenter);
-            RowValidationErrors = RowValidationErrors.Remove(rowPresenter);
-            RowValidationWarnings = RowValidationWarnings.Remove(rowPresenter);
-            var dataRow = rowPresenter.DataRow;
-            var errors = Validate(dataRow, ValidationSeverity.Error);
-            var warnings = Validate(dataRow, ValidationSeverity.Warning);
-            if (errors != null && errors.Count > 0)
-                RowValidationErrors = RowValidationErrors.Add(rowPresenter, errors);
-            if (warnings != null && warnings.Count > 0)
-                RowValidationWarnings = RowValidationWarnings.Add(rowPresenter, warnings);
-        }
-
-        public override void InvalidateView()
-        {
-            RowValidationErrors = RowValidationErrors.Seal();
-            RowValidationWarnings = RowValidationWarnings.Seal();
-            base.InvalidateView();
-        }
-
-        private IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
-        {
-            return dataRow == DataSet.AddingRow ? DataSet.ValidateAddingRow(severity) : dataRow.Validate(severity);
+            RowValidation.OnReloaded();
         }
 
         protected sealed override void OnCurrentRowChanged(RowPresenter oldValue)
         {
             base.OnCurrentRowChanged(oldValue);
-            Template.RowAsyncValidators.Each(x => x.OnCurrentRowChanged());
-            ValidateCurrentRowIfImplicit();
-            DataPresenter?.OnCurrentRowChanged(oldValue);
+            RowValidation.OnCurrentRowChanged(oldValue);
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)
         {
             base.DisposeRow(rowPresenter);
-
             RowValidation.OnRowDisposed(rowPresenter);
-
-            if (RowValidationErrors.ContainsKey(rowPresenter))
-                RowValidationErrors = RowValidationErrors.Remove(rowPresenter).Seal();
-
-            if (RowValidationWarnings.ContainsKey(rowPresenter))
-                RowValidationWarnings = RowValidationWarnings.Remove(rowPresenter).Seal();
-
-            if (AssignedRowValidationResults.ContainsKey(rowPresenter))
-                AssignedRowValidationResults = AssignedRowValidationResults.Remove(rowPresenter).Seal();
-
-            Template.RowAsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
-        }
-
-        public IRowValidationResults AssignedRowValidationResults { get; private set; } = RowValidationResults.Empty;
-
-        public void Assign(IDataRowValidationResults validationResults)
-        {
-            Debug.Assert(validationResults != null);
-            Assign(ToRowValidationResults(validationResults));
-        }
-
-        public void Assign(IRowValidationResults validationResults)
-        {
-            Debug.Assert(validationResults != null);
-            AssignedRowValidationResults = validationResults;
-            InvalidateView();
-        }
-
-        internal IRowValidationResults ToRowValidationResults(IDataRowValidationResults validationResults)
-        {
-            var result = RowValidationResults.Empty;
-            for (int i = 0; i < validationResults.Count; i++)
-            {
-                var entry = validationResults[i];
-                var rowPresenter = this[entry.DataRow];
-                if (rowPresenter != null)
-                    result = result.Add(rowPresenter, entry.Messages);
-            }
-            return result;
         }
 
         internal override void BeginEdit()
@@ -236,11 +69,11 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal bool QueryEndEdit()
         {
-            ValidateCurrentRow();
-            var hasError = CurrentRowErrors.Count > 0;
+            RowValidation.ValidateCurrentRow();
+            var hasError = RowValidation.CurrentRowErrors.Count > 0;
             if (hasError)
             {
-                FocusToInputError(CurrentRowErrors);
+                FocusToInputError(RowValidation.CurrentRowErrors);
                 return false;
             }
             return true;
@@ -301,7 +134,7 @@ namespace DevZest.Data.Presenters.Primitives
                         return true;
                 }
 
-                foreach (var keyValuePair in RowValidationErrors)
+                foreach (var keyValuePair in RowValidation.ValidationErrors)
                 {
                     var rowPresenter = keyValuePair.Key;
                     var messages = keyValuePair.Value;

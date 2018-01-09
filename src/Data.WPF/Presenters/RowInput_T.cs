@@ -117,7 +117,7 @@ namespace DevZest.Data.Presenters
             if (currentRow != element.GetRowPresenter())
                 throw new InvalidOperationException(DiagnosticMessages.RowInput_FlushCurrentRowOnly);
             var valueChanged = DoFlush(currentRow, element);
-            InputManager.OnFlushed(this, makeProgress, valueChanged);
+            InputManager.RowValidation.OnFlushed(this, makeProgress, valueChanged);
         }
 
         private bool DoFlush(RowPresenter rowPresenter, T element)

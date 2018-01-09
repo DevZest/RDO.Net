@@ -350,21 +350,21 @@ namespace DevZest.Data.Presenters.Primitives
                 Assert.AreEqual(_.Name, errorMessage.Source);
             }
 
-            var validationMessage = new ColumnValidationMessage(ValidationSeverity.Error, "Result Error", _.Name);
-            var validationResults = DataRowValidationResults.Empty.Add(new DataRowValidationResult(currentRow.DataRow, validationMessage));
-            inputManager.Assign(validationResults);
-            {
-                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
-                Assert.AreEqual(2, errors.Count);
-                Assert.AreEqual(validationMessage, errors[1].ErrorContent);
-            }
+            //var validationMessage = new ColumnValidationMessage(ValidationSeverity.Error, "Result Error", _.Name);
+            //var validationResults = DataRowValidationResults.Empty.Add(new DataRowValidationResult(currentRow.DataRow, validationMessage));
+            //inputManager.Assign(validationResults);
+            //{
+            //    var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+            //    Assert.AreEqual(2, errors.Count);
+            //    Assert.AreEqual(validationMessage, errors[1].ErrorContent);
+            //}
 
-            textBox[currentRow].Text = "any value";
-            {
-                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
-                Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(validationMessage, errors[0].ErrorContent);
-            }
+            //textBox[currentRow].Text = "any value";
+            //{
+            //    var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+            //    Assert.AreEqual(1, errors.Count);
+            //    Assert.AreEqual(validationMessage, errors[0].ErrorContent);
+            //}
         }
 
         // http://stackoverflow.com/questions/14087257/how-to-add-synchronization-context-to-async-test-method
