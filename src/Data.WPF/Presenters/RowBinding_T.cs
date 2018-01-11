@@ -21,9 +21,14 @@ namespace DevZest.Data.Presenters
             _onCleanup = onCleanup;
         }
 
+        public override IReadOnlyList<RowBinding> ChildBindings
+        {
+            get { return Array<RowBinding>.Empty; }
+        }
+
         public RowInput<T> Input { get; private set; }
 
-        internal override IRowInput RowInput
+        public override IRowInput RowInput
         {
             get { return Input; }
         }

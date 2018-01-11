@@ -48,6 +48,10 @@ namespace DevZest.Data.Presenters.Primitives
 
         public RowBinding Parent { get; private set; }
 
+        public abstract IReadOnlyList<RowBinding> ChildBindings { get; }
+
+        public abstract IRowInput RowInput { get; }
+
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
@@ -92,7 +96,5 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         internal abstract void BeginSetup(UIElement value);
-
-        internal abstract IRowInput RowInput { get; }
     }
 }

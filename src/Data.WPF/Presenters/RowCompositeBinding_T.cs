@@ -12,12 +12,12 @@ namespace DevZest.Data.Presenters
         private List<RowBinding> _childBindings = new List<RowBinding>();
         private List<Func<T, UIElement>> _childGetters = new List<Func<T, UIElement>>();
 
-        public IReadOnlyList<RowBinding> ChildBindings
+        public override IReadOnlyList<RowBinding> ChildBindings
         {
             get { return _childBindings; }
         }
 
-        internal override IRowInput RowInput
+        public override IRowInput RowInput
         {
             get { return null; }
         }
