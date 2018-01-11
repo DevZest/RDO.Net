@@ -53,21 +53,21 @@
     <Compile Include="VerboseUserRegisterWindow.xaml.cs">
       <DependentUpon>VerboseUserRegisterWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserLoginWindow.Presenter.cs" />
-    <Compile Include="UserLoginWindow.xaml.cs">
-      <DependentUpon>UserLoginWindow.xaml</DependentUpon>
+    <Compile Include="DefaultUserRegisterWindow.Presenter.cs" />
+    <Compile Include="DefaultUserRegisterWindow.xaml.cs">
+      <DependentUpon>DefaultUserRegisterWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DefaultUserLoginWindow.Presenter.cs" />
+    <Compile Include="UserLoginWindow.Presenter.cs" />
     <Compile Include="NewUser.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="DefaultUserLoginWindow.xaml.cs">
-      <DependentUpon>DefaultUserLoginWindow.xaml</DependentUpon>
+    <Compile Include="UserLoginWindow.xaml.cs">
+      <DependentUpon>UserLoginWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="VerboseUserRegisterWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserLoginWindow.xaml">
+    <Page Include="DefaultUserRegisterWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -83,7 +83,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="DefaultUserLoginWindow.xaml">
+    <Page Include="UserLoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

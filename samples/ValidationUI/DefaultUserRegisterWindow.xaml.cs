@@ -5,16 +5,16 @@ using System.Windows.Input;
 namespace ValidationUI
 {
     /// <summary>
-    /// Interaction logic for DefaultUserLoginForm.xaml
+    /// Interaction logic for VerboseUserRegisterWindow.xaml
     /// </summary>
-    public partial class DefaultUserLoginWindow : Window
+    public partial class DefaultUserRegisterWindow : Window
     {
         public static class Commands
         {
             public static readonly RoutedUICommand Submit = new RoutedUICommand();
         }
 
-        public DefaultUserLoginWindow()
+        public DefaultUserRegisterWindow()
         {
             InitializeComponent();
             InitializeCommandBindings();
@@ -40,7 +40,7 @@ namespace ValidationUI
 
         public void Show(Window ownerWindow)
         {
-            var dataSet = DataSet<User>.New();
+            var dataSet = DataSet<NewUser>.New();
             dataSet.Add(new DataRow());
             _presenter.Show(_dataView, dataSet);
             Owner = ownerWindow;

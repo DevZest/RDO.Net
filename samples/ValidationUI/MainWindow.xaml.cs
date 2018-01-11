@@ -12,15 +12,15 @@ namespace ValidationUI
             InitializeComponent();
         }
 
-        private void DefaultUserLogin_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new DefaultUserLoginWindow();
-            window.Show(this);
-        }
-
         private void UserLogin_Click(object sender, RoutedEventArgs e)
         {
             var window = new UserLoginWindow();
+            window.Show(this);
+        }
+
+        private void DefaultUserRegister_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new DefaultUserRegisterWindow();
             window.Show(this);
         }
 
