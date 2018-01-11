@@ -66,6 +66,10 @@ namespace DevZest.Data.Presenters.Primitives
             Ordinal = ordinal;
         }
 
+        public abstract IReadOnlyList<ScalarBinding> ChildBindings { get; }
+
+        public abstract IScalarInput ScalarInput { get; }
+
         internal abstract void BeginSetup(int startOffset, UIElement[] elements);
 
         internal abstract void BeginSetup(UIElement element);

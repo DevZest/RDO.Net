@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarInput<T> : Input<T>
+    public sealed class ScalarInput<T> : Input<T>, IScalarInput
         where T : UIElement, new()
     {
         internal  ScalarInput(ScalarBinding<T> scalarBinding, Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
@@ -46,7 +46,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        internal IScalars Target { get; private set; } = Scalars.Empty;
+        public IScalars Target { get; private set; } = Scalars.Empty;
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
 
         public ScalarInput<T> WithFlush(Scalar scalar, Func<T, bool> flushFunc)

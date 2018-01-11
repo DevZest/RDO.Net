@@ -36,7 +36,17 @@ namespace DevZest.Data.Presenters
             _onCleanup = onCleanup;
         }
 
+        public override IReadOnlyList<ScalarBinding> ChildBindings
+        {
+            get { return Array<ScalarBinding>.Empty; }
+        }
+
         public ScalarInput<T> Input { get; private set; }
+
+        public override IScalarInput ScalarInput
+        {
+            get { return Input; }
+        }
 
         internal sealed override void FlushInput(UIElement element)
         {

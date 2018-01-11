@@ -27,9 +27,14 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public IReadOnlyList<Binding> ChildBindings
+        public override IReadOnlyList<ScalarBinding> ChildBindings
         {
             get { return _childBindings; }
+        }
+
+        public override IScalarInput ScalarInput
+        {
+            get { return null; }
         }
 
         internal override UIElement GetChild(UIElement parent, int index)
