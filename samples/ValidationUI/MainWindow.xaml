@@ -29,7 +29,7 @@
         <Button Grid.Row="1" Click="UserLogin_Click">User Login (_Lite)</Button>
         <TextBlock Grid.Row="1" Grid.Column="1">User Login form to demonstrate Implicit mode and ValidationSeverityIndicator.</TextBlock>
         <Button Grid.Row="2" Click="DefaultUserRegister_Click">User Registration (_Default)</Button>
-        <TextBlock Grid.Row="2" Grid.Column="1">User Login form to demonstrate default validation.</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1">User Registration form to demonstrate default validation, ValidationPlaceholder and AsyncValidationIndicator.</TextBlock>
         <Button Grid.Row="4" Click="VerboseUserRegister_Click">User Registration (_Verbose)</Button>
         <TextBlock Grid.Row="4" Grid.Column="1">User Registration form to demonstrate ValidationMessageView and AsyncValidationIndicator.</TextBlock>
     </Grid>
