@@ -90,7 +90,7 @@ namespace DevZest.Data.Presenters
             element.SetBlockView(null);
         }
 
-        public BlockBinding<T> OverrideSetup(Action<T, BlockPresenter, Action<T, BlockPresenter>> overrideSetup)
+        public BlockBinding<T> OverrideSetup(Action<T, BlockPresenter> overrideSetup)
         {
             if (overrideSetup == null)
                 throw new ArgumentNullException(nameof(overrideSetup));
@@ -98,7 +98,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public BlockBinding<T> OverrideRefresh(Action<T, BlockPresenter, Action<T, BlockPresenter>> overrideRefresh)
+        public BlockBinding<T> OverrideRefresh(Action<T, BlockPresenter> overrideRefresh)
         {
             if (overrideRefresh == null)
                 throw new ArgumentNullException(nameof(overrideRefresh));
@@ -106,7 +106,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public BlockBinding<T> OverrideCleanup(Action<T, BlockPresenter, Action<T, BlockPresenter>> overrideCleanup)
+        public BlockBinding<T> OverrideCleanup(Action<T, BlockPresenter> overrideCleanup)
         {
             if (overrideCleanup == null)
                 throw new ArgumentNullException(nameof(overrideCleanup));

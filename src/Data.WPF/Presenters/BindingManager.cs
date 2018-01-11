@@ -149,12 +149,15 @@ namespace DevZest.Data.Presenters
                 element.SetValue(RowPresenterProperty, value);
         }
 
-        internal static Action<TElement, TPresenter> Override<TElement, TPresenter>(this Action<TElement, TPresenter> action,
-            Action<TElement, TPresenter, Action<TElement, TPresenter>> overrideAction)
+        internal static Action<TElement, TPresenter> Override<TElement, TPresenter>(this Action<TElement, TPresenter> action, Action<TElement, TPresenter> overrideAction)
         {
             if (action == null)
                 action = (e, sp) => { };
-            return (e, sp) => overrideAction(e, sp, action);
+            return (e, sp) =>
+            {
+                action(e, sp);
+                overrideAction(e, sp);
+            };
         }
 
         internal static void Verify<T>(this T binding, UIElement compositeView, string paramName)

@@ -175,7 +175,7 @@ namespace DevZest.Data.Presenters
             get { return (T)base[flowIndex]; }
         }
 
-        public ScalarBinding<T> OverrideSetup(Action<T, ScalarPresenter, Action<T, ScalarPresenter>> overrideSetup)
+        public ScalarBinding<T> OverrideSetup(Action<T, ScalarPresenter> overrideSetup)
         {
             if (overrideSetup == null)
                 throw new ArgumentNullException(nameof(overrideSetup));
@@ -183,7 +183,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public ScalarBinding<T> OverrideRefresh(Action<T, ScalarPresenter, Action<T, ScalarPresenter>> overrideRefresh)
+        public ScalarBinding<T> OverrideRefresh(Action<T, ScalarPresenter> overrideRefresh)
         {
             if (overrideRefresh == null)
                 throw new ArgumentNullException(nameof(overrideRefresh));
@@ -191,7 +191,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public ScalarBinding<T> OverrideCleanup(Action<T, ScalarPresenter, Action<T, ScalarPresenter>> overrideCleanup)
+        public ScalarBinding<T> OverrideCleanup(Action<T, ScalarPresenter> overrideCleanup)
         {
             if (overrideCleanup == null)
                 throw new ArgumentNullException(nameof(overrideCleanup));

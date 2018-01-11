@@ -56,6 +56,9 @@
             <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.IsKeyboardFocusWithin}" Value="true">
                 <Setter TargetName="_messagesControl" Property="Visibility" Value="Visible" />
             </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.(view:ValidationPlaceholder.IsActive)}" Value="true">
+                <Setter TargetName="_messagesControl" Property="Visibility" Value="Visible" />
+            </DataTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
@@ -108,6 +111,9 @@
                 <Setter TargetName="_messagesControl" Property="Visibility" Value="Visible" />
             </DataTrigger>
             <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.IsKeyboardFocusWithin}" Value="true">
+                <Setter TargetName="_messagesControl" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.(view:ValidationPlaceholder.IsActive)}" Value="true">
                 <Setter TargetName="_messagesControl" Property="Visibility" Value="Visible" />
             </DataTrigger>
         </ControlTemplate.Triggers>

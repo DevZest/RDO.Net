@@ -168,7 +168,7 @@ namespace DevZest.Data.Presenters
             return WithInput(new RoutedEventTrigger<T>(routedEvent), column, getValue);
         }
 
-        public RowBinding<T> OverrideSetup(Action<T, RowPresenter, Action<T, RowPresenter>> overrideSetup)
+        public RowBinding<T> OverrideSetup(Action<T, RowPresenter> overrideSetup)
         {
             if (overrideSetup == null)
                 throw new ArgumentNullException(nameof(overrideSetup));
@@ -176,7 +176,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public RowBinding<T> OverrideRefresh(Action<T, RowPresenter, Action<T, RowPresenter>> overrideRefresh)
+        public RowBinding<T> OverrideRefresh(Action<T, RowPresenter> overrideRefresh)
         {
             if (overrideRefresh == null)
                 throw new ArgumentNullException(nameof(overrideRefresh));
@@ -184,7 +184,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public RowBinding<T> OverrideCleanup(Action<T, RowPresenter, Action<T, RowPresenter>> overrideCleanup)
+        public RowBinding<T> OverrideCleanup(Action<T, RowPresenter> overrideCleanup)
         {
             if (overrideCleanup == null)
                 throw new ArgumentNullException(nameof(overrideCleanup));
