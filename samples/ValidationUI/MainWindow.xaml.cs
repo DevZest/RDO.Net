@@ -24,9 +24,9 @@ namespace ValidationUI
             window.Show(this);
         }
 
-        private void UserRegister_Click(object sender, RoutedEventArgs e)
+        private void VerboseUserRegister_Click(object sender, RoutedEventArgs e)
         {
-            var window = new UserRegisterWindow();
+            var window = new VerboseUserRegisterWindow();
             window.Show(this);
         }
     }

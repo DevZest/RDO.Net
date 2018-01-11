@@ -2,7 +2,7 @@
 
 namespace ValidationUI
 {
-    partial class UserRegisterWindow
+    partial class VerboseUserRegisterWindow
     {
         private sealed class Presenter : DataPresenter<NewUser>
         {

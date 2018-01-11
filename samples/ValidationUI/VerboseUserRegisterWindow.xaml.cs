@@ -7,16 +7,16 @@ using System.Windows.Input;
 namespace ValidationUI
 {
     /// <summary>
-    /// Interaction logic for UserRegisterWindow.xaml
+    /// Interaction logic for VerboseUserRegisterWindow.xaml
     /// </summary>
-    public partial class UserRegisterWindow : Window
+    public partial class VerboseUserRegisterWindow : Window
     {
         public static class Commands
         {
             public static readonly RoutedUICommand Submit = new RoutedUICommand();
         }
 
-        public UserRegisterWindow()
+        public VerboseUserRegisterWindow()
         {
             InitializeComponent();
             InitializeCommandBindings();
