@@ -40,21 +40,31 @@ namespace DevZest.Data.Views
 
                     if (_dataView != null)
                     {
-                        _dataView.MouseEnter -= HitTestValidationPlaceholder;
-                        _dataView.PreviewMouseMove -= HitTestValidationPlaceholder;
+                        _dataView.MouseEnter -= TrackMouse;
+                        _dataView.PreviewMouseMove -= TrackMouse;
                         _dataView.MouseLeave -= OnMouseLeave;
                     }
                     _dataView = value;
                     if (_dataView != null)
                     {
-                        _dataView.MouseEnter += HitTestValidationPlaceholder;
-                        _dataView.PreviewMouseMove += HitTestValidationPlaceholder;
+                        _dataView.MouseEnter += TrackMouse;
+                        _dataView.PreviewMouseMove += TrackMouse;
                         _dataView.MouseLeave += OnMouseLeave;
                     }
                 }
             }
 
-            private void HitTestValidationPlaceholder(object sender, MouseEventArgs e)
+            private void TrackMouse(object sender, MouseEventArgs e)
+            {
+                TrackMouse(sender, e, true);
+            }
+
+            private void OnMouseLeave(object sender, MouseEventArgs e)
+            {
+                TrackMouse(sender, e, false);
+            }
+
+            private void TrackMouse(object sender, MouseEventArgs e, bool hitTest)
             {
                 var enterMouseTrack = EnterMouseTrack;
                 var exitMouseTrack = ExitMouseTrack;
@@ -62,6 +72,13 @@ namespace DevZest.Data.Views
                     return;
 
                 enterMouseTrack(this, EventArgs.Empty);
+                if (hitTest)
+                    HitTest(sender, e);
+                exitMouseTrack(this, EventArgs.Empty);
+            }
+
+            private void HitTest(object sender, MouseEventArgs e)
+            {
                 var dataView = (DataView)sender;
                 var parameters = new PointHitTestParameters(e.GetPosition(dataView));
                 VisualTreeHelper.HitTest(dataView, element =>
@@ -74,18 +91,6 @@ namespace DevZest.Data.Views
                     }
                     return HitTestFilterBehavior.Continue;
                 }, result => HitTestResultBehavior.Continue, parameters);
-                exitMouseTrack(this, EventArgs.Empty);
-            }
-
-            private void OnMouseLeave(object sender, MouseEventArgs e)
-            {
-                var enterMouseTrack = EnterMouseTrack;
-                var exitMouseTrack = ExitMouseTrack;
-                if (enterMouseTrack == null || exitMouseTrack == null)
-                    return;
-
-                enterMouseTrack(this, EventArgs.Empty);
-                exitMouseTrack(this, EventArgs.Empty);
             }
 
             public void Initialize(DataPresenter dataPresenter)
