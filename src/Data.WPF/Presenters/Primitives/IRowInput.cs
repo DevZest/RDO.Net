@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace DevZest.Data.Presenters
+﻿namespace DevZest.Data.Presenters.Primitives
 {
     public interface IRowInput
     {

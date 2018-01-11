@@ -133,7 +133,7 @@
     <Compile Include="Presenters\IRowAsyncValidators.cs" />
     <Compile Include="Presenters\BlockPresenter.cs" />
     <Compile Include="Presenters\IService.cs" />
-    <Compile Include="Presenters\IRowInput.cs" />
+    <Compile Include="Presenters\Primitives\IRowInput.cs" />
     <Compile Include="Presenters\Primitives\DataRowExtensions.cs" />
     <Compile Include="Presenters\Primitives\IScrollable.cs" />
     <Compile Include="Presenters\Primitives\ScrollableManager.LogicalCrossTrack.cs" />
