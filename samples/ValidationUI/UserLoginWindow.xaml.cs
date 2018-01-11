@@ -5,7 +5,7 @@ using System.Windows.Input;
 namespace ValidationUI
 {
     /// <summary>
-    /// Interaction logic for UserLoginForm.xaml
+    /// Interaction logic for UserLoginWindow.xaml
     /// </summary>
     public partial class UserLoginWindow : Window
     {
