@@ -53,9 +53,9 @@
     <Compile Include="UserRegisterWindow.xaml.cs">
       <DependentUpon>UserRegisterWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LiteUserLoginWindow.Presenter.cs" />
-    <Compile Include="LiteUserLoginWindow.xaml.cs">
-      <DependentUpon>LiteUserLoginWindow.xaml</DependentUpon>
+    <Compile Include="UserLoginWindow.Presenter.cs" />
+    <Compile Include="UserLoginWindow.xaml.cs">
+      <DependentUpon>UserLoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="DefaultUserLoginWindow.Presenter.cs" />
     <Compile Include="NewUser.cs" />
@@ -67,7 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="LiteUserLoginWindow.xaml">
+    <Page Include="UserLoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

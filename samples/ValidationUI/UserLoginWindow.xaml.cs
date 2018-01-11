@@ -5,16 +5,16 @@ using System.Windows.Input;
 namespace ValidationUI
 {
     /// <summary>
-    /// Interaction logic for LiteUserLoginForm.xaml
+    /// Interaction logic for UserLoginForm.xaml
     /// </summary>
-    public partial class LiteUserLoginWindow : Window
+    public partial class UserLoginWindow : Window
     {
         public static class Commands
         {
             public static readonly RoutedUICommand Submit = new RoutedUICommand();
         }
 
-        public LiteUserLoginWindow()
+        public UserLoginWindow()
         {
             InitializeComponent();
             InitializeCommandBindings();

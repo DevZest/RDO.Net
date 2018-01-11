@@ -2,7 +2,7 @@
 
 namespace ValidationUI
 {
-    partial class LiteUserLoginWindow
+    partial class UserLoginWindow
     {
         private sealed class Presenter : DataPresenter<User>
         {
