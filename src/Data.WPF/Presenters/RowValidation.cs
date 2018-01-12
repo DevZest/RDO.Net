@@ -83,7 +83,7 @@ namespace DevZest.Data.Presenters
         }
 
         private IRowValidationResults _validationErrors = RowValidationResults.Empty;
-        public IRowValidationResults _validationWarnings = RowValidationResults.Empty;
+        private IRowValidationResults _validationWarnings = RowValidationResults.Empty;
 
         public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> ValidationErrors
         {
