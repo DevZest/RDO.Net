@@ -1,16 +1,13 @@
-﻿using DevZest.Data.Views;
-using DevZest.Data.Views.Primitives;
+﻿using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Presenters.Primitives
+namespace DevZest.Data.Presenters
 {
     public abstract class ScalarBinding : TwoWayBinding, IConcatList<ScalarBinding>
     {

@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -144,6 +145,13 @@ namespace DevZest.Data.Views
         {
             if (IsMouseIndirectlyOver)
                 return true;
+            if (_containingElements == null)
+                return false;
+            for (int i = 0; i < _containingElements.Count; i++)
+            {
+                if (_containingElements[i].IsKeyboardFocusWithin)
+                    return true;
+            }
             return false;
         }
 
@@ -199,6 +207,32 @@ namespace DevZest.Data.Views
         private void OnExitMouseTrack(object sender, EventArgs e)
         {
             CoerceIsActive();
+        }
+
+        private IReadOnlyList<UIElement> _containingElements;
+        internal void Setup(IReadOnlyList<UIElement> containingElements)
+        {
+            Debug.Assert(_containingElements == null && containingElements != null);
+
+            _containingElements = containingElements;
+            for (int i = 0; i < _containingElements.Count; i++)
+                _containingElements[i].IsKeyboardFocusWithinChanged += OnContainingElementIsKeyboardFocusWithinChanged;
+
+            CoerceIsActive();
+        }
+
+        private void OnContainingElementIsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            CoerceIsActive();
+        }
+
+        internal void Cleanup()
+        {
+            Debug.Assert(_containingElements != null);
+
+            for (int i = 0; i < _containingElements.Count; i++)
+                _containingElements[i].IsKeyboardFocusWithinChanged += OnContainingElementIsKeyboardFocusWithinChanged;
+            _containingElements = null;
         }
     }
 }

@@ -169,7 +169,7 @@
     <Compile Include="Presenters\Primitives\GridLine.cs" />
     <Compile Include="Presenters\GridPlacement.cs" />
     <Compile Include="Views\Primitives\BlockViewPanel.cs" />
-    <Compile Include="Presenters\Primitives\BlockBinding.cs" />
+    <Compile Include="Presenters\BlockBinding.cs" />
     <Compile Include="Presenters\Primitives\Clip.cs" />
     <Compile Include="Presenters\Primitives\ElementManager.cs" />
     <Compile Include="Presenters\Primitives\GridColumnCollection.cs" />
@@ -202,7 +202,7 @@
     <Compile Include="Presenters\VirtualRowPlacement.cs" />
     <Compile Include="Presenters\TemplateBuilder.cs" />
     <Compile Include="Presenters\LostFocusTrigger.cs" />
-    <Compile Include="Presenters\Primitives\RowBinding.cs" />
+    <Compile Include="Presenters\RowBinding.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="Views\ColumnHeader.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
@@ -227,7 +227,7 @@
     <Compile Include="Properties\UserMessages.Designer.cs">
       <DependentUpon>UserMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Presenters\Primitives\ScalarBinding.cs" />
+    <Compile Include="Presenters\ScalarBinding.cs" />
     <Compile Include="Presenters\Primitives\Binding.cs" />
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />

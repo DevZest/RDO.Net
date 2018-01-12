@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DevZest.Data.Presenters.Primitives;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
-namespace DevZest.Data.Presenters.Primitives
+namespace DevZest.Data.Presenters
 {
     public abstract class RowBinding : TwoWayBinding, IConcatList<RowBinding>
     {

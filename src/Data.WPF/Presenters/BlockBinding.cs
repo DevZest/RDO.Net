@@ -1,5 +1,5 @@
-﻿using DevZest.Data.Views;
-using DevZest.Data.Views.Primitives;
+﻿using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Presenters.Primitives
+namespace DevZest.Data.Presenters
 {
     public abstract class BlockBinding : Binding, IConcatList<BlockBinding>
     {
