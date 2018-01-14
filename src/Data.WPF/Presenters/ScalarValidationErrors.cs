@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public static class ScalarValidationMessages
+    public static class ScalarValidationErrors
     {
-        private class EmptyGroup : IScalarValidationMessages
+        private class EmptyGroup : IScalarValidationErrors
         {
             public static EmptyGroup Singleton = new EmptyGroup();
             private EmptyGroup()
@@ -19,7 +19,7 @@ namespace DevZest.Data.Presenters
                 get { return 0; }
             }
 
-            public ScalarValidationMessage this[int index]
+            public ScalarValidationError this[int index]
             {
                 get { throw new ArgumentOutOfRangeException(nameof(index)); }
             }
@@ -29,34 +29,34 @@ namespace DevZest.Data.Presenters
                 get { return true; }
             }
 
-            public IScalarValidationMessages Add(ScalarValidationMessage value)
+            public IScalarValidationErrors Add(ScalarValidationError value)
             {
                 Check.NotNull(value, nameof(value));
                 return value;
             }
 
-            public IScalarValidationMessages Seal()
+            public IScalarValidationErrors Seal()
             {
                 return this;
             }
 
-            public IEnumerator<ScalarValidationMessage> GetEnumerator()
+            public IEnumerator<ScalarValidationError> GetEnumerator()
             {
-                return EmptyEnumerator<ScalarValidationMessage>.Singleton;
+                return EmptyEnumerator<ScalarValidationError>.Singleton;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return EmptyEnumerator<ScalarValidationMessage>.Singleton;
+                return EmptyEnumerator<ScalarValidationError>.Singleton;
             }
         }
 
-        private class ListGroup : IScalarValidationMessages
+        private class ListGroup : IScalarValidationErrors
         {
             private bool _isSealed;
-            private List<ScalarValidationMessage> _list = new List<ScalarValidationMessage>();
+            private List<ScalarValidationError> _list = new List<ScalarValidationError>();
 
-            public ListGroup(ScalarValidationMessage value1, ScalarValidationMessage value2)
+            public ListGroup(ScalarValidationError value1, ScalarValidationError value2)
             {
                 Debug.Assert(value1 != null && value2 != null);
                 Add(value1);
@@ -77,18 +77,18 @@ namespace DevZest.Data.Presenters
                 get { return _list.Count; }
             }
 
-            public ScalarValidationMessage this[int index]
+            public ScalarValidationError this[int index]
             {
                 get { return _list[index]; }
             }
 
-            public IScalarValidationMessages Seal()
+            public IScalarValidationErrors Seal()
             {
                 _isSealed = true;
                 return this;
             }
 
-            public IScalarValidationMessages Add(ScalarValidationMessage value)
+            public IScalarValidationErrors Add(ScalarValidationError value)
             {
                 Check.NotNull(value, nameof(value));
 
@@ -110,7 +110,7 @@ namespace DevZest.Data.Presenters
                 }
             }
 
-            public IEnumerator<ScalarValidationMessage> GetEnumerator()
+            public IEnumerator<ScalarValidationError> GetEnumerator()
             {
                 return _list.GetEnumerator();
             }
@@ -121,31 +121,31 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static IScalarValidationMessages Empty
+        public static IScalarValidationErrors Empty
         {
             get { return EmptyGroup.Singleton; }
         }
 
-        internal static IScalarValidationMessages New(ScalarValidationMessage value1, ScalarValidationMessage value2)
+        internal static IScalarValidationErrors New(ScalarValidationError value1, ScalarValidationError value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
             return new ListGroup(value1, value2);
         }
 
-        public static IScalarValidationMessages New(params ScalarValidationMessage[] values)
+        public static IScalarValidationErrors New(params ScalarValidationError[] values)
         {
             Check.NotNull(values, nameof(values));
 
             if (values.Length == 0)
                 return Empty;
 
-            IScalarValidationMessages result = values[0].CheckNotNull(nameof(values), 0);
+            IScalarValidationErrors result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
                 result = result.Add(values[i].CheckNotNull(nameof(values), i));
             return result;
         }
 
-        public static IScalarValidationMessages Add(this IScalarValidationMessages result, IScalarValidationMessages messages)
+        public static IScalarValidationErrors Add(this IScalarValidationErrors result, IScalarValidationErrors messages)
         {
             Check.NotNull(messages, nameof(messages));
 
@@ -153,18 +153,6 @@ namespace DevZest.Data.Presenters
                 result = result.Add(messages[i]);
 
             return result;
-        }
-
-        internal static IScalarValidationMessages Where(this IScalarValidationMessages messages, ValidationSeverity severity)
-        {
-            var result = ScalarValidationMessages.Empty;
-            for (int i = 0; i < messages.Count; i++)
-            {
-                var message = messages[i];
-                if (message.Severity == severity)
-                    result = result.Add(message);
-            }
-            return result.Seal();
         }
     }
 }

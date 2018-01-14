@@ -6,24 +6,12 @@ namespace DevZest.Data.Presenters
 {
     public sealed class Scalar<T> : Scalar
     {
-        private struct Validator
-        {
-            public Validator(Func<T, string> action, ValidationSeverity severity)
-            {
-                Action = action;
-                Severity = severity;
-            }
-
-            public readonly ValidationSeverity Severity;
-            public readonly Func<T, string> Action;
-        }
-
         internal Scalar(T value = default(T))
         {
             _value = value;
         }
 
-        private List<Validator> _validators;
+        private List<Func<T, string>> _validators;
 
         private T _value;
         private Action<T> _onValueChanged;
@@ -39,13 +27,13 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public Scalar<T> AddValidator(Func<T, string> validator, ValidationSeverity severity = ValidationSeverity.Error)
+        public Scalar<T> AddValidator(Func<T, string> validator)
         {
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
             if (_validators == null)
-                _validators = new List<Validator>();
-            _validators.Add(new Validator(validator, severity));
+                _validators = new List<Func<T, string>>();
+            _validators.Add(validator);
             return this;
         }
 
@@ -61,7 +49,7 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
-        internal override IScalarValidationMessages Validate(IScalarValidationMessages result)
+        internal override IScalarValidationErrors Validate(IScalarValidationErrors result)
         {
             if (result == null)
                 throw new ArgumentNullException(nameof(result));
@@ -71,9 +59,9 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < _validators.Count; i++)
             {
                 var validator = _validators[i];
-                var description = validator.Action(Value);
-                if (!string.IsNullOrEmpty(description))
-                    result = result.Add(new ScalarValidationMessage(validator.Severity, description, this));
+                var message = validator(Value);
+                if (!string.IsNullOrEmpty(message))
+                    result = result.Add(new ScalarValidationError(message, this));
             }
             return result;
         }

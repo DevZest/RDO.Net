@@ -62,54 +62,42 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public IReadOnlyList<FlushErrorMessage> FlushErrors
+        public IReadOnlyList<FlushError> FlushErrors
         {
             get
             {
                 if (_flushErrors == null)
-                    return Array<FlushErrorMessage>.Empty;
+                    return Array<FlushError>.Empty;
                 return _flushErrors;
             }
         }
 
-        internal FlushErrorMessage GetFlushError(UIElement element)
+        internal FlushError GetFlushError(UIElement element)
         {
             return _flushErrors.GetFlushError(element);
         }
 
-        internal void SetFlushError(UIElement element, FlushErrorMessage value)
+        internal void SetFlushError(UIElement element, FlushError value)
         {
             InternalFlushErrors.SetFlushError(element, value);
         }
 
         private IRowValidationResults _validationErrors = RowValidationResults.Empty;
-        private IRowValidationResults _validationWarnings = RowValidationResults.Empty;
 
-        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> ValidationErrors
+        public IReadOnlyDictionary<RowPresenter, IDataValidationErrors> ValidationErrors
         {
             get { return _validationErrors; }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> ValidationWarnings
-        {
-            get { return _validationWarnings; }
-        }
-
-        public IColumnValidationMessages CurrentRowErrors
+        public IDataValidationErrors CurrentRowErrors
         {
             get { return _validationErrors.GetValidationMessages(CurrentRow); }
-        }
-
-        public IColumnValidationMessages CurrentRowWarnings
-        {
-            get { return _validationWarnings.GetValidationMessages(CurrentRow); }
         }
 
         private void ClearRowValidationMessages(RowPresenter rowPresenter)
         {
             Debug.Assert(rowPresenter != null);
             _validationErrors = _validationErrors.Remove(rowPresenter);
-            _validationWarnings = _validationWarnings.Remove(rowPresenter);
         }
 
         private void ValidateCurrentRowIfImplicit()
@@ -140,7 +128,7 @@ namespace DevZest.Data.Presenters
                 _valueChanged.Clear();
             }
 
-            _validationErrors = _validationWarnings = RowValidationResults.Empty;
+            _validationErrors = RowValidationResults.Empty;
             ValidateCurrentRowIfImplicit();
         }
 
@@ -188,19 +176,15 @@ namespace DevZest.Data.Presenters
             if (showAll)
                 ShowAll(rowPresenter);
             _validationErrors = _validationErrors.Remove(rowPresenter);
-            _validationWarnings = _validationWarnings.Remove(rowPresenter);
             var dataRow = rowPresenter.DataRow;
-            var errors = Validate(dataRow, ValidationSeverity.Error);
-            var warnings = Validate(dataRow, ValidationSeverity.Warning);
+            var errors = Validate(dataRow);
             if (errors != null && errors.Count > 0)
                 _validationErrors = _validationErrors.Add(rowPresenter, errors);
-            if (warnings != null && warnings.Count > 0)
-                _validationWarnings = _validationWarnings.Add(rowPresenter, warnings);
         }
 
-        private IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
+        private IDataValidationErrors Validate(DataRow dataRow)
         {
-            return dataRow == DataSet.AddingRow ? DataSet.ValidateAddingRow(severity) : dataRow.Validate(severity);
+            return dataRow == DataSet.AddingRow ? DataSet.ValidateAddingRow() : dataRow.Validate();
         }
 
         internal void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged)
@@ -240,13 +224,13 @@ namespace DevZest.Data.Presenters
             if (_validationErrors.Count == 0)
                 return false;
 
-            IColumnValidationMessages messages;
-            if (!_validationErrors.TryGetValue(rowPresenter, out messages))
+            IDataValidationErrors errors;
+            if (!_validationErrors.TryGetValue(rowPresenter, out errors))
                 return false;
 
-            for (int i = 0; i < messages.Count; i++)
+            for (int i = 0; i < errors.Count; i++)
             {
-                var message = messages[i];
+                var message = errors[i];
                 if (message.Source.SetEquals(columns))
                     return true;
             }
@@ -308,9 +292,6 @@ namespace DevZest.Data.Presenters
             if (_validationErrors.ContainsKey(rowPresenter))
                 _validationErrors = _validationErrors.Remove(rowPresenter).Seal();
 
-            if (_validationWarnings.ContainsKey(rowPresenter))
-                _validationWarnings = _validationWarnings.Remove(rowPresenter).Seal();
-
             Template.RowAsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
         }
 
@@ -351,19 +332,16 @@ namespace DevZest.Data.Presenters
             return Columns.Empty;
         }
 
-        public void Validate(int errorLimit = 1, int warningLimit = 0)
+        public void Validate(int errorLimit = 1)
         {
             if (errorLimit < 1)
                 throw new ArgumentOutOfRangeException(nameof(errorLimit));
-            if (warningLimit < 0)
-                throw new ArgumentOutOfRangeException(nameof(warningLimit));
 
             if (CurrentRow == null)
                 return;
 
             var errors = 0;
-            var warnings = 0;
-            var moreToValidate = Validate(CurrentRow, ref errors, errorLimit, ref warnings, warningLimit);
+            var moreToValidate = Validate(CurrentRow, ref errors, errorLimit);
             if (moreToValidate)
             {
                 foreach (var rowPresenter in _inputManager.Rows)
@@ -371,7 +349,7 @@ namespace DevZest.Data.Presenters
                     if (rowPresenter == CurrentRow || rowPresenter.IsVirtual)
                         continue;
 
-                    moreToValidate = Validate(rowPresenter, ref errors, errorLimit, ref warnings, warningLimit);
+                    moreToValidate = Validate(rowPresenter, ref errors, errorLimit);
                     if (!moreToValidate)
                         break;
                 }
@@ -380,40 +358,37 @@ namespace DevZest.Data.Presenters
             InvalidateView();
         }
 
-        private bool Validate(RowPresenter rowPresenter, ref int errors, int errorLimit, ref int warnings, int warningLimit)
+        private bool Validate(RowPresenter rowPresenter, ref int errors, int errorLimit)
         {
             Debug.Assert(rowPresenter != null);
             rowPresenter.Validate(false);
             if (ValidationErrors.ContainsKey(rowPresenter))
                 errors++;
-            if (ValidationWarnings.ContainsKey(rowPresenter))
-                warnings++;
-            return errors < errorLimit || warnings < warningLimit;
+            return errors < errorLimit;
         }
 
-        internal IColumnValidationMessages GetValidationMessages(RowPresenter rowPresenter, IColumns source, ValidationSeverity severity)
+        internal IDataValidationErrors GetValidationErrors(RowPresenter rowPresenter, IColumns source)
         {
             Debug.Assert(source != null && source.Count > 0);
 
             if (!IsVisible(rowPresenter, source))
-                return ColumnValidationMessages.Empty;
+                return DataValidationErrors.Empty;
 
-            var validationMessages = severity == ValidationSeverity.Error ? _validationErrors : _validationWarnings;
-            IColumnValidationMessages messages;
-            if (!validationMessages.TryGetValue(rowPresenter, out messages))
-                return ColumnValidationMessages.Empty;
+            IDataValidationErrors errors;
+            if (!_validationErrors.TryGetValue(rowPresenter, out errors))
+                return DataValidationErrors.Empty;
 
-            if (messages == null || messages.Count == 0 || ExistsAnySubsetSourceColumns(messages, source))
-                return ColumnValidationMessages.Empty;
+            if (errors == null || errors.Count == 0 || ExistsAnySubsetSourceColumns(errors, source))
+                return DataValidationErrors.Empty;
 
-            return GetValidationMessages(messages, source);
+            return GetValidationErrors(errors, source);
         }
 
-        private static IColumnValidationMessages GetValidationMessages(IColumnValidationMessages messages, IColumns columns)
+        private static IDataValidationErrors GetValidationErrors(IDataValidationErrors messages, IColumns columns)
         {
             Debug.Assert(messages != null);
 
-            var result = ColumnValidationMessages.Empty;
+            var result = DataValidationErrors.Empty;
             for (int i = 0; i < messages.Count; i++)
             {
                 var message = messages[i];
@@ -424,14 +399,14 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        private static bool ExistsAnySubsetSourceColumns(IColumnValidationMessages messages, IColumns columns)
+        private static bool ExistsAnySubsetSourceColumns(IDataValidationErrors errors, IColumns columns)
         {
             if (columns.Count == 1)
                 return false;
 
-            for (int i = 0; i < messages.Count; i++)
+            for (int i = 0; i < errors.Count; i++)
             {
-                var source = messages[i].Source;
+                var source = errors[i].Source;
                 if (columns.IsProperSupersetOf(source))
                     return true;
             }
@@ -439,7 +414,7 @@ namespace DevZest.Data.Presenters
             return false;
         }
 
-        private IRowValidationResults ToRowValidationResults(IDataRowValidationResults validationResults)
+        private IRowValidationResults ToRowValidationResults(IDataValidationResults validationResults)
         {
             var result = RowValidationResults.Empty;
             for (int i = 0; i < validationResults.Count; i++)
@@ -447,7 +422,7 @@ namespace DevZest.Data.Presenters
                 var entry = validationResults[i];
                 var rowPresenter = _inputManager[entry.DataRow];
                 if (rowPresenter != null)
-                    result = result.Add(rowPresenter, entry.Messages);
+                    result = result.Add(rowPresenter, entry.Errors);
             }
             return result;
         }

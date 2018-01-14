@@ -29,12 +29,12 @@ namespace DevZest.Data.Presenters
             get { return InputManager.RowValidation; }
         }
 
-        public sealed override FlushErrorMessage GetFlushError(UIElement element)
+        public sealed override FlushError GetFlushError(UIElement element)
         {
             return RowValidation.GetFlushError(element);
         }
 
-        internal sealed override void SetFlushError(UIElement element, FlushErrorMessage inputError)
+        internal sealed override void SetFlushError(UIElement element, FlushError inputError)
         {
             RowValidation.SetFlushError(element, inputError);
         }
@@ -133,7 +133,7 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        public FlushErrorMessage GetFlushError(RowPresenter rowPresenter)
+        public FlushError GetFlushError(RowPresenter rowPresenter)
         {
             RowBinding rowBinding = RowBinding;
             var element = rowBinding[rowPresenter];
@@ -146,24 +146,18 @@ namespace DevZest.Data.Presenters
             return null;
         }
 
-        public IColumnValidationMessages GetValidationErrors(RowPresenter rowPresenter)
+        public IDataValidationErrors GetValidationErrors(RowPresenter rowPresenter)
         {
             Check.NotNull(rowPresenter, nameof(rowPresenter));
             return rowPresenter.GetValidationErrors(Target);
         }
 
-        public IColumnValidationMessages GetValidationWarnings(RowPresenter rowPresenter)
-        {
-            Check.NotNull(rowPresenter, nameof(rowPresenter));
-            return rowPresenter.GetValidationWarnings(Target);
-        }
-
         private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            element.RefreshValidation(() => GetFlushError(element), () => GetValidationErrors(rowPresenter), () => GetValidationWarnings(rowPresenter));
+            element.RefreshValidation(() => GetFlushError(element), () => GetValidationErrors(rowPresenter));
         }
 
-        private Action<T, RowPresenter, FlushErrorMessage> _onRefresh;
+        private Action<T, RowPresenter, FlushError> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
             if (!IsFlushing && GetFlushError(element) == null)
@@ -173,14 +167,14 @@ namespace DevZest.Data.Presenters
             RefreshValidation(element, rowPresenter);
         }
 
-        public RowInput<T> WithRefreshAction(Action<T, RowPresenter, FlushErrorMessage> onRefresh)
+        public RowInput<T> WithRefreshAction(Action<T, RowPresenter, FlushError> onRefresh)
         {
             VerifyNotSealed();
             _onRefresh = onRefresh;
             return this;
         }
 
-        public RowInput<T> AddAsyncValidator(Func<Task<IColumnValidationMessages>> action, Action postAction = null)
+        public RowInput<T> AddAsyncValidator(Func<Task<IDataValidationErrors>> action, Action postAction = null)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));

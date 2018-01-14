@@ -14,25 +14,23 @@ namespace DevZest.Data.Presenters
         internal static class Templates
         {
             public static readonly TemplateId Error = new TemplateId(typeof(Validation));
-            public static readonly TemplateId Warning = new TemplateId(typeof(Validation));
         }
 
-        private static class MessageTypeBoxes
+        private static class ErrorTypeBoxes
         {
-            public static readonly object Null = new ValidationMessageType?();
-            public static readonly object FlushError = new ValidationMessageType?(ValidationMessageType.FlushError);
-            public static readonly object Error = new ValidationMessageType?(ValidationMessageType.Error);
-            public static readonly object Warning = new ValidationMessageType?(ValidationMessageType.Warning);
+            public static readonly object Null = new ValidationErrorType?();
+            public static readonly object FlushError = new ValidationErrorType?(ValidationErrorType.FlushError);
+            public static readonly object Error = new ValidationErrorType?(ValidationErrorType.Error);
 
-            public static object Box(ValidationMessageType value)
+            public static object Box(ValidationErrorType value)
             {
-                return value == ValidationMessageType.Error ? Error : (value == ValidationMessageType.FlushError ? FlushError : Warning);
+                return value == ValidationErrorType.Error ? Error : FlushError;
             }
         }
 
-        private static readonly DependencyPropertyKey MessageTypePropertyKey = DependencyProperty.RegisterAttachedReadOnly("MessageType",
-            typeof(ValidationMessageType?), typeof(Validation), new FrameworkPropertyMetadata(MessageTypeBoxes.Null, new PropertyChangedCallback(OnMessageTypeChanged)));
-        public static readonly DependencyProperty MessageTypeProperty = MessageTypePropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey ErrorTypePropertyKey = DependencyProperty.RegisterAttachedReadOnly("ErrorType",
+            typeof(ValidationErrorType?), typeof(Validation), new FrameworkPropertyMetadata(ErrorTypeBoxes.Null, new PropertyChangedCallback(OnErrorTypeChanged)));
+        public static readonly DependencyProperty MessageTypeProperty = ErrorTypePropertyKey1.DependencyProperty;
 
         public static readonly DependencyProperty FlushErrorTemplateProperty = DependencyProperty.RegisterAttached("FlushErrorTemplate",
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false),
@@ -42,21 +40,17 @@ namespace DevZest.Data.Presenters
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnErrorTemplateChanged)));
 
-        public static readonly DependencyProperty WarningTemplateProperty = DependencyProperty.RegisterAttached("WarningTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Warning.GetOrLoad(false),
-                FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnWarningTemplateChanged)));
-
-        public static ValidationMessageType? GetMessageType(this DependencyObject element)
+        public static ValidationErrorType? GetMessageType(this DependencyObject element)
         {
-            return (ValidationMessageType?)element.GetValue(MessageTypeProperty);
+            return (ValidationErrorType?)element.GetValue(MessageTypeProperty);
         }
 
-        private static void SetMessageType(this DependencyObject element, ValidationMessageType? value)
+        private static void SetMessageType(this DependencyObject element, ValidationErrorType? value)
         {
             if (!value.HasValue)
-                element.ClearValue(MessageTypePropertyKey);
+                element.ClearValue(ErrorTypePropertyKey1);
             else
-                element.SetValue(MessageTypePropertyKey, MessageTypeBoxes.Box(value.GetValueOrDefault()));
+                element.SetValue(ErrorTypePropertyKey1, ErrorTypeBoxes.Box(value.GetValueOrDefault()));
         }
 
         public static ControlTemplate GetFlushErrorTemplate(this DependencyObject element)
@@ -79,46 +73,28 @@ namespace DevZest.Data.Presenters
             element.SetValue(ErrorTemplateProperty, value);
         }
 
-        public static ControlTemplate GetWarningTemplate(this DependencyObject element)
+        private static void OnErrorTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            return (ControlTemplate)element.GetValue(WarningTemplateProperty);
-        }
-
-        public static void SetWarningTemplate(this DependencyObject element, ControlTemplate value)
-        {
-            element.SetValue(WarningTemplateProperty, value);
-        }
-
-        private static void OnMessageTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue == MessageTypeBoxes.Error)
+            if (e.NewValue == ErrorTypeBoxes.Error)
                 System.Windows.Controls.Validation.SetErrorTemplate(d, d.GetErrorTemplate());
-            else if (e.NewValue == MessageTypeBoxes.FlushError)
+            else if (e.NewValue == ErrorTypeBoxes.FlushError)
                 System.Windows.Controls.Validation.SetErrorTemplate(d, d.GetFlushErrorTemplate());
-            else if (e.NewValue == MessageTypeBoxes.Warning)
-                System.Windows.Controls.Validation.SetErrorTemplate(d, d.GetWarningTemplate());
             else
             {
-                Debug.Assert(e.NewValue == MessageTypeBoxes.Null);
+                Debug.Assert(e.NewValue == ErrorTypeBoxes.Null);
                 d.ClearValue(System.Windows.Controls.Validation.ErrorTemplateProperty);
             }
         }
 
         private static void OnErrorTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d.GetValue(MessageTypeProperty) == MessageTypeBoxes.Error)
+            if (d.GetValue(MessageTypeProperty) == ErrorTypeBoxes.Error)
                 System.Windows.Controls.Validation.SetErrorTemplate(d, (ControlTemplate)e.NewValue);
         }
 
         private static void OnFlushErrorTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d.GetValue(MessageTypeProperty) == MessageTypeBoxes.FlushError)
-                System.Windows.Controls.Validation.SetErrorTemplate(d, (ControlTemplate)e.NewValue);
-        }
-
-        private static void OnWarningTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d.GetValue(MessageTypeProperty) == MessageTypeBoxes.Warning)
+            if (d.GetValue(MessageTypeProperty) == ErrorTypeBoxes.FlushError)
                 System.Windows.Controls.Validation.SetErrorTemplate(d, (ControlTemplate)e.NewValue);
         }
 
@@ -178,6 +154,8 @@ namespace DevZest.Data.Presenters
         private static readonly DependencyProperty DummyProperty = DependencyProperty.RegisterAttached("DummyProperty", typeof(INotifyDataErrorInfo),
             typeof(Validation), new PropertyMetadata(null));
 
+        public static DependencyPropertyKey ErrorTypePropertyKey1 => ErrorTypePropertyKey;
+
         private static void SetDataErrorInfoBinding(this DependencyObject element, INotifyDataErrorInfo dataErrorInfo)
         {
             Debug.Assert(dataErrorInfo != null);
@@ -190,34 +168,26 @@ namespace DevZest.Data.Presenters
             BindingOperations.ClearBinding(element, DummyProperty);
         }
 
-        internal static void RefreshValidation(this DependencyObject element, 
-            Func<FlushErrorMessage> getFlushError, Func<IReadOnlyList<ValidationMessage>> getErrors, Func<IReadOnlyList<ValidationMessage>> getWarnings)
+        internal static void RefreshValidation(this DependencyObject element, Func<FlushError> getFlushError, Func<IReadOnlyList<ValidationError>> getErrors)
         {
             var flushError = getFlushError();
             if (flushError != null)
             {
-                element.SetDataErrorInfo(ValidationMessageType.FlushError, new FlushErrorMessage[] { flushError });
+                element.SetDataErrorInfo(ValidationErrorType.FlushError, new FlushError[] { flushError });
                 return;
             }
 
             var errors = getErrors();
             if (errors != null && errors.Count > 0)
             {
-                element.SetDataErrorInfo(ValidationMessageType.Error, errors);
-                return;
-            }
-
-            var warnings = getWarnings();
-            if (warnings != null && warnings.Count > 0)
-            {
-                element.SetDataErrorInfo(ValidationMessageType.Warning, warnings);
+                element.SetDataErrorInfo(ValidationErrorType.Error, errors);
                 return;
             }
 
             element.ClearDataErrorInfo();
         }
 
-        private static void SetDataErrorInfo(this DependencyObject element, ValidationMessageType messageType, IEnumerable messages)
+        private static void SetDataErrorInfo(this DependencyObject element, ValidationErrorType messageType, IEnumerable messages)
         {
             Debug.Assert(messages != null);
 

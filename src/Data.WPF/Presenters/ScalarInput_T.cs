@@ -30,12 +30,12 @@ namespace DevZest.Data.Presenters
             get { return InputManager.ScalarValidation; }
         }
 
-        public sealed override FlushErrorMessage GetFlushError(UIElement element)
+        public sealed override FlushError GetFlushError(UIElement element)
         {
             return ScalarValidation.GetFlushError(element);
         }
 
-        internal sealed override void SetFlushError(UIElement element, FlushErrorMessage inputError)
+        internal sealed override void SetFlushError(UIElement element, FlushError inputError)
         {
             ScalarValidation.SetFlushError(element, inputError);
         }
@@ -118,17 +118,12 @@ namespace DevZest.Data.Presenters
 
         private void RefreshValidation(T element)
         {
-            element.RefreshValidation(() => GetFlushError(element), () => ValidationErrors, () => ValidationWarnings);
+            element.RefreshValidation(() => GetFlushError(element), () => ValidationErrors);
         }
 
-        public IScalarValidationMessages ValidationErrors
+        public IScalarValidationErrors ValidationErrors
         {
             get { return ScalarValidation.GetErrors(Target); }
-        }
-
-        public IScalarValidationMessages ValidationWarnings
-        {
-            get { return ScalarValidation.GetWarnings(Target); }
         }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)
@@ -144,7 +139,7 @@ namespace DevZest.Data.Presenters
             return ScalarBinding;
         }
 
-        public ScalarInput<T> AddAsyncValidator(Func<Task<IScalarValidationMessages>> action, Action postAction = null)
+        public ScalarInput<T> AddAsyncValidator(Func<Task<IScalarValidationErrors>> action, Action postAction = null)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));

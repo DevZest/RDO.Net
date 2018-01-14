@@ -78,16 +78,16 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        Func<IScalarValidationMessages, IScalarValidationMessages> _validator;
-        public ConcreteInputManager WithValidator(Func<IScalarValidationMessages, IScalarValidationMessages> validator)
+        Func<IScalarValidationErrors, IScalarValidationErrors> _validator;
+        public ConcreteInputManager WithValidator(Func<IScalarValidationErrors, IScalarValidationErrors> validator)
         {
             _validator = validator;
             return this;
         }
 
-        internal override IScalarValidationMessages PerformValidateScalars()
+        internal override IScalarValidationErrors PerformValidateScalars()
         {
-            var result = ScalarValidationMessages.Empty;
+            var result = ScalarValidationErrors.Empty;
             if (_scalars != null)
             {
                 for (int i = 0; i < _scalars.Count; i++)

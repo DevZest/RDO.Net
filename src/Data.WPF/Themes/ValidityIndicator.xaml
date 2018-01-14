@@ -3,18 +3,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:DevZest.Data.Views">
 
-    <Style TargetType="{x:Type local:ValidationSeverityIndicator}">
+    <Style TargetType="{x:Type local:ValidityIndicator}">
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:ValidationSeverityIndicator}">
+                <ControlTemplate TargetType="{x:Type local:ValidityIndicator}">
                     <TextBlock x:Name="_textBlock" />
                     <ControlTemplate.Triggers>
-                        <Trigger Property="ValidationSeverity" Value="Error">
+                        <Trigger Property="IsValid" Value="False">
                             <Setter TargetName="_textBlock" Property="Text" Value="*" />
-                        </Trigger>
-                        <Trigger Property="ValidationSeverity" Value="Warning">
-                            <Setter TargetName="_textBlock" Property="Text" Value="!" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

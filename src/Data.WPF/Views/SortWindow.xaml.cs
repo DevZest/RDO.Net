@@ -28,15 +28,15 @@ namespace DevZest.Data.Views
             }
 
             [ModelValidator]
-            private ColumnValidationMessage ValidateRequiredColumnHeader(DataRow dataRow)
+            private DataValidationError ValidateRequiredColumnHeader(DataRow dataRow)
             {
                 return SortBy[dataRow] == null
-                    ? new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(SortBy.DisplayName), SortBy)
+                    ? new DataValidationError(UserMessages.SortModel_InputRequired(SortBy.DisplayName), SortBy)
                     : null;
             }
 
             [ModelValidator]
-            private ColumnValidationMessage ValidateDuplicateColumnHeader(DataRow dataRow)
+            private DataValidationError ValidateDuplicateColumnHeader(DataRow dataRow)
             {
                 var dataSet = DataSet;
                 foreach (var other in dataSet)
@@ -44,16 +44,16 @@ namespace DevZest.Data.Views
                     if (other == dataRow)
                         continue;
                     if (SortBy[dataRow] == SortBy[other])
-                        return new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_DuplicateSortBy, SortBy);
+                        return new DataValidationError(UserMessages.SortModel_DuplicateSortBy, SortBy);
                 }
                 return null;
             }
 
             [ModelValidator]
-            private ColumnValidationMessage ValidateDirection(DataRow dataRow)
+            private DataValidationError ValidateDirection(DataRow dataRow)
             {
                 return Order[dataRow] == SortDirection.Unspecified
-                    ? new ColumnValidationMessage(ValidationSeverity.Error, UserMessages.SortModel_InputRequired(Order.DisplayName), Order)
+                    ? new DataValidationError(UserMessages.SortModel_InputRequired(Order.DisplayName), Order)
                     : null;
             }
 
@@ -255,7 +255,7 @@ namespace DevZest.Data.Views
             if (sortData == null || sortData.Count == 0)
                 return Array<IColumnComparer>.Empty;
 
-            Debug.Assert(sortData.Validate(ValidationSeverity.Error).Count == 0);
+            Debug.Assert(sortData.Validate().Count == 0);
 
             var _ = sortData._;
             var result = new IColumnComparer[sortData.Count];

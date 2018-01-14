@@ -258,15 +258,15 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        internal IScalarValidationMessages ValidateScalars()
+        internal IScalarValidationErrors ValidateScalars()
         {
-            var result = ScalarValidationMessages.Empty;
+            var result = ScalarValidationErrors.Empty;
             for (int i = 0; i < Scalars.Count; i++)
                 result = result.Add(Scalars[i].Validate(result));
             return ValidateScalars(result);
         }
 
-        protected virtual IScalarValidationMessages ValidateScalars(IScalarValidationMessages result)
+        protected virtual IScalarValidationErrors ValidateScalars(IScalarValidationErrors result)
         {
             return result;
         }
@@ -301,7 +301,7 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
-        private static void FocusToErrorInput(IReadOnlyList<FlushErrorMessage> rowFlushErrors, IReadOnlyList<FlushErrorMessage> scalarFlushErrors)
+        private static void FocusToErrorInput(IReadOnlyList<FlushError> rowFlushErrors, IReadOnlyList<FlushError> scalarFlushErrors)
         {
             if (rowFlushErrors.Count > 0)
                 rowFlushErrors[0].Source.Focus();

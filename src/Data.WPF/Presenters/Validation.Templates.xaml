@@ -7,10 +7,10 @@
 
     <ControlTemplate x:Key="{x:Static local:Validation+Templates.Error}">
         <ControlTemplate.Resources>
-            <Style TargetType="{x:Type view:ValidationMessagesControl}">
+            <Style TargetType="{x:Type view:ValidationErrorsControl}">
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type view:ValidationMessagesControl}">
+                        <ControlTemplate TargetType="{x:Type view:ValidationErrorsControl}">
                             <Border Background="Red">
                                 <ItemsPresenter />
                             </Border>
@@ -24,7 +24,7 @@
                                 <BulletDecorator.Bullet>
                                     <Ellipse x:Name="_bullet" Height="5" Width="5" Fill="White" />
                                 </BulletDecorator.Bullet>
-                                <TextBlock x:Name="_textBlock" TextWrapping="Wrap" Margin="3,0,0,0" Foreground="White" Text="{Binding ErrorContent.Description}" FontWeight="Bold" />
+                                <TextBlock x:Name="_textBlock" TextWrapping="Wrap" Margin="3,0,0,0" Foreground="White" Text="{Binding ErrorContent.Message}" FontWeight="Bold" />
                             </BulletDecorator>
                         </DataTemplate>
                     </Setter.Value>
@@ -33,8 +33,8 @@
                     <Trigger Property="ItemsCount" Value="1">
                         <Setter Property="ItemTemplate">
                             <Setter.Value>
-                                <DataTemplate DataType="{x:Type dz:ValidationMessage}">
-                                    <TextBlock x:Name="_textBlock" Foreground="White" TextWrapping="Wrap" Text="{Binding ErrorContent.Description}" FontWeight="Bold" />
+                                <DataTemplate DataType="{x:Type dz:ValidationError}">
+                                    <TextBlock x:Name="_textBlock" Foreground="White" TextWrapping="Wrap" Text="{Binding ErrorContent.Message}" FontWeight="Bold" />
                                 </DataTemplate>
                             </Setter.Value>
                         </Setter>
@@ -46,64 +46,7 @@
             <Border x:Name="_border" BorderBrush="Red" BorderThickness="2" HorizontalAlignment="Left">
                 <AdornedElementPlaceholder x:Name="_placeholder" />
             </Border>
-            <view:ValidationMessagesControl x:Name="_messagesControl" Visibility="Collapsed" MinWidth="70" Width="{Binding ElementName=_border, Path=ActualWidth}"
-                ItemsSource="{Binding}" />
-        </StackPanel>
-        <ControlTemplate.Triggers>
-            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.IsMouseOver}" Value="true">
-                <Setter TargetName="_messagesControl" Property="Visibility" Value="Visible" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.IsKeyboardFocusWithin}" Value="true">
-                <Setter TargetName="_messagesControl" Property="Visibility" Value="Visible" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding ElementName=_placeholder, Path=AdornedElement.(view:ValidationPlaceholder.IsActive)}" Value="true">
-                <Setter TargetName="_messagesControl" Property="Visibility" Value="Visible" />
-            </DataTrigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-
-    <ControlTemplate x:Key="{x:Static local:Validation+Templates.Warning}">
-        <ControlTemplate.Resources>
-            <Style TargetType="{x:Type view:ValidationMessagesControl}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type view:ValidationMessagesControl}">
-                            <Border Background="Purple">
-                                <ItemsPresenter />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="ItemTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <BulletDecorator>
-                                <BulletDecorator.Bullet>
-                                    <Ellipse x:Name="_bullet" Height="5" Width="5" Fill="White" />
-                                </BulletDecorator.Bullet>
-                                <TextBlock x:Name="_textBlock" TextWrapping="Wrap" Margin="3,0,0,0" Foreground="White" Text="{Binding ErrorContent.Description}" FontWeight="Bold" />
-                            </BulletDecorator>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="ItemsCount" Value="1">
-                        <Setter Property="ItemTemplate">
-                            <Setter.Value>
-                                <DataTemplate DataType="{x:Type dz:ValidationMessage}">
-                                    <TextBlock x:Name="_textBlock" Foreground="White" TextWrapping="Wrap" Text="{Binding ErrorContent.Description}" FontWeight="Bold" />
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </ControlTemplate.Resources>
-        <StackPanel Orientation="Vertical">
-            <Border x:Name="_border" BorderBrush="Purple" BorderThickness="2" HorizontalAlignment="Left">
-                <AdornedElementPlaceholder x:Name="_placeholder" />
-            </Border>
-            <view:ValidationMessagesControl x:Name="_messagesControl" Visibility="Collapsed" MinWidth="70" Width="{Binding ElementName=_border, Path=ActualWidth}"
+            <view:ValidationErrorsControl x:Name="_messagesControl" Visibility="Collapsed" MinWidth="70" Width="{Binding ElementName=_border, Path=ActualWidth}"
                 ItemsSource="{Binding}" />
         </StackPanel>
         <ControlTemplate.Triggers>

@@ -1,9 +1,8 @@
 ﻿namespace DevZest.Data.Presenters
 {
-    public enum ValidationMessageType
+    public enum ValidationErrorType
     {
         FlushError,
-        Error,
-        Warning
+        Error
     }
 }

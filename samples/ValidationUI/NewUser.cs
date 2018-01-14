@@ -26,9 +26,9 @@ namespace ValidationUI
         private const string ERR_PASSWORD_MISMATCH = "Password and Confirm Password must be identical";
 
         [ModelValidator]
-        private ColumnValidationMessage ValidatePassword(DataRow dataRow)
+        private DataValidationError ValidatePassword(DataRow dataRow)
         {
-            return ConfirmPassword[dataRow] == Password[dataRow] ? null : new ColumnValidationMessage(ValidationSeverity.Error, ERR_PASSWORD_MISMATCH, PasswordMismatchErrorSource);
+            return ConfirmPassword[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_PASSWORD_MISMATCH, PasswordMismatchErrorSource);
         }
     }
 }

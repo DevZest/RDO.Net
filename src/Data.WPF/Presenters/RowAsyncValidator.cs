@@ -13,18 +13,18 @@ namespace DevZest.Data.Presenters
 {
     public abstract class RowAsyncValidator : AsyncValidator<IRowValidationResults>, IRowAsyncValidators
     {
-        internal static RowAsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
+        internal static RowAsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IDataValidationErrors>> action, Action postAction)
             where T : UIElement, new()
         {
             return new RowInputAsyncValidator<T>(rowInput, action, postAction);
         }
 
-        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IColumnValidationMessages>> action, Action postAction)
+        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IDataValidationErrors>> action, Action postAction)
         {
             return new CurrentRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
-        private static async Task<IRowValidationResults> Validate(Func<Task<IColumnValidationMessages>> action, RowPresenter currentRow)
+        private static async Task<IRowValidationResults> Validate(Func<Task<IDataValidationErrors>> action, RowPresenter currentRow)
         {
             var messages = await action();
             return messages == null || messages.Count == 0 || currentRow == null
@@ -34,7 +34,7 @@ namespace DevZest.Data.Presenters
         private sealed class RowInputAsyncValidator<T> : RowAsyncValidator
             where T : UIElement, new()
         {
-            public RowInputAsyncValidator(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
+            public RowInputAsyncValidator(RowInput<T> rowInput, Func<Task<IDataValidationErrors>> action, Action postAction)
                 : base(postAction)
             {
                 Debug.Assert(rowInput != null);
@@ -44,7 +44,7 @@ namespace DevZest.Data.Presenters
             }
 
             private readonly RowInput<T> _rowInput;
-            private readonly Func<Task<IColumnValidationMessages>> _action;
+            private readonly Func<Task<IDataValidationErrors>> _action;
 
             public override IColumns SourceColumns
             {
@@ -98,14 +98,14 @@ namespace DevZest.Data.Presenters
 
         private sealed class CurrentRowAsyncValidator : ColumnsAsyncValidator
         {
-            public CurrentRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IColumnValidationMessages>> action, Action postAction)
+            public CurrentRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IDataValidationErrors>> action, Action postAction)
                 : base(template, sourceColumns, postAction)
             {
                 Debug.Assert(action != null);
                 _action = action;
             }
 
-            private readonly Func<Task<IColumnValidationMessages>> _action;
+            private readonly Func<Task<IDataValidationErrors>> _action;
 
             private RowPresenter CurrentRow
             {
@@ -166,45 +166,16 @@ namespace DevZest.Data.Presenters
             OnPropertyChanged(nameof(HasError));
         }
 
-        private IRowValidationResults _warnings = RowValidationResults.Empty;
-        public IRowValidationResults Warnings
-        {
-            get { return _warnings; }
-            private set
-            {
-                Debug.Assert(value != null && value.IsSealed);
-                if (_warnings == value)
-                    return;
-                _warnings = value;
-                OnPropertyChanged(nameof(Warnings));
-            }
-        }
-
-        private bool _hasWarning;
-        public sealed override bool HasWarning
-        {
-            get { return _hasWarning; }
-        }
-        private void RefreshHasWarning()
-        {
-            var value = Warnings.Count > 0;
-            if (value == _hasWarning)
-                return;
-            _hasWarning = value;
-            OnPropertyChanged(nameof(HasWarning));
-        }
-
         internal abstract IRowInput RowInput { get; }
 
         protected sealed override void ClearValidationMessages()
         {
-            Errors = Warnings = RowValidationResults.Empty;
+            Errors = RowValidationResults.Empty;
         }
 
-        protected sealed override void RefreshValidationMessages(IRowValidationResults result)
+        protected sealed override void RefreshValidationErrors(IRowValidationResults result)
         {
-            Errors = result.Where(ValidationSeverity.Error);
-            Warnings = result.Where(ValidationSeverity.Warning);
+            Errors = result.Seal();
         }
 
         protected sealed override IRowValidationResults EmptyValidationResult
@@ -216,8 +187,6 @@ namespace DevZest.Data.Presenters
         {
             if (Errors.ContainsKey(rowPresenter))
                 Errors = Errors.Remove(rowPresenter);
-            if (Warnings.ContainsKey(rowPresenter))
-                Warnings = Warnings.Remove(rowPresenter);
         }
 
         internal void OnCurrentRowChanged()

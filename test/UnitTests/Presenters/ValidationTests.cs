@@ -9,7 +9,6 @@ namespace DevZest.Data.Presenters
         public void Validation_Templates_not_null()
         {
             Assert.IsNotNull(Validation.Templates.Error.GetOrLoad());
-            Assert.IsNotNull(Validation.Templates.Warning.GetOrLoad());
         }
     }
 }

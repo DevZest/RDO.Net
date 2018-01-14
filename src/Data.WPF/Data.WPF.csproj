@@ -46,7 +46,7 @@
     <Compile Include="Presenters\BindingFactory.PasswordBox.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationMessagesControl.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationPlaceholder.cs" />
-    <Compile Include="Presenters\BindingFactory.ValidationSeverityIndicator.cs" />
+    <Compile Include="Presenters\BindingFactory.ValidityIndicator.cs" />
     <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
     <Compile Include="Presenters\BindingFactory.ComboBox.cs" />
     <Compile Include="Presenters\BindingFactory.DatePicker.cs" />
@@ -60,7 +60,7 @@
     <Compile Include="Presenters\RoutedEventTrigger.cs" />
     <Compile Include="Presenters\IScalarAsyncValidators.cs" />
     <Compile Include="Presenters\IScalars.cs" />
-    <Compile Include="Presenters\IScalarValidationMessages.cs" />
+    <Compile Include="Presenters\IScalarValidationErrors.cs" />
     <Compile Include="Presenters\BlockViewAlternation.cs" />
     <Compile Include="Presenters\Primitives\ResourceId.cs" />
     <Compile Include="Presenters\RowBindingBehavior.cs" />
@@ -81,8 +81,8 @@
     <Compile Include="Presenters\ScalarAsyncValidator.cs" />
     <Compile Include="Presenters\ScalarAsyncValidators.cs" />
     <Compile Include="Presenters\Scalars.cs" />
-    <Compile Include="Presenters\ScalarValidationMessage.cs" />
-    <Compile Include="Presenters\ScalarValidationMessages.cs" />
+    <Compile Include="Presenters\ScalarValidationError.cs" />
+    <Compile Include="Presenters\ScalarValidationErrors.cs" />
     <Compile Include="Presenters\ScalarValidation.cs" />
     <Compile Include="Presenters\ServiceManager.cs" />
     <Compile Include="Presenters\CommandExtensions.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presenters\ValidationMessageType.cs" />
+    <Compile Include="Presenters\ValidationErrorType.cs" />
     <Compile Include="Utilities\Check.NotNull.cs" />
     <Compile Include="Utilities\Check.CheckNotNull.cs" />
     <Compile Include="Utilities\Windows\DragHandlerBase.cs" />
@@ -115,9 +115,9 @@
     </Compile>
     <Compile Include="Views\RowSelector.cs" />
     <Compile Include="Views\RowExpander.cs" />
-    <Compile Include="Views\ValidationMessagesControl.cs" />
+    <Compile Include="Views\ValidationErrorsControl.cs" />
     <Compile Include="Views\ValidationPlaceholder.cs" />
-    <Compile Include="Views\ValidationSeverityIndicator.cs" />
+    <Compile Include="Views\ValidityIndicator.cs" />
     <Compile Include="Views\VisualStates.cs" />
     <Compile Include="Presenters\RowAsyncValidator.cs" />
     <Compile Include="Presenters\RowAsyncValidators.cs" />
@@ -235,11 +235,11 @@
     <Compile Include="Presenters\RowValidationResults.cs" />
     <Compile Include="Presenters\ValidationMode.cs" />
     <Compile Include="Presenters\RowValidation.cs" />
-    <Compile Include="Presenters\FlushErrorMessage.cs" />
+    <Compile Include="Presenters\FlushError.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-beta-20171222\lib\netstandard2.0\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-beta-20180114\lib\netstandard2.0\DevZest.Data.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
@@ -281,7 +281,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ValidationMessagesControl.xaml">
+    <Page Include="Themes\ValidationErrorsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -289,7 +289,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\ValidationSeverityIndicator.xaml">
+    <Page Include="Themes\ValidityIndicator.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -349,7 +349,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ValidationMessagesControl.Templates.xaml">
+    <Page Include="Views\ValidationErrorsControl.Templates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

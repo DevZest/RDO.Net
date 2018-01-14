@@ -48,58 +48,49 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public IReadOnlyList<FlushErrorMessage> FlushErrors
+        public IReadOnlyList<FlushError> FlushErrors
         {
             get
             {
                 if (_flushErrors == null)
-                    return Array<FlushErrorMessage>.Empty;
+                    return Array<FlushError>.Empty;
                 return _flushErrors;
             }
         }
 
-        internal FlushErrorMessage GetFlushError(UIElement element)
+        internal FlushError GetFlushError(UIElement element)
         {
             return _flushErrors.GetFlushError(element);
         }
 
-        internal void SetFlushError(UIElement element, FlushErrorMessage inputError)
+        internal void SetFlushError(UIElement element, FlushError inputError)
         {
             InternalFlushErrors.SetFlushError(element, inputError);
         }
 
-        private IScalarValidationMessages _validationErrors = ScalarValidationMessages.Empty;
-        private IScalarValidationMessages _validationWarnings = ScalarValidationMessages.Empty;
+        private IScalarValidationErrors _validationErrors = ScalarValidationErrors.Empty;
+        private IScalarValidationErrors _validationWarnings = ScalarValidationErrors.Empty;
 
-        public IReadOnlyList<ScalarValidationMessage> ValidationErrors
+        public IReadOnlyList<ScalarValidationError> ValidationErrors
         {
             get { return _validationErrors; }
         }
 
-        public IReadOnlyList<ScalarValidationMessage> ValidationWarnings
+        public IReadOnlyList<ScalarValidationError> ValidationWarnings
         {
             get { return _validationWarnings; }
         }
 
-        public IScalarValidationMessages GetErrors(IScalars scalars)
+        public IScalarValidationErrors GetErrors(IScalars scalars)
         {
-            var result = ScalarValidationMessages.Empty;
+            var result = ScalarValidationErrors.Empty;
             if (IsVisible(scalars))
-                result = AddValidationMessages(result, _validationErrors, scalars);
-            result = AddAsyncValidationMessages(result, ValidationSeverity.Error, scalars);
+                result = AddValidationErrors(result, _validationErrors, scalars);
+            result = AddAsyncValidationErrors(result, scalars);
             return result;
         }
 
-        public IScalarValidationMessages GetWarnings(IScalars scalars)
-        {
-            var result = ScalarValidationMessages.Empty;
-            if (IsVisible(scalars))
-                result = AddValidationMessages(result, _validationWarnings, scalars);
-            result = AddAsyncValidationMessages(result, ValidationSeverity.Warning, scalars);
-            return result;
-        }
-
-        private static IScalarValidationMessages AddValidationMessages(IScalarValidationMessages result, IScalarValidationMessages messages, IScalars scalars)
+        private static IScalarValidationErrors AddValidationErrors(IScalarValidationErrors result, IScalarValidationErrors messages, IScalars scalars)
         {
             for (int i = 0; i < messages.Count; i++)
             {
@@ -110,14 +101,14 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        private IScalarValidationMessages AddAsyncValidationMessages(IScalarValidationMessages result, ValidationSeverity severity, IScalars scalars)
+        private IScalarValidationErrors AddAsyncValidationErrors(IScalarValidationErrors result, IScalars scalars)
         {
             var asyncValidators = Template.ScalarAsyncValidators;
             for (int i = 0; i < asyncValidators.Count; i++)
             {
                 var asyncValidator = asyncValidators[i];
-                var messages = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
-                result = AddValidationMessages(result, messages, scalars);
+                var errors = asyncValidator.Errors;
+                result = AddValidationErrors(result, errors, scalars);
             }
 
             return result;
@@ -135,22 +126,15 @@ namespace DevZest.Data.Presenters
                 ShowAll();
 
             ClearValidationMessages();
-            var messages = _inputManager.PerformValidateScalars();
-            for (int i = 0; i < messages.Count; i++)
-            {
-                var message = messages[i];
-                if (message.Severity == ValidationSeverity.Error)
-                    _validationErrors = _validationErrors.Add(message);
-                else
-                    _validationWarnings = _validationWarnings.Add(message);
-            }
+            var errors = _inputManager.PerformValidateScalars();
+            for (int i = 0; i < errors.Count; i++)
+                _validationErrors = _validationErrors.Add(errors[i]);
             _validationErrors = _validationErrors.Seal();
-            _validationWarnings = _validationWarnings.Seal();
         }
 
         private void ClearValidationMessages()
         {
-            _validationErrors = _validationWarnings = ScalarValidationMessages.Empty;
+            _validationErrors = _validationWarnings = ScalarValidationErrors.Empty;
         }
 
         private bool _showAll;

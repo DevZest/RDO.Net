@@ -7,7 +7,7 @@ namespace DevZest.Data.Presenters
 {
     public abstract class Scalar : IScalars
     {
-        internal abstract IScalarValidationMessages Validate(IScalarValidationMessages result);
+        internal abstract IScalarValidationErrors Validate(IScalarValidationErrors result);
 
         #region IScalars
 

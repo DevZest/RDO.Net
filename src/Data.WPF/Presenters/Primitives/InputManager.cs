@@ -17,9 +17,9 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _scalarValidation ?? (_scalarValidation = new ScalarValidation(this)); }
         }
 
-        internal virtual IScalarValidationMessages PerformValidateScalars()
+        internal virtual IScalarValidationErrors PerformValidateScalars()
         {
-            return DataPresenter == null ? ScalarValidationMessages.Empty : DataPresenter.ValidateScalars();
+            return base.DataPresenter == null ? Presenters.ScalarValidationErrors.Empty : base.DataPresenter.ValidateScalars();
         }
 
         private RowValidation _rowValidation;
@@ -86,7 +86,7 @@ namespace DevZest.Data.Presenters.Primitives
             return true;
         }
 
-        private void FocusToInputError(IColumnValidationMessages errors)
+        private void FocusToInputError(IDataValidationErrors errors)
         {
             for (int i = 0; i < errors.Count; i++)
             {
@@ -96,7 +96,7 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        internal bool FocusToInputError(ColumnValidationMessage error, RowPresenter row)
+        internal bool FocusToInputError(DataValidationError error, RowPresenter row)
         {
             foreach (var rowBinding in Template.RowBindings)
             {
@@ -127,22 +127,22 @@ namespace DevZest.Data.Presenters.Primitives
             return element.Focus();
         }
 
-        private IReadOnlyList<FlushErrorMessage> ScalarFlushErrors
+        private IReadOnlyList<FlushError> ScalarFlushErrors
         {
-            get { return _scalarValidation == null ? Array<FlushErrorMessage>.Empty : _scalarValidation.FlushErrors; }
+            get { return _scalarValidation == null ? Array<FlushError>.Empty : _scalarValidation.FlushErrors; }
         }
 
-        private IReadOnlyList<FlushErrorMessage> RowFlushErrors
+        private IReadOnlyList<FlushError> RowFlushErrors
         {
-            get { return _rowValidation == null ? Array<FlushErrorMessage>.Empty : _rowValidation.FlushErrors; }
+            get { return _rowValidation == null ? Array<FlushError>.Empty : _rowValidation.FlushErrors; }
         }
 
-        private IReadOnlyList<ScalarValidationMessage> ScalarValidationErrors
+        private IReadOnlyList<ScalarValidationError> ScalarValidationErrors
         {
-            get { return _scalarValidation == null ? Array<ScalarValidationMessage>.Empty : _scalarValidation.ValidationErrors; }
+            get { return _scalarValidation == null ? Array<ScalarValidationError>.Empty : _scalarValidation.ValidationErrors; }
         }
 
-        private IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowValidationErrors
+        private IReadOnlyDictionary<RowPresenter, IDataValidationErrors> RowValidationErrors
         {
             get { return _rowValidation == null ? RowValidationResults.Empty : _rowValidation.ValidationErrors; }
         }

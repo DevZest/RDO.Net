@@ -50,8 +50,6 @@ namespace DevZest.Data.Presenters
 
         public abstract bool HasError { get; }
 
-        public abstract bool HasWarning { get; }
-
         public abstract void Run();
 
         public void CancelRunning()

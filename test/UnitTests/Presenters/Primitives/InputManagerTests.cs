@@ -63,7 +63,7 @@ namespace DevZest.Data.Presenters.Primitives
                 .AddValidator(x =>
                 {
                     return x > 5 ? "Value cannot be greater than 5." : null;
-                }, ValidationSeverity.Error);
+                });
 
             Assert.AreEqual(-1, oldValue);
 
@@ -79,7 +79,7 @@ namespace DevZest.Data.Presenters.Primitives
             Scalar<Int32> scalar = new Scalar<int>().AddValidator(x =>
             {
                 return x > 5 ? "Value cannot be greater than 5." : null;
-            }, ValidationSeverity.Error);
+            });
             ScalarBinding<TextBox> textBox = null;
             RowBinding<TextBlock> textBlock = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
@@ -157,8 +157,8 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
-                var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
-                Assert.AreEqual(_.Name, errorMessage.Source);
+                var error = (DataValidationError)errors[0].ErrorContent;
+                Assert.AreEqual(_.Name, error.Source);
             }
 
             textBox[currentRow].Text = "some other name";
@@ -187,8 +187,8 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
-                var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
-                Assert.AreEqual(_.Name, errorMessage.Source);
+                var error = (DataValidationError)errors[0].ErrorContent;
+                Assert.AreEqual(_.Name, error.Source);
             }
 
             textBox[currentRow].Text = "some name";
@@ -240,11 +240,11 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
         }
 
-        private static async Task<IColumnValidationMessages> ValidateBadNameAsync(_String nameColumn, int index)
+        private static async Task<IDataValidationErrors> ValidateBadNameAsync(_String nameColumn, int index)
         {
             await Task.Delay(200);
             var value = nameColumn[index];
-            return value == BAD_NAME ? new ColumnValidationMessage(ValidationSeverity.Error, "Bad Name", nameColumn) : null;
+            return value == BAD_NAME ? new DataValidationError("Bad Name", nameColumn) : null;
         }
 
         [TestMethod]
@@ -281,7 +281,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(typeof(InvalidOperationException), asyncValidator.Exception.GetType());
         }
 
-        private static async Task<IColumnValidationMessages> ValidateFaultedAsync()
+        private static async Task<IDataValidationErrors> ValidateFaultedAsync()
         {
             await Task.Delay(200);
             throw new InvalidOperationException("Validation failed.");
@@ -346,7 +346,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
-                var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
+                var errorMessage = (DataValidationError)errors[0].ErrorContent;
                 Assert.AreEqual(_.Name, errorMessage.Source);
             }
 

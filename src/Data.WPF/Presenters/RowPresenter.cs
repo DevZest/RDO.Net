@@ -497,33 +497,20 @@ namespace DevZest.Data.Presenters
                 InputManager.InvalidateView();
         }
 
-        public IColumnValidationMessages GetValidationErrors(IColumns source)
+        public IDataValidationErrors GetValidationErrors(IColumns source)
         {
             Check.NotNull(source, nameof(source));
 
             if (source.Count == 0)
-                return ColumnValidationMessages.Empty;
+                return DataValidationErrors.Empty;
 
-            var result = ColumnValidationMessages.Empty;
-            result = InputManager.RowValidation.GetValidationMessages(this, source, ValidationSeverity.Error);
-            result = AddAsyncValidationMessages(result, this, ValidationSeverity.Error);
+            var result = DataValidationErrors.Empty;
+            result = InputManager.RowValidation.GetValidationErrors(this, source);
+            result = AddAsyncValidationErrors(result, this);
             return result;
         }
 
-        public IColumnValidationMessages GetValidationWarnings(IColumns source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            if (source.Count == 0)
-                return ColumnValidationMessages.Empty;
-
-            var result = ColumnValidationMessages.Empty;
-            result = InputManager.RowValidation.GetValidationMessages(this, source, ValidationSeverity.Warning);
-            result = AddAsyncValidationMessages(result, this, ValidationSeverity.Warning);
-            return result;
-        }
-
-        private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter)
+        private static IDataValidationErrors AddValidationErrors(IDataValidationErrors result, IRowValidationResults dictionary, RowPresenter rowPresenter)
         {
             if (dictionary.ContainsKey(rowPresenter))
             {
@@ -535,14 +522,14 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        private IColumnValidationMessages AddAsyncValidationMessages(IColumnValidationMessages result, RowPresenter rowPresenter, ValidationSeverity severity)
+        private IDataValidationErrors AddAsyncValidationErrors(IDataValidationErrors result, RowPresenter rowPresenter)
         {
             var asyncValidators = Template.RowAsyncValidators;
             for (int i = 0; i < asyncValidators.Count; i++)
             {
                 var asyncValidator = asyncValidators[i];
-                var dictionary = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
-                result = AddValidationMessages(result, dictionary, rowPresenter);
+                var dictionary = asyncValidator.Errors;
+                result = AddValidationErrors(result, dictionary, rowPresenter);
             }
 
             return result;

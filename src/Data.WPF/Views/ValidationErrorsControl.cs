@@ -5,31 +5,25 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Views
 {
-    public class ValidationMessagesControl : ItemsControl
+    public class ValidationErrorsControl : ItemsControl
     {
         public static class Templates
         {
-            public static readonly TemplateId ValidationErrorId = new TemplateId(typeof(ValidationMessagesControl));
-            public static readonly TemplateId ValidationWarningId = new TemplateId(typeof(ValidationMessagesControl));
+            public static readonly TemplateId ValidationErrorId = new TemplateId(typeof(ValidationErrorsControl));
 
             public static ControlTemplate ValidationError
             {
                 get { return ValidationErrorId.GetOrLoad(); }
-            }
-
-            public static ControlTemplate ValidationWarning
-            {
-                get { return ValidationWarningId.GetOrLoad(); }
             }
         }
 
         private static readonly DependencyPropertyKey ItemsCountPropertyKey;
         public static readonly DependencyProperty ItemsCountProperty;
 
-        static ValidationMessagesControl()
+        static ValidationErrorsControl()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ValidationMessagesControl), new FrameworkPropertyMetadata(typeof(ValidationMessagesControl)));
-            ItemsCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsCount), typeof(int), typeof(ValidationMessagesControl), new FrameworkPropertyMetadata(0));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ValidationErrorsControl), new FrameworkPropertyMetadata(typeof(ValidationErrorsControl)));
+            ItemsCountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ItemsCount), typeof(int), typeof(ValidationErrorsControl), new FrameworkPropertyMetadata(0));
             ItemsCountProperty = ItemsCountPropertyKey.DependencyProperty;
         }
 

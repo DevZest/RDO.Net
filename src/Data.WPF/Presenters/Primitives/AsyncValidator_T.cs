@@ -29,7 +29,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected abstract Task<T> ValidateAsync();
 
-        protected abstract void RefreshValidationMessages(T result);
+        protected abstract void RefreshValidationErrors(T result);
 
         protected abstract T EmptyValidationResult { get; }
 
@@ -75,7 +75,7 @@ namespace DevZest.Data.Presenters.Primitives
             _awaitingTask = null;
             Exception = exception;
             Status = status;
-            RefreshValidationMessages(result);
+            RefreshValidationErrors(result);
 
             if (_postAction != null)
                 _postAction();

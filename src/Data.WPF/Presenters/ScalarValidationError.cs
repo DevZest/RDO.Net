@@ -5,10 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarValidationMessage : ValidationMessageBase<IScalars>, IScalarValidationMessages
+    public sealed class ScalarValidationError : ValidationError<IScalars>, IScalarValidationErrors
     {
-        public ScalarValidationMessage(ValidationSeverity severity, string description, IScalars source)
-            : base(severity, description, source)
+        public ScalarValidationError(string message, IScalars source)
+            : base(message, source)
         {
             Check.NotNull(source, nameof(source));
             if (source.Count == 0)
@@ -18,13 +18,13 @@ namespace DevZest.Data.Presenters
         #region IScalarValidationMessageGroup
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        int IReadOnlyCollection<ScalarValidationMessage>.Count
+        int IReadOnlyCollection<ScalarValidationError>.Count
         {
             get { return 1; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        ScalarValidationMessage IReadOnlyList<ScalarValidationMessage>.this[int index]
+        ScalarValidationError IReadOnlyList<ScalarValidationError>.this[int index]
         {
             get
             {
@@ -34,26 +34,26 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        bool IScalarValidationMessages.IsSealed
+        bool IScalarValidationErrors.IsSealed
         {
             get { return true; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IScalarValidationMessages IScalarValidationMessages.Seal()
+        IScalarValidationErrors IScalarValidationErrors.Seal()
         {
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IScalarValidationMessages IScalarValidationMessages.Add(ScalarValidationMessage value)
+        IScalarValidationErrors IScalarValidationErrors.Add(ScalarValidationError value)
         {
             Check.NotNull(value, nameof(value));
-            return ScalarValidationMessages.New(this, value);
+            return ScalarValidationErrors.New(this, value);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IEnumerator<ScalarValidationMessage> IEnumerable<ScalarValidationMessage>.GetEnumerator()
+        IEnumerator<ScalarValidationError> IEnumerable<ScalarValidationError>.GetEnumerator()
         {
             yield return this;
         }

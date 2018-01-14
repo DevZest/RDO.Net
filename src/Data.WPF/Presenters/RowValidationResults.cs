@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
             {
             }
 
-            public IColumnValidationMessages this[RowPresenter key]
+            public IDataValidationErrors this[RowPresenter key]
             {
                 get { throw new KeyNotFoundException(); }
             }
@@ -35,15 +35,15 @@ namespace DevZest.Data.Presenters
                 get { yield break; }
             }
 
-            public IEnumerable<IColumnValidationMessages> Values
+            public IEnumerable<IDataValidationErrors> Values
             {
                 get { yield break; }
             }
 
-            public IRowValidationResults Add(RowPresenter rowPresenter, IColumnValidationMessages validationMessages)
+            public IRowValidationResults Add(RowPresenter rowPresenter, IDataValidationErrors validationErrors)
             {
                 var result = new Dictionary();
-                result.Add(rowPresenter, validationMessages);
+                result.Add(rowPresenter, validationErrors);
                 return result;
             }
 
@@ -52,7 +52,7 @@ namespace DevZest.Data.Presenters
                 return false;
             }
 
-            public IEnumerator<KeyValuePair<RowPresenter, IColumnValidationMessages>> GetEnumerator()
+            public IEnumerator<KeyValuePair<RowPresenter, IDataValidationErrors>> GetEnumerator()
             {
                 yield break;
             }
@@ -67,7 +67,7 @@ namespace DevZest.Data.Presenters
                 return this;
             }
 
-            public bool TryGetValue(RowPresenter key, out IColumnValidationMessages value)
+            public bool TryGetValue(RowPresenter key, out IDataValidationErrors value)
             {
                 value = null;
                 return false;
@@ -79,7 +79,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private sealed class Dictionary : Dictionary<RowPresenter, IColumnValidationMessages>, IRowValidationResults
+        private sealed class Dictionary : Dictionary<RowPresenter, IDataValidationErrors>, IRowValidationResults
         {
             public bool IsSealed { get; private set; }
 
@@ -89,23 +89,23 @@ namespace DevZest.Data.Presenters
                 return this;
             }
 
-            IRowValidationResults IRowValidationResults.Add(RowPresenter rowPresenter, IColumnValidationMessages validationMessages)
+            IRowValidationResults IRowValidationResults.Add(RowPresenter rowPresenter, IDataValidationErrors validationErrors)
             {
                 if (rowPresenter == null)
                     throw new ArgumentNullException(nameof(rowPresenter));
-                if (validationMessages == null || validationMessages.Count == 0)
-                    throw new ArgumentNullException(nameof(validationMessages));
+                if (validationErrors == null || validationErrors.Count == 0)
+                    throw new ArgumentNullException(nameof(validationErrors));
 
                 if (!IsSealed)
                 {
-                    base.Add(rowPresenter, validationMessages);
+                    base.Add(rowPresenter, validationErrors);
                     return this;
                 }
 
                 IRowValidationResults result = new Dictionary();
                 foreach (var keyValuePair in this)
                     result = result.Add(keyValuePair.Key, keyValuePair.Value);
-                result = result.Add(rowPresenter, validationMessages);
+                result = result.Add(rowPresenter, validationErrors);
                 return result;               
             }
 
@@ -139,30 +139,11 @@ namespace DevZest.Data.Presenters
             get { return EmptyDictionary.Singleton; }
         }
 
-        public static IColumnValidationMessages GetValidationMessages(this IRowValidationResults directory, RowPresenter rowPresenter)
+        public static IDataValidationErrors GetValidationMessages(this IRowValidationResults directory, RowPresenter rowPresenter)
         {
             if (rowPresenter == null)
                 return null;
-            return directory.ContainsKey(rowPresenter) ? directory[rowPresenter] : ColumnValidationMessages.Empty;
-        }
-
-        internal static IRowValidationResults Where(this IRowValidationResults directory, ValidationSeverity severity)
-        {
-            var result = RowValidationResults.Empty;
-            foreach (var rowPresenter in directory.Keys)
-            {
-                var messages = directory[rowPresenter];
-                var filteredMessages = ColumnValidationMessages.Empty;
-                for (int i = 0; i < messages.Count; i++)
-                {
-                    var message = messages[i];
-                    if (message.Severity == severity)
-                        filteredMessages = filteredMessages.Add(message);
-                }
-                if (filteredMessages.Count > 0)
-                    result = result.Add(rowPresenter, filteredMessages);
-            }
-            return result.Seal();
+            return directory.ContainsKey(rowPresenter) ? directory[rowPresenter] : DataValidationErrors.Empty;
         }
     }
 }

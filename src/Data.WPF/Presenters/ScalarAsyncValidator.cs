@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class ScalarAsyncValidator : AsyncValidator<IScalarValidationMessages>, IScalarAsyncValidators
+    public abstract class ScalarAsyncValidator : AsyncValidator<IScalarValidationErrors>, IScalarAsyncValidators
     {
-        internal static ScalarAsyncValidator Create<T>(ScalarInput<T> scalarInput, Func<Task<IScalarValidationMessages>> action, Action postAction)
+        internal static ScalarAsyncValidator Create<T>(ScalarInput<T> scalarInput, Func<Task<IScalarValidationErrors>> action, Action postAction)
             where T : UIElement, new()
         {
             return new ScalarInputAsyncValidator<T>(scalarInput, action, postAction);
         }
 
-        internal static ScalarAsyncValidator Create(Template template, IScalars sourceScalars, Func<Task<IScalarValidationMessages>> action, Action postAction)
+        internal static ScalarAsyncValidator Create(Template template, IScalars sourceScalars, Func<Task<IScalarValidationErrors>> action, Action postAction)
         {
             return new SourceScalarsAsyncValidator(template, sourceScalars, action, postAction);
         }
@@ -25,7 +25,7 @@ namespace DevZest.Data.Presenters
         private sealed class ScalarInputAsyncValidator<T> : ScalarAsyncValidator
             where T : UIElement, new()
         {
-            public ScalarInputAsyncValidator(ScalarInput<T> scalarInput, Func<Task<IScalarValidationMessages>> action, Action postAction)
+            public ScalarInputAsyncValidator(ScalarInput<T> scalarInput, Func<Task<IScalarValidationErrors>> action, Action postAction)
                 : base(action, postAction)
             {
                 Debug.Assert(scalarInput != null);
@@ -48,7 +48,7 @@ namespace DevZest.Data.Presenters
 
         private sealed class SourceScalarsAsyncValidator : ScalarAsyncValidator
         {
-            public SourceScalarsAsyncValidator(Template template, IScalars sourceScalars, Func<Task<IScalarValidationMessages>> action, Action postAction)
+            public SourceScalarsAsyncValidator(Template template, IScalars sourceScalars, Func<Task<IScalarValidationErrors>> action, Action postAction)
                 : base(action, postAction)
             {
                 Debug.Assert(template != null);
@@ -71,30 +71,30 @@ namespace DevZest.Data.Presenters
         }
 
 #if DEBUG
-        public ScalarAsyncValidator(Func<Task<IScalarValidationMessages>> action)
+        public ScalarAsyncValidator(Func<Task<IScalarValidationErrors>> action)
             : this(action, null)
         {
         }
 #endif
 
-        private ScalarAsyncValidator(Func<Task<IScalarValidationMessages>> action, Action postAction)
+        private ScalarAsyncValidator(Func<Task<IScalarValidationErrors>> action, Action postAction)
             : base(postAction)
         {
             Debug.Assert(action != null);
             _action = action;
         }
 
-        private readonly Func<Task<IScalarValidationMessages>> _action;
+        private readonly Func<Task<IScalarValidationErrors>> _action;
 
-        protected sealed override async Task<IScalarValidationMessages> ValidateAsync()
+        protected sealed override async Task<IScalarValidationErrors> ValidateAsync()
         {
             return await _action();
         }
 
         public abstract IScalars SourceScalars { get; }
 
-        private IScalarValidationMessages _errors = ScalarValidationMessages.Empty;
-        public IScalarValidationMessages Errors
+        private IScalarValidationErrors _errors = ScalarValidationErrors.Empty;
+        public IScalarValidationErrors Errors
         {
             get { return _errors; }
             private set
@@ -122,48 +122,19 @@ namespace DevZest.Data.Presenters
             OnPropertyChanged(nameof(HasError));
         }
 
-        private IScalarValidationMessages _warnings = ScalarValidationMessages.Empty;
-        public IScalarValidationMessages Warnings
-        {
-            get { return _warnings; }
-            private set
-            {
-                Debug.Assert(value != null && value.IsSealed);
-                if (_warnings == value)
-                    return;
-                _warnings = value;
-                OnPropertyChanged(nameof(Warnings));
-            }
-        }
-
-        private bool _hasWarning;
-        public sealed override bool HasWarning
-        {
-            get { return _hasWarning; }
-        }
-        private void RefreshHasWarning()
-        {
-            var value = Warnings.Count > 0;
-            if (value == _hasWarning)
-                return;
-            _hasWarning = value;
-            OnPropertyChanged(nameof(HasWarning));
-        }
-
         protected sealed override void ClearValidationMessages()
         {
-            Errors = Warnings = ScalarValidationMessages.Empty;
+            Errors = ScalarValidationErrors.Empty;
         }
 
-        protected sealed override IScalarValidationMessages EmptyValidationResult
+        protected sealed override IScalarValidationErrors EmptyValidationResult
         {
-            get { return ScalarValidationMessages.Empty; }
+            get { return ScalarValidationErrors.Empty; }
         }
 
-        protected sealed override void RefreshValidationMessages(IScalarValidationMessages result)
+        protected sealed override void RefreshValidationErrors(IScalarValidationErrors result)
         {
-            Errors = result.Where(ValidationSeverity.Error);
-            Warnings = result.Where(ValidationSeverity.Warning);
+            Errors = result;
         }
 
         #region IScalarAsyncValidators

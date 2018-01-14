@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    internal sealed class FlushErrorCollection : KeyedCollection<UIElement, FlushErrorMessage>
+    internal sealed class FlushErrorCollection : KeyedCollection<UIElement, FlushError>
     {
         internal FlushErrorCollection(InputManager inputManager)
         {
@@ -14,12 +14,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         private readonly InputManager _inputManager;
 
-        protected override UIElement GetKeyForItem(FlushErrorMessage item)
+        protected override UIElement GetKeyForItem(FlushError item)
         {
             return item.Source;
         }
 
-        public void SetFlushError(UIElement element, FlushErrorMessage flushError)
+        public void SetFlushError(UIElement element, FlushError flushError)
         {
             Remove(element);
             if (flushError != null)
@@ -30,7 +30,7 @@ namespace DevZest.Data.Presenters.Primitives
 
     internal static class FlushErrorCollectionExtensions
     {
-        internal static FlushErrorMessage GetFlushError(this FlushErrorCollection flushErrors, UIElement element)
+        internal static FlushError GetFlushError(this FlushErrorCollection flushErrors, UIElement element)
         {
             if (flushErrors == null)
                 return null;

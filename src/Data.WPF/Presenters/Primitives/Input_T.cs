@@ -70,9 +70,9 @@ namespace DevZest.Data.Presenters.Primitives
                 _progressFlushTrigger.Detach(element);
         }
 
-        public abstract FlushErrorMessage GetFlushError(UIElement element);
+        public abstract FlushError GetFlushError(UIElement element);
 
-        internal abstract void SetFlushError(UIElement element, FlushErrorMessage inputError);
+        internal abstract void SetFlushError(UIElement element, FlushError inputError);
 
         internal void ValidateFlush(T element)
         {
@@ -81,13 +81,13 @@ namespace DevZest.Data.Presenters.Primitives
             var oldflushError = GetFlushError(element);
             var flushErrorDescription = _flushValidator(element);
             if (IsFlushErrorChanged(flushErrorDescription, oldflushError))
-                SetFlushError(element, string.IsNullOrEmpty(flushErrorDescription) ? null : new FlushErrorMessage(flushErrorDescription, element));
+                SetFlushError(element, string.IsNullOrEmpty(flushErrorDescription) ? null : new FlushError(flushErrorDescription, element));
         }
 
-        private static bool IsFlushErrorChanged(string flushErrorDescription, FlushErrorMessage flushErrorMessage)
+        private static bool IsFlushErrorChanged(string flushErrorMessage, FlushError flushError)
         {
-            return string.IsNullOrEmpty(flushErrorDescription) ? flushErrorMessage != null
-                : flushErrorMessage == null || flushErrorMessage.Description != flushErrorDescription;
+            return string.IsNullOrEmpty(flushErrorMessage) ? flushError != null
+                : flushError == null || flushError.Message != flushErrorMessage;
         }
 
         public bool IsFlushing { get; private set; }
