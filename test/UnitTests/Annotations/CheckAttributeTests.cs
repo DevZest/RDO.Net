@@ -62,15 +62,15 @@ namespace DevZest.Data.Annotations
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.Id[row] = 1);
-                Assert.AreEqual(0, dataSet._.Validate(dataRow, ValidationSeverity.Error).Count);
+                Assert.AreEqual(0, dataSet._.Validate(dataRow).Count);
             }
 
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.Id[row] = 0);
-                var messages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var messages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, messages.Count);
-                Assert.AreEqual("ERR_Check", messages[0].Description);
+                Assert.AreEqual("ERR_Check", messages[0].Message);
             }
         }
     }

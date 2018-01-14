@@ -433,24 +433,20 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        internal IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
+        internal IDataValidationErrors Validate(DataRow dataRow)
         {
-            var result = ColumnValidationMessages.Empty;
+            var result = DataValidationErrors.Empty;
             foreach (var validator in Validators)
-                result = Merge(result, validator.Validate(dataRow), severity);
+                result = Merge(result, validator.Validate(dataRow));
             return result;
         }
 
-        private static IColumnValidationMessages Merge(IColumnValidationMessages result, IColumnValidationMessages validationMessages, ValidationSeverity? severity)
+        private static IDataValidationErrors Merge(IDataValidationErrors result, IDataValidationErrors validationErrors)
         {
-            if (validationMessages != null)
+            if (validationErrors != null)
             {
-                foreach (var validationMessage in validationMessages)
-                {
-                    if (severity.HasValue && validationMessage.Severity != severity.GetValueOrDefault())
-                        continue;
+                foreach (var validationMessage in validationErrors)
                     result = result.Add(validationMessage);
-                }
             }
             return result;
         }

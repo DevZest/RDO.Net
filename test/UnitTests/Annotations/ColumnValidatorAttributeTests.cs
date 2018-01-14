@@ -28,16 +28,16 @@ namespace DevZest.Data.Annotations
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.Id[row] = 3);
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.Id[row] = 5);
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual("value must be less than 5", validationMessages[0].Description);
+                Assert.AreEqual("value must be less than 5", validationMessages[0].Message);
             }
         }
     }

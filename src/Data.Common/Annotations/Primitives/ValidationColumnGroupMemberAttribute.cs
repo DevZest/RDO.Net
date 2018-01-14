@@ -73,9 +73,9 @@ namespace DevZest.Data.Annotations.Primitives
                     get { return _columns; }
                 }
 
-                public ColumnValidationMessage Validate(DataRow dataRow)
+                public DataValidationError Validate(DataRow dataRow)
                 {
-                    return IsValid(dataRow) ? null : new ColumnValidationMessage(ValidationSeverity.Error, MessageString, Columns);
+                    return IsValid(dataRow) ? null : new DataValidationError(MessageString, Columns);
                 }
 
                 private bool IsValid(DataRow dataRow)

@@ -195,12 +195,12 @@ namespace DevZest.Data.Utilities
             private readonly ColumnValidatorAttribute _attribute;
             private Func<T, DataRow, bool> _func;
 
-            public ColumnValidationMessage Validate(DataRow dataRow)
+            public DataValidationError Validate(DataRow dataRow)
             {
                 if (!_attribute.VerifyDeclaringType(_column))
                     return null;
                 var isValid = _func(_column, dataRow);
-                return isValid ? null : new ColumnValidationMessage(_attribute.Severity, _attribute.MessageString, _column);
+                return isValid ? null : new DataValidationError(_attribute.MessageString, _column);
             }
         }
 

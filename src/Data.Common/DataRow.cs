@@ -309,11 +309,11 @@ namespace DevZest.Data
             return result;
         }
 
-        public IColumnValidationMessages Validate(ValidationSeverity? severity = ValidationSeverity.Error)
+        public IDataValidationErrors Validate()
         {
             if (Model == null)
                 throw new InvalidOperationException(DiagnosticMessages.DataRow_NullModel);
-            return Model.Validate(this, severity).Seal();
+            return Model.Validate(this).Seal();
         }
 
         public void CopyValuesFrom(DataRow from, bool recursive = true)

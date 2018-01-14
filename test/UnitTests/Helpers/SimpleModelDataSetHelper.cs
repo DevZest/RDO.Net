@@ -19,9 +19,9 @@ namespace DevZest.Data.Helpers
             private const string ERR_MESSAGE = "The Id must be even.";
 
             [ModelValidator]
-            private ColumnValidationMessage Validate(DataRow dataRow)
+            private DataValidationError ValidateId(DataRow dataRow)
             {
-                return (Id[dataRow] % 2) == 0 ? null : new ColumnValidationMessage(ValidationSeverity.Error, ERR_MESSAGE, Id);
+                return (Id[dataRow] % 2) == 0 ? null : new DataValidationError(ERR_MESSAGE, Id);
             }
 
             protected override void OnChildDataSetsCreated()

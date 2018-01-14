@@ -29,8 +29,6 @@ namespace DevZest.Data.Annotations
             get { return _columnName; }
         }
 
-        public ValidationSeverity Severity { get; set; } = ValidationSeverity.Error;
-
         private readonly string _message;
         public string Message
         {

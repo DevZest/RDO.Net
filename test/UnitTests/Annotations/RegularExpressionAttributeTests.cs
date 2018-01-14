@@ -24,17 +24,17 @@ namespace DevZest.Data.Annotations
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.Name[row] = "John Doe O'Dell");
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.Name[row] = "John Doe O'Dell John Doe O'Dell John Doe O'Dell John Doe O'Dell");
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);
                 Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.RegularExpressionAttribute, nameof(TestModel.Name), PATTERN),
-                    validationMessages[0].Description);
+                    validationMessages[0].Message);
             }
         }
     }

@@ -31,7 +31,7 @@ namespace DevZest.Data.Annotations
                     _.Text1[row] = "123456";
                     _.Text2[row] = "123456";
                 });
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
@@ -42,10 +42,10 @@ namespace DevZest.Data.Annotations
                     _.Text1[row] = "12345678901";
                     _.Text2[row] = "123456";
                 });
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);
                 Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.StringLengthAttribute, nameof(TestModel.Text1), 10),
-                    validationMessages[0].Description);
+                    validationMessages[0].Message);
             }
 
             {
@@ -55,10 +55,10 @@ namespace DevZest.Data.Annotations
                     _.Text1[row] = "123456";
                     _.Text2[row] = "1234";
                 });
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);
                 Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.StringLengthAttribute_WithMinLength, nameof(TestModel.Text2), 10, 5),
-                    validationMessages[0].Description);
+                    validationMessages[0].Message);
             }
         }
     }

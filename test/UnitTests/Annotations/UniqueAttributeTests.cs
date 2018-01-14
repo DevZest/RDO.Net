@@ -56,17 +56,17 @@ namespace DevZest.Data.Annotations
         {
             var dataSet = DataSet<TestModel>.New();
             var dataRow1 = dataSet.AddRow((_, row) => _.Id[row] = 1);
-            Assert.AreEqual(0, dataSet._.Validate(dataRow1, ValidationSeverity.Error).Count);
+            Assert.AreEqual(0, dataSet._.Validate(dataRow1).Count);
             var dataRow2 = dataSet.AddRow((_, row) => _.Id[row] = 1);
             {
-                var messages1 = dataSet._.Validate(dataRow1, ValidationSeverity.Error);
+                var messages1 = dataSet._.Validate(dataRow1);
                 Assert.AreEqual(1, messages1.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.UniqueAttribute, nameof(TestModel.Id)), messages1[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.UniqueAttribute, nameof(TestModel.Id)), messages1[0].Message);
             }
             {
-                var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
+                var messages2 = dataSet._.Validate(dataRow2);
                 Assert.AreEqual(1, messages2.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.UniqueAttribute, nameof(TestModel.Id)), messages2[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.UniqueAttribute, nameof(TestModel.Id)), messages2[0].Message);
             }
         }
     }

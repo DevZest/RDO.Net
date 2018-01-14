@@ -23,16 +23,16 @@ namespace DevZest.Data.Annotations
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.Url[row] = "http://devzest.com");
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.Url[row] = "devzest.com");
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);
-                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.UrlAttribute, nameof(TestModel.Url)) , validationMessages[0].Description);
+                Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.UrlAttribute, nameof(TestModel.Url)) , validationMessages[0].Message);
             }
         }
     }

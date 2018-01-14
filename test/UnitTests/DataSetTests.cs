@@ -161,72 +161,65 @@ namespace DevZest.Data
         {
             var dataSet = GetDataSet(3);
 
-            var validationResult = dataSet.Validate(ValidationSeverity.Error, limit:6);
-            Assert.IsFalse(validationResult.IsValid());
+            var validationResults = dataSet.Validate(true, 6);
             var expectedJson =
 @"[
    {
       ""DataRow"" : ""/[0]/Child[0]/Child[1]"",
-      ""Messages"" : [
+      ""Errors"" : [
          {
-            ""Severity"" : ""Error"",
-            ""Description"" : ""The Id must be even."",
+            ""Message"" : ""The Id must be even."",
             ""Source"" : ""Id""
          }
       ]
    },
    {
       ""DataRow"" : ""/[0]/Child[1]"",
-      ""Messages"" : [
+      ""Errors"" : [
          {
-            ""Severity"" : ""Error"",
-            ""Description"" : ""The Id must be even."",
+            ""Message"" : ""The Id must be even."",
             ""Source"" : ""Id""
          }
       ]
    },
    {
       ""DataRow"" : ""/[0]/Child[1]/Child[1]"",
-      ""Messages"" : [
+      ""Errors"" : [
          {
-            ""Severity"" : ""Error"",
-            ""Description"" : ""The Id must be even."",
+            ""Message"" : ""The Id must be even."",
             ""Source"" : ""Id""
          }
       ]
    },
    {
       ""DataRow"" : ""/[0]/Child[2]/Child[1]"",
-      ""Messages"" : [
+      ""Errors"" : [
          {
-            ""Severity"" : ""Error"",
-            ""Description"" : ""The Id must be even."",
+            ""Message"" : ""The Id must be even."",
             ""Source"" : ""Id""
          }
       ]
    },
    {
       ""DataRow"" : ""/[1]"",
-      ""Messages"" : [
+      ""Errors"" : [
          {
-            ""Severity"" : ""Error"",
-            ""Description"" : ""The Id must be even."",
+            ""Message"" : ""The Id must be even."",
             ""Source"" : ""Id""
          }
       ]
    },
    {
       ""DataRow"" : ""/[1]/Child[0]/Child[1]"",
-      ""Messages"" : [
+      ""Errors"" : [
          {
-            ""Severity"" : ""Error"",
-            ""Description"" : ""The Id must be even."",
+            ""Message"" : ""The Id must be even."",
             ""Source"" : ""Id""
          }
       ]
    }
 ]";
-            Assert.AreEqual(expectedJson, validationResult.ToString());
+            Assert.AreEqual(expectedJson, validationResults.ToString());
         }
 
         [TestMethod]

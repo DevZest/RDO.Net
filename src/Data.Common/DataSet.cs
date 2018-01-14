@@ -194,169 +194,29 @@ namespace DevZest.Data
             return JsonWriter.New().Write(this).ToString(isPretty);
         }
 
-        private abstract class ValidationResultsCounter
+        public IDataValidationResults Validate(bool recursive = true, int maxErrorRows = 100)
         {
-            public static ValidationResultsCounter Create(ValidationSeverity severity, int limit)
-            {
-                return new SingleSeverityCounter(severity, limit);
-            }
-
-            public static ValidationResultsCounter Create(int errorLimit, int warningLimit)
-            {
-                return new AllSeverityCounter(errorLimit, warningLimit);
-            }
-
-            protected ValidationResultsCounter()
-            {
-            }
-
-            public abstract bool HasNext { get; }
-
-            public abstract DataRowValidationResult? Next(DataRow dataRow);
-
-            private sealed class SingleSeverityCounter : ValidationResultsCounter
-            {
-                public SingleSeverityCounter(ValidationSeverity severity, int limit)
-                {
-                    _severity = severity;
-                    _limit = limit;
-                }
-
-                private ValidationSeverity _severity;
-                private int _limit;
-                private int _count;
-
-                public override bool HasNext
-                {
-                    get { return _count < _limit; }
-                }
-
-                public override DataRowValidationResult? Next(DataRow dataRow)
-                {
-                    if (!HasNext)
-                        return null;
-                    var validationMessages = dataRow.Validate(_severity);
-                    if (validationMessages.Count > 0)
-                    {
-                        _count++;
-                        return new DataRowValidationResult(dataRow, validationMessages);
-                    }
-                    else
-                        return new DataRowValidationResult();
-                }
-            }
-
-            private sealed class AllSeverityCounter : ValidationResultsCounter
-            {
-                public AllSeverityCounter(int errorLimit, int warningLimit)
-                {
-                    _errorLimit = errorLimit;
-                    _warningLimit = warningLimit;
-                }
-
-                private int _errorCount, _warningCount, _errorLimit, _warningLimit;
-
-                public override bool HasNext
-                {
-                    get { return _errorCount < _errorLimit || _warningCount < _warningLimit; }
-                }
-
-                private bool HasValidator(Model model)
-                {
-                    bool nextError = _errorCount < _errorLimit;
-                    bool nextWarning = _warningCount < _warningLimit;
-
-                    var validators = model.Validators;
-                    if (nextError && validators.Count > 0)
-                        return true;
-                    else if (nextWarning && validators.Count > 0)
-                        return true;
-                    else
-                        return false;
-                }
-
-                private static void Check(IReadOnlyList<ColumnValidationMessage> validationMessages, out bool hasError, out bool hasWarning)
-                {
-                    hasError = hasWarning = false;
-                    for (int i = 0; i < validationMessages.Count; i++)
-                    {
-                        var severity = validationMessages[i].Severity;
-                        switch (severity)
-                        {
-                            case ValidationSeverity.Error:
-                                hasError = true;
-                                break;
-                            case ValidationSeverity.Warning:
-                                hasWarning = true;
-                                break;
-                        }
-
-                        if (hasError && hasWarning)
-                            return;
-                    }
-                }
-
-                public override DataRowValidationResult? Next(DataRow dataRow)
-                {
-                    if (!HasNext || !HasValidator(dataRow.Model))
-                        return null;
-
-                    var validationMessages = dataRow.Validate(null);
-                    if (validationMessages.Count == 0)
-                        return new DataRowValidationResult();
-
-                    bool hasError, hasWarning;
-                    Check(validationMessages, out hasError, out hasWarning);
-
-                    bool emptyEntry = true;
-                    if (hasError)
-                    {
-                        if (_errorCount < _errorLimit)
-                            emptyEntry = false;
-                        _errorCount++;
-                    }
-                    if (hasWarning)
-                    {
-                        if (_warningCount < _warningLimit)
-                            emptyEntry = false;
-                        _warningCount++;
-                    }
-                    return emptyEntry ? new DataRowValidationResult() : new DataRowValidationResult(dataRow, validationMessages);
-                }
-            }
+            return Validate(DataValidationResults.Empty, this, maxErrorRows, recursive).Seal();
         }
 
-        public IDataRowValidationResults Validate(bool recursive = true, int errorLimit = 100, int warningLimit = 100)
-        {
-            return Validate(DataRowValidationResults.Empty, this, ValidationResultsCounter.Create(errorLimit, warningLimit), recursive);
-        }
-
-        public IDataRowValidationResults Validate(ValidationSeverity severity, bool recursive = true, int limit = 100)
-        {
-            return Validate(DataRowValidationResults.Empty, this, ValidationResultsCounter.Create(severity, limit), recursive);
-        }
-
-        private static IDataRowValidationResults Validate(IDataRowValidationResults result, DataSet dataSet, ValidationResultsCounter resultsCounter, bool recursive)
+        private static IDataValidationResults Validate(IDataValidationResults result, DataSet dataSet, int maxErrorRows, bool recursive)
         {
             foreach (var dataRow in dataSet)
             {
-                var entry = resultsCounter.Next(dataRow);
-                if (!entry.HasValue)
+                if (maxErrorRows > 0 && result.Count >= maxErrorRows)
                     return result;
 
-                var entryValue = entry.GetValueOrDefault();
-                if (!entryValue.IsEmpty)
-                    result = result.Add(entryValue);
+                var errors = dataRow.Validate();
+                if (errors != null && errors.Count > 0)
+                    result = result.Add(new DataValidationResult(dataRow, errors));
 
                 if (recursive)
                 {
                     var childModels = dataSet.Model.ChildModels;
                     foreach (var childModel in childModels)
                     {
-                        if (!resultsCounter.HasNext)
-                            break;
                         var childDataSet = dataRow[childModel];
-                        result = Validate(result, childDataSet, resultsCounter, recursive);
+                        result = Validate(result, childDataSet, maxErrorRows, recursive);
                     }
                 }
             }
@@ -378,12 +238,12 @@ namespace DevZest.Data
             }
         }
 
-        public IColumnValidationMessages ValidateAddingRow(ValidationSeverity? severity = ValidationSeverity.Error)
+        public IDataValidationErrors ValidateAddingRow()
         {
             var addingRow = AddingRow;
             if (addingRow == null)
                 throw new InvalidOperationException(DiagnosticMessages.DataSet_NullAddingRow);
-            return Model.Validate(addingRow, severity).Seal();
+            return Model.Validate(addingRow).Seal();
         }
 
         public DataRow BeginAdd()

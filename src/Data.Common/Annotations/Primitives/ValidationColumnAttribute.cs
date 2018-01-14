@@ -21,23 +21,18 @@ namespace DevZest.Data.Annotations.Primitives
             private ValidationColumnAttribute _owner;
             private Column _column;
 
-            public ColumnValidationMessage Validate(DataRow dataRow)
+            public DataValidationError Validate(DataRow dataRow)
             {
                 return _owner.Validate(_column, dataRow);
             }
         }
 
-        private ColumnValidationMessage Validate(Column column, DataRow dataRow)
+        private DataValidationError Validate(Column column, DataRow dataRow)
         {
-            return IsValid(column, dataRow) ? null : new ColumnValidationMessage(Severity, FormatMessage(column.DisplayName), column);
+            return IsValid(column, dataRow) ? null : new DataValidationError(FormatMessage(column.DisplayName), column);
         }
 
         protected abstract bool IsValid(Column column, DataRow dataRow);
-
-        protected virtual ValidationSeverity Severity
-        {
-            get { return ValidationSeverity.Error; }
-        }
 
         public string Message { get; set; }
 

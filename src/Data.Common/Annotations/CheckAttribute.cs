@@ -22,9 +22,9 @@ namespace DevZest.Data.Annotations
             _messageGetter = messageResourceType.ResolveStringGetter(message);
         }
 
-        protected sealed override ColumnValidationMessage Validate(Model model, DataRow dataRow)
+        protected sealed override DataValidationError Validate(Model model, DataRow dataRow)
         {
-            return IsValid(model, dataRow) ? null : new ColumnValidationMessage(ValidationSeverity.Error, MessageString, GetValidationSource(model));
+            return IsValid(model, dataRow) ? null : new DataValidationError(MessageString, GetValidationSource(model));
         }
 
         private readonly string _message;

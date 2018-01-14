@@ -23,17 +23,17 @@ namespace DevZest.Data.Annotations
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.CreditCardNumber[row] = "4392 2500 0980 2983");
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
                 var dataSet = DataSet<TestModel>.New();
                 var dataRow = dataSet.AddRow((_, row) => _.CreditCardNumber[row] = "4392 2500 0980 2980");
-                var validationMessages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);
                 Assert.AreEqual(string.Format(CultureInfo.CurrentCulture, UserMessages.CreditCardAttribute, nameof(TestModel.CreditCardNumber)),
-                    validationMessages[0].Description);
+                    validationMessages[0].Message);
             }
         }
 

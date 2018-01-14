@@ -66,17 +66,17 @@ namespace DevZest.Data.Annotations
                 _.Id1[row] = 1;
                 _.Id2[row] = 1;
                 });
-            Assert.AreEqual(0, dataSet._.Validate(dataRow1, ValidationSeverity.Error).Count);
+            Assert.AreEqual(0, dataSet._.Validate(dataRow1).Count);
             var dataRow2 = dataSet.AddRow((_, row) => {
                 _.Id1[row] = 1;
                 _.Id2[row] = 1;
             });
-            var messages1 = dataSet._.Validate(dataRow1, ValidationSeverity.Error);
-            var messages2 = dataSet._.Validate(dataRow2, ValidationSeverity.Error);
+            var messages1 = dataSet._.Validate(dataRow1);
+            var messages2 = dataSet._.Validate(dataRow2);
             Assert.AreEqual(1, messages1.Count);
-            Assert.AreEqual("ERR_DuplicateIds", messages1[0].Description);
+            Assert.AreEqual("ERR_DuplicateIds", messages1[0].Message);
             Assert.AreEqual(1, messages2.Count);
-            Assert.AreEqual("ERR_DuplicateIds", messages2[0].Description);
+            Assert.AreEqual("ERR_DuplicateIds", messages2[0].Message);
 
         }
     }

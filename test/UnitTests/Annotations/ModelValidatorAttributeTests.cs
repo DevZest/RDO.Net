@@ -20,9 +20,9 @@ namespace DevZest.Data.Annotations
             public _String ConfirmPassword { get; private set; }
 
             [ModelValidator]
-            private ColumnValidationMessage ValidateConfirmPassword(DataRow dataRow)
+            private DataValidationError ValidateConfirmPassword(DataRow dataRow)
             {
-                return ConfirmPassword[dataRow] == Password[dataRow] ? null : new ColumnValidationMessage(ValidationSeverity.Error, ERR_MESSAGE, ConfirmPassword);
+                return ConfirmPassword[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_MESSAGE, ConfirmPassword);
             }
         }
 
@@ -36,7 +36,7 @@ namespace DevZest.Data.Annotations
                     _.Password[row] = "password";
                     _.ConfirmPassword[row] = "password";
                 });
-                var messages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var messages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, messages.Count);
             }
 
@@ -47,9 +47,9 @@ namespace DevZest.Data.Annotations
                     _.Password[row] = "password";
                     _.ConfirmPassword[row] = "another password";
                 });
-                var messages = dataSet._.Validate(dataRow, ValidationSeverity.Error);
+                var messages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, messages.Count);
-                Assert.AreEqual(ERR_MESSAGE, messages[0].Description);
+                Assert.AreEqual(ERR_MESSAGE, messages[0].Message);
             }
         }
     }
