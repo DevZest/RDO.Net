@@ -214,5 +214,31 @@ namespace DevZest.Data.Utilities
             foreach (var provider in columnValidatorProviders)
                 validators.Add(provider.GetValidator(column));
         }
+
+        internal static Action<Column<T>> Verify<TParent, T>(this Expression<Func<TParent, Column<T>>> getter, string paramName)
+        {
+            Check.NotNull(getter, paramName);
+            var memberExpr = getter.Body as MemberExpression;
+            if (memberExpr == null)
+                throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression, paramName);
+            var columnName = memberExpr.Member.Name;
+
+            var columnAttributes = GetColumnAttributes<TParent>(columnName, paramName);
+            var columnInitializers = GetColumnInitializers<TParent, Column<T>>(columnName);
+            var columnValidatorProviders = GetColumnValidatorProviders<TParent, Column<T>>(columnName);
+            return Merge(columnAttributes, columnInitializers, columnValidatorProviders);
+        }
+
+        private static Action<Column<T>> Merge<T>(IEnumerable<ColumnAttribute> columnAttributes,
+            IEnumerable<ColumnInitializer<Column<T>>> columnInitializers,
+            IEnumerable<ColumnValidatorProvider<Column<T>>> columnValidatorProviders)
+        {
+            return x =>
+            {
+                Initialize(x, columnAttributes);
+                Initialize(x, columnInitializers);
+                Initialize(x, columnValidatorProviders);
+            };
+        }
     }
 }

@@ -288,17 +288,16 @@ AfterDataRowInserted: DataSet-0[0].
 
         private class OrderByModel : Model
         {
-            private static readonly Mounter<_Int32> _Column = RegisterColumn((OrderByModel x) => x.Column);
+            private static readonly Mounter<_Int32> _Column = RegisterColumn((OrderByModel _) => _.Column);
+
+            static OrderByModel()
+            {
+                RegisterLocalColumn((OrderByModel _) => _.LocalColumn);
+            }
 
             public _Int32 Column { get; private set; }
 
             public Column<int> LocalColumn { get; private set; }
-
-            protected override void OnInitializing()
-            {
-                LocalColumn = CreateLocalColumn<int>();
-                base.OnInitializing();
-            }
         }
 
         [TestMethod]

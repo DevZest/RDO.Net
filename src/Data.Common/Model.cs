@@ -251,6 +251,39 @@ namespace DevZest.Data
 
         #endregion
 
+        #region RegisterLocalColumn
+
+        static MounterManager<Model, Column> s_localColumnManager = new MounterManager<Model, Column>();
+
+        /// <summary>
+        /// Registers a new local column.
+        /// </summary>
+        /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
+        /// <typeparam name="TColumn">The type of the column.</typeparam>
+        /// <param name="getter">The lambda expression of the column getter.</param>
+        /// <param name="constructor">The constructor of the computed local column. If null, a normal local column will be created.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
+        public static void RegisterLocalColumn<TModel, T>(Expression<Func<TModel, Column<T>>> getter, Func<TModel, Column<T>> constructor = null)
+            where TModel : Model
+        {
+            var initializer = getter.Verify(nameof(getter));
+
+            if (constructor == null)
+                constructor = _ => _.CreateLocalColumn<T>();
+            s_localColumnManager.Register(getter, mounter => CreateLocalColumn(mounter, constructor, initializer));
+        }
+
+        private static Column<T> CreateLocalColumn<TModel, T>(Mounter<TModel, Column<T>> mounter, Func<TModel, Column<T>> constructor, Action<Column<T>> initializer)
+            where TModel : Model
+        {
+            var result = constructor(mounter.Parent);
+            initializer(result);
+            return result;
+        }
+
+        #endregion
+
         protected Model()
         {
             Columns = new ColumnCollection(this);
@@ -344,6 +377,7 @@ namespace DevZest.Data
         private void PerformInitializing()
         {
             ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initializing);
+            Mount(s_localColumnManager);
             OnInitializing();
         }
 
