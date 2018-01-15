@@ -16,7 +16,7 @@ namespace DevZest.Data.Presenters
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private AsyncValidatorStatus _status = AsyncValidatorStatus.Created;
+        private AsyncValidatorStatus _status = AsyncValidatorStatus.Inactive;
         public AsyncValidatorStatus Status
         {
             get { return _status; }
@@ -56,7 +56,7 @@ namespace DevZest.Data.Presenters
         {
             if (Status == AsyncValidatorStatus.Running)
             {
-                Status = AsyncValidatorStatus.Created;
+                Status = AsyncValidatorStatus.Inactive;
                 InputManager.InvalidateView();
             }
         }

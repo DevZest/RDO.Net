@@ -225,7 +225,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             var currentRow = inputManager.CurrentRow;
             var asyncValidator = inputManager.RowValidation.AsyncValidators[0];
-            Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
+            Assert.AreEqual(AsyncValidatorStatus.Inactive, asyncValidator.Status);
 
             textBox[currentRow].Text = BAD_NAME;
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
@@ -318,12 +318,12 @@ namespace DevZest.Data.Presenters.Primitives
 
             asyncValidator.Reset();
             inputManager.InvalidateView();
-            Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
+            Assert.AreEqual(AsyncValidatorStatus.Inactive, asyncValidator.Status);
             Assert.IsNull(asyncValidator.Exception);
 
             await asyncValidator.LastRunningTask;
             inputManager.InvalidateView();
-            Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
+            Assert.AreEqual(AsyncValidatorStatus.Inactive, asyncValidator.Status);
             Assert.IsNull(asyncValidator.Exception);
         }
 

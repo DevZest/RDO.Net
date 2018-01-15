@@ -89,7 +89,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _awaitingTask = null;
 
             _pendingValidationRequest = false;
-            Status = AsyncValidatorStatus.Created;
+            Status = AsyncValidatorStatus.Inactive;
             Exception = null;
             ClearValidationMessages();
         }
