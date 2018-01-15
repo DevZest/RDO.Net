@@ -5,42 +5,11 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class AsyncValidator : INotifyPropertyChanged
+    public abstract class AsyncValidator
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public AsyncValidatorStatus Status { get; internal set; } = AsyncValidatorStatus.Inactive;
 
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            var propertyChanged = PropertyChanged;
-            if (propertyChanged != null)
-                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private AsyncValidatorStatus _status = AsyncValidatorStatus.Inactive;
-        public AsyncValidatorStatus Status
-        {
-            get { return _status; }
-            internal set
-            {
-                if (_status == value)
-                    return;
-                _status = value;
-                OnPropertyChanged(nameof(Status));
-            }
-        }
-
-        private Exception _exception;
-        public Exception Exception
-        {
-            get { return _exception; }
-            internal set
-            {
-                if (_exception == value)
-                    return;
-                _exception = value;
-                OnPropertyChanged(nameof(Exception));
-            }
-        }
+        public Exception Exception { get; internal set; }
 
 #if DEBUG
         internal Task LastRunningTask { get; set; }

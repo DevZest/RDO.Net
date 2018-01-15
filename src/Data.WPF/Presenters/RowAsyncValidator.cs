@@ -147,7 +147,6 @@ namespace DevZest.Data.Presenters
                 if (_errors == value)
                     return;
                 _errors = value;
-                OnPropertyChanged(nameof(Errors));
                 RefreshHasError();
             }
         }
@@ -163,7 +162,6 @@ namespace DevZest.Data.Presenters
             if (value == _hasError)
                 return;
             _hasError = value;
-            OnPropertyChanged(nameof(HasError));
         }
 
         internal abstract IRowInput RowInput { get; }
