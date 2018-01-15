@@ -17,15 +17,17 @@ namespace DevZest.Data.Views
     {
         private sealed class Model : Data.Model
         {
-            public Column<ColumnHeader> SortBy { get; private set; }
-            public Column<SortDirection> Order { get; private set; }
-
-            [LocalColumnsInitializer]
-            private void InitLocalColumns()
+            static Model()
             {
-                SortBy = CreateLocalColumn<ColumnHeader>(builder => builder.DisplayName = UserMessages.SortModel_SortBy);
-                Order = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UserMessages.SortModel_Order);
+                RegisterLocalColumn((Model _) => _.SortBy);
+                RegisterLocalColumn((Model _) => _.Order);
             }
+
+            [Display(Name = nameof(UserMessages.SortModel_SortBy), ResourceType = typeof(UserMessages))]
+            public Column<ColumnHeader> SortBy { get; private set; }
+
+            [Display(Name = nameof(UserMessages.SortModel_Order), ResourceType = typeof(UserMessages))]
+            public Column<SortDirection> Order { get; private set; }
 
             [ModelValidator]
             private DataValidationError ValidateRequiredColumnHeader(DataRow dataRow)

@@ -239,7 +239,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-beta-20180114\lib\netstandard2.0\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-beta-20180115-2\lib\netstandard2.0\DevZest.Data.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
