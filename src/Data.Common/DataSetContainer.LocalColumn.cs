@@ -28,8 +28,8 @@ namespace DevZest.Data
                         initializer(builder);
                     }
                 }
-                InitValues();
-                _designMode = false;
+                if (model == null || model.IsInitialized)
+                    SealLocalColumn();
             }
 
             private Action<LocalColumnBuilder<T>> _initializer;
@@ -91,6 +91,12 @@ namespace DevZest.Data
             protected internal override bool DesignMode
             {
                 get { return _designMode; }
+            }
+
+            internal override void SealLocalColumn()
+            {
+                InitValues();
+                _designMode = false;
             }
 
             public override _String CastToString()

@@ -411,6 +411,9 @@ namespace DevZest.Data
         private void PerformInitialized()
         {
             ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initialized);
+            var localColumns = LocalColumns;
+            for (int i = 0; i < localColumns.Count; i++)
+                localColumns[i].SealLocalColumn();
             OnInitialized();
         }
 
