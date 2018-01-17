@@ -317,13 +317,13 @@ namespace DevZest.Data.Presenters
 
         private bool FocusToErrorInput(RowValidation rowValidation)
         {
-            if (CurrentRow == null || rowValidation.ValidationErrors == null || rowValidation.ValidationErrors.Count == 0)
+            if (CurrentRow == null || rowValidation.Errors == null || rowValidation.Errors.Count == 0)
                 return false;
 
             if (FocusToErrorInput(rowValidation, CurrentRow))
                 return true;
 
-            var rows = rowValidation.ValidationErrors.Keys;
+            var rows = rowValidation.Errors.Keys;
             foreach (var row in rows)
             {
                 if (FocusToErrorInput(rowValidation, row))
@@ -334,7 +334,7 @@ namespace DevZest.Data.Presenters
 
         private bool FocusToErrorInput(RowValidation rowValidation, RowPresenter row)
         {
-            var errorsByRow = rowValidation.ValidationErrors;
+            var errorsByRow = rowValidation.Errors;
             if (!errorsByRow.ContainsKey(row))
                 return false;
 

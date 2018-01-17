@@ -11,128 +11,81 @@ namespace DevZest.Data.Presenters
 {
     public abstract class ScalarAsyncValidator : AsyncValidator<IScalarValidationErrors>, IScalarAsyncValidators
     {
-        internal static ScalarAsyncValidator Create<T>(ScalarInput<T> scalarInput, Func<Task<IScalarValidationErrors>> action, Action postAction)
-            where T : UIElement, new()
+        internal static ScalarAsyncValidator Create(Template template, IScalars sourceScalars, Func<Task<string>> validator)
         {
-            return new ScalarInputAsyncValidator<T>(scalarInput, action, postAction);
+            return new SingleErrorValidator(template, sourceScalars, validator);
         }
 
-        internal static ScalarAsyncValidator Create(Template template, IScalars sourceScalars, Func<Task<IScalarValidationErrors>> action, Action postAction)
+        internal static ScalarAsyncValidator Create(Template template, IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator)
         {
-            return new SourceScalarsAsyncValidator(template, sourceScalars, action, postAction);
+            return new MultipleErrorsValidator(template, sourceScalars, validator);
         }
 
-        private sealed class ScalarInputAsyncValidator<T> : ScalarAsyncValidator
-            where T : UIElement, new()
+        private sealed class SingleErrorValidator : ScalarAsyncValidator
         {
-            public ScalarInputAsyncValidator(ScalarInput<T> scalarInput, Func<Task<IScalarValidationErrors>> action, Action postAction)
-                : base(action, postAction)
+            public SingleErrorValidator(Template template, IScalars scalars, Func<Task<string>> validator)
+                : base(template, scalars)
             {
-                Debug.Assert(scalarInput != null);
-                Debug.Assert(action != null);
-                _scalarInput = scalarInput;
+                _validator = validator;
             }
 
-            private readonly ScalarInput<T> _scalarInput;
+            private readonly Func<Task<string>> _validator;
 
-            public override IScalars SourceScalars
+            internal override async Task<IScalarValidationErrors> ValidateAsync()
             {
-                get { return _scalarInput.Target; }
-            }
-
-            internal override InputManager InputManager
-            {
-                get { return _scalarInput.InputManager; }
+                var message = await _validator();
+                return string.IsNullOrEmpty(message) ? ScalarValidationErrors.Empty : new ScalarValidationError(message, SourceScalars);
             }
         }
 
-        private sealed class SourceScalarsAsyncValidator : ScalarAsyncValidator
+        private sealed class MultipleErrorsValidator : ScalarAsyncValidator
         {
-            public SourceScalarsAsyncValidator(Template template, IScalars sourceScalars, Func<Task<IScalarValidationErrors>> action, Action postAction)
-                : base(action, postAction)
+            public MultipleErrorsValidator(Template template, IScalars scalars, Func<Task<IEnumerable<string>>> validator)
+                : base(template, scalars)
             {
-                Debug.Assert(template != null);
-                _template = template;
-                _sourceScalars = sourceScalars;
+                _validator = validator;
             }
 
-            private readonly Template _template;
-            private readonly IScalars _sourceScalars;
+            private readonly Func<Task<IEnumerable<string>>> _validator;
 
-            internal override InputManager InputManager
+            internal override async Task<IScalarValidationErrors> ValidateAsync()
             {
-                get { return _template.InputManager; }
-            }
-
-            public override IScalars SourceScalars
-            {
-                get { return _sourceScalars; }
-            }
-        }
-
-#if DEBUG
-        public ScalarAsyncValidator(Func<Task<IScalarValidationErrors>> action)
-            : this(action, null)
-        {
-        }
-#endif
-
-        private ScalarAsyncValidator(Func<Task<IScalarValidationErrors>> action, Action postAction)
-            : base(postAction)
-        {
-            Debug.Assert(action != null);
-            _action = action;
-        }
-
-        private readonly Func<Task<IScalarValidationErrors>> _action;
-
-        protected sealed override async Task<IScalarValidationErrors> ValidateAsync()
-        {
-            return await _action();
-        }
-
-        public abstract IScalars SourceScalars { get; }
-
-        private IScalarValidationErrors _errors = ScalarValidationErrors.Empty;
-        public IScalarValidationErrors Errors
-        {
-            get { return _errors; }
-            private set
-            {
-                Debug.Assert(value != null && value.IsSealed);
-                if (_errors == value)
-                    return;
-                _errors = value;
-                RefreshHasError();
+                var messages = await _validator();
+                var result = ScalarValidationErrors.Empty;
+                if (messages == null)
+                    return result;
+                foreach (var message in messages)
+                {
+                    if (!string.IsNullOrEmpty(message))
+                        result = result.Add(new ScalarValidationError(message, SourceScalars));
+                }
+                return result.Seal();
             }
         }
 
-        private bool _hasError;
-        public sealed override bool HasError
+        private ScalarAsyncValidator(Template template, IScalars sourceScalars)
+            : base(template)
         {
-            get { return _hasError; }
-        }
-        private void RefreshHasError()
-        {
-            var value = Errors.Count > 0;
-            if (value == _hasError)
-                return;
-            _hasError = value;
+            Debug.Assert(template != null);
+            Debug.Assert(sourceScalars != null && sourceScalars.Count > 0);
+            _sourceScalars = sourceScalars.Seal();
         }
 
-        protected sealed override void ClearValidationMessages()
+        private readonly IScalars _sourceScalars;
+        public IScalars SourceScalars
         {
-            Errors = ScalarValidationErrors.Empty;
+            get { return _sourceScalars; }
         }
 
-        protected sealed override IScalarValidationErrors EmptyValidationResult
+        internal sealed override IScalarValidationErrors EmptyResult
         {
             get { return ScalarValidationErrors.Empty; }
         }
 
-        protected sealed override void RefreshValidationErrors(IScalarValidationErrors result)
+        internal sealed override void OnStatusChanged()
         {
-            Errors = result;
+            InputManager.ScalarValidation.UpdateAsyncErrors(this);
+            InvalidateView();
         }
 
         #region IScalarAsyncValidators

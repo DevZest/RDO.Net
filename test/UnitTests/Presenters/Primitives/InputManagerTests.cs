@@ -116,11 +116,11 @@ namespace DevZest.Data.Presenters.Primitives
             inputManager.ScalarValidation.UpdateProgress(textBox.Input, true, true);
             textBox[0].Text = "6";
             Assert.AreEqual("6", textBox[0].Text);
-            Assert.IsTrue(inputManager.ScalarValidation.ValidationErrors.Count == 1);
+            Assert.IsTrue(inputManager.ScalarValidation.Errors.Count == 1);
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(inputManager.ScalarValidation.ValidationErrors, errors[0].ErrorContent);
+                Assert.AreEqual(inputManager.ScalarValidation.Errors, errors[0].ErrorContent);
             }
         }
 
@@ -220,7 +220,7 @@ namespace DevZest.Data.Presenters.Primitives
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
-                textBox.Input.AddAsyncValidator(() => ValidateBadNameAsync(_.Name, 0));
+                textBox.Input.AddAsyncValidator(dataRow => ValidateBadNameAsync(_.Name, dataRow));
             });
 
             var currentRow = inputManager.CurrentRow;
@@ -230,21 +230,21 @@ namespace DevZest.Data.Presenters.Primitives
             textBox[currentRow].Text = BAD_NAME;
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
 
-            await asyncValidator.LastRunningTask;
-            Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
+            await asyncValidator.LastRunTask;
+            Assert.AreEqual(AsyncValidatorStatus.Error, asyncValidator.Status);
 
             textBox[currentRow].Text = "Good Name";
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
 
-            await asyncValidator.LastRunningTask;
-            Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
+            await asyncValidator.LastRunTask;
+            Assert.AreEqual(AsyncValidatorStatus.Validated, asyncValidator.Status);
         }
 
-        private static async Task<IDataValidationErrors> ValidateBadNameAsync(_String nameColumn, int index)
+        private static async Task<string> ValidateBadNameAsync(_String nameColumn, DataRow dataRow)
         {
             await Task.Delay(200);
-            var value = nameColumn[index];
-            return value == BAD_NAME ? new DataValidationError("Bad Name", nameColumn) : null;
+            var value = nameColumn[dataRow];
+            return value == BAD_NAME ? "Bad Name" : null;
         }
 
         [TestMethod]
@@ -267,7 +267,7 @@ namespace DevZest.Data.Presenters.Primitives
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
-                textBox.Input.AddAsyncValidator(ValidateFaultedAsync);
+                textBox.Input.AddAsyncValidator(dataRow => ValidateFaultedAsync(dataRow));
             });
 
             var currentRow = inputManager.CurrentRow;
@@ -276,12 +276,12 @@ namespace DevZest.Data.Presenters.Primitives
             textBox[currentRow].Text = "Anything";
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
 
-            await asyncValidator.LastRunningTask;
+            await asyncValidator.LastRunTask;
             Assert.AreEqual(AsyncValidatorStatus.Faulted, asyncValidator.Status);
             Assert.AreEqual(typeof(InvalidOperationException), asyncValidator.Exception.GetType());
         }
 
-        private static async Task<IDataValidationErrors> ValidateFaultedAsync()
+        private static async Task<string> ValidateFaultedAsync(DataRow dataRow)
         {
             await Task.Delay(200);
             throw new InvalidOperationException("Validation failed.");
@@ -307,7 +307,7 @@ namespace DevZest.Data.Presenters.Primitives
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
-                textBox.Input.AddAsyncValidator(ValidateFaultedAsync);
+                textBox.Input.AddAsyncValidator(dataRow => ValidateFaultedAsync(dataRow));
             });
 
             var currentRow = inputManager.CurrentRow;
@@ -317,11 +317,6 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
 
             asyncValidator.Reset();
-            inputManager.InvalidateView();
-            Assert.AreEqual(AsyncValidatorStatus.Inactive, asyncValidator.Status);
-            Assert.IsNull(asyncValidator.Exception);
-
-            await asyncValidator.LastRunningTask;
             inputManager.InvalidateView();
             Assert.AreEqual(AsyncValidatorStatus.Inactive, asyncValidator.Status);
             Assert.IsNull(asyncValidator.Exception);

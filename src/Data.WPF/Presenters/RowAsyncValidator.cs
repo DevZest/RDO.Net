@@ -5,191 +5,105 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using DevZest.Data;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class RowAsyncValidator : AsyncValidator<IRowValidationResults>, IRowAsyncValidators
+    public abstract class RowAsyncValidator : AsyncValidator<IDataValidationErrors>, IRowAsyncValidators
     {
-        internal static RowAsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IDataValidationErrors>> action, Action postAction)
-            where T : UIElement, new()
+        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<DataRow, Task<string>> validator)
         {
-            return new RowInputAsyncValidator<T>(rowInput, action, postAction);
+            return new SingleErrorValidator(template, sourceColumns, validator);
         }
 
-        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IDataValidationErrors>> action, Action postAction)
+        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<DataRow, Task<IEnumerable<string>>> validator)
         {
-            return new CurrentRowAsyncValidator(template, sourceColumns, action, postAction);
+            return new MultipleErrorValidator(template, sourceColumns, validator);
         }
 
-        private static async Task<IRowValidationResults> Validate(Func<Task<IDataValidationErrors>> action, RowPresenter currentRow)
+        private sealed class SingleErrorValidator : RowAsyncValidator
         {
-            var messages = await action();
-            return messages == null || messages.Count == 0 || currentRow == null
-                ? RowValidationResults.Empty : RowValidationResults.Empty.Add(currentRow, messages);
-        }
-
-        private sealed class RowInputAsyncValidator<T> : RowAsyncValidator
-            where T : UIElement, new()
-        {
-            public RowInputAsyncValidator(RowInput<T> rowInput, Func<Task<IDataValidationErrors>> action, Action postAction)
-                : base(postAction)
+            public SingleErrorValidator(Template template, IColumns columns, Func<DataRow, Task<string>> validator)
+                : base(template, columns)
             {
-                Debug.Assert(rowInput != null);
-                Debug.Assert(action != null);
-                _rowInput = rowInput;
-                _action = action;
+                _validator = validator;
             }
 
-            private readonly RowInput<T> _rowInput;
-            private readonly Func<Task<IDataValidationErrors>> _action;
+            private readonly Func<DataRow, Task<string>> _validator;
 
-            public override IColumns SourceColumns
+            internal override async Task<IDataValidationErrors> ValidateAsync()
             {
-                get { return _rowInput.Target; }
-            }
-
-            internal override InputManager InputManager
-            {
-                get { return _rowInput.InputManager; }
-            }
-
-            private RowPresenter CurrentRow
-            {
-                get { return InputManager.CurrentRow; }
-            }
-
-            internal override IRowInput RowInput
-            {
-                get { return _rowInput; }
-            }
-
-            protected override async Task<IRowValidationResults> ValidateAsync()
-            {
-                return await Validate(_action, CurrentRow);
+                var message = await _validator(CurrentRow.DataRow);
+                return string.IsNullOrEmpty(message) ? DataValidationErrors.Empty : new DataValidationError(message, SourceColumns);
             }
         }
 
-        private abstract class ColumnsAsyncValidator : RowAsyncValidator
+        private sealed class MultipleErrorValidator : RowAsyncValidator
         {
-            protected ColumnsAsyncValidator(Template template, IColumns sourceColumns, Action postAction)
-                : base(postAction)
+            public MultipleErrorValidator(Template template, IColumns columns, Func<DataRow, Task<IEnumerable<string>>> validator)
+                : base(template, columns)
             {
-                Debug.Assert(template != null);
-                _template = template;
-                _sourceColumns = sourceColumns;
+                _validator = validator;
             }
 
-            private readonly Template _template;
-            private readonly IColumns _sourceColumns;
+            private readonly Func<DataRow, Task<IEnumerable<string>>> _validator;
 
-            internal override InputManager InputManager
+            internal override async Task<IDataValidationErrors> ValidateAsync()
             {
-                get { return _template.InputManager; }
-            }
-
-            public override IColumns SourceColumns
-            {
-                get { return _sourceColumns; }
-            }
-        }
-
-        private sealed class CurrentRowAsyncValidator : ColumnsAsyncValidator
-        {
-            public CurrentRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IDataValidationErrors>> action, Action postAction)
-                : base(template, sourceColumns, postAction)
-            {
-                Debug.Assert(action != null);
-                _action = action;
-            }
-
-            private readonly Func<Task<IDataValidationErrors>> _action;
-
-            private RowPresenter CurrentRow
-            {
-                get { return InputManager.CurrentRow; }
-            }
-
-            internal override IRowInput RowInput
-            {
-                get { return null; }
-            }
-
-            protected override async Task<IRowValidationResults> ValidateAsync()
-            {
-                return await Validate(_action, CurrentRow);
+                var messages = await _validator(CurrentRow.DataRow);
+                var result = DataValidationErrors.Empty;
+                if (messages == null)
+                    return result;
+                foreach (var message in messages)
+                {
+                    if (!string.IsNullOrEmpty(message))
+                        result = result.Add(new DataValidationError(message, SourceColumns));
+                }
+                return result.Seal();
             }
         }
 
-#if DEBUG
-        public RowAsyncValidator()
-            : base(null)
+        private RowAsyncValidator(Template template, IColumns sourceColumns)
+            : base(template)
         {
-        }
-#endif
-
-        private RowAsyncValidator(Action postAction)
-            : base(postAction)
-        {
+            Debug.Assert(template != null);
+            Debug.Assert(sourceColumns != null && sourceColumns.Count > 0);
+            _sourceColumns = sourceColumns.Seal();
         }
 
-        public abstract IColumns SourceColumns { get; }
-
-        private IRowValidationResults _errors = RowValidationResults.Empty;
-        public IRowValidationResults Errors
+        private readonly IColumns _sourceColumns;
+        public IColumns SourceColumns
         {
-            get { return _errors; }
-            private set
-            {
-                Debug.Assert(value != null && value.IsSealed);
-                if (_errors == value)
-                    return;
-                _errors = value;
-                RefreshHasError();
-            }
+            get { return _sourceColumns; }
         }
 
-        private bool _hasError;
-        public sealed override bool HasError
+        internal RowPresenter CurrentRow
         {
-            get { return _hasError; }
-        }
-        private void RefreshHasError()
-        {
-            var value = Errors.Count > 0;
-            if (value == _hasError)
-                return;
-            _hasError = value;
-        }
-
-        internal abstract IRowInput RowInput { get; }
-
-        protected sealed override void ClearValidationMessages()
-        {
-            Errors = RowValidationResults.Empty;
-        }
-
-        protected sealed override void RefreshValidationErrors(IRowValidationResults result)
-        {
-            Errors = result.Seal();
-        }
-
-        protected sealed override IRowValidationResults EmptyValidationResult
-        {
-            get { return RowValidationResults.Empty; }
-        }
-
-        internal void OnRowDisposed(RowPresenter rowPresenter)
-        {
-            if (Errors.ContainsKey(rowPresenter))
-                Errors = Errors.Remove(rowPresenter);
+            get { return InputManager?.CurrentRow; }
         }
 
         internal void OnCurrentRowChanged()
         {
             Reset();
+        }
+
+        internal sealed override IDataValidationErrors EmptyResult
+        {
+            get { return DataValidationErrors.Empty; }
+        }
+
+        public override void Run()
+        {
+            if (CurrentRow == null)
+                return;
+            base.Run();
+        }
+
+        internal sealed override void OnStatusChanged()
+        {
+            Debug.Assert(CurrentRow != null);
+            InputManager.RowValidation.UpdateAsyncErrors(this);
+            InvalidateView();
         }
 
         #region IRowAsyncValidators

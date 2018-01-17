@@ -1,7 +1,9 @@
 ﻿using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Presenters
@@ -11,6 +13,7 @@ namespace DevZest.Data.Presenters
         internal ScalarValidation(InputManager inputManager)
         {
             _inputManager = inputManager;
+            InitInputs();
             if (Mode == ValidationMode.Progressive)
             {
                 _progress = Scalars.Empty;
@@ -68,47 +71,99 @@ namespace DevZest.Data.Presenters
             InternalFlushErrors.SetFlushError(element, inputError);
         }
 
-        private IScalarValidationErrors _validationErrors = ScalarValidationErrors.Empty;
-        private IScalarValidationErrors _validationWarnings = ScalarValidationErrors.Empty;
+        private IScalarValidationErrors _errors = ScalarValidationErrors.Empty;
+        private IScalarValidationErrors _asyncErrors = ScalarValidationErrors.Empty;
 
-        public IReadOnlyList<ScalarValidationError> ValidationErrors
+        public IReadOnlyList<ScalarValidationError> Errors
         {
-            get { return _validationErrors; }
+            get { return _errors; }
         }
 
-        public IReadOnlyList<ScalarValidationError> ValidationWarnings
+        internal IValidationErrors GetErrors(DataView dataView)
         {
-            get { return _validationWarnings; }
-        }
+            Debug.Assert(dataView != null);
 
-        public IScalarValidationErrors GetErrors(IScalars scalars)
-        {
-            var result = ScalarValidationErrors.Empty;
-            if (IsVisible(scalars))
-                result = AddValidationErrors(result, _validationErrors, scalars);
-            result = AddAsyncValidationErrors(result, scalars);
-            return result;
-        }
-
-        private static IScalarValidationErrors AddValidationErrors(IScalarValidationErrors result, IScalarValidationErrors messages, IScalars scalars)
-        {
-            for (int i = 0; i < messages.Count; i++)
+            for (int i = 0; i < Inputs.Count; i++)
             {
-                var message = messages[i];
-                if (message.Source.SetEquals(scalars))
-                    result = result.Add(message);
+                if (HasError(Inputs[i]))
+                    return ValidationErrors.Empty;
             }
-            return result;
+
+            var errors = GetErrors(null, false);
+            var asyncErrors = GetErrors(null, true);
+            return ValidationErrors.Empty.Merge(errors).Merge(asyncErrors).Seal();
         }
 
-        private IScalarValidationErrors AddAsyncValidationErrors(IScalarValidationErrors result, IScalars scalars)
+        internal IValidationErrors GetErrors(Input<ScalarBinding, IScalars> input)
         {
-            var asyncValidators = Template.ScalarAsyncValidators;
-            for (int i = 0; i < asyncValidators.Count; i++)
+            Debug.Assert(input != null);
+
+            var flushError = GetFlushError(input.Binding[0]);
+            if (flushError != null)
+                return flushError;
+
+            if (AnyPrecedingInputHasError(input))
+                return ValidationErrors.Empty;
+
+            var errors = GetErrors(input.Target, false);
+            var asyncErrors = GetErrors(input.Target, true);
+            return ValidationErrors.Empty.Merge(errors).Merge(asyncErrors).Seal();
+        }
+
+        private bool AnyPrecedingInputHasError(Input<ScalarBinding, IScalars> input)
+        {
+            for (int i = 0; i < Inputs.Count; i++)
             {
-                var asyncValidator = asyncValidators[i];
-                var errors = asyncValidator.Errors;
-                result = AddValidationErrors(result, errors, scalars);
+                if (input.Index == i)
+                    continue;
+                if (Inputs[i].IsPrecedingOf(input) && HasError(Inputs[i]))
+                    return true;
+            }
+            return false;
+        }
+
+        internal bool HasError(Input<ScalarBinding, IScalars> input)
+        {
+            var flushError = GetFlushError(input.Binding[0]);
+            if (flushError != null)
+                return true;
+
+            if (HasError(input.Target, false))
+                return true;
+            if (HasError(input.Target, true))
+                return true;
+            return false;
+        }
+
+        private bool HasError(IScalars scalars, bool isAsync)
+        {
+            var errors = isAsync ? this._asyncErrors : this._errors;
+            var ensureVisible = !isAsync;
+            for (int i = 0; i < errors.Count; i++)
+            {
+                var error = errors[i];
+                if (ensureVisible && !IsVisible(error.Source))
+                    continue;
+                if (scalars == null || scalars.IsSupersetOf(error.Source))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private IValidationErrors GetErrors(IScalars scalars, bool isAsync)
+        {
+            var errors = isAsync ? this._asyncErrors : this._errors;
+            var ensureVisible = !isAsync;
+
+            var result = ValidationErrors.Empty;
+            for (int i = 0; i < errors.Count; i++)
+            {
+                var error = errors[i];
+                if (ensureVisible && !IsVisible(error.Source))
+                    continue;
+                if (scalars == null || scalars.IsSupersetOf(error.Source))
+                    result = result.Add(error);
             }
 
             return result;
@@ -125,16 +180,16 @@ namespace DevZest.Data.Presenters
             if (showAll)
                 ShowAll();
 
-            ClearValidationMessages();
+            ClearErrors();
             var errors = _inputManager.PerformValidateScalars();
             for (int i = 0; i < errors.Count; i++)
-                _validationErrors = _validationErrors.Add(errors[i]);
-            _validationErrors = _validationErrors.Seal();
+                _errors = _errors.Add(errors[i]);
+            _errors = _errors.Seal();
         }
 
-        private void ClearValidationMessages()
+        private void ClearErrors()
         {
-            _validationErrors = _validationWarnings = ScalarValidationErrors.Empty;
+            _errors = ScalarValidationErrors.Empty;
         }
 
         private bool _showAll;
@@ -174,12 +229,12 @@ namespace DevZest.Data.Presenters
 
         private bool HasError(IScalars scalars)
         {
-            if (ValidationErrors.Count == 0)
+            if (Errors.Count == 0)
                 return false;
 
-            for (int i = 0; i < ValidationErrors.Count; i++)
+            for (int i = 0; i < Errors.Count; i++)
             {
-                var message = ValidationErrors[i];
+                var message = Errors[i];
                 if (message.Source.SetEquals(scalars))
                     return true;
             }
@@ -242,6 +297,75 @@ namespace DevZest.Data.Presenters
         public IScalarAsyncValidators AsyncValidators
         {
             get { return Template.ScalarAsyncValidators; }
+        }
+
+        internal void UpdateAsyncErrors(ScalarAsyncValidator scalarAsyncValidator)
+        {
+            var sourceScalars = scalarAsyncValidator.SourceScalars;
+            _errors = Remove(_errors, x => x.Source.SetEquals(sourceScalars));
+            _errors = Merge(_errors, scalarAsyncValidator.Results);
+        }
+
+        private static IScalarValidationErrors Merge(IScalarValidationErrors result, IScalarValidationErrors errors)
+        {
+            return Merge(result, errors, errors.Count);
+        }
+
+        private static IScalarValidationErrors Merge(IScalarValidationErrors result, IScalarValidationErrors errors, int count)
+        {
+            for (int i = 0; i < count; i++)
+                result = result.Add(errors[i]);
+            return result;
+        }
+
+        private static IScalarValidationErrors Remove(IScalarValidationErrors errors, Predicate<ScalarValidationError> predicate)
+        {
+            var result = errors;
+
+            for (int i = 0; i < errors.Count; i++)
+            {
+                var error = errors[i];
+                if (predicate(error))
+                {
+                    if (result != errors)
+                        result = result.Add(error);
+                }
+                else
+                {
+                    if (result == errors)
+                        result = Merge(ScalarValidationErrors.Empty, errors, i);
+                }
+            }
+            return result;
+        }
+
+        private Input<ScalarBinding, IScalars>[] _inputs;
+        public IReadOnlyList<Input<ScalarBinding, IScalars>> Inputs
+        {
+            get { return _inputs; }
+        }
+
+        private void InitInputs()
+        {
+            _inputs = GetInputs(Template.ScalarBindings).ToArray();
+            for (int i = 0; i < Inputs.Count; i++)
+                Inputs[i].Index = i;
+        }
+
+        private static IEnumerable<Input<ScalarBinding, IScalars>> GetInputs(IReadOnlyList<ScalarBinding> scalarBindings)
+        {
+            if (scalarBindings == null)
+                yield break;
+            for (int i = 0; i < scalarBindings.Count; i++)
+            {
+                var scalarBinding = scalarBindings[i];
+                var scalarInput = scalarBinding.ScalarInput;
+                if (scalarInput != null)
+                    yield return scalarInput;
+
+                foreach (var childInput in GetInputs(scalarBinding.ChildBindings))
+                    yield return childInput;
+            }
         }
     }
 }

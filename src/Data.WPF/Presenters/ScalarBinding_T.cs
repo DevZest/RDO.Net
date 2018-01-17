@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters
 
         public ScalarInput<T> Input { get; private set; }
 
-        public override IScalarInput ScalarInput
+        public override Input<ScalarBinding, IScalars> ScalarInput
         {
             get { return Input; }
         }

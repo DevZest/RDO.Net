@@ -1,11 +1,13 @@
 ﻿using DevZest.Data.Views;
 using System;
+using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<ValidityIndicator> BindToValidityIndicator(this IColumns source)
+        public static RowBinding<ValidityIndicator> BindToValidityIndicator<T>(this RowInput<T> source)
+            where T : UIElement, new()
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -13,15 +15,13 @@ namespace DevZest.Data.Presenters
             return new RowBinding<ValidityIndicator>(
                 onRefresh: (v, p) =>
                 {
-                    if (p.GetValidationErrors(source).Count > 0)
-                        v.IsValid = false;
-                    else
-                        v.IsValid = true;
+                    v.IsValid = !source.HasValidationError(p);
                 },
                 onSetup: null, onCleanup: null);
         }
 
-        public static ScalarBinding<ValidityIndicator> BindToValidityIndicator(this IScalars source)
+        public static ScalarBinding<ValidityIndicator> BindToValidityIndicator<T>(this ScalarInput<T> source)
+            where T : UIElement, new()
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -29,11 +29,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<ValidityIndicator>(
                 onRefresh: (v, p) =>
                 {
-                    var validation = p.DataPresenter.ScalarValidation;
-                    if (validation.GetErrors(source).Count > 0)
-                        v.IsValid = false;
-                    else
-                        v.IsValid = true;
+                    v.IsValid = !source.HasValidationError;
                 },
                 onSetup: null, onCleanup: null);
         }

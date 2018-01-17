@@ -3,8 +3,18 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class Input<T>
+    public abstract class Input<TBinding, TTarget>
+        where TBinding : TwoWayBinding
+    {
+        public abstract TBinding Binding { get; }
+        public abstract TTarget Target { get; }
+        public int Index { get; internal set; } = -1;
+        internal abstract bool IsPrecedingOf(Input<TBinding, TTarget> input);
+    }
+
+    public abstract class Input<T, TBinding, TTarget> : Input<TBinding, TTarget>
         where T : UIElement, new()
+        where TBinding : TwoWayBinding
     {
         internal Input(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
         {
@@ -30,8 +40,6 @@ namespace DevZest.Data.Presenters.Primitives
         private readonly Trigger<T> _flushTrigger;
         private readonly Trigger<T> _progressFlushTrigger;
         private Func<T, string> _flushValidator;
-
-        public abstract TwoWayBinding Binding { get; }
 
         internal void VerifyNotSealed()
         {

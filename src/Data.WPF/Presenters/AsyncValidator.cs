@@ -1,35 +1,37 @@
 ﻿using DevZest.Data.Presenters.Primitives;
 using System;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
     public abstract class AsyncValidator
     {
+        internal AsyncValidator(Template template)
+        {
+            Debug.Assert(template != null);
+            _template = template;
+        }
+
+        private readonly Template _template;
+        internal InputManager InputManager
+        {
+            get { return _template.InputManager; }
+        }
+
+        internal void InvalidateView()
+        {
+            InputManager.InvalidateView();
+        }
+
         public AsyncValidatorStatus Status { get; internal set; } = AsyncValidatorStatus.Inactive;
 
         public Exception Exception { get; internal set; }
 
-#if DEBUG
-        internal Task LastRunningTask { get; set; }
-#endif
-
-        internal abstract InputManager InputManager { get; }
-
-        public abstract bool HasError { get; }
-
         public abstract void Run();
 
-        public void CancelRunning()
-        {
-            if (Status == AsyncValidatorStatus.Running)
-            {
-                Status = AsyncValidatorStatus.Inactive;
-                InputManager.InvalidateView();
-            }
-        }
-
-        internal abstract void Reset();
+#if DEBUG
+        internal abstract Task LastRunTask { get; }
+#endif
     }
 }

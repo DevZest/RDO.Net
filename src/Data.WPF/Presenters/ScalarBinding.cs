@@ -65,7 +65,7 @@ namespace DevZest.Data.Presenters
 
         public abstract IReadOnlyList<ScalarBinding> ChildBindings { get; }
 
-        public abstract IScalarInput ScalarInput { get; }
+        public abstract Input<ScalarBinding, IScalars> ScalarInput { get; }
 
         internal abstract void BeginSetup(int startOffset, UIElement[] elements);
 

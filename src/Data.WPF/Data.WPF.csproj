@@ -44,7 +44,7 @@
     <Compile Include="Presenters\BindingFactory.DataView.cs" />
     <Compile Include="Presenters\BindingFactory.Image.cs" />
     <Compile Include="Presenters\BindingFactory.PasswordBox.cs" />
-    <Compile Include="Presenters\BindingFactory.ValidationMessagesControl.cs" />
+    <Compile Include="Presenters\BindingFactory.ValidationErrorsControl.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationPlaceholder.cs" />
     <Compile Include="Presenters\BindingFactory.ValidityIndicator.cs" />
     <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
@@ -56,7 +56,6 @@
     <Compile Include="Presenters\BindingFactory.TextBlock.cs" />
     <Compile Include="Presenters\InitialFocus.cs" />
     <Compile Include="Presenters\Primitives\FlushErrorCollection.cs" />
-    <Compile Include="Presenters\Primitives\IScalarInput.cs" />
     <Compile Include="Presenters\RoutedEventTrigger.cs" />
     <Compile Include="Presenters\IScalarAsyncValidators.cs" />
     <Compile Include="Presenters\IScalars.cs" />
@@ -134,12 +133,10 @@
     <Compile Include="Presenters\IRowAsyncValidators.cs" />
     <Compile Include="Presenters\BlockPresenter.cs" />
     <Compile Include="Presenters\IService.cs" />
-    <Compile Include="Presenters\Primitives\IRowInput.cs" />
     <Compile Include="Presenters\Primitives\DataRowExtensions.cs" />
     <Compile Include="Presenters\Primitives\IScrollable.cs" />
     <Compile Include="Presenters\Primitives\ScrollableManager.LogicalCrossTrack.cs" />
     <Compile Include="Presenters\ScalarPresenter.cs" />
-    <Compile Include="Presenters\IRowValidationResults.cs" />
     <Compile Include="Presenters\Primitives\ContainerKind.cs" />
     <Compile Include="Views\Primitives\ContainerView.cs" />
     <Compile Include="Presenters\Primitives\ScrollableManager.VariantLengthHandler.cs" />
@@ -232,14 +229,13 @@
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
-    <Compile Include="Presenters\RowValidationResults.cs" />
     <Compile Include="Presenters\ValidationMode.cs" />
     <Compile Include="Presenters\RowValidation.cs" />
     <Compile Include="Presenters\FlushError.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-beta-20180115-2\lib\netstandard2.0\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-beta-20180117\lib\netstandard2.0\DevZest.Data.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />

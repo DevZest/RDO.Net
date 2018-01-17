@@ -164,32 +164,5 @@ namespace DevZest.Data.Presenters
                 result = result.Add(values[i].CheckNotNull(nameof(values), 0));
             return result;
         }
-
-        public static IScalarAsyncValidators Where(this IScalarAsyncValidators asyncValidators, Func<ScalarAsyncValidator, bool> predict)
-        {
-            if (asyncValidators == null)
-                throw new ArgumentNullException(nameof(asyncValidators));
-
-            var result = ScalarAsyncValidators.Empty;
-            for (int i = 0; i < asyncValidators.Count; i++)
-            {
-                var asyncValidator = asyncValidators[i];
-                if (predict(asyncValidator))
-                    result = result.Add(asyncValidator);
-            }
-            return result.Seal();
-        }
-
-        public static void Each(this IScalarAsyncValidators asyncValidators, Action<ScalarAsyncValidator> action)
-        {
-            if (asyncValidators == null)
-                throw new ArgumentNullException(nameof(asyncValidators));
-
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-
-            for (int i = 0; i < asyncValidators.Count; i++)
-                action(asyncValidators[i]);
-        }
     }
 }

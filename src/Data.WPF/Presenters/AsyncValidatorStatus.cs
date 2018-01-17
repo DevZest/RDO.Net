@@ -4,7 +4,8 @@
     {
         Inactive,
         Running,
-        Completed,
+        Validated,
+        Error,
         Faulted
     }
 }

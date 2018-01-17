@@ -32,7 +32,7 @@ namespace DevZest.Data.Presenters
             get { return _childBindings; }
         }
 
-        public override IScalarInput ScalarInput
+        public override Input<ScalarBinding, IScalars> ScalarInput
         {
             get { return null; }
         }

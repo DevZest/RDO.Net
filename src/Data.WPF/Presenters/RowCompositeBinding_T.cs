@@ -17,7 +17,7 @@ namespace DevZest.Data.Presenters
             get { return _childBindings; }
         }
 
-        public override IRowInput RowInput
+        public override Input<RowBinding, IColumns> RowInput
         {
             get { return null; }
         }

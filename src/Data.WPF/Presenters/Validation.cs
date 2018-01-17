@@ -168,30 +168,31 @@ namespace DevZest.Data.Presenters
             BindingOperations.ClearBinding(element, DummyProperty);
         }
 
-        internal static void RefreshValidation(this DependencyObject element, Func<FlushError> getFlushError, Func<IReadOnlyList<ValidationError>> getErrors)
+        internal static void RefreshValidation(this DependencyObject element, IValidationErrors errors)
         {
-            var flushError = getFlushError();
-            if (flushError != null)
-            {
-                element.SetDataErrorInfo(ValidationErrorType.FlushError, new FlushError[] { flushError });
-                return;
-            }
-
-            var errors = getErrors();
-            if (errors != null && errors.Count > 0)
-            {
-                element.SetDataErrorInfo(ValidationErrorType.Error, errors);
-                return;
-            }
-
-            element.ClearDataErrorInfo();
+            var errorType = GetValidationErrorType(errors);
+            if (errorType.HasValue)
+                element.SetDataErrorInfo(errorType.Value, errors);
+            else
+                element.ClearDataErrorInfo();
         }
 
-        private static void SetDataErrorInfo(this DependencyObject element, ValidationErrorType messageType, IEnumerable messages)
+        private static ValidationErrorType? GetValidationErrorType(IValidationErrors errors)
+        {
+            if (errors == null || errors.Count == 0)
+                return null;
+
+            if (errors.Count == 1 && errors[0] is FlushError)
+                return ValidationErrorType.FlushError;
+            else
+                return ValidationErrorType.Error;
+        }
+
+        private static void SetDataErrorInfo(this DependencyObject element, ValidationErrorType errorType, IEnumerable messages)
         {
             Debug.Assert(messages != null);
 
-            element.SetMessageType(messageType);
+            element.SetMessageType(errorType);
 
             var binding = BindingOperations.GetBinding(element, DummyProperty);
             if (binding == null)
@@ -207,6 +208,13 @@ namespace DevZest.Data.Presenters
         {
             element.SetMessageType(null);
             element.ClearDataErrorInfoBinding();
+        }
+
+        internal static IValidationErrors Merge(this IValidationErrors result, IValidationErrors errors)
+        {
+            for (int i = 0; i < errors.Count; i++)
+                result = result.Add(errors[i]);
+            return result;
         }
     }
 }

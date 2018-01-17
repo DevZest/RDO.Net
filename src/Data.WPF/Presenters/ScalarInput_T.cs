@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarInput<T> : Input<T>, IScalarInput
+    public sealed class ScalarInput<T> : Input<T, ScalarBinding, IScalars>
         where T : UIElement, new()
     {
-        internal  ScalarInput(ScalarBinding<T> scalarBinding, Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
+        internal ScalarInput(ScalarBinding<T> scalarBinding, Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
             : base(flushTrigger, progressiveFlushTrigger)
         {
             Debug.Assert(scalarBinding != null);
@@ -20,7 +20,7 @@ namespace DevZest.Data.Presenters
 
         public ScalarBinding<T> ScalarBinding { get; private set; }
 
-        public sealed override TwoWayBinding Binding
+        public sealed override ScalarBinding Binding
         {
             get { return ScalarBinding; }
         }
@@ -46,7 +46,12 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public IScalars Target { get; private set; } = Scalars.Empty;
+        private IScalars _target = Scalars.Empty;
+        public override IScalars Target
+        {
+            get { return _target; }
+        }   
+
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
 
         public ScalarInput<T> WithFlush(Scalar scalar, Func<T, bool> flushFunc)
@@ -55,7 +60,7 @@ namespace DevZest.Data.Presenters
             Check.NotNull(flushFunc, nameof(flushFunc));
 
             VerifyNotSealed();
-            Target = Target.Union(scalar);
+            _target = _target.Union(scalar);
             _flushFuncs.Add(flushFunc);
             return this;
         }
@@ -66,7 +71,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(scalar));
 
             VerifyNotSealed();
-            Target = Target.Union(scalar);
+            _target = _target.Union(scalar);
             _flushFuncs.Add(element =>
             {
                 if (getValue == null)
@@ -118,12 +123,17 @@ namespace DevZest.Data.Presenters
 
         private void RefreshValidation(T element)
         {
-            element.RefreshValidation(() => GetFlushError(element), () => ValidationErrors);
+            element.RefreshValidation(ValidationErrors);
         }
 
-        public IScalarValidationErrors ValidationErrors
+        public IValidationErrors ValidationErrors
         {
-            get { return ScalarValidation.GetErrors(Target); }
+            get { return InputManager.GetValidationErrors(this); }
+        }
+
+        public bool HasValidationError
+        {
+            get { return InputManager.HasValidationError(this); }
         }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)
@@ -135,19 +145,41 @@ namespace DevZest.Data.Presenters
 
         public ScalarBinding<T> EndInput()
         {
-            Target = Target.Seal();
+            _target = _target.Seal();
             return ScalarBinding;
         }
 
-        public ScalarInput<T> AddAsyncValidator(Func<Task<IScalarValidationErrors>> action, Action postAction = null)
+        public ScalarInput<T> AddAsyncValidator(Func<Task<string>> validator)
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
             VerifyNotSealed();
 
-            var asyncValidator = ScalarAsyncValidator.Create<T>(this, action, postAction);
+            var asyncValidator = ScalarAsyncValidator.Create(Template, Target, validator);
             Template.InternalScalarAsyncValidators = Template.InternalScalarAsyncValidators.Add(asyncValidator);
             return this;
+        }
+
+        public ScalarInput<T> AddAsyncValidator(Func<Task<IEnumerable<string>>> validator)
+        {
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
+            VerifyNotSealed();
+
+            var asyncValidator = ScalarAsyncValidator.Create(Template, Target, validator);
+            Template.InternalScalarAsyncValidators = Template.InternalScalarAsyncValidators.Add(asyncValidator);
+            return this;
+        }
+
+        internal override bool IsPrecedingOf(Input<ScalarBinding, IScalars> input)
+        {
+            Debug.Assert(input != null);
+            if (!input.Target.Overlaps(Target))
+                return false;
+            else if (input.Target.IsSupersetOf(Target))
+                return true;
+            else
+                return input.Index < Index;
         }
     }
 }

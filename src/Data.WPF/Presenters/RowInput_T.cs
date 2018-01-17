@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowInput<T> : Input<T>, IRowInput
+    public sealed class RowInput<T> : Input<T, RowBinding, IColumns>
         where T : UIElement, new()
     {
         internal RowInput(RowBinding<T> rowBinding, Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
@@ -19,7 +19,7 @@ namespace DevZest.Data.Presenters
 
         public RowBinding<T> RowBinding { get; private set; }
 
-        public sealed override TwoWayBinding Binding
+        public sealed override RowBinding Binding
         {
             get { return RowBinding; }
         }
@@ -39,7 +39,12 @@ namespace DevZest.Data.Presenters
             RowValidation.SetFlushError(element, inputError);
         }
 
-        public IColumns Target { get; private set; } = Columns.Empty;
+        private IColumns _target = Columns.Empty;
+        public override IColumns Target
+        {
+            get { return _target; }
+        }
+
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
 
         private RowPresenter CurrentRow
@@ -59,7 +64,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(column));
 
             VerifyNotSealed();
-            Target = Target.Union(column);
+            _target = _target.Union(column);
             _flushFuncs.Add((rowPresenter, element) =>
             {
                 if (getValue == null)
@@ -78,7 +83,7 @@ namespace DevZest.Data.Presenters
             Check.NotNull(column, nameof(column));
             Check.NotNull(flushFunc, nameof(flushFunc));
             VerifyNotSealed();
-            Target = Target.Union(column);
+            _target = _target.Union(column);
             _flushFuncs.Add(flushFunc);
             return this;
         }
@@ -91,7 +96,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(valueBagGetter));
 
             VerifyNotSealed();
-            Target = Target.Union(column);
+            _target = _target.Union(column);
             _flushFuncs.Add((rowPresenter, element) =>
             {
                 if (valueBagGetter == null)
@@ -146,15 +151,21 @@ namespace DevZest.Data.Presenters
             return null;
         }
 
-        public IDataValidationErrors GetValidationErrors(RowPresenter rowPresenter)
+        public IValidationErrors GetValidationErrors(RowPresenter rowPresenter)
         {
             Check.NotNull(rowPresenter, nameof(rowPresenter));
-            return rowPresenter.GetValidationErrors(Target);
+            return rowPresenter.GetValidationErrors(this);
+        }
+
+        public bool HasValidationError(RowPresenter rowPresenter)
+        {
+            Check.NotNull(rowPresenter, nameof(rowPresenter));
+            return rowPresenter.HasValidationError(this);
         }
 
         private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            element.RefreshValidation(() => GetFlushError(element), () => GetValidationErrors(rowPresenter));
+            element.RefreshValidation(GetValidationErrors(rowPresenter));
         }
 
         private Action<T, RowPresenter, FlushError> _onRefresh;
@@ -174,35 +185,43 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public RowInput<T> AddAsyncValidator(Func<Task<IDataValidationErrors>> action, Action postAction = null)
+        public RowInput<T> AddAsyncValidator(Func<DataRow, Task<string>> validator)
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
             VerifyNotSealed();
 
-            var asyncValidator = RowAsyncValidator.Create<T>(this, action, postAction);
+            var asyncValidator = RowAsyncValidator.Create(Template, Target, validator);
+            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(asyncValidator);
+            return this;
+        }
+
+        public RowInput<T> AddAsyncValidator(Func<DataRow, Task<IEnumerable<string>>> validator)
+        {
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
+            VerifyNotSealed();
+
+            var asyncValidator = RowAsyncValidator.Create(Template, Target, validator);
             Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(asyncValidator);
             return this;
         }
 
         public RowBinding<T> EndInput()
         {
-            Target = Target.Seal();
+            _target = _target.Seal();
             return RowBinding;
         }
 
-        private IRowAsyncValidators _asyncValidators;
-        public IRowAsyncValidators AsyncValidators
+        internal override bool IsPrecedingOf(Input<RowBinding, IColumns> input)
         {
-            get
-            {
-                if (InputManager == null)
-                    return null;
-
-                if (_asyncValidators == null)
-                    _asyncValidators = Template.RowAsyncValidators.Where(x => x.RowInput == this);
-                return _asyncValidators;
-            }
+            Debug.Assert(input != null);
+            if (!input.Target.Overlaps(Target))
+                return false;
+            else if (input.Target.IsSupersetOf(Target))
+                return true;
+            else
+                return input.Index < Index;
         }
     }
 }

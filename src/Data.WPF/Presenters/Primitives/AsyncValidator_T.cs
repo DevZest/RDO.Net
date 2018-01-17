@@ -1,39 +1,22 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters.Primitives
 {
     public abstract class AsyncValidator<T> : AsyncValidator
+        where T : class
     {
-        protected AsyncValidator(Action postAction)
+        internal AsyncValidator(Template template)
+            : base(template)
         {
-            _postAction = postAction;
         }
 
         private bool _pendingValidationRequest;
-        private readonly Action _postAction;
 
         private Task<T> _awaitingTask;
 
-        public sealed override async void Run()
-        {
-#if DEBUG
-            var runningTask = LastRunningTask = RunAsync();
-#else
-            var runningTask = ValidateAsync();
-#endif
-            await runningTask;
-        }
-
-        protected abstract void ClearValidationMessages();
-
-        protected abstract Task<T> ValidateAsync();
-
-        protected abstract void RefreshValidationErrors(T result);
-
-        protected abstract T EmptyValidationResult { get; }
-
-        private async Task RunAsync()
+        public override async void Run()
         {
             if (Status == AsyncValidatorStatus.Running)
             {
@@ -41,10 +24,33 @@ namespace DevZest.Data.Presenters.Primitives
                 return;
             }
 
-            ClearValidationMessages();
+#if DEBUG
+            var statusChanged = await (_lastRunTask = RunAsync());
+            _lastRunTask = null;
+#else
+            var statusChanged = await RunAsync();
+#endif
+            if (statusChanged)
+                OnStatusChanged();
+        }
+
+        internal abstract void OnStatusChanged();
+
+        internal abstract T EmptyResult { get; }
+
+        private T _results;
+        public T Results
+        {
+            get { return _results ?? EmptyResult; }
+        }
+
+        internal abstract Task<T> ValidateAsync();
+
+        private async Task<bool> RunAsync()
+        {
             Exception = null;
             Status = AsyncValidatorStatus.Running;
-            InputManager.InvalidateView();
+            InvalidateView();
 
             T result;
             AsyncValidatorStatus status;
@@ -57,15 +63,16 @@ namespace DevZest.Data.Presenters.Primitives
                 {
                     result = await task;
                     if (task != _awaitingTask)   // cancelled
-                        return;
-                    status = AsyncValidatorStatus.Completed;
+                        return false;
+                    status = result != null && result != EmptyResult ? AsyncValidatorStatus.Error : AsyncValidatorStatus.Validated;
                     exception = null;
                 }
                 catch (Exception ex)
                 {
                     if (task != _awaitingTask)  // cancelled
-                        return;
-                    result = EmptyValidationResult;
+                        return false;
+                    result = EmptyResult;
+                    Debug.Assert(result != null);
                     status = AsyncValidatorStatus.Faulted;
                     exception = ex;
                 }
@@ -73,25 +80,29 @@ namespace DevZest.Data.Presenters.Primitives
             while (_pendingValidationRequest);
 
             _awaitingTask = null;
+            _results = result;
             Exception = exception;
             Status = status;
-            RefreshValidationErrors(result);
-
-            if (_postAction != null)
-                _postAction();
-
-            InputManager.InvalidateView();
+            return true;
         }
 
-        internal sealed override void Reset()
+        internal void Reset()
         {
             if (Status == AsyncValidatorStatus.Running)
                 _awaitingTask = null;
 
             _pendingValidationRequest = false;
+            _results = null;
             Status = AsyncValidatorStatus.Inactive;
             Exception = null;
-            ClearValidationMessages();
         }
+
+#if DEBUG
+        private Task<bool> _lastRunTask;
+        internal override Task LastRunTask
+        {
+            get { return _lastRunTask; }
+        }
+#endif
     }
 }

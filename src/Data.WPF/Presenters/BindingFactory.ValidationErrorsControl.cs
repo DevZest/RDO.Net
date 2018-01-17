@@ -3,12 +3,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<ValidationErrorsControl> BindToValidationMessagesControl(this IColumns source)
+        public static RowBinding<ValidationErrorsControl> BindToValidationErrorsControl<T>(this RowInput<T> source)
+            where T : UIElement, new()
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -16,7 +18,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<ValidationErrorsControl>(
                 onRefresh: (v, p) =>
                 {
-                    var errors = p.GetValidationErrors(source);
+                    var errors = source.GetValidationErrors(p);
                     if (ShouldUpdateItemsSource(v, errors))
                         v.ItemsSource = errors;
                 },
@@ -52,7 +54,8 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
-        public static ScalarBinding<ValidationErrorsControl> BindToValidationMessageView(this IScalars source)
+        public static ScalarBinding<ValidationErrorsControl> BindToValidationErrorsControl<T>(this ScalarInput<T> source)
+            where T : UIElement, new()
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -60,8 +63,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<ValidationErrorsControl>(
                 onRefresh: (v, p) =>
                 {
-                    var validation = p.DataPresenter.ScalarValidation;
-                    var errors = validation.GetErrors(source);
+                    var errors = source.ValidationErrors;
                     if (ShouldUpdateItemsSource(v, errors))
                         v.ItemsSource = errors;
                 },

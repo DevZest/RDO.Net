@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DevZest.Data.Views;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -6,6 +8,60 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class InputManager : ElementManager
     {
+        private sealed class EmptyRowValidationResults : IReadOnlyDictionary<RowPresenter, IDataValidationErrors>
+        {
+            public static readonly EmptyRowValidationResults Singleton = new EmptyRowValidationResults();
+            private EmptyRowValidationResults()
+            {
+            }
+
+            public IDataValidationErrors this[RowPresenter key]
+            {
+                get
+                {
+                    Check.NotNull(key, nameof(key));
+                    throw new ArgumentOutOfRangeException(nameof(key));
+                }
+            }
+
+            public IEnumerable<RowPresenter> Keys
+            {
+                get { yield break; }
+            }
+
+            public IEnumerable<IDataValidationErrors> Values
+            {
+                get { yield break; }
+            }
+
+            public int Count
+            {
+                get { return 0; }
+            }
+
+            public bool ContainsKey(RowPresenter key)
+            {
+                Check.NotNull(key, nameof(key));
+                return false;
+            }
+
+            public IEnumerator<KeyValuePair<RowPresenter, IDataValidationErrors>> GetEnumerator()
+            {
+                yield break;
+            }
+
+            public bool TryGetValue(RowPresenter key, out IDataValidationErrors value)
+            {
+                value = null;
+                return false;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                yield break;
+            }
+        }
+
         protected InputManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
@@ -17,6 +73,21 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _scalarValidation ?? (_scalarValidation = new ScalarValidation(this)); }
         }
 
+        internal IValidationErrors GetValidationErrors(DataView dataView)
+        {
+            return _scalarValidation == null ? ValidationErrors.Empty : _scalarValidation.GetErrors(dataView);
+        }
+
+        internal IValidationErrors GetValidationErrors(Input<ScalarBinding, IScalars> input)
+        {
+            return _scalarValidation == null ? ValidationErrors.Empty : _scalarValidation.GetErrors(input);
+        }
+
+        internal bool HasValidationError(Input<ScalarBinding, IScalars> input)
+        {
+            return _scalarValidation == null ? false : _scalarValidation.HasError(input);
+        }
+
         internal virtual IScalarValidationErrors PerformValidateScalars()
         {
             return base.DataPresenter == null ? Presenters.ScalarValidationErrors.Empty : base.DataPresenter.ValidateScalars();
@@ -26,6 +97,21 @@ namespace DevZest.Data.Presenters.Primitives
         public RowValidation RowValidation
         {
             get { return _rowValidation ?? (_rowValidation = new RowValidation(this)); }
+        }
+
+        internal IValidationErrors GetValidationErrors(RowView rowView)
+        {
+            return _rowValidation == null ? ValidationErrors.Empty : _rowValidation.GetErrors(rowView);
+        }
+
+        internal IValidationErrors GetValidationErrors(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
+        {
+            return _rowValidation == null ? ValidationErrors.Empty : _rowValidation.GetErrors(rowPresenter, input);
+        }
+
+        internal bool HasValidationError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
+        {
+            return _rowValidation == null ? false : _rowValidation.HasError(rowPresenter, input);
         }
 
         protected override void Reload()
@@ -139,12 +225,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         private IReadOnlyList<ScalarValidationError> ScalarValidationErrors
         {
-            get { return _scalarValidation == null ? Array<ScalarValidationError>.Empty : _scalarValidation.ValidationErrors; }
+            get { return _scalarValidation == null ? Array<ScalarValidationError>.Empty : _scalarValidation.Errors; }
         }
 
         private IReadOnlyDictionary<RowPresenter, IDataValidationErrors> RowValidationErrors
         {
-            get { return _rowValidation == null ? RowValidationResults.Empty : _rowValidation.ValidationErrors; }
+            get { return _rowValidation == null ? EmptyRowValidationResults.Singleton : _rowValidation.Errors; }
         }
 
         public bool HasVisibleError

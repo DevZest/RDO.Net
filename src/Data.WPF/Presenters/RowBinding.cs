@@ -51,7 +51,7 @@ namespace DevZest.Data.Presenters
 
         public abstract IReadOnlyList<RowBinding> ChildBindings { get; }
 
-        public abstract IRowInput RowInput { get; }
+        public abstract Input<RowBinding, IColumns> RowInput { get; }
 
         public sealed override Binding ParentBinding
         {

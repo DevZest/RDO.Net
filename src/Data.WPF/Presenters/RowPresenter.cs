@@ -497,42 +497,16 @@ namespace DevZest.Data.Presenters
                 InputManager.InvalidateView();
         }
 
-        public IDataValidationErrors GetValidationErrors(IColumns source)
+        public IValidationErrors GetValidationErrors(Input<RowBinding, IColumns> input)
         {
-            Check.NotNull(source, nameof(source));
-
-            if (source.Count == 0)
-                return DataValidationErrors.Empty;
-
-            var result = DataValidationErrors.Empty;
-            result = InputManager.RowValidation.GetValidationErrors(this, source);
-            result = AddAsyncValidationErrors(result, this);
-            return result;
+            Check.NotNull(input, nameof(input));
+            return InputManager.GetValidationErrors(this, input);
         }
 
-        private static IDataValidationErrors AddValidationErrors(IDataValidationErrors result, IRowValidationResults dictionary, RowPresenter rowPresenter)
+        public bool HasValidationError(Input<RowBinding, IColumns> input)
         {
-            if (dictionary.ContainsKey(rowPresenter))
-            {
-                var messages = dictionary[rowPresenter];
-                for (int i = 0; i < messages.Count; i++)
-                    result = result.Add(messages[i]);
-            }
-
-            return result;
-        }
-
-        private IDataValidationErrors AddAsyncValidationErrors(IDataValidationErrors result, RowPresenter rowPresenter)
-        {
-            var asyncValidators = Template.RowAsyncValidators;
-            for (int i = 0; i < asyncValidators.Count; i++)
-            {
-                var asyncValidator = asyncValidators[i];
-                var dictionary = asyncValidator.Errors;
-                result = AddValidationErrors(result, dictionary, rowPresenter);
-            }
-
-            return result;
+            Check.NotNull(input, nameof(input));
+            return InputManager.HasValidationError(this, input);
         }
     }
 }

@@ -8,20 +8,21 @@ namespace ValidationUI
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var emailAddressBinding = _.EmailAddress.BindToTextBox();
-                var passwordBinding = _.Password.BindToPasswordBox();
-                var confirmPasswordBinding = _.ConfirmPassword.BindToPasswordBox();
+                var emailAddress = _.EmailAddress.BindToTextBox();
+                var password = _.Password.BindToPasswordBox();
+                var confirmPassword = _.ConfirmPassword.BindToPasswordBox();
+                var passwordMismatch = new RowBinding[] { password, confirmPassword }.BindToValidationPlaceholder();
                 builder
                     .GridColumns("Auto", "*")
                     .GridRows("Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto")
-                    .AddBinding(1, 2, 1, 5, new RowBinding[] { passwordBinding, confirmPasswordBinding }.BindToValidationPlaceholder())
-                    .AddBinding(1, 6, _.PasswordMismatchErrorSource.BindToValidationMessagesControl().WithAutoSizeOrder(1))
-                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddressBinding)).AddBinding(1, 0, emailAddressBinding)
-                    .AddBinding(1, 1, _.EmailAddress.BindToValidationMessagesControl().WithAutoSizeOrder(1))
-                    .AddBinding(0, 2, _.Password.BindToLabel(passwordBinding)).AddBinding(1, 2, passwordBinding)
-                    .AddBinding(1, 3, _.Password.BindToValidationMessagesControl().WithAutoSizeOrder(1))
-                    .AddBinding(0, 4, _.ConfirmPassword.BindToLabel(confirmPasswordBinding)).AddBinding(1, 4, confirmPasswordBinding)
-                    .AddBinding(1, 5, _.ConfirmPassword.BindToValidationMessagesControl().WithAutoSizeOrder(1));
+                    .AddBinding(1, 2, 1, 5, passwordMismatch)
+                    .AddBinding(1, 6, passwordMismatch.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
+                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddress)).AddBinding(1, 0, emailAddress)
+                    .AddBinding(1, 1, emailAddress.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
+                    .AddBinding(0, 2, _.Password.BindToLabel(password)).AddBinding(1, 2, password)
+                    .AddBinding(1, 3, password.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
+                    .AddBinding(0, 4, _.ConfirmPassword.BindToLabel(confirmPassword)).AddBinding(1, 4, confirmPassword)
+                    .AddBinding(1, 5, confirmPassword.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1));
             }
         }
     }
