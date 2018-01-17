@@ -35,7 +35,7 @@ namespace DevZest.Data
             return ToJsonString(true);
         }
 
-        #region IColumnValidationMessages
+        #region IDataValidationErrors
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IReadOnlyCollection<DataValidationError>.Count
