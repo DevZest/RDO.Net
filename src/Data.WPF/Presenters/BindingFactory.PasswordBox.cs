@@ -14,7 +14,9 @@ namespace DevZest.Data.Presenters
         {
             return new RowBinding<PasswordBox>(onRefresh: (v, p) =>
             {
-                v.Password = p.GetValue(source);
+                var password = p.GetValue(source);
+                if (v.Password != password) // PasswordBox.Password is not a dependency property, update only when value changed.
+                    v.Password = p.GetValue(source);
             }).WithInput(PasswordBox.PasswordChangedEvent, PasswordBox.LostFocusEvent, source, v => v.Password);
         }
     }
