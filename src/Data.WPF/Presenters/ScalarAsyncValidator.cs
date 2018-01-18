@@ -4,27 +4,26 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections;
-using System.Windows;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
     public abstract class ScalarAsyncValidator : AsyncValidator<IScalarValidationErrors>, IScalarAsyncValidators
     {
-        internal static ScalarAsyncValidator Create(Template template, IScalars sourceScalars, Func<Task<string>> validator)
+        internal static ScalarAsyncValidator Create(IScalars sourceScalars, Func<Task<string>> validator)
         {
-            return new SingleErrorValidator(template, sourceScalars, validator);
+            return new SingleErrorValidator(sourceScalars, validator);
         }
 
-        internal static ScalarAsyncValidator Create(Template template, IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator)
+        internal static ScalarAsyncValidator Create(IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator)
         {
-            return new MultipleErrorsValidator(template, sourceScalars, validator);
+            return new MultipleErrorsValidator(sourceScalars, validator);
         }
 
         private sealed class SingleErrorValidator : ScalarAsyncValidator
         {
-            public SingleErrorValidator(Template template, IScalars scalars, Func<Task<string>> validator)
-                : base(template, scalars)
+            public SingleErrorValidator(IScalars scalars, Func<Task<string>> validator)
+                : base(scalars)
             {
                 _validator = validator;
             }
@@ -40,8 +39,8 @@ namespace DevZest.Data.Presenters
 
         private sealed class MultipleErrorsValidator : ScalarAsyncValidator
         {
-            public MultipleErrorsValidator(Template template, IScalars scalars, Func<Task<IEnumerable<string>>> validator)
-                : base(template, scalars)
+            public MultipleErrorsValidator(IScalars scalars, Func<Task<IEnumerable<string>>> validator)
+                : base(scalars)
             {
                 _validator = validator;
             }
@@ -63,10 +62,8 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private ScalarAsyncValidator(Template template, IScalars sourceScalars)
-            : base(template)
+        private ScalarAsyncValidator(IScalars sourceScalars)
         {
-            Debug.Assert(template != null);
             Debug.Assert(sourceScalars != null && sourceScalars.Count > 0);
             _sourceScalars = sourceScalars.Seal();
         }

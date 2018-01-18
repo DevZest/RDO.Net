@@ -120,6 +120,9 @@
   <data name="ArgumentNullAtIndex" xml:space="preserve">
     <value>The {array}[{index}] is null.</value>
   </data>
+  <data name="AsyncValidator_AlreadyInitialized" xml:space="preserve">
+    <value>The AsyncValidator is already initialized by a Template.</value>
+  </data>
   <data name="BindingFactory_InvalidInput" xml:space="preserve">
     <value>Invalid input for type {type}.</value>
   </data>

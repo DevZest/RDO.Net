@@ -149,26 +149,20 @@ namespace DevZest.Data.Presenters
             return ScalarBinding;
         }
 
-        public ScalarInput<T> AddAsyncValidator(Func<Task<string>> validator)
+        public ScalarAsyncValidator CreateAsyncValidator(Func<Task<string>> validator)
         {
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
-            VerifyNotSealed();
 
-            var asyncValidator = ScalarAsyncValidator.Create(Template, Target, validator);
-            Template.InternalScalarAsyncValidators = Template.InternalScalarAsyncValidators.Add(asyncValidator);
-            return this;
+            return ScalarAsyncValidator.Create(Target, validator);
         }
 
-        public ScalarInput<T> AddAsyncValidator(Func<Task<IEnumerable<string>>> validator)
+        public ScalarAsyncValidator CreateAsyncValidator(Func<Task<IEnumerable<string>>> validator)
         {
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
-            VerifyNotSealed();
 
-            var asyncValidator = ScalarAsyncValidator.Create(Template, Target, validator);
-            Template.InternalScalarAsyncValidators = Template.InternalScalarAsyncValidators.Add(asyncValidator);
-            return this;
+            return ScalarAsyncValidator.Create(Target, validator);
         }
 
         internal override bool IsPrecedingOf(Input<ScalarBinding, IScalars> input)

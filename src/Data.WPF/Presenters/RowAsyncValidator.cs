@@ -11,20 +11,20 @@ namespace DevZest.Data.Presenters
 {
     public abstract class RowAsyncValidator : AsyncValidator<IDataValidationErrors>, IRowAsyncValidators
     {
-        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<DataRow, Task<string>> validator)
+        internal static RowAsyncValidator Create(IColumns sourceColumns, Func<DataRow, Task<string>> validator)
         {
-            return new SingleErrorValidator(template, sourceColumns, validator);
+            return new SingleErrorValidator(sourceColumns, validator);
         }
 
-        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<DataRow, Task<IEnumerable<string>>> validator)
+        internal static RowAsyncValidator Create(IColumns sourceColumns, Func<DataRow, Task<IEnumerable<string>>> validator)
         {
-            return new MultipleErrorValidator(template, sourceColumns, validator);
+            return new MultipleErrorValidator(sourceColumns, validator);
         }
 
         private sealed class SingleErrorValidator : RowAsyncValidator
         {
-            public SingleErrorValidator(Template template, IColumns columns, Func<DataRow, Task<string>> validator)
-                : base(template, columns)
+            public SingleErrorValidator(IColumns columns, Func<DataRow, Task<string>> validator)
+                : base(columns)
             {
                 _validator = validator;
             }
@@ -40,8 +40,8 @@ namespace DevZest.Data.Presenters
 
         private sealed class MultipleErrorValidator : RowAsyncValidator
         {
-            public MultipleErrorValidator(Template template, IColumns columns, Func<DataRow, Task<IEnumerable<string>>> validator)
-                : base(template, columns)
+            public MultipleErrorValidator(IColumns columns, Func<DataRow, Task<IEnumerable<string>>> validator)
+                : base(columns)
             {
                 _validator = validator;
             }
@@ -63,10 +63,8 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private RowAsyncValidator(Template template, IColumns sourceColumns)
-            : base(template)
+        private RowAsyncValidator(IColumns sourceColumns)
         {
-            Debug.Assert(template != null);
             Debug.Assert(sourceColumns != null && sourceColumns.Count > 0);
             _sourceColumns = sourceColumns.Seal();
         }

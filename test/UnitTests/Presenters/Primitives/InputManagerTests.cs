@@ -220,7 +220,7 @@ namespace DevZest.Data.Presenters.Primitives
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
-                textBox.Input.AddAsyncValidator(dataRow => ValidateBadNameAsync(_.Name, dataRow));
+                builder.AddAsyncValidator(textBox.Input.CreateAsyncValidator(dataRow => ValidateBadNameAsync(_.Name, dataRow)));
             });
 
             var currentRow = inputManager.CurrentRow;
@@ -267,7 +267,7 @@ namespace DevZest.Data.Presenters.Primitives
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
-                textBox.Input.AddAsyncValidator(dataRow => ValidateFaultedAsync(dataRow));
+                builder.AddAsyncValidator(textBox.Input.CreateAsyncValidator(dataRow => ValidateFaultedAsync(dataRow)));
             });
 
             var currentRow = inputManager.CurrentRow;
@@ -307,7 +307,7 @@ namespace DevZest.Data.Presenters.Primitives
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
 
-                textBox.Input.AddAsyncValidator(dataRow => ValidateFaultedAsync(dataRow));
+                builder.AddAsyncValidator(textBox.Input.CreateAsyncValidator(dataRow => ValidateFaultedAsync(dataRow)));
             });
 
             var currentRow = inputManager.CurrentRow;

@@ -167,43 +167,19 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddAsyncValidator(IScalars sourceScalars, Func<Task<string>> validator)
+        public TemplateBuilder AddAsyncValidator(ScalarAsyncValidator validator)
         {
-            if (sourceScalars == null || sourceScalars.Count == 0)
-                throw new ArgumentNullException(nameof(sourceScalars));
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
-            Template.InternalScalarAsyncValidators = Template.InternalScalarAsyncValidators.Add(ScalarAsyncValidator.Create(Template, sourceScalars, validator));
+            Template.AddAsyncValidator(validator);
             return this;
         }
 
-        public TemplateBuilder AddAsyncValidator(IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator)
+        public TemplateBuilder AddAsyncValidator(RowAsyncValidator validator)
         {
-            if (sourceScalars == null || sourceScalars.Count == 0)
-                throw new ArgumentNullException(nameof(sourceScalars));
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
-            Template.InternalScalarAsyncValidators = Template.InternalScalarAsyncValidators.Add(ScalarAsyncValidator.Create(Template, sourceScalars, validator));
-            return this;
-        }
-
-        public TemplateBuilder AddAsyncValidator(IColumns sourceColumns, Func<DataRow, Task<string>> validator)
-        {
-            if (sourceColumns == null || sourceColumns.Count == 0)
-                throw new ArgumentNullException(nameof(sourceColumns));
-            if (validator == null)
-                throw new ArgumentNullException(nameof(validator));
-            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(RowAsyncValidator.Create(Template, sourceColumns, validator));
-            return this;
-        }
-
-        public TemplateBuilder AddAsyncValidator(IColumns sourceColumns, Func<DataRow, Task<IEnumerable<string>>> validator)
-        {
-            if (sourceColumns == null || sourceColumns.Count == 0)
-                throw new ArgumentNullException(nameof(sourceColumns));
-            if (validator == null)
-                throw new ArgumentNullException(nameof(validator));
-            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(RowAsyncValidator.Create(Template, sourceColumns, validator));
+            Template.AddAsyncValidator(validator);
             return this;
         }
 

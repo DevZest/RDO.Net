@@ -132,8 +132,8 @@ namespace DevZest.Data.Presenters.Primitives
             VerifyGridUnitType();
             VerifyRowRange();
             VerifyFrozenMargins();
-            InternalScalarAsyncValidators = InternalScalarAsyncValidators.Seal();
-            InternalRowAsyncValidators = InternalRowAsyncValidators.Seal();
+            _scalarAsyncValidators = _scalarAsyncValidators.Seal();
+            _rowAsyncValidators = _rowAsyncValidators.Seal();
         }
 
         internal void VerifyGridUnitType()
@@ -503,18 +503,32 @@ namespace DevZest.Data.Presenters.Primitives
         [DefaultValue(null)]
         public SelectionMode? SelectionMode { get; internal set; }
 
-        internal IScalarAsyncValidators InternalScalarAsyncValidators { get; set; } = Presenters.ScalarAsyncValidators.Empty;
+        private IScalarAsyncValidators _scalarAsyncValidators = Presenters.ScalarAsyncValidators.Empty;
+
+        internal void AddAsyncValidator(ScalarAsyncValidator validator)
+        {
+            Debug.Assert(validator != null);
+            validator.Initialize(this);
+            _scalarAsyncValidators = _scalarAsyncValidators.Add(validator);
+        }
 
         public IScalarAsyncValidators ScalarAsyncValidators
         {
-            get { return IsSealed ? InternalScalarAsyncValidators : null; }
+            get { return IsSealed ? _scalarAsyncValidators : null; }
         }
 
-        internal IRowAsyncValidators InternalRowAsyncValidators { get; set; } = Presenters.RowAsyncValidators.Empty;
+        private IRowAsyncValidators _rowAsyncValidators = Presenters.RowAsyncValidators.Empty;
+
+        internal void AddAsyncValidator(RowAsyncValidator validator)
+        {
+            Debug.Assert(validator != null);
+            validator.Initialize(this);
+            _rowAsyncValidators = _rowAsyncValidators.Add(validator);
+        }
 
         public IRowAsyncValidators RowAsyncValidators
         {
-            get { return IsSealed ? InternalRowAsyncValidators : null; }
+            get { return IsSealed ? _rowAsyncValidators : null; }
         }
 
         private ScalarPresenter _scalarPresenter;
@@ -585,8 +599,8 @@ namespace DevZest.Data.Presenters.Primitives
             InternalScalarBindings.Clear();
             InternalBlockBindings.Clear();
             InternalRowBindings.Clear();
-            InternalScalarAsyncValidators = Presenters.ScalarAsyncValidators.Empty;
-            InternalRowAsyncValidators = Presenters.RowAsyncValidators.Empty;
+            _scalarAsyncValidators = Presenters.ScalarAsyncValidators.Empty;
+            _rowAsyncValidators = Presenters.RowAsyncValidators.Empty;
         }
 
         InputGesture[] _rowViewToggleEditGestures;

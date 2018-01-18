@@ -1,22 +1,27 @@
 ﻿using DevZest.Data.Presenters.Primitives;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
     public abstract class AsyncValidator
     {
-        internal AsyncValidator(Template template)
+        private Template _template;
+        public Template Template
         {
-            Debug.Assert(template != null);
+            get { return _template; }
+        }
+
+        internal void Initialize(Template template)
+        {
+            if (_template != null)
+                throw new InvalidOperationException(DiagnosticMessages.AsyncValidator_AlreadyInitialized);
             _template = template;
         }
 
-        private readonly Template _template;
         internal InputManager InputManager
         {
-            get { return _template.InputManager; }
+            get { return Template.InputManager; }
         }
 
         internal void InvalidateView()

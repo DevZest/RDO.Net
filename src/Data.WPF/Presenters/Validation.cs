@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -215,6 +216,42 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < errors.Count; i++)
                 result = result.Add(errors[i]);
             return result;
+        }
+
+        public static ScalarAsyncValidator CreateAsyncValidator(this IScalars sourceScalars, Func<Task<string>> validator)
+        {
+            if (sourceScalars == null || sourceScalars.Count == 0)
+                throw new ArgumentNullException(nameof(sourceScalars));
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
+            return ScalarAsyncValidator.Create(sourceScalars, validator);
+        }
+
+        public static ScalarAsyncValidator CreateAsyncValidator(this IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator)
+        {
+            if (sourceScalars == null || sourceScalars.Count == 0)
+                throw new ArgumentNullException(nameof(sourceScalars));
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
+            return ScalarAsyncValidator.Create(sourceScalars, validator);
+        }
+
+        public static RowAsyncValidator CreateAsyncValidator(this IColumns sourceColumns, Func<DataRow, Task<string>> validator)
+        {
+            if (sourceColumns == null || sourceColumns.Count == 0)
+                throw new ArgumentNullException(nameof(sourceColumns));
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
+            return RowAsyncValidator.Create(sourceColumns, validator);
+        }
+
+        public static RowAsyncValidator CreateAsyncValidator(this IColumns sourceColumns, Func<DataRow, Task<IEnumerable<string>>> validator)
+        {
+            if (sourceColumns == null || sourceColumns.Count == 0)
+                throw new ArgumentNullException(nameof(sourceColumns));
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
+            return RowAsyncValidator.Create(sourceColumns, validator);
         }
     }
 }

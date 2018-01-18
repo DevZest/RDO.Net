@@ -20,6 +20,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The AsyncValidator is already initialized by a Template.
+        /// </summary>
+        public static string AsyncValidator_AlreadyInitialized
+        {
+            get { return GetString("AsyncValidator_AlreadyInitialized"); }
+        }
+
+        /// <summary>
         /// Invalid input for type {type}.
         /// </summary>
         public static string BindingFactory_InvalidInput(object type)

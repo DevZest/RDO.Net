@@ -185,26 +185,19 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public RowInput<T> AddAsyncValidator(Func<DataRow, Task<string>> validator)
+        public RowAsyncValidator CreateAsyncValidator(Func<DataRow, Task<string>> validator)
         {
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
-            VerifyNotSealed();
-
-            var asyncValidator = RowAsyncValidator.Create(Template, Target, validator);
-            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(asyncValidator);
-            return this;
+            return RowAsyncValidator.Create(Target, validator);
         }
 
-        public RowInput<T> AddAsyncValidator(Func<DataRow, Task<IEnumerable<string>>> validator)
+        public RowAsyncValidator CreateAsyncValidator(Func<DataRow, Task<IEnumerable<string>>> validator)
         {
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
-            VerifyNotSealed();
 
-            var asyncValidator = RowAsyncValidator.Create(Template, Target, validator);
-            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(asyncValidator);
-            return this;
+            return RowAsyncValidator.Create(Target, validator);
         }
 
         public RowBinding<T> EndInput()

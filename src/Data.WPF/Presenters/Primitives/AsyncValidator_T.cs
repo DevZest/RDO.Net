@@ -7,11 +7,6 @@ namespace DevZest.Data.Presenters.Primitives
     public abstract class AsyncValidator<T> : AsyncValidator
         where T : class
     {
-        internal AsyncValidator(Template template)
-            : base(template)
-        {
-        }
-
         private bool _pendingValidationRequest;
 
         private Task<T> _awaitingTask;

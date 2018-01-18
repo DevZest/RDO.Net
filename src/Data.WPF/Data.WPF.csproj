@@ -46,6 +46,7 @@
     <Compile Include="Presenters\BindingFactory.PasswordBox.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationErrorsControl.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationPlaceholder.cs" />
+    <Compile Include="Presenters\BindingFactory.AsyncValidatorIndicator.cs" />
     <Compile Include="Presenters\BindingFactory.ValidityIndicator.cs" />
     <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
     <Compile Include="Presenters\BindingFactory.ComboBox.cs" />
@@ -91,6 +92,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="Views\AsyncValidatorIndicator.cs" />
     <Compile Include="Views\GridHeader.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
     <Compile Include="Views\SelectionHandler.cs" />
