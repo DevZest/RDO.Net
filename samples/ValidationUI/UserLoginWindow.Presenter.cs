@@ -8,14 +8,14 @@ namespace ValidationUI
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var emailAddressBinding = _.EmailAddress.BindToTextBox();
-                var passwordBinding = _.Password.BindToPasswordBox();
+                var emailAddress = _.EmailAddress.BindToTextBox();
+                var password = _.Password.BindToPasswordBox();
                 builder
                     .WithRowValidationMode(ValidationMode.Implicit)
                     .GridColumns("Auto", "*", "20")
                     .GridRows("Auto", "Auto")
-                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddressBinding)).AddBinding(1, 0, emailAddressBinding).AddBinding(2, 0, emailAddressBinding.Input.BindToValidityIndicator())
-                    .AddBinding(0, 1, _.Password.BindToLabel(passwordBinding)).AddBinding(1, 1, passwordBinding).AddBinding(2, 1, passwordBinding.Input.BindToValidityIndicator());
+                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddress, "{0}:")).AddBinding(1, 0, emailAddress).AddBinding(2, 0, emailAddress.Input.BindToValidityIndicator())
+                    .AddBinding(0, 1, _.Password.BindToLabel(password, "{0}:")).AddBinding(1, 1, password).AddBinding(2, 1, password.Input.BindToValidityIndicator());
             }
         }
     }

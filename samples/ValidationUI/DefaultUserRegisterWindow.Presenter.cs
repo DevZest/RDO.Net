@@ -8,16 +8,16 @@ namespace ValidationUI
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var emailAddressBinding = _.EmailAddress.BindToTextBox();
-                var passwordBinding = _.Password.BindToPasswordBox();
-                var confirmPasswordBinding = _.ConfirmPassword.BindToPasswordBox();
+                var emailAddress = _.EmailAddress.BindToTextBox();
+                var password = _.Password.BindToPasswordBox();
+                var confirmPassword = _.ConfirmPassword.BindToPasswordBox();
                 builder
                     .GridColumns("Auto", "*")
                     .GridRows("Auto", "Auto", "Auto")
-                    .AddBinding(1, 1, 1, 2, new RowBinding[] { passwordBinding, confirmPasswordBinding } .BindToValidationPlaceholder())
-                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddressBinding)).AddBinding(1, 0, emailAddressBinding)
-                    .AddBinding(0, 1, _.Password.BindToLabel(passwordBinding)).AddBinding(1, 1, passwordBinding)
-                    .AddBinding(0, 2, _.ConfirmPassword.BindToLabel(confirmPasswordBinding)).AddBinding(1, 2, confirmPasswordBinding);
+                    .AddBinding(1, 1, 1, 2, new RowBinding[] { password, confirmPassword } .BindToValidationPlaceholder())
+                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddress, "{0}:")).AddBinding(1, 0, emailAddress)
+                    .AddBinding(0, 1, _.Password.BindToLabel(password, "{0}:")).AddBinding(1, 1, password)
+                    .AddBinding(0, 2, _.ConfirmPassword.BindToLabel(confirmPassword, "{0}:")).AddBinding(1, 2, confirmPassword);
             }
         }
     }

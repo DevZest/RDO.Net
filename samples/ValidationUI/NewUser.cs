@@ -13,7 +13,7 @@ namespace ValidationUI
 
         [Required]
         [StringLength(20, MinimumLength = 6)]
-        [Display(Name = "Confirm Password:")]
+        [Display(Name = "Confirm Password")]
         [DefaultValue("")]
         public _String ConfirmPassword { get; private set; }
 
