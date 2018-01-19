@@ -43,8 +43,7 @@ namespace ValidationUI
                     .AddBinding(0, 4, _.ConfirmPassword.BindToLabel(confirmPassword, "{0}:"))
                     .AddBinding(1, 0, emailAddress).AddBinding(1, 1, emailAddress.Input.BindToValidationErrorsControl())
                     .AddBinding(1, 2, password).AddBinding(1, 3, password.Input.BindToValidationErrorsControl())
-                    .AddBinding(1, 4, confirmPassword).AddBinding(1, 5, confirmPassword.Input.BindToValidationErrorsControl())
-;
+                    .AddBinding(1, 4, confirmPassword).AddBinding(1, 5, confirmPassword.Input.BindToValidationErrorsControl());
             }
         }
     }
