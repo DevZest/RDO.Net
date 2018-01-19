@@ -18,6 +18,12 @@ namespace ValidationUI
             window.Show(this);
         }
 
+        private void ScalarLogin_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new LoginWindow();
+            window.ShowScalar(this);
+        }
+
         private void DefaultUserRegister_Click(object sender, RoutedEventArgs e)
         {
             var window = new RegistrationWindow();
@@ -29,5 +35,6 @@ namespace ValidationUI
             var window = new RegistrationWindow();
             window.ShowVerbose(this);
         }
+
     }
 }

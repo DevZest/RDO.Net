@@ -26,7 +26,7 @@ namespace ValidationUI
 
             public ScalarPresenter()
             {
-                _emailAddress = NewScalar<string>().AddValidator(ValidateEmailAddressRequired).AddValidator(ValidateEmailAddressMaxLength);
+                _emailAddress = NewScalar<string>().AddValidator(ValidateEmailAddressRequired).AddValidator(ValidateEmailAddress).AddValidator(ValidateEmailAddressMaxLength);
                 _password = NewScalar<string>().AddValidator(ValidatePasswordRequired).AddValidator(ValidatePasswordLength);
             }
 
@@ -34,6 +34,11 @@ namespace ValidationUI
             {
                 return string.IsNullOrEmpty(value) ? "Field 'Email Address' is required." : null;
 
+            }
+
+            private static string ValidateEmailAddress(string value)
+            {
+                return !value.IsValidEmailAddress() ? "Field 'Email Address' is not a valid email address." : null;
             }
 
             private static string ValidateEmailAddressMaxLength(string value)
@@ -56,9 +61,10 @@ namespace ValidationUI
                 var emailAddress = _emailAddress.BindToTextBox();
                 var password = _password.BindToPasswordBox();
                 builder
-                    .WithRowValidationMode(ValidationMode.Implicit)
+                    .WithScalarValidationMode(ValidationMode.Implicit)
                         .GridColumns("Auto", "*", "20")
-                        .GridRows("Auto", "Auto")
+                        .GridRows("Auto", "Auto", "Auto")
+                        .RowRange(0, 2, 2, 2)
                         .AddBinding(0, 0, @"Email Address:".BindToLabel(emailAddress)).AddBinding(1, 0, emailAddress).AddBinding(2, 0, emailAddress.Input.BindToValidityIndicator())
                         .AddBinding(0, 1, @"Password:".BindToLabel(password)).AddBinding(1, 1, password).AddBinding(2, 1, password.Input.BindToValidityIndicator());
             }

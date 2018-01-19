@@ -262,7 +262,7 @@ namespace DevZest.Data.Presenters
         {
             var result = ScalarValidationErrors.Empty;
             for (int i = 0; i < Scalars.Count; i++)
-                result = result.Add(Scalars[i].Validate(result));
+                result = Scalars[i].Validate(result);
             return ValidateScalars(result);
         }
 

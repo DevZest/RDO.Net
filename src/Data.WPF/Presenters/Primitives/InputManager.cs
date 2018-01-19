@@ -90,7 +90,8 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal virtual IScalarValidationErrors PerformValidateScalars()
         {
-            return base.DataPresenter == null ? Presenters.ScalarValidationErrors.Empty : base.DataPresenter.ValidateScalars();
+            var dataPresenter = DataPresenter;
+            return dataPresenter == null ? Presenters.ScalarValidationErrors.Empty : dataPresenter.ValidateScalars();
         }
 
         private RowValidation _rowValidation;

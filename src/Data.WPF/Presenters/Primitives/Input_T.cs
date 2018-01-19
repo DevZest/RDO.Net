@@ -109,8 +109,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void ProgressiveFlush(T element)
         {
-            if (element.GetRowPresenter().IsEditing)
-                PerformFlush(element, true);
+            PerformFlush(element, true);
         }
 
         private void PerformFlush(T element, bool makeProgress)
