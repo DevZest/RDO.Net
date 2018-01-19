@@ -170,6 +170,11 @@ namespace DevZest.Data.Presenters
             return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), data, getValue);
         }
 
+        public ScalarBinding<T> WithInput<TData>(RoutedEvent routedEvent, RoutedEvent progressiveFlushRoutedEvent, Scalar<TData> column, Func<T, TData> getValue)
+        {
+            return WithInput(new RoutedEventTrigger<T>(routedEvent), new RoutedEventTrigger<T>(progressiveFlushRoutedEvent), column, getValue);
+        }
+
         public new T this[int flowIndex]
         {
             get { return (T)base[flowIndex]; }

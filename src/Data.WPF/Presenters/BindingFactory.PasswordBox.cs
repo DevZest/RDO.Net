@@ -16,7 +16,17 @@ namespace DevZest.Data.Presenters
             {
                 var password = p.GetValue(source);
                 if (v.Password != password) // PasswordBox.Password is not a dependency property, update only when value changed.
-                    v.Password = p.GetValue(source);
+                    v.Password = password;
+            }).WithInput(PasswordBox.PasswordChangedEvent, PasswordBox.LostFocusEvent, source, v => v.Password);
+        }
+
+        public static ScalarBinding<PasswordBox> BindToPasswordBox(this Scalar<string> source)
+        {
+            return new ScalarBinding<PasswordBox>(onRefresh: (v, p) =>
+            {
+                var password = source.Value;
+                if (v.Password != password) // PasswordBox.Password is not a dependency property, update only when value changed.
+                    v.Password = password;
             }).WithInput(PasswordBox.PasswordChangedEvent, PasswordBox.LostFocusEvent, source, v => v.Password);
         }
     }
