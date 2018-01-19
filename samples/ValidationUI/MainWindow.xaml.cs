@@ -20,14 +20,14 @@ namespace ValidationUI
 
         private void DefaultUserRegister_Click(object sender, RoutedEventArgs e)
         {
-            var window = new DefaultUserRegisterWindow();
-            window.Show(this);
+            var window = new RegistrationWindow();
+            window.ShowDefault(this);
         }
 
         private void VerboseUserRegister_Click(object sender, RoutedEventArgs e)
         {
-            var window = new VerboseUserRegisterWindow();
-            window.Show(this);
+            var window = new RegistrationWindow();
+            window.ShowVerbose(this);
         }
     }
 }

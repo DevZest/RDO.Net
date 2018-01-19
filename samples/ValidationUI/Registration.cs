@@ -4,11 +4,11 @@ using DevZest.Data.Presenters;
 
 namespace ValidationUI
 {
-    public class NewUser : Login
+    public class Registration : Login
     {
-        static NewUser()
+        static Registration()
         {
-            RegisterColumn((NewUser _) => _.ConfirmPassword);
+            RegisterColumn((Registration _) => _.ConfirmPassword);
         }
 
         [Required]

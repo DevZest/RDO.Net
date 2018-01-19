@@ -49,25 +49,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="VerboseUserRegisterWindow.Presenter.cs" />
-    <Compile Include="VerboseUserRegisterWindow.xaml.cs">
-      <DependentUpon>VerboseUserRegisterWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DefaultUserRegisterWindow.Presenter.cs" />
-    <Compile Include="DefaultUserRegisterWindow.xaml.cs">
-      <DependentUpon>DefaultUserRegisterWindow.xaml</DependentUpon>
+    <Compile Include="RegistrationWindow.Presenters.cs" />
+    <Compile Include="RegistrationWindow.xaml.cs">
+      <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginWindow.Presenter.cs" />
-    <Compile Include="NewUser.cs" />
+    <Compile Include="Registration.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="VerboseUserRegisterWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DefaultUserRegisterWindow.xaml">
+    <Page Include="RegistrationWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
