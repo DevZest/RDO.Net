@@ -3,12 +3,12 @@ using DevZest.Data.Annotations;
 
 namespace ValidationUI
 {
-    public class User : Model
+    public class Login : Model
     {
-        static User()
+        static Login()
         {
-            RegisterColumn((User _) => _.EmailAddress);
-            RegisterColumn((User _) => _.Password);
+            RegisterColumn((Login _) => _.EmailAddress);
+            RegisterColumn((Login _) => _.Password);
         }
 
         [Required]

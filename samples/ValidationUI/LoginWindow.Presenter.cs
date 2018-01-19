@@ -2,9 +2,9 @@
 
 namespace ValidationUI
 {
-    partial class UserLoginWindow
+    partial class LoginWindow
     {
-        private sealed class Presenter : DataPresenter<User>
+        private sealed class Presenter : DataPresenter<Login>
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {

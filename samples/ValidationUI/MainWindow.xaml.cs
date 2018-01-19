@@ -12,9 +12,9 @@ namespace ValidationUI
             InitializeComponent();
         }
 
-        private void UserLogin_Click(object sender, RoutedEventArgs e)
+        private void Login_Click(object sender, RoutedEventArgs e)
         {
-            var window = new UserLoginWindow();
+            var window = new LoginWindow();
             window.Show(this);
         }
 

@@ -5,16 +5,16 @@ using System.Windows.Input;
 namespace ValidationUI
 {
     /// <summary>
-    /// Interaction logic for UserLoginWindow.xaml
+    /// Interaction logic for LoginWindow.xaml
     /// </summary>
-    public partial class UserLoginWindow : Window
+    public partial class LoginWindow : Window
     {
         public static class Commands
         {
             public static readonly RoutedUICommand Submit = new RoutedUICommand();
         }
 
-        public UserLoginWindow()
+        public LoginWindow()
         {
             InitializeComponent();
             InitializeCommandBindings();
@@ -40,7 +40,7 @@ namespace ValidationUI
 
         public void Show(Window ownerWindow)
         {
-            var dataSet = DataSet<User>.New();
+            var dataSet = DataSet<Login>.New();
             dataSet.Add(new DataRow());
             _presenter.Show(_dataView, dataSet);
             Owner = ownerWindow;

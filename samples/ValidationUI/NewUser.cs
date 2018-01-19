@@ -4,7 +4,7 @@ using DevZest.Data.Presenters;
 
 namespace ValidationUI
 {
-    public class NewUser : User
+    public class NewUser : Login
     {
         static NewUser()
         {
