@@ -28,6 +28,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// {typeArgName} must be an enum type.
+        /// </summary>
+        public static string BindingFactory_EnumTypeRequired(object typeArgName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("BindingFactory_EnumTypeRequired", "typeArgName"), typeArgName);
+        }
+
+        /// <summary>
         /// Invalid input for type {type}.
         /// </summary>
         public static string BindingFactory_InvalidInput(object type)

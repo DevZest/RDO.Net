@@ -123,6 +123,9 @@
   <data name="AsyncValidator_AlreadyInitialized" xml:space="preserve">
     <value>The AsyncValidator is already initialized by a Template.</value>
   </data>
+  <data name="BindingFactory_EnumTypeRequired" xml:space="preserve">
+    <value>{typeArgName} must be an enum type.</value>
+  </data>
   <data name="BindingFactory_InvalidInput" xml:space="preserve">
     <value>Invalid input for type {type}.</value>
   </data>

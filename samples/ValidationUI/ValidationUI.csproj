@@ -51,6 +51,7 @@
     </ApplicationDefinition>
     <Compile Include="DummyModel.cs" />
     <Compile Include="EmailAddressValidator.cs" />
+    <Compile Include="Interests.cs" />
     <Compile Include="RegistrationWindow.Presenters.cs" />
     <Compile Include="RegistrationWindow.xaml.cs">
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>

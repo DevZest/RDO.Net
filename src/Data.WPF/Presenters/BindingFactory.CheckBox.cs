@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Presenters.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters
@@ -36,12 +37,188 @@ namespace DevZest.Data.Presenters
                 onCleanup: (v, p) => trigger.Detach(v));
         }
 
-        public static RowBinding<CheckBox> BindToCheckBox(this _Boolean column)
+        public static RowBinding<CheckBox> BindToCheckBox(this Column<bool?> source, string display = null)
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-            return new RowBinding<CheckBox>(onRefresh: (v, p) => v.IsChecked = p.GetValue(column))
-                .WithInput(CheckBox.IsCheckedProperty, column, v => v.IsChecked);
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            return new RowBinding<CheckBox>(
+                onSetup: (v, p) =>
+                {
+                    v.IsThreeState = true;
+                    v.Content = string.IsNullOrEmpty(display) ? source.DisplayName : display;
+
+                },
+                onRefresh: (v, p) => v.IsChecked = p.GetValue(source), onCleanup: null)
+                .WithInput(CheckBox.IsCheckedProperty, source, v => v.IsChecked);
+        }
+
+        public static RowBinding<CheckBox> BindToCheckBox(this Column<bool> source, string display = null)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            return new RowBinding<CheckBox>(
+                onSetup: (v, p) =>
+                {
+                    v.IsThreeState = false;
+                    v.Content = string.IsNullOrEmpty(display) ? source.DisplayName : display;
+
+                },
+                onRefresh: (v, p) => v.IsChecked = p.GetValue(source), onCleanup: null)
+                .WithInput(CheckBox.IsCheckedProperty, source, v => v.IsChecked == true);
+        }
+
+        public static RowBinding<CheckBox> BindToCheckBox<T>(this Column<T> source, T flag, string display = null)
+            where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new RowBinding<CheckBox>(
+                onSetup: (v, p) =>
+                {
+                    v.IsThreeState = false;
+                    v.Content = string.IsNullOrEmpty(display) ? Enum.GetName(typeof(T), flag) : display;
+                },
+                onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(flag),
+                onCleanup: null)
+                .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
+                .WithFlush(source, (r, v) =>
+                {
+                    var value = r.GetValue(source);
+                    var newValue = value.GetNewValue(flag, v);
+                    if (source.AreEqual(value, newValue))
+                        return false;
+                    r.EditValue(source, newValue);
+                    return true;
+                })
+                .EndInput();
+        }
+
+        private static bool HasFlag<T>(this T value, T flag)
+            where T : struct, IConvertible
+        {
+            return (value as Enum).HasFlag(flag as Enum);
+        }
+
+        private static T GetNewValue<T>(this T value, T flag, CheckBox v)
+            where T : struct, IConvertible
+        {
+            return v.IsChecked == true ? value.AddFlag(flag) : value.RemoveFlag(flag);
+        }
+
+        private static T AddFlag<T>(this T value, T flag)
+            where T : struct, IConvertible
+        {
+            return (T)Enum.ToObject(typeof(T), value.ToUInt64(null) | flag.ToUInt64(null));
+        }
+
+        private static T RemoveFlag<T>(this T value, T flag)
+            where T : struct, IConvertible
+        {
+            return (T)Enum.ToObject(typeof(T), value.ToUInt64(null) & ~flag.ToUInt64(null));
+        }
+
+        public static RowBinding<CheckBox> BindToCheckBox<T>(this Column<T?> source, T flag, string name = null)
+            where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new RowBinding<CheckBox>(onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(flag),
+                onSetup: (v, p) =>
+                {
+                    v.IsThreeState = false;
+                    v.Content = string.IsNullOrEmpty(name) ? Enum.GetName(typeof(T), flag) : name;
+                }, onCleanup: null)
+                .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
+                .WithFlush(source, (r, v) =>
+                {
+                    var value = r.GetValue(source);
+                    var newValue = value.GetNewValue(flag, v, source.IsNullable);
+                    if (source.AreEqual(value, newValue))
+                        return false;
+                    r.EditValue(source, newValue);
+                    return true;
+                })
+                .EndInput();
+        }
+
+        private static bool? HasFlag<T>(this T? value, T flag)
+            where T : struct, IConvertible
+        {
+            if (value == null)
+                return false;
+            else
+                return value.GetValueOrDefault().HasFlag(flag);
+        }
+
+        private static T? GetNewValue<T>(this T? nullable, T flag, CheckBox v, bool isNullable)
+            where T : struct, IConvertible
+        {
+            var value = nullable.HasValue ? nullable.GetValueOrDefault() : default(T);
+            var result = value.GetNewValue(flag, v);
+            if (isNullable && result.Equals(default(T)))
+                return null;
+            else
+                return result;
+        }
+
+        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T> source, T flag, string name = null)
+            where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.Value.HasFlag(flag),
+                onSetup: v =>
+                {
+                    v.IsThreeState = false;
+                    v.Content = string.IsNullOrEmpty(name) ? Enum.GetName(typeof(T), flag) : name;
+                }, onCleanup: null)
+                .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
+                .WithFlush(source, v =>
+                {
+                    var value = source.Value;
+                    var newValue = value.GetNewValue(flag, v);
+                    if (Comparer<T>.Default.Compare(value, newValue) == 0)
+                        return false;
+                    source.Value = newValue;
+                    return true;
+                })
+                .EndInput();
+        }
+
+        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T?> source, T flag, string name = null)
+            where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.Value.HasFlag(flag),
+                onSetup: v =>
+                {
+                    v.IsThreeState = false;
+                    v.Content = string.IsNullOrEmpty(name) ? Enum.GetName(typeof(T), flag) : name;
+                }, onCleanup: null)
+                .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
+                .WithFlush(source, v =>
+                {
+                    var value = source.Value;
+                    var newValue = value.GetNewValue(flag, v, true);
+                    if (Comparer<T?>.Default.Compare(value, newValue) == 0)
+                        return false;
+                    source.Value = newValue;
+                    return true;
+                })
+                .EndInput();
         }
     }
 }
