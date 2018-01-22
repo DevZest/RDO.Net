@@ -18,6 +18,8 @@ namespace ValidationUI
         [Display(Name = "User Name")]
         public _String UserName { get; private set; }
 
+        [Required]
+        [DefaultValue(typeof(Interests), nameof(ValidationUI.Interests.None))]
         public _ByteEnum<Interests> Interests { get; private set; }
 
         [Required]
