@@ -8,27 +8,27 @@ namespace ValidationUI
     {
         static Registration()
         {
-            RegisterColumn((Registration _) => _.ConfirmPassword);
+            RegisterColumn((Registration _) => _.PasswordConfirmation);
         }
 
         [Required]
         [StringLength(20, MinimumLength = 6)]
         [Display(Name = "Confirm Password")]
         [DefaultValue("")]
-        public _String ConfirmPassword { get; private set; }
+        public _String PasswordConfirmation { get; private set; }
 
         private IColumns _passwordMismatchErrorSource;
         public IColumns PasswordMismatchErrorSource
         {
-            get { return _passwordMismatchErrorSource ?? (_passwordMismatchErrorSource = Password.Union(ConfirmPassword).Seal()); }
+            get { return _passwordMismatchErrorSource ?? (_passwordMismatchErrorSource = Password.Union(PasswordConfirmation).Seal()); }
         }
 
-        private const string ERR_PASSWORD_MISMATCH = "Password and Confirm Password must be identical";
+        private const string ERR_PASSWORD_MISMATCH = "Passwords do not match";
 
         [ModelValidator]
-        private DataValidationError ValidatePassword(DataRow dataRow)
+        private DataValidationError ValidatePasswordConfirmation(DataRow dataRow)
         {
-            return ConfirmPassword[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_PASSWORD_MISMATCH, PasswordMismatchErrorSource);
+            return PasswordConfirmation[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_PASSWORD_MISMATCH, PasswordMismatchErrorSource);
         }
     }
 }

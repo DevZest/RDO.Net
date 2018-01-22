@@ -11,14 +11,14 @@ namespace ValidationUI
             {
                 var emailAddress = _.EmailAddress.BindToTextBox();
                 var password = _.Password.BindToPasswordBox();
-                var confirmPassword = _.ConfirmPassword.BindToPasswordBox();
+                var confirmPassword = _.PasswordConfirmation.BindToPasswordBox();
                 builder
                     .GridColumns("Auto", "*")
                     .GridRows("Auto", "Auto", "Auto")
                     .AddBinding(1, 1, 1, 2, new RowBinding[] { password, confirmPassword } .BindToValidationPlaceholder())
                     .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddress, "{0}:"))
                     .AddBinding(0, 1, _.Password.BindToLabel(password, "{0}:"))
-                    .AddBinding(0, 2, _.ConfirmPassword.BindToLabel(confirmPassword, "{0}:"))
+                    .AddBinding(0, 2, _.PasswordConfirmation.BindToLabel(confirmPassword, "{0}:"))
                     .AddBinding(1, 0, emailAddress)
                     .AddBinding(1, 1, password)
                     .AddBinding(1, 2, confirmPassword);
@@ -31,7 +31,7 @@ namespace ValidationUI
             {
                 var emailAddress = _.EmailAddress.BindToTextBox();
                 var password = _.Password.BindToPasswordBox();
-                var confirmPassword = _.ConfirmPassword.BindToPasswordBox();
+                var confirmPassword = _.PasswordConfirmation.BindToPasswordBox();
                 var passwordMismatch = new RowBinding[] { password, confirmPassword }.BindToValidationPlaceholder();
                 builder
                     .GridColumns("Auto", "*")
@@ -40,7 +40,7 @@ namespace ValidationUI
                     .AddBinding(1, 6, passwordMismatch.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
                     .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddress, "{0}:"))
                     .AddBinding(0, 2, _.Password.BindToLabel(password, "{0}:"))
-                    .AddBinding(0, 4, _.ConfirmPassword.BindToLabel(confirmPassword, "{0}:"))
+                    .AddBinding(0, 4, _.PasswordConfirmation.BindToLabel(confirmPassword, "{0}:"))
                     .AddBinding(1, 0, emailAddress).AddBinding(1, 1, emailAddress.Input.BindToValidationErrorsControl())
                     .AddBinding(1, 2, password).AddBinding(1, 3, password.Input.BindToValidationErrorsControl())
                     .AddBinding(1, 4, confirmPassword).AddBinding(1, 5, confirmPassword.Input.BindToValidationErrorsControl());
