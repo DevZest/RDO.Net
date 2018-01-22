@@ -41,11 +41,13 @@ namespace DevZest.Data.Presenters
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrEmpty(display))
+                display = source.DisplayName;
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
                     v.IsThreeState = true;
-                    v.Content = string.IsNullOrEmpty(display) ? source.DisplayName : display;
+                    v.Content = display;
 
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source), onCleanup: null)
@@ -56,11 +58,13 @@ namespace DevZest.Data.Presenters
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrEmpty(display))
+                display = source.DisplayName;
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
                     v.IsThreeState = false;
-                    v.Content = string.IsNullOrEmpty(display) ? source.DisplayName : display;
+                    v.Content = display;
 
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source), onCleanup: null)
@@ -74,12 +78,14 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrEmpty(display))
+                display = Enum.GetName(typeof(T), flag);
 
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
                     v.IsThreeState = false;
-                    v.Content = string.IsNullOrEmpty(display) ? Enum.GetName(typeof(T), flag) : display;
+                    v.Content = display;
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(flag),
                 onCleanup: null)
@@ -120,19 +126,21 @@ namespace DevZest.Data.Presenters
             return (T)Enum.ToObject(typeof(T), value.ToUInt64(null) & ~flag.ToUInt64(null));
         }
 
-        public static RowBinding<CheckBox> BindToCheckBox<T>(this Column<T?> source, T flag, string name = null)
+        public static RowBinding<CheckBox> BindToCheckBox<T>(this Column<T?> source, T flag, string display = null)
             where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
                 throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrEmpty(display))
+                display = Enum.GetName(typeof(T), flag);
 
             return new RowBinding<CheckBox>(onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(flag),
                 onSetup: (v, p) =>
                 {
                     v.IsThreeState = false;
-                    v.Content = string.IsNullOrEmpty(name) ? Enum.GetName(typeof(T), flag) : name;
+                    v.Content = display;
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
                 .WithFlush(source, (r, v) =>
@@ -167,19 +175,21 @@ namespace DevZest.Data.Presenters
                 return result;
         }
 
-        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T> source, T flag, string name = null)
+        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T> source, T flag, string display = null)
             where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
                 throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrEmpty(display))
+                display = Enum.GetName(typeof(T), flag);
 
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.Value.HasFlag(flag),
                 onSetup: v =>
                 {
                     v.IsThreeState = false;
-                    v.Content = string.IsNullOrEmpty(name) ? Enum.GetName(typeof(T), flag) : name;
+                    v.Content = display;
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
                 .WithFlush(source, v =>
@@ -194,19 +204,21 @@ namespace DevZest.Data.Presenters
                 .EndInput();
         }
 
-        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T?> source, T flag, string name = null)
+        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T?> source, T flag, string display = null)
             where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
                 throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrEmpty(display))
+                display = Enum.GetName(typeof(T), flag);
 
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.Value.HasFlag(flag),
                 onSetup: v =>
                 {
                     v.IsThreeState = false;
-                    v.Content = string.IsNullOrEmpty(name) ? Enum.GetName(typeof(T), flag) : name;
+                    v.Content = display;
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
                 .WithFlush(source, v =>
