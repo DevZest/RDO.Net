@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using DevZest.Data.Presenters.Primitives;
+﻿using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -212,7 +211,7 @@ namespace DevZest.Data.Presenters
             if (!input.Target.Overlaps(Target))
                 return false;
             else if (input.Target.IsSupersetOf(Target))
-                return true;
+                return input.Target.SetEquals(Target) ? IsPlaceholder || !input.IsPlaceholder : true;
             else
                 return input.Index < Index;
         }

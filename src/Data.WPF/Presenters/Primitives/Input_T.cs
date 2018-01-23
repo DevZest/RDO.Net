@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Views;
+using System;
 using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
@@ -10,6 +11,11 @@ namespace DevZest.Data.Presenters.Primitives
         public abstract TTarget Target { get; }
         public int Index { get; internal set; } = -1;
         internal abstract bool IsPrecedingOf(Input<TBinding, TTarget> input);
+
+        internal bool IsPlaceholder
+        {
+            get { return typeof(ValidationPlaceholder).IsAssignableFrom(Binding.ViewType); }
+        }
     }
 
     public abstract class Input<T, TBinding, TTarget> : Input<TBinding, TTarget>

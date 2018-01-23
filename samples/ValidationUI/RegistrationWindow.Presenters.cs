@@ -27,6 +27,7 @@ namespace ValidationUI
                     .GridColumns("Auto", "*", "*")
                     .GridRows("Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto")
                     .AddBinding(1, 2, 2, 3, new RowBinding[] { password, confirmPassword }.BindToValidationPlaceholder())
+                    .AddBinding(1, 4, 2, 7, new RowBinding[] { interests1, interests2, interests3, interests4, interests5, interests6, interests7, interests8 }.BindToValidationPlaceholder())
                     .AddBinding(0, 0, _.UserName.BindToLabel(userName, LABEL_FORMAT))
                     .AddBinding(0, 1, _.EmailAddress.BindToLabel(emailAddress, LABEL_FORMAT))
                     .AddBinding(0, 2, _.Password.BindToLabel(password, LABEL_FORMAT))
