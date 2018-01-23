@@ -43,21 +43,32 @@ namespace ValidationUI
 
         public void ShowDefault(Window ownerWindow)
         {
-            Show<DefaultPresenter>(ownerWindow, "Default");
+            Show<DefaultPresenter, Registration>(ownerWindow, "Default");
         }
 
         public void ShowVerbose(Window ownerWindow)
         {
-            Show<VerbosePresenter>(ownerWindow, "Verbose", ValidationErrorsControl.Templates.ValidationError);
+            Show<VerbosePresenter, Registration>(ownerWindow, "Verbose", ValidationErrorsControl.Templates.ValidationError);
         }
 
-        private void Show<T>(Window ownerWindow, string windowTitleSuffix, ControlTemplate errorTemplate = null)
-            where T : DataPresenter<Registration>, new()
+        public void ShowDefaultScalar(Window ownerWindow)
+        {
+            Show<DefaultScalarPresenter, DummyModel>(ownerWindow, "Default - Scalar");
+        }
+
+        public void ShowVerboseScalar(Window ownerWindow)
+        {
+            Show<VerboseScalarPresenter, DummyModel>(ownerWindow, "Verbose - Scalar", ValidationErrorsControl.Templates.ValidationError);
+        }
+
+        private void Show<T, TModel>(Window ownerWindow, string windowTitleSuffix, ControlTemplate errorTemplate = null)
+            where T : DataPresenter<TModel>, new()
+            where TModel : Model, new()
         {
             Title = string.Format("{0} ({1})", Title, windowTitleSuffix);
             if (errorTemplate != null)
                 DevZest.Data.Presenters.Validation.SetErrorTemplate(_dataView, errorTemplate);
-            var dataSet = DataSet<Registration>.New();
+            var dataSet = DataSet<TModel>.New();
             dataSet.Add(new DataRow());
             var presenter = new T();
             _presenter = presenter;

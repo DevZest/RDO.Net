@@ -36,5 +36,16 @@ namespace ValidationUI
             window.ShowVerbose(this);
         }
 
+        private void DefaultScalarUserRegister_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new RegistrationWindow();
+            window.ShowDefaultScalar(this);
+        }
+
+        private void VerboseScalarUserRegister_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new RegistrationWindow();
+            window.ShowVerboseScalar(this);
+        }
     }
 }
