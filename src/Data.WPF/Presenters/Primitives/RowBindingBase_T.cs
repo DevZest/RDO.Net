@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
@@ -43,6 +44,11 @@ namespace DevZest.Data.Presenters.Primitives
         public new T this[RowPresenter rowPresenter]
         {
             get { return (T)base[rowPresenter]; }
+        }
+
+        public sealed override Type ViewType
+        {
+            get { return typeof(T); }
         }
     }
 }

@@ -181,5 +181,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         [DefaultValue(false)]
         public bool FrozenBottomShrink { get; internal set; }
+
+        public abstract Type ViewType { get; }
     }
 }

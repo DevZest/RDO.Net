@@ -107,5 +107,10 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         internal abstract void PerformSetup(T element, ScalarPresenter scalarPresenter);
+
+        public sealed override Type ViewType
+        {
+            get { return typeof(T); }
+        }
     }
 }

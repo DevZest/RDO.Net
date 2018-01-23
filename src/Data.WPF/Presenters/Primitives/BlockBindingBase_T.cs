@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Views;
 using System.Diagnostics;
 using System.Windows;
+using System;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -44,6 +45,11 @@ namespace DevZest.Data.Presenters.Primitives
         public new T this[int blockOrdinal]
         {
             get { return (T)base[blockOrdinal]; }
+        }
+
+        public sealed override Type ViewType
+        {
+            get { return typeof(T); }
         }
     }
 }
