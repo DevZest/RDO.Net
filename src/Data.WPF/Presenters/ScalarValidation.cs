@@ -384,5 +384,29 @@ namespace DevZest.Data.Presenters
                     yield return childInput;
             }
         }
+
+        public IValidationErrors VisibleErrors
+        {
+            get
+            {
+                var result = ValidationErrors.Empty;
+                foreach (var input in Inputs)
+                {
+                    for (int flowIndex = 0; flowIndex < FlowRepeatCount; flowIndex++)
+                    {
+                        var errors = _inputManager.GetValidationErrors(input, flowIndex);
+                        for (int i = 0; i < errors.Count; i++)
+                            result = result.Add(errors[i]);
+                    }
+                }
+
+                {
+                    var errors = _inputManager.GetValidationErrors(DataPresenter.View);
+                    for (int i = 0; i < errors.Count; i++)
+                        result = result.Add(errors[i]);
+                }
+                return result.Seal();
+            }
+        }
     }
 }

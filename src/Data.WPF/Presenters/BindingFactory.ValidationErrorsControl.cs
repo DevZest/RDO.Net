@@ -66,6 +66,18 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
+        public static ScalarBinding<ValidationErrorsControl> BindToValidationErrorsControl(this DataPresenter source)
+        {
+            return new ScalarBinding<ValidationErrorsControl>(
+                onRefresh: (v, p) =>
+                {
+                    var errors = p.DataPresenter.ScalarValidation.VisibleErrors;
+                    if (ShouldUpdateItemsSource(v, errors))
+                        v.ItemsSource = errors;
+                },
+                onSetup: null, onCleanup: null);
+        }
+
         public static ScalarBinding<ValidationErrorsControl> BindToValidationErrorsControl<T>(this ScalarInput<T> source)
             where T : UIElement, new()
         {

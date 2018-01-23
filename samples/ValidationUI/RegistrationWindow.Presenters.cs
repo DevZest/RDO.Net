@@ -182,8 +182,8 @@ namespace ValidationUI
                     .AddBinding(1, 6, interests5)
                     .AddBinding(2, 6, interests6)
                     .AddBinding(1, 7, interests7)
-                    .AddBinding(2, 7, interests8);
-                    //.AddBinding(0, 8, 2, 8, _.BindToValidationErrorsControl().WithAutoSizeWaiver(AutoSizeWaiver.Width));
+                    .AddBinding(2, 7, interests8)
+                    .AddBinding(0, 8, 2, 8, this.BindToValidationErrorsControl().WithAutoSizeWaiver(AutoSizeWaiver.Width));
             }
         }
 
