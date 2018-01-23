@@ -9,6 +9,18 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
+        public static RowBinding<ValidationErrorsControl> BindToValidationErrorsControl(this Model source)
+        {
+            return new RowBinding<ValidationErrorsControl>(
+                onRefresh: (v, p) =>
+                {
+                    var errors = p.VisibleValidationErrors;
+                    if (ShouldUpdateItemsSource(v, errors))
+                        v.ItemsSource = errors;
+                },
+                onSetup: null, onCleanup: null);
+        }
+
         public static RowBinding<ValidationErrorsControl> BindToValidationErrorsControl<T>(this RowInput<T> source)
             where T : UIElement, new()
         {

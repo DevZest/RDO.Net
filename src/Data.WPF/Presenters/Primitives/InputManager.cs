@@ -186,15 +186,11 @@ namespace DevZest.Data.Presenters.Primitives
             if (_scalarValidation == null)
                 return false;
 
-            foreach (var scalarBinding in Template.ScalarBindings)
+            foreach (var input in _scalarValidation.Inputs)
             {
-                var scalarInput = scalarBinding.ScalarInput;
-                if (scalarInput == null)
-                    continue;
-
-                if (_scalarValidation.HasError(scalarInput))
+                if (_scalarValidation.HasError(input))
                 {
-                    if (scalarBinding[0].Focus())
+                    if (input.Binding[0].Focus())
                         return true;
                 }
             }
@@ -207,15 +203,11 @@ namespace DevZest.Data.Presenters.Primitives
             if (_rowValidation == null)
                 return false;
 
-            foreach (var rowBinding in Template.RowBindings)
+            foreach (var input in _rowValidation.Inputs)
             {
-                var rowInput = rowBinding.RowInput;
-                if (rowInput == null)
-                    continue;
-
-                if (_rowValidation.HasError(rowPresenter, rowInput, true))
+                if (_rowValidation.HasError(rowPresenter, input, true))
                 {
-                    if (Focus(rowBinding, rowPresenter))
+                    if (Focus(input.Binding, rowPresenter))
                         return true;
                 }
             }
@@ -306,6 +298,29 @@ namespace DevZest.Data.Presenters.Primitives
         {
             if (CurrentRow != null && CurrentRow.View != null)
                 CurrentRow.View.Flush();
+        }
+
+        internal IValidationErrors GetVisibleValidationErrors(RowPresenter rowPresenter)
+        {
+            Debug.Assert(rowPresenter != null);
+
+            if (_rowValidation == null)
+                return ValidationErrors.Empty;
+
+            var result = ValidationErrors.Empty;
+            foreach (var input in _rowValidation.Inputs)
+            {
+                var errors = GetValidationErrors(rowPresenter, input);
+                for (int i = 0; i < errors.Count; i++)
+                    result = result.Add(errors[i]);
+            }
+
+            {
+                var errors = GetValidationErrors(rowPresenter.View);
+                for (int i = 0; i < errors.Count; i++)
+                    result = result.Add(errors[i]);
+            }
+            return result.Seal();
         }
     }
 }

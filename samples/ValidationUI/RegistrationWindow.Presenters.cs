@@ -25,7 +25,7 @@ namespace ValidationUI
                 var interests8 = _.Interests.BindToCheckBox(Interests.Sports);
                 builder
                     .GridColumns("Auto", "*", "*")
-                    .GridRows("Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto")
+                    .GridRows("Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto", "Auto")
                     .AddBinding(1, 2, 2, 3, new RowBinding[] { password, confirmPassword }.BindToValidationPlaceholder())
                     .AddBinding(1, 4, 2, 7, new RowBinding[] { interests1, interests2, interests3, interests4, interests5, interests6, interests7, interests8 }.BindToValidationPlaceholder())
                     .AddBinding(0, 0, _.UserName.BindToLabel(userName, LABEL_FORMAT))
@@ -44,7 +44,8 @@ namespace ValidationUI
                     .AddBinding(1, 6, interests5)
                     .AddBinding(2, 6, interests6)
                     .AddBinding(1, 7, interests7)
-                    .AddBinding(2, 7, interests8);
+                    .AddBinding(2, 7, interests8)
+                    .AddBinding(0, 8, 2, 8, _.BindToValidationErrorsControl().WithAutoSizeWaiver(AutoSizeWaiver.Width));
             }
         }
 

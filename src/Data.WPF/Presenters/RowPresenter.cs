@@ -508,5 +508,10 @@ namespace DevZest.Data.Presenters
             Check.NotNull(input, nameof(input));
             return InputManager.HasValidationError(this, input);
         }
+
+        public IValidationErrors VisibleValidationErrors
+        {
+            get { return InputManager.GetVisibleValidationErrors(this); }
+        }
     }
 }
