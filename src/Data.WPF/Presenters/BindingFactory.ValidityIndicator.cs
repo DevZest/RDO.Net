@@ -29,7 +29,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<ValidityIndicator>(
                 onRefresh: (v, p) =>
                 {
-                    v.IsValid = !source.HasValidationError;
+                    v.IsValid = !source.HasValidationError(p.FlowIndex);
                 },
                 onSetup: null, onCleanup: null);
         }

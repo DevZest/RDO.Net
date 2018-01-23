@@ -128,9 +128,11 @@ namespace DevZest.Data.Presenters
             return InputManager.GetValidationErrors(this, flowIndex);
         }
 
-        public bool HasValidationError
+        public bool HasValidationError(int flowIndex = 0)
         {
-            get { return InputManager.HasValidationError(this); }
+            if (flowIndex < 0 || flowIndex >= InputManager.FlowRepeatCount)
+                throw new ArgumentOutOfRangeException(nameof(flowIndex));
+            return InputManager.HasValidationError(this, flowIndex);
         }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)

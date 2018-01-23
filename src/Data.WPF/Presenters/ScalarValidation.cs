@@ -83,15 +83,23 @@ namespace DevZest.Data.Presenters
         {
             Debug.Assert(dataView != null);
 
-            for (int i = 0; i < Inputs.Count; i++)
+            if (FlowRepeatCount == 1)
             {
-                if (HasError(Inputs[i]))
-                    return ValidationErrors.Empty;
+                for (int i = 0; i < Inputs.Count; i++)
+                {
+                    if (HasError(Inputs[i], 0))
+                        return ValidationErrors.Empty;
+                }
             }
 
             var errors = GetErrors(null, false);
             var asyncErrors = GetErrors(null, true);
             return ValidationErrors.Empty.Merge(errors).Merge(asyncErrors).Seal();
+        }
+
+        private int FlowRepeatCount
+        {
+            get { return _inputManager.FlowRepeatCount; }
         }
 
         internal IValidationErrors GetErrors(Input<ScalarBinding, IScalars> input, int flowIndex)
@@ -102,7 +110,10 @@ namespace DevZest.Data.Presenters
             if (flushError != null)
                 return flushError;
 
-            if (AnyPrecedingInputHasError(input))
+            if (FlowRepeatCount > 1)
+                return ValidationErrors.Empty;
+
+            if (AnyPrecedingInputHasError(input, flowIndex))
                 return ValidationErrors.Empty;
 
             var errors = GetErrors(input.Target, false);
@@ -110,21 +121,21 @@ namespace DevZest.Data.Presenters
             return ValidationErrors.Empty.Merge(errors).Merge(asyncErrors).Seal();
         }
 
-        private bool AnyPrecedingInputHasError(Input<ScalarBinding, IScalars> input)
+        private bool AnyPrecedingInputHasError(Input<ScalarBinding, IScalars> input, int flowIndex)
         {
             for (int i = 0; i < Inputs.Count; i++)
             {
                 if (input.Index == i)
                     continue;
-                if (Inputs[i].IsPrecedingOf(input) && HasError(Inputs[i]))
+                if (Inputs[i].IsPrecedingOf(input) && HasError(Inputs[i], flowIndex))
                     return true;
             }
             return false;
         }
 
-        internal bool HasError(Input<ScalarBinding, IScalars> input)
+        internal bool HasError(Input<ScalarBinding, IScalars> input, int flowIndex)
         {
-            var flushError = GetFlushError(input.Binding[0]);
+            var flushError = GetFlushError(input.Binding[flowIndex]);
             if (flushError != null)
                 return true;
 
