@@ -280,76 +280,18 @@ namespace DevZest.Data.Presenters
         {
             RequireLayoutManager();
 
-            if (RowValidation.FlushErrors.Count > 0 || ScalarValidation.FlushErrors.Count > 0)
-            {
-                if (focusToErrorInput)
-                    FocusToErrorInput(RowValidation.FlushErrors, ScalarValidation.FlushErrors);
-                return false;
-            }
-
             RowValidation.Validate();
             ScalarValidation.Validate();
             if (HasVisibleInputError)
             {
                 if (focusToErrorInput)
-                    FocusToErrorInput(RowValidation, ScalarValidation);
+                    LayoutManager.FocusToInputError();
                 return false;
             }
 
             if (IsEditing)
                 CurrentRow.EndEdit();
             return true;
-        }
-
-        private static void FocusToErrorInput(IReadOnlyList<FlushError> rowFlushErrors, IReadOnlyList<FlushError> scalarFlushErrors)
-        {
-            if (rowFlushErrors.Count > 0)
-                rowFlushErrors[0].Source.Focus();
-            else if (scalarFlushErrors.Count > 0)
-                scalarFlushErrors[0].Source.Focus();
-        }
-
-        private void FocusToErrorInput(RowValidation rowValidation, ScalarValidation scalarValidation)
-        {
-            if (!FocusToErrorInput(rowValidation))
-                FocusToErrorInput(scalarValidation);
-        }
-
-        private bool FocusToErrorInput(RowValidation rowValidation)
-        {
-            if (CurrentRow == null || rowValidation.Errors == null || rowValidation.Errors.Count == 0)
-                return false;
-
-            if (FocusToErrorInput(rowValidation, CurrentRow))
-                return true;
-
-            var rows = rowValidation.Errors.Keys;
-            foreach (var row in rows)
-            {
-                if (FocusToErrorInput(rowValidation, row))
-                    return true;
-            }
-            return false;
-        }
-
-        private bool FocusToErrorInput(RowValidation rowValidation, RowPresenter row)
-        {
-            var errorsByRow = rowValidation.Errors;
-            if (!errorsByRow.ContainsKey(row))
-                return false;
-
-            var errors = errorsByRow[row];
-            foreach (var error in errors)
-            {
-                if (LayoutManager.FocusToInputError(error, row))
-                    return true;
-            }
-
-            return false;
-        }
-
-        private static void FocusToErrorInput(ScalarValidation scalarValidation)
-        {
         }
 
         public void InvalidateMeasure()

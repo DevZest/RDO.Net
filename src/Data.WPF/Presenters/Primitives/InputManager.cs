@@ -167,33 +167,55 @@ namespace DevZest.Data.Presenters.Primitives
             var hasError = RowValidation.CurrentRowErrors.Count > 0;
             if (hasError)
             {
-                FocusToInputError(RowValidation.CurrentRowErrors);
+                FocusToInputError();
                 return false;
             }
             return true;
         }
 
-        private void FocusToInputError(IDataValidationErrors errors)
+        public bool FocusToInputError()
         {
-            for (int i = 0; i < errors.Count; i++)
-            {
-                var error = errors[i];
-                if (FocusToInputError(error, CurrentRow))
-                    return;
-            }
+            if (FocusToScalarInputError())
+                return true;
+            else
+                return FocusToRowInputError(CurrentRow);
         }
 
-        internal bool FocusToInputError(DataValidationError error, RowPresenter row)
+        internal bool FocusToScalarInputError()
         {
+            if (_scalarValidation == null)
+                return false;
+
+            foreach (var scalarBinding in Template.ScalarBindings)
+            {
+                var scalarInput = scalarBinding.ScalarInput;
+                if (scalarInput == null)
+                    continue;
+
+                if (_scalarValidation.HasError(scalarInput))
+                {
+                    if (scalarBinding[0].Focus())
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        internal bool FocusToRowInputError(RowPresenter rowPresenter)
+        {
+            Debug.Assert(rowPresenter != null);
+            if (_rowValidation == null)
+                return false;
+
             foreach (var rowBinding in Template.RowBindings)
             {
                 var rowInput = rowBinding.RowInput;
                 if (rowInput == null)
                     continue;
 
-                if (error.Source.IsSupersetOf(rowInput.Target))
+                if (_rowValidation.HasError(rowPresenter, rowInput, true))
                 {
-                    if (Focus(rowBinding, row))
+                    if (Focus(rowBinding, rowPresenter))
                         return true;
                 }
             }

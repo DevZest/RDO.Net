@@ -207,13 +207,17 @@ namespace DevZest.Data.Presenters
 
         internal override bool IsPrecedingOf(Input<RowBinding, IColumns> input)
         {
-            Debug.Assert(input != null);
+            Debug.Assert(input != null && input != this);
             if (!input.Target.Overlaps(Target))
                 return false;
+            else if (input.Target.SetEquals(Target))
+                return IsPlaceholder || !input.IsPlaceholder;
             else if (input.Target.IsSupersetOf(Target))
-                return input.Target.SetEquals(Target) ? IsPlaceholder || !input.IsPlaceholder : true;
+                return true;
+            else if (Target.IsSupersetOf(input.Target))
+                return false;
             else
-                return input.Index < Index;
+                return Index < input.Index;
         }
     }
 }
