@@ -9,13 +9,8 @@ namespace ValidationUI
 
         protected ScalarPresenterBase()
         {
-            _emailAddress = NewScalar<string>().AddValidator(ValidateEmailAddressRequired).AddValidator(ValidateEmailAddress).AddValidator(ValidateEmailAddressMaxLength);
-            _password = NewScalar<string>(string.Empty).AddValidator(ValidatePasswordLength);
-        }
-
-        private static string ValidateEmailAddressRequired(string value)
-        {
-            return string.IsNullOrEmpty(value) ? "Field 'Email Address' is required." : null;
+            _emailAddress = NewScalar(string.Empty).AddValidator(ValidateEmailAddress).AddValidator(ValidateEmailAddressMaxLength);
+            _password = NewScalar(string.Empty).AddValidator(ValidatePasswordLength);
         }
 
         private static string ValidateEmailAddress(string value)

@@ -108,7 +108,7 @@ namespace ValidationUI
 
             protected ScalarPresenter()
             {
-                _userName = NewScalar<string>().AddValidator(ValidateUserNameRequired);
+                _userName = NewScalar(string.Empty).AddValidator(ValidateUserNameRequired);
                 _passwordConfirmation = NewScalar(string.Empty).AddValidator(ValidatePasswordConfirmationLength);
                 _interests = NewScalar(Interests.None).AddValidator(ValidateInterests);
             }
