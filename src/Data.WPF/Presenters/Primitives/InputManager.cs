@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal bool HasValidationError(Input<ScalarBinding, IScalars> input, int flowIndex)
         {
-            return _scalarValidation == null ? false : _scalarValidation.HasError(input, flowIndex);
+            return _scalarValidation == null ? false : _scalarValidation.HasError(input, flowIndex, true);
         }
 
         internal virtual IScalarValidationErrors PerformValidateScalars()
@@ -190,7 +190,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 for (int i = 0; i < FlowRepeatCount; i++)
                 {
-                    if (_scalarValidation.HasError(input, i))
+                    if (_scalarValidation.HasError(input, i, true))
                     {
                         if (input.Binding[i].Focus())
                             return true;

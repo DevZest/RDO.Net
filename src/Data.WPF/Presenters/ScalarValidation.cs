@@ -87,7 +87,7 @@ namespace DevZest.Data.Presenters
             {
                 for (int i = 0; i < Inputs.Count; i++)
                 {
-                    if (HasError(Inputs[i], 0))
+                    if (HasError(Inputs[i], 0, true))
                         return ValidationErrors.Empty;
                 }
             }
@@ -127,17 +127,23 @@ namespace DevZest.Data.Presenters
             {
                 if (input.Index == i)
                     continue;
-                if (Inputs[i].IsPrecedingOf(input) && HasError(Inputs[i], flowIndex))
+                if (Inputs[i].IsPrecedingOf(input) && HasError(Inputs[i], flowIndex, false))
                     return true;
             }
             return false;
         }
 
-        internal bool HasError(Input<ScalarBinding, IScalars> input, int flowIndex)
+        internal bool HasError(Input<ScalarBinding, IScalars> input, int flowIndex, bool blockByPrecedingInput)
         {
             var flushError = GetFlushError(input.Binding[flowIndex]);
             if (flushError != null)
                 return true;
+
+            if (FlowRepeatCount > 1)
+                return false;
+
+            if (blockByPrecedingInput && AnyPrecedingInputHasError(input, flowIndex))
+                return false;
 
             if (HasError(input.Target, false))
                 return true;
