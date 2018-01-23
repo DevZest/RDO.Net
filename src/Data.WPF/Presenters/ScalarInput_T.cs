@@ -107,28 +107,25 @@ namespace DevZest.Data.Presenters
         }
 
         private Action<T, ScalarPresenter> _onRefresh;
-        internal void Refresh(T element, ScalarPresenter scalarPresenter)
+        internal void Refresh(T v, ScalarPresenter p)
         {
-            if (!IsFlushing && GetFlushError(element) == null)
-                ScalarBinding.Refresh(element, scalarPresenter);
-            var flushError = GetFlushError(element);
+            if (!IsFlushing && GetFlushError(v) == null)
+                ScalarBinding.Refresh(v, p);
+            var flushError = GetFlushError(v);
             if (_onRefresh != null)
             {
-                scalarPresenter.SetErrors(flushError, null);
-                _onRefresh(element, scalarPresenter);
-                scalarPresenter.SetErrors(null, null);
+                p.SetErrors(flushError, null);
+                _onRefresh(v, p);
+                p.SetErrors(null, null);
             }
-            RefreshValidation(element);
+            v.RefreshValidation(GetValidationErrors(p.FlowIndex));
         }
 
-        private void RefreshValidation(T element)
+        public IValidationErrors GetValidationErrors(int flowIndex = 0)
         {
-            element.RefreshValidation(ValidationErrors);
-        }
-
-        public IValidationErrors ValidationErrors
-        {
-            get { return InputManager.GetValidationErrors(this); }
+            if (flowIndex < 0 || flowIndex >= InputManager.FlowRepeatCount)
+                throw new ArgumentOutOfRangeException(nameof(flowIndex));
+            return InputManager.GetValidationErrors(this, flowIndex);
         }
 
         public bool HasValidationError

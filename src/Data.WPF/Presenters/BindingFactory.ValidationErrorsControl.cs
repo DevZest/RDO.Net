@@ -75,7 +75,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<ValidationErrorsControl>(
                 onRefresh: (v, p) =>
                 {
-                    var errors = source.ValidationErrors;
+                    var errors = source.GetValidationErrors(p.FlowIndex);
                     if (ShouldUpdateItemsSource(v, errors))
                         v.ItemsSource = errors;
                 },

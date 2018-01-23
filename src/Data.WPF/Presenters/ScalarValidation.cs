@@ -94,11 +94,11 @@ namespace DevZest.Data.Presenters
             return ValidationErrors.Empty.Merge(errors).Merge(asyncErrors).Seal();
         }
 
-        internal IValidationErrors GetErrors(Input<ScalarBinding, IScalars> input)
+        internal IValidationErrors GetErrors(Input<ScalarBinding, IScalars> input, int flowIndex)
         {
             Debug.Assert(input != null);
 
-            var flushError = GetFlushError(input.Binding[0]);
+            var flushError = GetFlushError(input.Binding[flowIndex]);
             if (flushError != null)
                 return flushError;
 

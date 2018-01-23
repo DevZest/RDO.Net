@@ -78,9 +78,9 @@ namespace DevZest.Data.Presenters.Primitives
             return _scalarValidation == null ? ValidationErrors.Empty : _scalarValidation.GetErrors(dataView);
         }
 
-        internal IValidationErrors GetValidationErrors(Input<ScalarBinding, IScalars> input)
+        internal IValidationErrors GetValidationErrors(Input<ScalarBinding, IScalars> input, int flowIndex)
         {
-            return _scalarValidation == null ? ValidationErrors.Empty : _scalarValidation.GetErrors(input);
+            return _scalarValidation == null ? ValidationErrors.Empty : _scalarValidation.GetErrors(input, flowIndex);
         }
 
         internal bool HasValidationError(Input<ScalarBinding, IScalars> input)
