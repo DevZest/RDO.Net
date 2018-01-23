@@ -450,6 +450,8 @@ namespace DevZest.Data.Presenters.Primitives
 
             DataPresenter?.OnViewRefreshing();
 
+            DataPresenter?.View?.RefreshScalarValidationErrors();
+
             RefreshScalarElements();
             RefreshContainerViews();
 

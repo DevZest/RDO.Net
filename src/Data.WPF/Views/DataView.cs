@@ -248,5 +248,12 @@ namespace DevZest.Data.Views
             get { return (bool)GetValue(dataLoadCancellableProperty); }
             set { SetValue(DataLoadCancellablePropertyKey, BooleanBoxes.Box(value)); }
         }
+
+        internal void RefreshScalarValidationErrors()
+        {
+            var layoutManager = LayoutManager;
+            if (layoutManager != null)
+                this.RefreshValidation(layoutManager?.GetValidationErrors(this));
+        }
     }
 }
