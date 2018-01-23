@@ -32,17 +32,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <dz:DataView x:Name="_dataView" Background="White" Margin="5" />
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
             <Button Content="OK" IsDefault="True" Command="{x:Static local:RegistrationWindow+Commands.Submit}" />
             <Button Content="Cancel" IsCancel="True" />
         </UniformGrid>
-        <TextBlock Grid.Row="2">
-            <Run>Note:</Run><LineBreak/>
-            <Run>Email Address: required, must be a valid email address;</Run><LineBreak/>
-            <Run>Password: required, must be 6-20 characters long.</Run>
-        </TextBlock>
     </Grid>
 </Window>
