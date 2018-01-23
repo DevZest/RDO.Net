@@ -417,7 +417,7 @@ namespace DevZest.Data.Presenters
             var rowPresenter = rowView.RowPresenter;
             for (int i = 0; i < Inputs.Count; i++)
             {
-                if (HasError(rowPresenter, Inputs[i]))
+                if (HasError(rowPresenter, Inputs[i], true))
                     return ValidationErrors.Empty;
             }
 
@@ -452,13 +452,13 @@ namespace DevZest.Data.Presenters
             {
                 if (input.Index == i)
                     continue;
-                if (Inputs[i].IsPrecedingOf(input) && HasError(rowPresenter, Inputs[i]))
+                if (Inputs[i].IsPrecedingOf(input) && HasError(rowPresenter, Inputs[i], false))
                     return true;
             }
             return false;
         }
 
-        internal bool HasError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
+        internal bool HasError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool blockByPrecedingInput)
         {
             if (rowPresenter == CurrentRow)
             {
@@ -466,6 +466,9 @@ namespace DevZest.Data.Presenters
                 if (flushError != null)
                     return true;
             }
+
+            if (blockByPrecedingInput && AnyPrecedingInputHasError(rowPresenter, input))
+                return false;
 
             if (HasError(rowPresenter, input.Target, false))
                 return true;

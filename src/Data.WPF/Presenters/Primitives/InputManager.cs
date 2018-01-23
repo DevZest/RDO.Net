@@ -112,7 +112,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal bool HasValidationError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
         {
-            return _rowValidation == null ? false : _rowValidation.HasError(rowPresenter, input);
+            return _rowValidation == null ? false : _rowValidation.HasError(rowPresenter, input, true);
         }
 
         protected override void Reload()
