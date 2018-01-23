@@ -38,9 +38,9 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(x != null && y != null);
             var result = x.AutoSizeOrder.CompareTo(y.AutoSizeOrder);
-            if (result != 0)
-                return result;
-            return x.Ordinal.CompareTo(y.Ordinal);
+            if (result == 0)
+                result = x.Ordinal.CompareTo(y.Ordinal);
+            return result;
         }
 
         protected IConcatList<T> FilterAutoSizeBindings(Func<T, bool> predict)
