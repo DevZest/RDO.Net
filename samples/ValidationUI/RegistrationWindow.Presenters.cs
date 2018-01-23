@@ -91,14 +91,12 @@ namespace ValidationUI
                     .AddBinding(2, 11, interests6)
                     .AddBinding(1, 12, interests7)
                     .AddBinding(2, 12, interests8)
-                    .AddBinding(1, 1, 2, 1, userName.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
-                    .AddBinding(1, 3, 2, 3, emailAddress.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
-                    .AddBinding(1, 5, 2, 5, password.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
-                    .AddBinding(1, 7, 2, 7, confirmPassword.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
-                    .AddBinding(1, 8, 2, 8, passwordMismatch.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
-                    .AddBinding(1, 13, 2, 13, interestsValidation.Input.BindToValidationErrorsControl().WithAutoSizeOrder(1))
-
-                    ;
+                    .AddBinding(1, 1, 2, 1, userName.Input.BindToValidationErrorsControl())
+                    .AddBinding(1, 3, 2, 3, emailAddress.Input.BindToValidationErrorsControl())
+                    .AddBinding(1, 5, 2, 5, password.Input.BindToValidationErrorsControl())
+                    .AddBinding(1, 7, 2, 7, confirmPassword.Input.BindToValidationErrorsControl())
+                    .AddBinding(1, 8, 2, 8, passwordMismatch.Input.BindToValidationErrorsControl())
+                    .AddBinding(1, 13, 2, 13, interestsValidation.Input.BindToValidationErrorsControl());
             }
         }
     }

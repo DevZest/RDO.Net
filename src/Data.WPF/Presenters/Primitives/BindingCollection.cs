@@ -37,7 +37,10 @@ namespace DevZest.Data.Presenters.Primitives
         private static int CompareByAutoSizeOrder(T x, T y)
         {
             Debug.Assert(x != null && y != null);
-            return x.AutoSizeOrder.CompareTo(y.AutoSizeOrder);
+            var result = x.AutoSizeOrder.CompareTo(y.AutoSizeOrder);
+            if (result != 0)
+                return result;
+            return x.Ordinal.CompareTo(y.Ordinal);
         }
 
         protected IConcatList<T> FilterAutoSizeBindings(Func<T, bool> predict)
