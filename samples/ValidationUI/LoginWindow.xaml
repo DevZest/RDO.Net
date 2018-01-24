@@ -8,6 +8,12 @@
         mc:Ignorable="d"
         Title="User Login (Lite)" WindowStartupLocation="CenterOwner" Width="370" SizeToContent="Height" ResizeMode="NoResize">
     <Window.Resources>
+        <ControlTemplate x:Key="ErrorTemplate">
+            <StackPanel Orientation="Horizontal">
+                <AdornedElementPlaceholder />
+                <TextBlock Text="*" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </StackPanel>
+        </ControlTemplate>
         <Style TargetType="Label">
             <Setter Property="Margin" Value="5" />
             <Setter Property="HorizontalAlignment" Value="Right" />
@@ -22,10 +28,6 @@
         <Style TargetType="PasswordBox">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        <Style TargetType="dz:ValidityIndicator">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="5,0,5,0" />
-        </Style>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5" />
         </Style>
@@ -36,7 +38,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <dz:DataView x:Name="_dataView" Background="White" Margin="5" dz:Validation.ErrorTemplate="{x:Null}" />
+        <dz:DataView x:Name="_dataView" Background="White" Margin="5" dz:Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
             <Button Content="OK" IsDefault="True" Command="{x:Static local:LoginWindow+Commands.Submit}" />
             <Button Content="Cancel" IsCancel="True" />

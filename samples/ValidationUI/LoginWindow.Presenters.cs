@@ -14,8 +14,8 @@ namespace ValidationUI
                     .WithRowValidationMode(ValidationMode.Implicit)
                     .GridColumns("Auto", "*", "20")
                     .GridRows("Auto", "Auto")
-                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddress, "{0}:")).AddBinding(1, 0, emailAddress).AddBinding(2, 0, emailAddress.Input.BindToValidityIndicator())
-                    .AddBinding(0, 1, _.Password.BindToLabel(password, "{0}:")).AddBinding(1, 1, password).AddBinding(2, 1, password.Input.BindToValidityIndicator());
+                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddress, "{0}:")).AddBinding(1, 0, emailAddress)
+                    .AddBinding(0, 1, _.Password.BindToLabel(password, "{0}:")).AddBinding(1, 1, password);
             }
         }
 
@@ -30,8 +30,8 @@ namespace ValidationUI
                         .GridColumns("Auto", "*", "20")
                         .GridRows("Auto", "Auto", "Auto")
                         .RowRange(0, 2, 2, 2)
-                        .AddBinding(0, 0, @"Email Address:".BindToLabel(emailAddress)).AddBinding(1, 0, emailAddress).AddBinding(2, 0, emailAddress.Input.BindToValidityIndicator())
-                        .AddBinding(0, 1, @"Password:".BindToLabel(password)).AddBinding(1, 1, password).AddBinding(2, 1, password.Input.BindToValidityIndicator());
+                        .AddBinding(0, 0, @"Email Address:".BindToLabel(emailAddress)).AddBinding(1, 0, emailAddress)
+                        .AddBinding(0, 1, @"Password:".BindToLabel(password)).AddBinding(1, 1, password);
             }
         }
     }

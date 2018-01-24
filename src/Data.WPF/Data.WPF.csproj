@@ -47,7 +47,6 @@
     <Compile Include="Presenters\BindingFactory.ValidationErrorsControl.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationPlaceholder.cs" />
     <Compile Include="Presenters\BindingFactory.AsyncValidatorIndicator.cs" />
-    <Compile Include="Presenters\BindingFactory.ValidityIndicator.cs" />
     <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
     <Compile Include="Presenters\BindingFactory.ComboBox.cs" />
     <Compile Include="Presenters\BindingFactory.DatePicker.cs" />
@@ -118,7 +117,6 @@
     <Compile Include="Views\RowExpander.cs" />
     <Compile Include="Views\ValidationErrorsControl.cs" />
     <Compile Include="Views\ValidationPlaceholder.cs" />
-    <Compile Include="Views\ValidityIndicator.cs" />
     <Compile Include="Views\VisualStates.cs" />
     <Compile Include="Presenters\RowAsyncValidator.cs" />
     <Compile Include="Presenters\RowAsyncValidators.cs" />
@@ -284,10 +282,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\ValidationPlaceholder.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\ValidityIndicator.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
