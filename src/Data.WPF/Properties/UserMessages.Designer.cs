@@ -12,6 +12,14 @@ namespace DevZest.Data
             = new ResourceManager("DevZest.Data.UserMessages", typeof(UserMessages).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// An error occurs while validating {asynValidatorDisplayName}: {exceptionMessage}.
+        /// </summary>
+        public static string AsyncValidationFault_FormatMessage(object asynValidatorDisplayName, object exceptionMessage)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("AsyncValidationFault_FormatMessage", "asynValidatorDisplayName", "exceptionMessage"), asynValidatorDisplayName, exceptionMessage);
+        }
+
+        /// <summary>
         /// _Sort...
         /// </summary>
         public static string ColumnHeaderCommands_SortCommandText

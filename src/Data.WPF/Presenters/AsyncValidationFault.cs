@@ -21,7 +21,7 @@ namespace DevZest.Data.Presenters
 
         private static string FormatMessage(AsyncValidator source, Exception exception)
         {
-            throw new NotImplementedException();
+            return UserMessages.AsyncValidationFault_FormatMessage(source.DisplayName, exception.Message);
         }
     }
 }

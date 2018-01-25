@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AsyncValidationFault_FormatMessage" xml:space="preserve">
+    <value>An error occurs while validating {asynValidatorDisplayName}: {exceptionMessage}.</value>
+  </data>
   <data name="ColumnHeaderCommands_SortCommandText" xml:space="preserve">
     <value>_Sort...</value>
   </data>
