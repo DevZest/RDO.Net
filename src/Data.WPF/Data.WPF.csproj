@@ -99,7 +99,7 @@
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presenters\ValidationErrorType.cs" />
+    <Compile Include="Presenters\ValidationStatus.cs" />
     <Compile Include="Utilities\Check.NotNull.cs" />
     <Compile Include="Utilities\Check.CheckNotNull.cs" />
     <Compile Include="Utilities\Windows\DragHandlerBase.cs" />
