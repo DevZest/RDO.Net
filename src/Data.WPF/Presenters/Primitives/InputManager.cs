@@ -231,14 +231,14 @@ namespace DevZest.Data.Presenters.Primitives
             return element.Focus();
         }
 
-        private IReadOnlyList<FlushError> ScalarFlushErrors
+        private IReadOnlyList<FlushingError> ScalarFlushingErrors
         {
-            get { return _scalarValidation == null ? Array<FlushError>.Empty : _scalarValidation.FlushErrors; }
+            get { return _scalarValidation == null ? Array<FlushingError>.Empty : _scalarValidation.FlushingErrors; }
         }
 
-        private IReadOnlyList<FlushError> RowFlushErrors
+        private IReadOnlyList<FlushingError> RowFlushingErrors
         {
-            get { return _rowValidation == null ? Array<FlushError>.Empty : _rowValidation.FlushErrors; }
+            get { return _rowValidation == null ? Array<FlushingError>.Empty : _rowValidation.FlushingErrors; }
         }
 
         private IReadOnlyList<ScalarValidationError> ScalarValidationErrors
@@ -255,7 +255,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             get
             {
-                if (ScalarFlushErrors.Count > 0 || RowFlushErrors.Count > 0)
+                if (ScalarFlushingErrors.Count > 0 || RowFlushingErrors.Count > 0)
                     return true;
 
                 var scalarValidationErrors = ScalarValidationErrors;

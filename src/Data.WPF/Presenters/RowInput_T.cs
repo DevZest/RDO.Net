@@ -28,14 +28,14 @@ namespace DevZest.Data.Presenters
             get { return InputManager.RowValidation; }
         }
 
-        public sealed override FlushError GetFlushError(UIElement element)
+        public sealed override FlushingError GetFlushingError(UIElement element)
         {
-            return RowValidation.GetFlushError(element);
+            return RowValidation.GetFlushingError(element);
         }
 
-        internal sealed override void SetFlushError(UIElement element, FlushError inputError)
+        internal sealed override void SetFlushingError(UIElement element, FlushingError flushingError)
         {
-            RowValidation.SetFlushError(element, inputError);
+            RowValidation.SetFlushingError(element, flushingError);
         }
 
         private IColumns _target = Columns.Empty;
@@ -51,9 +51,9 @@ namespace DevZest.Data.Presenters
             get { return InputManager.CurrentRow; }
         }
 
-        public RowInput<T> WithFlushValidator(Func<T, string> flushValidaitor)
+        public RowInput<T> WithFlushingValidator(Func<T, string> flushingValidaitor)
         {
-            SetFlushValidator(flushValidaitor);
+            SetFlushingValidator(flushingValidaitor);
             return this;
         }
 
@@ -137,15 +137,15 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        public FlushError GetFlushError(RowPresenter rowPresenter)
+        public FlushingError GetFlushingError(RowPresenter rowPresenter)
         {
             RowBinding rowBinding = RowBinding;
             var element = rowBinding[rowPresenter];
             if (element != null)
             {
-                var inputError = GetFlushError(element);
-                if (inputError != null)
-                    return inputError;
+                var flushingError = GetFlushingError(element);
+                if (flushingError != null)
+                    return flushingError;
             }
             return null;
         }
@@ -167,17 +167,17 @@ namespace DevZest.Data.Presenters
             element.RefreshValidation(GetValidationErrors(rowPresenter));
         }
 
-        private Action<T, RowPresenter, FlushError> _onRefresh;
+        private Action<T, RowPresenter, FlushingError> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
-            if (!IsFlushing && GetFlushError(element) == null)
+            if (!IsFlushing && GetFlushingError(element) == null)
                 RowBinding.Refresh(element, rowPresenter);
             if (_onRefresh != null)
-                _onRefresh(element, rowPresenter, GetFlushError(element));
+                _onRefresh(element, rowPresenter, GetFlushingError(element));
             RefreshValidation(element, rowPresenter);
         }
 
-        public RowInput<T> WithRefreshAction(Action<T, RowPresenter, FlushError> onRefresh)
+        public RowInput<T> WithRefreshAction(Action<T, RowPresenter, FlushingError> onRefresh)
         {
             VerifyNotSealed();
             _onRefresh = onRefresh;

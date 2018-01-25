@@ -22,18 +22,18 @@ namespace DevZest.Data.Presenters.Primitives
         where T : UIElement, new()
         where TBinding : TwoWayBinding
     {
-        internal Input(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
+        internal Input(Trigger<T> flushingTrigger, Trigger<T> progressiveFlushingTrigger)
         {
-            if (flushTrigger == null)
-                throw new ArgumentNullException(nameof(flushTrigger));
-            VerifyNotInitialized(flushTrigger, nameof(flushTrigger));
-            _flushTrigger = flushTrigger;
-            _flushTrigger.ExecuteAction = Flush;
+            if (flushingTrigger == null)
+                throw new ArgumentNullException(nameof(flushingTrigger));
+            VerifyNotInitialized(flushingTrigger, nameof(flushingTrigger));
+            _flushingTrigger = flushingTrigger;
+            _flushingTrigger.ExecuteAction = Flush;
 
-            if (progressiveFlushTrigger != null)
+            if (progressiveFlushingTrigger != null)
             {
-                _progressFlushTrigger = progressiveFlushTrigger;
-                _progressFlushTrigger.ExecuteAction = ProgressiveFlush;
+                _progressiveFlushingTrigger = progressiveFlushingTrigger;
+                _progressiveFlushingTrigger.ExecuteAction = ProgressiveFlush;
             }
         }
 
@@ -43,9 +43,9 @@ namespace DevZest.Data.Presenters.Primitives
                 throw new ArgumentException(DiagnosticMessages.Input_TriggerAlreadyInitialized, paramName);
         }
 
-        private readonly Trigger<T> _flushTrigger;
-        private readonly Trigger<T> _progressFlushTrigger;
-        private Func<T, string> _flushValidator;
+        private readonly Trigger<T> _flushingTrigger;
+        private readonly Trigger<T> _progressiveFlushingTrigger;
+        private Func<T, string> _flushingValidator;
 
         internal void VerifyNotSealed()
         {
@@ -62,53 +62,53 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Binding.Template; }
         }
 
-        internal void SetFlushValidator(Func<T, string> flushValidator)
+        internal void SetFlushingValidator(Func<T, string> flushingValidator)
         {
-            if (flushValidator == null)
-                throw new ArgumentNullException(nameof(flushValidator));
+            if (flushingValidator == null)
+                throw new ArgumentNullException(nameof(flushingValidator));
 
-            _flushValidator = flushValidator;
+            _flushingValidator = flushingValidator;
         }
 
         internal void Attach(T element)
         {
-            _flushTrigger.Attach(element);
-            if (_progressFlushTrigger != null)
-                _progressFlushTrigger.Attach(element);
+            _flushingTrigger.Attach(element);
+            if (_progressiveFlushingTrigger != null)
+                _progressiveFlushingTrigger.Attach(element);
         }
 
         internal void Detach(T element)
         {
-            _flushTrigger.Detach(element);
-            if (_progressFlushTrigger != null)
-                _progressFlushTrigger.Detach(element);
+            _flushingTrigger.Detach(element);
+            if (_progressiveFlushingTrigger != null)
+                _progressiveFlushingTrigger.Detach(element);
         }
 
-        public abstract FlushError GetFlushError(UIElement element);
+        public abstract FlushingError GetFlushingError(UIElement element);
 
-        internal abstract void SetFlushError(UIElement element, FlushError inputError);
+        internal abstract void SetFlushingError(UIElement element, FlushingError flushingError);
 
         internal void ValidateFlush(T element)
         {
-            if (_flushValidator == null)
+            if (_flushingValidator == null)
                 return;
-            var oldflushError = GetFlushError(element);
-            var flushErrorDescription = _flushValidator(element);
-            if (IsFlushErrorChanged(flushErrorDescription, oldflushError))
-                SetFlushError(element, string.IsNullOrEmpty(flushErrorDescription) ? null : new FlushError(flushErrorDescription, element));
+            var oldflushingError = GetFlushingError(element);
+            var flushingErrorDescription = _flushingValidator(element);
+            if (IsFlushingErrorChanged(flushingErrorDescription, oldflushingError))
+                SetFlushingError(element, string.IsNullOrEmpty(flushingErrorDescription) ? null : new FlushingError(flushingErrorDescription, element));
         }
 
-        private static bool IsFlushErrorChanged(string flushErrorMessage, FlushError flushError)
+        private static bool IsFlushingErrorChanged(string flushingErrorMessage, FlushingError flushingError)
         {
-            return string.IsNullOrEmpty(flushErrorMessage) ? flushError != null
-                : flushError == null || flushError.Message != flushErrorMessage;
+            return string.IsNullOrEmpty(flushingErrorMessage) ? flushingError != null
+                : flushingError == null || flushingError.Message != flushingErrorMessage;
         }
 
         public bool IsFlushing { get; private set; }
 
         internal void Flush(T element)
         {
-            PerformFlush(element, _progressFlushTrigger == null || IsValidationVisible);
+            PerformFlush(element, _progressiveFlushingTrigger == null || IsValidationVisible);
         }
 
         internal abstract bool IsValidationVisible { get; }
@@ -125,7 +125,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             IsFlushing = true;
             ValidateFlush(element);
-            if (GetFlushError(element) == null)
+            if (GetFlushingError(element) == null)
                 FlushCore(element, makeProgress);
             IsFlushing = false;
         }

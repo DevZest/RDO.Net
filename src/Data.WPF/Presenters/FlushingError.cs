@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public class FlushError : ValidationError<UIElement>
+    public class FlushingError : ValidationError<UIElement>
     {
-        public FlushError(string message, UIElement source)
+        public FlushingError(string message, UIElement source)
             : base(message, source)
         {
             if (source == null)

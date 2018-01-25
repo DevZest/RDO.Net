@@ -40,35 +40,35 @@ namespace DevZest.Data.Presenters
             _inputManager.InvalidateView();
         }
 
-        private FlushErrorCollection _flushErrors;
-        private FlushErrorCollection InternalFlushErrors
+        private FlushingErrorCollection _flushingErrors;
+        private FlushingErrorCollection InternalFlushingErrors
         {
             get
             {
-                if (_flushErrors == null)
-                    _flushErrors = new FlushErrorCollection(_inputManager);
-                return _flushErrors;
+                if (_flushingErrors == null)
+                    _flushingErrors = new FlushingErrorCollection(_inputManager);
+                return _flushingErrors;
             }
         }
 
-        public IReadOnlyList<FlushError> FlushErrors
+        public IReadOnlyList<FlushingError> FlushingErrors
         {
             get
             {
-                if (_flushErrors == null)
-                    return Array<FlushError>.Empty;
-                return _flushErrors;
+                if (_flushingErrors == null)
+                    return Array<FlushingError>.Empty;
+                return _flushingErrors;
             }
         }
 
-        internal FlushError GetFlushError(UIElement element)
+        internal FlushingError GetFlushingError(UIElement element)
         {
-            return _flushErrors.GetFlushError(element);
+            return _flushingErrors.GetFlushingError(element);
         }
 
-        internal void SetFlushError(UIElement element, FlushError inputError)
+        internal void SetFlushingError(UIElement element, FlushingError flushingError)
         {
-            InternalFlushErrors.SetFlushError(element, inputError);
+            InternalFlushingErrors.SetFlushError(element, flushingError);
         }
 
         private IScalarValidationErrors _errors = ScalarValidationErrors.Empty;
@@ -106,9 +106,9 @@ namespace DevZest.Data.Presenters
         {
             Debug.Assert(input != null);
 
-            var flushError = GetFlushError(input.Binding[flowIndex]);
-            if (flushError != null)
-                return flushError;
+            var flushingError = GetFlushingError(input.Binding[flowIndex]);
+            if (flushingError != null)
+                return flushingError;
 
             if (FlowRepeatCount > 1)
                 return ValidationErrors.Empty;
@@ -135,8 +135,8 @@ namespace DevZest.Data.Presenters
 
         internal bool HasError(Input<ScalarBinding, IScalars> input, int flowIndex, bool blockByPrecedingInput)
         {
-            var flushError = GetFlushError(input.Binding[flowIndex]);
-            if (flushError != null)
+            var flushingError = GetFlushingError(input.Binding[flowIndex]);
+            if (flushingError != null)
                 return true;
 
             if (FlowRepeatCount > 1)

@@ -54,35 +54,35 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.CurrentRow; }
         }
 
-        private FlushErrorCollection _flushErrors;
-        private FlushErrorCollection InternalFlushErrors
+        private FlushingErrorCollection _flushingErrors;
+        private FlushingErrorCollection InternalFlushingErrors
         {
             get
             {
-                if (_flushErrors == null)
-                    _flushErrors = new FlushErrorCollection(_inputManager);
-                return _flushErrors;
+                if (_flushingErrors == null)
+                    _flushingErrors = new FlushingErrorCollection(_inputManager);
+                return _flushingErrors;
             }
         }
 
-        public IReadOnlyList<FlushError> FlushErrors
+        public IReadOnlyList<FlushingError> FlushingErrors
         {
             get
             {
-                if (_flushErrors == null)
-                    return Array<FlushError>.Empty;
-                return _flushErrors;
+                if (_flushingErrors == null)
+                    return Array<FlushingError>.Empty;
+                return _flushingErrors;
             }
         }
 
-        internal FlushError GetFlushError(UIElement element)
+        internal FlushingError GetFlushingError(UIElement element)
         {
-            return _flushErrors.GetFlushError(element);
+            return _flushingErrors.GetFlushingError(element);
         }
 
-        internal void SetFlushError(UIElement element, FlushError value)
+        internal void SetFlushingError(UIElement element, FlushingError value)
         {
-            InternalFlushErrors.SetFlushError(element, value);
+            InternalFlushingErrors.SetFlushError(element, value);
         }
 
         private Dictionary<RowPresenter, IDataValidationErrors> _errorsByRow;
@@ -433,9 +433,9 @@ namespace DevZest.Data.Presenters
 
             if (rowPresenter == CurrentRow)
             {
-                var flushError = GetFlushError(input.Binding[rowPresenter]);
-                if (flushError != null)
-                    return flushError;
+                var flushingError = GetFlushingError(input.Binding[rowPresenter]);
+                if (flushingError != null)
+                    return flushingError;
             }
 
             if (AnyPrecedingInputHasError(rowPresenter, input))
@@ -462,8 +462,8 @@ namespace DevZest.Data.Presenters
         {
             if (rowPresenter == CurrentRow)
             {
-                var flushError = GetFlushError(input.Binding[rowPresenter]);
-                if (flushError != null)
+                var flushingError = GetFlushingError(input.Binding[rowPresenter]);
+                if (flushingError != null)
                     return true;
             }
 

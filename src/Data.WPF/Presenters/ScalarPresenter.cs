@@ -19,9 +19,7 @@ namespace DevZest.Data.Presenters
 
         public int FlowIndex { get; private set; } = -1;
 
-        public FlushError InputError { get; private set; }
-
-        public FlushError ValueError { get; private set; }
+        public FlushingError FlushingError { get; internal set; }
 
         private Stack<int> _flowIndexes = new Stack<int>();
 
@@ -29,19 +27,12 @@ namespace DevZest.Data.Presenters
         {
             _flowIndexes.Push(FlowIndex);
             FlowIndex = flowIndex;
-            InputError = null;
-            ValueError = null;
+            FlushingError = null;
         }
 
         internal void ExitSetup()
         {
             FlowIndex = _flowIndexes.Pop();
-        }
-
-        internal void SetErrors(FlushError inputError, FlushError valueError)
-        {
-            InputError = inputError;
-            ValueError = valueError;
         }
     }
 }

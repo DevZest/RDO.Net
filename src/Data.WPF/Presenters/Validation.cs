@@ -183,7 +183,7 @@ namespace DevZest.Data.Presenters
             if (errors == null || errors.Count == 0)
                 return null;
 
-            if (errors.Count == 1 && errors[0] is FlushError)
+            if (errors.Count == 1 && errors[0] is FlushingError)
                 return ValidationErrorType.FlushError;
             else
                 return ValidationErrorType.Error;

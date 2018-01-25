@@ -30,19 +30,19 @@ namespace DevZest.Data.Presenters
             get { return InputManager.ScalarValidation; }
         }
 
-        public sealed override FlushError GetFlushError(UIElement element)
+        public sealed override FlushingError GetFlushingError(UIElement element)
         {
-            return ScalarValidation.GetFlushError(element);
+            return ScalarValidation.GetFlushingError(element);
         }
 
-        internal sealed override void SetFlushError(UIElement element, FlushError inputError)
+        internal sealed override void SetFlushingError(UIElement element, FlushingError flushingError)
         {
-            ScalarValidation.SetFlushError(element, inputError);
+            ScalarValidation.SetFlushingError(element, flushingError);
         }
 
-        public ScalarInput<T> WithFlushValidator(Func<T, string> flushValidator)
+        public ScalarInput<T> WithFlushingValidator(Func<T, string> flushingValidator)
         {
-            SetFlushValidator(flushValidator);
+            SetFlushingValidator(flushingValidator);
             return this;
         }
 
@@ -109,14 +109,14 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onRefresh;
         internal void Refresh(T v, ScalarPresenter p)
         {
-            if (!IsFlushing && GetFlushError(v) == null)
+            if (!IsFlushing && GetFlushingError(v) == null)
                 ScalarBinding.Refresh(v, p);
-            var flushError = GetFlushError(v);
+            var flushingError = GetFlushingError(v);
             if (_onRefresh != null)
             {
-                p.SetErrors(flushError, null);
+                p.FlushingError = flushingError;
                 _onRefresh(v, p);
-                p.SetErrors(null, null);
+                p.FlushingError = null;
             }
             v.RefreshValidation(GetValidationErrors(p.FlowIndex));
         }

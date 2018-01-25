@@ -25,7 +25,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = p.GetValue(source).ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -48,7 +48,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = p.GetValue(source).ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -72,7 +72,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = p.GetValue(source).ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -95,7 +95,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = p.GetValue(source).ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -118,7 +118,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = p.GetValue(source).ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -141,7 +141,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = p.GetValue(source).ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -172,7 +172,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -195,7 +195,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -218,7 +218,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -241,7 +241,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -264,7 +264,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
@@ -287,7 +287,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 Int16 result;
                 return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
@@ -305,7 +305,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 Int32 result;
                 return Int32.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
@@ -323,7 +323,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 Int64 result;
                 return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
@@ -341,7 +341,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 Single result;
                 return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
@@ -359,7 +359,7 @@ namespace DevZest.Data.Presenters
             {
                 v.Text = source.Value.ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
-            .WithFlushValidator(v =>
+            .WithFlushingValidator(v =>
             {
                 Double result;
                 return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));

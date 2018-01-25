@@ -56,7 +56,7 @@
     <Compile Include="Presenters\BindingFactory.Label.cs" />
     <Compile Include="Presenters\BindingFactory.TextBlock.cs" />
     <Compile Include="Presenters\InitialFocus.cs" />
-    <Compile Include="Presenters\Primitives\FlushErrorCollection.cs" />
+    <Compile Include="Presenters\Primitives\FlushingErrorCollection.cs" />
     <Compile Include="Presenters\RoutedEventTrigger.cs" />
     <Compile Include="Presenters\IScalarAsyncValidators.cs" />
     <Compile Include="Presenters\IScalars.cs" />
@@ -232,7 +232,7 @@
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
     <Compile Include="Presenters\ValidationMode.cs" />
     <Compile Include="Presenters\RowValidation.cs" />
-    <Compile Include="Presenters\FlushError.cs" />
+    <Compile Include="Presenters\FlushingError.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
