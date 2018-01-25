@@ -95,6 +95,9 @@
     <Compile Include="Views\AsyncValidatorIndicator.cs" />
     <Compile Include="Views\GridHeader.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
+    <Compile Include="Views\Primitives\Spinner.xaml.cs">
+      <DependentUpon>Spinner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SelectionHandler.cs" />
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
@@ -285,6 +288,10 @@
     <Page Include="Themes\ValidationPlaceholder.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Primitives\Spinner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SortWindow.xaml">
       <SubType>Designer</SubType>

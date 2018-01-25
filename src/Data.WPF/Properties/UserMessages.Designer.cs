@@ -148,6 +148,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Validating...
+        /// </summary>
+        public static string Validation_Validating
+        {
+            get { return GetString("Validation_Validating"); }
+        }
+
+        /// <summary>
         /// Cancel
         /// </summary>
         public static string _Cancel

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ValidationUI"
         xmlns:dz="http://schemas.devzest.com/data/windows"
         mc:Ignorable="d"
-        Title="User Registration" WindowStartupLocation="CenterOwner" Width="350" SizeToContent="Height" ResizeMode="NoResize">
+        Title="User Registration" WindowStartupLocation="CenterOwner" Width="350" SizeToContent="Height" ResizeMode="CanResize">
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="Margin" Value="5,5,0,5" />
