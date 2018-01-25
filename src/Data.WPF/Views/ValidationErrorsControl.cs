@@ -56,6 +56,30 @@ namespace DevZest.Data.Views
             }
         }
 
+        public static IValueConverter ItemsCountToBulletVisibilityConverter
+        {
+            get { return _ValidationErrorsConverter.Singleton; }
+        }
+
+        private class _ItemsCountToBulletVisibilityConverter : IValueConverter
+        {
+            public static readonly _ItemsCountToBulletVisibilityConverter Singleton = new _ItemsCountToBulletVisibilityConverter();
+            private _ItemsCountToBulletVisibilityConverter()
+            {
+            }
+
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                var itemsCount = (int)value;
+                return itemsCount == 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                throw new NotSupportedException();
+            }
+        }
+
         private static readonly DependencyPropertyKey ItemsCountPropertyKey;
         public static readonly DependencyProperty ItemsCountProperty;
 

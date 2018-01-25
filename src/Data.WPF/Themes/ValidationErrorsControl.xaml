@@ -5,6 +5,24 @@
     xmlns:dz="clr-namespace:DevZest.Data;assembly=DevZest.Data.Common">
 
     <Style TargetType="{x:Type local:ValidationErrorsControl}">
+        <Style.Resources>
+            <DataTemplate DataType="{x:Type dz:ValidationError}">
+                <BulletDecorator>
+                    <BulletDecorator.Bullet>
+                        <Ellipse Height="5" Width="5"
+                             Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=Foreground, Converter={x:Static local:ValidationErrorsControl.ItemsCountToBulletVisibilityConverter}}"
+                             Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=Foreground}" />
+                    </BulletDecorator.Bullet>
+                    <TextBlock x:Name="_textBlock" TextWrapping="Wrap" Margin="3,0,0,0" Text="{Binding Message}"
+                            Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=Foreground}"
+                            FontFamily="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontFamily}"
+                            FontSize="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontSize}"
+                            FontWeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontWeight}"
+                            FontStretch="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontStretch}"
+                            FontStyle="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontStyle}"/>
+                </BulletDecorator>
+            </DataTemplate>
+        </Style.Resources>
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="Red" />
@@ -20,41 +38,5 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate DataType="{x:Type dz:ValidationError}">
-                    <BulletDecorator>
-                        <BulletDecorator.Bullet>
-                            <Ellipse Height="5" Width="5"
-                                Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=Foreground}" />
-                        </BulletDecorator.Bullet>
-                        <TextBlock x:Name="_textBlock" TextWrapping="Wrap" Margin="3,0,0,0" Text="{Binding Message}"
-                            Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=Foreground}"
-                            FontFamily="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontFamily}"
-                            FontSize="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontSize}"
-                            FontWeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontWeight}"
-                            FontStretch="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontStretch}"
-                            FontStyle="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontStyle}"/>
-                    </BulletDecorator>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="ItemsCount" Value="1">
-                <Setter Property="ItemTemplate">
-                    <Setter.Value>
-                        <DataTemplate DataType="{x:Type dz:ValidationError}">
-                            <TextBlock x:Name="_textBlock" TextWrapping="Wrap" Margin="3,0,0,0" Text="{Binding Message}"
-                            Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=Foreground}"
-                            FontFamily="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontFamily}"
-                            FontSize="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontSize}"
-                            FontWeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontWeight}"
-                            FontStretch="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontStretch}"
-                            FontStyle="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=FontStyle}"/>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Trigger>
-        </Style.Triggers>
     </Style>
 </ResourceDictionary>
