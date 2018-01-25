@@ -167,20 +167,92 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddAsyncValidator(ScalarAsyncValidator validator)
+        public TemplateBuilder AddAsyncValidator(IScalars sourceScalars, Func<Task<string>> validator, string displayName)
         {
+            if (sourceScalars == null || sourceScalars.Count == 0)
+                throw new ArgumentNullException(nameof(sourceScalars));
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
-            Template.AddAsyncValidator(validator);
+            Template.AddAsyncValidator(ScalarAsyncValidator.Create(displayName, sourceScalars, validator));
             return this;
         }
 
-        public TemplateBuilder AddAsyncValidator(RowAsyncValidator validator)
+        public TemplateBuilder AddAsyncValidator(IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator, string displayName)
         {
+            if (sourceScalars == null || sourceScalars.Count == 0)
+                throw new ArgumentNullException(nameof(sourceScalars));
             if (validator == null)
                 throw new ArgumentNullException(nameof(validator));
-            Template.AddAsyncValidator(validator);
+            Template.AddAsyncValidator(ScalarAsyncValidator.Create(displayName, sourceScalars, validator));
             return this;
+        }
+
+        public TemplateBuilder AddAsyncValidator<T>(ScalarInput<T> input, Func<Task<string>> validator, string displayName)
+            where T : UIElement, new()
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            return AddAsyncValidator(input.Target, validator, displayName);
+        }
+
+        public TemplateBuilder AddAsyncValidator<T>(ScalarInput<T> input, Func<Task<IEnumerable<string>>> validator, string displayName)
+            where T : UIElement, new()
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            return AddAsyncValidator(input.Target, validator, displayName);
+        }
+
+        private static string GetDefaultDisplayName(IColumns sourceColumns)
+        {
+            if (sourceColumns.Count == 1)
+                return sourceColumns.First<Column>().DisplayName;
+            else
+                return string.Format("[{0}]", string.Join(", ", sourceColumns.Select(x => x.DisplayName)));
+        }
+
+        public TemplateBuilder AddAsyncValidator(IColumns sourceColumns, Func<DataRow, Task<string>> validator, string displayName = null)
+        {
+            if (sourceColumns == null || sourceColumns.Count == 0)
+                throw new ArgumentNullException(nameof(sourceColumns));
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
+            if (string.IsNullOrEmpty(displayName))
+                displayName = GetDefaultDisplayName(sourceColumns);
+            Template.AddAsyncValidator(RowAsyncValidator.Create(displayName, sourceColumns, validator));
+            return this;
+        }
+
+        public TemplateBuilder AddAsyncValidator(IColumns sourceColumns, Func<DataRow, Task<IEnumerable<string>>> validator, string displayName = null)
+        {
+            if (sourceColumns == null || sourceColumns.Count == 0)
+                throw new ArgumentNullException(nameof(sourceColumns));
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator));
+            if (string.IsNullOrEmpty(displayName))
+                displayName = GetDefaultDisplayName(sourceColumns);
+            Template.AddAsyncValidator(RowAsyncValidator.Create(displayName, sourceColumns, validator));
+            return this;
+        }
+
+        public TemplateBuilder AddAsyncValidator<T>(RowInput<T> input, Func<DataRow, Task<string>> validator, string displayName = null)
+            where T : UIElement, new()
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            return AddAsyncValidator(input.Target, validator, displayName);
+        }
+
+        public TemplateBuilder AddAsyncValidator<T>(RowInput<T> input, Func<DataRow, Task<IEnumerable<string>>> validator, string displayName = null)
+            where T : UIElement, new()
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            return AddAsyncValidator(input.Target, validator, displayName);
         }
 
         [DefaultValue(ValidationMode.Progressive)]

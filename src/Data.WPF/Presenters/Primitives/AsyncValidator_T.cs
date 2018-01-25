@@ -7,6 +7,11 @@ namespace DevZest.Data.Presenters.Primitives
     public abstract class AsyncValidator<T> : AsyncValidator
         where T : class
     {
+        protected AsyncValidator(string displayName)
+            : base(displayName)
+        {
+        }
+
         private bool _pendingValidationRequest;
 
         private Task<T> _awaitingTask;

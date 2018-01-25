@@ -148,22 +148,6 @@ namespace DevZest.Data.Presenters
             return ScalarBinding;
         }
 
-        public ScalarAsyncValidator CreateAsyncValidator(Func<Task<string>> validator)
-        {
-            if (validator == null)
-                throw new ArgumentNullException(nameof(validator));
-
-            return ScalarAsyncValidator.Create(Target, validator);
-        }
-
-        public ScalarAsyncValidator CreateAsyncValidator(Func<Task<IEnumerable<string>>> validator)
-        {
-            if (validator == null)
-                throw new ArgumentNullException(nameof(validator));
-
-            return ScalarAsyncValidator.Create(Target, validator);
-        }
-
         internal override bool IsPrecedingOf(Input<ScalarBinding, IScalars> input)
         {
             Debug.Assert(input != null && input != this);

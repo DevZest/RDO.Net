@@ -184,21 +184,6 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public RowAsyncValidator CreateAsyncValidator(Func<DataRow, Task<string>> validator)
-        {
-            if (validator == null)
-                throw new ArgumentNullException(nameof(validator));
-            return RowAsyncValidator.Create(Target, validator);
-        }
-
-        public RowAsyncValidator CreateAsyncValidator(Func<DataRow, Task<IEnumerable<string>>> validator)
-        {
-            if (validator == null)
-                throw new ArgumentNullException(nameof(validator));
-
-            return RowAsyncValidator.Create(Target, validator);
-        }
-
         public RowBinding<T> EndInput()
         {
             _target = _target.Seal();

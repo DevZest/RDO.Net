@@ -6,6 +6,17 @@ namespace DevZest.Data.Presenters
 {
     public abstract class AsyncValidator
     {
+        protected AsyncValidator(string displayName)
+        {
+            _displayName = displayName;
+        }
+
+        private readonly string _displayName;
+        public string DisplayName
+        {
+            get { return _displayName; }
+        }
+
         private Template _template;
         public Template Template
         {

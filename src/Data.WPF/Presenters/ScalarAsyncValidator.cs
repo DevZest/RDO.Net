@@ -10,20 +10,20 @@ namespace DevZest.Data.Presenters
 {
     public abstract class ScalarAsyncValidator : AsyncValidator<IScalarValidationErrors>, IScalarAsyncValidators
     {
-        internal static ScalarAsyncValidator Create(IScalars sourceScalars, Func<Task<string>> validator)
+        internal static ScalarAsyncValidator Create(string displayName, IScalars sourceScalars, Func<Task<string>> validator)
         {
-            return new SingleErrorValidator(sourceScalars, validator);
+            return new SingleErrorValidator(displayName, sourceScalars, validator);
         }
 
-        internal static ScalarAsyncValidator Create(IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator)
+        internal static ScalarAsyncValidator Create(string displayName, IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator)
         {
-            return new MultipleErrorsValidator(sourceScalars, validator);
+            return new MultipleErrorsValidator(displayName, sourceScalars, validator);
         }
 
         private sealed class SingleErrorValidator : ScalarAsyncValidator
         {
-            public SingleErrorValidator(IScalars scalars, Func<Task<string>> validator)
-                : base(scalars)
+            public SingleErrorValidator(string displayName, IScalars scalars, Func<Task<string>> validator)
+                : base(displayName, scalars)
             {
                 _validator = validator;
             }
@@ -39,8 +39,8 @@ namespace DevZest.Data.Presenters
 
         private sealed class MultipleErrorsValidator : ScalarAsyncValidator
         {
-            public MultipleErrorsValidator(IScalars scalars, Func<Task<IEnumerable<string>>> validator)
-                : base(scalars)
+            public MultipleErrorsValidator(string displayName, IScalars scalars, Func<Task<IEnumerable<string>>> validator)
+                : base(displayName, scalars)
             {
                 _validator = validator;
             }
@@ -62,7 +62,8 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private ScalarAsyncValidator(IScalars sourceScalars)
+        private ScalarAsyncValidator(string displayName, IScalars sourceScalars)
+            : base(displayName)
         {
             Debug.Assert(sourceScalars != null && sourceScalars.Count > 0);
             _sourceScalars = sourceScalars.Seal();
