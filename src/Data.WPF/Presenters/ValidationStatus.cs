@@ -3,7 +3,7 @@
     public enum ValidationStatus
     {
         FlushingError,
-        Invalid,
+        DataError,
         Validating
     }
 }
