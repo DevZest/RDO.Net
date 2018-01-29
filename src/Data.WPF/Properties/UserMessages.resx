@@ -168,6 +168,9 @@
   <data name="SortWindow_Title" xml:space="preserve">
     <value>Sort</value>
   </data>
+  <data name="Validation_Validated" xml:space="preserve">
+    <value>Validated</value>
+  </data>
   <data name="Validation_Validating" xml:space="preserve">
     <value>Validating...</value>
   </data>

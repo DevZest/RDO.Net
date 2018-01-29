@@ -10,6 +10,27 @@ namespace DevZest.Data.Presenters
 {
     public static class Validation
     {
+        internal static IValidationErrors ValidatingMessage
+        {
+            get { return DummyError.Validating; }
+        }
+
+        internal static IValidationErrors ValidatedMessage
+        {
+            get { return DummyError.Validated; }
+        }
+
+        private sealed class DummyError : ValidationError
+        {
+            public static readonly DummyError Validating = new DummyError(UserMessages.Validation_Validating);
+            public static readonly DummyError Validated = new DummyError(UserMessages.Validation_Validated);
+
+            private DummyError(string message)
+                : base(message)
+            {
+            }
+        }
+
         internal static class Templates
         {
             public static readonly TemplateId Error = new TemplateId(typeof(Validation));
@@ -31,6 +52,10 @@ namespace DevZest.Data.Presenters
         public static readonly DependencyProperty ValidatingTemplateProperty = DependencyProperty.RegisterAttached("ValidatingTemplate",
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Validating.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnValidatingTemplateChanged)));
+
+        public static readonly DependencyProperty ValidatedTemplateProperty = DependencyProperty.RegisterAttached("ValidatedTemplate",
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(null,
+                FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnValidatedTemplateChanged)));
 
         public static ValidationStatus? GetStatus(this DependencyObject element)
         {
@@ -75,6 +100,16 @@ namespace DevZest.Data.Presenters
             element.SetValue(ValidatingTemplateProperty, value);
         }
 
+        public static ControlTemplate GetValidatedTemplate(this DependencyObject element)
+        {
+            return (ControlTemplate)element.GetValue(ValidatedTemplateProperty);
+        }
+
+        public static void SetValidatedTemplate(this DependencyObject element, ControlTemplate value)
+        {
+            element.SetValue(ValidatedTemplateProperty, value);
+        }
+
         private static void OnStatusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var status = (ValidationStatus?)e.NewValue;
@@ -84,6 +119,8 @@ namespace DevZest.Data.Presenters
                 System.Windows.Controls.Validation.SetErrorTemplate(d, d.GetFlushingErrorTemplate());
             else if (status == ValidationStatus.Validating)
                 System.Windows.Controls.Validation.SetErrorTemplate(d, d.GetValidatingTemplate());
+            else if (status == ValidationStatus.Validated)
+                System.Windows.Controls.Validation.SetErrorTemplate(d, d.GetValidatedTemplate());
             else
             {
                 Debug.Assert(status == null);
@@ -106,6 +143,12 @@ namespace DevZest.Data.Presenters
         private static void OnValidatingTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d.GetStatus() == ValidationStatus.Validating)
+                System.Windows.Controls.Validation.SetErrorTemplate(d, (ControlTemplate)e.NewValue);
+        }
+
+        private static void OnValidatedTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d.GetStatus() == ValidationStatus.Validated)
                 System.Windows.Controls.Validation.SetErrorTemplate(d, (ControlTemplate)e.NewValue);
         }
 
@@ -180,6 +223,8 @@ namespace DevZest.Data.Presenters
         internal static void RefreshValidation(this DependencyObject element, IValidationErrors errors)
         {
             var status = GetStatus(errors);
+            if (status == ValidationStatus.Validated && element.GetValidatedTemplate() == null)
+                status = null;
             if (status.HasValue)
                 element.SetDataErrorInfo(status.Value, errors);
             else
@@ -188,8 +233,12 @@ namespace DevZest.Data.Presenters
 
         private static ValidationStatus? GetStatus(IValidationErrors errors)
         {
-            if (errors == null)
+            Debug.Assert(errors != null);
+
+            if (errors == ValidatingMessage)
                 return ValidationStatus.Validating;
+            else if (errors == ValidatedMessage)
+                return ValidationStatus.Validated;
             else if (errors.Count == 0)
                 return null;
             else if (errors.Count == 1 && errors[0] is FlushingError)
@@ -198,12 +247,9 @@ namespace DevZest.Data.Presenters
                 return ValidationStatus.DataError;
         }
 
-        private static void SetDataErrorInfo(this DependencyObject element, ValidationStatus errorType, IEnumerable messages)
+        private static void SetDataErrorInfo(this DependencyObject element, ValidationStatus status, IEnumerable messages)
         {
-            if (messages == null)
-                messages = new string[] { UserMessages.Validation_Validating };
-
-            element.SetStatus(errorType);
+            element.SetStatus(status);
 
             var binding = BindingOperations.GetBinding(element, DummyProperty);
             if (binding == null)

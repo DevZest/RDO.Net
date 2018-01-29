@@ -4,6 +4,7 @@
     {
         FlushingError,
         DataError,
-        Validating
+        Validating,
+        Validated
     }
 }
