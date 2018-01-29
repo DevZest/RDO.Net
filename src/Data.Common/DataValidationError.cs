@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
             Check.NotNull(source, nameof(source));
             if (source.Count == 0)
-                throw new ArgumentException(DiagnosticMessages.ValidationMessage_EmptySourceColumns, nameof(source));
+                throw new ArgumentException(DiagnosticMessages.ValidationError_EmptySourceColumns, nameof(source));
         }
 
         public string ToJsonString(bool isPretty)

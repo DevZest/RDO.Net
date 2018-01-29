@@ -758,9 +758,9 @@ namespace DevZest.Data
         /// <summary>
         /// The source colums cannot be empty.
         /// </summary>
-        public static string ValidationMessage_EmptySourceColumns
+        public static string ValidationError_EmptySourceColumns
         {
-            get { return GetString("ValidationMessage_EmptySourceColumns"); }
+            get { return GetString("ValidationError_EmptySourceColumns"); }
         }
 
         /// <summary>
