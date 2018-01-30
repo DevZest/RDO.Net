@@ -1,27 +1,25 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
     public sealed class AsyncValidationFault : ValidationError<AsyncValidator>
     {
-        public AsyncValidationFault(AsyncValidator source, Exception exception, Func<AsyncValidator, Exception, string> formatMessage = null)
-            : base(formatMessage == null ? FormatMessage(source, exception) : formatMessage(source, exception), source)
+        internal AsyncValidationFault(AsyncValidator source, Func<AsyncValidator, string> formatMessage)
+            : base(FormatMessage(source, formatMessage), source)
         {
             Check.NotNull(source, nameof(source));
-            Check.NotNull(exception, nameof(exception));
-
-            _exception = exception;
         }
 
-        private readonly Exception _exception;
-        public Exception Exception
+        private static string FormatMessage(AsyncValidator source, Func<AsyncValidator, string> formatMessage)
         {
-            get { return _exception; }
+            Debug.Assert(source != null && source.Exception != null);
+            return formatMessage != null ? formatMessage(source) : FormatMessage(source);
         }
 
-        private static string FormatMessage(AsyncValidator source, Exception exception)
+        internal static string FormatMessage(AsyncValidator source)
         {
-            return UserMessages.AsyncValidationFault_FormatMessage(source.DisplayName, exception.Message);
+            return UserMessages.AsyncValidationFault_FormatMessage(source.DisplayName, source.Exception.Message);
         }
     }
 }

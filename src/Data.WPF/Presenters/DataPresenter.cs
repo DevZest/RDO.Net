@@ -329,5 +329,10 @@ namespace DevZest.Data.Presenters
             throw new NotSupportedException();
         }
         #endregion
+
+        protected internal virtual string FormatFaultMessage(AsyncValidator asyncValidator)
+        {
+            return AsyncValidationFault.FormatMessage(asyncValidator);
+        }
     }
 }

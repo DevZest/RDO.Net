@@ -42,12 +42,42 @@ namespace DevZest.Data.Presenters
 
         public AsyncValidatorStatus Status { get; internal set; } = AsyncValidatorStatus.Inactive;
 
-        public Exception Exception { get; internal set; }
+        private Exception _exception;
+        public Exception Exception
+        {
+            get { return _exception; }
+            internal set
+            {
+                if (_exception == value)
+                    return;
+                _exception = value;
+                Fault = CoerceFault();
+            }
+        }
 
         public abstract void Run();
 
 #if DEBUG
         internal abstract Task LastRunTask { get; }
 #endif
+
+        private DataPresenter DataPresenter
+        {
+            get { return InputManager.DataPresenter; }
+        }
+
+        internal AsyncValidationFault Fault { get; private set; }
+
+        private AsyncValidationFault CoerceFault()
+        {
+            if (Exception == null)
+                return null;
+
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
+                return new AsyncValidationFault(this, null);
+            else
+                return new AsyncValidationFault(this, dataPresenter.FormatFaultMessage);
+        }
     }
 }
