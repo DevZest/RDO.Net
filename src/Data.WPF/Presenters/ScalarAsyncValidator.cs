@@ -144,5 +144,11 @@ namespace DevZest.Data.Presenters
         }
 
         #endregion
+
+
+        internal AsyncValidationFault GetFault(IScalars container)
+        {
+            return Fault != null && (container == null || container.IsSupersetOf(SourceScalars)) ? Fault : null;
+        }
     }
 }

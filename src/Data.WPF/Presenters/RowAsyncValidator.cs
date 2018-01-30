@@ -163,5 +163,10 @@ namespace DevZest.Data.Presenters
         }
 
 #endregion
+
+        internal AsyncValidationFault GetFault(IColumns container)
+        {
+            return Fault != null && (container == null || container.IsSupersetOf(SourceColumns)) ? Fault : null;
+        }
     }
 }

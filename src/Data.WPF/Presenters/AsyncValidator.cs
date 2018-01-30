@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Presenters.Primitives;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
@@ -66,7 +67,7 @@ namespace DevZest.Data.Presenters
             get { return InputManager.DataPresenter; }
         }
 
-        internal AsyncValidationFault Fault { get; private set; }
+        protected AsyncValidationFault Fault { get; private set; }
 
         private AsyncValidationFault CoerceFault()
         {

@@ -369,7 +369,7 @@ namespace DevZest.Data.Views
             var behaviors = Behaviors;
             for (int i = 0; i < behaviors.Count; i++)
                 behaviors[i].Refresh(this);
-            this.RefreshValidation(ValidationErrors);
+            this.RefreshValidation(ValidationPresenter);
             Refreshing(this, EventArgs.Empty);
         }
 
@@ -410,12 +410,12 @@ namespace DevZest.Data.Views
             get { return RowPresenter == null ? null : RowPresenter.DataPresenter; }
         }
 
-        public IValidationErrors ValidationErrors
+        public ValidationPresenter ValidationPresenter
         {
             get
             {
                 var inputManager = _elementManager as Presenters.Primitives.InputManager;
-                return inputManager == null ? Data.ValidationErrors.Empty : inputManager.GetValidationErrors(this);
+                return inputManager == null ? ValidationPresenter.Invisible : inputManager.GetValidationPresenter(this);
             }
         }
     }

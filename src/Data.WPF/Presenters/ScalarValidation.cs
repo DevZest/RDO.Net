@@ -79,7 +79,7 @@ namespace DevZest.Data.Presenters
             get { return _errors; }
         }
 
-        internal IValidationErrors GetErrors(DataView dataView)
+        internal ValidationPresenter GetPresenter(DataView dataView)
         {
             Debug.Assert(dataView != null);
 
@@ -87,14 +87,23 @@ namespace DevZest.Data.Presenters
             {
                 for (int i = 0; i < Inputs.Count; i++)
                 {
-                    if (HasError(Inputs[i], 0, true))
-                        return ValidationErrors.Empty;
+                    if (HasError(Inputs[i], 0, true) || IsValidating(Inputs[i], true))
+                        return ValidationPresenter.Invisible;
                 }
             }
 
-            var errors = GetErrors(null, false);
-            var asyncErrors = GetErrors(null, true);
-            return ValidationErrors.Empty.Merge(errors).Merge(asyncErrors).Seal();
+            var errors = GetErrors(ValidationErrors.Empty, null, false);
+            errors = GetErrors(errors, null, true);
+            if (errors.Count > 0)
+                return ValidationPresenter.Error(errors.Seal());
+
+            foreach (var asyncValidator in AsyncValidators)
+            {
+                if (asyncValidator.Status == AsyncValidatorStatus.Running)
+                    return ValidationPresenter.Validating;
+            }
+
+            return ValidationPresenter.Invisible;
         }
 
         private int FlowRepeatCount
@@ -102,38 +111,48 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.FlowRepeatCount; }
         }
 
-        internal IValidationErrors GetErrors(Input<ScalarBinding, IScalars> input, int flowIndex)
+        internal ValidationPresenter GetPresenter(Input<ScalarBinding, IScalars> input, int flowIndex)
         {
             Debug.Assert(input != null);
 
             var flushingError = GetFlushingError(input.Binding[flowIndex]);
             if (flushingError != null)
-                return flushingError;
+                return ValidationPresenter.Error(flushingError);
 
             if (FlowRepeatCount > 1)
-                return ValidationErrors.Empty;
+                return ValidationPresenter.Invisible;
 
-            if (AnyPrecedingInputHasError(input, flowIndex))
-                return ValidationErrors.Empty;
+            if (AnyBlockingErrorInput(input, flowIndex, true) || AnyBlockingValidatingInput(input, true))
+                return ValidationPresenter.Invisible;
 
-            var errors = GetErrors(input.Target, false);
-            var asyncErrors = GetErrors(input.Target, true);
-            return ValidationErrors.Empty.Merge(errors).Merge(asyncErrors).Seal();
+            var errors = GetErrors(ValidationErrors.Empty, input.Target, false);
+            errors = GetErrors(errors, input.Target, true);
+            if (errors.Count > 0)
+                return ValidationPresenter.Error(errors.Seal());
+
+            if (IsValidating(input, false))
+                return ValidationPresenter.Validating;
+
+            if (!IsVisible(input.Target) || AnyBlockingErrorInput(input, flowIndex, false) || AnyBlockingValidatingInput(input, false))
+                return ValidationPresenter.Invisible;
+            else
+                return ValidationPresenter.Validated;
         }
 
-        private bool AnyPrecedingInputHasError(Input<ScalarBinding, IScalars> input, int flowIndex)
+        private bool AnyBlockingErrorInput(Input<ScalarBinding, IScalars> input, int flowIndex, bool isPreceding)
         {
             for (int i = 0; i < Inputs.Count; i++)
             {
                 if (input.Index == i)
                     continue;
-                if (Inputs[i].IsPrecedingOf(input) && HasError(Inputs[i], flowIndex, false))
+                var canBlock = isPreceding ? Inputs[i].IsPrecedingOf(input) : input.IsPrecedingOf(Inputs[i]);
+                if (canBlock && HasError(Inputs[i], flowIndex, false))
                     return true;
             }
             return false;
         }
 
-        internal bool HasError(Input<ScalarBinding, IScalars> input, int flowIndex, bool blockByPrecedingInput)
+        internal bool HasError(Input<ScalarBinding, IScalars> input, int flowIndex, bool? blockingPrecedence)
         {
             var flushingError = GetFlushingError(input.Binding[flowIndex]);
             if (flushingError != null)
@@ -142,8 +161,11 @@ namespace DevZest.Data.Presenters
             if (FlowRepeatCount > 1)
                 return false;
 
-            if (blockByPrecedingInput && AnyPrecedingInputHasError(input, flowIndex))
-                return false;
+            if (blockingPrecedence.HasValue)
+            {
+                if (AnyBlockingErrorInput(input, flowIndex, blockingPrecedence.Value))
+                    return false;
+            }
 
             if (HasError(input.Target, false))
                 return true;
@@ -165,15 +187,23 @@ namespace DevZest.Data.Presenters
                     return true;
             }
 
+            if (isAsync)
+            {
+                foreach (var asyncValidator in AsyncValidators)
+                {
+                    if (asyncValidator.GetFault(scalars) != null)
+                        return true;
+                }
+            }
+
             return false;
         }
 
-        private IValidationErrors GetErrors(IScalars scalars, bool isAsync)
+        private IValidationErrors GetErrors(IValidationErrors result, IScalars scalars, bool isAsync)
         {
             var errors = isAsync ? this._asyncErrors : this._errors;
             var ensureVisible = !isAsync;
 
-            var result = ValidationErrors.Empty;
             for (int i = 0; i < errors.Count; i++)
             {
                 var error = errors[i];
@@ -394,19 +424,51 @@ namespace DevZest.Data.Presenters
                 {
                     for (int flowIndex = 0; flowIndex < FlowRepeatCount; flowIndex++)
                     {
-                        var errors = _inputManager.GetValidationErrors(input, flowIndex);
+                        var errors = _inputManager.GetValidationPresenter(input, flowIndex).Errors;
                         for (int i = 0; i < errors.Count; i++)
                             result = result.Add(errors[i]);
                     }
                 }
 
                 {
-                    var errors = _inputManager.GetValidationErrors(DataPresenter.View);
+                    var errors = _inputManager.GetValidationPresenter(DataPresenter.View).Errors;
                     for (int i = 0; i < errors.Count; i++)
                         result = result.Add(errors[i]);
                 }
                 return result.Seal();
             }
+        }
+
+        private bool AnyBlockingValidatingInput(Input<ScalarBinding, IScalars> input, bool isPreceding)
+        {
+            for (int i = 0; i < Inputs.Count; i++)
+            {
+                if (input.Index == i)
+                    continue;
+                var canBlock = isPreceding ? Inputs[i].IsPrecedingOf(input) : input.IsPrecedingOf(Inputs[i]);
+                if (canBlock && IsValidating(Inputs[i], null))
+                    return true;
+            }
+            return false;
+        }
+
+        internal bool IsValidating(Input<ScalarBinding, IScalars> input, bool? blockingPrecedence)
+        {
+            if (FlowRepeatCount > 1)
+                return false;
+
+            if (blockingPrecedence.HasValue)
+            {
+                if (AnyBlockingValidatingInput(input, blockingPrecedence.Value))
+                    return false;
+            }
+
+            foreach (var asyncValidator in AsyncValidators)
+            {
+                if (asyncValidator.Status == AsyncValidatorStatus.Running && input.Target.IsSupersetOf(asyncValidator.SourceScalars))
+                    return true;
+            }
+            return false;
         }
     }
 }

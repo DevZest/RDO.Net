@@ -497,16 +497,22 @@ namespace DevZest.Data.Presenters
                 InputManager.InvalidateView();
         }
 
-        public IValidationErrors GetValidationErrors(Input<RowBinding, IColumns> input)
+        public ValidationPresenter GetValidationPresenter(Input<RowBinding, IColumns> input)
         {
             Check.NotNull(input, nameof(input));
-            return InputManager.GetValidationErrors(this, input);
+            return InputManager.GetValidationPresenter(this, input);
         }
 
         public bool HasValidationError(Input<RowBinding, IColumns> input)
         {
             Check.NotNull(input, nameof(input));
             return InputManager.HasValidationError(this, input);
+        }
+
+        public bool IsValidating(Input<RowBinding, IColumns> input)
+        {
+            Check.NotNull(input, nameof(input));
+            return InputManager.IsValidating(this, input);
         }
 
         public IValidationErrors VisibleValidationErrors

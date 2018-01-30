@@ -118,14 +118,14 @@ namespace DevZest.Data.Presenters
                 _onRefresh(v, p);
                 p.FlushingError = null;
             }
-            v.RefreshValidation(GetValidationErrors(p.FlowIndex));
+            v.RefreshValidation(GetValidationPresenter(p.FlowIndex));
         }
 
-        public IValidationErrors GetValidationErrors(int flowIndex = 0)
+        public ValidationPresenter GetValidationPresenter(int flowIndex = 0)
         {
             if (flowIndex < 0 || flowIndex >= InputManager.FlowRepeatCount)
                 throw new ArgumentOutOfRangeException(nameof(flowIndex));
-            return InputManager.GetValidationErrors(this, flowIndex);
+            return InputManager.GetValidationPresenter(this, flowIndex);
         }
 
         public bool HasValidationError(int flowIndex = 0)

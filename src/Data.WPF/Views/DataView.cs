@@ -253,7 +253,7 @@ namespace DevZest.Data.Views
         {
             var layoutManager = LayoutManager;
             if (layoutManager != null)
-                this.RefreshValidation(layoutManager?.GetValidationErrors(this));
+                this.RefreshValidation(layoutManager.GetValidationPresenter(this));
         }
     }
 }

@@ -10,27 +10,6 @@ namespace DevZest.Data.Presenters
 {
     public static class Validation
     {
-        internal static IValidationErrors ValidatingMessage
-        {
-            get { return DummyError.Validating; }
-        }
-
-        internal static IValidationErrors ValidatedMessage
-        {
-            get { return DummyError.Validated; }
-        }
-
-        private sealed class DummyError : ValidationError
-        {
-            public static readonly DummyError Validating = new DummyError(UserMessages.Validation_Validating);
-            public static readonly DummyError Validated = new DummyError(UserMessages.Validation_Validated);
-
-            private DummyError(string message)
-                : base(message)
-            {
-            }
-        }
-
         internal static class Templates
         {
             public static readonly TemplateId Error = new TemplateId(typeof(Validation));
@@ -38,7 +17,7 @@ namespace DevZest.Data.Presenters
         }
 
         private static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Status",
-            typeof(ValidationStatus?), typeof(Validation), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnStatusChanged)));
+            typeof(ValidationStatus), typeof(Validation), new FrameworkPropertyMetadata(ValidationStatus.Invisible, new PropertyChangedCallback(OnStatusChanged)));
         public static readonly DependencyProperty StatusProperty = StatusPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty FlushingErrorTemplateProperty = DependencyProperty.RegisterAttached("FlushingErrorTemplate",
@@ -57,14 +36,14 @@ namespace DevZest.Data.Presenters
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(null,
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnValidatedTemplateChanged)));
 
-        public static ValidationStatus? GetStatus(this DependencyObject element)
+        public static ValidationStatus GetStatus(this DependencyObject element)
         {
-            return (ValidationStatus?)element.GetValue(StatusProperty);
+            return (ValidationStatus)element.GetValue(StatusProperty);
         }
 
-        private static void SetStatus(this DependencyObject element, ValidationStatus? value)
+        private static void SetStatus(this DependencyObject element, ValidationStatus value)
         {
-            if (!value.HasValue)
+            if (value == ValidationStatus.Invisible)
                 element.ClearValue(StatusPropertyKey);
             else
                 element.SetValue(StatusPropertyKey, value);
@@ -112,7 +91,7 @@ namespace DevZest.Data.Presenters
 
         private static void OnStatusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var status = (ValidationStatus?)e.NewValue;
+            var status = (ValidationStatus)e.NewValue;
             if (status == ValidationStatus.DataError)
                 System.Windows.Controls.Validation.SetErrorTemplate(d, d.GetDataErrorTemplate());
             else if (status == ValidationStatus.FlushingError)
@@ -123,7 +102,7 @@ namespace DevZest.Data.Presenters
                 System.Windows.Controls.Validation.SetErrorTemplate(d, d.GetValidatedTemplate());
             else
             {
-                Debug.Assert(status == null);
+                Debug.Assert(status == ValidationStatus.Invisible);
                 d.ClearValue(System.Windows.Controls.Validation.ErrorTemplateProperty);
             }
         }
@@ -220,51 +199,30 @@ namespace DevZest.Data.Presenters
             BindingOperations.ClearBinding(element, DummyProperty);
         }
 
-        internal static void RefreshValidation(this DependencyObject element, IValidationErrors errors)
+        internal static void RefreshValidation(this DependencyObject v, ValidationPresenter p)
         {
-            var status = GetStatus(errors);
-            if (status == ValidationStatus.Validated && element.GetValidatedTemplate() == null)
-                status = null;
-            if (status.HasValue)
-                element.SetDataErrorInfo(status.Value, errors);
+            var status = p.Status;
+            v.SetStatus(status);
+
+            if (status == ValidationStatus.Validated && v.GetValidatedTemplate() == null)
+                status = ValidationStatus.Invisible;
+            if (status != ValidationStatus.Invisible)
+                v.SetDataErrorInfo(p.Messages);
             else
-                element.ClearDataErrorInfo();
+                v.ClearDataErrorInfoBinding();
         }
 
-        private static ValidationStatus? GetStatus(IValidationErrors errors)
+        private static void SetDataErrorInfo(this DependencyObject v, IEnumerable messages)
         {
-            Debug.Assert(errors != null);
-
-            if (errors == ValidatingMessage)
-                return ValidationStatus.Validating;
-            else if (errors == ValidatedMessage)
-                return ValidationStatus.Validated;
-            else if (errors.Count == 0)
-                return null;
-            else if (errors.Count == 1 && errors[0] is FlushingError)
-                return ValidationStatus.FlushingError;
-            else
-                return ValidationStatus.DataError;
-        }
-
-        private static void SetDataErrorInfo(this DependencyObject element, ValidationStatus status, IEnumerable messages)
-        {
-            element.SetStatus(status);
-
-            var binding = BindingOperations.GetBinding(element, DummyProperty);
+            Debug.Assert(messages != null);
+            var binding = BindingOperations.GetBinding(v, DummyProperty);
             if (binding == null)
-                element.SetDataErrorInfoBinding(new DataErrorInfo(messages));
+                v.SetDataErrorInfoBinding(new DataErrorInfo(messages));
             else
             {
                 var dataErrorInfo = (DataErrorInfo)binding.Source;
                 dataErrorInfo.Messages = messages;
             }
-        }
-
-        private static void ClearDataErrorInfo(this DependencyObject element)
-        {
-            element.SetStatus(null);
-            element.ClearDataErrorInfoBinding();
         }
 
         internal static IValidationErrors Merge(this IValidationErrors result, IValidationErrors errors)
