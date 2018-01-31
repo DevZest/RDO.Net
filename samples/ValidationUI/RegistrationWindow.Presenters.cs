@@ -1,5 +1,8 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Presenters;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ValidationUI
 {
@@ -7,7 +10,40 @@ namespace ValidationUI
     {
         private const string LABEL_FORMAT = "{0}:";
 
-        private sealed class DefaultPresenter : DataPresenter<Registration>
+        private static string[] s_takenUserNames = new string[] { "paul", "john", "tony" };
+        private static string[] s_errorNames = new string[] { "error" };
+        private static int s_retryCount = 0;
+
+        private static async Task<string> PerformValidateUserName(string userName)
+        {
+            await Task.Delay(1000);
+            if (s_takenUserNames.Any(x => x == userName))
+                return string.Format("User name '{0}' is taken.", userName);
+
+            if (s_errorNames.Any(x => x == userName))
+            {
+                s_retryCount++;
+                if (s_retryCount % 2 == 1)
+                    throw new InvalidOperationException("An exception is thrown");
+            }
+
+            return null;
+        }
+
+        private abstract class PresenterBase : DataPresenter<Registration>
+        {
+            protected Func<DataRow, Task<string>> ValidateUserNameFunc
+            {
+                get { return ValidateUserName; }
+            }
+
+            private Task<string> ValidateUserName(DataRow dataRow)
+            {
+                return PerformValidateUserName(_.UserName[dataRow]);
+            }
+        }
+
+        private sealed class DefaultPresenter : PresenterBase
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
@@ -47,11 +83,12 @@ namespace ValidationUI
                     .AddBinding(2, 6, interests6)
                     .AddBinding(1, 7, interests7)
                     .AddBinding(2, 7, interests8)
-                    .AddBinding(0, 8, 2, 8, _.BindToValidationErrorsControl().WithAutoSizeWaiver(AutoSizeWaiver.Width));
+                    .AddBinding(0, 8, 2, 8, _.BindToValidationErrorsControl().WithAutoSizeWaiver(AutoSizeWaiver.Width))
+                    .AddAsyncValidator(userName.Input, ValidateUserNameFunc);
             }
         }
 
-        private sealed class VerbosePresenter : DataPresenter<Registration>
+        private sealed class VerbosePresenter : PresenterBase
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
@@ -96,7 +133,8 @@ namespace ValidationUI
                     .AddBinding(1, 5, 2, 5, password.Input.BindToValidationErrorsControl())
                     .AddBinding(1, 7, 2, 7, confirmPassword.Input.BindToValidationErrorsControl())
                     .AddBinding(1, 8, 2, 8, passwordMismatch.Input.BindToValidationErrorsControl())
-                    .AddBinding(1, 13, 2, 13, interestsValidation.Input.BindToValidationErrorsControl());
+                    .AddBinding(1, 13, 2, 13, interestsValidation.Input.BindToValidationErrorsControl())
+                    .AddAsyncValidator(userName.Input, ValidateUserNameFunc);
             }
         }
 

@@ -502,15 +502,15 @@ namespace DevZest.Data.Presenters
         private bool HasError(RowPresenter rowPresenter, IColumns source, bool isAsync)
         {
             IReadOnlyDictionary<RowPresenter, IDataValidationErrors> dictionary = isAsync ? _asyncErrorsByRow : _errorsByRow;
-            if (dictionary == null)
-                return false;
-
-            IDataValidationErrors errors;
-            if (!dictionary.TryGetValue(rowPresenter, out errors))
-                return false;
-
-            if (errors != null && errors.Count > 0 && HasError(rowPresenter, errors, source, !isAsync))
-                return true;
+            if (dictionary != null)
+            {
+                IDataValidationErrors errors;
+                if (dictionary.TryGetValue(rowPresenter, out errors))
+                {
+                    if (errors != null && errors.Count > 0 && HasError(rowPresenter, errors, source, !isAsync))
+                        return true;
+                }
+            }
 
             if (isAsync)
             {
@@ -542,15 +542,15 @@ namespace DevZest.Data.Presenters
         private IValidationErrors GetErrors(IValidationErrors result, RowPresenter rowPresenter, IColumns source, bool isAsync)
         {
             IReadOnlyDictionary<RowPresenter, IDataValidationErrors> dictionary = isAsync ? _asyncErrorsByRow : _errorsByRow;
-            if (dictionary == null)
-                return result;
-
-            IDataValidationErrors errors;
-            if (!dictionary.TryGetValue(rowPresenter, out errors))
-                return result;
-
-            if (errors != null && errors.Count > 0)
-                result = GetErrors(result, rowPresenter, errors, source, !isAsync);
+            if (dictionary != null)
+            {
+                IDataValidationErrors errors;
+                if (dictionary.TryGetValue(rowPresenter, out errors))
+                {
+                    if (errors != null && errors.Count > 0)
+                        result = GetErrors(result, rowPresenter, errors, source, !isAsync);
+                }
+            }
 
             if (isAsync)
             {

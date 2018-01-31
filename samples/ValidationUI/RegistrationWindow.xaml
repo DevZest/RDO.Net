@@ -32,11 +32,19 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <dz:DataView x:Name="_dataView" Background="White" Margin="5" />
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
             <Button Content="OK" IsDefault="True" Command="{x:Static local:RegistrationWindow+Commands.Submit}" />
             <Button Content="Cancel" IsCancel="True" />
         </UniformGrid>
+        <TextBlock Grid.Row="2">
+            <TextBlock.Inlines>
+                <Run>Enter "paul", "john" or "tony" in User Name field will cause "User Name taken" validation error;</Run>
+                <LineBreak />
+                <Run>Enter "error" in User Name field will have 50% chance to trigger an async validation exception.</Run>
+            </TextBlock.Inlines>
+        </TextBlock>
     </Grid>
 </Window>
