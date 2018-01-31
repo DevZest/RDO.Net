@@ -6,7 +6,6 @@ using System.Windows.Input;
 using DevZest.Data.Views.Primitives;
 using DevZest.Data.Presenters;
 using System;
-using System.Linq;
 
 namespace DevZest.Data.Views
 {
@@ -369,7 +368,7 @@ namespace DevZest.Data.Views
             var behaviors = Behaviors;
             for (int i = 0; i < behaviors.Count; i++)
                 behaviors[i].Refresh(this);
-            this.RefreshValidation(ValidationPresenter);
+            this.RefreshValidation(ValidationInfo);
             Refreshing(this, EventArgs.Empty);
         }
 
@@ -410,12 +409,12 @@ namespace DevZest.Data.Views
             get { return RowPresenter == null ? null : RowPresenter.DataPresenter; }
         }
 
-        public ValidationPresenter ValidationPresenter
+        public ValidationInfo ValidationInfo
         {
             get
             {
                 var inputManager = _elementManager as Presenters.Primitives.InputManager;
-                return inputManager == null ? ValidationPresenter.Empty : inputManager.GetValidationPresenter(this);
+                return inputManager == null ? ValidationInfo.Empty : inputManager.GetValidationInfo(this);
             }
         }
     }

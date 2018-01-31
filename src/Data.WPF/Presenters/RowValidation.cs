@@ -410,7 +410,7 @@ namespace DevZest.Data.Presenters
             return errors < errorLimit;
         }
 
-        internal ValidationPresenter GetPresenter(RowView rowView)
+        internal ValidationInfo GetInfo(RowView rowView)
         {
             Debug.Assert(rowView != null);
 
@@ -418,24 +418,24 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < Inputs.Count; i++)
             {
                 if (HasError(rowPresenter, Inputs[i], true) || IsValidating(rowPresenter, Inputs[i], true))
-                    return ValidationPresenter.Empty;
+                    return ValidationInfo.Empty;
             }
 
             var errors = GetErrors(ValidationErrors.Empty, rowPresenter, null, false);
             errors = GetErrors(errors, rowPresenter, null, true);
             if (errors.Count > 0)
-                return ValidationPresenter.Error(errors.Seal());
+                return ValidationInfo.Error(errors.Seal());
 
             foreach (var asyncValidator in AsyncValidators)
             {
                 if (asyncValidator.Status == AsyncValidatorStatus.Running)
-                    return ValidationPresenter.Validating;
+                    return ValidationInfo.Validating;
             }
 
-            return ValidationPresenter.Empty;
+            return ValidationInfo.Empty;
         }
 
-        internal ValidationPresenter GetPresenter(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
+        internal ValidationInfo GetInfo(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
         {
             Debug.Assert(rowPresenter != null);
             Debug.Assert(input != null);
@@ -444,24 +444,24 @@ namespace DevZest.Data.Presenters
             {
                 var flushingError = GetFlushingError(input.Binding[rowPresenter]);
                 if (flushingError != null)
-                    return ValidationPresenter.Error(flushingError);
+                    return ValidationInfo.Error(flushingError);
             }
 
             if (AnyBlockingErrorInput(rowPresenter, input, true) || AnyBlockingValidatingInput(rowPresenter, input, true))
-                return ValidationPresenter.Empty;
+                return ValidationInfo.Empty;
 
             var errors = GetErrors(ValidationErrors.Empty, rowPresenter, input.Target, false);
             errors = GetErrors(errors, rowPresenter, input.Target, true);
             if (errors.Count > 0)
-                return ValidationPresenter.Error(errors.Seal());
+                return ValidationInfo.Error(errors.Seal());
 
             if (IsValidating(rowPresenter, input, null))
-                return ValidationPresenter.Validating;
+                return ValidationInfo.Validating;
 
             if (!IsVisible(rowPresenter, input.Target) || AnyBlockingErrorInput(rowPresenter, input, false) || AnyBlockingValidatingInput(rowPresenter, input, false))
-                return ValidationPresenter.Empty;
+                return ValidationInfo.Empty;
             else
-                return ValidationPresenter.Validated;
+                return ValidationInfo.Validated;
         }
 
         private bool AnyBlockingErrorInput(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool isPreceding)

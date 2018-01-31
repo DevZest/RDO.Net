@@ -87,7 +87,7 @@
     <Compile Include="Presenters\ServiceManager.cs" />
     <Compile Include="Presenters\CommandExtensions.cs" />
     <Compile Include="Presenters\TemplateId.cs" />
-    <Compile Include="Presenters\ValidationPresenter.cs" />
+    <Compile Include="Presenters\ValidationInfo.cs" />
     <Compile Include="Properties\Resources.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

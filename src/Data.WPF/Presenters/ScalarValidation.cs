@@ -79,7 +79,7 @@ namespace DevZest.Data.Presenters
             get { return _errors; }
         }
 
-        internal ValidationPresenter GetPresenter(DataView dataView)
+        internal ValidationInfo GetInfo(DataView dataView)
         {
             Debug.Assert(dataView != null);
 
@@ -88,22 +88,22 @@ namespace DevZest.Data.Presenters
                 for (int i = 0; i < Inputs.Count; i++)
                 {
                     if (HasError(Inputs[i], 0, true) || IsValidating(Inputs[i], true))
-                        return ValidationPresenter.Empty;
+                        return ValidationInfo.Empty;
                 }
             }
 
             var errors = GetErrors(ValidationErrors.Empty, null, false);
             errors = GetErrors(errors, null, true);
             if (errors.Count > 0)
-                return ValidationPresenter.Error(errors.Seal());
+                return ValidationInfo.Error(errors.Seal());
 
             foreach (var asyncValidator in AsyncValidators)
             {
                 if (asyncValidator.Status == AsyncValidatorStatus.Running)
-                    return ValidationPresenter.Validating;
+                    return ValidationInfo.Validating;
             }
 
-            return ValidationPresenter.Empty;
+            return ValidationInfo.Empty;
         }
 
         private int FlowRepeatCount
@@ -111,32 +111,32 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.FlowRepeatCount; }
         }
 
-        internal ValidationPresenter GetPresenter(Input<ScalarBinding, IScalars> input, int flowIndex)
+        internal ValidationInfo GetInfo(Input<ScalarBinding, IScalars> input, int flowIndex)
         {
             Debug.Assert(input != null);
 
             var flushingError = GetFlushingError(input.Binding[flowIndex]);
             if (flushingError != null)
-                return ValidationPresenter.Error(flushingError);
+                return ValidationInfo.Error(flushingError);
 
             if (FlowRepeatCount > 1)
-                return ValidationPresenter.Empty;
+                return ValidationInfo.Empty;
 
             if (AnyBlockingErrorInput(input, flowIndex, true) || AnyBlockingValidatingInput(input, true))
-                return ValidationPresenter.Empty;
+                return ValidationInfo.Empty;
 
             var errors = GetErrors(ValidationErrors.Empty, input.Target, false);
             errors = GetErrors(errors, input.Target, true);
             if (errors.Count > 0)
-                return ValidationPresenter.Error(errors.Seal());
+                return ValidationInfo.Error(errors.Seal());
 
             if (IsValidating(input, null))
-                return ValidationPresenter.Validating;
+                return ValidationInfo.Validating;
 
             if (!IsVisible(input.Target) || AnyBlockingErrorInput(input, flowIndex, false) || AnyBlockingValidatingInput(input, false))
-                return ValidationPresenter.Empty;
+                return ValidationInfo.Empty;
             else
-                return ValidationPresenter.Validated;
+                return ValidationInfo.Validated;
         }
 
         private bool AnyBlockingErrorInput(Input<ScalarBinding, IScalars> input, int flowIndex, bool isPreceding)
@@ -424,14 +424,14 @@ namespace DevZest.Data.Presenters
                 {
                     for (int flowIndex = 0; flowIndex < FlowRepeatCount; flowIndex++)
                     {
-                        var errors = _inputManager.GetValidationPresenter(input, flowIndex).Errors;
+                        var errors = _inputManager.GetValidationInfo(input, flowIndex).Errors;
                         for (int i = 0; i < errors.Count; i++)
                             result = result.Add(errors[i]);
                     }
                 }
 
                 {
-                    var errors = _inputManager.GetValidationPresenter(DataPresenter.View).Errors;
+                    var errors = _inputManager.GetValidationInfo(DataPresenter.View).Errors;
                     for (int i = 0; i < errors.Count; i++)
                         result = result.Add(errors[i]);
                 }

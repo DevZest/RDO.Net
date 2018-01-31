@@ -199,17 +199,17 @@ namespace DevZest.Data.Presenters
             BindingOperations.ClearBinding(element, DummyProperty);
         }
 
-        internal static void RefreshValidation(this DependencyObject v, ValidationPresenter p)
+        internal static void RefreshValidation(this DependencyObject element, ValidationInfo info)
         {
-            var status = p.Status;
-            v.SetStatus(status);
+            var status = info.Status;
+            element.SetStatus(status);
 
-            if (status == ValidationStatus.Succeeded && v.GetSucceededTemplate() == null)
+            if (status == ValidationStatus.Succeeded && element.GetSucceededTemplate() == null)
                 status = null;
             if (status.HasValue)
-                v.SetDataErrorInfo(p.Messages);
+                element.SetDataErrorInfo(info.Messages);
             else
-                v.ClearDataErrorInfoBinding();
+                element.ClearDataErrorInfoBinding();
         }
 
         private static void SetDataErrorInfo(this DependencyObject v, IEnumerable messages)

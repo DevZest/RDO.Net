@@ -30,7 +30,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<ValidationErrorsControl>(
                 onRefresh: (v, p) =>
                 {
-                    var errors = source.GetValidationPresenter(p).Errors;
+                    var errors = source.GetValidationInfo(p).Errors;
                     if (ShouldUpdateItemsSource(v, errors))
                         v.ItemsSource = errors;
                 },
@@ -87,7 +87,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<ValidationErrorsControl>(
                 onRefresh: (v, p) =>
                 {
-                    var errors = source.GetValidationPresenter(p.FlowIndex).Errors;
+                    var errors = source.GetValidationInfo(p.FlowIndex).Errors;
                     if (ShouldUpdateItemsSource(v, errors))
                         v.ItemsSource = errors;
                 },

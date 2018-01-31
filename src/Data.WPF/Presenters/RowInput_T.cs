@@ -150,10 +150,10 @@ namespace DevZest.Data.Presenters
             return null;
         }
 
-        public ValidationPresenter GetValidationPresenter(RowPresenter rowPresenter)
+        public ValidationInfo GetValidationInfo(RowPresenter rowPresenter)
         {
             Check.NotNull(rowPresenter, nameof(rowPresenter));
-            return rowPresenter.GetValidationPresenter(this);
+            return rowPresenter.GetValidationInfo(this);
         }
 
         public bool HasValidationError(RowPresenter rowPresenter)
@@ -164,7 +164,7 @@ namespace DevZest.Data.Presenters
 
         private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            element.RefreshValidation(GetValidationPresenter(rowPresenter));
+            element.RefreshValidation(GetValidationInfo(rowPresenter));
         }
 
         private Action<T, RowPresenter, FlushingError> _onRefresh;

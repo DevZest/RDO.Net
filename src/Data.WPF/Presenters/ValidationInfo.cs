@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public struct ValidationPresenter
+    public struct ValidationInfo
     {
         private sealed class DummyMessage : ValidationError
         {
@@ -26,28 +26,28 @@ namespace DevZest.Data.Presenters
             get { return DummyMessage.Validated; }
         }
 
-        internal static ValidationPresenter Empty
+        internal static ValidationInfo Empty
         {
-            get { return new ValidationPresenter(); }
+            get { return new ValidationInfo(); }
         }
 
-        internal static ValidationPresenter Validating
+        internal static ValidationInfo Validating
         {
-            get { return new ValidationPresenter(DummyValidatingMessage); }
+            get { return new ValidationInfo(DummyValidatingMessage); }
         }
 
-        internal static ValidationPresenter Validated
+        internal static ValidationInfo Validated
         {
-            get { return new ValidationPresenter(DummyValidatedMessage); }
+            get { return new ValidationInfo(DummyValidatedMessage); }
         }
 
-        internal static ValidationPresenter Error(IValidationErrors errors)
+        internal static ValidationInfo Error(IValidationErrors errors)
         {
             Debug.Assert(errors != null && errors.Count > 0);
-            return new ValidationPresenter(errors);
+            return new ValidationInfo(errors);
         }
 
-        private ValidationPresenter(IValidationErrors messages)
+        private ValidationInfo(IValidationErrors messages)
         {
             _messages = messages;
         }

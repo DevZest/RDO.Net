@@ -249,11 +249,20 @@ namespace DevZest.Data.Views
             set { SetValue(DataLoadCancellablePropertyKey, BooleanBoxes.Box(value)); }
         }
 
-        internal void RefreshScalarValidationErrors()
+        internal void RefreshScalarValidation()
         {
             var layoutManager = LayoutManager;
             if (layoutManager != null)
-                this.RefreshValidation(layoutManager.GetValidationPresenter(this));
+                this.RefreshValidation(layoutManager.GetValidationInfo(this));
+        }
+
+        public ValidationInfo ValidationInfo
+        {
+            get
+            {
+                var layoutManager = LayoutManager;
+                return layoutManager == null ? ValidationInfo.Empty : layoutManager.GetValidationInfo(this);
+            }
         }
     }
 }
