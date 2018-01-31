@@ -10,7 +10,7 @@
                 <BulletDecorator>
                     <BulletDecorator.Bullet>
                         <Ellipse Height="5" Width="5"
-                             Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=Foreground, Converter={x:Static local:ValidationErrorsControl.ItemsCountToBulletVisibilityConverter}}"
+                             Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=ItemsCount, Converter={x:Static local:ValidationErrorsControl.ItemsCountToBulletVisibilityConverter}}"
                              Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ValidationErrorsControl}}, Path=Foreground}" />
                     </BulletDecorator.Bullet>
                     <TextBlock x:Name="_textBlock" TextWrapping="Wrap" Margin="3,0,0,0" Text="{Binding Message}"

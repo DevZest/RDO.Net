@@ -71,7 +71,7 @@ namespace DevZest.Data.Views
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
                 var itemsCount = (int)value;
-                return itemsCount == 0 ? Visibility.Collapsed : Visibility.Visible;
+                return itemsCount == 1 ? Visibility.Collapsed : Visibility.Visible;
             }
 
             public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
