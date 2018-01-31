@@ -130,7 +130,7 @@ namespace DevZest.Data.Presenters
             if (errors.Count > 0)
                 return ValidationPresenter.Error(errors.Seal());
 
-            if (IsValidating(input, false))
+            if (IsValidating(input, null))
                 return ValidationPresenter.Validating;
 
             if (!IsVisible(input.Target) || AnyBlockingErrorInput(input, flowIndex, false) || AnyBlockingValidatingInput(input, false))

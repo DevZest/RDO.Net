@@ -455,7 +455,7 @@ namespace DevZest.Data.Presenters
             if (errors.Count > 0)
                 return ValidationPresenter.Error(errors.Seal());
 
-            if (IsValidating(rowPresenter, input, false))
+            if (IsValidating(rowPresenter, input, null))
                 return ValidationPresenter.Validating;
 
             if (!IsVisible(rowPresenter, input.Target) || AnyBlockingErrorInput(rowPresenter, input, false) || AnyBlockingValidatingInput(rowPresenter, input, false))
