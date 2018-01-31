@@ -38,7 +38,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <dz:DataView x:Name="_dataView" Background="White" Margin="5" dz:Validation.DataErrorTemplate="{StaticResource ErrorTemplate}" />
+        <dz:DataView x:Name="_dataView" Background="White" Margin="5" dz:Validation.FailedTemplate="{StaticResource ErrorTemplate}" />
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
             <Button Content="OK" IsDefault="True" Command="{x:Static local:LoginWindow+Commands.Submit}" />
             <Button Content="Cancel" IsCancel="True" />

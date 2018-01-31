@@ -26,7 +26,7 @@ namespace DevZest.Data.Presenters
             get { return DummyMessage.Validated; }
         }
 
-        internal static ValidationPresenter Invisible
+        internal static ValidationPresenter Empty
         {
             get { return new ValidationPresenter(); }
         }
@@ -68,20 +68,20 @@ namespace DevZest.Data.Presenters
             get { return _messages; }
         }
 
-        public ValidationStatus Status
+        public ValidationStatus? Status
         {
             get
             {
                 if (_messages == null)
-                    return ValidationStatus.Invisible;
+                    return null;
                 else if (_messages == DummyValidatingMessage)
                     return ValidationStatus.Validating;
                 else if (_messages == DummyValidatedMessage)
-                    return ValidationStatus.Validated;
+                    return ValidationStatus.Succeeded;
                 else if (_messages.Count == 1 && _messages[0] is FlushingError)
-                    return ValidationStatus.FlushingError;
+                    return ValidationStatus.FailedFlushing;
                 else
-                    return ValidationStatus.DataError;
+                    return ValidationStatus.Failed;
             }
         }
     }

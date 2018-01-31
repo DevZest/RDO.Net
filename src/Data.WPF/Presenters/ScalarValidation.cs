@@ -88,7 +88,7 @@ namespace DevZest.Data.Presenters
                 for (int i = 0; i < Inputs.Count; i++)
                 {
                     if (HasError(Inputs[i], 0, true) || IsValidating(Inputs[i], true))
-                        return ValidationPresenter.Invisible;
+                        return ValidationPresenter.Empty;
                 }
             }
 
@@ -103,7 +103,7 @@ namespace DevZest.Data.Presenters
                     return ValidationPresenter.Validating;
             }
 
-            return ValidationPresenter.Invisible;
+            return ValidationPresenter.Empty;
         }
 
         private int FlowRepeatCount
@@ -120,10 +120,10 @@ namespace DevZest.Data.Presenters
                 return ValidationPresenter.Error(flushingError);
 
             if (FlowRepeatCount > 1)
-                return ValidationPresenter.Invisible;
+                return ValidationPresenter.Empty;
 
             if (AnyBlockingErrorInput(input, flowIndex, true) || AnyBlockingValidatingInput(input, true))
-                return ValidationPresenter.Invisible;
+                return ValidationPresenter.Empty;
 
             var errors = GetErrors(ValidationErrors.Empty, input.Target, false);
             errors = GetErrors(errors, input.Target, true);
@@ -134,7 +134,7 @@ namespace DevZest.Data.Presenters
                 return ValidationPresenter.Validating;
 
             if (!IsVisible(input.Target) || AnyBlockingErrorInput(input, flowIndex, false) || AnyBlockingValidatingInput(input, false))
-                return ValidationPresenter.Invisible;
+                return ValidationPresenter.Empty;
             else
                 return ValidationPresenter.Validated;
         }

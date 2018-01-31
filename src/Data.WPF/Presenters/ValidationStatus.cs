@@ -2,10 +2,9 @@
 {
     public enum ValidationStatus
     {
-        Invisible = 0,
-        FlushingError,
-        DataError,
+        FailedFlushing,
         Validating,
-        Validated
+        Failed,
+        Succeeded
     }
 }

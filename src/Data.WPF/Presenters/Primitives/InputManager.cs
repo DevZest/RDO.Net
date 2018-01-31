@@ -75,12 +75,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal ValidationPresenter GetValidationPresenter(DataView dataView)
         {
-            return _scalarValidation == null ? ValidationPresenter.Invisible : _scalarValidation.GetPresenter(dataView);
+            return _scalarValidation == null ? ValidationPresenter.Empty : _scalarValidation.GetPresenter(dataView);
         }
 
         internal ValidationPresenter GetValidationPresenter(Input<ScalarBinding, IScalars> input, int flowIndex)
         {
-            return _scalarValidation == null ? ValidationPresenter.Invisible : _scalarValidation.GetPresenter(input, flowIndex);
+            return _scalarValidation == null ? ValidationPresenter.Empty : _scalarValidation.GetPresenter(input, flowIndex);
         }
 
         internal bool HasValidationError(Input<ScalarBinding, IScalars> input, int flowIndex)
@@ -102,12 +102,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal ValidationPresenter GetValidationPresenter(RowView rowView)
         {
-            return _rowValidation == null ? ValidationPresenter.Invisible : _rowValidation.GetPresenter(rowView);
+            return _rowValidation == null ? ValidationPresenter.Empty : _rowValidation.GetPresenter(rowView);
         }
 
         internal ValidationPresenter GetValidationPresenter(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
         {
-            return _rowValidation == null ? ValidationPresenter.Invisible : _rowValidation.GetPresenter(rowPresenter, input);
+            return _rowValidation == null ? ValidationPresenter.Empty : _rowValidation.GetPresenter(rowPresenter, input);
         }
 
         internal bool HasValidationError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)

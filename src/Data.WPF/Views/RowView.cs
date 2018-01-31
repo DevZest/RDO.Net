@@ -415,7 +415,7 @@ namespace DevZest.Data.Views
             get
             {
                 var inputManager = _elementManager as Presenters.Primitives.InputManager;
-                return inputManager == null ? ValidationPresenter.Invisible : inputManager.GetValidationPresenter(this);
+                return inputManager == null ? ValidationPresenter.Empty : inputManager.GetValidationPresenter(this);
             }
         }
     }

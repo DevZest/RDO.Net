@@ -67,7 +67,7 @@ namespace ValidationUI
         {
             Title = string.Format("{0} ({1})", Title, windowTitleSuffix);
             if (errorTemplate != null)
-                DevZest.Data.Presenters.Validation.SetDataErrorTemplate(_dataView, errorTemplate);
+                DevZest.Data.Presenters.Validation.SetFailedTemplate(_dataView, errorTemplate);
             var dataSet = DataSet<TModel>.New();
             dataSet.Add(new DataRow());
             var presenter = new T();

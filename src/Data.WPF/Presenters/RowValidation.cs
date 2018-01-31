@@ -418,7 +418,7 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < Inputs.Count; i++)
             {
                 if (HasError(rowPresenter, Inputs[i], true) || IsValidating(rowPresenter, Inputs[i], true))
-                    return ValidationPresenter.Invisible;
+                    return ValidationPresenter.Empty;
             }
 
             var errors = GetErrors(ValidationErrors.Empty, rowPresenter, null, false);
@@ -432,7 +432,7 @@ namespace DevZest.Data.Presenters
                     return ValidationPresenter.Validating;
             }
 
-            return ValidationPresenter.Invisible;
+            return ValidationPresenter.Empty;
         }
 
         internal ValidationPresenter GetPresenter(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
@@ -448,7 +448,7 @@ namespace DevZest.Data.Presenters
             }
 
             if (AnyBlockingErrorInput(rowPresenter, input, true) || AnyBlockingValidatingInput(rowPresenter, input, true))
-                return ValidationPresenter.Invisible;
+                return ValidationPresenter.Empty;
 
             var errors = GetErrors(ValidationErrors.Empty, rowPresenter, input.Target, false);
             errors = GetErrors(errors, rowPresenter, input.Target, true);
@@ -459,7 +459,7 @@ namespace DevZest.Data.Presenters
                 return ValidationPresenter.Validating;
 
             if (!IsVisible(rowPresenter, input.Target) || AnyBlockingErrorInput(rowPresenter, input, false) || AnyBlockingValidatingInput(rowPresenter, input, false))
-                return ValidationPresenter.Invisible;
+                return ValidationPresenter.Empty;
             else
                 return ValidationPresenter.Validated;
         }
