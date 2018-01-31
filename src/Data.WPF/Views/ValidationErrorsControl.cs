@@ -58,7 +58,7 @@ namespace DevZest.Data.Views
 
         public static IValueConverter ItemsCountToBulletVisibilityConverter
         {
-            get { return _ValidationErrorsConverter.Singleton; }
+            get { return _ItemsCountToBulletVisibilityConverter.Singleton; }
         }
 
         private class _ItemsCountToBulletVisibilityConverter : IValueConverter
