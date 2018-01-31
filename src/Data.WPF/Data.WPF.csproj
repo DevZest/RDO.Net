@@ -92,6 +92,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="Views\AsyncValidationFaultControl.cs" />
     <Compile Include="Views\GridHeader.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
     <Compile Include="Views\Primitives\Spinner.xaml.cs">
@@ -277,6 +278,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\GridHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\AsyncValidationFaultControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

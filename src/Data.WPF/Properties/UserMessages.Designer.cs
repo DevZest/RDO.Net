@@ -12,6 +12,14 @@ namespace DevZest.Data
             = new ResourceManager("DevZest.Data.UserMessages", typeof(UserMessages).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// Retry
+        /// </summary>
+        public static string AsyncValidationFaultControlCommands_RetryCommandText
+        {
+            get { return GetString("AsyncValidationFaultControlCommands_RetryCommandText"); }
+        }
+
+        /// <summary>
         /// An error occurs while validating {asynValidatorDisplayName}: {exceptionMessage}.
         /// </summary>
         public static string AsyncValidationFault_FormatMessage(object asynValidatorDisplayName, object exceptionMessage)
