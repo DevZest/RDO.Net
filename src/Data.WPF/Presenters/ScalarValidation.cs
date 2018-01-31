@@ -146,7 +146,7 @@ namespace DevZest.Data.Presenters
                 if (input.Index == i)
                     continue;
                 var canBlock = isPreceding ? Inputs[i].IsPrecedingOf(input) : input.IsPrecedingOf(Inputs[i]);
-                if (canBlock && HasError(Inputs[i], flowIndex, false))
+                if (canBlock && HasError(Inputs[i], flowIndex, null))
                     return true;
             }
             return false;
