@@ -22,40 +22,6 @@ namespace DevZest.Data.Views
             }
         }
 
-        public static IValueConverter VallidationErrorsConverter
-        {
-            get { return _ValidationErrorsConverter.Singleton; }
-        }
-
-        private class _ValidationErrorsConverter : IValueConverter
-        {
-            public static readonly _ValidationErrorsConverter Singleton = new _ValidationErrorsConverter();
-            private _ValidationErrorsConverter()
-            {
-            }
-
-            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                var errors = value as IReadOnlyList<System.Windows.Controls.ValidationError>;
-                var result = ValidationErrors.Empty;
-                if (errors != null)
-                {
-                    for (int i = 0; i < errors.Count; i++)
-                    {
-                        var error = errors[i].ErrorContent as ValidationError;
-                        if (error != null)
-                            result = result.Add(error);
-                    }
-                }
-                return result;
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
         public static IValueConverter ItemsCountToBulletVisibilityConverter
         {
             get { return _ItemsCountToBulletVisibilityConverter.Singleton; }

@@ -17,7 +17,7 @@
                 <AdornedElementPlaceholder x:Name="_placeholder" />
             </Border>
             <Popup x:Name="_popup" StaysOpen="True" MinWidth="70" Width="{Binding ElementName=_border, Path=ActualWidth}">
-                <view:ValidationErrorsControl ItemsSource="{Binding Converter={x:Static view:ValidationErrorsControl.VallidationErrorsConverter}}" />
+                <view:ValidationErrorsControl ItemsSource="{Binding}" />
             </Popup>
         </StackPanel>
         <ControlTemplate.Triggers>

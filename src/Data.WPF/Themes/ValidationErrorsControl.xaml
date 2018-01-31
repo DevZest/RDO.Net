@@ -6,6 +6,9 @@
 
     <Style TargetType="{x:Type local:ValidationErrorsControl}">
         <Style.Resources>
+            <DataTemplate DataType="{x:Type ValidationError}">
+                <ContentPresenter Content="{Binding ErrorContent}" />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type dz:ValidationError}">
                 <BulletDecorator>
                     <BulletDecorator.Bullet>
