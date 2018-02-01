@@ -22,7 +22,7 @@
                             FontStretch="{TemplateBinding FontStretch}"
                             FontStyle="{TemplateBinding FontStyle}">
                             <Run Text="{TemplateBinding Message}" />
-                            <Hyperlink Foreground="{TemplateBinding Foreground}" CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
+                            <Hyperlink Focusable="False" Foreground="{TemplateBinding Foreground}" CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
                                 Command="{x:Static local:AsyncValidationFaultControl+Commands.Retry}">
                                 <Run Text="{x:Static res:UserMessages.AsyncValidationFaultControlCommands_RetryCommandText}" />
                             </Hyperlink>
