@@ -259,8 +259,13 @@ namespace DevZest.Data.Presenters
             if (!makeProgress && !valueChanged)
                 return;
 
-            if (Mode != ValidationMode.Explicit)
-                Validate(false);
+            if (valueChanged)
+            {
+                UpdateAsyncErrors(scalarInput.Target);
+                if (Mode != ValidationMode.Explicit)
+                    Validate(false);
+            }
+
             if (UpdateProgress(scalarInput, valueChanged, makeProgress))
                 OnProgress(scalarInput);
             InvalidateView();
@@ -313,6 +318,8 @@ namespace DevZest.Data.Presenters
 
             if (makeProgress)
             {
+                if (_progress.IsSupersetOf(scalars))
+                    return valueChanged;
                 if (valueChanged || _valueChanged.IsSupersetOf(scalars))
                 {
                     _progress = _progress.Union(scalars);
@@ -354,6 +361,11 @@ namespace DevZest.Data.Presenters
         public IScalarAsyncValidators AsyncValidators
         {
             get { return Template.ScalarAsyncValidators; }
+        }
+
+        private void UpdateAsyncErrors(IScalars changedScalars)
+        {
+            _errors = Remove(_errors, x => x.Source.Overlaps(changedScalars));
         }
 
         internal void UpdateAsyncErrors(ScalarAsyncValidator scalarAsyncValidator)
