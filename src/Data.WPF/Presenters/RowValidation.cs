@@ -224,9 +224,11 @@ namespace DevZest.Data.Presenters
                 return;
 
             if (valueChanged)
+            {
                 UpdateAsyncErrors(rowInput.Target);
-            if (Mode != ValidationMode.Explicit)
-                Validate(CurrentRow, false);
+                if (Mode != ValidationMode.Explicit)
+                    Validate(CurrentRow, false);
+            }
             if (UpdateProgress(rowInput, valueChanged, makeProgress))
                 OnProgress(rowInput);
             InvalidateView();
@@ -287,7 +289,7 @@ namespace DevZest.Data.Presenters
             if (makeProgress)
             {
                 var columns = GetProgress(_progress, currentRow);
-                if (columns == null)
+                if (columns == null || columns.IsSupersetOf(sourceColumns))
                     return valueChanged;
                 if (valueChanged || Exists(_valueChanged, currentRow, sourceColumns))
                 {
