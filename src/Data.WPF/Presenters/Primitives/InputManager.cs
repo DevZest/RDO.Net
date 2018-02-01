@@ -173,14 +173,14 @@ namespace DevZest.Data.Presenters.Primitives
                 return true;
 
             _rowValidation.ValidateCurrentRow();
-            var hasError = _rowValidation.HasError(CurrentRow, null, false) || _rowValidation.HasError(CurrentRow, null, true);
-            if (hasError)
+            var hasVisibleError = _rowValidation.HasVisibleError(CurrentRow);
+            if (hasVisibleError)
             {
                 FocusToRowInputError();
                 return false;
             }
 
-            var isValidationg = RowValidation.AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running);
+            var isValidationg = _rowValidation.IsValidating;
             if (isValidationg)
                 return false;
             return true;
