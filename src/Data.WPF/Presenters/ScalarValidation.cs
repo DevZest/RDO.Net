@@ -485,7 +485,7 @@ namespace DevZest.Data.Presenters
         {
             get
             {
-                if (_flushingErrors.Count > 0)
+                if (FlushingErrors.Count > 0)
                     return true;
 
                 if (_asyncErrors.Count > 0)

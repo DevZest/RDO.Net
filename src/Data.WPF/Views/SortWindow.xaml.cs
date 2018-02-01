@@ -233,7 +233,7 @@ namespace DevZest.Data.Views
 
         private bool CanApply
         {
-            get { return !_presenter.HasVisibleInputError; }
+            get { return _presenter.CanSubmitInput; }
         }
 
         private void ExecApply(object sender, ExecutedRoutedEventArgs e)

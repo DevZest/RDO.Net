@@ -271,9 +271,9 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        public bool HasVisibleInputError
+        public bool CanSubmitInput
         {
-            get { return LayoutManager == null ? false : LayoutManager.HasVisibleError; }
+            get { return LayoutManager == null ? false : LayoutManager.CanSubmitInput; }
         }
 
         public bool SubmitInput(bool focusToErrorInput = true)
@@ -282,7 +282,7 @@ namespace DevZest.Data.Presenters
 
             RowValidation.Validate();
             ScalarValidation.Validate();
-            if (HasVisibleInputError)
+            if (!CanSubmitInput)
             {
                 if (focusToErrorInput)
                     LayoutManager.FocusToInputError();

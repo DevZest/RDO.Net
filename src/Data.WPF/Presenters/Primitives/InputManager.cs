@@ -266,36 +266,35 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _rowValidation == null ? EmptyRowValidationResults.Singleton : _rowValidation.Errors; }
         }
 
-        public bool HasVisibleError
+        public bool CanSubmitInput
         {
             get
             {
-                if (ScalarFlushingErrors.Count > 0 || RowFlushingErrors.Count > 0)
-                    return true;
-
-                var scalarValidationErrors = ScalarValidationErrors;
-                for (int i = 0; i < scalarValidationErrors.Count; i++)
+                if (_scalarValidation != null)
                 {
-                    var error = scalarValidationErrors[i];
-                    if (ScalarValidation.IsVisible(error.Source))
-                        return true;
+                    if (_scalarValidation.HasVisibleError || _scalarValidation.IsValidating)
+                        return false;
                 }
 
-                var rowValidationErrors = RowValidationErrors;
-                foreach (var keyValuePair in rowValidationErrors)
+                if (_rowValidation != null)
                 {
-                    var rowPresenter = keyValuePair.Key;
-                    var messages = keyValuePair.Value;
+                    if (_rowValidation.IsValidating)
+                        return false;
 
-                    for (int i = 0; i < messages.Count; i++)
+                    if (CurrentRow != null)
                     {
-                        var message = messages[i];
-                        if (RowValidation.IsVisible(rowPresenter, message.Source))
-                            return true;
+                        if (_rowValidation.HasVisibleError(CurrentRow))
+                            return false;
+                    }
+
+                    foreach (var row in Rows)
+                    {
+                        if (row != CurrentRow && _rowValidation.HasVisibleError(row))
+                            return false;
                     }
                 }
 
-                return false;
+                return true;
             }
         }
 

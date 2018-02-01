@@ -706,7 +706,7 @@ namespace DevZest.Data.Presenters
 
             if (rowPresenter == CurrentRow)
             {
-                if (_flushingErrors.Count > 0)
+                if (FlushingErrors.Count > 0)
                     return true;
             }
 

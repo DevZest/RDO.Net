@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Presenters.Primitives;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
@@ -41,7 +40,18 @@ namespace DevZest.Data.Presenters
             InputManager.InvalidateView();
         }
 
-        public AsyncValidatorStatus Status { get; internal set; } = AsyncValidatorStatus.Inactive;
+        private AsyncValidatorStatus _status = AsyncValidatorStatus.Inactive;
+        public AsyncValidatorStatus Status
+        {
+            get { return _status; }
+            internal set
+            {
+                if (_status == value)
+                    return;
+                _status = value;
+                System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+            }
+        }
 
         private Exception _exception;
         public Exception Exception
@@ -53,6 +63,7 @@ namespace DevZest.Data.Presenters
                     return;
                 _exception = value;
                 Fault = CoerceFault();
+                System.Windows.Input.CommandManager.InvalidateRequerySuggested();
             }
         }
 

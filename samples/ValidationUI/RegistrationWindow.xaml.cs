@@ -36,7 +36,7 @@ namespace ValidationUI
 
         private void CanSubmit(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = !_presenter.HasVisibleInputError;
+            e.CanExecute = _presenter.CanSubmitInput;
         }
 
         private DataPresenter _presenter;
