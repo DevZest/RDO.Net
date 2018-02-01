@@ -645,10 +645,7 @@ namespace DevZest.Data.Presenters
                 {
                     if (result != errors)
                         result = result.Add(error);
-                }
-                else
-                {
-                    if (result == errors)
+                    else
                         result = Merge(DataValidationErrors.Empty, errors, i);
                 }
             }
