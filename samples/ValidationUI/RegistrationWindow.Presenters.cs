@@ -178,6 +178,16 @@ namespace ValidationUI
                     result = result.Add(new ScalarValidationError("Passwords do not match.", _password.Union(_passwordConfirmation).Seal()));
                 return result.Seal();
             }
+
+            protected Func<Task<string>> ValidateUserNameFunc
+            {
+                get { return ValidateUserName; }
+            }
+
+            private Task<string> ValidateUserName()
+            {
+                return PerformValidateUserName(_userName.Value);
+            }
         }
 
         private sealed class DefaultScalarPresenter : ScalarPresenter
@@ -221,7 +231,8 @@ namespace ValidationUI
                     .AddBinding(2, 6, interests6)
                     .AddBinding(1, 7, interests7)
                     .AddBinding(2, 7, interests8)
-                    .AddBinding(0, 8, 2, 8, this.BindToValidationErrorsControl().WithAutoSizeWaiver(AutoSizeWaiver.Width));
+                    .AddBinding(0, 8, 2, 8, this.BindToValidationErrorsControl().WithAutoSizeWaiver(AutoSizeWaiver.Width))
+                    .AddAsyncValidator(userName.Input, ValidateUserNameFunc, "User Name");
             }
         }
 
@@ -271,7 +282,8 @@ namespace ValidationUI
                     .AddBinding(1, 5, 2, 5, password.Input.BindToValidationErrorsControl())
                     .AddBinding(1, 7, 2, 7, confirmPassword.Input.BindToValidationErrorsControl())
                     .AddBinding(1, 8, 2, 8, passwordMismatch.Input.BindToValidationErrorsControl())
-                    .AddBinding(1, 13, 2, 13, interestsValidation.Input.BindToValidationErrorsControl());
+                    .AddBinding(1, 13, 2, 13, interestsValidation.Input.BindToValidationErrorsControl())
+                    .AddAsyncValidator(userName.Input, ValidateUserNameFunc, "User Name");
             }
         }
     }
