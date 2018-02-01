@@ -176,7 +176,7 @@ namespace DevZest.Data.Presenters.Primitives
             var hasError = _rowValidation.HasError(CurrentRow, null, false) || _rowValidation.HasError(CurrentRow, null, true);
             if (hasError)
             {
-                FocusToRowInputError(CurrentRow);
+                FocusToRowInputError();
                 return false;
             }
 
@@ -190,8 +190,10 @@ namespace DevZest.Data.Presenters.Primitives
         {
             if (FocusToScalarInputError())
                 return true;
+            else if (CurrentRow != null)
+                return FocusToRowInputError();
             else
-                return FocusToRowInputError(CurrentRow);
+                return false;
         }
 
         internal bool FocusToScalarInputError()
@@ -213,17 +215,17 @@ namespace DevZest.Data.Presenters.Primitives
             return false;
         }
 
-        internal bool FocusToRowInputError(RowPresenter rowPresenter)
+        private bool FocusToRowInputError()
         {
-            Debug.Assert(rowPresenter != null);
+            Debug.Assert(CurrentRow != null);
             if (_rowValidation == null)
                 return false;
 
             foreach (var input in _rowValidation.Inputs)
             {
-                if (_rowValidation.HasError(rowPresenter, input, true))
+                if (_rowValidation.HasError(CurrentRow, input, true))
                 {
-                    if (Focus(input.Binding, rowPresenter))
+                    if (Focus(input.Binding, CurrentRow))
                         return true;
                 }
             }
