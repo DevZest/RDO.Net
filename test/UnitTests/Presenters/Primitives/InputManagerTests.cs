@@ -357,8 +357,7 @@ namespace DevZest.Data.Presenters.Primitives
             textBox[currentRow].Text = "any value";
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
-                Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(error, errors[0].ErrorContent);
+                Assert.AreEqual(0, errors.Count);
             }
         }
 

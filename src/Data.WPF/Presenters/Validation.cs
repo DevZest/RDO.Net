@@ -10,10 +10,11 @@ namespace DevZest.Data.Presenters
 {
     public static class Validation
     {
-        internal static class Templates
+        public static class Templates
         {
-            public static readonly TemplateId Error = new TemplateId(typeof(Validation));
+            public static readonly TemplateId Failed = new TemplateId(typeof(Validation));
             public static readonly TemplateId Validating = new TemplateId(typeof(Validation));
+            public static readonly TemplateId Succeeded = new TemplateId(typeof(Validation));
         }
 
         private static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Status",
@@ -21,11 +22,11 @@ namespace DevZest.Data.Presenters
         public static readonly DependencyProperty StatusProperty = StatusPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty FailedFlushingTemplateProperty = DependencyProperty.RegisterAttached("FailedFlushingTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false),
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Failed.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnFailedFlushingTemplateChanged)));
 
         public static readonly DependencyProperty FailedTemplateProperty = DependencyProperty.RegisterAttached("FailedTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Error.GetOrLoad(false),
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Failed.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnFailedTemplateChanged)));
 
         public static readonly DependencyProperty ValidatingTemplateProperty = DependencyProperty.RegisterAttached("ValidatingTemplate",

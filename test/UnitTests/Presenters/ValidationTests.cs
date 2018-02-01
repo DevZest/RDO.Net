@@ -8,7 +8,7 @@ namespace DevZest.Data.Presenters
         [TestMethod]
         public void Validation_Templates_not_null()
         {
-            Assert.IsNotNull(Validation.Templates.Error.GetOrLoad());
+            Assert.IsNotNull(Validation.Templates.Failed.GetOrLoad());
         }
     }
 }
