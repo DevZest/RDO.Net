@@ -519,5 +519,10 @@ namespace DevZest.Data.Presenters
         {
             get { return InputManager.GetVisibleValidationErrors(this); }
         }
+
+        public bool HasVisibleValidationError
+        {
+            get { return InputManager.HasVisibleValidationError(this); }
+        }
     }
 }

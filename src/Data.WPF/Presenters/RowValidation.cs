@@ -404,7 +404,7 @@ namespace DevZest.Data.Presenters
             var rowPresenter = rowView.RowPresenter;
             for (int i = 0; i < Inputs.Count; i++)
             {
-                if (HasError(rowPresenter, Inputs[i], true) || IsValidating(rowPresenter, Inputs[i], true))
+                if (HasError(rowPresenter, Inputs[i], true) || IsValidatingStatus(rowPresenter, Inputs[i], true))
                     return ValidationInfo.Empty;
             }
 
@@ -442,7 +442,7 @@ namespace DevZest.Data.Presenters
             if (errors.Count > 0)
                 return ValidationInfo.Error(errors.Seal());
 
-            if (IsValidating(rowPresenter, input, null))
+            if (IsValidatingStatus(rowPresenter, input, null))
                 return ValidationInfo.Validating;
 
             if (!IsVisible(rowPresenter, input.Target) || AnyBlockingErrorInput(rowPresenter, input, false) || AnyBlockingValidatingInput(rowPresenter, input, false))
@@ -499,7 +499,7 @@ namespace DevZest.Data.Presenters
                 }
             }
 
-            if (isAsync)
+            if (isAsync && rowPresenter == CurrentRow)
             {
                 foreach (var asyncValidator in AsyncValidators)
                 {
@@ -539,7 +539,7 @@ namespace DevZest.Data.Presenters
                 }
             }
 
-            if (isAsync)
+            if (isAsync && rowPresenter == CurrentRow)
             {
                 foreach (var asyncValidator in AsyncValidators)
                 {
@@ -675,13 +675,13 @@ namespace DevZest.Data.Presenters
                 if (input.Index == i)
                     continue;
                 var canBlock = isPreceding ? Inputs[i].IsPrecedingOf(input) : input.IsPrecedingOf(Inputs[i]);
-                if (canBlock && IsValidating(rowPresenter, Inputs[i], null))
+                if (canBlock && IsValidatingStatus(rowPresenter, Inputs[i], null))
                     return true;
             }
             return false;
         }
 
-        internal bool IsValidating(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool? blockingPrecedence)
+        internal bool IsValidatingStatus(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool? blockingPrecedence)
         {
             if (blockingPrecedence.HasValue)
             {
@@ -689,12 +689,61 @@ namespace DevZest.Data.Presenters
                     return false;
             }
 
-            foreach (var asyncValidator in AsyncValidators)
+            if (rowPresenter == CurrentRow)
             {
-                if (asyncValidator.Status == AsyncValidatorStatus.Running && input.Target.IsSupersetOf(asyncValidator.SourceColumns))
-                    return true;
+                foreach (var asyncValidator in AsyncValidators)
+                {
+                    if (asyncValidator.Status == AsyncValidatorStatus.Running && input.Target.IsSupersetOf(asyncValidator.SourceColumns))
+                        return true;
+                }
             }
             return false;
+        }
+
+        internal bool HasVisibleError(RowPresenter rowPresenter)
+        {
+            Debug.Assert(rowPresenter != null);
+
+            if (rowPresenter == CurrentRow)
+            {
+                if (_flushingErrors.Count > 0)
+                    return true;
+            }
+
+            if (HasVisibleError(rowPresenter, false))
+                return true;
+
+            if (HasVisibleError(rowPresenter, true))
+                return true;
+
+            return false;
+        }
+
+        private bool HasVisibleError(RowPresenter rowPresenter, bool isAsync)
+        {
+            IReadOnlyDictionary<RowPresenter, IDataValidationErrors> dictionary = isAsync ? _asyncErrorsByRow : _errorsByRow;
+            if (dictionary != null)
+            {
+                IDataValidationErrors errors;
+                if (dictionary.TryGetValue(rowPresenter, out errors))
+                {
+                    if (errors != null && errors.Count > 0 && errors.Any(x => IsVisible(rowPresenter, x.Source)))
+                        return true;
+                }
+            }
+
+            if (isAsync && rowPresenter == CurrentRow)
+            {
+                if (AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Faulted))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsValidating
+        {
+            get { return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running); }
         }
     }
 }

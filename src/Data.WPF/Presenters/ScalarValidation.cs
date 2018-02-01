@@ -87,7 +87,7 @@ namespace DevZest.Data.Presenters
             {
                 for (int i = 0; i < Inputs.Count; i++)
                 {
-                    if (HasError(Inputs[i], 0, true) || IsValidating(Inputs[i], true))
+                    if (HasError(Inputs[i], 0, true) || IsValidatingStatus(Inputs[i], true))
                         return ValidationInfo.Empty;
                 }
             }
@@ -130,7 +130,7 @@ namespace DevZest.Data.Presenters
             if (errors.Count > 0)
                 return ValidationInfo.Error(errors.Seal());
 
-            if (IsValidating(input, null))
+            if (IsValidatingStatus(input, null))
                 return ValidationInfo.Validating;
 
             if (!IsVisible(input.Target) || AnyBlockingErrorInput(input, flowIndex, false) || AnyBlockingValidatingInput(input, false))
@@ -456,13 +456,13 @@ namespace DevZest.Data.Presenters
                 if (input.Index == i)
                     continue;
                 var canBlock = isPreceding ? Inputs[i].IsPrecedingOf(input) : input.IsPrecedingOf(Inputs[i]);
-                if (canBlock && IsValidating(Inputs[i], null))
+                if (canBlock && IsValidatingStatus(Inputs[i], null))
                     return true;
             }
             return false;
         }
 
-        internal bool IsValidating(Input<ScalarBinding, IScalars> input, bool? blockingPrecedence)
+        private bool IsValidatingStatus(Input<ScalarBinding, IScalars> input, bool? blockingPrecedence)
         {
             if (FlowRepeatCount > 1)
                 return false;
@@ -479,6 +479,28 @@ namespace DevZest.Data.Presenters
                     return true;
             }
             return false;
+        }
+
+        public bool HasVisibleError
+        {
+            get
+            {
+                if (_flushingErrors.Count > 0)
+                    return true;
+
+                if (_asyncErrors.Count > 0)
+                    return true;
+
+                if (_errors.Any(x => IsVisible(x.Source)))
+                    return true;
+
+                return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Faulted);
+            }
+        }
+
+        public bool IsValidating
+        {
+            get { return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running); }
         }
     }
 }

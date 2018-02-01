@@ -118,7 +118,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal bool IsValidating(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
         {
-            return _rowValidation == null ? false : _rowValidation.IsValidating(rowPresenter, input, true);
+            return _rowValidation == null ? false : _rowValidation.IsValidatingStatus(rowPresenter, input, true);
         }
 
         protected override void Reload()
@@ -339,6 +339,13 @@ namespace DevZest.Data.Presenters.Primitives
                     result = result.Add(errors[i]);
             }
             return result.Seal();
+        }
+
+        internal bool HasVisibleValidationError(RowPresenter rowPresenter)
+        {
+            Debug.Assert(rowPresenter != null);
+
+            return _rowValidation == null ? false : _rowValidation.HasVisibleError(rowPresenter);
         }
     }
 }
