@@ -213,6 +213,16 @@ namespace DevZest.Data.Presenters
                     result = result.Add(error);
             }
 
+            if (isAsync)
+            {
+                foreach (var asyncValidator in AsyncValidators)
+                {
+                    var fault = asyncValidator.GetFault(scalars);
+                    if (fault != null)
+                        result = result.Add(fault);
+                }
+            }
+
             return result;
         }
 
