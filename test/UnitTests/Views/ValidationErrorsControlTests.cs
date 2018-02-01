@@ -8,7 +8,7 @@ namespace DevZest.Data.Views
         [TestMethod]
         public void ValidationErrorsControl_Templates_not_null()
         {
-            Assert.IsNotNull(ValidationErrorsControl.Templates.ValidationError);
+            Assert.IsNotNull(ValidationErrorsControl.Templates.Failed);
         }
     }
 }

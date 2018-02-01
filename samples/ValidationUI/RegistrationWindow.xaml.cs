@@ -48,7 +48,7 @@ namespace ValidationUI
 
         public void ShowVerbose(Window ownerWindow)
         {
-            Show<VerbosePresenter, Registration>(ownerWindow, "Verbose", ValidationErrorsControl.Templates.ValidationError);
+            Show<VerbosePresenter, Registration>(ownerWindow, "Verbose", ValidationErrorsControl.Templates.Failed, DevZest.Data.Presenters.Validation.Templates.Succeeded);
         }
 
         public void ShowDefaultScalar(Window ownerWindow)
@@ -58,16 +58,18 @@ namespace ValidationUI
 
         public void ShowVerboseScalar(Window ownerWindow)
         {
-            Show<VerboseScalarPresenter, DummyModel>(ownerWindow, "Verbose - Scalar", ValidationErrorsControl.Templates.ValidationError);
+            Show<VerboseScalarPresenter, DummyModel>(ownerWindow, "Verbose - Scalar", ValidationErrorsControl.Templates.Failed, DevZest.Data.Presenters.Validation.Templates.Succeeded);
         }
 
-        private void Show<T, TModel>(Window ownerWindow, string windowTitleSuffix, ControlTemplate errorTemplate = null)
+        private void Show<T, TModel>(Window ownerWindow, string windowTitleSuffix, ControlTemplate failedTemplate = null, ControlTemplate succeededTemplate = null)
             where T : DataPresenter<TModel>, new()
             where TModel : Model, new()
         {
             Title = string.Format("{0} ({1})", Title, windowTitleSuffix);
-            if (errorTemplate != null)
-                DevZest.Data.Presenters.Validation.SetFailedTemplate(_dataView, errorTemplate);
+            if (failedTemplate != null)
+                _dataView.SetFailedTemplate(failedTemplate);
+            if (succeededTemplate != null)
+                _dataView.SetSucceededTemplate(succeededTemplate);
             var dataSet = DataSet<TModel>.New();
             dataSet.Add(new DataRow());
             var presenter = new T();

@@ -10,11 +10,29 @@ namespace DevZest.Data.Presenters
 {
     public static class Validation
     {
-        public static class Templates
+        internal static class TemplateIds
         {
             public static readonly TemplateId Failed = new TemplateId(typeof(Validation));
             public static readonly TemplateId Validating = new TemplateId(typeof(Validation));
             public static readonly TemplateId Succeeded = new TemplateId(typeof(Validation));
+        }
+
+        public static class Templates
+        {
+            public static ControlTemplate Failed
+            {
+                get { return TemplateIds.Failed.GetOrLoad(); }
+            }
+
+            public static ControlTemplate Validating
+            {
+                get { return TemplateIds.Validating.GetOrLoad(); }
+            }
+
+            public static ControlTemplate Succeeded
+            {
+                get { return TemplateIds.Succeeded.GetOrLoad(); }
+            }
         }
 
         private static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Status",
@@ -22,15 +40,15 @@ namespace DevZest.Data.Presenters
         public static readonly DependencyProperty StatusProperty = StatusPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty FailedFlushingTemplateProperty = DependencyProperty.RegisterAttached("FailedFlushingTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Failed.GetOrLoad(false),
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(TemplateIds.Failed.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnFailedFlushingTemplateChanged)));
 
         public static readonly DependencyProperty FailedTemplateProperty = DependencyProperty.RegisterAttached("FailedTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Failed.GetOrLoad(false),
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(TemplateIds.Failed.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnFailedTemplateChanged)));
 
         public static readonly DependencyProperty ValidatingTemplateProperty = DependencyProperty.RegisterAttached("ValidatingTemplate",
-            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(Templates.Validating.GetOrLoad(false),
+            typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(TemplateIds.Validating.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnValidatingTemplateChanged)));
 
         public static readonly DependencyProperty SucceededTemplateProperty = DependencyProperty.RegisterAttached("SucceededTemplate",

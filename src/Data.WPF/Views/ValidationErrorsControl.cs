@@ -12,13 +12,16 @@ namespace DevZest.Data.Views
 {
     public class ValidationErrorsControl : ItemsControl
     {
+        internal static class TemplateIds
+        {
+            public static readonly TemplateId Failed = new TemplateId(typeof(ValidationErrorsControl));
+        }
+
         public static class Templates
         {
-            public static readonly TemplateId ValidationErrorId = new TemplateId(typeof(ValidationErrorsControl));
-
-            public static ControlTemplate ValidationError
+            public static ControlTemplate Failed
             {
-                get { return ValidationErrorId.GetOrLoad(); }
+                get { return TemplateIds.Failed.GetOrLoad(); }
             }
         }
 

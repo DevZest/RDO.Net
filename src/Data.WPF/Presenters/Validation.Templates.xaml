@@ -5,7 +5,7 @@
     xmlns:primitives="clr-namespace:DevZest.Data.Views.Primitives"
     xmlns:view="clr-namespace:DevZest.Data.Views">
 
-    <ControlTemplate x:Key="{x:Static local:Validation+Templates.Failed}">
+    <ControlTemplate x:Key="{x:Static local:Validation+TemplateIds.Failed}">
         <ControlTemplate.Resources>
             <Style TargetType="{x:Type view:ValidationErrorsControl}">
                 <Setter Property="Background" Value="Red" />
@@ -33,7 +33,7 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="{x:Static local:Validation+Templates.Validating}">
+    <ControlTemplate x:Key="{x:Static local:Validation+TemplateIds.Validating}">
         <Grid x:Name="_grid">
             <AdornedElementPlaceholder x:Name="_placeholder" />
             <Border Padding="3" MaxHeight="{Binding ElementName=_placeholder, Path=AdornedElement.ActualHeight, Mode=OneWay}"
@@ -45,7 +45,7 @@
         </Grid>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="{x:Static local:Validation+Templates.Succeeded}">
+    <ControlTemplate x:Key="{x:Static local:Validation+TemplateIds.Succeeded}">
         <Grid x:Name="_grid">
             <AdornedElementPlaceholder x:Name="_placeholder" />
             <Border Padding="3" MaxHeight="{Binding ElementName=_placeholder, Path=AdornedElement.ActualHeight, Mode=OneWay}"

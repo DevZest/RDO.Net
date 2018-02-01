@@ -96,15 +96,15 @@ namespace ValidationUI
                 var emailAddress = _.EmailAddress.BindToTextBox();
                 var password = _.Password.BindToPasswordBox();
                 var confirmPassword = _.PasswordConfirmation.BindToPasswordBox();
-                var passwordMismatch = new RowBinding[] { password, confirmPassword }.BindToValidationPlaceholder();
-                var interests1 = _.Interests.BindToCheckBox(Interests.Books);
-                var interests2 = _.Interests.BindToCheckBox(Interests.Comics);
-                var interests3 = _.Interests.BindToCheckBox(Interests.Hunting);
-                var interests4 = _.Interests.BindToCheckBox(Interests.Movies);
-                var interests5 = _.Interests.BindToCheckBox(Interests.Music);
-                var interests6 = _.Interests.BindToCheckBox(Interests.Physics);
-                var interests7 = _.Interests.BindToCheckBox(Interests.Shopping);
-                var interests8 = _.Interests.BindToCheckBox(Interests.Sports);
+                var passwordMismatch = new RowBinding[] { password, confirmPassword }.BindToValidationPlaceholder().OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests1 = _.Interests.BindToCheckBox(Interests.Books).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests2 = _.Interests.BindToCheckBox(Interests.Comics).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests3 = _.Interests.BindToCheckBox(Interests.Hunting).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests4 = _.Interests.BindToCheckBox(Interests.Movies).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests5 = _.Interests.BindToCheckBox(Interests.Music).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests6 = _.Interests.BindToCheckBox(Interests.Physics).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests7 = _.Interests.BindToCheckBox(Interests.Shopping).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests8 = _.Interests.BindToCheckBox(Interests.Sports).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
                 var interestsValidation = new RowBinding[] { interests1, interests2, interests3, interests4, interests5, interests6, interests7, interests8 }.BindToValidationPlaceholder();
                 builder
                     .GridColumns("Auto", "*", "*")
@@ -244,15 +244,15 @@ namespace ValidationUI
                 var emailAddress = _emailAddress.BindToTextBox();
                 var password = _password.BindToPasswordBox();
                 var confirmPassword = _passwordConfirmation.BindToPasswordBox();
-                var passwordMismatch = new ScalarBinding[] { password, confirmPassword }.BindToValidationPlaceholder();
-                var interests1 = _interests.BindToCheckBox(Interests.Books);
-                var interests2 = _interests.BindToCheckBox(Interests.Comics);
-                var interests3 = _interests.BindToCheckBox(Interests.Hunting);
-                var interests4 = _interests.BindToCheckBox(Interests.Movies);
-                var interests5 = _interests.BindToCheckBox(Interests.Music);
-                var interests6 = _interests.BindToCheckBox(Interests.Physics);
-                var interests7 = _interests.BindToCheckBox(Interests.Shopping);
-                var interests8 = _interests.BindToCheckBox(Interests.Sports);
+                var passwordMismatch = new ScalarBinding[] { password, confirmPassword }.BindToValidationPlaceholder().OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests1 = _interests.BindToCheckBox(Interests.Books).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests2 = _interests.BindToCheckBox(Interests.Comics).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests3 = _interests.BindToCheckBox(Interests.Hunting).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests4 = _interests.BindToCheckBox(Interests.Movies).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests5 = _interests.BindToCheckBox(Interests.Music).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests6 = _interests.BindToCheckBox(Interests.Physics).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests7 = _interests.BindToCheckBox(Interests.Shopping).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
+                var interests8 = _interests.BindToCheckBox(Interests.Sports).OverrideSetup((v, p) => v.SetSucceededTemplate(null));
                 var interestsValidation = new ScalarBinding[] { interests1, interests2, interests3, interests4, interests5, interests6, interests7, interests8 }.BindToValidationPlaceholder();
                 builder
                     .GridColumns("Auto", "*", "*")
