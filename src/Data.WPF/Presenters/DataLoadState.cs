@@ -1,4 +1,4 @@
-﻿namespace DevZest.Data.Views
+﻿namespace DevZest.Data.Presenters
 {
     public enum DataLoadState
     {

@@ -108,7 +108,7 @@
     <Compile Include="Utilities\Windows\DragHandlerBase.cs" />
     <Compile Include="Utilities\Windows\KeyboardManager.cs" />
     <Compile Include="Utilities\Windows\Point.IsClose.cs" />
-    <Compile Include="Views\DataLoadState.cs" />
+    <Compile Include="Presenters\DataLoadState.cs" />
     <Compile Include="Views\ForeignKeyBox.cs" />
     <Compile Include="Views\InertEditor.cs" />
     <Compile Include="Views\Primitives\LoadingAnimation.xaml.cs">
