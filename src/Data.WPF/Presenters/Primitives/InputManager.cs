@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -168,13 +169,20 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal bool QueryEndEdit()
         {
-            RowValidation.ValidateCurrentRow();
-            var hasError = RowValidation.CurrentRowErrors.Count > 0;
+            if (_rowValidation == null)
+                return true;
+
+            _rowValidation.ValidateCurrentRow();
+            var hasError = _rowValidation.HasError(CurrentRow, null, false) || _rowValidation.HasError(CurrentRow, null, true);
             if (hasError)
             {
-                FocusToInputError();
+                FocusToRowInputError(CurrentRow);
                 return false;
             }
+
+            var isValidationg = RowValidation.AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running);
+            if (isValidationg)
+                return false;
             return true;
         }
 

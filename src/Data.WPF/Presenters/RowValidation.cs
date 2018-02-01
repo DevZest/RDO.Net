@@ -113,19 +113,6 @@ namespace DevZest.Data.Presenters
                 return DataValidationErrors.Empty;
         }
 
-        public IDataValidationErrors CurrentRowErrors
-        {
-            get
-            {
-                if (CurrentRow == null)
-                    return DataValidationErrors.Empty;
-
-                var result = GetErrors(_errorsByRow, CurrentRow);
-                var asyncErrors = GetErrors(_asyncErrorsByRow, CurrentRow);
-                return Merge(result, asyncErrors).Seal();
-            }
-        }
-
         private void ClearErrors(RowPresenter rowPresenter)
         {
             Debug.Assert(rowPresenter != null);
@@ -499,7 +486,7 @@ namespace DevZest.Data.Presenters
             return false;
         }
 
-        private bool HasError(RowPresenter rowPresenter, IColumns source, bool isAsync)
+        internal bool HasError(RowPresenter rowPresenter, IColumns source, bool isAsync)
         {
             IReadOnlyDictionary<RowPresenter, IDataValidationErrors> dictionary = isAsync ? _asyncErrorsByRow : _errorsByRow;
             if (dictionary != null)
