@@ -7,21 +7,21 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Views
 {
-    public class InertEditor : ContentControl
+    public class InPlaceEditor : ContentControl
     {
-        private static readonly DependencyPropertyKey InertElementPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InertElement), typeof(UIElement), typeof(InertEditor),
+        private static readonly DependencyPropertyKey InertElementPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InertElement), typeof(UIElement), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty InertElementProperty = InertElementPropertyKey.DependencyProperty;
         private static readonly DependencyPropertyKey InertElementVisibilityPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InertElementVisibility), typeof(Visibility),
-            typeof(InertEditor), new FrameworkPropertyMetadata(Visibility.Visible));
+            typeof(InPlaceEditor), new FrameworkPropertyMetadata(Visibility.Visible));
         public static readonly DependencyProperty InertElementVisibilityProperty = InertElementVisibilityPropertyKey.DependencyProperty;
-        private static readonly DependencyPropertyKey EditorElementPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditorElement), typeof(UIElement), typeof(InertEditor),
+        private static readonly DependencyPropertyKey EditorElementPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditorElement), typeof(UIElement), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty EditorElementProperty = EditorElementPropertyKey.DependencyProperty;
         private static readonly DependencyPropertyKey EditorElementVisibilityPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditorElementVisibility), typeof(Visibility),
-            typeof(InertEditor), new FrameworkPropertyMetadata(Visibility.Collapsed));
+            typeof(InPlaceEditor), new FrameworkPropertyMetadata(Visibility.Collapsed));
         public static readonly DependencyProperty EditorElementVisibilityProperty = EditorElementVisibilityPropertyKey.DependencyProperty;
-        private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditing), typeof(bool), typeof(InertEditor),
+        private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditing), typeof(bool), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(BooleanBoxes.False, new PropertyChangedCallback(_OnIsEditingChanged)));
         public static readonly DependencyProperty IsEditingProperty = IsEditingPropertyKey.DependencyProperty;
 
@@ -33,7 +33,7 @@ namespace DevZest.Data.Views
 
         private static void _OnIsEditingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((InertEditor)d).OnIsEditingChanged();
+            ((InPlaceEditor)d).OnIsEditingChanged();
         }
 
         private void OnIsEditingChanged()

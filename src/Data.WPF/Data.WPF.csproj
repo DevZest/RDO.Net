@@ -110,7 +110,7 @@
     <Compile Include="Utilities\Windows\Point.IsClose.cs" />
     <Compile Include="Presenters\DataLoadState.cs" />
     <Compile Include="Views\ForeignKeyBox.cs" />
-    <Compile Include="Views\InertEditor.cs" />
+    <Compile Include="Views\InPlaceEditor.cs" />
     <Compile Include="Views\Primitives\LoadingAnimation.xaml.cs">
       <DependentUpon>LoadingAnimation.xaml</DependentUpon>
     </Compile>
