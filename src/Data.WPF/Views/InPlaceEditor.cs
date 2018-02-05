@@ -4,118 +4,103 @@ using System.Windows.Controls;
 using System;
 using DevZest.Data.Presenters;
 using System.Diagnostics;
+using System.Windows.Media;
+using System.Collections;
 
 namespace DevZest.Data.Views
 {
-    public class InPlaceEditor : ContentControl
+    public class InPlaceEditor : FrameworkElement
     {
-        private static readonly DependencyPropertyKey InertElementPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InertElement), typeof(UIElement), typeof(InPlaceEditor),
-            new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty InertElementProperty = InertElementPropertyKey.DependencyProperty;
-        private static readonly DependencyPropertyKey InertElementVisibilityPropertyKey = DependencyProperty.RegisterReadOnly(nameof(InertElementVisibility), typeof(Visibility),
-            typeof(InPlaceEditor), new FrameworkPropertyMetadata(Visibility.Visible));
-        public static readonly DependencyProperty InertElementVisibilityProperty = InertElementVisibilityPropertyKey.DependencyProperty;
-        private static readonly DependencyPropertyKey EditorElementPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditorElement), typeof(UIElement), typeof(InPlaceEditor),
-            new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty EditorElementProperty = EditorElementPropertyKey.DependencyProperty;
-        private static readonly DependencyPropertyKey EditorElementVisibilityPropertyKey = DependencyProperty.RegisterReadOnly(nameof(EditorElementVisibility), typeof(Visibility),
-            typeof(InPlaceEditor), new FrameworkPropertyMetadata(Visibility.Collapsed));
-        public static readonly DependencyProperty EditorElementVisibilityProperty = EditorElementVisibilityPropertyKey.DependencyProperty;
-        private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditing), typeof(bool), typeof(InPlaceEditor),
-            new FrameworkPropertyMetadata(BooleanBoxes.False, new PropertyChangedCallback(_OnIsEditingChanged)));
-        public static readonly DependencyProperty IsEditingProperty = IsEditingPropertyKey.DependencyProperty;
+        public bool IsEditing { get; private set; }
 
-        public bool IsEditing
-        {
-            get { return (bool)GetValue(IsEditingProperty); }
-            private set { SetValue(IsEditingPropertyKey, BooleanBoxes.Box(value)); }
-        }
-
-        private static void _OnIsEditingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((InPlaceEditor)d).OnIsEditingChanged();
-        }
-
-        private void OnIsEditingChanged()
-        {
-            var rowPresenter = this.GetRowPresenter();
-            if (rowPresenter != null)
-                rowPresenter.DataPresenter.InvalidateView();
-        }
-
+        private UIElement _inertElement;
         public UIElement InertElement
         {
-            get { return (UIElement)GetValue(InertElementProperty);  }
-            private set { SetValue(InertElementPropertyKey, value); }
-        }
-
-        public Visibility InertElementVisibility
-        {
-            get { return (Visibility)GetValue(InertElementVisibilityProperty); }
-            private set { SetValue(InertElementVisibilityPropertyKey, value); }
-        }
-
-        public UIElement EditorElement
-        {
-            get { return (UIElement)GetValue(EditorElementProperty); }
-            private set { SetValue(EditorElementPropertyKey, value); }
-        }
-
-        public Visibility EditorElementVisibility
-        {
-            get { return (Visibility)GetValue(EditorElementVisibilityProperty); }
-            private set { SetValue(EditorElementPropertyKey, value); }
-        }
-
-        internal void Setup(UIElement inertElement, UIElement editorElement)
-        {
-            Debug.Assert(inertElement != null);
-            Debug.Assert(editorElement != null);
-            InertElement = inertElement;
-            EditorElement = editorElement;
-            System.Windows.Controls.Validation.SetValidationAdornerSiteFor(EditorElement, this);
-        }
-
-        internal void Cleanup()
-        {
-            System.Windows.Controls.Validation.SetValidationAdornerSiteFor(EditorElement, null);
-            InertElement = EditorElement = null;
-        }
-
-        public void BeginEdit()
-        {
-            if (IsEditing)
-                return;
-
-            throw new NotImplementedException();
-        }
-
-        public bool CanEndEdit
-        {
-            get
+            get { return _inertElement;  }
+            private set
             {
-                //return IsEditing ? _bindingDispatcher.CanEndEdit : false;
-                throw new NotImplementedException();
+                if (_inertElement == value)
+                    return;
+
+                var oldValue = _inertElement;
+                _inertElement = value;
+                OnChildChanged(oldValue, value);
             }
         }
 
-        public bool EndEdit()
+        private void OnChildChanged(UIElement oldValue, UIElement newValue)
         {
-            if (!CanEndEdit)
-                return false;
-
-            //_bindingDispatcher.EndEdit();
-            //return true;
-            throw new NotImplementedException();
+            if (oldValue != null)
+            {
+                RemoveLogicalChild(oldValue);
+                RemoveVisualChild(oldValue);
+            }
+            if (newValue != null)
+            {
+                AddLogicalChild(newValue);
+                AddVisualChild(newValue);
+            }
         }
 
-        public void CancelEdit()
+        private UIElement _editorElement;
+        public UIElement EditorElement
         {
-            if (!IsEditing)
-                return;
+            get { return _editorElement; }
+            private set
+            {
+                if (_editorElement == value)
+                    return;
 
-            //_bindingDispatcher.CancelEdit();
-            throw new NotImplementedException();
+                var oldValue = _editorElement;
+                _editorElement = value;
+                OnChildChanged(oldValue, value);
+            }
+        }
+
+        public UIElement Child
+        {
+            get { return IsEditing ? EditorElement : InertElement; }
+        }
+
+        protected override Visual GetVisualChild(int index)
+        {
+            if (index < 0 || index >= VisualChildrenCount)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            return Child;
+        }
+
+        protected override IEnumerator LogicalChildren
+        {
+            get
+            {
+                var child = Child;
+                return child == null ? EmptyEnumerator.Singleton : new SingleChildEnumerator(child);
+            }
+        }
+
+        protected override int VisualChildrenCount
+        {
+            get { return Child == null ? 0 : 1; }
+        }
+
+        protected override Size MeasureOverride(Size constraint)
+        {
+            UIElement child = Child;
+            if (child != null)
+            {
+                child.Measure(constraint);
+                return child.DesiredSize;
+            }
+            return default(Size);
+        }
+
+        protected override Size ArrangeOverride(Size arrangeSize)
+        {
+            UIElement child = Child;
+            if (child != null)
+                child.Arrange(new Rect(arrangeSize));
+            return arrangeSize;
         }
     }
 }
