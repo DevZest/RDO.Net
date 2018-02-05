@@ -1,9 +1,5 @@
-﻿using DevZest.Data.Presenters.Primitives;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System;
-using DevZest.Data.Presenters;
-using System.Diagnostics;
 using System.Windows.Media;
 using System.Collections;
 
