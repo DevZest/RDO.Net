@@ -153,13 +153,13 @@ namespace DevZest.Data.Presenters
         public ValidationInfo GetValidationInfo(RowPresenter rowPresenter)
         {
             Check.NotNull(rowPresenter, nameof(rowPresenter));
-            return rowPresenter.GetValidationInfo(this);
+            return RowValidation.GetInfo(rowPresenter, this);
         }
 
         public bool HasValidationError(RowPresenter rowPresenter)
         {
             Check.NotNull(rowPresenter, nameof(rowPresenter));
-            return rowPresenter.HasValidationError(this);
+            return RowValidation.HasError(rowPresenter, this, true);
         }
 
         private void RefreshValidation(T element, RowPresenter rowPresenter)
