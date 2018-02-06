@@ -170,10 +170,11 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter, FlushingError> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
-            if (!IsFlushing && GetFlushingError(element) == null)
+            var flushingError = GetFlushingError(element);
+            if (!IsFlushing && flushingError == null)
                 RowBinding.Refresh(element, rowPresenter);
             if (_onRefresh != null)
-                _onRefresh(element, rowPresenter, GetFlushingError(element));
+                _onRefresh(element, rowPresenter, flushingError);
             RefreshValidation(element, rowPresenter);
         }
 
