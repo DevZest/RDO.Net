@@ -141,13 +141,7 @@ namespace DevZest.Data.Presenters
         {
             RowBinding rowBinding = RowBinding;
             var element = rowBinding[rowPresenter];
-            if (element != null)
-            {
-                var flushingError = GetFlushingError(element);
-                if (flushingError != null)
-                    return flushingError;
-            }
-            return null;
+            return element != null ? GetFlushingError(element) : null;
         }
 
         public ValidationInfo GetValidationInfo(RowPresenter rowPresenter)
