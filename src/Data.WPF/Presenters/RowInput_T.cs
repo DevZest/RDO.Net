@@ -161,22 +161,12 @@ namespace DevZest.Data.Presenters
             element.RefreshValidation(GetValidationInfo(rowPresenter));
         }
 
-        private Action<T, RowPresenter, FlushingError> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
             var flushingError = GetFlushingError(element);
             if (!IsFlushing && flushingError == null)
                 RowBinding.Refresh(element, rowPresenter);
-            if (_onRefresh != null)
-                _onRefresh(element, rowPresenter, flushingError);
             RefreshValidation(element, rowPresenter);
-        }
-
-        public RowInput<T> WithRefreshAction(Action<T, RowPresenter, FlushingError> onRefresh)
-        {
-            VerifyNotSealed();
-            _onRefresh = onRefresh;
-            return this;
         }
 
         public RowBinding<T> EndInput()
