@@ -4,11 +4,92 @@ using System.Windows.Media;
 using System.Collections;
 using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
+using System.Diagnostics;
 
 namespace DevZest.Data.Views
 {
     public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement
     {
+        private interface IProxyRowInput
+        {
+            RowBinding EditorBinding { get; }
+            RowBinding InertBinding { get; }
+        }
+
+        private sealed class ProxyRowInput<TEditor, TInert> : RowInput<InPlaceEditor>, IRowValidation, IProxyRowInput
+            where TEditor : UIElement, new()
+            where TInert : UIElement, new()
+        {
+            private readonly RowInput<TEditor> _editorInput;
+            private readonly RowBinding<TInert> _inertBinding;
+
+            public ProxyRowInput(RowBinding<InPlaceEditor> binding, RowInput<TEditor> editorInput, RowBinding<TInert> inertBinding)
+                : base(binding, new ExplicitTrigger<InPlaceEditor>(), null)
+            {
+                Debug.Assert(editorInput != null);
+                Debug.Assert(inertBinding != null);
+                _editorInput = editorInput;
+                _inertBinding = inertBinding;
+                _editorInput.InjectRowValidation(this);
+            }
+
+            public RowBinding EditorBinding
+            {
+                get { return _editorInput.Binding; }
+            }
+
+            public RowBinding InertBinding
+            {
+                get { return _inertBinding; }
+            }
+
+            private IRowValidation BaseRowValidation
+            {
+                get { return InputManager.RowValidation; }
+            }
+
+            public ValidationInfo GetInfo(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
+            {
+                return input == this ? BaseRowValidation.GetInfo(rowPresenter, input) : ValidationInfo.Empty;
+            }
+
+            public bool HasError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool? blockingPrecedence)
+            {
+                return input == this ? BaseRowValidation.HasError(rowPresenter, input, blockingPrecedence) : false;
+            }
+
+            public void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged) where T : UIElement, new()
+            {
+                BaseRowValidation.OnFlushed(this, makeProgress, valueChanged);
+            }
+
+            public override IColumns Target
+            {
+                get { return _editorInput.Target; }
+            }
+
+            internal override void Flush(InPlaceEditor element)
+            {
+                var editorElement = element.EditorElement;
+                if (editorElement != null)
+                    _editorInput.Flush((TEditor)editorElement);
+            }
+
+            bool IRowValidation.IsLockedByFlushingError(UIElement element)
+            {
+                var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
+                Debug.Assert(currentInPlaceEditor != null);
+                return BaseRowValidation.IsLockedByFlushingError(currentInPlaceEditor);
+            }
+
+            void IRowValidation.SetFlushingError(UIElement element, string flushingErrorMessage)
+            {
+                var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
+                Debug.Assert(currentInPlaceEditor != null);
+                BaseRowValidation.SetFlushingError(currentInPlaceEditor, flushingErrorMessage);
+            }
+        }
+
         public interface ISwitcher : IService
         {
             bool AffectsIsEditing(InPlaceEditor inPlaceEditor, DependencyProperty dp);
@@ -50,7 +131,38 @@ namespace DevZest.Data.Views
             private set { SetValue(IsRowEditingProperty, BooleanBoxes.Box(value)); }
         }
 
-        public bool IsEditing { get; private set; }
+        private bool _isEditing;
+        public bool IsEditing
+        {
+            get { return _isEditing; }
+            private set
+            {
+                if (_isEditing == value)
+                    return;
+
+                _isEditing = value;
+                var proxyRowInput = GetProxyRowInput();
+                if (proxyRowInput != null)
+                    Setup(GetProxyRowInput(), RowPresenter);
+            }
+        }
+
+        private void InitIsEditing()
+        {
+            var switcher = DataPresenter?.GetService<ISwitcher>();
+            if (switcher != null)
+                _isEditing = switcher.GetIsEditing(this);
+        }
+
+        private RowView RowView
+        {
+            get { return RowView.GetCurrent(this); }
+        }
+
+        private RowPresenter RowPresenter
+        {
+            get { return RowView?.RowPresenter; }
+        }
 
         private UIElement _inertElement;
         public UIElement InertElement
@@ -179,18 +291,72 @@ namespace DevZest.Data.Views
 
         void IRowElement.Setup(RowPresenter rowPresenter)
         {
-            throw new NotImplementedException();
+            InitIsEditing();
+            Setup(GetProxyRowInput(), rowPresenter);
+        }
+
+        private void Setup(IProxyRowInput proxyRowInput, RowPresenter rowPresenter)
+        {
+            if (proxyRowInput == null)
+                return;
+
+            if (IsEditing)
+                EditorElement = proxyRowInput.EditorBinding.Setup(rowPresenter);
+            else
+                InertElement = proxyRowInput.InertBinding.Setup(rowPresenter);
         }
 
         void IRowElement.Refresh(RowPresenter rowPresenter)
         {
             IsRowEditing = rowPresenter.IsEditing;
+
+            var proxyRowInput = GetProxyRowInput();
+            if (proxyRowInput == null)
+                return;
+
+            if (EditorElement != null)
+                proxyRowInput.EditorBinding.Refresh(EditorElement);
+            else if (InertElement != null)
+                proxyRowInput.InertBinding.Refresh(InertElement);
         }
 
         void IRowElement.Cleanup(RowPresenter rowPresenter)
         {
-            throw new NotImplementedException();
+            var proxyRowInput = GetProxyRowInput();
+            Cleanup(proxyRowInput);
         }
 
+        private void Cleanup(IProxyRowInput proxyRowInput)
+        {
+            if (proxyRowInput == null)
+                return;
+
+            if (EditorElement != null)
+            {
+                proxyRowInput.EditorBinding.Cleanup(EditorElement);
+                EditorElement = null;
+            }
+            else if (InertElement != null)
+            {
+                proxyRowInput.InertBinding.Cleanup(InertElement);
+                InertElement = null;
+            }
+        }
+
+        private static InPlaceEditor GetCurrentInPlaceEditor(UIElement element)
+        {
+            var result = element as InPlaceEditor;
+            return result ?? VisualTreeHelper.GetParent(element) as InPlaceEditor;
+        }
+
+        private static bool IsInPlaceEditor(UIElement element)
+        {
+            return GetCurrentInPlaceEditor(element) == element;
+        }
+
+        private IProxyRowInput GetProxyRowInput()
+        {
+            return (this.GetBinding() as RowBinding)?.RowInput as IProxyRowInput;
+        }
     }
 }

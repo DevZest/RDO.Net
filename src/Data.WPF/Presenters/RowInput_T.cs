@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowInput<T> : Input<T, RowBinding, IColumns>
+    public class RowInput<T> : Input<T, RowBinding, IColumns>
         where T : UIElement, new()
     {
         internal RowInput(RowBinding<T> rowBinding, Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
@@ -123,7 +122,7 @@ namespace DevZest.Data.Presenters
 
         internal override bool IsValidationVisible
         {
-            get { return RowValidation.IsVisible(CurrentRow, Target); }
+            get { return InputManager.RowValidation.IsVisible(CurrentRow, Target); }
         }
 
         internal override void FlushCore(T element, bool makeProgress)

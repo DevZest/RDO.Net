@@ -106,7 +106,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public bool IsFlushing { get; private set; }
 
-        internal void Flush(T element)
+        internal virtual void Flush(T element)
         {
             PerformFlush(element, _progressiveFlushingTrigger == null || IsValidationVisible);
         }

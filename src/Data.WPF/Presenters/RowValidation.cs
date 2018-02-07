@@ -12,7 +12,6 @@ namespace DevZest.Data.Presenters
     {
         FlushingError GetFlushingError(UIElement element);
         void SetFlushingError(UIElement element, string flushingErrorMessage);
-        bool IsVisible(RowPresenter rowPresenter, IColumns columns);
         void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged) where T : UIElement, new();
         ValidationInfo GetInfo(RowPresenter rowPresenter, Input<RowBinding, IColumns> input);
         bool HasError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool? blockingPrecedence);
