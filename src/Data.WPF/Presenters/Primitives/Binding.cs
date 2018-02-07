@@ -18,7 +18,12 @@ namespace DevZest.Data.Presenters.Primitives
             private set { _template = value; }
         }
 
-        public GridRange GridRange { get; private set; }
+        private GridRange _gridRange;
+        public GridRange GridRange
+        {
+            get { return ParentBinding != null ? ParentBinding.GridRange : _gridRange; }
+            private set { _gridRange = value; }
+        }
 
         public int Ordinal { get; internal set; } = -1;
 
@@ -52,6 +57,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(template != null && Template == null);
 
+            VerifyNotSealed();
             Template = template;
             GridRange = gridRange;
             Ordinal = ordinal;

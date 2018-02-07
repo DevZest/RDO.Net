@@ -10,6 +10,15 @@ namespace DevZest.Data.Views
 {
     public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement
     {
+        internal static RowBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(RowInput<TEditing> rowInput, RowBinding<TInert> inertRowBinding)
+            where TEditing : UIElement, new()
+            where TInert : UIElement, new()
+        {
+            var result = new RowBinding<InPlaceEditor>(null);
+            result.Input = new ProxyRowInput<TEditing, TInert>(result, rowInput, inertRowBinding);
+            return result;
+        }
+
         private interface IProxyRowInput
         {
             RowBinding EditorBinding { get; }
@@ -31,6 +40,8 @@ namespace DevZest.Data.Views
                 _editorInput = editorInput;
                 _inertBinding = inertBinding;
                 _editorInput.InjectRowValidation(this);
+                InertBinding.Seal(binding, 0);
+                EditorBinding.Seal(binding, 1);
             }
 
             public RowBinding EditorBinding
@@ -78,8 +89,7 @@ namespace DevZest.Data.Views
             bool IRowValidation.IsLockedByFlushingError(UIElement element)
             {
                 var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
-                Debug.Assert(currentInPlaceEditor != null);
-                return BaseRowValidation.IsLockedByFlushingError(currentInPlaceEditor);
+                return currentInPlaceEditor != null ? BaseRowValidation.IsLockedByFlushingError(currentInPlaceEditor) : false;
             }
 
             void IRowValidation.SetFlushingError(UIElement element, string flushingErrorMessage)
@@ -128,7 +138,7 @@ namespace DevZest.Data.Views
         public bool IsRowEditing
         {
             get { return (bool)GetValue(IsRowEditingProperty); }
-            private set { SetValue(IsRowEditingProperty, BooleanBoxes.Box(value)); }
+            private set { SetValue(IsRowEditingPropertyKey, BooleanBoxes.Box(value)); }
         }
 
         private bool _isEditing;
@@ -267,6 +277,7 @@ namespace DevZest.Data.Views
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
+
             var switcher = DataPresenter?.GetService<ISwitcher>();
             if (switcher != null)
             {
@@ -301,9 +312,25 @@ namespace DevZest.Data.Views
                 return;
 
             if (IsEditing)
-                EditorElement = proxyRowInput.EditorBinding.Setup(rowPresenter);
+            {
+                InertElement = null;
+                EditorElement = GenerateElement(proxyRowInput.EditorBinding, rowPresenter);
+            }
             else
-                InertElement = proxyRowInput.InertBinding.Setup(rowPresenter);
+            {
+                EditorElement = null;
+                InertElement = GenerateElement(proxyRowInput.InertBinding, rowPresenter);
+            }
+            InvalidateMeasure();
+        }
+
+        private static UIElement GenerateElement(RowBinding binding, RowPresenter p)
+        {
+            binding.BeginSetup(null);
+            var result = binding.Setup(p);
+            binding.EndSetup();
+            binding.Refresh(result);
+            return result;
         }
 
         void IRowElement.Refresh(RowPresenter rowPresenter)

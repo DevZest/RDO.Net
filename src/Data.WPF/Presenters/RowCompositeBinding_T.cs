@@ -9,6 +9,15 @@ namespace DevZest.Data.Presenters
     public sealed class RowCompositeBinding<T> : RowBindingBase<T>
         where T : UIElement, new()
     {
+        public RowCompositeBinding()
+        {
+        }
+
+        public RowCompositeBinding(Action<T, RowPresenter> onRefresh)
+        {
+            _onRefresh = onRefresh;
+        }
+
         private List<RowBinding> _childBindings = new List<RowBinding>();
         private List<Func<T, UIElement>> _childGetters = new List<Func<T, UIElement>>();
 
@@ -65,6 +74,8 @@ namespace DevZest.Data.Presenters
                 if (childBinding.GetSettingUpElement() != null)
                     childBinding.Setup(rowPresenter);
             }
+            if (_onRefresh != null)
+                _onRefresh(SettingUpElement, rowPresenter);
         }
 
         private bool _isRefreshing;
@@ -73,10 +84,14 @@ namespace DevZest.Data.Presenters
             get { return _isRefreshing; }
         }
 
+        private Action<T, RowPresenter> _onRefresh;
         internal sealed override void Refresh(UIElement element)
         {
             _isRefreshing = true;
-            PerformRefresh((T)element);
+            var v = (T)element;
+            PerformRefresh(v);
+            if (_onRefresh != null)
+                _onRefresh(v, element.GetRowPresenter());
             _isRefreshing = false;
         }
 

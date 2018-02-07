@@ -26,7 +26,7 @@ namespace DevZest.Data.Presenters
             get { return Array<RowBinding>.Empty; }
         }
 
-        public RowInput<T> Input { get; private set; }
+        public RowInput<T> Input { get; internal set; }
 
         public override Input<RowBinding, IColumns> RowInput
         {

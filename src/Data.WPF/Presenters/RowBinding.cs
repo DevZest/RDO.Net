@@ -58,9 +58,9 @@ namespace DevZest.Data.Presenters
             get { return Parent; }
         }
 
-        internal void Seal<T>(RowCompositeBinding<T> parent, int ordinal)
-            where T : UIElement, new()
+        internal void Seal(RowBinding parent, int ordinal)
         {
+            VerifyNotSealed();
             Parent = parent;
             Ordinal = ordinal;
         }

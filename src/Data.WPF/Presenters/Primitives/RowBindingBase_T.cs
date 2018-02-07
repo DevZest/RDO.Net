@@ -7,13 +7,6 @@ namespace DevZest.Data.Presenters.Primitives
     public abstract class RowBindingBase<T> : RowBinding
         where T : UIElement, new()
     {
-        private T Create()
-        {
-            var result = new T();
-            OnCreated(result);
-            return result;
-        }
-
         public T SettingUpElement { get; private set; }
 
         internal sealed override UIElement GetSettingUpElement()
@@ -23,7 +16,9 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal override void BeginSetup(UIElement value)
         {
-            SettingUpElement = value == null ? Create() : (T)value;
+            SettingUpElement = value == null ? new T() : (T)value;
+            if (SettingUpElement.GetBinding() == null)
+                OnCreated(SettingUpElement);
         }
 
         internal override void EndSetup()

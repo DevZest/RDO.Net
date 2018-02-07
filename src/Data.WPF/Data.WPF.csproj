@@ -128,7 +128,7 @@
     <Compile Include="Presenters\AsyncValidatorStatus.cs" />
     <Compile Include="Presenters\AutoSizeWaiver.cs" />
     <Compile Include="Presenters\BindingManager.cs" />
-    <Compile Include="Presenters\BindingFactory.cs" />
+    <Compile Include="Presenters\BindingFactory.InPlaceEditor.cs" />
     <Compile Include="Presenters\BindingFactory.TextBox.cs" />
     <Compile Include="Presenters\BlockCompositeBinding_T.cs" />
     <Compile Include="Presenters\CommandEntry.cs" />

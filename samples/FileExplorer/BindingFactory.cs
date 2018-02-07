@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Presenters;
+using System.Windows.Controls;
 
 namespace FileExplorer
 {
@@ -9,15 +10,31 @@ namespace FileExplorer
             var depth = rowPresenter.Depth;
             element.Depth = depth;
             element.ImageSource = depth == 0 ? Images.DiskDrive : Images.Folder;
-            var text = rowPresenter.GetValue(_.Path);
-            if (depth > 0)
-                text = text.Substring(text.LastIndexOf("\\") + 1);
-            element.Text = text;
         }
 
-        public static RowBinding<FolderView> AsFolderView(this Folder _)
+        public static RowCompositeBinding<FolderView> AsFolderView(this Folder _)
         {
-            return new RowBinding<FolderView>((e, r) => Refresh(e, _, r));
+            var textBoxBinding = new RowBinding<TextBox>(onRefresh: (v, p) =>
+            {
+                v.Text = GetDisplayText(_, p);
+            }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, _.Path, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
+
+            var textBlockBinding = new RowBinding<TextBlock>(onRefresh: (v, p) =>
+            {
+                v.Text = GetDisplayText(_, p);
+            });
+
+            return new RowCompositeBinding<FolderView>((e, r) => Refresh(e, _, r))
+                .AddChild(textBoxBinding.Input.AddToInPlaceEditor(textBlockBinding), v => v.InPlaceEditor);
+        }
+
+        private static string GetDisplayText(Folder _, RowPresenter p)
+        {
+            var result = p.GetValue(_.Path);
+            var depth = p.Depth;
+            if (depth > 0)
+                result = result.Substring(result.LastIndexOf("\\") + 1);
+            return result;
         }
 
         private static void Refresh(LargeIconListItemView element, LargeIconListItem _, RowPresenter rowPresenter)
