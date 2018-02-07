@@ -198,6 +198,7 @@ namespace DevZest.Data.Presenters
         internal void ExitEdit()
         {
             _beginEditProgress = _beginEditValueChanged = null;
+            _flushingErrors = null;
         }
 
         internal void Validate(RowPresenter rowPresenter, bool showAll)
