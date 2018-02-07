@@ -125,10 +125,12 @@ namespace DevZest.Data.Presenters.Primitives
 
             IsFlushing = true;
             ValidateFlush(element);
-            if (GetFlushingError(element) == null)
+            if (!IsLockedByFlushingError(element))
                 FlushCore(element, makeProgress);
             IsFlushing = false;
         }
+
+        internal abstract bool IsLockedByFlushingError(UIElement element);
 
         internal abstract void FlushCore(T element, bool makeProgress);
     }

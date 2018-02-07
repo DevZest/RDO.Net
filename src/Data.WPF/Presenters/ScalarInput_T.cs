@@ -35,6 +35,11 @@ namespace DevZest.Data.Presenters
             return ScalarValidation.GetFlushingError(element);
         }
 
+        internal sealed override bool IsLockedByFlushingError(UIElement element)
+        {
+            return GetFlushingError(element) != null;
+        }
+
         internal sealed override void SetFlushingError(UIElement element, string flushingErrorMessage)
         {
             ScalarValidation.SetFlushingError(element, flushingErrorMessage);

@@ -16,6 +16,7 @@ namespace DevZest.Data.Presenters
         void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged) where T : UIElement, new();
         ValidationInfo GetInfo(RowPresenter rowPresenter, Input<RowBinding, IColumns> input);
         bool HasError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool? blockingPrecedence);
+        bool IsLockedByFlushingError(UIElement element);
     }
 
     public sealed class RowValidation : IRowValidation
@@ -772,6 +773,11 @@ namespace DevZest.Data.Presenters
         bool IRowValidation.HasError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool? blockingPrecedence)
         {
             return HasError(rowPresenter, input, blockingPrecedence);
+        }
+
+        bool IRowValidation.IsLockedByFlushingError(UIElement element)
+        {
+            return GetFlushingError(element) != null;
         }
     }
 }

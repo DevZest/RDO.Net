@@ -45,6 +45,11 @@ namespace DevZest.Data.Presenters
             RowValidation.SetFlushingError(element, flushingErrorMessage);
         }
 
+        internal sealed override bool IsLockedByFlushingError(UIElement element)
+        {
+            return RowValidation.IsLockedByFlushingError(element);
+        }
+
         private IColumns _target = Columns.Empty;
         public override IColumns Target
         {
@@ -170,8 +175,7 @@ namespace DevZest.Data.Presenters
 
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
-            var flushingError = GetFlushingError(element);
-            if (!IsFlushing && flushingError == null)
+            if (!IsFlushing && !IsLockedByFlushingError(element))
                 RowBinding.Refresh(element, rowPresenter);
             RefreshValidation(element, rowPresenter);
         }
