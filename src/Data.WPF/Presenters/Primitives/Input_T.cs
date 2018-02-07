@@ -86,16 +86,16 @@ namespace DevZest.Data.Presenters.Primitives
 
         public abstract FlushingError GetFlushingError(UIElement element);
 
-        internal abstract void SetFlushingError(UIElement element, FlushingError flushingError);
+        internal abstract void SetFlushingError(UIElement element, string flushingErrorMessage);
 
         internal void ValidateFlush(T element)
         {
             if (_flushingValidator == null)
                 return;
             var oldflushingError = GetFlushingError(element);
-            var flushingErrorDescription = _flushingValidator(element);
-            if (IsFlushingErrorChanged(flushingErrorDescription, oldflushingError))
-                SetFlushingError(element, string.IsNullOrEmpty(flushingErrorDescription) ? null : new FlushingError(flushingErrorDescription, element));
+            var flushingErrorMessage = _flushingValidator(element);
+            if (IsFlushingErrorChanged(flushingErrorMessage, oldflushingError))
+                SetFlushingError(element, flushingErrorMessage);
         }
 
         private static bool IsFlushingErrorChanged(string flushingErrorMessage, FlushingError flushingError)

@@ -35,9 +35,9 @@ namespace DevZest.Data.Presenters
             return ScalarValidation.GetFlushingError(element);
         }
 
-        internal sealed override void SetFlushingError(UIElement element, FlushingError flushingError)
+        internal sealed override void SetFlushingError(UIElement element, string flushingErrorMessage)
         {
-            ScalarValidation.SetFlushingError(element, flushingError);
+            ScalarValidation.SetFlushingError(element, flushingErrorMessage);
         }
 
         public ScalarInput<T> WithFlushingValidator(Func<T, string> flushingValidator)

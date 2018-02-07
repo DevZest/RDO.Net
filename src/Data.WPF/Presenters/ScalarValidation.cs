@@ -66,8 +66,9 @@ namespace DevZest.Data.Presenters
             return _flushingErrors.GetFlushingError(element);
         }
 
-        internal void SetFlushingError(UIElement element, FlushingError flushingError)
+        internal void SetFlushingError(UIElement element, string flushingErrorMessage)
         {
+            var flushingError = string.IsNullOrEmpty(flushingErrorMessage) ? null : new FlushingError(flushingErrorMessage, element);
             InternalFlushingErrors.SetFlushError(element, flushingError);
         }
 

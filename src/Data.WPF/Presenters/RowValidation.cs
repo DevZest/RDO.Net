@@ -8,7 +8,17 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowValidation
+    internal interface IRowValidation
+    {
+        FlushingError GetFlushingError(UIElement element);
+        void SetFlushingError(UIElement element, string flushingErrorMessage);
+        bool IsVisible(RowPresenter rowPresenter, IColumns columns);
+        void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged) where T : UIElement, new();
+        ValidationInfo GetInfo(RowPresenter rowPresenter, Input<RowBinding, IColumns> input);
+        bool HasError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool? blockingPrecedence);
+    }
+
+    public sealed class RowValidation : IRowValidation
     {
         internal RowValidation(InputManager inputManager)
         {
@@ -78,11 +88,6 @@ namespace DevZest.Data.Presenters
         internal FlushingError GetFlushingError(UIElement element)
         {
             return _flushingErrors.GetFlushingError(element);
-        }
-
-        internal void SetFlushingError(UIElement element, FlushingError value)
-        {
-            InternalFlushingErrors.SetFlushError(element, value);
         }
 
         private Dictionary<RowPresenter, IDataValidationErrors> _errorsByRow;
@@ -216,23 +221,6 @@ namespace DevZest.Data.Presenters
         private IDataValidationErrors Validate(DataRow dataRow)
         {
             return dataRow == DataSet.AddingRow ? DataSet.ValidateAddingRow() : dataRow.Validate();
-        }
-
-        internal void OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged)
-            where T : UIElement, new()
-        {
-            if (!makeProgress && !valueChanged)
-                return;
-
-            if (valueChanged)
-            {
-                UpdateAsyncErrors(rowInput.Target);
-                if (Mode != ValidationMode.Explicit)
-                    Validate(CurrentRow, false);
-            }
-            if (UpdateProgress(rowInput, valueChanged, makeProgress))
-                OnProgress(rowInput);
-            InvalidateView();
         }
 
         private void OnProgress<T>(RowInput<T> rowInput)
@@ -747,6 +735,43 @@ namespace DevZest.Data.Presenters
         public bool IsValidating
         {
             get { return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running); }
+        }
+
+        FlushingError IRowValidation.GetFlushingError(UIElement element)
+        {
+            return GetFlushingError(element);
+        }
+
+        void IRowValidation.SetFlushingError(UIElement element, string flushingErrorMessage)
+        {
+            var flushingError = string.IsNullOrEmpty(flushingErrorMessage) ? null : new FlushingError(flushingErrorMessage, element);
+            InternalFlushingErrors.SetFlushError(element, flushingError);
+        }
+
+        void IRowValidation.OnFlushed<T>(RowInput<T> rowInput, bool makeProgress, bool valueChanged)
+        {
+            if (!makeProgress && !valueChanged)
+                return;
+
+            if (valueChanged)
+            {
+                UpdateAsyncErrors(rowInput.Target);
+                if (Mode != ValidationMode.Explicit)
+                    Validate(CurrentRow, false);
+            }
+            if (UpdateProgress(rowInput, valueChanged, makeProgress))
+                OnProgress(rowInput);
+            InvalidateView();
+        }
+
+        ValidationInfo IRowValidation.GetInfo(RowPresenter rowPresenter, Input<RowBinding, IColumns> input)
+        {
+            return GetInfo(rowPresenter, input);
+        }
+
+        bool IRowValidation.HasError(RowPresenter rowPresenter, Input<RowBinding, IColumns> input, bool? blockingPrecedence)
+        {
+            return HasError(rowPresenter, input, blockingPrecedence);
         }
     }
 }

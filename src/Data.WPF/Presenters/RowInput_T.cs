@@ -23,9 +23,16 @@ namespace DevZest.Data.Presenters
             get { return RowBinding; }
         }
 
-        private RowValidation RowValidation
+        private IRowValidation _rowValidation;
+        private IRowValidation RowValidation
         {
-            get { return InputManager.RowValidation; }
+            get { return _rowValidation ?? InputManager.RowValidation; }
+        }
+
+        internal void InjectRowValidation(IRowValidation rowValidation)
+        {
+            Debug.Assert(rowValidation != null);
+            _rowValidation = rowValidation;
         }
 
         public sealed override FlushingError GetFlushingError(UIElement element)
@@ -33,9 +40,9 @@ namespace DevZest.Data.Presenters
             return RowValidation.GetFlushingError(element);
         }
 
-        internal sealed override void SetFlushingError(UIElement element, FlushingError flushingError)
+        internal sealed override void SetFlushingError(UIElement element, string flushingErrorMessage)
         {
-            RowValidation.SetFlushingError(element, flushingError);
+            RowValidation.SetFlushingError(element, flushingErrorMessage);
         }
 
         private IColumns _target = Columns.Empty;
