@@ -108,17 +108,15 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal virtual void Flush(T element)
         {
-            PerformFlush(element, _progressiveFlushingTrigger == null || IsValidationVisible);
+            PerformFlush(element, true, _progressiveFlushingTrigger == null);
         }
-
-        internal abstract bool IsValidationVisible { get; }
 
         private void ProgressiveFlush(T element)
         {
-            PerformFlush(element, true);
+            PerformFlush(element, false, true);
         }
 
-        private void PerformFlush(T element, bool makeProgress)
+        private void PerformFlush(T element, bool isFlushing, bool isProgressiveFlushing)
         {
             if (Binding.IsRefreshing)
                 return;
@@ -126,12 +124,12 @@ namespace DevZest.Data.Presenters.Primitives
             IsFlushing = true;
             ValidateFlush(element);
             if (!IsLockedByFlushingError(element))
-                FlushCore(element, makeProgress);
+                FlushCore(element, isFlushing, isProgressiveFlushing);
             IsFlushing = false;
         }
 
         internal abstract bool IsLockedByFlushingError(UIElement element);
 
-        internal abstract void FlushCore(T element, bool makeProgress);
+        internal abstract void FlushCore(T element, bool isFlushing, bool isProgressiveFlushing);
     }
 }

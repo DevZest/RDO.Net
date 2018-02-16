@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Presenters;
+using System.IO;
 using System.Windows.Controls;
 
 namespace FileExplorer
@@ -17,7 +18,7 @@ namespace FileExplorer
             var textBoxBinding = new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
                 v.Text = GetDisplayText(_, p);
-            }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, _.Path, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
+            }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, _.Path, (RowPresenter p, TextBox v) => GetPath(_, p, v.Text));
 
             var textBlockBinding = new RowBinding<TextBlock>(onRefresh: (v, p) =>
             {
@@ -33,8 +34,21 @@ namespace FileExplorer
             var result = p.GetValue(_.Path);
             var depth = p.Depth;
             if (depth > 0)
-                result = result.Substring(result.LastIndexOf("\\") + 1);
+                result = Path.GetFileName(result);
             return result;
+        }
+
+        private static string GetPath(Folder _, RowPresenter p, string displayText)
+        {
+            var directory = GetDirectory(_, p);
+            return string.IsNullOrEmpty(directory) ? displayText : Path.Combine(directory, displayText);
+        }
+
+        private static string GetDirectory(Folder _, RowPresenter p)
+        {
+            var result = p.GetValue(_.Path);
+            var depth = p.Depth;
+            return depth > 0 ? Path.GetDirectoryName(result) : string.Empty;
         }
 
         private static void Refresh(LargeIconListItemView element, LargeIconListItem _, RowPresenter rowPresenter)

@@ -377,7 +377,13 @@ namespace DevZest.Data.Presenters
             VerifyColumn(column, nameof(column));
 
             if (Depth > 0)
-                column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
+            {
+                var model = DataRow.Model;
+                if (column.IsLocal)
+                    column = (Column<T>)model.GetLocalColumns()[column.Ordinal];
+                else
+                    column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
+            }
 
             BeginEdit();
             column[DataRow] = value;

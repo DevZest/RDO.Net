@@ -87,14 +87,15 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        internal override bool IsValidationVisible
+        private bool IsValidationVisible
         {
             get { return InputManager.ScalarValidation.IsVisible(Target); }
         }
 
-        internal override void FlushCore(T element, bool makeProgress)
+        internal override void FlushCore(T element, bool isFlushing, bool isProgressiveFlushing)
         {
             var valueChanged = DoFlush(element);
+            var makeProgress = isProgressiveFlushing || IsValidationVisible;
             ScalarValidation.OnFlushed(this, makeProgress, valueChanged);
         }
 

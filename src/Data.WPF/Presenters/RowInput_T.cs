@@ -75,14 +75,34 @@ namespace DevZest.Data.Presenters
 
             VerifyNotSealed();
             _target = _target.Union(column);
-            _flushFuncs.Add((rowPresenter, element) =>
+            _flushFuncs.Add((p, v) =>
             {
                 if (getValue == null)
                     return false;
-                var value = getValue(element);
-                if (column.AreEqual(rowPresenter.GetValue(column), value))
+                var value = getValue(v);
+                if (column.AreEqual(p.GetValue(column), value))
                     return false;
-                rowPresenter.EditValue(column, value);
+                p.EditValue(column, value);
+                return true;
+            });
+            return this;
+        }
+
+        public RowInput<T> WithFlush<TData>(Column<TData> column, Func<RowPresenter, T, TData> getValue)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            VerifyNotSealed();
+            _target = _target.Union(column);
+            _flushFuncs.Add((p, v) =>
+            {
+                if (getValue == null)
+                    return false;
+                var value = getValue(p, v);
+                if (column.AreEqual(p.GetValue(column), value))
+                    return false;
+                p.EditValue(column, value);
                 return true;
             });
             return this;
@@ -120,19 +140,26 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        internal override bool IsValidationVisible
+        private bool IsValidationVisible
         {
             get { return InputManager.RowValidation.IsVisible(CurrentRow, Target); }
         }
 
-        internal override void FlushCore(T element, bool makeProgress)
+        internal override void FlushCore(T element, bool isFlushing, bool isProgressiveFlushing)
         {
+            Debug.Assert(isFlushing || isProgressiveFlushing);
             Debug.Assert(CurrentRow != null);
             var currentRow = CurrentRow;
             if (currentRow != element.GetRowPresenter())
-                throw new InvalidOperationException(DiagnosticMessages.RowInput_FlushCurrentRowOnly);
+            {
+                if (isFlushing)
+                    throw new InvalidOperationException(DiagnosticMessages.RowInput_FlushCurrentRowOnly);
+                else
+                    return;
+            }
             var valueChanged = DoFlush(currentRow, element);
-            RowValidation.OnFlushed(this, makeProgress, valueChanged);
+            var makeProgress = isProgressiveFlushing || IsValidationVisible;
+            RowValidation.OnFlushed(this, isProgressiveFlushing || IsValidationVisible, valueChanged);
         }
 
         private bool DoFlush(RowPresenter rowPresenter, T element)
