@@ -11,8 +11,14 @@ namespace DevZest.Data.Presenters
 {
     public abstract class DataPresenter : IService
     {
+        public event EventHandler ViewInvalidated = delegate { };
         public event EventHandler ViewRefreshing = delegate { };
         public event EventHandler ViewRefreshed = delegate { };
+
+        protected internal virtual void OnViewInvalidated()
+        {
+            ViewInvalidated(this, EventArgs.Empty);
+        }
 
         protected internal virtual void OnViewRefreshing()
         {

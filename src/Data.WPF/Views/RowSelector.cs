@@ -364,6 +364,7 @@ namespace DevZest.Data.Views
                 oldValue.SettingUp -= OnSettingUp;
                 oldValue.Refreshing -= OnRefreshing;
                 oldValue.CleaningUp -= OnCleaningUp;
+                oldValue.DataPresenter.ViewInvalidated -= OnViewInvalidated;
             }
             if (newValue != null)
             {
@@ -372,6 +373,7 @@ namespace DevZest.Data.Views
                 newValue.SettingUp += OnSettingUp;
                 newValue.Refreshing += OnRefreshing;
                 newValue.CleaningUp += OnCleaningUp;
+                newValue.DataPresenter.ViewInvalidated += OnViewInvalidated;
             }
         }
 
@@ -393,12 +395,13 @@ namespace DevZest.Data.Views
 
         private void OnRefreshing(object sender, EventArgs e)
         {
-            if (ElementManager != null)
-            {
-                if (IsKeyboardFocusWithin && !IsSelected)
-                    ElementManager.Select(RowPresenter, SelectionMode.Single, ElementManager.CurrentRow);
-            }
             UpdateVisualState();
+        }
+
+        private void OnViewInvalidated(object sender, EventArgs e)
+        {
+            if (IsKeyboardFocusWithin && !IsSelected)
+                ElementManager.Select(RowPresenter, SelectionMode.Single, ElementManager.CurrentRow);
         }
 
         private RowView RowView
