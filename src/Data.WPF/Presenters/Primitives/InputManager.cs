@@ -133,6 +133,7 @@ namespace DevZest.Data.Presenters.Primitives
             base.OnCurrentRowChanged(oldValue);
             _rowValidation?.OnCurrentRowChanged(oldValue);
             DataPresenter?.OnCurrentRowChanged(oldValue);
+            InvalidateView();
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)
