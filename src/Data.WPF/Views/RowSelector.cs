@@ -393,6 +393,11 @@ namespace DevZest.Data.Views
 
         private void OnRefreshing(object sender, EventArgs e)
         {
+            if (ElementManager != null)
+            {
+                if (IsKeyboardFocusWithin && !IsSelected)
+                    ElementManager.Select(RowPresenter, SelectionMode.Single, ElementManager.CurrentRow);
+            }
             UpdateVisualState();
         }
 

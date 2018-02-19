@@ -448,14 +448,14 @@ namespace DevZest.Data.Presenters.Primitives
             if (Elements == null || Elements.Count == 0)
                 return;
 
+            _isDirty = false;
+
             DataPresenter?.OnViewRefreshing();
 
             DataPresenter?.View?.RefreshScalarValidation();
 
             RefreshScalarElements();
             RefreshContainerViews();
-
-            _isDirty = false;
 
             DataPresenter?.OnViewRefreshed();
         }
