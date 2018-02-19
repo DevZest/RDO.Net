@@ -16,7 +16,7 @@ namespace DevZest.Data.Views
             switch (templateSelectionMode.Value)
             {
                 case SelectionMode.Single:
-                    Select(elementManager, (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control ? SelectionMode.Multiple : SelectionMode.Single, oldCurrentRow, newCurrentRow);
+                    Select(elementManager, SelectionMode.Single, oldCurrentRow, newCurrentRow);
                     return true;
                 case SelectionMode.Multiple:
                     Select(elementManager, SelectionMode.Multiple, oldCurrentRow, newCurrentRow);

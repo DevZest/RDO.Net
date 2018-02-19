@@ -11,7 +11,7 @@ namespace FileExplorer
                 .GridColumns("85", "5")
                 .GridRows("Auto", "5")
                 .Layout(Orientation.Vertical, 0)
-                .WithSelectionMode(SelectionMode.Single)
+                .WithSelectionMode(SelectionMode.Extended)
                 .AddBinding(0, 0, _.AsLargeIconView());
         }
     }
