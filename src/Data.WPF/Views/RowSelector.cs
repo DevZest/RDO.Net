@@ -400,7 +400,7 @@ namespace DevZest.Data.Views
 
         private void OnViewInvalidated(object sender, EventArgs e)
         {
-            if (IsKeyboardFocusWithin && !IsSelected)
+            if (RowPresenter.IsCurrent && !IsSelected)
                 ElementManager.Select(RowPresenter, SelectionMode.Single, ElementManager.CurrentRow);
         }
 
