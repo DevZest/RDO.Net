@@ -18,7 +18,7 @@ namespace FileExplorer
         public int Depth
         {
             get { return _depth; }
-            set
+            private set
             {
                 _depth = value;
                 _rowExpander.Margin = new Thickness(15 * value, 0, 0, 0);
@@ -28,12 +28,20 @@ namespace FileExplorer
         public ImageSource ImageSource
         {
             get { return _image.Source; }
-            set { _image.Source = value; }
+            private set { _image.Source = value; }
         }
 
-        public InPlaceEditor InPlaceEditor
+        public string Text
         {
-            get { return _inPlaceEditor; }
+            get { return _textBlock.Text; }
+            private set { _textBlock.Text = value; }
+        }
+
+        public void Refresh(int depth, ImageSource imageSource, string text)
+        {
+            Depth = depth;
+            ImageSource = imageSource;
+            Text = text;
         }
     }
 }

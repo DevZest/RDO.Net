@@ -1,32 +1,21 @@
 ﻿using DevZest.Data.Presenters;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace FileExplorer
 {
     public static class BindingFactory
     {
-        private static void Refresh(FolderView element, Folder _, RowPresenter rowPresenter)
+        private static void Refresh(FolderView v, Folder _, RowPresenter p)
         {
-            var depth = rowPresenter.Depth;
-            element.Depth = depth;
-            element.ImageSource = depth == 0 ? Images.DiskDrive : Images.Folder;
+            var depth = p.Depth;
+            v.Refresh(depth, depth == 0 ? Images.DiskDrive : Images.Folder, GetDisplayText(_, p));
         }
 
-        public static RowCompositeBinding<FolderView> AsFolderView(this Folder _)
+        public static RowBinding<FolderView> BindToFolderView(this Folder _)
         {
-            var textBoxBinding = new RowBinding<TextBox>(onRefresh: (v, p) =>
-            {
-                v.Text = GetDisplayText(_, p);
-            }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, _.Path, (RowPresenter p, TextBox v) => GetPath(_, p, v.Text));
-
-            var textBlockBinding = new RowBinding<TextBlock>(onRefresh: (v, p) =>
-            {
-                v.Text = GetDisplayText(_, p);
-            });
-
-            return new RowCompositeBinding<FolderView>((e, r) => Refresh(e, _, r))
-                .AddChild(textBoxBinding.Input.AddToInPlaceEditor(textBlockBinding), v => v.InPlaceEditor);
+            return new RowBinding<FolderView>((e, r) => Refresh(e, _, r));
         }
 
         private static string GetDisplayText(Folder _, RowPresenter p)
@@ -38,28 +27,18 @@ namespace FileExplorer
             return result;
         }
 
-        private static string GetPath(Folder _, RowPresenter p, string displayText)
+        private static void Refresh(LargeIconListItemView v, LargeIconListItem _, RowPresenter p)
         {
-            var directory = GetDirectory(_, p);
-            return string.IsNullOrEmpty(directory) ? displayText : Path.Combine(directory, displayText);
+            v.ImageSource = p.GetValue(_.LargeIcon);
         }
 
-        private static string GetDirectory(Folder _, RowPresenter p)
+        public static RowCompositeBinding<LargeIconListItemView> BindToLargeIconView(this LargeIconListItem _)
         {
-            var result = p.GetValue(_.Path);
-            var depth = p.Depth;
-            return depth > 0 ? Path.GetDirectoryName(result) : string.Empty;
-        }
+            var textBoxBinding = _.DisplayName.BindToTextBox();
+            var textBlockBinding = _.DisplayName.BindToTextBlock();
 
-        private static void Refresh(LargeIconListItemView element, LargeIconListItem _, RowPresenter rowPresenter)
-        {
-            element.ImageSource = rowPresenter.GetValue(_.LargeIcon);
-            element.Text = rowPresenter.GetValue(_.DisplayName);
-        }
-
-        public static RowBinding<LargeIconListItemView> AsLargeIconView(this LargeIconListItem _)
-        {
-            return new RowBinding<LargeIconListItemView>((e, r) => Refresh(e, _, r));
+            return new RowCompositeBinding<LargeIconListItemView>((e, r) => Refresh(e, _, r))
+                .AddChild(textBoxBinding.Input.AddToInPlaceEditor(textBlockBinding), v => v.InPlaceEditor);
         }
     }
 }

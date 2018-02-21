@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using DevZest.Data.Views;
+using System.Windows.Media;
 
 namespace FileExplorer
 {
@@ -18,10 +19,9 @@ namespace FileExplorer
             set { _image.Source = value; }
         }
 
-        public string Text
+        public InPlaceEditor InPlaceEditor
         {
-            get { return _textBlock.Text; }
-            set { _textBlock.Text = value; }
+            get { return _inPlaceEditor; }
         }
     }
 }

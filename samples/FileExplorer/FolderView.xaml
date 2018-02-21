@@ -12,7 +12,7 @@
         <dz:RowSelector>
             <StackPanel Orientation="Horizontal">
                 <Image Name="_image" Width="20" Height="20" Stretch="Fill" />
-                <dz:InPlaceEditor Name="_inPlaceEditor" Margin="5,0" />
+                <TextBlock Name="_textBlock" Margin="5,0" />
             </StackPanel>
         </dz:RowSelector>
     </StackPanel>
