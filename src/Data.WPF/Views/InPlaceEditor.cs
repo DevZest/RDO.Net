@@ -100,6 +100,96 @@ namespace DevZest.Data.Views
             }
         }
 
+        internal static ScalarBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(ScalarInput<TEditing> scalarInput, ScalarBinding<TInert> inertScalarBinding)
+            where TEditing : UIElement, new()
+            where TInert : UIElement, new()
+        {
+            var result = new ScalarBinding<InPlaceEditor>((Action<InPlaceEditor>)null);
+            result.Input = new ProxyScalarInput<TEditing, TInert>(result, scalarInput, inertScalarBinding);
+            return result;
+        }
+
+        private interface IProxyScalarInput
+        {
+            ScalarBinding EditorBinding { get; }
+            ScalarBinding InertBinding { get; }
+        }
+
+        private sealed class ProxyScalarInput<TEditor, TInert> : ScalarInput<InPlaceEditor>, IScalarValidation, IProxyScalarInput
+            where TEditor : UIElement, new()
+            where TInert : UIElement, new()
+        {
+            private readonly ScalarInput<TEditor> _editorInput;
+            private readonly ScalarBinding<TInert> _inertBinding;
+
+            public ProxyScalarInput(ScalarBinding<InPlaceEditor> binding, ScalarInput<TEditor> editorInput, ScalarBinding<TInert> inertBinding)
+                : base(binding, new ExplicitTrigger<InPlaceEditor>(), null)
+            {
+                Debug.Assert(editorInput != null);
+                Debug.Assert(inertBinding != null);
+                _editorInput = editorInput;
+                _inertBinding = inertBinding;
+                _editorInput.InjectScalarValidation(this);
+                InertBinding.Seal(binding, 0);
+                EditorBinding.Seal(binding, 1);
+            }
+
+            public ScalarBinding EditorBinding
+            {
+                get { return _editorInput.Binding; }
+            }
+
+            public ScalarBinding InertBinding
+            {
+                get { return _inertBinding; }
+            }
+
+            private IScalarValidation BaseScalarValidation
+            {
+                get { return InputManager.ScalarValidation; }
+            }
+
+            public ValidationInfo GetInfo(Input<ScalarBinding, IScalars> input, int flowIndex)
+            {
+                return input == this ? BaseScalarValidation.GetInfo(input, flowIndex) : ValidationInfo.Empty;
+            }
+
+            public bool HasError(Input<ScalarBinding, IScalars> input, int flowIndex, bool? blockingPrecedence)
+            {
+                return input == this ? BaseScalarValidation.HasError(input, flowIndex, blockingPrecedence) : false;
+            }
+
+            public void OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged) where T : UIElement, new()
+            {
+                BaseScalarValidation.OnFlushed(this, makeProgress, valueChanged);
+            }
+
+            public override IScalars Target
+            {
+                get { return _editorInput.Target; }
+            }
+
+            internal override void Flush(InPlaceEditor element)
+            {
+                var editorElement = element.EditorElement;
+                if (editorElement != null)
+                    _editorInput.Flush((TEditor)editorElement);
+            }
+
+            bool IScalarValidation.IsLockedByFlushingError(UIElement element)
+            {
+                var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
+                return currentInPlaceEditor != null ? BaseScalarValidation.IsLockedByFlushingError(currentInPlaceEditor) : false;
+            }
+
+            void IScalarValidation.SetFlushingError(UIElement element, string flushingErrorMessage)
+            {
+                var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
+                Debug.Assert(currentInPlaceEditor != null);
+                BaseScalarValidation.SetFlushingError(currentInPlaceEditor, flushingErrorMessage);
+            }
+        }
+
         public interface ISwitcher : IService
         {
             bool AffectsIsEditing(InPlaceEditor inPlaceEditor, DependencyProperty dp);

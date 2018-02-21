@@ -9,6 +9,8 @@ namespace DevZest.Data.Presenters
     {
         internal abstract IScalarValidationErrors Validate(IScalarValidationErrors result);
 
+        public abstract object ObjectValue { get; set; }
+
         #region IScalars
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]

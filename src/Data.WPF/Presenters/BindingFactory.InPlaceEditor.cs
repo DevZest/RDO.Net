@@ -38,5 +38,31 @@ namespace DevZest.Data.Presenters
 
             return InPlaceEditor.AddToInPlaceEditor(rowInput, inertRowBinding);
         }
+
+        public static ScalarBinding<InPlaceEditor> AddToInPlaceEditor<T>(this ScalarInput<T> scalarInput, string format = null, IFormatProvider formatProvider = null)
+            where T : UIElement, new()
+        {
+            if (scalarInput == null)
+                throw new ArgumentNullException(nameof(scalarInput));
+
+            var scalar = scalarInput.Target as Scalar;
+            if (scalar == null)
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingScalarBindingNotScalar, nameof(scalarInput));
+            var inertScalarBinding = scalar.BindToTextBlock(format, formatProvider);
+            return AddToInPlaceEditor(scalarInput, inertScalarBinding);
+
+        }
+
+        public static ScalarBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(this ScalarInput<TEditing> scalarInput, ScalarBinding<TInert> inertScalarBinding)
+            where TEditing : UIElement, new()
+            where TInert : UIElement, new()
+        {
+            if (scalarInput == null)
+                throw new ArgumentNullException(nameof(scalarInput));
+            if (inertScalarBinding == null)
+                throw new ArgumentNullException(nameof(inertScalarBinding));
+
+            return InPlaceEditor.AddToInPlaceEditor(scalarInput, inertScalarBinding);
+        }
     }
 }

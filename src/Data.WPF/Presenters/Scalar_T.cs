@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
@@ -19,6 +18,12 @@ namespace DevZest.Data.Presenters
         {
             get { return _value; }
             set { ChangeValue(value); }
+        }
+
+        public override object ObjectValue
+        {
+            get { return Value; }
+            set { Value = (T)value; }
         }
 
         public Scalar<T> WithOnValueChanged(Action<T> onValueChanged)

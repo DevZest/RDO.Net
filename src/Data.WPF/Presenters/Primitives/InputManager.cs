@@ -84,11 +84,6 @@ namespace DevZest.Data.Presenters.Primitives
             return _scalarValidation == null ? ValidationInfo.Empty : _scalarValidation.GetInfo(input, flowIndex);
         }
 
-        internal bool HasValidationError(Input<ScalarBinding, IScalars> input, int flowIndex)
-        {
-            return _scalarValidation == null ? false : _scalarValidation.HasError(input, flowIndex, true);
-        }
-
         internal virtual IScalarValidationErrors PerformValidateScalars()
         {
             var dataPresenter = DataPresenter;

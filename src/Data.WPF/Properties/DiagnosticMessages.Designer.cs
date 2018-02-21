@@ -236,6 +236,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The Input.Scalars property is not a single Scalar.
+        /// </summary>
+        public static string InPlaceEditor_EditingScalarBindingNotScalar
+        {
+            get { return GetString("InPlaceEditor_EditingScalarBindingNotScalar"); }
+        }
+
+        /// <summary>
         /// The trigger has already been initialized with another Input.
         /// </summary>
         public static string Input_TriggerAlreadyInitialized

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarInput<T> : Input<T, ScalarBinding, IScalars>
+    public class ScalarInput<T> : Input<T, ScalarBinding, IScalars>
         where T : UIElement, new()
     {
         internal ScalarInput(ScalarBinding<T> scalarBinding, Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger)
@@ -25,9 +25,16 @@ namespace DevZest.Data.Presenters
             get { return ScalarBinding; }
         }
 
-        private ScalarValidation ScalarValidation
+        private IScalarValidation _scalarValidation;
+        private IScalarValidation ScalarValidation
         {
-            get { return InputManager.ScalarValidation; }
+            get { return _scalarValidation ?? InputManager.ScalarValidation; }
+        }
+
+        internal void InjectScalarValidation(IScalarValidation scalarValidation)
+        {
+            Debug.Assert(scalarValidation != null);
+            _scalarValidation = scalarValidation;
         }
 
         public sealed override FlushingError GetFlushingError(UIElement element)
@@ -37,7 +44,7 @@ namespace DevZest.Data.Presenters
 
         internal sealed override bool IsLockedByFlushingError(UIElement element)
         {
-            return GetFlushingError(element) != null;
+            return ScalarValidation.IsLockedByFlushingError(element);
         }
 
         internal sealed override void SetFlushingError(UIElement element, string flushingErrorMessage)
@@ -131,14 +138,14 @@ namespace DevZest.Data.Presenters
         {
             if (flowIndex < 0 || flowIndex >= InputManager.FlowRepeatCount)
                 throw new ArgumentOutOfRangeException(nameof(flowIndex));
-            return InputManager.GetValidationInfo(this, flowIndex);
+            return ScalarValidation.GetInfo(this, flowIndex);
         }
 
         public bool HasValidationError(int flowIndex = 0)
         {
             if (flowIndex < 0 || flowIndex >= InputManager.FlowRepeatCount)
                 throw new ArgumentOutOfRangeException(nameof(flowIndex));
-            return InputManager.HasValidationError(this, flowIndex);
+            return ScalarValidation.HasError(this, flowIndex, true);
         }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)

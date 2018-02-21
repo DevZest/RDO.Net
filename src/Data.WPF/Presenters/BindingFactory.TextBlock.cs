@@ -77,7 +77,7 @@ namespace DevZest.Data.Presenters
                 onCleanup: null);
         }
 
-        public static ScalarBinding<TextBlock> BindToTextBlock<T>(this Scalar<T> source, string format = null, IFormatProvider formatProvider = null)
+        public static ScalarBinding<TextBlock> BindToTextBlock(this Scalar source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBlock>(
                 onRefresh: v =>
                 {
-                    v.Text = source.Value.ToString(format, formatProvider);
+                    v.Text = source.ObjectValue.ToString(format, formatProvider);
                 });
         }
     }

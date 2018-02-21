@@ -56,8 +56,7 @@ namespace DevZest.Data.Presenters
             get { return Parent; }
         }
 
-        internal void Seal<T>(ScalarCompositeBinding<T> parent, int ordinal)
-            where T : UIElement, new()
+        internal void Seal(ScalarBinding parent, int ordinal)
         {
             Parent = parent;
             Ordinal = ordinal;

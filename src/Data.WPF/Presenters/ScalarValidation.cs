@@ -8,7 +8,17 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarValidation
+    internal interface IScalarValidation
+    {
+        FlushingError GetFlushingError(UIElement element);
+        void SetFlushingError(UIElement element, string flushingErrorMessage);
+        void OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged) where T : UIElement, new();
+        ValidationInfo GetInfo(Input<ScalarBinding, IScalars> input, int flowIndex);
+        bool HasError(Input<ScalarBinding, IScalars> input, int flowIndex, bool? blockingPrecedence);
+        bool IsLockedByFlushingError(UIElement element);
+    }
+
+    public sealed class ScalarValidation : IScalarValidation
     {
         internal ScalarValidation(InputManager inputManager)
         {
@@ -66,7 +76,12 @@ namespace DevZest.Data.Presenters
             return _flushingErrors.GetFlushingError(element);
         }
 
-        internal void SetFlushingError(UIElement element, string flushingErrorMessage)
+        FlushingError IScalarValidation.GetFlushingError(UIElement element)
+        {
+            return GetFlushingError(element);
+        }
+
+        void IScalarValidation.SetFlushingError(UIElement element, string flushingErrorMessage)
         {
             var flushingError = string.IsNullOrEmpty(flushingErrorMessage) ? null : new FlushingError(flushingErrorMessage, element);
             InternalFlushingErrors.SetFlushError(element, flushingError);
@@ -254,8 +269,7 @@ namespace DevZest.Data.Presenters
         private IScalars _progress;
         private IScalars _valueChanged;
 
-        internal void OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged)
-            where T : UIElement, new()
+        void IScalarValidation.OnFlushed<T>(ScalarInput<T> scalarInput, bool makeProgress, bool valueChanged)
         {
             if (!makeProgress && !valueChanged)
                 return;
@@ -492,6 +506,21 @@ namespace DevZest.Data.Presenters
                     return true;
             }
             return false;
+        }
+
+        ValidationInfo IScalarValidation.GetInfo(Input<ScalarBinding, IScalars> input, int flowIndex)
+        {
+            return GetInfo(input, flowIndex);
+        }
+
+        bool IScalarValidation.HasError(Input<ScalarBinding, IScalars> input, int flowIndex, bool? blockingPrecedence)
+        {
+            return HasError(input, flowIndex, blockingPrecedence);
+        }
+
+        bool IScalarValidation.IsLockedByFlushingError(UIElement element)
+        {
+            return GetFlushingError(element) != null;
         }
 
         public bool HasVisibleError

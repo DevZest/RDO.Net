@@ -201,6 +201,9 @@
   <data name="InPlaceEditor_EditingRowBindingNotColumn" xml:space="preserve">
     <value>The Input.Columns property is not a single Column.</value>
   </data>
+  <data name="InPlaceEditor_EditingScalarBindingNotScalar" xml:space="preserve">
+    <value>The Input.Scalars property is not a single Scalar.</value>
+  </data>
   <data name="Input_TriggerAlreadyInitialized" xml:space="preserve">
     <value>The trigger has already been initialized with another Input.</value>
   </data>
