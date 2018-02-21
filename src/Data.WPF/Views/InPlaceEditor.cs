@@ -5,11 +5,29 @@ using System.Collections;
 using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Views
 {
     public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement
     {
+        public interface ICommandService : IService
+        {
+            IEnumerable<CommandEntry> GetCommandEntries(InPlaceEditor inPlaceEditor);
+        }
+
+        private void SetupCommands()
+        {
+            var commandService = DataPresenter?.GetService<ICommandService>();
+            if (commandService != null)
+                this.SetupCommandEntries(commandService.GetCommandEntries(this));
+        }
+
+        private void CleanupCommands()
+        {
+            this.CleanupCommandEntries();
+        }
+
         internal static RowBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(RowInput<TEditing> rowInput, RowBinding<TInert> inertRowBinding)
             where TEditing : UIElement, new()
             where TInert : UIElement, new()
@@ -380,6 +398,7 @@ namespace DevZest.Data.Views
         {
             InitIsEditing();
             Setup(GetProxyScalarInput(), scalarPresenter);
+            SetupCommands();
         }
 
         private void Setup(IProxyScalarInput proxyScalarInput, ScalarPresenter scalarPresenter)
@@ -425,6 +444,7 @@ namespace DevZest.Data.Views
         {
             var proxyScalarInput = GetProxyScalarInput();
             Cleanup(proxyScalarInput);
+            CleanupCommands();
         }
 
         private void Cleanup(IProxyScalarInput proxyScalarInput)
@@ -448,6 +468,7 @@ namespace DevZest.Data.Views
         {
             InitIsEditing();
             Setup(GetProxyRowInput(), rowPresenter);
+            SetupCommands();
         }
 
         private void Setup(IProxyRowInput proxyRowInput, RowPresenter rowPresenter)
@@ -495,6 +516,7 @@ namespace DevZest.Data.Views
         {
             var proxyRowInput = GetProxyRowInput();
             Cleanup(proxyRowInput);
+            CleanupCommands();
         }
 
         private void Cleanup(IProxyRowInput proxyRowInput)
@@ -533,6 +555,6 @@ namespace DevZest.Data.Views
         private IProxyScalarInput GetProxyScalarInput()
         {
             return (this.GetBinding() as ScalarBinding)?.ScalarInput as IProxyScalarInput;
-        }
+        }        
     }
 }
