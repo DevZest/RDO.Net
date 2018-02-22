@@ -539,7 +539,7 @@ namespace DevZest.Data
             set { _ordinal = value; }
         }
 
-#region IModelSet
+#region IModels
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IModels.Contains(Model model)
         {
