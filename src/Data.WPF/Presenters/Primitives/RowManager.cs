@@ -608,7 +608,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             _currentRow = null;
             _selectedRows.Clear();
-            _lastExtnedSelection = null;
+            _lastExtenedSelection = null;
             _editing = null;
             VirtualRow = null;
             base.Reload();
@@ -716,7 +716,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
         }
 
-        private RowPresenter _lastExtnedSelection;
+        private RowPresenter _lastExtenedSelection;
         public void Select(RowPresenter value, SelectionMode selectionMode, RowPresenter oldCurrentRow)
         {
             SelectCore(value, selectionMode, oldCurrentRow);
@@ -728,24 +728,33 @@ namespace DevZest.Data.Presenters.Primitives
             switch (selectionMode)
             {
                 case SelectionMode.Single:
-                    _lastExtnedSelection = null;
+                    _lastExtenedSelection = null;
                     _selectedRows.Clear();
-                    value.IsSelected = true;
+                    _selectedRows.Add(value);
                     break;
                 case SelectionMode.Multiple:
-                    _lastExtnedSelection = null;
-                    value.IsSelected = !value.IsSelected;
+                    _lastExtenedSelection = null;
+                    if (value.IsSelected)
+                        _selectedRows.Remove(value);
+                    else
+                        _selectedRows.Add(value);
                     break;
                 case SelectionMode.Extended:
-                    if (_lastExtnedSelection == null)
-                        _lastExtnedSelection = oldCurrentRow;
+                    if (_lastExtenedSelection == null)
+                        _lastExtenedSelection = oldCurrentRow;
                     _selectedRows.Clear();
-                    var min = Math.Min(_lastExtnedSelection.Index, value.Index);
-                    var max = Math.Max(_lastExtnedSelection.Index, value.Index);
+                    var min = Math.Min(_lastExtenedSelection.Index, value.Index);
+                    var max = Math.Max(_lastExtenedSelection.Index, value.Index);
                     for (int i = min; i <= max; i++)
-                        Rows[i].IsSelected = true;
+                        _selectedRows.Add(Rows[i]);
                     break;
             }
+        }
+
+        public void SyncSelectionToCurrentRow()
+        {
+            _selectedRows.Clear();
+            _selectedRows.Add(CurrentRow);
         }
 
         private EditHandler _editing;

@@ -31,7 +31,7 @@ namespace DevZest.Data.Views
             private void OnViewInvalidated(object sender, EventArgs e)
             {
                 if (ShouldCoerceSelection)
-                    DataPresenter.Select(CurrentRow, SelectionMode.Single, false);
+                    DataPresenter.LayoutManager.SyncSelectionToCurrentRow();
             }
 
             private bool ShouldCoerceSelection
