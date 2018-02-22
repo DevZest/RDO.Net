@@ -751,10 +751,14 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        public void SyncSelectionToCurrentRow()
+        public void Select(RowPresenter[] rows)
         {
             _selectedRows.Clear();
-            _selectedRows.Add(CurrentRow);
+            if (rows != null)
+            {
+                for (int i = 0; i < rows.Length; i++)
+                    _selectedRows.Add(rows[i]);
+            }
         }
 
         private EditHandler _editing;

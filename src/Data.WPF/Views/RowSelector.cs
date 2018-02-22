@@ -84,7 +84,7 @@ namespace DevZest.Data.Views
                             yield return Commands.SelectExtendedUp.Bind(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedDown.Bind(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
                             yield return Commands.SelectiExtendedLeft.Bind(ExecSelectExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
-                            yield return Commands.SelectExtendedRight.Bind(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right));
+                            yield return Commands.SelectExtendedRight.Bind(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedHome.Bind(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedEnd.Bind(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedPageUp.Bind(ExecSelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
@@ -469,22 +469,14 @@ namespace DevZest.Data.Views
             base.OnMouseRightButtonDown(e);
         }
 
-        private ElementManager ElementManager
+        private DataPresenter DataPresenter
         {
-            get { return RowPresenter.ElementManager; }
+            get { return RowPresenter.DataPresenter; }
         }
 
-        private bool HandleMouseButtonDown(MouseButton mouseButton)
+        private void HandleMouseButtonDown(MouseButton mouseButton)
         {
-            var oldCurrentRow = ElementManager.CurrentRow;
-            var focusMoved = IsKeyboardFocusWithin ? true : MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-            var selected = Select(mouseButton, oldCurrentRow);
-            return focusMoved || selected;
-        }
-
-        private bool Select(MouseButton mouseButton, RowPresenter oldCurrentRow)
-        {
-            return SelectionHandler.Select(ElementManager, mouseButton, oldCurrentRow, RowPresenter);
+            SelectionHandler.Select(DataPresenter, mouseButton, RowPresenter);
         }
     }
 }

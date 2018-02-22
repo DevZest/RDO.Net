@@ -130,23 +130,43 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? 1 : LayoutManager.FlowRepeatCount; }
         }
 
-        private void VerifyRowPresenter(RowPresenter value, string paramName)
+        private void VerifyRowPresenter(RowPresenter value, string paramName, int index = -1)
         {
             if (value == null)
-                throw new ArgumentNullException(paramName);
+                throw new ArgumentNullException(GetParamName(paramName, index));
 
             if (value.DataPresenter != this)
-                throw new ArgumentException(DiagnosticMessages.DataPresenter_InvalidRowPresenter, paramName);
+                throw new ArgumentException(DiagnosticMessages.DataPresenter_InvalidRowPresenter, GetParamName(paramName, index));
+        }
+
+        private static string GetParamName(string paramName, int index)
+        {
+            return index == -1 ? paramName : string.Format("{0}[{1}]", paramName, index);
         }
 
         public void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true)
         {
             VerifyRowPresenter(rowPresenter, nameof(rowPresenter));
+            SuspendInvalidateView();
             var oldCurrentRow = CurrentRow;
             CurrentRow = rowPresenter;
             RequireLayoutManager().Select(rowPresenter, selectionMode, oldCurrentRow);
+            ResumeInvalidateView();
             if (ensureVisible && Scrollable != null)
                 Scrollable.EnsureCurrentRowVisible();
+        }
+
+        public void Select(params RowPresenter[] rows)
+        {
+            if (rows != null)
+            {
+                for (int i = 0; i < rows.Length; i++)
+                    VerifyRowPresenter(rows[i], nameof(rows), i);
+            }
+            SuspendInvalidateView();
+            RequireLayoutManager().Select(rows);
+            InvalidateView();
+            ResumeInvalidateView();
         }
 
         public IReadOnlyCollection<RowPresenter> SelectedRows
@@ -210,6 +230,16 @@ namespace DevZest.Data.Presenters
         public void InvalidateView()
         {
             RequireLayoutManager().InvalidateView();
+        }
+
+        public void SuspendInvalidateView()
+        {
+            RequireLayoutManager().SuspendInvalidateView();
+        }
+
+        public void ResumeInvalidateView()
+        {
+            RequireLayoutManager().ResumeInvalidateView();
         }
 
         public ScalarValidation ScalarValidation

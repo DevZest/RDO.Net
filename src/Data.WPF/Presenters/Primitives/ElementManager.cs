@@ -692,6 +692,16 @@ namespace DevZest.Data.Presenters.Primitives
         private bool _isDirty;
         public void InvalidateView()
         {
+            if (_suspendInvalidateViewCount > 0)
+            {
+                _isViewInvalid = true;
+                return;
+            }
+            PerformInvalidateView();
+        }
+
+        private void PerformInvalidateView()
+        {
             DataPresenter?.OnViewInvalidated();
 
             if (_isDirty || ElementCollection == null)
@@ -699,6 +709,24 @@ namespace DevZest.Data.Presenters.Primitives
 
             _isDirty = true;
             BeginRefreshView();
+        }
+
+        private int _suspendInvalidateViewCount;
+        private bool _isViewInvalid;
+        public void SuspendInvalidateView()
+        {
+            _suspendInvalidateViewCount++;
+        }
+
+        public void ResumeInvalidateView()
+        {
+            Debug.Assert(_suspendInvalidateViewCount > 0);
+            _suspendInvalidateViewCount--;
+            if (_suspendInvalidateViewCount == 0 && _isViewInvalid)
+            {
+                _isViewInvalid = false;
+                PerformInvalidateView();
+            };
         }
 
         private void BeginRefreshView()

@@ -278,8 +278,6 @@ namespace DevZest.Data.Presenters
                     RowManager.RemoveSelectedRow(this);
                 if (value)
                     RowManager.AddSelectedRow(this);
-
-                Invalidate();
             }
         }
 

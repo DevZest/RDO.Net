@@ -31,7 +31,7 @@ namespace DevZest.Data.Views
             private void OnViewInvalidated(object sender, EventArgs e)
             {
                 if (ShouldCoerceSelection)
-                    DataPresenter.LayoutManager.SyncSelectionToCurrentRow();
+                    DataPresenter.Select(CurrentRow);
             }
 
             private bool ShouldCoerceSelection
@@ -68,28 +68,31 @@ namespace DevZest.Data.Views
             Debug.Assert(service != null);
         }
 
-        public static bool Select(ElementManager elementManager, MouseButton mouseButton, RowPresenter oldCurrentRow, RowPresenter newCurrentRow)
+        public static bool Select(DataPresenter dataPresenter, MouseButton mouseButton, RowPresenter row)
         {
-            var templateSelectionMode = elementManager.Template.SelectionMode;
+            if (dataPresenter.EditingRow != null)
+                return false;
+
+            var templateSelectionMode = dataPresenter.Template.SelectionMode;
             if (!templateSelectionMode.HasValue)
                 templateSelectionMode = SelectionMode.Extended;
 
             switch (templateSelectionMode.Value)
             {
                 case SelectionMode.Single:
-                    Select(elementManager, SelectionMode.Single, oldCurrentRow, newCurrentRow);
+                    dataPresenter.Select(row, SelectionMode.Single);
                     return true;
                 case SelectionMode.Multiple:
-                    Select(elementManager, SelectionMode.Multiple, oldCurrentRow, newCurrentRow);
+                    dataPresenter.Select(row, SelectionMode.Multiple);
                     return true;
                 case SelectionMode.Extended:
                     if (mouseButton != MouseButton.Left)
                     {
                         if (mouseButton == MouseButton.Right && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.None)
                         {
-                            if (newCurrentRow.IsSelected)
+                            if (row.IsSelected)
                                 return false;
-                            Select(elementManager, SelectionMode.Single, oldCurrentRow, newCurrentRow);
+                            dataPresenter.Select(row, SelectionMode.Single);
                             return true;
                         }
                         return false;
@@ -99,7 +102,7 @@ namespace DevZest.Data.Views
                         return false;
 
                     var selectionMode = IsShiftDown ? SelectionMode.Extended : (IsControlDown ? SelectionMode.Multiple : SelectionMode.Single);
-                    Select(elementManager, selectionMode, oldCurrentRow, newCurrentRow);
+                    dataPresenter.Select(row, selectionMode);
                     return true;
             }
             return false;
@@ -113,11 +116,6 @@ namespace DevZest.Data.Views
         private static bool IsShiftDown
         {
             get { return (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift; }
-        }
-
-        private static void Select(ElementManager elementManager, SelectionMode selectionMode, RowPresenter oldCurrentRow, RowPresenter newCurrentRow)
-        {
-            elementManager.Select(newCurrentRow, selectionMode, oldCurrentRow);
         }
     }
 }

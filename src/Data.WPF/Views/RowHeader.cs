@@ -300,20 +300,18 @@ namespace DevZest.Data.Views
             get { return RowView?.RowPresenter; }
         }
 
-        private ElementManager ElementManager
+        private DataPresenter DataPresenter
         {
-            get { return RowPresenter?.ElementManager; }
+            get { return RowPresenter?.DataPresenter; }
         }
 
         private void HandleMouseButtonDown(MouseButton mouseButton)
         {
-            var elementManager = ElementManager;
-            if (elementManager == null)
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
                 return;
 
-            var oldCurrentRow = ElementManager.CurrentRow;
-            var focusMoved = IsKeyboardFocusWithin ? true : MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-            SelectionHandler.Select(ElementManager, mouseButton, oldCurrentRow, RowPresenter);
+            SelectionHandler.Select(dataPresenter, mouseButton, RowPresenter);
         }
     }
 }
