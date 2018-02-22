@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace FileExplorer
 {
-    public class DetailsList : DataPresenter<DetailsListItem>
+    public class DetailsList : FolderContentPresenter<DetailsListItem>
     {
         public static readonly StyleId FileSizeTextBlockStyleKey = new StyleId(typeof(DetailsList));
 
-        protected override void BuildTemplate(TemplateBuilder builder)
+        protected override void OverrideBuildTemplate(TemplateBuilder builder)
         {
             builder
                 .GridColumns("20", "Auto", "Auto", "Auto", "Auto")

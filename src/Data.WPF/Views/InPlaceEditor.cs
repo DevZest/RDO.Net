@@ -16,9 +16,9 @@ namespace DevZest.Data.Views
             IEnumerable<CommandEntry> GetCommandEntries(InPlaceEditor inPlaceEditor);
         }
 
-        private void SetupCommands()
+        private void SetupCommands(DataPresenter dataPresenter)
         {
-            var commandService = DataPresenter?.GetService<ICommandService>();
+            var commandService = dataPresenter.GetService<ICommandService>();
             if (commandService != null)
                 this.SetupCommandEntries(commandService.GetCommandEntries(this));
         }
@@ -394,11 +394,11 @@ namespace DevZest.Data.Views
             }
         }
 
-        void IScalarElement.Setup(ScalarPresenter scalarPresenter)
+        void IScalarElement.Setup(ScalarPresenter p)
         {
             InitIsEditing();
-            Setup(GetProxyScalarInput(), scalarPresenter);
-            SetupCommands();
+            Setup(GetProxyScalarInput(), p);
+            SetupCommands(p.DataPresenter);
         }
 
         private void Setup(IProxyScalarInput proxyScalarInput, ScalarPresenter scalarPresenter)
@@ -464,11 +464,11 @@ namespace DevZest.Data.Views
             }
         }
 
-        void IRowElement.Setup(RowPresenter rowPresenter)
+        void IRowElement.Setup(RowPresenter p)
         {
             InitIsEditing();
-            Setup(GetProxyRowInput(), rowPresenter);
-            SetupCommands();
+            Setup(GetProxyRowInput(), p);
+            SetupCommands(p.DataPresenter);
         }
 
         private void Setup(IProxyRowInput proxyRowInput, RowPresenter rowPresenter)

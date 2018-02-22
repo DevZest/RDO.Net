@@ -3,9 +3,9 @@ using System.Windows.Controls;
 
 namespace FileExplorer
 {
-    public class LargeIconList : DataPresenter<LargeIconListItem>
+    public class LargeIconList : FolderContentPresenter<LargeIconListItem>
     {
-        protected override void BuildTemplate(TemplateBuilder builder)
+        protected override void OverrideBuildTemplate(TemplateBuilder builder)
         {
             builder
                 .GridColumns("85", "5")

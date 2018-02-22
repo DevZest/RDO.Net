@@ -2,8 +2,8 @@
 {
     public interface IScalarElement
     {
-        void Setup(ScalarPresenter scalarPresenter);
-        void Refresh(ScalarPresenter scalarPresenter);
-        void Cleanup(ScalarPresenter scalarPresenter);
+        void Setup(ScalarPresenter p);
+        void Refresh(ScalarPresenter p);
+        void Cleanup(ScalarPresenter p);
     }
 }
