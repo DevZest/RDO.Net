@@ -283,7 +283,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public T GetValue<T>(Column<T> column)
+        public T GetValue<T>(Column<T> column, bool beforeEdit = false)
         {
             if (Depth > 0)
             {
@@ -291,10 +291,10 @@ namespace DevZest.Data.Presenters
                 IReadOnlyList<Column> columns = column.IsLocal ? model.GetLocalColumns() : model.GetColumns();
                 column = (Column<T>)columns[column.Ordinal];
             }
-            return DataRow == null ? default(T) : column[DataRow];
+            return DataRow == null ? default(T) : column[DataRow, beforeEdit];
         }
 
-        public object GetObject(Column column)
+        public object GetObject(Column column, bool beforeEdit = false)
         {
             if (Depth > 0)
             {
@@ -302,7 +302,7 @@ namespace DevZest.Data.Presenters
                 IReadOnlyList<Column> columns = column.IsLocal ? model.GetLocalColumns() : model.GetColumns();
                 column = columns[column.Ordinal];
             }
-            return DataRow == null ? null : column.GetValue(DataRow);
+            return DataRow == null ? null : column.GetValue(DataRow, beforeEdit);
         }
 
         private void VerifyColumn(Column column, string paramName)
