@@ -2,11 +2,72 @@
 using DevZest.Data.Presenters.Primitives;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Views
 {
     internal static class SelectionHandler
     {
+        private interface ISelectionService : IService
+        {
+        }
+
+        private sealed class SelectionService : ISelectionService
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+                dataPresenter.ViewInvalidated += OnViewInvalidated;
+            }
+
+            private RowPresenter CurrentRow
+            {
+                get { return DataPresenter.CurrentRow; }
+            }
+
+            private void OnViewInvalidated(object sender, EventArgs e)
+            {
+                if (ShouldCoerceSelection)
+                    DataPresenter.Select(CurrentRow, SelectionMode.Single, false);
+            }
+
+            private bool ShouldCoerceSelection
+            {
+                get
+                {
+                    if (CurrentRow == null)
+                        return false;
+
+                    if (!CurrentRow.IsSelected)
+                        return true;
+
+                    if (CurrentRow.IsEditing)
+                    {
+                        var selectedRows = DataPresenter.SelectedRows;
+                        if (selectedRows.Count != 1)
+                            return true;
+                    }
+
+                    return false;
+                }
+            }
+        }
+
+        static SelectionHandler()
+        {
+            ServiceManager.Register<ISelectionService, SelectionService>();
+        }
+
+        public static void EnsureInitialized(DataPresenter dataPresenter)
+        {
+            Debug.Assert(dataPresenter != null);
+            var service = dataPresenter.GetService<ISelectionService>();
+            Debug.Assert(service != null);
+        }
+
         public static bool Select(ElementManager elementManager, MouseButton mouseButton, RowPresenter oldCurrentRow, RowPresenter newCurrentRow)
         {
             var templateSelectionMode = elementManager.Template.SelectionMode;

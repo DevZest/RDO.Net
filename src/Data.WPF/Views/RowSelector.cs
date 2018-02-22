@@ -317,7 +317,7 @@ namespace DevZest.Data.Views
 
             private bool CanExecuteByKeyGesture(CanExecuteRoutedEventArgs e)
             {
-                return Rows.Count > 0;
+                return Rows.Count > 0 && !CurrentRow.IsEditing;
             }
 
             private void ExecSelectExtendedHome(object sender, ExecutedRoutedEventArgs e)
@@ -364,7 +364,6 @@ namespace DevZest.Data.Views
                 oldValue.SettingUp -= OnSettingUp;
                 oldValue.Refreshing -= OnRefreshing;
                 oldValue.CleaningUp -= OnCleaningUp;
-                oldValue.DataPresenter.ViewInvalidated -= OnViewInvalidated;
             }
             if (newValue != null)
             {
@@ -373,7 +372,6 @@ namespace DevZest.Data.Views
                 newValue.SettingUp += OnSettingUp;
                 newValue.Refreshing += OnRefreshing;
                 newValue.CleaningUp += OnCleaningUp;
-                newValue.DataPresenter.ViewInvalidated += OnViewInvalidated;
             }
         }
 
@@ -384,7 +382,12 @@ namespace DevZest.Data.Views
 
         private void OnSettingUp()
         {
-            this.SetupCommandEntries(RowPresenter?.DataPresenter?.GetService<ICommandService>().GetCommandEntries(this));
+            var dataPresenter = RowPresenter?.DataPresenter;
+            if (dataPresenter != null)
+            {
+                SelectionHandler.EnsureInitialized(dataPresenter);
+                this.SetupCommandEntries(RowPresenter?.DataPresenter?.GetService<ICommandService>().GetCommandEntries(this));
+            }
             UpdateVisualState();
         }
 
@@ -396,12 +399,6 @@ namespace DevZest.Data.Views
         private void OnRefreshing(object sender, EventArgs e)
         {
             UpdateVisualState();
-        }
-
-        private void OnViewInvalidated(object sender, EventArgs e)
-        {
-            if (RowPresenter.IsCurrent && !IsSelected)
-                ElementManager.Select(RowPresenter, SelectionMode.Single, ElementManager.CurrentRow);
         }
 
         private RowView RowView

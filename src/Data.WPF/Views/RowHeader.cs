@@ -217,34 +217,35 @@ namespace DevZest.Data.Views
             set { SetValue(SeparatorVisibilityProperty, value); }
         }
 
-        void IRowElement.Setup(RowPresenter rowPresenter)
+        void IRowElement.Setup(RowPresenter p)
         {
-            var dataPresenter = rowPresenter.DataPresenter;
+            var dataPresenter = p.DataPresenter;
+            SelectionHandler.EnsureInitialized(dataPresenter);
             EnsureFocusTrackerInitialized(dataPresenter);
             this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
         }
 
-        void IRowElement.Refresh(RowPresenter rowPresenter)
+        void IRowElement.Refresh(RowPresenter p)
         {
-            UpdateVisualStates(rowPresenter);
+            UpdateVisualStates(p);
         }
 
-        void IRowElement.Cleanup(RowPresenter rowPresenter)
+        void IRowElement.Cleanup(RowPresenter p)
         {
             this.CleanupCommandEntries();
         }
 
-        private void UpdateVisualStates(RowPresenter rowPresenter)
+        private void UpdateVisualStates(RowPresenter p)
         {
-            UpdateVisualStates(rowPresenter, true);
+            UpdateVisualStates(p, true);
         }
 
-        private void UpdateVisualStates(RowPresenter rowPresenter, bool useTransitions)
+        private void UpdateVisualStates(RowPresenter p, bool useTransitions)
         {
             if (!IsLoaded)
                 return;
 
-            if (rowPresenter.IsSelected)
+            if (p.IsSelected)
             {
                 IsSelected = true;
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateSelected);
@@ -255,18 +256,18 @@ namespace DevZest.Data.Views
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateUnselected);
             }
 
-            if (rowPresenter.IsVirtual)
+            if (p.IsVirtual)
             {
-                if (rowPresenter.IsEditing)
+                if (p.IsEditing)
                     VisualStates.GoToState(this, useTransitions, VisualStates.StateNewEditingRow);
-                else if (rowPresenter.IsCurrent)
+                else if (p.IsCurrent)
                     VisualStates.GoToState(this, useTransitions, VisualStates.StateNewCurrentRow);
                 else
                     VisualStates.GoToState(this, useTransitions, VisualStates.StateNewRow);
             }
-            else if (rowPresenter.IsCurrent)
+            else if (p.IsCurrent)
             {
-                if (rowPresenter.IsEditing)
+                if (p.IsEditing)
                     VisualStates.GoToState(this, useTransitions, VisualStates.StateCurrentEditingRow);
                 else
                     VisualStates.GoToState(this, useTransitions, VisualStates.StateCurrentRow);
