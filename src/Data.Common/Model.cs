@@ -1288,5 +1288,22 @@ namespace DevZest.Data
         {
             return Extender as T;
         }
+
+        private int _suspendEditingValueCount = 0;
+        internal void SuspendEditingValue()
+        {
+            RootModel._suspendEditingValueCount++;
+        }
+
+        internal void ResumeEditingValue()
+        {
+            Debug.Assert(IsEditingValueSuspended);
+            RootModel._suspendEditingValueCount--;
+        }
+
+        internal bool IsEditingValueSuspended
+        {
+            get { return RootModel._suspendEditingValueCount > 0; }
+        }
     }
 }

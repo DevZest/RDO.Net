@@ -281,7 +281,7 @@ namespace DevZest.Data
         /// <returns>The created <see cref="ColumnMapping"/>.</returns>
         public abstract ColumnMapping MapFrom(Column column);
 
-        public abstract object GetValue(DataRow dataRow);
+        public abstract object GetValue(DataRow dataRow, bool beforeEdit = false);
 
         public abstract void SetValue(DataRow dataRow, object value);
 

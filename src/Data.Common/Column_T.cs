@@ -161,13 +161,7 @@ namespace DevZest.Data
         /// <seealso cref="IsReadOnly(DataRow)"/>
         public T this[DataRow dataRow]
         {
-            get
-            {
-                if (ParentModel == null && Expression != null)
-                    return Expression[dataRow];
-                var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow), true);
-                return InternalGetValue(dataRow, translatedDataRow);
-            }
+            get { return this[dataRow, false]; }
             set
             {
                 VerifyDataRow(dataRow, nameof(dataRow), false);
@@ -175,12 +169,41 @@ namespace DevZest.Data
             }
         }
 
+        public T this[DataRow dataRow, bool beforeEdit]
+        {
+            get
+            {
+                if (ParentModel == null && Expression != null)
+                    return Expression[dataRow];
+                var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow), true);
+                return InternalGetValue(dataRow, translatedDataRow, beforeEdit);
+            }
+        }
+
+        private T InternalGetValue(DataRow dataRow, DataRow translatedDataRow, bool beforeEdit)
+        {
+            return beforeEdit ? InternalGetBeforeEditValue(dataRow, translatedDataRow) : InternalGetValue(dataRow, translatedDataRow);
+        }
+
+        private T InternalGetBeforeEditValue(DataRow dataRow, DataRow translatedDataRow)
+        {
+            ParentModel.SuspendEditingValue();
+            try
+            {
+                return InternalGetValue(dataRow, translatedDataRow);
+            }
+            finally
+            {
+                ParentModel.ResumeEditingValue();
+            }
+        }
+
         private T InternalGetValue(DataRow dataRow, DataRow translatedDataRow)
         {
             if (_valueManager == null)
                 return Expression[dataRow];
-            else if (translatedDataRow == ParentModel.EditingRow)
-                return Expression != null ? Expression[dataRow] : _editingValue;
+            else if (translatedDataRow == ParentModel.EditingRow && !ParentModel.IsEditingValueSuspended)
+                return Expression != null ? Expression[dataRow] : _editingValue;    // resolve to expression when it is a concrete computation column.
             else
                 return _valueManager[translatedDataRow.Ordinal];
         }
@@ -279,16 +302,14 @@ namespace DevZest.Data
             set { this[null, ordinal] = value; }
         }
 
+        public T this[int ordinal, bool beforeEdit]
+        {
+            get { return this[null, ordinal, beforeEdit]; }
+        }
+
         public T this[DataRow parentDataRow, int index]
         {
-            get
-            {
-                var model = GetModel();
-                if (model == null)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                var dataRow = GetDataRow(model, parentDataRow, index);
-                return InternalGetValue(dataRow, dataRow);
-            }
+            get { return this[parentDataRow, index, false]; }
             set
             {
                 var model = GetModel();
@@ -296,6 +317,18 @@ namespace DevZest.Data
                     throw new ArgumentOutOfRangeException(nameof(index));
                 var dataRow = GetDataRow(ParentModel, parentDataRow, index);
                 InternalSetValue(dataRow, value);
+            }
+        }
+
+        public T this[DataRow parentDataRow, int index, bool beforeEdit]
+        {
+            get
+            {
+                var model = GetModel();
+                if (model == null)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                var dataRow = GetDataRow(model, parentDataRow, index);
+                return InternalGetValue(dataRow, dataRow, beforeEdit);
             }
         }
 
@@ -582,9 +615,9 @@ namespace DevZest.Data
             return ColumnMapping.Map((Column<T>)column, this);
         }
 
-        public sealed override object GetValue(DataRow dataRow)
+        public sealed override object GetValue(DataRow dataRow, bool beforeEdit = false)
         {
-            return this[dataRow];
+            return this[dataRow, beforeEdit];
         }
 
         public sealed override void SetValue(DataRow dataRow, object value)
