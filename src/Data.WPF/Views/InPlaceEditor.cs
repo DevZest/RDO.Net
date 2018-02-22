@@ -240,6 +240,7 @@ namespace DevZest.Data.Views
 
         static InPlaceEditor()
         {
+            FocusableProperty.OverrideMetadata(typeof(InPlaceEditor), new FrameworkPropertyMetadata(BooleanBoxes.True));
             ServiceManager.Register<ISwitcher, Switcher>();
         }
 
@@ -476,6 +477,10 @@ namespace DevZest.Data.Views
             if (proxyRowInput == null)
                 return;
 
+            bool hasFocus = IsKeyboardFocusWithin;
+            if (hasFocus)
+                Focus();
+
             if (IsEditing)
             {
                 InertElement = null;
@@ -486,6 +491,8 @@ namespace DevZest.Data.Views
                 EditorElement = null;
                 InertElement = GenerateElement(proxyRowInput.InertBinding, rowPresenter);
             }
+            if (hasFocus)
+                Child.Focus();
             InvalidateMeasure();
         }
 
