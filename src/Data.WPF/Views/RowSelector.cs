@@ -83,7 +83,7 @@ namespace DevZest.Data.Views
                         {
                             yield return Commands.SelectExtendedUp.Bind(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedDown.Bind(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
-                            yield return Commands.SelectiExtendedLeft.Bind(ExecSelectiExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
+                            yield return Commands.SelectiExtendedLeft.Bind(ExecSelectExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedRight.Bind(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right));
                             yield return Commands.SelectExtendedHome.Bind(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedEnd.Bind(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
@@ -300,7 +300,7 @@ namespace DevZest.Data.Views
                 Select(MoveDownRow, SelectionMode.Extended);
             }
 
-            private void ExecSelectiExtendedLeft(object sender, ExecutedRoutedEventArgs e)
+            private void ExecSelectExtendedLeft(object sender, ExecutedRoutedEventArgs e)
             {
                 Select(MoveLeftRow, SelectionMode.Extended);
             }
