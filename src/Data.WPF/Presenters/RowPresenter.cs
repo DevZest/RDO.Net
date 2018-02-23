@@ -367,7 +367,9 @@ namespace DevZest.Data.Presenters
             VerifyNoPendingEdit();
             if (IsVirtual && RowManager.Template.VirtualRowPlacement == VirtualRowPlacement.Exclusive)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_BeginEditExclusiveVirtual);
+            DataPresenter.SuspendInvalidateView();
             RowManager.BeginEdit();
+            DataPresenter.ResumeInvalidateView();
         }
 
         public void EditValue<T>(Column<T> column, T value)
@@ -383,9 +385,11 @@ namespace DevZest.Data.Presenters
                     column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
             }
 
+            DataPresenter.SuspendInvalidateView();
             BeginEdit();
             column[DataRow] = value;
             Invalidate();
+            DataPresenter.ResumeInvalidateView();
         }
 
         public void CancelEdit()
@@ -393,7 +397,9 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
+            DataPresenter.SuspendInvalidateView();
             RowManager.CancelEdit();
+            DataPresenter.ResumeInvalidateView();
         }
 
         public bool EndEdit()
@@ -401,19 +407,26 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
-            return RowManager.EndEdit();
+            DataPresenter.SuspendInvalidateView();
+            var result = RowManager.EndEdit();
+            DataPresenter.ResumeInvalidateView();
+            return result;
         }
 
         public void BeginInsertBefore(RowPresenter child = null)
         {
             VerifyInsert(child);
+            DataPresenter.SuspendInvalidateView();
             RowManager.BeginInsertBefore(this, child);
+            DataPresenter.ResumeInvalidateView();
         }
 
         public void BeginInsertAfter(RowPresenter child = null)
         {
             VerifyInsert(child);
+            DataPresenter.SuspendInvalidateView();
             RowManager.BeginInsertAfter(this, child);
+            DataPresenter.ResumeInvalidateView();
         }
 
         private void VerifyInsert(RowPresenter child)
