@@ -148,11 +148,12 @@ namespace DevZest.Data.Presenters
             return index == -1 ? paramName : string.Format("{0}[{1}]", paramName, index);
         }
 
-        public void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true)
+        public void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true, Action beforeSelecting = null)
         {
             VerifyRowPresenter(rowPresenter, nameof(rowPresenter));
-            SuspendInvalidateView();
             var oldCurrentRow = CurrentRow;
+            beforeSelecting?.Invoke();
+            SuspendInvalidateView();
             CurrentRow = rowPresenter;
             RequireLayoutManager().Select(rowPresenter, selectionMode, oldCurrentRow);
             ResumeInvalidateView();

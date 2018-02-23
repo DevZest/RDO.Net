@@ -471,12 +471,20 @@ namespace DevZest.Data.Views
 
         private DataPresenter DataPresenter
         {
-            get { return RowPresenter.DataPresenter; }
+            get { return RowPresenter?.DataPresenter; }
         }
 
         private void HandleMouseButtonDown(MouseButton mouseButton)
         {
-            SelectionHandler.Select(DataPresenter, mouseButton, RowPresenter);
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
+                return;
+
+            SelectionHandler.Select(dataPresenter, mouseButton, RowPresenter, () =>
+            {
+                if (!IsKeyboardFocusWithin)
+                    MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+            });
         }
     }
 }

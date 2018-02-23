@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Presenters;
-using DevZest.Data.Presenters.Primitives;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System;
@@ -11,6 +10,8 @@ namespace DevZest.Data.Views
     {
         private interface ISelectionService : IService
         {
+            void SuspendCoerceSelection();
+            void ResumeCoerceSelection();
         }
 
         private sealed class SelectionService : ISelectionService
@@ -32,6 +33,22 @@ namespace DevZest.Data.Views
             {
                 if (ShouldCoerceSelection)
                     DataPresenter.Select(CurrentRow);
+            }
+
+            private int _suspendCoerceSelectionCount;
+            public void SuspendCoerceSelection()
+            {
+                if (_suspendCoerceSelectionCount == 0)
+                    DataPresenter.ViewInvalidated -= OnViewInvalidated;
+                _suspendCoerceSelectionCount++;
+            }
+
+            public void ResumeCoerceSelection()
+            {
+                Debug.Assert(_suspendCoerceSelectionCount > 0);
+                _suspendCoerceSelectionCount--;
+                if (_suspendCoerceSelectionCount == 0)
+                    DataPresenter.ViewInvalidated += OnViewInvalidated;
             }
 
             private bool ShouldCoerceSelection
@@ -68,11 +85,32 @@ namespace DevZest.Data.Views
             Debug.Assert(service != null);
         }
 
-        public static bool Select(DataPresenter dataPresenter, MouseButton mouseButton, RowPresenter row)
+        private static void SuspendCoerceSelection(DataPresenter dataPresenter)
+        {
+            dataPresenter.GetService<ISelectionService>().SuspendCoerceSelection();
+        }
+
+        private static void ResumeCoerceSelection(DataPresenter dataPresenter)
+        {
+            dataPresenter.GetService<ISelectionService>().ResumeCoerceSelection();
+        }
+
+        public static void Select(DataPresenter dataPresenter, MouseButton mouseButton, RowPresenter row, Action beforeSelecting)
         {
             if (dataPresenter.EditingRow != null)
-                return false;
+                return;
 
+            var selectionMode = GetSelectionMode(dataPresenter, mouseButton, row);
+            if (selectionMode.HasValue)
+            {
+                SuspendCoerceSelection(dataPresenter);
+                dataPresenter.Select(row, selectionMode.GetValueOrDefault(), true, beforeSelecting);
+                ResumeCoerceSelection(dataPresenter);
+            }
+        }
+
+        private static SelectionMode? GetSelectionMode(DataPresenter dataPresenter, MouseButton mouseButton, RowPresenter row)
+        {
             var templateSelectionMode = dataPresenter.Template.SelectionMode;
             if (!templateSelectionMode.HasValue)
                 templateSelectionMode = SelectionMode.Extended;
@@ -80,32 +118,27 @@ namespace DevZest.Data.Views
             switch (templateSelectionMode.Value)
             {
                 case SelectionMode.Single:
-                    dataPresenter.Select(row, SelectionMode.Single);
-                    return true;
+                    return SelectionMode.Single;
                 case SelectionMode.Multiple:
-                    dataPresenter.Select(row, SelectionMode.Multiple);
-                    return true;
+                    return SelectionMode.Multiple;
                 case SelectionMode.Extended:
                     if (mouseButton != MouseButton.Left)
                     {
                         if (mouseButton == MouseButton.Right && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.None)
                         {
                             if (row.IsSelected)
-                                return false;
-                            dataPresenter.Select(row, SelectionMode.Single);
-                            return true;
+                                return null;
+                            return SelectionMode.Single;
                         }
-                        return false;
+                        return null;
                     }
 
                     if (IsControlDown && IsShiftDown)
-                        return false;
+                        return null;
 
-                    var selectionMode = IsShiftDown ? SelectionMode.Extended : (IsControlDown ? SelectionMode.Multiple : SelectionMode.Single);
-                    dataPresenter.Select(row, selectionMode);
-                    return true;
+                    return IsShiftDown ? SelectionMode.Extended : (IsControlDown ? SelectionMode.Multiple : SelectionMode.Single);
             }
-            return false;
+            return null;
         }
 
         private static bool IsControlDown

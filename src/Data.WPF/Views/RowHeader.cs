@@ -311,7 +311,11 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            SelectionHandler.Select(dataPresenter, mouseButton, RowPresenter);
+            SelectionHandler.Select(dataPresenter, mouseButton, RowPresenter, () =>
+            {
+                if (!IsKeyboardFocusWithin)
+                    MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+            });
         }
     }
 }
