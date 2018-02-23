@@ -260,10 +260,37 @@ namespace DevZest.Data.Views
                     return;
 
                 _isEditing = value;
-                var proxyRowInput = GetProxyRowInput();
-                if (proxyRowInput != null)
-                    Setup(GetProxyRowInput(), RowPresenter);
+                bool hasFocus = IsKeyboardFocusWithin;
+                var setup = SetupProxyRowInput();
+                if (!setup)
+                    setup = SetupProxyScalarInput();
+                if (setup && hasFocus)
+                    Child.Focus();
             }
+        }
+
+        private bool SetupProxyRowInput()
+        {
+            var proxyRowInput = GetProxyRowInput();
+            if (proxyRowInput != null)
+            {
+                Cleanup(proxyRowInput);
+                Setup(proxyRowInput, RowPresenter);
+                return true;
+            }
+            return false;
+        }
+
+        private bool SetupProxyScalarInput()
+        {
+            var proxyScalarInput = GetProxyScalarInput();
+            if (proxyScalarInput != null)
+            {
+                Cleanup(proxyScalarInput);
+                Setup(proxyScalarInput, this.GetScalarFlowIndex());
+                return true;
+            }
+            return false;
         }
 
         private void InitIsEditing()
@@ -398,11 +425,11 @@ namespace DevZest.Data.Views
         void IScalarElement.Setup(ScalarPresenter p)
         {
             InitIsEditing();
-            Setup(GetProxyScalarInput(), p);
+            Setup(GetProxyScalarInput(), p.FlowIndex);
             SetupCommands(p.DataPresenter);
         }
 
-        private void Setup(IProxyScalarInput proxyScalarInput, ScalarPresenter scalarPresenter)
+        private void Setup(IProxyScalarInput proxyScalarInput, int flowIndex)
         {
             if (proxyScalarInput == null)
                 return;
@@ -410,20 +437,20 @@ namespace DevZest.Data.Views
             if (IsEditing)
             {
                 InertElement = null;
-                EditorElement = GenerateElement(proxyScalarInput.EditorBinding, scalarPresenter);
+                EditorElement = GenerateElement(proxyScalarInput.EditorBinding, flowIndex);
             }
             else
             {
                 EditorElement = null;
-                InertElement = GenerateElement(proxyScalarInput.InertBinding, scalarPresenter);
+                InertElement = GenerateElement(proxyScalarInput.InertBinding, flowIndex);
             }
             InvalidateMeasure();
         }
 
-        private static UIElement GenerateElement(ScalarBinding binding, ScalarPresenter p)
+        private static UIElement GenerateElement(ScalarBinding binding, int flowIndex)
         {
             binding.BeginSetup(null);
-            var result = binding.Setup(p.FlowIndex);
+            var result = binding.Setup(flowIndex);
             binding.EndSetup();
             binding.Refresh(result);
             return result;
@@ -477,10 +504,6 @@ namespace DevZest.Data.Views
             if (proxyRowInput == null)
                 return;
 
-            bool hasFocus = IsKeyboardFocusWithin;
-            if (hasFocus)
-                Focus();
-
             if (IsEditing)
             {
                 InertElement = null;
@@ -491,8 +514,6 @@ namespace DevZest.Data.Views
                 EditorElement = null;
                 InertElement = GenerateElement(proxyRowInput.InertBinding, rowPresenter);
             }
-            if (hasFocus)
-                Child.Focus();
             InvalidateMeasure();
         }
 
