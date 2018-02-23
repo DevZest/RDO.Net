@@ -102,7 +102,9 @@ namespace DevZest.Data.Presenters
 
         public virtual void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
+            SuspendInvalidateView();
             RequireLayoutManager().Apply(where, orderBy);
+            ResumeInvalidateView();
         }
 
         public IReadOnlyList<RowPresenter> Rows
@@ -115,8 +117,10 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager?.CurrentRow; }
             set
             {
+                SuspendInvalidateView();
                 VerifyRowPresenter(value, nameof(value));
                 RequireLayoutManager().CurrentRow = value;
+                ResumeInvalidateView();
             }
         }
 
@@ -207,13 +211,17 @@ namespace DevZest.Data.Presenters
         public void BeginInsertBefore(RowPresenter row = null)
         {
             VerifyInsert(row);
+            SuspendInvalidateView();
             RequireLayoutManager().BeginInsertBefore(null, row);
+            ResumeInvalidateView();
         }
 
         public void BeginInsertAfter(RowPresenter row = null)
         {
             VerifyInsert(row);
+            SuspendInvalidateView();
             RequireLayoutManager().BeginInsertAfter(null, row);
+            ResumeInvalidateView();
         }
 
         private void VerifyInsert(RowPresenter row)

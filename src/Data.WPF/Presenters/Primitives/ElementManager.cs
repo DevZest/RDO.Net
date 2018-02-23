@@ -593,6 +593,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             if (rowView.RowPresenter != CurrentRow)
             {
+                SuspendInvalidateView();
                 _currentRowChangedByInsertSuspended = true;
                 _focusTo = rowView;
                 if (!CanChangeCurrentRow)
@@ -600,6 +601,7 @@ namespace DevZest.Data.Presenters.Primitives
                 else if (_focusTo != null)
                     SetCurrentRowFromView();
                 _currentRowChangedByInsertSuspended = false;
+                ResumeInvalidateView();
             }
         }
 
