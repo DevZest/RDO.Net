@@ -421,11 +421,20 @@ namespace DevZest.Data.Views
             UpdateVisualState(true);
         }
 
+        private bool IsDataPresenterEditing
+        {
+            get
+            {
+                var dataPresenter = DataPresenter;
+                return dataPresenter == null ? false : dataPresenter.IsEditing;
+            }
+        }
+
         private void UpdateVisualState(bool useTransitions)
         {
             if (!IsEnabled)
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateDisabled, VisualStates.StateNormal);
-            else if (IsMouseOver)
+            else if (IsMouseOver && !IsDataPresenterEditing)
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateMouseOver, VisualStates.StateNormal);
             else
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateNormal);
