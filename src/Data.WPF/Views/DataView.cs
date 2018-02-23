@@ -60,15 +60,11 @@ namespace DevZest.Data.Views
             }
         }
 
-        private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(DataView),
-            typeof(DataView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
-        public static readonly DependencyProperty CurrentProperty = CurrentPropertyKey.DependencyProperty;
-
         public static DataView GetCurrent(DependencyObject target)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
-            return (DataView)target.GetValue(CurrentProperty);
+            return target.FindAncestor<DataView>();
         }
 
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
@@ -105,11 +101,6 @@ namespace DevZest.Data.Views
             KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
             KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
             ServiceManager.Register<ICommandService, CommandService>();
-        }
-
-        public DataView()
-        {
-            SetValue(CurrentPropertyKey, this);
         }
 
         private DataPresenter _dataPresenter;
