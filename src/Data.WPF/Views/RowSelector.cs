@@ -492,7 +492,7 @@ namespace DevZest.Data.Views
             SelectionHandler.Select(dataPresenter, mouseButton, RowPresenter, () =>
             {
                 if (!IsKeyboardFocusWithin)
-                    MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                    Focus();
             });
         }
     }

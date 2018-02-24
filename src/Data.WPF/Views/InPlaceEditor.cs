@@ -265,7 +265,10 @@ namespace DevZest.Data.Views
                 if (!setup)
                     setup = SetupProxyScalarInput();
                 if (setup && hasFocus)
-                    Child.Focus();
+                {
+                    if (!Child.Focus())
+                        Focus();
+                }
             }
         }
 

@@ -367,9 +367,9 @@ namespace DevZest.Data.Presenters
             VerifyNoPendingEdit();
             if (IsVirtual && RowManager.Template.VirtualRowPlacement == VirtualRowPlacement.Exclusive)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_BeginEditExclusiveVirtual);
-            DataPresenter.SuspendInvalidateView();
+            DataPresenter?.SuspendInvalidateView();
             RowManager.BeginEdit();
-            DataPresenter.ResumeInvalidateView();
+            DataPresenter?.ResumeInvalidateView();
         }
 
         public void EditValue<T>(Column<T> column, T value)
@@ -385,11 +385,11 @@ namespace DevZest.Data.Presenters
                     column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
             }
 
-            DataPresenter.SuspendInvalidateView();
+            DataPresenter?.SuspendInvalidateView();
             BeginEdit();
             column[DataRow] = value;
             Invalidate();
-            DataPresenter.ResumeInvalidateView();
+            DataPresenter?.ResumeInvalidateView();
         }
 
         public void CancelEdit()
@@ -397,9 +397,9 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
-            DataPresenter.SuspendInvalidateView();
+            DataPresenter?.SuspendInvalidateView();
             RowManager.CancelEdit();
-            DataPresenter.ResumeInvalidateView();
+            DataPresenter?.ResumeInvalidateView();
         }
 
         public bool EndEdit()
@@ -407,26 +407,26 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
-            DataPresenter.SuspendInvalidateView();
+            DataPresenter?.SuspendInvalidateView();
             var result = RowManager.EndEdit();
-            DataPresenter.ResumeInvalidateView();
+            DataPresenter?.ResumeInvalidateView();
             return result;
         }
 
         public void BeginInsertBefore(RowPresenter child = null)
         {
             VerifyInsert(child);
-            DataPresenter.SuspendInvalidateView();
+            DataPresenter?.SuspendInvalidateView();
             RowManager.BeginInsertBefore(this, child);
-            DataPresenter.ResumeInvalidateView();
+            DataPresenter?.ResumeInvalidateView();
         }
 
         public void BeginInsertAfter(RowPresenter child = null)
         {
             VerifyInsert(child);
-            DataPresenter.SuspendInvalidateView();
+            DataPresenter?.SuspendInvalidateView();
             RowManager.BeginInsertAfter(this, child);
-            DataPresenter.ResumeInvalidateView();
+            DataPresenter?.ResumeInvalidateView();
         }
 
         private void VerifyInsert(RowPresenter child)
