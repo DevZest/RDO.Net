@@ -24,7 +24,7 @@ namespace FileExplorer
         public static DataSet<DirectoryTreeItem> GetLogicalDrives()
         {
             var result = DataSet<DirectoryTreeItem>.New();
-            foreach (string s in Directory.GetLogicalDrives())
+            foreach (string s in System.IO.Directory.GetLogicalDrives())
                 AddRow(result, s);
             return result;
         }
@@ -46,7 +46,7 @@ namespace FileExplorer
         {
             try
             {
-                return Directory.GetDirectories(path);
+                return System.IO.Directory.GetDirectories(path);
             }
             catch (UnauthorizedAccessException)
             {

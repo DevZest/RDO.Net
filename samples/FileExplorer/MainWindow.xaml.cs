@@ -39,14 +39,14 @@ namespace FileExplorer
 
             public abstract void ShowOrRefreshAsync(DataView dataView, string currentFolder);
 
-            public abstract FolderContent _ { get; }
+            public abstract DirectoryItem _ { get; }
 
             public abstract DataPresenter DataPresenter { get; }
 
             private abstract class ListManagerBase<T> : ListManager
-                where T : FolderContent, new()
+                where T : DirectoryItem, new()
             {
-                public sealed override FolderContent _
+                public sealed override DirectoryItem _
                 {
                     get { return GetDataPresenter()._; }
                 }
@@ -60,7 +60,7 @@ namespace FileExplorer
 
                 public sealed override void ShowOrRefreshAsync(DataView dataView, string currentFolder)
                 {
-                    GetDataPresenter().ShowOrRefreshAsync(dataView, (CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
+                    GetDataPresenter().ShowOrRefreshAsync(dataView, (CancellationToken ct) => DirectoryItem.GetDirectoryItemsAsync<T>(currentFolder, ct));
                 }
             }
 

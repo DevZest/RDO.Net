@@ -59,9 +59,9 @@
     <Compile Include="DetailsListItem.cs" />
     <Compile Include="EnumToBooleanConverter.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
-    <Compile Include="FolderContent.cs" />
-    <Compile Include="FolderContentPresenter.cs" />
-    <Compile Include="FolderContentType.cs" />
+    <Compile Include="DirectoryItem.cs" />
+    <Compile Include="DirectoryPresenter.cs" />
+    <Compile Include="DirectoryItemType.cs" />
     <Compile Include="DetailsList.cs" />
     <Compile Include="LargeIconListItem.cs" />
     <Compile Include="LargeIconListItemView.xaml.cs">

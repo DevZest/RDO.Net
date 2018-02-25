@@ -4,7 +4,7 @@ using System.IO;
 
 namespace FileExplorer
 {
-    public sealed class LargeIconListItem : FolderContent
+    public sealed class LargeIconListItem : DirectoryItem
     {
         public Column<ImageSource> LargeIcon { get; private set; }
 

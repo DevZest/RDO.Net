@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace FileExplorer
 {
-    public sealed class DetailsListItem : FolderContent
+    public sealed class DetailsListItem : DirectoryItem
     {
         public Column<ImageSource> SmallIcon { get; private set; }
         public Column<long?> FileSize { get; private set; }

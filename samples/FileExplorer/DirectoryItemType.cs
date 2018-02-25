@@ -1,8 +1,8 @@
 ﻿namespace FileExplorer
 {
-    public enum FolderContentType
+    public enum DirectoryItemType
     {
-        Folder,
+        Directory,
         File
     }
 }

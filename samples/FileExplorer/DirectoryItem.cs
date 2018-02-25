@@ -3,17 +3,16 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace FileExplorer
 {
-    public abstract class FolderContent : Model
+    public abstract class DirectoryItem : Model
     {
         public Column<string> Path { get; private set; }
 
         public Column<string> DisplayName { get; private set; }
 
-        public Column<FolderContentType> Type { get; private set; }
+        public Column<DirectoryItemType> Type { get; private set; }
 
         protected sealed override void OnInitializing()
         {
@@ -25,43 +24,43 @@ namespace FileExplorer
         {
             Path = CreateLocalColumn<string>();
             DisplayName = CreateLocalColumn<string>();
-            Type = CreateLocalColumn<FolderContentType>();
+            Type = CreateLocalColumn<DirectoryItemType>();
         }
 
         protected virtual void Initialize(DataRow x, DirectoryInfo directoryInfo)
         {
             Path[x] = directoryInfo.FullName;
             DisplayName[x] = directoryInfo.Name;
-            Type[x] = FolderContentType.Folder;
+            Type[x] = DirectoryItemType.Directory;
         }
 
         protected virtual void Initialize(DataRow x, FileInfo fileInfo)
         {
             Path[x] = fileInfo.FullName;
             DisplayName[x] = fileInfo.Name;
-            Type[x] = FolderContentType.File;
+            Type[x] = DirectoryItemType.File;
         }
 
-        public static async Task<DataSet<T>> GetFolderContentsAsync<T>(string path)
-            where T : FolderContent, new()
+        public static async Task<DataSet<T>> GetDirectoryItemsAsync<T>(string path)
+            where T : DirectoryItem, new()
         {
-            return await Task.Run(() => GetFolderContents<T>(path, CancellationToken.None));
+            return await Task.Run(() => GetDirectoryItems<T>(path, CancellationToken.None));
         }
 
-        public static async Task<DataSet<T>> GetFolderContentsAsync<T>(string path, CancellationToken ct)
-            where T : FolderContent, new()
+        public static async Task<DataSet<T>> GetDirectoryItemsAsync<T>(string path, CancellationToken ct)
+            where T : DirectoryItem, new()
         {
-            return await Task.Run(() => GetFolderContents<T>(path, ct));
+            return await Task.Run(() => GetDirectoryItems<T>(path, ct));
         }
 
-        public static DataSet<T> GetFolderContents<T>(string path)
-            where T : FolderContent, new()
+        public static DataSet<T> GetDirectoryItems<T>(string path)
+            where T : DirectoryItem, new()
         {
-            return GetFolderContents<T>(path, CancellationToken.None);
+            return GetDirectoryItems<T>(path, CancellationToken.None);
         }
 
-        private static DataSet<T> GetFolderContents<T>(string path, CancellationToken ct)
-            where T : FolderContent, new()
+        private static DataSet<T> GetDirectoryItems<T>(string path, CancellationToken ct)
+            where T : DirectoryItem, new()
         {
             var result = DataSet<T>.New();
             if (string.IsNullOrEmpty(path))
@@ -88,7 +87,7 @@ namespace FileExplorer
         {
             try
             {
-                return Directory.GetFiles(folder);
+                return System.IO.Directory.GetFiles(folder);
             }
             catch (UnauthorizedAccessException)
             {
