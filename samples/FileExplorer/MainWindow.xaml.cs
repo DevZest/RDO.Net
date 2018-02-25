@@ -97,7 +97,7 @@ namespace FileExplorer
         public static readonly DependencyProperty ListModeProperty = DependencyProperty.Register(nameof(ListMode), typeof(ListMode),
             typeof(MainWindow), new FrameworkPropertyMetadata(OnListModeChanged));
 
-        private FolderTree _folderTree = new FolderTree();
+        private DirectoryTree _folderTree = new DirectoryTree();
         private ListManager _listManager;
 
         public MainWindow()
@@ -107,7 +107,7 @@ namespace FileExplorer
             Debug.Assert(_listManager != null);
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, ExecuteCloseCommand));
             _folderTree.ViewRefreshed += OnFolderTreeViewRefreshed;
-            _folderTree.Show(_foldersTreeView, Folder.GetLogicalDrives());
+            _folderTree.Show(_foldersTreeView, DirectoryTreeItem.GetLogicalDrives());
         }
 
         public ListMode ListMode

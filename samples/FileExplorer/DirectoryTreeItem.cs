@@ -1,20 +1,19 @@
 ﻿using DevZest.Data;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace FileExplorer
 {
-    public class Folder : Model
+    public class DirectoryTreeItem : Model
     {
-        static Folder()
+        static DirectoryTreeItem()
         {
-            RegisterChildModel((Folder x) => x.SubFolders);
+            RegisterChildModel((DirectoryTreeItem x) => x.SubFolders);
         }
 
         public Column<string> Path { get; private set; }
 
-        public Folder SubFolders { get; private set; }
+        public DirectoryTreeItem SubFolders { get; private set; }
 
         protected override void OnInitializing()
         {
@@ -22,9 +21,9 @@ namespace FileExplorer
             base.OnInitializing();
         }
 
-        public static DataSet<Folder> GetLogicalDrives()
+        public static DataSet<DirectoryTreeItem> GetLogicalDrives()
         {
-            var result = DataSet<Folder>.New();
+            var result = DataSet<DirectoryTreeItem>.New();
             foreach (string s in Directory.GetLogicalDrives())
                 AddRow(result, s);
             return result;
@@ -32,7 +31,7 @@ namespace FileExplorer
 
         public static void Expand(DataRow dataRow)
         {
-            var folders = (DataSet<Folder>)dataRow.DataSet;
+            var folders = (DataSet<DirectoryTreeItem>)dataRow.DataSet;
             var children = dataRow.Children(folders._.SubFolders);
             if (children.Count == 1 && children._.Path[0] == null)
             {
@@ -55,7 +54,7 @@ namespace FileExplorer
             }
         }
 
-        private static void AddRow(DataSet<Folder> folders, string path)
+        private static void AddRow(DataSet<DirectoryTreeItem> folders, string path)
         {
             var dataRow = folders.AddRow((_, x) => _.Path[x] = path);
             dataRow.Children(folders._.SubFolders).AddRow();

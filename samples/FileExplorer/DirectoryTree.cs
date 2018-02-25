@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace FileExplorer
 {
-    public class FolderTree : DataPresenter<Folder>
+    public class DirectoryTree : DataPresenter<DirectoryTreeItem>
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {
@@ -13,13 +13,13 @@ namespace FileExplorer
                 .GridRows("Auto")
                 .Layout(Orientation.Vertical)
                 .WithSelectionMode(SelectionMode.Single)
-                .AddBinding(0, 0, _.BindToFolderView());
+                .AddBinding(0, 0, _.BindToDirectoryTreeItemView());
         }
 
         protected override void ToggleExpandState(RowPresenter rowPresenter)
         {
             var dataRow = rowPresenter.DataRow;
-            Folder.Expand(dataRow);
+            DirectoryTreeItem.Expand(dataRow);
             base.ToggleExpandState(rowPresenter);
         }
     }

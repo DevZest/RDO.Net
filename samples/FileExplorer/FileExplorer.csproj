@@ -69,7 +69,7 @@
     </Compile>
     <Compile Include="ListMode.cs" />
     <Compile Include="Win32.cs" />
-    <Compile Include="FolderTree.cs" />
+    <Compile Include="DirectoryTree.cs" />
     <Compile Include="LargeIconList.cs" />
     <Page Include="DetailsList.Styles.xaml">
       <SubType>Designer</SubType>
@@ -79,7 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="FolderView.xaml">
+    <Page Include="DirectoryTreeItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -92,9 +92,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BindingFactory.cs" />
-    <Compile Include="Folder.cs" />
-    <Compile Include="FolderView.xaml.cs">
-      <DependentUpon>FolderView.xaml</DependentUpon>
+    <Compile Include="DirectoryTreeItem.cs" />
+    <Compile Include="DirectoryTreeItemView.xaml.cs">
+      <DependentUpon>DirectoryTreeItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Images.cs" />
     <Compile Include="MainWindow.xaml.cs">

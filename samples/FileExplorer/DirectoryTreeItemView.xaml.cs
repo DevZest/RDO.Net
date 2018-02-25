@@ -1,15 +1,14 @@
-﻿using DevZest.Data.Views;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace FileExplorer
 {
     /// <summary>
-    /// Interaction logic for FolderView.xaml
+    /// Interaction logic for DirectoryTreeItemView.xaml
     /// </summary>
-    public partial class FolderView
+    public partial class DirectoryTreeItemView
     {
-        public FolderView()
+        public DirectoryTreeItemView()
         {
             InitializeComponent();
         }

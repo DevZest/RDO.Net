@@ -67,7 +67,7 @@ namespace FileExplorer
             if (string.IsNullOrEmpty(path))
                 return result;
 
-            foreach (var folder in Folder.GetSubDirectories(path))
+            foreach (var folder in DirectoryTreeItem.GetSubDirectories(path))
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(folder);
                 result.AddRow((_, x) => _.Initialize(x, directoryInfo));

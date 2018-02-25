@@ -12,7 +12,7 @@ namespace FileExplorer
                 .GridRows("Auto", "5")
                 .Layout(Orientation.Vertical, 0)
                 .WithSelectionMode(SelectionMode.Extended)
-                .AddBinding(0, 0, _.BindToLargeIconView());
+                .AddBinding(0, 0, _.BindToLargeIconListItemView());
         }
     }
 }
