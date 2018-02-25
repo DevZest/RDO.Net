@@ -60,7 +60,7 @@
     <Compile Include="EnumToBooleanConverter.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
     <Compile Include="DirectoryItem.cs" />
-    <Compile Include="DirectoryPresenter.cs" />
+    <Compile Include="DirectoryList.cs" />
     <Compile Include="DirectoryItemType.cs" />
     <Compile Include="DetailsList.cs" />
     <Compile Include="LargeIconListItem.cs" />

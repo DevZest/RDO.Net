@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace FileExplorer
 {
-    public abstract class DirectoryPresenter<T> : DataPresenter<T>, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
+    public abstract class DirectoryList<T> : DataPresenter<T>, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
         where T : DirectoryItem, new()
     {
         protected sealed override void BuildTemplate(TemplateBuilder builder)

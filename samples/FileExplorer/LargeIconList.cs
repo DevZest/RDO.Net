@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace FileExplorer
 {
-    public class LargeIconList : DirectoryPresenter<LargeIconListItem>
+    public class LargeIconList : DirectoryList<LargeIconListItem>
     {
         protected override void OverrideBuildTemplate(TemplateBuilder builder)
         {

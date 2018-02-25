@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace FileExplorer
 {
-    public class DetailsList : DirectoryPresenter<DetailsListItem>
+    public class DetailsList : DirectoryList<DetailsListItem>
     {
         public static readonly StyleId FileSizeTextBlockStyleKey = new StyleId(typeof(DetailsList));
 
