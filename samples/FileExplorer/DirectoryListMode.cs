@@ -1,6 +1,6 @@
 ﻿namespace FileExplorer
 {
-    public enum ListMode
+    public enum DirectoryListMode
     {
         LargeIcon = 1,
         Details

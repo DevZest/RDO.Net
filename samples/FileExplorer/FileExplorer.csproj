@@ -67,7 +67,7 @@
     <Compile Include="LargeIconListItemView.xaml.cs">
       <DependentUpon>LargeIconListItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ListMode.cs" />
+    <Compile Include="DirectoryListMode.cs" />
     <Compile Include="Win32.cs" />
     <Compile Include="DirectoryTree.cs" />
     <Compile Include="LargeIconList.cs" />

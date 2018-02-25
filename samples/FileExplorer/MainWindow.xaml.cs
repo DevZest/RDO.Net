@@ -1,10 +1,8 @@
-﻿using DevZest.Data;
-using DevZest.Data.Presenters;
+﻿using DevZest.Data.Presenters;
 using DevZest.Data.Views;
 using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -15,27 +13,27 @@ namespace FileExplorer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private abstract class ListManager
+        private abstract class DirectoryListManager
         {
-            public static ListManager Create(ListManager oldValue, ListMode mode)
+            public static DirectoryListManager Create(DirectoryListManager oldValue, DirectoryListMode mode)
             {
                 if (oldValue != null)
                 {
-                    if (oldValue.ListMode == mode)
+                    if (oldValue.DirectoryListMode == mode)
                         return oldValue;
                     else
                         oldValue.DataPresenter.DetachView();
                 }
 
-                if (mode == ListMode.LargeIcon)
+                if (mode == DirectoryListMode.LargeIcon)
                     return new LargeIconListManager();
-                else if (mode == ListMode.Details)
+                else if (mode == DirectoryListMode.Details)
                     return new DetailsListManager();
                 else
-                    throw new ArgumentException("Invalid ListMode", nameof(mode));
+                    throw new ArgumentException("Invalid DirectoryListMode", nameof(mode));
             }
 
-            public abstract ListMode ListMode { get; }
+            public abstract DirectoryListMode DirectoryListMode { get; }
 
             public abstract void ShowOrRefreshAsync(DataView dataView, string currentFolder);
 
@@ -43,7 +41,7 @@ namespace FileExplorer
 
             public abstract DataPresenter DataPresenter { get; }
 
-            private abstract class ListManagerBase<T> : ListManager
+            private abstract class DirectoryListManagerBase<T> : DirectoryListManager
                 where T : DirectoryItem, new()
             {
                 public sealed override DirectoryItem _
@@ -64,7 +62,7 @@ namespace FileExplorer
                 }
             }
 
-            private sealed class LargeIconListManager : ListManagerBase<LargeIconListItem>
+            private sealed class LargeIconListManager : DirectoryListManagerBase<LargeIconListItem>
             {
                 private readonly LargeIconList _largeIconList = new LargeIconList();
                 protected override DataPresenter<LargeIconListItem> GetDataPresenter()
@@ -72,13 +70,13 @@ namespace FileExplorer
                     return _largeIconList;
                 }
 
-                public override ListMode ListMode
+                public override DirectoryListMode DirectoryListMode
                 {
-                    get { return ListMode.LargeIcon; }
+                    get { return DirectoryListMode.LargeIcon; }
                 }
             }
 
-            private sealed class DetailsListManager : ListManagerBase<DetailsListItem>
+            private sealed class DetailsListManager : DirectoryListManagerBase<DetailsListItem>
             {
                 private readonly DetailsList _detailsList = new DetailsList();
 
@@ -87,44 +85,44 @@ namespace FileExplorer
                     return _detailsList;
                 }
 
-                public override ListMode ListMode
+                public override DirectoryListMode DirectoryListMode
                 {
-                    get { return ListMode.Details; }
+                    get { return DirectoryListMode.Details; }
                 }
             }
         }
 
-        public static readonly DependencyProperty ListModeProperty = DependencyProperty.Register(nameof(ListMode), typeof(ListMode),
-            typeof(MainWindow), new FrameworkPropertyMetadata(OnListModeChanged));
+        public static readonly DependencyProperty DirectoryListModeProperty = DependencyProperty.Register(nameof(DirectoryListMode), typeof(DirectoryListMode),
+            typeof(MainWindow), new FrameworkPropertyMetadata(OnDirectoryListModeChanged));
 
-        private DirectoryTree _folderTree = new DirectoryTree();
-        private ListManager _listManager;
+        private DirectoryTree _directoryTree = new DirectoryTree();
+        private DirectoryListManager _listManager;
 
         public MainWindow()
         {
             InitializeComponent();
-            ListMode = ListMode.LargeIcon;
+            DirectoryListMode = DirectoryListMode.LargeIcon;
             Debug.Assert(_listManager != null);
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, ExecuteCloseCommand));
-            _folderTree.ViewRefreshed += OnFolderTreeViewRefreshed;
-            _folderTree.Show(_foldersTreeView, DirectoryTreeItem.GetLogicalDrives());
+            _directoryTree.ViewRefreshed += OnDirectoryTreeViewRefreshed;
+            _directoryTree.Show(_foldersTreeView, DirectoryTreeItem.GetLogicalDrives());
         }
 
-        public ListMode ListMode
+        public DirectoryListMode DirectoryListMode
         {
-            get { return (ListMode)GetValue(ListModeProperty); }
-            set { SetValue(ListModeProperty, value); }
+            get { return (DirectoryListMode)GetValue(DirectoryListModeProperty); }
+            set { SetValue(DirectoryListModeProperty, value); }
         }
 
-        private static void OnListModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnDirectoryListModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((MainWindow)d).SetListManager((ListMode)e.NewValue);
+            ((MainWindow)d).SetListManager((DirectoryListMode)e.NewValue);
         }
 
-        private void SetListManager(ListMode value)
+        private void SetListManager(DirectoryListMode value)
         {
             bool loadData = _listManager != null;
-            _listManager = ListManager.Create(_listManager, value);
+            _listManager = DirectoryListManager.Create(_listManager, value);
             if (loadData)
                 _listManager.ShowOrRefreshAsync(_folderContentListView, CurrentFolder);
         }
@@ -148,10 +146,10 @@ namespace FileExplorer
             }
         }
 
-        private void OnFolderTreeViewRefreshed(object sender, EventArgs e)
+        private void OnDirectoryTreeViewRefreshed(object sender, EventArgs e)
         {
-            var currentRow = _folderTree.CurrentRow;
-            var _ = _folderTree._;
+            var currentRow = _directoryTree.CurrentRow;
+            var _ = _directoryTree._;
             CurrentFolder = currentRow == null ? null : currentRow.GetValue(_.Path);
         }
     }

@@ -18,8 +18,8 @@
                 <MenuItem.Resources>
                     <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
                 </MenuItem.Resources>
-                <MenuItem Header="_Details" IsCheckable="True" IsChecked="{Binding ElementName=_mainWindow, Path=ListMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:ListMode.Details}}" />
-                <MenuItem Header="_Large Icons" IsCheckable="True" IsChecked="{Binding ElementName=_mainWindow, Path=ListMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:ListMode.LargeIcon}}" />
+                <MenuItem Header="_Details" IsCheckable="True" IsChecked="{Binding ElementName=_mainWindow, Path=ListMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:DirectoryListMode.Details}}" />
+                <MenuItem Header="_Large Icons" IsCheckable="True" IsChecked="{Binding ElementName=_mainWindow, Path=ListMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:DirectoryListMode.LargeIcon}}" />
             </MenuItem>
         </Menu>
         <Grid>
