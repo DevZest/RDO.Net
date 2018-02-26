@@ -49,5 +49,10 @@ namespace FileExplorer
         {
             return inPlaceEditor.IsRowEditing;
         }
+
+        bool InPlaceEditor.ISwitcher.ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
+        {
+            return true;
+        }
     }
 }

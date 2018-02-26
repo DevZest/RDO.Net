@@ -6,6 +6,8 @@ using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Views
 {
@@ -28,12 +30,12 @@ namespace DevZest.Data.Views
             this.CleanupCommandEntries();
         }
 
-        internal static RowBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(RowInput<TEditing> rowInput, RowBinding<TInert> inertRowBinding)
+        internal static RowBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(RowInput<TEditing> editingInput, RowBinding<TInert> inertBinding)
             where TEditing : UIElement, new()
             where TInert : UIElement, new()
         {
             var result = new RowBinding<InPlaceEditor>(null);
-            result.Input = new ProxyRowInput<TEditing, TInert>(result, rowInput, inertRowBinding);
+            result.Input = new ProxyRowInput<TEditing, TInert>(result, editingInput, inertBinding);
             return result;
         }
 
@@ -212,6 +214,7 @@ namespace DevZest.Data.Views
         {
             bool AffectsIsEditing(InPlaceEditor inPlaceEditor, DependencyProperty dp);
             bool GetIsEditing(InPlaceEditor inPlaceEditor);
+            bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor);
         }
 
         private sealed class Switcher : ISwitcher
@@ -232,6 +235,38 @@ namespace DevZest.Data.Views
             {
                 return inPlaceEditor.IsMouseOver || inPlaceEditor.IsKeyboardFocusWithin;
             }
+
+            public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
+            {
+                return inPlaceEditor.IsKeyboardFocusWithin;
+            }
+        }
+
+        public interface IChildInitializer : IService
+        {
+            void InitializeEditorElement(InPlaceEditor inPlaceEditor);
+            void InitializeInertElement(InPlaceEditor inPlaceEditor);
+        }
+
+        private sealed class ChildInitializer : IChildInitializer
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+            }
+
+            public void InitializeEditorElement(InPlaceEditor inPlaceEditor)
+            {
+                var textBox = inPlaceEditor.EditorElement as TextBox;
+                if (textBox != null)
+                    textBox.SelectAll();
+            }
+
+            public void InitializeInertElement(InPlaceEditor inPlaceEditor)
+            {
+            }
         }
 
         private static readonly DependencyPropertyKey IsRowEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsRowEditing), typeof(bool), typeof(InPlaceEditor),
@@ -242,6 +277,7 @@ namespace DevZest.Data.Views
         {
             FocusableProperty.OverrideMetadata(typeof(InPlaceEditor), new FrameworkPropertyMetadata(BooleanBoxes.True));
             ServiceManager.Register<ISwitcher, Switcher>();
+            ServiceManager.Register<IChildInitializer, ChildInitializer>();
         }
 
         public bool IsRowEditing
@@ -251,6 +287,7 @@ namespace DevZest.Data.Views
         }
 
         private bool _isEditing;
+        private IInputElement _elementToRestoreFocus;
         public bool IsEditing
         {
             get { return _isEditing; }
@@ -259,17 +296,45 @@ namespace DevZest.Data.Views
                 if (_isEditing == value)
                     return;
 
+                var oldFocusedElement = Keyboard.FocusedElement;
+                var oldEditorElement = EditorElement;
+                bool oldIsKeyboardFocusWithin = IsKeyboardFocusWithin;
+
                 _isEditing = value;
-                bool hasFocus = IsKeyboardFocusWithin;
+
                 var setup = SetupProxyRowInput();
                 if (!setup)
                     setup = SetupProxyScalarInput();
-                if (setup && hasFocus)
+
+                if (_isEditing)
                 {
-                    if (!Child.Focus())
-                        Focus();
+                    if (setup)
+                    {
+                        var dataPresenter = DataPresenter;
+                        if (dataPresenter != null && dataPresenter.GetService<ISwitcher>().ShouldFocusToEditorElement(this))
+                            EditorElement.Focus();
+                    }
+
+                    if (Keyboard.FocusedElement != oldFocusedElement)
+                        _elementToRestoreFocus = oldFocusedElement;
+                }
+                else
+                {
+                    if (_elementToRestoreFocus != null)
+                    {
+                        if (oldIsKeyboardFocusWithin && !HasFocusAfterEditorElementUnloaded(oldEditorElement))
+                            _elementToRestoreFocus.Focus();
+                        _elementToRestoreFocus = null;
+                    }
                 }
             }
+        }
+
+        private bool HasFocusAfterEditorElementUnloaded(UIElement oldEditorElement)
+        {
+            if (oldEditorElement != null && oldEditorElement.IsKeyboardFocusWithin)
+                return false;
+            return IsKeyboardFocusWithin;
         }
 
         private bool SetupProxyRowInput()
@@ -441,11 +506,13 @@ namespace DevZest.Data.Views
             {
                 InertElement = null;
                 EditorElement = GenerateElement(proxyScalarInput.EditorBinding, flowIndex);
+                DataPresenter?.GetService<IChildInitializer>()?.InitializeEditorElement(this);
             }
             else
             {
                 EditorElement = null;
                 InertElement = GenerateElement(proxyScalarInput.InertBinding, flowIndex);
+                DataPresenter?.GetService<IChildInitializer>()?.InitializeInertElement(this);
             }
             InvalidateMeasure();
         }
@@ -511,11 +578,13 @@ namespace DevZest.Data.Views
             {
                 InertElement = null;
                 EditorElement = GenerateElement(proxyRowInput.EditorBinding, rowPresenter);
+                DataPresenter?.GetService<IChildInitializer>()?.InitializeEditorElement(this);
             }
             else
             {
                 EditorElement = null;
                 InertElement = GenerateElement(proxyRowInput.InertBinding, rowPresenter);
+                DataPresenter?.GetService<IChildInitializer>()?.InitializeInertElement(this);
             }
             InvalidateMeasure();
         }
