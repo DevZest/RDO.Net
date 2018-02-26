@@ -25,7 +25,7 @@ namespace FileExplorer
                 .AddBinding(3, 0, _.FileType.BindToColumnHeader("Type"))
                 .AddBinding(4, 0, _.FileSize.BindToColumnHeader("Size"))
                 .AddBinding(0, 1, _.SmallIcon.BindToImage())
-                .AddBinding(1, 1, _.DisplayName.BindToTextBlock())
+                .AddBinding(1, 1, _.DisplayName.BindToTextBox().Input.AddToInPlaceEditor(_.DisplayName.BindToTextBlock()))
                 .AddBinding(2, 1, _.DateModified.BindToTextBlock("{0:g}"))
                 .AddBinding(3, 1, _.FileType.BindToTextBlock())
                 .AddBinding(4, 1, _.FileSize.BindToTextBlock("{0:KB}", FileSizeFormatProvider.Singleton).WithStyle(FileSizeTextBlockStyleKey));
