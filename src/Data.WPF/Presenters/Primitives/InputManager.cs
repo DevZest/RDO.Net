@@ -206,12 +206,20 @@ namespace DevZest.Data.Presenters.Primitives
                 {
                     if (_scalarValidation.HasError(input, i, true))
                     {
-                        if (input.Binding[i].Focus())
+                        if (TryFocus(input.Binding, i))
                             return true;
                     }
                 }
             }
             return false;
+        }
+
+        private bool TryFocus(ScalarBinding scalarBinding, int flowIndex)
+        {
+            var element = scalarBinding[flowIndex];
+            if (element.IsKeyboardFocusWithin)
+                return true;
+            return element.Focus();
         }
 
         private bool FocusToRowInputError()
@@ -224,14 +232,14 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 if (_rowValidation.HasError(CurrentRow, input, true))
                 {
-                    if (Focus(input.Binding, CurrentRow))
+                    if (TryFocus(input.Binding, CurrentRow))
                         return true;
                 }
             }
             return false;
         }
 
-        private bool Focus(RowBinding rowBinding, RowPresenter row)
+        private bool TryFocus(RowBinding rowBinding, RowPresenter row)
         {
             if (rowBinding[row] == null)
             {
@@ -242,6 +250,8 @@ namespace DevZest.Data.Presenters.Primitives
 
             var element = rowBinding[row];
             Debug.Assert(element != null);
+            if (element.IsKeyboardFocusWithin)
+                return true;
             return element.Focus();
         }
 
