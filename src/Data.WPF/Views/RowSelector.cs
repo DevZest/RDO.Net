@@ -386,7 +386,7 @@ namespace DevZest.Data.Views
             if (dataPresenter != null)
             {
                 SelectionHandler.EnsureInitialized(dataPresenter);
-                this.SetupCommandEntries(RowPresenter?.DataPresenter?.GetService<ICommandService>().GetCommandEntries(this));
+                this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
             }
             UpdateVisualState();
         }
