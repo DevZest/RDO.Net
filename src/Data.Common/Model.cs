@@ -470,7 +470,7 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        internal IDataValidationErrors Validate(DataRow dataRow)
+        protected internal virtual IDataValidationErrors Validate(DataRow dataRow)
         {
             var result = DataValidationErrors.Empty;
             foreach (var validator in Validators)
