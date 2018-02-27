@@ -1,9 +1,21 @@
 ﻿using DevZest.Data.Presenters;
+using DevZest.Data.Views;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Collections.Generic;
+using System;
 
 namespace FileExplorer
 {
-    public class DirectoryTree : DataPresenter<DirectoryTreeItem>
+    public static class DirectoryTreeCommands
+    {
+        public static RoutedUICommand Refresh
+        {
+            get { return NavigationCommands.Refresh; }
+        }
+    }
+
+    public class DirectoryTree : DataPresenter<DirectoryTreeItem>, DataView.ICommandService
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {
@@ -57,6 +69,61 @@ namespace FileExplorer
                     return;
                 }
             }
+        }
+
+        IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
+        {
+            var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
+            foreach (var entry in baseService.GetCommandEntries(dataView))
+                yield return entry;
+            yield return DirectoryTreeCommands.Refresh.Bind(ExecRefresh);
+        }
+
+        private void ExecRefresh(object sender, ExecutedRoutedEventArgs e)
+        {
+            var currentPath = GetCurrentPath();
+            var dataSet = DirectoryTreeItem.GetLogicalDrives();
+            Refresh(dataSet);
+            SelectCurrentPath(currentPath);
+        }
+
+        private IReadOnlyList<string> GetCurrentPath()
+        {
+            if (CurrentRow == null)
+                return null;
+
+            var result = new List<string>();
+            for (var row = CurrentRow; row != null; row = row.Parent)
+                result.Insert(0, row.GetValue(_.Path));
+
+            return result;
+        }
+
+        private void SelectCurrentPath(IReadOnlyList<string> currentPath)
+        {
+            var currentRow = FindRow(Rows, currentPath, 0);
+            if (currentRow != null)
+                Select(currentRow, SelectionMode.Single);
+        }
+
+        private RowPresenter FindRow(IReadOnlyList<RowPresenter> rows, IReadOnlyList<string> currentPath, int level)
+        {
+            if (currentPath == null)
+                return null;
+
+            foreach (var row in rows)
+            {
+                if (row.GetValue(_.Path) == currentPath[level])
+                {
+                    if (level == currentPath.Count - 1)
+                        return row;
+                    EnsureSubDirectoriesLoaded(row);
+                    row.ToggleExpandState();
+                    return FindRow(row.Children, currentPath, level + 1);
+                }
+            }
+
+            return null;
         }
     }
 }
