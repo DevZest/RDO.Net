@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +19,30 @@ namespace FileExplorer
         {
             CreateLocalColumns();
             base.OnInitializing();
+        }
+
+        private const string InvalidChars = @"\/:*?""<>|";
+        private const string DisplayInvalidChars = @"\ / : * ? "" < > |";
+        private static bool ContainsInvalidChar(string value)
+        {
+            for (int i = 0; i < InvalidChars.Length; i++)
+            {
+                var invalidChar = InvalidChars[i];
+                if (value.Contains(invalidChar))
+                    return true;
+            }
+            return false;
+        }
+
+        protected override IDataValidationErrors Validate(DataRow dataRow)
+        {
+            var result = base.Validate(dataRow);
+            var displayName = DisplayName[dataRow];
+            if (string.IsNullOrEmpty(displayName))
+                result = result.Add(new DataValidationError("A file name can't be empty.", DisplayName));
+            else if (ContainsInvalidChar(displayName))
+                result = result.Add(new DataValidationError(string.Format("A file name can't contain any of the following characters: {0}", DisplayInvalidChars), DisplayName));
+            return result;
         }
 
         protected virtual void CreateLocalColumns()

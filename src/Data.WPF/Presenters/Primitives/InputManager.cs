@@ -176,9 +176,12 @@ namespace DevZest.Data.Presenters.Primitives
                 return false;
             }
 
-            var isValidationg = _rowValidation.IsValidating;
-            if (isValidationg)
+            var isValidating = _rowValidation.IsValidating;
+            if (isValidating)
                 return false;
+
+            if (DataPresenter != null)
+                return DataPresenter.ConfirmEndEdit();
             return true;
         }
 

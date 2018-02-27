@@ -407,9 +407,6 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
-            if (!ConfirmEndEdit())
-                return false;
-
             DataPresenter?.SuspendInvalidateView();
             var result = RowManager.EndEdit();
             DataPresenter?.ResumeInvalidateView();
