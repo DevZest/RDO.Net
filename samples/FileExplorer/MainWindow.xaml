@@ -20,6 +20,7 @@
                 </MenuItem.Resources>
                 <MenuItem Header="_Details" IsCheckable="True" IsChecked="{Binding ElementName=_mainWindow, Path=DirectoryListMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:DirectoryListMode.Details}}" />
                 <MenuItem Header="_Large Icons" IsCheckable="True" IsChecked="{Binding ElementName=_mainWindow, Path=DirectoryListMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:DirectoryListMode.LargeIcon}}" />
+                <MenuItem Command="Refresh" />
             </MenuItem>
         </Menu>
         <Grid>

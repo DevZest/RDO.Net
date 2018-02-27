@@ -648,7 +648,12 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private bool _initialFocusFlag = true;
-        public InitialFocus InitialFocus { get; set; } = InitialFocus.First;
+        public InitialFocus InitialFocus { get; internal set; } = InitialFocus.First;
+
+        internal void ResetInitialFocus()
+        {
+            _initialFocusFlag = true;
+        }
 
         internal void InitFocus()
         {

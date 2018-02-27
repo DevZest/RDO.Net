@@ -14,7 +14,7 @@ namespace FileExplorer
         DirectoryListMode Mode { get; }
     }
 
-    public abstract class DirectoryList<T> : DataPresenter<T>, IDirectoryList, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
+    public abstract class DirectoryList<T> : DataPresenter<T>, IDirectoryList, DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
         where T : DirectoryItem, new()
     {
         protected DirectoryList(DataView directoryListView, DirectoryTree directoryTree)
@@ -165,6 +165,19 @@ namespace FileExplorer
         public void Dispose()
         {
             Dispose(true);
+        }
+
+        IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
+        {
+            var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
+            foreach (var entry in baseService.GetCommandEntries(dataView))
+                yield return entry;
+            yield return NavigationCommands.Refresh.Bind(ExecRefresh);
+        }
+
+        private void ExecRefresh(object sender, ExecutedRoutedEventArgs e)
+        {
+            Refresh();
         }
         #endregion
     }
