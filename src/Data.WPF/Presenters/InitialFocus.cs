@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Views;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
@@ -93,8 +94,16 @@ namespace DevZest.Data.Presenters
         internal void MoveFocus(DataPresenter dataPresenter)
         {
             var dataView = dataPresenter.View;
-            if (!dataView.IsKeyboardFocusWithin)
+            if (!HasKeyboardFocus(dataView))
                 MoveFocus(dataView);
+        }
+
+        private static bool HasKeyboardFocus(DataView dataView)
+        {
+            if (!dataView.IsKeyboardFocused)
+                return false;
+            // workaround bug of framework: dataView.IsKeyboardFocusWithin == true but dataView is not ancestor of Keyboard.FocusedElement
+            return (Keyboard.FocusedElement as DependencyObject)?.FindAncestor<DataView>() == dataView;
         }
 
         protected abstract void MoveFocus(DataView dataView);
