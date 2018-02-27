@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>DevZest.Data.sqlServer</PackageId>
+    <PackageId>DevZest.Data.SqlServer</PackageId>
     <PackageTags>RDO.NET;ADO.NET;SQL Server</PackageTags>
     <PackageLicenseUrl>http://www.devzest.com</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
