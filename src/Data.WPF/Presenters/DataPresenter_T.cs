@@ -238,6 +238,9 @@ namespace DevZest.Data.Presenters
             {
                 Debug.Assert(DataView != null && _runningTask == null);
 
+                if (DataView.IsKeyboardFocusWithin && LayoutManager != null)
+                    LayoutManager.Template.ResetInitialFocus();
+
                 DataSet<T> dataSet = null;
                 int revision;
                 DataLoadState state;
@@ -378,6 +381,8 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(dataSet));
             if (LayoutManager == null)
                 throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
+            if (View.IsKeyboardFocusWithin)
+                Template.ResetInitialFocus();
             Mount(View, dataSet, where, orderBy, true);
         }
 
