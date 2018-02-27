@@ -87,7 +87,7 @@ namespace FileExplorer
         {
             try
             {
-                return System.IO.Directory.GetFiles(folder);
+                return Directory.GetFiles(folder);
             }
             catch (UnauthorizedAccessException)
             {
