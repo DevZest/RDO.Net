@@ -5,12 +5,67 @@ using DevZest.Data.Views;
 using System.Windows.Input;
 using System;
 using System.IO;
+using System.Threading;
 
 namespace FileExplorer
 {
-    public abstract class DirectoryList<T> : DataPresenter<T>, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
+    public interface IDirectoryList : IDataPresenter, IDisposable
+    {
+        DirectoryListMode Mode { get; }
+    }
+
+    public abstract class DirectoryList<T> : DataPresenter<T>, IDirectoryList, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
         where T : DirectoryItem, new()
     {
+        protected DirectoryList(DataView directoryListView, DirectoryTree directoryTree)
+        {
+            _directoryTree = directoryTree;
+            _currentDirectory = GetCurrentDirectory();
+            Refresh(directoryListView);
+            _directoryTree.ViewInvalidated += OnDirectoryTreeViewInvalidated;
+        }
+
+        private readonly DirectoryTree _directoryTree;
+        protected DirectoryTree DirectoryTree
+        {
+            get { return _directoryTree; }
+        }
+
+        private string _currentDirectory;
+        private string CurrentDirectory
+        {
+            get { return _currentDirectory; }
+            set
+            {
+                if (_currentDirectory == value)
+                    return;
+
+                _currentDirectory = value;
+                Refresh();
+            }
+        }
+
+        private void OnDirectoryTreeViewInvalidated(object sender, EventArgs e)
+        {
+            CurrentDirectory = GetCurrentDirectory();
+        }
+
+        private string GetCurrentDirectory()
+        {
+            var currentRow = DirectoryTree.CurrentRow;
+            return currentRow == null ? null : currentRow.GetValue(DirectoryTree._.Path);
+        }
+
+        private void Refresh()
+        {
+            Refresh(View);
+        }
+
+        private void Refresh(DataView directoryListView)
+        {
+            ShowOrRefreshAsync(directoryListView, (CancellationToken ct) => DirectoryItem.GetDirectoryItemsAsync<T>(CurrentDirectory, ct));
+        }
+
         protected sealed override void BuildTemplate(TemplateBuilder builder)
         {
             builder.WithRowViewBeginEditGestures(new KeyGesture(Key.F2))
@@ -20,6 +75,8 @@ namespace FileExplorer
         }
 
         protected abstract void OverrideBuildTemplate(TemplateBuilder builder);
+
+        public abstract DirectoryListMode Mode { get; }
 
         protected override bool ConfirmEndEdit()
         {
@@ -87,5 +144,28 @@ namespace FileExplorer
         {
             return true;
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    DirectoryTree.ViewInvalidated -= OnDirectoryTreeViewInvalidated;
+                    DetachView();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

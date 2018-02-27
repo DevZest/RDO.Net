@@ -11,6 +11,16 @@ namespace FileExplorer
     {
         public static readonly StyleId FileSizeTextBlockStyleKey = new StyleId(typeof(DetailsList));
 
+        public DetailsList(DataView directoryListView, DirectoryTree directoryTree)
+            : base(directoryListView, directoryTree)
+        {
+        }
+
+        public sealed override DirectoryListMode Mode
+        {
+            get { return DirectoryListMode.Details; }
+        }
+
         protected override void OverrideBuildTemplate(TemplateBuilder builder)
         {
             builder

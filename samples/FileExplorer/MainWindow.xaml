@@ -33,9 +33,9 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <dz:DataView x:Name="_foldersTreeView" Grid.Column="0" />
+            <dz:DataView x:Name="_directoryTreeView" Grid.Column="0" />
             <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" />
-            <dz:DataView x:Name="_folderContentListView" Grid.Column="2">
+            <dz:DataView x:Name="_directoryListView" Grid.Column="2">
                 <dz:DataView.Resources>
                     <Style x:Key="{x:Type TextBlock}" TargetType="TextBlock">
                         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
