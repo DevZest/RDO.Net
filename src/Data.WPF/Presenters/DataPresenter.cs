@@ -362,6 +362,11 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
+        protected internal virtual bool ConfirmEndEdit()
+        {
+            return true;
+        }
+
         #region IService
 
         DataPresenter IService.DataPresenter

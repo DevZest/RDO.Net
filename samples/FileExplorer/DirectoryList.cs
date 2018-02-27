@@ -3,6 +3,8 @@ using System.Windows;
 using DevZest.Data.Presenters;
 using DevZest.Data.Views;
 using System.Windows.Input;
+using System;
+using System.IO;
 
 namespace FileExplorer
 {
@@ -18,6 +20,37 @@ namespace FileExplorer
         }
 
         protected abstract void OverrideBuildTemplate(TemplateBuilder builder);
+
+        protected override bool ConfirmEndEdit()
+        {
+            var type = CurrentRow.GetValue(_.Type);
+            var path = CurrentRow.GetValue(_.Path);
+            var displayName = CurrentRow.GetValue(_.DisplayName);
+            var caption = type == DirectoryItemType.Directory ? "Rename Directory" : "Rename File";
+            var directoryOrFile = type == DirectoryItemType.Directory ? "directory" : "file";
+            var message = string.Format("Are you sure you want to rename the {0}?\nWARNING: This will ACTUALLY rename the {0}!!!", directoryOrFile);
+            if (MessageBox.Show(message, caption, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                return Rename(type, path, displayName);
+            return false;
+        }
+
+        private bool Rename(DirectoryItemType type, string path, string newName)
+        {
+            try
+            {
+                var newPath = Path.Combine(Path.GetDirectoryName(path), newName);
+                if (type == DirectoryItemType.Directory)
+                    Directory.Move(path, newPath);
+                else
+                    File.Move(path, newPath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+        }
 
         IEnumerable<CommandEntry> InPlaceEditor.ICommandService.GetCommandEntries(InPlaceEditor inPlaceEditor)
         {

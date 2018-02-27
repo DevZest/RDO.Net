@@ -407,10 +407,18 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
 
+            if (!ConfirmEndEdit())
+                return false;
+
             DataPresenter?.SuspendInvalidateView();
             var result = RowManager.EndEdit();
             DataPresenter?.ResumeInvalidateView();
             return result;
+        }
+
+        private bool ConfirmEndEdit()
+        {
+            return DataPresenter == null ? true : DataPresenter.ConfirmEndEdit();
         }
 
         public void BeginInsertBefore(RowPresenter child = null)
