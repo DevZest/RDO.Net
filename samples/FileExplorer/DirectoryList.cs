@@ -24,12 +24,10 @@ namespace FileExplorer
             get { return NavigationCommands.Refresh; }
         }
 
-        public static readonly RoutedUICommand Open = new RoutedUICommand();
-
-        public static readonly RoutedUICommand EndEditOrOpen = new RoutedUICommand();
+        public static readonly RoutedUICommand Start = new RoutedUICommand();
     }
 
-    public abstract class DirectoryList<T> : DataPresenter<T>, IDirectoryList, DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, RowView.ICommandService
+    public abstract class DirectoryList<T> : DataPresenter<T>, IDirectoryList, DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, RowSelector.ICommandService
         where T : DirectoryItem, new()
     {
         protected DirectoryList(DataView directoryListView, DirectoryTree directoryTree)
@@ -229,39 +227,32 @@ namespace FileExplorer
             }
         }
 
-        IEnumerable<CommandEntry> RowView.ICommandService.GetCommandEntries(RowView rowView)
+        IEnumerable<CommandEntry> RowSelector.ICommandService.GetCommandEntries(RowSelector rowSelector)
         {
-            var baseService = ServiceManager.GetService<RowView.ICommandService>(this);
-            foreach (var entry in baseService.GetCommandEntries(rowView))
+            var baseService = ServiceManager.GetService<RowSelector.ICommandService>(this);
+            foreach (var entry in baseService.GetCommandEntries(rowSelector))
                 yield return entry;
-            yield return DirectoryListCommands.Open.Bind(ExecOpen, CanExecOpen, new MouseGesture(MouseAction.LeftDoubleClick));
-            yield return DirectoryListCommands.EndEditOrOpen.Bind(EndEditOrOpen, new KeyGesture(Key.Enter));
+            yield return DirectoryListCommands.Start.Bind(ExecStart, CanExecStart, new MouseGesture(MouseAction.LeftDoubleClick), new KeyGesture(Key.Enter));
         }
 
-        private void EndEditOrOpen(object sender, ExecutedRoutedEventArgs e)
-        {
-            if (CurrentRow.IsEditing)
-                CurrentRow.EndEdit();
-            else
-                OpenCurrent();
-        }
-
-        private void CanExecOpen(object sender, CanExecuteRoutedEventArgs e)
+        private void CanExecStart(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = !CurrentRow.IsEditing;
+            if (!e.CanExecute)
+                e.ContinueRouting = true;
         }
 
-        private void ExecOpen(object sender, ExecutedRoutedEventArgs e)
+        private void ExecStart(object sender, ExecutedRoutedEventArgs e)
         {
-            OpenCurrent();
+            StartCurrent();
         }
 
-        private void OpenCurrent()
+        private void StartCurrent()
         {
             var type = CurrentRow.GetValue(_.Type);
             var path = CurrentRow.GetValue(_.Path);
             if (type == DirectoryItemType.Directory)
-                DirectoryTree.OnSubDirectorySelected(path);
+                DirectoryTree.SelectSubDirectory(path);
             else
                 ProcessStart(path);
         }

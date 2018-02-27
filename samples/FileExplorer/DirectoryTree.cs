@@ -55,7 +55,7 @@ namespace FileExplorer
             }
         }
 
-        public void OnSubDirectorySelected(string path)
+        public void SelectSubDirectory(string path)
         {
             EnsureSubDirectoriesLoaded(CurrentRow);
             if (!CurrentRow.IsExpanded)
