@@ -9,6 +9,11 @@
         WindowState="Maximized"
         x:Name="_mainWindow"
         Title="File Explorer">
+    <Window.Resources>
+        <Style TargetType="{x:Type dz:DataView}">
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="Once" />
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
