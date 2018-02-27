@@ -1,8 +1,4 @@
-﻿using DevZest.Data.Presenters;
-using DevZest.Data.Views;
-using System;
-using System.Diagnostics;
-using System.Threading;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 
