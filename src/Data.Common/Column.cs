@@ -283,7 +283,7 @@ namespace DevZest.Data
 
         public abstract object GetValue(DataRow dataRow, bool beforeEdit = false);
 
-        public abstract void SetValue(DataRow dataRow, object value);
+        public abstract void SetValue(DataRow dataRow, object value, bool beforeEdit = false);
 
         #region IColumnSet
 

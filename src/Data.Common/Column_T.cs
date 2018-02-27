@@ -159,17 +159,7 @@ namespace DevZest.Data
         /// <exception cref="ArgumentException">This column does not belong to provided <paramref name="dataRow"/>.</exception>
         /// <exception cref="InvalidOperationException">This column is read only when setting the value.</exception>
         /// <seealso cref="IsReadOnly(DataRow)"/>
-        public T this[DataRow dataRow]
-        {
-            get { return this[dataRow, false]; }
-            set
-            {
-                VerifyDataRow(dataRow, nameof(dataRow), false);
-                InternalSetValue(dataRow, value);
-            }
-        }
-
-        public T this[DataRow dataRow, bool beforeEdit]
+        public T this[DataRow dataRow, bool beforeEdit = false]
         {
             get
             {
@@ -177,6 +167,11 @@ namespace DevZest.Data
                     return Expression[dataRow];
                 var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow), true);
                 return InternalGetValue(dataRow, translatedDataRow, beforeEdit);
+            }
+            set
+            {
+                VerifyDataRow(dataRow, nameof(dataRow), false);
+                InternalSetValue(dataRow, value, beforeEdit);
             }
         }
 
@@ -208,18 +203,18 @@ namespace DevZest.Data
                 return _valueManager[translatedDataRow.Ordinal];
         }
 
-        private void InternalSetValue(DataRow dataRow, T value)
+        private void InternalSetValue(DataRow dataRow, T value, bool beforeEdit)
         {
             Debug.Assert(dataRow != null);
             if (InternalIsReadOnly(dataRow))
                 throw new InvalidOperationException(DiagnosticMessages.Column_SetReadOnlyValue(this));
 
-            SetValueCore(dataRow, value);
+            SetValueCore(dataRow, value, beforeEdit);
         }
 
-        private void SetValueCore(DataRow dataRow, T value)
+        private void SetValueCore(DataRow dataRow, T value, bool beforeEdit)
         {
-            if (dataRow == ParentModel.EditingRow)
+            if (dataRow == ParentModel.EditingRow && !beforeEdit)
                 _editingValue = value;
             else
                 UpdateValue(dataRow, value);
@@ -307,20 +302,7 @@ namespace DevZest.Data
             get { return this[null, ordinal, beforeEdit]; }
         }
 
-        public T this[DataRow parentDataRow, int index]
-        {
-            get { return this[parentDataRow, index, false]; }
-            set
-            {
-                var model = GetModel();
-                if (model == null)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                var dataRow = GetDataRow(ParentModel, parentDataRow, index);
-                InternalSetValue(dataRow, value);
-            }
-        }
-
-        public T this[DataRow parentDataRow, int index, bool beforeEdit]
+        public T this[DataRow parentDataRow, int index, bool beforeEdit = false]
         {
             get
             {
@@ -329,6 +311,14 @@ namespace DevZest.Data
                     throw new ArgumentOutOfRangeException(nameof(index));
                 var dataRow = GetDataRow(model, parentDataRow, index);
                 return InternalGetValue(dataRow, dataRow, beforeEdit);
+            }
+            set
+            {
+                var model = GetModel();
+                if (model == null)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                var dataRow = GetDataRow(ParentModel, parentDataRow, index);
+                InternalSetValue(dataRow, value, beforeEdit);
             }
         }
 
@@ -620,9 +610,9 @@ namespace DevZest.Data
             return this[dataRow, beforeEdit];
         }
 
-        public sealed override void SetValue(DataRow dataRow, object value)
+        public sealed override void SetValue(DataRow dataRow, object value, bool beforeEdit = false)
         {
-            this[dataRow] = (T)value;
+            this[dataRow, beforeEdit] = (T)value;
         }
 
         public virtual bool AreEqual(T x, T y)
