@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class DataPresenter : IService
+    public abstract class DataPresenter : IDataPresenter
     {
         public event EventHandler ViewInvalidated = delegate { };
         public event EventHandler ViewRefreshing = delegate { };
