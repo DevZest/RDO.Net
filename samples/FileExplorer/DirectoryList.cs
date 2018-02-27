@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 namespace FileExplorer
 {
@@ -14,7 +15,19 @@ namespace FileExplorer
         DirectoryListMode Mode { get; }
     }
 
-    public abstract class DirectoryList<T> : DataPresenter<T>, IDirectoryList, DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
+    public static class DirectoryListCommands
+    {
+        public static RoutedUICommand Refresh
+        {
+            get { return NavigationCommands.Refresh; }
+        }
+
+        public static readonly RoutedUICommand Open = new RoutedUICommand();
+
+        public static readonly RoutedUICommand EndEditOrOpen = new RoutedUICommand();
+    }
+
+    public abstract class DirectoryList<T> : DataPresenter<T>, IDirectoryList, DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, RowView.ICommandService
         where T : DirectoryItem, new()
     {
         protected DirectoryList(DataView directoryListView, DirectoryTree directoryTree)
@@ -81,21 +94,34 @@ namespace FileExplorer
         protected override bool ConfirmEndEdit()
         {
             var type = CurrentRow.GetValue(_.Type);
-            var path = CurrentRow.GetValue(_.Path);
-            var displayName = CurrentRow.GetValue(_.DisplayName);
             var caption = type == DirectoryItemType.Directory ? "Rename Directory" : "Rename File";
             var directoryOrFile = type == DirectoryItemType.Directory ? "directory" : "file";
             var message = string.Format("Are you sure you want to rename the {0}?\nWARNING: This will ACTUALLY rename the {0}!!!", directoryOrFile);
             if (MessageBox.Show(message, caption, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                return Rename(type, path, displayName);
+                return RenameCurrent();
             return false;
         }
 
-        private bool Rename(DirectoryItemType type, string path, string newName)
+        private bool RenameCurrent()
+        {
+            var type = CurrentRow.GetValue(_.Type);
+            var path = CurrentRow.GetValue(_.Path);
+            var displayName = CurrentRow.GetValue(_.DisplayName);
+
+            var newPath = Path.Combine(Path.GetDirectoryName(path), displayName);
+            if (!PerformRename(type, path, newPath))
+                return false;
+
+            CurrentRow.EditValue(_.Path, newPath);
+            if (type == DirectoryItemType.Directory)
+                DirectoryTree.OnSubDirectoryRenamed(path, newPath);
+            return true;
+        }
+
+        private bool PerformRename(DirectoryItemType type, string path, string newPath)
         {
             try
             {
-                var newPath = Path.Combine(Path.GetDirectoryName(path), newName);
                 if (type == DirectoryItemType.Directory)
                     Directory.Move(path, newPath);
                 else
@@ -172,12 +198,61 @@ namespace FileExplorer
             var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
             foreach (var entry in baseService.GetCommandEntries(dataView))
                 yield return entry;
-            yield return NavigationCommands.Refresh.Bind(ExecRefresh);
+            yield return DirectoryListCommands.Refresh.Bind(ExecRefresh);
         }
 
         private void ExecRefresh(object sender, ExecutedRoutedEventArgs e)
         {
             Refresh();
+        }
+
+        IEnumerable<CommandEntry> RowView.ICommandService.GetCommandEntries(RowView rowView)
+        {
+            var baseService = ServiceManager.GetService<RowView.ICommandService>(this);
+            foreach (var entry in baseService.GetCommandEntries(rowView))
+                yield return entry;
+            yield return DirectoryListCommands.Open.Bind(ExecOpen, CanExecOpen, new MouseGesture(MouseAction.LeftDoubleClick));
+            yield return DirectoryListCommands.EndEditOrOpen.Bind(EndEditOrOpen, new KeyGesture(Key.Enter));
+        }
+
+        private void EndEditOrOpen(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (CurrentRow.IsEditing)
+                CurrentRow.EndEdit();
+            else
+                OpenCurrent();
+        }
+
+        private void CanExecOpen(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !CurrentRow.IsEditing;
+        }
+
+        private void ExecOpen(object sender, ExecutedRoutedEventArgs e)
+        {
+            OpenCurrent();
+        }
+
+        private void OpenCurrent()
+        {
+            var type = CurrentRow.GetValue(_.Type);
+            var path = CurrentRow.GetValue(_.Path);
+            if (type == DirectoryItemType.Directory)
+                DirectoryTree.OnSubDirectorySelected(path);
+            else
+                ProcessStart(path);
+        }
+
+        private void ProcessStart(string fileName)
+        {
+            try
+            {
+                Process.Start(fileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
     }
