@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using System.Windows.Controls;
+using System.Threading.Tasks;
 
 namespace FileExplorer
 {
@@ -69,14 +71,14 @@ namespace FileExplorer
             return currentRow == null ? null : currentRow.GetValue(DirectoryTree._.Path);
         }
 
-        private void Refresh()
+        private Task Refresh()
         {
-            Refresh(View);
+            return Refresh(View);
         }
 
-        private void Refresh(DataView directoryListView)
+        private Task Refresh(DataView directoryListView)
         {
-            ShowOrRefreshAsync(directoryListView, (CancellationToken ct) => DirectoryItem.GetDirectoryItemsAsync<T>(CurrentDirectory, ct));
+            return ShowOrRefreshAsync(directoryListView, (CancellationToken ct) => DirectoryItem.GetDirectoryItemsAsync<T>(CurrentDirectory, ct));
         }
 
         protected sealed override void BuildTemplate(TemplateBuilder builder)
@@ -201,9 +203,30 @@ namespace FileExplorer
             yield return DirectoryListCommands.Refresh.Bind(ExecRefresh);
         }
 
-        private void ExecRefresh(object sender, ExecutedRoutedEventArgs e)
+        private async void ExecRefresh(object sender, ExecutedRoutedEventArgs e)
         {
-            Refresh();
+            var currentPath = CurrentPath;
+            await Refresh();
+            SelectPath(currentPath);
+        }
+
+        private string CurrentPath
+        {
+            get { return CurrentRow == null ? null : CurrentRow.GetValue(_.Path); }
+        }
+
+        private void SelectPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return;
+            foreach (var row in Rows)
+            {
+                if (row.GetValue(_.Path) == path)
+                {
+                    Select(row, SelectionMode.Single);
+                    return;
+                }
+            }
         }
 
         IEnumerable<CommandEntry> RowView.ICommandService.GetCommandEntries(RowView rowView)

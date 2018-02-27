@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using DevZest.Data.Views;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
@@ -35,7 +36,7 @@ namespace DevZest.Data.Presenters
             {
             }
 
-            protected internal override void MoveFocus(DataPresenter dataPresenter)
+            protected override void MoveFocus(DataView dataView)
             {
             }
         }
@@ -48,9 +49,8 @@ namespace DevZest.Data.Presenters
             {
             }
 
-            protected internal override void MoveFocus(DataPresenter dataPresenter)
+            protected override void MoveFocus(DataView dataView)
             {
-                var dataView = dataPresenter.View;
                 dataView.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
             }
         }
@@ -65,8 +65,9 @@ namespace DevZest.Data.Presenters
 
             private readonly RowBinding _binding;
 
-            protected internal override void MoveFocus(DataPresenter dataPresenter)
+            protected override void MoveFocus(DataView dataView)
             {
+                var dataPresenter = dataView.DataPresenter;
                 var currentRow = dataPresenter.CurrentRow;
                 if (currentRow != null)
                     _binding[currentRow].Focus();
@@ -83,12 +84,19 @@ namespace DevZest.Data.Presenters
 
             private readonly ScalarBinding _binding;
 
-            protected internal override void MoveFocus(DataPresenter dataPresenter)
+            protected override void MoveFocus(DataView dataView)
             {
                 _binding[0].Focus();
             }
         }
 
-        protected internal abstract void MoveFocus(DataPresenter dataPresenter);
+        internal void MoveFocus(DataPresenter dataPresenter)
+        {
+            var dataView = dataPresenter.View;
+            if (!dataView.IsKeyboardFocusWithin)
+                MoveFocus(dataView);
+        }
+
+        protected abstract void MoveFocus(DataView dataView);
     }
 }

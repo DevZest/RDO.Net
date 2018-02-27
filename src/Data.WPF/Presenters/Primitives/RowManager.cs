@@ -684,7 +684,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private RowPresenter _currentRow;
-        public RowPresenter CurrentRow
+        public virtual RowPresenter CurrentRow
         {
             get { return _currentRow; }
             set { SetCurrentRow(value, true); }
@@ -697,6 +697,7 @@ namespace DevZest.Data.Presenters.Primitives
                 return;
             if (verifyIsEditing && IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages.RowManager_ChangeEditingRowNotAllowed);
+
             _currentRow = value;
             OnCurrentRowChanged(oldValue);
         }

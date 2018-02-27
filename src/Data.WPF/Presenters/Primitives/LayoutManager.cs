@@ -320,10 +320,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             ArrangeContainerViews();
 
-            Panel.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-            {
-                Template.InitFocus();
-            }));
+            Template.InitFocus();
             return finalSize;
         }
 

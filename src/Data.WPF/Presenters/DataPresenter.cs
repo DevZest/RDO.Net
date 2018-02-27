@@ -117,10 +117,8 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager?.CurrentRow; }
             set
             {
-                SuspendInvalidateView();
                 VerifyRowPresenter(value, nameof(value));
                 RequireLayoutManager().CurrentRow = value;
-                ResumeInvalidateView();
             }
         }
 
@@ -151,6 +149,7 @@ namespace DevZest.Data.Presenters
         public void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true, Action beforeSelecting = null)
         {
             VerifyRowPresenter(rowPresenter, nameof(rowPresenter));
+
             var oldCurrentRow = CurrentRow;
             beforeSelecting?.Invoke();
             SuspendInvalidateView();
