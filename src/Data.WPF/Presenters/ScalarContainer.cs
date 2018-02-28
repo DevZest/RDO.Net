@@ -13,6 +13,7 @@ namespace DevZest.Data.Presenters
             void SuspendInvalidateView();
             void ResumeInvalidateView();
             void OnValueChanged(IScalars scalars);
+            bool QueryEndEdit();
         }
 
         internal ScalarContainer(IOwner owner)
@@ -24,7 +25,17 @@ namespace DevZest.Data.Presenters
 
         private readonly IOwner _owner;
 
-        public bool IsEditing { get; private set; }
+        private bool _isEditing;
+        public bool IsEditing
+        {
+            get { return _isEditing; }
+            private set
+            {
+                Debug.Assert(_isEditing != value);
+                _isEditing = value;
+                _owner.InvalidateView();
+            }
+        }
 
         public void BeginEdit()
         {
@@ -32,13 +43,12 @@ namespace DevZest.Data.Presenters
                 return;
 
             IsEditing = true;
-            _owner.InvalidateView();
         }
 
         public void CancelEdit()
         {
             if (!IsEditing)
-                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
+                throw new InvalidOperationException(DiagnosticMessages._VerifyIsEditing);
 
             _owner.SuspendInvalidateView();
             for (int i = 0; i < Count; i++)
@@ -50,7 +60,16 @@ namespace DevZest.Data.Presenters
         public bool EndEdit()
         {
             if (!IsEditing)
-                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
+                throw new InvalidOperationException(DiagnosticMessages._VerifyIsEditing);
+
+            if (Count == 0)
+            {
+                IsEditing = false;
+                return true;
+            }
+
+            if (!_owner.QueryEndEdit())
+                return false;
 
             _owner.SuspendInvalidateView();
             SuspendValueChangedNotification();

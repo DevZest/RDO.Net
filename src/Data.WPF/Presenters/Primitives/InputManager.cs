@@ -185,6 +185,28 @@ namespace DevZest.Data.Presenters.Primitives
             return true;
         }
 
+        internal bool QueryEndEditScalars()
+        {
+            if (_scalarValidation == null)
+                return true;
+
+            _scalarValidation.Validate();
+            var hasVisibleError = _scalarValidation.HasVisibleError;
+            if (hasVisibleError)
+            {
+                FocusToScalarInputError();
+                return false;
+            }
+
+            var isValidating = _scalarValidation.IsValidating;
+            if (isValidating)
+                return false;
+
+            if (DataPresenter != null)
+                return DataPresenter.ConfirmEndEditScalars();
+            return true;
+        }
+
         public bool FocusToInputError()
         {
             if (FocusToScalarInputError())

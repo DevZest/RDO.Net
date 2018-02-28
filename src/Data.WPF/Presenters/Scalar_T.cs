@@ -11,6 +11,8 @@ namespace DevZest.Data.Presenters
         {
             _value = value;
             _comparer = comparer ?? Comparer<T>.Default;
+            if (IsEditing)
+                _editingValue = _value;
         }
 
         private T _value;

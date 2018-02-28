@@ -395,7 +395,7 @@ namespace DevZest.Data.Presenters
         public void CancelEdit()
         {
             if (!IsEditing)
-                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
+                throw new InvalidOperationException(DiagnosticMessages._VerifyIsEditing);
 
             DataPresenter?.SuspendInvalidateView();
             RowManager.CancelEdit();
@@ -405,7 +405,7 @@ namespace DevZest.Data.Presenters
         public bool EndEdit()
         {
             if (!IsEditing)
-                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsEditing);
+                throw new InvalidOperationException(DiagnosticMessages._VerifyIsEditing);
 
             DataPresenter?.SuspendInvalidateView();
             var result = RowManager.EndEdit();

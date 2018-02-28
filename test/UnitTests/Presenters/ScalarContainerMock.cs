@@ -28,6 +28,11 @@ namespace DevZest.Data.Presenters
             public void SuspendInvalidateView()
             {
             }
+
+            public bool QueryEndEdit()
+            {
+                return true;
+            }
         }
 
         public static ScalarContainer New(Action<IScalars> onValueChanged = null)

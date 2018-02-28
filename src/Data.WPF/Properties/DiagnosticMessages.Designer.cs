@@ -12,14 +12,6 @@ namespace DevZest.Data
             = new ResourceManager("DevZest.Data.DiagnosticMessages", typeof(DiagnosticMessages).GetTypeInfo().Assembly);
 
         /// <summary>
-        /// The {array}[{index}] is null.
-        /// </summary>
-        public static string ArgumentNullAtIndex(object array, object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ArgumentNullAtIndex", "array", "index"), array, index);
-        }
-
-        /// <summary>
         /// The AsyncValidator is already initialized by a Template.
         /// </summary>
         public static string AsyncValidator_AlreadyInitialized
@@ -348,14 +340,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The IsEditing property must be true.
-        /// </summary>
-        public static string RowPresenter_VerifyIsEditing
-        {
-            get { return GetString("RowPresenter_VerifyIsEditing"); }
-        }
-
-        /// <summary>
         /// There is pending edit not completed.
         /// </summary>
         public static string RowPresenter_VerifyNoPendingEdit
@@ -465,6 +449,22 @@ namespace DevZest.Data
         public static string TwoWayBinding_InputAlreadyExists
         {
             get { return GetString("TwoWayBinding_InputAlreadyExists"); }
+        }
+
+        /// <summary>
+        /// The {array}[{index}] is null.
+        /// </summary>
+        public static string _ArgumentNullAtIndex(object array, object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("_ArgumentNullAtIndex", "array", "index"), array, index);
+        }
+
+        /// <summary>
+        /// The IsEditing property must be true.
+        /// </summary>
+        public static string _VerifyIsEditing
+        {
+            get { return GetString("_VerifyIsEditing"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

@@ -391,9 +391,24 @@ namespace DevZest.Data.Presenters
         {
         }
 
+        protected internal virtual bool QueryEndEditScalars()
+        {
+            return RequireLayoutManager().QueryEndEditScalars();
+        }
+
+        protected internal virtual bool ConfirmEndEditScalars()
+        {
+            return true;
+        }
+
         void ScalarContainer.IOwner.OnValueChanged(IScalars scalars)
         {
             OnValueChanged(scalars);
+        }
+
+        bool ScalarContainer.IOwner.QueryEndEdit()
+        {
+            return QueryEndEditScalars();
         }
     }
 }
