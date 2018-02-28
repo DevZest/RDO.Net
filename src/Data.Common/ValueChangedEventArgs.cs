@@ -4,17 +4,17 @@ namespace DevZest.Data
 {
     public class ValueChangedEventArgs : DataRowEventArgs
     {
-        public ValueChangedEventArgs(DataRow dataRow, Column column)
+        public ValueChangedEventArgs(DataRow dataRow, IColumns columns)
             : base(dataRow)
         {
-            Check.NotNull(column, nameof(column));
-            _column = column;
+            Check.NotNull(columns, nameof(columns));
+            _columns = columns;
         }
 
-        private Column _column;
-        public Column Column
+        private IColumns _columns;
+        public IColumns Columns
         {
-            get { return _column; }
+            get { return _columns; }
         }
     }
 }

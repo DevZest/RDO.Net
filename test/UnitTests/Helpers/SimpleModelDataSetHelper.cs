@@ -46,7 +46,10 @@ namespace DevZest.Data.Helpers
                     _.AfterDataRowInserted += (sender, e) => LogAfterDataRowInserted(log, e.DataRow);
                     _.DataRowRemoving += (sender, e) => LogDataRowRemoving(log, e.DataRow);
                     _.DataRowRemoved += (sender, e) => LogDataRowRemoved(log, e.BaseDataSet, e.Ordinal);
-                    _.ValueChanged += (sender, e) => LogValueChanged(log, e.DataRow, e.Column);
+                    _.ValueChanged += (sender, e) => {
+                        foreach (var column in e.Columns)
+                            LogValueChanged(log, e.DataRow, column);
+                    };
                 }
                 return log;
             }

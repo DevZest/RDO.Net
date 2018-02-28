@@ -272,7 +272,7 @@ namespace DevZest.Data
                 return null;
 
             var result = new DataRow();
-            Insert(index, result, dataRow => Model.EndEdit(dataRow));
+            Insert(index, result, dataRow => Model.EndEdit(dataRow, true));
             return result;
         }
 

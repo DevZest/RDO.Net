@@ -516,4 +516,7 @@
   <data name="Model_EnsureInitializedNullDataSource" xml:space="preserve">
     <value>Calling EnsureInitialized() is not allowed when Model.DataSource is null.</value>
   </data>
+  <data name="DataRow_ResumeValueChangedNotificationWithoutSuspend" xml:space="preserve">
+    <value>The SuspendValueChangedNotification/ResumeValueChangedNotification must be called in tandem.</value>
+  </data>
 </root>

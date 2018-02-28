@@ -81,7 +81,14 @@ namespace DevZest.Data
             }
         }
 
-        internal static readonly DataRow Placeholder = new DataRow() { ValueChangedSuspended = true };
+        internal static readonly DataRow Placeholder = CreatePlaceholderDataRow();
+
+        private static DataRow CreatePlaceholderDataRow()
+        {
+            var result = new DataRow();
+            result.SuspendValueChangedNotification(true);
+            return result;
+        }
 
         /// <summary>Initializes a new instance of <see cref="DataRow"/> object.</summary>
         public DataRow()
@@ -386,7 +393,7 @@ namespace DevZest.Data
             if (Model.EditingRow == null && !HasChild)
             {
                 Model.BeginEdit(this);
-                return dataRow => dataRow.Model.EndEdit(dataRow);
+                return dataRow => dataRow.Model.EndEdit(dataRow, true);
             }
             else
             {
@@ -460,9 +467,11 @@ namespace DevZest.Data
             if (Model == null || Model.EditingRow != this)
                 return false;
 
+            SuspendValueChangedNotification(false);
             Model.DataSetContainer.SuspendComputation();
-            Model.EndEdit(this);
+            Model.EndEdit(this, false);
             Model.DataSetContainer.ResumeComputation();
+            ResumeValueChangedNotification();
             return true;
         }
 
@@ -484,23 +493,58 @@ namespace DevZest.Data
             return dataRow;
         }
 
-        private bool _valueChangedSuspended;
-        internal bool ValueChangedSuspended
+        private int _suspendValueChangedCount;
+        public bool IsValueChangedNotificationSuspended
         {
-            get { return _valueChangedSuspended; }
-            set
+            get { return _suspendValueChangedCount > 0; }
+        }
+
+        public void SuspendValueChangedNotification()
+        {
+            if (_pendingValueChangedColumns == null)
+                SuspendValueChangedNotification(true);  // calling inside insert or remove.
+            else
+                SuspendValueChangedNotification(false);
+        }
+
+        internal void SuspendValueChangedNotification(bool discardChanges)
+        {
+            var value = discardChanges ? null : Columns.Empty;
+            Debug.Assert(_suspendValueChangedCount == 0 || _pendingValueChangedColumns == value);
+            _pendingValueChangedColumns = value;
+            _suspendValueChangedCount++;
+        }
+
+        public void ResumeValueChangedNotification()
+        {
+            if (_suspendValueChangedCount <= 0)
+                throw new InvalidOperationException(DiagnosticMessages.DataRow_ResumeValueChangedNotificationWithoutSuspend);
+            _suspendValueChangedCount--;
+            if (_suspendValueChangedCount == 0)
             {
-                Debug.Assert(_valueChangedSuspended != value);
-                _valueChangedSuspended = value;
+                if (_pendingValueChangedColumns != null && _pendingValueChangedColumns.Count > 0)
+                    NotifyValueChanged(_pendingValueChangedColumns.Seal());
+                _pendingValueChangedColumns = Columns.Empty;
             }
         }
 
+        private IColumns _pendingValueChangedColumns = Columns.Empty;
         internal void OnValueChanged(Column column)
         {
-            if (ValueChangedSuspended)
+            if (IsValueChangedNotificationSuspended)
+            {
+                if (_pendingValueChangedColumns != null)
+                    _pendingValueChangedColumns = _pendingValueChangedColumns.Add(column);
                 return;
+            }
+            NotifyValueChanged(column);
+        }
+
+        private void NotifyValueChanged(IColumns columns)
+        {
+            Debug.Assert(columns.IsSealed);
             UpdateDataSetRevision();
-            Model.HandlesValueChanged(this, column);
+            Model.HandlesValueChanged(this, columns);
         }
 
         private void UpdateDataSetRevision()

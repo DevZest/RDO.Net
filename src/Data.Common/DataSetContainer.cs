@@ -94,7 +94,7 @@ namespace DevZest.Data
                 Debug.Assert(dataRow != null);
                 Debug.Assert(_suspendComputationCount > 0);
 
-                if (dataRow.ValueChangedSuspended)
+                if (dataRow.IsValueChangedNotificationSuspended)
                     return;
 
                 Node node;
@@ -366,7 +366,8 @@ namespace DevZest.Data
         internal void OnValueChanged(ValueChangedEventArgs e)
         {
             ValueChanged(this, e);
-            _computationManager?.OnValueChanged(e.DataRow, e.Column);
+            foreach (var column in e.Columns)
+                _computationManager?.OnValueChanged(e.DataRow, column);
         }
 
         internal void OnDataRowRemoving(DataRowEventArgs e)

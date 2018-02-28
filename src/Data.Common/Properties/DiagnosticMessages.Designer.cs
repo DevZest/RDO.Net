@@ -1075,6 +1075,14 @@ namespace DevZest.Data
             get { return GetString("Model_EnsureInitializedNullDataSource"); }
         }
 
+        /// <summary>
+        /// The SuspendValueChangedNotification/ResumeValueChangedNotification must be called in tandem.
+        /// </summary>
+        public static string DataRow_ResumeValueChangedNotificationWithoutSuspend
+        {
+            get { return GetString("DataRow_ResumeValueChangedNotificationWithoutSuspend"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

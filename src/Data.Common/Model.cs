@@ -964,16 +964,18 @@ namespace DevZest.Data
                 LocalColumns[i].BeginEdit(dataRow);
         }
 
-        internal void EndEdit(DataRow dataRow)
+        internal void EndEdit(DataRow dataRow, bool discardChanges)
         {
             Debug.Assert(EditingRow != null);
             Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
 
+            dataRow.SuspendValueChangedNotification(discardChanges);
             for (int i = 0; i < Columns.Count; i++)
                 Columns[i].EndEdit(dataRow);
             for (int i = 0; i < LocalColumns.Count; i++)
                 LocalColumns[i].EndEdit(dataRow);
             EditingRow = null;
+            dataRow.ResumeValueChangedNotification();
         }
 
         internal void CancelEdit()
@@ -1015,7 +1017,7 @@ namespace DevZest.Data
 
         internal void HandlesDataRowInserted(DataRow dataRow, Action<DataRow> updateAction)
         {
-            dataRow.ValueChangedSuspended = true;
+            dataRow.SuspendValueChangedNotification(true);
             var e = new DataRowEventArgs(dataRow);
             OnDataRowInserting(e);
             DataSetContainer.OnDataRowInserting(e);
@@ -1023,7 +1025,7 @@ namespace DevZest.Data
                 updateAction(dataRow);
             OnBeforeDataRowInserted(e);
             DataSetContainer.OnBeforeDataRowInserted(e);
-            dataRow.ValueChangedSuspended = false;
+            dataRow.ResumeValueChangedNotification();
             DataSetContainer.SuspendComputation();
             OnDataRowInserted(e);
             DataSetContainer.OnAfterDataRowInserted(e);
@@ -1047,7 +1049,7 @@ namespace DevZest.Data
 
         internal void HandlesDataRowRemoving(DataRow dataRow)
         {
-            dataRow.ValueChangedSuspended = true;
+            dataRow.SuspendValueChangedNotification(true);
             var e = new DataRowEventArgs(dataRow);
             OnDataRowRemoving(e);
             DataSetContainer.OnDataRowRemoving(e);
@@ -1063,7 +1065,7 @@ namespace DevZest.Data
             if (EditingRow == dataRow)
                 CancelEdit();
 
-            dataRow.ValueChangedSuspended = false;
+            dataRow.ResumeValueChangedNotification();
             DataSetContainer.SuspendComputation();
             var e = new DataRowRemovedEventArgs(dataRow, baseDataSet, ordinal, dataSet, index);
             OnDataRowRemoved(e);
@@ -1076,10 +1078,10 @@ namespace DevZest.Data
             DataRowRemoved(this, e);
         }
 
-        internal void HandlesValueChanged(DataRow dataRow, Column column)
+        internal void HandlesValueChanged(DataRow dataRow, IColumns columns)
         {
             DataSetContainer.SuspendComputation();
-            var e = new ValueChangedEventArgs(dataRow, column);
+            var e = new ValueChangedEventArgs(dataRow, columns);
             OnValueChanged(e);
             DataSetContainer.OnValueChanged(e);
             DataSetContainer.ResumeComputation();

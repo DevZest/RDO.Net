@@ -392,7 +392,8 @@ namespace DevZest.Data
             _.ValueChanged += (sender, e) =>
             {
                 dataRowUpdatedCount++;
-                changedColumns = changedColumns.Add(e.Column);
+                foreach (var column in e.Columns)
+                    changedColumns = changedColumns.Add(column);
             };
             salesOrders.Add(new DataRow());
             _.SalesOrderID[0] = 12345;
