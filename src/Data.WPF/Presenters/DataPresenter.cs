@@ -248,7 +248,7 @@ namespace DevZest.Data.Presenters
 
         public void InvalidateView()
         {
-            RequireLayoutManager().InvalidateView();
+            LayoutManager?.InvalidateView();
         }
 
         public void SuspendInvalidateView()

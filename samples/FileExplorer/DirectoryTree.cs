@@ -125,5 +125,10 @@ namespace FileExplorer
 
             return null;
         }
+
+        public string CurrentPath
+        {
+            get { return CurrentRow == null ? null : CurrentRow.GetValue(_.Path); }
+        }
     }
 }

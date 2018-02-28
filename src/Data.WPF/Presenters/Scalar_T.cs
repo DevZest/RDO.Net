@@ -42,7 +42,7 @@ namespace DevZest.Data.Presenters
                 return false;
 
             reference = value;
-            Container?.OnValueChanged(this);
+            Container.OnValueChanged(this);
             return true;
         }
 

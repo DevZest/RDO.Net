@@ -27,25 +27,18 @@ namespace FileExplorer
         public static readonly RoutedUICommand Start = new RoutedUICommand();
     }
 
-    public abstract class DirectoryList<T> : DataPresenter<T>, IDirectoryList, DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, RowSelector.ICommandService
+    public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList, DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, RowSelector.ICommandService
         where T : DirectoryItem, new()
     {
         protected DirectoryList(DataView directoryListView, DirectoryTree directoryTree)
+            : base(directoryTree)
         {
-            _directoryTree = directoryTree;
-            _currentDirectory = GetCurrentDirectory();
+            _currentDirectory = DirectoryTree.CurrentPath;
             Refresh(directoryListView);
-            _directoryTree.ViewInvalidated += OnDirectoryTreeViewInvalidated;
-        }
-
-        private readonly DirectoryTree _directoryTree;
-        protected DirectoryTree DirectoryTree
-        {
-            get { return _directoryTree; }
         }
 
         private string _currentDirectory;
-        private string CurrentDirectory
+        protected sealed override string CurrentDirectory
         {
             get { return _currentDirectory; }
             set
@@ -56,17 +49,6 @@ namespace FileExplorer
                 _currentDirectory = value;
                 Refresh();
             }
-        }
-
-        private void OnDirectoryTreeViewInvalidated(object sender, EventArgs e)
-        {
-            CurrentDirectory = GetCurrentDirectory();
-        }
-
-        private string GetCurrentDirectory()
-        {
-            var currentRow = DirectoryTree.CurrentRow;
-            return currentRow == null ? null : currentRow.GetValue(DirectoryTree._.Path);
         }
 
         private Task Refresh()
@@ -171,28 +153,6 @@ namespace FileExplorer
             return true;
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    DirectoryTree.ViewInvalidated -= OnDirectoryTreeViewInvalidated;
-                    DetachView();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
         IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
         {
             var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
@@ -268,6 +228,5 @@ namespace FileExplorer
                 MessageBox.Show(ex.Message);
             }
         }
-        #endregion
     }
 }

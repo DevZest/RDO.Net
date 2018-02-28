@@ -28,6 +28,14 @@
                 <MenuItem Command="Refresh" />
             </MenuItem>
         </Menu>
+        <Border BorderThickness="1" BorderBrush="Gray" DockPanel.Dock="Bottom" Background="LightGray">
+            <Border.Resources>
+                <Style TargetType="TextBox">
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+            </Border.Resources>
+            <dz:DataView x:Name="_currentDirectoryBarView" Margin="5,0" />
+        </Border>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />

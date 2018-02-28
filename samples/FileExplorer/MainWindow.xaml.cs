@@ -14,12 +14,14 @@ namespace FileExplorer
 
         private DirectoryTree _directoryTree = new DirectoryTree();
         private IDirectoryList _directoryList;
+        private CurrentDirectoryBar _currentDirectoryBar;
 
         public MainWindow()
         {
             InitializeComponent();
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, ExecuteCloseCommand));
             _directoryTree.Show(_directoryTreeView, DirectoryTreeItem.GetLogicalDrives());
+            _currentDirectoryBar = new CurrentDirectoryBar(_currentDirectoryBarView, _directoryTree);
             DirectoryListMode = DirectoryListMode.LargeIcon;
         }
 

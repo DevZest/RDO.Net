@@ -121,6 +121,7 @@ namespace DevZest.Data.Presenters
                 _pendingValueChangedScalars = _pendingValueChangedScalars.Add(scalar);
             else
                 NotifyValueChanged(scalar);
+            _owner.InvalidateView();
         }
 
         private void NotifyValueChanged(IScalars scalars)

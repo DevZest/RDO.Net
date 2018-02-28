@@ -56,7 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CurrentDirectoryBar.cs" />
     <Compile Include="DetailsListItem.cs" />
+    <Compile Include="DirectoryPresenter.cs" />
     <Compile Include="EnumToBooleanConverter.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
     <Compile Include="DirectoryItem.cs" />
