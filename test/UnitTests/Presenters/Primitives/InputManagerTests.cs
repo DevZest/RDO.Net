@@ -66,7 +66,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return x > 5 ? "Value cannot be greater than 5." : null;
                 });
 
-            var valueChanged = scalar.AssignValue(4);
+            var valueChanged = scalar.SetValue(4);
             Assert.IsTrue(valueChanged);
             Assert.AreEqual(scalar, valueChangedScalars);
         }

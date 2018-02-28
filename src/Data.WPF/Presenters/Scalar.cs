@@ -25,19 +25,9 @@ namespace DevZest.Data.Presenters
             get { return _ordinal; }
         }
 
-        public object GetValue(bool beforeEdit = false)
-        {
-            return PerformGetValue(beforeEdit);
-        }
+        public abstract object GetObject(bool beforeEdit = false);
 
-        public void SetValue(object value, bool beforeEdit = false)
-        {
-            PerformSetValue(value, beforeEdit);
-        }
-
-        protected abstract object PerformGetValue(bool beforeEdit);
-
-        protected abstract void PerformSetValue(object value, bool beforeEdit);
+        public abstract void SetObject(object value, bool beforeEdit = false);
 
         public bool IsEditing
         {

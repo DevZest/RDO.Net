@@ -132,7 +132,7 @@ namespace DevZest.Data.Presenters
                 if (valueBagGetter == null)
                     return false;
                 var value = valueBagGetter(element)[column];
-                if (object.Equals(rowPresenter.GetValue(column), value))
+                if (object.Equals(rowPresenter.GetObject(column), value))
                     return false;
                 rowPresenter[column] = value;
                 return true;

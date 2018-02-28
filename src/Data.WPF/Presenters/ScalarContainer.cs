@@ -87,7 +87,7 @@ namespace DevZest.Data.Presenters
 
             _owner.SuspendInvalidateView();
             BeginEdit();
-            var result = scalar.AssignValue(value);
+            var result = scalar.SetValue(value);
             _owner.ResumeInvalidateView();
             return result;
         }

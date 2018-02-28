@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBlock>(
                 onRefresh: (v, p) =>
                 {
-                    v.Text = p.GetValue(source).ToString(format, formatProvider);
+                    v.Text = p.GetObject(source).ToString(format, formatProvider);
                 });
         }
 
@@ -46,7 +46,7 @@ namespace DevZest.Data.Presenters
                 {
                     var hyperlink = (Hyperlink)v.Inlines.FirstInline;
                     var run = (Run)hyperlink.Inlines.FirstInline;
-                    run.Text = p.GetValue(source).ToString(format, formatProvider);              
+                    run.Text = p.GetObject(source).ToString(format, formatProvider);              
                 },
                 onCleanup: (v, p) =>
                 {
@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBlock>(
                 onRefresh: v =>
                 {
-                    v.Text = source.GetValue().ToString(format, formatProvider);
+                    v.Text = source.GetObject().ToString(format, formatProvider);
                 });
         }
     }

@@ -23,12 +23,12 @@ namespace DevZest.Data.Presenters
             get { return _comparer; }
         }
 
-        public new T GetValue(bool beforeEdit = false)
+        public T GetValue(bool beforeEdit = false)
         {
             return IsEditing ? _editingValue : _value;
         }
 
-        public bool AssignValue(T value, bool beforeEdit = false)
+        public bool SetValue(T value, bool beforeEdit = false)
         {
             if (IsEditing && !beforeEdit)
                 return Assign(ref _editingValue, value);
@@ -51,14 +51,14 @@ namespace DevZest.Data.Presenters
             return Container.Edit(this, value);
         }
 
-        protected override object PerformGetValue(bool beforeEdit)
+        public sealed override object GetObject(bool beforeEdit)
         {
             return GetValue(beforeEdit);
         }
 
-        protected override void PerformSetValue(object value, bool beforeEdit)
+        public sealed override void SetObject(object value, bool beforeEdit)
         {
-            AssignValue((T)value, beforeEdit);
+            SetValue((T)value, beforeEdit);
         }
 
         internal override void CancelEdit()
