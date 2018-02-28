@@ -9,11 +9,22 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class DataPresenter : IDataPresenter
+    public abstract class DataPresenter : IDataPresenter, ScalarContainer.IOwner
     {
         public event EventHandler ViewInvalidated = delegate { };
         public event EventHandler ViewRefreshing = delegate { };
         public event EventHandler ViewRefreshed = delegate { };
+
+        protected DataPresenter()
+        {
+            _scalarContainer = new ScalarContainer(this);
+        }
+
+        private readonly ScalarContainer _scalarContainer;
+        public ScalarContainer ScalarContainer
+        {
+            get { return _scalarContainer; }
+        }
 
         protected internal virtual void OnViewInvalidated()
         {
@@ -289,24 +300,16 @@ namespace DevZest.Data.Presenters
 
         internal abstract bool CanCancelLoading { get; }
 
-        private List<Scalar> _scalars = new List<Scalar>();
-        public IReadOnlyList<Scalar> Scalars
+        protected Scalar<T> NewScalar<T>(T value = default(T), IComparer<T> comparer = null)
         {
-            get { return _scalars; }
-        }
-
-        protected Scalar<T> NewScalar<T>(T value = default(T))
-        {
-            var result = new Scalar<T>(value);
-            _scalars.Add(result);
-            return result;
+            return ScalarContainer.CreateNew(value, comparer);
         }
 
         internal IScalarValidationErrors ValidateScalars()
         {
             var result = ScalarValidationErrors.Empty;
-            for (int i = 0; i < Scalars.Count; i++)
-                result = Scalars[i].Validate(result);
+            for (int i = 0; i < ScalarContainer.Count; i++)
+                result = ScalarContainer[i].Validate(result);
             return ValidateScalars(result);
         }
 
@@ -382,6 +385,15 @@ namespace DevZest.Data.Presenters
         protected internal virtual string FormatFaultMessage(AsyncValidator asyncValidator)
         {
             return AsyncValidationFault.FormatMessage(asyncValidator);
+        }
+
+        protected virtual void OnValueChanged(IScalars scalars)
+        {
+        }
+
+        void ScalarContainer.IOwner.OnValueChanged(IScalars scalars)
+        {
+            OnValueChanged(scalars);
         }
     }
 }

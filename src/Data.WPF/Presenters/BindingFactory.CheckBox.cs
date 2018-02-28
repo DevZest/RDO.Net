@@ -185,7 +185,7 @@ namespace DevZest.Data.Presenters
             if (string.IsNullOrEmpty(display))
                 display = Enum.GetName(typeof(T), flag);
 
-            return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.Value.HasFlag(flag),
+            return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue().HasFlag(flag),
                 onSetup: v =>
                 {
                     v.IsThreeState = false;
@@ -194,11 +194,11 @@ namespace DevZest.Data.Presenters
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
                 .WithFlush(source, v =>
                 {
-                    var value = source.Value;
+                    var value = source.GetValue();
                     var newValue = value.GetNewValue(flag, v);
                     if (Comparer<T>.Default.Compare(value, newValue) == 0)
                         return false;
-                    source.Value = newValue;
+                    source.EditValue(newValue);
                     return true;
                 })
                 .EndInput();
@@ -214,7 +214,7 @@ namespace DevZest.Data.Presenters
             if (string.IsNullOrEmpty(display))
                 display = Enum.GetName(typeof(T), flag);
 
-            return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.Value.HasFlag(flag),
+            return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue().HasFlag(flag),
                 onSetup: v =>
                 {
                     v.IsThreeState = false;
@@ -223,11 +223,11 @@ namespace DevZest.Data.Presenters
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
                 .WithFlush(source, v =>
                 {
-                    var value = source.Value;
+                    var value = source.GetValue();
                     var newValue = value.GetNewValue(flag, v, true);
                     if (Comparer<T?>.Default.Compare(value, newValue) == 0)
                         return false;
-                    source.Value = newValue;
+                    source.EditValue(newValue);
                     return true;
                 })
                 .EndInput();

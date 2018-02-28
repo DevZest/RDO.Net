@@ -7,9 +7,48 @@ namespace DevZest.Data.Presenters
 {
     public abstract class Scalar : IScalars
     {
-        internal abstract IScalarValidationErrors Validate(IScalarValidationErrors result);
+        protected Scalar(ScalarContainer container, int ordinal)
+        {
+            _container = container;
+            _ordinal = ordinal;
+        }
 
-        public abstract object ObjectValue { get; set; }
+        private readonly ScalarContainer _container;
+        public ScalarContainer Container
+        {
+            get { return _container; }
+        }
+
+        private readonly int _ordinal;
+        public int Ordinal
+        {
+            get { return _ordinal; }
+        }
+
+        public object GetValue(bool beforeEdit = false)
+        {
+            return PerformGetValue(beforeEdit);
+        }
+
+        public void SetValue(object value, bool beforeEdit = false)
+        {
+            PerformSetValue(value, beforeEdit);
+        }
+
+        protected abstract object PerformGetValue(bool beforeEdit);
+
+        protected abstract void PerformSetValue(object value, bool beforeEdit);
+
+        public bool IsEditing
+        {
+            get { return Container.IsEditing; }
+        }
+
+        internal abstract void CancelEdit();
+
+        internal abstract bool EndEdit();
+
+        internal abstract IScalarValidationErrors Validate(IScalarValidationErrors result);
 
         #region IScalars
 

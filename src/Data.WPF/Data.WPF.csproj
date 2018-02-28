@@ -80,6 +80,7 @@
     <Compile Include="Presenters\Scalar.cs" />
     <Compile Include="Presenters\ScalarAsyncValidator.cs" />
     <Compile Include="Presenters\ScalarAsyncValidators.cs" />
+    <Compile Include="Presenters\ScalarContainer.cs" />
     <Compile Include="Presenters\Scalars.cs" />
     <Compile Include="Presenters\ScalarValidationError.cs" />
     <Compile Include="Presenters\ScalarValidationErrors.cs" />
@@ -89,9 +90,9 @@
     <Compile Include="Presenters\TemplateId.cs" />
     <Compile Include="Presenters\ValidationInfo.cs" />
     <Compile Include="Properties\Resources.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Utilities\SingleChildEnumerator.cs" />
     <Compile Include="Views\AsyncValidationFaultControl.cs" />
@@ -361,13 +362,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -24,7 +24,7 @@ namespace DevZest.Data.Presenters
         IComparer<DataRow> OrderBy { get; set; }
         IReadOnlyList<RowPresenter> Rows { get; }
         RowValidation RowValidation { get; }
-        IReadOnlyList<Scalar> Scalars { get; }
+        ScalarContainer ScalarContainer { get; }
         ScalarValidation ScalarValidation { get; }
         IScrollable Scrollable { get; }
         IReadOnlyCollection<RowPresenter> SelectedRows { get; }

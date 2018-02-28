@@ -292,7 +292,7 @@ namespace DevZest.Data.Presenters
             return DataRow == null ? default(T) : column[DataRow, beforeEdit];
         }
 
-        public object GetObject(Column column, bool beforeEdit = false)
+        public object GetValue(Column column, bool beforeEdit = false)
         {
             if (Depth > 0)
             {

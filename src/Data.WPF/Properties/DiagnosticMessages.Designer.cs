@@ -404,6 +404,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The SuspendValueChangedNotification/ResumeValueChangedNotification must be called in tandem.
+        /// </summary>
+        public static string ScalarContainer_ResumeValueChangedWithoutSuspend
+        {
+            get { return GetString("ScalarContainer_ResumeValueChangedWithoutSuspend"); }
+        }
+
+        /// <summary>
         /// The source scalars cannot be empty.
         /// </summary>
         public static string ScalarValidationMessage_EmptySourceScalars

@@ -9,13 +9,14 @@ namespace DevZest.Data.Presenters
         public void Scalars_New()
         {
             {
-                var scalar1 = new Scalar<int>();
+                var scalar1 = ScalarContainerMock.New().CreateNew<int>();
                 Assert.AreEqual(scalar1, Scalars.New(scalar1));
             }
 
             {
-                var scalar1 = new Scalar<int>();
-                var scalar2 = new Scalar<int>();
+                var container = ScalarContainerMock.New();
+                var scalar1 = container.CreateNew<int>();
+                var scalar2 = container.CreateNew<int>();
                 var scalars = Scalars.New(scalar1, scalar2);
                 Assert.AreEqual(2, scalars.Count);
                 Assert.IsTrue(scalars.Contains(scalar1));
@@ -31,19 +32,22 @@ namespace DevZest.Data.Presenters
             }
 
             {
-                var scalar1 = new Scalar<int>();
+                var container = ScalarContainerMock.New();
+                var scalar1 = container.CreateNew<int>();
                 Assert.AreEqual(scalar1, Scalars.Empty.Union(scalar1));
                 Assert.AreEqual(scalar1, scalar1.Union(Scalars.Empty));
             }
 
             {
-                var scalar1 = new Scalar<int>();
+                var container = ScalarContainerMock.New();
+                var scalar1 = container.CreateNew<int>();
                 Assert.AreEqual(scalar1, scalar1.Union(scalar1));
             }
 
             {
-                var scalar1 = new Scalar<int>();
-                var scalar2 = new Scalar<int>();
+                var container = ScalarContainerMock.New();
+                var scalar1 = container.CreateNew<int>();
+                var scalar2 = container.CreateNew<int>();
                 var scalars = scalar1.Union(scalar2);
                 Assert.AreEqual(2, scalars.Count);
                 Assert.IsTrue(scalars.Contains(scalar1));
@@ -56,8 +60,9 @@ namespace DevZest.Data.Presenters
         {
             Assert.IsTrue(Scalars.Empty.IsSubsetOf(Scalars.Empty));
 
-            var scalar1 = new Scalar<int>();
-            var scalar2 = new Scalar<int>();
+            var container = ScalarContainerMock.New();
+            var scalar1 = container.CreateNew<int>();
+            var scalar2 = container.CreateNew<int>();
             var scalar1And2 = Scalars.New(scalar1, scalar2);
 
             Assert.IsTrue(scalar1.IsSubsetOf(scalar1And2));
@@ -70,8 +75,9 @@ namespace DevZest.Data.Presenters
         {
             Assert.IsTrue(Scalars.Empty.IsSubsetOf(Scalars.Empty));
 
-            var scalar1 = new Scalar<int>();
-            var scalar2 = new Scalar<int>();
+            var container = ScalarContainerMock.New();
+            var scalar1 = container.CreateNew<int>();
+            var scalar2 = container.CreateNew<int>();
             var scalar1And2 = Scalars.New(scalar1, scalar2);
 
             Assert.IsTrue(scalar1.IsProperSubsetOf(scalar1And2));
@@ -84,8 +90,9 @@ namespace DevZest.Data.Presenters
         {
             Assert.IsTrue(Scalars.Empty.IsSubsetOf(Scalars.Empty));
 
-            var scalar1 = new Scalar<int>();
-            var scalar2 = new Scalar<int>();
+            var container = ScalarContainerMock.New();
+            var scalar1 = container.CreateNew<int>();
+            var scalar2 = container.CreateNew<int>();
             var scalar1And2 = Scalars.New(scalar1, scalar2);
 
             Assert.IsTrue(scalar1And2.IsSupersetOf(scalar1));
@@ -98,8 +105,9 @@ namespace DevZest.Data.Presenters
         {
             Assert.IsTrue(Scalars.Empty.IsSubsetOf(Scalars.Empty));
 
-            var scalar1 = new Scalar<int>();
-            var scalar2 = new Scalar<int>();
+            var container = ScalarContainerMock.New();
+            var scalar1 = container.CreateNew<int>();
+            var scalar2 = container.CreateNew<int>();
             var scalar1And2 = Scalars.New(scalar1, scalar2);
 
             Assert.IsTrue(scalar1And2.IsProperSupersetOf(scalar1));
@@ -110,11 +118,12 @@ namespace DevZest.Data.Presenters
         [TestMethod]
         public void Scalars_Equals()
         {
-            var scalar1 = new Scalar<int>();
+            var container = ScalarContainerMock.New();
+            var scalar1 = container.CreateNew<int>();
             Assert.IsTrue(!scalar1.Equals(null));
             Assert.IsTrue(!scalar1.Equals(new object()));
 
-            var scalar2 = new Scalar<int>();
+            var scalar2 = container.CreateNew<int>();
 
             var scalars1 = Scalars.Empty.Add(scalar1).Add(scalar2);
             var scalars2 = Scalars.Empty.Add(scalar2).Add(scalar1);

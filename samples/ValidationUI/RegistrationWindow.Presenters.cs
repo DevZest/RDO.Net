@@ -174,7 +174,7 @@ namespace ValidationUI
 
             protected override IScalarValidationErrors ValidateScalars(IScalarValidationErrors result)
             {
-                if (_password.Value != _passwordConfirmation.Value)
+                if (_password.GetValue() != _passwordConfirmation.GetValue())
                     result = result.Add(new ScalarValidationError("Passwords do not match.", _password.Union(_passwordConfirmation).Seal()));
                 return result.Seal();
             }
@@ -186,7 +186,7 @@ namespace ValidationUI
 
             private Task<string> ValidateUserName()
             {
-                return PerformValidateUserName(_userName.Value);
+                return PerformValidateUserName(_userName.GetValue());
             }
         }
 

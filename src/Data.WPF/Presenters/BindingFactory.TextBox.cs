@@ -162,7 +162,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value;
+                v.Text = source.GetValue();
             }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, source, v => v.Text);
         }
 
@@ -170,7 +170,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -193,7 +193,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -216,7 +216,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -239,7 +239,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -262,7 +262,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -285,7 +285,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -303,7 +303,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -321,7 +321,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -339,7 +339,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {
@@ -357,7 +357,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                v.Text = source.Value.ToString();
+                v.Text = source.GetValue().ToString();
             }).BeginInput(TextBox.TextProperty, TextBox.LostFocusEvent)
             .WithFlushingValidator(v =>
             {

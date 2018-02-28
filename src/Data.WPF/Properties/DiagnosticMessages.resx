@@ -264,6 +264,9 @@
   <data name="ScalarBinding_OutOfVerticalRowRange" xml:space="preserve">
     <value>Flowable ScalarBindings[{index}] is out of vertical side of RowRange.</value>
   </data>
+  <data name="ScalarContainer_ResumeValueChangedWithoutSuspend" xml:space="preserve">
+    <value>The SuspendValueChangedNotification/ResumeValueChangedNotification must be called in tandem.</value>
+  </data>
   <data name="ScalarValidationMessage_EmptySourceScalars" xml:space="preserve">
     <value>The source scalars cannot be empty.</value>
   </data>

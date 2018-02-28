@@ -54,21 +54,21 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void InputManager_Scalar()
         {
-            var oldValue = -1;
-            var scalar = new Scalar<int>(0)
-                .WithOnValueChanged(x =>
-                {
-                    oldValue = x;
-                })
+            IScalars valueChangedScalars = null;
+            var scalarContainer = ScalarContainerMock.New(x =>
+            {
+                valueChangedScalars = x;
+            });
+
+            var scalar = scalarContainer.CreateNew<int>(0)
                 .AddValidator(x =>
                 {
                     return x > 5 ? "Value cannot be greater than 5." : null;
                 });
 
-            Assert.AreEqual(-1, oldValue);
-
-            scalar.Value = 4;
-            Assert.AreEqual(0, oldValue);
+            var valueChanged = scalar.AssignValue(4);
+            Assert.IsTrue(valueChanged);
+            Assert.AreEqual(scalar, valueChangedScalars);
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
-            Scalar<Int32> scalar = new Scalar<int>().AddValidator(x =>
+            Scalar<Int32> scalar = ScalarContainerMock.New().CreateNew<int>().AddValidator(x =>
             {
                 return x > 5 ? "Value cannot be greater than 5." : null;
             });
@@ -106,7 +106,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             textBox[0].Text = "4";
             Assert.IsNull(inputManager.ScalarValidation.GetFlushingError(textBox[0]));
-            Assert.AreEqual(4, scalar.Value);
+            Assert.AreEqual(4, scalar.GetValue());
             Assert.IsNull(inputManager.ScalarValidation.GetFlushingError(textBox[0]));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
@@ -116,7 +116,7 @@ namespace DevZest.Data.Presenters.Primitives
             inputManager.ScalarValidation.UpdateProgress(textBox.Input, true, true);
             textBox[0].Text = "6";
             Assert.AreEqual("6", textBox[0].Text);
-            Assert.IsTrue(inputManager.ScalarValidation.Errors.Count == 1);
+            Assert.AreEqual(1, inputManager.ScalarValidation.Errors.Count);
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(1, errors.Count);

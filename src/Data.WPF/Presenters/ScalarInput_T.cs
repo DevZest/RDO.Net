@@ -89,7 +89,7 @@ namespace DevZest.Data.Presenters
                 if (getValue == null)
                     return false;
                 var value = getValue(element);
-                return scalar.ChangeValue(value);
+                return scalar.EditValue(value);
             });
             return this;
         }

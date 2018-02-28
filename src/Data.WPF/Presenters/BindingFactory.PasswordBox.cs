@@ -24,7 +24,7 @@ namespace DevZest.Data.Presenters
         {
             return new ScalarBinding<PasswordBox>(onRefresh: (v, p) =>
             {
-                var password = source.Value;
+                var password = source.GetValue();
                 if (v.Password != password) // PasswordBox.Password is not a dependency property, update only when value changed.
                     v.Password = password;
             }).WithInput(PasswordBox.PasswordChangedEvent, PasswordBox.LostFocusEvent, source, v => v.Password);
