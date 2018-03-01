@@ -545,33 +545,47 @@ namespace DevZest.Data.Presenters
             get { return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running); }
         }
 
-        private bool _beginEditShowAll;
-        private IScalars _beginEditProgress;
-        private IScalars _beginEditValueChanged;
+        private sealed class Snapshot
+        {
+            private readonly ScalarValidation _source;
+            private readonly bool _showAll;
+            private readonly IScalars _progress;
+            private readonly IScalars _valueChanged;
+            private readonly IScalarValidationErrors _errors;
+
+            public Snapshot(ScalarValidation source)
+            {
+                _source = source;
+                _showAll = source._showAll;
+                _progress = source._progress;
+                _valueChanged = source._progress;
+                _errors = source._errors.Seal();
+            }
+
+            public void Restore()
+            {
+                _source._showAll = _showAll;
+                _source._progress = _progress;
+                _source._valueChanged = _valueChanged;
+                _source._errors = _errors;
+            }
+        }
+
+        private Snapshot _snapshot;
         internal void EnterEdit()
         {
-            if (_progress != null)
-            {
-                _beginEditShowAll = _showAll;
-                _beginEditProgress = _progress;
-                _beginEditValueChanged = _valueChanged;
-            }
+            _snapshot = new Snapshot(this);
         }
 
         internal void CancelEdit()
         {
-            if (_progress != null)
-            {
-                _showAll = _beginEditShowAll;
-                _progress = _beginEditProgress;
-                _valueChanged = _beginEditValueChanged;
-                ExitEdit();
-            }
+            _snapshot.Restore();
+            ExitEdit();
         }
 
         internal void ExitEdit()
         {
-            _beginEditProgress = _beginEditValueChanged = null;
+            _snapshot = null;
             _flushingErrors = null;
         }
     }
