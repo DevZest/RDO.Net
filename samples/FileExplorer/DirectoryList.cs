@@ -28,7 +28,10 @@ namespace FileExplorer
     }
 
     public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList,
-        DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, RowSelector.ICommandService, RowView.ICommandService
+        InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher,
+        RowSelector.ICommandService,
+        RowView.ICommandService,
+        DataView.ICommandService
         where T : DirectoryItem, new()
     {
         protected DirectoryList(DataView directoryListView, DirectoryTree directoryTree)
