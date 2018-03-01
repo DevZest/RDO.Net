@@ -148,7 +148,7 @@ namespace DevZest.Data.Presenters
             if (value == null)
                 throw new ArgumentNullException(GetParamName(paramName, index));
 
-            if (value.DataPresenter != this)
+            if (value.DataPresenter != this || value.Index < 0)
                 throw new ArgumentException(DiagnosticMessages.DataPresenter_InvalidRowPresenter, GetParamName(paramName, index));
         }
 

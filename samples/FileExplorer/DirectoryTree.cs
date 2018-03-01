@@ -133,7 +133,8 @@ namespace FileExplorer
                     if (level == currentPath.Count - 1)
                         return row;
                     EnsureSubDirectoriesLoaded(row);
-                    row.ToggleExpandState();
+                    if (!row.IsExpanded)
+                        row.ToggleExpandState();
                     return FindRow(row.Children, currentPath, level + 1);
                 }
             }

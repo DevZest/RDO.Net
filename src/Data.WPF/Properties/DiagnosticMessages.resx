@@ -163,7 +163,7 @@
     <value>The DataView is invalid. It has been associated with another DataPresenter.</value>
   </data>
   <data name="DataPresenter_InvalidRowPresenter" xml:space="preserve">
-    <value>The RowPresenter is invalid for this DataPresenter.</value>
+    <value>The RowPresenter is invalid for this DataPresenter or it's collapsed.</value>
   </data>
   <data name="DataPresenter_NullDataSet" xml:space="preserve">
     <value>The DataPresenter is not initialized: the DataSet property is null.</value>

@@ -132,7 +132,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The RowPresenter is invalid for this DataPresenter.
+        /// The RowPresenter is invalid for this DataPresenter or it's collapsed.
         /// </summary>
         public static string DataPresenter_InvalidRowPresenter
         {
