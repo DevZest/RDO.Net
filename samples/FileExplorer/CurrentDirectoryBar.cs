@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Presenters;
 using DevZest.Data.Views;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -20,7 +21,7 @@ namespace FileExplorer
             : base(directoryTree)
         {
             _directoryTree = directoryTree;
-            _currentDirectory = NewScalar<string>().AddValidator(ValidateDirectory);
+            _currentDirectory = NewScalar<string>(null, StringComparer.OrdinalIgnoreCase).AddValidator(ValidateDirectory);
             CurrentDirectory = DirectoryTree.CurrentPath;
 
             var dataSet = DataSet<Item>.New();
