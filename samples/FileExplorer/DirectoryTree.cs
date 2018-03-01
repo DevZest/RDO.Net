@@ -82,27 +82,15 @@ namespace FileExplorer
 
         private void ExecRefresh(object sender, ExecutedRoutedEventArgs e)
         {
-            var currentPath = GetCurrentPath();
+            var currentPath = CurrentPath;
             var dataSet = DirectoryTreeItem.GetLogicalDrives();
             Refresh(dataSet);
-            SelectCurrentPath(currentPath);
-        }
-
-        private IReadOnlyList<string> GetCurrentPath()
-        {
-            if (CurrentRow == null)
-                return null;
-
-            var result = new List<string>();
-            for (var row = CurrentRow; row != null; row = row.Parent)
-                result.Insert(0, row.GetValue(_.Path));
-
-            return result;
+            Select(currentPath);
         }
 
         public void Select(string path)
         {
-            SelectCurrentPath(ParsePath(path));
+            Select(ParsePath(path));
         }
 
         private static IReadOnlyList<string> ParsePath(string path)
@@ -114,28 +102,26 @@ namespace FileExplorer
             return result;
         }
 
-        private void SelectCurrentPath(IReadOnlyList<string> currentPath)
+        private void Select(IReadOnlyList<string> paths)
         {
-            var currentRow = FindRow(Rows, currentPath, 0);
+            var currentRow = FindRow(Rows, paths, 0);
             if (currentRow != null)
                 Select(currentRow, SelectionMode.Single);
         }
 
-        private RowPresenter FindRow(IReadOnlyList<RowPresenter> rows, IReadOnlyList<string> currentPath, int level)
+        private RowPresenter FindRow(IReadOnlyList<RowPresenter> rows, IReadOnlyList<string> paths, int level)
         {
-            if (currentPath == null)
+            if (paths == null || level >= paths.Count)
                 return null;
 
             foreach (var row in rows)
             {
-                if (row.GetValue(_.Path).ToLower() == currentPath[level].ToLower())
+                if (row.GetValue(_.Path).ToLower() == paths[level].ToLower())
                 {
-                    if (level == currentPath.Count - 1)
-                        return row;
                     EnsureSubDirectoriesLoaded(row);
                     if (!row.IsExpanded)
                         row.ToggleExpandState();
-                    return FindRow(row.Children, currentPath, level + 1);
+                    return FindRow(row.Children, paths, level + 1) ?? row;
                 }
             }
 

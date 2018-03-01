@@ -129,7 +129,9 @@ namespace DevZest.Data.Presenters
             set
             {
                 VerifyRowPresenter(value, nameof(value));
-                RequireLayoutManager().CurrentRow = value;
+                var layoutManager = RequireLayoutManager();
+                View.UpdateLayout();
+                layoutManager.CurrentRow = value;
             }
         }
 
