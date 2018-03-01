@@ -37,7 +37,6 @@ namespace DevZest.Data.Presenters
                 onRefresh: (e, r) =>
                 {
                     e.SelectedValue = r.GetValue(source);
-                    e.IsDropDownOpen = false;
                 },
                 onCleanup: (e, r) =>
                 {
