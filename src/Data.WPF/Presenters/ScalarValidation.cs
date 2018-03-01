@@ -588,5 +588,11 @@ namespace DevZest.Data.Presenters
             _snapshot = null;
             _flushingErrors = null;
         }
+
+        public void SetAsyncErrors(IScalarValidationErrors value)
+        {
+            _asyncErrors = value.Seal();
+            InvalidateView();
+        }
     }
 }
