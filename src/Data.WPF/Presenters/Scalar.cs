@@ -34,6 +34,8 @@ namespace DevZest.Data.Presenters
             get { return Container.IsEditing; }
         }
 
+        internal abstract void BeginEdit();
+
         internal abstract void CancelEdit();
 
         internal abstract bool EndEdit();

@@ -1,10 +1,13 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Presenters;
 using DevZest.Data.Views;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Input;
 
 namespace FileExplorer
 {
-    public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>
+    public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
     {
         public sealed class Item : Model
         {
@@ -33,6 +36,38 @@ namespace FileExplorer
                 .GridRows("Auto", "0")
                 .RowRange(0, 1, 0, 1)
                 .AddBinding(0, 0, _currentDirectory.BindToTextBox().Input.AddToInPlaceEditor(_currentDirectory.BindToTextBlock()));
+        }
+
+        IEnumerable<CommandEntry> InPlaceEditor.ICommandService.GetCommandEntries(InPlaceEditor inPlaceEditor)
+        {
+            yield return RowView.Commands.BeginEdit.Bind(BeginEdit, CanBeginEdit, new MouseGesture(MouseAction.LeftClick));
+        }
+
+        private void CanBeginEdit(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !ScalarContainer.IsEditing;
+            if (!e.CanExecute)
+                e.ContinueRouting = true;
+        }
+
+        private void BeginEdit(object sender, ExecutedRoutedEventArgs e)
+        {
+            ScalarContainer.BeginEdit();
+        }
+
+        bool InPlaceEditor.ISwitcher.AffectsIsEditing(InPlaceEditor inPlaceEditor, DependencyProperty dp)
+        {
+            return dp == InPlaceEditor.IsScalarEditingProperty;
+        }
+
+        bool InPlaceEditor.ISwitcher.GetIsEditing(InPlaceEditor inPlaceEditor)
+        {
+            return inPlaceEditor.IsScalarEditing;
+        }
+
+        bool InPlaceEditor.ISwitcher.ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
+        {
+            return true;
         }
     }
 }

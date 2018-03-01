@@ -61,6 +61,11 @@ namespace DevZest.Data.Presenters
             SetValue((T)value, beforeEdit);
         }
 
+        internal override void BeginEdit()
+        {
+            _editingValue = _value;
+        }
+
         internal override void CancelEdit()
         {
             _editingValue = default(T);

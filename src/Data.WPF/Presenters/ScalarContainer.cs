@@ -42,7 +42,11 @@ namespace DevZest.Data.Presenters
             if (IsEditing)
                 return;
 
+            _owner.SuspendInvalidateView();
+            for (int i = 0; i < Count; i++)
+                this[i].BeginEdit();
             IsEditing = true;
+            _owner.ResumeInvalidateView();
         }
 
         public void CancelEdit()
