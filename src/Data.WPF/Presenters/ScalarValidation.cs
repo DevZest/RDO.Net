@@ -380,14 +380,14 @@ namespace DevZest.Data.Presenters
 
         private void UpdateAsyncErrors(IScalars changedScalars)
         {
-            _errors = Remove(_errors, x => x.Source.Overlaps(changedScalars));
+            _asyncErrors = Remove(_asyncErrors, x => x.Source.Overlaps(changedScalars));
         }
 
         internal void UpdateAsyncErrors(ScalarAsyncValidator scalarAsyncValidator)
         {
             var sourceScalars = scalarAsyncValidator.SourceScalars;
-            _errors = Remove(_errors, x => x.Source.SetEquals(sourceScalars));
-            _errors = Merge(_errors, scalarAsyncValidator.Results);
+            _asyncErrors = Remove(_asyncErrors, x => x.Source.SetEquals(sourceScalars));
+            _asyncErrors = Merge(_asyncErrors, scalarAsyncValidator.Results);
         }
 
         private static IScalarValidationErrors Merge(IScalarValidationErrors result, IScalarValidationErrors errors)
@@ -411,13 +411,13 @@ namespace DevZest.Data.Presenters
                 var error = errors[i];
                 if (predicate(error))
                 {
-                    if (result != errors)
-                        result = result.Add(error);
+                    if (result == errors)
+                        result = Merge(ScalarValidationErrors.Empty, errors, i);
                 }
                 else
                 {
-                    if (result == errors)
-                        result = Merge(ScalarValidationErrors.Empty, errors, i);
+                    if (result != errors)
+                        result = result.Add(error);
                 }
             }
             return result;
