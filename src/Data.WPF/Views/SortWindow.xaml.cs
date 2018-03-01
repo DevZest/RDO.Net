@@ -61,7 +61,7 @@ namespace DevZest.Data.Views
 
         }
 
-        private sealed class Presenter : DataPresenter<Model>
+        private sealed class Presenter : DataPresenter<Model>, RowView.ICommandService
         {
             public Presenter(DataPresenter target)
             {
@@ -102,9 +102,21 @@ namespace DevZest.Data.Views
                     .AddBinding(2, 0, this.BindToTextBlock(_.Order.DisplayName))
                     .AddBinding(0, 1, _.BindToRowHeader().WithStyle(RowHeader.Styles.Flat))
                     .AddBinding(1, 1, _.SortBy.BindToComboBox(ColumnHeaderSelection, "Value", "Display"))
-                    .AddBinding(2, 1, _.Order.BindToComboBox(DirectionSelection, "Value", "Display"))
-                    .WithRowViewCancelEditGestures(new KeyGesture(Key.Escape))
-                    .WithRowViewEndEditGestures(new KeyGesture(Key.Enter));
+                    .AddBinding(2, 1, _.Order.BindToComboBox(DirectionSelection, "Value", "Display"));
+            }
+
+            IEnumerable<CommandEntry> RowView.ICommandService.GetCommandEntries(RowView rowView)
+            {
+                var baseService = ServiceManager.GetService<RowView.ICommandService>(this);
+                foreach (var entry in baseService.GetCommandEntries(rowView))
+                {
+                    if (entry.Command == RowView.Commands.CancelEdit)
+                        yield return entry.Command.Bind(entry.Executed, entry.CanExecute, new KeyGesture(Key.Escape));
+                    else if (entry.Command == RowView.Commands.EndEdit)
+                        yield return entry.Command.Bind(entry.Executed, entry.CanExecute, new KeyGesture(Key.Enter));
+                    else
+                        yield return entry;
+                }
             }
         }
 

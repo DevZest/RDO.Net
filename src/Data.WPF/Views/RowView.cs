@@ -43,10 +43,10 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(RowView rowView)
             {
-                yield return Commands.ToggleEdit.Bind(Template.RowViewToggleEditGestures, ToggleEdit, CanToggleEdit);
-                yield return Commands.BeginEdit.Bind(Template.RowViewBeginEditGestures, BeginEdit, CanBeginEdit);
-                yield return Commands.CancelEdit.Bind(Template.RowViewCancelEditGestures, CancelEdit, CanCancelEdit);
-                yield return Commands.EndEdit.Bind(Template.RowViewEndEditGestures, EndEdit, CanCancelEdit);
+                yield return Commands.ToggleEdit.Bind(ToggleEdit, CanToggleEdit);
+                yield return Commands.BeginEdit.Bind(BeginEdit, CanBeginEdit);
+                yield return Commands.CancelEdit.Bind(CancelEdit, CanCancelEdit);
+                yield return Commands.EndEdit.Bind(EndEdit, CanCancelEdit);
                 if (DataPresenter.IsRecursive)
                 {
                     yield return Commands.Expand.Bind(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));

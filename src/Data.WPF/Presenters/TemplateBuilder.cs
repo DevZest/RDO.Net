@@ -453,30 +453,6 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder WithRowViewToggleEditGestures(params InputGesture[] gestures)
-        {
-            Template.SetRowViewToggleEditGestures(gestures);
-            return this;
-        }
-
-        public TemplateBuilder WithRowViewBeginEditGestures(params InputGesture[] gestures)
-        {
-            Template.SetRowViewBeginEditGestures(gestures);
-            return this;
-        }
-
-        public TemplateBuilder WithRowViewCancelEditGestures(params InputGesture[] gestures)
-        {
-            Template.SetRowViewCancelEditGestures(gestures);
-            return this;
-        }
-
-        public TemplateBuilder WithRowViewEndEditGestures(params InputGesture[] gestures)
-        {
-            Template.SetRowViewEndEditGestures(gestures);
-            return this;
-        }
-
         public TemplateBuilder WithInitialFocus(InitialFocus initialFocus)
         {
             Check.NotNull(initialFocus, nameof(initialFocus));

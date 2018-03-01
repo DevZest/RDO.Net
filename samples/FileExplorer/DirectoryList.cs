@@ -27,7 +27,8 @@ namespace FileExplorer
         public static readonly RoutedUICommand Start = new RoutedUICommand();
     }
 
-    public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList, DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, RowSelector.ICommandService
+    public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList,
+        DataView.ICommandService, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, RowSelector.ICommandService, RowView.ICommandService
         where T : DirectoryItem, new()
     {
         protected DirectoryList(DataView directoryListView, DirectoryTree directoryTree)
@@ -61,15 +62,21 @@ namespace FileExplorer
             return ShowOrRefreshAsync(directoryListView, (CancellationToken ct) => DirectoryItem.GetDirectoryItemsAsync<T>(CurrentDirectory, ct));
         }
 
-        protected sealed override void BuildTemplate(TemplateBuilder builder)
+        IEnumerable<CommandEntry> RowView.ICommandService.GetCommandEntries(RowView rowView)
         {
-            builder.WithRowViewBeginEditGestures(new KeyGesture(Key.F2))
-                .WithRowViewCancelEditGestures(new KeyGesture(Key.Escape))
-                .WithRowViewEndEditGestures(new KeyGesture(Key.Enter));
-            OverrideBuildTemplate(builder);
+            var baseService = ServiceManager.GetService<RowView.ICommandService>(this);
+            foreach (var entry in baseService.GetCommandEntries(rowView))
+            {
+                if (entry.Command == RowView.Commands.BeginEdit)
+                    yield return entry.Command.Bind(entry.Executed, entry.CanExecute, new KeyGesture(Key.F2));
+                else if (entry.Command == RowView.Commands.CancelEdit)
+                    yield return entry.Command.Bind(entry.Executed, entry.CanExecute, new KeyGesture(Key.Escape));
+                else if (entry.Command == RowView.Commands.EndEdit)
+                    yield return entry.Command.Bind(entry.Executed, entry.CanExecute, new KeyGesture(Key.Enter));
+                else
+                    yield return entry;
+            }
         }
-
-        protected abstract void OverrideBuildTemplate(TemplateBuilder builder);
 
         public abstract DirectoryListMode Mode { get; }
 

@@ -16,7 +16,7 @@ namespace FileExplorer
             get { return DirectoryListMode.LargeIcon; }
         }
 
-        protected override void OverrideBuildTemplate(TemplateBuilder builder)
+        protected override void BuildTemplate(TemplateBuilder builder)
         {
             builder
                 .GridColumns("85", "5")

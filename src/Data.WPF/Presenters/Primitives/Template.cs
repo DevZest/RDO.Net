@@ -603,50 +603,6 @@ namespace DevZest.Data.Presenters.Primitives
             _rowAsyncValidators = Presenters.RowAsyncValidators.Empty;
         }
 
-        InputGesture[] _rowViewToggleEditGestures;
-        public IReadOnlyList<InputGesture> RowViewToggleEditGestures
-        {
-            get { return _rowViewToggleEditGestures ?? Array<InputGesture>.Empty; }
-        }
-
-        internal void SetRowViewToggleEditGestures(InputGesture[] value)
-        {
-            _rowViewToggleEditGestures = value;
-        }
-
-        InputGesture[] _rowViewBeginEditGestures;
-        public IReadOnlyList<InputGesture> RowViewBeginEditGestures
-        {
-            get { return _rowViewBeginEditGestures ?? Array<InputGesture>.Empty; }
-        }
-
-        internal void SetRowViewBeginEditGestures(InputGesture[] value)
-        {
-            _rowViewBeginEditGestures = value;
-        }
-
-        InputGesture[] _rowViewCancelEditGestures;
-        public IReadOnlyList<InputGesture> RowViewCancelEditGestures
-        {
-            get { return _rowViewCancelEditGestures ?? Array<InputGesture>.Empty; }
-        }
-
-        internal void SetRowViewCancelEditGestures(InputGesture[] value)
-        {
-            _rowViewCancelEditGestures = value;
-        }
-
-        InputGesture[] _rowViewEndEditGestures;
-        public IReadOnlyList<InputGesture> RowViewEndEditGestures
-        {
-            get { return _rowViewEndEditGestures ?? Array<InputGesture>.Empty; }
-        }
-
-        internal void SetRowViewEndEditGestures(InputGesture[] value)
-        {
-            _rowViewEndEditGestures = value;
-        }
-
         private bool _initialFocusFlag = true;
         public InitialFocus InitialFocus { get; internal set; } = InitialFocus.First;
 

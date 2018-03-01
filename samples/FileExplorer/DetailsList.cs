@@ -21,7 +21,7 @@ namespace FileExplorer
             get { return DirectoryListMode.Details; }
         }
 
-        protected override void OverrideBuildTemplate(TemplateBuilder builder)
+        protected override void BuildTemplate(TemplateBuilder builder)
         {
             builder
                 .GridColumns("20", "Auto", "Auto", "Auto", "Auto")
