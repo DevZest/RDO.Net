@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace FileExplorer
 {
@@ -99,6 +100,20 @@ namespace FileExplorer
             return result;
         }
 
+        public void Select(string path)
+        {
+            SelectCurrentPath(ParsePath(path));
+        }
+
+        private static IReadOnlyList<string> ParsePath(string path)
+        {
+            var result = new List<string>();
+            for (; path != null; path = Directory.GetParent(path)?.FullName)
+                result.Insert(0, path);
+
+            return result;
+        }
+
         private void SelectCurrentPath(IReadOnlyList<string> currentPath)
         {
             var currentRow = FindRow(Rows, currentPath, 0);
@@ -113,7 +128,7 @@ namespace FileExplorer
 
             foreach (var row in rows)
             {
-                if (row.GetValue(_.Path) == currentPath[level])
+                if (row.GetValue(_.Path).ToLower() == currentPath[level].ToLower())
                 {
                     if (level == currentPath.Count - 1)
                         return row;

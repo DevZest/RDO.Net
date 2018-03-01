@@ -19,12 +19,15 @@ namespace FileExplorer
         public CurrentDirectoryBar(DataView dataView, DirectoryTree directoryTree)
             : base(directoryTree)
         {
+            _directoryTree = directoryTree;
             _currentDirectory = NewScalar<string>().AddValidator(ValidateDirectory);
             CurrentDirectory = DirectoryTree.CurrentPath;
 
             var dataSet = DataSet<Item>.New();
             Show(dataView, dataSet);
         }
+
+        private readonly DirectoryTree _directoryTree;
 
         private static string ValidateDirectory(string path)
         {
@@ -95,6 +98,13 @@ namespace FileExplorer
                 else
                     yield return entry;
             }
+        }
+
+        protected override bool ConfirmEndEditScalars()
+        {
+            var path = _currentDirectory.GetValue();
+            _directoryTree.Select(path);
+            return true;
         }
     }
 }
