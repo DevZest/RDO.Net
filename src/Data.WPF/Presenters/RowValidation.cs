@@ -787,7 +787,7 @@ namespace DevZest.Data.Presenters
 
         internal void ExitEdit()
         {
-            Debug.Assert(!CurrentRow.IsEditing);
+            Debug.Assert(CurrentRow.IsEditing); // If EndEdit called first, the CurrentRow can be changed when DataRow inserted by moving focus to another RowView.
             if (_progress != null)
                 Validate(CurrentRow, false);
             _snapshot = null;

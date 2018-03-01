@@ -598,7 +598,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _focusTo = rowView;
                 if (!CanChangeCurrentRow)
                     PreventCurrentRowViewFromLosingFocus(rowView);
-                else if (_focusTo != null)
+                else if (_focusTo != null)  // _focusTo can be null from OnRowsChanged.
                     SetCurrentRowFromView();
                 _currentRowChangedByInsertSuspended = false;
                 ResumeInvalidateView();
