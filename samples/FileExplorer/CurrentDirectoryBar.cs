@@ -105,7 +105,8 @@ namespace FileExplorer
         {
             var path = _currentDirectory.GetValue();
             _directoryTree.Select(path);
-            return true;
+            ScalarContainer.CancelEdit();
+            return false;
         }
     }
 }
