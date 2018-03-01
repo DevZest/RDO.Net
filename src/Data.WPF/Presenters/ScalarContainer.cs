@@ -14,6 +14,9 @@ namespace DevZest.Data.Presenters
             void ResumeInvalidateView();
             void OnValueChanged(IScalars scalars);
             bool QueryEndEdit();
+            void OnBeginEdit();
+            void OnCancelEdit();
+            void OnEndEdit();
         }
 
         internal ScalarContainer(IOwner owner)
@@ -46,6 +49,7 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < Count; i++)
                 this[i].BeginEdit();
             IsEditing = true;
+            _owner.OnBeginEdit();
             _owner.ResumeInvalidateView();
         }
 
@@ -58,6 +62,7 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < Count; i++)
                 this[i].CancelEdit();
             IsEditing = false;
+            _owner.OnCancelEdit();
             _owner.ResumeInvalidateView();
         }
 
@@ -80,6 +85,7 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < Count; i++)
                 this[i].EndEdit();
             IsEditing = false;
+            _owner.OnEndEdit();
             ResumeValueChangedNotification();
             _owner.ResumeInvalidateView();
             return true;

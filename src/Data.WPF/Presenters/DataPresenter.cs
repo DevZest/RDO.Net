@@ -410,5 +410,20 @@ namespace DevZest.Data.Presenters
         {
             return QueryEndEditScalars();
         }
+
+        void ScalarContainer.IOwner.OnBeginEdit()
+        {
+            ScalarValidation.EnterEdit();
+        }
+
+        void ScalarContainer.IOwner.OnCancelEdit()
+        {
+            ScalarValidation.CancelEdit();
+        }
+
+        void ScalarContainer.IOwner.OnEndEdit()
+        {
+            ScalarValidation.ExitEdit();
+        }
     }
 }

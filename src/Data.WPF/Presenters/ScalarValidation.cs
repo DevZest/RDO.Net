@@ -544,5 +544,32 @@ namespace DevZest.Data.Presenters
         {
             get { return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running); }
         }
+
+        private IScalars _beginEditProgress;
+        private IScalars _beginEditValueChanged;
+        internal void EnterEdit()
+        {
+            if (_progress != null)
+            {
+                _beginEditProgress = _progress;
+                _beginEditValueChanged = _valueChanged;
+            }
+        }
+
+        internal void CancelEdit()
+        {
+            if (_progress != null)
+            {
+                _progress = _beginEditProgress;
+                _valueChanged = _beginEditValueChanged;
+                ExitEdit();
+            }
+        }
+
+        internal void ExitEdit()
+        {
+            _beginEditProgress = _beginEditValueChanged = null;
+            _flushingErrors = null;
+        }
     }
 }
