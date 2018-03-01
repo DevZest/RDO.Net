@@ -42,5 +42,10 @@ namespace DevZest.Data.Presenters
             CanExecute = canExecute;
             _inputGestures = inputGestures;
         }
+
+        public CommandEntry ReplaceWith(params InputGesture[] inputGestures)
+        {
+            return Command.Bind(Executed, CanExecute, inputGestures);
+        }
     }
 }

@@ -17,6 +17,10 @@ namespace DevZest.Data.Views
         {
             public static readonly RoutedUICommand RetryDataLoad = new RoutedUICommand(UserMessages.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoad), typeof(Commands));
             public static readonly RoutedUICommand CancelDataLoad = new RoutedUICommand(UserMessages.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoad), typeof(Commands));
+            public static readonly RoutedUICommand ToggleEditScalars = new RoutedUICommand();
+            public static readonly RoutedUICommand BeginEditScalars = new RoutedUICommand();
+            public static readonly RoutedUICommand CancelEditScalars = new RoutedUICommand();
+            public static readonly RoutedUICommand EndEditScalars = new RoutedUICommand();
         }
 
         public interface ICommandService : IService
@@ -37,6 +41,10 @@ namespace DevZest.Data.Views
             {
                 yield return Commands.CancelDataLoad.Bind(CancelLoadData, CanCancelLoadData);
                 yield return Commands.RetryDataLoad.Bind(ReloadData, CanReloadData);
+                yield return Commands.ToggleEditScalars.Bind(ToggleEditScalars);
+                yield return Commands.BeginEditScalars.Bind(BeginEditScalars, CanBeginEditScalars);
+                yield return Commands.CancelEditScalars.Bind(CancelEditScalars, CanCancelEditScalars);
+                yield return Commands.EndEditScalars.Bind(EndEditScalars, CanCancelEditScalars);
             }
 
             private void ReloadData(object sender, ExecutedRoutedEventArgs e)
@@ -57,6 +65,49 @@ namespace DevZest.Data.Views
             private void CanCancelLoadData(object sender, CanExecuteRoutedEventArgs e)
             {
                 e.CanExecute = DataPresenter.CanCancelLoading;
+            }
+
+            private void ToggleEditScalars(object sender, ExecutedRoutedEventArgs e)
+            {
+                var scalarContainer = ((DataView)sender).DataPresenter.ScalarContainer;
+                if (scalarContainer.IsEditing)
+                    scalarContainer.EndEdit();
+                else
+                    scalarContainer.BeginEdit();
+            }
+
+            private void CanBeginEditScalars(object sender, CanExecuteRoutedEventArgs e)
+            {
+                var scalarContainer = ((DataView)sender).DataPresenter.ScalarContainer;
+                e.CanExecute = !scalarContainer.IsEditing;
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+
+            private void BeginEditScalars(object sender, ExecutedRoutedEventArgs e)
+            {
+                var scalarContainer = ((DataView)sender).DataPresenter.ScalarContainer;
+                scalarContainer.BeginEdit();
+            }
+
+            private void CanCancelEditScalars(object sender, CanExecuteRoutedEventArgs e)
+            {
+                var scalarContainer = ((DataView)sender).DataPresenter.ScalarContainer;
+                e.CanExecute = scalarContainer.IsEditing;
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+
+            private void CancelEditScalars(object sender, ExecutedRoutedEventArgs e)
+            {
+                var scalarContainer = ((DataView)sender).DataPresenter.ScalarContainer;
+                scalarContainer.CancelEdit();
+            }
+
+            private void EndEditScalars(object sender, ExecutedRoutedEventArgs e)
+            {
+                var scalarContainer = ((DataView)sender).DataPresenter.ScalarContainer;
+                scalarContainer.EndEdit();
             }
         }
 

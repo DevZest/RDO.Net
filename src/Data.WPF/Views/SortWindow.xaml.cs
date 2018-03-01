@@ -111,9 +111,9 @@ namespace DevZest.Data.Views
                 foreach (var entry in baseService.GetCommandEntries(rowView))
                 {
                     if (entry.Command == RowView.Commands.CancelEdit)
-                        yield return entry.Command.Bind(entry.Executed, entry.CanExecute, new KeyGesture(Key.Escape));
+                        yield return entry.ReplaceWith(new KeyGesture(Key.Escape));
                     else if (entry.Command == RowView.Commands.EndEdit)
-                        yield return entry.Command.Bind(entry.Executed, entry.CanExecute, new KeyGesture(Key.Enter));
+                        yield return entry.ReplaceWith(new KeyGesture(Key.Enter));
                     else
                         yield return entry;
                 }
