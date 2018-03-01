@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace FileExplorer
 {
-    public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
+    public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>, InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher, DataView.ICommandService
     {
         public sealed class Item : Model
         {
@@ -68,6 +68,20 @@ namespace FileExplorer
         bool InPlaceEditor.ISwitcher.ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
         {
             return true;
+        }
+
+        IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
+        {
+            var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
+            foreach (var entry in baseService.GetCommandEntries(dataView))
+            {
+                if (entry.Command == DataView.Commands.CancelEditScalars)
+                    yield return entry.ReplaceWith(new KeyGesture(Key.Escape));
+                else if (entry.Command == DataView.Commands.EndEditScalars)
+                    yield return entry.ReplaceWith(new KeyGesture(Key.Enter));
+                else
+                    yield return entry;
+            }
         }
     }
 }
