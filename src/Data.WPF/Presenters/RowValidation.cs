@@ -149,8 +149,6 @@ namespace DevZest.Data.Presenters
 
         private Dictionary<RowPresenter, IColumns> _progress;
         private Dictionary<RowPresenter, IColumns> _valueChanged;
-        private IColumns _beginEditProgress;
-        private IColumns _beginEditValueChanged;
 
         internal void OnReloaded()
         {
@@ -169,41 +167,8 @@ namespace DevZest.Data.Presenters
 
         internal void OnCurrentRowChanged(RowPresenter oldValue)
         {
-            Template.RowAsyncValidators.ForEach(x => x.OnCurrentRowChanged());
+            Template.RowAsyncValidators.ForEach(x => x.Reset());
             ValidateCurrentRowIfImplicit();
-        }
-
-        internal void EnterEdit()
-        {
-            if (_progress != null)
-            {
-                _beginEditProgress = GetProgress(_progress, CurrentRow);
-                _beginEditValueChanged = GetProgress(_valueChanged, CurrentRow);
-            }
-        }
-
-        internal void CancelEdit()
-        {
-            if (_progress != null)
-            {
-                Restore(_beginEditProgress, _progress, CurrentRow);
-                Restore(_beginEditValueChanged, _valueChanged, CurrentRow);
-                ExitEdit();
-            }
-        }
-
-        private static void Restore(IColumns beginEditProgress, Dictionary<RowPresenter, IColumns> progress, RowPresenter currentRow)
-        {
-            if (beginEditProgress == Columns.Empty && progress.ContainsKey(currentRow))
-                progress.Remove(currentRow);
-            else
-                progress[currentRow] = beginEditProgress;
-        }
-
-        internal void ExitEdit()
-        {
-            _beginEditProgress = _beginEditValueChanged = null;
-            _flushingErrors = null;
         }
 
         internal void Validate(RowPresenter rowPresenter, bool showAll)
@@ -777,6 +742,58 @@ namespace DevZest.Data.Presenters
         bool IRowValidation.IsLockedByFlushingError(UIElement element)
         {
             return GetFlushingError(element) != null;
+        }
+
+        private sealed class Snapshot
+        {
+            private RowValidation _rowValidation;
+            private IColumns _progress;
+            private IColumns _valueChanged;
+
+            public Snapshot(RowValidation rowValidation)
+            {
+                _rowValidation = rowValidation;
+                _progress = GetProgress(rowValidation._progress, rowValidation.CurrentRow);
+                _valueChanged = GetProgress(rowValidation._valueChanged, rowValidation.CurrentRow);
+            }
+
+            public void Restore()
+            {
+                Restore(_progress, _rowValidation._progress, _rowValidation.CurrentRow);
+                Restore(_valueChanged, _rowValidation._valueChanged, _rowValidation.CurrentRow);
+            }
+
+            private static void Restore(IColumns progress, Dictionary<RowPresenter, IColumns> progressByRow, RowPresenter currentRow)
+            {
+                if (progress == Columns.Empty && progressByRow.ContainsKey(currentRow))
+                    progressByRow.Remove(currentRow);
+                else
+                    progressByRow[currentRow] = progress;
+            }
+        }
+
+        private Snapshot _snapshot;
+        internal void EnterEdit()
+        {
+            if (_progress != null)
+                _snapshot = new Snapshot(this);
+        }
+
+        internal void CancelEdit()
+        {
+            _snapshot?.Restore();
+            ExitEdit();
+        }
+
+        internal void ExitEdit()
+        {
+            Debug.Assert(!CurrentRow.IsEditing);
+            if (_progress != null)
+                Validate(CurrentRow, false);
+            _snapshot = null;
+            _flushingErrors = null;
+            ClearAsyncErrors(CurrentRow);
+            Template.RowAsyncValidators.ForEach(x => x.Reset());
         }
     }
 }

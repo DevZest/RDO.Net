@@ -81,11 +81,6 @@ namespace DevZest.Data.Presenters
             get { return InputManager?.CurrentRow; }
         }
 
-        internal void OnCurrentRowChanged()
-        {
-            Reset();
-        }
-
         internal sealed override IDataValidationErrors EmptyResult
         {
             get { return DataValidationErrors.Empty; }
