@@ -8,7 +8,7 @@ using System.Windows.Input;
 namespace FileExplorer
 {
     public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>,
-        InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher
+        InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher,
         DataView.ICommandService
     {
         public sealed class Item : Model
