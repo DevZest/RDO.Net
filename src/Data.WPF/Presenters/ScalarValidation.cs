@@ -545,12 +545,14 @@ namespace DevZest.Data.Presenters
             get { return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running); }
         }
 
+        private bool _beginEditShowAll;
         private IScalars _beginEditProgress;
         private IScalars _beginEditValueChanged;
         internal void EnterEdit()
         {
             if (_progress != null)
             {
+                _beginEditShowAll = _showAll;
                 _beginEditProgress = _progress;
                 _beginEditValueChanged = _valueChanged;
             }
@@ -560,6 +562,7 @@ namespace DevZest.Data.Presenters
         {
             if (_progress != null)
             {
+                _showAll = _beginEditShowAll;
                 _progress = _beginEditProgress;
                 _valueChanged = _beginEditValueChanged;
                 ExitEdit();
