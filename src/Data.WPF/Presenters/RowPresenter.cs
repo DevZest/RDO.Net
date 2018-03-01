@@ -367,9 +367,10 @@ namespace DevZest.Data.Presenters
             VerifyNoPendingEdit();
             if (IsVirtual && RowManager.Template.VirtualRowPlacement == VirtualRowPlacement.Exclusive)
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_BeginEditExclusiveVirtual);
-            DataPresenter?.SuspendInvalidateView();
+            var elementManager = ElementManager;
+            elementManager?.SuspendInvalidateView();
             RowManager.BeginEdit();
-            DataPresenter?.ResumeInvalidateView();
+            elementManager?.ResumeInvalidateView();
         }
 
         public void EditValue<T>(Column<T> column, T value)
@@ -385,11 +386,12 @@ namespace DevZest.Data.Presenters
                     column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
             }
 
-            DataPresenter?.SuspendInvalidateView();
+            var elementManager = ElementManager;
+            elementManager?.SuspendInvalidateView();
             BeginEdit();
             column[DataRow] = value;
             Invalidate();
-            DataPresenter?.ResumeInvalidateView();
+            elementManager?.ResumeInvalidateView();
         }
 
         public void CancelEdit()
@@ -397,9 +399,10 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages._VerifyIsEditing);
 
-            DataPresenter?.SuspendInvalidateView();
+            var elementManager = ElementManager;
+            elementManager?.SuspendInvalidateView();
             RowManager.CancelEdit();
-            DataPresenter?.ResumeInvalidateView();
+            elementManager?.ResumeInvalidateView();
         }
 
         public bool EndEdit()
@@ -407,9 +410,10 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages._VerifyIsEditing);
 
-            DataPresenter?.SuspendInvalidateView();
+            var elementManager = ElementManager;
+            elementManager?.SuspendInvalidateView();
             var result = RowManager.EndEdit();
-            DataPresenter?.ResumeInvalidateView();
+            elementManager?.ResumeInvalidateView();
             return result;
         }
 
@@ -421,17 +425,19 @@ namespace DevZest.Data.Presenters
         public void BeginInsertBefore(RowPresenter child = null)
         {
             VerifyInsert(child);
-            DataPresenter?.SuspendInvalidateView();
+            var elementManager = ElementManager;
+            elementManager?.SuspendInvalidateView();
             RowManager.BeginInsertBefore(this, child);
-            DataPresenter?.ResumeInvalidateView();
+            elementManager?.ResumeInvalidateView();
         }
 
         public void BeginInsertAfter(RowPresenter child = null)
         {
             VerifyInsert(child);
-            DataPresenter?.SuspendInvalidateView();
+            var elementManager = ElementManager;
+            elementManager?.SuspendInvalidateView();
             RowManager.BeginInsertAfter(this, child);
-            DataPresenter?.ResumeInvalidateView();
+            elementManager?.ResumeInvalidateView();
         }
 
         private void VerifyInsert(RowPresenter child)

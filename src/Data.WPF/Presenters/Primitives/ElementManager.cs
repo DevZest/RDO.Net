@@ -793,7 +793,6 @@ namespace DevZest.Data.Presenters.Primitives
             get { return base.CurrentRow; }
             set
             {
-                DataPresenter?.View?.UpdateLayout();
                 SuspendInvalidateView();
                 base.CurrentRow = value;
                 ResumeInvalidateView();
