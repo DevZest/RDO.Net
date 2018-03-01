@@ -12,7 +12,7 @@ namespace DevZest.Data.Views
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
-        public abstract class Commands
+        public static class Commands
         {
             public static readonly RoutedUICommand ToggleEdit = new RoutedUICommand();
             public static readonly RoutedUICommand BeginEdit = new RoutedUICommand();
