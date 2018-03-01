@@ -273,6 +273,10 @@ namespace DevZest.Data.Views
             new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty IsRowEditingProperty = IsRowEditingPropertyKey.DependencyProperty;
 
+        private static readonly DependencyPropertyKey IsScalarEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsScalarEditing), typeof(bool), typeof(InPlaceEditor),
+            new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty IsScalarEditingProperty = IsScalarEditingPropertyKey.DependencyProperty;
+
         static InPlaceEditor()
         {
             FocusableProperty.OverrideMetadata(typeof(InPlaceEditor), new FrameworkPropertyMetadata(BooleanBoxes.True));
@@ -284,6 +288,12 @@ namespace DevZest.Data.Views
         {
             get { return (bool)GetValue(IsRowEditingProperty); }
             private set { SetValue(IsRowEditingPropertyKey, BooleanBoxes.Box(value)); }
+        }
+
+        public bool IsScalarEditing
+        {
+            get { return (bool)GetValue(IsScalarEditingProperty); }
+            private set { SetValue(IsScalarEditingPropertyKey, BooleanBoxes.Box(value)); }
         }
 
         private bool _isEditing;
@@ -490,82 +500,17 @@ namespace DevZest.Data.Views
             }
         }
 
-        void IScalarElement.Setup(ScalarPresenter p)
-        {
-            InitIsEditing();
-            Setup(GetProxyScalarInput(), p.FlowIndex);
-            SetupCommands(p.DataPresenter);
-        }
-
-        private void Setup(IProxyScalarInput proxyScalarInput, int flowIndex)
-        {
-            if (proxyScalarInput == null)
-                return;
-
-            if (IsEditing)
-            {
-                InertElement = null;
-                EditorElement = GenerateElement(proxyScalarInput.EditorBinding, flowIndex);
-                DataPresenter?.GetService<IChildInitializer>()?.InitializeEditorElement(this);
-            }
-            else
-            {
-                EditorElement = null;
-                InertElement = GenerateElement(proxyScalarInput.InertBinding, flowIndex);
-                DataPresenter?.GetService<IChildInitializer>()?.InitializeInertElement(this);
-            }
-            InvalidateMeasure();
-        }
-
-        private static UIElement GenerateElement(ScalarBinding binding, int flowIndex)
-        {
-            binding.BeginSetup(null);
-            var result = binding.Setup(flowIndex);
-            binding.EndSetup();
-            binding.Refresh(result);
-            return result;
-        }
-
-        void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
-        {
-            var proxyScalarInput = GetProxyScalarInput();
-            if (proxyScalarInput == null)
-                return;
-
-            if (EditorElement != null)
-                proxyScalarInput.EditorBinding.Refresh(EditorElement);
-            else if (InertElement != null)
-                proxyScalarInput.InertBinding.Refresh(InertElement);
-        }
-
-        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
-        {
-            var proxyScalarInput = GetProxyScalarInput();
-            Cleanup(proxyScalarInput);
-            CleanupCommands();
-        }
-
-        private void Cleanup(IProxyScalarInput proxyScalarInput)
-        {
-            if (proxyScalarInput == null)
-                return;
-
-            if (EditorElement != null)
-            {
-                proxyScalarInput.EditorBinding.Cleanup(EditorElement);
-                EditorElement = null;
-            }
-            else if (InertElement != null)
-            {
-                proxyScalarInput.InertBinding.Cleanup(InertElement);
-                InertElement = null;
-            }
-        }
-
         void IRowElement.Setup(RowPresenter p)
         {
             InitIsEditing();
             Setup(GetProxyRowInput(), p);
+            SetupCommands(p.DataPresenter);
+        }
+
+        void IScalarElement.Setup(ScalarPresenter p)
+        {
+            InitIsEditing();
+            Setup(GetProxyScalarInput(), p.FlowIndex);
             SetupCommands(p.DataPresenter);
         }
 
@@ -589,10 +534,39 @@ namespace DevZest.Data.Views
             InvalidateMeasure();
         }
 
+        private void Setup(IProxyScalarInput proxyScalarInput, int flowIndex)
+        {
+            if (proxyScalarInput == null)
+                return;
+
+            if (IsEditing)
+            {
+                InertElement = null;
+                EditorElement = GenerateElement(proxyScalarInput.EditorBinding, flowIndex);
+                DataPresenter?.GetService<IChildInitializer>()?.InitializeEditorElement(this);
+            }
+            else
+            {
+                EditorElement = null;
+                InertElement = GenerateElement(proxyScalarInput.InertBinding, flowIndex);
+                DataPresenter?.GetService<IChildInitializer>()?.InitializeInertElement(this);
+            }
+            InvalidateMeasure();
+        }
+
         private static UIElement GenerateElement(RowBinding binding, RowPresenter p)
         {
             binding.BeginSetup(null);
             var result = binding.Setup(p);
+            binding.EndSetup();
+            binding.Refresh(result);
+            return result;
+        }
+
+        private static UIElement GenerateElement(ScalarBinding binding, int flowIndex)
+        {
+            binding.BeginSetup(null);
+            var result = binding.Setup(flowIndex);
             binding.EndSetup();
             binding.Refresh(result);
             return result;
@@ -612,10 +586,31 @@ namespace DevZest.Data.Views
                 proxyRowInput.InertBinding.Refresh(InertElement);
         }
 
+        void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
+        {
+            IsScalarEditing = scalarPresenter.DataPresenter.ScalarContainer.IsEditing;
+
+            var proxyScalarInput = GetProxyScalarInput();
+            if (proxyScalarInput == null)
+                return;
+
+            if (EditorElement != null)
+                proxyScalarInput.EditorBinding.Refresh(EditorElement);
+            else if (InertElement != null)
+                proxyScalarInput.InertBinding.Refresh(InertElement);
+        }
+
         void IRowElement.Cleanup(RowPresenter rowPresenter)
         {
             var proxyRowInput = GetProxyRowInput();
             Cleanup(proxyRowInput);
+            CleanupCommands();
+        }
+
+        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
+        {
+            var proxyScalarInput = GetProxyScalarInput();
+            Cleanup(proxyScalarInput);
             CleanupCommands();
         }
 
@@ -632,6 +627,23 @@ namespace DevZest.Data.Views
             else if (InertElement != null)
             {
                 proxyRowInput.InertBinding.Cleanup(InertElement);
+                InertElement = null;
+            }
+        }
+
+        private void Cleanup(IProxyScalarInput proxyScalarInput)
+        {
+            if (proxyScalarInput == null)
+                return;
+
+            if (EditorElement != null)
+            {
+                proxyScalarInput.EditorBinding.Cleanup(EditorElement);
+                EditorElement = null;
+            }
+            else if (InertElement != null)
+            {
+                proxyScalarInput.InertBinding.Cleanup(InertElement);
                 InertElement = null;
             }
         }
