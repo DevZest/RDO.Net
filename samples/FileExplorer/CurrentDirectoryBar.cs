@@ -2,6 +2,7 @@
 using DevZest.Data.Presenters;
 using DevZest.Data.Views;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -18,11 +19,21 @@ namespace FileExplorer
         public CurrentDirectoryBar(DataView dataView, DirectoryTree directoryTree)
             : base(directoryTree)
         {
-            _currentDirectory = NewScalar<string>();
+            _currentDirectory = NewScalar<string>().AddValidator(ValidateDirectory);
             CurrentDirectory = DirectoryTree.CurrentPath;
 
             var dataSet = DataSet<Item>.New();
             Show(dataView, dataSet);
+        }
+
+        private static string ValidateDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return "Directory can't be empty";
+            if (!Directory.Exists(path))
+                return "Directory does not exist";
+            else
+                return null;
         }
 
         private readonly Scalar<string> _currentDirectory;
