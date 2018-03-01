@@ -551,7 +551,6 @@ namespace DevZest.Data.Presenters
             private readonly bool _showAll;
             private readonly IScalars _progress;
             private readonly IScalars _valueChanged;
-            private readonly IScalarValidationErrors _errors;
 
             public Snapshot(ScalarValidation source)
             {
@@ -559,7 +558,6 @@ namespace DevZest.Data.Presenters
                 _showAll = source._showAll;
                 _progress = source._progress;
                 _valueChanged = source._progress;
-                _errors = source._errors.Seal();
             }
 
             public void Restore()
@@ -567,7 +565,6 @@ namespace DevZest.Data.Presenters
                 _source._showAll = _showAll;
                 _source._progress = _progress;
                 _source._valueChanged = _valueChanged;
-                _source._errors = _errors;
             }
         }
 
@@ -585,8 +582,14 @@ namespace DevZest.Data.Presenters
 
         internal void ExitEdit()
         {
+            Debug.Assert(!DataPresenter.ScalarContainer.IsEditing);
+
             _snapshot = null;
             _flushingErrors = null;
+            Validate(false);
+            _asyncErrors = ScalarValidationErrors.Empty;
+            foreach (var asyncValidator in AsyncValidators)
+                asyncValidator.Reset();
         }
 
         public void SetAsyncErrors(IScalarValidationErrors value)
