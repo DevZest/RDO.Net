@@ -779,20 +779,21 @@ namespace DevZest.Data.Presenters
                 _snapshot = new Snapshot(this);
         }
 
-        internal void CancelEdit()
+        internal void CancelEdit(RowPresenter rowAfterEditing)
         {
             _snapshot?.Restore();
-            ExitEdit();
+            ExitEdit(rowAfterEditing);
         }
 
-        internal void ExitEdit()
+        internal void ExitEdit(RowPresenter rowAfterEditing)
         {
-            Debug.Assert(CurrentRow.IsEditing); // If EndEdit called first, the CurrentRow can be changed when DataRow inserted by moving focus to another RowView.
-            if (_progress != null)
-                Validate(CurrentRow, false);
+            Debug.Assert(!CurrentRow.IsEditing);
+            if (_progress != null && rowAfterEditing != null)
+                Validate(rowAfterEditing, false);
             _snapshot = null;
             _flushingErrors = null;
-            ClearAsyncErrors(CurrentRow);
+            if (rowAfterEditing != null)
+                ClearAsyncErrors(rowAfterEditing);
             Template.RowAsyncValidators.ForEach(x => x.Reset());
         }
     }

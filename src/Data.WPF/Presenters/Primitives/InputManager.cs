@@ -148,8 +148,9 @@ namespace DevZest.Data.Presenters.Primitives
             var cancelEdit = DataPresenter == null ? true : DataPresenter.QueryCancelEdit();
             if (cancelEdit)
             {
-                RowValidation.CancelEdit();
+                var rowAfterEditing = CurrentRow.IsInserting ? null : CurrentRow;
                 base.CancelEdit();
+                RowValidation.CancelEdit(rowAfterEditing);
             }
         }
 
@@ -159,8 +160,9 @@ namespace DevZest.Data.Presenters.Primitives
             if (!endEdit)
                 return false;
 
-            RowValidation.ExitEdit();
-            return base.EndEdit();
+            var rowAfterEditing = CommitEdit();
+            RowValidation.ExitEdit(rowAfterEditing);
+            return true;
         }
 
         internal bool QueryEndEdit()

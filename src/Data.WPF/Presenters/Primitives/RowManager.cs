@@ -76,17 +76,17 @@ namespace DevZest.Data.Presenters.Primitives
                 RollbackEdit(rowManager);
             }
 
-            public void EndEdit(RowManager rowManager)
+            public RowPresenter EndEdit(RowManager rowManager)
             {
                 rowManager.Editing = null;
-                CommitEdit(rowManager);
+                return CommitEdit(rowManager);
             }
 
             protected abstract void OpenEdit(RowManager rowManager);
 
             protected abstract void RollbackEdit(RowManager rowManager);
 
-            protected abstract void CommitEdit(RowManager rowManager);
+            protected abstract RowPresenter CommitEdit(RowManager rowManager);
 
             private sealed class EditCurrentHandler : EditHandler
             {
@@ -111,9 +111,11 @@ namespace DevZest.Data.Presenters.Primitives
                     rowManager.CurrentRow.DataRow.CancelEdit();
                 }
 
-                protected override void CommitEdit(RowManager rowManager)
+                protected override RowPresenter CommitEdit(RowManager rowManager)
                 {
-                    rowManager.CurrentRow.DataRow.EndEdit();
+                    var currentRow = rowManager.CurrentRow;
+                    currentRow.DataRow.EndEdit();
+                    return currentRow;
                 }
 
                 public override void OnRowsChanged(RowManager rowManager)
@@ -186,7 +188,7 @@ namespace DevZest.Data.Presenters.Primitives
 
                 protected abstract int CommitEditIndex { get; }
 
-                protected sealed override void CommitEdit(RowManager rowManager)
+                protected sealed override RowPresenter CommitEdit(RowManager rowManager)
                 {
                     Debug.Assert(!rowManager.IsEditing);
                     Debug.Assert(rowManager == RowManager);
@@ -199,6 +201,7 @@ namespace DevZest.Data.Presenters.Primitives
                         if (newCurrentRow != null)
                             rowManager.CurrentRow = newCurrentRow;
                     }
+                    return newCurrentRow;
                 }
 
                 protected virtual RowPresenter CurrentRowAfterRollback
@@ -807,8 +810,13 @@ namespace DevZest.Data.Presenters.Primitives
         internal virtual bool EndEdit()
         {
             Debug.Assert(IsEditing);
-            Editing.EndEdit(this);
+            CommitEdit();
             return true;
+        }
+
+        internal RowPresenter CommitEdit()
+        {
+            return Editing.EndEdit(this);
         }
 
         internal virtual void CancelEdit()
