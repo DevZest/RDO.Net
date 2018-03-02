@@ -587,6 +587,22 @@ namespace DevZest.Data.Presenters.Primitives
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
 
+        /// <remarks>
+        /// <see cref="_focusTo" /> is set in <see cref="OnFocused(RowView)"/> method, then is cleared to null in <see cref="SetCurrentRowFromView"/> method.
+        /// NOTE: Besides the direct calling chain in <see cref="OnFocused(RowView)"/>, there is another calling chain to <see cref="SetCurrentRowFromView"/>:
+        /// <see cref="OnFocused(RowView)"/> -->
+        /// <see cref="CanChangeCurrentRow"/> -->
+        /// <see cref="RowManager.EndEdit"/> -->
+        /// <see cref="RowManager.CommitEdit"/> -->
+        /// <see cref="RowManager.EditHandler.EndEdit(RowManager)"/> -->
+        /// <see cref="RowManager.EditHandler.InsertHandler.CommitEdit(RowManager)"/> -->
+        /// <see cref="DataSet.EndAdd"/> -->
+        /// ... -->
+        /// <see cref="OnRowsChanged"/>
+        /// ALSO NOTE: During this calling chain, <see cref="CurrentRow"/> is directly set to <see cref="_focusTo"/>, by using the flag <see cref="_currentRowChangedByInsertSuspended"/>.
+        /// In this case, <see cref="CurrentRow"/> does not always be the same of the currently editing <see cref="RowPresenter"/>,
+        /// use the return value of <see cref="RowManager.CommitEdit"/> instead.
+        /// </remarks>
         private RowView _focusTo;
         private bool _currentRowChangedByInsertSuspended;
         internal void OnFocused(RowView rowView)
