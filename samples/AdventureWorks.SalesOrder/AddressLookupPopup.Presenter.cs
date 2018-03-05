@@ -35,7 +35,7 @@ namespace AdventureWorks.SalesOrders
                     .RowView<RowView>(RowView.Styles.Selectable)
                     .Layout(Orientation.Vertical)
                     .WithSelectionMode(SelectionMode.Single)
-                    .AddBinding(0, 0, _.AsAddressBox());
+                    .AddBinding(0, 0, _.BindToAddressBox());
             }
 
             private Task<DataSet<Address>> LoadDataAsync(CancellationToken ct)

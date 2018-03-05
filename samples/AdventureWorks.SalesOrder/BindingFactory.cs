@@ -7,7 +7,7 @@ namespace AdventureWorks.SalesOrders
 {
     public static class BindingFactory
     {
-        public static RowCompositeBinding<SalesOrderHeaderBox> AsSalesOrderHeaderBox(this SalesOrderToEdit _,
+        public static RowCompositeBinding<SalesOrderHeaderBox> BindToSalesOrderHeaderBox(this SalesOrderToEdit _,
             out RowBinding<ForeignKeyBox> shipToAddressBinding, out RowBinding<ForeignKeyBox> billToAddressBinding)
         {
             var ext = _.GetExtender<SalesOrderToEdit.Ext>();
@@ -28,7 +28,7 @@ namespace AdventureWorks.SalesOrders
                 .AddChild(_.Comment.BindToTextBox(), v => v._comment);
         }
 
-        public static RowCompositeBinding<SalesOrderFooterBox> AsSalesOrderFooterBox(this SalesOrder _)
+        public static RowCompositeBinding<SalesOrderFooterBox> BindToSalesOrderFooterBox(this SalesOrder _)
         {
             return new RowCompositeBinding<SalesOrderFooterBox>()
                 .AddChild(_.SubTotal.BindToTextBlock("{0:C}"), v => v._subTotal)
@@ -37,7 +37,7 @@ namespace AdventureWorks.SalesOrders
                 .AddChild(_.TotalDue.BindToTextBlock("{0:C}"), v => v._totalDue);
         }
 
-        public static RowCompositeBinding<AddressBox> AsAddressBox(this Address _)
+        public static RowCompositeBinding<AddressBox> BindToAddressBox(this Address _)
         {
             return new RowCompositeBinding<AddressBox>()
                 .AddChild(_.AddressLine1.BindToTextBlock(), v => v._addressLine1)
