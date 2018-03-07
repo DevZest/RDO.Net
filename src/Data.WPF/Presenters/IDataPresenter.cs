@@ -42,7 +42,7 @@ namespace DevZest.Data.Presenters
         void BeginInsertAfter(RowPresenter row = null);
         void BeginInsertBefore(RowPresenter row = null);
         void DetachView();
-        T GetService<T>() where T : class, IService;
+        T GetService<T>(bool autoCreate = true) where T : class, IService;
         void InvalidateMeasure();
         void InvalidateView();
         void ResumeInvalidateView();

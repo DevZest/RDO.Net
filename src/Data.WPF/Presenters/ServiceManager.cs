@@ -26,14 +26,24 @@ namespace DevZest.Data.Presenters
             return _serviceProviders.ContainsKey(typeof(TService));
         }
 
-        public static T GetService<T>(DataPresenter dataPresenter)
+        public static T GetService<T>(DataPresenter dataPresenter, bool autoCreate = true)
             where T : class, IService
         {
             if (dataPresenter == null)
                 throw new ArgumentNullException(nameof(dataPresenter));
 
-            var servicesByType = _services.GetOrCreateValue(dataPresenter);
-            return (T)servicesByType.GetOrAdd(typeof(T), type => CreateService<T>(dataPresenter));
+            if (autoCreate)
+            {
+                var servicesByType = _services.GetOrCreateValue(dataPresenter);
+                return (T)servicesByType.GetOrAdd(typeof(T), type => CreateService<T>(dataPresenter));
+            }
+            else if (_services.TryGetValue(dataPresenter, out var servicesByType))
+            {
+                if (servicesByType.ContainsKey(typeof(T)))
+                    return (T)servicesByType[typeof(T)];
+            }
+
+            return null;
         }
 
         private static T CreateService<T>(DataPresenter dataPresenter)

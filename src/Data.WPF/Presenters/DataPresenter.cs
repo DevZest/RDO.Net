@@ -288,10 +288,10 @@ namespace DevZest.Data.Presenters
             return rowPresenter.InternalHasChildren;
         }
 
-        public virtual T GetService<T>()
+        public virtual T GetService<T>(bool autoCreate = true)
             where T : class, IService
         {
-            return (this is T) ? (T)((object)this) : ServiceManager.GetService<T>(this);
+            return (this is T) ? (T)((object)this) : ServiceManager.GetService<T>(this, autoCreate);
         }
 
         internal abstract void Reload();
