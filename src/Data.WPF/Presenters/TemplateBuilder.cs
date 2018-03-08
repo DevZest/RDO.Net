@@ -459,5 +459,14 @@ namespace DevZest.Data.Presenters
             Template.InitialFocus = initialFocus;
             return this;
         }
+
+        public TemplateBuilder AddConfig<T>(T config)
+            where T : class
+        {
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
+            Template.AddConfig(config);
+            return this;
+        }
     }
 }

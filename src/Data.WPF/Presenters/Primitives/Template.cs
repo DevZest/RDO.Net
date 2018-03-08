@@ -619,5 +619,27 @@ namespace DevZest.Data.Presenters.Primitives
                 InitialFocus.MoveFocus(DataPresenter);
             }
         }
+
+        private Dictionary<Type, object> _configs;
+        public T GetConfig<T>()
+            where T : class
+        {
+            if (_configs == null)
+                return null;
+
+            if (_configs.TryGetValue(typeof(T), out var result))
+                return (T)result;
+
+            return null;
+        }
+
+        internal void AddConfig<T>(T value)
+            where T : class
+        {
+            Debug.Assert(value != null);
+            if (_configs == null)
+                _configs = new Dictionary<Type, object>();
+            _configs.Add(typeof(T), value);
+        }
     }
 }
