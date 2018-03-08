@@ -17,5 +17,7 @@
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ValidationErrorsControl.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ValidationPlaceholder.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/AsyncValidationFaultControl.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/AsyncValidationFaultControl.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/GridCell.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

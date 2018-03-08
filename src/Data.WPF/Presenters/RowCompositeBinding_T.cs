@@ -31,7 +31,7 @@ namespace DevZest.Data.Presenters
             get { return null; }
         }
 
-        public RowCompositeBinding<T> AddChild<TChild>(RowBinding<TChild> childBinding, Func<T, TChild> childGetter)
+        public RowCompositeBinding<T> AddChild<TChild>(RowBindingBase<TChild> childBinding, Func<T, TChild> childGetter)
             where TChild : UIElement, new()
         {
             Binding.VerifyAdding(childBinding, nameof(childBinding));

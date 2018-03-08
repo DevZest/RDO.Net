@@ -27,12 +27,12 @@ namespace AdventureWorks.SalesOrders
                     .AddBinding(5, 0, _.OrderQty.BindToColumnHeader("Qty"))
                     .AddBinding(6, 0, _.LineTotal.BindToColumnHeader("Total"))
                     .AddBinding(0, 1, _.BindToRowHeader())
-                    .AddBinding(1, 1, _.Product.BindToForeignKeyBox(ext.Product, GetProductNumber))
-                    .AddBinding(2, 1, ext.Product.Name.BindToTextBlock())
-                    .AddBinding(3, 1, _.UnitPrice.BindToTextBox())
-                    .AddBinding(4, 1, _.UnitPriceDiscount.BindToTextBox())
-                    .AddBinding(5, 1, _.OrderQty.BindToTextBox())
-                    .AddBinding(6, 1, _.LineTotal.BindToTextBlock("{0:C}"));
+                    .AddBinding(1, 1, _.Product.BindToForeignKeyBox(ext.Product, GetProductNumber).AddToGridCell())
+                    .AddBinding(2, 1, ext.Product.Name.BindToTextBlock().AddToGridCell())
+                    .AddBinding(3, 1, _.UnitPrice.BindToTextBox().AddToGridCell())
+                    .AddBinding(4, 1, _.UnitPriceDiscount.BindToTextBox().AddToGridCell())
+                    .AddBinding(5, 1, _.OrderQty.BindToTextBox().AddToGridCell())
+                    .AddBinding(6, 1, _.LineTotal.BindToTextBlock("{0:C}").AddToGridCell());
             }
 
             private static string GetProductNumber(ColumnValueBag valueBag, Product.Key productKey, Product.Lookup productLookup)

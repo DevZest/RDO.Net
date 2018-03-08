@@ -44,6 +44,7 @@
     <Compile Include="Presenters\BindingFactory.GridHeader.cs" />
     <Compile Include="Presenters\BindingFactory.DataView.cs" />
     <Compile Include="Presenters\BindingFactory.Image.cs" />
+    <Compile Include="Presenters\BindingFactory.GridCell.cs" />
     <Compile Include="Presenters\BindingFactory.PasswordBox.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationErrorsControl.cs" />
     <Compile Include="Presenters\BindingFactory.ValidationPlaceholder.cs" />
@@ -96,6 +97,7 @@
     </Compile>
     <Compile Include="Utilities\SingleChildEnumerator.cs" />
     <Compile Include="Views\AsyncValidationFaultControl.cs" />
+    <Compile Include="Views\GridCell.cs" />
     <Compile Include="Views\GridHeader.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
     <Compile Include="Views\Primitives\Spinner.xaml.cs">
@@ -273,6 +275,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Presenters\Validation.Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\GridCell.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
