@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace DevZest.Data.Views
 {
@@ -22,7 +23,14 @@ namespace DevZest.Data.Views
         static GridCell()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(typeof(GridCell)));
+            FocusableProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(null, CoerceFocusable));
+            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
             ServiceManager.Register<Handler, Handler>();
+        }
+
+        private static object CoerceFocusable(DependencyObject d, Object baseValue)
+        {
+            return BooleanBoxes.True;
         }
 
         public UIElement Child
