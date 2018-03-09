@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Presenters;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -84,6 +85,8 @@ namespace DevZest.Data.Views
 
             void IService.Initialize(DataPresenter dataPresenter)
             {
+                if (!dataPresenter.IsMounted)
+                    throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
                 DataPresenter = dataPresenter;
             }
 
