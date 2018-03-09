@@ -14,6 +14,10 @@ namespace DevZest.Data.Views
             new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ModeProperty = ModePropertyKey.DependencyProperty;
 
+        private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(IsCurrent), typeof(bool), typeof(GridCell),
+            new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty IsCurrentProperty = IsCurrentPropertyKey.DependencyProperty;
+
         static GridCell()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(typeof(GridCell)));
@@ -34,10 +38,39 @@ namespace DevZest.Data.Views
             return (T)Child;
         }
 
+        private static class ModeBoxes
+        {
+            public static readonly object Select = GridCellMode.Select;
+            public static readonly object Edit = GridCellMode.Edit;
+
+            public static object Box(GridCellMode value)
+            {
+                return value == GridCellMode.Select ? Select : Edit;
+            }
+        }
+
         public GridCellMode? Mode
         {
             get { return (GridCellMode?)GetValue(ModeProperty); }
-            private set { SetValue(ModePropertyKey, value); }
+            private set
+            {
+                if (value == null)
+                    ClearValue(ModePropertyKey);
+                else
+                    SetValue(ModePropertyKey, ModeBoxes.Box(value.GetValueOrDefault()));
+            }
+        }
+
+        public bool IsCurrent
+        {
+            get { return (bool)GetValue(IsCurrentProperty); }
+            private set
+            {
+                if (value)
+                    SetValue(IsCurrentPropertyKey, BooleanBoxes.True);
+                else
+                    ClearValue(IsCurrentPropertyKey);
+            }
         }
 
         public static GridCellMode? GetMode(UIElement element)
