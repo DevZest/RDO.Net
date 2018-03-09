@@ -14,7 +14,7 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <Trigger Property="IsSelected" Value="True">
+            <Trigger Property="Mode" Value="Select">
                 <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
             </Trigger>

@@ -5,23 +5,13 @@ namespace DevZest.Data.Views
 {
     public class GridCell : Control
     {
-        public enum Mode
-        {
-            Select,
-            Edit
-        }
-
         private static readonly DependencyPropertyKey ChildPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Child), typeof(UIElement), typeof(GridCell),
             new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ChildProperty = ChildPropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey IsSelectedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelected), typeof(bool), typeof(GridCell),
-            new FrameworkPropertyMetadata(BooleanBoxes.False));
-        public static readonly DependencyProperty IsSelectedProperty = IsSelectedPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(IsEditing), typeof(bool), typeof(GridCell),
-            new FrameworkPropertyMetadata(BooleanBoxes.False, FrameworkPropertyMetadataOptions.Inherits));
-        public static readonly DependencyProperty IsEditingProperty = IsEditingPropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey ModePropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(Mode), typeof(GridCellMode?), typeof(GridCell),
+            new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty ModeProperty = ModePropertyKey.DependencyProperty;
 
         static GridCell()
         {
@@ -42,21 +32,15 @@ namespace DevZest.Data.Views
             return (T)Child;
         }
 
-        public bool IsSelected
+        public GridCellMode? Mode
         {
-            get { return (bool)GetValue(IsSelectedProperty); }
-            private set { SetValue(IsSelectedPropertyKey, value); }
+            get { return (GridCellMode?)GetValue(ModeProperty); }
+            private set { SetValue(ModePropertyKey, value); }
         }
 
-        public static bool GetIsEditing(UIElement element)
+        public static GridCellMode? GetMode(UIElement element)
         {
-            return (bool)element.GetValue(IsEditingProperty);
-        }
-
-        public bool IsEditing
-        {
-            get { return (bool)GetValue(IsEditingProperty); }
-            private set { SetValue(IsEditingPropertyKey, value); }
+            return (GridCellMode?)element.GetValue(ModeProperty);
         }
     }
 }
