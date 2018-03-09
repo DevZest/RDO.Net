@@ -212,7 +212,6 @@ namespace DevZest.Data.Views
 
         public interface ISwitcher : IService
         {
-            bool AffectsIsEditing(InPlaceEditor inPlaceEditor, DependencyProperty dp);
             bool GetIsEditing(InPlaceEditor inPlaceEditor);
             bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor);
         }
@@ -224,11 +223,6 @@ namespace DevZest.Data.Views
             public void Initialize(DataPresenter dataPresenter)
             {
                 DataPresenter = dataPresenter;
-            }
-
-            public bool AffectsIsEditing(InPlaceEditor inPlaceEditor, DependencyProperty dp)
-            {
-                return dp == IsMouseOverProperty || dp == IsKeyboardFocusWithinProperty;
             }
 
             public bool GetIsEditing(InPlaceEditor inPlaceEditor)
@@ -494,10 +488,7 @@ namespace DevZest.Data.Views
 
             var switcher = DataPresenter?.GetService<ISwitcher>();
             if (switcher != null)
-            {
-                if (switcher.AffectsIsEditing(this, e.Property))
-                    IsEditing = switcher.GetIsEditing(this);
-            }
+                IsEditing = switcher.GetIsEditing(this);
         }
 
         void IRowElement.Setup(RowPresenter p)

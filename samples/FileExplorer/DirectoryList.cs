@@ -148,11 +148,6 @@ namespace FileExplorer
             rowPresenter.BeginEdit();
         }
 
-        bool InPlaceEditor.ISwitcher.AffectsIsEditing(InPlaceEditor inPlaceEditor, DependencyProperty dp)
-        {
-            return dp == InPlaceEditor.IsRowEditingProperty;
-        }
-
         bool InPlaceEditor.ISwitcher.GetIsEditing(InPlaceEditor inPlaceEditor)
         {
             return inPlaceEditor.IsRowEditing;

@@ -290,11 +290,6 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void InputManager_AsyncValidators_Reset()
         {
-            RunInWpfSyncContext(InputManager_AsyncValidators_Reset_Async);
-        }
-
-        private async Task InputManager_AsyncValidators_Reset_Async()
-        {
             var dataSet = DataSet<ProductCategory>.New();
             var _ = dataSet._;
             dataSet.Add(new DataRow());
