@@ -381,7 +381,7 @@ namespace DevZest.Data.Presenters
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
             if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
             if (View.IsKeyboardFocusWithin)
                 Template.ResetInitialFocus();
             Mount(View, dataSet, where, orderBy, true);
@@ -400,7 +400,7 @@ namespace DevZest.Data.Presenters
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
             if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);
@@ -420,7 +420,7 @@ namespace DevZest.Data.Presenters
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
             if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);

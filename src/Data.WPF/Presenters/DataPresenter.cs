@@ -62,6 +62,11 @@ namespace DevZest.Data.Presenters
             View.DataPresenter = this;
         }
 
+        public bool IsMounted
+        {
+            get { return LayoutManager != null; }
+        }
+
         public event EventHandler<EventArgs> Mounted = delegate { };
 
         protected virtual void OnMounted()
@@ -102,7 +107,7 @@ namespace DevZest.Data.Presenters
         private LayoutManager RequireLayoutManager()
         {
             if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NullDataSet);
+                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
             return LayoutManager;
         }
 

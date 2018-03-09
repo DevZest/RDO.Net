@@ -140,11 +140,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The DataPresenter is not initialized: the DataSet property is null.
+        /// The DataPresenter is not mounted.
         /// </summary>
-        public static string DataPresenter_NullDataSet
+        public static string DataPresenter_NotMounted
         {
-            get { return GetString("DataPresenter_NullDataSet"); }
+            get { return GetString("DataPresenter_NotMounted"); }
         }
 
         /// <summary>

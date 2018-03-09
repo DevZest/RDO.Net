@@ -15,8 +15,6 @@ namespace DevZest.Data.Presenters
             where TServiceImpl : TService, new()
         {
             var serviceType = typeof(TService);
-            if (_serviceProviders.ContainsKey(serviceType))
-                throw new InvalidOperationException();
             _serviceProviders.Add(serviceType, () => new TServiceImpl());
         }
 

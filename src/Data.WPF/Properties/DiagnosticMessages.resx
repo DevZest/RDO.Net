@@ -165,8 +165,8 @@
   <data name="DataPresenter_InvalidRowPresenter" xml:space="preserve">
     <value>The RowPresenter is invalid for this DataPresenter or it's collapsed.</value>
   </data>
-  <data name="DataPresenter_NullDataSet" xml:space="preserve">
-    <value>The DataPresenter is not initialized: the DataSet property is null.</value>
+  <data name="DataPresenter_NotMounted" xml:space="preserve">
+    <value>The DataPresenter is not mounted.</value>
   </data>
   <data name="DataPresenter_VerifyCanInsert" xml:space="preserve">
     <value>The CanInsert property must be true.</value>
