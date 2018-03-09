@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using DevZest.Data.Presenters;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Views
@@ -16,6 +17,7 @@ namespace DevZest.Data.Views
         static GridCell()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(typeof(GridCell)));
+            ServiceManager.Register<Handler, Handler>();
         }
 
         public UIElement Child
@@ -41,6 +43,32 @@ namespace DevZest.Data.Views
         public static GridCellMode? GetMode(UIElement element)
         {
             return (GridCellMode?)element.GetValue(ModeProperty);
+        }
+
+        public sealed class Handler : IService
+        {
+            public DataPresenter DataPresenter { get; private set; }
+
+            void IService.Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+            }
+
+            private GridCellMode _mode = GridCellMode.Edit;
+            public GridCellMode Mode
+            {
+                get { return _mode; }
+                set
+                {
+                    if (_mode == value)
+                        return;
+
+                    if (_mode == GridCellMode.Edit && DataPresenter.IsEditing)
+                        DataPresenter.EditingRow.CancelEdit();
+                    _mode = value;
+                    DataPresenter.InvalidateView();
+                }
+            }
         }
     }
 }

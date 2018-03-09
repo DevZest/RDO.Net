@@ -62,6 +62,13 @@ namespace DevZest.Data.Presenters
             View.DataPresenter = this;
         }
 
+        public event EventHandler<EventArgs> Mounted = delegate { };
+
+        protected virtual void OnMounted()
+        {
+            Mounted(this, EventArgs.Empty);
+        }
+
         public event EventHandler<EventArgs> ViewChanged = delegate { };
 
         protected virtual void OnViewChanged()

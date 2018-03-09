@@ -56,6 +56,7 @@ namespace DevZest.Data.Presenters
                 builder.Seal();
             }
             _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
+            OnMounted();
             dataView.OnDataLoaded();
         }
 
