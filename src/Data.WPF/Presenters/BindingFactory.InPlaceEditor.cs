@@ -1,14 +1,7 @@
-﻿using DevZest.Data;
-using DevZest.Data.Primitives;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace DevZest.Data.Presenters
 {
