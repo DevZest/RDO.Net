@@ -185,6 +185,8 @@ namespace DevZest.Data.Presenters
 
         private IDataValidationErrors Validate(DataRow dataRow)
         {
+            if (dataRow == null)
+                return DataValidationErrors.Empty;
             return dataRow == DataSet.AddingRow ? DataSet.ValidateAddingRow() : dataRow.Validate();
         }
 

@@ -222,7 +222,7 @@ namespace DevZest.Data.Views
         {
             var dataPresenter = p.DataPresenter;
             var selectionMode = dataPresenter.Template.SelectionMode;
-            if (selectionMode == SelectionMode.Single || selectionMode == SelectionMode.Extended)
+            if (selectionMode.HasValue)
                 SelectionHandler.EnsureInitialized(dataPresenter);
             EnsureFocusTrackerInitialized(dataPresenter);
             this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
