@@ -261,5 +261,12 @@ namespace DevZest.Data.Views
         void IRowElement.Cleanup(RowPresenter p)
         {
         }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if (!IsKeyboardFocusWithin)
+                Focus();
+        }
     }
 }
