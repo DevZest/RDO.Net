@@ -171,6 +171,9 @@
   <data name="DataPresenter_VerifyCanInsert" xml:space="preserve">
     <value>The CanInsert property must be true.</value>
   </data>
+  <data name="GridCell_Handler_SelectionNotAllowedInEditMode" xml:space="preserve">
+    <value>Selection operation is not allowed in edit mode.</value>
+  </data>
   <data name="GridColumn_InvalidAutoWidth" xml:space="preserve">
     <value>Auto width GridColumns[{ordinal}] is invalid for flowable layout.</value>
   </data>

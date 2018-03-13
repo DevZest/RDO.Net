@@ -156,6 +156,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Selection operation is not allowed in edit mode.
+        /// </summary>
+        public static string GridCell_Handler_SelectionNotAllowedInEditMode
+        {
+            get { return GetString("GridCell_Handler_SelectionNotAllowedInEditMode"); }
+        }
+
+        /// <summary>
         /// Auto width GridColumns[{ordinal}] is invalid for flowable layout.
         /// </summary>
         public static string GridColumn_InvalidAutoWidth(object ordinal)

@@ -7,6 +7,20 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
+        public static RowCompositeBinding<GridCell> AddToGridCell<T>(this RowInput<T> rowInput, string format = null, IFormatProvider formatProvider = null)
+            where T : UIElement, new()
+        {
+            return rowInput.AddToInPlaceEditor(format, formatProvider).AddToGridCell();
+
+        }
+
+        public static RowCompositeBinding<GridCell> AddToGridCell<TEditing, TInert>(this RowInput<TEditing> rowInput, RowBinding<TInert> inertRowBinding)
+            where TEditing : UIElement, new()
+            where TInert : UIElement, new()
+        {
+            return rowInput.AddToInPlaceEditor(inertRowBinding).AddToGridCell();
+        }
+
         public static RowCompositeBinding<GridCell> AddToGridCell<T>(this RowBindingBase<T> rowBinding)
             where T : UIElement, new()
         {
