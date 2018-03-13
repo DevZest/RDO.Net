@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Presenters
@@ -97,5 +98,10 @@ namespace DevZest.Data.Presenters
         }
 
         internal abstract void BeginSetup(UIElement value);
+
+        public bool IsEditable
+        {
+            get { return RowInput != null || ChildBindings.Any(x =>  x.IsEditable); }
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -198,6 +199,11 @@ namespace DevZest.Data.Presenters
 
                 return result;
             }
+        }
+
+        public bool IsEditable
+        {
+            get { return ScalarInput != null || ChildBindings.Any(x => x.IsEditable); }
         }
     }
 }
