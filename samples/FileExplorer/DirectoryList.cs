@@ -30,7 +30,6 @@ namespace FileExplorer
     public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList,
         InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher,
         RowSelector.ICommandService,
-        RowView.ICommandService,
         DataView.ICommandService
         where T : DirectoryItem, new()
     {
@@ -63,22 +62,6 @@ namespace FileExplorer
         private Task Refresh(DataView directoryListView)
         {
             return ShowOrRefreshAsync(directoryListView, (CancellationToken ct) => DirectoryItem.GetDirectoryItemsAsync<T>(CurrentDirectory, ct));
-        }
-
-        IEnumerable<CommandEntry> RowView.ICommandService.GetCommandEntries(RowView rowView)
-        {
-            var baseService = ServiceManager.GetService<RowView.ICommandService>(this);
-            foreach (var entry in baseService.GetCommandEntries(rowView))
-            {
-                if (entry.Command == RowView.Commands.BeginEdit)
-                    yield return entry.ReplaceWith(new KeyGesture(Key.F2));
-                else if (entry.Command == RowView.Commands.CancelEdit)
-                    yield return entry.ReplaceWith(new KeyGesture(Key.Escape));
-                else if (entry.Command == RowView.Commands.EndEdit)
-                    yield return entry.ReplaceWith(new KeyGesture(Key.Enter));
-                else
-                    yield return entry;
-            }
         }
 
         public abstract DirectoryListMode Mode { get; }

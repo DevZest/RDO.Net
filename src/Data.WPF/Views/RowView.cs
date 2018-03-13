@@ -6,6 +6,7 @@ using System.Windows.Input;
 using DevZest.Data.Views.Primitives;
 using DevZest.Data.Presenters;
 using System;
+using System.Linq;
 
 namespace DevZest.Data.Views
 {
@@ -43,10 +44,13 @@ namespace DevZest.Data.Views
 
             public IEnumerable<CommandEntry> GetCommandEntries(RowView rowView)
             {
-                yield return Commands.ToggleEdit.Bind(ToggleEdit, CanToggleEdit);
-                yield return Commands.BeginEdit.Bind(BeginEdit, CanBeginEdit);
-                yield return Commands.CancelEdit.Bind(CancelEdit, CanCancelEdit);
-                yield return Commands.EndEdit.Bind(EndEdit, CanCancelEdit);
+                if (Template.RowBindings.Any(x => x.IsEditable))
+                {
+                    yield return Commands.ToggleEdit.Bind(ToggleEdit, CanToggleEdit);
+                    yield return Commands.BeginEdit.Bind(BeginEdit, CanBeginEdit, new KeyGesture(Key.F2));
+                    yield return Commands.CancelEdit.Bind(CancelEdit, CanCancelEdit, new KeyGesture(Key.Escape));
+                    yield return Commands.EndEdit.Bind(EndEdit, CanCancelEdit, new KeyGesture(Key.Enter));
+                }
                 if (DataPresenter.IsRecursive)
                 {
                     yield return Commands.Expand.Bind(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));

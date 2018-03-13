@@ -59,7 +59,7 @@ namespace DevZest.Data.Views
                 return false;
 
             var binding = child.GetBinding() as RowBinding;
-            return binding != null && binding.RowInput != null;
+            return binding != null && binding.IsEditable;
         }
 
         public UIElement Child
