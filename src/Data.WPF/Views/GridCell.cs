@@ -16,7 +16,7 @@ namespace DevZest.Data.Views
         public static readonly DependencyProperty ChildProperty = ChildPropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey ModePropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(Mode), typeof(GridCellMode?), typeof(GridCell),
-            new FrameworkPropertyMetadata(null));
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
         public static readonly DependencyProperty ModeProperty = ModePropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(IsCurrent), typeof(bool), typeof(GridCell),
@@ -255,6 +255,7 @@ namespace DevZest.Data.Views
                 Mode = handler.IsCurrent(this) ? new GridCellMode?(GridCellMode.Edit) : null;
             else
                 Mode = handler.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
+            IsCurrent = handler.IsCurrent(this);
         }
 
         void IRowElement.Cleanup(RowPresenter p)

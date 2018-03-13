@@ -227,11 +227,32 @@ namespace DevZest.Data.Views
 
             public bool GetIsEditing(InPlaceEditor inPlaceEditor)
             {
+                var isGridCellEditing = IsGridCellEditing(inPlaceEditor);
+                if (isGridCellEditing.HasValue)
+                    return isGridCellEditing.Value;
+
                 return inPlaceEditor.IsMouseOver || inPlaceEditor.IsKeyboardFocusWithin;
+            }
+
+            private bool? IsGridCellEditing(InPlaceEditor inPlaceEditor)
+            {
+                var handler = DataPresenter.GetService<GridCell.Handler>(autoCreate: false);
+                if (handler == null)
+                    return null;
+
+                var mode = GridCell.GetMode(inPlaceEditor);
+                if (!mode.HasValue)
+                    return false;
+                else
+                    return mode.Value == GridCellMode.Edit;
             }
 
             public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
             {
+                var isGridCellEditing = IsGridCellEditing(inPlaceEditor);
+                if (isGridCellEditing.HasValue)
+                    return isGridCellEditing.Value;
+
                 return inPlaceEditor.IsKeyboardFocusWithin;
             }
         }

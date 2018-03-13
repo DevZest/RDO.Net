@@ -74,8 +74,10 @@ namespace DevZest.Data.Presenters
                 if (childBinding.GetSettingUpElement() != null)
                     childBinding.Setup(rowPresenter);
             }
-            if (_onRefresh != null)
-                _onRefresh(SettingUpElement, rowPresenter);
+            _onRefresh?.Invoke(SettingUpElement, rowPresenter);
+
+            var rowElement = SettingUpElement as IRowElement;
+            rowElement?.Setup(rowPresenter);
         }
 
         private bool _isRefreshing;
@@ -90,8 +92,7 @@ namespace DevZest.Data.Presenters
             _isRefreshing = true;
             var v = (T)element;
             PerformRefresh(v);
-            if (_onRefresh != null)
-                _onRefresh(v, element.GetRowPresenter());
+            _onRefresh?.Invoke(v, element.GetRowPresenter());
             _isRefreshing = false;
         }
 
@@ -105,6 +106,9 @@ namespace DevZest.Data.Presenters
                 if (child != null)
                     childBinding.Refresh(child);
             }
+
+            var rowElement = element as IRowElement;
+            rowElement?.Refresh(element.GetRowPresenter());
         }
 
         internal sealed override void Cleanup(UIElement element)
@@ -122,6 +126,9 @@ namespace DevZest.Data.Presenters
                 if (child != null)
                     childBinding.Cleanup(child);
             }
+
+            var rowElement = element as IRowElement;
+            rowElement?.Cleanup(element.GetRowPresenter());
         }
 
         internal sealed override void FlushInput(UIElement element)
