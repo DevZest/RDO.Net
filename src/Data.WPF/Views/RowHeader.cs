@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Views
 {
@@ -220,7 +221,9 @@ namespace DevZest.Data.Views
         void IRowElement.Setup(RowPresenter p)
         {
             var dataPresenter = p.DataPresenter;
-            SelectionHandler.EnsureInitialized(dataPresenter);
+            var selectionMode = dataPresenter.Template.SelectionMode;
+            if (selectionMode == SelectionMode.Single || selectionMode == SelectionMode.Extended)
+                SelectionHandler.EnsureInitialized(dataPresenter);
             EnsureFocusTrackerInitialized(dataPresenter);
             this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
         }

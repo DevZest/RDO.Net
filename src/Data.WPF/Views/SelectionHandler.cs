@@ -87,12 +87,12 @@ namespace DevZest.Data.Views
 
         private static void SuspendCoerceSelection(DataPresenter dataPresenter)
         {
-            dataPresenter.GetService<ISelectionService>().SuspendCoerceSelection();
+            dataPresenter.GetService<ISelectionService>(autoCreate: false)?.SuspendCoerceSelection();
         }
 
         private static void ResumeCoerceSelection(DataPresenter dataPresenter)
         {
-            dataPresenter.GetService<ISelectionService>().ResumeCoerceSelection();
+            dataPresenter.GetService<ISelectionService>(autoCreate: false)?.ResumeCoerceSelection();
         }
 
         public static void Select(DataPresenter dataPresenter, MouseButton mouseButton, RowPresenter row, Action beforeSelecting)

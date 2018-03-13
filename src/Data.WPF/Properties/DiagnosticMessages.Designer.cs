@@ -158,9 +158,17 @@ namespace DevZest.Data
         /// <summary>
         /// Selection operation is not allowed in edit mode.
         /// </summary>
-        public static string GridCell_Handler_SelectionNotAllowedInEditMode
+        public static string GridCell_Presenter_SelectionNotAllowedInEditMode
         {
-            get { return GetString("GridCell_Handler_SelectionNotAllowedInEditMode"); }
+            get { return GetString("GridCell_Presenter_SelectionNotAllowedInEditMode"); }
+        }
+
+        /// <summary>
+        /// The GridCell is not owned by this DataPresenter.
+        /// </summary>
+        public static string GridCell_Presenter_VerifyGridCell
+        {
+            get { return GetString("GridCell_Presenter_VerifyGridCell"); }
         }
 
         /// <summary>

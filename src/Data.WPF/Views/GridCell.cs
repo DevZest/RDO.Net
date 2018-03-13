@@ -19,10 +19,6 @@ namespace DevZest.Data.Views
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
         public static readonly DependencyProperty ModeProperty = ModePropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(IsCurrent), typeof(bool), typeof(GridCell),
-            new FrameworkPropertyMetadata(BooleanBoxes.False));
-        public static readonly DependencyProperty IsCurrentProperty = IsCurrentPropertyKey.DependencyProperty;
-
         static GridCell()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(typeof(GridCell)));
@@ -38,7 +34,10 @@ namespace DevZest.Data.Views
 
         private static bool GetFocusable(GridCell gridCell)
         {
-            if (gridCell.IsKeyboardFocusWithin && !gridCell.IsKeyboardFocused)  // GridCell is not focusable if child element has keyboard focus
+            if (gridCell.IsKeyboardFocused)
+                return true;
+
+            if (gridCell.IsKeyboardFocusWithin)
                 return false;
 
             var dataPresenter = gridCell.DataPresenter;
@@ -99,18 +98,6 @@ namespace DevZest.Data.Views
             }
         }
 
-        public bool IsCurrent
-        {
-            get { return (bool)GetValue(IsCurrentProperty); }
-            private set
-            {
-                if (value)
-                    SetValue(IsCurrentPropertyKey, BooleanBoxes.True);
-                else
-                    ClearValue(IsCurrentPropertyKey);
-            }
-        }
-
         public static GridCellMode? GetMode(UIElement element)
         {
             return (GridCellMode?)element.GetValue(ModeProperty);
@@ -147,13 +134,15 @@ namespace DevZest.Data.Views
                     if (_mode == GridCellMode.Edit && DataPresenter.IsEditing)
                         DataPresenter.EditingRow.CancelEdit();
                     _mode = value;
-                    _extendedSelection = 0;
+                    _extendedBindingSelection = _extendedRowSelection = 0;
                     DataPresenter.InvalidateView();
                 }
             }
 
-            private int _current = -1;
-            private int _extendedSelection;
+            private int _currentBinding = -1;
+            private int _extendedBindingSelection;
+            private RowPresenter _currentRow;
+            private int _extendedRowSelection;
 
             private int IndexOf(GridCell gridCell)
             {
@@ -175,40 +164,65 @@ namespace DevZest.Data.Views
                 Check.NotNull(gridCell, paramName);
                 var index = IndexOf(gridCell);
                 if (index < 0)
-                    throw new ArgumentException("", paramName);
+                    throw new ArgumentException(DiagnosticMessages.GridCell_Presenter_VerifyGridCell, paramName);
                 return index;
             }
 
             public bool IsSelected(GridCell gridCell)
             {
-                if (Mode == GridCellMode.Edit || _current  < 0)
+                if (Mode == GridCellMode.Edit)
                     return false;
 
-                var index = VerifyGridCell(gridCell, nameof(gridCell));
-                var startIndex = Math.Min(_current, _current + _extendedSelection);
-                var endIndex = Math.Max(_current, _current + _extendedSelection);
-                return index >= startIndex && index <= endIndex && gridCell.GetRowPresenter().IsSelected;
+                if (DataPresenter.SelectedRows.Count > 0)
+                    return gridCell.GetRowPresenter().IsSelected;
+
+                if (_currentBinding < 0)
+                    return false;
+
+                var bindingIndex = VerifyGridCell(gridCell, nameof(gridCell));
+                return IsBindingSelected(bindingIndex) && IsRowSelected(gridCell.GetRowPresenter().Index);
             }
 
-            public bool IsCurrent(GridCell gridCell)
+            private bool IsBindingSelected(int bindingIndex)
             {
-                var index = VerifyGridCell(gridCell, nameof(gridCell));
-                return _current == index && gridCell.GetRowPresenter().IsCurrent;
+                var extended = _currentBinding + _extendedBindingSelection;
+                var startIndex = Math.Min(_currentBinding, extended);
+                var endIndex = Math.Max(_currentBinding, extended);
+                return bindingIndex >= startIndex && bindingIndex <= endIndex;
+            }
+
+            private bool IsRowSelected(int rowIndex)
+            {
+                if (_currentRow == null)
+                    return false;
+                var currentRowIndex = _currentRow.Index;
+                var extended = currentRowIndex + _extendedRowSelection;
+                var startIndex = Math.Min(currentRowIndex, extended);
+                var endIndex = Math.Max(currentRowIndex, extended);
+                return rowIndex >= startIndex && rowIndex <= endIndex;
             }
 
             public void Select(GridCell gridCell, bool isExtended)
             {
                 if (Mode != GridCellMode.Select)
-                    throw new InvalidOperationException(DiagnosticMessages.GridCell_Handler_SelectionNotAllowedInEditMode);
+                    throw new InvalidOperationException(DiagnosticMessages.GridCell_Presenter_SelectionNotAllowedInEditMode);
 
-                var index = VerifyGridCell(gridCell, nameof(gridCell));
+                var bindingIndex = VerifyGridCell(gridCell, nameof(gridCell));
 
                 SuspendInvalidateView();
 
+                foreach (var row in DataPresenter.SelectedRows.ToArray())
+                    row.IsSelected = false;
+
+                if (_currentBinding == -1)
+                    _currentBinding = bindingIndex;
+                if (_currentRow == null)
+                    _currentRow = gridCell.GetRowPresenter();
+
                 if (isExtended)
-                    _extendedSelection += _current - index;
+                    _extendedBindingSelection += _currentBinding - bindingIndex;
                 else
-                    _extendedSelection = 0;
+                    _extendedBindingSelection = 0;
 
                 if (!gridCell.IsKeyboardFocusWithin)
                 {
@@ -223,7 +237,7 @@ namespace DevZest.Data.Views
                     }
                 }
 
-                Debug.Assert(_current == index);
+                Debug.Assert(_currentBinding == bindingIndex);
                 InvalidateView();
                 ResumeInvalidateView();
             }
@@ -248,9 +262,10 @@ namespace DevZest.Data.Views
             {
                 var index = IndexOf(gridCell);
                 Debug.Assert(index >= 0 && index < _gridCellBindings.Length);
-                _current = index;
+                _currentBinding = index;
+                _currentRow = gridCell.GetRowPresenter();
                 if (!_isExtendedSelectionLocked)
-                    _extendedSelection = 0;
+                    _extendedBindingSelection = _extendedRowSelection = 0;
 
                 InvalidateView();
             }
@@ -261,10 +276,15 @@ namespace DevZest.Data.Views
             get { return this.GetRowPresenter()?.DataPresenter; }
         }
 
-        protected override void OnIsKeyboardFocusedChanged(DependencyPropertyChangedEventArgs e)
+        protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnIsKeyboardFocusedChanged(e);
-            if ((bool)e.NewValue)
+
+            var newValue = (bool)e.NewValue;
+            var presenter = DataPresenter?.GetService<GridCell.Presenter>(autoCreate: false);
+            if (presenter != null && presenter.Mode == GridCellMode.Edit)
+                Mode = newValue ? new GridCellMode?(GridCellMode.Edit) : null;
+            if (newValue)
                 DataPresenter?.GetService<Presenter>().OnFocused(this);
         }
 
@@ -274,12 +294,9 @@ namespace DevZest.Data.Views
 
         void IRowElement.Refresh(RowPresenter p)
         {
-            var handler = DataPresenter.GetService<Presenter>();
-            if (handler.Mode == GridCellMode.Edit)
-                Mode = handler.IsCurrent(this) ? new GridCellMode?(GridCellMode.Edit) : null;
-            else
-                Mode = handler.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
-            IsCurrent = handler.IsCurrent(this);
+            var gridCellPresenter = p.DataPresenter.GetService<Presenter>();
+            if (gridCellPresenter.Mode == GridCellMode.Select)
+                Mode = gridCellPresenter.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
             CoerceValue(FocusableProperty);
         }
 
