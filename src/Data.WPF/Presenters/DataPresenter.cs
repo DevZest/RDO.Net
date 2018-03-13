@@ -306,6 +306,12 @@ namespace DevZest.Data.Presenters
             return (this is T) ? (T)((object)this) : ServiceManager.GetService<T>(this, autoCreate);
         }
 
+        public bool ExistsService<T>()
+            where T : class, IService
+        {
+            return GetService<T>(autoCreate: false) != null;
+        }
+
         internal abstract void Reload();
 
         internal abstract bool CanReload { get; }

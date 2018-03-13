@@ -28,7 +28,7 @@ namespace DevZest.Data.Views
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(typeof(GridCell)));
             FocusableProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(null, CoerceFocusable));
             KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
-            ServiceManager.Register<Handler, Handler>();
+            ServiceManager.Register<Presenter, Presenter>();
         }
 
         private static object CoerceFocusable(DependencyObject d, Object baseValue)
@@ -44,8 +44,8 @@ namespace DevZest.Data.Views
             var dataPresenter = gridCell.DataPresenter;
             if (dataPresenter != null)
             {
-                var handler = dataPresenter.GetService<Handler>(false);
-                if (handler != null && handler.Mode == GridCellMode.Edit)   // DataView is in Edit mode
+                var p = dataPresenter.GetService<Presenter>(false);
+                if (p != null && p.Mode == GridCellMode.Edit)   // DataView is in Edit mode
                     return IsEditable(gridCell);
             }
 
@@ -116,7 +116,7 @@ namespace DevZest.Data.Views
             return (GridCellMode?)element.GetValue(ModeProperty);
         }
 
-        public sealed class Handler : IService
+        public sealed class Presenter : IService
         {
             public DataPresenter DataPresenter { get; private set; }
 
@@ -126,8 +126,6 @@ namespace DevZest.Data.Views
                     throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
                 DataPresenter = dataPresenter;
                 _gridCellBindings = Template.RowBindings.Where(x => typeof(GridCell).IsAssignableFrom(x.ViewType)).ToArray();
-                if (_gridCellBindings.Length > 0)
-                    _current = 0;
             }
 
             private Template Template
@@ -154,7 +152,7 @@ namespace DevZest.Data.Views
                 }
             }
 
-            private int _current;
+            private int _current = -1;
             private int _extendedSelection;
 
             private int IndexOf(GridCell gridCell)
@@ -183,7 +181,7 @@ namespace DevZest.Data.Views
 
             public bool IsSelected(GridCell gridCell)
             {
-                if (Mode == GridCellMode.Edit)
+                if (Mode == GridCellMode.Edit || _current  < 0)
                     return false;
 
                 var index = VerifyGridCell(gridCell, nameof(gridCell));
@@ -267,7 +265,7 @@ namespace DevZest.Data.Views
         {
             base.OnIsKeyboardFocusedChanged(e);
             if ((bool)e.NewValue)
-                DataPresenter?.GetService<Handler>().OnFocused(this);
+                DataPresenter?.GetService<Presenter>().OnFocused(this);
         }
 
         void IRowElement.Setup(RowPresenter p)
@@ -276,7 +274,7 @@ namespace DevZest.Data.Views
 
         void IRowElement.Refresh(RowPresenter p)
         {
-            var handler = DataPresenter.GetService<Handler>();
+            var handler = DataPresenter.GetService<Presenter>();
             if (handler.Mode == GridCellMode.Edit)
                 Mode = handler.IsCurrent(this) ? new GridCellMode?(GridCellMode.Edit) : null;
             else

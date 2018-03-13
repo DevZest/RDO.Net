@@ -236,8 +236,7 @@ namespace DevZest.Data.Views
 
             private bool? IsGridCellEditing(InPlaceEditor inPlaceEditor)
             {
-                var handler = DataPresenter.GetService<GridCell.Handler>(autoCreate: false);
-                if (handler == null)
+                if (!DataPresenter.ExistsService<GridCell.Presenter>())
                     return null;
 
                 var mode = GridCell.GetMode(inPlaceEditor);
