@@ -244,6 +244,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The editing binding is invalid. The Input property must not be null.
+        /// </summary>
+        public static string InPlaceEditor_VerifyEditingBinding
+        {
+            get { return GetString("InPlaceEditor_VerifyEditingBinding"); }
+        }
+
+        /// <summary>
         /// The trigger has already been initialized with another Input.
         /// </summary>
         public static string Input_TriggerAlreadyInitialized

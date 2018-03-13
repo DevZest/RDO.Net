@@ -52,7 +52,7 @@ namespace FileExplorer
             builder.GridColumns("*")
                 .GridRows("Auto", "0")
                 .RowRange(0, 1, 0, 1)
-                .AddBinding(0, 0, _currentDirectory.BindToTextBox().Input.AddToInPlaceEditor(_currentDirectory.BindToTextBlock("{0} (Click to edit)")));
+                .AddBinding(0, 0, _currentDirectory.BindToTextBox().MergeIntoInPlaceEditor(_currentDirectory.BindToTextBlock("{0} (Click to edit)")));
         }
 
         IEnumerable<CommandEntry> InPlaceEditor.ICommandService.GetCommandEntries(InPlaceEditor inPlaceEditor)
