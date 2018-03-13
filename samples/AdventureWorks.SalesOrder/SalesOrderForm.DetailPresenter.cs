@@ -17,6 +17,9 @@ namespace AdventureWorks.SalesOrders
                 var ext = _.GetExtender<SalesOrderToEdit.DetailExt>();
                 builder.GridRows("Auto", "Auto")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
+                    .GridLineX(new GridPoint(0, 2), 7)
+                    .GridLineY(new GridPoint(2, 1), 1).GridLineY(new GridPoint(3, 1), 1).GridLineY(new GridPoint(4, 1), 1)
+                    .GridLineY(new GridPoint(5, 1), 1).GridLineY(new GridPoint(6, 1), 1).GridLineY(new GridPoint(7, 1), 1)
                     .Layout(Orientation.Vertical)
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
                     .AddBinding(0, 0, this.BindToGridHeader())
