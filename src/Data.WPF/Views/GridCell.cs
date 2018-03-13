@@ -33,7 +33,33 @@ namespace DevZest.Data.Views
 
         private static object CoerceFocusable(DependencyObject d, Object baseValue)
         {
-            return BooleanBoxes.True;
+            return BooleanBoxes.Box(GetFocusable((GridCell)d));
+        }
+
+        private static bool GetFocusable(GridCell gridCell)
+        {
+            if (gridCell.IsKeyboardFocusWithin && !gridCell.IsKeyboardFocused)  // GridCell is not focusable if child element has keyboard focus
+                return false;
+
+            var dataPresenter = gridCell.DataPresenter;
+            if (dataPresenter != null)
+            {
+                var handler = dataPresenter.GetService<Handler>(false);
+                if (handler != null && handler.Mode == GridCellMode.Edit)   // DataView is in Edit mode
+                    return IsEditable(gridCell);
+            }
+
+            return true;
+        }
+
+        private static bool IsEditable(GridCell gridCell)
+        {
+            var child = gridCell.Child;
+            if (child == null)
+                return false;
+
+            var binding = child.GetBinding() as RowBinding;
+            return binding != null && binding.RowInput != null;
         }
 
         public UIElement Child
@@ -256,6 +282,7 @@ namespace DevZest.Data.Views
             else
                 Mode = handler.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
             IsCurrent = handler.IsCurrent(this);
+            CoerceValue(FocusableProperty);
         }
 
         void IRowElement.Cleanup(RowPresenter p)
@@ -265,7 +292,7 @@ namespace DevZest.Data.Views
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
-            if (!IsKeyboardFocusWithin)
+            if (!IsKeyboardFocusWithin && Focusable)
                 Focus();
         }
     }
