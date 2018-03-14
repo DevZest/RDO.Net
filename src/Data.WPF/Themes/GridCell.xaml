@@ -4,6 +4,11 @@
     xmlns:local="clr-namespace:DevZest.Data.Views">
     
     <Style TargetType="{x:Type local:GridCell}">
+        <Style.Resources>
+            <Style TargetType="{x:Type local:InPlaceEditor}">
+                <Setter Property="Switcher" Value="{x:Static local:GridCell.InPlaceEditorSwitcher}" />
+            </Style>
+        </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:GridCell}">

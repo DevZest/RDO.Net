@@ -210,48 +210,27 @@ namespace DevZest.Data.Views
             }
         }
 
-        public interface ISwitcher : IService
+        public interface ISwitcher
         {
             bool GetIsEditing(InPlaceEditor inPlaceEditor);
             bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor);
         }
 
-        private sealed class Switcher : ISwitcher
+        private sealed class DefaultSwitcher : ISwitcher
         {
-            public DataPresenter DataPresenter { get; private set; }
+            public static DefaultSwitcher Singleton = new DefaultSwitcher();
 
-            public void Initialize(DataPresenter dataPresenter)
+            private DefaultSwitcher()
             {
-                DataPresenter = dataPresenter;
             }
 
             public bool GetIsEditing(InPlaceEditor inPlaceEditor)
             {
-                var isGridCellEditing = IsGridCellEditing(inPlaceEditor);
-                if (isGridCellEditing.HasValue)
-                    return isGridCellEditing.Value;
-
                 return inPlaceEditor.IsMouseOver || inPlaceEditor.IsKeyboardFocusWithin;
-            }
-
-            private bool? IsGridCellEditing(InPlaceEditor inPlaceEditor)
-            {
-                if (!DataPresenter.ExistsService<GridCell.Presenter>())
-                    return null;
-
-                var mode = GridCell.GetMode(inPlaceEditor);
-                if (!mode.HasValue)
-                    return false;
-                else
-                    return mode.Value == GridCellMode.Edit;
             }
 
             public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
             {
-                var isGridCellEditing = IsGridCellEditing(inPlaceEditor);
-                if (isGridCellEditing.HasValue)
-                    return isGridCellEditing.Value;
-
                 return inPlaceEditor.IsKeyboardFocusWithin;
             }
         }
@@ -291,10 +270,17 @@ namespace DevZest.Data.Views
             new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty IsScalarEditingProperty = IsScalarEditingPropertyKey.DependencyProperty;
 
+        public static readonly DependencyProperty SwitcherProperty = DependencyProperty.Register(nameof(Switcher), typeof(ISwitcher), typeof(InPlaceEditor),
+            new FrameworkPropertyMetadata(DefaultSwitcher.Singleton, null, CoerceSwitcher));
+
+        private static object CoerceSwitcher(DependencyObject d, object baseValue)
+        {
+            return baseValue ?? DefaultSwitcher.Singleton;
+        }
+
         static InPlaceEditor()
         {
             FocusableProperty.OverrideMetadata(typeof(InPlaceEditor), new FrameworkPropertyMetadata(BooleanBoxes.True));
-            ServiceManager.Register<ISwitcher, Switcher>();
             ServiceManager.Register<IChildInitializer, ChildInitializer>();
         }
 
@@ -308,6 +294,12 @@ namespace DevZest.Data.Views
         {
             get { return (bool)GetValue(IsScalarEditingProperty); }
             private set { SetValue(IsScalarEditingPropertyKey, BooleanBoxes.Box(value)); }
+        }
+
+        public ISwitcher Switcher
+        {
+            get { return (ISwitcher)GetValue(SwitcherProperty); }
+            set { SetValue(SwitcherProperty, value); }
         }
 
         private bool _isEditing;
@@ -334,8 +326,7 @@ namespace DevZest.Data.Views
                 {
                     if (setup)
                     {
-                        var dataPresenter = DataPresenter;
-                        if (dataPresenter != null && dataPresenter.GetService<ISwitcher>().ShouldFocusToEditorElement(this))
+                        if (Switcher.ShouldFocusToEditorElement(this))
                             EditorElement.Focus();
                     }
 
@@ -387,9 +378,7 @@ namespace DevZest.Data.Views
 
         private void InitIsEditing()
         {
-            var switcher = DataPresenter?.GetService<ISwitcher>();
-            if (switcher != null)
-                _isEditing = switcher.GetIsEditing(this);
+            _isEditing = Switcher.GetIsEditing(this);
         }
 
         private RowView RowView
@@ -505,10 +494,7 @@ namespace DevZest.Data.Views
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
-
-            var switcher = DataPresenter?.GetService<ISwitcher>();
-            if (switcher != null)
-                IsEditing = switcher.GetIsEditing(this);
+            IsEditing = Switcher.GetIsEditing(this);
         }
 
         void IRowElement.Setup(RowPresenter p)

@@ -30,6 +30,9 @@
         </Menu>
         <dz:DataView x:Name="_currentDirectoryBarView" Padding="5,0" DockPanel.Dock="Bottom" BorderBrush="Gray" Background="LightGray" BorderThickness="1">
             <dz:DataView.Resources>
+                <Style TargetType="{x:Type dz:InPlaceEditor}">
+                    <Setter Property="Switcher" Value="{x:Static local:CurrentDirectoryBar.InPlaceEditorSwitcher}" />
+                </Style>
                 <Style TargetType="TextBox">
                     <Setter Property="BorderThickness" Value="0" />
                 </Style>
@@ -50,6 +53,9 @@
             <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" />
             <dz:DataView x:Name="_directoryListView" Grid.Column="2">
                 <dz:DataView.Resources>
+                    <Style TargetType="{x:Type dz:InPlaceEditor}">
+                        <Setter Property="Switcher" Value="{x:Static local:DirectoryListInPlaceEditorSwitcher.Singleton}" />
+                    </Style>
                     <Style x:Key="{x:Type TextBlock}" TargetType="TextBlock">
                         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                         <Setter Property="Margin" Value="2,0" />

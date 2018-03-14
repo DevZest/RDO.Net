@@ -4,15 +4,38 @@ using DevZest.Data.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows;
 using System.Windows.Input;
 
 namespace FileExplorer
 {
     public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>,
-        InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher,
+        InPlaceEditor.ICommandService,
         DataView.ICommandService
     {
+        public static InPlaceEditor.ISwitcher InPlaceEditorSwitcher
+        {
+            get { return Switcher.Singleton; }
+        }
+
+        private sealed class Switcher : InPlaceEditor.ISwitcher
+        {
+            public static Switcher Singleton = new Switcher();
+
+            private Switcher()
+            {
+            }
+
+            public bool GetIsEditing(InPlaceEditor inPlaceEditor)
+            {
+                return inPlaceEditor.IsScalarEditing;
+            }
+
+            public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
+            {
+                return true;
+            }
+        }
+
         public sealed class Item : Model
         {
         }
@@ -70,16 +93,6 @@ namespace FileExplorer
         private void BeginEdit(object sender, ExecutedRoutedEventArgs e)
         {
             ScalarContainer.BeginEdit();
-        }
-
-        bool InPlaceEditor.ISwitcher.GetIsEditing(InPlaceEditor inPlaceEditor)
-        {
-            return inPlaceEditor.IsScalarEditing;
-        }
-
-        bool InPlaceEditor.ISwitcher.ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
-        {
-            return true;
         }
 
         IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)

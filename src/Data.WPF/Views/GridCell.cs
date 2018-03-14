@@ -11,6 +11,30 @@ namespace DevZest.Data.Views
 {
     public class GridCell : Control, IRowElement
     {
+        public static InPlaceEditor.ISwitcher InPlaceEditorSwitcher
+        {
+            get { return Switcher.Singleton; }
+        }
+
+        private sealed class Switcher : InPlaceEditor.ISwitcher
+        {
+            public static Switcher Singleton = new Switcher();
+
+            private Switcher()
+            {
+            }
+
+            public bool GetIsEditing(InPlaceEditor inPlaceEditor)
+            {
+                return GetMode(inPlaceEditor) == GridCellMode.Edit;
+            }
+
+            public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
+            {
+                return true;
+            }
+        }
+
         private static readonly DependencyPropertyKey ChildPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Child), typeof(UIElement), typeof(GridCell),
             new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ChildProperty = ChildPropertyKey.DependencyProperty;

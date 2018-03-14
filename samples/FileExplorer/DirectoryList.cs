@@ -27,8 +27,27 @@ namespace FileExplorer
         public static readonly RoutedUICommand Start = new RoutedUICommand();
     }
 
+    public sealed class DirectoryListInPlaceEditorSwitcher : InPlaceEditor.ISwitcher
+    {
+        public static DirectoryListInPlaceEditorSwitcher Singleton = new DirectoryListInPlaceEditorSwitcher();
+
+        private DirectoryListInPlaceEditorSwitcher()
+        {
+        }
+
+        public bool GetIsEditing(InPlaceEditor inPlaceEditor)
+        {
+            return inPlaceEditor.IsRowEditing;
+        }
+
+        public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
+        {
+            return true;
+        }
+    }
+
     public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList,
-        InPlaceEditor.ICommandService, InPlaceEditor.ISwitcher,
+        InPlaceEditor.ICommandService,
         RowSelector.ICommandService,
         DataView.ICommandService
         where T : DirectoryItem, new()
@@ -129,16 +148,6 @@ namespace FileExplorer
             var rowView = RowView.GetCurrent((InPlaceEditor)sender);
             var rowPresenter = rowView.RowPresenter;
             rowPresenter.BeginEdit();
-        }
-
-        bool InPlaceEditor.ISwitcher.GetIsEditing(InPlaceEditor inPlaceEditor)
-        {
-            return inPlaceEditor.IsRowEditing;
-        }
-
-        bool InPlaceEditor.ISwitcher.ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
-        {
-            return true;
         }
 
         IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
