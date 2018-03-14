@@ -708,7 +708,7 @@ namespace DevZest.Data.Presenters.Primitives
         public void Select(RowPresenter value, SelectionMode selectionMode, RowPresenter oldCurrentRow)
         {
             SelectCore(value, selectionMode, oldCurrentRow);
-            OnSelectedRowsChanged();
+            InvalidateView();
         }
 
         private void SelectCore(RowPresenter value, SelectionMode selectionMode, RowPresenter oldCurrentRow)
@@ -809,7 +809,7 @@ namespace DevZest.Data.Presenters.Primitives
             Editing.CancelEdit(this);
         }
 
-        protected virtual void OnSelectedRowsChanged()
+        public virtual void InvalidateView()
         {
         }
 
@@ -827,13 +827,13 @@ namespace DevZest.Data.Presenters.Primitives
         internal void AddSelectedRow(RowPresenter row)
         {
             _selectedRows.Add(row);
-            OnSelectedRowsChanged();
+            InvalidateView();
         }
 
         internal void RemoveSelectedRow(RowPresenter row)
         {
             _selectedRows.Remove(row);
-            OnSelectedRowsChanged();
+            InvalidateView();
         }
 
         protected override void OnRowsChanged()

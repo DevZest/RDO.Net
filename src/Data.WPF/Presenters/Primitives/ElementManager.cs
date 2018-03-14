@@ -676,12 +676,6 @@ namespace DevZest.Data.Presenters.Primitives
                 CoerceCurrentContainerView(oldValue);
         }
 
-        protected override void OnSelectedRowsChanged()
-        {
-            base.OnSelectedRowsChanged();
-            InvalidateView();
-        }
-
         protected override void OnRowsChanged()
         {
             if (_focusTo != null)
@@ -708,7 +702,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private bool _isDirty;
-        public void InvalidateView()
+        public sealed override void InvalidateView()
         {
             if (_isViewInvalid)
                 return;
