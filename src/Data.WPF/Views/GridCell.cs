@@ -155,11 +155,6 @@ namespace DevZest.Data.Views
                 }
             }
 
-            public bool IsInEditMode
-            {
-                get { return Mode == GridCellMode.Edit && DataPresenter.SelectedRows.Count == 0; }
-            }
-
             private int _currentBinding = -1;
             private int _extendedBindingSelection;
             private RowPresenter _currentRow;
@@ -191,11 +186,11 @@ namespace DevZest.Data.Views
 
             public bool IsSelected(GridCell gridCell)
             {
-                if (IsInEditMode)
-                    return false;
-
                 if (DataPresenter.SelectedRows.Count > 0)
                     return gridCell.GetRowPresenter().IsSelected;
+
+                if (Mode == GridCellMode.Edit)
+                    return false;
 
                 if (_currentBinding < 0)
                     return false;
@@ -341,12 +336,19 @@ namespace DevZest.Data.Views
 
         private void Refresh(Presenter p)
         {
-            if (p.IsInEditMode)
-                Mode = IsKeyboardFocusWithin ? new GridCellMode?(GridCellMode.Edit) : null;
-            else
-                Mode = p.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
+            Mode = GetMode(p);
             IsCurrent = p.IsCurrent(this);
             CoerceValue(FocusableProperty);
+        }
+
+        private GridCellMode? GetMode(Presenter p)
+        {
+            if (p.Mode == GridCellMode.Edit)
+            {
+                if (IsKeyboardFocusWithin)
+                    return GridCellMode.Edit;
+            }
+            return p.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
         }
 
         void IRowElement.Cleanup(RowPresenter p)
