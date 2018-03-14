@@ -71,6 +71,7 @@ namespace DevZest.Data.Presenters
 
         protected virtual void OnMounted()
         {
+            CoerceSelection();
             Mounted(this, EventArgs.Empty);
         }
 
@@ -444,6 +445,94 @@ namespace DevZest.Data.Presenters
         void ScalarContainer.IOwner.OnEndEdit()
         {
             ScalarValidation.ExitEdit();
+        }
+
+        internal void CoerceSelection()
+        {
+            if (ShouldCoerceSelection)
+                Select(CurrentRow);
+        }
+
+        private bool ShouldCoerceSelection
+        {
+            get
+            {
+                if (!Template.EnsureCurrentRowSelected)
+                    return false;
+
+                if (CurrentRow == null)
+                    return false;
+
+                if (!CurrentRow.IsSelected)
+                    return true;
+
+                if (CurrentRow.IsEditing)
+                {
+                    var selectedRows = SelectedRows;
+                    if (selectedRows.Count != 1)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
+        public void Select(RowPresenter row, MouseButton mouseButton, Action beforeSelecting)
+        {
+            VerifyRowPresenter(row, nameof(row));
+
+            if (EditingRow != null)
+                return;
+
+            var selectionMode = PredictSelectionMode(mouseButton, row);
+            if (selectionMode.HasValue)
+            {
+                SuspendInvalidateView();
+                Select(row, selectionMode.GetValueOrDefault(), true, beforeSelecting);
+                ResumeInvalidateView();
+            }
+        }
+
+        protected virtual SelectionMode? PredictSelectionMode(MouseButton mouseButton, RowPresenter row)
+        {
+            var selectionMode = Template.SelectionMode;
+            if (!selectionMode.HasValue)
+                selectionMode = SelectionMode.Extended;
+
+            switch (selectionMode.Value)
+            {
+                case SelectionMode.Single:
+                    return SelectionMode.Single;
+                case SelectionMode.Multiple:
+                    return SelectionMode.Multiple;
+                case SelectionMode.Extended:
+                    if (mouseButton != MouseButton.Left)
+                    {
+                        if (mouseButton == MouseButton.Right && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.None)
+                        {
+                            if (row.IsSelected)
+                                return null;
+                            return SelectionMode.Single;
+                        }
+                        return null;
+                    }
+
+                    if (IsControlDown && IsShiftDown)
+                        return null;
+
+                    return IsShiftDown ? SelectionMode.Extended : (IsControlDown ? SelectionMode.Multiple : SelectionMode.Single);
+            }
+            return null;
+        }
+
+        private static bool IsControlDown
+        {
+            get { return (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control; }
+        }
+
+        private static bool IsShiftDown
+        {
+            get { return (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift; }
         }
     }
 }

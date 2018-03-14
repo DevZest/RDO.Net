@@ -221,9 +221,6 @@ namespace DevZest.Data.Views
         void IRowElement.Setup(RowPresenter p)
         {
             var dataPresenter = p.DataPresenter;
-            var selectionMode = dataPresenter.Template.SelectionMode;
-            if (selectionMode.HasValue)
-                SelectionHandler.EnsureInitialized(dataPresenter);
             EnsureFocusTrackerInitialized(dataPresenter);
             this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
         }
@@ -314,7 +311,7 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            SelectionHandler.Select(dataPresenter, mouseButton, RowPresenter, () =>
+            dataPresenter.Select(RowPresenter, mouseButton, () =>
             {
                 if (!IsKeyboardFocusWithin)
                     Focus();

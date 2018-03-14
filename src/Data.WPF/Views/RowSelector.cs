@@ -385,7 +385,7 @@ namespace DevZest.Data.Views
             var dataPresenter = RowPresenter?.DataPresenter;
             if (dataPresenter != null)
             {
-                SelectionHandler.EnsureInitialized(dataPresenter);
+                dataPresenter.Template.EnsureCurrentRowSelected = true;
                 this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
             }
             UpdateVisualState();
@@ -489,7 +489,7 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            SelectionHandler.Select(dataPresenter, mouseButton, RowPresenter, () =>
+            dataPresenter.Select(RowPresenter, mouseButton, () =>
             {
                 if (!IsKeyboardFocusWithin)
                     Focus();

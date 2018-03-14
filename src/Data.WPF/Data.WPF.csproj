@@ -104,7 +104,6 @@
     <Compile Include="Views\Primitives\Spinner.xaml.cs">
       <DependentUpon>Spinner.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SelectionHandler.cs" />
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>

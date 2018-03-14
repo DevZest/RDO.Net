@@ -6,10 +6,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -619,5 +617,8 @@ namespace DevZest.Data.Presenters.Primitives
                 InitialFocus.MoveFocus(DataPresenter);
             }
         }
+
+        [DefaultValue(false)]
+        public bool EnsureCurrentRowSelected { get; internal set; }
     }
 }
