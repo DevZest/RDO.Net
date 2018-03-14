@@ -345,13 +345,13 @@ namespace DevZest.Data.Views
         {
             if (p.Mode == GridCellMode.Edit)
             {
-                if (IsCurrent && ContainsLogicalFocus)
+                if (IsCurrent && ContainsPhysicalOrLogicalFocus)
                     return GridCellMode.Edit;
             }
             return p.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
         }
 
-        private bool ContainsLogicalFocus
+        private bool ContainsPhysicalOrLogicalFocus
         {
             get
             {
