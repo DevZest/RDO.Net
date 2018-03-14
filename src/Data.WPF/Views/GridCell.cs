@@ -342,7 +342,7 @@ namespace DevZest.Data.Views
         private void Refresh(Presenter p)
         {
             if (p.IsInEditMode)
-                Mode = p.IsCurrent(this) ? new GridCellMode?(GridCellMode.Edit) : null;
+                Mode = IsKeyboardFocusWithin ? new GridCellMode?(GridCellMode.Edit) : null;
             else
                 Mode = p.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
             IsCurrent = p.IsCurrent(this);
