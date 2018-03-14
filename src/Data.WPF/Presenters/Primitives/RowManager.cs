@@ -761,12 +761,8 @@ namespace DevZest.Data.Presenters.Primitives
                 if (!IsEditing)
                     CoerceVirtualRow();
                 if (oldIsEditing != IsEditing)
-                    OnIsEditingChanged();
+                    InvalidateView();
             }
-        }
-
-        protected virtual void OnIsEditingChanged()
-        {
         }
 
         public bool IsEditing

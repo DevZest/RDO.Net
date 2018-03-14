@@ -695,12 +695,6 @@ namespace DevZest.Data.Presenters.Primitives
             InvalidateView();
         }
 
-        protected override void OnIsEditingChanged()
-        {
-            base.OnIsEditingChanged();
-            InvalidateView();
-        }
-
         private bool _isDirty;
         public sealed override void InvalidateView()
         {
