@@ -26,12 +26,12 @@ namespace DevZest.Data.Views
 
             public bool GetIsEditing(InPlaceEditor inPlaceEditor)
             {
-                return GetMode(inPlaceEditor) == GridCellMode.Edit;
+                return GetMode(inPlaceEditor) == GridCellMode.Edit || GetPreviewMode(inPlaceEditor) == GridCellMode.Edit;
             }
 
             public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
             {
-                return true;
+                return GetMode(inPlaceEditor) == GridCellMode.Edit;
             }
         }
 
@@ -42,6 +42,10 @@ namespace DevZest.Data.Views
         private static readonly DependencyPropertyKey ModePropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(Mode), typeof(GridCellMode?), typeof(GridCell),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
         public static readonly DependencyProperty ModeProperty = ModePropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey PreviewModePropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(PreviewMode), typeof(GridCellMode?), typeof(GridCell),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+        public static readonly DependencyProperty PreviewModeProperty = PreviewModePropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(IsCurrent), typeof(bool), typeof(GridCell),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
@@ -126,6 +130,28 @@ namespace DevZest.Data.Views
             }
         }
 
+        public static GridCellMode? GetMode(UIElement element)
+        {
+            return (GridCellMode?)element.GetValue(ModeProperty);
+        }
+
+        public GridCellMode? PreviewMode
+        {
+            get { return (GridCellMode?)GetValue(PreviewModeProperty); }
+            private set
+            {
+                if (value == null)
+                    ClearValue(PreviewModePropertyKey);
+                else
+                    SetValue(PreviewModePropertyKey, ModeBoxes.Box(value.GetValueOrDefault()));
+            }
+        }
+
+        public static GridCellMode? GetPreviewMode(UIElement element)
+        {
+            return (GridCellMode?)element.GetValue(PreviewModeProperty);
+        }
+
         public bool IsCurrent
         {
             get { return (bool)GetValue(IsCurrentProperty); }
@@ -136,11 +162,6 @@ namespace DevZest.Data.Views
                 else
                     ClearValue(IsCurrentPropertyKey);
             }
-        }
-
-        public static GridCellMode? GetMode(UIElement element)
-        {
-            return (GridCellMode?)element.GetValue(ModeProperty);
         }
 
         public sealed class Presenter : IService
@@ -355,7 +376,7 @@ namespace DevZest.Data.Views
 
         void IRowElement.Refresh(RowPresenter p)
         {
-            Refresh(DataPresenter.GetService<Presenter>());
+            Refresh(GetPresenter());
         }
 
         private void Refresh(Presenter p)
@@ -363,6 +384,31 @@ namespace DevZest.Data.Views
             IsCurrent = p.IsCurrent(this);
             Mode = GetMode(p);
             CoerceValue(FocusableProperty);
+            RefreshPreviewMode(p);
+        }
+
+        private Presenter GetPresenter()
+        {
+            return DataPresenter?.GetService<Presenter>();
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            if (e.Property == IsMouseOverProperty)
+            {
+                var p = GetPresenter();
+                if (p != null)
+                    RefreshPreviewMode(p);
+            }
+        }
+
+        private void RefreshPreviewMode(Presenter p)
+        {
+            if (Focusable && IsMouseOver)
+                PreviewMode = p.Mode == GridCellMode.Edit ? GridCellMode.Edit : GridCellMode.Select;
+            else
+                PreviewMode = null;
         }
 
         private GridCellMode? GetMode(Presenter p)
