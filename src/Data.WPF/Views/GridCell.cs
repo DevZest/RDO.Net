@@ -336,8 +336,8 @@ namespace DevZest.Data.Views
 
         private void Refresh(Presenter p)
         {
-            Mode = GetMode(p);
             IsCurrent = p.IsCurrent(this);
+            Mode = GetMode(p);
             CoerceValue(FocusableProperty);
         }
 
@@ -345,10 +345,27 @@ namespace DevZest.Data.Views
         {
             if (p.Mode == GridCellMode.Edit)
             {
-                if (IsKeyboardFocusWithin)
+                if (IsCurrent && ContainsLogicalFocus)
                     return GridCellMode.Edit;
             }
             return p.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
+        }
+
+        private bool ContainsLogicalFocus
+        {
+            get
+            {
+                if (IsKeyboardFocusWithin)
+                    return true;
+
+                var focusScope = FocusManager.GetFocusScope(this);
+                if (focusScope == null)
+                    return false;
+                var focusedElement = FocusManager.GetFocusedElement(focusScope) as DependencyObject;
+                if (focusedElement == null)
+                    return false;
+                return IsAncestorOf(focusedElement);
+            }
         }
 
         void IRowElement.Cleanup(RowPresenter p)
