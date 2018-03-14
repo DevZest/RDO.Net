@@ -19,6 +19,10 @@ namespace DevZest.Data.Views
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
         public static readonly DependencyProperty ModeProperty = ModePropertyKey.DependencyProperty;
 
+        private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(IsCurrent), typeof(bool), typeof(GridCell),
+            new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty IsCurrentProperty = IsCurrentPropertyKey.DependencyProperty;
+
         static GridCell()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(typeof(GridCell)));
@@ -95,6 +99,18 @@ namespace DevZest.Data.Views
                     ClearValue(ModePropertyKey);
                 else
                     SetValue(ModePropertyKey, ModeBoxes.Box(value.GetValueOrDefault()));
+            }
+        }
+
+        public bool IsCurrent
+        {
+            get { return (bool)GetValue(IsCurrentProperty); }
+            private set
+            {
+                if (value)
+                    SetValue(IsCurrentPropertyKey, BooleanBoxes.True);
+                else
+                    ClearValue(IsCurrentPropertyKey);
             }
         }
 
@@ -202,6 +218,14 @@ namespace DevZest.Data.Views
                 return rowIndex >= startIndex && rowIndex <= endIndex;
             }
 
+            public bool IsCurrent(GridCell gridCell)
+            {
+                var index = VerifyGridCell(gridCell, nameof(gridCell));
+                if (!gridCell.IsKeyboardFocusWithin && DataPresenter.View.IsKeyboardFocusWithin)    // Another element in DataView has keyboard focus
+                    return false;
+                return _currentBinding == index && gridCell.GetRowPresenter() == _currentRow;
+            }
+
             public void Select(GridCell gridCell, bool isExtended)
             {
                 if (Mode != GridCellMode.Select)
@@ -280,12 +304,13 @@ namespace DevZest.Data.Views
         {
             base.OnIsKeyboardFocusedChanged(e);
 
-            var newValue = (bool)e.NewValue;
-            var presenter = DataPresenter?.GetService<GridCell.Presenter>(autoCreate: false);
-            if (presenter != null && presenter.Mode == GridCellMode.Edit)
-                Mode = newValue ? new GridCellMode?(GridCellMode.Edit) : null;
-            if (newValue)
-                DataPresenter?.GetService<Presenter>().OnFocused(this);
+            var p = DataPresenter?.GetService<Presenter>();
+            if (p == null)
+                return;
+
+            Refresh(p);
+            if ((bool)e.NewValue)
+                p.OnFocused(this);
         }
 
         void IRowElement.Setup(RowPresenter p)
@@ -294,9 +319,16 @@ namespace DevZest.Data.Views
 
         void IRowElement.Refresh(RowPresenter p)
         {
-            var gridCellPresenter = p.DataPresenter.GetService<Presenter>();
-            if (gridCellPresenter.Mode == GridCellMode.Select)
-                Mode = gridCellPresenter.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
+            Refresh(DataPresenter.GetService<Presenter>());
+        }
+
+        private void Refresh(Presenter p)
+        {
+            if (p.Mode == GridCellMode.Edit)
+                Mode = p.IsCurrent(this) ? new GridCellMode?(GridCellMode.Edit) : null;
+            else
+                Mode = p.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
+            IsCurrent = p.IsCurrent(this);
             CoerceValue(FocusableProperty);
         }
 
