@@ -155,6 +155,11 @@ namespace DevZest.Data.Views
                 }
             }
 
+            public bool IsInEditMode
+            {
+                get { return Mode == GridCellMode.Edit && DataPresenter.SelectedRows.Count == 0; }
+            }
+
             private int _currentBinding = -1;
             private int _extendedBindingSelection;
             private RowPresenter _currentRow;
@@ -186,7 +191,7 @@ namespace DevZest.Data.Views
 
             public bool IsSelected(GridCell gridCell)
             {
-                if (Mode == GridCellMode.Edit)
+                if (IsInEditMode)
                     return false;
 
                 if (DataPresenter.SelectedRows.Count > 0)
@@ -235,8 +240,7 @@ namespace DevZest.Data.Views
 
                 SuspendInvalidateView();
 
-                foreach (var row in DataPresenter.SelectedRows.ToArray())
-                    row.IsSelected = false;
+                DeselectAllRows();
 
                 if (_currentBinding == -1)
                     _currentBinding = bindingIndex;
@@ -266,6 +270,16 @@ namespace DevZest.Data.Views
                 ResumeInvalidateView();
             }
 
+            private void DeselectAllRows()
+            {
+                var rows = DataPresenter.SelectedRows;
+                if (rows.Count == 0)
+                    return;
+
+                foreach (var row in rows.ToArray())
+                    row.IsSelected = false;
+            }
+
             private void InvalidateView()
             {
                 DataPresenter.InvalidateView();
@@ -284,6 +298,9 @@ namespace DevZest.Data.Views
             private bool _isExtendedSelectionLocked;
             internal void OnFocused(GridCell gridCell)
             {
+                if (Template.SelectionMode == null)
+                    DeselectAllRows();
+
                 var index = IndexOf(gridCell);
                 Debug.Assert(index >= 0 && index < _gridCellBindings.Length);
                 _currentBinding = index;
@@ -324,7 +341,7 @@ namespace DevZest.Data.Views
 
         private void Refresh(Presenter p)
         {
-            if (p.Mode == GridCellMode.Edit)
+            if (p.IsInEditMode)
                 Mode = p.IsCurrent(this) ? new GridCellMode?(GridCellMode.Edit) : null;
             else
                 Mode = p.IsSelected(this) ? new GridCellMode?(GridCellMode.Select) : null;
