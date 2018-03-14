@@ -495,11 +495,7 @@ namespace DevZest.Data.Presenters
 
         protected virtual SelectionMode? PredictSelectionMode(MouseButton mouseButton, RowPresenter row)
         {
-            var selectionMode = Template.SelectionMode;
-            if (!selectionMode.HasValue)
-                selectionMode = SelectionMode.Extended;
-
-            switch (selectionMode.Value)
+            switch (Template.SelectionMode)
             {
                 case SelectionMode.Single:
                     return SelectionMode.Single;
