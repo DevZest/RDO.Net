@@ -11,6 +11,7 @@ namespace DevZest.Data.Presenters
 {
     public abstract class DataPresenter : IDataPresenter, ScalarContainer.IOwner
     {
+        public event EventHandler ViewInvalidating = delegate { };
         public event EventHandler ViewInvalidated = delegate { };
         public event EventHandler ViewRefreshing = delegate { };
         public event EventHandler ViewRefreshed = delegate { };
@@ -24,6 +25,11 @@ namespace DevZest.Data.Presenters
         public ScalarContainer ScalarContainer
         {
             get { return _scalarContainer; }
+        }
+
+        protected internal virtual void OnViewInvalidating()
+        {
+            ViewInvalidating(this, EventArgs.Empty);
         }
 
         protected internal virtual void OnViewInvalidated()
@@ -71,7 +77,6 @@ namespace DevZest.Data.Presenters
 
         protected virtual void OnMounted()
         {
-            CoerceSelection();
             Mounted(this, EventArgs.Empty);
         }
 
@@ -445,36 +450,6 @@ namespace DevZest.Data.Presenters
         void ScalarContainer.IOwner.OnEndEdit()
         {
             ScalarValidation.ExitEdit();
-        }
-
-        internal void CoerceSelection()
-        {
-            if (ShouldCoerceSelection)
-                Select(CurrentRow);
-        }
-
-        private bool ShouldCoerceSelection
-        {
-            get
-            {
-                if (!Template.EnsureCurrentRowSelected)
-                    return false;
-
-                if (CurrentRow == null)
-                    return false;
-
-                if (!CurrentRow.IsSelected)
-                    return true;
-
-                if (CurrentRow.IsEditing)
-                {
-                    var selectedRows = SelectedRows;
-                    if (selectedRows.Count != 1)
-                        return true;
-                }
-
-                return false;
-            }
         }
 
         public void Select(RowPresenter row, MouseButton mouseButton, Action beforeSelecting)

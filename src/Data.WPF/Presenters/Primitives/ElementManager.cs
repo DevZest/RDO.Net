@@ -724,9 +724,8 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void PerformInvalidateView()
         {
-            DataPresenter?.CoerceSelection();
+            DataPresenter?.OnViewInvalidating();
             _isViewInvalid = false;
-
             DataPresenter?.OnViewInvalidated();
 
             if (_isDirty || ElementCollection == null)

@@ -2,6 +2,7 @@
 using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -43,6 +44,66 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand SelectExtendedPageUp = new RoutedUICommand();
             public static readonly RoutedUICommand SelectExtendedPageDown = new RoutedUICommand();
             public static readonly RoutedUICommand ToggleSelection = new RoutedUICommand();
+        }
+
+        private sealed class CurrentRowSynchronizer : IService
+        {
+            public static void EnsureInitialized(DataPresenter dataPresenter)
+            {
+                var service = ServiceManager.GetService<CurrentRowSynchronizer>(dataPresenter);
+                Debug.Assert(service != null);
+            }
+
+            public DataPresenter DataPresenter { get; private set; }
+
+            public void Initialize(DataPresenter dataPresenter)
+            {
+                DataPresenter = dataPresenter;
+                SynchronizeSelection();
+                DataPresenter.ViewInvalidating += OnViewInvalidating;
+            }
+
+            private void OnViewInvalidating(object sender, EventArgs e)
+            {
+                SynchronizeSelection();
+            }
+
+            private void SynchronizeSelection()
+            {
+                if (ShouldSynchronizeSelection)
+                    DataPresenter.Select(CurrentRow);
+            }
+
+            private RowPresenter CurrentRow
+            {
+                get { return DataPresenter.CurrentRow; }
+            }
+
+            private IReadOnlyCollection<RowPresenter> SelectedRows
+            {
+                get { return DataPresenter.SelectedRows; }
+            }
+
+            private bool ShouldSynchronizeSelection
+            {
+                get
+                {
+                    if (CurrentRow == null)
+                        return false;
+
+                    if (!CurrentRow.IsSelected)
+                        return true;
+
+                    if (CurrentRow.IsEditing)
+                    {
+                        var selectedRows = SelectedRows;
+                        if (selectedRows.Count != 1)
+                            return true;
+                    }
+
+                    return false;
+                }
+            }
         }
 
         public interface ICommandService : IService
@@ -351,6 +412,7 @@ namespace DevZest.Data.Views
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowSelector), new FrameworkPropertyMetadata(typeof(RowSelector)));
             ServiceManager.Register<ICommandService, CommandService>();
+            ServiceManager.Register<CurrentRowSynchronizer, CurrentRowSynchronizer>();
         }
 
         public RowSelector()
@@ -385,7 +447,7 @@ namespace DevZest.Data.Views
             var dataPresenter = RowPresenter?.DataPresenter;
             if (dataPresenter != null)
             {
-                dataPresenter.Template.EnsureCurrentRowSelected = true;
+                CurrentRowSynchronizer.EnsureInitialized(dataPresenter);
                 this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
             }
             UpdateVisualState();

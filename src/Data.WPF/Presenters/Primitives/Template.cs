@@ -617,8 +617,5 @@ namespace DevZest.Data.Presenters.Primitives
                 InitialFocus.MoveFocus(DataPresenter);
             }
         }
-
-        [DefaultValue(false)]
-        public bool EnsureCurrentRowSelected { get; internal set; }
     }
 }
