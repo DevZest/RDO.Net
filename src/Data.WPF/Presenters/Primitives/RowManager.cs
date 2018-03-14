@@ -505,10 +505,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (coercedVirtualRowIndex >= 0)
                 VirtualRow = new RowPresenter(this, coercedVirtualRowIndex);
             if (Rows.Count > 0)
-            {
                 _currentRow = Rows[0];
-                InitSelection();
-            }
         }
 
         public RowPresenter VirtualRow { get; private set; }
@@ -658,10 +655,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (CurrentRow == null)
             {
                 if (Rows.Count > 0)
-                {
                     CurrentRow = Rows[0];
-                    InitSelection();
-                }
             }
             else if (CurrentRow.IsDisposed)
             {
@@ -678,12 +672,6 @@ namespace DevZest.Data.Presenters.Primitives
                 }
             }
             _suggestedCurrentRow = null;
-        }
-
-        private void InitSelection()
-        {
-            if (Template.SelectionMode == SelectionMode.Single || Template.SelectionMode == SelectionMode.Extended)
-                SelectCore(CurrentRow, SelectionMode.Single, null);
         }
 
         private RowPresenter _currentRow;
@@ -708,11 +696,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal override void Collapse(RowPresenter row)
         {
             if (CurrentRow.IsDescendantOf(row))
-            {
                 CurrentRow = row;
-                if (Template.SelectionMode == SelectionMode.Single)
-                    Select(row, SelectionMode.Single, row);
-            }
             base.Collapse(row);
         }
 
