@@ -112,6 +112,13 @@ namespace DevZest.Data.Views
                 return currentInPlaceEditor != null ? BaseRowValidation.IsLockedByFlushingError(currentInPlaceEditor) : false;
             }
 
+            public override FlushingError GetFlushingError(UIElement element)
+            {
+                var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
+                Debug.Assert(currentInPlaceEditor != null);
+                return BaseRowValidation.GetFlushingError(currentInPlaceEditor);
+            }
+
             void IRowValidation.SetFlushingError(UIElement element, string flushingErrorMessage)
             {
                 var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
@@ -200,6 +207,13 @@ namespace DevZest.Data.Views
             {
                 var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
                 return currentInPlaceEditor != null ? BaseScalarValidation.IsLockedByFlushingError(currentInPlaceEditor) : false;
+            }
+
+            public override FlushingError GetFlushingError(UIElement element)
+            {
+                var currentInPlaceEditor = GetCurrentInPlaceEditor(element);
+                Debug.Assert(currentInPlaceEditor != null);
+                return BaseScalarValidation.GetFlushingError(currentInPlaceEditor);
             }
 
             void IScalarValidation.SetFlushingError(UIElement element, string flushingErrorMessage)

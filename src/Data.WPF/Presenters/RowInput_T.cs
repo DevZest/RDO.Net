@@ -34,7 +34,7 @@ namespace DevZest.Data.Presenters
             _rowValidation = rowValidation;
         }
 
-        public sealed override FlushingError GetFlushingError(UIElement element)
+        public override FlushingError GetFlushingError(UIElement element)
         {
             return RowValidation.GetFlushingError(element);
         }

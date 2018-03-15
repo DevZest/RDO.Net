@@ -37,7 +37,7 @@ namespace DevZest.Data.Presenters
             _scalarValidation = scalarValidation;
         }
 
-        public sealed override FlushingError GetFlushingError(UIElement element)
+        public override FlushingError GetFlushingError(UIElement element)
         {
             return ScalarValidation.GetFlushingError(element);
         }
