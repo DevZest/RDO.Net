@@ -47,8 +47,6 @@ namespace DevZest.Data.Views
                     e.ContinueRouting = true;
             }
 
-
-
             private bool CanToggleMode(GridCell gridCell)
             {
                 return Mode == GridCellMode.Edit ? true : IsEditable(gridCell);
