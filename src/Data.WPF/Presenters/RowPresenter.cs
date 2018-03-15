@@ -267,9 +267,6 @@ namespace DevZest.Data.Presenters
             get { return RowManager.IsSelected(this); }
             set
             {
-                if (IsVirtual)
-                    return;
-
                 var oldValue = IsSelected;
                 if (oldValue == value)
                     return;
