@@ -237,9 +237,6 @@
   <data name="RowPresenter_BeginEditExclusiveVirtual" xml:space="preserve">
     <value>Edit exclusive virtual row is not allowed.</value>
   </data>
-  <data name="RowPresenter_DeleteVirtualRow" xml:space="preserve">
-    <value>The virtual row cannot be deleted.</value>
-  </data>
   <data name="RowPresenter_InvalidChildRow" xml:space="preserve">
     <value>The child row is invalid.</value>
   </data>

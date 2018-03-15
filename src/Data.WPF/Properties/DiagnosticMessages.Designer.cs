@@ -332,14 +332,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The virtual row cannot be deleted.
-        /// </summary>
-        public static string RowPresenter_DeleteVirtualRow
-        {
-            get { return GetString("RowPresenter_DeleteVirtualRow"); }
-        }
-
-        /// <summary>
         /// The child row is invalid.
         /// </summary>
         public static string RowPresenter_InvalidChildRow

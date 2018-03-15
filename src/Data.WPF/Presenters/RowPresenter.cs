@@ -458,7 +458,7 @@ namespace DevZest.Data.Presenters
         {
             VerifyDisposed();
             if (IsVirtual)
-                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_DeleteVirtualRow);
+                return;
 
             DataRow.DataSet.Remove(DataRow);
         }
