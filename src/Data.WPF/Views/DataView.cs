@@ -115,7 +115,7 @@ namespace DevZest.Data.Views
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
-            return target.FindAncestor<DataView>();
+            return target.FindVisaulAncestor<DataView>();
         }
 
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),

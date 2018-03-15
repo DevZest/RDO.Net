@@ -55,6 +55,7 @@ namespace DevZest.Data.Views
             FocusableProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(null, CoerceFocusable));
             KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
             ServiceManager.Register<Presenter, Presenter>();
+            ServiceManager.Register<ICommandService, CommandService>();
         }
 
         private static object CoerceFocusable(DependencyObject d, Object baseValue)
@@ -67,7 +68,7 @@ namespace DevZest.Data.Views
             if (gridCell.IsKeyboardFocused)
                 return true;
 
-            if (gridCell.IsKeyboardFocusWithin)
+            if (gridCell.ContainsKeyboardFocus())
                 return false;
 
             var dataPresenter = gridCell.DataPresenter;
@@ -182,11 +183,20 @@ namespace DevZest.Data.Views
 
         void IRowElement.Setup(RowPresenter p)
         {
+            var dataPresenter = p.DataPresenter;
+            this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
         }
 
         void IRowElement.Refresh(RowPresenter p)
         {
             Refresh(GetPresenter());
+        }
+
+        public void Refresh()
+        {
+            var presenter = GetPresenter();
+            if (presenter != null)
+                Refresh(presenter);
         }
 
         private void Refresh(Presenter p)
@@ -250,6 +260,7 @@ namespace DevZest.Data.Views
 
         void IRowElement.Cleanup(RowPresenter p)
         {
+            this.CleanupCommandEntries();
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)

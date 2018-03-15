@@ -94,16 +94,8 @@ namespace DevZest.Data.Presenters
         internal void MoveFocus(DataPresenter dataPresenter)
         {
             var dataView = dataPresenter.View;
-            if (!HasKeyboardFocus(dataView))
+            if (!dataView.ContainsKeyboardFocus())
                 MoveFocus(dataView);
-        }
-
-        private static bool HasKeyboardFocus(DataView dataView)
-        {
-            if (!dataView.IsKeyboardFocused)
-                return false;
-            // workaround bug of framework: dataView.IsKeyboardFocusWithin == true but dataView is not ancestor of Keyboard.FocusedElement
-            return (Keyboard.FocusedElement as DependencyObject)?.FindAncestor<DataView>() == dataView;
         }
 
         protected abstract void MoveFocus(DataView dataView);
