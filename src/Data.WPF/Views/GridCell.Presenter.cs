@@ -28,7 +28,8 @@ namespace DevZest.Data.Views
 
             private RowBinding[] _gridCellBindings;
 
-            private GridCellMode _mode = GridCellMode.Edit;
+            private GridCellMode _mode = GridCellMode.Select;
+            [DefaultValue(GridCellMode.Select)]
             public GridCellMode Mode
             {
                 get { return _mode; }
