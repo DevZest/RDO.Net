@@ -36,7 +36,7 @@ namespace DevZest.Data.Views
             public IEnumerable<CommandEntry> GetCommandEntries(GridCell gridCell)
             {
                 yield return Commands.ToggleMode.Bind(ExecToggleMode, CanToggleMode, new KeyGesture(Key.F8));
-                yield return Commands.EnterEditMode.Bind(ExecToggleMode, CanEnterEditMode, new MouseGesture(MouseAction.LeftClick), new KeyGesture(Key.Enter));
+                yield return Commands.EnterEditMode.Bind(ExecToggleMode, CanEnterEditMode, new MouseGesture(MouseAction.LeftClick));
                 yield return Commands.ExitEditMode.Bind(ExecToggleMode, CanExitEditMode, new KeyGesture(Key.Escape));
             }
 
@@ -90,7 +90,7 @@ namespace DevZest.Data.Views
 
             private bool CanExitEditMode(GridCell gridCell)
             {
-                return !DataPresenter.IsEditing && gridCell.IsCurrent && Mode == GridCellMode.Edit;
+                return gridCell.IsCurrent && Mode == GridCellMode.Edit;
             }
         }
     }
