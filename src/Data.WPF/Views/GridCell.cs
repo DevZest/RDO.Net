@@ -276,12 +276,30 @@ namespace DevZest.Data.Views
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             base.OnPreviewKeyDown(e);
+
+            if (HasInputBinding(e.Key))
+                return;
+
             var presenter = GetPresenter();
             if (presenter == null)
                 return;
 
             if (presenter.Mode == GridCellMode.Select && IsEditable)
                 presenter.Mode = GridCellMode.Edit;
+        }
+
+        private bool HasInputBinding(Key key)
+        {
+            foreach (var obj in InputBindings)
+            {
+                var inputBinding = obj as InputBinding;
+                if (inputBinding == null)
+                    continue;
+                var keyGesture = inputBinding.Gesture as KeyGesture;
+                if (keyGesture != null && keyGesture.Key == key)
+                    return true;
+            }
+            return false;
         }
     }
 }
