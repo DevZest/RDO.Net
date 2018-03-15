@@ -98,6 +98,7 @@
     <Compile Include="Utilities\SingleChildEnumerator.cs" />
     <Compile Include="Views\AsyncValidationFaultControl.cs" />
     <Compile Include="Views\GridCell.cs" />
+    <Compile Include="Views\GridCell.Presenter.cs" />
     <Compile Include="Views\GridCellMode.cs" />
     <Compile Include="Views\GridHeader.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
