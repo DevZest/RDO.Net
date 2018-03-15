@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -27,6 +28,10 @@ namespace DevZest.Data.Views
             }
 
             private RowBinding[] _gridCellBindings;
+            public IReadOnlyList<RowBinding> GridCellBindings
+            {
+                get { return _gridCellBindings; }
+            }
 
             private GridCellMode _mode = GridCellMode.Select;
             [DefaultValue(GridCellMode.Select)]
