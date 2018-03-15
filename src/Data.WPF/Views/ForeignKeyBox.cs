@@ -80,7 +80,6 @@ namespace DevZest.Data.Views
 
         public ForeignKeyBox()
         {
-            Command = Commands.Lookup;
             ValueBag = new ColumnValueBag();
         }
 
@@ -161,6 +160,7 @@ namespace DevZest.Data.Views
         {
             var commandService = rowPresenter.DataPresenter.GetService<ICommandService>();
             this.SetupCommandEntries(commandService.GetCommandEntries(this));
+            Command = Commands.Lookup;  // Command needs to be set after command bindings otherwise IsEnabled will be false
         }
 
         void IRowElement.Refresh(RowPresenter rowPresenter)
@@ -170,6 +170,7 @@ namespace DevZest.Data.Views
 
         void IRowElement.Cleanup(RowPresenter rowPresenter)
         {
+            Command = null;
             ForeignKey = null;
             Extender = null;
             ValueBag.Clear();
