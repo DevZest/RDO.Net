@@ -182,8 +182,8 @@ namespace DevZest.Data.Views
             private bool _isExtendedSelectionLocked;
             internal void OnFocused(GridCell gridCell)
             {
-                if (Template.SelectionMode == null)
-                    DeselectAllRows();
+                SuspendInvalidateView();
+                DeselectAllRows();
 
                 var index = IndexOf(gridCell);
                 Debug.Assert(index >= 0 && index < _gridCellBindings.Length);
@@ -193,6 +193,7 @@ namespace DevZest.Data.Views
                     _extendedBindingSelection = _extendedRowSelection = 0;
 
                 InvalidateView();
+                ResumeInvalidateView();
             }
         }
     }
