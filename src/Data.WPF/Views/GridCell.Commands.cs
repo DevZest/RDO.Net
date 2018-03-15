@@ -49,13 +49,7 @@ namespace DevZest.Data.Views
 
             private bool CanToggleMode(GridCell gridCell)
             {
-                return Mode == GridCellMode.Edit ? true : IsEditable(gridCell);
-            }
-
-            private static bool IsEditable(GridCell gridCell)
-            {
-                var rowBinding = gridCell.GetBinding() as RowBinding;
-                return rowBinding != null && rowBinding.IsEditable;
+                return Mode == GridCellMode.Edit ? true : gridCell.IsEditable;
             }
 
             private void ExecToggleMode(object sender, ExecutedRoutedEventArgs e)
@@ -84,7 +78,7 @@ namespace DevZest.Data.Views
 
             private bool CanEnterEditMode(GridCell gridCell)
             {
-                return gridCell.IsCurrent && Mode == GridCellMode.Select && IsEditable(gridCell);
+                return gridCell.IsCurrent && Mode == GridCellMode.Select && gridCell.IsEditable;
             }
 
             private void CanExitEditMode(object sender, CanExecuteRoutedEventArgs e)

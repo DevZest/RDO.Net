@@ -76,20 +76,23 @@ namespace DevZest.Data.Views
             {
                 var p = dataPresenter.GetService<Presenter>(false);
                 if (p != null && p.Mode == GridCellMode.Edit)   // DataView is in Edit mode
-                    return IsEditable(gridCell);
+                    return gridCell.IsEditable;
             }
 
             return true;
         }
 
-        private static bool IsEditable(GridCell gridCell)
+        public bool IsEditable
         {
-            var child = gridCell.Child;
-            if (child == null)
-                return false;
+            get
+            {
+                var child = Child;
+                if (child == null)
+                    return false;
 
-            var binding = child.GetBinding() as RowBinding;
-            return binding != null && binding.IsEditable;
+                var binding = child.GetBinding() as RowBinding;
+                return binding != null && binding.IsEditable;
+            }
         }
 
         public UIElement Child
@@ -268,6 +271,17 @@ namespace DevZest.Data.Views
             base.OnMouseDown(e);
             if (!IsKeyboardFocusWithin && Focusable)
                 Focus();
+        }
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+            var presenter = GetPresenter();
+            if (presenter == null)
+                return;
+
+            if (presenter.Mode == GridCellMode.Select && IsEditable)
+                presenter.Mode = GridCellMode.Edit;
         }
     }
 }
