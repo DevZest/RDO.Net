@@ -499,7 +499,7 @@ namespace DevZest.Data.Presenters.Primitives
         public ValidationMode ScalarValidationMode { get; internal set; } = ValidationMode.Progressive;
 
         [DefaultValue(SelectionMode.Extended)]
-        public SelectionMode SelectionMode { get; internal set; }
+        public SelectionMode SelectionMode { get; internal set; } = SelectionMode.Extended;
 
         private IScalarAsyncValidators _scalarAsyncValidators = Presenters.ScalarAsyncValidators.Empty;
 
