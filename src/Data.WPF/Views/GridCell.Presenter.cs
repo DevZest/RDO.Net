@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 
@@ -44,6 +45,21 @@ namespace DevZest.Data.Views
                 }
             }
 
+            private bool _selectFullRowInEditMode = true;
+            [DefaultValue(true)]
+            public bool SelectFullRowInEditMode
+            {
+                get { return _selectFullRowInEditMode; }
+                set
+                {
+                    if (_selectFullRowInEditMode == value)
+                        return;
+
+                    _selectFullRowInEditMode = value;
+                    DataPresenter.InvalidateView();
+                }
+            }
+
             private int _currentBinding = -1;
             private int _extendedBindingSelection;
             private RowPresenter _currentRow;
@@ -79,7 +95,7 @@ namespace DevZest.Data.Views
                     return gridCell.GetRowPresenter().IsSelected;
 
                 if (Mode == GridCellMode.Edit)
-                    return false;
+                    return SelectFullRowInEditMode && gridCell.GetRowPresenter().IsCurrent;
 
                 if (_currentBinding < 0)
                     return false;
