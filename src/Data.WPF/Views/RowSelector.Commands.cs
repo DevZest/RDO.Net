@@ -20,7 +20,7 @@ namespace DevZest.Data.Views
             public static RoutedUICommand MoveToEnd { get { return ComponentCommands.MoveToEnd; } }
             public static RoutedUICommand SelectExtendedUp { get { return ComponentCommands.ExtendSelectionUp; } }
             public static RoutedUICommand SelectExtendedDown { get { return ComponentCommands.ExtendSelectionDown; } }
-            public static RoutedUICommand SelectiExtendedLeft { get { return ComponentCommands.ExtendSelectionLeft; } }
+            public static RoutedUICommand SelectExtendedLeft { get { return ComponentCommands.ExtendSelectionLeft; } }
             public static RoutedUICommand SelectExtendedRight { get { return ComponentCommands.ExtendSelectionRight; } }
             public static readonly RoutedUICommand SelectExtendedHome = new RoutedUICommand();
             public static readonly RoutedUICommand SelectExtendedEnd = new RoutedUICommand();
@@ -61,7 +61,7 @@ namespace DevZest.Data.Views
                         {
                             yield return Commands.SelectExtendedUp.Bind(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedDown.Bind(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
-                            yield return Commands.SelectiExtendedLeft.Bind(ExecSelectExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
+                            yield return Commands.SelectExtendedLeft.Bind(ExecSelectExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedRight.Bind(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedHome.Bind(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
                             yield return Commands.SelectExtendedEnd.Bind(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
