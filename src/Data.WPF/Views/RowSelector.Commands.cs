@@ -10,12 +10,6 @@ namespace DevZest.Data.Views
     {
         public static class Commands
         {
-            public static RoutedUICommand ScrollUp { get { return ComponentCommands.MoveFocusUp; } }
-            public static RoutedUICommand ScrollDown { get { return ComponentCommands.MoveFocusDown; } }
-            public static RoutedUICommand ScrollLeft { get { return ComponentCommands.MoveFocusBack; } }
-            public static RoutedUICommand ScrollRight { get { return ComponentCommands.MoveFocusForward; } }
-            public static RoutedUICommand ScrollPageUp { get { return ComponentCommands.MoveFocusPageUp; } }
-            public static RoutedUICommand ScrollPageDown { get { return ComponentCommands.MoveFocusPageDown; } }
             public static RoutedUICommand MoveUp { get { return ComponentCommands.MoveUp; } }
             public static RoutedUICommand MoveDown { get { return ComponentCommands.MoveDown; } }
             public static RoutedUICommand MoveLeft { get { return ComponentCommands.MoveLeft; } }
@@ -55,12 +49,6 @@ namespace DevZest.Data.Views
                 {
                     if (DataPresenter.LayoutOrientation.HasValue)
                     {
-                        yield return Commands.ScrollUp.Bind(ExecScrollUp);
-                        yield return Commands.ScrollDown.Bind(ExecScrollDown);
-                        yield return Commands.ScrollLeft.Bind(ExecScrollLeft);
-                        yield return Commands.ScrollRight.Bind(ExecScrollRight);
-                        yield return Commands.ScrollPageUp.Bind(ExecScrollPageUp);
-                        yield return Commands.ScrollPageDown.Bind(ExecScrollPageDown);
                         yield return Commands.MoveUp.Bind(ExecMoveUp, CanExecMoveUp, new KeyGesture(Key.Up));
                         yield return Commands.MoveDown.Bind(ExecMoveDown, CanExecMoveDown, new KeyGesture(Key.Down));
                         yield return Commands.MoveLeft.Bind(ExecMoveLeft, CanExecMoveLeft, new KeyGesture(Key.Left));
@@ -96,11 +84,6 @@ namespace DevZest.Data.Views
                 get { return DataPresenter.Scrollable; }
             }
 
-            private DataView View
-            {
-                get { return DataPresenter.View; }
-            }
-
             private RowPresenter CurrentRow
             {
                 get { return DataPresenter.CurrentRow; }
@@ -125,36 +108,6 @@ namespace DevZest.Data.Views
             private void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true)
             {
                 DataPresenter.Select(rowPresenter, selectionMode, ensureVisible);
-            }
-
-            private void ExecScrollUp(object sender, ExecutedRoutedEventArgs e)
-            {
-                Scrollable.ScrollBy(0, -View.ScrollLineHeight);
-            }
-
-            private void ExecScrollDown(object sender, ExecutedRoutedEventArgs e)
-            {
-                Scrollable.ScrollBy(0, View.ScrollLineHeight);
-            }
-
-            private void ExecScrollLeft(object sender, ExecutedRoutedEventArgs e)
-            {
-                Scrollable.ScrollBy(-View.ScrollLineWidth, 0);
-            }
-
-            private void ExecScrollRight(object sender, ExecutedRoutedEventArgs e)
-            {
-                Scrollable.ScrollBy(View.ScrollLineWidth, 0);
-            }
-
-            private void ExecScrollPageUp(object sender, ExecutedRoutedEventArgs e)
-            {
-                Scrollable.ScrollPageUp();
-            }
-
-            private void ExecScrollPageDown(object sender, ExecutedRoutedEventArgs e)
-            {
-                Scrollable.ScrollPageDown();
             }
 
             private bool CanSelect(Orientation orientation)
