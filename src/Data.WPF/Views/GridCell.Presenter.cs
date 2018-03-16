@@ -49,11 +49,14 @@ namespace DevZest.Data.Views
                     if (_mode == value)
                         return;
 
+                    SuspendInvalidateView();
                     if (_mode == GridCellMode.Edit && DataPresenter.IsEditing)
                         DataPresenter.EditingRow.CancelEdit();
                     _mode = value;
-                    _extendedBindingSelection = _extendedRowSelection = 0;
+                    DeselectAllRows();
+                    ClearExtendedSelection();
                     DataPresenter.InvalidateView();
+                    ResumeInvalidateView();
                 }
             }
 
@@ -122,6 +125,12 @@ namespace DevZest.Data.Views
             public int EndSelectedRowIndex
             {
                 get { return Math.Max(CurrentRowIndex, CurrentRowIndex + _extendedRowSelection); }
+            }
+
+            public void ClearExtendedSelection()
+            {
+                _extendedBindingSelection = _extendedRowSelection = 0;
+                InvalidateView();
             }
 
             private int IndexOf(GridCell gridCell)
@@ -201,7 +210,7 @@ namespace DevZest.Data.Views
                     _extendedRowSelection += CurrentRow.Index - gridCell.GetRowPresenter().Index;
                 }
                 else
-                    _extendedBindingSelection = _extendedRowSelection = 0;
+                    ClearExtendedSelection();
 
                 if (!gridCell.IsKeyboardFocusWithin)
                 {
@@ -256,7 +265,7 @@ namespace DevZest.Data.Views
                 Debug.Assert(index >= 0 && index < _gridCellBindings.Length);
                 CurrentBindingIndex = index;
                 if (!_isExtendedSelectionLocked)
-                    _extendedBindingSelection = _extendedRowSelection = 0;
+                    ClearExtendedSelection();
 
                 InvalidateView();
                 ResumeInvalidateView();
@@ -291,6 +300,17 @@ namespace DevZest.Data.Views
                     Select(gridCell, false);
                 else if (predict == GridCellMode.Edit)
                     ToggleMode(gridCell);
+            }
+
+            public void SelectAll()
+            {
+                SuspendInvalidateView();
+
+                foreach (var row in DataPresenter.Rows)
+                    row.IsSelected = true;
+                ClearExtendedSelection();
+
+                ResumeInvalidateView();
             }
         }
     }

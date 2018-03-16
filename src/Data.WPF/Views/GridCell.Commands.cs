@@ -12,6 +12,7 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand ExitEditMode = new RoutedUICommand();
             public static readonly RoutedUICommand ActivateGridCell = new RoutedUICommand();
             public static readonly RoutedUICommand SelectTo = new RoutedUICommand();
+            public static RoutedCommand SelectAll { get { return ApplicationCommands.SelectAll; } }
         }
 
         public interface ICommandService : IService
@@ -44,6 +45,7 @@ namespace DevZest.Data.Views
                 yield return Commands.ActivateGridCell.Bind(ExecActivateGridCell, CanActivateGridCell, new MouseGesture(MouseAction.LeftClick));
                 yield return Commands.ExitEditMode.Bind(ExecToggleMode, CanExitEditMode, new KeyGesture(Key.Escape));
                 yield return Commands.SelectTo.Bind(ExecSelectTo, CanSelectTo, new MouseGesture(MouseAction.LeftClick, ModifierKeys.Shift));
+                yield return Commands.SelectAll.Bind(ExecSelectAll, CanSelectTo);
             }
 
             private void CanToggleMode(object sender, CanExecuteRoutedEventArgs e)
@@ -136,6 +138,17 @@ namespace DevZest.Data.Views
             private bool SelectTo(GridCell gridCell)
             {
                 Presenter.Select(gridCell, true);
+                return true;
+            }
+
+            private void ExecSelectAll(object sender, ExecutedRoutedEventArgs e)
+            {
+                e.Handled = SelectAll();
+            }
+
+            private bool SelectAll()
+            {
+                Presenter.SelectAll();
                 return true;
             }
         }
