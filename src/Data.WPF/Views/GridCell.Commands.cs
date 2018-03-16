@@ -8,11 +8,11 @@ namespace DevZest.Data.Views
     {
         public static class Commands
         {
-            public static readonly RoutedUICommand ToggleMode = new RoutedUICommand();
-            public static readonly RoutedUICommand ExitEditMode = new RoutedUICommand();
-            public static readonly RoutedUICommand ActivateGridCell = new RoutedUICommand();
-            public static readonly RoutedUICommand SelectTo = new RoutedUICommand();
-            public static RoutedCommand SelectAll { get { return ApplicationCommands.SelectAll; } }
+            public static readonly RoutedCommand ToggleMode = new RoutedCommand(nameof(ToggleMode), typeof(GridCell));
+            public static readonly RoutedCommand ExitEditMode = new RoutedCommand(nameof(ExitEditMode), typeof(GridCell));
+            public static readonly RoutedCommand Activate = new RoutedCommand(nameof(Activate), typeof(GridCell));
+            public static readonly RoutedCommand SelectTo = new RoutedCommand(nameof(SelectTo), typeof(GridCell));
+            public static RoutedUICommand SelectAll { get { return ApplicationCommands.SelectAll; } }
         }
 
         public interface ICommandService : IService
@@ -42,7 +42,7 @@ namespace DevZest.Data.Views
             public IEnumerable<CommandEntry> GetCommandEntries(GridCell gridCell)
             {
                 yield return Commands.ToggleMode.Bind(ExecToggleMode, CanToggleMode, new KeyGesture(Key.F8));
-                yield return Commands.ActivateGridCell.Bind(ExecActivateGridCell, CanActivateGridCell, new MouseGesture(MouseAction.LeftClick));
+                yield return Commands.Activate.Bind(ExecActivateGridCell, CanActivateGridCell, new MouseGesture(MouseAction.LeftClick));
                 yield return Commands.ExitEditMode.Bind(ExecToggleMode, CanExitEditMode, new KeyGesture(Key.Escape));
                 yield return Commands.SelectTo.Bind(ExecSelectTo, CanSelectTo, new MouseGesture(MouseAction.LeftClick, ModifierKeys.Shift));
                 yield return Commands.SelectAll.Bind(ExecSelectAll, CanSelectTo);
