@@ -98,6 +98,7 @@
     <Compile Include="Utilities\IInputElement.ContainsKeyboardFocus.cs" />
     <Compile Include="Utilities\SingleChildEnumerator.cs" />
     <Compile Include="Views\AsyncValidationFaultControl.cs" />
+    <Compile Include="Views\DataView.Commands.cs" />
     <Compile Include="Views\GridCell.Commands.cs" />
     <Compile Include="Views\GridCell.cs" />
     <Compile Include="Views\GridCell.Presenter.cs" />
