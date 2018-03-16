@@ -276,8 +276,12 @@ namespace DevZest.Data.Views
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             base.OnPreviewKeyDown(e);
+            EnterEditModeByKey(e);
+        }
 
-            if (HasInputBinding(e.Key))
+        private void EnterEditModeByKey(KeyEventArgs e)
+        {
+            if (HasInputBinding(e.Key) || e.KeyboardDevice.Modifiers != ModifierKeys.None)
                 return;
 
             var presenter = GetPresenter();

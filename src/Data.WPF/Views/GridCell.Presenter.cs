@@ -20,11 +20,17 @@ namespace DevZest.Data.Views
                     throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
                 DataPresenter = dataPresenter;
                 _gridCellBindings = Template.RowBindings.Where(x => typeof(GridCell).IsAssignableFrom(x.ViewType)).ToArray();
+                CurrentBindingIndex = GridCellBindings.Count > 0 ? 0 : -1;
             }
 
             private Template Template
             {
                 get { return DataPresenter.Template; }
+            }
+
+            public IReadOnlyCollection<RowPresenter> SelectedFullRows
+            {
+                get { return DataPresenter.SelectedRows; }
             }
 
             private RowBinding[] _gridCellBindings;
@@ -51,6 +57,24 @@ namespace DevZest.Data.Views
                 }
             }
 
+            public bool CanToggleMode(GridCell gridCell)
+            {
+                VerifyGridCell(gridCell, nameof(gridCell));
+                return Mode == GridCellMode.Edit ? true : gridCell.IsEditable;
+            }
+
+            public void ToggleMode(GridCell gridCell)
+            {
+                VerifyGridCell(gridCell, nameof(gridCell));
+
+                bool isKeyboardFocusWithin = gridCell.IsKeyboardFocusWithin;
+                var mode = Mode;
+                Mode = mode == GridCellMode.Edit ? GridCellMode.Select : GridCellMode.Edit;
+                gridCell.Refresh();
+                if (isKeyboardFocusWithin && !gridCell.ContainsKeyboardFocus())
+                    gridCell.Focus();
+            }
+
             private bool _selectFullRowInEditMode = true;
             [DefaultValue(true)]
             public bool SelectFullRowInEditMode
@@ -66,13 +90,39 @@ namespace DevZest.Data.Views
                 }
             }
 
-            private int _currentBinding = -1;
+            public int CurrentBindingIndex { get; private set; }
             private int _extendedBindingSelection;
-            private RowPresenter CurrentRow
+
+            public int StartSelectedBindingIndex
+            {
+                get { return Math.Min(CurrentBindingIndex, CurrentBindingIndex + _extendedBindingSelection); }
+            }
+
+            public int EndSelectedBindingIndex
+            {
+                get { return Math.Max(CurrentBindingIndex, CurrentBindingIndex + _extendedBindingSelection); }
+            }
+
+            public RowPresenter CurrentRow
             {
                 get { return DataPresenter.CurrentRow; }
             }
             private int _extendedRowSelection;
+
+            public int CurrentRowIndex
+            {
+                get { return CurrentRow == null ? -1 : CurrentRow.Index; }
+            }
+
+            public int StartSelectedRowIndex
+            {
+                get { return Math.Min(CurrentRowIndex, CurrentRowIndex + _extendedRowSelection); }
+            }
+
+            public int EndSelectedRowIndex
+            {
+                get { return Math.Max(CurrentRowIndex, CurrentRowIndex + _extendedRowSelection); }
+            }
 
             private int IndexOf(GridCell gridCell)
             {
@@ -106,7 +156,7 @@ namespace DevZest.Data.Views
                 if (Mode == GridCellMode.Edit)
                     return SelectFullRowInEditMode && gridCell.GetRowPresenter().IsCurrent;
 
-                if (_currentBinding < 0)
+                if (CurrentBindingIndex < 0)
                     return false;
 
                 var bindingIndex = VerifyGridCell(gridCell, nameof(gridCell));
@@ -115,21 +165,12 @@ namespace DevZest.Data.Views
 
             private bool IsBindingSelected(int bindingIndex)
             {
-                var extended = _currentBinding + _extendedBindingSelection;
-                var startIndex = Math.Min(_currentBinding, extended);
-                var endIndex = Math.Max(_currentBinding, extended);
-                return bindingIndex >= startIndex && bindingIndex <= endIndex;
+                return bindingIndex >= StartSelectedBindingIndex && bindingIndex <= EndSelectedBindingIndex;
             }
 
             private bool IsRowSelected(int rowIndex)
             {
-                if (CurrentRow == null)
-                    return false;
-                var currentRowIndex = CurrentRow.Index;
-                var extended = currentRowIndex + _extendedRowSelection;
-                var startIndex = Math.Min(currentRowIndex, extended);
-                var endIndex = Math.Max(currentRowIndex, extended);
-                return rowIndex >= startIndex && rowIndex <= endIndex;
+                return rowIndex >= StartSelectedRowIndex && rowIndex <= EndSelectedRowIndex;
             }
 
             public bool IsCurrent(GridCell gridCell)
@@ -137,7 +178,7 @@ namespace DevZest.Data.Views
                 var index = VerifyGridCell(gridCell, nameof(gridCell));
                 if (!gridCell.IsKeyboardFocusWithin && DataPresenter.View.IsKeyboardFocusWithin)    // Another element in DataView has keyboard focus
                     return false;
-                return _currentBinding == index && gridCell.GetRowPresenter() == CurrentRow;
+                return CurrentBindingIndex == index && gridCell.GetRowPresenter() == CurrentRow;
             }
 
             public void Select(GridCell gridCell, bool isExtended)
@@ -151,13 +192,16 @@ namespace DevZest.Data.Views
 
                 DeselectAllRows();
 
-                if (_currentBinding == -1)
-                    _currentBinding = bindingIndex;
+                if (CurrentBindingIndex == -1)
+                    CurrentBindingIndex = bindingIndex;
 
                 if (isExtended)
-                    _extendedBindingSelection += _currentBinding - bindingIndex;
+                {
+                    _extendedBindingSelection += CurrentBindingIndex - bindingIndex;
+                    _extendedRowSelection += CurrentRow.Index - gridCell.GetRowPresenter().Index;
+                }
                 else
-                    _extendedBindingSelection = 0;
+                    _extendedBindingSelection = _extendedRowSelection = 0;
 
                 if (!gridCell.IsKeyboardFocusWithin)
                 {
@@ -172,7 +216,7 @@ namespace DevZest.Data.Views
                     }
                 }
 
-                Debug.Assert(_currentBinding == bindingIndex);
+                Debug.Assert(CurrentBindingIndex == bindingIndex);
                 InvalidateView();
                 ResumeInvalidateView();
             }
@@ -210,12 +254,43 @@ namespace DevZest.Data.Views
 
                 var index = IndexOf(gridCell);
                 Debug.Assert(index >= 0 && index < _gridCellBindings.Length);
-                _currentBinding = index;
+                CurrentBindingIndex = index;
                 if (!_isExtendedSelectionLocked)
                     _extendedBindingSelection = _extendedRowSelection = 0;
 
                 InvalidateView();
                 ResumeInvalidateView();
+            }
+
+            public GridCellMode? PredictActivate(GridCell gridCell)
+            {
+                VerifyGridCell(gridCell, nameof(gridCell));
+
+                if (Mode == GridCellMode.Edit)
+                    return null;
+
+                if (SelectedFullRows.Count > 0 || !gridCell.IsKeyboardFocusWithin || gridCell.Mode != GridCellMode.Select)
+                    return GridCellMode.Select;
+
+                if (StartSelectedBindingIndex == EndSelectedBindingIndex && StartSelectedRowIndex == EndSelectedRowIndex)
+                {
+                    if (gridCell.IsEditable)
+                        return GridCellMode.Edit;
+                    else
+                        return null;
+                }
+
+                return GridCellMode.Select;
+            }
+
+            public void Activate(GridCell gridCell)
+            {
+                var predict = PredictActivate(gridCell);
+
+                if (predict == GridCellMode.Select)
+                    Select(gridCell, false);
+                else if (predict == GridCellMode.Edit)
+                    ToggleMode(gridCell);
             }
         }
     }
