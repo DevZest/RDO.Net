@@ -273,37 +273,20 @@ namespace DevZest.Data.Views
                 Focus();
         }
 
-        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        protected override void OnPreviewTextInput(TextCompositionEventArgs e)
         {
-            base.OnPreviewKeyDown(e);
-            EnterEditModeByKey(e);
+            base.OnPreviewTextInput(e);
+            TryEnterEditMode();
         }
 
-        private void EnterEditModeByKey(KeyEventArgs e)
+        private void TryEnterEditMode()
         {
-            if (HasInputBinding(e.Key) || e.KeyboardDevice.Modifiers != ModifierKeys.None)
-                return;
-
             var presenter = GetPresenter();
             if (presenter == null)
                 return;
 
             if (presenter.Mode == GridCellMode.Select && IsEditable)
-                presenter.Mode = GridCellMode.Edit;
-        }
-
-        private bool HasInputBinding(Key key)
-        {
-            foreach (var obj in InputBindings)
-            {
-                var inputBinding = obj as InputBinding;
-                if (inputBinding == null)
-                    continue;
-                var keyGesture = inputBinding.Gesture as KeyGesture;
-                if (keyGesture != null && keyGesture.Key == key)
-                    return true;
-            }
-            return false;
+                presenter.ToggleMode(this);
         }
     }
 }
