@@ -68,7 +68,10 @@ namespace DevZest.Data.Views
 
             private int _currentBinding = -1;
             private int _extendedBindingSelection;
-            private RowPresenter _currentRow;
+            private RowPresenter CurrentRow
+            {
+                get { return DataPresenter.CurrentRow; }
+            }
             private int _extendedRowSelection;
 
             private int IndexOf(GridCell gridCell)
@@ -120,9 +123,9 @@ namespace DevZest.Data.Views
 
             private bool IsRowSelected(int rowIndex)
             {
-                if (_currentRow == null)
+                if (CurrentRow == null)
                     return false;
-                var currentRowIndex = _currentRow.Index;
+                var currentRowIndex = CurrentRow.Index;
                 var extended = currentRowIndex + _extendedRowSelection;
                 var startIndex = Math.Min(currentRowIndex, extended);
                 var endIndex = Math.Max(currentRowIndex, extended);
@@ -134,7 +137,7 @@ namespace DevZest.Data.Views
                 var index = VerifyGridCell(gridCell, nameof(gridCell));
                 if (!gridCell.IsKeyboardFocusWithin && DataPresenter.View.IsKeyboardFocusWithin)    // Another element in DataView has keyboard focus
                     return false;
-                return _currentBinding == index && gridCell.GetRowPresenter() == _currentRow;
+                return _currentBinding == index && gridCell.GetRowPresenter() == CurrentRow;
             }
 
             public void Select(GridCell gridCell, bool isExtended)
@@ -150,8 +153,6 @@ namespace DevZest.Data.Views
 
                 if (_currentBinding == -1)
                     _currentBinding = bindingIndex;
-                if (_currentRow == null)
-                    _currentRow = gridCell.GetRowPresenter();
 
                 if (isExtended)
                     _extendedBindingSelection += _currentBinding - bindingIndex;
@@ -210,7 +211,6 @@ namespace DevZest.Data.Views
                 var index = IndexOf(gridCell);
                 Debug.Assert(index >= 0 && index < _gridCellBindings.Length);
                 _currentBinding = index;
-                _currentRow = gridCell.GetRowPresenter();
                 if (!_isExtendedSelectionLocked)
                     _extendedBindingSelection = _extendedRowSelection = 0;
 

@@ -109,14 +109,13 @@ namespace DevZest.Data.Presenters
                 Refresh(e, rowPresenter);
         }
 
-        internal sealed override void Cleanup(UIElement element)
+        internal sealed override void PerformCleanup(UIElement element)
         {
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
             if (Input != null)
                 Input.Detach(e);
             Cleanup(e, rowPresenter);
-            e.SetRowPresenter(null);
         }
 
         public RowInput<T> BeginInput(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger = null)

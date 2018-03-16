@@ -111,7 +111,7 @@ namespace DevZest.Data.Presenters
             rowElement?.Refresh(element.GetRowPresenter());
         }
 
-        internal sealed override void Cleanup(UIElement element)
+        internal sealed override void PerformCleanup(UIElement element)
         {
             PerformCleanup((T)element);
         }

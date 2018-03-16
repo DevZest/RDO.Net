@@ -290,14 +290,9 @@ namespace DevZest.Data.Views
             base.OnMouseRightButtonDown(e);
         }
 
-        private RowView RowView
-        {
-            get { return RowView.GetCurrent(this); }
-        }
-
         private RowPresenter RowPresenter
         {
-            get { return RowView?.RowPresenter; }
+            get { return this.GetRowPresenter(); }
         }
 
         private DataPresenter DataPresenter

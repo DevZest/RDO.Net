@@ -136,12 +136,24 @@ namespace DevZest.Data.Presenters
         private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
             typeof(RowPresenter), typeof(BindingManager), new PropertyMetadata(null));
 
-        internal static RowPresenter GetRowPresenter(this UIElement element)
+        public static RowPresenter GetRowPresenter(this UIElement element)
         {
             return (RowPresenter)element.GetValue(RowPresenterProperty);
         }
 
-        internal static void SetRowPresenter(this UIElement element, RowPresenter value)
+        internal static void SetRowPresenter(this UIElement element, RowBinding rowBinding, RowPresenter value)
+        {
+            element.SetRowPresenter(value);
+            var childBindings = rowBinding.ChildBindings;
+            for (int i = 0; i < childBindings.Count; i++)
+            {
+                var childBinding = childBindings[i];
+                var childElement = rowBinding.GetChild(element, i);
+                childElement.SetRowPresenter(childBinding, value);
+            }
+        }
+
+        private static void SetRowPresenter(this UIElement element, RowPresenter value)
         {
             if (value == null)
                 element.ClearValue(RowPresenterProperty);

@@ -395,14 +395,9 @@ namespace DevZest.Data.Views
             _isEditing = Switcher.GetIsEditing(this);
         }
 
-        private RowView RowView
-        {
-            get { return RowView.GetCurrent(this); }
-        }
-
         private RowPresenter RowPresenter
         {
-            get { return RowView?.RowPresenter; }
+            get { return this.GetRowPresenter(); }
         }
 
         private UIElement _inertElement;

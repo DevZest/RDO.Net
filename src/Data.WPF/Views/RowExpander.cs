@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Presenters;
-using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -32,7 +31,6 @@ namespace DevZest.Data.Views
         public RowExpander()
         {
             CommandBindings.Add(new CommandBinding(Commands.ToggleExpand, ExecToggleExpand, CanToggleExpand));
-            //Loaded += OnLoaded;
         }
 
         private void CanToggleExpand(object sender, CanExecuteRoutedEventArgs e)

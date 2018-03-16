@@ -29,12 +29,20 @@ namespace DevZest.Data.Presenters.Primitives
         internal sealed override UIElement Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(SettingUpElement != null);
-            SettingUpElement.SetRowPresenter(rowPresenter);
+            SettingUpElement.SetRowPresenter(this, rowPresenter);
             PerformSetup(rowPresenter);
             return SettingUpElement;
         }
 
+        internal sealed override void Cleanup(UIElement element)
+        {
+            PerformCleanup(element);
+            element.SetRowPresenter(this, null);
+        }
+
         internal abstract void PerformSetup(RowPresenter rowPresenter);
+
+        internal abstract void PerformCleanup(UIElement element);
 
         public new T this[RowPresenter rowPresenter]
         {

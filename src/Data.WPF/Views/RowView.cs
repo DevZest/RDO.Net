@@ -232,7 +232,7 @@ namespace DevZest.Data.Views
             if (Elements != null)
             {
                 foreach (var element in Elements)
-                    element.SetRowPresenter(rowPresenter);
+                    element.SetRowPresenter((RowBinding)element.GetBinding(), rowPresenter);
             }
 
             SetupElements(false);
