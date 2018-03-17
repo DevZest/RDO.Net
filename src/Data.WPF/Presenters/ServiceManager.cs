@@ -101,7 +101,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private static bool Setup(this UIElement element, ServiceIdentifier serviceIdentifier)
+        private static bool Setup(this ServiceIdentifier serviceIdentifier, UIElement element)
         {
             var bag = s_serviceIdentifiers.GetOrCreateValue(element);
             if (bag.Contains(serviceIdentifier.Type))
@@ -111,7 +111,7 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
-        private static bool Cleanup(this UIElement element, ServiceIdentifier serviceIdentifier)
+        private static bool Cleanup(this ServiceIdentifier serviceIdentifier, UIElement element)
         {
             ServiceIdentifierBag bag;
             if (!s_serviceIdentifiers.TryGetValue(element, out bag))
@@ -144,16 +144,18 @@ namespace DevZest.Data.Presenters
             public readonly ServiceIdentifier ServiceIdentifier;
         }
 
-        public static void Setup<T>(this ICommandService<T> commandService,  T element)
-            where T : UIElement
+        public static void Setup<TService, TElement>(this TService commandService,  TElement element, Func<TService, TElement, IEnumerable<CommandEntry>> getCommandEntries)
+            where TService : IService
+            where TElement : UIElement
         {
             Check.NotNull(element, nameof(element));
+            Check.NotNull(getCommandEntries, nameof(getCommandEntries));
 
-            var serviceIdentifier = commandService.GetServiceIdentifier(typeof(ICommandService<T>));
-            if (!element.Setup(serviceIdentifier))
+            var serviceIdentifier = commandService.GetServiceIdentifier(typeof(TService));
+            if (!serviceIdentifier.Setup(element))
                 return;
 
-            var commandEntries = commandService.GetCommandEntries(element);
+            var commandEntries = getCommandEntries(commandService, element);
             if (commandEntries == null)
                 return;
             foreach (var entry in commandEntries)
@@ -171,12 +173,13 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static void Cleanup<T>(this ICommandService<T> commandService, T element)
-            where T : UIElement
+        public static void Cleanup<TService, TElement>(this TService commandService, TElement element)
+            where TService : IService
+            where TElement : UIElement
         {
-            var serviceIdentifier = commandService.GetServiceIdentifier(typeof(ICommandService<T>));
-            if (!element.Cleanup(serviceIdentifier))
-                return; ;
+            var serviceIdentifier = commandService.GetServiceIdentifier(typeof(TService));
+            if (!serviceIdentifier.Cleanup((UIElement)element))
+                return;
 
             CleanupCommandBindings(element.CommandBindings, serviceIdentifier);
             CleanupInputBindings(element.InputBindings, serviceIdentifier);

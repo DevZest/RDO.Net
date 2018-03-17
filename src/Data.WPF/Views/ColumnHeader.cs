@@ -64,8 +64,10 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand Sort = new RoutedUICommand(UserMessages.ColumnHeaderCommands_SortCommandText, nameof(Sort), typeof(Commands));
         }
 
-        public interface ICommandService : ICommandService<DataView>, ICommandService<ColumnHeader>
+        public interface ICommandService : IService
         {
+            IEnumerable<CommandEntry> GetCommandEntries(DataView dataView);
+            IEnumerable<CommandEntry> GetCommandEntries(ColumnHeader columnHeader);
         }
 
         private sealed class CommandService : ICommandService
@@ -285,8 +287,18 @@ namespace DevZest.Data.Views
         {
             var dataPresenter = p.DataPresenter;
             var commandService = GetCommandService(dataPresenter);
-            commandService.Setup(dataPresenter.View);
-            commandService.Setup(this);
+            commandService.Setup(dataPresenter.View, GetCommandEntries);
+            commandService.Setup(this, GetCommandEntries);
+        }
+
+        private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, DataView dataView)
+        {
+            return commandService.GetCommandEntries(dataView);
+        }
+
+        private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, ColumnHeader columnHeader)
+        {
+            return commandService.GetCommandEntries(columnHeader);
         }
 
         void IScalarElement.Cleanup(ScalarPresenter p)

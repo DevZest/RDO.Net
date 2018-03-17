@@ -78,7 +78,7 @@ namespace FileExplorer
                 .AddBinding(0, 0, _currentDirectory.BindToTextBox().MergeIntoInPlaceEditor(_currentDirectory.BindToTextBlock("{0} (Click to edit)")));
         }
 
-        IEnumerable<CommandEntry> ICommandService<InPlaceEditor>.GetCommandEntries(InPlaceEditor inPlaceEditor)
+        IEnumerable<CommandEntry> InPlaceEditor.ICommandService.GetCommandEntries(InPlaceEditor inPlaceEditor)
         {
             yield return RowView.Commands.BeginEdit.Bind(BeginEdit, CanBeginEdit, new MouseGesture(MouseAction.LeftClick));
         }
@@ -95,7 +95,7 @@ namespace FileExplorer
             ScalarContainer.BeginEdit();
         }
 
-        IEnumerable<CommandEntry> ICommandService<DataView>.GetCommandEntries(DataView dataView)
+        IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
         {
             var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
             foreach (var entry in baseService.GetCommandEntries(dataView))

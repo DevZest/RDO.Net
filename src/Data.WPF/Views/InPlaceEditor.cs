@@ -13,8 +13,9 @@ namespace DevZest.Data.Views
 {
     public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement
     {
-        public interface ICommandService : ICommandService<InPlaceEditor>
+        public interface ICommandService : IService
         {
+            IEnumerable<CommandEntry> GetCommandEntries(InPlaceEditor inPlaceEditor);
         }
 
         protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
@@ -24,7 +25,12 @@ namespace DevZest.Data.Views
 
         private void SetupCommands(DataPresenter dataPresenter)
         {
-            GetCommandService(dataPresenter)?.Setup(this);
+            GetCommandService(dataPresenter)?.Setup(this, GetCommandEnties);
+        }
+
+        private static IEnumerable<CommandEntry> GetCommandEnties(ICommandService commandService, InPlaceEditor inPlaceEditor)
+        {
+            return commandService.GetCommandEntries(inPlaceEditor);
         }
 
         private void CleanupCommands(DataPresenter dataPresenter)

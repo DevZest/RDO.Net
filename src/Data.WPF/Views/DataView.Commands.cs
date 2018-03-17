@@ -16,8 +16,9 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand EndEditScalars = new RoutedUICommand();
         }
 
-        public interface ICommandService : ICommandService<DataView>
+        public interface ICommandService : IService
         {
+            IEnumerable<CommandEntry> GetCommandEntries(DataView dataView);
         }
 
         private sealed class CommandService : ICommandService

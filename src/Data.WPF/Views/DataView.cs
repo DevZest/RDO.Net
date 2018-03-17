@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Views
 {
@@ -73,8 +74,13 @@ namespace DevZest.Data.Views
                     GetCommandService(oldValue).Cleanup(this);
                 }
                 else
-                    GetCommandService(value).Setup(this);
+                    GetCommandService(value).Setup(this, GetCommandEntries);
             }
+        }
+
+        private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, DataView dataView)
+        {
+            return commandService.GetCommandEntries(dataView);
         }
 
         internal void ResetDataLoadState()

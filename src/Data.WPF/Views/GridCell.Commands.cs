@@ -15,8 +15,9 @@ namespace DevZest.Data.Views
             public static RoutedUICommand SelectAll { get { return ApplicationCommands.SelectAll; } }
         }
 
-        public interface ICommandService : ICommandService<GridCell>
+        public interface ICommandService : IService
         {
+            IEnumerable<CommandEntry> GetCommandEntries(GridCell gridCell);
         }
 
         private sealed class CommandService : ICommandService

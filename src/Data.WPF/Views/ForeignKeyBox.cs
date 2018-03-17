@@ -29,8 +29,9 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand ClearValue = new RoutedUICommand();
         }
 
-        public interface ICommandService : ICommandService<ForeignKeyBox>
+        public interface ICommandService : IService
         {
+            IEnumerable<CommandEntry> GetCommandEntries(ForeignKeyBox foreignKeyBox);
         }
 
         private sealed class CommandService : ICommandService
@@ -162,8 +163,13 @@ namespace DevZest.Data.Views
 
         void IRowElement.Setup(RowPresenter rowPresenter)
         {
-            GetCommandService(rowPresenter.DataPresenter).Setup(this);
+            GetCommandService(rowPresenter.DataPresenter).Setup(this, GetCommandEntries);
             Command = Commands.Lookup;  // Command needs to be set after command bindings otherwise IsEnabled will be false
+        }
+
+        private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, ForeignKeyBox foreignKeyBox)
+        {
+            return commandService.GetCommandEntries(foreignKeyBox);
         }
 
         void IRowElement.Refresh(RowPresenter rowPresenter)

@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -187,7 +188,12 @@ namespace DevZest.Data.Views
         void IRowElement.Setup(RowPresenter p)
         {
             var dataPresenter = p.DataPresenter;
-            GetCommandService(p.DataPresenter).Setup(this);
+            GetCommandService(p.DataPresenter).Setup(this, GetCommandEntries);
+        }
+
+        private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, GridCell gridCell)
+        {
+            return commandService.GetCommandEntries(gridCell);
         }
 
         void IRowElement.Refresh(RowPresenter p)
