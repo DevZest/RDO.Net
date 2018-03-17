@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System;
-using System.Collections.Generic;
 
 namespace DevZest.Data.Views
 {
@@ -64,16 +63,17 @@ namespace DevZest.Data.Views
             {
                 Debug.Assert((value == null) != (DataPresenter == null));
 
+                var oldValue = _dataPresenter;
                 _dataPresenter = value;
                 DataLoadState = DataLoadState.Idle;
                 DataLoadError = null;
                 if (value == null)
                 {
                     ClearValue(ScrollablePropertyKey);
-                    this.CleanupCommandEntries();
+                    GetCommandService(oldValue).Cleanup(this);
                 }
                 else
-                    this.SetupCommandEntries(DataPresenter.GetService<ICommandService>().GetCommandEntries(this));
+                    GetCommandService(value).Setup(this);
             }
         }
 

@@ -72,7 +72,7 @@ namespace FileExplorer
             }
         }
 
-        IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
+        IEnumerable<CommandEntry> ICommandService<DataView>.GetCommandEntries(DataView dataView)
         {
             var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
             foreach (var entry in baseService.GetCommandEntries(dataView))

@@ -6,7 +6,7 @@ namespace DevZest.Data.Views
 {
     partial class DataView
     {
-        public static class Commands
+        public abstract class Commands
         {
             public static readonly RoutedUICommand RetryDataLoad = new RoutedUICommand(UserMessages.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoad), typeof(Commands));
             public static readonly RoutedUICommand CancelDataLoad = new RoutedUICommand(UserMessages.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoad), typeof(Commands));
@@ -16,9 +16,8 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand EndEditScalars = new RoutedUICommand();
         }
 
-        public interface ICommandService : IService
+        public interface ICommandService : ICommandService<DataView>
         {
-            IEnumerable<CommandEntry> GetCommandEntries(DataView dataView);
         }
 
         private sealed class CommandService : ICommandService
@@ -102,6 +101,11 @@ namespace DevZest.Data.Views
                 var scalarContainer = ((DataView)sender).DataPresenter.ScalarContainer;
                 scalarContainer.EndEdit();
             }
+        }
+
+        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        {
+            return dataPresenter.GetService<ICommandService>();
         }
     }
 }
