@@ -64,46 +64,8 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand Sort = new RoutedUICommand(UserMessages.ColumnHeaderCommands_SortCommandText, nameof(Sort), typeof(Commands));
         }
 
-        private interface ICommandManager : IService
+        public interface ICommandService : ICommandService<DataView>, ICommandService<ColumnHeader>
         {
-            void EnsureCommandEntriesSetup(DataView dataView);
-        }
-
-        public interface ICommandService : IService
-        {
-            IEnumerable<CommandEntry> GetCommandEntries(DataView dataView);
-            IEnumerable<CommandEntry> GetCommandEntries(ColumnHeader columnHeader);
-        }
-
-        private sealed class CommandManager : ICommandManager
-        {
-            private DataPresenter _dataPresenter;
-            public DataPresenter DataPresenter
-            {
-                get { return _dataPresenter; }
-            }
-
-            public void Initialize(DataPresenter dataPresenter)
-            {
-                _dataPresenter = dataPresenter;
-                dataPresenter.ViewChanged += OnViewChanged;
-            }
-
-            private void OnViewChanged(object sender, EventArgs e)
-            {
-                _dataViewCommandEntriesSetup = false;
-            }
-
-            private bool _dataViewCommandEntriesSetup = false;
-            public void EnsureCommandEntriesSetup(DataView dataView)
-            {
-                if (_dataViewCommandEntriesSetup)
-                    return;
-
-                var commandService = _dataPresenter.GetService<ICommandService>();
-                dataView.SetupCommandEntries(commandService.GetCommandEntries(dataView));
-                _dataViewCommandEntriesSetup = true;
-            }
         }
 
         private sealed class CommandService : ICommandService
@@ -259,7 +221,6 @@ namespace DevZest.Data.Views
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ColumnHeader), new FrameworkPropertyMetadata(typeof(ColumnHeader)));
             ServiceManager.Register<ISortService, SortService>();
-            ServiceManager.Register<ICommandManager, CommandManager>();
             ServiceManager.Register<ICommandService, CommandService>();
         }
 
@@ -315,13 +276,30 @@ namespace DevZest.Data.Views
             obj.SetValue(IsResizeGripperProperty, BooleanBoxes.Box(value));
         }
 
-        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
+        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
         {
+            return dataPresenter.GetService<ICommandService>();
         }
 
-        void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
+        void IScalarElement.Setup(ScalarPresenter p)
         {
-            UpdateVisualState(scalarPresenter.DataPresenter);
+            var dataPresenter = p.DataPresenter;
+            var commandService = GetCommandService(dataPresenter);
+            commandService.Setup(dataPresenter.View);
+            commandService.Setup(this);
+        }
+
+        void IScalarElement.Cleanup(ScalarPresenter p)
+        {
+            var dataPresenter = p.DataPresenter;
+            var commandService = GetCommandService(dataPresenter);
+            commandService.Cleanup(dataPresenter.View);
+            commandService.Cleanup(this);
+        }
+
+        void IScalarElement.Refresh(ScalarPresenter p)
+        {
+            UpdateVisualState(p.DataPresenter);
         }
 
         private void UpdateVisualState(DataPresenter dataPresenter)
@@ -373,25 +351,6 @@ namespace DevZest.Data.Views
                 return ListSortDirection.Ascending;
             else
                 return ListSortDirection.Descending;
-        }
-
-        void IScalarElement.Setup(ScalarPresenter scalarPresenter)
-        {
-            var dataPresenter = scalarPresenter.DataPresenter;
-            var commandService = dataPresenter.GetService<ICommandService>();
-            EnsureCommandEntriesSetup(commandService);
-            var commandManager = dataPresenter.GetService<ICommandManager>();
-            commandManager.EnsureCommandEntriesSetup(dataPresenter.View);
-        }
-
-        private bool _commandEntriesSetup;
-        private void EnsureCommandEntriesSetup(ICommandService commandService)
-        {
-            if (_commandEntriesSetup)
-                return;
-
-            this.SetupCommandEntries(commandService.GetCommandEntries(this));
-            _commandEntriesSetup = true;
         }
 
         private GridTrack GridTrackToResize

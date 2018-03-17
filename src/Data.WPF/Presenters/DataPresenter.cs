@@ -53,7 +53,6 @@ namespace DevZest.Data.Presenters
         {
             if (View == null)
                 return;
-            View.CleanupCommandEntries();
             View.DataPresenter = null;
             View = null;
         }

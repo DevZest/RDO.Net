@@ -345,12 +345,12 @@ namespace DevZest.Data.Presenters
         {
             if (_dataLoader != null)
                 _dataLoader.Reset();
-            base.DetachView();
             if (_layoutManager != null)
             {
                 _layoutManager.ClearElements();
                 _layoutManager = null;
             }
+            base.DetachView();  // This must be called after _layoutManager.ClearElements() to ensure DataPresenter.View is not null when doing cleanup
             DataSet = null;
             OnViewChanged();
         }

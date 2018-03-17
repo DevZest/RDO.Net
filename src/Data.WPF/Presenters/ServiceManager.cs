@@ -171,7 +171,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static void Cleanup<T>(this ICommandService<T> commandService, UIElement element)
+        public static void Cleanup<T>(this ICommandService<T> commandService, T element)
             where T : UIElement
         {
             var serviceIdentifier = commandService.GetServiceIdentifier(typeof(ICommandService<T>));
