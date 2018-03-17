@@ -29,9 +29,8 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand ClearValue = new RoutedUICommand();
         }
 
-        public interface ICommandService : IService
+        public interface ICommandService : ICommandService<ForeignKeyBox>
         {
-            IEnumerable<CommandEntry> GetCommandEntries(ForeignKeyBox foreignKeyBox);
         }
 
         private sealed class CommandService : ICommandService
@@ -156,10 +155,14 @@ namespace DevZest.Data.Views
             return true;
         }
 
+        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        {
+            return dataPresenter.GetService<ICommandService>();
+        }
+
         void IRowElement.Setup(RowPresenter rowPresenter)
         {
-            var commandService = rowPresenter.DataPresenter.GetService<ICommandService>();
-            this.SetupCommandEntries(commandService.GetCommandEntries(this));
+            GetCommandService(rowPresenter.DataPresenter).Setup(this);
             Command = Commands.Lookup;  // Command needs to be set after command bindings otherwise IsEnabled will be false
         }
 
@@ -174,7 +177,7 @@ namespace DevZest.Data.Views
             ForeignKey = null;
             Extender = null;
             ValueBag.Clear();
-            this.CleanupCommandEntries();
+            GetCommandService(rowPresenter.DataPresenter).Cleanup(this);
         }
     }
 }
