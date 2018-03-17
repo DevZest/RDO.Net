@@ -105,6 +105,7 @@
     <Compile Include="Presenters\ScalarCompositeBindingTests.cs" />
     <Compile Include="Presenters\ScalarContainerMock.cs" />
     <Compile Include="Presenters\ScalarsTests.cs" />
+    <Compile Include="Presenters\ServiceManagerTests.cs" />
     <Compile Include="Presenters\ValidationTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
