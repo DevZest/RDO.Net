@@ -6,7 +6,7 @@ namespace DevZest.Data.Views
 {
     partial class GridCell
     {
-        public static class Commands
+        public abstract class Commands
         {
             public static readonly RoutedCommand ToggleMode = new RoutedCommand(nameof(ToggleMode), typeof(GridCell));
             public static readonly RoutedCommand ExitEditMode = new RoutedCommand(nameof(ExitEditMode), typeof(GridCell));
@@ -15,9 +15,8 @@ namespace DevZest.Data.Views
             public static RoutedUICommand SelectAll { get { return ApplicationCommands.SelectAll; } }
         }
 
-        public interface ICommandService : IService
+        public interface ICommandService : ICommandService<GridCell>
         {
-            IEnumerable<CommandEntry> GetCommandEntries(GridCell gridCell);
         }
 
         private sealed class CommandService : ICommandService
@@ -151,6 +150,11 @@ namespace DevZest.Data.Views
                 Presenter.SelectAll();
                 return true;
             }
+        }
+
+        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        {
+            return dataPresenter.GetService<ICommandService>();
         }
     }
 }
