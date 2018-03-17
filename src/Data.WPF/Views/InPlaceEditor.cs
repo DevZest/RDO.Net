@@ -13,21 +13,23 @@ namespace DevZest.Data.Views
 {
     public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement
     {
-        public interface ICommandService : IService
+        public interface ICommandService : ICommandService<InPlaceEditor>
         {
-            IEnumerable<CommandEntry> GetCommandEntries(InPlaceEditor inPlaceEditor);
+        }
+
+        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        {
+            return dataPresenter.GetService<ICommandService>();
         }
 
         private void SetupCommands(DataPresenter dataPresenter)
         {
-            var commandService = dataPresenter.GetService<ICommandService>();
-            if (commandService != null)
-                this.SetupCommandEntries(commandService.GetCommandEntries(this));
+            GetCommandService(dataPresenter)?.Setup(this);
         }
 
-        private void CleanupCommands()
+        private void CleanupCommands(DataPresenter dataPresenter)
         {
-            this.CleanupCommandEntries();
+            GetCommandService(dataPresenter)?.Cleanup(this);
         }
 
         internal static RowBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(RowInput<TEditing> editingInput, RowBinding<TInert> inertBinding)
@@ -610,14 +612,14 @@ namespace DevZest.Data.Views
         {
             var proxyRowInput = GetProxyRowInput();
             Cleanup(proxyRowInput);
-            CleanupCommands();
+            CleanupCommands(rowPresenter.DataPresenter);
         }
 
         void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
         {
             var proxyScalarInput = GetProxyScalarInput();
             Cleanup(proxyScalarInput);
-            CleanupCommands();
+            CleanupCommands(scalarPresenter.DataPresenter);
         }
 
         private void Cleanup(IProxyRowInput proxyRowInput)

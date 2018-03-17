@@ -78,7 +78,7 @@ namespace FileExplorer
                 .AddBinding(0, 0, _currentDirectory.BindToTextBox().MergeIntoInPlaceEditor(_currentDirectory.BindToTextBlock("{0} (Click to edit)")));
         }
 
-        IEnumerable<CommandEntry> InPlaceEditor.ICommandService.GetCommandEntries(InPlaceEditor inPlaceEditor)
+        IEnumerable<CommandEntry> ICommandService<InPlaceEditor>.GetCommandEntries(InPlaceEditor inPlaceEditor)
         {
             yield return RowView.Commands.BeginEdit.Bind(BeginEdit, CanBeginEdit, new MouseGesture(MouseAction.LeftClick));
         }

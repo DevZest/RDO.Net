@@ -129,7 +129,7 @@ namespace FileExplorer
             }
         }
 
-        IEnumerable<CommandEntry> InPlaceEditor.ICommandService.GetCommandEntries(InPlaceEditor inPlaceEditor)
+        IEnumerable<CommandEntry> ICommandService<InPlaceEditor>.GetCommandEntries(InPlaceEditor inPlaceEditor)
         {
             yield return RowView.Commands.BeginEdit.Bind(BeginEdit, CanBeginEdit, new MouseGesture(MouseAction.LeftClick));
         }
