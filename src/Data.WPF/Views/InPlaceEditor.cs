@@ -25,7 +25,7 @@ namespace DevZest.Data.Views
 
         private void SetupCommands(DataPresenter dataPresenter)
         {
-            GetCommandService(dataPresenter)?.Setup(this, GetCommandEnties);
+            GetCommandService(dataPresenter)?.SetupCommandEntries(this, GetCommandEnties);
         }
 
         private static IEnumerable<CommandEntry> GetCommandEnties(ICommandService commandService, InPlaceEditor inPlaceEditor)
@@ -35,7 +35,7 @@ namespace DevZest.Data.Views
 
         private void CleanupCommands(DataPresenter dataPresenter)
         {
-            GetCommandService(dataPresenter)?.Cleanup(this);
+            GetCommandService(dataPresenter)?.CleanupCommandEntries(this);
         }
 
         internal static RowBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(RowInput<TEditing> editingInput, RowBinding<TInert> inertBinding)

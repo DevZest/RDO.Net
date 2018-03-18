@@ -144,7 +144,7 @@ namespace DevZest.Data.Presenters
             public readonly ServiceIdentifier ServiceIdentifier;
         }
 
-        public static void Setup<TService, TElement>(this TService commandService,  TElement element, Func<TService, TElement, IEnumerable<CommandEntry>> getCommandEntries)
+        public static void SetupCommandEntries<TService, TElement>(this TService commandService,  TElement element, Func<TService, TElement, IEnumerable<CommandEntry>> getCommandEntries)
             where TService : IService
             where TElement : UIElement
         {
@@ -173,7 +173,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static void Cleanup<TService, TElement>(this TService commandService, TElement element)
+        public static void CleanupCommandEntries<TService, TElement>(this TService commandService, TElement element)
             where TService : IService
             where TElement : UIElement
         {

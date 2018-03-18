@@ -50,16 +50,16 @@ namespace DevZest.Data.Presenters
             var element = new UIElement();
             Assert.AreEqual(0, element.CommandBindings.Count);
             Assert.AreEqual(0, element.InputBindings.Count);
-            commandService.Setup(element, GetCommandEntries);
+            commandService.SetupCommandEntries(element, GetCommandEntries);
             Assert.AreEqual(1, element.CommandBindings.Count);
             Assert.AreEqual(1, element.InputBindings.Count);
-            commandService.Setup(element, GetCommandEntries);
+            commandService.SetupCommandEntries(element, GetCommandEntries);
             Assert.AreEqual(1, element.CommandBindings.Count);
             Assert.AreEqual(1, element.InputBindings.Count);
-            commandService.Cleanup(element);
+            commandService.CleanupCommandEntries(element);
             Assert.AreEqual(0, element.CommandBindings.Count);
             Assert.AreEqual(0, element.InputBindings.Count);
-            commandService.Cleanup(element);
+            commandService.CleanupCommandEntries(element);
             Assert.AreEqual(0, element.CommandBindings.Count);
             Assert.AreEqual(0, element.InputBindings.Count);
         }

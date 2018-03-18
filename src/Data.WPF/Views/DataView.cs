@@ -71,10 +71,10 @@ namespace DevZest.Data.Views
                 if (value == null)
                 {
                     ClearValue(ScrollablePropertyKey);
-                    GetCommandService(oldValue).Cleanup(this);
+                    GetCommandService(oldValue).CleanupCommandEntries(this);
                 }
                 else
-                    GetCommandService(value).Setup(this, GetCommandEntries);
+                    GetCommandService(value).SetupCommandEntries(this, GetCommandEntries);
             }
         }
 
