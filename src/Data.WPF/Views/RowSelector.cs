@@ -118,14 +118,19 @@ namespace DevZest.Data.Views
             if (dataPresenter != null)
             {
                 CurrentRowSynchronizer.EnsureInitialized(dataPresenter);
-                this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
+                this.SetupCommandEntries(dataPresenter.GetService<ICommandService>(), GetCommandEntries);
             }
             UpdateVisualState();
         }
 
+        private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, RowSelector rowSelector)
+        {
+            return commandService.GetCommandEntries(rowSelector);
+        }
+
         private void OnCleaningUp(object sender, EventArgs e)
         {
-            this.CleanupCommandEntries0();
+            this.CleanupCommandEntries();
         }
 
         private void OnRefreshing(object sender, EventArgs e)

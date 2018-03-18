@@ -259,9 +259,14 @@ namespace DevZest.Data.Views
                 behaviors[i].Setup(this);
                 behaviors[i].Refresh(this);
             }
-            this.SetupCommandEntries(rowPresenter?.DataPresenter?.GetService<ICommandService>().GetCommandEntries(this));
+            this.SetupCommandEntries(rowPresenter.DataPresenter.GetService<ICommandService>(), GetCommandEntries);
             SettingUp(this, EventArgs.Empty);
             HasSetup = true;
+        }
+
+        private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, RowView rowView)
+        {
+            return commandService.GetCommandEntries(rowView);
         }
 
         internal sealed override void Cleanup()
@@ -270,7 +275,7 @@ namespace DevZest.Data.Views
             Debug.Assert(ElementCollection != null);
 
             CleaningUp(this, EventArgs.Empty);
-            this.CleanupCommandEntries0();
+            this.CleanupCommandEntries();
             var behaviors = Behaviors;
             for (int i = 0; i < behaviors.Count; i++)
                 behaviors[i].Cleanup(this);
