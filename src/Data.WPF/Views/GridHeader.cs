@@ -6,12 +6,8 @@ using DevZest.Data.Presenters;
 
 namespace DevZest.Data.Views
 {
-    public class GridHeader : ToggleButton, IScalarElement, IRowHeader
+    public class GridHeader : ToggleButton, IScalarElement, RowSelectionWiper.ISelector
     {
-        public abstract class Commands : RowHeader.Commands
-        {
-        }
-
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(GridHeader), new FrameworkPropertyMetadata(null));
 
@@ -38,8 +34,7 @@ namespace DevZest.Data.Views
         void IScalarElement.Setup(ScalarPresenter scalarPresenter)
         {
             var dataPresenter = scalarPresenter.DataPresenter;
-            RowHeader.EnsureFocusTrackerInitialized(dataPresenter);
-            this.SetupCommandEntries(dataPresenter.GetService<RowHeader.ICommandService>().GetCommandEntries(null));
+            RowSelectionWiper.EnsureSetup(dataPresenter);
         }
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
@@ -48,7 +43,6 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
         {
-            this.CleanupCommandEntries0();
         }
     }
 }

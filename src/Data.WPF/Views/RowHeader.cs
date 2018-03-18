@@ -12,10 +12,6 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Views
 {
-    internal interface IRowHeader
-    {
-    }
-
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateNormal)]
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateMouseOver)]
     [TemplateVisualState(GroupName = VisualStates.GroupSelection, Name = VisualStates.StateSelected)]
@@ -26,101 +22,8 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewRow)]
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewCurrentRow)]
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewEditingRow)]
-    public class RowHeader : ButtonBase, IRowElement, IRowHeader
+    public class RowHeader : ButtonBase, IRowElement, RowSelectionWiper.ISelector
     {
-        private interface IFocusTracker : IService
-        {
-        }
-
-        private sealed class FocusTracker : IFocusTracker
-        {
-            private DataPresenter _dataPresenter;
-            public DataPresenter DataPresenter
-            {
-                get { return _dataPresenter; }
-            }
-
-            private DataView _dataView;
-            private DataView DataView
-            {
-                get { return _dataView; }
-                set
-                {
-                    if (_dataView == value)
-                        return;
-
-                    if (_dataView != null)
-                        _dataView.GotKeyboardFocus -= OnGotKeyboardFocus;
-                    _dataView = value;
-                    _activeHeader = null;
-                    if (_dataView != null)
-                        _dataView.GotKeyboardFocus += OnGotKeyboardFocus;
-                }
-            }
-
-            private IRowHeader _activeHeader;
-            private IRowHeader ActiveHeader
-            {
-                get { return _activeHeader; }
-                set
-                {
-                    if (_activeHeader == value)
-                        return;
-                    if (_activeHeader != null && value == null)
-                        DeselectAll();
-                    _activeHeader = value;
-                }
-            }
-
-            private void OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-            {
-                ActiveHeader = FindAncestorRowHeader(e.OriginalSource as DependencyObject);
-            }
-
-            private static IRowHeader FindAncestorRowHeader(DependencyObject child)
-            {
-                if (child == null)
-                    return null;
-
-                if (child is IRowHeader)
-                    return (IRowHeader)child;
-
-                DependencyObject parentObject = VisualTreeHelper.GetParent(child);
-                if (parentObject == null)
-                    return null;
-
-                var parent = parentObject as IRowHeader;
-                return parent ?? FindAncestorRowHeader(parentObject);
-            }
-
-            private void DeselectAll()
-            {
-                var rows = DataPresenter.SelectedRows.ToArray();
-                foreach (var row in rows)
-                    row.IsSelected = false;
-            }
-
-            public void Initialize(DataPresenter dataPresenter)
-            {
-                _dataPresenter = dataPresenter;
-                DataView = dataPresenter.View;
-                _dataPresenter.ViewChanged += OnViewChanged;
-            }
-
-            private void OnViewChanged(object sender, EventArgs e)
-            {
-                DataView = DataPresenter.View;
-            }
-        }
-
-        internal static void EnsureFocusTrackerInitialized(DataPresenter dataPresenter)
-        {
-            if (!ServiceManager.IsRegistered<IFocusTracker>())
-                ServiceManager.Register<IFocusTracker, FocusTracker>();
-            var service = ServiceManager.GetService<IFocusTracker>(dataPresenter);
-            Debug.Assert(service != null);
-        }
-
         public abstract class Commands
         {
             public static RoutedUICommand DeleteSelected { get { return ApplicationCommands.Delete; } }
@@ -221,7 +124,7 @@ namespace DevZest.Data.Views
         void IRowElement.Setup(RowPresenter p)
         {
             var dataPresenter = p.DataPresenter;
-            EnsureFocusTrackerInitialized(dataPresenter);
+            RowSelectionWiper.EnsureSetup(dataPresenter);
             this.SetupCommandEntries(dataPresenter.GetService<ICommandService>().GetCommandEntries(this));
         }
 
