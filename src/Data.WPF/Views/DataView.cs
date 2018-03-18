@@ -64,17 +64,16 @@ namespace DevZest.Data.Views
             {
                 Debug.Assert((value == null) != (DataPresenter == null));
 
-                var oldValue = _dataPresenter;
                 _dataPresenter = value;
                 DataLoadState = DataLoadState.Idle;
                 DataLoadError = null;
                 if (value == null)
                 {
                     ClearValue(ScrollablePropertyKey);
-                    GetCommandService(oldValue).CleanupCommandEntries(this);
+                    this.CleanupCommandEntries();
                 }
                 else
-                    GetCommandService(value).SetupCommandEntries(this, GetCommandEntries);
+                    this.SetupCommandEntries(GetCommandService(value), GetCommandEntries);
             }
         }
 

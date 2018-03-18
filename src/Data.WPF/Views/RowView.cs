@@ -270,7 +270,7 @@ namespace DevZest.Data.Views
             Debug.Assert(ElementCollection != null);
 
             CleaningUp(this, EventArgs.Empty);
-            this.CleanupCommandEntries();
+            this.CleanupCommandEntries0();
             var behaviors = Behaviors;
             for (int i = 0; i < behaviors.Count; i++)
                 behaviors[i].Cleanup(this);

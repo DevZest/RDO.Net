@@ -287,8 +287,8 @@ namespace DevZest.Data.Views
         {
             var dataPresenter = p.DataPresenter;
             var commandService = GetCommandService(dataPresenter);
-            commandService.SetupCommandEntries(dataPresenter.View, GetCommandEntries);
-            commandService.SetupCommandEntries(this, GetCommandEntries);
+            dataPresenter.View.SetupCommandEntries(commandService, GetCommandEntries);
+            this.SetupCommandEntries(commandService, GetCommandEntries);
         }
 
         private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, DataView dataView)
@@ -303,10 +303,7 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Cleanup(ScalarPresenter p)
         {
-            var dataPresenter = p.DataPresenter;
-            var commandService = GetCommandService(dataPresenter);
-            commandService.CleanupCommandEntries(dataPresenter.View);
-            commandService.CleanupCommandEntries(this);
+            this.CleanupCommandEntries();
         }
 
         void IScalarElement.Refresh(ScalarPresenter p)

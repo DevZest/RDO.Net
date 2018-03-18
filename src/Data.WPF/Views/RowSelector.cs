@@ -125,7 +125,7 @@ namespace DevZest.Data.Views
 
         private void OnCleaningUp(object sender, EventArgs e)
         {
-            this.CleanupCommandEntries();
+            this.CleanupCommandEntries0();
         }
 
         private void OnRefreshing(object sender, EventArgs e)

@@ -48,7 +48,7 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
         {
-            this.CleanupCommandEntries();
+            this.CleanupCommandEntries0();
         }
     }
 }

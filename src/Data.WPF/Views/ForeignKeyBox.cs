@@ -163,7 +163,7 @@ namespace DevZest.Data.Views
 
         void IRowElement.Setup(RowPresenter rowPresenter)
         {
-            GetCommandService(rowPresenter.DataPresenter).SetupCommandEntries(this, GetCommandEntries);
+            this.SetupCommandEntries(GetCommandService(rowPresenter.DataPresenter), GetCommandEntries);
             Command = Commands.Lookup;  // Command needs to be set after command bindings otherwise IsEnabled will be false
         }
 
@@ -183,7 +183,7 @@ namespace DevZest.Data.Views
             ForeignKey = null;
             Extender = null;
             ValueBag.Clear();
-            GetCommandService(rowPresenter.DataPresenter).CleanupCommandEntries(this);
+            this.CleanupCommandEntries();
         }
     }
 }

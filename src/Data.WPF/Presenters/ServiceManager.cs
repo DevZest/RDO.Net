@@ -101,7 +101,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private static bool Setup(this ServiceIdentifier serviceIdentifier, UIElement element)
+        private static bool Setup(this UIElement element, ServiceIdentifier serviceIdentifier)
         {
             var bag = s_serviceIdentifiers.GetOrCreateValue(element);
             if (bag.Contains(serviceIdentifier.Type))
@@ -111,48 +111,38 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
-        private static bool Cleanup(this ServiceIdentifier serviceIdentifier, UIElement element)
+        private static bool Cleanup(this UIElement element)
         {
-            ServiceIdentifierBag bag;
-            if (!s_serviceIdentifiers.TryGetValue(element, out bag))
-                return false;
-
-            return bag.Remove(serviceIdentifier);
+            return s_serviceIdentifiers.Remove(element);
         }
 
         private sealed class CommandBindingEx : CommandBinding
         {
-            public CommandBindingEx(ServiceIdentifier serviceIdentifier, ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute)
+            public CommandBindingEx(ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute)
                 : base(command, executed, canExecute)
             {
-                Debug.Assert(serviceIdentifier != null);
-                ServiceIdentifier = serviceIdentifier;
             }
-
-            public readonly ServiceIdentifier ServiceIdentifier;
         }
 
         private sealed class InputBindingEx : InputBinding
         {
-            public InputBindingEx(ServiceIdentifier serviceIdentifier, ICommand command, InputGesture inputGesture)
+            public InputBindingEx(ICommand command, InputGesture inputGesture)
                 : base(command, inputGesture)
             {
-                Debug.Assert(serviceIdentifier != null);
-                ServiceIdentifier = serviceIdentifier;
             }
-
-            public readonly ServiceIdentifier ServiceIdentifier;
         }
 
-        public static void SetupCommandEntries<TService, TElement>(this TService commandService,  TElement element, Func<TService, TElement, IEnumerable<CommandEntry>> getCommandEntries)
+        public static void SetupCommandEntries<TService, TElement>(this TElement element, TService commandService,  Func<TService, TElement, IEnumerable<CommandEntry>> getCommandEntries)
             where TService : IService
             where TElement : UIElement
         {
             Check.NotNull(element, nameof(element));
+            if (commandService == null)
+                throw new ArgumentNullException(nameof(commandService));
             Check.NotNull(getCommandEntries, nameof(getCommandEntries));
 
             var serviceIdentifier = commandService.GetServiceIdentifier(typeof(TService));
-            if (!serviceIdentifier.Setup(element))
+            if (!element.Setup(serviceIdentifier))
                 return;
 
             var commandEntries = getCommandEntries(commandService, element);
@@ -162,45 +152,44 @@ namespace DevZest.Data.Presenters
             {
                 if (entry.Executed != null)
                 {
-                    var commandBinding = new CommandBindingEx(serviceIdentifier, entry.Command, entry.Executed, entry.CanExecute);
+                    var commandBinding = new CommandBindingEx(entry.Command, entry.Executed, entry.CanExecute);
                     element.CommandBindings.Add(commandBinding);
                 }
                 for (int i = 0; i < entry.InputGesturesCount; i++)
                 {
-                    var inputBinding = new InputBindingEx(serviceIdentifier, entry.Command, entry.GetInputGesture(i));
+                    var inputBinding = new InputBindingEx(entry.Command, entry.GetInputGesture(i));
                     element.InputBindings.Add(inputBinding);
                 }
             }
         }
 
-        public static void CleanupCommandEntries<TService, TElement>(this TService commandService, TElement element)
-            where TService : IService
-            where TElement : UIElement
+        public static void CleanupCommandEntries(this UIElement element)
         {
-            var serviceIdentifier = commandService.GetServiceIdentifier(typeof(TService));
-            if (!serviceIdentifier.Cleanup((UIElement)element))
+            Check.NotNull(element, nameof(element));
+
+            if (!element.Cleanup())
                 return;
 
-            CleanupCommandBindings(element.CommandBindings, serviceIdentifier);
-            CleanupInputBindings(element.InputBindings, serviceIdentifier);
+            CleanupCommandBindings(element.CommandBindings);
+            CleanupInputBindings(element.InputBindings);
         }
 
-        private static void CleanupCommandBindings(CommandBindingCollection commandBindings, ServiceIdentifier serviceIdentifier)
+        private static void CleanupCommandBindings(CommandBindingCollection commandBindings)
         {
             for (int i = commandBindings.Count - 1; i >= 0; i--)
             {
                 var commandBindingEx = commandBindings[i] as CommandBindingEx;
-                if (commandBindingEx != null && commandBindingEx.ServiceIdentifier == serviceIdentifier)
+                if (commandBindingEx != null)
                     commandBindings.RemoveAt(i);
             }
         }
 
-        private static void CleanupInputBindings(InputBindingCollection inputBindings, ServiceIdentifier serviceIdentifier)
+        private static void CleanupInputBindings(InputBindingCollection inputBindings)
         {
             for (int i = inputBindings.Count - 1; i >= 0; i--)
             {
                 var inputBindingEx = inputBindings[i] as InputBindingEx;
-                if (inputBindingEx != null && inputBindingEx.ServiceIdentifier == serviceIdentifier)
+                if (inputBindingEx != null)
                     inputBindings.RemoveAt(i);
             }
         }

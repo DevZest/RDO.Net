@@ -188,7 +188,7 @@ namespace DevZest.Data.Views
         void IRowElement.Setup(RowPresenter p)
         {
             var dataPresenter = p.DataPresenter;
-            GetCommandService(p.DataPresenter).SetupCommandEntries(this, GetCommandEntries);
+            this.SetupCommandEntries(GetCommandService(p.DataPresenter), GetCommandEntries);
         }
 
         private static IEnumerable<CommandEntry> GetCommandEntries(ICommandService commandService, GridCell gridCell)
@@ -269,7 +269,7 @@ namespace DevZest.Data.Views
 
         void IRowElement.Cleanup(RowPresenter p)
         {
-            GetCommandService(p.DataPresenter).CleanupCommandEntries(this);
+            this.CleanupCommandEntries();
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)

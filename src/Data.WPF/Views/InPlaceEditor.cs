@@ -25,7 +25,9 @@ namespace DevZest.Data.Views
 
         private void SetupCommands(DataPresenter dataPresenter)
         {
-            GetCommandService(dataPresenter)?.SetupCommandEntries(this, GetCommandEnties);
+            var commandService = GetCommandService(dataPresenter);
+            if (commandService != null)
+                this.SetupCommandEntries(commandService, GetCommandEnties);
         }
 
         private static IEnumerable<CommandEntry> GetCommandEnties(ICommandService commandService, InPlaceEditor inPlaceEditor)
@@ -33,9 +35,9 @@ namespace DevZest.Data.Views
             return commandService.GetCommandEntries(inPlaceEditor);
         }
 
-        private void CleanupCommands(DataPresenter dataPresenter)
+        private void CleanupCommands()
         {
-            GetCommandService(dataPresenter)?.CleanupCommandEntries(this);
+            this.CleanupCommandEntries();
         }
 
         internal static RowBinding<InPlaceEditor> AddToInPlaceEditor<TEditing, TInert>(RowInput<TEditing> editingInput, RowBinding<TInert> inertBinding)
@@ -618,14 +620,14 @@ namespace DevZest.Data.Views
         {
             var proxyRowInput = GetProxyRowInput();
             Cleanup(proxyRowInput);
-            CleanupCommands(rowPresenter.DataPresenter);
+            CleanupCommands();
         }
 
         void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
         {
             var proxyScalarInput = GetProxyScalarInput();
             Cleanup(proxyScalarInput);
-            CleanupCommands(scalarPresenter.DataPresenter);
+            CleanupCommands();
         }
 
         private void Cleanup(IProxyRowInput proxyRowInput)

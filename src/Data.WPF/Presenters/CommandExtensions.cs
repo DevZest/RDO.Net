@@ -118,7 +118,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static void CleanupCommandEntries(this UIElement element)
+        public static void CleanupCommandEntries0(this UIElement element)
         {
             element.CommandBindings.Clear();
             element.InputBindings.Clear();
