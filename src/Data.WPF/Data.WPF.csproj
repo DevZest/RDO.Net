@@ -88,7 +88,6 @@
     <Compile Include="Presenters\ScalarValidationErrors.cs" />
     <Compile Include="Presenters\ScalarValidation.cs" />
     <Compile Include="Presenters\ServiceManager.cs" />
-    <Compile Include="Presenters\CommandExtensions.cs" />
     <Compile Include="Presenters\TemplateId.cs" />
     <Compile Include="Presenters\ValidationInfo.cs" />
     <Compile Include="Properties\Resources.cs">

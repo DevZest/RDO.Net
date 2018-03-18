@@ -83,7 +83,6 @@ namespace DevZest.Data.Views
 
         void IRowElement.Cleanup(RowPresenter p)
         {
-            this.CleanupCommandEntries0();
         }
 
         private void UpdateVisualStates(RowPresenter p)

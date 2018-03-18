@@ -259,7 +259,9 @@ namespace DevZest.Data.Views
                 behaviors[i].Setup(this);
                 behaviors[i].Refresh(this);
             }
-            this.SetupCommandEntries(rowPresenter.DataPresenter.GetService<ICommandService>(), GetCommandEntries);
+            var commandService = rowPresenter.DataPresenter?.GetService<ICommandService>(); // rowPresenter.DataPresenter could be null in unit tests.
+            if (commandService != null)
+                this.SetupCommandEntries(commandService, GetCommandEntries);
             SettingUp(this, EventArgs.Empty);
             HasSetup = true;
         }
