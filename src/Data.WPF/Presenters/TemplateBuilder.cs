@@ -459,5 +459,11 @@ namespace DevZest.Data.Presenters
             Template.InitialFocus = initialFocus;
             return this;
         }
+
+        public TemplateBuilder AllowDelete()
+        {
+            Template.AllowsDelete = true;
+            return this;
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace AdventureWorks.SalesOrders
 {
     partial class SalesOrderForm
     {
-        private class DetailPresenter : DataPresenter<SalesOrderDetail>, ForeignKeyBox.ILookupService, RowHeader.IDeletingConfirmation
+        private class DetailPresenter : DataPresenter<SalesOrderDetail>, ForeignKeyBox.ILookupService
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {
@@ -22,6 +22,7 @@ namespace AdventureWorks.SalesOrders
                     .GridLineY(new GridPoint(5, 1), 1).GridLineY(new GridPoint(6, 1), 1).GridLineY(new GridPoint(7, 1), 1)
                     .Layout(Orientation.Vertical)
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
+                    .AllowDelete()
                     .AddBinding(0, 0, this.BindToGridHeader())
                     .AddBinding(1, 0, ext.Product.ProductNumber.BindToColumnHeader("Product No."))
                     .AddBinding(2, 0, ext.Product.Name.BindToColumnHeader("Product"))
@@ -61,7 +62,7 @@ namespace AdventureWorks.SalesOrders
                     throw new NotSupportedException();
             }
 
-            bool RowHeader.IDeletingConfirmation.Confirm()
+            protected override bool ConfirmDelete()
             {
                 return MessageBox.Show(string.Format("Are you sure you want to delete selected {0} rows?", SelectedRows.Count), "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
             }

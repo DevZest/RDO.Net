@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Presenters;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace DevZest.Data.Views
@@ -14,6 +15,7 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand BeginEditScalars = new RoutedUICommand();
             public static readonly RoutedUICommand CancelEditScalars = new RoutedUICommand();
             public static readonly RoutedUICommand EndEditScalars = new RoutedUICommand();
+            public static RoutedUICommand Delete { get { return ApplicationCommands.Delete; } }
         }
 
         public interface ICommandService : IService
@@ -38,6 +40,7 @@ namespace DevZest.Data.Views
                 yield return Commands.BeginEditScalars.Bind(BeginEditScalars, CanBeginEditScalars);
                 yield return Commands.CancelEditScalars.Bind(CancelEditScalars, CanCancelEditScalars);
                 yield return Commands.EndEditScalars.Bind(EndEditScalars, CanCancelEditScalars);
+                yield return Commands.Delete.Bind(ExecDeleteSelected, CanExecDeleteSelected, new KeyGesture(Key.Delete));
             }
 
             private void ReloadData(object sender, ExecutedRoutedEventArgs e)
@@ -101,6 +104,22 @@ namespace DevZest.Data.Views
             {
                 var scalarContainer = ((DataView)sender).DataPresenter.ScalarContainer;
                 scalarContainer.EndEdit();
+            }
+
+            private void CanExecDeleteSelected(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = DataPresenter.Template.AllowsDelete && DataPresenter.SelectedRows.Count > 0;
+            }
+
+            private void ExecDeleteSelected(object sender, ExecutedRoutedEventArgs e)
+            {
+                var confirmed = DataPresenter.ConfirmDelete();
+                if (confirmed)
+                {
+                    foreach (var row in DataPresenter.SelectedRows.ToArray())
+                        row.Delete();
+                }
+                e.Handled = true;
             }
         }
 

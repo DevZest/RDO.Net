@@ -504,5 +504,10 @@ namespace DevZest.Data.Presenters
         {
             get { return (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift; }
         }
+
+        protected internal virtual bool ConfirmDelete()
+        {
+            return true;
+        }
     }
 }
