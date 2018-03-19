@@ -8,11 +8,32 @@ namespace DevZest.Data.Views
     {
         public abstract class Commands
         {
-            public static readonly RoutedCommand ToggleMode = new RoutedCommand(nameof(ToggleMode), typeof(GridCell));
-            public static readonly RoutedCommand ExitEditMode = new RoutedCommand(nameof(ExitEditMode), typeof(GridCell));
-            public static readonly RoutedCommand Activate = new RoutedCommand(nameof(Activate), typeof(GridCell));
-            public static readonly RoutedCommand SelectTo = new RoutedCommand(nameof(SelectTo), typeof(GridCell));
-            public static RoutedUICommand SelectAll { get { return ApplicationCommands.SelectAll; } }
+            public static RoutedCommand ToggleMode { get; private set; } = new RoutedCommand(nameof(ToggleMode), typeof(GridCell));
+            public static RoutedCommand ExitEditMode { get; private set; } = new RoutedCommand(nameof(ExitEditMode), typeof(GridCell));
+            public static RoutedCommand Activate { get; private set; } = new RoutedCommand(nameof(Activate), typeof(GridCell));
+            public static RoutedCommand SelectTo { get; private set; } = new RoutedCommand(nameof(SelectTo), typeof(GridCell));
+            public static RoutedCommand SelectAll { get { return ApplicationCommands.SelectAll; } }
+
+            public static RoutedCommand SelectLeft { get { return ComponentCommands.MoveLeft; } }
+            public static RoutedCommand SelectRight { get { return ComponentCommands.MoveRight; } }
+            public static RoutedCommand SelectUp { get { return ComponentCommands.MoveUp; } }
+            public static RoutedCommand SelectDown { get { return ComponentCommands.MoveDown; } }
+            public static RoutedCommand SelectPageUp { get { return ComponentCommands.MoveToPageUp; } }
+            public static RoutedCommand SelectPageDown { get { return ComponentCommands.MoveToPageDown; } }
+            public static RoutedCommand SelectRowHome { get; private set; } = new RoutedCommand(nameof(SelectRowHome), typeof(GridCell));
+            public static RoutedCommand SelectRowEnd { get; private set; } = new RoutedCommand(nameof(SelectRowEnd), typeof(GridCell));
+            public static RoutedCommand SelectHome { get { return ComponentCommands.MoveToHome; } }
+            public static RoutedCommand SelectEnd { get { return ComponentCommands.MoveToEnd; } }
+            public static RoutedCommand SelectToLeft { get { return ComponentCommands.ExtendSelectionLeft; } }
+            public static RoutedCommand SelectToRight { get { return ComponentCommands.ExtendSelectionRight; } }
+            public static RoutedCommand SelectToUp { get { return ComponentCommands.ExtendSelectionUp; } }
+            public static RoutedCommand SelectToDown { get { return ComponentCommands.ExtendSelectionDown; } }
+            public static RoutedCommand SelectToPageUp { get; private set; } = new RoutedCommand(nameof(SelectToPageUp), typeof(GridCell));
+            public static RoutedCommand SelectToPageDown { get; private set; } = new RoutedCommand(nameof(SelectToPageDown), typeof(GridCell));
+            public static RoutedCommand SelectToRowHome { get; private set; } = new RoutedCommand(nameof(SelectToRowHome), typeof(GridCell));
+            public static RoutedCommand SelectToRowEnd { get; private set; } = new RoutedCommand(nameof(SelectToRowEnd), typeof(GridCell));
+            public static RoutedCommand SelectToHome { get; private set; } = new RoutedCommand(nameof(SelectToHome), typeof(GridCell));
+            public static RoutedCommand SelectToEnd { get; private set; } = new RoutedCommand(nameof(SelectToEnd), typeof(GridCell));
         }
 
         public interface ICommandService : IService
