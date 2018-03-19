@@ -194,16 +194,11 @@ namespace DevZest.Data.Presenters
             return RowValidation.HasError(rowPresenter, this, true);
         }
 
-        private void RefreshValidation(T element, RowPresenter rowPresenter)
-        {
-            element.RefreshValidation(GetValidationInfo(rowPresenter));
-        }
-
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
             if (!IsFlushing && !IsLockedByFlushingError(element))
                 RowBinding.Refresh(element, rowPresenter);
-            RefreshValidation(element, rowPresenter);
+            element.RefreshValidation(GetValidationInfo(rowPresenter));
         }
 
         public RowBinding<T> EndInput()

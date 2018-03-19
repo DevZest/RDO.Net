@@ -119,18 +119,10 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        private Action<T, ScalarPresenter> _onRefresh;
         internal void Refresh(T v, ScalarPresenter p)
         {
-            if (!IsFlushing && GetFlushingError(v) == null)
+            if (!IsFlushing && !IsLockedByFlushingError(v))
                 ScalarBinding.Refresh(v, p);
-            var flushingError = GetFlushingError(v);
-            if (_onRefresh != null)
-            {
-                p.FlushingError = flushingError;
-                _onRefresh(v, p);
-                p.FlushingError = null;
-            }
             v.RefreshValidation(GetValidationInfo(p.FlowIndex));
         }
 
@@ -146,13 +138,6 @@ namespace DevZest.Data.Presenters
             if (flowIndex < 0 || flowIndex >= InputManager.FlowRepeatCount)
                 throw new ArgumentOutOfRangeException(nameof(flowIndex));
             return ScalarValidation.HasError(this, flowIndex, true);
-        }
-
-        public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)
-        {
-            VerifyNotSealed();
-            _onRefresh = onRefresh;
-            return this;
         }
 
         public ScalarBinding<T> EndInput()
