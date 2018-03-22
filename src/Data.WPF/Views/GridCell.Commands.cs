@@ -1,5 +1,10 @@
 ﻿using DevZest.Data.Presenters;
+using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Primitives;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 
 namespace DevZest.Data.Views
@@ -13,6 +18,7 @@ namespace DevZest.Data.Views
             public static RoutedCommand Activate { get; private set; } = new RoutedCommand(nameof(Activate), typeof(GridCell));
             public static RoutedCommand SelectTo { get; private set; } = new RoutedCommand(nameof(SelectTo), typeof(GridCell));
             public static RoutedCommand SelectAll { get { return ApplicationCommands.SelectAll; } }
+            public static RoutedCommand Copy { get { return ApplicationCommands.Copy; } }
 
             public static RoutedCommand SelectLeft { get { return ComponentCommands.MoveLeft; } }
             public static RoutedCommand SelectRight { get { return ComponentCommands.MoveRight; } }
@@ -67,6 +73,7 @@ namespace DevZest.Data.Views
                 yield return Commands.ExitEditMode.Bind(ExecToggleMode, CanExitEditMode, new KeyGesture(Key.Escape));
                 yield return Commands.SelectTo.Bind(ExecSelectTo, CanSelectTo, new MouseGesture(MouseAction.LeftClick, ModifierKeys.Shift));
                 yield return Commands.SelectAll.Bind(ExecSelectAll, CanSelectTo);
+                yield return Commands.Copy.Bind(ExecCopy, CanCopy);
             }
 
             private void CanToggleMode(object sender, CanExecuteRoutedEventArgs e)
@@ -171,6 +178,97 @@ namespace DevZest.Data.Views
             {
                 Presenter.SelectAll();
                 return true;
+            }
+
+            private int SelectedRowsCount
+            {
+                get
+                {
+                    var presenter = DataPresenter.GetService<Presenter>();
+                    var startRowIndex = presenter.StartSelectedRowIndex;
+                    if (startRowIndex < 0)
+                        return 0;
+                    var endRowIndex = presenter.EndSelectedRowIndex;
+
+                    var result = endRowIndex - startRowIndex + 1;
+                    var virtualRow = DataPresenter.VirtualRow;
+                    if (virtualRow != null && virtualRow.Index >= startRowIndex && virtualRow.Index <= endRowIndex)
+                        result--;
+                    return result;
+                }
+            }
+
+            private RowPresenter[] GetSelectedRows()
+            {
+                var presenter = DataPresenter.GetService<Presenter>();
+                var startRowIndex = presenter.StartSelectedRowIndex;
+                var endRowIndex = presenter.EndSelectedRowIndex;
+
+                Debug.Assert(SelectedRowsCount > 0);
+                var result = new RowPresenter[SelectedRowsCount];
+                var index = 0;
+                for (int i = startRowIndex; i <= endRowIndex; i++)
+                {
+                    var row = DataPresenter.Rows[i];
+                    if (!row.IsVirtual)
+                        result[index++] = row;
+                }
+                return result;
+            }
+
+            private int SelectedColumnsCount
+            {
+                get
+                {
+                    var presenter = DataPresenter.GetService<Presenter>();
+                    var startBindingIndex = presenter.StartSelectedBindingIndex;
+                    if (startBindingIndex < 0)
+                        return 0;
+                    var endBindingIndex = presenter.EndSelectedBindingIndex;
+                    var gridCellBindings = presenter.GridCellBindings;
+
+                    int result = 0;
+                    for (int i = startBindingIndex; i <= endBindingIndex; i++)
+                        result += gridCellBindings[i].SerializableColumns.Count;
+
+                    return result;
+                }
+            }
+
+            private ColumnSerializer[] GetSelectedColumnSerializers()
+            {
+                var presenter = DataPresenter.GetService<Presenter>();
+                var startBindingIndex = presenter.StartSelectedBindingIndex;
+                Debug.Assert(startBindingIndex >= 0);
+                var endBindingIndex = presenter.EndSelectedBindingIndex;
+                var gridCellBindings = presenter.GridCellBindings;
+
+                var result = new ColumnSerializer[SelectedColumnsCount];
+                int index = 0;
+                for (int i = startBindingIndex; i <= endBindingIndex; i++)
+                {
+                    var rowBinding = gridCellBindings[i];
+                    var serializableColumns = rowBinding.SerializableColumns;
+                    for (int j = 0; j < serializableColumns.Count; j++)
+                        result[index++] = DataPresenter.GetSerializer(serializableColumns[j]);
+                }
+
+                return result;
+            }
+
+            private void CanCopy(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = DataPresenter.GetService<Presenter>().Mode == GridCellMode.Select && SelectedRowsCount > 0 && SelectedColumnsCount > 0;
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+
+            private void ExecCopy(object sender, ExecutedRoutedEventArgs e)
+            {
+                var selectedRows = GetSelectedRows();
+                var columnSerializers = GetSelectedColumnSerializers();
+                new SerializableSelection(selectedRows, columnSerializers).CopyToClipboard(true, true);
+                e.Handled = true;
             }
         }
 

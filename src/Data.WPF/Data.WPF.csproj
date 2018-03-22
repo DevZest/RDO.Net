@@ -41,6 +41,7 @@
     <Compile Include="Presenters\AsyncValidationFault.cs" />
     <Compile Include="Presenters\AsyncValidator.cs" />
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
+    <Compile Include="Presenters\BindingFactory.cs" />
     <Compile Include="Presenters\BindingFactory.GridHeader.cs" />
     <Compile Include="Presenters\BindingFactory.DataView.cs" />
     <Compile Include="Presenters\BindingFactory.Image.cs" />

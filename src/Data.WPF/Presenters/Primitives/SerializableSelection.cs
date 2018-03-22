@@ -13,28 +13,10 @@ namespace DevZest.Data.Presenters.Primitives
 
         public SerializableSelection(IReadOnlyList<RowPresenter> rows, IReadOnlyList<ColumnSerializer> columnSerializers)
         {
-            VerifyNotNull(rows, nameof(rows));
-            VerifyNotNull(columnSerializers, nameof(columnSerializers));
+            rows.CheckNotNull(nameof(rows));
+            columnSerializers.CheckNotNull(nameof(columnSerializers));
             Rows = rows;
             ColumnSerializers = columnSerializers;
-        }
-
-        private static void VerifyNotNull<T>(IReadOnlyList<T> list, string listParamName)
-            where T : class
-        {
-            Check.NotNull(list, listParamName);
-            for (int i = 0; i < list.Count; i++)
-                VerifyNotNull(list, i, listParamName);
-        }
-
-        private static T VerifyNotNull<T>(IReadOnlyList<T> list, int index, string listParamName)
-            where T : class
-        {
-            Debug.Assert(list != null);
-            var result = list[index];
-            if (result == null)
-                throw new ArgumentNullException(string.Format("{0}[1]", listParamName, index));
-            return result;
         }
 
         public readonly IReadOnlyList<RowPresenter> Rows;

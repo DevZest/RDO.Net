@@ -59,6 +59,44 @@ namespace DevZest.Data.Presenters
             get { return Parent; }
         }
 
+        private IReadOnlyList<Column> _serializableColumns;
+        public IReadOnlyList<Column> SerializableColumns
+        {
+            get
+            {
+                if (_serializableColumns == null)
+                {
+                    var rowInputTarget = RowInput?.Target;
+                    _serializableColumns = GetSerializableColumns().ToArray();
+                }
+                return _serializableColumns;
+            }
+            set
+            {
+                VerifyNotSealed();
+                _serializableColumns = value;
+            }
+        }
+
+        private IEnumerable<Column> GetSerializableColumns()
+        {
+            var rowInputTarget = RowInput?.Target;
+            if (rowInputTarget != null)
+            {
+                foreach (var column in rowInputTarget)
+                {
+                    if (column != null)
+                        yield return column;
+                }
+            }
+
+            foreach (var childBinding in ChildBindings)
+            {
+                foreach (var column in childBinding.GetSerializableColumns())
+                    yield return column;
+            }
+        }
+
         internal void Seal(RowBinding parent, int ordinal)
         {
             VerifyNotSealed();
