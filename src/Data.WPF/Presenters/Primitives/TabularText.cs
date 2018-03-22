@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters.Primitives
             var result = DataSet<TabularText>.New();
             var _ = result._;
 
-            var inQuote = false;
+            bool? inQuote = null;   // three states to distinguish between null and string.Empty
             DataRow currentRow = null;
             var currentField = 0;
             var sb = new StringBuilder();
@@ -64,7 +64,7 @@ namespace DevZest.Data.Presenters.Primitives
                     if (readChar == '\r')
                         reader.Read();
 
-                    if (inQuote)
+                    if (inQuote == true)
                     {
                         if (readChar == '\r')
                             sb.Append('\r');
@@ -72,30 +72,30 @@ namespace DevZest.Data.Presenters.Primitives
                     }
                     else
                     {
-                        _.AddValue(currentRow, currentField++, sb);
+                        _.AddValue(currentRow, currentField++, sb, ref inQuote);
                         currentRow = null;
                         currentField = 0;
                     }
                 }
-                else if (sb.Length == 0 && !inQuote)
+                else if (sb.Length == 0 && inQuote != true)
                 {
                     if (readChar == '"')
                         inQuote = true;
                     else if (readChar == delimiter)
-                        _.AddValue(currentRow, currentField++, sb);
+                        _.AddValue(currentRow, currentField++, sb, ref inQuote);
                     else
                         sb.Append(readChar);
                 }
                 else if (readChar == delimiter)
                 {
-                    if (inQuote)
+                    if (inQuote == true)
                         sb.Append(delimiter);
                     else
-                        _.AddValue(currentRow, currentField++, sb);
+                        _.AddValue(currentRow, currentField++, sb, ref inQuote);
                 }
                 else if (readChar == '"')
                 {
-                    if (inQuote)
+                    if (inQuote == true)
                     {
                         if ((char)reader.Peek() == '"') // escaped quote
                         {
@@ -121,10 +121,11 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _textColumns; }
         }
 
-        private void AddValue(DataRow dataRow, int fieldIndex, StringBuilder sb)
+        private void AddValue(DataRow dataRow, int fieldIndex, StringBuilder sb, ref bool? inQuote)
         {
             Debug.Assert(dataRow.Index == DataSet.Count - 1);
             Debug.Assert(fieldIndex >= 0 && fieldIndex <= TextColumns.Count);
+            Debug.Assert(inQuote != true);
 
             if (fieldIndex == TextColumns.Count)
                 _textColumns.Add(CreateLocalColumn<string>());
@@ -135,6 +136,10 @@ namespace DevZest.Data.Presenters.Primitives
                 TextColumns[fieldIndex][dataRow] = value;
                 sb.Clear();
             }
+            else if (inQuote.HasValue)
+                TextColumns[fieldIndex][dataRow] = string.Empty;
+
+            inQuote = null;
         }
     }
 }
