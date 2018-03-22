@@ -15,38 +15,38 @@ namespace DevZest.Data.Views
     /// </summary>
     internal partial class SortWindow : Window
     {
-        private sealed class Model : Data.Model
+        private sealed class OrderBy : Data.Model
         {
-            static Model()
+            static OrderBy()
             {
-                RegisterLocalColumn((Model _) => _.SortBy);
-                RegisterLocalColumn((Model _) => _.Order);
+                RegisterLocalColumn((OrderBy _) => _.Column);
+                RegisterLocalColumn((OrderBy _) => _.Direction);
             }
 
             [Display(Name = nameof(UserMessages.SortModel_SortBy), ResourceType = typeof(UserMessages))]
-            public Column<Column> SortBy { get; private set; }
+            public Column<Column> Column { get; private set; }
 
             [Display(Name = nameof(UserMessages.SortModel_Order), ResourceType = typeof(UserMessages))]
-            public Column<SortDirection> Order { get; private set; }
+            public Column<SortDirection> Direction { get; private set; }
 
             [ModelValidator]
-            private DataValidationError ValidateRequiredColumnHeader(DataRow dataRow)
+            private DataValidationError ValidateRequiredColumn(DataRow dataRow)
             {
-                return SortBy[dataRow] == null
-                    ? new DataValidationError(UserMessages.SortModel_InputRequired(SortBy.DisplayName), SortBy)
+                return Column[dataRow] == null
+                    ? new DataValidationError(UserMessages.SortModel_InputRequired(Column.DisplayName), Column)
                     : null;
             }
 
             [ModelValidator]
-            private DataValidationError ValidateDuplicateColumnHeader(DataRow dataRow)
+            private DataValidationError ValidateDuplicateColumn(DataRow dataRow)
             {
                 var dataSet = DataSet;
                 foreach (var other in dataSet)
                 {
                     if (other == dataRow)
                         continue;
-                    if (SortBy[dataRow] == SortBy[other])
-                        return new DataValidationError(UserMessages.SortModel_DuplicateSortBy, SortBy);
+                    if (Column[dataRow] == Column[other])
+                        return new DataValidationError(UserMessages.SortModel_DuplicateSortBy, Column);
                 }
                 return null;
             }
@@ -54,14 +54,14 @@ namespace DevZest.Data.Views
             [ModelValidator]
             private DataValidationError ValidateDirection(DataRow dataRow)
             {
-                return Order[dataRow] == SortDirection.Unspecified
-                    ? new DataValidationError(UserMessages.SortModel_InputRequired(Order.DisplayName), Order)
+                return Direction[dataRow] == SortDirection.Unspecified
+                    ? new DataValidationError(UserMessages.SortModel_InputRequired(Direction.DisplayName), Direction)
                     : null;
             }
 
         }
 
-        private sealed class Presenter : DataPresenter<Model>
+        private sealed class Presenter : DataPresenter<OrderBy>
         {
             public Presenter(DataPresenter target)
             {
@@ -98,11 +98,11 @@ namespace DevZest.Data.Views
                     .GridRows("Auto", "Auto")
                     .Layout(Orientation.Vertical)
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
-                    .AddBinding(1, 0, this.BindToTextBlock(_.SortBy.DisplayName))
-                    .AddBinding(2, 0, this.BindToTextBlock(_.Order.DisplayName))
+                    .AddBinding(1, 0, this.BindToTextBlock(_.Column.DisplayName))
+                    .AddBinding(2, 0, this.BindToTextBlock(_.Direction.DisplayName))
                     .AddBinding(0, 1, _.BindToRowHeader().WithStyle(RowHeader.Styles.Flat))
-                    .AddBinding(1, 1, _.SortBy.BindToComboBox(ColumnHeaderSelection, "Value", "Display"))
-                    .AddBinding(2, 1, _.Order.BindToComboBox(DirectionSelection, "Value", "Display"));
+                    .AddBinding(1, 1, _.Column.BindToComboBox(ColumnHeaderSelection, "Value", "Display"))
+                    .AddBinding(2, 1, _.Direction.BindToComboBox(DirectionSelection, "Value", "Display"));
             }
         }
 
@@ -113,7 +113,7 @@ namespace DevZest.Data.Views
         public static RoutedUICommand Cancel { get { return ApplicationCommands.Close; } }
 
         private Presenter _presenter;
-        private DataSet<Model> _data;
+        private DataSet<OrderBy> _data;
 
         public SortWindow()
         {
@@ -146,9 +146,9 @@ namespace DevZest.Data.Views
                 return result;
         }
 
-        private static DataSet<Model> GetData(ColumnHeader.ISortService sortService)
+        private static DataSet<OrderBy> GetData(ColumnHeader.ISortService sortService)
         {
-            var result = DataSet<Model>.New();
+            var result = DataSet<OrderBy>.New();
             if (sortService == null)
                 return result;
             var dataPresenter = sortService.DataPresenter;
@@ -162,8 +162,8 @@ namespace DevZest.Data.Views
                 result.AddRow((_, dataRow) =>
                 {
                     var column = orderByItem.GetColumn(dataPresenter.DataSet.Model);
-                    _.SortBy[dataRow] = column;
-                    _.Order[dataRow] = orderByItem.Direction;
+                    _.Column[dataRow] = column;
+                    _.Direction[dataRow] = orderByItem.Direction;
                 });
             }
 
@@ -249,7 +249,7 @@ namespace DevZest.Data.Views
             Close();
         }
 
-        private static IReadOnlyList<IColumnComparer> GetOrderBy(DataSet<Model> sortData)
+        private static IReadOnlyList<IColumnComparer> GetOrderBy(DataSet<OrderBy> sortData)
         {
             if (sortData == null || sortData.Count == 0)
                 return Array<IColumnComparer>.Empty;
@@ -260,8 +260,8 @@ namespace DevZest.Data.Views
             var result = new IColumnComparer[sortData.Count];
             for (int i = 0; i < sortData.Count; i++)
             {
-                var column = _.SortBy[i];
-                var direction = _.Order[i];
+                var column = _.Column[i];
+                var direction = _.Direction[i];
                 Debug.Assert(direction == SortDirection.Ascending || direction == SortDirection.Descending);
                 result[i] = DataRow.OrderBy(column, direction);
             }
