@@ -42,9 +42,14 @@ namespace DevZest.Data.Presenters
 
             public override void Deserialize(string s, ColumnValueBag columnValueBag)
             {
-                var converter = TypeDescriptor.GetConverter(_column.DataType);
-                var value = converter.ConvertFromString(s);
-                columnValueBag[_column] = value;
+                if (s == null)
+                    columnValueBag[_column] = null;
+                else
+                {
+                    var converter = TypeDescriptor.GetConverter(_column.DataType);
+                    var value = converter.ConvertFromString(s);
+                    columnValueBag[_column] = value;
+                }
             }
         }
 
