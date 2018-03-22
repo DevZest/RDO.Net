@@ -24,7 +24,7 @@ namespace DevZest.Data.Views
             }
 
             [Display(Name = nameof(UserMessages.SortModel_SortBy), ResourceType = typeof(UserMessages))]
-            public Column<ColumnHeader> SortBy { get; private set; }
+            public Column<Column> SortBy { get; private set; }
 
             [Display(Name = nameof(UserMessages.SortModel_Order), ResourceType = typeof(UserMessages))]
             public Column<SortDirection> Order { get; private set; }
@@ -88,7 +88,7 @@ namespace DevZest.Data.Views
 
             private IEnumerable ColumnHeaderSelection
             {
-                get { return GetColumnHeaders(_target).Select(x => new { Value = x, Display = x.Content }); }
+                get { return GetColumnHeaders(_target).Select(x => new { Value = x.Column, Display = x.Content }); }
             }
 
             protected override void BuildTemplate(TemplateBuilder builder)
@@ -156,14 +156,13 @@ namespace DevZest.Data.Views
             if (orderBy == null || orderBy.Count == 0)
                 return result;
 
-            var columnHeaders = GetColumnHeaders(dataPresenter);
             for (int i = 0; i < orderBy.Count; i++)
             {
                 var orderByItem = orderBy[i];
                 result.AddRow((_, dataRow) =>
                 {
                     var column = orderByItem.GetColumn(dataPresenter.DataSet.Model);
-                    _.SortBy[dataRow] = columnHeaders.First(x => x.Column == column);
+                    _.SortBy[dataRow] = column;
                     _.Order[dataRow] = orderByItem.Direction;
                 });
             }
@@ -176,7 +175,7 @@ namespace DevZest.Data.Views
             _data = GetData(target.GetService<ColumnHeader.ISortService>());
             _presenter = new Presenter(target);
             _presenter.Show(_dataView, _data);
-            Show();
+            ShowDialog();
         }
 
         private void CanExecMoveUp(object sender, CanExecuteRoutedEventArgs e)
@@ -261,10 +260,10 @@ namespace DevZest.Data.Views
             var result = new IColumnComparer[sortData.Count];
             for (int i = 0; i < sortData.Count; i++)
             {
-                var columnHeader = _.SortBy[i];
+                var column = _.SortBy[i];
                 var direction = _.Order[i];
                 Debug.Assert(direction == SortDirection.Ascending || direction == SortDirection.Descending);
-                result[i] = DataRow.OrderBy(columnHeader.Column, direction);
+                result[i] = DataRow.OrderBy(column, direction);
             }
 
             return result;
