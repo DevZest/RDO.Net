@@ -94,6 +94,12 @@ namespace DevZest.Data.Presenters.Primitives
             if (s == null)
                 return;
 
+            if (s.Length == 0)
+            {
+                output.Append('"').Append('"');
+                return;
+            }
+
             var length = output.Length;
             var escapeApplied = FormatEscaped(s, output, delimiter);
             if (escapeApplied)
@@ -105,7 +111,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private static bool FormatEscaped(string s, StringBuilder output, char delimiter)
         {
-            Debug.Assert(s != null);
+            Debug.Assert(!string.IsNullOrEmpty(s));
 
             int length = s.Length;
             for (int i = 0; i < length; i++)
