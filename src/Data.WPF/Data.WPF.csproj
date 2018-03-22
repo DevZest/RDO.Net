@@ -108,6 +108,7 @@
     <Compile Include="Views\GridCellMode.cs" />
     <Compile Include="Views\GridHeader.cs" />
     <Compile Include="Views\Primitives\InertButton.cs" />
+    <Compile Include="Views\Primitives\Sorting.cs" />
     <Compile Include="Views\Primitives\Spinner.xaml.cs">
       <DependentUpon>Spinner.xaml</DependentUpon>
     </Compile>

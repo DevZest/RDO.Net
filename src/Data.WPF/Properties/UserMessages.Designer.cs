@@ -94,33 +94,33 @@ namespace DevZest.Data
         /// <summary>
         /// Duplicate Sort By is not allowed.
         /// </summary>
-        public static string SortModel_DuplicateSortBy
+        public static string Sorting_DuplicateSortBy
         {
-            get { return GetString("SortModel_DuplicateSortBy"); }
+            get { return GetString("Sorting_DuplicateSortBy"); }
         }
 
         /// <summary>
         /// Field '{input}' is required.
         /// </summary>
-        public static string SortModel_InputRequired(object input)
+        public static string Sorting_InputRequired(object input)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("SortModel_InputRequired", "input"), input);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Sorting_InputRequired", "input"), input);
         }
 
         /// <summary>
         /// Order
         /// </summary>
-        public static string SortModel_Order
+        public static string Sorting_Order
         {
-            get { return GetString("SortModel_Order"); }
+            get { return GetString("Sorting_Order"); }
         }
 
         /// <summary>
         /// Sort By
         /// </summary>
-        public static string SortModel_SortBy
+        public static string Sorting_SortBy
         {
-            get { return GetString("SortModel_SortBy"); }
+            get { return GetString("Sorting_SortBy"); }
         }
 
         /// <summary>

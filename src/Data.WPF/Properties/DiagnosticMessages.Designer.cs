@@ -420,6 +420,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The sortings data is invalid, it fails the validation.
+        /// </summary>
+        public static string Sorting_HasValidationError
+        {
+            get { return GetString("Sorting_HasValidationError"); }
+        }
+
+        /// <summary>
         /// Conflict between Template.ValidationScope and AsyncValidation.Scope detected.
         /// </summary>
         public static string TemplateBuilder_AsyncValidatorScopeConflict

@@ -270,6 +270,9 @@
   <data name="ScalarValidationMessage_EmptySourceScalars" xml:space="preserve">
     <value>The source scalars cannot be empty.</value>
   </data>
+  <data name="Sorting_HasValidationError" xml:space="preserve">
+    <value>The sortings data is invalid, it fails the validation.</value>
+  </data>
   <data name="TemplateBuilder_AsyncValidatorScopeConflict" xml:space="preserve">
     <value>Conflict between Template.ValidationScope and AsyncValidation.Scope detected.</value>
   </data>

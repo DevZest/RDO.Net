@@ -1,5 +1,5 @@
-﻿using DevZest.Data.Annotations;
-using DevZest.Data.Presenters;
+﻿using DevZest.Data.Presenters;
+using DevZest.Data.Views.Primitives;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,53 +15,7 @@ namespace DevZest.Data.Views
     /// </summary>
     internal partial class SortWindow : Window
     {
-        private sealed class OrderBy : Data.Model
-        {
-            static OrderBy()
-            {
-                RegisterLocalColumn((OrderBy _) => _.Column);
-                RegisterLocalColumn((OrderBy _) => _.Direction);
-            }
-
-            [Display(Name = nameof(UserMessages.SortModel_SortBy), ResourceType = typeof(UserMessages))]
-            public Column<Column> Column { get; private set; }
-
-            [Display(Name = nameof(UserMessages.SortModel_Order), ResourceType = typeof(UserMessages))]
-            public Column<SortDirection> Direction { get; private set; }
-
-            [ModelValidator]
-            private DataValidationError ValidateRequiredColumn(DataRow dataRow)
-            {
-                return Column[dataRow] == null
-                    ? new DataValidationError(UserMessages.SortModel_InputRequired(Column.DisplayName), Column)
-                    : null;
-            }
-
-            [ModelValidator]
-            private DataValidationError ValidateDuplicateColumn(DataRow dataRow)
-            {
-                var dataSet = DataSet;
-                foreach (var other in dataSet)
-                {
-                    if (other == dataRow)
-                        continue;
-                    if (Column[dataRow] == Column[other])
-                        return new DataValidationError(UserMessages.SortModel_DuplicateSortBy, Column);
-                }
-                return null;
-            }
-
-            [ModelValidator]
-            private DataValidationError ValidateDirection(DataRow dataRow)
-            {
-                return Direction[dataRow] == SortDirection.Unspecified
-                    ? new DataValidationError(UserMessages.SortModel_InputRequired(Direction.DisplayName), Direction)
-                    : null;
-            }
-
-        }
-
-        private sealed class Presenter : DataPresenter<OrderBy>
+        private sealed class Presenter : DataPresenter<Sorting>
         {
             public Presenter(DataPresenter target)
             {
@@ -113,7 +67,10 @@ namespace DevZest.Data.Views
         public static RoutedUICommand Cancel { get { return ApplicationCommands.Close; } }
 
         private Presenter _presenter;
-        private DataSet<OrderBy> _data;
+        private DataSet<Sorting> Sortings
+        {
+            get { return _presenter.DataSet; }
+        }
 
         public SortWindow()
         {
@@ -146,35 +103,17 @@ namespace DevZest.Data.Views
                 return result;
         }
 
-        private static DataSet<OrderBy> GetData(ColumnHeader.ISortService sortService)
+        private static DataSet<Sorting> GetSortings(ColumnHeader.ISortService sortService)
         {
-            var result = DataSet<OrderBy>.New();
-            if (sortService == null)
-                return result;
-            var dataPresenter = sortService.DataPresenter;
-            var orderBy = sortService.OrderBy;
-            if (orderBy == null || orderBy.Count == 0)
-                return result;
-
-            for (int i = 0; i < orderBy.Count; i++)
-            {
-                var orderByItem = orderBy[i];
-                result.AddRow((_, dataRow) =>
-                {
-                    var column = orderByItem.GetColumn(dataPresenter.DataSet.Model);
-                    _.Column[dataRow] = column;
-                    _.Direction[dataRow] = orderByItem.Direction;
-                });
-            }
-
-            return result;
+            Debug.Assert(sortService != null);
+            return Sorting.Convert(sortService.DataPresenter.DataSet.Model, sortService.OrderBy);
         }
 
         public void Show(DataPresenter target)
         {
-            _data = GetData(target.GetService<ColumnHeader.ISortService>());
+            var sortings = GetSortings(target.GetService<ColumnHeader.ISortService>());
             _presenter = new Presenter(target);
-            _presenter.Show(_dataView, _data);
+            _presenter.Show(_dataView, sortings);
             ShowDialog();
         }
 
@@ -240,33 +179,13 @@ namespace DevZest.Data.Views
                 return;
             var target = _presenter.Target;
             var sortService = target.GetService<ColumnHeader.ISortService>();
-            sortService.OrderBy = GetOrderBy(_data);
+            sortService.OrderBy = Sorting.Convert(Sortings);
             this.Close();
         }
 
         private void ExecCancel(object sender, ExecutedRoutedEventArgs e)
         {
             Close();
-        }
-
-        private static IReadOnlyList<IColumnComparer> GetOrderBy(DataSet<OrderBy> sortData)
-        {
-            if (sortData == null || sortData.Count == 0)
-                return Array<IColumnComparer>.Empty;
-
-            Debug.Assert(sortData.Validate().Count == 0);
-
-            var _ = sortData._;
-            var result = new IColumnComparer[sortData.Count];
-            for (int i = 0; i < sortData.Count; i++)
-            {
-                var column = _.Column[i];
-                var direction = _.Direction[i];
-                Debug.Assert(direction == SortDirection.Ascending || direction == SortDirection.Descending);
-                result[i] = DataRow.OrderBy(column, direction);
-            }
-
-            return result;
         }
     }
 }
