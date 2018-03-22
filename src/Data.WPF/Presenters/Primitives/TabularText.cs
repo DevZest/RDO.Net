@@ -78,7 +78,7 @@ namespace DevZest.Data.Presenters.Primitives
                 {
                     if (inQuote)
                     {
-                        if ((char)reader.Peek() == '"')
+                        if ((char)reader.Peek() == '"') // escaped quote
                         {
                             reader.Read();
                             sb.Append('"');
