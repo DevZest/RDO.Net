@@ -55,25 +55,28 @@ namespace DevZest.Data.Presenters.Primitives
             get { return !IsEmpty; }
         }
 
-        public void CopyToClipboard(bool copy)
+        public void CopyToClipboard(bool includeColumnNames, bool copy)
         {
             if (!CanCopyToClipboard)
                 return;
 
-            var tabDelimitedText = Serialize(TabDelimiter);
-            var commaDelimitedText = Serialize(CommaDelimiter);
+            var tabDelimitedText = Serialize(includeColumnNames, TabDelimiter);
+            var commaDelimitedText = Serialize(includeColumnNames, CommaDelimiter);
             var dataObject = new DataObject();
             dataObject.SetText(tabDelimitedText, TextDataFormat.UnicodeText);
             dataObject.SetText(commaDelimitedText, TextDataFormat.CommaSeparatedValue);
             Clipboard.SetDataObject(dataObject, copy);
         }
 
-        private string Serialize(char delimiter)
+        private string Serialize(bool includeColumnNames, char delimiter)
         {
             if (IsEmpty)
                 return null;
 
             var result = new StringBuilder();
+            if (includeColumnNames)
+                SerializeColumnNames(result, delimiter);
+
             for (int i = 0; i < Rows.Count; i++)
             {
                 var row = Rows[i];
@@ -89,6 +92,19 @@ namespace DevZest.Data.Presenters.Primitives
                 result.AppendLine();
             }
             return result.ToString();
+        }
+
+        private void SerializeColumnNames(StringBuilder output, char delimiter)
+        {
+            for (int i = 0; i < ColumnSerializers.Count; i++)
+            {
+                var column = ColumnSerializers[i].Column;
+                Format(column.DisplayName, output, delimiter);
+                var isLast = i == ColumnSerializers.Count - 1;
+                if (!isLast)
+                    output.Append(delimiter);
+            }
+            output.AppendLine();
         }
 
         private static void Format(string s, StringBuilder output, char delimiter)

@@ -1,4 +1,6 @@
 ﻿using DevZest.Data.Presenters;
+using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -16,6 +18,7 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand CancelEditScalars = new RoutedUICommand();
             public static readonly RoutedUICommand EndEditScalars = new RoutedUICommand();
             public static RoutedUICommand Delete { get { return ApplicationCommands.Delete; } }
+            public static RoutedUICommand Copy { get { return ApplicationCommands.Copy; } }
         }
 
         public interface ICommandService : IService
@@ -41,6 +44,7 @@ namespace DevZest.Data.Views
                 yield return Commands.CancelEditScalars.Bind(CancelEditScalars, CanCancelEditScalars);
                 yield return Commands.EndEditScalars.Bind(EndEditScalars, CanCancelEditScalars);
                 yield return Commands.Delete.Bind(ExecDeleteSelected, CanExecDeleteSelected, new KeyGesture(Key.Delete));
+                yield return Commands.Copy.Bind(ExecCopy, CanExecCopy);
             }
 
             private void ReloadData(object sender, ExecutedRoutedEventArgs e)
@@ -109,6 +113,8 @@ namespace DevZest.Data.Views
             private void CanExecDeleteSelected(object sender, CanExecuteRoutedEventArgs e)
             {
                 e.CanExecute = DataPresenter.Template.AllowsDelete && DataPresenter.SelectedRows.Count > 0;
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
             }
 
             private void ExecDeleteSelected(object sender, ExecutedRoutedEventArgs e)
@@ -119,6 +125,61 @@ namespace DevZest.Data.Views
                     foreach (var row in DataPresenter.SelectedRows.ToArray())
                         row.Delete();
                 }
+                e.Handled = true;
+            }
+
+            private void CanExecCopy(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = SelectedRowsCount > 0 && ColumnsCount > 0;
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+
+            private int SelectedRowsCount
+            {
+                get
+                {
+                    var result = DataPresenter.SelectedRows.Count;
+                    var virtualRow = DataPresenter.VirtualRow;
+                    if (virtualRow != null && virtualRow.IsSelected)
+                        result--;
+                    return result;
+                }
+            }
+
+            private RowPresenter[] GetSelectedRows()
+            {
+                return DataPresenter.SelectedRows.Where(x => !x.IsVirtual).OrderBy(x => x.Index).ToArray();
+            }
+
+            private int ColumnsCount
+            {
+                get
+                {
+                    var model = DataPresenter.DataSet.Model;
+                    return model.GetColumns().Count + model.GetLocalColumns().Count;
+                }
+            }
+
+            private ColumnSerializer[] GetColumnSerializers()
+            {
+                var result = new ColumnSerializer[ColumnsCount];
+
+                var model = DataPresenter.DataSet.Model;
+                var columns = model.GetColumns();
+                var localColumns = model.GetLocalColumns();
+                for (int i = 0; i < columns.Count; i++)
+                    result[i] = DataPresenter.GetSerializer(columns[i]);
+                for (int i = 0; i < localColumns.Count; i++)
+                    result[i + columns.Count] = DataPresenter.GetSerializer(localColumns[i]);
+                return result;
+            }
+
+            private void ExecCopy(object sender, ExecutedRoutedEventArgs e)
+            {
+                var selectedRows = GetSelectedRows();
+                var columnSerializers = GetColumnSerializers();
+                new SerializableSelection(selectedRows, columnSerializers).CopyToClipboard(true, true);
                 e.Handled = true;
             }
         }
