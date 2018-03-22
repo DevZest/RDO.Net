@@ -3,11 +3,30 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
     public sealed class TabularText : Model
     {
+        public static bool CanPasteFromClipboard
+        {
+            get { return Clipboard.ContainsData(DataFormats.CommaSeparatedValue) || Clipboard.ContainsText(); }
+        }
+
+        public static DataSet<TabularText> PasteFromClipboard()
+        {
+            var csv = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+            if (csv != null)
+                return Parse(csv, ',');
+
+            var text = Clipboard.GetText();
+            if (!string.IsNullOrEmpty(text))
+                return Parse(text, '\t');
+
+            return null;
+        }
+
         public static DataSet<TabularText> Parse(string s, char delimiter)
         {
             Check.NotNull(s, nameof(s));
