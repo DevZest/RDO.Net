@@ -119,7 +119,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return true;
                 }
 
-                if (c == delimiter)
+                if (c == delimiter || c == '\r' || c == '\n')
                     return true;
             }
 

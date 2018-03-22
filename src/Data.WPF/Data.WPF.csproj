@@ -112,6 +112,7 @@
     <Compile Include="Views\Primitives\Spinner.xaml.cs">
       <DependentUpon>Spinner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presenters\Primitives\TabularText.cs" />
     <Compile Include="Views\RowSelector.Commands.cs" />
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
