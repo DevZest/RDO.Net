@@ -509,5 +509,10 @@ namespace DevZest.Data.Presenters
         {
             return true;
         }
+
+        public virtual ColumnSerializer GetSerializer(Column column)
+        {
+            return ColumnSerializer.Create(column);
+        }
     }
 }
