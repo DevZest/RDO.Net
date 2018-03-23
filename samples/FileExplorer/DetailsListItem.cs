@@ -21,7 +21,7 @@ namespace FileExplorer
             DateModified = CreateLocalColumn<DateTime>();
         }
 
-        protected override void Initialize(DataRow x, DirectoryInfo directoryInfo)
+        public override void Initialize(DataRow x, DirectoryInfo directoryInfo)
         {
             base.Initialize(x, directoryInfo);
             SmallIcon[x] = Win32.GetDirectoryIcon(directoryInfo.FullName, true);

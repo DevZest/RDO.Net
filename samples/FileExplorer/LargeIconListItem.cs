@@ -14,7 +14,7 @@ namespace FileExplorer
             LargeIcon = CreateLocalColumn<ImageSource>();
         }
 
-        protected override void Initialize(DataRow x, DirectoryInfo directoryInfo)
+        public override void Initialize(DataRow x, DirectoryInfo directoryInfo)
         {
             base.Initialize(x, directoryInfo);
             LargeIcon[x] = Win32.GetDirectoryIcon(directoryInfo.FullName, false);

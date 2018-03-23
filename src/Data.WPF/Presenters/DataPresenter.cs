@@ -514,5 +514,10 @@ namespace DevZest.Data.Presenters
         {
             return ColumnSerializer.Create(column);
         }
+
+        public RowPresenter this[DataRow dataRow]
+        {
+            get { return LayoutManager?[dataRow]; }
+        }
     }
 }

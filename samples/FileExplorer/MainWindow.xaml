@@ -17,6 +17,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
+                <MenuItem Header="New Folder" Command="{x:Static local:DirectoryListCommands.NewFolder}" CommandTarget="{x:Reference _directoryListView}" />
                 <MenuItem Header="_Close" Command="Close" />
             </MenuItem>
             <MenuItem Header="_View">

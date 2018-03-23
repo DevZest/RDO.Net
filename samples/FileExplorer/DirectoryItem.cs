@@ -52,7 +52,7 @@ namespace FileExplorer
             Type = CreateLocalColumn<DirectoryItemType>();
         }
 
-        protected virtual void Initialize(DataRow x, DirectoryInfo directoryInfo)
+        public virtual void Initialize(DataRow x, DirectoryInfo directoryInfo)
         {
             Path[x] = directoryInfo.FullName;
             DisplayName[x] = directoryInfo.Name;

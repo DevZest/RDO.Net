@@ -19,11 +19,8 @@ namespace FileExplorer
 
     public static class DirectoryListCommands
     {
-        public static RoutedUICommand Refresh
-        {
-            get { return NavigationCommands.Refresh; }
-        }
-
+        public static RoutedUICommand Refresh { get { return NavigationCommands.Refresh; } }
+        public static RoutedUICommand NewFolder { get { return ApplicationCommands.New; } }
         public static readonly RoutedUICommand Start = new RoutedUICommand();
     }
 
@@ -156,6 +153,7 @@ namespace FileExplorer
             foreach (var entry in baseService.GetCommandEntries(dataView))
                 yield return entry;
             yield return DirectoryListCommands.Refresh.Bind(ExecRefresh);
+            yield return DirectoryListCommands.NewFolder.Bind(ExecNewFolder, CanExecNewFolder);
         }
 
         private async void ExecRefresh(object sender, ExecutedRoutedEventArgs e)
@@ -163,6 +161,40 @@ namespace FileExplorer
             var currentPath = CurrentPath;
             await Refresh();
             SelectPath(currentPath);
+        }
+
+        private void CanExecNewFolder(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !IsEditing && CurrentPath != null;
+        }
+
+        private void ExecNewFolder(object sender, ExecutedRoutedEventArgs e)
+        {
+            var fullPath = GetNewFolder();
+            Directory.CreateDirectory(fullPath);
+            var dataRow = DataSet.AddRow((_, x) => _.Initialize(x, new DirectoryInfo(fullPath)));
+            var rowPresenter = this[dataRow];
+            CurrentRow = rowPresenter;
+            CurrentRow.View.Focus();
+            CurrentRow.BeginEdit();
+            e.Handled = true;
+        }
+
+        private string GetNewFolder()
+        {
+            var baseFolderName = "New Folder";
+            var suffix = 0;
+            string folderName, fullPath;
+            folderName = baseFolderName;
+            do
+            {
+                fullPath = Path.Combine(CurrentDirectory, folderName);
+                if (!Directory.Exists(fullPath))
+                    return fullPath;
+                suffix++;
+                folderName = baseFolderName + suffix.ToString();
+            }
+            while (true);
         }
 
         private string CurrentPath
