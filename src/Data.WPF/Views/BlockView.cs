@@ -336,6 +336,9 @@ namespace DevZest.Data.Views
                 if (Elements == null)
                     return false;
 
+                if (Elements.Count != Count)
+                    return true;
+
                 var startRowIndex = ContainerOrdinal * ElementManager.FlowRepeatCount;
                 var startIndex = BlockBindingsSplit;
                 int flowRepeatCount = Elements.Count - BlockBindings.Count;
