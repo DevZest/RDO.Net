@@ -165,7 +165,7 @@ namespace FileExplorer
 
         private void CanExecNewFolder(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = !IsEditing && CurrentPath != null;
+            e.CanExecute = !IsEditing && !string.IsNullOrEmpty(CurrentDirectory);
         }
 
         private void ExecNewFolder(object sender, ExecutedRoutedEventArgs e)
