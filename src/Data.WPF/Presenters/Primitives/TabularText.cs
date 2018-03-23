@@ -86,7 +86,7 @@ namespace DevZest.Data.Presenters.Primitives
         public static DataSet<TabularText> Parse(TextReader reader, char delimiter)
         {
             Check.NotNull(reader, nameof(reader));
-            if (delimiter == '"')
+            if (delimiter == QuotationMark)
                 throw new ArgumentException(DiagnosticMessages.TabularText_DelimiterCannotBeQuote, nameof(delimiter));
 
             var result = DataSet<TabularText>.New();
@@ -126,12 +126,12 @@ namespace DevZest.Data.Presenters.Primitives
                     {
                         if (sb.Length > 0)
                             _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
-                        return true;
+                        return reader.Peek() != -1;
                     }
                 }
                 else if (sb.Length == 0 && inQuote != true)
                 {
-                    if (readChar == '"')
+                    if (readChar == QuotationMark)
                         inQuote = true;
                     else if (readChar == delimiter)
                         _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
@@ -145,14 +145,14 @@ namespace DevZest.Data.Presenters.Primitives
                     else
                         _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
                 }
-                else if (readChar == '"')
+                else if (readChar == QuotationMark)
                 {
                     if (inQuote == true)
                     {
-                        if ((char)reader.Peek() == '"') // escaped quote
+                        if ((char)reader.Peek() == QuotationMark) // escaped quote
                         {
                             reader.Read();
-                            sb.Append('"');
+                            sb.Append(QuotationMark);
                         }
                         else
                             inQuote = false;
@@ -187,7 +187,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var value = sb.ToString();
                 if (inQuote == true)
-                    value = '"' + value;
+                    value = QuotationMark + value;
                 TextColumns[fieldIndex][dataRow] = value;
                 sb.Clear();
             }

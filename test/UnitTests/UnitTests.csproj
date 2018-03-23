@@ -99,6 +99,7 @@
     <Compile Include="Presenters\Primitives\RowManagerTests.cs" />
     <Compile Include="Presenters\Primitives\RowMapperTests.cs" />
     <Compile Include="Presenters\Primitives\RowNormalizerTests.cs" />
+    <Compile Include="Presenters\Primitives\TabularTextTests.cs" />
     <Compile Include="Presenters\RowBindingTests.cs" />
     <Compile Include="Presenters\RowCompositeBindingTests.cs" />
     <Compile Include="Presenters\ScalarBindingTests.cs" />
