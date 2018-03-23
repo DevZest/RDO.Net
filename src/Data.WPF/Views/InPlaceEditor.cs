@@ -513,7 +513,8 @@ namespace DevZest.Data.Views
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
-            IsEditing = Switcher.GetIsEditing(this);
+            if (this.GetBinding() != null)  // binding can be null when removed from UIElementCollection.
+                IsEditing = Switcher.GetIsEditing(this);
         }
 
         void IRowElement.Setup(RowPresenter p)

@@ -30,39 +30,11 @@ namespace DevZest.Data.Presenters.Primitives
                 ContainerViewList = Primitives.ContainerViewList.Create(this);
         }
 
-        List<ContainerView> _cachedContainerViews;
-        List<RowView> _cachedRowViews;
-
-        protected void ClearCachedElements()
-        {
-            if (_cachedContainerViews != null)
-                _cachedContainerViews.Clear();
-            if (_cachedRowViews != null)
-                _cachedRowViews.Clear();
-        }
-
-        private static T GetOrCreate<T>(ref List<T> cachedList, Func<T> constructor)
+        private static T Create<T>(Func<T> constructor)
             where T : class
         {
             Debug.Assert(constructor != null);
-
-            if (cachedList == null || cachedList.Count == 0)
-                return constructor();
-
-            var last = cachedList.Count - 1;
-            var result = cachedList[last];
-            cachedList.RemoveAt(last);
-            return result;
-        }
-
-        private static void Recycle<T>(ref List<T> cachedList, T value)
-            where T : class
-        {
-            Debug.Assert(value != null);
-
-            if (cachedList == null)
-                cachedList = new List<T>();
-            cachedList.Add(value);
+            return constructor();
         }
 
         private ContainerView Setup(RowPresenter rowPresenter)
@@ -73,7 +45,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private ContainerView Setup(int ordinal)
         {
-            var result = GetOrCreate(ref _cachedContainerViews, Template.CreateContainerView);
+            var result = Create(Template.CreateContainerView);
             result.Setup(this, ordinal);
             return result;
         }
@@ -82,7 +54,6 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(containerView != null);
             containerView.Cleanup();
-            Recycle(ref _cachedContainerViews, containerView);
         }
 
         public ContainerViewList ContainerViewList { get; private set; }
@@ -367,7 +338,7 @@ namespace DevZest.Data.Presenters.Primitives
             Debug.Assert(blockView != null);
             Debug.Assert(row != null && row.View == null);
 
-            var rowView = GetOrCreate(ref _cachedRowViews, Template.CreateRowView);
+            var rowView = Create(Template.CreateRowView);
             rowView.SetBlockView(blockView);
             rowView.Setup(row);
             return rowView;
@@ -379,7 +350,6 @@ namespace DevZest.Data.Presenters.Primitives
             Debug.Assert(rowView != null);
             rowView.Cleanup();
             rowView.SetBlockView(null);
-            Recycle(ref _cachedRowViews, rowView);
         }
 
         internal IElementCollection ElementCollection { get; private set; }

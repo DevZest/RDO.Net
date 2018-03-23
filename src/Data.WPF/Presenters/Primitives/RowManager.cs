@@ -66,7 +66,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Debug.Assert(!rowManager.IsEditing);
 
                 OpenEdit(rowManager);
-                if (rowManager.Editing == null)
+                if (rowManager.Editing == null)     // OpenEdit may set rowManager.Editing already
                     rowManager.Editing = this;
             }
 

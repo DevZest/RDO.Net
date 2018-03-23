@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBlock>(
                 onRefresh: (v, p) =>
                 {
-                    v.Text = p.GetObject(source).ToString(format, formatProvider);
+                    v.Text = p.GetObject(source)?.ToString(format, formatProvider);
                 });
         }
 

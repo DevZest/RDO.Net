@@ -191,7 +191,6 @@ namespace DevZest.Data.Presenters.Primitives
                 containerView.Measure(GetSize(containerView));
             }
 
-            ClearCachedElements();
             return MeasuredSize;
         }
 
