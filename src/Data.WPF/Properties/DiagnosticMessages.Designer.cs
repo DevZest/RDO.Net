@@ -428,6 +428,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Delimiter char cannot be double quotation mark.
+        /// </summary>
+        public static string TabularText_DelimiterCannotBeQuote
+        {
+            get { return GetString("TabularText_DelimiterCannotBeQuote"); }
+        }
+
+        /// <summary>
         /// Conflict between Template.ValidationScope and AsyncValidation.Scope detected.
         /// </summary>
         public static string TemplateBuilder_AsyncValidatorScopeConflict

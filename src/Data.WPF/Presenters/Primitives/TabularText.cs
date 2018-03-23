@@ -9,6 +9,53 @@ namespace DevZest.Data.Presenters.Primitives
 {
     public sealed class TabularText : Model
     {
+        public const char QuotationMark = '"';
+        public const char CommaDelimiter = ',';
+        public const char TabDelimiter = '\t';
+
+        internal static void Format(string s, StringBuilder output, char delimiter)
+        {
+            if (s == null)
+                return;
+
+            if (s.Length == 0)
+            {
+                output.Append(QuotationMark).Append(QuotationMark);
+                return;
+            }
+
+            var length = output.Length;
+            var inQuote = FormatEscaped(s, output, delimiter);
+            if (inQuote)
+            {
+                output.Insert(length, QuotationMark);
+                output.Append(QuotationMark);
+            }
+        }
+
+        private static bool FormatEscaped(string s, StringBuilder output, char delimiter)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(s));
+
+            int length = s.Length;
+            for (int i = 0; i < length; i++)
+            {
+                char c = s[i];
+                output.Append(c);
+
+                if (c == QuotationMark)
+                {
+                    output.Append(QuotationMark);
+                    return true;
+                }
+
+                if (c == delimiter || c == '\r' || c == '\n')
+                    return true;
+            }
+
+            return false;
+        }
+
         public static bool CanPasteFromClipboard
         {
             get { return Clipboard.ContainsData(DataFormats.CommaSeparatedValue) || Clipboard.ContainsText(); }
@@ -39,23 +86,28 @@ namespace DevZest.Data.Presenters.Primitives
         public static DataSet<TabularText> Parse(TextReader reader, char delimiter)
         {
             Check.NotNull(reader, nameof(reader));
+            if (delimiter == '"')
+                throw new ArgumentException(DiagnosticMessages.TabularText_DelimiterCannotBeQuote, nameof(delimiter));
 
             var result = DataSet<TabularText>.New();
-            var _ = result._;
+
+            var sb = new StringBuilder();
+            var hasNext = reader.Peek() != -1;
+            while (hasNext)
+                result.AddRow((_, dataRow) => hasNext = Parse(reader, delimiter, _, dataRow, sb));
+
+            return result;
+        }
+
+        private static bool Parse(TextReader reader, char delimiter, TabularText _, DataRow dataRow, StringBuilder sb)
+        {
+            Debug.Assert(reader.Peek() != -1);
 
             bool? inQuote = null;   // three states to distinguish between null and string.Empty
-            DataRow currentRow = null;
-            var currentField = 0;
-            var sb = new StringBuilder();
+            var fieldIndex = 0;
 
-            while (reader.Peek() != -1)
+            do
             {
-                if (currentRow == null)
-                {
-                    currentRow = new DataRow();
-                    result.Add(currentRow);
-                }
-
                 var readChar = (char)reader.Read();
 
                 if (readChar == '\n' || (readChar == '\r' && (char)reader.Peek() == '\n'))
@@ -72,9 +124,9 @@ namespace DevZest.Data.Presenters.Primitives
                     }
                     else
                     {
-                        _.AddValue(currentRow, currentField++, sb, ref inQuote);
-                        currentRow = null;
-                        currentField = 0;
+                        if (sb.Length > 0)
+                            _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
+                        return true;
                     }
                 }
                 else if (sb.Length == 0 && inQuote != true)
@@ -82,7 +134,7 @@ namespace DevZest.Data.Presenters.Primitives
                     if (readChar == '"')
                         inQuote = true;
                     else if (readChar == delimiter)
-                        _.AddValue(currentRow, currentField++, sb, ref inQuote);
+                        _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
                     else
                         sb.Append(readChar);
                 }
@@ -91,7 +143,7 @@ namespace DevZest.Data.Presenters.Primitives
                     if (inQuote == true)
                         sb.Append(delimiter);
                     else
-                        _.AddValue(currentRow, currentField++, sb, ref inQuote);
+                        _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
                 }
                 else if (readChar == '"')
                 {
@@ -111,8 +163,10 @@ namespace DevZest.Data.Presenters.Primitives
                 else
                     sb.Append(readChar);
             }
+            while (reader.Peek() != -1);
 
-            return result;
+            _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
+            return false;
         }
 
         private readonly List<Column<string>> _textColumns = new List<Column<string>>();
@@ -125,7 +179,6 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(dataRow.Index == DataSet.Count - 1);
             Debug.Assert(fieldIndex >= 0 && fieldIndex <= TextColumns.Count);
-            Debug.Assert(inQuote != true);
 
             if (fieldIndex == TextColumns.Count)
                 _textColumns.Add(CreateLocalColumn<string>());
@@ -133,10 +186,14 @@ namespace DevZest.Data.Presenters.Primitives
             if (sb.Length > 0)
             {
                 var value = sb.ToString();
+                if (inQuote == true)
+                    value = '"' + value;
                 TextColumns[fieldIndex][dataRow] = value;
                 sb.Clear();
             }
-            else if (inQuote.HasValue)
+            else if (inQuote == true)
+                TextColumns[fieldIndex][dataRow] = "\"";
+            else if (inQuote == false)
                 TextColumns[fieldIndex][dataRow] = string.Empty;
 
             inQuote = null;

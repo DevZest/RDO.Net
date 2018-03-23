@@ -273,6 +273,9 @@
   <data name="Sorting_HasValidationError" xml:space="preserve">
     <value>The sortings data is invalid, it fails the validation.</value>
   </data>
+  <data name="TabularText_DelimiterCannotBeQuote" xml:space="preserve">
+    <value>Delimiter char cannot be double quotation mark.</value>
+  </data>
   <data name="TemplateBuilder_AsyncValidatorScopeConflict" xml:space="preserve">
     <value>Conflict between Template.ValidationScope and AsyncValidation.Scope detected.</value>
   </data>
