@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -223,6 +224,9 @@ namespace DevZest.Data.Presenters
 
         internal override UIElement GetChild(UIElement parent, int index)
         {
+            var containerElement = parent as IContainerElement;
+            if (containerElement != null)
+                return containerElement.GetChild(index);
             throw new NotSupportedException();
         }
     }

@@ -8,10 +8,11 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Controls;
+using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Views
 {
-    public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement
+    public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement, IContainerElement
     {
         public interface ICommandService : IService
         {
@@ -684,6 +685,16 @@ namespace DevZest.Data.Views
         private IProxyScalarInput GetProxyScalarInput()
         {
             return (this.GetBinding() as ScalarBinding)?.ScalarInput as IProxyScalarInput;
-        }        
+        }
+
+        UIElement IContainerElement.GetChild(int index)
+        {
+            if (index == 0)
+                return InertElement;
+            else if (index == 1)
+                return EditorElement;
+            else
+                throw new ArgumentOutOfRangeException(nameof(index));
+        }
     }
 }

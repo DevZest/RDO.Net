@@ -4,6 +4,8 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Collections.Generic;
+using DevZest.Data.Views.Primitives;
+
 namespace DevZest.Data.Presenters
 {
     public sealed class BlockBinding<T> : BlockBindingBase<T>
@@ -136,6 +138,9 @@ namespace DevZest.Data.Presenters
 
         internal override UIElement GetChild(UIElement parent, int index)
         {
+            var containerElement = parent as IContainerElement;
+            if (containerElement != null)
+                return containerElement.GetChild(index);
             throw new NotSupportedException();
         }
     }
