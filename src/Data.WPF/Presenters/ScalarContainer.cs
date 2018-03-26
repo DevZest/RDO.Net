@@ -17,6 +17,7 @@ namespace DevZest.Data.Presenters
             void OnBeginEdit();
             void OnCancelEdit();
             void OnEndEdit();
+            void OnEdit(Scalar scalar);
         }
 
         internal ScalarContainer(IOwner owner)
@@ -98,6 +99,7 @@ namespace DevZest.Data.Presenters
             _owner.SuspendInvalidateView();
             BeginEdit();
             var result = scalar.SetValue(value);
+            _owner.OnEdit(scalar);
             _owner.ResumeInvalidateView();
             return result;
         }

@@ -452,6 +452,11 @@ namespace DevZest.Data.Presenters
             ScalarValidation.ExitEdit();
         }
 
+        void ScalarContainer.IOwner.OnEdit(Scalar scalar)
+        {
+            OnEdit(scalar);
+        }
+
         public void Select(RowPresenter row, MouseButton mouseButton, Action beforeSelecting)
         {
             VerifyRowPresenter(row, nameof(row));
@@ -541,6 +546,14 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentException(DiagnosticMessages.DataPresenter_ElementNotAttachedToThis, nameof(element));
 
             AttachedScalarBinding.Detach(element);
+        }
+
+        protected internal virtual void OnEdit(Column column)
+        {
+        }
+
+        protected virtual void OnEdit(Scalar scalar)
+        {
         }
     }
 }

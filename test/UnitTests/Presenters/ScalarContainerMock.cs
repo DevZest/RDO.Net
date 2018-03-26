@@ -45,6 +45,10 @@ namespace DevZest.Data.Presenters
             public void OnEndEdit()
             {
             }
+
+            public void OnEdit(Scalar scalar)
+            {
+            }
         }
 
         public static ScalarContainer New(Action<IScalars> onValueChanged = null)

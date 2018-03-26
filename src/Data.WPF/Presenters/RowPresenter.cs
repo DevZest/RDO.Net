@@ -387,6 +387,7 @@ namespace DevZest.Data.Presenters
             elementManager?.SuspendInvalidateView();
             BeginEdit();
             column[DataRow] = value;
+            DataPresenter?.OnEdit(column);
             Invalidate();
             elementManager?.ResumeInvalidateView();
         }
