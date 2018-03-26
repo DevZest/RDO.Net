@@ -124,6 +124,22 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The UIElement is already attached to DataPresenter.
+        /// </summary>
+        public static string DataPresenter_ElementAttachedAlready
+        {
+            get { return GetString("DataPresenter_ElementAttachedAlready"); }
+        }
+
+        /// <summary>
+        /// The UIElement is not attached to this DataPresenter.
+        /// </summary>
+        public static string DataPresenter_ElementNotAttachedToThis
+        {
+            get { return GetString("DataPresenter_ElementNotAttachedToThis"); }
+        }
+
+        /// <summary>
         /// The DataView is invalid. It has been associated with another DataPresenter.
         /// </summary>
         public static string DataPresenter_InvalidDataView

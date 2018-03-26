@@ -159,6 +159,12 @@
   <data name="DataPresenter_CurrentRowIsEditing" xml:space="preserve">
     <value>The CurrentRow is editing.</value>
   </data>
+  <data name="DataPresenter_ElementAttachedAlready" xml:space="preserve">
+    <value>The UIElement is already attached to DataPresenter.</value>
+  </data>
+  <data name="DataPresenter_ElementNotAttachedToThis" xml:space="preserve">
+    <value>The UIElement is not attached to this DataPresenter.</value>
+  </data>
   <data name="DataPresenter_InvalidDataView" xml:space="preserve">
     <value>The DataView is invalid. It has been associated with another DataPresenter.</value>
   </data>

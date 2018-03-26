@@ -89,7 +89,7 @@ namespace DevZest.Data.Presenters
         private static readonly DependencyProperty BindingProperty = DependencyProperty.RegisterAttached(nameof(Binding),
             typeof(Binding), typeof(BindingManager), new PropertyMetadata(null));
 
-        internal static Binding GetBinding(this UIElement element)
+        public static Binding GetBinding(this UIElement element)
         {
             return (Binding)element.GetValue(BindingProperty);
         }
@@ -120,7 +120,7 @@ namespace DevZest.Data.Presenters
         private static readonly DependencyProperty BlockViewProperty = DependencyProperty.RegisterAttached(nameof(BlockView),
             typeof(BlockView), typeof(BindingManager), new PropertyMetadata(null));
 
-        internal static BlockView GetBlockView(this UIElement element)
+        public static BlockView GetBlockView(this UIElement element)
         {
             return (BlockView)element.GetValue(BlockViewProperty);
         }
@@ -208,6 +208,12 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(behavior));
             blockBinding.InternalAddBehavior(behavior);
             return blockBinding;
+        }
+
+        public static DataPresenter GetAttachedTo(this UIElement element)
+        {
+            Check.NotNull(element, nameof(element));
+            return AttachedScalarBinding.GetAttachedScalarBinding(element)?.DataPresenter;
         }
     }
 }

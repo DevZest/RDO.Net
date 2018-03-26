@@ -6,6 +6,7 @@ using DevZest.Data.Views;
 using DevZest.Data.Views.Primitives;
 using System.Diagnostics;
 using System.Windows.Input;
+using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
@@ -518,6 +519,28 @@ namespace DevZest.Data.Presenters
         public RowPresenter this[DataRow dataRow]
         {
             get { return LayoutManager?[dataRow]; }
+        }
+
+        public void Attach<T>(T element, ScalarBinding<T> scalarBinding)
+            where T : UIElement, new()
+        {
+            Check.NotNull(element, nameof(element));
+            if (element.GetAttachedTo() != null)
+                throw new ArgumentException(DiagnosticMessages.DataPresenter_ElementAttachedAlready, nameof(element));
+            Check.NotNull(scalarBinding, nameof(scalarBinding));
+            if (scalarBinding.IsSealed)
+                throw new ArgumentException(DiagnosticMessages.Binding_VerifyNotSealed, nameof(scalarBinding));
+
+            AttachedScalarBinding.Attach(this, element, scalarBinding);
+        }
+
+        public void Detach(UIElement element)
+        {
+            Check.NotNull(element, nameof(element));
+            if (element.GetAttachedTo() != this)
+                throw new ArgumentException(DiagnosticMessages.DataPresenter_ElementNotAttachedToThis, nameof(element));
+
+            AttachedScalarBinding.Detach(element);
         }
     }
 }

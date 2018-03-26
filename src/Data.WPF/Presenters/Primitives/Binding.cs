@@ -12,7 +12,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private Template _template;
-        public Template Template
+        public virtual Template Template
         {
             get { return ParentBinding != null ? ParentBinding.Template : _template; }
             private set { _template = value; }
