@@ -168,7 +168,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal bool QueryEndEdit()
         {
-            if (_rowValidation == null)
+            if (_rowValidation == null || Template.RowValidationMode == ValidationMode.Explicit)
                 return true;
 
             _rowValidation.ValidateCurrentRow();
@@ -190,7 +190,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal bool QueryEndEditScalars()
         {
-            if (_scalarValidation == null)
+            if (_scalarValidation == null || Template.ScalarValidationMode == ValidationMode.Explicit)
                 return true;
 
             _scalarValidation.Validate();
