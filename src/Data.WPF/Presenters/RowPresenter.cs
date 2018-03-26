@@ -289,17 +289,6 @@ namespace DevZest.Data.Presenters
             return DataRow == null ? default(T) : column[DataRow, beforeEdit];
         }
 
-        public object GetObject(Column column, bool beforeEdit = false)
-        {
-            if (Depth > 0)
-            {
-                var model = DataRow.Model;
-                IReadOnlyList<Column> columns = column.IsLocal ? model.GetLocalColumns() : model.GetColumns();
-                column = columns[column.Ordinal];
-            }
-            return DataRow == null ? null : column.GetValue(DataRow, beforeEdit);
-        }
-
         private void VerifyColumn(Column column, string paramName)
         {
             if (column == null)
@@ -311,14 +300,7 @@ namespace DevZest.Data.Presenters
 
         public object this[Column column]
         {
-            get
-            {
-                VerifyColumn(column, nameof(column));
-
-                if (Depth > 0)
-                    column = DataRow.Model.GetColumns()[column.Ordinal];
-                return DataRow == null ? column.GetDefaultValue() : column.GetValue(DataRow);
-            }
+            get { return this[column, false]; }
             set
             {
                 VerifyColumn(column, nameof(column));
@@ -328,6 +310,22 @@ namespace DevZest.Data.Presenters
                 BeginEdit();
                 column.SetValue(DataRow, value);
                 Invalidate();
+            }
+        }
+
+        public object this[Column column, bool beforeEdit]
+        {
+            get
+            {
+                VerifyColumn(column, nameof(column));
+
+                if (Depth > 0)
+                {
+                    var model = DataRow.Model;
+                    IReadOnlyList<Column> columns = column.IsLocal ? model.GetLocalColumns() : model.GetColumns();
+                    column = columns[column.Ordinal];
+                }
+                return DataRow == null ? null : column.GetValue(DataRow, beforeEdit);
             }
         }
 

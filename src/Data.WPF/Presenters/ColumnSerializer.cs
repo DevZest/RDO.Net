@@ -37,7 +37,7 @@ namespace DevZest.Data.Presenters
 
             public override string Serialize(RowPresenter row)
             {
-                return row.GetObject(_column)?.ToString();
+                return row[_column]?.ToString();
             }
 
             public override void Deserialize(string s, ColumnValueBag columnValueBag)
