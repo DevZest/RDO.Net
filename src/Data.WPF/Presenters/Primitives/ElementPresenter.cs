@@ -10,7 +10,7 @@
 
         public DataPresenter DataPresenter
         {
-            get { return Template.DataPresenter; }
+            get { return Template?.DataPresenter; }
         }
     }
 }
