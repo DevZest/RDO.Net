@@ -22,11 +22,11 @@ namespace DevZest.Data.Presenters.Primitives
                 {
                     var virtualRowPlacement = rowManager.VirtualRowPlacement;
                     if (virtualRowPlacement == VirtualRowPlacement.Head)
-                        return InsertHandler.Before(rowManager, null);
+                        return InsertHandler.EditVirtualHead(rowManager);
                     else
                     {
                         Debug.Assert(virtualRowPlacement == VirtualRowPlacement.Tail);
-                        return InsertHandler.After(rowManager, null);
+                        return InsertHandler.EditVirtualTail(rowManager);
                     }
                 }
                 else
@@ -76,17 +76,17 @@ namespace DevZest.Data.Presenters.Primitives
                 RollbackEdit(rowManager);
             }
 
-            public RowPresenter EndEdit(RowManager rowManager)
+            public RowPresenter EndEdit(RowManager rowManager, bool staysOnInserting)
             {
                 rowManager.Editing = null;
-                return CommitEdit(rowManager);
+                return CommitEdit(rowManager, staysOnInserting);
             }
 
             protected abstract void OpenEdit(RowManager rowManager);
 
             protected abstract void RollbackEdit(RowManager rowManager);
 
-            protected abstract RowPresenter CommitEdit(RowManager rowManager);
+            protected abstract RowPresenter CommitEdit(RowManager rowManager, bool staysOnInserting);
 
             private sealed class EditCurrentHandler : EditHandler
             {
@@ -112,7 +112,7 @@ namespace DevZest.Data.Presenters.Primitives
                     currentRow.DataRow.CancelEdit();
                 }
 
-                protected override RowPresenter CommitEdit(RowManager rowManager)
+                protected override RowPresenter CommitEdit(RowManager rowManager, bool staysOnInserting)
                 {
                     var currentRow = rowManager.CurrentRow;
                     currentRow.DataRow.EndEdit();
@@ -128,6 +128,16 @@ namespace DevZest.Data.Presenters.Primitives
 
             private abstract class InsertHandler : EditHandler
             {
+                public static InsertHandler EditVirtualHead(RowManager rowManager)
+                {
+                    return new EditVirtualHeadHandler(rowManager);
+                }
+
+                public static InsertHandler EditVirtualTail(RowManager rowManager)
+                {
+                    return new EditVirtualTailHandler(rowManager);
+                }
+
                 public static InsertHandler Before(RowManager rowManager, RowPresenter reference)
                 {
                     return new InsertBeforeHandler(rowManager, reference);
@@ -189,7 +199,7 @@ namespace DevZest.Data.Presenters.Primitives
 
                 protected abstract int CommitEditIndex { get; }
 
-                protected sealed override RowPresenter CommitEdit(RowManager rowManager)
+                protected sealed override RowPresenter CommitEdit(RowManager rowManager, bool staysOnInserting)
                 {
                     Debug.Assert(!rowManager.IsEditing);
                     Debug.Assert(rowManager == RowManager);
@@ -202,8 +212,13 @@ namespace DevZest.Data.Presenters.Primitives
                         if (newCurrentRow != null)
                             rowManager.CurrentRow = newCurrentRow;
                     }
+
+                    if (staysOnInserting)
+                        StayOnInserting(rowManager, newCurrentRow);
                     return newCurrentRow;
                 }
+
+                protected abstract void StayOnInserting(RowManager rowManager, RowPresenter rowInserted);
 
                 protected virtual RowPresenter CurrentRowAfterRollback
                 {
@@ -286,7 +301,7 @@ namespace DevZest.Data.Presenters.Primitives
 
                 protected abstract int InsertingRowRawIndex { get; }
 
-                private sealed class InsertBeforeHandler : InsertHandler
+                private class InsertBeforeHandler : InsertHandler
                 {
                     public InsertBeforeHandler(RowManager rowManager, RowPresenter reference)
                         : base(rowManager, reference)
@@ -315,9 +330,28 @@ namespace DevZest.Data.Presenters.Primitives
                     {
                         get { return InsertMode.Before; }
                     }
+
+                    protected override void StayOnInserting(RowManager rowManager, RowPresenter rowInserted)
+                    {
+                        rowManager.BeginInsertBefore(null, rowInserted);
+                    }
                 }
 
-                private sealed class InsertAfterHandler : InsertHandler
+                private sealed class EditVirtualHeadHandler : InsertBeforeHandler
+                {
+                    public EditVirtualHeadHandler(RowManager rowManager)
+                        : base(rowManager, null)
+                    {
+                    }
+
+                    protected override void StayOnInserting(RowManager rowManager, RowPresenter rowInserted)
+                    {
+                        Debug.Assert(rowManager.VirtualRow != null);
+                        rowManager.CurrentRow = rowManager.VirtualRow;
+                    }
+                }
+
+                private class InsertAfterHandler : InsertHandler
                 {
                     public InsertAfterHandler(RowManager rowManager, RowPresenter reference)
                         : base(rowManager, reference)
@@ -342,6 +376,25 @@ namespace DevZest.Data.Presenters.Primitives
                     protected override int CommitEditIndex
                     {
                         get { return Reference == null ? DataSet.Count : Reference.DataRow.Index + 1; }
+                    }
+
+                    protected override void StayOnInserting(RowManager rowManager, RowPresenter rowInserted)
+                    {
+                        rowManager.BeginInsertAfter(null, rowInserted);
+                    }
+                }
+
+                private sealed class EditVirtualTailHandler : InsertAfterHandler
+                {
+                    public EditVirtualTailHandler(RowManager rowManager)
+                        : base(rowManager, null)
+                    {
+                    }
+
+                    protected override void StayOnInserting(RowManager rowManager, RowPresenter rowInserted)
+                    {
+                        Debug.Assert(rowManager.VirtualRow != null);
+                        rowManager.CurrentRow = rowManager.VirtualRow;
                     }
                 }
             }
@@ -466,6 +519,11 @@ namespace DevZest.Data.Presenters.Primitives
                     {
                         get { return InsertMode.Before; }
                     }
+
+                    protected override void StayOnInserting(RowManager rowManager, RowPresenter rowInserted)
+                    {
+                        rowManager.BeginInsertBefore(ParentRow, rowInserted);
+                    }
                 }
 
                 private sealed class InsertAfterChildHandler : InsertChildHandler
@@ -488,6 +546,11 @@ namespace DevZest.Data.Presenters.Primitives
                     protected override InsertMode Mode
                     {
                         get { return InsertMode.After; }
+                    }
+
+                    protected override void StayOnInserting(RowManager rowManager, RowPresenter rowInserted)
+                    {
+                        rowManager.BeginInsertAfter(ParentRow, rowInserted);
                     }
                 }
             }
@@ -788,10 +851,10 @@ namespace DevZest.Data.Presenters.Primitives
             EditHandler.EnterEditMode(this);
         }
 
-        internal virtual RowPresenter EndEdit()
+        internal virtual RowPresenter EndEdit(bool staysOnInserting = false)
         {
             Debug.Assert(IsEditing);
-            return Editing.EndEdit(this);
+            return Editing.EndEdit(this, staysOnInserting);
         }
 
         internal virtual void CancelEdit()

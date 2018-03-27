@@ -396,14 +396,14 @@ namespace DevZest.Data.Presenters
             elementManager?.ResumeInvalidateView();
         }
 
-        public RowPresenter EndEdit()
+        public RowPresenter EndEdit(bool staysOnInserting = true)
         {
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages._VerifyIsEditing);
 
             var elementManager = ElementManager;
             elementManager?.SuspendInvalidateView();
-            var result = RowManager.EndEdit();
+            var result = RowManager.EndEdit(staysOnInserting);
             elementManager?.ResumeInvalidateView();
             return result;
         }
