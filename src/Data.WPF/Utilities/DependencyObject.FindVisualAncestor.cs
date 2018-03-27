@@ -10,7 +10,8 @@ namespace DevZest
         internal static T FindVisaulAncestor<T>(this DependencyObject obj)
             where T : DependencyObject
         {
-            Debug.Assert(obj != null);
+            if (obj == null)
+                return null;
 
             // If obj is not Visual nor Visual3D, the next call to VisualTreeHelper.GetParent will throw exception
             // Seems TreeView has this problem too, and not fixed till now (2018):

@@ -428,5 +428,14 @@ namespace DevZest.Data.Views
                 return inputManager == null ? ValidationInfo.Empty : inputManager.GetValidationInfo(this);
             }
         }
+
+        public IInputElement ActiveInputElement { get; private set; }
+        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            base.OnGotKeyboardFocus(e);
+            var activeInputElement = e.OriginalSource as IInputElement;
+            if (activeInputElement != null)
+                ActiveInputElement = activeInputElement;
+        }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections;
 using System.Windows.Controls;
+using System.Windows;
+using DevZest.Data.Views;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -214,7 +216,13 @@ namespace DevZest.Data.Presenters.Primitives
                     }
 
                     if (staysOnInserting)
+                    {
                         StayOnInserting(rowManager, newCurrentRow);
+                        var currentView = rowManager.CurrentRow?.View;
+                        if (currentView != null && currentView.ContainsKeyboardFocus() && InitialInputElement != null &&
+                            (InitialInputElement as DependencyObject).FindVisaulAncestor<RowView>() == currentView)
+                            InitialInputElement.Focus();
+                    }
                     return newCurrentRow;
                 }
 
@@ -249,9 +257,20 @@ namespace DevZest.Data.Presenters.Primitives
                     }
                 }
 
+                protected IInputElement InitialInputElement { get; private set; }
+
+                private void KeepInitialInputElement(RowManager rowManager)
+                {
+                    var currentView = rowManager.CurrentRow?.View;
+                    if (currentView != null)
+                        InitialInputElement = currentView.ActiveInputElement;
+                }
+
                 protected sealed override void OpenEdit(RowManager rowManager)
                 {
                     Debug.Assert(rowManager == RowManager);
+
+                    KeepInitialInputElement(rowManager);
 
                     if (rowManager.VirtualRow != null)
                     {
