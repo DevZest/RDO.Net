@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data
 {
-    public sealed class PagedDataSet<T> : Scalar
+    public sealed class PagedDataSet<T> : DataObjectBase
         where T : Model, new()
     {
         public PagedDataSet()
@@ -43,7 +43,7 @@
 
         public static PagedDataSet<T> ParseJson(string json)
         {
-            return Scalar.ParseJson<PagedDataSet<T>>(json);
+            return DataObjectBase.ParseJson<PagedDataSet<T>>(json);
         }
     }
 }
