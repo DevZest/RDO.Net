@@ -19,6 +19,7 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand EndEditScalars = new RoutedUICommand();
             public static RoutedUICommand Delete { get { return ApplicationCommands.Delete; } }
             public static RoutedUICommand Copy { get { return ApplicationCommands.Copy; } }
+            public static RoutedUICommand PasteAppend { get { return ApplicationCommands.Paste; } }
         }
 
         public interface ICommandService : IService
@@ -45,6 +46,7 @@ namespace DevZest.Data.Views
                 yield return Commands.EndEditScalars.Bind(EndEditScalars, CanCancelEditScalars);
                 yield return Commands.Delete.Bind(ExecDeleteSelected, CanExecDeleteSelected, new KeyGesture(Key.Delete));
                 yield return Commands.Copy.Bind(ExecCopy, CanExecCopy);
+                yield return Commands.PasteAppend.Bind(ExecPasteAppend, CanExecPasteAppend);
             }
 
             private void ReloadData(object sender, ExecutedRoutedEventArgs e)
@@ -181,6 +183,24 @@ namespace DevZest.Data.Views
                 var columnSerializers = GetColumnSerializers();
                 new SerializableSelection(selectedRows, columnSerializers).CopyToClipboard(true, true);
                 e.Handled = true;
+            }
+
+            private void CanExecPasteAppend(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = TabularText.CanPasteFromClipboard && RowBindings.Any(x => x.SerializableColumns.Count > 0);
+                if (!e.CanExecute)
+                    e.ContinueRouting = true;
+            }
+
+            private IReadOnlyList<RowBinding> RowBindings
+            {
+                get { return DataPresenter.Template.RowBindings; }
+            }
+
+            private void ExecPasteAppend(object sender, ExecutedRoutedEventArgs e)
+            {
+                var window = new PasteAppendWindow();
+                window.Show(null);
             }
         }
 
