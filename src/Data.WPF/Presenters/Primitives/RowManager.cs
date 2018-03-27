@@ -219,7 +219,7 @@ namespace DevZest.Data.Presenters.Primitives
                     {
                         StayOnInserting(rowManager, newCurrentRow);
                         var currentView = rowManager.CurrentRow?.View;
-                        if (currentView != null && currentView.ContainsKeyboardFocus() && InitialInputElement != null &&
+                        if (currentView != null && currentView.ContainsKeyboardFocus() && InitialInputElement != null && InitialInputElement != currentView.ActiveInputElement &&
                             (InitialInputElement as DependencyObject).FindVisaulAncestor<RowView>() == currentView)
                             InitialInputElement.Focus();
                     }
