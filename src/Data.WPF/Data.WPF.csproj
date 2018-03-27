@@ -116,6 +116,9 @@
     </Compile>
     <Compile Include="Presenters\Primitives\TabularText.cs" />
     <Compile Include="Views\RowSelector.Commands.cs" />
+    <Compile Include="Views\PasteAppendWindow.xaml.cs">
+      <DependentUpon>PasteAppendWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>
@@ -317,6 +320,10 @@
     <Page Include="Views\Primitives\Spinner.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PasteAppendWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SortWindow.xaml">
       <SubType>Designer</SubType>

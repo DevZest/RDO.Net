@@ -187,6 +187,14 @@ namespace DevZest.Data
             get { return GetString("_OK"); }
         }
 
+        /// <summary>
+        /// Paste Append
+        /// </summary>
+        public static string PasteAppendWindow_Title
+        {
+            get { return GetString("PasteAppendWindow_Title"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
