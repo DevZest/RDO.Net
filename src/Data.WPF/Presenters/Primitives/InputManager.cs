@@ -154,16 +154,16 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        internal sealed override bool EndEdit()
+        internal sealed override RowPresenter EndEdit()
         {
             var endEdit = DataPresenter == null ? QueryEndEdit() : DataPresenter.QueryEndEdit();
             if (!endEdit)
-                return false;
+                return null;
 
             /// <see cref="CurrentRow"/> does not always be the currently editing row after editing, see comments on <see cref="ElementManager.OnFocused(RowView)"/>.
-            var rowAfterEditing = CommitEdit();
+            var rowAfterEditing = base.EndEdit();
             RowValidation.ExitEdit(rowAfterEditing);
-            return true;
+            return rowAfterEditing;
         }
 
         internal bool QueryEndEdit()

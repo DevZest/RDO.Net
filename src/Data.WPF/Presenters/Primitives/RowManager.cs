@@ -108,7 +108,8 @@ namespace DevZest.Data.Presenters.Primitives
 
                 protected override void RollbackEdit(RowManager rowManager)
                 {
-                    rowManager.CurrentRow.DataRow.CancelEdit();
+                    var currentRow = rowManager.CurrentRow;
+                    currentRow.DataRow.CancelEdit();
                 }
 
                 protected override RowPresenter CommitEdit(RowManager rowManager)
@@ -787,15 +788,9 @@ namespace DevZest.Data.Presenters.Primitives
             EditHandler.EnterEditMode(this);
         }
 
-        internal virtual bool EndEdit()
+        internal virtual RowPresenter EndEdit()
         {
             Debug.Assert(IsEditing);
-            CommitEdit();
-            return true;
-        }
-
-        internal RowPresenter CommitEdit()
-        {
             return Editing.EndEdit(this);
         }
 

@@ -571,7 +571,7 @@ namespace DevZest.Data.Presenters.Primitives
         /// <see cref="OnRowsChanged"/>
         /// ALSO NOTE: During this calling chain, <see cref="CurrentRow"/> is directly set to <see cref="_focusTo"/>, by using the flag <see cref="_currentRowChangedByInsertSuspended"/>.
         /// In this case, <see cref="CurrentRow"/> does not always be the same of the currently editing <see cref="RowPresenter"/>,
-        /// use the return value of <see cref="RowManager.CommitEdit"/> instead.
+        /// use the return value of <see cref="RowManager.EndEdit"/> instead.
         /// </remarks>
         private RowView _focusTo;
         private bool _currentRowChangedByInsertSuspended;
@@ -593,7 +593,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private bool CanChangeCurrentRow
         {
-            get { return IsEditing ? EndEdit() : true; }
+            get { return IsEditing ? EndEdit() != null : true; }
         }
 
         private void PreventCurrentRowViewFromLosingFocus(RowView newFocusedRowView)

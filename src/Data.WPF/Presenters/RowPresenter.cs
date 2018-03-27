@@ -396,7 +396,7 @@ namespace DevZest.Data.Presenters
             elementManager?.ResumeInvalidateView();
         }
 
-        public bool EndEdit()
+        public RowPresenter EndEdit()
         {
             if (!IsEditing)
                 throw new InvalidOperationException(DiagnosticMessages._VerifyIsEditing);
