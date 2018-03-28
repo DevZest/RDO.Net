@@ -141,9 +141,16 @@ namespace DevZest.Data.Presenters
             _owner.OnValueChanged(scalars);
         }
 
-        internal Scalar<T> CreateNew<T>(T value = default(T), IComparer<T> comparer = null)
+        internal Scalar<T> CreateNew<T>(T value = default(T), IEqualityComparer<T> equalityComparer = null)
         {
-            var result = new Scalar<T>(this, Count, value, comparer);
+            var result = Scalar<T>.Create(this, Count, equalityComparer, value);
+            Items.Add(result);
+            return result;
+        }
+
+        internal Scalar<T> CreateNew<T>(Func<T> getter, Action<T> setter, IEqualityComparer<T> equalityComparer = null)
+        {
+            var result = Scalar<T>.Create(this, Count, equalityComparer, getter, setter);
             Items.Add(result);
             return result;
         }

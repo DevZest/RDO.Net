@@ -25,11 +25,21 @@ namespace DevZest.Data.Presenters
             get { return _ordinal; }
         }
 
-        public abstract object GetObject(bool beforeEdit = false);
+        public object GetValue(bool beforeEdit = false)
+        {
+            return GetValueOverride(beforeEdit);
+        }
 
-        public abstract void SetObject(object value, bool beforeEdit = false);
+        internal abstract object GetValueOverride(bool beforeEdit);
 
-        public bool IsEditing
+        public void SetValue(object value, bool beforeEdit = false)
+        {
+            SetValueOverride(value, beforeEdit);
+        }
+
+        internal abstract void SetValueOverride(object value, bool beforeEdit);
+
+        public virtual bool IsEditing
         {
             get { return Container.IsEditing; }
         }

@@ -326,9 +326,16 @@ namespace DevZest.Data.Presenters
 
         internal abstract bool CanCancelLoading { get; }
 
-        protected Scalar<T> NewScalar<T>(T value = default(T), IComparer<T> comparer = null)
+        protected Scalar<T> NewScalar<T>(T value = default(T), IEqualityComparer<T> equalityComparer = null)
         {
-            return ScalarContainer.CreateNew(value, comparer);
+            return ScalarContainer.CreateNew(value, equalityComparer);
+        }
+
+        protected Scalar<T> NewLinkedScalar<T>(string propertyOrFieldName, IEqualityComparer<T> equalityComparer = null)
+        {
+            var getter = this.GetPropertyOrFieldGetter<T>(propertyOrFieldName);
+            var setter = this.GetPropertyOrFieldSetter<T>(propertyOrFieldName);
+            return ScalarContainer.CreateNew(getter, setter, equalityComparer);
         }
 
         internal IScalarValidationErrors ValidateScalars()

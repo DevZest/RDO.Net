@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<TextBlock>(
                 onRefresh: v =>
                 {
-                    v.Text = source.GetObject().ToString(format, formatProvider);
+                    v.Text = source.GetValue().ToString(format, formatProvider);
                 });
         }
     }
