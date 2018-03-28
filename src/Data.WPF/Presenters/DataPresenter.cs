@@ -338,6 +338,13 @@ namespace DevZest.Data.Presenters
             return ScalarContainer.CreateNew(getter, setter, equalityComparer);
         }
 
+        protected Scalar<T> NewLinkedScalar<T>(Func<T> getter, Action<T> setter, IEqualityComparer<T> equalityComparer = null)
+        {
+            Check.NotNull(getter, nameof(getter));
+            Check.NotNull(setter, nameof(setter));
+            return ScalarContainer.CreateNew(getter, setter, equalityComparer);
+        }
+
         internal IScalarValidationErrors ValidateScalars()
         {
             var result = ScalarValidationErrors.Empty;
