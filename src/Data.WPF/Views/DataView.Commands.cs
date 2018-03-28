@@ -187,7 +187,7 @@ namespace DevZest.Data.Views
 
             private void CanExecPasteAppend(object sender, CanExecuteRoutedEventArgs e)
             {
-                e.CanExecute = TabularText.CanPasteFromClipboard && RowBindings.Any(x => x.SerializableColumns.Count > 0);
+                e.CanExecute = TabularText.CanPasteFromClipboard && !DataPresenter.IsRecursive && RowBindings.Any(x => x.SerializableColumns.Count > 0);
                 if (!e.CanExecute)
                     e.ContinueRouting = true;
             }

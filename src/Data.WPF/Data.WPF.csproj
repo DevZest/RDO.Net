@@ -101,6 +101,8 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Utilities\IInputElement.ContainsKeyboardFocus.cs" />
+    <Compile Include="Utilities\Object.GetPropertyOrFieldSetter.cs" />
+    <Compile Include="Utilities\Object.GetPropertyOrFieldGetter.cs" />
     <Compile Include="Utilities\SingleChildEnumerator.cs" />
     <Compile Include="Views\AsyncValidationFaultControl.cs" />
     <Compile Include="Views\DataView.Commands.cs" />
