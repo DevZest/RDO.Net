@@ -175,6 +175,40 @@ namespace DevZest.Data.Presenters
                 return result;
         }
 
+        public static ScalarBinding<CheckBox> BindToCheckBox(this Scalar<bool?> source, string display = null)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue(),
+                onSetup: v =>
+                {
+                    v.IsThreeState = true;
+                    if (display != null)
+                        v.Content = display;
+                }, onCleanup: null)
+                .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty))
+                .WithFlush(source, v => v.IsChecked)
+                .EndInput();
+        }
+
+        public static ScalarBinding<CheckBox> BindToCheckBox(this Scalar<bool> source, string display = null)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue(),
+                onSetup: v =>
+                {
+                    v.IsThreeState = false;
+                    if (display != null)
+                        v.Content = display;
+                }, onCleanup: null)
+                .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty))
+                .WithFlush(source, v => v.IsChecked.Value)
+                .EndInput();
+        }
+
         public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T> source, T flag, string display = null)
             where T : struct, IConvertible
         {
