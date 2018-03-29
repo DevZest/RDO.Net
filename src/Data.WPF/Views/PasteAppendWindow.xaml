@@ -19,6 +19,8 @@
             <v:DataView.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="Padding" Value="2" />
+                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                    <Setter Property="v:PasteAppendWindow.AutoTooltip" Value="True" />
                 </Style>
             </v:DataView.Resources>
         </v:DataView>
