@@ -35,8 +35,8 @@ namespace DevZest.Data.Views
 
             public Presenter(IReadOnlyList<Column> targetColumns, DataView dataView)
             {
-                //Debug.Assert(targetColumns != null && targetColumns.Count > 0);
-                _targetColumns = targetColumns;
+                Debug.Assert(targetColumns != null && targetColumns.Count > 0);
+                _columnSelection = InitColumnSelection(targetColumns);
                 BindableIsFirstRowHeader = NewLinkedScalar<bool>(nameof(IsFirstRowHeader));
 
                 var tabularText = TabularText.PasteFromClipboard();
@@ -47,8 +47,25 @@ namespace DevZest.Data.Views
                 _bindableHeaders = new Func<string>[textColumnsCount];
                 for (int i = 0; i < _bindableHeaders.Length; i++)
                     _bindableHeaders[i] = new Indexer<string>(_headers, i).GetValue;
+                _columnMappings = new Scalar<Column>[textColumnsCount];
+                for (int i = 0; i < _columnMappings.Length; i++)
+                    _columnMappings[i] = NewScalar<Column>();
+                _isFirstRowHeader = InitColumnMappings(tabularText, targetColumns);
+                if (_isFirstRowHeader)
+                {
+                    InitHeaders(tabularText._.TextColumns);
+                    tabularText.RemoveAt(0);
+                }
                 Show(dataView, tabularText);
-                IsFirstRowHeader = true;
+            }
+
+            private ColumnSelectionItem[] InitColumnSelection(IReadOnlyList<Column> targetColumns)
+            {
+                var result = new ColumnSelectionItem[targetColumns.Count + 1];
+                for (int i = 0; i < targetColumns.Count; i++)
+                    result[i] = new ColumnSelectionItem(targetColumns[i], targetColumns[i].DisplayName);
+                result[result.Length - 1] = new ColumnSelectionItem(_ignore, "[Ignored]");
+                return result;
             }
 
             private void InitHeaders(IReadOnlyList<Column<string>> columns)
@@ -57,8 +74,55 @@ namespace DevZest.Data.Views
                     _headers[i] = columns == null ? "Column" + (i + 1) : columns[i][0];
             }
 
-            private readonly IReadOnlyList<Column> _targetColumns;
-            private readonly Scalar<Column> _mappedColumns;
+            private bool InitColumnMappings(DataSet<TabularText> tabularText, IReadOnlyList<Column> targetColumns)
+            {
+                if (InitColumnMappingsByFirstRowHeader(tabularText, targetColumns))
+                    return true;
+
+                var count = Math.Min(targetColumns.Count, tabularText._.TextColumns.Count);
+                for (int i = 0; i < count; i++)
+                    _columnMappings[i].SetValue(targetColumns[i]);
+                return false;
+            }
+
+            private bool InitColumnMappingsByFirstRowHeader(DataSet<TabularText> tabularText, IReadOnlyList<Column> targetColumns)
+            {
+                if (tabularText.Count == 0)
+                    return false;
+
+                var columnsMatched = 0;
+                var textColumns = tabularText._.TextColumns;
+                for (int i = 0; i < _columnMappings.Length; i++)
+                {
+                    var header = textColumns[i][0];
+                    foreach (var column in targetColumns)
+                    {
+                        if (!string.IsNullOrEmpty(header) && column.DisplayName == header)
+                        {
+                            _columnMappings[i].SetValue(column);
+                            columnsMatched++;
+                        }
+                    }
+                }
+
+                return columnsMatched > 0;
+            }
+
+            private sealed class ColumnSelectionItem
+            {
+                public ColumnSelectionItem(Column column, string display)
+                {
+                    Column = column;
+                    Display = display;
+                }
+
+                public Column Column { get; private set; }
+                public string Display { get; private set; }
+            }
+
+            private readonly _String _ignore = new _String();
+            private readonly ColumnSelectionItem[] _columnSelection;
+            private readonly Scalar<Column>[] _columnMappings;
             private readonly string[] _headers;
             private readonly Func<string>[] _bindableHeaders;
             public readonly Scalar<bool> BindableIsFirstRowHeader;
@@ -111,12 +175,13 @@ namespace DevZest.Data.Views
                     .Layout(Orientation.Vertical);
 
                 for (int i = 0; i < _headers.Length; i++)
-                    builder.AddBinding(i, 1,
-                        _bindableHeaders[i].BindToColumnHeader().WithAutoSizeWaiver(AutoSizeWaiver.Width));
+                    builder.AddBinding(i, 0, _bindableHeaders[i].BindToColumnHeader());
+
+                for (int i = 0; i < _columnMappings.Length; i++)
+                    builder.AddBinding(i, 1, _columnMappings[i].BindToComboBox(_columnSelection, nameof(ColumnSelectionItem.Column), nameof(ColumnSelectionItem.Display)));
 
                 for (int i = 0; i < textColumns.Count; i++)
                     builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().AddToGridCell());
-
             }
         }
 

@@ -187,7 +187,7 @@ namespace DevZest.Data.Views
 
             private void CanExecPasteAppend(object sender, CanExecuteRoutedEventArgs e)
             {
-                e.CanExecute = TabularText.CanPasteFromClipboard && !DataPresenter.IsRecursive && RowBindings.Any(x => x.SerializableColumns.Count > 0);
+                e.CanExecute = TabularText.CanPasteFromClipboard && !DataPresenter.IsRecursive && SerializableColumns.Any();
                 if (!e.CanExecute)
                     e.ContinueRouting = true;
             }
@@ -200,7 +200,20 @@ namespace DevZest.Data.Views
             private void ExecPasteAppend(object sender, ExecutedRoutedEventArgs e)
             {
                 var window = new PasteAppendWindow();
-                window.Show(null);
+                window.Show(SerializableColumns.ToArray());
+            }
+
+            private IEnumerable<Column> SerializableColumns
+            {
+                get
+                {
+                    for (int i = 0; i < RowBindings.Count; i++)
+                    {
+                        var serializableColumns = RowBindings[i].SerializableColumns;
+                        foreach (var serializableColumn in serializableColumns)
+                            yield return serializableColumn;
+                    }
+                }
             }
         }
 

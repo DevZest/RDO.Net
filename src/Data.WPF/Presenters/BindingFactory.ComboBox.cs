@@ -28,21 +28,49 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(displayMemberPath));
 
             return new RowBinding<ComboBox>(
-                onSetup: (e, r) =>
+                onSetup: (v, p) =>
                 {
-                    e.ItemsSource = selectionData;
-                    e.SelectedValuePath = selectedValuePath;
-                    e.DisplayMemberPath = displayMemberPath;
+                    v.ItemsSource = selectionData;
+                    v.SelectedValuePath = selectedValuePath;
+                    v.DisplayMemberPath = displayMemberPath;
                 },
-                onRefresh: (e, r) =>
+                onRefresh: (v, p) =>
                 {
-                    e.SelectedValue = r.GetValue(source);
+                    v.SelectedValue = p.GetValue(source);
                 },
-                onCleanup: (e, r) =>
+                onCleanup: (v, p) =>
                 {
-                    e.ItemsSource = null;
-                    e.SelectedValuePath = null;
-                    e.DisplayMemberPath = null;
+                    v.ItemsSource = null;
+                    v.SelectedValuePath = null;
+                    v.DisplayMemberPath = null;
+                }).WithInput(ComboBox.SelectedValueProperty, source, e => (T)e.SelectedValue);
+        }
+
+        public static ScalarBinding<ComboBox> BindToComboBox<T>(this Scalar<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(selectionData, nameof(selectionData));
+            if (string.IsNullOrEmpty(selectedValuePath))
+                throw new ArgumentNullException(nameof(selectedValuePath));
+            if (string.IsNullOrEmpty(displayMemberPath))
+                throw new ArgumentNullException(nameof(displayMemberPath));
+
+            return new ScalarBinding<ComboBox>(
+                onSetup: (v, p) =>
+                {
+                    v.ItemsSource = selectionData;
+                    v.SelectedValuePath = selectedValuePath;
+                    v.DisplayMemberPath = displayMemberPath;
+                },
+                onRefresh: (v, p) =>
+                {
+                    v.SelectedValue = source.GetValue();
+                },
+                onCleanup: (v, p) =>
+                {
+                    v.ItemsSource = null;
+                    v.SelectedValuePath = null;
+                    v.DisplayMemberPath = null;
                 }).WithInput(ComboBox.SelectedValueProperty, source, e => (T)e.SelectedValue);
         }
     }
