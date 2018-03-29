@@ -64,14 +64,14 @@ namespace DevZest.Data.Views
                 var result = new ColumnSelection[targetColumns.Count + 1];
                 for (int i = 0; i < targetColumns.Count; i++)
                     result[i] = new ColumnSelection(targetColumns[i], targetColumns[i].DisplayName);
-                result[result.Length - 1] = new ColumnSelection(_ignore, "[Ignored]");
+                result[result.Length - 1] = new ColumnSelection(_ignore, UserMessages.PasteAppendWindow_Ignore);
                 return result;
             }
 
             private void InitHeaders(IReadOnlyList<Column<string>> columns)
             {
                 for (int i = 0; i < _columnHeadings.Length; i++)
-                    _columnHeadings[i] = columns == null ? "Column" + (i + 1) : columns[i][0];
+                    _columnHeadings[i] = columns == null ? UserMessages.PasteAppendWindow_ColumnHeading(i + 1) : columns[i][0];
             }
 
             private bool InitColumnMappings(DataSet<TabularText> tabularText, IReadOnlyList<Column> targetColumns)
@@ -81,7 +81,7 @@ namespace DevZest.Data.Views
 
                 var count = Math.Min(targetColumns.Count, tabularText._.TextColumns.Count);
                 for (int i = 0; i < count; i++)
-                    _columnMappings[i].SetValue(targetColumns[i]);
+                    _columnMappings[i].Value = targetColumns[i];
                 return false;
             }
 
@@ -120,7 +120,7 @@ namespace DevZest.Data.Views
                 public string Display { get; private set; }
             }
 
-            private readonly _String _ignore = new _String();
+            private static readonly Column _ignore = new _String();
             private readonly ColumnSelection[] _columnSelections;
             private readonly Scalar<Column>[] _columnMappings;
             private readonly string[] _columnHeadings;
@@ -182,6 +182,34 @@ namespace DevZest.Data.Views
 
                 for (int i = 0; i < textColumns.Count; i++)
                     builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().AddToGridCell());
+            }
+
+            protected override IScalarValidationErrors ValidateScalars(IScalarValidationErrors result)
+            {
+                for (int i = 0; i < _columnMappings.Length; i++)
+                {
+                    var scalar = _columnMappings[i];
+                    var column = scalar.Value;
+
+                    if (column == _ignore)
+                        continue;
+
+                    if (column == null)
+                    {
+                        result = result.Add(new ScalarValidationError(UserMessages.PasteAppendWindow_InputRequired, scalar));
+                        continue;
+                    }
+
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (column == _columnMappings[j].Value)
+                        {
+                            result = result.Add(new ScalarValidationError(UserMessages.PasteAppendWindow_DuplicateValueNotAllowed, scalar));
+                            continue;
+                        }
+                    }
+                }
+                return result;
             }
         }
 

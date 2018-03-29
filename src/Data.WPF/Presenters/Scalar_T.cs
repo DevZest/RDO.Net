@@ -30,6 +30,12 @@ namespace DevZest.Data.Presenters
             get { return _equalityComparer; }
         }
 
+        public T Value
+        {
+            get { return GetValue(); }
+            set { SetValue(value); }
+        }
+
         public new T GetValue(bool beforeEdit = false)
         {
             return PerformGetValue(beforeEdit);

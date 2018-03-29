@@ -186,4 +186,19 @@
   <data name="PasteAppendWindow_Title" xml:space="preserve">
     <value>Paste Append</value>
   </data>
+  <data name="PasteAppendWindow_ColumnHeading" xml:space="preserve">
+    <value>Column{index}</value>
+  </data>
+  <data name="PasteAppendWindow_DuplicateValueNotAllowed" xml:space="preserve">
+    <value>Duplicate value is not allowed.</value>
+  </data>
+  <data name="PasteAppendWindow_FirstRowContainsColumnHeadings" xml:space="preserve">
+    <value>First Row Contains Column Headings</value>
+  </data>
+  <data name="PasteAppendWindow_InputRequired" xml:space="preserve">
+    <value>Input is required.</value>
+  </data>
+  <data name="PasteAppendWindow_Ignore" xml:space="preserve">
+    <value>[Ignore]</value>
+  </data>
 </root>

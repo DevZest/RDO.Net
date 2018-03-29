@@ -195,6 +195,46 @@ namespace DevZest.Data
             get { return GetString("PasteAppendWindow_Title"); }
         }
 
+        /// <summary>
+        /// Column{index}
+        /// </summary>
+        public static string PasteAppendWindow_ColumnHeading(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("PasteAppendWindow_ColumnHeading", "index"), index);
+        }
+
+        /// <summary>
+        /// Duplicate value is not allowed.
+        /// </summary>
+        public static string PasteAppendWindow_DuplicateValueNotAllowed
+        {
+            get { return GetString("PasteAppendWindow_DuplicateValueNotAllowed"); }
+        }
+
+        /// <summary>
+        /// First Row Contains Column Headings
+        /// </summary>
+        public static string PasteAppendWindow_FirstRowContainsColumnHeadings
+        {
+            get { return GetString("PasteAppendWindow_FirstRowContainsColumnHeadings"); }
+        }
+
+        /// <summary>
+        /// Input is required.
+        /// </summary>
+        public static string PasteAppendWindow_InputRequired
+        {
+            get { return GetString("PasteAppendWindow_InputRequired"); }
+        }
+
+        /// <summary>
+        /// [Ignore]
+        /// </summary>
+        public static string PasteAppendWindow_Ignore
+        {
+            get { return GetString("PasteAppendWindow_Ignore"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
