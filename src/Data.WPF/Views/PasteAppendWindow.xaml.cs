@@ -31,6 +31,7 @@ namespace DevZest.Data.Views
                         _headers[i] = tabularText._.TextColumns[i][0];
                 }
                 Show(dataView, tabularText);
+                IsFirstRowHeader = true;
             }
 
             private readonly IReadOnlyList<Column> _targetColumns;
@@ -77,12 +78,14 @@ namespace DevZest.Data.Views
             {
                 var textColumns = _.TextColumns;
 
-                builder.GridColumns(textColumns.Select(x => "Auto;Max:200").ToArray())
+                builder.GridColumns(textColumns.Select(x => "Auto;Min:20;Max:20").ToArray())
                     .GridRows("Auto", "Auto", "Auto")
                     .Layout(Orientation.Vertical);
 
                 for (int i = 0; i < _headers.Length; i++)
-                    builder.AddBinding(i, 1, this.BindToTextBlock(_headers[i]).OverrideRefresh((v, p) => v.Visibility = AreHeadersVisible ? Visibility.Visible : Visibility.Collapsed));
+                    builder.AddBinding(i, 1,
+                        this.BindToTextBlock(_headers[i]).OverrideRefresh((v, p) => v.Visibility = AreHeadersVisible ? Visibility.Visible : Visibility.Collapsed)
+                            .WithAutoSizeWaiver(AutoSizeWaiver.Width));
 
                 for (int i = 0; i < textColumns.Count; i++)
                     builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().AddToGridCell());
