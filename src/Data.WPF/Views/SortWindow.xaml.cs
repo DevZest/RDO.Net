@@ -79,7 +79,6 @@ namespace DevZest.Data.Views
             CommandBindings.Add(new CommandBinding(MoveDown, ExecMoveDown, CanExecMoveDown));
             CommandBindings.Add(new CommandBinding(Delete, ExecDelete, CanExecDelete));
             CommandBindings.Add(new CommandBinding(Apply, ExecApply, CanExecApply));
-            CommandBindings.Add(new CommandBinding(Cancel, ExecCancel));
         }
 
         private static IReadOnlyList<ColumnHeader> GetColumnHeaders(DataPresenter dataPresenter)
@@ -181,11 +180,6 @@ namespace DevZest.Data.Views
             var sortService = target.GetService<ColumnHeader.ISortService>();
             sortService.OrderBy = Sorting.Convert(Sortings);
             this.Close();
-        }
-
-        private void ExecCancel(object sender, ExecutedRoutedEventArgs e)
-        {
-            Close();
         }
     }
 }
