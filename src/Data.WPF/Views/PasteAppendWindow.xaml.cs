@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DevZest.Data.Views
 {
@@ -166,6 +167,24 @@ namespace DevZest.Data.Views
                 get { return _hasData && FirstRowContainsColumnHeadings; }
             }
 
+            private class TextBlockGrayOut
+            {
+                public TextBlockGrayOut(Scalar<Column> scalar)
+                {
+                    _scalar = scalar;
+                }
+
+                private readonly Scalar<Column> _scalar;
+
+                public void Refresh(TextBlock v, RowPresenter p)
+                {
+                    if (_scalar.Value == _ignore)
+                        v.Foreground = Brushes.LightGray;
+                    else
+                        v.ClearValue(ForegroundProperty);
+                }
+            }
+
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 var textColumns = _.TextColumns;
@@ -181,7 +200,10 @@ namespace DevZest.Data.Views
                     builder.AddBinding(i, 1, _columnMappings[i].BindToComboBox(_columnSelections, nameof(ColumnSelection.Column), nameof(ColumnSelection.Display)));
 
                 for (int i = 0; i < textColumns.Count; i++)
-                    builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().AddToGridCell());
+                {
+                    var textBlockGrayOut = new TextBlockGrayOut(_columnMappings[i]);
+                    builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().OverrideRefresh(textBlockGrayOut.Refresh).AddToGridCell());
+                }
             }
 
             protected override IScalarValidationErrors ValidateScalars(IScalarValidationErrors result)
