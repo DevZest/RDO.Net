@@ -189,7 +189,7 @@ namespace DevZest.Data.Views
             {
                 var textColumns = _.TextColumns;
 
-                builder.GridColumns(textColumns.Select(x => "100").ToArray())
+                builder.GridColumns(textColumns.Select(x => "100;min:20;max:200").ToArray())
                     .GridRows("Auto", "Auto", "Auto")
                     .Layout(Orientation.Vertical);
 
@@ -203,7 +203,10 @@ namespace DevZest.Data.Views
                 {
                     var textBlockGrayOut = new TextBlockGrayOut(_columnMappings[i]);
                     builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().OverrideRefresh(textBlockGrayOut.Refresh).AddToGridCell());
+                    builder.GridLineY(new GridPoint(i + 1, 2), 1);
                 }
+
+                builder.GridLineX(new GridPoint(0, 3), textColumns.Count);
             }
 
             protected override IScalarValidationErrors ValidateScalars(IScalarValidationErrors result)

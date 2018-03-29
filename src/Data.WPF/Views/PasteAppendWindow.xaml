@@ -15,7 +15,13 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <v:DataView x:Name="_dataView" Grid.Row="0" HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="Gray" Margin="0,5,0,0" />
+        <v:DataView x:Name="_dataView" Grid.Row="0" HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="Gray" Margin="0,5,0,0">
+            <v:DataView.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Padding" Value="2" />
+                </Style>
+            </v:DataView.Resources>
+        </v:DataView>
         <DockPanel Grid.Row="1" Margin="0,10,0,0">
             <CheckBox DockPanel.Dock="Left" x:Name="_firstRowContainsColumnHeadings" Content="{x:Static res:UserMessages.PasteAppendWindow_FirstRowContainsColumnHeadings}" />
             <UniformGrid Rows="1" Grid.Row="2" DockPanel.Dock="Right" HorizontalAlignment="Right">
