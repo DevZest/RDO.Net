@@ -185,9 +185,15 @@ namespace DevZest.Data.Views
                 e.Handled = true;
             }
 
+            private RowPresenter CurrentRow
+            {
+                get { return DataPresenter.CurrentRow; }
+            }
+
             private void CanExecPasteAppend(object sender, CanExecuteRoutedEventArgs e)
             {
-                e.CanExecute = TabularText.CanPasteFromClipboard && !DataPresenter.IsRecursive && SerializableColumns.Any();
+                e.CanExecute = TabularText.CanPasteFromClipboard && !DataPresenter.IsEditing && !DataPresenter.IsRecursive 
+                    && DataPresenter.LayoutOrientation.HasValue && CurrentRow != null && CurrentRow.IsVirtual && SerializableColumns.Any();
                 if (!e.CanExecute)
                     e.ContinueRouting = true;
             }
