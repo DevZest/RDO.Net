@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Views;
+using System;
 
 namespace DevZest.Data.Presenters
 {
@@ -13,6 +14,17 @@ namespace DevZest.Data.Presenters
                 {
                     e.Column = column;
                     e.Content = title ?? column.DisplayShortName;
+                });
+        }
+
+        public static ScalarBinding<ColumnHeader> BindToColumnHeader(this Func<string> header)
+        {
+            return new ScalarBinding<ColumnHeader>(
+                onSetup: null,
+                onCleanup: null,
+                onRefresh: e =>
+                {
+                    e.Content = header();
                 });
         }
     }

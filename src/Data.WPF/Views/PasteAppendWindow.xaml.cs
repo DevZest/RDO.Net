@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +16,23 @@ namespace DevZest.Data.Views
     {
         private sealed class Presenter : DataPresenter<TabularText>
         {
+            private struct Indexer<T>
+            {
+                public Indexer(IReadOnlyList<T> values, int index)
+                {
+                    Values = values;
+                    Index = index;
+                }
+
+                public readonly IReadOnlyList<T> Values;
+                public readonly int Index;
+
+                public T GetValue()
+                {
+                    return Values[Index];
+                }
+            }
+
             public Presenter(IReadOnlyList<Column> targetColumns, DataView dataView)
             {
                 //Debug.Assert(targetColumns != null && targetColumns.Count > 0);
@@ -25,18 +43,24 @@ namespace DevZest.Data.Views
                 _hasData = tabularText.Count > 0;
                 var textColumnsCount = tabularText._.TextColumns.Count;
                 _headers = new string[textColumnsCount];
-                if (tabularText.Count > 0)
-                {
-                    for (int i = 0; i < _headers.Length; i++)
-                        _headers[i] = tabularText._.TextColumns[i][0];
-                }
+                InitHeaders(null);
+                _bindableHeaders = new Func<string>[textColumnsCount];
+                for (int i = 0; i < _bindableHeaders.Length; i++)
+                    _bindableHeaders[i] = new Indexer<string>(_headers, i).GetValue;
                 Show(dataView, tabularText);
                 IsFirstRowHeader = true;
+            }
+
+            private void InitHeaders(IReadOnlyList<Column<string>> columns)
+            {
+                for (int i = 0; i < _headers.Length; i++)
+                    _headers[i] = columns == null ? "Column" + (i + 1) : columns[i][0];
             }
 
             private readonly IReadOnlyList<Column> _targetColumns;
             private readonly Scalar<Column> _mappedColumns;
             private readonly string[] _headers;
+            private readonly Func<string>[] _bindableHeaders;
             public readonly Scalar<bool> BindableIsFirstRowHeader;
 
             private bool _isFirstRowHeader;
@@ -53,7 +77,10 @@ namespace DevZest.Data.Views
                     if (_hasData)
                     {
                         if (value)
+                        {
+                            InitHeaders(_.TextColumns);
                             DataSet.RemoveAt(0);
+                        }
                         else
                         {
                             DataSet.Insert(0, (_, dataRow) =>
@@ -61,6 +88,7 @@ namespace DevZest.Data.Views
                                 for (int i = 0; i < _headers.Length; i++)
                                     _.TextColumns[i][dataRow] = _headers[i];
                             });
+                            InitHeaders(null);
                         }
                     }
                     ResumeInvalidateView();
@@ -78,14 +106,13 @@ namespace DevZest.Data.Views
             {
                 var textColumns = _.TextColumns;
 
-                builder.GridColumns(textColumns.Select(x => "Auto;Min:20;Max:20").ToArray())
+                builder.GridColumns(textColumns.Select(x => "100").ToArray())
                     .GridRows("Auto", "Auto", "Auto")
                     .Layout(Orientation.Vertical);
 
                 for (int i = 0; i < _headers.Length; i++)
                     builder.AddBinding(i, 1,
-                        this.BindToTextBlock(_headers[i]).OverrideRefresh((v, p) => v.Visibility = AreHeadersVisible ? Visibility.Visible : Visibility.Collapsed)
-                            .WithAutoSizeWaiver(AutoSizeWaiver.Width));
+                        _bindableHeaders[i].BindToColumnHeader().WithAutoSizeWaiver(AutoSizeWaiver.Width));
 
                 for (int i = 0; i < textColumns.Count; i++)
                     builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().AddToGridCell());
