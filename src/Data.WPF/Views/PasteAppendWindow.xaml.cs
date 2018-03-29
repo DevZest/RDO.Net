@@ -36,22 +36,22 @@ namespace DevZest.Data.Views
             public Presenter(IReadOnlyList<Column> targetColumns, DataView dataView)
             {
                 Debug.Assert(targetColumns != null && targetColumns.Count > 0);
-                _columnSelection = InitColumnSelection(targetColumns);
-                BindableIsFirstRowHeader = NewLinkedScalar<bool>(nameof(IsFirstRowHeader));
+                _columnSelections = InitColumnSelection(targetColumns);
+                BindableFirstRowContainsColumnHeadings = NewLinkedScalar<bool>(nameof(FirstRowContainsColumnHeadings));
 
                 var tabularText = TabularText.PasteFromClipboard();
                 _hasData = tabularText.Count > 0;
                 var textColumnsCount = tabularText._.TextColumns.Count;
-                _headers = new string[textColumnsCount];
+                _columnHeadings = new string[textColumnsCount];
                 InitHeaders(null);
-                _bindableHeaders = new Func<string>[textColumnsCount];
-                for (int i = 0; i < _bindableHeaders.Length; i++)
-                    _bindableHeaders[i] = new Indexer<string>(_headers, i).GetValue;
+                _bindableColumnHeadings = new Func<string>[textColumnsCount];
+                for (int i = 0; i < _bindableColumnHeadings.Length; i++)
+                    _bindableColumnHeadings[i] = new Indexer<string>(_columnHeadings, i).GetValue;
                 _columnMappings = new Scalar<Column>[textColumnsCount];
                 for (int i = 0; i < _columnMappings.Length; i++)
                     _columnMappings[i] = NewScalar<Column>();
-                _isFirstRowHeader = InitColumnMappings(tabularText, targetColumns);
-                if (_isFirstRowHeader)
+                _firstRowContainsColumnHeadings = InitColumnMappings(tabularText, targetColumns);
+                if (_firstRowContainsColumnHeadings)
                 {
                     InitHeaders(tabularText._.TextColumns);
                     tabularText.RemoveAt(0);
@@ -59,19 +59,19 @@ namespace DevZest.Data.Views
                 Show(dataView, tabularText);
             }
 
-            private ColumnSelectionItem[] InitColumnSelection(IReadOnlyList<Column> targetColumns)
+            private ColumnSelection[] InitColumnSelection(IReadOnlyList<Column> targetColumns)
             {
-                var result = new ColumnSelectionItem[targetColumns.Count + 1];
+                var result = new ColumnSelection[targetColumns.Count + 1];
                 for (int i = 0; i < targetColumns.Count; i++)
-                    result[i] = new ColumnSelectionItem(targetColumns[i], targetColumns[i].DisplayName);
-                result[result.Length - 1] = new ColumnSelectionItem(_ignore, "[Ignored]");
+                    result[i] = new ColumnSelection(targetColumns[i], targetColumns[i].DisplayName);
+                result[result.Length - 1] = new ColumnSelection(_ignore, "[Ignored]");
                 return result;
             }
 
             private void InitHeaders(IReadOnlyList<Column<string>> columns)
             {
-                for (int i = 0; i < _headers.Length; i++)
-                    _headers[i] = columns == null ? "Column" + (i + 1) : columns[i][0];
+                for (int i = 0; i < _columnHeadings.Length; i++)
+                    _columnHeadings[i] = columns == null ? "Column" + (i + 1) : columns[i][0];
             }
 
             private bool InitColumnMappings(DataSet<TabularText> tabularText, IReadOnlyList<Column> targetColumns)
@@ -108,9 +108,9 @@ namespace DevZest.Data.Views
                 return columnsMatched > 0;
             }
 
-            private sealed class ColumnSelectionItem
+            private sealed class ColumnSelection
             {
-                public ColumnSelectionItem(Column column, string display)
+                public ColumnSelection(Column column, string display)
                 {
                     Column = column;
                     Display = display;
@@ -121,23 +121,23 @@ namespace DevZest.Data.Views
             }
 
             private readonly _String _ignore = new _String();
-            private readonly ColumnSelectionItem[] _columnSelection;
+            private readonly ColumnSelection[] _columnSelections;
             private readonly Scalar<Column>[] _columnMappings;
-            private readonly string[] _headers;
-            private readonly Func<string>[] _bindableHeaders;
-            public readonly Scalar<bool> BindableIsFirstRowHeader;
+            private readonly string[] _columnHeadings;
+            private readonly Func<string>[] _bindableColumnHeadings;
+            public readonly Scalar<bool> BindableFirstRowContainsColumnHeadings;
 
-            private bool _isFirstRowHeader;
-            private bool IsFirstRowHeader
+            private bool _firstRowContainsColumnHeadings;
+            private bool FirstRowContainsColumnHeadings
             {
-                get { return _isFirstRowHeader; }
+                get { return _firstRowContainsColumnHeadings; }
                 set
                 {
-                    if (_isFirstRowHeader == value)
+                    if (_firstRowContainsColumnHeadings == value)
                         return;
 
                     SuspendInvalidateView();
-                    _isFirstRowHeader = value;
+                    _firstRowContainsColumnHeadings = value;
                     if (_hasData)
                     {
                         if (value)
@@ -149,8 +149,8 @@ namespace DevZest.Data.Views
                         {
                             DataSet.Insert(0, (_, dataRow) =>
                             {
-                                for (int i = 0; i < _headers.Length; i++)
-                                    _.TextColumns[i][dataRow] = _headers[i];
+                                for (int i = 0; i < _columnHeadings.Length; i++)
+                                    _.TextColumns[i][dataRow] = _columnHeadings[i];
                             });
                             InitHeaders(null);
                         }
@@ -163,7 +163,7 @@ namespace DevZest.Data.Views
 
             private bool AreHeadersVisible
             {
-                get { return _hasData && IsFirstRowHeader; }
+                get { return _hasData && FirstRowContainsColumnHeadings; }
             }
 
             protected override void BuildTemplate(TemplateBuilder builder)
@@ -174,11 +174,11 @@ namespace DevZest.Data.Views
                     .GridRows("Auto", "Auto", "Auto")
                     .Layout(Orientation.Vertical);
 
-                for (int i = 0; i < _headers.Length; i++)
-                    builder.AddBinding(i, 0, _bindableHeaders[i].BindToColumnHeader());
+                for (int i = 0; i < _columnHeadings.Length; i++)
+                    builder.AddBinding(i, 0, _bindableColumnHeadings[i].BindToColumnHeader());
 
                 for (int i = 0; i < _columnMappings.Length; i++)
-                    builder.AddBinding(i, 1, _columnMappings[i].BindToComboBox(_columnSelection, nameof(ColumnSelectionItem.Column), nameof(ColumnSelectionItem.Display)));
+                    builder.AddBinding(i, 1, _columnMappings[i].BindToComboBox(_columnSelections, nameof(ColumnSelection.Column), nameof(ColumnSelection.Display)));
 
                 for (int i = 0; i < textColumns.Count; i++)
                     builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().AddToGridCell());
@@ -194,7 +194,7 @@ namespace DevZest.Data.Views
         public IReadOnlyList<ColumnValueBag> Show(IReadOnlyList<Column> columns)
         {
             _presenter = new Presenter(columns, _dataView);
-            _presenter.Attach(_isFirstRowHeader, _presenter.BindableIsFirstRowHeader.BindToCheckBox());
+            _presenter.Attach(_firstRowContainsColumnHeadings, _presenter.BindableFirstRowContainsColumnHeadings.BindToCheckBox());
             ShowDialog();
             return null;
         }
