@@ -123,9 +123,8 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected virtual void SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
         {
-            var delta = value - gridTrack.MeasuredLength;
-            Debug.Assert(delta > 0);
-            gridTrack.MeasuredLength = value;
+            Debug.Assert(value - gridTrack.MeasuredLength > 0);
+            var delta = gridTrack.SetMeasuredLength(value);
             gridTrack.Owner.TotalAutoLength += delta;
         }
 

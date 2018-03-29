@@ -49,7 +49,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return;
 
                 _length = value;
-                MeasuredLength = 0;
+                SetMeasuredLength(0);
                 Owner.OnResized(this, oldValue);
                 LayoutManager?.InvalidateMeasure();
             }
@@ -82,15 +82,24 @@ namespace DevZest.Data.Presenters.Primitives
         public double MeasuredLength
         {
             get { return VariantByContainer ? double.NaN : _measuredValue; }
-            internal set
-            {
-                Debug.Assert(!VariantByContainer);
-                if (_measuredValue == value)
-                    return;
+        }
 
-                _measuredValue = value;
-                Owner.InvalidateOffset();
+        internal double SetMeasuredLength(double value)
+        {
+            Debug.Assert(!VariantByContainer);
+            if (!IsStarLength)
+            {
+                value = Math.Max(MinLength, value);
+                value = Math.Min(MaxLength, value);
             }
+
+            if (_measuredValue == value)
+                return 0;
+
+            var oldValue = _measuredValue;
+            _measuredValue = value;
+            Owner.InvalidateOffset();
+            return value - oldValue;
         }
 
         internal double VariantByContainerAvgLength

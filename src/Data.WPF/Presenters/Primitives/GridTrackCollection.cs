@@ -115,15 +115,14 @@ namespace DevZest.Data.Presenters.Primitives
 
                 if (gridTrack.IsAutoLength)
                 {
-                    if (KeepMeasuredAutoLength)
-                        TotalAutoLength += gridTrack.MeasuredLength;
-                    else
-                        gridTrack.MeasuredLength = 0;
+                    if (!KeepMeasuredAutoLength)
+                        gridTrack.SetMeasuredLength(0);
+                    TotalAutoLength += gridTrack.MeasuredLength;
                 }
                 else if (gridTrack.IsStarLength)
-                    gridTrack.MeasuredLength = 0;
+                    gridTrack.SetMeasuredLength(0);
                 else
-                    gridTrack.MeasuredLength = gridTrack.Length.Value;
+                    gridTrack.SetMeasuredLength(gridTrack.Length.Value);
             }
         }
 
@@ -220,7 +219,7 @@ namespace DevZest.Data.Presenters.Primitives
             var totalLength = Math.Max(0d, AvailableLength - TotalAbsoluteLength - TotalAutoLength);
             var totalStarFactor = TotalStarFactor;
             foreach (var gridTrack in StarLengthTracks)
-                gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
+                gridTrack.SetMeasuredLength(totalLength * (gridTrack.Length.Value / totalStarFactor));
         }
 
         private GridSpan<T> ContainerSpan
