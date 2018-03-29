@@ -154,7 +154,7 @@ namespace DevZest.Data.Views
         {
             private GridTrack _gridTrack;
             private double _resized;
-            private GridLength _oldValue;
+            private GridLength[] _oldValues;
 
             public bool BeginDrag(ColumnHeader columnHeader, UIElement resizeGripper, MouseEventArgs e)
             {
@@ -163,13 +163,22 @@ namespace DevZest.Data.Views
                 _gridTrack = columnHeader.GridTrackToResize;
                 if (_gridTrack == null)
                     return false;
+                _oldValues = new GridLength[_gridTrack.Ordinal + 1];
+                var gridTrackOwner = _gridTrack.Owner;
+                for (int i = 0; i < _oldValues.Length - 1; i++)
+                {
+                    var current = gridTrackOwner[i];
+                    _oldValues[i] = current.Length;
+                    if (current.Length.IsStar)
+                        current.Length = new GridLength(current.MeasuredLength, GridUnitType.Pixel);
+                }
+                _oldValues[_oldValues.Length - 1] = _gridTrack.Length;
                 DragDetect(resizeGripper, e);
                 return true;
             }
 
             protected override void OnBeginDrag()
             {
-                _oldValue = _gridTrack.Length;
                 _resized = _gridTrack.MeasuredLength;
             }
 
@@ -195,7 +204,16 @@ namespace DevZest.Data.Views
             protected override void OnEndDrag(UIElement dragElement, bool abort)
             {
                 if (abort)
-                    _gridTrack.Length = _oldValue;
+                {
+                    _gridTrack.Length = _oldValues[_oldValues.Length - 1];
+                }
+                var gridTrackOwner = _gridTrack.Owner;
+                for (int i = 0; i < _oldValues.Length - 1; i++)
+                {
+                    var oldValue = _oldValues[i];
+                    if (oldValue.IsStar)
+                        gridTrackOwner[i].Length = oldValue;
+                }
             }
         }
 
