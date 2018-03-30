@@ -46,7 +46,6 @@ namespace DevZest.Data.Presenters
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
-                    v.IsThreeState = true;
                     v.Content = display;
 
                 },
@@ -63,7 +62,6 @@ namespace DevZest.Data.Presenters
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
-                    v.IsThreeState = false;
                     v.Content = display;
 
                 },
@@ -84,7 +82,6 @@ namespace DevZest.Data.Presenters
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
-                    v.IsThreeState = false;
                     v.Content = display;
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(flag),
@@ -139,7 +136,6 @@ namespace DevZest.Data.Presenters
             return new RowBinding<CheckBox>(onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(flag),
                 onSetup: (v, p) =>
                 {
-                    v.IsThreeState = false;
                     v.Content = display;
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
@@ -183,7 +179,6 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue(),
                 onSetup: v =>
                 {
-                    v.IsThreeState = true;
                     if (display != null)
                         v.Content = display;
                 }, onCleanup: null)
@@ -200,7 +195,6 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue(),
                 onSetup: v =>
                 {
-                    v.IsThreeState = false;
                     if (display != null)
                         v.Content = display;
                 }, onCleanup: null)
@@ -222,7 +216,6 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue().HasFlag(flag),
                 onSetup: v =>
                 {
-                    v.IsThreeState = false;
                     v.Content = display;
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
@@ -251,7 +244,6 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue().HasFlag(flag),
                 onSetup: v =>
                 {
-                    v.IsThreeState = false;
                     v.Content = display;
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
