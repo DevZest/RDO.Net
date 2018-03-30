@@ -2,6 +2,7 @@
 using DevZest.Samples.AdventureWorksLT;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,6 +64,22 @@ namespace AdventureWorks.SalesOrders
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
                 return await db.Products.ToDataSetAsync(ct);
+            }
+        }
+
+        public static async Task Update(DataSet<SalesOrder> salesOrder, CancellationToken ct)
+        {
+            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            {
+                await db.UpdateAsync(salesOrder, ct);
+            }
+        }
+
+        public static async Task Create(DataSet<SalesOrder> salesOrder, CancellationToken ct)
+        {
+            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            {
+                await db.InsertAsync(salesOrder, ct);
             }
         }
     }
