@@ -46,8 +46,8 @@ namespace DevZest.Data.Presenters
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
-                    v.Content = display;
-
+                    if (v.Content == null)
+                        v.Content = display;
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source), onCleanup: null)
                 .WithInput(CheckBox.IsCheckedProperty, source, v => v.IsChecked);
@@ -62,8 +62,8 @@ namespace DevZest.Data.Presenters
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
-                    v.Content = display;
-
+                    if (v.Content == null)
+                        v.Content = display;
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source), onCleanup: null)
                 .WithInput(CheckBox.IsCheckedProperty, source, v => v.IsChecked == true);
@@ -82,7 +82,8 @@ namespace DevZest.Data.Presenters
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
-                    v.Content = display;
+                    if (v.Content == null)
+                        v.Content = display;
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(flag),
                 onCleanup: null)
