@@ -5,6 +5,7 @@ using DevZest.Data;
 using System.Windows;
 using System;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -41,7 +42,7 @@ namespace AdventureWorks.SalesOrders
                     .AddBinding(1, 1, _.Product.BindToForeignKeyBox(ext.Product, GetProductNumber).MergeIntoGridCell(ext.Product.ProductNumber.BindToTextBlock()))
                     .AddBinding(2, 1, ext.Product.Name.BindToTextBlock().AddToGridCell())
                     .AddBinding(3, 1, _.UnitPrice.BindToTextBox().MergeIntoGridCell())
-                    .AddBinding(4, 1, _.UnitPriceDiscount.BindToTextBox().MergeIntoGridCell(_.UnitPriceDiscount.BindToTextBlock("{0:P}")))
+                    .AddBinding(4, 1, _.UnitPriceDiscount.BindToTextBox(new PercentageConverter()).MergeIntoGridCell(_.UnitPriceDiscount.BindToTextBlock("{0:P}")))
                     .AddBinding(5, 1, _.OrderQty.BindToTextBox().MergeIntoGridCell())
                     .AddBinding(6, 1, _.LineTotal.BindToTextBlock("{0:C}").AddToGridCell());
             }

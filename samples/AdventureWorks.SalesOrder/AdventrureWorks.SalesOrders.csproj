@@ -95,6 +95,7 @@
       <DependentUpon>AddressLookupPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="AddressLookupPopup.Presenter.cs" />
+    <Compile Include="PercentageConverter.cs" />
     <Compile Include="ProductLookupWindow.Presenter.cs" />
     <Compile Include="ProductLookupWindow.xaml.cs">
       <DependentUpon>ProductLookupWindow.xaml</DependentUpon>
