@@ -44,7 +44,7 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Select(this, query).CreateCommand(null).ToTraceString();
         }
 
-        protected sealed override DbTransactionInvoker<SqlConnection, SqlTransaction> CreateTransactionInvoker(IsolationLevel isolationLevel)
+        protected sealed override DbTransactionInvoker<SqlConnection, SqlTransaction> CreateTransactionInvoker(IsolationLevel? isolationLevel)
         {
             return new SqlTransactionInvoker(this, GetConnection(), isolationLevel);
         }

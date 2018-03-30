@@ -7,14 +7,17 @@ namespace DevZest.Data.SqlServer
 {
     internal sealed class SqlTransactionInvoker : DbTransactionInvoker<SqlConnection, SqlTransaction>
     {
-        public SqlTransactionInvoker(DbSession dbSession, SqlConnection connection, IsolationLevel isolationLevel)
+        public SqlTransactionInvoker(DbSession dbSession, SqlConnection connection, IsolationLevel? isolationLevel)
             : base(dbSession, connection, isolationLevel)
         {
         }
 
-        protected override SqlTransaction BeginTransaction(IsolationLevel isolationLevel)
+        protected override SqlTransaction BeginTransaction()
         {
-            return Connection.BeginTransaction(isolationLevel);
+            if (IsolationLevel.HasValue)
+                return Connection.BeginTransaction(IsolationLevel.Value);
+            else
+                return Connection.BeginTransaction();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevZest.Data
@@ -167,6 +169,37 @@ FROM [SalesLT].[Customer] [Customer]
 ORDER BY [Customer].[CustomerID];
 ";
             Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
+        }
+
+        [TestMethod]
+        public async Task DbSession_ExecuteTransactionAsync_update_sales_order()
+        {
+            var log = new StringBuilder();
+            using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
+            {
+                var salesOrder = await db.SalesOrders.Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
+                await salesOrder.FillAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetails);
+                await db.UpdateAsync(salesOrder, CancellationToken.None);
+
+                var dataSet = await db.SalesOrderDetails.Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
+                Assert.IsTrue(dataSet._.ModifiedDate[0].Value.AddSeconds(1) > DateTime.Now);
+            }
+        }
+
+        [TestMethod]
+        public async Task DbSession_ExecuteTransactionAsync_insert_sales_order()
+        {
+            var log = new StringBuilder();
+            using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
+            {
+                var salesOrder = DataSet<SalesOrder>.ParseJson(Strings.ExpectedJSON_SalesOrder_71774);
+                await db.InsertAsync(salesOrder, CancellationToken.None);
+
+                int salesOrderID = salesOrder._.SalesOrderID[0].Value;
+                Assert.AreEqual(5, salesOrderID);
+                var dataSet = await db.SalesOrderDetails.Where(_ => _.SalesOrderID == salesOrderID).ToDataSetAsync(CancellationToken.None);
+                Assert.IsTrue(dataSet._.ModifiedDate[0].Value.AddSeconds(1) > DateTime.Now);
+            }
         }
     }
 }

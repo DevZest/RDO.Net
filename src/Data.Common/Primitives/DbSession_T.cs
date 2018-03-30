@@ -58,26 +58,46 @@ namespace DevZest.Data.Primitives
             get { return _transactions.Count > 0 ? _transactions.Peek() : null; }
         }
 
+        public void ExecuteTransaction(Action action)
+        {
+            Check.NotNull(action, nameof(action));
+            CreateTransactionInvoker(null).Execute(_transactions, action);
+        }
+
         public void ExecuteTransaction(IsolationLevel isolationLevel, Action action)
         {
+            Check.NotNull(action, nameof(action));
             CreateTransactionInvoker(isolationLevel).Execute(_transactions, action);
         }
 
-        protected abstract DbTransactionInvoker<TConnection, TTransaction> CreateTransactionInvoker(IsolationLevel isolationLevel);
-
-        private DbNonQueryInvoker<TCommand> CreateNonQueryInvoker(TCommand command)
+        public Task ExecuteTransactionAsync(Func<Task> action)
         {
+            Check.NotNull(action, nameof(action));
+            return CreateTransactionInvoker(null).ExecuteAsync(_transactions, action);
+        }
+
+        public Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct)
+        {
+            Check.NotNull(action, nameof(action));
+            return CreateTransactionInvoker(null).ExecuteAsync(_transactions, action, ct);
+        }
+
+        protected abstract DbTransactionInvoker<TConnection, TTransaction> CreateTransactionInvoker(IsolationLevel? isolationLevel);
+
+        private DbNonQueryInvoker<TCommand> PrepareNonQueryInvoker(TCommand command)
+        {
+            command.Transaction = CurrentTransaction;
             return new DbNonQueryInvoker<TCommand>(this, command);
         }
 
         protected int ExecuteNonQuery(TCommand command)
         {
-            return CreateNonQueryInvoker(command).Execute();
+            return PrepareNonQueryInvoker(command).Execute();
         }
 
         protected Task<int> ExecuteNonQueryAsync(TCommand command, CancellationToken cancellationToken)
         {
-            return CreateNonQueryInvoker(command).ExecuteAsync(cancellationToken);
+            return PrepareNonQueryInvoker(command).ExecuteAsync(cancellationToken);
         }
 
         protected internal abstract TCommand GetCreateTableCommand(Model model, string tableName, string tableDescription, bool isTempTable);
@@ -94,10 +114,17 @@ namespace DevZest.Data.Primitives
 
         private DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(DbQueryStatement queryStatement)
         {
-            return CreateReaderInvoker(GetQueryCommand(queryStatement), queryStatement.Model);
+            var command = GetQueryCommand(queryStatement);
+            return PrepareReaderInvoker(command, queryStatement.Model);
         }
 
         protected abstract TCommand GetQueryCommand(DbQueryStatement queryStatement);
+
+        private DbReaderInvoker<TCommand, TReader> PrepareReaderInvoker(TCommand command, Model model)
+        {
+            command.Transaction = CurrentTransaction;
+            return CreateReaderInvoker(command, model);
+        }
 
         protected abstract DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(TCommand command, Model model);
 
@@ -360,13 +387,13 @@ namespace DevZest.Data.Primitives
             var command = GetInsertScalarCommand(statement, outputIdentity);
             if (!outputIdentity)
             {
-                var rowCount = ExecuteNonQuery(command);
+                var rowCount = PrepareNonQueryInvoker(command).Execute();
                 return new InsertScalarResult(rowCount > 0, null);
             }
 
             var model = ScalarIdentityOutput.Singleton;
             int? identityValue = null;
-            using (var reader = CreateReaderInvoker(command, model).Execute())
+            using (var reader = PrepareReaderInvoker(command, model).Execute())
             {
                 if (reader.Read())
                     identityValue = model.IdentityValue[reader];
@@ -381,13 +408,13 @@ namespace DevZest.Data.Primitives
             var command = GetInsertScalarCommand(statement, outputIdentity);
             if (!outputIdentity)
             {
-                var rowCount = await ExecuteNonQueryAsync(command, cancellationToken);
+                var rowCount = await PrepareNonQueryInvoker(command).ExecuteAsync(cancellationToken);
                 return new InsertScalarResult(rowCount > 0, null);
             }
 
             var model = ScalarIdentityOutput.Singleton;
             int? identityValue = null;
-            using (var reader = await CreateReaderInvoker(command, model).ExecuteAsync(cancellationToken))
+            using (var reader = await PrepareReaderInvoker(command, model).ExecuteAsync(cancellationToken))
             {
                 if (await reader.ReadAsync(cancellationToken))
                     identityValue = model.IdentityValue[reader];

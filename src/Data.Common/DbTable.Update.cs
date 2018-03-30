@@ -47,6 +47,12 @@ namespace DevZest.Data
             return UpdateOrigin(null, DbSession.Update(statement));
         }
 
+        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, CancellationToken cancellationToken)
+            where TSource : Model, new()
+        {
+            return UpdateAsync(source, null, cancellationToken);
+        }
+
         public async Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
@@ -82,6 +88,12 @@ namespace DevZest.Data
             return result == 1;
         }
 
+        public Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, CancellationToken cancellationToken)
+            where TSource : Model, new()
+        {
+            return UpdateAsync(source, ordinal, null, cancellationToken);
+        }
+
         public async Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder,
             CancellationToken cancellationToken)
             where TSource : Model, new()
@@ -113,6 +125,13 @@ namespace DevZest.Data
 
             return UpdateOrigin(null, DbSession.Update(source, this, columnMappingsBuilder));
         }
+
+        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, CancellationToken cancellationToken)
+            where TSource : Model, new()
+        {
+            return UpdateAsync(source, null, cancellationToken);
+        }
+
 
         public async Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()

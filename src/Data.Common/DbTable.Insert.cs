@@ -323,6 +323,7 @@ namespace DevZest.Data
         private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, int? value)
             where TSource : Model, new()
         {
+            dataRow.IsPrimaryKeySealed = false;
             dataSet._.GetIdentity(false).Column[dataRow] = value;
             dataRow.IsPrimaryKeySealed = true;
         }

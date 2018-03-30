@@ -82,8 +82,7 @@ namespace DevZest.Data
 
                 var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Ref _) =>
                 {
-                    SalesOrder s;
-                    builder.From(db.SalesOrders, out s)
+                    builder.From(db.SalesOrders, out var s)
                     .AutoSelect()
                     .Where(s.SalesOrderID == 1 | s.SalesOrderID == 2);
                 });

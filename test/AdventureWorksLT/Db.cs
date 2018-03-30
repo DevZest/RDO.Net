@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -197,6 +199,51 @@ namespace DevZest.Samples.AdventureWorksLT
             });
 
             return result;
+        }
+
+        public Task UpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        {
+            return ExecuteTransactionAsync(() => PerformUpdateAsync(salesOrders, ct));
+        }
+
+        private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        {
+            for (int i = 0; i < salesOrders.Count; i++)
+            {
+                salesOrders._.RowGuid[i] = Guid.NewGuid();
+                salesOrders._.ModifiedDate[i] = DateTime.Now;
+            }
+            await SalesOrders.UpdateAsync(salesOrders, ct);
+            await SalesOrderDetails.DeleteAsync(salesOrders, _ => _.SalesOrder, ct);
+            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            for (int i = 0; i < salesOrderDetails.Count; i++)
+            {
+                salesOrderDetails._.RowGuid[i] = Guid.NewGuid();
+                salesOrderDetails._.ModifiedDate[i] = DateTime.Now;
+            }
+            await SalesOrderDetails.InsertAsync(salesOrderDetails, null, false, false, ct);
+        }
+
+        public Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        {
+            return ExecuteTransactionAsync(() => PerformInsertAsync(salesOrders, ct));
+        }
+
+        private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        {
+            for (int i = 0; i < salesOrders.Count; i++)
+            {
+                salesOrders._.RowGuid[i] = Guid.NewGuid();
+                salesOrders._.ModifiedDate[i] = DateTime.Now;
+            }
+            await SalesOrders.InsertAsync(salesOrders, null, false, true, ct);
+            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            for (int i = 0; i < salesOrderDetails.Count; i++)
+            {
+                salesOrderDetails._.RowGuid[i] = Guid.NewGuid();
+                salesOrderDetails._.ModifiedDate[i] = DateTime.Now;
+            }
+            await SalesOrderDetails.InsertAsync(salesOrderDetails, null, false, false, ct);
         }
     }
 }
