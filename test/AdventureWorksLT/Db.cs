@@ -208,19 +208,11 @@ namespace DevZest.Samples.AdventureWorksLT
 
         private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
-            for (int i = 0; i < salesOrders.Count; i++)
-            {
-                salesOrders._.RowGuid[i] = Guid.NewGuid();
-                salesOrders._.ModifiedDate[i] = DateTime.Now;
-            }
+            salesOrders._.ResetRowIdentifiers();
             await SalesOrders.UpdateAsync(salesOrders, ct);
             await SalesOrderDetails.DeleteAsync(salesOrders, _ => _.SalesOrder, ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
-            for (int i = 0; i < salesOrderDetails.Count; i++)
-            {
-                salesOrderDetails._.RowGuid[i] = Guid.NewGuid();
-                salesOrderDetails._.ModifiedDate[i] = DateTime.Now;
-            }
+            salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetails.InsertAsync(salesOrderDetails, null, false, false, ct);
         }
 
@@ -231,18 +223,10 @@ namespace DevZest.Samples.AdventureWorksLT
 
         private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
-            for (int i = 0; i < salesOrders.Count; i++)
-            {
-                salesOrders._.RowGuid[i] = Guid.NewGuid();
-                salesOrders._.ModifiedDate[i] = DateTime.Now;
-            }
+            salesOrders._.ResetRowIdentifiers();
             await SalesOrders.InsertAsync(salesOrders, null, false, true, ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
-            for (int i = 0; i < salesOrderDetails.Count; i++)
-            {
-                salesOrderDetails._.RowGuid[i] = Guid.NewGuid();
-                salesOrderDetails._.ModifiedDate[i] = DateTime.Now;
-            }
+            salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetails.InsertAsync(salesOrderDetails, null, false, false, ct);
         }
     }

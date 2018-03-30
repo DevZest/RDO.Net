@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
+using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -21,5 +22,17 @@ namespace DevZest.Samples.AdventureWorksLT
         [AutoDateTime(Name = "DF_%_ModifiedDate", Description = "Default constraint value of GETDATE()")]
         [DbColumn(Description = "Date and time the record was last updated.")]
         public _DateTime ModifiedDate { get; private set; }
+
+        public void ResetRowIdentifiers()
+        {
+            var dataSet = DataSet;
+            if (dataSet == null)
+                return;
+            for (int i = 0; i < dataSet.Count; i++)
+            {
+                RowGuid[i] = Guid.NewGuid();
+                ModifiedDate[i] = DateTime.Now;
+            }
+        }
     }
 }
