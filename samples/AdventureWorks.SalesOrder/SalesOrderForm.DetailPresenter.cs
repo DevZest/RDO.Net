@@ -22,7 +22,7 @@ namespace AdventureWorks.SalesOrders
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 var ext = _.GetExtender<SalesOrderToEdit.DetailExt>();
-                builder.GridRows("Auto", "Auto")
+                builder.GridRows("Auto", "20")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
                     .GridLineX(new GridPoint(0, 2), 7)
                     .GridLineY(new GridPoint(2, 1), 1).GridLineY(new GridPoint(3, 1), 1).GridLineY(new GridPoint(4, 1), 1)
