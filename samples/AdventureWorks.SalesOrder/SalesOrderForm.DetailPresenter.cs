@@ -12,6 +12,13 @@ namespace AdventureWorks.SalesOrders
     {
         private class DetailPresenter : DataPresenter<SalesOrderDetail>, ForeignKeyBox.ILookupService
         {
+            public DetailPresenter(Window ownerWindow)
+            {
+                _ownerWindow = ownerWindow;
+            }
+
+            private Window _ownerWindow;
+
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 var ext = _.GetExtender<SalesOrderToEdit.DetailExt>();
@@ -56,7 +63,8 @@ namespace AdventureWorks.SalesOrders
             {
                 if (foreignKeyBox.ForeignKey == _.Product)
                 {
-                    MessageBox.Show("Lookup!");
+                    var dialogWindow = new ProductLookupWindow();
+                    dialogWindow.Show(_ownerWindow, foreignKeyBox, CurrentRow.GetValue(_.ProductID));
                 }
                 else
                     throw new NotSupportedException();

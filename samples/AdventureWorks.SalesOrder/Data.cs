@@ -57,5 +57,13 @@ namespace AdventureWorks.SalesOrders
                 return await result.ToDataSetAsync(ct);
             }
         }
+
+        public static async Task<DataSet<Product>> GetProductLookup(CancellationToken ct)
+        {
+            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            {
+                return await db.Products.ToDataSetAsync(ct);
+            }
+        }
     }
 }
