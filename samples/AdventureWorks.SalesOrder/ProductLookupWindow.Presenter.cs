@@ -39,7 +39,7 @@ namespace AdventureWorks.SalesOrders
                     .AddBinding(2, 0, _.ListPrice.BindToColumnHeader("List Price"))
                     .AddBinding(0, 1, _.ProductNumber.BindToTextBlock())
                     .AddBinding(1, 1, _.Name.BindToTextBlock())
-                    .AddBinding(2, 1, _.ListPrice.BindToTextBlock());
+                    .AddBinding(2, 1, _.ListPrice.BindToTextBlock("{0:C}").WithStyle(MainWindow.Styles.RightAlignedTextBlock));
             }
 
             private Task<DataSet<Product>> LoadDataAsync(CancellationToken ct)
