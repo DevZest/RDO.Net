@@ -62,6 +62,8 @@ namespace DevZest.Data
 
         public override bool AreEqual(Binary x, Binary y)
         {
+            if (x == null)
+                return y == null;
             return x.Equals(y);
         }
 
