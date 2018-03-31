@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
@@ -40,8 +39,7 @@ namespace DevZest.Data.Primitives
             get { return (GetIdentity(true) == null ? "sys_key_" : "sys_sequential_") + _sourceDbAlias; }
         }
 
-        public static void BuildKeyMappings<T>(ColumnMappingsBuilder builder, T source, KeyOutput target)
-            where T : Model, new()
+        public static void BuildKeyMappings(ColumnMappingsBuilder builder, Model source, KeyOutput target)
         {
             var sourceKey = source.PrimaryKey;
             if (sourceKey == null)
