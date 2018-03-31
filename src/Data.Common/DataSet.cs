@@ -9,11 +9,6 @@ namespace DevZest.Data
 {
     public abstract class DataSet : DataSource, IList<DataRow>
     {
-        internal DataSet(Model model)
-            : base(model)
-        {
-        }
-
         public DataSet Clone()
         {
             return InternalClone();

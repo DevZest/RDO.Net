@@ -13,7 +13,6 @@ namespace DevZest.Data
         where T : Model, new()
     {
         internal DbSet(T model, DbSession dbSession)
-            : base(model)
         {
             Debug.Assert(dbSession != null);
             DbSession = dbSession;
@@ -23,6 +22,11 @@ namespace DevZest.Data
         public DbSession DbSession { get; private set; }
 
         public T _ { get; private set; }
+
+        public sealed override Model Model
+        {
+            get { return _; }
+        }
 
         internal abstract DbQueryStatement QueryStatement { get; }
 

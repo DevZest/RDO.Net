@@ -6,13 +6,7 @@ namespace DevZest.Data
 {
     public abstract class DataSource
     {
-        internal DataSource(Model model)
-        {
-            Debug.Assert(model != null);
-            Model = model;
-        }
-
-        public Model Model { get; private set; }
+        public abstract Model Model { get; }
 
         public abstract DataSourceKind Kind { get; }
 

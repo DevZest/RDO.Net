@@ -201,7 +201,9 @@ namespace DevZest.Data
         public void Model_Clone()
         {
             var model1 = new CloneModel();
-            DataSource ds1 = new Mock<DataSource>(model1).Object;
+            var mock = new Mock<DataSource>();
+            mock.Setup(x => x.Model).Returns(model1);
+            DataSource ds1 = mock.Object;
             Init(model1, ds1);
 
             var clone1 = Model.Clone<CloneModel>(model1, true);

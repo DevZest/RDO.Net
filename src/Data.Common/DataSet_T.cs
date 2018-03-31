@@ -194,15 +194,18 @@ namespace DevZest.Data
             return this.Clone();
         }
 
-        /// <summary>
         private DataSet(T model)
-            : base(model)
         {
             Debug.Assert(model != null);
-            this._ = model;
+            _ = model;
         }
 
-        public readonly T _;
+        public T _ { get; private set; }
+
+        public sealed override Model Model
+        {
+            get { return _; }
+        }
 
         public static DataSet<T> ParseJson(string json)
         {
