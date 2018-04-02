@@ -531,4 +531,7 @@
   <data name="KeyMapping_SourceTargetTypeMismatch" xml:space="preserve">
     <value>The type of target key does not match with source key.</value>
   </data>
+  <data name="DbTable_EmptyColumnMapperResult" xml:space="preserve">
+    <value>The result returned by ColumnMapper is empty.</value>
+  </data>
 </root>

@@ -1,0 +1,65 @@
+﻿using DevZest.Data.Primitives;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace DevZest.Data
+{
+    public abstract class DbUpdate<T> : Executable<int>
+        where T : Model, new()
+    {
+        protected DbUpdate(DbTable<T> target)
+        {
+            Debug.Assert(target != null);
+            _target = target;
+        }
+
+        private readonly DbTable<T> _target;
+        protected DbTable<T> Target
+        {
+            get { return _target; }
+        }
+
+        protected DbSession DbSession
+        {
+            get { return Target.DbSession; }
+        }
+
+        internal static DbUpdate<T> Create(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
+        {
+            return new DbUpdateWhere(target, columnMappings, where);
+        }
+
+        private sealed class DbUpdateWhere : DbUpdate<T>
+        {
+            public DbUpdateWhere(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
+                : base(target)
+            {
+                _columnMappings = columnMappings;
+                _where = where;
+            }
+
+            private readonly IReadOnlyList<ColumnMapping> _columnMappings;
+            private readonly Func<T, _Boolean> _where;
+
+            private DbSelectStatement BuildUpdateStatement()
+            {
+                return Target.BuildUpdateStatement(_columnMappings, _where);
+            }
+
+            protected override int PerformExecute()
+            {
+                var statement = BuildUpdateStatement();
+                return Target.UpdateOrigin(null, DbSession.Update(statement));
+            }
+
+            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
+            {
+                var statement = BuildUpdateStatement();
+                return Target.UpdateOrigin(null, await DbSession.UpdateAsync(statement, ct));
+            }
+        }
+    }
+}

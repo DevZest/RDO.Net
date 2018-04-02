@@ -147,11 +147,11 @@ namespace DevZest.Data.Helpers
             return result;
         }
 
-        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMapper, T> columnMappingsBuilder,
-            Func<T, _Boolean> getWhere = null)
+        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
             where T : Model, new()
         {
-            var statement = dbTable.BuildUpdateStatement(columnMappingsBuilder, getWhere);
+            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper));
+            var statement = dbTable.BuildUpdateStatement(columnMappings, where);
             var result = dbTable.SqlSession().GetUpdateCommand(statement);
             dbTable.UpdateOrigin(null, rowsAffected);
             return result;

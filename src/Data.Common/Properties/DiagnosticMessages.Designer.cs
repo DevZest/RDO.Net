@@ -1115,6 +1115,14 @@ namespace DevZest.Data
             get { return GetString("KeyMapping_SourceTargetTypeMismatch"); }
         }
 
+        /// <summary>
+        /// The result returned by ColumnMapper is empty.
+        /// </summary>
+        public static string DbTable_EmptyColumnMapperResult
+        {
+            get { return GetString("DbTable_EmptyColumnMapperResult"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

@@ -1,8 +1,6 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,29 +9,15 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public int Update(Action<ColumnMapper, T> columnMappingsBuilder, Func<T, _Boolean> where = null)
+        public DbUpdate<T> Update(Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
         {
-            Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
-            var statement = BuildUpdateStatement(columnMappingsBuilder, where);
-            return UpdateOrigin(null, DbSession.Update(statement));
+            var columnMappings = Verify(columnMapper, nameof(columnMapper));
+            return DbUpdate<T>.Create(this, columnMappings, where);
         }
 
-        public async Task<int> UpdateAsync(Action<ColumnMapper, T> columnMappingsBuilder, Func<T, _Boolean> where, CancellationToken cancellationToken)
+        internal DbSelectStatement BuildUpdateStatement(IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
         {
-            Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
-            var statement = BuildUpdateStatement(columnMappingsBuilder, where);
-            return UpdateOrigin(null, await DbSession.UpdateAsync(statement, cancellationToken));
-        }
-
-        public Task<int> UpdateAsync(Action<ColumnMapper, T> columnMappingsBuilder, Func<T, _Boolean> where = null)
-        {
-            return UpdateAsync(columnMappingsBuilder, where, CancellationToken.None);
-        }
-
-        internal DbSelectStatement BuildUpdateStatement(Action<ColumnMapper, T> columnMappingsBuilder, Func<T, _Boolean> where)
-        {
-            Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
-            var columnMappings = BuildColumnMappings(columnMappingsBuilder);
+            Debug.Assert(columnMappings != null && columnMappings.Count > 0);
             var whereExpr = VerifyWhere(where);
             return new DbSelectStatement(Model, columnMappings, null, whereExpr, null, -1, -1);
         }

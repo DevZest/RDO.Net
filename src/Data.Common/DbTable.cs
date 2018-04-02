@@ -151,11 +151,6 @@ namespace DevZest.Data
             return childModel.DataSource as DbTable<TChild>;
         }
 
-        private IReadOnlyList<ColumnMapping> BuildColumnMappings(Action<ColumnMapper, T> columnMappingsBuilder)
-        {
-            return new ColumnMapper(null, _).Build(builder => columnMappingsBuilder(builder, _));
-        }
-
         private IReadOnlyList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, PrimaryKey> joinOn)
         {
             var sourceKey = sourceModel.PrimaryKey;
@@ -307,6 +302,15 @@ namespace DevZest.Data
             var result = keyMapper(source, _);
             if (result.IsEmpty || result.SourceModel != source || result.TargetModel != _)
                 throw new ArgumentException(DiagnosticMessages.DbTable_InvalidReturnedKeyMapping, paramName);
+            return result;
+        }
+
+        internal IReadOnlyList<ColumnMapping> Verify(Action<ColumnMapper, T> mapper, string paramName)
+        {
+            Check.NotNull(mapper, paramName);
+            var result = new ColumnMapper(null, _).Build(x => mapper(x, _));
+            if (result == null || result.Count == 0)
+                throw new ArgumentException(DiagnosticMessages.DbTable_EmptyColumnMapperResult, paramName);
             return result;
         }
     }
