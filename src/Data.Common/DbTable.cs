@@ -278,26 +278,36 @@ namespace DevZest.Data
             return scalarInsertSuccess;
         }
 
-        internal void VerifySource<TSource>(DbSet<TSource> source)
-            where TSource : Model, new()
+        internal void Verify<TLookup>(DbSet<TLookup> source, string paramName)
+            where TLookup : Model, new()
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source, paramName);
             if (source.DbSession != DbSession)
-                throw new ArgumentException(DiagnosticMessages.DbTable_InvalidDbSetSource);
+                throw new ArgumentException(DiagnosticMessages.DbTable_InvalidDbSetSource, paramName);
         }
 
-        internal void VerifySource<TSource>(DataSet<TSource> source)
-            where TSource : Model, new()
+        internal void Verify<TLookup>(DataSet<TLookup> source, string paramName)
+            where TLookup : Model, new()
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source, paramName);
         }
 
-        internal void VerifySource<TSource>(DataSet<TSource> source, int ordinal)
+        internal void Verify<TSource>(DataSet<TSource> source, string sourceParamName, int rowIndex, string rowIndexParamName)
             where TSource : Model, new()
         {
-            VerifySource(source);
-            if (ordinal < 0 || ordinal >= source.Count)
-                throw new ArgumentOutOfRangeException(nameof(ordinal));
+            Verify(source, sourceParamName);
+            if (rowIndex < 0 || rowIndex >= source.Count)
+                throw new ArgumentOutOfRangeException(rowIndexParamName);
+        }
+
+        internal KeyMapping Verify<TSource>(Func<TSource, T, KeyMapping> keyMapper, string paramName, TSource source)
+            where TSource : Model
+        {
+            Check.NotNull(keyMapper, paramName);
+            var result = keyMapper(source, _);
+            if (result.IsEmpty || result.SourceModel != source || result.TargetModel != _)
+                throw new ArgumentException(DiagnosticMessages.DbTable_InvalidReturnedKeyMapping, paramName);
+            return result;
         }
     }
 }

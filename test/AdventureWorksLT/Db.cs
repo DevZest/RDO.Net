@@ -210,7 +210,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             salesOrders._.ResetRowIdentifiers();
             await SalesOrders.UpdateAsync(salesOrders, ct);
-            await SalesOrderDetails.DeleteAsync(salesOrders, _ => _.SalesOrder, ct);
+            await SalesOrderDetails.Delete(salesOrders, (s, _) => s.MapTo(_.SalesOrder)).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetails.InsertAsync(salesOrderDetails, null, false, false, ct);

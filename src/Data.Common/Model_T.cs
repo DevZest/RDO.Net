@@ -1,6 +1,9 @@
 ﻿using DevZest.Data.Annotations;
 using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace DevZest.Data
@@ -30,6 +33,18 @@ namespace DevZest.Data
         {
             var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbConstraintAttribute>();
             return dbConstraintAttribute == null ? null : dbConstraintAttribute.Description;
+        }
+
+        public KeyMapping MapTo(T target)
+        {
+            Check.NotNull(target, nameof(target));
+            return new KeyMapping(PrimaryKey, target);
+        }
+
+        public KeyMapping MapTo(Model<T> target)
+        {
+            Check.NotNull(target, nameof(target));
+            return new KeyMapping(PrimaryKey, target.PrimaryKey);
         }
     }
 }

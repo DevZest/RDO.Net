@@ -1,34 +1,17 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public int Delete(Func<T, _Boolean> where)
+        public DbDelete<T> Delete(Func<T, _Boolean> where = null)
         {
-            VerifyDelete();
-            var statement = BuildDeleteStatement(where);
-            return UpdateOrigin(null, DbSession.Delete(statement));
-        }
-
-        public async Task<int> DeleteAsync(Func<T, _Boolean> where, CancellationToken cancellationToken)
-        {
-            VerifyDelete();
-            var statement = BuildDeleteStatement(where);
-            return UpdateOrigin(null, await DbSession.DeleteAsync(statement, cancellationToken));
-        }
-
-        public Task<int> DeleteAsync(Func<T, _Boolean> where)
-        {
-            return DeleteAsync(where, CancellationToken.None);
+            VerifyDeletable();
+            return DbDelete<T>.Create(this, where);
         }
 
         internal DbSelectStatement BuildDeleteStatement(Func<T, _Boolean> where)
@@ -37,138 +20,62 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, null, null, whereExpr, null, -1, -1);
         }
 
-        public int Delete<TSource>(DbSet<TSource> source, Func<T, PrimaryKey> joinOn = null)
-            where TSource : Model, new()
+        public DbDelete<T> Delete<TLookup>(DbSet<TLookup> source, Func<TLookup, T, KeyMapping> keyMapper)
+            where TLookup : Model, new()
         {
-            VerifyDelete(source);
-
-            var statement = BuildDeleteStatement(source, joinOn);
-            return UpdateOrigin(null, DbSession.Update(statement));
+            VerifyDeletable();
+            Verify(source, nameof(source));
+            var columnMappings = Verify(keyMapper, nameof(keyMapper), source._).GetColumnMappings();
+            return DbDelete<T>.Create(this, source, columnMappings);
         }
 
-        public async Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<T, PrimaryKey> joinOn, CancellationToken cancellationToken)
-            where TSource : Model, new()
+        public DbDelete<T> Delete<TLookup>(DataSet<TLookup> source, int rowIndex, Func<TLookup, T, KeyMapping> keyMapper)
+            where TLookup : Model, new()
         {
-            VerifyDelete(source);
-
-            var statement = BuildDeleteStatement(source, joinOn);
-            return UpdateOrigin(null, await DbSession.DeleteAsync(statement, cancellationToken));
+            VerifyDeletable();
+            Verify(source, nameof(source), rowIndex, nameof(rowIndex));
+            var columnMappings = Verify(keyMapper, nameof(keyMapper), source._).GetColumnMappings();
+            return DbDelete<T>.Create(this, source, rowIndex, columnMappings);
         }
 
-        public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<T, PrimaryKey> joinOn = null)
-            where TSource : Model, new()
+        public DbDelete<T> Delete<TLookup>(DataSet<TLookup> source, Func<TLookup, T, KeyMapping> keyMapper)
+            where TLookup : Model, new()
         {
-            return DeleteAsync(source, joinOn, CancellationToken.None);
-        }
-
-        public bool Delete<TSource>(DataSet<TSource> source, int ordinal, Func<T, PrimaryKey> joinOn = null)
-            where TSource : Model, new()
-        {
-            VerifyDelete(source, ordinal);
-
-            var statement = BuildDeleteScalarStatement(source, ordinal, joinOn);
-            return UpdateOrigin<TSource>(null, DbSession.Delete(statement) > 0);
-        }
-
-        public async Task<bool> DeleteAsync<TSource>(DataSet<TSource> source,  int ordinal, Func<T, PrimaryKey> joinOn, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            VerifyDelete(source, ordinal);
-
-            var statement = BuildDeleteScalarStatement(source, ordinal, joinOn);
-            return UpdateOrigin<TSource>(null, await DbSession.DeleteAsync(statement, cancellationToken) > 0);
-        }
-
-        public Task<bool> DeleteAsync<TSource>(DataSet<TSource> source, int ordinal, Func<T, PrimaryKey> joinOn = null)
-            where TSource : Model, new()
-        {
-            return DeleteAsync(source, ordinal, joinOn, CancellationToken.None);
-        }
-
-        internal DbSelectStatement BuildDeleteStatement<TSource>(DbSet<TSource> source, Func<T, PrimaryKey> joinOn)
-            where TSource : Model, new()
-        {
-            Debug.Assert(source != null);
-
-            var keyMappings = GetKeyMappings(source._, joinOn);
-            return source.QueryStatement.BuildDeleteStatement(Model, keyMappings);
-        }
-
-        public int Delete<TSource>(DataSet<TSource> source, Func<T, PrimaryKey> joinOn = null)
-            where TSource : Model, new()
-        {
-            VerifyDelete(source);
-
-            if (source.Count == 0)
-                return 0;
-
+            Verify(source, nameof(source));
             if (source.Count == 1)
-                return Delete(source, 0) ? 1 : 0;
+                return Delete(source, 0, keyMapper);
 
-            return UpdateOrigin(null, DbSession.Delete(source, this, joinOn));
+            VerifyDeletable();
+            var keyMappingTarget = Verify(keyMapper, nameof(keyMapper), source._).TargetKey;
+            return DbDelete<T>.Create(this, source, keyMappingTarget);
         }
 
-        public async Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<T, PrimaryKey> joinOn, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            VerifyDelete(source);
-
-            if (source.Count == 0)
-                return 0;
-
-            if (source.Count == 1)
-                return await DeleteAsync(source, 0, joinOn, cancellationToken) ? 1 : 0;
-
-            return UpdateOrigin(null, await DbSession.DeleteAsync(source, this, joinOn, cancellationToken));
-        }
-
-        public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<T, PrimaryKey> joinOn = null)
-            where TSource : Model, new()
-        {
-            return DeleteAsync(source, joinOn, CancellationToken.None);
-        }
-
-        internal DbSelectStatement BuildDeleteScalarStatement<TSource>(DataSet<TSource> source, int ordinal, Func<T, PrimaryKey> joinOn)
-            where TSource : Model, new()
+        internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> columnMappings)
+            where TLookup : Model, new()
         {
             Debug.Assert(source != null && source._ != null);
-            var sourceModel = source._;
-            var keyMappings = GetKeyMappings(sourceModel, joinOn);
-            return BuildDeleteScalarStatement(source[ordinal], keyMappings);
+            return BuildDeleteScalarStatement(source[ordinal], columnMappings);
         }
 
-        private DbSelectStatement BuildDeleteScalarStatement(DataRow dataRow, IReadOnlyList<ColumnMapping> keyMappings)
+        internal DbSelectStatement BuildDeleteScalarStatement(DataRow dataRow, IReadOnlyList<ColumnMapping> columnMappings)
         {
             var paramManager = new ScalarParamManager(dataRow);
-            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, keyMappings);
+            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, columnMappings), FromClause, columnMappings);
             return new DbSelectStatement(Model, null, from, null, null, -1, -1);
         }
 
-        internal void VerifyDelete()
+        internal DbSelectStatement BuildDeleteStatement<TLookup>(DbSet<TLookup> source, IReadOnlyList<ColumnMapping> columnMappings)
+            where TLookup : Model, new()
+        {
+            Debug.Assert(source != null);
+            Debug.Assert(columnMappings != null);
+            return source.QueryStatement.BuildDeleteStatement(Model, columnMappings);
+        }
+
+        private void VerifyDeletable()
         {
             if (Model.ChildModels.Any(x => x != null))
                 throw new NotSupportedException(DiagnosticMessages.DbTable_DeleteNotSupportedForParentTable);
-        }
-
-        internal void VerifyDelete<TSource>(DbSet<TSource> source)
-            where TSource : Model, new()
-        {
-            VerifyDelete();
-            VerifySource(source);
-        }
-
-        internal void VerifyDelete<TSource>(DataSet<TSource> source)
-            where TSource : Model, new()
-        {
-            VerifyDelete();
-            VerifySource(source);
-        }
-
-        internal void VerifyDelete<TSource>(DataSet<TSource> source, int ordinal)
-            where TSource : Model, new()
-        {
-            VerifyDelete();
-            VerifySource(source, ordinal);
         }
     }
 }

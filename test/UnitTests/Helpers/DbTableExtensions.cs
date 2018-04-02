@@ -49,7 +49,7 @@ namespace DevZest.Data.Helpers
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            dbTable.VerifySource(source, ordinal);
+            dbTable.Verify(source, nameof(source), ordinal, nameof(ordinal));
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var result = dbTable.GetInsertCommand(dbTable.BuildInsertScalarStatement(source, ordinal, columnMappingsBuilder, autoJoin));
@@ -63,7 +63,7 @@ namespace DevZest.Data.Helpers
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            dbTable.VerifySource(source);
+            dbTable.Verify(source, nameof(source));
 
             var result = dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMappingsBuilder, autoJoin));
             dbTable.UpdateOrigin(source, rowsAffected);
@@ -75,7 +75,7 @@ namespace DevZest.Data.Helpers
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            dbTable.VerifySource(source);
+            dbTable.Verify(source, nameof(source));
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var result = dbTable.MockInsertTable(rowsAffected, source, columnMappingsBuilder, autoJoin, updateIdentity);
@@ -118,7 +118,7 @@ namespace DevZest.Data.Helpers
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            dbTable.VerifySource(source);
+            dbTable.Verify(source, nameof(source));
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var result = new List<SqlCommand>();
@@ -207,29 +207,31 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Func<TTarget, PrimaryKey> joinOn = null)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
+            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
             dbTable.UpdateOrigin(null, rowsAffected);
-            var statement = dbTable.BuildDeleteStatement(source, joinOn);
+            var statement = dbTable.BuildDeleteStatement(source, keyMapping.GetColumnMappings());
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal, Func<TTarget, PrimaryKey> joinOn = null)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal, Func<TSource, TTarget, KeyMapping> keyMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
+            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
             dbTable.UpdateOrigin<TSource>(null, success);
-            var statement = dbTable.BuildDeleteScalarStatement(source, ordinal, joinOn);
+            var statement = dbTable.BuildDeleteScalarStatement(source, ordinal, keyMapping.GetColumnMappings());
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source, Func<TTarget, PrimaryKey> joinOn = null)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            Check.NotNull(source, nameof(source));
+            dbTable.Verify(source, nameof(source));
 
             if (source.Count == 0)
                 return null;
@@ -237,11 +239,12 @@ namespace DevZest.Data.Helpers
             if (source.Count == 1)
             {
                 Debug.Assert(rowsAffected == 1 || rowsAffected == 0);
-                return dbTable.MockDelete(rowsAffected != 0, source, 0, joinOn);
+                return dbTable.MockDelete(rowsAffected != 0, source, 0, keyMapper);
             }
 
+            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
             dbTable.UpdateOrigin(null, rowsAffected);
-            return dbTable.SqlSession().BuildDeleteCommand(source, dbTable, joinOn);
+            return dbTable.SqlSession().BuildDeleteCommand(source, dbTable, keyMapping.TargetKey);
         }
     }
 }

@@ -2,8 +2,6 @@
 using DevZest.Data.Utilities;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Data;
-using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
@@ -299,21 +297,22 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        protected internal virtual int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Func<TTarget, PrimaryKey> joinOn)
+        protected internal virtual int Delete<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var keys = ImportKey(sourceData);
-            return Delete(targetTable.BuildDeleteStatement(keys, joinOn));
+            var keys = ImportKey(source);
+            var columnMappings = keys._.MapTo(keyMappingTarget);
+            return Delete(target.BuildDeleteStatement(keys, columnMappings));
         }
 
-        protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Func<TTarget, PrimaryKey> joinOn, CancellationToken cancellationToken)
+        protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget, CancellationToken ct)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var keys = await ImportKeyAsync(sourceData, cancellationToken);
-            return await DeleteAsync(targetTable.BuildDeleteStatement(keys, joinOn), cancellationToken);
+            var keys = await ImportKeyAsync(source, ct);
+            var columnMappings = keys._.MapTo(keyMappingTarget);
+            return await DeleteAsync(target.BuildDeleteStatement(keys, columnMappings), ct);
         }
 
         internal abstract DbReader ExecuteDbReader<T>(DbSet<T> dbSet)

@@ -628,7 +628,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The source is invalid: cross DbSession is not supported.
+        /// The source DbSet is invalid: cross DbSession is not supported.
         /// </summary>
         public static string DbTable_InvalidDbSetSource
         {
@@ -1081,6 +1081,38 @@ namespace DevZest.Data
         public static string DataRow_ResumeValueChangedNotificationWithoutSuspend
         {
             get { return GetString("DataRow_ResumeValueChangedNotificationWithoutSuspend"); }
+        }
+
+        /// <summary>
+        /// The returned KeyMapping result is invalid, it must be primary key mappings between the source model and this table.
+        /// </summary>
+        public static string DbTable_InvalidReturnedKeyMapping
+        {
+            get { return GetString("DbTable_InvalidReturnedKeyMapping"); }
+        }
+
+        /// <summary>
+        /// The column data type does not match with PrimaryKey.
+        /// </summary>
+        public static string KeyOutput_MapTo_ColumnDataTypeMismatch
+        {
+            get { return GetString("KeyOutput_MapTo_ColumnDataTypeMismatch"); }
+        }
+
+        /// <summary>
+        /// The columns count does not match with PrimaryKey.
+        /// </summary>
+        public static string KeyOutput_MapTo_ColumnsCountMismatch
+        {
+            get { return GetString("KeyOutput_MapTo_ColumnsCountMismatch"); }
+        }
+
+        /// <summary>
+        /// The type of target key does not match with source key.
+        /// </summary>
+        public static string KeyMapping_SourceTargetTypeMismatch
+        {
+            get { return GetString("KeyMapping_SourceTargetTypeMismatch"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

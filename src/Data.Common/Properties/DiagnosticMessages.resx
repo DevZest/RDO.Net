@@ -349,7 +349,7 @@
     <value>Delete is not supported for parent table.</value>
   </data>
   <data name="DbTable_InvalidDbSetSource" xml:space="preserve">
-    <value>The source is invalid: cross DbSession is not supported.</value>
+    <value>The source DbSet is invalid: cross DbSession is not supported.</value>
   </data>
   <data name="DataRow_FromString_ExpectChar" xml:space="preserve">
     <value>Char '{ch}' expected after '{prevInput}'.</value>
@@ -518,5 +518,17 @@
   </data>
   <data name="DataRow_ResumeValueChangedNotificationWithoutSuspend" xml:space="preserve">
     <value>The SuspendValueChangedNotification/ResumeValueChangedNotification must be called in tandem.</value>
+  </data>
+  <data name="DbTable_InvalidReturnedKeyMapping" xml:space="preserve">
+    <value>The returned KeyMapping result is invalid, it must be primary key mappings between the source model and this table.</value>
+  </data>
+  <data name="KeyOutput_MapTo_ColumnDataTypeMismatch" xml:space="preserve">
+    <value>The column data type does not match with PrimaryKey.</value>
+  </data>
+  <data name="KeyOutput_MapTo_ColumnsCountMismatch" xml:space="preserve">
+    <value>The columns count does not match with PrimaryKey.</value>
+  </data>
+  <data name="KeyMapping_SourceTargetTypeMismatch" xml:space="preserve">
+    <value>The type of target key does not match with source key.</value>
   </data>
 </root>

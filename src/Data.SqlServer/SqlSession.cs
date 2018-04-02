@@ -393,23 +393,25 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Delete(this, statement).CreateCommand(GetConnection());
         }
 
-        protected sealed override int Delete<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, PrimaryKey> joinOn)
+        protected sealed override int Delete<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget)
         {
-            var command = BuildDeleteCommand(source, target, joinOn);
+            var command = BuildDeleteCommand(source, target, keyMappingTarget);
             return ExecuteNonQuery(command);
         }
 
-        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, PrimaryKey> joinOn, CancellationToken cancellationToken)
+        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget, CancellationToken cancellationToken)
         {
-            var command = BuildDeleteCommand(source, target, joinOn);
+            var command = BuildDeleteCommand(source, target, keyMappingTarget);
             return ExecuteNonQueryAsync(command, cancellationToken);
         }
 
-        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Func<TTarget, PrimaryKey> joinOn)
+        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var statement = target.BuildDeleteStatement(BuildImportKeyQuery(source), joinOn);
+            var keys = BuildImportKeyQuery(source);
+            var columnMappings = keys._.MapTo(keyMappingTarget);
+            var statement = target.BuildDeleteStatement(keys, columnMappings);
             return GetDeleteCommand(statement);
         }
 

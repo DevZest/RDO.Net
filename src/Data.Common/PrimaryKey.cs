@@ -205,5 +205,13 @@ namespace DevZest.Data
 
             return result;
         }
+
+        public IReadOnlyList<Column> GetColumns()
+        {
+            var result = new Column[Count];
+            for (int i = 0; i < Count; i++)
+                result[i] = this[i].Column;
+            return result;
+        }
     }
 }

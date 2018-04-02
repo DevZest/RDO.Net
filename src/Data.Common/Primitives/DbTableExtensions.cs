@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
@@ -27,14 +28,13 @@ namespace DevZest.Data.Primitives
             return target.BuildUpdateStatement(source, columnMappingsBuilder);
         }
 
-        public static DbSelectStatement BuildDeleteStatement<TSource, TTarget>(this DbTable<TTarget> targetTable, DbSet<TSource> source,
-            Func<TTarget, PrimaryKey> joinOn = null)
+        public static DbSelectStatement BuildDeleteStatement<TSource, TTarget>(this DbTable<TTarget> targetTable, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             Check.NotNull(targetTable, nameof(targetTable));
 
-            return targetTable.BuildDeleteStatement(source, joinOn);
+            return targetTable.BuildDeleteStatement(source, columnMappings);
         }
     }
 }

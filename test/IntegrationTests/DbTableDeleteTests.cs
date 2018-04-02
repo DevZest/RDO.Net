@@ -15,9 +15,9 @@ namespace DevZest.Data
             using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
             {
                 var count = db.SalesOrderDetails.Count();
-                var countToDelete = db.SalesOrderDetails.Where(x => x.SalesOrderDetailID > 2).Count();
+                var countToDelete = db.SalesOrderDetails.Where(_ => _.SalesOrderDetailID > 2).Count();
                 Assert.IsTrue(countToDelete > 0);
-                var countDeleted = db.SalesOrderDetails.Delete(x => x.SalesOrderDetailID > 2);
+                var countDeleted = db.SalesOrderDetails.Delete(_ => _.SalesOrderDetailID > 2).Execute();
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countToDelete, db.SalesOrderDetails.Count());
             }
@@ -30,9 +30,9 @@ namespace DevZest.Data
             using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
             {
                 var count = await db.SalesOrderDetails.CountAsync();
-                var countToDelete = await db.SalesOrderDetails.Where(x => x.SalesOrderDetailID > 2).CountAsync();
+                var countToDelete = await db.SalesOrderDetails.Where(_ => _.SalesOrderDetailID > 2).CountAsync();
                 Assert.IsTrue(countToDelete > 0);
-                var countDeleted = await db.SalesOrderDetails.DeleteAsync(x => x.SalesOrderDetailID > 2);
+                var countDeleted = await db.SalesOrderDetails.Delete(_ => _.SalesOrderDetailID > 2).ExecuteAsync();
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countToDelete, await db.SalesOrderDetails.CountAsync());
             }
@@ -48,7 +48,7 @@ namespace DevZest.Data
                 var dataSet = db.SalesOrderDetails.Where(x => x.SalesOrderDetailID == 1).ToDataSet();
                 Assert.IsTrue(dataSet.Count == 1);
 
-                bool success = db.SalesOrderDetails.Delete(dataSet, 0);
+                bool success = db.SalesOrderDetails.Delete(dataSet, 0, (s, _) => s.MapTo(_)).Execute() > 0;
                 Assert.IsTrue(success);
                 Assert.AreEqual(count - 1, db.SalesOrderDetails.Count());
             }
@@ -64,7 +64,7 @@ namespace DevZest.Data
                 var dataSet = await db.SalesOrderDetails.Where(x => x.SalesOrderDetailID == 1).ToDataSetAsync();
                 Assert.IsTrue(dataSet.Count == 1);
 
-                bool success = await db.SalesOrderDetails.DeleteAsync(dataSet, 0);
+                bool success = await db.SalesOrderDetails.Delete(dataSet, 0, (s, _) => s.MapTo(_)).ExecuteAsync() > 0;
                 Assert.IsTrue(success);
                 Assert.AreEqual(count - 1, await db.SalesOrderDetails.CountAsync());
             }
@@ -88,7 +88,7 @@ namespace DevZest.Data
                 });
                 var dataSet = query.ToDataSet();
 
-                var countDeleted = db.SalesOrderDetails.Delete(dataSet, _ => _.SalesOrder);
+                var countDeleted = db.SalesOrderDetails.Delete(dataSet, (s, _) => s.MapTo(_.SalesOrder)).Execute();
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countDeleted, db.SalesOrderDetails.Count());
             }
@@ -113,7 +113,7 @@ namespace DevZest.Data
                 });
                 var dataSet = await query.ToDataSetAsync();
 
-                var countDeleted = await db.SalesOrderDetails.DeleteAsync(dataSet, _ => _.SalesOrder);
+                var countDeleted = await db.SalesOrderDetails.Delete(dataSet, (s, _) => s.MapTo(_.SalesOrder)).ExecuteAsync();
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countDeleted, await db.SalesOrderDetails.CountAsync());
             }

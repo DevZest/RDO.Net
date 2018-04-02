@@ -41,7 +41,7 @@ namespace DevZest.Data
         public int Update<TSource>(DbSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
 
             var statement = BuildUpdateStatement(source, columnMappingsBuilder);
             return UpdateOrigin(null, DbSession.Update(statement));
@@ -56,7 +56,7 @@ namespace DevZest.Data
         public async Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
 
             var statement = BuildUpdateStatement(source, columnMappingsBuilder);
             return UpdateOrigin(null, await DbSession.UpdateAsync(statement, cancellationToken));
@@ -80,7 +80,7 @@ namespace DevZest.Data
         public bool Update<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
-            VerifySource(source, ordinal);
+            Verify(source, nameof(source), ordinal, nameof(ordinal));
 
             var statement = BuildUpdateScalarStatement(source, ordinal, columnMappingsBuilder);
             var result = DbSession.Update(statement);
@@ -98,7 +98,7 @@ namespace DevZest.Data
             CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            VerifySource(source, ordinal);
+            Verify(source, nameof(source), ordinal, nameof(ordinal));
 
             var statement = BuildUpdateScalarStatement(source, ordinal, columnMappingsBuilder);
             var result = await DbSession.UpdateAsync(statement, cancellationToken);
@@ -115,7 +115,7 @@ namespace DevZest.Data
         public int Update<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
 
             if (source.Count == 0)
                 return 0;
@@ -136,7 +136,7 @@ namespace DevZest.Data
         public async Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
 
             if (source.Count == 0)
                 return 0;

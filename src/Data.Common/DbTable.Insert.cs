@@ -14,14 +14,14 @@ namespace DevZest.Data
         public int Insert<TSource>(DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
             return UpdateOrigin(source, DbSession.Insert(BuildInsertStatement(source, columnMappingsBuilder, autoJoin)));
         }
 
         public async Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
             return UpdateOrigin(source, await DbSession.InsertAsync(BuildInsertStatement(source, columnMappingsBuilder, autoJoin), cancellationToken));
         }
 
@@ -34,7 +34,7 @@ namespace DevZest.Data
         public int Insert<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var result = InsertTable(source, columnMappingsBuilder, autoJoin, updateIdentity);
@@ -45,7 +45,7 @@ namespace DevZest.Data
         public async Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var result = await InsertTableAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
@@ -131,7 +131,7 @@ namespace DevZest.Data
         public int Insert<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             if (source.Count == 0)
@@ -148,7 +148,7 @@ namespace DevZest.Data
         public async Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            VerifySource(source);
+            Verify(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             if (source.Count == 0)
@@ -188,7 +188,7 @@ namespace DevZest.Data
         public bool Insert<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
-            VerifySource(source, ordinal);
+            Verify(source, nameof(source), ordinal, nameof(ordinal));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var statement = BuildInsertScalarStatement(source, ordinal, columnMappingsBuilder, autoJoin);
@@ -201,7 +201,7 @@ namespace DevZest.Data
         public async Task<bool> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            VerifySource(source, ordinal);
+            Verify(source, nameof(source), ordinal, nameof(ordinal));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var statement = BuildInsertScalarStatement(source, ordinal, columnMappingsBuilder, autoJoin);
