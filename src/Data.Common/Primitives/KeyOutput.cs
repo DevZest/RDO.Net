@@ -41,7 +41,7 @@ namespace DevZest.Data.Primitives
             get { return (GetIdentity(true) == null ? "sys_key_" : "sys_sequential_") + _sourceDbAlias; }
         }
 
-        public static void BuildKeyMappings(ColumnMappingsBuilder builder, Model source, KeyOutput target)
+        public static void BuildKeyMappings(ColumnMapper builder, Model source, KeyOutput target)
         {
             var sourceKey = source.PrimaryKey;
             if (sourceKey == null)
@@ -61,7 +61,7 @@ namespace DevZest.Data.Primitives
                 if (targetColumn.DataType != sourceColumn.DataType)
                     throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
 
-                builder.Select(sourceColumn, i);
+                builder.Map(sourceColumn, i);
             }
         }
 

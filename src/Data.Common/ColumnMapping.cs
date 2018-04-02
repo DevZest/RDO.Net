@@ -20,7 +20,7 @@ namespace DevZest.Data
             return new ColumnMapping(source, target);
         }
 
-        public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource sourceModel, TTarget targetModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool isInsertable)
+        public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource sourceModel, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool isInsertable)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -30,7 +30,7 @@ namespace DevZest.Data
             if (columnMappingsBuilder == null)
                 return GetColumnMappings(sourceModel, targetModel, isInsertable);
 
-            var result = new ColumnMappingsBuilder(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
+            var result = new ColumnMapper(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
             var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
             var targetModelIds = new HashSet<ColumnId>(columns.Select(x => x.ModelId));
             foreach (var resultItem in result)

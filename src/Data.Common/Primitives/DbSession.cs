@@ -244,7 +244,7 @@ namespace DevZest.Data.Primitives
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
 
         protected internal virtual int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -253,7 +253,7 @@ namespace DevZest.Data.Primitives
         }
 
         protected internal virtual async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -262,12 +262,12 @@ namespace DevZest.Data.Primitives
         }
 
         protected internal abstract int Insert<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
             where TSource : Model, new()
             where TTarget : Model, new();
 
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new();
 
@@ -276,7 +276,7 @@ namespace DevZest.Data.Primitives
         internal abstract Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
         protected internal virtual int Update<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -285,7 +285,7 @@ namespace DevZest.Data.Primitives
         }
 
         protected internal virtual async Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new()
         {

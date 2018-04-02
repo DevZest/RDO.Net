@@ -19,7 +19,7 @@ namespace DevZest.Data
                 _DateTime newModifiedDate = new DateTime(2015, 11, 19);
                 db.ProductCategories.Update((builder, productCategory) =>
                 {
-                    builder.Select(newModifiedDate, productCategory.ModifiedDate);
+                    builder.Map(newModifiedDate, productCategory.ModifiedDate);
                 }, x => x.ProductCategoryID > 2);
                 Assert.AreEqual(count, db.ProductCategories.Where(x => x.ModifiedDate == newModifiedDate).Count());
             }
@@ -36,7 +36,7 @@ namespace DevZest.Data
                 _DateTime newModifiedDate = new DateTime(2015, 11, 19);
                 await db.ProductCategories.UpdateAsync((builder, productCategory) =>
                 {
-                    builder.Select(newModifiedDate, productCategory.ModifiedDate);
+                    builder.Map(newModifiedDate, productCategory.ModifiedDate);
                 }, x => x.ProductCategoryID > 2);
                 Assert.AreEqual(count, await db.ProductCategories.Where(x => x.ModifiedDate == newModifiedDate).CountAsync());
             }

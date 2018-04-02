@@ -7,7 +7,7 @@ namespace DevZest.Data.Primitives
     public static class DbTableExtensions
     {
         public static DbSelectStatement BuildInsertStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -18,7 +18,7 @@ namespace DevZest.Data.Primitives
         }
 
         public static DbSelectStatement BuildUpdateStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {

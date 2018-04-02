@@ -155,7 +155,7 @@ namespace DevZest.Data.SqlServer
             return BuildQuery(dataSet, dataSet._, null);
         }
 
-        internal DbQuery<TTarget> BuildQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+        internal DbQuery<TTarget> BuildQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -226,7 +226,7 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override int Insert<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
         {
             if (identityMappings == null)
             {
@@ -238,7 +238,7 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin,
+            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin,
             DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
         {
             if (identityMappings == null)
@@ -251,7 +251,7 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
             where TTarget : Model, new()
 
@@ -261,7 +261,7 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override int Insert<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
         {
             var statement = target.BuildInsertStatement(source, columnMappingsBuilder, autoJoin);
             if (identityMappings == null)
@@ -274,7 +274,7 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+        protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
         {
             var statement = targetTable.BuildInsertStatement(sourceData, columnMappingsBuilder, autoJoin);
             if (identityMappings == null)
@@ -366,21 +366,21 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override int Update<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder)
         {
             var command = BuildUpdateCommand(source, target, columnMappingsBuilder);
             return ExecuteNonQuery(command);
         }
 
         protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, CancellationToken cancellationToken)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, CancellationToken cancellationToken)
         {
             var command = BuildUpdateCommand(source, target, columnMappingsBuilder);
             return ExecuteNonQueryAsync(command, cancellationToken);
         }
 
         internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder)
             where TSource : Model, new()
             where TTarget : Model, new()
         {

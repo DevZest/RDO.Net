@@ -151,9 +151,9 @@ namespace DevZest.Data
             return childModel.DataSource as DbTable<TChild>;
         }
 
-        private IReadOnlyList<ColumnMapping> BuildColumnMappings(Action<ColumnMappingsBuilder, T> columnMappingsBuilder)
+        private IReadOnlyList<ColumnMapping> BuildColumnMappings(Action<ColumnMapper, T> columnMappingsBuilder)
         {
-            return new ColumnMappingsBuilder(null, _).Build(builder => columnMappingsBuilder(builder, _));
+            return new ColumnMapper(null, _).Build(builder => columnMappingsBuilder(builder, _));
         }
 
         private IReadOnlyList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, PrimaryKey> joinOn)
@@ -256,7 +256,7 @@ namespace DevZest.Data
             throw new ArgumentException(DiagnosticMessages.DbTable_VerifyWhere, nameof(where));
         }
 
-        private IReadOnlyList<ColumnMapping> GetColumnMappings<TSource>(TSource sourceModel, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool isInsertable)
+        private IReadOnlyList<ColumnMapping> GetColumnMappings<TSource>(TSource sourceModel, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool isInsertable)
             where TSource : Model, new()
         {
             return ColumnMapping.Map(sourceModel, _, columnMappingsBuilder, isInsertable);

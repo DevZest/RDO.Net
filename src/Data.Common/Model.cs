@@ -177,7 +177,7 @@ namespace DevZest.Data
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="relationshipGetter"/> is <see langword="null"/>.</exception>
         public static Mounter<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
-            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> childColumnsBuilder = null)
+            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMapper, TChildModel, TModel> childColumnsBuilder = null)
             where TModel : Model<TModelKey>
             where TModelKey : PrimaryKey
             where TChildModel : Model, new()
@@ -189,7 +189,7 @@ namespace DevZest.Data
         }
 
         private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Mounter<TModel, TChildModel> mounter,
-            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> parentMappingsBuilder)
+            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMapper, TChildModel, TModel> parentMappingsBuilder)
             where TModel : Model<TModelKey>
             where TModelKey : PrimaryKey
             where TChildModel : Model, new()
@@ -203,14 +203,14 @@ namespace DevZest.Data
         }
 
         private static IReadOnlyList<ColumnMapping> AppendColumnMappings<TChildModel, TParentModel>(IReadOnlyList<ColumnMapping> parentRelationship,
-            Action<ColumnMappingsBuilder, TChildModel, TParentModel> parentMappingsBuilderAction, TChildModel childModel, TParentModel parentModel)
+            Action<ColumnMapper, TChildModel, TParentModel> parentMappingsBuilderAction, TChildModel childModel, TParentModel parentModel)
             where TChildModel : Model
             where TParentModel : Model
         {
             if (parentMappingsBuilderAction == null)
                 return parentRelationship;
 
-            var parentMappingsBuilder = new ColumnMappingsBuilder(childModel, parentModel);
+            var parentMappingsBuilder = new ColumnMapper(childModel, parentModel);
             var parentMappings = parentMappingsBuilder.Build(x => parentMappingsBuilderAction(x, childModel, parentModel));
 
             var result = new ColumnMapping[parentRelationship.Count + parentMappings.Count];

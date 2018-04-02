@@ -11,26 +11,26 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public int Update(Action<ColumnMappingsBuilder, T> columnMappingsBuilder, Func<T, _Boolean> where = null)
+        public int Update(Action<ColumnMapper, T> columnMappingsBuilder, Func<T, _Boolean> where = null)
         {
             Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
             var statement = BuildUpdateStatement(columnMappingsBuilder, where);
             return UpdateOrigin(null, DbSession.Update(statement));
         }
 
-        public async Task<int> UpdateAsync(Action<ColumnMappingsBuilder, T> columnMappingsBuilder, Func<T, _Boolean> where, CancellationToken cancellationToken)
+        public async Task<int> UpdateAsync(Action<ColumnMapper, T> columnMappingsBuilder, Func<T, _Boolean> where, CancellationToken cancellationToken)
         {
             Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
             var statement = BuildUpdateStatement(columnMappingsBuilder, where);
             return UpdateOrigin(null, await DbSession.UpdateAsync(statement, cancellationToken));
         }
 
-        public Task<int> UpdateAsync(Action<ColumnMappingsBuilder, T> columnMappingsBuilder, Func<T, _Boolean> where = null)
+        public Task<int> UpdateAsync(Action<ColumnMapper, T> columnMappingsBuilder, Func<T, _Boolean> where = null)
         {
             return UpdateAsync(columnMappingsBuilder, where, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildUpdateStatement(Action<ColumnMappingsBuilder, T> columnMappingsBuilder, Func<T, _Boolean> where)
+        internal DbSelectStatement BuildUpdateStatement(Action<ColumnMapper, T> columnMappingsBuilder, Func<T, _Boolean> where)
         {
             Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
             var columnMappings = BuildColumnMappings(columnMappingsBuilder);
@@ -38,7 +38,7 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, columnMappings, null, whereExpr, null, -1, -1);
         }
 
-        public int Update<TSource>(DbSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+        public int Update<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
@@ -53,7 +53,7 @@ namespace DevZest.Data
             return UpdateAsync(source, null, cancellationToken);
         }
 
-        public async Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
+        public async Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
@@ -62,13 +62,13 @@ namespace DevZest.Data
             return UpdateOrigin(null, await DbSession.UpdateAsync(statement, cancellationToken));
         }
 
-        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
             return UpdateAsync(source, columnMappingsBuilder, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder)
+        internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder)
             where TSource : Model, new()
         {
             Debug.Assert(source != null);
@@ -77,7 +77,7 @@ namespace DevZest.Data
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, keyMappings);
         }
 
-        public bool Update<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+        public bool Update<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
             Verify(source, nameof(source), ordinal, nameof(ordinal));
@@ -94,7 +94,7 @@ namespace DevZest.Data
             return UpdateAsync(source, ordinal, null, cancellationToken);
         }
 
-        public async Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder,
+        public async Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder,
             CancellationToken cancellationToken)
             where TSource : Model, new()
         {
@@ -106,13 +106,13 @@ namespace DevZest.Data
             return result == 1;
         }
 
-        public Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+        public Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
             return UpdateAsync(source, ordinal, columnMappingsBuilder, CancellationToken.None);
         }
 
-        public int Update<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+        public int Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
@@ -133,7 +133,7 @@ namespace DevZest.Data
         }
 
 
-        public async Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
+        public async Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
@@ -147,13 +147,13 @@ namespace DevZest.Data
             return UpdateOrigin(null, await DbSession.UpdateAsync(source, this, columnMappingsBuilder, cancellationToken));
         }
 
-        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
             return UpdateAsync(source, columnMappingsBuilder, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder)
+        internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder)
             where TSource : Model, new()
         {
             Debug.Assert(dataSet != null && dataSet._ != null);

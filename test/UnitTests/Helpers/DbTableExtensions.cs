@@ -44,7 +44,7 @@ namespace DevZest.Data.Helpers
 
         public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success,
             DataSet<TSource> source, int ordinal,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null,
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null,
             bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
@@ -59,7 +59,7 @@ namespace DevZest.Data.Helpers
         }
 
         public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
-            DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
+            DbQuery<TSource> source, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -71,7 +71,7 @@ namespace DevZest.Data.Helpers
         }
 
         public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
-            DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+            DbTable<TSource> source, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -84,7 +84,7 @@ namespace DevZest.Data.Helpers
         }
 
         private static IList<SqlCommand> MockInsertTable<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
-            DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+            DbTable<TSource> source, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -114,7 +114,7 @@ namespace DevZest.Data.Helpers
         }
 
         public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
-            DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+            DataSet<TSource> source, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -147,7 +147,7 @@ namespace DevZest.Data.Helpers
             return result;
         }
 
-        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMappingsBuilder, T> columnMappingsBuilder,
+        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMapper, T> columnMappingsBuilder,
             Func<T, _Boolean> getWhere = null)
             where T : Model, new()
         {
@@ -158,7 +158,7 @@ namespace DevZest.Data.Helpers
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> dbSet,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -169,7 +169,7 @@ namespace DevZest.Data.Helpers
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> dataSet, int ordinal,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -180,7 +180,7 @@ namespace DevZest.Data.Helpers
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
+            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {

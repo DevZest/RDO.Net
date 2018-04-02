@@ -15,9 +15,9 @@ namespace DevZest.Data.SqlServer
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
-                var query = db.BuildQuery(dataSet, null, (ColumnMappingsBuilder builder, ProductCategory source, Adhoc target) =>
+                var query = db.BuildQuery(dataSet, null, (Data.ColumnMapper builder, ProductCategory source, Adhoc target) =>
                 {
-                    builder.Select(source.Name, target.AddColumn(source.Name, initializer: x => x.DbColumnName = source.Name.DbColumnName));
+                    builder.Map(source.Name, target.AddColumn(source.Name, initializer: x => x.DbColumnName = source.Name.DbColumnName));
                 });
                 var expectedSql =
 @"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
