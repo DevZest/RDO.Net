@@ -80,34 +80,34 @@ namespace DevZest.Data
         }
             
 
-        private sealed class DbDeleteFromDbSet<TLookup> : DbDelete<T>
-            where TLookup : Model, new()
+        private sealed class DbDeleteFromDbSet<TSource> : DbDelete<T>
+            where TSource : Model, new()
         {
-            public DbDeleteFromDbSet(DbTable<T> from, DbSet<TLookup> lookup, IReadOnlyList<ColumnMapping> columnMappings)
+            public DbDeleteFromDbSet(DbTable<T> from, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)
                 : base(from)
             {
-                _lookup = lookup;
+                _source = source;
                 _columnMappings = columnMappings;
             }
 
-            private readonly DbSet<TLookup> _lookup;
+            private readonly DbSet<TSource> _source;
             private readonly IReadOnlyList<ColumnMapping> _columnMappings;
 
             private DbSelectStatement BuildDeleteStatement()
             {
-                return From.BuildDeleteStatement(_lookup, _columnMappings);
+                return From.BuildDeleteStatement(_source, _columnMappings);
             }
 
             protected override int PerformExecute()
             {
                 var statement = BuildDeleteStatement();
-                return From.UpdateOrigin(null, DbSession.Update(statement));
+                return From.UpdateOrigin(null, DbSession.Delete(statement));
             }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 var statement = BuildDeleteStatement();
-                return From.UpdateOrigin(null, await DbSession.UpdateAsync(statement, ct));
+                return From.UpdateOrigin(null, await DbSession.DeleteAsync(statement, ct));
             }
         }
 

@@ -313,5 +313,15 @@ namespace DevZest.Data
                 throw new ArgumentException(DiagnosticMessages.DbTable_EmptyColumnMapperResult, paramName);
             return result;
         }
+
+        internal IReadOnlyList<ColumnMapping> Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, string paramName, TSource source)
+            where TSource : Model, new()
+        {
+            Check.NotNull(mapper, paramName);
+            var result = new ColumnMapper(source, _).Build(x => mapper(x, source, _));
+            if (result == null || result.Count == 0)
+                throw new ArgumentException(DiagnosticMessages.DbTable_EmptyColumnMapperResult, paramName);
+            return result;
+        }
     }
 }

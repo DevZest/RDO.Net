@@ -61,5 +61,45 @@ namespace DevZest.Data
                 return Target.UpdateOrigin(null, await DbSession.UpdateAsync(statement, ct));
             }
         }
+
+        internal static DbUpdate<T> Create<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+            where TSource : Model, new()
+        {
+            return new DbUpdateFromDbSet<TSource>(target, source, columnMappings, join);
+        }
+
+        private sealed class DbUpdateFromDbSet<TSource> : DbUpdate<T>
+            where TSource : Model, new()
+        {
+            public DbUpdateFromDbSet(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+                : base(target)
+            {
+                _source = source;
+                _columnMappings = columnMappings;
+                _join = join;
+            }
+
+            private readonly DbSet<TSource> _source;
+            private readonly IReadOnlyList<ColumnMapping> _columnMappings;
+            private readonly IReadOnlyList<ColumnMapping> _join;
+
+            private DbSelectStatement BuildUpdateStatement()
+            {
+                throw new NotImplementedException();
+                //return Target.BuildUpdateStatement(_source, _columnMappings, _join);
+            }
+
+            protected override int PerformExecute()
+            {
+                var statement = BuildUpdateStatement();
+                return Target.UpdateOrigin(null, DbSession.Update(statement));
+            }
+
+            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
+            {
+                var statement = BuildUpdateStatement();
+                return Target.UpdateOrigin(null, await DbSession.UpdateAsync(statement, ct));
+            }
+        }
     }
 }
