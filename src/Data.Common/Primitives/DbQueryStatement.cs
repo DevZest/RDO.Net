@@ -94,9 +94,9 @@ namespace DevZest.Data.Primitives
             return new DbQueryBuilder(model).BuildUpdateStatement(Model, columnMappings, keyMappings);
         }
 
-        internal virtual DbSelectStatement BuildDeleteStatement(Model model, IReadOnlyList<ColumnMapping> keyMappings)
+        internal virtual DbSelectStatement BuildDeleteStatement(Model model, IReadOnlyList<ColumnMapping> join)
         {
-            return new DbQueryBuilder(model).BuildDeleteStatement(Model, keyMappings);
+            return new DbQueryBuilder(model).BuildDeleteStatement(Model, join);
         }
 
         internal virtual DbQueryStatement RemoveSystemColumns()

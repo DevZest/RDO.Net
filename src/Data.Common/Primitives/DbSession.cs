@@ -297,21 +297,21 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        protected internal virtual int Delete<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget)
+        protected internal virtual int Delete<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var keys = ImportKey(source);
-            var columnMappings = keys._.MapTo(keyMappingTarget);
+            var columnMappings = keys._.MapTo(joinTo);
             return Delete(target.BuildDeleteStatement(keys, columnMappings));
         }
 
-        protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget, CancellationToken ct)
+        protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo, CancellationToken ct)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var keys = await ImportKeyAsync(source, ct);
-            var columnMappings = keys._.MapTo(keyMappingTarget);
+            var columnMappings = keys._.MapTo(joinTo);
             return await DeleteAsync(target.BuildDeleteStatement(keys, columnMappings), ct);
         }
 

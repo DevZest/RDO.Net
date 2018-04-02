@@ -399,18 +399,18 @@ namespace DevZest.Data.SqlServer
             return ExecuteNonQuery(command);
         }
 
-        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget, CancellationToken cancellationToken)
+        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo, CancellationToken cancellationToken)
         {
-            var command = BuildDeleteCommand(source, target, keyMappingTarget);
+            var command = BuildDeleteCommand(source, target, joinTo);
             return ExecuteNonQueryAsync(command, cancellationToken);
         }
 
-        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey keyMappingTarget)
+        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var keys = BuildImportKeyQuery(source);
-            var columnMappings = keys._.MapTo(keyMappingTarget);
+            var columnMappings = keys._.MapTo(joinTo);
             var statement = target.BuildDeleteStatement(keys, columnMappings);
             return GetDeleteCommand(statement);
         }

@@ -50,26 +50,26 @@ namespace DevZest.Data
             return DbDelete<T>.Create(this, source, keyMappingTarget);
         }
 
-        internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> columnMappings)
+        internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> join)
             where TLookup : Model, new()
         {
             Debug.Assert(source != null && source._ != null);
-            return BuildDeleteScalarStatement(source[ordinal], columnMappings);
+            return BuildDeleteScalarStatement(source[ordinal], join);
         }
 
-        internal DbSelectStatement BuildDeleteScalarStatement(DataRow dataRow, IReadOnlyList<ColumnMapping> columnMappings)
+        internal DbSelectStatement BuildDeleteScalarStatement(DataRow dataRow, IReadOnlyList<ColumnMapping> join)
         {
             var paramManager = new ScalarParamManager(dataRow);
-            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, columnMappings), FromClause, columnMappings);
+            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, join), FromClause, join);
             return new DbSelectStatement(Model, null, from, null, null, -1, -1);
         }
 
-        internal DbSelectStatement BuildDeleteStatement<TLookup>(DbSet<TLookup> source, IReadOnlyList<ColumnMapping> columnMappings)
+        internal DbSelectStatement BuildDeleteStatement<TLookup>(DbSet<TLookup> source, IReadOnlyList<ColumnMapping> join)
             where TLookup : Model, new()
         {
             Debug.Assert(source != null);
-            Debug.Assert(columnMappings != null);
-            return source.QueryStatement.BuildDeleteStatement(Model, columnMappings);
+            Debug.Assert(join != null);
+            return source.QueryStatement.BuildDeleteStatement(Model, join);
         }
 
         private void VerifyDeletable()
