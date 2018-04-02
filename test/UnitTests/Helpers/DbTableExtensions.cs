@@ -177,12 +177,22 @@ namespace DevZest.Data.Helpers
             return result;
         }
 
-        internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> dataSet, int ordinal,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null)
+        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int rowIndex)
+            where T : Model, new()
+        {
+            return MockUpdate(dbTable, success, source, rowIndex, ColumnMapper.InferUpdate, KeyMapping.Infer);
+        }
+
+        internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int rowIndex,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var statement = dbTable.BuildUpdateScalarStatement(dataSet, ordinal, columnMappingsBuilder);
+            dbTable.Verify(source, nameof(source), rowIndex, nameof(rowIndex));
+            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), source._);
+            var join = dbTable.Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
+
+            var statement = dbTable.BuildUpdateScalarStatement(source, rowIndex, columnMappings, join);
             var result = dbTable.SqlSession().GetUpdateCommand(statement);
             dbTable.UpdateOrigin<TSource>(null, success);
             return result;
@@ -201,7 +211,7 @@ namespace DevZest.Data.Helpers
             if (source.Count == 1)
             {
                 Debug.Assert(rowsAffected == 1 || rowsAffected == 0);
-                return dbTable.MockUpdate(rowsAffected != 0, source, 0, columnMappingsBuilder);
+                throw new NotImplementedException();
             }
 
             dbTable.UpdateOrigin(null, rowsAffected);

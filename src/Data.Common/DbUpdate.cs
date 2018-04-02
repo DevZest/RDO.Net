@@ -101,5 +101,46 @@ namespace DevZest.Data
                 return Target.UpdateOrigin(null, await DbSession.UpdateAsync(statement, ct));
             }
         }
+
+        internal static DbUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+            where TSource : Model, new()
+        {
+            return new DbUpdateFromDataRow<TSource>(target, source, rowIndex, columnMappings, join);
+        }
+
+        private sealed class DbUpdateFromDataRow<TSource> : DbUpdate<T>
+            where TSource : Model, new()
+        {
+            public DbUpdateFromDataRow(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+                : base(target)
+            {
+                _source = source;
+                _rowIndex = rowIndex;
+                _columnMappings = columnMappings;
+                _join = join;
+            }
+
+            private readonly DataSet<TSource> _source;
+            private readonly int _rowIndex;
+            private readonly IReadOnlyList<ColumnMapping> _columnMappings;
+            private readonly IReadOnlyList<ColumnMapping> _join;
+
+            private DbSelectStatement BuildUpdateStatement()
+            {
+                return Target.BuildUpdateScalarStatement(_source, _rowIndex, _columnMappings, _join);
+            }
+
+            protected override int PerformExecute()
+            {
+                var statement = BuildUpdateStatement();
+                return Target.UpdateOrigin<TSource>(null, DbSession.Update(statement) > 0) ? 1 : 0;
+            }
+
+            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
+            {
+                var statement = BuildUpdateStatement();
+                return Target.UpdateOrigin<TSource>(null, await DbSession.UpdateAsync(statement, ct) > 0) ? 1 : 0;
+            }
+        }
     }
 }

@@ -53,39 +53,19 @@ namespace DevZest.Data
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, keyMappings);
         }
 
-        public bool Update<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
-            where TSource : Model, new()
+        public DbUpdate<T> Update(DataSet<T> source, int rowIndex)
         {
-            Verify(source, nameof(source), ordinal, nameof(ordinal));
-
-            var statement = BuildUpdateScalarStatement(source, ordinal, columnMappingsBuilder);
-            var result = DbSession.Update(statement);
-            UpdateOrigin(null, result);
-            return result == 1;
+            return Update(source, rowIndex, ColumnMapper.InferUpdate, KeyMapping.Infer);
         }
 
-        public Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, CancellationToken cancellationToken)
+        public DbUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
             where TSource : Model, new()
         {
-            return UpdateAsync(source, ordinal, null, cancellationToken);
-        }
+            Verify(source, nameof(source), rowIndex, nameof(rowIndex));
+            var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
+            var join = Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
 
-        public async Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder,
-            CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            Verify(source, nameof(source), ordinal, nameof(ordinal));
-
-            var statement = BuildUpdateScalarStatement(source, ordinal, columnMappingsBuilder);
-            var result = await DbSession.UpdateAsync(statement, cancellationToken);
-            UpdateOrigin(null, result);
-            return result == 1;
-        }
-
-        public Task<bool> UpdateAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
-            where TSource : Model, new()
-        {
-            return UpdateAsync(source, ordinal, columnMappingsBuilder, CancellationToken.None);
+            return DbUpdate<T>.Create(this, source, rowIndex, columnMappings, join);
         }
 
         public int Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
@@ -97,7 +77,7 @@ namespace DevZest.Data
                 return 0;
 
             if (source.Count == 1)
-                return Update(source, 0, columnMappingsBuilder) ? 1 : 0;
+                throw new NotImplementedException();
 
             return UpdateOrigin(null, DbSession.Update(source, this, columnMappingsBuilder));
         }
@@ -118,7 +98,7 @@ namespace DevZest.Data
                 return 0;
 
             if (source.Count == 1)
-                return await UpdateAsync(source, 0, columnMappingsBuilder, cancellationToken) ? 1 : 0;
+                throw new NotImplementedException();
 
             return UpdateOrigin(null, await DbSession.UpdateAsync(source, this, columnMappingsBuilder, cancellationToken));
         }
@@ -129,21 +109,18 @@ namespace DevZest.Data
             return UpdateAsync(source, columnMappingsBuilder, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder)
+        internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
             where TSource : Model, new()
         {
             Debug.Assert(dataSet != null && dataSet._ != null);
-            var sourceModel = dataSet._;
-            var keyMappings = GetKeyMappings(sourceModel, null);
-            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder, false);
-            return BuildUpdateScalarStatement(dataSet[ordinal], keyMappings, columnMappings);
+            return BuildUpdateScalarStatement(dataSet[ordinal], columnMappings, join);
         }
 
-        private DbSelectStatement BuildUpdateScalarStatement(DataRow dataRow, IReadOnlyList<ColumnMapping> keyMappings, IReadOnlyList<ColumnMapping> columnMappings)
+        private DbSelectStatement BuildUpdateScalarStatement(DataRow dataRow, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
         {
             var paramManager = new ScalarParamManager(dataRow);
             var select = GetScalarMapping(paramManager, columnMappings);
-            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, keyMappings);
+            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, join), FromClause, join);
             return new DbSelectStatement(Model, select, from, null, null, -1, -1);
         }
     }

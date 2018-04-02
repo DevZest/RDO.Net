@@ -111,36 +111,36 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class DbDeleteFromDataRow<TLookup> : DbDelete<T>
-            where TLookup : Model, new()
+        private sealed class DbDeleteFromDataRow<TSource> : DbDelete<T>
+            where TSource : Model, new()
         {
-            public DbDeleteFromDataRow(DbTable<T> from, DataSet<TLookup> lookup, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings)
+            public DbDeleteFromDataRow(DbTable<T> from, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings)
                 : base(from)
             {
-                _lookup = lookup;
+                _source = source;
                 _rowIndex = rowIndex;
                 _columnMappings = columnMappings;
             }
 
-            private readonly DataSet<TLookup> _lookup;
+            private readonly DataSet<TSource> _source;
             private readonly int _rowIndex;
             private readonly IReadOnlyList<ColumnMapping> _columnMappings;
 
             private DbSelectStatement BuildDeleteStatement()
             {
-                return From.BuildDeleteScalarStatement(_lookup, _rowIndex, _columnMappings);
+                return From.BuildDeleteScalarStatement(_source, _rowIndex, _columnMappings);
             }
 
             protected override int PerformExecute()
             {
                 var statement = BuildDeleteStatement();
-                return From.UpdateOrigin<TLookup>(null, DbSession.Delete(statement) > 0) ? 1 : 0;
+                return From.UpdateOrigin<TSource>(null, DbSession.Delete(statement) > 0) ? 1 : 0;
             }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 var statement = BuildDeleteStatement();
-                return From.UpdateOrigin<TLookup>(null, await DbSession.DeleteAsync(statement, ct) > 0) ? 1 : 0;
+                return From.UpdateOrigin<TSource>(null, await DbSession.DeleteAsync(statement, ct) > 0) ? 1 : 0;
             }
         }
 

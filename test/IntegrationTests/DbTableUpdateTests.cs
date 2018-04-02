@@ -53,7 +53,7 @@ namespace DevZest.Data
                 var newModifiedDate = new DateTime(2015, 11, 19);
                 dataSet._.ModifiedDate[0] = newModifiedDate;
 
-                db.ProductCategories.Update(dataSet, 0);
+                db.ProductCategories.Update(dataSet, 0).Execute();
                 Assert.AreEqual(1, db.ProductCategories.Where(x => x.ModifiedDate == newModifiedDate).Count());
             }
         }
@@ -69,7 +69,7 @@ namespace DevZest.Data
                 var newModifiedDate = new DateTime(2015, 11, 19);
                 dataSet._.ModifiedDate[0] = newModifiedDate;
 
-                await db.ProductCategories.UpdateAsync(dataSet, 0);
+                await db.ProductCategories.Update(dataSet, 0).ExecuteAsync();
                 Assert.AreEqual(1, await db.ProductCategories.Where(x => x.ModifiedDate == newModifiedDate).CountAsync());
             }
         }
