@@ -144,32 +144,32 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class DbDeleteFromDataSet<TLookup> : DbDelete<T>
-            where TLookup : Model, new()
+        private sealed class DbDeleteFromDataSet<TSource> : DbDelete<T>
+            where TSource : Model, new()
         {
-            public DbDeleteFromDataSet(DbTable<T> from, DataSet<TLookup> lookup, PrimaryKey keyMappingTarget)
+            public DbDeleteFromDataSet(DbTable<T> from, DataSet<TSource> source, PrimaryKey keyMappingTarget)
                 : base(from)
             {
-                Debug.Assert(lookup.Count != 1);
-                _lookup = lookup;
+                Debug.Assert(source.Count != 1);
+                _source = source;
                 _keyMappingTarget = keyMappingTarget;
             }
 
-            private readonly DataSet<TLookup> _lookup;
+            private readonly DataSet<TSource> _source;
             private readonly PrimaryKey _keyMappingTarget;
 
             protected override int PerformExecute()
             {
-                if (_lookup.Count == 0)
+                if (_source.Count == 0)
                     return 0;
-                return DbSession.Delete(_lookup, From, _keyMappingTarget);
+                return DbSession.Delete(_source, From, _keyMappingTarget);
             }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
-                if (_lookup.Count == 0)
+                if (_source.Count == 0)
                     return 0;
-                return await DbSession.DeleteAsync(_lookup, From, _keyMappingTarget, ct);
+                return await DbSession.DeleteAsync(_source, From, _keyMappingTarget, ct);
             }
         }
     }
