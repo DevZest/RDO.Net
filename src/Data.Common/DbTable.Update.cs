@@ -22,36 +22,28 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, columnMappings, null, whereExpr, null, -1, -1);
         }
 
-        public int Update<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
+        public DbUpdate<T> Update(DbSet<T> source)
+        {
+            return Update(source, ColumnMapper.InferUpdate, KeyMapping.Infer);
+        }
+
+        public DbUpdate<T> Update<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
-
-            var statement = BuildUpdateStatement(source, columnMappingsBuilder);
-            return UpdateOrigin(null, DbSession.Update(statement));
+            var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
+            var keyMapping = Verify(join, nameof(join), source._);
+            return DbUpdate<T>.Create(this, source, columnMappings, keyMapping.GetColumnMappings());
         }
 
-        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, CancellationToken cancellationToken)
+        internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
             where TSource : Model, new()
         {
-            return UpdateAsync(source, null, cancellationToken);
+            Debug.Assert(source != null);
+            return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, join);
         }
 
-        public async Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            Verify(source, nameof(source));
-
-            var statement = BuildUpdateStatement(source, columnMappingsBuilder);
-            return UpdateOrigin(null, await DbSession.UpdateAsync(statement, cancellationToken));
-        }
-
-        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
-            where TSource : Model, new()
-        {
-            return UpdateAsync(source, columnMappingsBuilder, CancellationToken.None);
-        }
-
+        // TODO: This should be deleted.
         internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder)
             where TSource : Model, new()
         {

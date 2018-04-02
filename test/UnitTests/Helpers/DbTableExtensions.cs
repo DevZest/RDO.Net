@@ -157,12 +157,21 @@ namespace DevZest.Data.Helpers
             return result;
         }
 
+        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> dbSet)
+            where T : Model, new()
+        {
+            return MockUpdate(dbTable, rowsAffected, dbSet, ColumnMapper.InferUpdate, KeyMapping.Infer);
+        }
+
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> dbSet,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> join)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var statement = dbTable.BuildUpdateStatement(dbSet, columnMappingsBuilder);
+            dbTable.Verify(dbSet, nameof(dbSet));
+            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), dbSet._);
+            var keyMapping = dbTable.Verify(join, nameof(join), dbSet._).GetColumnMappings();
+            var statement = dbTable.BuildUpdateStatement(dbSet, columnMappings, keyMapping);
             var result = dbTable.SqlSession().GetUpdateCommand(statement);
             dbTable.UpdateOrigin(null, rowsAffected);
             return result;

@@ -18,6 +18,17 @@ namespace DevZest.Data.Primitives
         }
 
         public static DbSelectStatement BuildUpdateStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
+            IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            Check.NotNull(target, nameof(target));
+            Check.NotNull(source, nameof(source));
+
+            return target.BuildUpdateStatement(source, columnMappings, join);
+        }
+
+        public static DbSelectStatement BuildUpdateStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
             where TTarget : Model, new()

@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -64,6 +65,30 @@ namespace DevZest.Data
             return this;
         }
 
+        public ColumnMapper AutoMapInsert()
+        {
+            return AutoMap(_targetModel.GetInsertableColumns());
+        }
+
+        public ColumnMapper AutoMapUpdate()
+        {
+            return AutoMap(_targetModel.GetUpdatableColumns());
+        }
+
+        public ColumnMapper AutoMap(IEnumerable<Column> targetColumns)
+        {
+            var sourceColumns = _sourceModel.Columns;
+            foreach (var targetColumn in targetColumns)
+            {
+                if (targetColumn.IsSystem)
+                    continue;
+                var sourceColumn = sourceColumns.AutoSelect(targetColumn);
+                if (sourceColumn != null)
+                    _result.Add(new ColumnMapping(sourceColumn, targetColumn));
+            }
+            return this;
+        }
+
         private void VerifyTarget(Column targetColumn)
         {
             Check.NotNull(targetColumn, nameof(targetColumn));
@@ -81,6 +106,16 @@ namespace DevZest.Data
                 if (model != _sourceModel)
                     throw new ArgumentException(DiagnosticMessages.ColumnMappingsBuilder_InvalidSourceParentModelSet(model), nameof(sourceColumn));
             }
+        }
+
+        public static void InferInsert<T>(ColumnMapper columnMapper, T source, T target)
+        {
+            columnMapper.AutoMapInsert();
+        }
+
+        public static void InferUpdate<T>(ColumnMapper columnMapper, T source, T target)
+        {
+            columnMapper.AutoMapUpdate();
         }
     }
 }

@@ -7,6 +7,17 @@ namespace DevZest.Data
 {
     public struct KeyMapping
     {
+        public static KeyMapping Infer<T>(T source, T target)
+            where T : Model
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(target, nameof(target));
+
+            var sourceKey = source.PrimaryKey;
+            var targetKey = target.PrimaryKey;
+            return new KeyMapping(sourceKey, targetKey);
+        }
+
         public KeyMapping(PrimaryKey sourceKey, PrimaryKey targetKey)
         {
             Check.NotNull(sourceKey, nameof(sourceKey));
