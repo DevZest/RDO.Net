@@ -20,8 +20,13 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, null, null, whereExpr, null, -1, -1);
         }
 
-        public DbDelete<T> Delete<TLookup>(DbSet<TLookup> source, Func<TLookup, T, KeyMapping> keyMapper)
-            where TLookup : Model, new()
+        public DbDelete<T> Delete(DbSet<T> source)
+        {
+            return Delete(source, KeyMapping.Infer);
+        }
+
+        public DbDelete<T> Delete<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
+            where TSource : Model, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source));
@@ -29,8 +34,13 @@ namespace DevZest.Data
             return DbDelete<T>.Create(this, source, columnMappings);
         }
 
-        public DbDelete<T> Delete<TLookup>(DataSet<TLookup> source, int rowIndex, Func<TLookup, T, KeyMapping> keyMapper)
-            where TLookup : Model, new()
+        public DbDelete<T> Delete(DataSet<T> source, int rowIndex)
+        {
+            return Delete(source, rowIndex, KeyMapping.Infer);
+        }
+
+        public DbDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper)
+            where TSource : Model, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
@@ -38,8 +48,13 @@ namespace DevZest.Data
             return DbDelete<T>.Create(this, source, rowIndex, columnMappings);
         }
 
-        public DbDelete<T> Delete<TLookup>(DataSet<TLookup> source, Func<TLookup, T, KeyMapping> keyMapper)
-            where TLookup : Model, new()
+        public DbDelete<T> Delete(DataSet<T> source)
+        {
+            return Delete(source, KeyMapping.Infer);
+        }
+
+        public DbDelete<T> Delete<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
+            where TSource : Model, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
