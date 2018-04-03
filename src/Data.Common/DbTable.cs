@@ -151,32 +151,6 @@ namespace DevZest.Data
             return childModel.DataSource as DbTable<TChild>;
         }
 
-        private IReadOnlyList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, PrimaryKey> joinOn)
-        {
-            var sourceKey = sourceModel.PrimaryKey;
-            if (sourceKey == null)
-                throw new InvalidOperationException(DiagnosticMessages.DbTable_NoPrimaryKey(sourceModel));
-
-            var targetKey = joinOn == null ? Model.PrimaryKey : joinOn(_);
-            if (targetKey == null)
-                throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
-
-            if (targetKey.GetType() != sourceKey.GetType() || targetKey.Count != sourceKey.Count)
-                throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
-
-            var result = new ColumnMapping[targetKey.Count];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var targetColumn = targetKey[i].Column;
-                var sourceColumn = sourceKey[i].Column;
-                if (targetColumn.DataType != sourceColumn.DataType)
-                    throw new InvalidOperationException(DiagnosticMessages.DbTable_GetKeyMappings_CannotMatch);
-
-                result[i] = new ColumnMapping(sourceColumn, targetColumn);
-            }
-            return result;
-        }
-
         private sealed class ScalarParamManager
         {
             public ScalarParamManager(DataRow dataRow)
@@ -249,12 +223,6 @@ namespace DevZest.Data
                 return whereExpr.DbExpression;
 
             throw new ArgumentException(DiagnosticMessages.DbTable_VerifyWhere, nameof(where));
-        }
-
-        private IReadOnlyList<ColumnMapping> GetColumnMappings<TSource>(TSource sourceModel, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool isInsertable)
-            where TSource : Model, new()
-        {
-            return ColumnMapping.Map(sourceModel, _, columnMappingsBuilder, isInsertable);
         }
 
         internal int UpdateOrigin(DataSource origin, int rowsAffected)
