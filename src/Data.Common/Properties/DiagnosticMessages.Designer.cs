@@ -478,17 +478,17 @@ namespace DevZest.Data
         /// <summary>
         /// The source column derives from invalid model '{model}'.
         /// </summary>
-        public static string ColumnMappingsBuilder_InvalidSourceParentModelSet(object model)
+        public static string ColumnMapper_InvalidSourceParentModelSet(object model)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMappingsBuilder_InvalidSourceParentModelSet", "model"), model);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMapper_InvalidSourceParentModelSet", "model"), model);
         }
 
         /// <summary>
         /// The target column '{targetColumn}' is invalid.
         /// </summary>
-        public static string ColumnMappingsBuilder_InvalidTarget(object targetColumn)
+        public static string ColumnMapper_InvalidTarget(object targetColumn)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMappingsBuilder_InvalidTarget", "targetColumn"), targetColumn);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMapper_InvalidTarget", "targetColumn"), targetColumn);
         }
 
         /// <summary>
@@ -582,17 +582,17 @@ namespace DevZest.Data
         /// <summary>
         /// The source column's data type '{sourceColumnDataType}' is invalid. Data type '{expectedDataType}' required.
         /// </summary>
-        public static string ColumnMappingsBuilder_InvalidSourceDataType(object sourceColumnDataType, object expectedDataType)
+        public static string ColumnMapper_InvalidSourceDataType(object sourceColumnDataType, object expectedDataType)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMappingsBuilder_InvalidSourceDataType", "sourceColumnDataType", "expectedDataType"), sourceColumnDataType, expectedDataType);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMapper_InvalidSourceDataType", "sourceColumnDataType", "expectedDataType"), sourceColumnDataType, expectedDataType);
         }
 
         /// <summary>
         /// No ColumnMapping specified.
         /// </summary>
-        public static string ColumnMappingsBuilder_NoColumnMapping
+        public static string ColumnMapper_EmptyResult
         {
-            get { return GetString("ColumnMappingsBuilder_NoColumnMapping"); }
+            get { return GetString("ColumnMapper_EmptyResult"); }
         }
 
         /// <summary>
@@ -1094,17 +1094,17 @@ namespace DevZest.Data
         /// <summary>
         /// The column data type does not match with PrimaryKey.
         /// </summary>
-        public static string KeyOutput_MapTo_ColumnDataTypeMismatch
+        public static string PrimaryKey_Join_ColumnDataTypeMismatch
         {
-            get { return GetString("KeyOutput_MapTo_ColumnDataTypeMismatch"); }
+            get { return GetString("PrimaryKey_Join_ColumnDataTypeMismatch"); }
         }
 
         /// <summary>
         /// The columns count does not match with PrimaryKey.
         /// </summary>
-        public static string KeyOutput_MapTo_ColumnsCountMismatch
+        public static string PrimaryKey_Join_ColumnsCountMismatch
         {
-            get { return GetString("KeyOutput_MapTo_ColumnsCountMismatch"); }
+            get { return GetString("PrimaryKey_Join_ColumnsCountMismatch"); }
         }
 
         /// <summary>
@@ -1121,6 +1121,14 @@ namespace DevZest.Data
         public static string DbTable_EmptyColumnMapperResult
         {
             get { return GetString("DbTable_EmptyColumnMapperResult"); }
+        }
+
+        /// <summary>
+        /// The argument '{argumentName}' cannot be null or empty.
+        /// </summary>
+        public static string ArgumentIsNullOrEmptyList(object argumentName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ArgumentIsNullOrEmptyList", "argumentName"), argumentName);
         }
 
         private static string GetString(string name, params string[] formatterNames)

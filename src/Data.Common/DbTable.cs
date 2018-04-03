@@ -323,5 +323,20 @@ namespace DevZest.Data
                 throw new ArgumentException(DiagnosticMessages.DbTable_EmptyColumnMapperResult, paramName);
             return result;
         }
+
+        internal void Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, string paramName)
+            where TSource : Model, new()
+        {
+            Check.NotNull(mapper, paramName);
+        }
+
+        private IReadOnlyList<ColumnMapping> Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, TSource source)
+            where TSource : Model, new()
+        {
+            var result = new ColumnMapper(source, _).Build(x => mapper(x, source, _));
+            if (result == null || result.Count == 0)
+                throw new InvalidOperationException(DiagnosticMessages.DbTable_EmptyColumnMapperResult);
+            return result;
+        }
     }
 }

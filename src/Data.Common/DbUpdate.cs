@@ -142,5 +142,42 @@ namespace DevZest.Data
                 return Target.UpdateOrigin<TSource>(null, await DbSession.UpdateAsync(statement, ct) > 0) ? 1 : 0;
             }
         }
+
+        internal static DbUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
+            where TSource : Model, new()
+        {
+            return new DbUpdateFromDataSet<TSource>(target, source, columnMapper, joinTo);
+        }
+
+        private sealed class DbUpdateFromDataSet<TSource> : DbUpdate<T>
+            where TSource : Model, new()
+        {
+            public DbUpdateFromDataSet(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
+                : base(target)
+            {
+                Debug.Assert(source.Count != 1);
+                _source = source;
+                _columnMapper = columnMapper;
+                _joinTo = joinTo;
+            }
+
+            private readonly DataSet<TSource> _source;
+            private readonly Action<ColumnMapper, TSource, T> _columnMapper;
+            private readonly PrimaryKey _joinTo;
+
+            protected override int PerformExecute()
+            {
+                if (_source.Count == 0)
+                    return 0;
+                return DbSession.Update(_source, Target, _columnMapper, _joinTo);
+            }
+
+            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
+            {
+                if (_source.Count == 0)
+                    return 0;
+                return await DbSession.UpdateAsync(_source, Target, _columnMapper, _joinTo, ct);
+            }
+        }
     }
 }

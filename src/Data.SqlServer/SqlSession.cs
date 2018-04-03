@@ -365,26 +365,26 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Update(this, statement).CreateCommand(GetConnection());
         }
 
-        protected sealed override int Update<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder)
+        protected sealed override int Update<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo)
         {
-            var command = BuildUpdateCommand(source, target, columnMappingsBuilder);
+            var command = BuildUpdateCommand(source, target, columnMapper, joinTo);
             return ExecuteNonQuery(command);
         }
 
         protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, CancellationToken cancellationToken)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, CancellationToken ct)
         {
-            var command = BuildUpdateCommand(source, target, columnMappingsBuilder);
-            return ExecuteNonQueryAsync(command, cancellationToken);
+            var command = BuildUpdateCommand(source, target, columnMapper, joinTo);
+            return ExecuteNonQueryAsync(command, ct);
         }
 
-        internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder)
+        internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var statement = target.BuildUpdateStatement(BuildImportQuery(source), columnMappingsBuilder);
+            var import = BuildImportQuery(source);
+            var join = import._.PrimaryKey.Join(joinTo);
+            var statement = target.BuildUpdateStatement(import, columnMapper, join);
             return GetUpdateCommand(statement);
         }
 
@@ -410,7 +410,7 @@ namespace DevZest.Data.SqlServer
             where TTarget : Model, new()
         {
             var keys = BuildImportKeyQuery(source);
-            var columnMappings = keys._.MapTo(joinTo);
+            var columnMappings = keys._.PrimaryKey.Join(joinTo);
             var statement = target.BuildDeleteStatement(keys, columnMappings);
             return GetDeleteCommand(statement);
         }

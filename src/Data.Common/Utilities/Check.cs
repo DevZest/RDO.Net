@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Utilities
 {
@@ -27,6 +28,15 @@ namespace DevZest.Data.Utilities
             if (reference == null)
                 throw new ArgumentNullException(String.Format("{0}[{1}]", paramName, index));
             return reference;
+        }
+
+        internal static IReadOnlyList<T> NotEmpty<T>(IReadOnlyList<T> list, string parameterName)
+        {
+            Check.NotNull(list, nameof(list));
+            if (list.Count == 0)
+                throw new ArgumentException(DiagnosticMessages.ArgumentIsNullOrWhitespace(parameterName), parameterName);
+
+            return list;
         }
     }
 }

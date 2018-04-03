@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections;
 using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 
 namespace DevZest.Data
 {
@@ -190,16 +191,19 @@ namespace DevZest.Data
             return _columns.GetEnumerator();
         }
 
-        internal IReadOnlyList<ColumnMapping> Join(PrimaryKey target)
+        public IReadOnlyList<ColumnMapping> Join(PrimaryKey target)
         {
-            Debug.Assert(target != null);
-            Debug.Assert(Count == target.Count);
+            Check.NotNull(target, nameof(target));
+            if (Count != target.Count)
+                throw new ArgumentException(DiagnosticMessages.PrimaryKey_Join_ColumnsCountMismatch, nameof(target));
 
             var result = new ColumnMapping[Count];
             for (int i = 0; i < Count; i++)
             {
                 var sourceColumn = this[i].Column;
                 var targetColumn = target[i].Column;
+                if (sourceColumn.DataType != targetColumn.DataType)
+                    throw new ArgumentException(DiagnosticMessages.PrimaryKey_Join_ColumnDataTypeMismatch, string.Format("{0}[{1}]", nameof(target), i));
                 result[i] = new ColumnMapping(sourceColumn, targetColumn);
             }
 

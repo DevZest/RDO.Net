@@ -27,7 +27,7 @@ namespace DevZest.Data
 
             buildAction(this);
             if (_result.Count == 0)
-                throw new InvalidOperationException(DiagnosticMessages.ColumnMappingsBuilder_NoColumnMapping);
+                throw new InvalidOperationException(DiagnosticMessages.ColumnMapper_EmptyResult);
             return _result;
         }
 
@@ -39,8 +39,8 @@ namespace DevZest.Data
         /// <overloads>Build the <see cref="ColumnMapping"/>.</overloads>
         public ColumnMapper Map<T>(Column<T> sourceColumn, Column<T> targetColumn)
         {
-            VerifySource(sourceColumn);
-            VerifyTarget(targetColumn);
+            VerifySource(sourceColumn, nameof(sourceColumn));
+            VerifyTarget(targetColumn, nameof(targetColumn));
             _result.Add(ColumnMapping.Map(sourceColumn, targetColumn));
             return this;
         }
@@ -57,9 +57,9 @@ namespace DevZest.Data
                 throw new ArgumentOutOfRangeException(nameof(targetColumnOrdinal));
 
             var targetColumn = targetColumns[targetColumnOrdinal];
-            VerifySource(sourceColumn);
+            VerifySource(sourceColumn, nameof(sourceColumn));
             if (sourceColumn.DataType != targetColumn.DataType)
-                throw new ArgumentException(DiagnosticMessages.ColumnMappingsBuilder_InvalidSourceDataType(sourceColumn.DataType, targetColumn.DataType), nameof(sourceColumn));
+                throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidSourceDataType(sourceColumn.DataType, targetColumn.DataType), nameof(sourceColumn));
 
             _result.Add(new ColumnMapping(sourceColumn, targetColumn));
             return this;
@@ -89,22 +89,22 @@ namespace DevZest.Data
             return this;
         }
 
-        private void VerifyTarget(Column targetColumn)
+        private void VerifyTarget(Column targetColumn, string paramName)
         {
-            Check.NotNull(targetColumn, nameof(targetColumn));
+            Check.NotNull(targetColumn, paramName);
             if (targetColumn.ParentModel != _targetModel)
-                throw new ArgumentException(DiagnosticMessages.ColumnMappingsBuilder_InvalidTarget(targetColumn), nameof(targetColumn));
+                throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidTarget(targetColumn), paramName);
         }
 
-        private void VerifySource(Column sourceColumn)
+        private void VerifySource(Column sourceColumn, string paramName)
         {
-            Check.NotNull(sourceColumn, nameof(sourceColumn));
+            Check.NotNull(sourceColumn, paramName);
 
             var sourceModels = sourceColumn.ScalarSourceModels;
             foreach (var model in sourceModels)
             {
                 if (model != _sourceModel)
-                    throw new ArgumentException(DiagnosticMessages.ColumnMappingsBuilder_InvalidSourceParentModelSet(model), nameof(sourceColumn));
+                    throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidSourceParentModelSet(model), paramName);
             }
         }
 

@@ -43,14 +43,13 @@ namespace DevZest.Data
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, join);
         }
 
-        // TODO: This should be deleted.
-        internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder)
+        internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, IReadOnlyList<ColumnMapping> join)
             where TSource : Model, new()
         {
             Debug.Assert(source != null);
-            var keyMappings = GetKeyMappings(source._, null);
-            var columnMappings = GetColumnMappings(source._, columnMappingsBuilder, false);
-            return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, keyMappings);
+            Debug.Assert(columnMapper != null);
+            var columnMappings = Verify(columnMapper, source._);
+            return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, join);
         }
 
         public DbUpdate<T> Update(DataSet<T> source, int rowIndex)
@@ -68,45 +67,21 @@ namespace DevZest.Data
             return DbUpdate<T>.Create(this, source, rowIndex, columnMappings, join);
         }
 
-        public int Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
+        public DbUpdate<T> Update(DataSet<T> source)
+        {
+            return Update(source, ColumnMapper.InferUpdate, KeyMapping.Infer);
+        }
+
+        public DbUpdate<T> Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
-
-            if (source.Count == 0)
-                return 0;
-
             if (source.Count == 1)
-                throw new NotImplementedException();
+                return Update(source, 0, columnMapper, joinMapper);
 
-            return UpdateOrigin(null, DbSession.Update(source, this, columnMappingsBuilder));
-        }
-
-        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            return UpdateAsync(source, null, cancellationToken);
-        }
-
-
-        public async Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            Verify(source, nameof(source));
-
-            if (source.Count == 0)
-                return 0;
-
-            if (source.Count == 1)
-                throw new NotImplementedException();
-
-            return UpdateOrigin(null, await DbSession.UpdateAsync(source, this, columnMappingsBuilder, cancellationToken));
-        }
-
-        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null)
-            where TSource : Model, new()
-        {
-            return UpdateAsync(source, columnMappingsBuilder, CancellationToken.None);
+            Verify(columnMapper, nameof(columnMapper));
+            var joinTo = Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
+            return DbUpdate<T>.Create(this, source, columnMapper, joinTo);
         }
 
         internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)

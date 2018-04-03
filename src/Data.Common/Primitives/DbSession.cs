@@ -275,22 +275,23 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        protected internal virtual int Update<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
+        protected internal virtual int Update<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = Import(sourceData);
-            return Update(targetTable.BuildUpdateStatement(tempTable, columnMappingsBuilder));
+            var import = Import(source);
+            var join = import._.PrimaryKey.Join(joinTo);
+            return Update(target.BuildUpdateStatement(import, columnMapper, join));
         }
 
-        protected internal virtual async Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, CancellationToken cancellationToken)
+        protected internal virtual async Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, CancellationToken ct)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = await ImportAsync(sourceData, cancellationToken);
-            return await UpdateAsync(targetTable.BuildUpdateStatement(tempTable, columnMappingsBuilder), cancellationToken);
+            var import = await ImportAsync(source, ct);
+            var join = import._.PrimaryKey.Join(joinTo);
+            return await UpdateAsync(target.BuildUpdateStatement(import, columnMapper, join), ct);
         }
 
         internal abstract int Delete(DbSelectStatement statement);
@@ -302,7 +303,7 @@ namespace DevZest.Data.Primitives
             where TTarget : Model, new()
         {
             var keys = ImportKey(source);
-            var columnMappings = keys._.MapTo(joinTo);
+            var columnMappings = keys._.PrimaryKey.Join(joinTo);
             return Delete(target.BuildDeleteStatement(keys, columnMappings));
         }
 
@@ -311,7 +312,7 @@ namespace DevZest.Data.Primitives
             where TTarget : Model, new()
         {
             var keys = await ImportKeyAsync(source, ct);
-            var columnMappings = keys._.MapTo(joinTo);
+            var columnMappings = keys._.PrimaryKey.Join(joinTo);
             return await DeleteAsync(target.BuildDeleteStatement(keys, columnMappings), ct);
         }
 

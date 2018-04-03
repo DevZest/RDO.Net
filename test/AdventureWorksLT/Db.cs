@@ -209,7 +209,7 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrders.UpdateAsync(salesOrders, ct);
+            await SalesOrders.Update(salesOrders).ExecuteAsync(ct);
             await SalesOrderDetails.Delete(salesOrders, (s, _) => s.MapTo(_.SalesOrder)).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();

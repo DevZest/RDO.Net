@@ -20,23 +20,23 @@ namespace DevZest.Data
             return new ColumnMapping(source, target);
         }
 
-        public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource sourceModel, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool isInsertable)
+        public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource sourceModel, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMapper, bool isInsertable)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             Check.NotNull(targetModel, nameof(targetModel));
             Check.NotNull(sourceModel, nameof(sourceModel));
 
-            if (columnMappingsBuilder == null)
+            if (columnMapper == null)
                 return GetColumnMappings(sourceModel, targetModel, isInsertable);
 
-            var result = new ColumnMapper(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
+            var result = new ColumnMapper(sourceModel, targetModel).Build(builder => columnMapper(builder, sourceModel, targetModel));
             var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
             var targetModelIds = new HashSet<ColumnId>(columns.Select(x => x.ModelId));
             foreach (var resultItem in result)
             {
                 if (!targetModelIds.Contains(resultItem.Target.ModelId))
-                    throw new InvalidOperationException(DiagnosticMessages.ColumnMappingsBuilder_InvalidTarget(resultItem.Target));
+                    throw new InvalidOperationException(DiagnosticMessages.ColumnMapper_InvalidTarget(resultItem.Target));
             }
 
             return result;

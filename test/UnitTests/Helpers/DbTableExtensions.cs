@@ -198,8 +198,14 @@ namespace DevZest.Data.Helpers
             return result;
         }
 
+        internal static SqlCommand MockUpdate<TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TTarget> source)
+            where TTarget : Model, new()
+        {
+            return MockUpdate(dbTable, rowsAffected, source, ColumnMapper.InferUpdate, KeyMapping.Infer);
+        }
+
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder = null)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -211,11 +217,12 @@ namespace DevZest.Data.Helpers
             if (source.Count == 1)
             {
                 Debug.Assert(rowsAffected == 1 || rowsAffected == 0);
-                throw new NotImplementedException();
+                MockUpdate(dbTable, rowsAffected > 0, source, 0, columnMapper, joinMapper);
             }
 
             dbTable.UpdateOrigin(null, rowsAffected);
-            return dbTable.SqlSession().BuildUpdateCommand(source, dbTable, columnMappingsBuilder);
+            var joinTo = dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
+            return dbTable.SqlSession().BuildUpdateCommand(source, dbTable, columnMapper, joinTo);
         }
 
         internal static SqlCommand MockDelete<T>(this DbTable<T> dbTable, int rowsAffected, Func<T, _Boolean> where)

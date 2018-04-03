@@ -16,22 +16,22 @@ namespace DevZest.Data
             return new DbDeleteWhere(from, where);
         }
 
-        internal static DbDelete<T> Create<TLookup>(DbTable<T> from, DbSet<TLookup> lookup, IReadOnlyList<ColumnMapping> columnMappings)
-            where TLookup : Model, new()
+        internal static DbDelete<T> Create<TSource>(DbTable<T> from, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)
+            where TSource : Model, new()
         {
-            return new DbDeleteFromDbSet<TLookup>(from, lookup, columnMappings);
+            return new DbDeleteFromDbSet<TSource>(from, source, columnMappings);
         }
 
-        internal static DbDelete<T> Create<TLookup>(DbTable<T> from, DataSet<TLookup> lookup, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings)
-            where TLookup : Model, new()
+        internal static DbDelete<T> Create<TSource>(DbTable<T> from, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings)
+            where TSource : Model, new()
         {
-            return new DbDeleteFromDataRow<TLookup>(from, lookup, rowIndex, columnMappings);
+            return new DbDeleteFromDataRow<TSource>(from, source, rowIndex, columnMappings);
         }
 
-        internal static DbDelete<T> Create<TLookup>(DbTable<T> from, DataSet<TLookup> lookup, PrimaryKey keyMappingTarget)
-            where TLookup : Model, new()
+        internal static DbDelete<T> Create<TSource>(DbTable<T> from, DataSet<TSource> source, PrimaryKey joinTo)
+            where TSource : Model, new()
         {
-            return new DbDeleteFromDataSet<TLookup>(from, lookup, keyMappingTarget);
+            return new DbDeleteFromDataSet<TSource>(from, source, joinTo);
         }
 
         protected DbDelete(DbTable<T> from)
@@ -147,29 +147,29 @@ namespace DevZest.Data
         private sealed class DbDeleteFromDataSet<TSource> : DbDelete<T>
             where TSource : Model, new()
         {
-            public DbDeleteFromDataSet(DbTable<T> from, DataSet<TSource> source, PrimaryKey keyMappingTarget)
+            public DbDeleteFromDataSet(DbTable<T> from, DataSet<TSource> source, PrimaryKey joinTo)
                 : base(from)
             {
                 Debug.Assert(source.Count != 1);
                 _source = source;
-                _keyMappingTarget = keyMappingTarget;
+                _joinTo = joinTo;
             }
 
             private readonly DataSet<TSource> _source;
-            private readonly PrimaryKey _keyMappingTarget;
+            private readonly PrimaryKey _joinTo;
 
             protected override int PerformExecute()
             {
                 if (_source.Count == 0)
                     return 0;
-                return DbSession.Delete(_source, From, _keyMappingTarget);
+                return DbSession.Delete(_source, From, _joinTo);
             }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 if (_source.Count == 0)
                     return 0;
-                return await DbSession.DeleteAsync(_source, From, _keyMappingTarget, ct);
+                return await DbSession.DeleteAsync(_source, From, _joinTo, ct);
             }
         }
     }

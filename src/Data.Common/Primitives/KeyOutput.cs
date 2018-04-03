@@ -64,43 +64,5 @@ namespace DevZest.Data.Primitives
                 builder.Map(sourceColumn, i);
             }
         }
-
-        public IReadOnlyList<ColumnMapping> MapTo(PrimaryKey key)
-        {
-            Check.NotNull(key, nameof(key));
-
-            var sourceKey = PrimaryKey;
-            if (sourceKey.Count != key.Count)
-                throw new ArgumentException(DiagnosticMessages.KeyOutput_MapTo_ColumnsCountMismatch, nameof(key));
-            var result = new ColumnMapping[key.Count];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var sourceColumn = sourceKey[i].Column;
-                var targetColumn = key[i].Column;
-                if (sourceColumn.DataType != targetColumn.DataType)
-                    throw new ArgumentException(DiagnosticMessages.KeyOutput_MapTo_ColumnDataTypeMismatch, string.Format("{0}[{1}]", nameof(key), i));
-                result[i] = new ColumnMapping(sourceColumn, targetColumn);
-            }
-            return result;
-        }
-
-        public IReadOnlyList<ColumnMapping> MapTo(IReadOnlyList<Column> targetColumns)
-        {
-            Check.NotNull(targetColumns, nameof(targetColumns));
-            var sourceKey = PrimaryKey;
-            if (sourceKey.Count != targetColumns.Count)
-                throw new ArgumentException(DiagnosticMessages.KeyOutput_MapTo_ColumnsCountMismatch, nameof(targetColumns));
-
-            var result = new ColumnMapping[targetColumns.Count];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var sourceColumn = sourceKey[i].Column;
-                var targetColumn = targetColumns[i];
-                if (sourceColumn.DataType != targetColumn.DataType)
-                    throw new ArgumentException(DiagnosticMessages.KeyOutput_MapTo_ColumnDataTypeMismatch, string.Format("{0}[{1}]", nameof(targetColumns), i));
-                result[i] = new ColumnMapping(sourceColumn, targetColumn);
-            }
-            return result;
-        }
     }
 }

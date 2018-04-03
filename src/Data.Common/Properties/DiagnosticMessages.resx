@@ -291,10 +291,10 @@
   <data name="JsonParser_InvalidTokenKind" xml:space="preserve">
     <value>Current token kind "{tokenKind}" is invalid. Expected token kind: {expectedTokenKind}.</value>
   </data>
-  <data name="ColumnMappingsBuilder_InvalidSourceParentModelSet" xml:space="preserve">
+  <data name="ColumnMapper_InvalidSourceParentModelSet" xml:space="preserve">
     <value>The source column derives from invalid model '{model}'.</value>
   </data>
-  <data name="ColumnMappingsBuilder_InvalidTarget" xml:space="preserve">
+  <data name="ColumnMapper_InvalidTarget" xml:space="preserve">
     <value>The target column '{targetColumn}' is invalid.</value>
   </data>
   <data name="DbTable_GetKeyMappings_CannotMatch" xml:space="preserve">
@@ -330,10 +330,10 @@
   <data name="DbTable_NoPrimaryKey" xml:space="preserve">
     <value>The operation requires a primary key of model '{model}'.</value>
   </data>
-  <data name="ColumnMappingsBuilder_InvalidSourceDataType" xml:space="preserve">
+  <data name="ColumnMapper_InvalidSourceDataType" xml:space="preserve">
     <value>The source column's data type '{sourceColumnDataType}' is invalid. Data type '{expectedDataType}' required.</value>
   </data>
-  <data name="ColumnMappingsBuilder_NoColumnMapping" xml:space="preserve">
+  <data name="ColumnMapper_EmptyResult" xml:space="preserve">
     <value>No ColumnMapping specified.</value>
   </data>
   <data name="DataSet_InvalidNewDataRow" xml:space="preserve">
@@ -522,10 +522,10 @@
   <data name="DbTable_InvalidReturnedKeyMapping" xml:space="preserve">
     <value>The returned KeyMapping result is invalid, it must be primary key mappings between the source model and this table.</value>
   </data>
-  <data name="KeyOutput_MapTo_ColumnDataTypeMismatch" xml:space="preserve">
+  <data name="PrimaryKey_Join_ColumnDataTypeMismatch" xml:space="preserve">
     <value>The column data type does not match with PrimaryKey.</value>
   </data>
-  <data name="KeyOutput_MapTo_ColumnsCountMismatch" xml:space="preserve">
+  <data name="PrimaryKey_Join_ColumnsCountMismatch" xml:space="preserve">
     <value>The columns count does not match with PrimaryKey.</value>
   </data>
   <data name="KeyMapping_SourceTargetTypeMismatch" xml:space="preserve">
@@ -533,5 +533,8 @@
   </data>
   <data name="DbTable_EmptyColumnMapperResult" xml:space="preserve">
     <value>The result returned by ColumnMapper is empty.</value>
+  </data>
+  <data name="ArgumentIsNullOrEmptyList" xml:space="preserve">
+    <value>The argument '{argumentName}' cannot be null or empty.</value>
   </data>
 </root>

@@ -65,7 +65,7 @@ namespace DevZest.Data.Primitives
         {
             Check.NotNull(model, nameof(model));
 
-            IDbTable dbTable = (IDbTable)model.DataSource;
+            IDbTable dbTable = model.DataSource as IDbTable;
             bool isTempTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTempTable;
             bool isTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTable;
             var identity = dbTable == null ? null : model.GetIdentity(isTempTable);
