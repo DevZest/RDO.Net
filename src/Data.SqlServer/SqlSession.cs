@@ -197,7 +197,7 @@ namespace DevZest.Data.SqlServer
         internal SqlCommand BuildImportCommand<T>(DataSet<T> source, DbTable<T> target)
             where T : Model, new()
         {
-            var statement = target.BuildInsertStatement(BuildImportQuery(source));
+            var statement = target.BuildInsertStatement(BuildImportQuery(source), Data.ColumnMapper.InferInsert);
             return GetInsertCommand(statement);
         }
 
@@ -216,7 +216,7 @@ namespace DevZest.Data.SqlServer
         internal SqlCommand BuildImportKeyCommand<T>(DataSet<T> source, DbTable<KeyOutput> target)
             where T : Model, new()
         {
-            var statement = target.BuildInsertStatement(BuildImportKeyQuery(source));
+            var statement = target.BuildInsertStatement(BuildImportKeyQuery(source), Data.ColumnMapper.InferInsert);
             return GetInsertCommand(statement);
         }
 
@@ -226,65 +226,69 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override int Insert<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings)
         {
             if (identityMappings == null)
             {
-                var command = BuildInsertCommand(source, target, columnMappingsBuilder, autoJoin);
+                var command = BuildInsertCommand(source, target, columnMapper, joinTo);
                 return ExecuteNonQuery(command);
             }
 
-            return base.Insert(source, target, columnMappingsBuilder, autoJoin, identityMappings);
+            return base.Insert(source, target, columnMapper, joinTo, identityMappings);
         }
 
         protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin,
-            DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings, CancellationToken ct)
         {
             if (identityMappings == null)
             {
-                var command = BuildInsertCommand(source, target, columnMappingsBuilder, autoJoin);
-                return ExecuteNonQueryAsync(command, cancellationToken);
+                var command = BuildInsertCommand(source, target, columnMapper, joinTo);
+                return ExecuteNonQueryAsync(command, ct);
             }
 
-            return base.InsertAsync(source, target, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
+            return base.InsertAsync(source, target, columnMapper, joinTo, identityMappings, ct);
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo = null)
             where TSource : Model, new()
             where TTarget : Model, new()
 
         {
-            var statement = target.BuildInsertStatement(BuildImportQuery(source), columnMappingsBuilder, autoJoin);
+            var import = BuildImportQuery(source);
+            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import._.PrimaryKey.Join(joinTo);
+            var statement = target.BuildInsertStatement(import, columnMapper, join);
             return GetInsertCommand(statement);
         }
 
         protected sealed override int Insert<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings)
         {
-            var statement = target.BuildInsertStatement(source, columnMappingsBuilder, autoJoin);
+            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source._.PrimaryKey.Join(joinTo);
+            var statement = target.BuildInsertStatement(source, columnMapper, join);
             if (identityMappings == null)
                 return ExecuteNonQuery(GetInsertCommand(statement));
 
             var identityOutput = CreateTempTable<IdentityOutput>();
             var result = ExecuteNonQuery(GetInsertCommand(statement, identityOutput));
-            ExecuteNonQuery(GetInsertIntoIdentityMappingsCommand(source, identityMappings, autoJoin ? target : null));
+            ExecuteNonQuery(GetInsertIntoIdentityMappingsCommand(source, identityMappings, joinTo != null ? target : null));
             ExecuteNonQuery(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput));
             return result;
         }
 
-        protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+        protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
+            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings, CancellationToken ct)
         {
-            var statement = targetTable.BuildInsertStatement(sourceData, columnMappingsBuilder, autoJoin);
+            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source._.PrimaryKey.Join(joinTo);
+            var statement = target.BuildInsertStatement(source, columnMapper, join);
             if (identityMappings == null)
-                return await ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
+                return await ExecuteNonQueryAsync(GetInsertCommand(statement), ct);
 
             Action<IdentityOutput> action = null;
-            var identityOutput = await CreateTempTableAsync<IdentityOutput>(null, action, cancellationToken);
-            var result = await ExecuteNonQueryAsync(GetInsertCommand(statement, identityOutput), cancellationToken);
-            await ExecuteNonQueryAsync(GetInsertIntoIdentityMappingsCommand(sourceData, identityMappings, autoJoin ? targetTable : null), cancellationToken);
-            await ExecuteNonQueryAsync(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput), cancellationToken);
+            var identityOutput = await CreateTempTableAsync<IdentityOutput>(null, action, ct);
+            var result = await ExecuteNonQueryAsync(GetInsertCommand(statement, identityOutput), ct);
+            await ExecuteNonQueryAsync(GetInsertIntoIdentityMappingsCommand(source, identityMappings, joinTo != null ? target : null), ct);
+            await ExecuteNonQueryAsync(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput), ct);
             return result;
         }
 

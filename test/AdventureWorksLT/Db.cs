@@ -213,7 +213,7 @@ namespace DevZest.Samples.AdventureWorksLT
             await SalesOrderDetails.Delete(salesOrders, (s, _) => s.MapTo(_.SalesOrder)).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetails.InsertAsync(salesOrderDetails, null, false, false, ct);
+            await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
         }
 
         public Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
@@ -224,10 +224,10 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrders.InsertAsync(salesOrders, null, false, true, ct);
+            await SalesOrders.Insert(salesOrders, updateIdentity: true).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetails.InsertAsync(salesOrderDetails, null, false, false, ct);
+            await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
         }
     }
 }

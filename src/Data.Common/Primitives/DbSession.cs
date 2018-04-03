@@ -2,6 +2,7 @@
 using DevZest.Data.Utilities;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
@@ -244,30 +245,30 @@ namespace DevZest.Data.Primitives
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
 
         protected internal virtual int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var tempTable = Import(sourceData);
-            return Insert(tempTable, targetTable, columnMappingsBuilder, autoJoin, identityMappings);
+            return Insert(tempTable, targetTable, columnMapper, joinTo, identityMappings);
         }
 
         protected internal virtual async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var tempTable = await ImportAsync(sourceData, cancellationToken);
-            return await InsertAsync(tempTable, targetTable, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
+            return await InsertAsync(tempTable, targetTable, columnMapper, joinTo, identityMappings, cancellationToken);
         }
 
         protected internal abstract int Insert<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            Action<ColumnMapper, TSource, TTarget> columnMappings, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings)
             where TSource : Model, new()
             where TTarget : Model, new();
 
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new();
 

@@ -39,7 +39,7 @@ namespace DevZest.Data
                 foreach (var dataSet in dataSets)
                 {
                     if (dataSet != null)
-                        dbTable.Insert(dataSet);
+                        dbTable.Insert(dataSet).Execute();
                 }
             });
         }

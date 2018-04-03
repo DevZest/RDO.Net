@@ -2,61 +2,47 @@
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public int Insert<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
+        private static Func<T, T, KeyMapping> GetJoinMapper(bool skipExisting)
+        {
+            if (skipExisting)
+                return KeyMapping.Infer;
+            else
+                return null;
+        }
+
+        public DbTableInsert<T> Insert(DbQuery<T> source, bool skipExisting = false)
+        {
+            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper(skipExisting));
+        }
+
+        public DbTableInsert<T> Insert<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper = null)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
-            return UpdateOrigin(source, DbSession.Insert(BuildInsertStatement(source, columnMappingsBuilder, autoJoin)));
+            var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
+            IReadOnlyList<ColumnMapping> join = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
+            return DbTableInsert<T>.Create(this, source, columnMappings, join);
         }
 
-        public async Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
+        public DbTableInsert<T> Insert(DbTable<T> source, bool skipExisting = false, bool updateIdentity = false)
+        {
+            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper(skipExisting), updateIdentity);
+        }
+
+        public DbTableInsert<T> Insert<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper = null, bool updateIdentity = false)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
-            return UpdateOrigin(source, await DbSession.InsertAsync(BuildInsertStatement(source, columnMappingsBuilder, autoJoin), cancellationToken));
-        }
-
-        public Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
-            where TSource : Model, new()
-        {
-            return InsertAsync(source, columnMappingsBuilder, autoJoin, CancellationToken.None);
-        }
-
-        public int Insert<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
-            where TSource : Model, new()
-        {
-            Verify(source, nameof(source));
+            Verify(columnMapper, nameof(columnMapper));
+            PrimaryKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-
-            var result = InsertTable(source, columnMappingsBuilder, autoJoin, updateIdentity);
-            UpdateIdentity(source, result);
-            return UpdateOrigin(source, result.RowCount);
-        }
-
-        public async Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            Verify(source, nameof(source));
-            VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-
-            var result = await InsertTableAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
-            await UpdateIdentityAsync(source, result, cancellationToken);
-            return UpdateOrigin(source, result.RowCount);
-        }
-
-        public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
-            where TSource : Model, new()
-        {
-            return InsertAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, CancellationToken.None);
+            return DbTableInsert<T>.Create(this, source, columnMapper, joinTo, updateIdentity);
         }
 
         internal void VerifyUpdateIdentity(bool updateIdentity, string paramName)
@@ -68,43 +54,11 @@ namespace DevZest.Data
                 throw new ArgumentException(DiagnosticMessages.DbTable_VerifyUpdateIdentity, paramName);
         }
 
-        private struct InsertTableResult
-        {
-            public InsertTableResult(int rowCount, DbTable<IdentityMapping> identityMappings)
-            {
-                RowCount = rowCount;
-                IdentityMappings = identityMappings;
-            }
-
-            public readonly int RowCount;
-
-            public readonly DbTable<IdentityMapping> IdentityMappings;
-        }
-
-        private InsertTableResult InsertTable<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
-            where TSource : Model, new()
-        {
-            var identityMappings = updateIdentity ? DbSession.CreateTempTable<IdentityMapping>() : null;
-            var rowCount = DbSession.Insert(source, this, columnMappingsBuilder, autoJoin, identityMappings);
-            return new InsertTableResult(rowCount, identityMappings);
-        }
-
-        private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            Action<IdentityMapping> initializer = null;
-            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
-            var rowCount = await DbSession.InsertAsync(source, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
-            return new InsertTableResult(rowCount, identityMappings);
-        }
-
-        internal DbSelectStatement BuildInsertStatement<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin)
+        internal DbSelectStatement BuildInsertStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
             where TSource : Model, new()
         {
             var sourceModel = source._;
-            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder, true);
-            var keyMappings = autoJoin ? GetKeyMappings(sourceModel, null) : null;
-            return source.QueryStatement.BuildInsertStatement(Model, columnMappings, keyMappings, ShouldJoinParent(source));
+            return source.QueryStatement.BuildInsertStatement(Model, columnMappings, join, ShouldJoinParent(source));
         }
 
         private bool ShouldJoinParent(DataSource sourceData)
@@ -128,95 +82,47 @@ namespace DevZest.Data
             return parentModel.DataSource.UltimateOriginalDataSource != parentDataSource.UltimateOriginalDataSource;
         }
 
-        public int Insert<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+        public DbTableInsert<T> Insert(DataSet<T> source, bool skipExisting = false, bool updateIdentity = false)
+        {
+            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper(skipExisting), updateIdentity);
+        }
+
+        public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity = false)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
+            if (source.Count == 1)
+                return Insert(source, 0, columnMapper, joinMapper, updateIdentity);
+
+            Verify(columnMapper, nameof(columnMapper));
+            PrimaryKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            if (source.Count == 0)
-                return 0;
-
-            if (source.Count == 1)
-                return Insert(source, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
-
-            var result = InsertDataSet(source, columnMappingsBuilder, autoJoin, updateIdentity);
-            UpdateIdentity(source, result);
-            return UpdateOrigin(source, result.RowCount);
+            return DbTableInsert<T>.Create(this, source, columnMapper, joinTo, updateIdentity);
         }
 
-        public async Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : Model, new()
+        public DbTableInsert<T> Insert(DataSet<T> source, int ordinal, bool skipExisting = false, bool updateIdentity = false)
         {
-            Verify(source, nameof(source));
-            VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-
-            if (source.Count == 0)
-                return 0;
-
-            if (source.Count == 1)
-                return await InsertAsync(source, 0, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken) ? 1 : 0;
-
-            var result = await InsertDataSetAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
-            UpdateIdentity(source, result);
-            return UpdateOrigin(source, result.RowCount);
+            return Insert(source, ordinal, ColumnMapper.InferInsert, GetJoinMapper(skipExisting), updateIdentity);
         }
 
-        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
-            where TSource : Model, new()
-        {
-            return InsertAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, CancellationToken.None);
-        }
-
-        private InsertTableResult InsertDataSet<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
-            where TSource : Model, new()
-        {
-            var identityMappings = updateIdentity ? DbSession.CreateTempTable<IdentityMapping>() : null;
-            var rowCount = DbSession.Insert(source, this, columnMappingsBuilder, autoJoin, identityMappings);
-            return new InsertTableResult(rowCount, identityMappings);
-        }
-
-        private async Task<InsertTableResult> InsertDataSetAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            Action<IdentityMapping> initializer = null;
-            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
-            var rowCount = await DbSession.InsertAsync(source, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
-            return new InsertTableResult(rowCount, identityMappings);
-        }
-
-        public bool Insert<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
+        public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, int ordinal,
+            Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity = false)
             where TSource : Model, new()
         {
             Verify(source, nameof(source), ordinal, nameof(ordinal));
+            var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
+            IReadOnlyList<ColumnMapping> join = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var statement = BuildInsertScalarStatement(source, ordinal, columnMappingsBuilder, autoJoin);
-            var result = DbSession.InsertScalar(statement, updateIdentity);
-            if (updateIdentity)
-                UpdateIdentity(source, source[ordinal], result.IdentityValue);
-            return UpdateOrigin(source, result.Success);
+            return DbTableInsert<T>.Create(this, source, ordinal, columnMappings, join, updateIdentity);
         }
 
-        public async Task<bool> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            Verify(source, nameof(source), ordinal, nameof(ordinal));
-            VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-
-            var statement = BuildInsertScalarStatement(source, ordinal, columnMappingsBuilder, autoJoin);
-            var result = await DbSession.InsertScalarAsync(statement, updateIdentity, cancellationToken);
-            if (updateIdentity)
-                UpdateIdentity(source, source[ordinal], result.IdentityValue);
-            return UpdateOrigin(source, result.Success);
-        }
-
-        internal DbSelectStatement BuildInsertScalarStatement<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMapper, TSource, T> columnMappingsBuilder, bool autoJoin)
+        internal DbSelectStatement BuildInsertScalarStatement<TSource>(DataSet<TSource> dataSet, int rowOrdinal,
+            IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
             where TSource : Model, new()
         {
             var sourceModel = dataSet._;
-            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder, true);
-            var keyMappings = autoJoin ? GetKeyMappings(sourceModel, null) : null;
             var parentMappings = ShouldJoinParent(dataSet) ? this.Model.GetParentRelationship(columnMappings) : null;
 
             var paramManager = new ScalarParamManager(dataSet[rowOrdinal]);
@@ -231,101 +137,21 @@ namespace DevZest.Data
                 select = select.Append(parentRowIdMapping);
             }
 
-            DbFromClause from = GetScalarDataSource(paramManager, keyMappings, parentMappings);
+            DbFromClause from = GetScalarDataSource(paramManager, join, parentMappings);
             DbExpression where = null;
             if (from != null)
             {
                 if (parentMappings != null)
                     from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentTable.FromClause, parentMappings);
 
-                if (keyMappings != null)
+                if (join != null)
                 {
-                    from = new DbJoinClause(DbJoinKind.LeftJoin, from, FromClause, keyMappings);
-                    where = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].Target.DbExpression });
+                    from = new DbJoinClause(DbJoinKind.LeftJoin, from, FromClause, join);
+                    where = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { join[0].Target.DbExpression });
                 }
             }
 
             return new DbSelectStatement(Model, select, from, where, null, -1, -1);
-        }
-
-        private void UpdateIdentity<TSource>(DataSet<TSource> dataSet, InsertTableResult result)
-            where TSource : Model, new()
-        {
-            if (result.IdentityMappings == null || result.RowCount == 0)
-                return;
-
-            var identityMappings = result.IdentityMappings;
-            var identityColumn = (_Int32)dataSet._.Columns[this._.GetIdentity(false).Column.Ordinal];
-            using (var reader = DbSession.ExecuteDbReader(identityMappings))
-            {
-                int ordinal = 0;
-                while (reader.Read())
-                {
-                    var dataRow = dataSet[ordinal++];
-                    identityColumn[dataRow] = identityMappings._.NewValue[reader];
-                    dataRow.IsPrimaryKeySealed = true;
-                }
-            }
-        }
-
-        private async Task UpdateIdentityAsync<TSource>(DataSet<TSource> dataSet, InsertTableResult result, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            if (result.IdentityMappings == null || result.RowCount == 0)
-                return;
-
-            var identityOutput = result.IdentityMappings;
-            var identityColumn = (_Int32)dataSet._.Columns[this._.GetIdentity(false).Column.Ordinal];
-            using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, cancellationToken))
-            {
-                int ordinal = 0;
-                while (await reader.ReadAsync(cancellationToken))
-                {
-                    var dataRow = dataSet[ordinal++];
-                    identityColumn[dataRow] = identityOutput._.NewValue[reader];
-                    dataRow.IsPrimaryKeySealed = true;
-                }
-            }
-        }
-
-        private static IList<DbSelectStatement> BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, InsertTableResult result)
-            where TSource : Model, new()
-        {
-            var identityMappings = result.IdentityMappings;
-            if (identityMappings == null || result.RowCount == 0)
-                return null;
-
-            return dbTable.BuildUpdateIdentityStatement(identityMappings);
-        }
-
-        private static void UpdateIdentity<TSource>(DbTable<TSource> dbTable, InsertTableResult result)
-            where TSource : Model, new()
-        {
-            var statements = BuildUpdateIdentityStatement(dbTable, result);
-            if (statements != null)
-            {
-                foreach (var statement in statements)
-                    dbTable.DbSession.Update(statement);
-            }
-        }
-
-        private static async Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertTableResult result, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            var statements = BuildUpdateIdentityStatement(dbTable, result);
-            if (statements != null)
-            {
-                foreach (var statement in statements)
-                    await dbTable.DbSession.UpdateAsync(statement, cancellationToken);
-            }
-        }
-
-        private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, int? value)
-            where TSource : Model, new()
-        {
-            dataRow.IsPrimaryKeySealed = false;
-            dataSet._.GetIdentity(false).Column[dataRow] = value;
-            dataRow.IsPrimaryKeySealed = true;
         }
     }
 }

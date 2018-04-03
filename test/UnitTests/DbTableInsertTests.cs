@@ -74,7 +74,7 @@ WHERE ([ProductCategory].[ParentProductCategoryID] IS NULL);
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
-                var command = table.MockInsert(0, db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()), autoJoin: true);
+                var command = table.MockInsert(0, db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()), skipExisting: true);
                 var expectedSql =
 @"INSERT INTO [#ProductCategory]
 ([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
@@ -175,7 +175,7 @@ SELECT
                 dataSet._.ParentProductCategoryID[dataRow] = null;
                 dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
                 dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
-                var command = table.MockInsert(true, dataSet, 0, autoJoin: true);
+                var command = table.MockInsert(true, dataSet, 0, skipExisting: true);
                 var expectedSql =
 @"DECLARE @p1 INT = 0;
 DECLARE @p2 INT = NULL;
@@ -475,7 +475,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
                 var sourceData = db.MockTempTable<ProductCategory>();
                 var children = sourceData.MockCreateChild(x => x.SubCategories);
                 var grandChildren = children.MockCreateChild(x => x.SubCategories);
-                var commands = db.ProductCategories.MockInsert(10, sourceData, null, false, true);
+                var commands = db.ProductCategories.MockInsert(10, sourceData, updateIdentity: true);
 
                 var expectedSql = new string[]
                 {
