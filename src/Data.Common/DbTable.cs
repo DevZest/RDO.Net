@@ -260,7 +260,7 @@ namespace DevZest.Data
         internal int UpdateOrigin(DataSource origin, int rowsAffected)
         {
             if (rowsAffected != 0)
-                UpdateOriginalDataSource(origin, true);
+                UpdateOriginalDataSource(origin);
             return rowsAffected;
         }
 
@@ -268,7 +268,7 @@ namespace DevZest.Data
             where TSource : Model, new()
         {
             if (scalarInsertSuccess)
-                UpdateOriginalDataSource(origin == null || origin.Count != 1 ? null : origin, true);
+                UpdateOriginalDataSource(origin == null || origin.Count != 1 ? null : origin);
 
             return scalarInsertSuccess;
         }
