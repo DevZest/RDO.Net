@@ -8,10 +8,10 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public DbDelete<T> Delete(Func<T, _Boolean> where = null)
+        public DbTableDelete<T> Delete(Func<T, _Boolean> where = null)
         {
             VerifyDeletable();
-            return DbDelete<T>.Create(this, where);
+            return DbTableDelete<T>.Create(this, where);
         }
 
         internal DbSelectStatement BuildDeleteStatement(Func<T, _Boolean> where)
@@ -20,40 +20,40 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, null, null, whereExpr, null, -1, -1);
         }
 
-        public DbDelete<T> Delete(DbSet<T> source)
+        public DbTableDelete<T> Delete(DbSet<T> source)
         {
             return Delete(source, KeyMapping.Infer);
         }
 
-        public DbDelete<T> Delete<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
+        public DbTableDelete<T> Delete<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
             where TSource : Model, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source));
             var columnMappings = Verify(keyMapper, nameof(keyMapper), source._).GetColumnMappings();
-            return DbDelete<T>.Create(this, source, columnMappings);
+            return DbTableDelete<T>.Create(this, source, columnMappings);
         }
 
-        public DbDelete<T> Delete(DataSet<T> source, int rowIndex)
+        public DbTableDelete<T> Delete(DataSet<T> source, int rowIndex)
         {
             return Delete(source, rowIndex, KeyMapping.Infer);
         }
 
-        public DbDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper)
+        public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper)
             where TSource : Model, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
             var columnMappings = Verify(keyMapper, nameof(keyMapper), source._).GetColumnMappings();
-            return DbDelete<T>.Create(this, source, rowIndex, columnMappings);
+            return DbTableDelete<T>.Create(this, source, rowIndex, columnMappings);
         }
 
-        public DbDelete<T> Delete(DataSet<T> source)
+        public DbTableDelete<T> Delete(DataSet<T> source)
         {
             return Delete(source, KeyMapping.Infer);
         }
 
-        public DbDelete<T> Delete<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
+        public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
@@ -62,7 +62,7 @@ namespace DevZest.Data
 
             VerifyDeletable();
             var keyMappingTarget = Verify(keyMapper, nameof(keyMapper), source._).TargetKey;
-            return DbDelete<T>.Create(this, source, keyMappingTarget);
+            return DbTableDelete<T>.Create(this, source, keyMappingTarget);
         }
 
         internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> join)

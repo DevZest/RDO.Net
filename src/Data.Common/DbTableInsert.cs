@@ -3,10 +3,10 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public abstract class DbInsert<T> : Executable<int>
+    public abstract class DbTableInsert<T> : Executable<int>
         where T : Model, new()
     {
-        protected DbInsert(DbTable<T> into)
+        protected DbTableInsert(DbTable<T> into)
         {
             Debug.Assert(into != null);
             _into = into;

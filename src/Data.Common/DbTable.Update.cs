@@ -9,10 +9,10 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public DbUpdate<T> Update(Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
+        public DbTableUpdate<T> Update(Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
         {
             var columnMappings = Verify(columnMapper, nameof(columnMapper));
-            return DbUpdate<T>.Create(this, columnMappings, where);
+            return DbTableUpdate<T>.Create(this, columnMappings, where);
         }
 
         internal DbSelectStatement BuildUpdateStatement(IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
@@ -22,18 +22,18 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, columnMappings, null, whereExpr, null, -1, -1);
         }
 
-        public DbUpdate<T> Update(DbSet<T> source)
+        public DbTableUpdate<T> Update(DbSet<T> source)
         {
             return Update(source, ColumnMapper.InferUpdate, KeyMapping.Infer);
         }
 
-        public DbUpdate<T> Update<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join)
+        public DbTableUpdate<T> Update<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
             var keyMapping = Verify(join, nameof(join), source._);
-            return DbUpdate<T>.Create(this, source, columnMappings, keyMapping.GetColumnMappings());
+            return DbTableUpdate<T>.Create(this, source, columnMappings, keyMapping.GetColumnMappings());
         }
 
         internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
@@ -52,27 +52,27 @@ namespace DevZest.Data
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, join);
         }
 
-        public DbUpdate<T> Update(DataSet<T> source, int rowIndex)
+        public DbTableUpdate<T> Update(DataSet<T> source, int rowIndex)
         {
             return Update(source, rowIndex, ColumnMapper.InferUpdate, KeyMapping.Infer);
         }
 
-        public DbUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
+        public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
             where TSource : Model, new()
         {
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
             var join = Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
 
-            return DbUpdate<T>.Create(this, source, rowIndex, columnMappings, join);
+            return DbTableUpdate<T>.Create(this, source, rowIndex, columnMappings, join);
         }
 
-        public DbUpdate<T> Update(DataSet<T> source)
+        public DbTableUpdate<T> Update(DataSet<T> source)
         {
             return Update(source, ColumnMapper.InferUpdate, KeyMapping.Infer);
         }
 
-        public DbUpdate<T> Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
+        public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
             where TSource : Model, new()
         {
             Verify(source, nameof(source));
@@ -81,7 +81,7 @@ namespace DevZest.Data
 
             Verify(columnMapper, nameof(columnMapper));
             var joinTo = Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
-            return DbUpdate<T>.Create(this, source, columnMapper, joinTo);
+            return DbTableUpdate<T>.Create(this, source, columnMapper, joinTo);
         }
 
         internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
-    public abstract class DbUpdate<T> : Executable<int>
+    public abstract class DbTableUpdate<T> : Executable<int>
         where T : Model, new()
     {
-        protected DbUpdate(DbTable<T> target)
+        protected DbTableUpdate(DbTable<T> target)
         {
             Debug.Assert(target != null);
             _target = target;
@@ -27,14 +27,14 @@ namespace DevZest.Data
             get { return Target.DbSession; }
         }
 
-        internal static DbUpdate<T> Create(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
+        internal static DbTableUpdate<T> Create(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
         {
-            return new DbUpdateWhere(target, columnMappings, where);
+            return new UpdateWhere(target, columnMappings, where);
         }
 
-        private sealed class DbUpdateWhere : DbUpdate<T>
+        private sealed class UpdateWhere : DbTableUpdate<T>
         {
-            public DbUpdateWhere(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
+            public UpdateWhere(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
                 : base(target)
             {
                 _columnMappings = columnMappings;
@@ -62,16 +62,16 @@ namespace DevZest.Data
             }
         }
 
-        internal static DbUpdate<T> Create<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+        internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
             where TSource : Model, new()
         {
-            return new DbUpdateFromDbSet<TSource>(target, source, columnMappings, join);
+            return new UpdateFromDbSet<TSource>(target, source, columnMappings, join);
         }
 
-        private sealed class DbUpdateFromDbSet<TSource> : DbUpdate<T>
+        private sealed class UpdateFromDbSet<TSource> : DbTableUpdate<T>
             where TSource : Model, new()
         {
-            public DbUpdateFromDbSet(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+            public UpdateFromDbSet(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
                 : base(target)
             {
                 _source = source;
@@ -102,16 +102,16 @@ namespace DevZest.Data
             }
         }
 
-        internal static DbUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+        internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
             where TSource : Model, new()
         {
-            return new DbUpdateFromDataRow<TSource>(target, source, rowIndex, columnMappings, join);
+            return new UpdateFromDataRow<TSource>(target, source, rowIndex, columnMappings, join);
         }
 
-        private sealed class DbUpdateFromDataRow<TSource> : DbUpdate<T>
+        private sealed class UpdateFromDataRow<TSource> : DbTableUpdate<T>
             where TSource : Model, new()
         {
-            public DbUpdateFromDataRow(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+            public UpdateFromDataRow(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
                 : base(target)
             {
                 _source = source;
@@ -143,16 +143,16 @@ namespace DevZest.Data
             }
         }
 
-        internal static DbUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
+        internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
             where TSource : Model, new()
         {
-            return new DbUpdateFromDataSet<TSource>(target, source, columnMapper, joinTo);
+            return new UpdateFromDataSet<TSource>(target, source, columnMapper, joinTo);
         }
 
-        private sealed class DbUpdateFromDataSet<TSource> : DbUpdate<T>
+        private sealed class UpdateFromDataSet<TSource> : DbTableUpdate<T>
             where TSource : Model, new()
         {
-            public DbUpdateFromDataSet(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
+            public UpdateFromDataSet(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
                 : base(target)
             {
                 Debug.Assert(source.Count != 1);
