@@ -32,7 +32,7 @@ namespace DevZest.Data
             }
         }
 
-        internal void UpdateOriginalDataSource(DataSource originalDataSource, bool isSnapshot = true)
+        internal void UpdateOriginalDataSource(DataSource originalDataSource, bool revisionInvariant = false)
         {
             if (_originalDataSourceRevision == -1)
                 return;
@@ -45,7 +45,7 @@ namespace DevZest.Data
             }
 
             _originalDataSource = originalDataSource;
-            if (isSnapshot)
+            if (!revisionInvariant)
                 _originalDataSourceRevision = originalDataSource.Revision;
         }
 

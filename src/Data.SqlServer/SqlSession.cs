@@ -178,7 +178,7 @@ namespace DevZest.Data.SqlServer
                 }
                 builder.OrderBy(xmlModel[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
             });
-            result.UpdateOriginalDataSource(dataSet, false);
+            result.UpdateOriginalDataSource(dataSet, true);
             return result;
         }
 
