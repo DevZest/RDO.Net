@@ -119,13 +119,13 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        private DbTable<SalesOrder> _salesOrders;
+        private DbTable<SalesOrderHeader> _salesOrderHeaders;
         [Description("General sales order information.")]
-        public DbTable<SalesOrder> SalesOrders
+        public DbTable<SalesOrderHeader> SalesOrderHeaders
         {
             get
             {
-                return GetTable(ref _salesOrders, "[SalesLT].[SalesOrderHeader]",
+                return GetTable(ref _salesOrderHeaders, "[SalesLT].[SalesOrderHeader]",
                     _ => DbForeignKey("FK_SalesOrderHeader_Customer_CustomerID", null,
                         _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
                     _ => DbForeignKey("FK_SalesOrderHeader_Address_BillTo_AddressID", null,
@@ -142,18 +142,18 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _salesOrderDetails, "[SalesLT].[SalesOrderDetail]",
-                    _ => DbForeignKey(null, null, _.SalesOrder, SalesOrders._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey(null, null, _.SalesOrderHeader, SalesOrderHeaders._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
                     _ => DbForeignKey(null, null, _.Product, Products._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
-        public DbSet<SalesOrder> GetSalesOrderList(string filterText, IReadOnlyList<IColumnComparer> orderBy)
+        public DbSet<SalesOrderHeader> GetSalesOrderHeaders(string filterText, IReadOnlyList<IColumnComparer> orderBy)
         {
-            DbSet<SalesOrder> result;
+            DbSet<SalesOrderHeader> result;
             if (string.IsNullOrEmpty(filterText))
-                result = SalesOrders;
+                result = SalesOrderHeaders;
             else
-                result = SalesOrders.Where(_ => _.SalesOrderNumber.Contains(filterText) | _.PurchaseOrderNumber.Contains(filterText));
+                result = SalesOrderHeaders.Where(_ => _.SalesOrderNumber.Contains(filterText) | _.PurchaseOrderNumber.Contains(filterText));
 
             if (orderBy != null && orderBy.Count > 0)
                 result = result.OrderBy(GetOrderBy(result._, orderBy));
@@ -180,7 +180,7 @@ namespace DevZest.Samples.AdventureWorksLT
             {
                 var ext = _.GetExtender<SalesOrderInfo.Ext>();
                 Debug.Assert(ext != null);
-                builder.From(SalesOrders, out var o)
+                builder.From(SalesOrderHeaders, out var o)
                     .InnerJoin(Customers, o.Customer, out var c)
                     .InnerJoin(Addresses, o.ShipToAddress, out var shipTo)
                     .InnerJoin(Addresses, o.BillToAddress, out var billTo)
@@ -209,8 +209,8 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrders.Update(salesOrders).ExecuteAsync(ct);
-            await SalesOrderDetails.Delete(salesOrders, (s, _) => s.MapTo(_.SalesOrder)).ExecuteAsync(ct);
+            await SalesOrderHeaders.Update(salesOrders).ExecuteAsync(ct);
+            await SalesOrderDetails.Delete(salesOrders, (s, _) => s.MapTo(_.SalesOrderHeader)).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
@@ -224,7 +224,7 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrders.Insert(salesOrders, updateIdentity: true).ExecuteAsync(ct);
+            await SalesOrderHeaders.Insert(salesOrders, updateIdentity: true).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);

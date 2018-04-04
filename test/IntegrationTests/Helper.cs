@@ -8,7 +8,7 @@ namespace DevZest.Data
 {
     internal static class Helper
     {
-        internal static IList<int> GetSalesOrderIds(this DbTable<SalesOrder> salesOrders)
+        internal static IList<int> GetSalesOrderIds(this DbSet<SalesOrder> salesOrders)
         {
             var result = new List<int>();
 

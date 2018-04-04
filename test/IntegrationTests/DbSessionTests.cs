@@ -14,8 +14,7 @@ namespace DevZest.Data
         {
             return db.CreateQuery((DbQueryBuilder builder, SalesOrder model) =>
             {
-                SalesOrder h;
-                builder.From(db.SalesOrders, out h)
+                builder.From(db.SalesOrderHeaders, out var h)
                     .AutoSelect()
                     .Where(h.SalesOrderID == _Int32.Const(71774) | h.SalesOrderID == _Int32.Const(71776))
                     .OrderBy(h.SalesOrderID);
@@ -50,10 +49,10 @@ namespace DevZest.Data
 
 INSERT INTO [#sys_sequential_SalesOrder]
 ([SalesOrderID])
-SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
-FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
-WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
-ORDER BY [SalesOrder].[SalesOrderID];
+SELECT [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID]
+FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
+WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
+ORDER BY [SalesOrderHeader].[SalesOrderID];
 ";
             Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
         }
@@ -79,10 +78,10 @@ ORDER BY [SalesOrder].[SalesOrderID];
 
 INSERT INTO [#sys_sequential_SalesOrder]
 ([SalesOrderID])
-SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
-FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
-WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
-ORDER BY [SalesOrder].[SalesOrderID];
+SELECT [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID]
+FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
+WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
+ORDER BY [SalesOrderHeader].[SalesOrderID];
 ";
             Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
         }
@@ -177,7 +176,7 @@ ORDER BY [Customer].[CustomerID];
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
             {
-                var salesOrder = await db.SalesOrders.Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
+                var salesOrder = await db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
                 await salesOrder.FillAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetails);
                 await db.UpdateAsync(salesOrder, CancellationToken.None);
 

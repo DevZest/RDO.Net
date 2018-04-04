@@ -25,7 +25,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log)))
             {
-                Assert.AreEqual(0, db.SalesOrders.Count());
+                Assert.AreEqual(0, db.SalesOrderHeaders.Count());
                 Assert.AreEqual(0, db.SalesOrderDetails.Count());
             }
         }

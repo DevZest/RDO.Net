@@ -7,8 +7,9 @@ namespace DevZest.Data
 {
     public struct KeyMapping
     {
-        public static KeyMapping Infer<T>(T source, T target)
-            where T : Model
+        public static KeyMapping Infer<TSource, TTarget>(TSource source, TTarget target)
+            where TSource : TTarget
+            where TTarget : Model
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(target, nameof(target));

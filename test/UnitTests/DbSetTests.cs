@@ -14,34 +14,34 @@ namespace DevZest.Data
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var query = db.SalesOrders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                var query = db.SalesOrderHeaders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 var expectedSql =
 @"SELECT
-    [SalesOrder].[SalesOrderID] AS [SalesOrderID],
-    [SalesOrder].[RevisionNumber] AS [RevisionNumber],
-    [SalesOrder].[OrderDate] AS [OrderDate],
-    [SalesOrder].[DueDate] AS [DueDate],
-    [SalesOrder].[ShipDate] AS [ShipDate],
-    [SalesOrder].[Status] AS [Status],
-    [SalesOrder].[OnlineOrderFlag] AS [OnlineOrderFlag],
-    [SalesOrder].[SalesOrderNumber] AS [SalesOrderNumber],
-    [SalesOrder].[PurchaseOrderNumber] AS [PurchaseOrderNumber],
-    [SalesOrder].[AccountNumber] AS [AccountNumber],
-    [SalesOrder].[CustomerID] AS [CustomerID],
-    [SalesOrder].[ShipToAddressID] AS [ShipToAddressID],
-    [SalesOrder].[BillToAddressID] AS [BillToAddressID],
-    [SalesOrder].[ShipMethod] AS [ShipMethod],
-    [SalesOrder].[CreditCardApprovalCode] AS [CreditCardApprovalCode],
-    [SalesOrder].[SubTotal] AS [SubTotal],
-    [SalesOrder].[TaxAmt] AS [TaxAmt],
-    [SalesOrder].[Freight] AS [Freight],
-    [SalesOrder].[TotalDue] AS [TotalDue],
-    [SalesOrder].[Comment] AS [Comment],
-    [SalesOrder].[RowGuid] AS [RowGuid],
-    [SalesOrder].[ModifiedDate] AS [ModifiedDate]
-FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
-WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
-ORDER BY [SalesOrder].[SalesOrderID];
+    [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID],
+    [SalesOrderHeader].[RevisionNumber] AS [RevisionNumber],
+    [SalesOrderHeader].[OrderDate] AS [OrderDate],
+    [SalesOrderHeader].[DueDate] AS [DueDate],
+    [SalesOrderHeader].[ShipDate] AS [ShipDate],
+    [SalesOrderHeader].[Status] AS [Status],
+    [SalesOrderHeader].[OnlineOrderFlag] AS [OnlineOrderFlag],
+    [SalesOrderHeader].[SalesOrderNumber] AS [SalesOrderNumber],
+    [SalesOrderHeader].[PurchaseOrderNumber] AS [PurchaseOrderNumber],
+    [SalesOrderHeader].[AccountNumber] AS [AccountNumber],
+    [SalesOrderHeader].[CustomerID] AS [CustomerID],
+    [SalesOrderHeader].[ShipToAddressID] AS [ShipToAddressID],
+    [SalesOrderHeader].[BillToAddressID] AS [BillToAddressID],
+    [SalesOrderHeader].[ShipMethod] AS [ShipMethod],
+    [SalesOrderHeader].[CreditCardApprovalCode] AS [CreditCardApprovalCode],
+    [SalesOrderHeader].[SubTotal] AS [SubTotal],
+    [SalesOrderHeader].[TaxAmt] AS [TaxAmt],
+    [SalesOrderHeader].[Freight] AS [Freight],
+    [SalesOrderHeader].[TotalDue] AS [TotalDue],
+    [SalesOrderHeader].[Comment] AS [Comment],
+    [SalesOrderHeader].[RowGuid] AS [RowGuid],
+    [SalesOrderHeader].[ModifiedDate] AS [ModifiedDate]
+FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
+WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
+ORDER BY [SalesOrderHeader].[SalesOrderID];
 ";
                 Assert.AreEqual(expectedSql, query.ToString());
             }

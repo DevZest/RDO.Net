@@ -82,13 +82,13 @@ namespace DevZest.Data
 
                 var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Ref _) =>
                 {
-                    builder.From(db.SalesOrders, out var s)
+                    builder.From(db.SalesOrderHeaders, out var s)
                     .AutoSelect()
                     .Where(s.SalesOrderID == 1 | s.SalesOrderID == 2);
                 });
                 var dataSet = query.ToDataSet();
 
-                var countDeleted = db.SalesOrderDetails.Delete(dataSet, (s, _) => s.MapTo(_.SalesOrder)).Execute();
+                var countDeleted = db.SalesOrderDetails.Delete(dataSet, (s, _) => s.MapTo(_.SalesOrderHeader)).Execute();
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countDeleted, db.SalesOrderDetails.Count());
             }
@@ -106,14 +106,13 @@ namespace DevZest.Data
 
                 var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Ref _) =>
                 {
-                    SalesOrder s;
-                    builder.From(db.SalesOrders, out s)
+                    builder.From(db.SalesOrderHeaders, out var s)
                     .AutoSelect()
                     .Where(s.SalesOrderID == 1 | s.SalesOrderID == 2);
                 });
                 var dataSet = await query.ToDataSetAsync();
 
-                var countDeleted = await db.SalesOrderDetails.Delete(dataSet, (s, _) => s.MapTo(_.SalesOrder)).ExecuteAsync();
+                var countDeleted = await db.SalesOrderDetails.Delete(dataSet, (s, _) => s.MapTo(_.SalesOrderHeader)).ExecuteAsync();
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countDeleted, await db.SalesOrderDetails.CountAsync());
             }

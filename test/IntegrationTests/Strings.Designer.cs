@@ -288,30 +288,6 @@ namespace DevZest.Data {
         ///   Looks up a localized string similar to [
         ///   {
         ///      &quot;SalesOrderID&quot; : 1,
-        ///      &quot;RevisionNumber&quot; : 2,
-        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
-        ///      &quot;DueDate&quot; : &quot;2008-06-13T00:00:00.000&quot;,
-        ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00.000&quot;,
-        ///      &quot;Status&quot; : 5,
-        ///      &quot;OnlineOrderFlag&quot; : false,
-        ///      &quot;SalesOrderNumber&quot; : &quot;SO71774&quot;,
-        ///      &quot;PurchaseOrderNumber&quot; : &quot;PO348186287&quot;,
-        ///      &quot;AccountNumber&quot; : &quot;10-4020-000609&quot;,
-        ///      &quot;CustomerID&quot; : 29847,
-        ///      &quot;ShipToAddressID&quot; : 1092,
-        ///      &quot;BillToAddressID&quot; : 1092,
-        ///      &quot;ShipMethod&quot; : &quot;CARGO  [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Mock_SalesOrder {
-            get {
-                return ResourceManager.GetString("Mock_SalesOrder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [
-        ///   {
-        ///      &quot;SalesOrderID&quot; : 1,
         ///      &quot;SalesOrderDetailID&quot; : 1,
         ///      &quot;OrderQty&quot; : 1,
         ///      &quot;ProductID&quot; : 836,
@@ -332,6 +308,30 @@ namespace DevZest.Data {
         internal static string Mock_SalesOrderDetail {
             get {
                 return ResourceManager.GetString("Mock_SalesOrderDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///   {
+        ///      &quot;SalesOrderID&quot; : 1,
+        ///      &quot;RevisionNumber&quot; : 2,
+        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
+        ///      &quot;DueDate&quot; : &quot;2008-06-13T00:00:00.000&quot;,
+        ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00.000&quot;,
+        ///      &quot;Status&quot; : 5,
+        ///      &quot;OnlineOrderFlag&quot; : false,
+        ///      &quot;SalesOrderNumber&quot; : &quot;SO71774&quot;,
+        ///      &quot;PurchaseOrderNumber&quot; : &quot;PO348186287&quot;,
+        ///      &quot;AccountNumber&quot; : &quot;10-4020-000609&quot;,
+        ///      &quot;CustomerID&quot; : 29847,
+        ///      &quot;ShipToAddressID&quot; : 1092,
+        ///      &quot;BillToAddressID&quot; : 1092,
+        ///      &quot;ShipMethod&quot; : &quot;CARGO  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Mock_SalesOrderHeader {
+            get {
+                return ResourceManager.GetString("Mock_SalesOrderHeader", resourceCulture);
             }
         }
     }

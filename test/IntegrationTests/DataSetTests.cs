@@ -62,8 +62,7 @@ namespace DevZest.Data
             {
                 var json = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
-                    SalesOrder o;
-                    builder.From(db.SalesOrders, out o)
+                    builder.From(db.SalesOrderHeaders, out var o)
                         .Select(o.SalesOrderID, adhoc)
                         .Select(o.SalesOrderNumber, adhoc)
                         .Where(o.SalesOrderID == 71774 | o.SalesOrderID == 71776)
@@ -88,7 +87,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = OpenDb(log))
             {
-                var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774).ToDataSet();
+                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSet();
                 Assert.IsTrue(salesOrders.Count == 1);
                 salesOrders.Fill(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
@@ -101,7 +100,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = await OpenDbAsync(log))
             {
-                var salesOrders = await db.SalesOrders.Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
+                var salesOrders = await db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
                 Assert.IsTrue(salesOrders.Count == 1);
                 await salesOrders.FillAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());

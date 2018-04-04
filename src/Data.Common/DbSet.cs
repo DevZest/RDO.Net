@@ -286,5 +286,15 @@ namespace DevZest.Data
         {
             return new DbJoinClause(DbJoinKind.InnerJoin, FromClause, dbTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
         }
+
+        public DbQuery<TDerived> ToDbQuery<TDerived>()
+            where TDerived : T, new()
+        {
+            return DbSession.CreateQuery((DbQueryBuilder builder, TDerived _) =>
+            {
+                builder.From(this, out var s)
+                    .AutoSelect();
+            });
+        }
     }
 }

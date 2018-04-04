@@ -100,7 +100,7 @@ WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCatego
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
                 var childQuery = salesOrders.CreateChild(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID));
                 var tempTable = db.MockTempTable<SalesOrderDetail>();

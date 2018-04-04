@@ -8,7 +8,8 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        private static Func<T, T, KeyMapping> GetJoinMapper(bool skipExisting)
+        private static Func<TSource, T, KeyMapping> GetJoinMapper<TSource>(bool skipExisting)
+            where TSource : T, new()
         {
             if (skipExisting)
                 return KeyMapping.Infer;
@@ -16,9 +17,10 @@ namespace DevZest.Data
                 return null;
         }
 
-        public DbTableInsert<T> Insert(DbQuery<T> source, bool skipExisting = false)
+        public DbTableInsert<T> Insert<TSource>(DbQuery<TSource> source, bool skipExisting = false)
+            where TSource : T, new()
         {
-            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper(skipExisting));
+            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper<TSource>(skipExisting));
         }
 
         public DbTableInsert<T> Insert<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper = null)
@@ -30,9 +32,10 @@ namespace DevZest.Data
             return DbTableInsert<T>.Create(this, source, columnMappings, join);
         }
 
-        public DbTableInsert<T> Insert(DbTable<T> source, bool skipExisting = false, bool updateIdentity = false)
+        public DbTableInsert<T> Insert<TSource>(DbTable<TSource> source, bool skipExisting = false, bool updateIdentity = false)
+            where TSource : T, new()
         {
-            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper(skipExisting), updateIdentity);
+            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper<TSource>(skipExisting), updateIdentity);
         }
 
         public DbTableInsert<T> Insert<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper = null, bool updateIdentity = false)
@@ -82,9 +85,10 @@ namespace DevZest.Data
             return parentModel.DataSource.UltimateOriginalDataSource != parentDataSource.UltimateOriginalDataSource;
         }
 
-        public DbTableInsert<T> Insert(DataSet<T> source, bool skipExisting = false, bool updateIdentity = false)
+        public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, bool skipExisting = false, bool updateIdentity = false)
+            where TSource : T, new()
         {
-            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper(skipExisting), updateIdentity);
+            return Insert(source, ColumnMapper.InferInsert, GetJoinMapper<TSource>(skipExisting), updateIdentity);
         }
 
         public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity = false)
@@ -101,9 +105,10 @@ namespace DevZest.Data
             return DbTableInsert<T>.Create(this, source, columnMapper, joinTo, updateIdentity);
         }
 
-        public DbTableInsert<T> Insert(DataSet<T> source, int ordinal, bool skipExisting = false, bool updateIdentity = false)
+        public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, int ordinal, bool skipExisting = false, bool updateIdentity = false)
+            where TSource : T, new()
         {
-            return Insert(source, ordinal, ColumnMapper.InferInsert, GetJoinMapper(skipExisting), updateIdentity);
+            return Insert(source, ordinal, ColumnMapper.InferInsert, GetJoinMapper<TSource>(skipExisting), updateIdentity);
         }
 
         public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, int ordinal,

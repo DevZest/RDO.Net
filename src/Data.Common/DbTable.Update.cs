@@ -22,7 +22,8 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, columnMappings, null, whereExpr, null, -1, -1);
         }
 
-        public DbTableUpdate<T> Update(DbSet<T> source)
+        public DbTableUpdate<T> Update<TSource>(DbSet<TSource> source)
+            where TSource : T, new()
         {
             return Update(source, ColumnMapper.InferUpdate, KeyMapping.Infer);
         }
@@ -52,7 +53,8 @@ namespace DevZest.Data
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, join);
         }
 
-        public DbTableUpdate<T> Update(DataSet<T> source, int rowIndex)
+        public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex)
+            where TSource : T, new()
         {
             return Update(source, rowIndex, ColumnMapper.InferUpdate, KeyMapping.Infer);
         }
@@ -67,7 +69,8 @@ namespace DevZest.Data
             return DbTableUpdate<T>.Create(this, source, rowIndex, columnMappings, join);
         }
 
-        public DbTableUpdate<T> Update(DataSet<T> source)
+        public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source)
+            where TSource : T, new()
         {
             return Update(source, ColumnMapper.InferUpdate, KeyMapping.Infer);
         }

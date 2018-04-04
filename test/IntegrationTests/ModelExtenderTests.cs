@@ -41,13 +41,10 @@ namespace DevZest.Data
                     (DbQueryBuilder builder, SalesOrder _) =>
                     {
                         var ext = _.GetExtender<SalesOrderInfo.Ext>();
-                        SalesOrder o;
-                        Customer c;
-                        Address shipTo, billTo;
-                        builder.From(db.SalesOrders, out o)
-                            .InnerJoin(db.Customers, o.Customer, out c)
-                            .InnerJoin(db.Addresses, o.ShipToAddress, out shipTo)
-                            .InnerJoin(db.Addresses, o.BillToAddress, out billTo)
+                        builder.From(db.SalesOrderHeaders, out var o)
+                            .InnerJoin(db.Customers, o.Customer, out var c)
+                            .InnerJoin(db.Addresses, o.ShipToAddress, out var shipTo)
+                            .InnerJoin(db.Addresses, o.BillToAddress, out var billTo)
                             .AutoSelect()
                             .AutoSelect(shipTo, ext.ShipToAddress)
                             .AutoSelect(billTo, ext.BillToAddress)

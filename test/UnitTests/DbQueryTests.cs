@@ -103,11 +103,9 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
             {
                 var query = db.CreateAggregateQuery<Adhoc>((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
                 {
-                    SalesOrder h;
-                    SalesOrderDetail d;
                     _Int32 count;
-                    builder.From(db.SalesOrders, out h)
-                        .InnerJoin(db.SalesOrderDetails, h.PrimaryKey, x => x.SalesOrder, out d)
+                    builder.From(db.SalesOrderHeaders, out var h)
+                        .InnerJoin(db.SalesOrderDetails, h.PrimaryKey, x => x.SalesOrderHeader, out var d)
                         .Select(h.SalesOrderID, adhoc)
                         .Select(count = d.SalesOrderID.Count(), adhoc, "LineCount")
                         .Having(count > _Int32.Const(1))
@@ -115,16 +113,16 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
                 });
                 var expectedSql =
 @"SELECT
-    [SalesOrder].[SalesOrderID] AS [SalesOrderID],
+    [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID],
     COUNT([SalesOrderDetail].[SalesOrderID]) AS [LineCount]
 FROM
-    ([SalesLT].[SalesOrderHeader] [SalesOrder]
+    ([SalesLT].[SalesOrderHeader] [SalesOrderHeader]
     INNER JOIN
     [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-    ON [SalesOrder].[SalesOrderID] = [SalesOrderDetail].[SalesOrderID])
-GROUP BY [SalesOrder].[SalesOrderID]
+    ON [SalesOrderHeader].[SalesOrderID] = [SalesOrderDetail].[SalesOrderID])
+GROUP BY [SalesOrderHeader].[SalesOrderID]
 HAVING (COUNT([SalesOrderDetail].[SalesOrderID]) > 1)
-ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrder].[SalesOrderID];
+ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrderHeader].[SalesOrderID];
 ";
                 query.Verify(expectedSql);
             }
@@ -137,12 +135,9 @@ ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrder].[SalesOrder
             {
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
-                    SalesOrderDetail d;
-                    SalesOrder h;
-                    Product p;
-                    builder.From(db.SalesOrderDetails, out d)
-                        .InnerJoin(db.SalesOrders, d.SalesOrder, out h)
-                        .InnerJoin(db.Products, d.Product, out p)
+                    builder.From(db.SalesOrderDetails, out var d)
+                        .InnerJoin(db.SalesOrderHeaders, d.SalesOrderHeader, out var h)
+                        .InnerJoin(db.Products, d.Product, out var p)
                         .Select(d.SalesOrderID, adhoc)
                         .Select(d.SalesOrderDetailID, adhoc)
                         .Select(p.Name, adhoc)
@@ -156,14 +151,14 @@ ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrder].[SalesOrder
     [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
     [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID],
     [Product].[Name] AS [Name],
-    [SalesOrder].[OrderDate] AS [OrderDate],
-    [SalesOrder].[Status] AS [Status],
-    [SalesOrder].[TotalDue] AS [TotalDue]
+    [SalesOrderHeader].[OrderDate] AS [OrderDate],
+    [SalesOrderHeader].[Status] AS [Status],
+    [SalesOrderHeader].[TotalDue] AS [TotalDue]
 FROM
     (([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
     INNER JOIN
-    [SalesLT].[SalesOrderHeader] [SalesOrder]
-    ON [SalesOrderDetail].[SalesOrderID] = [SalesOrder].[SalesOrderID])
+    [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
+    ON [SalesOrderDetail].[SalesOrderID] = [SalesOrderHeader].[SalesOrderID])
     INNER JOIN
     [SalesLT].[Product] [Product]
     ON [SalesOrderDetail].[ProductID] = [Product].[ProductID])
@@ -216,7 +211,7 @@ WHERE ([Product].[ProductID] > 500);
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
                 var childQuery = salesOrders.CreateChild(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID));
                 var expectedSql =
@@ -246,7 +241,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
                 var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbAggregateQueryBuilder builder, SalesOrderDetail model) =>
                 {
@@ -372,42 +367,42 @@ ORDER BY [sys_sequential_Product].[sys_row_id] ASC;
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
-                salesOrders.MockSequentialKeyTempTable();
+                var salesOrderHeaders = db.SalesOrderHeaders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                salesOrderHeaders.MockSequentialKeyTempTable();
                 var expectedSql =
 @"SELECT
-    [SalesOrder].[SalesOrderID] AS [SalesOrderID],
-    [SalesOrder].[RevisionNumber] AS [RevisionNumber],
-    [SalesOrder].[OrderDate] AS [OrderDate],
-    [SalesOrder].[DueDate] AS [DueDate],
-    [SalesOrder].[ShipDate] AS [ShipDate],
-    [SalesOrder].[Status] AS [Status],
-    [SalesOrder].[OnlineOrderFlag] AS [OnlineOrderFlag],
-    [SalesOrder].[SalesOrderNumber] AS [SalesOrderNumber],
-    [SalesOrder].[PurchaseOrderNumber] AS [PurchaseOrderNumber],
-    [SalesOrder].[AccountNumber] AS [AccountNumber],
-    [SalesOrder].[CustomerID] AS [CustomerID],
-    [SalesOrder].[ShipToAddressID] AS [ShipToAddressID],
-    [SalesOrder].[BillToAddressID] AS [BillToAddressID],
-    [SalesOrder].[ShipMethod] AS [ShipMethod],
-    [SalesOrder].[CreditCardApprovalCode] AS [CreditCardApprovalCode],
-    [SalesOrder].[SubTotal] AS [SubTotal],
-    [SalesOrder].[TaxAmt] AS [TaxAmt],
-    [SalesOrder].[Freight] AS [Freight],
-    [SalesOrder].[TotalDue] AS [TotalDue],
-    [SalesOrder].[Comment] AS [Comment],
-    [SalesOrder].[RowGuid] AS [RowGuid],
-    [SalesOrder].[ModifiedDate] AS [ModifiedDate],
-    [sys_sequential_SalesOrder].[sys_row_id] AS [sys_row_id]
+    [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID],
+    [SalesOrderHeader].[RevisionNumber] AS [RevisionNumber],
+    [SalesOrderHeader].[OrderDate] AS [OrderDate],
+    [SalesOrderHeader].[DueDate] AS [DueDate],
+    [SalesOrderHeader].[ShipDate] AS [ShipDate],
+    [SalesOrderHeader].[Status] AS [Status],
+    [SalesOrderHeader].[OnlineOrderFlag] AS [OnlineOrderFlag],
+    [SalesOrderHeader].[SalesOrderNumber] AS [SalesOrderNumber],
+    [SalesOrderHeader].[PurchaseOrderNumber] AS [PurchaseOrderNumber],
+    [SalesOrderHeader].[AccountNumber] AS [AccountNumber],
+    [SalesOrderHeader].[CustomerID] AS [CustomerID],
+    [SalesOrderHeader].[ShipToAddressID] AS [ShipToAddressID],
+    [SalesOrderHeader].[BillToAddressID] AS [BillToAddressID],
+    [SalesOrderHeader].[ShipMethod] AS [ShipMethod],
+    [SalesOrderHeader].[CreditCardApprovalCode] AS [CreditCardApprovalCode],
+    [SalesOrderHeader].[SubTotal] AS [SubTotal],
+    [SalesOrderHeader].[TaxAmt] AS [TaxAmt],
+    [SalesOrderHeader].[Freight] AS [Freight],
+    [SalesOrderHeader].[TotalDue] AS [TotalDue],
+    [SalesOrderHeader].[Comment] AS [Comment],
+    [SalesOrderHeader].[RowGuid] AS [RowGuid],
+    [SalesOrderHeader].[ModifiedDate] AS [ModifiedDate],
+    [sys_sequential_SalesOrderHeader].[sys_row_id] AS [sys_row_id]
 FROM
-    ([SalesLT].[SalesOrderHeader] [SalesOrder]
+    ([SalesLT].[SalesOrderHeader] [SalesOrderHeader]
     INNER JOIN
-    [#sys_sequential_SalesOrder] [sys_sequential_SalesOrder]
-    ON [SalesOrder].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
-WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
-ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC;
+    [#sys_sequential_SalesOrderHeader] [sys_sequential_SalesOrderHeader]
+    ON [SalesOrderHeader].[SalesOrderID] = [sys_sequential_SalesOrderHeader].[SalesOrderID])
+WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
+ORDER BY [sys_sequential_SalesOrderHeader].[sys_row_id] ASC;
 ";
-                Assert.AreEqual(expectedSql, db.GetSqlString(salesOrders.SequentialQueryStatement));
+                Assert.AreEqual(expectedSql, db.GetSqlString(salesOrderHeaders.SequentialQueryStatement));
             }
         }
 
@@ -416,7 +411,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC;
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
                 var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID));
                 salesOrderDetails.MockSequentialKeyTempTable();
@@ -452,11 +447,11 @@ ORDER BY [sys_sequential_SalesOrderDetail].[sys_row_id] ASC;
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeaders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
                 var expectedSql = new string[]
                 {
-@"CREATE TABLE [#sys_sequential_SalesOrder] (
+@"CREATE TABLE [#sys_sequential_SalesOrderHeader] (
     [SalesOrderID] INT NOT NULL,
     [sys_row_id] INT NOT NULL IDENTITY(1, 1)
 
@@ -464,12 +459,12 @@ ORDER BY [sys_sequential_SalesOrderDetail].[sys_row_id] ASC;
     UNIQUE CLUSTERED ([sys_row_id] ASC)
 );",
 
-@"INSERT INTO [#sys_sequential_SalesOrder]
+@"INSERT INTO [#sys_sequential_SalesOrderHeader]
 ([SalesOrderID])
-SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
-FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
-WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
-ORDER BY [SalesOrder].[SalesOrderID];"
+SELECT [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID]
+FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
+WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
+ORDER BY [SalesOrderHeader].[SalesOrderID];"
                 };
                 commands.Verify(expectedSql);
             }
@@ -482,8 +477,7 @@ ORDER BY [SalesOrder].[SalesOrderID];"
             {
                 var salesOrders = db.CreateAggregateQuery((DbAggregateQueryBuilder queryBuilder, SalesOrder model) =>
                 {
-                    SalesOrder h;
-                    queryBuilder.From(db.SalesOrders, out h)
+                    queryBuilder.From(db.SalesOrderHeaders, out var h)
                         .AutoSelect()
                         .Where(h.SalesOrderID == _Int32.Const(71774) | h.SalesOrderID == _Int32.Const(71776))
                         .OrderBy(h.SalesOrderNumber.Desc());
@@ -503,33 +497,33 @@ ORDER BY [SalesOrder].[SalesOrderID];"
 
 @"INSERT INTO [#sys_sequential_SalesOrder]
 ([SalesOrderID])
-SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
-FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
-WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
+SELECT [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID]
+FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
+WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
 GROUP BY
-    [SalesOrder].[SalesOrderID],
-    [SalesOrder].[RevisionNumber],
-    [SalesOrder].[OrderDate],
-    [SalesOrder].[DueDate],
-    [SalesOrder].[ShipDate],
-    [SalesOrder].[Status],
-    [SalesOrder].[OnlineOrderFlag],
-    [SalesOrder].[SalesOrderNumber],
-    [SalesOrder].[PurchaseOrderNumber],
-    [SalesOrder].[AccountNumber],
-    [SalesOrder].[CustomerID],
-    [SalesOrder].[ShipToAddressID],
-    [SalesOrder].[BillToAddressID],
-    [SalesOrder].[ShipMethod],
-    [SalesOrder].[CreditCardApprovalCode],
-    [SalesOrder].[SubTotal],
-    [SalesOrder].[TaxAmt],
-    [SalesOrder].[Freight],
-    [SalesOrder].[TotalDue],
-    [SalesOrder].[Comment],
-    [SalesOrder].[RowGuid],
-    [SalesOrder].[ModifiedDate]
-ORDER BY [SalesOrder].[SalesOrderNumber] DESC;"
+    [SalesOrderHeader].[SalesOrderID],
+    [SalesOrderHeader].[RevisionNumber],
+    [SalesOrderHeader].[OrderDate],
+    [SalesOrderHeader].[DueDate],
+    [SalesOrderHeader].[ShipDate],
+    [SalesOrderHeader].[Status],
+    [SalesOrderHeader].[OnlineOrderFlag],
+    [SalesOrderHeader].[SalesOrderNumber],
+    [SalesOrderHeader].[PurchaseOrderNumber],
+    [SalesOrderHeader].[AccountNumber],
+    [SalesOrderHeader].[CustomerID],
+    [SalesOrderHeader].[ShipToAddressID],
+    [SalesOrderHeader].[BillToAddressID],
+    [SalesOrderHeader].[ShipMethod],
+    [SalesOrderHeader].[CreditCardApprovalCode],
+    [SalesOrderHeader].[SubTotal],
+    [SalesOrderHeader].[TaxAmt],
+    [SalesOrderHeader].[Freight],
+    [SalesOrderHeader].[TotalDue],
+    [SalesOrderHeader].[Comment],
+    [SalesOrderHeader].[RowGuid],
+    [SalesOrderHeader].[ModifiedDate]
+ORDER BY [SalesOrderHeader].[SalesOrderNumber] DESC;"
                 };
 
                 commands.Verify(expectedSql);

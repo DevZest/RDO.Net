@@ -73,7 +73,6 @@ namespace DevZest.Data
             ""BillToAddressID"" : 1092,
             ""ShipMethod"" : ""CARGO TRANSPORT 5"",
             ""CreditCardApprovalCode"" : null,
-            ""SubTotal"" : 880.3484,
             ""TaxAmt"" : 70.4279,
             ""Freight"" : 22.0087,
             ""Comment"" : null,

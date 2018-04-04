@@ -20,7 +20,8 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, null, null, whereExpr, null, -1, -1);
         }
 
-        public DbTableDelete<T> Delete(DbSet<T> source)
+        public DbTableDelete<T> Delete<TSource>(DbSet<TSource> source)
+            where TSource : T, new()
         {
             return Delete(source, KeyMapping.Infer);
         }
@@ -34,7 +35,8 @@ namespace DevZest.Data
             return DbTableDelete<T>.Create(this, source, columnMappings);
         }
 
-        public DbTableDelete<T> Delete(DataSet<T> source, int rowIndex)
+        public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex)
+            where TSource : T, new()
         {
             return Delete(source, rowIndex, KeyMapping.Infer);
         }
@@ -48,7 +50,8 @@ namespace DevZest.Data
             return DbTableDelete<T>.Create(this, source, rowIndex, columnMappings);
         }
 
-        public DbTableDelete<T> Delete(DataSet<T> source)
+        public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source)
+            where TSource : T, new()
         {
             return Delete(source, KeyMapping.Infer);
         }

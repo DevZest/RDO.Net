@@ -35,11 +35,5 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get { return base.SalesOrderDetails; }
         }
-
-        [Computation(IsAggregate = true)]
-        private void ComputeSubTotal()
-        {
-            SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);
-        }
     }
 }

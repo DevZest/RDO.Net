@@ -66,10 +66,10 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID, SalesOrderDetailID)); }
         }
 
-        private SalesOrder.Key _salesOrder;
-        public SalesOrder.Key SalesOrder
+        private SalesOrderHeader.Key _salesOrderHeader;
+        public SalesOrderHeader.Key SalesOrderHeader
         {
-            get { return _salesOrder ?? (_salesOrder = new SalesOrder.Key(SalesOrderID)); }
+            get { return _salesOrderHeader ?? (_salesOrderHeader = new SalesOrderHeader.Key(SalesOrderID)); }
         }
 
         private Product.Key _product;
