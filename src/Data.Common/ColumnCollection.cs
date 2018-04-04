@@ -15,7 +15,7 @@ namespace DevZest.Data
         {
             protected override ColumnId GetKeyForItem(Column item)
             {
-                return item.ModelId;
+                return item.Id;
             }
         }
 
@@ -39,7 +39,7 @@ namespace DevZest.Data
             Debug.Assert(Model.DesignMode);
 
             var columns = Columns;
-            var modelId = item.ModelId;
+            var modelId = item.Id;
             if (columns.Contains(modelId))
                 throw new InvalidOperationException(DiagnosticMessages.ColumnCollection_DuplicateModelId(modelId.DeclaringType, modelId.Name));
 
@@ -112,7 +112,7 @@ namespace DevZest.Data
         internal Column AutoSelect(Column column)
         {
             Debug.Assert(column != null);
-            var result = this[column.ModelId];
+            var result = this[column.Id];
             if (result != null)
                 return result;
 

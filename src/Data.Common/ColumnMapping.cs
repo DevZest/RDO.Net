@@ -32,10 +32,10 @@ namespace DevZest.Data
 
             var result = new ColumnMapper(sourceModel, targetModel).Build(builder => columnMapper(builder, sourceModel, targetModel));
             var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
-            var targetModelIds = new HashSet<ColumnId>(columns.Select(x => x.ModelId));
+            var targetModelIds = new HashSet<ColumnId>(columns.Select(x => x.Id));
             foreach (var resultItem in result)
             {
-                if (!targetModelIds.Contains(resultItem.Target.ModelId))
+                if (!targetModelIds.Contains(resultItem.Target.Id))
                     throw new InvalidOperationException(DiagnosticMessages.ColumnMapper_InvalidTarget(resultItem.Target));
             }
 

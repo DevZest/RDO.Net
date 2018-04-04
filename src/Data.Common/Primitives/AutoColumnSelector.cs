@@ -23,7 +23,7 @@ namespace DevZest.Data.Primitives
         private void Add(Column column)
         {
             Debug.Assert(column != null);
-            Add(_byModelId, column, c => c.ModelId);
+            Add(_byModelId, column, c => c.Id);
             Add(_byOriginalId, column, c => c.OriginalId);
         }
 
@@ -40,7 +40,7 @@ namespace DevZest.Data.Primitives
 
         public Column Select(Column column)
         {
-            return Select(_byModelId, column, c => c.ModelId) ?? Select(_byOriginalId, column, c => c.OriginalId);
+            return Select(_byModelId, column, c => c.Id) ?? Select(_byOriginalId, column, c => c.OriginalId);
         }
 
         private static Column Select(Dictionary<ColumnId, IColumns> dictionary, Column column, Func<Column, ColumnId> columnIdGetter)

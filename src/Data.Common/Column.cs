@@ -29,7 +29,7 @@ namespace DevZest.Data
         /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
         public string OriginalName { get; internal set; }
 
-        public ColumnId ModelId
+        public ColumnId Id
         {
             get { return new ColumnId(DeclaringType, Name); }
         }
