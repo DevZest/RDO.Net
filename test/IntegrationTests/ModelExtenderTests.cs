@@ -12,7 +12,7 @@ namespace DevZest.Data
         {
             using (var db = OpenDb())
             {
-                var salesOrderDetails = db.CreateQuery(_ => _.SetExtender<SalesOrderToEdit.DetailExt>(),
+                var salesOrderDetails = db.CreateQuery(_ => _.SetExtender<SalesOrderInfo.DetailExt>(),
                     (DbQueryBuilder builder, SalesOrderDetail _) =>
                     {
                         SalesOrderDetail d;
@@ -27,7 +27,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrderDetail_71774_with_ext.Trim();
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtender<SalesOrderToEdit.DetailExt>(), json);
+                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtender<SalesOrderInfo.DetailExt>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
@@ -37,10 +37,10 @@ namespace DevZest.Data
         {
             using (var db = OpenDb())
             {
-                var salesOrders = db.CreateQuery(_ => _.SetExtender<SalesOrderToEdit.Ext>(),
+                var salesOrders = db.CreateQuery(_ => _.SetExtender<SalesOrderInfo.Ext>(),
                     (DbQueryBuilder builder, SalesOrder _) =>
                     {
-                        var ext = _.GetExtender<SalesOrderToEdit.Ext>();
+                        var ext = _.GetExtender<SalesOrderInfo.Ext>();
                         SalesOrder o;
                         Customer c;
                         Address shipTo, billTo;
@@ -58,7 +58,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrder_71774_with_ext;
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtender<SalesOrderToEdit.Ext>(), json);
+                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtender<SalesOrderInfo.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
@@ -66,11 +66,11 @@ namespace DevZest.Data
         [TestMethod]
         public void ModelExtender_sales_order_with_details()
         {
-            var json = GetSalesOrderToEdit(71774).ToJsonString(true);
+            var json = GetSalesOrderInfo(71774).ToJsonString(true);
             var expectedJson = Strings.ExpectedJSON_SalesOrderEdit_71774;
             Assert.AreEqual(expectedJson, json);
 
-            var dataSet = DataSet<SalesOrderToEdit>.ParseJson(json);
+            var dataSet = DataSet<SalesOrderInfo>.ParseJson(json);
             Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
         }
     }

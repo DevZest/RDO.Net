@@ -10,7 +10,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSetContainer_column_computation()
         {
-            var dataSet = GetSalesOrderToEdit(71774);
+            var dataSet = GetSalesOrderInfo(71774);
             var _ = dataSet._;
 
             Assert.AreNotEqual(0, _.TaxAmt[0]);

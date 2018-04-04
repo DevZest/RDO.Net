@@ -10,9 +10,9 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag_SetValue()
         {
-            var salesOrders = DataSet<SalesOrderToEdit>.New();
+            var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderInfo.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();
@@ -27,9 +27,9 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag_SetValue_with_DataRow()
         {
-            var salesOrders = DataSet<SalesOrderToEdit>.New();
+            var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderInfo.Ext>();
             var customer = ext.Customer;
             salesOrders.Add(new DataRow(), (dataRow) =>
             {
@@ -54,9 +54,9 @@ namespace DevZest.Data
             }
 
             {
-                var salesOrder = DataSet<SalesOrderToEdit>.New().EnsureInitialized()._;
+                var salesOrder = DataSet<SalesOrderInfo>.New().EnsureInitialized()._;
                 var customerKey = salesOrder.Customer;
-                var customerExt = salesOrder.GetExtender<SalesOrderToEdit.Ext>().Customer;
+                var customerExt = salesOrder.GetExtender<SalesOrderInfo.Ext>().Customer;
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);
                 valueBag.AutoSelect(customerExt, salesOrders[0]);
@@ -82,9 +82,9 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag_Clone()
         {
-            var salesOrders = DataSet<SalesOrderToEdit>.New();
+            var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderInfo.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();
@@ -101,9 +101,9 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag_ClearValues()
         {
-            var salesOrders = DataSet<SalesOrderToEdit>.New();
+            var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderInfo.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();

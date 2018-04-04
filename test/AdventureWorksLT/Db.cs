@@ -174,11 +174,11 @@ namespace DevZest.Samples.AdventureWorksLT
             return result;
         }
 
-        public DbSet<SalesOrderToEdit> GetSalesOrderToEdit(int salesOrderID)
+        public DbSet<SalesOrderInfo> GetSalesOrderInfo(int salesOrderID)
         {
-            var result = CreateQuery((DbQueryBuilder builder, SalesOrderToEdit _) =>
+            var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
             {
-                var ext = _.GetExtender<SalesOrderToEdit.Ext>();
+                var ext = _.GetExtender<SalesOrderInfo.Ext>();
                 Debug.Assert(ext != null);
                 builder.From(SalesOrders, out var o)
                     .InnerJoin(Customers, o.Customer, out var c)
@@ -192,7 +192,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
             {
-                Debug.Assert(_.GetExtender<SalesOrderToEdit.DetailExt>() != null);
+                Debug.Assert(_.GetExtender<SalesOrderInfo.DetailExt>() != null);
                 builder.From(SalesOrderDetails, out var d)
                     .InnerJoin(Products, d.Product, out var p)
                     .AutoSelect();

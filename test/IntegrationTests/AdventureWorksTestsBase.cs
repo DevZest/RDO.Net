@@ -42,11 +42,11 @@ namespace DevZest.Data
             return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
         }
 
-        protected DataSet<SalesOrderToEdit> GetSalesOrderToEdit(int salesOrderID)
+        protected DataSet<SalesOrderInfo> GetSalesOrderInfo(int salesOrderID)
         {
             using (var db = OpenDb())
             {
-                return db.GetSalesOrderToEdit(salesOrderID).ToDataSet();
+                return db.GetSalesOrderInfo(salesOrderID).ToDataSet();
             }
         }
     }
