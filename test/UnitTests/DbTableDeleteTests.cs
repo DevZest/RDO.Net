@@ -114,7 +114,7 @@ FROM
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrder = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
+                var salesOrder = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
                 var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);
                 var command = db.SalesOrderDetails.MockDelete(0, salesOrderDetails, (s, _) => s.MapTo(_));
                 var expectedSql =

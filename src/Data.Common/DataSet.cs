@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace DevZest.Data
 {
-    public abstract class DataSet : DataSource, IList<DataRow>, IReadOnlyList<DataRow>
+    public abstract class DataSet : DataSource, IList<DataRow>, IReadOnlyList<DataRow>, IJsonView
     {
         public DataSet Clone()
         {
@@ -188,6 +188,12 @@ namespace DevZest.Data
             return JsonWriter.New().Write(this).ToString(isPretty);
         }
 
+        public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty)
+        {
+            Check.NotNull(dataRows, nameof(dataRows));
+            return JsonWriter.New().Write(this, dataRows).ToString(isPretty);
+        }
+
         public IDataValidationResults Validate(bool recursive = true, int maxErrorRows = 100)
         {
             return Validate(DataValidationResults.Empty, this, maxErrorRows, recursive).Seal();
@@ -280,6 +286,16 @@ namespace DevZest.Data
 
             Model.CancelEdit();
             return true;
+        }
+
+        IJsonView IJsonView.GetChildView(DataSet childDataSet)
+        {
+            return childDataSet;
+        }
+
+        JsonFilter IJsonView.Filter
+        {
+            get { return null; }
         }
 
         public DataSetContainer Container

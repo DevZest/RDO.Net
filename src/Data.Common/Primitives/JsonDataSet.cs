@@ -5,15 +5,30 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonDataSet
     {
-        public static JsonWriter Write(this JsonWriter jsonWriter, IEnumerable<DataRow> dataSet, JsonFilter jsonFilter = null)
+        public static JsonWriter Write(this JsonWriter jsonWriter, DataSet dataSet)
+        {
+            return jsonWriter.InternalWrite(dataSet, dataSet);
+        }
+
+        public static JsonWriter Write(this JsonWriter jsonWriter, DataSet dataSet, IEnumerable<DataRow> dataRows)
+        {
+            return jsonWriter.InternalWrite(dataSet, dataRows);
+        }
+
+        public static JsonWriter Write(this JsonWriter jsonWriter, JsonView jsonView, IEnumerable<DataRow> dataRows)
+        {
+            return jsonWriter.InternalWrite(jsonView, dataRows);
+        }
+
+        internal static JsonWriter InternalWrite(this JsonWriter jsonWriter, IJsonView jsonView, IEnumerable<DataRow> dataRows)
         {
             jsonWriter.WriteStartArray();
             int count = 0;
-            foreach (var dataRow in dataSet)
+            foreach (var dataRow in dataRows)
             {
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.Write(dataRow, jsonFilter);
+                jsonWriter.Write(jsonView, dataRow);
                 count++;
             }
             return jsonWriter.WriteEndArray();

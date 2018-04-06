@@ -22,4 +22,19 @@
     <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\Json.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Json.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Json.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Json.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

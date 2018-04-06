@@ -84,7 +84,7 @@ namespace DevZest.Data
                   ""OrderQty"" : 1,
                   ""ProductID"" : 836,
                   ""UnitPrice"" : 356.8980,
-                  ""UnitPriceDiscount"" : 0.0000,
+                  ""UnitPriceDiscount"" : 0,
                   ""RowGuid"" : ""e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"",
                   ""ModifiedDate"" : ""2008-06-01T00:00:00.000""
                },
@@ -93,7 +93,7 @@ namespace DevZest.Data
                   ""OrderQty"" : 1,
                   ""ProductID"" : 822,
                   ""UnitPrice"" : 356.8980,
-                  ""UnitPriceDiscount"" : 0.0000,
+                  ""UnitPriceDiscount"" : 0,
                   ""RowGuid"" : ""5c77f557-fdb6-43ba-90b9-9a7aec55ca32"",
                   ""ModifiedDate"" : ""2008-06-01T00:00:00.000""
                }
@@ -103,7 +103,7 @@ namespace DevZest.Data
    }
 ]";
             {
-                var dataSet = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
+                var dataSet = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
                 var pagedDataSet = new PagedDataSet<SalesOrder>()
                 {
                     Page = 1,

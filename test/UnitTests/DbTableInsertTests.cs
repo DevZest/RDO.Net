@@ -347,7 +347,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
         [TestMethod]
         public void DbTable_Insert_into_child_temp_table_optimized()
         {
-            var salesOrders = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
+            var salesOrders = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
@@ -364,8 +364,8 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
     <col_2>1</col_2>
     <col_3>836</col_3>
     <col_4>356.8980</col_4>
-    <col_5>0.0000</col_5>
-    <col_6>356.89800000</col_6>
+    <col_5>0</col_5>
+    <col_6>356.8980</col_6>
     <col_7>e3a1994c-7a68-4ce8-96a3-77fdd3bbd730</col_7>
     <col_8>2008-06-01 00:00:00.000</col_8>
     <col_9>1</col_9>
@@ -376,8 +376,8 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
     <col_2>1</col_2>
     <col_3>822</col_3>
     <col_4>356.8980</col_4>
-    <col_5>0.0000</col_5>
-    <col_6>356.89800000</col_6>
+    <col_5>0</col_5>
+    <col_6>356.8980</col_6>
     <col_7>5c77f557-fdb6-43ba-90b9-9a7aec55ca32</col_7>
     <col_8>2008-06-01 00:00:00.000</col_8>
     <col_9>2</col_9>
@@ -406,7 +406,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
         [TestMethod]
         public void DbTable_Insert_into_child_temp_table_do_not_optimize()
         {
-            var salesOrders = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
+            var salesOrders = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
@@ -424,8 +424,8 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
     <col_2>1</col_2>
     <col_3>836</col_3>
     <col_4>356.8980</col_4>
-    <col_5>0.0000</col_5>
-    <col_6>356.89800000</col_6>
+    <col_5>0</col_5>
+    <col_6>356.8980</col_6>
     <col_7>e3a1994c-7a68-4ce8-96a3-77fdd3bbd730</col_7>
     <col_8>2008-06-01 00:00:00.000</col_8>
     <col_9>1</col_9>
@@ -436,8 +436,8 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
     <col_2>1</col_2>
     <col_3>822</col_3>
     <col_4>356.8980</col_4>
-    <col_5>0.0000</col_5>
-    <col_6>356.89800000</col_6>
+    <col_5>0</col_5>
+    <col_6>356.8980</col_6>
     <col_7>5c77f557-fdb6-43ba-90b9-9a7aec55ca32</col_7>
     <col_8>2008-06-01 00:00:00.000</col_8>
     <col_9>2</col_9>

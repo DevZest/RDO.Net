@@ -316,5 +316,11 @@ namespace DevZest.Data
             _.EnsureInitialized();
             return this;
         }
+
+        public JsonView<T> Filter(JsonFilter filter)
+        {
+            Check.NotNull(filter, nameof(filter));
+            return new JsonView<T>(_, filter);
+        }
     }
 }

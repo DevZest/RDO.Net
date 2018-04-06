@@ -5,10 +5,21 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonDataRow
     {
-        public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow, JsonFilter jsonFilter = null)
+        public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow)
+        {
+            return Write(jsonWriter, dataRow.DataSet, dataRow);
+        }
+
+        public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow, JsonView jsonView)
+        {
+            return Write(jsonWriter, jsonView, dataRow);
+        }
+
+        internal static JsonWriter Write(this JsonWriter jsonWriter, IJsonView jsonView, DataRow dataRow)
         {
             jsonWriter.WriteStartObject();
 
+            var jsonFilter = jsonView.Filter;
             var columns = dataRow.Model.Columns;
             int count = 0;
             foreach (var column in columns)
@@ -67,7 +78,8 @@ namespace DevZest.Data.Primitives
 
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.WriteObjectName(dataSet.Model.Name).Write(dataSet);
+                var childJsonView = jsonView.GetChildView(dataSet);
+                jsonWriter.WriteObjectName(dataSet.Model.Name).InternalWrite(childJsonView, dataSet);
                 count++;
             }
 
