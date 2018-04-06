@@ -14,6 +14,15 @@ namespace DevZest.Data
             var details = salesOrderInfo.Children(x => x.SalesOrderDetails);
             var jsonView = salesOrderInfo.Filter(JsonFilter.NoExtender).FilterChildren(details.Filter(JsonFilter.NoExtender));
             Assert.AreEqual(Json.SalesOrder_71774, jsonView.ToJsonString(true));
+
+            jsonView = salesOrderInfo.Filter(JsonFilter.PrimaryKeyOnly);
+            var expectedJson =
+@"[
+   {
+      ""SalesOrderID"" : 71774
+   }
+]";
+            Assert.AreEqual(expectedJson, jsonView.ToJsonString(true));
         }
     }
 }

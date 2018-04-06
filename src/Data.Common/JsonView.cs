@@ -46,6 +46,11 @@ namespace DevZest.Data
             Check.NotNull(dataRows, nameof(dataRows));
             return JsonWriter.New().Write(this, dataRows).ToString(isPretty);
         }
+
+        public override string ToString()
+        {
+            return ToJsonString(true);
+        }
     }
 
     public sealed class JsonView<T> : JsonView

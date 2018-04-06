@@ -322,5 +322,10 @@ namespace DevZest.Data
             Check.NotNull(filter, nameof(filter));
             return new JsonView<T>(_, filter);
         }
+
+        public JsonView<T> Filter(params JsonFilter[] filters)
+        {
+            return new JsonView<T>(_, JsonFilter.Join(filters));
+        }
     }
 }
