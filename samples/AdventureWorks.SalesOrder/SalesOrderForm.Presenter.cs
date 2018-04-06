@@ -26,14 +26,21 @@ namespace AdventureWorks.SalesOrders
             private AddressLookupPopup _addressLookupPopup;
             private RowBinding<ForeignKeyBox> _shipToAddressBinding;
             private RowBinding<ForeignKeyBox> _billToAddressBinding;
+            private RowBinding<DataView> _subFormBinding;
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
+                _subFormBinding = _.SalesOrderDetails.BindToDataView(() => new DetailPresenter(_ownerWindow)).WithStyle(Styles.DataSheet);
                 builder.GridRows("Auto", "*", "Auto")
                     .GridColumns("580")
                     .AddBinding(0, 0, _.BindToSalesOrderHeaderBox(out _shipToAddressBinding, out _billToAddressBinding))
-                    .AddBinding(0, 1, _.SalesOrderDetails.BindToDataView(() => new DetailPresenter(_ownerWindow)).WithStyle(Styles.DataSheet))
+                    .AddBinding(0, 1, _subFormBinding)
                     .AddBinding(0, 2, _.BindToSalesOrderFooterBox());
+            }
+
+            public DetailPresenter CurrentRowDetailPresenter
+            {
+                get { return (DetailPresenter)_subFormBinding[CurrentRow].DataPresenter; }
             }
 
             bool ForeignKeyBox.ILookupService.CanLookup(PrimaryKey foreignKey)

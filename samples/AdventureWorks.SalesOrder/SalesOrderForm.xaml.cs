@@ -1,10 +1,8 @@
 ﻿using DevZest.Data;
-using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
 using System;
 using System.Windows;
-using DevZest.Data.Presenters;
-using System.Diagnostics;
+using System.Windows.Input;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -13,16 +11,46 @@ namespace AdventureWorks.SalesOrders
     /// </summary>
     public partial class SalesOrderForm : Window
     {
+        public static class Commands
+        {
+            public static readonly RoutedCommand Submit = new RoutedCommand(nameof(Submit), typeof(SalesOrderForm));
+        }
+
         public SalesOrderForm()
         {
             InitializeComponent();
+            CommandBindings.Add(new CommandBinding(Commands.Submit, ExecSubmit, CanExecSubmit));
+        }
+
+        private void ExecSubmit(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (_presenter.IsEditing)
+                _presenter.CurrentRow.EndEdit();
+            if (CurrentRowDetailPresenter.IsEditing)
+                CurrentRowDetailPresenter.CurrentRow.EndEdit();
+
+            //if (App.Execute((ct) => Data.Update(_presenter.DataSet, ct), "Saving..."))
+            //{
+            //    DialogResult = true;
+            //    Close();
+            //}
+        }
+
+        private void CanExecSubmit(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _presenter.CanSubmitInput && CurrentRowDetailPresenter.CanSubmitInput;
         }
 
         private Presenter _presenter;
 
-        private SalesOrderToEdit _
+        private DataSet<SalesOrderToEdit> DataSet
         {
-            get { return _presenter?._; }
+            get { return _presenter.DataSet; }
+        }
+
+        private DetailPresenter CurrentRowDetailPresenter
+        {
+            get { return _presenter.CurrentRowDetailPresenter; }
         }
 
         public void Show(DataSet<SalesOrderToEdit> data, Window ownerWindow, string windowTitle, Action action)

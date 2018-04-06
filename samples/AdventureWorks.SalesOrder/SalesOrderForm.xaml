@@ -18,7 +18,7 @@
         <dz:DataView x:Name="_dataView" Background="White" Margin="5" />
         <local:AddressLookupPopup x:Name="_addressLookupPopup" />
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
-            <Button Content="OK" IsDefault="True" Margin="5" />
+            <Button Content="OK" IsDefault="True" Margin="5" Command="{x:Static local:SalesOrderForm+Commands.Submit}" />
             <Button Content="Cancel" IsCancel="True" Margin="5" />
         </UniformGrid>
     </Grid>
