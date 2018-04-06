@@ -35,13 +35,13 @@ namespace DevZest.Data
             return dbConstraintAttribute == null ? null : dbConstraintAttribute.Description;
         }
 
-        public KeyMapping MapTo(T target)
+        public KeyMapping Join(T target)
         {
             Check.NotNull(target, nameof(target));
             return new KeyMapping(PrimaryKey, target);
         }
 
-        public KeyMapping MapTo(Model<T> target)
+        public KeyMapping Join(Model<T> target)
         {
             Check.NotNull(target, nameof(target));
             return new KeyMapping(PrimaryKey, target.PrimaryKey);
