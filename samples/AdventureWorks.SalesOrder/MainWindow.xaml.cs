@@ -42,7 +42,7 @@ namespace AdventureWorks.SalesOrders
             CommandBindings.Add(new CommandBinding(Commands.Close, Close));
         }
 
-        private SalesOrder _
+        private SalesOrderHeader _
         {
             get { return _presenter._; }
         }
@@ -73,7 +73,7 @@ namespace AdventureWorks.SalesOrders
             if (MessageBox.Show(messageBoxText, caption, MessageBoxButton.YesNo, MessageBoxImage.Asterisk, MessageBoxResult.No) == MessageBoxResult.No)
                 return;
 
-            var refs = DataSet<SalesOrder.Ref>.New();
+            var refs = DataSet<SalesOrderHeader.Ref>.New();
             foreach (var rowPresenter in selectedRows)
             {
                 var id = rowPresenter.GetValue(_.SalesOrderID);

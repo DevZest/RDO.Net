@@ -14,7 +14,7 @@ namespace AdventureWorks.SalesOrders
             public static readonly StyleId DataSheet = new StyleId(typeof(SalesOrderForm));
         }
 
-        private class Presenter : DataPresenter<SalesOrderToEdit>, ForeignKeyBox.ILookupService
+        private class Presenter : DataPresenter<SalesOrderInfo>, ForeignKeyBox.ILookupService
         {
             public Presenter(Window ownerWindow, AddressLookupPopup addressLookupPopup)
             {

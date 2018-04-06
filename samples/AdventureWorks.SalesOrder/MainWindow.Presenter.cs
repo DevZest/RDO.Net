@@ -23,7 +23,7 @@ namespace AdventureWorks.SalesOrders
             public static readonly StyleId Label = new StyleId(typeof(MainWindow));
         }
 
-        private class Presenter : DataPresenter<SalesOrder>, ColumnHeader.ISortService
+        private class Presenter : DataPresenter<SalesOrderHeader>, ColumnHeader.ISortService
         {
             private readonly Pen _frozenLine;
 
@@ -65,7 +65,7 @@ namespace AdventureWorks.SalesOrders
                 }
             }
 
-            private Task<DataSet<SalesOrder>> LoadDataAsync(CancellationToken ct)
+            private Task<DataSet<SalesOrderHeader>> LoadDataAsync(CancellationToken ct)
             {
                 return Data.GetListAsync(SearchText, _orderBy, ct);
             }

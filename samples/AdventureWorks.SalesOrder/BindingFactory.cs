@@ -7,10 +7,10 @@ namespace AdventureWorks.SalesOrders
 {
     public static class BindingFactory
     {
-        public static RowCompositeBinding<SalesOrderHeaderBox> BindToSalesOrderHeaderBox(this SalesOrderToEdit _,
+        public static RowCompositeBinding<SalesOrderHeaderBox> BindToSalesOrderHeaderBox(this SalesOrderInfo _,
             out RowBinding<ForeignKeyBox> shipToAddressBinding, out RowBinding<ForeignKeyBox> billToAddressBinding)
         {
-            var ext = _.GetExtender<SalesOrderToEdit.Ext>();
+            var ext = _.GetExtender<SalesOrderInfo.Ext>();
             return new RowCompositeBinding<SalesOrderHeaderBox>()
                 .AddChild(_.Customer.BindToForeignKeyBox(ext.Customer, CustomerBox.RefreshAction), v => v._customer)
                 .AddChild(shipToAddressBinding = _.ShipToAddress.BindToForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)

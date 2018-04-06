@@ -11,27 +11,27 @@ namespace AdventureWorks.SalesOrders
 {
     static class Data
     {
-        public static async Task<DataSet<SalesOrder>> GetListAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
+        public static async Task<DataSet<SalesOrderHeader>> GetListAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                return await db.GetSalesOrderList(filterText, orderBy).ToDataSetAsync(ct);
+                return await db.GetSalesOrderHeaders(filterText, orderBy).ToDataSetAsync(ct);
             }
         }
 
-        public static async Task DeleteAsync(DataSet<SalesOrder.Ref> dataSet, CancellationToken ct)
+        public static async Task DeleteAsync(DataSet<SalesOrderHeader.Ref> dataSet, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                await db.SalesOrders.DeleteAsync(dataSet, _ => _.PrimaryKey, ct);
+                await db.SalesOrderHeaders.Delete(dataSet, (s, _) => s.MapTo(_)).ExecuteAsync(ct);
             }
         }
 
-        public static async Task<DataSet<SalesOrderToEdit>> GetItemAsync(int salesOrderID, CancellationToken ct)
+        public static async Task<DataSet<SalesOrderInfo>> GetItemAsync(int salesOrderID, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                return await db.GetSalesOrderToEdit(salesOrderID).ToDataSetAsync(ct);
+                return await db.GetSalesOrderInfo(salesOrderID).ToDataSetAsync(ct);
             }
         }
 

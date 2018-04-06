@@ -43,7 +43,7 @@ namespace AdventureWorks.SalesOrders
 
         private Presenter _presenter;
 
-        private DataSet<SalesOrderToEdit> DataSet
+        private DataSet<SalesOrderInfo> DataSet
         {
             get { return _presenter.DataSet; }
         }
@@ -53,7 +53,7 @@ namespace AdventureWorks.SalesOrders
             get { return _presenter.CurrentRowDetailPresenter; }
         }
 
-        public void Show(DataSet<SalesOrderToEdit> data, Window ownerWindow, string windowTitle, Action action)
+        public void Show(DataSet<SalesOrderInfo> data, Window ownerWindow, string windowTitle, Action action)
         {
             _presenter = new Presenter(this, _addressLookupPopup);
             _presenter.Show(_dataView, data);
