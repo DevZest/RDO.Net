@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public abstract class DataSet : DataSource, IList<DataRow>
+    public abstract class DataSet : DataSource, IList<DataRow>, IReadOnlyList<DataRow>
     {
         public DataSet Clone()
         {
