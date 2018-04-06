@@ -5,7 +5,7 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonDataSet
     {
-        public static JsonWriter Write(this JsonWriter jsonWriter, IEnumerable<DataRow> dataSet, bool includeExtension = true)
+        public static JsonWriter Write(this JsonWriter jsonWriter, IEnumerable<DataRow> dataSet, JsonFilter jsonFilter = null)
         {
             jsonWriter.WriteStartArray();
             int count = 0;
@@ -13,7 +13,7 @@ namespace DevZest.Data.Primitives
             {
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.Write(dataRow, includeExtension);
+                jsonWriter.Write(dataRow, jsonFilter);
                 count++;
             }
             return jsonWriter.WriteEndArray();

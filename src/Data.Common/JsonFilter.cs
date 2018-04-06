@@ -9,6 +9,7 @@ namespace DevZest.Data
     public abstract class JsonFilter
     {
         public static JsonFilter NoExtender { get { return NoExtenderJsonFilter.Singleton; } }
+        public static JsonFilter NoChildDataSet { get { return NoChildDataSetJsonFilter.Singleton; } }
         public static JsonFilter PrimaryKeyOnly { get { return PrimaryKeyOnlyJsonFilter.Singleton; } }
         public static JsonFilter Explicit(params ModelMember[] members)
         {
@@ -66,6 +67,26 @@ namespace DevZest.Data
             protected internal override bool ShouldSerialize(ModelMember member)
             {
                 return true;
+            }
+        }
+
+        private sealed class NoChildDataSetJsonFilter : JsonFilter
+        {
+            public static readonly NoChildDataSetJsonFilter Singleton = new NoChildDataSetJsonFilter();
+
+            private NoChildDataSetJsonFilter()
+            {
+            }
+
+            protected internal override bool ShouldSerialize(ModelExtender extender)
+            {
+                return true;
+            }
+
+            protected internal override bool ShouldSerialize(ModelMember member)
+            {
+                var model = member as Model;
+                return model == null;
             }
         }
 

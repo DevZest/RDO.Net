@@ -5,7 +5,7 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonDataRow
     {
-        public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow, bool includeExtender = true)
+        public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow, JsonFilter jsonFilter = null)
         {
             jsonWriter.WriteStartObject();
 
@@ -19,6 +19,9 @@ namespace DevZest.Data.Primitives
                 if (column.Kind == ColumnKind.ColumnList || column.Kind == ColumnKind.Extender)
                     continue;
 
+                if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))
+                    continue;
+
                 if (count > 0)
                     jsonWriter.WriteComma();
                 jsonWriter.WriteObjectName(column.Name);
@@ -28,6 +31,9 @@ namespace DevZest.Data.Primitives
 
             foreach (var columnList in dataRow.Model.ColumnLists)
             {
+                if (jsonFilter != null && !jsonFilter.ShouldSerialize(columnList))
+                    continue;
+
                 if (count > 0)
                     jsonWriter.WriteComma();
                 jsonWriter.WriteObjectName(columnList.Name);
@@ -42,20 +48,23 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
-            if (includeExtender)
+            var extender = dataRow.Model.Extender;
+            if (extender != null)
             {
-                var extender = dataRow.Model.Extender;
-                if (extender != null)
+                if (jsonFilter == null || jsonFilter.ShouldSerialize(extender))
                 {
                     if (count > 0)
                         jsonWriter.WriteComma();
-                    jsonWriter.Write(extender, dataRow);
+                    jsonWriter.Write(extender, dataRow, jsonFilter);
                     count++;
                 }
             }
 
             foreach (var dataSet in dataRow.ChildDataSets)
             {
+                if (jsonFilter != null && !jsonFilter.ShouldSerialize(dataSet.Model))
+                    continue;
+
                 if (count > 0)
                     jsonWriter.WriteComma();
                 jsonWriter.WriteObjectName(dataSet.Model.Name).Write(dataSet);
@@ -74,7 +83,7 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
         }
 
-        private static void Write(this JsonWriter jsonWriter, ModelExtender extender, DataRow dataRow)
+        private static void Write(this JsonWriter jsonWriter, ModelExtender extender, DataRow dataRow, JsonFilter jsonFilter)
         {
             jsonWriter.WriteObjectName(extender.Name);
 
@@ -82,6 +91,9 @@ namespace DevZest.Data.Primitives
             jsonWriter.WriteStartObject();
             foreach (var column in extender.Columns)
             {
+                if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))
+                    continue;
+
                 if (count > 0)
                     jsonWriter.WriteComma();
                 jsonWriter.WriteObjectName(column.RelativeName);
@@ -90,9 +102,11 @@ namespace DevZest.Data.Primitives
             }
             foreach (var childExtender in extender.ChildExtenders)
             {
+                if (jsonFilter != null && !jsonFilter.ShouldSerialize(childExtender))
+                    continue;
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.Write(childExtender, dataRow);
+                jsonWriter.Write(childExtender, dataRow, jsonFilter);
                 count++;
             }
             jsonWriter.WriteEndObject();
