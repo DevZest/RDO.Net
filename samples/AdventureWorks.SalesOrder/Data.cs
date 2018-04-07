@@ -23,7 +23,7 @@ namespace AdventureWorks.SalesOrders
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                await db.SalesOrderHeaders.Delete(dataSet, (s, _) => s.MapTo(_)).ExecuteAsync(ct);
+                await db.SalesOrderHeaders.Delete(dataSet, (s, _) => s.Match(_)).ExecuteAsync(ct);
             }
         }
 
