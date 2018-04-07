@@ -25,7 +25,7 @@ namespace DevZest.Data
         public DbTableUpdate<T> Update<TSource>(DbSet<TSource> source)
             where TSource : T, new()
         {
-            return Update(source, ColumnMapper.InferUpdate, KeyMapping.Infer);
+            return Update(source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
         }
 
         public DbTableUpdate<T> Update<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join)
@@ -56,7 +56,7 @@ namespace DevZest.Data
         public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex)
             where TSource : T, new()
         {
-            return Update(source, rowIndex, ColumnMapper.InferUpdate, KeyMapping.Infer);
+            return Update(source, rowIndex, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
         }
 
         public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
@@ -72,7 +72,7 @@ namespace DevZest.Data
         public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source)
             where TSource : T, new()
         {
-            return Update(source, ColumnMapper.InferUpdate, KeyMapping.Infer);
+            return Update(source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
         }
 
         public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)

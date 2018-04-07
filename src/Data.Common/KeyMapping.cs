@@ -7,7 +7,7 @@ namespace DevZest.Data
 {
     public struct KeyMapping
     {
-        public static KeyMapping Infer<TSource, TTarget>(TSource source, TTarget target)
+        public static KeyMapping Match<TSource, TTarget>(TSource source, TTarget target)
             where TSource : TTarget
             where TTarget : Model
         {

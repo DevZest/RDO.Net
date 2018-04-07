@@ -46,7 +46,7 @@ namespace DevZest.Data.Helpers
             where T : Model, new()
         {
             if (skipExisting)
-                return KeyMapping.Infer;
+                return KeyMapping.Match;
             else
                 return null;
         }
@@ -54,7 +54,7 @@ namespace DevZest.Data.Helpers
         public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int ordinal, bool skipExisting = false, bool updateIdentity = false)
             where T : Model, new()
         {
-            return MockInsert(dbTable, success, source, ordinal, ColumnMapper.InferInsert, GetJoinMapper<T>(skipExisting), updateIdentity);
+            return MockInsert(dbTable, success, source, ordinal, ColumnMapper.AutoSelectInsertable, GetJoinMapper<T>(skipExisting), updateIdentity);
         }
 
         public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal,
@@ -76,7 +76,7 @@ namespace DevZest.Data.Helpers
         public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbQuery<T> source, bool skipExisting = false)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.InferInsert, GetJoinMapper<T>(skipExisting));
+            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<T>(skipExisting));
         }
 
         public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbQuery<TSource> source,
@@ -96,7 +96,7 @@ namespace DevZest.Data.Helpers
         public static IList<SqlCommand> MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbTable<T> source, bool skipExisting = false, bool updateIdentity = false)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.InferInsert, GetJoinMapper<T>(skipExisting), updateIdentity);
+            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<T>(skipExisting), updateIdentity);
         }
 
         public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
@@ -146,7 +146,7 @@ namespace DevZest.Data.Helpers
         public static IList<SqlCommand> MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DataSet<T> source, bool skipExisting = false, bool updateIdentity = false)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.InferInsert, GetJoinMapper<T>(skipExisting), updateIdentity);
+            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<T>(skipExisting), updateIdentity);
         }
 
         public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
@@ -197,7 +197,7 @@ namespace DevZest.Data.Helpers
         internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> dbSet)
             where T : Model, new()
         {
-            return MockUpdate(dbTable, rowsAffected, dbSet, ColumnMapper.InferUpdate, KeyMapping.Infer);
+            return MockUpdate(dbTable, rowsAffected, dbSet, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> dbSet,
@@ -217,7 +217,7 @@ namespace DevZest.Data.Helpers
         internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int rowIndex)
             where T : Model, new()
         {
-            return MockUpdate(dbTable, success, source, rowIndex, ColumnMapper.InferUpdate, KeyMapping.Infer);
+            return MockUpdate(dbTable, success, source, rowIndex, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int rowIndex,
@@ -238,7 +238,7 @@ namespace DevZest.Data.Helpers
         internal static SqlCommand MockUpdate<TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TTarget> source)
             where TTarget : Model, new()
         {
-            return MockUpdate(dbTable, rowsAffected, source, ColumnMapper.InferUpdate, KeyMapping.Infer);
+            return MockUpdate(dbTable, rowsAffected, source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,

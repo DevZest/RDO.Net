@@ -197,7 +197,7 @@ namespace DevZest.Data.SqlServer
         internal SqlCommand BuildImportCommand<T>(DataSet<T> source, DbTable<T> target)
             where T : Model, new()
         {
-            var statement = target.BuildInsertStatement(BuildImportQuery(source), Data.ColumnMapper.InferInsert);
+            var statement = target.BuildInsertStatement(BuildImportQuery(source), Data.ColumnMapper.AutoSelectInsertable);
             return GetInsertCommand(statement);
         }
 
@@ -216,7 +216,7 @@ namespace DevZest.Data.SqlServer
         internal SqlCommand BuildImportKeyCommand<T>(DataSet<T> source, DbTable<KeyOutput> target)
             where T : Model, new()
         {
-            var statement = target.BuildInsertStatement(BuildImportKeyQuery(source), Data.ColumnMapper.InferInsert);
+            var statement = target.BuildInsertStatement(BuildImportKeyQuery(source), Data.ColumnMapper.AutoSelectInsertable);
             return GetInsertCommand(statement);
         }
 

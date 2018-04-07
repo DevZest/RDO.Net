@@ -14,7 +14,7 @@ namespace DevZest.Data.Helpers
             public static readonly Mounter<_Int32> _ChildCount = RegisterColumn((SimpleModel _) => _.ChildCount);
 
             public static readonly Mounter<SimpleModel> _Child = RegisterChildModel((SimpleModel _) => _.Child,
-                x => x.ParentKey, (ColumnMapper builder, SimpleModel child, SimpleModel parent) => builder.Map(child.InheritedValue, parent.InheritedValue));
+                x => x.ParentKey, (ColumnMapper builder, SimpleModel child, SimpleModel parent) => builder.Select(child.InheritedValue, parent.InheritedValue));
 
             private const string ERR_MESSAGE = "The Id must be even.";
 

@@ -23,7 +23,7 @@ namespace DevZest.Data
         public DbTableDelete<T> Delete<TSource>(DbSet<TSource> source)
             where TSource : T, new()
         {
-            return Delete(source, KeyMapping.Infer);
+            return Delete(source, KeyMapping.Match);
         }
 
         public DbTableDelete<T> Delete<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
@@ -38,7 +38,7 @@ namespace DevZest.Data
         public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex)
             where TSource : T, new()
         {
-            return Delete(source, rowIndex, KeyMapping.Infer);
+            return Delete(source, rowIndex, KeyMapping.Match);
         }
 
         public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper)
@@ -53,7 +53,7 @@ namespace DevZest.Data
         public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source)
             where TSource : T, new()
         {
-            return Delete(source, KeyMapping.Infer);
+            return Delete(source, KeyMapping.Match);
         }
 
         public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)

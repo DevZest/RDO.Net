@@ -37,7 +37,7 @@ namespace DevZest.Data
         /// <param name="sourceColumn">The source column.</param>
         /// <returns>This <see cref="ColumnMapper"/>.</returns>
         /// <overloads>Build the <see cref="ColumnMapping"/>.</overloads>
-        public ColumnMapper Map<T>(Column<T> sourceColumn, Column<T> targetColumn)
+        public ColumnMapper Select<T>(Column<T> sourceColumn, Column<T> targetColumn)
         {
             VerifySource(sourceColumn, nameof(sourceColumn));
             VerifyTarget(targetColumn, nameof(targetColumn));
@@ -49,7 +49,7 @@ namespace DevZest.Data
         /// <param name="targetColumnOrdinal">The target column ordinal.</param>
         /// <param name="sourceColumn">The source column.</param>
         /// <returns>This <see cref="ColumnMapper"/>.</returns>
-        public ColumnMapper Map(Column sourceColumn, int targetColumnOrdinal)
+        public ColumnMapper Select(Column sourceColumn, int targetColumnOrdinal)
         {
             var targetColumns = _targetModel.Columns;
 
@@ -65,17 +65,17 @@ namespace DevZest.Data
             return this;
         }
 
-        public ColumnMapper AutoMapInsert()
+        public ColumnMapper AutoSelectInsertable()
         {
-            return AutoMap(_targetModel.GetInsertableColumns());
+            return AutoSelect(_targetModel.GetInsertableColumns());
         }
 
-        public ColumnMapper AutoMapUpdate()
+        public ColumnMapper AutoSelectUpdatable()
         {
-            return AutoMap(_targetModel.GetUpdatableColumns());
+            return AutoSelect(_targetModel.GetUpdatableColumns());
         }
 
-        public ColumnMapper AutoMap(IEnumerable<Column> targetColumns)
+        public ColumnMapper AutoSelect(IEnumerable<Column> targetColumns)
         {
             var sourceColumns = _sourceModel.Columns;
             foreach (var targetColumn in targetColumns)
@@ -108,14 +108,14 @@ namespace DevZest.Data
             }
         }
 
-        public static void InferInsert<T>(ColumnMapper columnMapper, T source, T target)
+        public static void AutoSelectInsertable<T>(ColumnMapper columnMapper, T source, T target)
         {
-            columnMapper.AutoMapInsert();
+            columnMapper.AutoSelectInsertable();
         }
 
-        public static void InferUpdate<T>(ColumnMapper columnMapper, T source, T target)
+        public static void AutoSelectUpdatable<T>(ColumnMapper columnMapper, T source, T target)
         {
-            columnMapper.AutoMapUpdate();
+            columnMapper.AutoSelectUpdatable();
         }
     }
 }
