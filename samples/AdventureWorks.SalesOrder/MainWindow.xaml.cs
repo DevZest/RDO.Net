@@ -74,11 +74,9 @@ namespace AdventureWorks.SalesOrders
                 return;
 
             var refs = DataSet<SalesOrderHeader.Ref>.New();
+            var keyMapping = _.Match(refs._).GetColumnMappings();
             foreach (var rowPresenter in selectedRows)
-            {
-                var id = rowPresenter.GetValue(_.SalesOrderID);
-                refs.AddRow((_, row) => _.SalesOrderID[row] = id);
-            }
+                refs.AddRow((_, dataRow) => dataRow.CopyValuesFrom(rowPresenter.DataRow, keyMapping));
 
             var success = App.Execute(ct => Data.DeleteAsync(refs, ct), this, caption);
             if (success)
