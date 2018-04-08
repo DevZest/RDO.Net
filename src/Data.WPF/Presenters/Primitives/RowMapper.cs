@@ -430,16 +430,16 @@ namespace DevZest.Data.Presenters.Primitives
             else if (!PassesFilter(dataRow))
                 Remove(row);
             else
-                Update(row);
+                Update(row, e);
         }
 
-        private void Update(RowPresenter row)
+        private void Update(RowPresenter row, ValueChangedEventArgs e)
         {
             var oldIndex = IndexOf(row);
             var newIndex = GetIndex(row, oldIndex);
             if (oldIndex == newIndex)
             {
-                OnRowUpdated(row);
+                OnRowUpdated(row, e);
                 return;
             }
 
@@ -504,8 +504,9 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.DataPresenter; }
         }
 
-        protected virtual void OnRowUpdated(RowPresenter row)
+        protected virtual void OnRowUpdated(RowPresenter row, ValueChangedEventArgs e)
         {
+            row.OnValueChanged(e);
         }
 
         private IEnumerable<DataRow> GetDataRows()

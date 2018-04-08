@@ -9,6 +9,8 @@ namespace DevZest.Data.Presenters
 {
     public sealed class RowPresenter : ElementPresenter
     {
+        public event EventHandler<ValueChangedEventArgs> ValueChanged = delegate { };
+
         internal RowPresenter(RowMapper rowMapper, DataRow dataRow)
             : this(rowMapper, dataRow, -1)
         {
@@ -542,6 +544,11 @@ namespace DevZest.Data.Presenters
         public bool HasVisibleValidationError
         {
             get { return InputManager.HasVisibleValidationError(this); }
+        }
+
+        internal void OnValueChanged(ValueChangedEventArgs e)
+        {
+            ValueChanged(this, e);
         }
     }
 }

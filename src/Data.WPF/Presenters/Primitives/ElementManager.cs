@@ -659,9 +659,9 @@ namespace DevZest.Data.Presenters.Primitives
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
 
-        protected sealed override void OnRowUpdated(RowPresenter row)
+        protected sealed override void OnRowUpdated(RowPresenter row, ValueChangedEventArgs e)
         {
-            base.OnRowUpdated(row);
+            base.OnRowUpdated(row, e);
             InvalidateView();
         }
 

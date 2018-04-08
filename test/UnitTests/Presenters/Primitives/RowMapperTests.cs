@@ -55,17 +55,17 @@ namespace DevZest.Data.Presenters.Primitives
                     _onRowMoved(row, oldIndex, newIndex);
             }
 
-            public ConcreteRowMapper SetupOnRowUpdated(Action<RowPresenter> onRowUpdated)
+            public ConcreteRowMapper SetupOnRowUpdated(Action<RowPresenter, ValueChangedEventArgs> onRowUpdated)
             {
                 _onRowUpdated = onRowUpdated;
                 return this;
             }
 
-            Action<RowPresenter> _onRowUpdated;
-            protected override void OnRowUpdated(RowPresenter row)
+            Action<RowPresenter, ValueChangedEventArgs> _onRowUpdated;
+            protected override void OnRowUpdated(RowPresenter row, ValueChangedEventArgs e)
             {
                 if (_onRowUpdated != null)
-                    _onRowUpdated(row);
+                    _onRowUpdated(row, e);
             }
         }
 
@@ -169,7 +169,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowPresenter rowUpdated = null;
             bool rowMoved = false;
             var rowMapper = CreateRowMapper(dataSet)
-                .SetupOnRowUpdated(row => rowUpdated = row)
+                .SetupOnRowUpdated((row, e) => rowUpdated = row)
                 .SetupOnRowMoved((parent, oldIndex, newIndex) =>
                 {
                     rowMoved = true;
