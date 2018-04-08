@@ -73,11 +73,7 @@ namespace AdventureWorks.SalesOrders
             if (MessageBox.Show(messageBoxText, caption, MessageBoxButton.YesNo, MessageBoxImage.Asterisk, MessageBoxResult.No) == MessageBoxResult.No)
                 return;
 
-            var refs = DataSet<SalesOrderHeader.Ref>.New();
-            var keyMapping = _.Match(refs._).GetColumnMappings();
-            foreach (var rowPresenter in selectedRows)
-                refs.AddRow((_, dataRow) => dataRow.CopyValuesFrom(rowPresenter.DataRow, keyMapping));
-
+            var refs = DataSet<SalesOrderHeader.Ref>.ParseJson(_presenter.DataSet.Filter(JsonFilter.PrimaryKeyOnly).ToJsonString(_presenter.SelectedDataRows, false));
             var success = App.Execute(ct => Data.DeleteAsync(refs, ct), this, caption);
             if (success)
                 RefreshList();

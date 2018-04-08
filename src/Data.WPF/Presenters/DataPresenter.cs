@@ -209,6 +209,19 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager?.SelectedRows; }
         }
 
+        public IEnumerable<DataRow> SelectedDataRows
+        {
+            get
+            {
+                foreach (var row in SelectedRows)
+                {
+                    if (row.IsVirtual)
+                        continue;
+                    yield return row.DataRow;
+                }
+            }
+        }
+
         public RowPresenter VirtualRow
         {
             get { return LayoutManager?.VirtualRow; }
