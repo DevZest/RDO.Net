@@ -635,7 +635,7 @@ namespace DevZest.Data
 
         internal sealed override void EndEdit(DataRow dataRow)
         {
-            if (_valueManager != null)
+            if (_valueManager != null && Expression == null)
                 UpdateValue(dataRow, _editingValue);
         }
 
