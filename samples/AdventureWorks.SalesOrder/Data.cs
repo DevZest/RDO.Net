@@ -11,7 +11,7 @@ namespace AdventureWorks.SalesOrders
 {
     static class Data
     {
-        public static async Task<DataSet<SalesOrderHeader>> GetListAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
+        public static async Task<DataSet<SalesOrderHeader>> GetSalesOrderHeadersAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -27,7 +27,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<DataSet<SalesOrderInfo>> GetItemAsync(int salesOrderID, CancellationToken ct)
+        public static async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {

@@ -40,7 +40,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var gridExtent = logicalExtent.GridExtent;
             if (gridExtent >= MaxGridExtentMain)
-                return GetLogicalMainTrack(MaxGridExtentMain - 1).EndExtent;
+                return MaxGridExtentMain == 0 ? 0 : GetLogicalMainTrack(MaxGridExtentMain - 1).EndExtent;
             else
             {
                 var span = GetLogicalMainTrack(gridExtent).ExtentSpan;

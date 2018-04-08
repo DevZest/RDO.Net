@@ -159,7 +159,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private double MaxExtentMain
         {
-            get { return GetLogicalMainTrack(MaxGridExtentMain - 1).EndExtent; }
+            get { return MaxGridExtentMain == 0 ? 0 : GetLogicalMainTrack(MaxGridExtentMain - 1).EndExtent; }
         }
 
         private double MaxExtentCross

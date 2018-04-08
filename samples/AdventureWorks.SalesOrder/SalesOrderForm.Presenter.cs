@@ -74,7 +74,11 @@ namespace AdventureWorks.SalesOrders
                 if (_addressLookupPopup.Key == foreignKey)
                     _addressLookupPopup.IsOpen = false;
                 else
-                    _addressLookupPopup.Show(foreignKeyBox, CurrentRow.GetValue(foreignKey.AddressID), CurrentRow.GetValue(_.CustomerID).Value);
+                {
+                    var customerID = CurrentRow.GetValue(_.CustomerID);
+                    if (customerID.HasValue)
+                        _addressLookupPopup.Show(foreignKeyBox, CurrentRow.GetValue(foreignKey.AddressID), customerID.Value);
+                }
             }
         }
     }
