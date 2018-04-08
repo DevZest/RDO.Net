@@ -1,10 +1,8 @@
-﻿using DevZest.Data.Presenters.Primitives;
-using System;
+﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Presenters
+namespace DevZest.Data.Presenters.Primitives
 {
     public sealed class PropertyChangedTrigger<T> : Trigger<T>
         where T : UIElement, new()

@@ -1,8 +1,6 @@
-﻿using DevZest.Data.Presenters.Primitives;
-using System;
-using System.Windows;
+﻿using System.Windows;
 
-namespace DevZest.Data.Presenters
+namespace DevZest.Data.Presenters.Primitives
 {
     public sealed class LostFocusTrigger<T> : Trigger<T>
         where T : UIElement, new()
