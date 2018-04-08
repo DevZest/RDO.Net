@@ -120,7 +120,6 @@ namespace DevZest.Data.Presenters.Primitives
         {
             base.Reload();
             _rowValidation?.OnReloaded();
-            DataPresenter?.OnRowsLoaded(true);
         }
 
         protected sealed override void OnCurrentRowChanged(RowPresenter oldValue)

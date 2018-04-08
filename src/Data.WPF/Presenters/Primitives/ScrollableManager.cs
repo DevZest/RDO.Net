@@ -1176,8 +1176,6 @@ namespace DevZest.Data.Presenters.Primitives
             _scrollOffsetMain = 0;
             _scrollToMainPlacement = default(GridPlacement);
             _scrollToMain = default(LogicalExtent);
-
-            DataPresenter?.OnRowsLoaded(false);
         }
     }
 }

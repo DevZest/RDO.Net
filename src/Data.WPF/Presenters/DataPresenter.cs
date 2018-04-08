@@ -399,10 +399,6 @@ namespace DevZest.Data.Presenters
             RequireLayoutManager().InvalidateMeasure();
         }
 
-        protected internal virtual void OnRowsLoaded(bool isReload)
-        {
-        }
-
         protected internal virtual void OnCurrentRowChanged(RowPresenter oldValue)
         {
         }
