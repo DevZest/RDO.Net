@@ -67,11 +67,17 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task Update(DataSet<SalesOrder> salesOrder, CancellationToken ct)
+        public static async Task UpdateSalesOrder<T>(DataSet<T> salesOrders, CancellationToken ct)
+            where T : SalesOrder, new()
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                await db.UpdateAsync(salesOrder, ct);
+                salesOrders._.ResetRowIdentifiers();
+                await db.SalesOrderHeaders.Update(salesOrders).ExecuteAsync(ct);
+                await db.SalesOrderDetails.Delete(salesOrders, (s, _) => s.Match(_.SalesOrderHeader)).ExecuteAsync(ct);
+                var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+                salesOrderDetails._.ResetRowIdentifiers();
+                await db.SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
             }
         }
 

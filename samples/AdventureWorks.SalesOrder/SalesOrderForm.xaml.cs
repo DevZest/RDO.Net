@@ -29,11 +29,11 @@ namespace AdventureWorks.SalesOrders
             if (CurrentRowDetailPresenter.IsEditing)
                 CurrentRowDetailPresenter.CurrentRow.EndEdit();
 
-            //if (App.Execute((ct) => Data.Update(_presenter.DataSet, ct), "Saving..."))
-            //{
-            //    DialogResult = true;
-            //    Close();
-            //}
+            if (App.Execute((ct) => Data.UpdateSalesOrder(_presenter.DataSet, ct), this, "Saving..."))
+            {
+                DialogResult = true;
+                Close();
+            }
         }
 
         private void CanExecSubmit(object sender, CanExecuteRoutedEventArgs e)
