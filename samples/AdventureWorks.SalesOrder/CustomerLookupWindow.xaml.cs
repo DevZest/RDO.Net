@@ -103,16 +103,19 @@ namespace AdventureWorks.SalesOrders
         private void Search(object sender, ExecutedRoutedEventArgs e)
         {
             _presenter.SearchText = _searchBox.SearchText;
+            e.Handled = true;
         }
 
         private void ClearSearch(object sender, ExecutedRoutedEventArgs e)
         {
             _presenter.SearchText = null;
+            e.Handled = true;
         }
 
         private void Close(object sender, ExecutedRoutedEventArgs e)
         {
             this.Close();
+            e.Handled = true;
         }
     }
 }
