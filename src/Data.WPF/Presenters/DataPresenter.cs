@@ -380,6 +380,12 @@ namespace DevZest.Data.Presenters
         {
             RequireLayoutManager();
 
+            if (IsEditing)
+                CurrentRow.EndEdit();
+
+            if (IsEditing)
+                return false;
+
             RowValidation.Validate();
             ScalarValidation.Validate();
             if (!CanSubmitInput)
@@ -389,8 +395,6 @@ namespace DevZest.Data.Presenters
                 return false;
             }
 
-            if (IsEditing)
-                CurrentRow.EndEdit();
             return true;
         }
 

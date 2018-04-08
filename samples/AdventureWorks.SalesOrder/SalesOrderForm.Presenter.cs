@@ -33,9 +33,11 @@ namespace AdventureWorks.SalesOrders
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 _subFormBinding = _.SalesOrderDetails.BindToDataView(() => new DetailPresenter(_ownerWindow)).WithStyle(Styles.DataSheet);
+                var lineCountValidation = new RowBinding[] { _subFormBinding }.BindToValidationPlaceholder(_.LineCount);
                 builder.GridRows("Auto", "*", "Auto")
                     .GridColumns("580")
                     .AddBinding(0, 0, _.BindToSalesOrderHeaderBox(IsNew, out _shipToAddressBinding, out _billToAddressBinding))
+                    .AddBinding(0, 1, lineCountValidation)
                     .AddBinding(0, 1, _subFormBinding)
                     .AddBinding(0, 2, _.BindToSalesOrderFooterBox());
             }
