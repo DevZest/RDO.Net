@@ -31,7 +31,29 @@ namespace AdventureWorks.SalesOrders
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                return await db.GetSalesOrderInfo(salesOrderID).ToDataSetAsync(ct);
+                var result = db.CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
+                {
+                    var ext = _.GetExtender<SalesOrderInfo.Ext>();
+                    Debug.Assert(ext != null);
+                    builder.From(db.SalesOrderHeaders, out var o)
+                        .LeftJoin(db.Customers, o.Customer, out var c)
+                        .LeftJoin(db.Addresses, o.ShipToAddress, out var shipTo)
+                        .LeftJoin(db.Addresses, o.BillToAddress, out var billTo)
+                        .AutoSelect()
+                        .AutoSelect(shipTo, ext.ShipToAddress)
+                        .AutoSelect(billTo, ext.BillToAddress)
+                        .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
+                });
+
+                result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
+                {
+                    Debug.Assert(_.GetExtender<SalesOrderInfo.DetailExt>() != null);
+                    builder.From(db.SalesOrderDetails, out var d)
+                        .LeftJoin(db.Products, d.Product, out var p)
+                        .AutoSelect();
+                });
+
+                return await result.ToDataSetAsync(ct);
             }
         }
 
@@ -81,11 +103,16 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task Create(DataSet<SalesOrder> salesOrder, CancellationToken ct)
+        public static async Task CreateSalesOrder<T>(DataSet<T> salesOrders, CancellationToken ct)
+            where T : SalesOrder, new()
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                await db.InsertAsync(salesOrder, ct);
+                salesOrders._.ResetRowIdentifiers();
+                await db.SalesOrderHeaders.Insert(salesOrders, updateIdentity: true).ExecuteAsync(ct);
+                var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+                salesOrderDetails._.ResetRowIdentifiers();
+                await db.SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
             }
         }
     }

@@ -51,7 +51,7 @@ namespace AdventureWorks.SalesOrders
         {
             var salesOrderInfo = DataSet<SalesOrderInfo>.New();
             salesOrderInfo.AddRow();
-            new SalesOrderForm().Show(salesOrderInfo, this, "New Sales Order", null);
+            new SalesOrderForm().Show(salesOrderInfo, this, null);
         }
 
         private void Open(object sender, ExecutedRoutedEventArgs e)
@@ -59,7 +59,7 @@ namespace AdventureWorks.SalesOrders
             var salesOrderID = _presenter.CurrentRow.GetValue(_.SalesOrderID).Value;
             var result = App.Execute(ct => Data.GetSalesOrderInfoAsync(salesOrderID, ct), this);
             if (result != null && result.Count == 1)
-                new SalesOrderForm().Show(result, this, string.Format("Sales Order: {0}", salesOrderID), null);
+                new SalesOrderForm().Show(result, this, null);
         }
 
         private void CanOpen(object sender, CanExecuteRoutedEventArgs e)

@@ -7,18 +7,17 @@ namespace AdventureWorks.SalesOrders
 {
     public static class BindingFactory
     {
-        public static RowCompositeBinding<SalesOrderHeaderBox> BindToSalesOrderHeaderBox(this SalesOrderInfo _,
+        public static RowCompositeBinding<SalesOrderHeaderBox> BindToSalesOrderHeaderBox(this SalesOrderInfo _, bool isNew,
             out RowBinding<ForeignKeyBox> shipToAddressBinding, out RowBinding<ForeignKeyBox> billToAddressBinding)
         {
             var ext = _.GetExtender<SalesOrderInfo.Ext>();
-            return new RowCompositeBinding<SalesOrderHeaderBox>()
+            var result = new RowCompositeBinding<SalesOrderHeaderBox>()
                 .AddChild(_.Customer.BindToForeignKeyBox(ext.Customer, CustomerBox.RefreshAction), v => v._customer)
                 .AddChild(shipToAddressBinding = _.ShipToAddress.BindToForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)
                 .AddChild(billToAddressBinding = _.BillToAddress.BindToForeignKeyBox(ext.BillToAddress, AddressBox.RefreshAction), v => v._billTo)
                 .AddChild(_.OrderDate.BindToDatePicker(), v => v._orderDate)
                 .AddChild(_.ShipDate.BindToDatePicker(), v => v._shipDate)
                 .AddChild(_.DueDate.BindToDatePicker(), v => v._dueDate)
-                .AddChild(_.SalesOrderNumber.BindToTextBlock(), v => v._salesOrderNumber)
                 .AddChild(_.PurchaseOrderNumber.BindToTextBox(), v => v._purchaseOrderNumber)
                 .AddChild(_.AccountNumber.BindToTextBox(), v => v._accountNumber)
                 .AddChild(_.ShipMethod.BindToTextBox(), v => v._shipMethod)
@@ -26,6 +25,9 @@ namespace AdventureWorks.SalesOrders
                 .AddChild(_.Status.BindToComboBox(), v => v._status)
                 .AddChild(_.OnlineOrderFlag.BindToCheckBox(), v => v._onlineOrderFlag)
                 .AddChild(_.Comment.BindToTextBox(), v => v._comment);
+            if (!isNew)
+                result.AddChild(_.SalesOrderNumber.BindToTextBlock(), v => v._salesOrderNumber);
+            return result;
         }
 
         public static RowCompositeBinding<SalesOrderFooterBox> BindToSalesOrderFooterBox(this SalesOrder _)

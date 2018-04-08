@@ -376,7 +376,7 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? false : LayoutManager.CanSubmitInput; }
         }
 
-        public bool SubmitInput(bool focusToErrorInput = true)
+        public virtual bool SubmitInput(bool focusToErrorInput = true)
         {
             RequireLayoutManager();
 

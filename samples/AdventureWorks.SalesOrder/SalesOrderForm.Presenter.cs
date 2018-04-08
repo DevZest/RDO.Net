@@ -4,6 +4,8 @@ using DevZest.Data.Views;
 using DevZest.Data;
 using System.Windows;
 using System;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -33,7 +35,7 @@ namespace AdventureWorks.SalesOrders
                 _subFormBinding = _.SalesOrderDetails.BindToDataView(() => new DetailPresenter(_ownerWindow)).WithStyle(Styles.DataSheet);
                 builder.GridRows("Auto", "*", "Auto")
                     .GridColumns("580")
-                    .AddBinding(0, 0, _.BindToSalesOrderHeaderBox(out _shipToAddressBinding, out _billToAddressBinding))
+                    .AddBinding(0, 0, _.BindToSalesOrderHeaderBox(IsNew, out _shipToAddressBinding, out _billToAddressBinding))
                     .AddBinding(0, 1, _subFormBinding)
                     .AddBinding(0, 2, _.BindToSalesOrderFooterBox());
             }
@@ -79,6 +81,33 @@ namespace AdventureWorks.SalesOrders
                     if (customerID.HasValue)
                         _addressLookupPopup.Show(foreignKeyBox, CurrentRow.GetValue(foreignKey.AddressID), customerID.Value);
                 }
+            }
+
+            public int SalesOrderId
+            {
+                get { return _.SalesOrderID[0].Value; }
+            }
+
+            public bool IsNew
+            {
+                get { return SalesOrderId < 1; }
+            }
+
+            public override bool SubmitInput(bool focusToErrorInput = true)
+            {
+                if (!base.SubmitInput(focusToErrorInput))
+                    return false;
+
+                var detailsPresenter = _subFormBinding[CurrentRow].DataPresenter;
+                return detailsPresenter.SubmitInput(focusToErrorInput);
+            }
+
+            public Task SaveToDb(CancellationToken ct)
+            {
+                if (IsNew)
+                    return Data.CreateSalesOrder(DataSet, ct);
+                else
+                    return Data.UpdateSalesOrder(DataSet, ct);
             }
         }
     }

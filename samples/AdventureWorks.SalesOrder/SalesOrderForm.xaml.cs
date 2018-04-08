@@ -1,6 +1,9 @@
 ﻿using DevZest.Data;
 using DevZest.Samples.AdventureWorksLT;
 using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -29,10 +32,13 @@ namespace AdventureWorks.SalesOrders
             if (CurrentRowDetailPresenter.IsEditing)
                 CurrentRowDetailPresenter.CurrentRow.EndEdit();
 
-            if (App.Execute((ct) => Data.UpdateSalesOrder(_presenter.DataSet, ct), this, "Saving..."))
+            if (!_presenter.SubmitInput())
+                return;
+
+            if (App.Execute(_presenter.SaveToDb, this, "Saving..."))
             {
-                DialogResult = true;
                 Close();
+                _action?.Invoke();
             }
         }
 
@@ -53,12 +59,14 @@ namespace AdventureWorks.SalesOrders
             get { return _presenter.CurrentRowDetailPresenter; }
         }
 
-        public void Show(DataSet<SalesOrderInfo> data, Window ownerWindow, string windowTitle, Action action)
+        private Action _action;
+        public void Show(DataSet<SalesOrderInfo> data, Window ownerWindow, Action action)
         {
+            Debug.Assert(data.Count == 1);
             _presenter = new Presenter(this, _addressLookupPopup);
             _presenter.Show(_dataView, data);
             Owner = ownerWindow;
-            Title = windowTitle;
+            Title = _presenter.IsNew ? "New Sales Order" : string.Format("Sales Order: {0}", _presenter.SalesOrderId);
             ShowDialog();
         }
     }
