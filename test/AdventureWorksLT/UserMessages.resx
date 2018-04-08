@@ -156,4 +156,7 @@
   <data name="CK_SalesOrderHeader_TaxAmt" xml:space="preserve">
     <value>TaxAmt cannot be a negtive value.</value>
   </data>
+  <data name="Validation_SalesOrder_LineCount" xml:space="preserve">
+    <value>Sales order must have detail line(s).</value>
+  </data>
 </root>

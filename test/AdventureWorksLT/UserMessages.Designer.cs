@@ -176,5 +176,14 @@ namespace DevZest.Samples.AdventureWorksLT {
                 return ResourceManager.GetString("CK_SalesOrderHeader_TaxAmt", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sales order must have detail line(s)..
+        /// </summary>
+        internal static string Validation_SalesOrder_LineCount {
+            get {
+                return ResourceManager.GetString("Validation_SalesOrder_LineCount", resourceCulture);
+            }
+        }
     }
 }
