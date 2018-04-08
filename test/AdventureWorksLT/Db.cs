@@ -181,9 +181,9 @@ namespace DevZest.Samples.AdventureWorksLT
                 var ext = _.GetExtender<SalesOrderInfo.Ext>();
                 Debug.Assert(ext != null);
                 builder.From(SalesOrderHeaders, out var o)
-                    .InnerJoin(Customers, o.Customer, out var c)
-                    .InnerJoin(Addresses, o.ShipToAddress, out var shipTo)
-                    .InnerJoin(Addresses, o.BillToAddress, out var billTo)
+                    .LeftJoin(Customers, o.Customer, out var c)
+                    .LeftJoin(Addresses, o.ShipToAddress, out var shipTo)
+                    .LeftJoin(Addresses, o.BillToAddress, out var billTo)
                     .AutoSelect()
                     .AutoSelect(shipTo, ext.ShipToAddress)
                     .AutoSelect(billTo, ext.BillToAddress)
@@ -194,7 +194,7 @@ namespace DevZest.Samples.AdventureWorksLT
             {
                 Debug.Assert(_.GetExtender<SalesOrderInfo.DetailExt>() != null);
                 builder.From(SalesOrderDetails, out var d)
-                    .InnerJoin(Products, d.Product, out var p)
+                    .LeftJoin(Products, d.Product, out var p)
                     .AutoSelect();
             });
 
