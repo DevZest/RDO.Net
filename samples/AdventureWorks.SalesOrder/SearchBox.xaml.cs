@@ -80,6 +80,7 @@ namespace AdventureWorks.SalesOrders
                 SearchText = InputText;
                 Commands.Search.Execute(null, null);
                 RefreshState();
+                RestoreKeyboardFocus();
                 return true;
             }
             return false;
@@ -92,9 +93,15 @@ namespace AdventureWorks.SalesOrders
                 SearchText = InputText = null;
                 RefreshState();
                 Commands.ClearSearch.Execute(null, null);
+                RestoreKeyboardFocus();
                 return true;
             }
             return false;
+        }
+
+        private void RestoreKeyboardFocus()
+        {
+            Keyboard.Focus(null);   // This will set keyboard focus to top level Keyboard focus scope, normally the window's previously focused element.
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
