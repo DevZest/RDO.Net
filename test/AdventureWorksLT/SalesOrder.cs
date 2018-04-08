@@ -22,7 +22,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [Computation(IsAggregate = true)]
         private void ComputeLineCount()
         {
-            LineCount.ComputedAs(SalesOrderDetails.SalesOrderID.CountRows());
+            LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows());
         }
 
         public virtual SalesOrderDetail SalesOrderDetails { get; private set; }
