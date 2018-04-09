@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections.Generic;
@@ -12,8 +11,8 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class ElementManager : RowManager
     {
-        internal ElementManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
-            : base(template, dataSet, where, orderBy)
+        internal ElementManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
+            : base(template, dataSet, rowMatchColumns, where, orderBy)
         {
             ContainerViewList = emptyContainerViewList ? Primitives.ContainerViewList.Empty : Primitives.ContainerViewList.Create(this);
         }

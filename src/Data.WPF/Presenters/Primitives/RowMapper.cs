@@ -10,12 +10,17 @@ namespace DevZest.Data.Presenters.Primitives
     /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filtering and sorting.</summary>
     internal abstract class RowMapper
     {
-        protected RowMapper(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        protected RowMapper(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             Debug.Assert(template != null && template.RowManager == null);
             Debug.Assert(dataSet != null);
             _template = template;
             _dataSet = dataSet;
+            if (rowMatchColumns != null && rowMatchColumns.Count == 0)
+                rowMatchColumns = null;
+            _rowMatchColumns = rowMatchColumns;
+            if (rowMatchColumns != null)
+                _rowMatches = new Dictionary<RowMatch, RowPresenter>();
             Where = where;
             OrderBy = orderBy;
             Initialize();
@@ -525,6 +530,30 @@ namespace DevZest.Data.Presenters.Primitives
                 foreach (var childDataRow in GetDataRowsRecursively(childDataSet))
                     yield return childDataRow;
             }
+        }
+
+        private readonly IReadOnlyList<Column> _rowMatchColumns;
+        private readonly Dictionary<RowMatch, RowPresenter> _rowMatches;
+        internal IReadOnlyList<Column> RowMatchColumns
+        {
+            get { return _rowMatchColumns; }
+        }
+
+        internal bool RowMatchable
+        {
+            get { return _rowMatches != null; }
+        }
+
+        internal void UpdateRowMatch(RowMatch? oldValue, RowMatch? newValue)
+        {
+            Debug.Assert(RowMatchable);
+            Debug.Assert(oldValue.HasValue || newValue.HasValue);
+
+            if (oldValue.HasValue)
+                _rowMatches.Remove(oldValue.Value);
+
+            if (newValue.HasValue)
+                _rowMatches.Add(newValue.Value, newValue.Value.RowPresenter);
         }
     }
 }

@@ -6,8 +6,8 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal sealed class LayoutYManager : ScrollableManager
     {
-        public LayoutYManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-            : base(template, dataSet, where, orderBy)
+        public LayoutYManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(template, dataSet, rowMatchColumns, where, orderBy)
         {
         }
 

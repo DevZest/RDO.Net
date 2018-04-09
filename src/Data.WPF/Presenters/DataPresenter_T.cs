@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.Linq;
 
 namespace DevZest.Data.Presenters
 {
@@ -55,7 +56,7 @@ namespace DevZest.Data.Presenters
                 BuildTemplate(builder);
                 builder.Seal();
             }
-            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
+            _layoutManager = LayoutManager.Create(this, template, dataSet, GetRowMatchColumns(dataSet._), where, orderBy);
             if (inherit && oldLayoutManager != null)
                 _layoutManager.Inherit(oldLayoutManager);
             OnMounted();
@@ -475,6 +476,12 @@ namespace DevZest.Data.Presenters
                 return ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
             else
                 return RefreshAsync(getDataSet, getWhere, getOrderBy);
+        }
+
+        protected virtual IReadOnlyList<Column> GetRowMatchColumns(T _)
+        {
+            var primaryKey = _.PrimaryKey;
+            return primaryKey == null ? null : primaryKey.Select(x => x.Column).ToArray();
         }
     }
 }

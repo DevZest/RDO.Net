@@ -28,8 +28,8 @@ namespace DevZest.Data.Presenters.Primitives
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "Derived classes are limited to class LayoutXManager/LayoutYManager, and the overrides do not rely on completion of its constructor.")]
-        protected ScrollableManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-            : base(template, dataSet, where, orderBy, false)
+        protected ScrollableManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(template, dataSet, rowMatchColumns, where, orderBy, false)
         {
             _scrollToMain = MinScrollToMain;
             _scrollToMainPlacement = GridPlacement.Head;

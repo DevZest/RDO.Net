@@ -575,8 +575,8 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        protected RowManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-            : base(template, dataSet, where, orderBy)
+        protected RowManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(template, dataSet, rowMatchColumns, where, orderBy)
         {
             Template.RowManager = this;
             Initialize();

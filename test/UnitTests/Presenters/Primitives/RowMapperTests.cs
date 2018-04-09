@@ -12,7 +12,7 @@ namespace DevZest.Data.Presenters.Primitives
         private sealed class ConcreteRowMapper : RowMapper
         {
             public ConcreteRowMapper(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-                : base(template, dataSet, where, orderBy)
+                : base(template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy)
             {
             }
 

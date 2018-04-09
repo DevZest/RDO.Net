@@ -1,14 +1,20 @@
-﻿using DevZest.Data;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Linq;
 
 namespace DevZest.Data.Presenters
 {
     internal static class DataSetExtensions
     {
+        internal static IReadOnlyList<Column> GetRowMatchColumns(this DataSet dataSet)
+        {
+            var primaryKey = dataSet.Model.PrimaryKey;
+            return primaryKey == null ? null : primaryKey.Select(x => x.Column).ToArray();
+        }
+
         private sealed class AutoInitRowView : RowView
         {
             protected override Size MeasureOverride(Size constraint)
@@ -43,7 +49,7 @@ namespace DevZest.Data.Presenters
         private sealed class ConcreteElementManager : ElementManager
         {
             public ConcreteElementManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, where, orderBy, emptyBlockViewList)
+                : base(template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy, emptyBlockViewList)
             {
             }
         }
@@ -60,14 +66,14 @@ namespace DevZest.Data.Presenters
 
         internal static LayoutManager CreateLayoutManager(this DataSet dataSet, Action<TemplateBuilder> buildTemplateAction)
         {
-            return dataSet.CreateManager(buildTemplateAction, (t, d) => LayoutManager.Create(t, d));
+            return dataSet.CreateManager(buildTemplateAction, (t, d) => LayoutManager.Create(t, d, d.GetRowMatchColumns()));
         }
     }
 
     internal sealed class ConcreteInputManager : InputManager
     {
         public ConcreteInputManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null, bool emptyBlockViewList = false)
-            : base(template, dataSet, where, orderBy, emptyBlockViewList)
+            : base(template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy, emptyBlockViewList)
         {
         }
 
@@ -97,6 +103,5 @@ namespace DevZest.Data.Presenters
                 result = _validator(result);
             return result;
         }
-
     }
 }

@@ -10,8 +10,8 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal sealed class LayoutZManager : LayoutManager
     {
-        internal LayoutZManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-            : base(template, dataSet, where, orderBy, true)
+        internal LayoutZManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(template, dataSet, rowMatchColumns, where, orderBy, true)
         {
         }
 

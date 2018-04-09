@@ -25,12 +25,14 @@ namespace DevZest.Data.Presenters
         {
             Debug.Assert(rowMapper != null);
             _rowMapper = rowMapper;
-            DataRow = dataRow;
+            _dataRow = dataRow;
             RawIndex = rawIndex;
+            RefreshMatchValueHashCode();
         }
 
         internal void Dispose()
         {
+            MatchValueHashCode = null;
             _rowMapper = null;
             Parent = null;
         }
@@ -48,7 +50,7 @@ namespace DevZest.Data.Presenters
 
         private RowMapper _rowMapper;
 
-        private RowMapper RowMapper
+        internal RowMapper RowMapper
         {
             get
             {
@@ -92,7 +94,19 @@ namespace DevZest.Data.Presenters
             get { return IsDisposed ? null : _rowMapper.Template; }
         }
 
-        public DataRow DataRow { get; internal set; }
+        private DataRow _dataRow;
+        public DataRow DataRow
+        {
+            get { return _dataRow; }
+            internal set
+            {
+                if (_dataRow == value)
+                    return;
+
+                _dataRow = value;
+                RefreshMatchValueHashCode();
+            }
+        }
 
         public bool IsVirtual
         {
@@ -548,7 +562,71 @@ namespace DevZest.Data.Presenters
 
         internal void OnValueChanged(ValueChangedEventArgs e)
         {
+            if (AffectsRowMatch(e.Columns))
+                RefreshMatchValueHashCode();
             ValueChanged(this, e);
+        }
+
+        private bool AffectsRowMatch(IColumns columns)
+        {
+            if (columns == null || columns.Count == 0 || _rowMapper == null || !_rowMapper.RowMatchable)
+                return false;
+
+            var rowMatchColumns = _rowMapper.RowMatchColumns;
+            for (int i = 0; i < rowMatchColumns.Count; i++)
+            {
+                if (columns.Contains(rowMatchColumns[i]))
+                    return true;
+            }
+            return false;
+        }
+
+        private int? _matchValueHashCode;
+        internal int? MatchValueHashCode
+        {
+            get { return _matchValueHashCode; }
+            set
+            {
+                if (_matchValueHashCode == value)
+                    return;
+
+                var oldValue = _matchValueHashCode;
+                _matchValueHashCode = value;
+                Debug.Assert(oldValue.HasValue || value.HasValue);
+                Debug.Assert(RowMapper.RowMatchable);
+                RowMapper.UpdateRowMatch(CreateRowMatch(oldValue), CreateRowMatch(value));
+            }
+        }
+
+        private RowMatch? CreateRowMatch(int? matchValueHashCode)
+        {
+            if (matchValueHashCode.HasValue)
+                return new RowMatch(this, matchValueHashCode.Value);
+            else
+                return null;
+        }
+
+        private void RefreshMatchValueHashCode()
+        {
+            MatchValueHashCode = GetMatchValueHashCode();
+        }
+
+        private int? GetMatchValueHashCode()
+        {
+            if (_rowMapper == null || !_rowMapper.RowMatchable || DataRow == null || DataRow.BaseDataSet == null)
+                return null;
+
+            var rowMatchColumns = _rowMapper.RowMatchColumns;
+            unchecked
+            {
+                var hash = 2166136261;
+                for (int i = 0; i < rowMatchColumns.Count; i++)
+                {
+                    hash = hash ^ (uint)rowMatchColumns[i].GetHashCode(DataRow);
+                    hash = hash * 16777619;
+                }
+                return unchecked((int)hash);
+            }
         }
     }
 }

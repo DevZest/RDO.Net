@@ -1,13 +1,12 @@
-﻿using DevZest.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace DevZest.Data.Presenters.Primitives
 {
     internal sealed class LayoutXManager : ScrollableManager
     {
-        public LayoutXManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-            : base(template, dataSet, where, orderBy)
+        public LayoutXManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(template, dataSet, rowMatchColumns, where, orderBy)
         {
         }
 

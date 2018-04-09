@@ -12,7 +12,7 @@ namespace DevZest.Data.Presenters.Primitives
         private sealed class ConcreteRowNormalizer : RowNormalizer
         {
             public ConcreteRowNormalizer(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-                : base(template, dataSet, where, orderBy)
+                : base(template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy)
             {
             }
 

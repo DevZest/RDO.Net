@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -8,8 +7,8 @@ namespace DevZest.Data.Presenters.Primitives
     /// <summary>Normalizes rows if recursive.</summary>
     internal abstract class RowNormalizer : RowMapper
     {
-        protected RowNormalizer(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-            : base(template, dataSet, where, orderBy)
+        protected RowNormalizer(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(template, dataSet, rowMatchColumns, where, orderBy)
         {
             Initialize();
         }

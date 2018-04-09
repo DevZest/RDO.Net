@@ -12,25 +12,25 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract partial class LayoutManager : InputManager
     {
-        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
-            var result = LayoutManager.Create(template, dataSet, where, orderBy);
+            var result = LayoutManager.Create(template, dataSet, rowMatchColumns, where, orderBy);
             result._dataPresenter = dataPresenter;
             return result;
         }
 
-        internal static LayoutManager Create(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null)
+        internal static LayoutManager Create(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null)
         {
             if (!template.Orientation.HasValue)
-                return new LayoutZManager(template, dataSet, where, orderBy);
+                return new LayoutZManager(template, dataSet, rowMatchColumns, where, orderBy);
             else if (template.Orientation.GetValueOrDefault() == Orientation.Horizontal)
-                return new LayoutXManager(template, dataSet, where, orderBy);
+                return new LayoutXManager(template, dataSet, rowMatchColumns, where, orderBy);
             else
-                return new LayoutYManager(template, dataSet, where, orderBy);
+                return new LayoutYManager(template, dataSet, rowMatchColumns, where, orderBy);
         }
 
-        protected LayoutManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
-            : base(template, dataSet, where, orderBy, emptyContainerViewList)
+        protected LayoutManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
+            : base(template, dataSet, rowMatchColumns, where, orderBy, emptyContainerViewList)
         {
         }
 
