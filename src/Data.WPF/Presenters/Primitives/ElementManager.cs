@@ -96,10 +96,11 @@ namespace DevZest.Data.Presenters.Primitives
             Debug.Assert(oldValue != null);
             Debug.Assert(CurrentContainerView == GetContainerView(oldValue));
 
-            var placement = GetContainerViewPlacement(CurrentRow);
-            if (IsIsolated(CurrentContainerViewPlacement))
+            var oldPlacement = CurrentContainerViewPlacement;
+            var newPlacement = GetContainerViewPlacement(CurrentRow);
+            if (IsIsolated(oldPlacement))
             {
-                if (IsIsolated(placement))
+                if (IsIsolated(newPlacement))
                     CurrentContainerView.ReloadCurrentRow(oldValue.RowPresenter);
                 else
                 {
@@ -114,13 +115,13 @@ namespace DevZest.Data.Presenters.Primitives
             }
             else
             {
-                if (IsIsolated(placement))
+                if (IsIsolated(newPlacement))
                 {
                     Debug.Assert(CurrentRow.View == null);
                     var containerView = Setup(CurrentRow);
                     Debug.Assert(CurrentRow.View != null);
                     var insertIndex = HeadScalarElementsCount;
-                    if (placement == CurrentContainerViewPlacement.AfterList)
+                    if (newPlacement == CurrentContainerViewPlacement.AfterList)
                         insertIndex += ContainerViewList.Count;
                     ElementCollection.Insert(insertIndex, containerView);
                 }
@@ -128,7 +129,7 @@ namespace DevZest.Data.Presenters.Primitives
             }
 
             CurrentContainerView = GetContainerView(CurrentRow.View);
-            CurrentContainerViewPlacement = placement;
+            CurrentContainerViewPlacement = newPlacement;
         }
 
         private CurrentContainerViewPlacement GetContainerViewPlacement(RowPresenter row)

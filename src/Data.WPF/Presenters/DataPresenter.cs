@@ -146,6 +146,9 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager?.CurrentRow; }
             set
             {
+                if (value == CurrentRow)
+                    return;
+
                 VerifyRowPresenter(value, nameof(value));
                 var layoutManager = RequireLayoutManager();
                 View.UpdateLayout();
