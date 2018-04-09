@@ -13,6 +13,8 @@ namespace DevZest.Data.Presenters
         {
             Check.NotNull(source, nameof(source));
 
+            source = source.Seal();
+
             var result = new RowBinding<ValidationPlaceholder>(onSetup: (v, p) =>
             {
                 if (containingBindings != null && containingBindings.Length > 0)
