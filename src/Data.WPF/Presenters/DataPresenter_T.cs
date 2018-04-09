@@ -38,24 +38,27 @@ namespace DevZest.Data.Presenters
             OnViewChanged();
         }
 
-        private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool inheritTemplate)
+        private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool inherit)
         {
-            var template = inheritTemplate ? Template : new Template();
+            var oldLayoutManager = _layoutManager;
+            var template = inherit ? Template : new Template();
             Debug.Assert(template != null);
 
-            if (inheritTemplate)
+            if (inherit)
             {
                 DetachView();
                 AttachView(dataView);
             }
 
             DataSet = dataSet.EnsureInitialized();
-            using (var builder = new TemplateBuilder(template, DataSet.Model, inheritTemplate))
+            using (var builder = new TemplateBuilder(template, DataSet.Model, inherit))
             {
                 BuildTemplate(builder);
                 builder.Seal();
             }
             _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
+            if (inherit && oldLayoutManager != null)
+                _layoutManager.Inherit(oldLayoutManager);
             OnMounted();
             dataView.OnDataLoaded();
         }

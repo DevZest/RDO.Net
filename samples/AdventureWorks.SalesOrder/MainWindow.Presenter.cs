@@ -75,9 +75,9 @@ namespace AdventureWorks.SalesOrders
                 ShowAsync(dataView, LoadDataAsync);
             }
 
-            public void RefreshAsync()
+            public Task RefreshAsync()
             {
-                RefreshAsync(LoadDataAsync);
+                return RefreshAsync(LoadDataAsync);
             }
 
             protected override void BuildTemplate(TemplateBuilder builder)
@@ -121,6 +121,29 @@ namespace AdventureWorks.SalesOrders
                 .AddBinding(2, 2, 8, 2, "Total: ".BindToLabel().WithStyle(Styles.Label).WithFrozenRightShrink(true))
                 .AddBinding(9, 2, CalcTotalAmtFunc.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock).AddBehavior(new TotalAmtConditionalFormat(CalcTotalAmtFunc)))
                 .AddBehavior(new RowViewAlternation());
+            }
+
+            public void EnsureVisible(int? salesOrderId)
+            {
+                if (!salesOrderId.HasValue)
+                    return;
+
+                var current = GetRow(salesOrderId.Value);
+                if (current != null)
+                {
+                    CurrentRow = current;
+                    Scrollable.EnsureCurrentRowVisible();
+                }
+            }
+
+            private RowPresenter GetRow(int salesOrderId)
+            {
+                foreach (var row in Rows)
+                {
+                    if (row.GetValue(_.SalesOrderID) == salesOrderId)
+                        return row;
+                }
+                return null;
             }
         }
     }

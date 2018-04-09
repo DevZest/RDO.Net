@@ -51,7 +51,7 @@ namespace AdventureWorks.SalesOrders
         {
             var salesOrderInfo = DataSet<SalesOrderInfo>.New();
             salesOrderInfo.AddRow();
-            new SalesOrderForm().Show(salesOrderInfo, this, null);
+            new SalesOrderForm().Show(salesOrderInfo, this, Refresh);
         }
 
         private void Open(object sender, ExecutedRoutedEventArgs e)
@@ -60,8 +60,16 @@ namespace AdventureWorks.SalesOrders
             if (App.Execute(ct => Data.GetSalesOrderInfoAsync(salesOrderID, ct), this, out var dataSet))
             {
                 if (dataSet.Count == 1)
-                    new SalesOrderForm().Show(dataSet, this, null);
+                    new SalesOrderForm().Show(dataSet, this, Refresh);
+                else
+                    MessageBox.Show("No data returned from server!");
             }
+        }
+
+        private async void Refresh(int? salesOrderId)
+        {
+            await _presenter.RefreshAsync();
+            _presenter.EnsureVisible(salesOrderId);
         }
 
         private void CanOpen(object sender, CanExecuteRoutedEventArgs e)

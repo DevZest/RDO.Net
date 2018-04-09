@@ -1177,5 +1177,20 @@ namespace DevZest.Data.Presenters.Primitives
             _scrollToMainPlacement = default(GridPlacement);
             _scrollToMain = default(LogicalExtent);
         }
+
+        internal override void Inherit(LayoutManager layoutManager)
+        {
+            base.Inherit(layoutManager);
+            var scrollable = layoutManager as ScrollableManager;
+            if (scrollable == null)
+                return;
+
+            _scrollDeltaMain = scrollable._scrollDeltaMain;
+            _scrollOffsetMain = scrollable._scrollOffsetMain;
+            _scrollToMainPlacement = scrollable._scrollToMainPlacement;
+            _scrollToMain = scrollable._scrollToMain;
+            _scrollDeltaCross = scrollable._scrollDeltaCross;
+            ScrollOffsetCross = scrollable.ScrollOffsetCross;
+        }
     }
 }
