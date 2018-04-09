@@ -103,7 +103,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task CreateSalesOrder<T>(DataSet<T> salesOrders, CancellationToken ct)
+        public static async Task<int?> CreateSalesOrder<T>(DataSet<T> salesOrders, CancellationToken ct)
             where T : SalesOrder, new()
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
@@ -113,6 +113,7 @@ namespace AdventureWorks.SalesOrders
                 var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
                 salesOrderDetails._.ResetRowIdentifiers();
                 await db.SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
+                return salesOrders.Count > 0 ? salesOrders._.SalesOrderID[0] : null;
             }
         }
     }

@@ -57,9 +57,11 @@ namespace AdventureWorks.SalesOrders
         private void Open(object sender, ExecutedRoutedEventArgs e)
         {
             var salesOrderID = _presenter.CurrentRow.GetValue(_.SalesOrderID).Value;
-            var result = App.Execute(ct => Data.GetSalesOrderInfoAsync(salesOrderID, ct), this);
-            if (result != null && result.Count == 1)
-                new SalesOrderForm().Show(result, this, null);
+            if (App.Execute(ct => Data.GetSalesOrderInfoAsync(salesOrderID, ct), this, out var dataSet))
+            {
+                if (dataSet.Count == 1)
+                    new SalesOrderForm().Show(dataSet, this, null);
+            }
         }
 
         private void CanOpen(object sender, CanExecuteRoutedEventArgs e)

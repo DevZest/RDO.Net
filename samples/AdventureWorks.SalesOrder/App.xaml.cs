@@ -37,16 +37,28 @@ namespace AdventureWorks.SalesOrders
             return true;
         }
 
-        public static T Execute<T>(Func<CancellationToken, Task<T>> func, Window ownerWindow, string windowTitle = null, string label = null)
+        public static bool Execute<T>(Func<CancellationToken, Task<T>> func, Window ownerWindow, out T result)
+        {
+            return Execute(func, ownerWindow, null, out result);
+        }
+
+        public static bool Execute<T>(Func<CancellationToken, Task<T>> func, Window ownerWindow, string windowTitle, out T result)
+        {
+            return Execute(func, ownerWindow, windowTitle, null, out result);
+        }
+
+        public static bool Execute<T>(Func<CancellationToken, Task<T>> func, Window ownerWindow, string windowTitle, string label, out T result)
         {
             var dialogResult = ProgressDialog.Execute(func, ownerWindow, windowTitle, label);
             var exception = dialogResult.Exception;
             if (exception != null)
             {
                 MessageBox.Show(exception.Message, windowTitle);
-                return default(T);
+                result = default(T);
+                return false;
             }
-            return dialogResult.Value;
+            result = dialogResult.Value;
+            return true;
         }
 
         //private static void SaveDefaultTemplate(Type type, string fileName)

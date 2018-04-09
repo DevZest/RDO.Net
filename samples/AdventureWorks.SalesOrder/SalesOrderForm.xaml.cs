@@ -35,10 +35,10 @@ namespace AdventureWorks.SalesOrders
             if (!_presenter.SubmitInput())
                 return;
 
-            if (App.Execute(_presenter.SaveToDb, this, "Saving..."))
+            if (App.Execute(_presenter.SaveToDb, this, "Saving...", out var salesOrderId))
             {
                 Close();
-                _action?.Invoke();
+                _action?.Invoke(salesOrderId);
             }
         }
 
@@ -59,14 +59,15 @@ namespace AdventureWorks.SalesOrders
             get { return _presenter.CurrentRowDetailPresenter; }
         }
 
-        private Action _action;
-        public void Show(DataSet<SalesOrderInfo> data, Window ownerWindow, Action action)
+        private Action<int?> _action;
+        public void Show(DataSet<SalesOrderInfo> data, Window ownerWindow, Action<int?> action)
         {
             Debug.Assert(data.Count == 1);
             _presenter = new Presenter(this, _addressLookupPopup);
             _presenter.Show(_dataView, data);
             Owner = ownerWindow;
             Title = _presenter.IsNew ? "New Sales Order" : string.Format("Sales Order: {0}", _presenter.SalesOrderId);
+            _action = action;
             ShowDialog();
         }
     }

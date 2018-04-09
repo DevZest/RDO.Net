@@ -104,12 +104,15 @@ namespace AdventureWorks.SalesOrders
                 return detailsPresenter.SubmitInput(focusToErrorInput);
             }
 
-            public Task SaveToDb(CancellationToken ct)
+            public async Task<int?> SaveToDb(CancellationToken ct)
             {
                 if (IsNew)
-                    return Data.CreateSalesOrder(DataSet, ct);
+                    return await Data.CreateSalesOrder(DataSet, ct);
                 else
-                    return Data.UpdateSalesOrder(DataSet, ct);
+                {
+                    await Data.UpdateSalesOrder(DataSet, ct);
+                    return null;
+                }
             }
         }
     }
