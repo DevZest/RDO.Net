@@ -11,7 +11,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected internal override void Attach(T element)
         {
-            element.LostFocus += OnLostFocus; ;
+            element.LostFocus += OnLostFocus;
         }
 
         protected internal override void Detach(T element)

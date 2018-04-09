@@ -9,13 +9,34 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<RowBinding> source, IColumns columns)
+        public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IColumns source, params RowBinding[] containingBindings)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (columns == null)
-                throw new ArgumentNullException(nameof(columns));
+            Check.NotNull(source, nameof(source));
 
+            var result = new RowBinding<ValidationPlaceholder>(onSetup: (v, p) =>
+            {
+                if (containingBindings != null && containingBindings.Length > 0)
+                {
+                    var containingElements = new UIElement[containingBindings.Length];
+                    for (int i = 0; i < containingElements.Length; i++)
+                        containingElements[i] = containingBindings[i].GetSettingUpElement();
+                    v.Setup(containingElements);
+                }
+            }, onRefresh: null, onCleanup: (v, p) =>
+            {
+                v.Cleanup();
+            });
+            var input = result.BeginInput(new ValueChangedTrigger<ValidationPlaceholder>(source, result));
+            foreach (var column in source)
+                input.WithFlush(column, (r, v) => true);
+            return input.EndInput();
+        }
+
+        public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<RowBinding> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            var columns = GetTargetColumns(source);
             var input = new RowBinding<ValidationPlaceholder>(onSetup: (v, p) =>
             {
                 var containingElements = new UIElement[source.Count];
@@ -29,14 +50,6 @@ namespace DevZest.Data.Presenters
             foreach (var column in columns)
                 input.WithFlush(column, (r, v) => true);
             return input.EndInput();
-        }
-
-        public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<RowBinding> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return BindToValidationPlaceholder(source, GetTargetColumns(source));
         }
 
         private static IColumns GetTargetColumns(IReadOnlyList<RowBinding> source)
@@ -66,14 +79,11 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        public static ScalarBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<ScalarBinding> source, IScalars scalars)
+        public static ScalarBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<ScalarBinding> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            Check.NotNull(source, nameof(source));
 
-            if (scalars == null)
-                throw new ArgumentNullException(nameof(scalars));
-
+            var scalars = GetTargetScalars(source);
             var input = new ScalarBinding<ValidationPlaceholder>(onSetup: (v, p) =>
             {
                 var containingElements = new UIElement[source.Count];
@@ -87,14 +97,6 @@ namespace DevZest.Data.Presenters
             foreach (var scalar in scalars)
                 input.WithFlush(scalar, v => true);
             return input.EndInput();
-        }
-
-        public static ScalarBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<ScalarBinding> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return BindToValidationPlaceholder(source, GetTargetScalars(source));
         }
 
         private static IScalars GetTargetScalars(IReadOnlyList<ScalarBinding> source)
