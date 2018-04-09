@@ -501,5 +501,9 @@ namespace DevZest.Data
         internal virtual void SealLocalColumn()
         {
         }
+
+        public abstract int GetHashCode(DataRow dataRow);
+
+        public abstract bool Equals(DataRow dataRow, Column otherColumn, DataRow otherDataRow);
     }
 }

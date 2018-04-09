@@ -697,6 +697,17 @@ namespace DevZest.Data
             }
         }
 
+        private IEqualityComparer<T> _equalityComparer;
+        public IEqualityComparer<T> EqualityComparer
+        {
+            get { return _equalityComparer ?? EqualityComparer<T>.Default; }
+            set
+            {
+                VerifyDesignMode();
+                _equalityComparer = value;
+            }
+        }
+
         public sealed override bool HasValueComparer
         {
             get { return ValueComparer != null; }
@@ -728,5 +739,18 @@ namespace DevZest.Data
             return result;
         }
 
+        public sealed override int GetHashCode(DataRow dataRow)
+        {
+            return EqualityComparer.GetHashCode(this[dataRow]);
+        }
+
+        public sealed override bool Equals(DataRow dataRow, Column otherColumn, DataRow otherDataRow)
+        {
+            var column = otherColumn as Column<T>;
+            if (column == null)
+                return false;
+
+            return EqualityComparer.Equals(this[dataRow], column[otherDataRow]);
+        }
     }
 }
