@@ -101,7 +101,14 @@ namespace DevZest.Data.Presenters.Primitives
             if (IsIsolated(oldPlacement))
             {
                 if (IsIsolated(newPlacement))
+                {
                     CurrentContainerView.ReloadCurrentRow(oldValue.RowPresenter);
+                    if (oldPlacement != newPlacement)
+                    {
+                        ContainerViewList.VirtualizeAll();
+                        newPlacement = CurrentContainerViewPlacement.Alone;
+                    }
+                }
                 else
                 {
                     var newValue = CurrentRow.View;
