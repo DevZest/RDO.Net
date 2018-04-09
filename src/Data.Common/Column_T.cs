@@ -750,6 +750,9 @@ namespace DevZest.Data
             if (column == null)
                 return false;
 
+            if (EqualityComparer != column.EqualityComparer)
+                return false;
+
             return EqualityComparer.Equals(this[dataRow], column[otherDataRow]);
         }
     }
