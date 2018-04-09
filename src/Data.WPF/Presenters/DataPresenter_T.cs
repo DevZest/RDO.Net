@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
