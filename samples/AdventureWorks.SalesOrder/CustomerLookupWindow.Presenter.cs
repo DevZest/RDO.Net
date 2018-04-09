@@ -76,10 +76,7 @@ namespace AdventureWorks.SalesOrders
 
                 var current = GetRow(currentCustomerID.Value);
                 if (current != null)
-                {
-                    View.UpdateLayout();
                     Select(current, SelectionMode.Single);
-                }
             }
 
             private RowPresenter GetRow(int currentCustomerID)
