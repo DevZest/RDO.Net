@@ -15,6 +15,11 @@ namespace DevZest.Data.Primitives
         /// <summary>Gets the parent model of this member. </summary>
         internal Model ParentModel { get; set; }
 
+        public Model GetParent()
+        {
+            return ParentModel;
+        }
+
         /// <summary>Gets the type which declares this member.</summary>
         /// <remarks>The <see cref="DeclaringType"/> can differ from type of <see cref="ParentModel"/> when the member
         /// is registered as attached.</remarks>

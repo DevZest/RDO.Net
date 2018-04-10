@@ -8,7 +8,7 @@ namespace DevZest.Samples.AdventureWorksLT
         static SalesOrder()
         {
             RegisterColumn((SalesOrder _) => _.LineCount);
-            RegisterChildModel((SalesOrder _) => _.SalesOrderDetails, (SalesOrderDetail _) => _.SalesOrderHeader, null, _ => _.CreateSalesOrderDetail());
+            RegisterChildModel((SalesOrder _) => _.SalesOrderDetails, (SalesOrderDetail _) => _.SalesOrderHeader, _ => _.CreateSalesOrderDetail());
         }
 
         public _Int32 LineCount { get; private set; }

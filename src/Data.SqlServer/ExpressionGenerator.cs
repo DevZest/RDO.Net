@@ -104,7 +104,7 @@ namespace DevZest.Data.SqlServer
             var columnName = e.DbColumnName.ToQuotedIdentifier();
             if (ModelAliasManager != null)
             {
-                var modelAlias = ModelAliasManager[e.Column.GetParentModel()].ToQuotedIdentifier();
+                var modelAlias = ModelAliasManager[e.Column.GetParent()].ToQuotedIdentifier();
                 SqlBuilder.Append(modelAlias).Append('.').Append(columnName);
             }
             else

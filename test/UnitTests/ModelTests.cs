@@ -118,7 +118,7 @@ namespace DevZest.Data
             var childModel = model.ChildModel;
 
             // assert ParentModelColumnMappings
-            Assert.AreEqual(model, childModel.GetParentModel());
+            Assert.AreEqual(model, childModel.GetParent());
             Assert.AreEqual(1, childModel.ParentRelationship.Count);
             Assert.AreEqual(childModel.ParentId, ((DbColumnExpression)childModel.ParentRelationship[0].SourceExpression).Column);
             Assert.AreEqual(model.Id, childModel.ParentRelationship[0].Target);

@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Annotations;
+using DevZest.Data.Primitives;
 using System;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,7 @@ namespace DevZest.Data.Helpers
 
             public static readonly Mounter<_Int32> _ChildCount = RegisterColumn((SimpleModel _) => _.ChildCount);
 
-            public static readonly Mounter<SimpleModel> _Child = RegisterChildModel((SimpleModel _) => _.Child,
-                x => x.ParentKey, (ColumnMapper builder, SimpleModel child, SimpleModel parent) => builder.Select(child.InheritedValue, parent.InheritedValue));
+            public static readonly Mounter<SimpleModel> _Child = RegisterChildModel((SimpleModel _) => _.Child, x => x.ParentKey);
 
             private const string ERR_MESSAGE = "The Id must be even.";
 
@@ -31,6 +31,14 @@ namespace DevZest.Data.Helpers
             }
 
             public _Int32 InheritedValue { get; private set; }
+
+            [Computation(IsAggregate = true)]
+            private void ComputeInheritedValue()
+            {
+                var parentModel = GetParent() as SimpleModel;
+                if (parentModel != null)
+                    InheritedValue.ComputedAs(parentModel.InheritedValue);
+            }
 
             public _Int32 ChildCount { get; private set; }
 

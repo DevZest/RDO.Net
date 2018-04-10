@@ -179,7 +179,7 @@ namespace DevZest.Data
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="relationshipGetter"/> is <see langword="null"/>.</exception>
         public static Mounter<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
-            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMapper, TChildModel, TModel> childColumnsBuilder = null, Func<TModel, TChildModel> constructor = null)
+            Func<TChildModel, TModelKey> relationshipGetter, Func<TModel, TChildModel> constructor = null)
             where TModel : Model<TModelKey>
             where TModelKey : PrimaryKey
             where TChildModel : Model, new()
@@ -188,11 +188,11 @@ namespace DevZest.Data
             Utilities.Check.NotNull(relationshipGetter, nameof(relationshipGetter));
             if (constructor == null)
                 constructor = _ => new TChildModel();
-            return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, relationshipGetter, childColumnsBuilder, constructor), null);
+            return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, relationshipGetter, constructor), null);
         }
 
         private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Mounter<TModel, TChildModel> mounter,
-            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMapper, TChildModel, TModel> parentMappingsBuilder, Func<TModel, TChildModel> constructor)
+            Func<TChildModel, TModelKey> relationshipGetter, Func<TModel, TChildModel> constructor)
             where TModel : Model<TModelKey>
             where TModelKey : PrimaryKey
             where TChildModel : Model, new()
@@ -200,7 +200,7 @@ namespace DevZest.Data
             var parentModel = mounter.Parent;
             TChildModel result = constructor(parentModel);
             var parentRelationship = relationshipGetter(result).Join(parentModel.PrimaryKey);
-            var parentMappings = AppendColumnMappings(parentRelationship, parentMappingsBuilder, result, parentModel);
+            var parentMappings = AppendColumnMappings(parentRelationship, null, result, parentModel);
             result.Construct(parentModel, mounter.DeclaringType, mounter.Name, parentRelationship, parentMappings);
             return result;
         }

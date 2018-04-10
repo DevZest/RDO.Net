@@ -6,11 +6,11 @@ namespace DevZest.Data.Helpers
 {
     internal static class ModelMemberExtensions
     {
-        public static void Verify(this ModelMember modelProperty, Model model, Type declaringType, string name)
+        public static void Verify(this ModelMember modelMember, Model model, Type declaringType, string name)
         {
-            Assert.AreEqual(model, modelProperty.GetParentModel());
-            Assert.AreEqual(declaringType, modelProperty.DeclaringType);
-            Assert.AreEqual(name, modelProperty.Name);
+            Assert.AreEqual(model, modelMember.GetParent());
+            Assert.AreEqual(declaringType, modelMember.DeclaringType);
+            Assert.AreEqual(name, modelMember.Name);
         }
     }
 }
