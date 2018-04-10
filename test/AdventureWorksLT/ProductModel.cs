@@ -17,6 +17,11 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductModelID { get; private set; }
         }
 
+        public static IDataValues GetValueRef(int productModelId)
+        {
+            return DataValues.Create(_Int32.Const(productModelId));
+        }
+
         public class Ref : Model<Key>
         {
             static Ref()

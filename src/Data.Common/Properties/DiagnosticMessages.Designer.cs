@@ -1131,6 +1131,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("ArgumentIsNullOrEmptyList", "argumentName"), argumentName);
         }
 
+        /// <summary>
+        /// The column must be a param or const.
+        /// </summary>
+        public static string DataValues_InvalidColumn
+        {
+            get { return GetString("DataValues_InvalidColumn"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

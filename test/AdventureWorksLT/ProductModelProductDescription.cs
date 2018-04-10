@@ -23,6 +23,11 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Culture { get; private set; }
         }
 
+        public static IDataValues GetValueRef(int productModelId, int productDescriptionId, string culture)
+        {
+            return DataValues.Create(_Int32.Const(productModelId), _Int32.Const(productDescriptionId), _String.Const(culture));
+        }
+
         public static readonly Mounter<_String> _Culture;
 
         static ProductModelProductDescription()

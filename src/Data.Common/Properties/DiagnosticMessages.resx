@@ -537,4 +537,7 @@
   <data name="ArgumentIsNullOrEmptyList" xml:space="preserve">
     <value>The argument '{argumentName}' cannot be null or empty.</value>
   </data>
+  <data name="DataValues_InvalidColumn" xml:space="preserve">
+    <value>The column must be a param or const.</value>
+  </data>
 </root>
