@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Controls;
-using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Views
 {
