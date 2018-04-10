@@ -56,7 +56,7 @@ namespace DevZest.Data.Presenters
                 BuildTemplate(builder);
                 builder.Seal();
             }
-            _layoutManager = LayoutManager.Create(this, template, dataSet, GetRowMatchColumns(dataSet._), where, orderBy);
+            _layoutManager = LayoutManager.Create(this, template, dataSet, GetMatchColumns(dataSet._), where, orderBy);
             if (inherit && oldLayoutManager != null)
                 _layoutManager.Inherit(oldLayoutManager);
             OnMounted();
@@ -478,7 +478,7 @@ namespace DevZest.Data.Presenters
                 return RefreshAsync(getDataSet, getWhere, getOrderBy);
         }
 
-        protected virtual IReadOnlyList<Column> GetRowMatchColumns(T _)
+        protected virtual IReadOnlyList<Column> GetMatchColumns(T _)
         {
             var primaryKey = _.PrimaryKey;
             return primaryKey == null ? null : primaryKey.Select(x => x.Column).ToArray();
