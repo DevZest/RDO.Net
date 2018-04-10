@@ -575,20 +575,43 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        protected RowManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        protected RowManager(RowManager inherit, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
             : base(template, dataSet, rowMatchColumns, where, orderBy)
         {
             Template.RowManager = this;
-            Initialize();
+            Initialize(inherit);
         }
 
-        private void Initialize()
+        private void Initialize(RowManager inherit)
         {
             var coercedVirtualRowIndex = CoercedVirtualRowIndex;
             if (coercedVirtualRowIndex >= 0)
                 VirtualRow = new RowPresenter(this, coercedVirtualRowIndex);
             if (Rows.Count > 0)
-                _currentRow = Rows[0];
+            {
+                if (inherit != null)
+                    InitializeInherited(inherit);
+                else
+                    _currentRow = Rows[0];
+            }
+        }
+        
+        private void InitializeInherited(RowManager inherit)
+        {
+            Debug.Assert(inherit != null && Rows.Count > 0);
+            foreach (var inheritRow in inherit.SelectedRows)
+            {
+                var row = Match(inheritRow);
+                if (row != null)
+                    _selectedRows.Add(row);
+            }
+
+            _lastExtenedSelection = Match(inherit._lastExtenedSelection);
+
+            var currentRow = Match(inherit._currentRow);
+            if (currentRow == null)
+                currentRow = Rows[0];
+            _currentRow = currentRow;
         }
 
         public RowPresenter VirtualRow { get; private set; }
@@ -695,7 +718,7 @@ namespace DevZest.Data.Presenters.Primitives
             _editing = null;
             VirtualRow = null;
             base.Reload();
-            Initialize();
+            Initialize(null);
         }
 
         private void CoerceVirtualRow()

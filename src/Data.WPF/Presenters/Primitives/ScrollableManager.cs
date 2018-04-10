@@ -28,11 +28,23 @@ namespace DevZest.Data.Presenters.Primitives
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "Derived classes are limited to class LayoutXManager/LayoutYManager, and the overrides do not rely on completion of its constructor.")]
-        protected ScrollableManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
-            : base(template, dataSet, rowMatchColumns, where, orderBy, false)
+        protected ScrollableManager(ScrollableManager inherit, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(inherit, template, dataSet, rowMatchColumns, where, orderBy, false)
         {
-            _scrollToMain = MinScrollToMain;
-            _scrollToMainPlacement = GridPlacement.Head;
+            if (inherit != null)
+            {
+                _scrollDeltaMain = inherit._scrollDeltaMain;
+                _scrollOffsetMain = inherit._scrollOffsetMain;
+                _scrollToMainPlacement = inherit._scrollToMainPlacement;
+                _scrollToMain = inherit._scrollToMain;
+                _scrollDeltaCross = inherit._scrollDeltaCross;
+                ScrollOffsetCross = inherit.ScrollOffsetCross;
+            }
+            else
+            {
+                _scrollToMain = MinScrollToMain;
+                _scrollToMainPlacement = GridPlacement.Head;
+            }
         }
 
         internal abstract IGridTrackCollection GridTracksMain { get; }
@@ -1176,21 +1188,6 @@ namespace DevZest.Data.Presenters.Primitives
             _scrollOffsetMain = 0;
             _scrollToMainPlacement = default(GridPlacement);
             _scrollToMain = default(LogicalExtent);
-        }
-
-        internal override void Inherit(LayoutManager layoutManager)
-        {
-            base.Inherit(layoutManager);
-            var scrollable = layoutManager as ScrollableManager;
-            if (scrollable == null)
-                return;
-
-            _scrollDeltaMain = scrollable._scrollDeltaMain;
-            _scrollOffsetMain = scrollable._scrollOffsetMain;
-            _scrollToMainPlacement = scrollable._scrollToMainPlacement;
-            _scrollToMain = scrollable._scrollToMain;
-            _scrollDeltaCross = scrollable._scrollDeltaCross;
-            ScrollOffsetCross = scrollable.ScrollOffsetCross;
         }
     }
 }

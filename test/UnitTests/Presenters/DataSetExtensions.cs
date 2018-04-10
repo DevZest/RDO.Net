@@ -49,7 +49,7 @@ namespace DevZest.Data.Presenters
         private sealed class ConcreteElementManager : ElementManager
         {
             public ConcreteElementManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy, emptyBlockViewList)
+                : base(null, template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy, emptyBlockViewList)
             {
             }
         }
@@ -66,14 +66,14 @@ namespace DevZest.Data.Presenters
 
         internal static LayoutManager CreateLayoutManager(this DataSet dataSet, Action<TemplateBuilder> buildTemplateAction)
         {
-            return dataSet.CreateManager(buildTemplateAction, (t, d) => LayoutManager.Create(t, d, d.GetRowMatchColumns()));
+            return dataSet.CreateManager(buildTemplateAction, (t, d) => LayoutManager.Create(null, t, d, d.GetRowMatchColumns()));
         }
     }
 
     internal sealed class ConcreteInputManager : InputManager
     {
         public ConcreteInputManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null, bool emptyBlockViewList = false)
-            : base(template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy, emptyBlockViewList)
+            : base(null, template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy, emptyBlockViewList)
         {
         }
 

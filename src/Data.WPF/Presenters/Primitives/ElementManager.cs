@@ -11,8 +11,8 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class ElementManager : RowManager
     {
-        internal ElementManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
-            : base(template, dataSet, rowMatchColumns, where, orderBy)
+        internal ElementManager(ElementManager inherit, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
+            : base(inherit, template, dataSet, rowMatchColumns, where, orderBy)
         {
             ContainerViewList = emptyContainerViewList ? Primitives.ContainerViewList.Empty : Primitives.ContainerViewList.Create(this);
         }

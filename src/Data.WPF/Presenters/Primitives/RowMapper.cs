@@ -561,5 +561,15 @@ namespace DevZest.Data.Presenters.Primitives
         {
             get { return _rowMatches == null ? null : _rowMatches.ContainsKey(rowMatch) ? _rowMatches[rowMatch] : null; }
         }
+
+        public RowPresenter Match(RowPresenter rowPresenter)
+        {
+            if (rowPresenter == null)
+                return null;
+
+            if (!rowPresenter.MatchValueHashCode.HasValue)
+                return null;
+            return this[new RowMatch(rowPresenter, rowPresenter.MatchValueHashCode.Value)];
+        }
     }
 }

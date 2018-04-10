@@ -52,7 +52,11 @@ namespace DevZest.Data.Presenters
 
             protected override void MoveFocus(DataView dataView)
             {
-                dataView.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                var currentRow = dataView.DataPresenter.CurrentRow;
+                if (currentRow != null)
+                    currentRow.View.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                else
+                    dataView.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
             }
         }
 
@@ -68,8 +72,7 @@ namespace DevZest.Data.Presenters
 
             protected override void MoveFocus(DataView dataView)
             {
-                var dataPresenter = dataView.DataPresenter;
-                var currentRow = dataPresenter.CurrentRow;
+                var currentRow = dataView.DataPresenter.CurrentRow;
                 if (currentRow != null)
                     _binding[currentRow].Focus();
             }

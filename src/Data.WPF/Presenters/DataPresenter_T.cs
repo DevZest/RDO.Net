@@ -56,9 +56,7 @@ namespace DevZest.Data.Presenters
                 BuildTemplate(builder);
                 builder.Seal();
             }
-            _layoutManager = LayoutManager.Create(this, template, dataSet, GetMatchColumns(dataSet._), where, orderBy);
-            if (inherit && oldLayoutManager != null)
-                _layoutManager.Inherit(oldLayoutManager);
+            _layoutManager = LayoutManager.Create(inherit ? oldLayoutManager : null, this, template, dataSet, GetMatchColumns(dataSet._), where, orderBy);
             OnMounted();
             dataView.OnDataLoaded();
         }

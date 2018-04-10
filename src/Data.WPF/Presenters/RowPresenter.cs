@@ -615,5 +615,10 @@ namespace DevZest.Data.Presenters
 
             return this.GetValueHashCode();
         }
+
+        public override string ToString()
+        {
+            return Index.ToString();
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace DevZest.Data.Presenters.Primitives
         private sealed class ConcreteRowManager : RowManager
         {
             public ConcreteRowManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null)
-                : base(template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy)
+                : base(null, template, dataSet, dataSet.GetRowMatchColumns(), where, orderBy)
             {
             }
         }

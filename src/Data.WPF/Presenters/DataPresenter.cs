@@ -605,14 +605,7 @@ namespace DevZest.Data.Presenters
 
         public RowPresenter Match(RowPresenter rowPresenter)
         {
-            Check.NotNull(rowPresenter, nameof(rowPresenter));
-            if (!CanMatchRow)
-                return null;
-
-            var valueHashCode = rowPresenter.MatchValueHashCode;
-            if (!valueHashCode.HasValue)
-                return null;
-            return LayoutManager[new RowMatch(rowPresenter, valueHashCode.Value)];
+            return LayoutManager?.Match(rowPresenter);
         }
     }
 }

@@ -63,8 +63,8 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        protected InputManager(Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
-            : base(template, dataSet, rowMatchColumns, where, orderBy, emptyContainerViewList)
+        protected InputManager(InputManager inherit, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
+            : base(inherit, template, dataSet, rowMatchColumns, where, orderBy, emptyContainerViewList)
         {
         }
 
