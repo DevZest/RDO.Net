@@ -31,7 +31,7 @@ namespace DevZest.Data.Annotations
                 IdPlusOne.ComputedAs(Id + _Int32.Const(1));
             }
 
-            [Computation(IsAggregate = true)]
+            [Computation(ComputationMode.Aggregate)]
             private void ComputeTotalValue()
             {
                 TotalValue.ComputedAs(Details.Value.Sum());

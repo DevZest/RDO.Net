@@ -19,7 +19,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return LineCount[dataRow] > 0 ? null : new DataValidationError(UserMessages.Validation_SalesOrder_LineCount, LineCount);
         }
 
-        [Computation(IsAggregate = true)]
+        [Computation(ComputationMode.Aggregate)]
         private void ComputeLineCount()
         {
             LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows());
@@ -32,7 +32,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return new SalesOrderDetail();
         }
 
-        [Computation(IsAggregate = true)]
+        [Computation(ComputationMode.Aggregate)]
         private void ComputeSubTotal()
         {
             SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);

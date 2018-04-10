@@ -32,12 +32,10 @@ namespace DevZest.Data.Helpers
 
             public _Int32 InheritedValue { get; private set; }
 
-            [Computation(IsAggregate = true)]
+            [Computation(ComputationMode.Inherit)]
             private void ComputeInheritedValue()
             {
-                var parentModel = GetParent() as SimpleModel;
-                if (parentModel != null)
-                    InheritedValue.ComputedAs(parentModel.InheritedValue);
+                Child.InheritedValue.ComputedAs(InheritedValue);
             }
 
             public _Int32 ChildCount { get; private set; }
