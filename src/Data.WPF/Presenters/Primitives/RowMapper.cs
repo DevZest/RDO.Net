@@ -556,5 +556,10 @@ namespace DevZest.Data.Presenters.Primitives
             if (newValueHashCode.HasValue)
                 _rowMatches.Add(new RowMatch(rowPresenter, newValueHashCode.Value), rowPresenter);
         }
+
+        public RowPresenter this[RowMatch rowMatch]
+        {
+            get { return _rowMatches == null ? null : _rowMatches.ContainsKey(rowMatch) ? _rowMatches[rowMatch] : null; }
+        }
     }
 }

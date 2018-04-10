@@ -80,12 +80,7 @@ namespace AdventureWorks.SalesOrders
 
             private RowPresenter GetRow(int currentProductID)
             {
-                foreach (var row in Rows)
-                {
-                    if (row.GetValue(_.ProductID) == currentProductID)
-                        return row;
-                }
-                return null;
+                return Match(Product.GetValueRef(currentProductID));
             }
 
             public async void RefreshAsync()

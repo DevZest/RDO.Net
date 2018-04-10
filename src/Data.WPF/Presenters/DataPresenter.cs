@@ -585,5 +585,29 @@ namespace DevZest.Data.Presenters
         protected virtual void OnEdit(Scalar scalar)
         {
         }
+
+        public RowPresenter Match(IDataValues dataValues)
+        {
+            Check.NotNull(dataValues, nameof(dataValues));
+            if (LayoutManager == null)
+                return null;
+
+            var valueHashCode = dataValues.GetValueHashCode();
+            if (!valueHashCode.HasValue)
+                return null;
+            return LayoutManager[new RowMatch(dataValues, valueHashCode.Value)];
+        }
+
+        public RowPresenter Match(RowPresenter rowPresenter)
+        {
+            Check.NotNull(rowPresenter, nameof(rowPresenter));
+            if (LayoutManager == null)
+                return null;
+
+            var valueHashCode = rowPresenter.MatchValueHashCode;
+            if (!valueHashCode.HasValue)
+                return null;
+            return LayoutManager[new RowMatch(rowPresenter, valueHashCode.Value)];
+        }
     }
 }
