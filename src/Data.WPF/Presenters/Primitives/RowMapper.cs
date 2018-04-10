@@ -544,16 +544,17 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _rowMatches != null; }
         }
 
-        internal void UpdateRowMatch(RowMatch? oldValue, RowMatch? newValue)
+        internal void UpdateRowMatch(RowPresenter rowPresenter, int? oldValueHashCode, int? newValueHashCode)
         {
             Debug.Assert(RowMatchable);
-            Debug.Assert(oldValue.HasValue || newValue.HasValue);
+            Debug.Assert(rowPresenter != null);
+            Debug.Assert(oldValueHashCode.HasValue || newValueHashCode.HasValue);
 
-            if (oldValue.HasValue)
-                _rowMatches.Remove(oldValue.Value);
+            if (oldValueHashCode.HasValue)
+                _rowMatches.Remove(new RowMatch(rowPresenter, oldValueHashCode.Value));
 
-            if (newValue.HasValue)
-                _rowMatches.Add(newValue.Value, newValue.Value.RowPresenter);
+            if (newValueHashCode.HasValue)
+                _rowMatches.Add(new RowMatch(rowPresenter, newValueHashCode.Value), rowPresenter);
         }
     }
 }

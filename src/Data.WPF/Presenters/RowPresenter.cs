@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowPresenter : ElementPresenter
+    public sealed class RowPresenter : ElementPresenter, IDataValues
     {
         public event EventHandler<ValueChangedEventArgs> ValueChanged = delegate { };
 
@@ -594,16 +594,13 @@ namespace DevZest.Data.Presenters
                 _matchValueHashCode = value;
                 Debug.Assert(oldValue.HasValue || value.HasValue);
                 Debug.Assert(RowMapper.RowMatchable);
-                RowMapper.UpdateRowMatch(CreateRowMatch(oldValue), CreateRowMatch(value));
+                RowMapper.UpdateRowMatch(this, oldValue, value);
             }
         }
 
-        private RowMatch? CreateRowMatch(int? matchValueHashCode)
+        IReadOnlyList<Column> IDataValues.Columns
         {
-            if (matchValueHashCode.HasValue)
-                return new RowMatch(this, matchValueHashCode.Value);
-            else
-                return null;
+            get { return _rowMapper?.RowMatchColumns; }
         }
 
         private void RefreshMatchValueHashCode()
@@ -616,17 +613,7 @@ namespace DevZest.Data.Presenters
             if (_rowMapper == null || !_rowMapper.RowMatchable || DataRow == null || DataRow.BaseDataSet == null)
                 return null;
 
-            var rowMatchColumns = _rowMapper.RowMatchColumns;
-            unchecked
-            {
-                var hash = 2166136261;
-                for (int i = 0; i < rowMatchColumns.Count; i++)
-                {
-                    hash = hash ^ (uint)rowMatchColumns[i].GetHashCode(DataRow);
-                    hash = hash * 16777619;
-                }
-                return unchecked((int)hash);
-            }
+            return this.GetValueHashCode();
         }
     }
 }
