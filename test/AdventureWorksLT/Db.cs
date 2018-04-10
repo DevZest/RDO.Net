@@ -190,9 +190,9 @@ namespace DevZest.Samples.AdventureWorksLT
                     .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
             });
 
-            result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
+            result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetailInfo _) =>
             {
-                Debug.Assert(_.GetExtender<SalesOrderInfo.DetailExt>() != null);
+                Debug.Assert(_.GetExtender<SalesOrderDetailInfo.Ext>() != null);
                 builder.From(SalesOrderDetails, out var d)
                     .LeftJoin(Products, d.Product, out var p)
                     .AutoSelect();

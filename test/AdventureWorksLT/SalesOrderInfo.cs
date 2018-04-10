@@ -20,20 +20,19 @@ namespace DevZest.Samples.AdventureWorksLT
             public Address.Lookup BillToAddress { get; private set; }
         }
 
-        public class DetailExt : ModelExtender
+        public new SalesOrderDetailInfo SalesOrderDetails
         {
-            static DetailExt()
-            {
-                RegisterChildExtender((DetailExt _) => _.Product);
-            }
-
-            public Product.Lookup Product { get; private set; }
+            get { return (SalesOrderDetailInfo)base.SalesOrderDetails; }
         }
 
-        [ModelExtender(typeof(DetailExt))]
-        public new SalesOrderDetail SalesOrderDetails
+        protected sealed override SalesOrderDetail CreateSalesOrderDetail()
         {
-            get { return base.SalesOrderDetails; }
+            return CreateSalesOrderDetailInfo();
+        }
+
+        protected virtual SalesOrderDetailInfo CreateSalesOrderDetailInfo()
+        {
+            return new SalesOrderDetailInfo();
         }
     }
 }

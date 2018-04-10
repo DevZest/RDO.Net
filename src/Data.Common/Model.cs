@@ -142,20 +142,22 @@ namespace DevZest.Data
 
         static MounterManager<Model, Model> s_childModelManager = new MounterManager<Model, Model>();
 
-        public static Mounter<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter)
+        public static Mounter<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter, Func<TModel, TChildModel> constructor = null)
             where TModel : Model, new()
             where TChildModel : Model, new()
         {
             Utilities.Check.NotNull(getter, nameof(getter));
-            return s_childModelManager.Register(getter, CreateChildModel, null);
+            if (constructor == null)
+                constructor = _ => new TChildModel();
+            return s_childModelManager.Register(getter, mounter => CreateChildModel(mounter, constructor), null);
         }
 
-        private static TChildModel CreateChildModel<TModel, TChildModel>(Mounter<TModel, TChildModel> mounter)
+        private static TChildModel CreateChildModel<TModel, TChildModel>(Mounter<TModel, TChildModel> mounter, Func<TModel, TChildModel> constructor)
             where TModel : Model, new()
             where TChildModel : Model, new()
         {
-            TChildModel result = new TChildModel();
             var parentModel = mounter.Parent;
+            TChildModel result = constructor(parentModel);
             result.Construct(parentModel, mounter.DeclaringType, mounter.Name);
             return result;
         }
@@ -177,25 +179,26 @@ namespace DevZest.Data
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="relationshipGetter"/> is <see langword="null"/>.</exception>
         public static Mounter<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
-            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMapper, TChildModel, TModel> childColumnsBuilder = null)
+            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMapper, TChildModel, TModel> childColumnsBuilder = null, Func<TModel, TChildModel> constructor = null)
             where TModel : Model<TModelKey>
             where TModelKey : PrimaryKey
             where TChildModel : Model, new()
         {
             Utilities.Check.NotNull(getter, nameof(getter));
             Utilities.Check.NotNull(relationshipGetter, nameof(relationshipGetter));
-
-            return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, relationshipGetter, childColumnsBuilder), null);
+            if (constructor == null)
+                constructor = _ => new TChildModel();
+            return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, relationshipGetter, childColumnsBuilder, constructor), null);
         }
 
         private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Mounter<TModel, TChildModel> mounter,
-            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMapper, TChildModel, TModel> parentMappingsBuilder)
+            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMapper, TChildModel, TModel> parentMappingsBuilder, Func<TModel, TChildModel> constructor)
             where TModel : Model<TModelKey>
             where TModelKey : PrimaryKey
             where TChildModel : Model, new()
         {
-            TChildModel result = new TChildModel();
             var parentModel = mounter.Parent;
+            TChildModel result = constructor(parentModel);
             var parentRelationship = relationshipGetter(result).Join(parentModel.PrimaryKey);
             var parentMappings = AppendColumnMappings(parentRelationship, parentMappingsBuilder, result, parentModel);
             result.Construct(parentModel, mounter.DeclaringType, mounter.Name, parentRelationship, parentMappings);
