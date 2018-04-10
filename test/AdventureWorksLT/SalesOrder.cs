@@ -25,7 +25,7 @@ namespace DevZest.Samples.AdventureWorksLT
             LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows());
         }
 
-        public virtual SalesOrderDetail SalesOrderDetails { get; private set; }
+        public SalesOrderDetail SalesOrderDetails { get; private set; }
 
         [Computation(IsAggregate = true)]
         private void ComputeSubTotal()

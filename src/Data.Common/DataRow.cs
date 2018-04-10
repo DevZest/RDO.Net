@@ -228,7 +228,7 @@ namespace DevZest.Data
             if (childModel.ParentModel != Model)
                 throw new ArgumentException(DiagnosticMessages.InvalidChildModel, nameof(childModel));
 
-            return (DataSet<T>)this[childModel.Ordinal];
+            return this[childModel.Ordinal] as DataSet<T>;
         }
 
         public override string ToString()

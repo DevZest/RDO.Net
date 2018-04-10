@@ -31,7 +31,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [ModelExtender(typeof(DetailExt))]
-        public override SalesOrderDetail SalesOrderDetails
+        public new SalesOrderDetail SalesOrderDetails
         {
             get { return base.SalesOrderDetails; }
         }
