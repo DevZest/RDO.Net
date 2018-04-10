@@ -539,14 +539,14 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _rowMatchColumns; }
         }
 
-        internal bool RowMatchable
+        public bool CanMatchRow
         {
             get { return _rowMatches != null; }
         }
 
         internal void UpdateRowMatch(RowPresenter rowPresenter, int? oldValueHashCode, int? newValueHashCode)
         {
-            Debug.Assert(RowMatchable);
+            Debug.Assert(CanMatchRow);
             Debug.Assert(rowPresenter != null);
             Debug.Assert(oldValueHashCode.HasValue || newValueHashCode.HasValue);
 

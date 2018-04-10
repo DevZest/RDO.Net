@@ -569,7 +569,7 @@ namespace DevZest.Data.Presenters
 
         private bool AffectsRowMatch(IColumns columns)
         {
-            if (columns == null || columns.Count == 0 || _rowMapper == null || !_rowMapper.RowMatchable)
+            if (columns == null || columns.Count == 0 || _rowMapper == null || !_rowMapper.CanMatchRow)
                 return false;
 
             var rowMatchColumns = _rowMapper.RowMatchColumns;
@@ -593,7 +593,7 @@ namespace DevZest.Data.Presenters
                 var oldValue = _matchValueHashCode;
                 _matchValueHashCode = value;
                 Debug.Assert(oldValue.HasValue || value.HasValue);
-                Debug.Assert(RowMapper.RowMatchable);
+                Debug.Assert(RowMapper.CanMatchRow);
                 RowMapper.UpdateRowMatch(this, oldValue, value);
             }
         }
@@ -610,7 +610,7 @@ namespace DevZest.Data.Presenters
 
         private int? GetMatchValueHashCode()
         {
-            if (_rowMapper == null || !_rowMapper.RowMatchable || DataRow == null || DataRow.BaseDataSet == null)
+            if (_rowMapper == null || !_rowMapper.CanMatchRow || DataRow == null || DataRow.BaseDataSet == null)
                 return null;
 
             return this.GetValueHashCode();

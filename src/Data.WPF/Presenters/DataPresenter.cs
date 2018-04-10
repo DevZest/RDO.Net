@@ -586,10 +586,15 @@ namespace DevZest.Data.Presenters
         {
         }
 
+        public bool CanMatchRow
+        {
+            get { return LayoutManager == null ? false : LayoutManager.CanMatchRow; }
+        }
+
         public RowPresenter Match(IDataValues dataValues)
         {
             Check.NotNull(dataValues, nameof(dataValues));
-            if (LayoutManager == null)
+            if (!CanMatchRow)
                 return null;
 
             var valueHashCode = dataValues.GetValueHashCode();
@@ -601,7 +606,7 @@ namespace DevZest.Data.Presenters
         public RowPresenter Match(RowPresenter rowPresenter)
         {
             Check.NotNull(rowPresenter, nameof(rowPresenter));
-            if (LayoutManager == null)
+            if (!CanMatchRow)
                 return null;
 
             var valueHashCode = rowPresenter.MatchValueHashCode;
