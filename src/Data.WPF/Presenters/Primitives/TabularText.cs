@@ -38,6 +38,7 @@ namespace DevZest.Data.Presenters.Primitives
             Debug.Assert(!string.IsNullOrEmpty(s));
 
             int length = s.Length;
+            bool escaped = false;
             for (int i = 0; i < length; i++)
             {
                 char c = s[i];
@@ -46,14 +47,12 @@ namespace DevZest.Data.Presenters.Primitives
                 if (c == QuotationMark)
                 {
                     output.Append(QuotationMark);
-                    return true;
+                    escaped = true;
                 }
-
-                if (c == delimiter || c == '\r' || c == '\n')
-                    return true;
+                else if (c == delimiter || c == '\r' || c == '\n')
+                    escaped = true;
             }
-
-            return false;
+            return escaped;
         }
 
         public static bool CanPasteFromClipboard
