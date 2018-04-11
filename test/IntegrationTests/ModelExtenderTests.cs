@@ -11,7 +11,7 @@ namespace DevZest.Data
         {
             using (var db = OpenDb())
             {
-                var salesOrderDetails = db.CreateQuery(_ => _.SetExtender<SalesOrderDetailInfo.Ext>(),
+                var salesOrderDetails = db.CreateQuery(_ => _.SetExtender<SalesOrderInfoDetail.Ext>(),
                     (DbQueryBuilder builder, SalesOrderDetail _) =>
                     {
                         SalesOrderDetail d;
@@ -26,7 +26,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrderDetail_71774_with_ext.Trim();
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtender<SalesOrderDetailInfo.Ext>(), json);
+                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtender<SalesOrderInfoDetail.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }

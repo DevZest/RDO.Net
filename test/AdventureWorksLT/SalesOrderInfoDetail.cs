@@ -4,7 +4,7 @@ using DevZest.Data.Annotations;
 namespace DevZest.Samples.AdventureWorksLT
 {
     [ModelExtender(typeof(Ext))]
-    public class SalesOrderDetailInfo : SalesOrderDetail
+    public class SalesOrderInfoDetail : SalesOrderDetail
     {
         public class Ext : ModelExtender
         {

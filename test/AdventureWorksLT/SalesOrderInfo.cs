@@ -20,9 +20,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public Address.Lookup BillToAddress { get; private set; }
         }
 
-        public new SalesOrderDetailInfo SalesOrderDetails
+        public new SalesOrderInfoDetail SalesOrderDetails
         {
-            get { return (SalesOrderDetailInfo)base.SalesOrderDetails; }
+            get { return (SalesOrderInfoDetail)base.SalesOrderDetails; }
         }
 
         protected sealed override SalesOrderDetail CreateSalesOrderDetail()
@@ -30,9 +30,9 @@ namespace DevZest.Samples.AdventureWorksLT
             return CreateSalesOrderDetailInfo();
         }
 
-        protected virtual SalesOrderDetailInfo CreateSalesOrderDetailInfo()
+        protected virtual SalesOrderInfoDetail CreateSalesOrderDetailInfo()
         {
-            return new SalesOrderDetailInfo();
+            return new SalesOrderInfoDetail();
         }
     }
 }
