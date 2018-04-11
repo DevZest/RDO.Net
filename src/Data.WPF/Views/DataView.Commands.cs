@@ -193,7 +193,7 @@ namespace DevZest.Data.Views
             private void CanExecPasteAppend(object sender, CanExecuteRoutedEventArgs e)
             {
                 e.CanExecute = TabularText.CanPasteFromClipboard && !DataPresenter.IsEditing && !DataPresenter.IsRecursive 
-                    && DataPresenter.LayoutOrientation.HasValue && CurrentRow != null && CurrentRow.IsVirtual && SerializableColumns.Any();
+                    && DataPresenter.LayoutOrientation.HasValue && CurrentRow != null && CurrentRow.IsVirtual && PastableColumns.Any();
                 if (!e.CanExecute)
                     e.ContinueRouting = true;
             }
@@ -206,7 +206,7 @@ namespace DevZest.Data.Views
             private void ExecPasteAppend(object sender, ExecutedRoutedEventArgs e)
             {
                 var window = new PasteAppendWindow();
-                window.Show(SerializableColumns.ToArray());
+                window.Show(PastableColumns.ToArray());
             }
 
             private IEnumerable<Column> SerializableColumns
@@ -215,9 +215,25 @@ namespace DevZest.Data.Views
                 {
                     for (int i = 0; i < RowBindings.Count; i++)
                     {
-                        var serializableColumns = RowBindings[i].SerializableColumns;
-                        foreach (var serializableColumn in serializableColumns)
-                            yield return serializableColumn;
+                        var columns = RowBindings[i].SerializableColumns;
+                        foreach (var column in columns)
+                            yield return column;
+                    }
+                }
+            }
+
+            private IEnumerable<Column> PastableColumns
+            {
+                get
+                {
+                    for (int i = 0; i < RowBindings.Count; i++)
+                    {
+                        var columns = RowBindings[i].GetInputTargetColumns();
+                        foreach (var column in columns)
+                        {
+                            if (!column.IsExpression)
+                                yield return column;
+                        }
                     }
                 }
             }
