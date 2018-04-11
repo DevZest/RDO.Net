@@ -187,7 +187,8 @@ namespace DevZest.Data.Views
 
                 builder.GridColumns(textColumns.Select(x => "100;min:20;max:200").ToArray())
                     .GridRows("Auto", "Auto", "Auto")
-                    .Layout(Orientation.Vertical);
+                    .Layout(Orientation.Vertical)
+                    .WithFrozenTop(2);
 
                 for (int i = 0; i < _columnHeadings.Length; i++)
                     builder.AddBinding(i, 0, _bindableColumnHeadings[i].BindToColumnHeader());
