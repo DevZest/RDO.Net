@@ -206,7 +206,7 @@ namespace DevZest.Data.Views
             private void ExecPasteAppend(object sender, ExecutedRoutedEventArgs e)
             {
                 var window = new PasteAppendWindow();
-                window.Show(PastableColumns.ToArray());
+                window.Show(DataPresenter, PastableColumns.ToArray());
             }
 
             private IEnumerable<Column> SerializableColumns

@@ -27,7 +27,7 @@
         <DockPanel Grid.Row="1" Margin="0,10,0,0">
             <CheckBox DockPanel.Dock="Left" x:Name="_firstRowContainsColumnHeadings" Content="{x:Static res:UserMessages.PasteAppendWindow_FirstRowContainsColumnHeadings}" />
             <UniformGrid Rows="1" Grid.Row="2" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                <Button IsDefault="True" Content="{x:Static res:UserMessages._OK}" Command="{x:Static v:SortWindow.Apply}" />
+                <Button IsDefault="True" Content="{x:Static res:UserMessages._OK}" Command="{x:Static v:PasteAppendWindow.Submit}" />
                 <Button Margin="5,0,0,0" IsCancel="True" Content="{x:Static res:UserMessages._Cancel}" />
             </UniformGrid>
         </DockPanel>

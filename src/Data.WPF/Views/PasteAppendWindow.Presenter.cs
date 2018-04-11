@@ -30,9 +30,11 @@ namespace DevZest.Data.Views
                 }
             }
 
-            public Presenter(IReadOnlyList<Column> targetColumns, DataView dataView)
+            public Presenter(DataPresenter sourcePresenter, IReadOnlyList<Column> targetColumns, DataView dataView)
             {
+                Debug.Assert(sourcePresenter != null);
                 Debug.Assert(targetColumns != null && targetColumns.Count > 0);
+                _sourcePresenter = sourcePresenter;
                 _columnSelections = InitColumnSelection(targetColumns);
                 BindableFirstRowContainsColumnHeadings = NewLinkedScalar<bool>(nameof(FirstRowContainsColumnHeadings));
 
@@ -61,7 +63,7 @@ namespace DevZest.Data.Views
                 var result = new ColumnSelection[targetColumns.Count + 1];
                 for (int i = 0; i < targetColumns.Count; i++)
                     result[i] = new ColumnSelection(targetColumns[i], targetColumns[i].DisplayName);
-                result[result.Length - 1] = new ColumnSelection(_ignore, UserMessages.PasteAppendWindow_Ignore);
+                result[result.Length - 1] = new ColumnSelection(IGNORE, UserMessages.PasteAppendWindow_Ignore);
                 return result;
             }
 
@@ -117,7 +119,8 @@ namespace DevZest.Data.Views
                 public string Display { get; private set; }
             }
 
-            private static readonly Column _ignore = new _String();
+            private static readonly Column IGNORE = new _String();
+            private readonly DataPresenter _sourcePresenter;
             private readonly ColumnSelection[] _columnSelections;
             private readonly Scalar<Column>[] _columnMappings;
             private readonly string[] _columnHeadings;
@@ -174,7 +177,7 @@ namespace DevZest.Data.Views
 
                 public void Refresh(TextBlock v, RowPresenter p)
                 {
-                    if (_scalar.Value == _ignore)
+                    if (_scalar.Value == IGNORE)
                         v.Foreground = Brushes.LightGray;
                     else
                         v.ClearValue(ForegroundProperty);
@@ -199,7 +202,10 @@ namespace DevZest.Data.Views
                 for (int i = 0; i < textColumns.Count; i++)
                 {
                     var textBlockGrayOut = new TextBlockGrayOut(_columnMappings[i]);
-                    builder.AddBinding(i, 2, textColumns[i].BindToTextBlock().OverrideRefresh(textBlockGrayOut.Refresh).AddToGridCell());
+                    var textColumn = textColumns[i];
+                    var gridCellBinding = textColumn.BindToTextBlock().OverrideRefresh(textBlockGrayOut.Refresh).AddToGridCell();
+                    builder.AddBinding(i, 2, textColumn.BindToValidationPlaceholder(gridCellBinding));
+                    builder.AddBinding(i, 2, gridCellBinding);
                     builder.GridLineY(new GridPoint(i + 1, 2), 1);
                 }
 
@@ -213,7 +219,7 @@ namespace DevZest.Data.Views
                     var scalar = _columnMappings[i];
                     var column = scalar.Value;
 
-                    if (column == _ignore)
+                    if (column == IGNORE)
                         continue;
 
                     if (column == null)
@@ -231,6 +237,64 @@ namespace DevZest.Data.Views
                         }
                     }
                 }
+                return result;
+            }
+
+            public ColumnValueBag[] Submit()
+            {
+                if (!SubmitInput())
+                    return null;
+
+
+                var result = new ColumnValueBag[DataSet.Count];
+                var serializers = GetColumnSerializers();
+                var validationResults = DataValidationResults.Empty;
+
+                for (int i = 0; i <  DataSet.Count; i++)
+                {
+                    var validationErrors = DataValidationErrors.Empty;
+                    var columnValueBag = new ColumnValueBag();
+                    result[i] = columnValueBag;
+                    for (int j = 0; j < serializers.Count; j++)
+                    {
+                        var serializer = serializers[j];
+                        if (serializer == null)
+                            continue;
+
+                        var textColumn = _.TextColumns[j];
+                        try
+                        {
+                            serializer.Deserialize(textColumn[i], columnValueBag);
+                        }
+                        catch (Exception ex)
+                        {
+                            validationErrors = validationErrors.Add(new DataValidationError(ex.Message, textColumn));
+                        }
+                    }
+
+                    if (validationErrors.Count > 0)
+                        validationResults = validationResults.Add(new DataValidationResult(DataSet[i], validationErrors));
+                }
+
+                if (validationResults.Count > 0)
+                {
+                    RowValidation.SetAsyncErrors(validationResults);
+                    return null;
+                }
+                return result;
+            }
+
+            private IReadOnlyList<ColumnSerializer> GetColumnSerializers()
+            {
+                var result = new ColumnSerializer[_columnMappings.Length];
+                for (int i = 0; i < _columnMappings.Length; i++)
+                {
+                    var column = _columnMappings[i].Value;
+                    if (column == IGNORE)
+                        continue;
+                    result[i] = _sourcePresenter.GetSerializer(column);
+                }
+
                 return result;
             }
         }

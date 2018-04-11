@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System;
 
 namespace DevZest.Data.Views
 {
@@ -10,6 +12,8 @@ namespace DevZest.Data.Views
     /// </summary>
     internal partial class PasteAppendWindow : Window
     {
+        public static readonly RoutedCommand Submit = new RoutedCommand(nameof(Submit), typeof(PasteAppendWindow));
+
         public static bool GetAutoTooltip(TextBlock textBlock)
         {
             return (bool)textBlock.GetValue(AutoTooltipProperty);
@@ -60,12 +64,24 @@ namespace DevZest.Data.Views
         public PasteAppendWindow()
         {
             InitializeComponent();
+            CommandBindings.Add(new CommandBinding(Submit, ExecSubmit, CanExecSubmit));
+        }
+
+        private void CanExecSubmit(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _presenter.CanSubmitInput;
+        }
+
+        private void ExecSubmit(object sender, ExecutedRoutedEventArgs e)
+        {
+            _presenter.Submit();
+            e.Handled = true;
         }
 
         private Presenter _presenter;
-        public IReadOnlyList<ColumnValueBag> Show(IReadOnlyList<Column> columns)
+        public IReadOnlyList<ColumnValueBag> Show(DataPresenter sourcePresenter, IReadOnlyList<Column> columns)
         {
-            _presenter = new Presenter(columns, _dataView);
+            _presenter = new Presenter(sourcePresenter, columns, _dataView);
             _presenter.Attach(_firstRowContainsColumnHeadings, _presenter.BindableFirstRowContainsColumnHeadings.BindToCheckBox());
             ShowDialog();
             return null;
