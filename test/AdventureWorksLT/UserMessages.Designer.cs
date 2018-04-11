@@ -185,5 +185,14 @@ namespace DevZest.Samples.AdventureWorksLT {
                 return ResourceManager.GetString("Validation_SalesOrder_LineCount", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value is required for field &apos;{0}&apos;..
+        /// </summary>
+        internal static string Validation_ValueIsRequired {
+            get {
+                return ResourceManager.GetString("Validation_ValueIsRequired", resourceCulture);
+            }
+        }
     }
 }

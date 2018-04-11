@@ -159,4 +159,7 @@
   <data name="Validation_SalesOrder_LineCount" xml:space="preserve">
     <value>Sales order must have detail line(s).</value>
   </data>
+  <data name="Validation_ValueIsRequired" xml:space="preserve">
+    <value>Value is required for field '{0}'.</value>
+  </data>
 </root>
