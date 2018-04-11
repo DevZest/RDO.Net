@@ -3,6 +3,7 @@ using DevZest.Data.Presenters.Primitives;
 using DevZest.Data.Primitives;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DevZest.Data.Views
@@ -206,7 +207,39 @@ namespace DevZest.Data.Views
             private void ExecPasteAppend(object sender, ExecutedRoutedEventArgs e)
             {
                 var window = new PasteAppendWindow();
-                window.Show(DataPresenter, PastableColumns.ToArray());
+                var columns = PastableColumns.ToArray();
+                var dataToPaste = window.Show(DataPresenter, columns);
+                if (dataToPaste != null)
+                    PasteAppend(columns, dataToPaste);
+                e.Handled = true;
+            }
+
+            private void PasteAppend(IReadOnlyList<Column> columns, IReadOnlyList<ColumnValueBag> dataToPaste)
+            {
+                for (int i = 0; i < dataToPaste.Count; i++)
+                {
+                    if (!PasteAppend(columns, dataToPaste[i]))
+                    {
+                        MessageBox.Show(UserMessages.DataView_PasteAppendWithError(i));
+                        return;
+                    }
+                }
+                MessageBox.Show(UserMessages.DataView_PasteAppendCompleted(dataToPaste.Count));
+            }
+
+            private bool PasteAppend(IReadOnlyList<Column> columns, ColumnValueBag data)
+            {
+                var presenter = DataPresenter;
+                var row = presenter.VirtualRow;
+                row.BeginEdit();
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    var column = columns[i];
+                    if (data.ContainsKey(column))
+                        row[column] = data[column];
+                }
+                row.EndEdit();
+                return !presenter.IsEditing;
             }
 
             private IEnumerable<Column> SerializableColumns

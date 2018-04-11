@@ -235,6 +235,22 @@ namespace DevZest.Data
             get { return GetString("PasteAppendWindow_Ignore"); }
         }
 
+        /// <summary>
+        /// {count} row(s) has been successfully appended.
+        /// </summary>
+        public static string DataView_PasteAppendCompleted(object count)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataView_PasteAppendCompleted", "count"), count);
+        }
+
+        /// <summary>
+        /// Error occurs when pasting append data. {count} row(s) has been successfully appended.
+        /// </summary>
+        public static string DataView_PasteAppendWithError(object count)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataView_PasteAppendWithError", "count"), count);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

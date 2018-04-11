@@ -201,4 +201,10 @@
   <data name="PasteAppendWindow_Ignore" xml:space="preserve">
     <value>[Ignore]</value>
   </data>
+  <data name="DataView_PasteAppendCompleted" xml:space="preserve">
+    <value>{count} row(s) has been successfully appended.</value>
+  </data>
+  <data name="DataView_PasteAppendWithError" xml:space="preserve">
+    <value>Error occurs when pasting append data. {count} row(s) has been successfully appended.</value>
+  </data>
 </root>
