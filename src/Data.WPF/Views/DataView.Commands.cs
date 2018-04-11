@@ -243,5 +243,10 @@ namespace DevZest.Data.Views
         {
             return dataPresenter.GetService<ICommandService>();
         }
+
+        public interface IPasteAppendService : IService
+        {
+            bool Verify(IReadOnlyList<ColumnValueBag> data);
+        }
     }
 }

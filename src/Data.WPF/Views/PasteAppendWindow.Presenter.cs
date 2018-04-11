@@ -282,6 +282,10 @@ namespace DevZest.Data.Views
                     RowValidation.SetAsyncErrors(validationResults);
                     return null;
                 }
+
+                var pasteAppendService = _sourcePresenter.GetService<DataView.IPasteAppendService>(false);
+                if (pasteAppendService != null && !pasteAppendService.Verify(result))
+                    return null;
                 return result;
             }
 
