@@ -81,6 +81,7 @@ namespace DevZest.Data.Views
         {
             _presenter = new Presenter(sourcePresenter, columns, _dataView);
             _presenter.Attach(_firstRowContainsColumnHeadings, _presenter.BindableFirstRowContainsColumnHeadings.BindToCheckBox());
+            Owner = Window.GetWindow(sourcePresenter.View);
             ShowDialog();
             return _result;
         }

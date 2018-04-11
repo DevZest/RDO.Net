@@ -113,6 +113,7 @@ namespace DevZest.Data.Views
             var sortings = GetSortings(target.GetService<ColumnHeader.ISortService>());
             _presenter = new Presenter(target);
             _presenter.Show(_dataView, sortings);
+            Owner = GetWindow(target.View);
             ShowDialog();
         }
 
