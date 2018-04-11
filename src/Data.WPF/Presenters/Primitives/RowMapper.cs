@@ -401,6 +401,8 @@ namespace DevZest.Data.Presenters.Primitives
                 Remove(parent);
             else
                 OnRowRemoved(parent, index);
+
+            row.Dispose();
         }
 
         private void RemoveAt(RowPresenter parent, int index)

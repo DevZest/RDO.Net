@@ -30,16 +30,27 @@ namespace DevZest.Data.Presenters
             RefreshMatchValueHashCode();
         }
 
+        bool _isDisposing;
         internal void Dispose()
         {
-            MatchValueHashCode = null;
-            _rowMapper = null;
-            Parent = null;
+            // Two phase dispose to allow UI element cleanup correctly.
+            if (!_isDisposing)
+            {
+                Debug.Assert(_rowMapper != null);
+                _isDisposing = true;
+            }
+            else
+            {
+                MatchValueHashCode = null;
+                _rowMapper = null;
+                Parent = null;
+                _isDisposing = false;
+            }
         }
 
         internal bool IsDisposed
         {
-            get { return _rowMapper == null; }
+            get { return _isDisposing || _rowMapper == null; }
         }
 
         private void VerifyDisposed()
@@ -91,7 +102,7 @@ namespace DevZest.Data.Presenters
 
         public sealed override Template Template
         {
-            get { return IsDisposed ? null : _rowMapper.Template; }
+            get { return _rowMapper?.Template; }
         }
 
         private DataRow _dataRow;
@@ -593,8 +604,8 @@ namespace DevZest.Data.Presenters
                 var oldValue = _matchValueHashCode;
                 _matchValueHashCode = value;
                 Debug.Assert(oldValue.HasValue || value.HasValue);
-                Debug.Assert(RowMapper.CanMatchRow);
-                RowMapper.UpdateRowMatch(this, oldValue, value);
+                Debug.Assert(_rowMapper.CanMatchRow);
+                _rowMapper.UpdateRowMatch(this, oldValue, value);
             }
         }
 
