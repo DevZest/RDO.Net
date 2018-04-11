@@ -242,9 +242,10 @@ namespace DevZest.Data.Views
 
             public ColumnValueBag[] Submit()
             {
+                RowValidation.SetAsyncErrors(DataValidationResults.Empty);
+
                 if (!SubmitInput())
                     return null;
-
 
                 var result = new ColumnValueBag[DataSet.Count];
                 var serializers = GetColumnSerializers();

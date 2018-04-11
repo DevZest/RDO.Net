@@ -64,17 +64,15 @@ namespace DevZest.Data.Views
         public PasteAppendWindow()
         {
             InitializeComponent();
-            CommandBindings.Add(new CommandBinding(Submit, ExecSubmit, CanExecSubmit));
+            CommandBindings.Add(new CommandBinding(Submit, ExecSubmit));
         }
 
-        private void CanExecSubmit(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = _presenter.CanSubmitInput;
-        }
-
+        private IReadOnlyList<ColumnValueBag> _result;
         private void ExecSubmit(object sender, ExecutedRoutedEventArgs e)
         {
-            _presenter.Submit();
+            _result = _presenter.Submit();
+            if (_result != null)
+                Close();
             e.Handled = true;
         }
 
@@ -84,7 +82,7 @@ namespace DevZest.Data.Views
             _presenter = new Presenter(sourcePresenter, columns, _dataView);
             _presenter.Attach(_firstRowContainsColumnHeadings, _presenter.BindableFirstRowContainsColumnHeadings.BindToCheckBox());
             ShowDialog();
-            return null;
+            return _result;
         }
     }
 }
