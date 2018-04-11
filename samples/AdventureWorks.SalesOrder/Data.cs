@@ -43,9 +43,9 @@ namespace AdventureWorks.SalesOrders
                         .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
                 });
 
-                result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetailInfo _) =>
+                result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
                 {
-                    Debug.Assert(_.GetExtender<SalesOrderDetailInfo.Ext>() != null);
+                    Debug.Assert(_.GetExtender<SalesOrderInfoDetail.Ext>() != null);
                     builder.From(db.SalesOrderDetails, out var d)
                         .LeftJoin(db.Products, d.Product, out var p)
                         .AutoSelect();
