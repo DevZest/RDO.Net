@@ -45,9 +45,9 @@ namespace AdventureWorks.SalesOrders
                         .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
                 });
 
-                result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail _) =>
+                result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetailInfo _) =>
                 {
-                    Debug.Assert(_.GetExtender<SalesOrderInfo.DetailExt>() != null);
+                    Debug.Assert(_.GetExtender<SalesOrderDetailInfo.Ext>() != null);
                     builder.From(db.SalesOrderDetails, out var d)
                         .LeftJoin(db.Products, d.Product, out var p)
                         .AutoSelect();
@@ -89,8 +89,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task UpdateSalesOrder<T>(DataSet<T> salesOrders, CancellationToken ct)
-            where T : SalesOrder, new()
+        public static async Task UpdateSalesOrder(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -103,8 +102,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<int?> CreateSalesOrder<T>(DataSet<T> salesOrders, CancellationToken ct)
-            where T : SalesOrder, new()
+        public static async Task<int?> CreateSalesOrder(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {

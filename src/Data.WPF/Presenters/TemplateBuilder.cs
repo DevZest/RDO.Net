@@ -283,7 +283,7 @@ namespace DevZest.Data.Presenters
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
 
-            if (childModel.GetParentModel() != _model || childModel.GetType() != _model.GetType())
+            if (childModel.GetParent() != _model || childModel.GetType() != _model.GetType())
                 throw new ArgumentException(DiagnosticMessages.TemplateBuilder_InvalidRecursiveChildModel);
 
             Template.RecursiveModelOrdinal = childModel.GetOrdinal();

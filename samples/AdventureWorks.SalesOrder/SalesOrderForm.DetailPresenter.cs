@@ -11,7 +11,7 @@ namespace AdventureWorks.SalesOrders
 {
     partial class SalesOrderForm
     {
-        private class DetailPresenter : DataPresenter<SalesOrderDetail>, ForeignKeyBox.ILookupService
+        private class DetailPresenter : DataPresenter<SalesOrderDetailInfo>, ForeignKeyBox.ILookupService
         {
             public DetailPresenter(Window ownerWindow)
             {
@@ -22,7 +22,7 @@ namespace AdventureWorks.SalesOrders
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var ext = _.GetExtender<SalesOrderInfo.DetailExt>();
+                var ext = _.GetExtender<SalesOrderDetailInfo.Ext>();
                 builder.GridRows("Auto", "20")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
                     .GridLineX(new GridPoint(0, 2), 7)
