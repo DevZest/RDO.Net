@@ -211,6 +211,7 @@ namespace DevZest.Data.Views
                 var dataToPaste = window.Show(DataPresenter, columns);
                 if (dataToPaste != null)
                     PasteAppend(columns, dataToPaste);
+                DataPresenter.Scrollable.EnsureCurrentRowVisible();
                 e.Handled = true;
             }
 
