@@ -67,7 +67,7 @@ namespace DevZest.Data.Presenters
                 if (_serializableColumns == null)
                 {
                     var rowInputTarget = RowInput?.Target;
-                    _serializableColumns = GetSerializableColumns().ToArray();
+                    _serializableColumns = GetInputTargetColumns().ToArray();
                 }
                 return _serializableColumns;
             }
@@ -78,7 +78,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private IEnumerable<Column> GetSerializableColumns()
+        public IEnumerable<Column> GetInputTargetColumns()
         {
             var rowInputTarget = RowInput?.Target;
             if (rowInputTarget != null)
@@ -92,7 +92,7 @@ namespace DevZest.Data.Presenters
 
             foreach (var childBinding in ChildBindings)
             {
-                foreach (var column in childBinding.GetSerializableColumns())
+                foreach (var column in childBinding.GetInputTargetColumns())
                     yield return column;
             }
         }
