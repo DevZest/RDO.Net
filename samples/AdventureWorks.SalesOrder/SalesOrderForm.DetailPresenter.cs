@@ -21,7 +21,7 @@ namespace AdventureWorks.SalesOrders
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var ext = _.GetExtender<SalesOrderDetailInfo.Ext>();
+                var product = _.GetExtender<SalesOrderDetailInfo.Ext>().Product;
                 builder.GridRows("Auto", "20")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
                     .GridLineX(new GridPoint(0, 2), 7)
@@ -31,19 +31,19 @@ namespace AdventureWorks.SalesOrders
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
                     .AllowDelete()
                     .AddBinding(0, 0, this.BindToGridHeader())
-                    .AddBinding(1, 0, ext.Product.ProductNumber.BindToColumnHeader("Product No."))
-                    .AddBinding(2, 0, ext.Product.Name.BindToColumnHeader("Product"))
+                    .AddBinding(1, 0, product.ProductNumber.BindToColumnHeader("Product No."))
+                    .AddBinding(2, 0, product.Name.BindToColumnHeader("Product"))
                     .AddBinding(3, 0, _.UnitPrice.BindToColumnHeader("Unit Price"))
                     .AddBinding(4, 0, _.UnitPriceDiscount.BindToColumnHeader("Discount"))
                     .AddBinding(5, 0, _.OrderQty.BindToColumnHeader("Qty"))
                     .AddBinding(6, 0, _.LineTotal.BindToColumnHeader("Total"))
                     .AddBinding(0, 1, _.BindToRowHeader())
-                    .AddBinding(1, 1, _.Product.BindToForeignKeyBox(ext.Product, GetProductNumber).MergeIntoGridCell(ext.Product.ProductNumber.BindToTextBlock()))
-                    .AddBinding(2, 1, ext.Product.Name.BindToTextBlock().AddToGridCell())
+                    .AddBinding(1, 1, _.Product.BindToForeignKeyBox(product, GetProductNumber).MergeIntoGridCell(product.ProductNumber.BindToTextBlock()).WithSerializableColumns(_.ProductID, product.ProductNumber))
+                    .AddBinding(2, 1, product.Name.BindToTextBlock().AddToGridCell().WithSerializableColumns(product.Name))
                     .AddBinding(3, 1, _.UnitPrice.BindToTextBox().MergeIntoGridCell())
                     .AddBinding(4, 1, _.UnitPriceDiscount.BindToTextBox(new PercentageConverter()).MergeIntoGridCell(_.UnitPriceDiscount.BindToTextBlock("{0:P}")))
                     .AddBinding(5, 1, _.OrderQty.BindToTextBox().MergeIntoGridCell())
-                    .AddBinding(6, 1, _.LineTotal.BindToTextBlock("{0:C}").AddToGridCell());
+                    .AddBinding(6, 1, _.LineTotal.BindToTextBlock("{0:C}").AddToGridCell().WithSerializableColumns(_.LineTotal));
             }
 
             private static string GetProductNumber(ColumnValueBag valueBag, Product.Key productKey, Product.Lookup productLookup)
