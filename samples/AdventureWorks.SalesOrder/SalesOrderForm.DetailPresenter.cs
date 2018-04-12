@@ -21,7 +21,7 @@ namespace AdventureWorks.SalesOrders
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var product = _.GetExtender<SalesOrderInfoDetail.Ext>().Product;
+                var product = _.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>().Product;
                 builder.GridRows("Auto", "20")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
                     .GridLineX(new GridPoint(0, 2), 7)
@@ -46,7 +46,7 @@ namespace AdventureWorks.SalesOrders
                     .AddBinding(6, 1, _.LineTotal.BindToTextBlock("{0:C}").AddToGridCell().WithSerializableColumns(_.LineTotal));
             }
 
-            private static string GetProductNumber(ColumnValueBag valueBag, Product.Key productKey, Product.Lookup productLookup)
+            private static string GetProductNumber(ColumnValueBag valueBag, Product.PK productKey, Product.Lookup productLookup)
             {
                 return valueBag.GetValue(productLookup.ProductNumber);
             }

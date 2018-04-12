@@ -17,7 +17,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task DeleteAsync(DataSet<SalesOrderHeader.Ref> dataSet, CancellationToken ct)
+        public static async Task DeleteAsync(DataSet<SalesOrderHeader.Key> dataSet, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -31,7 +31,7 @@ namespace AdventureWorks.SalesOrders
             {
                 var result = db.CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
                 {
-                    var ext = _.GetExtender<SalesOrderInfo.Ext>();
+                    var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
                     Debug.Assert(ext != null);
                     builder.From(db.SalesOrderHeaders, out var o)
                         .LeftJoin(db.Customers, o.Customer, out var c)
@@ -45,7 +45,7 @@ namespace AdventureWorks.SalesOrders
 
                 result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
                 {
-                    Debug.Assert(_.GetExtender<SalesOrderInfoDetail.Ext>() != null);
+                    Debug.Assert(_.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>() != null);
                     builder.From(db.SalesOrderDetails, out var d)
                         .LeftJoin(db.Products, d.Product, out var p)
                         .AutoSelect();

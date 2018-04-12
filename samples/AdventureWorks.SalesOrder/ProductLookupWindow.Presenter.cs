@@ -80,7 +80,7 @@ namespace AdventureWorks.SalesOrders
 
             private RowPresenter GetRow(int currentProductID)
             {
-                return Match(Product.GetValueRef(currentProductID));
+                return Match(Product.GetKey(currentProductID));
             }
 
             public async void RefreshAsync()

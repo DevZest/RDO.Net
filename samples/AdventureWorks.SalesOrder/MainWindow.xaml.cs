@@ -85,8 +85,8 @@ namespace AdventureWorks.SalesOrders
             if (MessageBox.Show(messageBoxText, caption, MessageBoxButton.YesNo, MessageBoxImage.Asterisk, MessageBoxResult.No) == MessageBoxResult.No)
                 return;
 
-            var refs = DataSet<SalesOrderHeader.Ref>.ParseJson(_presenter.DataSet.Filter(JsonFilter.PrimaryKeyOnly).ToJsonString(_presenter.SelectedDataRows, false));
-            var success = App.Execute(ct => Data.DeleteAsync(refs, ct), this, caption);
+            var keys = DataSet<SalesOrderHeader.Key>.ParseJson(_presenter.DataSet.Filter(JsonFilter.PrimaryKeyOnly).ToJsonString(_presenter.SelectedDataRows, false));
+            var success = App.Execute(ct => Data.DeleteAsync(keys, ct), this, caption);
             if (success)
                 RefreshList();
         }

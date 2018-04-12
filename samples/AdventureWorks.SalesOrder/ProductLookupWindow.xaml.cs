@@ -28,9 +28,9 @@ namespace AdventureWorks.SalesOrders
 
         private Presenter _presenter;
         private ForeignKeyBox _foreignKeyBox;
-        private Product.Key Key
+        private Product.PK PK
         {
-            get { return (Product.Key)_foreignKeyBox.ForeignKey; }
+            get { return (Product.PK)_foreignKeyBox.ForeignKey; }
         }
         private Product.Lookup Lookup
         {
@@ -71,7 +71,7 @@ namespace AdventureWorks.SalesOrders
         private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
             if (_presenter.CurrentProductID != CurrentRow.GetValue(_.ProductID))
-                _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(Key, Lookup));
+                _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(PK, Lookup));
             Close();
         }
 

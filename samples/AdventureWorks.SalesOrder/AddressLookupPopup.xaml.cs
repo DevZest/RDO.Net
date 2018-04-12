@@ -21,9 +21,9 @@ namespace AdventureWorks.SalesOrders
 
         private Presenter _presenter;
         private ForeignKeyBox _foreignKeyBox;
-        public Address.Key Key
+        public Address.PK PK
         {
-            get { return _foreignKeyBox == null ? null : (Address.Key)_foreignKeyBox.ForeignKey; }
+            get { return _foreignKeyBox == null ? null : (Address.PK)_foreignKeyBox.ForeignKey; }
         }
         private Address.Lookup Lookup
         {
@@ -58,7 +58,7 @@ namespace AdventureWorks.SalesOrders
 
         private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
-            _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(Key, Lookup));
+            _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(PK, Lookup));
             IsOpen = false;
         }
 
