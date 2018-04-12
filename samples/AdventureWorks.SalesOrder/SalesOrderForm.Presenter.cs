@@ -49,11 +49,11 @@ namespace AdventureWorks.SalesOrders
 
             bool ForeignKeyBox.ILookupService.CanLookup(PrimaryKey foreignKey)
             {
-                if (foreignKey == _.Customer)
+                if (foreignKey == _.FK_Customer)
                     return true;
-                else if (foreignKey == _.BillToAddress)
+                else if (foreignKey == _.FK_BillToAddress)
                     return true;
-                else if (foreignKey == _.ShipToAddress)
+                else if (foreignKey == _.FK_ShipToAddress)
                     return true;
                 else
                     return false;
@@ -61,12 +61,12 @@ namespace AdventureWorks.SalesOrders
 
             void ForeignKeyBox.ILookupService.BeginLookup(ForeignKeyBox foreignKeyBox)
             {
-                if (foreignKeyBox.ForeignKey == _.Customer)
+                if (foreignKeyBox.ForeignKey == _.FK_Customer)
                 {
                     var dialogWindow = new CustomerLookupWindow();
                     dialogWindow.Show(_ownerWindow, foreignKeyBox, CurrentRow.GetValue(_.CustomerID), _shipToAddressBinding[CurrentRow], _billToAddressBinding[CurrentRow]);
                 }
-                else if (foreignKeyBox.ForeignKey == _.ShipToAddress || foreignKeyBox.ForeignKey == _.BillToAddress)
+                else if (foreignKeyBox.ForeignKey == _.FK_ShipToAddress || foreignKeyBox.ForeignKey == _.FK_BillToAddress)
                     BeginLookupAddress(foreignKeyBox);
                 else
                     throw new NotSupportedException();

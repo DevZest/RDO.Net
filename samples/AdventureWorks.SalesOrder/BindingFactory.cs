@@ -12,9 +12,9 @@ namespace AdventureWorks.SalesOrders
         {
             var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
             var result = new RowCompositeBinding<SalesOrderHeaderBox>()
-                .AddChild(_.Customer.BindToForeignKeyBox(ext.Customer, CustomerBox.RefreshAction), v => v._customer)
-                .AddChild(shipToAddressBinding = _.ShipToAddress.BindToForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)
-                .AddChild(billToAddressBinding = _.BillToAddress.BindToForeignKeyBox(ext.BillToAddress, AddressBox.RefreshAction), v => v._billTo)
+                .AddChild(_.FK_Customer.BindToForeignKeyBox(ext.Customer, CustomerBox.RefreshAction), v => v._customer)
+                .AddChild(shipToAddressBinding = _.FK_ShipToAddress.BindToForeignKeyBox(ext.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)
+                .AddChild(billToAddressBinding = _.FK_BillToAddress.BindToForeignKeyBox(ext.BillToAddress, AddressBox.RefreshAction), v => v._billTo)
                 .AddChild(_.OrderDate.BindToDatePicker(), v => v._orderDate)
                 .AddChild(_.ShipDate.BindToDatePicker(), v => v._shipDate)
                 .AddChild(_.DueDate.BindToDatePicker(), v => v._dueDate)

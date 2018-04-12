@@ -34,9 +34,9 @@ namespace AdventureWorks.SalesOrders
                     var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
                     Debug.Assert(ext != null);
                     builder.From(db.SalesOrderHeaders, out var o)
-                        .LeftJoin(db.Customers, o.Customer, out var c)
-                        .LeftJoin(db.Addresses, o.ShipToAddress, out var shipTo)
-                        .LeftJoin(db.Addresses, o.BillToAddress, out var billTo)
+                        .LeftJoin(db.Customers, o.FK_Customer, out var c)
+                        .LeftJoin(db.Addresses, o.FK_ShipToAddress, out var shipTo)
+                        .LeftJoin(db.Addresses, o.FK_BillToAddress, out var billTo)
                         .AutoSelect()
                         .AutoSelect(shipTo, ext.ShipToAddress)
                         .AutoSelect(billTo, ext.BillToAddress)
@@ -72,7 +72,7 @@ namespace AdventureWorks.SalesOrders
                     CustomerAddress ca;
                     Address a;
                     builder.From(db.CustomerAddresses.Where(db.CustomerAddresses._.CustomerID == customerID), out ca)
-                        .InnerJoin(db.Addresses, ca.Address, out a)
+                        .InnerJoin(db.Addresses, ca.FK_Address, out a)
                         .AutoSelect();
                 });
                 return await result.ToDataSetAsync(ct);
@@ -93,7 +93,7 @@ namespace AdventureWorks.SalesOrders
             {
                 salesOrders._.ResetRowIdentifiers();
                 await db.SalesOrderHeaders.Update(salesOrders).ExecuteAsync(ct);
-                await db.SalesOrderDetails.Delete(salesOrders, (s, _) => s.Match(_.SalesOrderHeader)).ExecuteAsync(ct);
+                await db.SalesOrderDetails.Delete(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader)).ExecuteAsync(ct);
                 var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
                 salesOrderDetails._.ResetRowIdentifiers();
                 await db.SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
