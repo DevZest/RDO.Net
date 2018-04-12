@@ -138,12 +138,7 @@ namespace AdventureWorks.SalesOrders
 
             private RowPresenter GetRow(int salesOrderId)
             {
-                foreach (var row in Rows)
-                {
-                    if (row.GetValue(_.SalesOrderID) == salesOrderId)
-                        return row;
-                }
-                return null;
+                return Match(SalesOrder.GetKey(salesOrderId));
             }
         }
     }
