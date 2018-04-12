@@ -112,5 +112,13 @@ namespace AdventureWorks.SalesOrders
                 return salesOrders.Count > 0 ? salesOrders._.SalesOrderID[0] : null;
             }
         }
+
+        public static async Task<DataSet<SalesOrderDetail.ForeignKeyLookup>> Lookup(DataSet<SalesOrderDetail.ForeignKey> data, CancellationToken ct)
+        {
+            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            {
+                return await db.LookupAsync(data, ct);
+            }
+        }
     }
 }

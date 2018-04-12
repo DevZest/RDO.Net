@@ -5,12 +5,14 @@ using DevZest.Data;
 using System.Windows;
 using System;
 using System.Windows.Controls;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace AdventureWorks.SalesOrders
 {
     partial class SalesOrderForm
     {
-        private class DetailPresenter : DataPresenter<SalesOrderInfoDetail>, ForeignKeyBox.ILookupService
+        private class DetailPresenter : DataPresenter<SalesOrderInfoDetail>, ForeignKeyBox.ILookupService, DataView.IPasteAppendService
         {
             public DetailPresenter(Window ownerWindow)
             {
@@ -73,6 +75,32 @@ namespace AdventureWorks.SalesOrders
             protected override bool ConfirmDelete()
             {
                 return MessageBox.Show(string.Format("Are you sure you want to delete selected {0} rows?", SelectedRows.Count), "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
+            }
+
+            bool DataView.IPasteAppendService.Verify(IReadOnlyList<ColumnValueBag> data)
+            {
+                var foreignKeys = DataSet<SalesOrderDetail.ForeignKey>.New();
+                for (int i = 0; i < data.Count; i++)
+                {
+                    var valueBag = data[i];
+                    var productId = valueBag.ContainsKey(_.ProductID) ? valueBag[_.ProductID] : null;
+                    foreignKeys.AddRow((_, dataRow) =>
+                    {
+                        _.ProductID.SetValue(dataRow, productId);
+                    });
+                }
+
+                if (!App.Execute(ct => Data.Lookup(foreignKeys, ct), Window.GetWindow(View), out var lookup))
+                    return false;
+
+                Debug.Assert(lookup.Count == data.Count);
+                var product = _.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>().Product;
+                for (int i = 0; i < lookup.Count; i++)
+                {
+                    data[i].SetValue(product.Name, lookup._.Product.Name[i]);
+                    data[i].SetValue(product.ProductNumber, lookup._.Product.ProductNumber[i]);
+                }
+                return true;
             }
         }
     }
