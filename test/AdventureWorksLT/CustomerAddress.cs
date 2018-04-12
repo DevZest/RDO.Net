@@ -53,6 +53,75 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String AddressType { get; private set; }
         }
 
+        public class ForeignKey : Model<ForeignKey.PK>
+        {
+            public sealed class PK : PrimaryKey
+            {
+                public PK(_Int32 seqNo)
+                {
+                    SeqNo = seqNo;
+                }
+
+                public _Int32 SeqNo { get; private set; }
+            }
+
+            static ForeignKey()
+            {
+                RegisterColumn((ForeignKey _) => _.SeqNo);
+                RegisterColumn((ForeignKey _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
+                RegisterColumn((ForeignKey _) => _.AddressID, AdventureWorksLT.Address._AddressID);
+            }
+
+            [Identity(1, 1)]
+            public _Int32 SeqNo { get; private set; }
+            public _Int32 CustomerID { get; private set; }
+            public _Int32 AddressID { get; private set; }
+
+            private PK _pk;
+            public sealed override PK PrimaryKey
+            {
+                get { return _pk ?? (_pk = new PK(SeqNo)); }
+            }
+
+            private Customer.PK _customer;
+            public Customer.PK Customer
+            {
+                get { return _customer ?? (_customer = new Customer.PK(CustomerID)); }
+            }
+
+            private Address.PK _address;
+            public Address.PK Address
+            {
+                get { return _address ?? (_address = new Address.PK(AddressID)); }
+            }
+        }
+
+        [ModelExtender(typeof(Ext))]
+        public class ForeignKeyLookup : Model
+        {
+            public sealed class Ext : ModelExtender
+            {
+                static Ext()
+                {
+                    RegisterChildExtender((Ext _) => _.Customer);
+                    RegisterChildExtender((Ext _) => _.Address);
+                }
+
+                public Customer.Lookup Customer { get; private set; }
+                public Address.Lookup Address { get; private set; }
+            }
+
+            public Customer.Lookup Customer
+            {
+                get { return GetExtender<Ext>().Customer; }
+            }
+
+            public Address.Lookup Address
+            {
+                get { return GetExtender<Ext>().Address; }
+            }
+        }
+
         public static readonly Mounter<_String> _AddressType;
 
         static CustomerAddress()
