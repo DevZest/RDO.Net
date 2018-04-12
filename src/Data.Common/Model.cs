@@ -730,7 +730,7 @@ namespace DevZest.Data
             get { return ContainsMember(memberName) ? _members[memberName] : null; }
         }
 
-        protected internal Identity GetIdentity(bool isTempTable)
+        public Identity GetIdentity(bool isTempTable)
         {
             var results = GetExtensions<Identity>();
             foreach (var result in results)

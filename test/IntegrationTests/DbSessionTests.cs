@@ -200,5 +200,29 @@ ORDER BY [Customer].[CustomerID];
                 Assert.IsTrue(dataSet._.ModifiedDate[0].Value.AddSeconds(1) > DateTime.Now);
             }
         }
+
+        [TestMethod]
+        public void DbSession_Lookup()
+        {
+            var foreignKeys = DataSet<SalesOrderDetail.ForeignKey>.ParseJson(Strings.JSON_SalesOrderDetail_ForeignKeys);
+            var log = new StringBuilder();
+            using (var db = OpenDb(log))
+            {
+                var lookup = db.Lookup(foreignKeys);
+                Assert.AreEqual(Strings.ExpectedJSON_SalesOrderDetail_Lookup, lookup.ToJsonString(true));
+            }
+        }
+
+        [TestMethod]
+        public async Task DbSession_LookupAsync()
+        {
+            var foreignKeys = DataSet<SalesOrderDetail.ForeignKey>.ParseJson(Strings.JSON_SalesOrderDetail_ForeignKeys);
+            var log = new StringBuilder();
+            using (var db = await OpenDbAsync(log))
+            {
+                var lookup = await db.LookupAsync(foreignKeys, CancellationToken.None);
+                Assert.AreEqual(Strings.ExpectedJSON_SalesOrderDetail_Lookup, lookup.ToJsonString(true));
+            }
+        }
     }
 }

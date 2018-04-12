@@ -38,37 +38,18 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderID { get; private set; }
         }
 
-        public class ForeignKey : Model<ForeignKey.PK>
+        public class ForeignKey : Model
         {
-            public sealed class PK : PrimaryKey
-            {
-                public PK(_Int32 seqNo)
-                {
-                    SeqNo = seqNo;
-                }
-
-                public _Int32 SeqNo { get; private set; }
-            }
-
             static ForeignKey()
             {
-                RegisterColumn((ForeignKey _) => _.SeqNo);
                 RegisterColumn((ForeignKey _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
                 RegisterColumn((ForeignKey _) => _.ShipToAddressID, Address._AddressID);
                 RegisterColumn((ForeignKey _) => _.BillToAddressID, Address._AddressID);
             }
 
-            [Identity(1, 1)]
-            public _Int32 SeqNo { get; private set; }
             public _Int32 CustomerID { get; private set; }
             public _Int32 ShipToAddressID { get; private set; }
             public _Int32 BillToAddressID { get; private set; }
-
-            private PK _pk;
-            public sealed override PK PrimaryKey
-            {
-                get { return _pk ?? (_pk = new PK(SeqNo)); }
-            }
 
             private Customer.PK _customer;
             public Customer.PK Customer

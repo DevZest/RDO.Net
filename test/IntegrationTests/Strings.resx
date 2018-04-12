@@ -452,6 +452,34 @@
    }
 ]</value>
   </data>
+  <data name="ExpectedJSON_SalesOrderDetail_Lookup" xml:space="preserve">
+    <value>[
+   {
+      "Extender" : {
+         "Product" : {
+            "Name" : "ML Road Frame-W - Yellow, 48",
+            "ProductNumber" : "FR-R72Y-48"
+         }
+      }
+   },
+   {
+      "Extender" : {
+         "Product" : {
+            "Name" : "ML Road Frame-W - Yellow, 38",
+            "ProductNumber" : "FR-R72Y-38"
+         }
+      }
+   },
+   {
+      "Extender" : {
+         "Product" : {
+            "Name" : null,
+            "ProductNumber" : null
+         }
+      }
+   }
+]</value>
+  </data>
   <data name="ExpectedJSON_SalesOrderDynamicModel" xml:space="preserve">
     <value>[
    {
@@ -647,6 +675,19 @@
          }
       },
       "SalesOrderDetails" : []
+   }
+]</value>
+  </data>
+  <data name="JSON_SalesOrderDetail_ForeignKeys" xml:space="preserve">
+    <value>[
+   {
+      "ProductID" : 836
+   },
+   {
+      "ProductID" : 822
+   },
+   {
+      "ProductID" : -1
    }
 ]</value>
   </data>

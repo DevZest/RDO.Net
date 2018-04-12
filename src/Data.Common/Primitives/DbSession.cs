@@ -60,6 +60,12 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
+        public DbTable<T> CreateTempTable<T>(Action<T> initializer)
+            where T : Model, new()
+        {
+            return CreateTempTable<T>(initializer);
+        }
+
         public DbTable<T> CreateTempTable<T>(T fromModel = null, Action<T> initializer = null)
             where T : Model, new()
         {
@@ -68,10 +74,34 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
+        public Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer)
+            where T : Model, new()
+        {
+            return CreateTempTableAsync<T>(null, initializer);
+        }
+
         public Task<DbTable<T>> CreateTempTableAsync<T>(T fromModel = null, Action<T> initializer = null)
             where T : Model, new()
         {
-            return CreateTempTableAsync(fromModel, initializer, CancellationToken.None);
+            return CreateTempTableAsync<T>(CancellationToken.None);
+        }
+
+        public Task<DbTable<T>> CreateTempTableAsync<T>(CancellationToken ct)
+            where T : Model, new()
+        {
+            return CreateTempTableAsync<T>(null, null, ct);
+        }
+
+        public Task<DbTable<T>> CreateTempTableAsync<T>(T fromModel, CancellationToken ct)
+            where T : Model, new()
+        {
+            return CreateTempTableAsync<T>(fromModel, null, ct);
+        }
+
+        public Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer, CancellationToken ct)
+            where T : Model, new()
+        {
+            return CreateTempTableAsync<T>(null, initializer, ct);
         }
 
         public async Task<DbTable<T>> CreateTempTableAsync<T>(T fromModel, Action<T> initializer, CancellationToken cancellationToken)

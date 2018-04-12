@@ -163,6 +163,40 @@ namespace DevZest.Data {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
+        ///      &quot;Extender&quot; : {
+        ///         &quot;Product&quot; : {
+        ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
+        ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
+        ///         }
+        ///      }
+        ///   },
+        ///   {
+        ///      &quot;Extender&quot; : {
+        ///         &quot;Product&quot; : {
+        ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 38&quot;,
+        ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-38&quot;
+        ///         }
+        ///      }
+        ///   },
+        ///   {
+        ///      &quot;Extender&quot; : {
+        ///         &quot;Product&quot; : {
+        ///            &quot;Name&quot; : null,
+        ///            &quot;ProductNumber&quot; : null
+        ///         }
+        ///      }
+        ///   }
+        ///].
+        /// </summary>
+        internal static string ExpectedJSON_SalesOrderDetail_Lookup {
+            get {
+                return ResourceManager.GetString("ExpectedJSON_SalesOrderDetail_Lookup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///   {
         ///      &quot;ColumnList&quot; : [
         ///         71774,
         ///         &quot;SO71774&quot;
@@ -203,6 +237,25 @@ namespace DevZest.Data {
         internal static string ExpectedJSON_SalesOrderEdit_71774 {
             get {
                 return ResourceManager.GetString("ExpectedJSON_SalesOrderEdit_71774", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///   {
+        ///      &quot;ProductID&quot; : 836
+        ///   },
+        ///   {
+        ///      &quot;ProductID&quot; : 822
+        ///   },
+        ///   {
+        ///      &quot;ProductID&quot; : -1
+        ///   }
+        ///].
+        /// </summary>
+        internal static string JSON_SalesOrderDetail_ForeignKeys {
+            get {
+                return ResourceManager.GetString("JSON_SalesOrderDetail_ForeignKeys", resourceCulture);
             }
         }
         

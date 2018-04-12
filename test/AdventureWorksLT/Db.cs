@@ -229,5 +229,33 @@ namespace DevZest.Samples.AdventureWorksLT
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
         }
+
+        public DataSet<SalesOrderDetail.ForeignKeyLookup> Lookup(DataSet<SalesOrderDetail.ForeignKey> foreignKeys)
+        {
+            var tempTable = CreateTempTable<SalesOrderDetail.ForeignKey>();
+            tempTable.Insert(foreignKeys).Execute();
+            return CreateQuery((DbQueryBuilder builder, SalesOrderDetail.ForeignKeyLookup _) =>
+            {
+                builder.From(tempTable, out var t);
+                var seqNo = t.GetIdentity(true).Column;
+                Debug.Assert(!ReferenceEquals(seqNo, null));
+                builder.LeftJoin(Products, t.Product, out var p)
+                    .AutoSelect().OrderBy(seqNo);
+            }).ToDataSet();
+        }
+
+        public async Task<DataSet<SalesOrderDetail.ForeignKeyLookup>> LookupAsync(DataSet<SalesOrderDetail.ForeignKey> foreignKeys, CancellationToken ct)
+        {
+            var tempTable = await CreateTempTableAsync<SalesOrderDetail.ForeignKey>(ct);
+            await tempTable.Insert(foreignKeys).ExecuteAsync(ct);
+            return await CreateQuery((DbQueryBuilder builder, SalesOrderDetail.ForeignKeyLookup _) =>
+            {
+                builder.From(tempTable, out var t);
+                var seqNo = t.GetIdentity(true).Column;
+                Debug.Assert(!ReferenceEquals(seqNo, null));
+                builder.LeftJoin(Products, t.Product, out var p)
+                    .AutoSelect().OrderBy(seqNo);
+            }).ToDataSetAsync(ct);
+        }
     }
 }
