@@ -3,12 +3,12 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class CustomerAddress : BaseModel<CustomerAddress.Key>
+    public class CustomerAddress : BaseModel<CustomerAddress.PK>
     {
         [DbConstraint("PK_CustomerAddress_CustomerID_AddressID", Description = "Primary key (clustered) constraint")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 customerID, _Int32 addressID)
+            public PK(_Int32 customerID, _Int32 addressID)
             {
                 CustomerID = customerID;
                 AddressID = addressID;
@@ -19,23 +19,23 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public IDataValues GetValueRef(int customerId, int addressId)
+        public IDataValues GetKey(int customerId, int addressId)
         {
             return DataValues.Create(_Int32.Const(customerId), _Int32.Const(addressId));
         }
 
-        public class Ref : Model<Key>
+        public class Key : Model<PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
-                RegisterColumn((Ref _) => _.AddressID, AdventureWorksLT.Address._AddressID);
+                RegisterColumn((Key _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
+                RegisterColumn((Key _) => _.AddressID, AdventureWorksLT.Address._AddressID);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(CustomerID, AddressID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(CustomerID, AddressID)); }
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -62,22 +62,22 @@ namespace DevZest.Samples.AdventureWorksLT
             _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
         }
 
-        private Key _primaryKey;
-        public override Key PrimaryKey
+        private PK _primaryKey;
+        public override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(CustomerID, AddressID)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(CustomerID, AddressID)); }
         }
 
-        private Customer.Key _customer;
-        public Customer.Key Customer
+        private Customer.PK _customer;
+        public Customer.PK Customer
         {
-            get { return _customer ?? (_customer = new Customer.Key(CustomerID)); }
+            get { return _customer ?? (_customer = new Customer.PK(CustomerID)); }
         }
 
-        private Address.Key _address;
-        public Address.Key Address
+        private Address.PK _address;
+        public Address.PK Address
         {
-            get { return _address ?? (_address = new Address.Key(AddressID)); }
+            get { return _address ?? (_address = new Address.PK(AddressID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to Customer.CustomerID.")]

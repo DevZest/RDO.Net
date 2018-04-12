@@ -5,14 +5,14 @@ using DevZest.Data.SqlServer;
 namespace DevZest.Samples.AdventureWorksLT
 {
     [DbCompositeIndex(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Description = "Nonclustered index.")]
-    public class Address : BaseModel<Address.Key>
+    public class Address : BaseModel<Address.PK>
     {
         private const string IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion = nameof(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion);
 
         [DbConstraint("PK_Address_AddressID", Description = "Primary key (clustered) constraint")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 addressID)
+            public PK(_Int32 addressID)
             {
                 AddressID = addressID;
             }
@@ -20,22 +20,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int addressId)
+        public static IDataValues GetKey(int addressId)
         {
             return DataValues.Create(_Int32.Const(addressId));
         }
 
-        public class Ref : Model<Address.Key>
+        public class Key : Model<Address.PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.AddressID, _AddressID);
+                RegisterColumn((Key _) => _.AddressID, _AddressID);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(AddressID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(AddressID)); }
             }
 
             public _Int32 AddressID { get; private set; }
@@ -80,10 +80,10 @@ namespace DevZest.Samples.AdventureWorksLT
             _PostalCode = RegisterColumn((Address _) => _.PostalCode);
         }
 
-        private Key _primaryKey;
-        public sealed override Key PrimaryKey
+        private PK _primaryKey;
+        public sealed override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(AddressID)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(AddressID)); }
         }
 
         [Identity(1, 1)]

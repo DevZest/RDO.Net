@@ -5,12 +5,12 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class ProductCategory : BaseModel<ProductCategory.Key>
+    public class ProductCategory : BaseModel<ProductCategory.PK>
     {
         [DbConstraint("PK_ProductCategory_ProductCategoryID", Description = "Primary key (clustered) constraint")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 productCategoryID)
+            public PK(_Int32 productCategoryID)
             {
                 ProductCategoryID = productCategoryID;
             }
@@ -18,22 +18,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductCategoryID { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int productCategoryId)
+        public static IDataValues GetKey(int productCategoryId)
         {
             return DataValues.Create(_Int32.Const(productCategoryId));
         }
 
-        public class Ref : Model<Key>
+        public class Key : Model<PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.ProductCategoryID, _ProductCategoryID);
+                RegisterColumn((Key _) => _.ProductCategoryID, _ProductCategoryID);
             }
             
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(ProductCategoryID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(ProductCategoryID)); }
             }
 
             public _Int32 ProductCategoryID { get; private set; }
@@ -53,14 +53,14 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public ProductCategory()
         {
-            _primaryKey = new Key(ProductCategoryID);
-            ParentProductCategory = new Key(ParentProductCategoryID);
+            _primaryKey = new PK(ProductCategoryID);
+            ParentProductCategory = new PK(ParentProductCategoryID);
         }
 
         public ProductCategory SubCategories { get; private set; }
 
-        private Key _primaryKey;
-        public sealed override Key PrimaryKey
+        private PK _primaryKey;
+        public sealed override PK PrimaryKey
         {
             get { return _primaryKey; }
         }
@@ -73,7 +73,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 ParentProductCategoryID { get; private set; }
 
         [DbColumn(Description = "Category description.")]
-        public Key ParentProductCategory { get; private set; }
+        public PK ParentProductCategory { get; private set; }
 
         [UdtName]
         [Required]

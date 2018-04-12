@@ -4,12 +4,12 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class ProductModel : BaseModel<ProductModel.Key>
+    public class ProductModel : BaseModel<ProductModel.PK>
     {
         [DbConstraint("PK_ProductModel_ProductModelID", Description = "Clustered index created by a primary key constraint.")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 productModelID)
+            public PK(_Int32 productModelID)
             {
                 ProductModelID = productModelID;
             }
@@ -17,22 +17,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductModelID { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int productModelId)
+        public static IDataValues GetKey(int productModelId)
         {
             return DataValues.Create(_Int32.Const(productModelId));
         }
 
-        public class Ref : Model<Key>
+        public class Key : Model<PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.ProductModelID, _ProductModelID);
+                RegisterColumn((Key _) => _.ProductModelID, _ProductModelID);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(ProductModelID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(ProductModelID)); }
             }
 
             public _Int32 ProductModelID { get; private set; }
@@ -59,10 +59,10 @@ namespace DevZest.Samples.AdventureWorksLT
             _CatalogDescription = RegisterColumn((ProductModel _) => _.CatalogDescription);
         }
 
-        private Key _primaryKey;
-        public sealed override Key PrimaryKey
+        private PK _primaryKey;
+        public sealed override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(ProductModelID)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(ProductModelID)); }
         }
 
         [Identity(1, 1)]

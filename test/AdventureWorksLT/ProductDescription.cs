@@ -5,12 +5,12 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class ProductDescription : BaseModel<ProductDescription.Key>
+    public class ProductDescription : BaseModel<ProductDescription.PK>
     {
         [DbConstraint("PK_ProductDescription_ProductDescriptionID", Description = "Primary key (clustered) constraint")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 productDescriptionID)
+            public PK(_Int32 productDescriptionID)
             {
                 ProductDescriptionID = productDescriptionID;
             }
@@ -18,22 +18,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductDescriptionID { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int productDescriptionId)
+        public static IDataValues GetKey(int productDescriptionId)
         {
             return DataValues.Create(_Int32.Const(productDescriptionId));
         }
 
-        public class Ref : Model<Key>
+        public class Key : Model<PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.ProductDescriptionID, _ProductDescriptionID);
+                RegisterColumn((Key _) => _.ProductDescriptionID, _ProductDescriptionID);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(ProductDescriptionID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(ProductDescriptionID)); }
             }
 
             public _Int32 ProductDescriptionID { get; private set; }
@@ -48,10 +48,10 @@ namespace DevZest.Samples.AdventureWorksLT
             _Description = RegisterColumn((ProductDescription _) => _.Description);
         }
 
-        private Key _primaryKey;
-        public sealed override Key PrimaryKey
+        private PK _primaryKey;
+        public sealed override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(ProductDescriptionID)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(ProductDescriptionID)); }
         }
 
         [Identity(1, 1)]

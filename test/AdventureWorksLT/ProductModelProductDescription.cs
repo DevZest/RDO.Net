@@ -4,12 +4,12 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class ProductModelProductDescription : BaseModel<ProductModelProductDescription.Key>
+    public class ProductModelProductDescription : BaseModel<ProductModelProductDescription.PK>
     {
         [DbConstraint("PK_ProductModelProductDescription_ProductModelID_ProductDescriptionID_Culture", Description = "Primary key (clustered) constraint")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 productModelID, _Int32 productDescriptionID, _String culture)
+            public PK(_Int32 productModelID, _Int32 productDescriptionID, _String culture)
             {
                 ProductModelID = productModelID;
                 ProductDescriptionID = productDescriptionID;
@@ -23,7 +23,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Culture { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int productModelId, int productDescriptionId, string culture)
+        public static IDataValues GetKey(int productModelId, int productDescriptionId, string culture)
         {
             return DataValues.Create(_Int32.Const(productModelId), _Int32.Const(productDescriptionId), _String.Const(culture));
         }
@@ -37,22 +37,22 @@ namespace DevZest.Samples.AdventureWorksLT
             _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
         }
 
-        private Key _primaryKey;
-        public sealed override Key PrimaryKey
+        private PK _primaryKey;
+        public sealed override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(ProductModelID, ProductDescriptionID, Culture)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(ProductModelID, ProductDescriptionID, Culture)); }
         }
 
-        private ProductModel.Key _productModel;
-        public ProductModel.Key ProductModel
+        private ProductModel.PK _productModel;
+        public ProductModel.PK ProductModel
         {
-            get { return _productModel ?? (_productModel = new ProductModel.Key(ProductModelID)); }
+            get { return _productModel ?? (_productModel = new ProductModel.PK(ProductModelID)); }
         }
 
-        private ProductDescription.Key _productDescription;
-        public ProductDescription.Key ProductDescription
+        private ProductDescription.PK _productDescription;
+        public ProductDescription.PK ProductDescription
         {
-            get { return _productDescription ?? (_productDescription = new ProductDescription.Key(ProductDescriptionID)); }
+            get { return _productDescription ?? (_productDescription = new ProductDescription.PK(ProductDescriptionID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to ProductModel.ProductModelID.")]

@@ -4,12 +4,12 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class SalesOrderHeader : BaseModel<SalesOrderHeader.Key>
+    public class SalesOrderHeader : BaseModel<SalesOrderHeader.PK>
     {
         [DbConstraint("PK_SalesOrderHeader_SalesOrderID", Description = "Clustered index created by a primary key constraint.")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 salesOrderID)
+            public PK(_Int32 salesOrderID)
             {
                 SalesOrderID = salesOrderID;
             }
@@ -17,22 +17,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderID { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int salesOrderID)
+        public static IDataValues GetKey(int salesOrderID)
         {
             return DataValues.Create(_Int32.Const(salesOrderID));
         }
 
-        public class Ref : Model<Key>
+        public class Key : Model<PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.SalesOrderID, _SalesOrderID);
+                RegisterColumn((Key _) => _.SalesOrderID, _SalesOrderID);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(SalesOrderID)); }
             }
 
             public _Int32 SalesOrderID { get; private set; }
@@ -80,40 +80,40 @@ namespace DevZest.Samples.AdventureWorksLT
             _Comment = RegisterColumn((SalesOrderHeader _) => _.Comment);
         }
 
-        private Key _primaryKey;
-        public sealed override Key PrimaryKey
+        private PK _primaryKey;
+        public sealed override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(SalesOrderID)); }
         }
 
-        private Customer.Key _customer;
-        public Customer.Key Customer
+        private Customer.PK _customer;
+        public Customer.PK Customer
         {
-            get { return _customer ?? (_customer = new Customer.Key(CustomerID)); }
+            get { return _customer ?? (_customer = new Customer.PK(CustomerID)); }
         }
 
-        private Address.Key _shipToAddress;
-        public Address.Key ShipToAddress
+        private Address.PK _shipToAddress;
+        public Address.PK ShipToAddress
         {
-            get { return _shipToAddress ?? (_shipToAddress = new Address.Key(ShipToAddressID)); }
+            get { return _shipToAddress ?? (_shipToAddress = new Address.PK(ShipToAddressID)); }
         }
 
-        private CustomerAddress.Key _shipToCustomerAddress;
-        public CustomerAddress.Key ShipToCustomerAddress
+        private CustomerAddress.PK _shipToCustomerAddress;
+        public CustomerAddress.PK ShipToCustomerAddress
         {
-            get { return _shipToCustomerAddress ?? (_shipToCustomerAddress = new CustomerAddress.Key(CustomerID, ShipToAddressID)); }
+            get { return _shipToCustomerAddress ?? (_shipToCustomerAddress = new CustomerAddress.PK(CustomerID, ShipToAddressID)); }
         }
 
-        private Address.Key _billToAddress;
-        public Address.Key BillToAddress
+        private Address.PK _billToAddress;
+        public Address.PK BillToAddress
         {
-            get { return _billToAddress ?? (_billToAddress = new Address.Key(BillToAddressID)); }
+            get { return _billToAddress ?? (_billToAddress = new Address.PK(BillToAddressID)); }
         }
 
-        private CustomerAddress.Key _billToCustomerAddress;
-        public CustomerAddress.Key BillToCustomerAddress
+        private CustomerAddress.PK _billToCustomerAddress;
+        public CustomerAddress.PK BillToCustomerAddress
         {
-            get { return _billToCustomerAddress ?? (_billToCustomerAddress = new CustomerAddress.Key(CustomerID, BillToAddressID)); }
+            get { return _billToCustomerAddress ?? (_billToCustomerAddress = new CustomerAddress.PK(CustomerID, BillToAddressID)); }
         }
 
         [Identity(1, 1)]

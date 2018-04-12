@@ -4,12 +4,12 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class Product : BaseModel<Product.Key>
+    public class Product : BaseModel<Product.PK>
     {
         [DbConstraint("PK_Product_ProductID", Description = "Primary key (clustered) constraint")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 productID)
+            public PK(_Int32 productID)
             {
                 ProductID = productID;
             }
@@ -17,22 +17,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductID { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int productId)
+        public static IDataValues GetKey(int productId)
         {
             return DataValues.Create(_Int32.Const(productId));
         }
 
-        public class Ref : Model<Key>
+        public class Key : Model<PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.ProductID, _ProductID);
+                RegisterColumn((Key _) => _.ProductID, _ProductID);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(ProductID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(ProductID)); }
             }
 
             public _Int32 ProductID { get; private set; }
@@ -84,22 +84,22 @@ namespace DevZest.Samples.AdventureWorksLT
             _ThumbnailPhotoFileName = RegisterColumn((Product _) => _.ThumbnailPhotoFileName);
         }
 
-        private Key _primaryKey;
-        public override Key PrimaryKey
+        private PK _primaryKey;
+        public override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(ProductID)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(ProductID)); }
         }
 
-        private ProductCategory.Key _productCategory;
-        public ProductCategory.Key ProductCategory
+        private ProductCategory.PK _productCategory;
+        public ProductCategory.PK ProductCategory
         {
-            get { return _productCategory ?? (_productCategory = new ProductCategory.Key(ProductCategoryID)); }
+            get { return _productCategory ?? (_productCategory = new ProductCategory.PK(ProductCategoryID)); }
         }
 
-        private ProductModel.Key _productModel;
-        public ProductModel.Key ProductModel
+        private ProductModel.PK _productModel;
+        public ProductModel.PK ProductModel
         {
-            get { return _productModel ?? (_productModel = new ProductModel.Key(ProductModelID)); }
+            get { return _productModel ?? (_productModel = new ProductModel.PK(ProductModelID)); }
         }
 
         [Identity(1, 1)]

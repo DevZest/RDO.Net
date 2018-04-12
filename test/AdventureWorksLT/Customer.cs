@@ -4,12 +4,12 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class Customer : BaseModel<Customer.Key>
+    public class Customer : BaseModel<Customer.PK>
     {
         [DbConstraint("PK_Customer_CustomerID", Description = "Primary key (clustered) constraint")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 customerID)
+            public PK(_Int32 customerID)
             {
                 CustomerID = customerID;
             }
@@ -17,22 +17,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 CustomerID { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int customerId)
+        public static IDataValues GetKey(int customerId)
         {
             return DataValues.Create(_Int32.Const(customerId));
         }
 
-        public class Ref : Model<Key>
+        public class Key : Model<PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.CustomerID, _CustomerID);
+                RegisterColumn((Key _) => _.CustomerID, _CustomerID);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(CustomerID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(CustomerID)); }
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -91,10 +91,10 @@ namespace DevZest.Samples.AdventureWorksLT
             _PasswordSalt = RegisterColumn((Customer _) => _.PasswordSalt);
         }
 
-        private Key _primaryKey;
-        public sealed override Key PrimaryKey
+        private PK _primaryKey;
+        public sealed override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(CustomerID)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(CustomerID)); }
         }
 
         [Identity(1, 1)]

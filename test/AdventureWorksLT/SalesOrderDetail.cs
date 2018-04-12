@@ -4,12 +4,12 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class SalesOrderDetail : BaseModel<SalesOrderDetail.Key>
+    public class SalesOrderDetail : BaseModel<SalesOrderDetail.PK>
     {
         [DbConstraint("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID", Description = "Clustered index created by a primary key constraint.")]
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 salesOrderID, _Int32 salesOrderDetailID)
+            public PK(_Int32 salesOrderID, _Int32 salesOrderDetailID)
             {
                 SalesOrderID = salesOrderID;
                 SalesOrderDetailID = salesOrderDetailID;
@@ -20,23 +20,23 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
-        public static IDataValues GetValueRef(int salesOrderID, int salesOrderDetailID)
+        public static IDataValues GetKey(int salesOrderID, int salesOrderDetailID)
         {
             return DataValues.Create(_Int32.Const(salesOrderID), _Int32.Const(salesOrderDetailID));
         }
 
-        public class Ref : Model<Key>
+        public class Key : Model<PK>
         {
-            static Ref()
+            static Key()
             {
-                RegisterColumn((Ref _) => _.SalesOrderID, AdventureWorksLT.SalesOrder._SalesOrderID);
-                RegisterColumn((Ref _) => _.SalesOrderDetailID, _SalesOrderDetailID);
+                RegisterColumn((Key _) => _.SalesOrderID, AdventureWorksLT.SalesOrderHeader._SalesOrderID);
+                RegisterColumn((Key _) => _.SalesOrderDetailID, _SalesOrderDetailID);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            private PK _primaryKey;
+            public sealed override PK PrimaryKey
             {
-                get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID, SalesOrderDetailID)); }
+                get { return _primaryKey ?? (_primaryKey = new PK(SalesOrderID, SalesOrderDetailID)); }
             }
 
             public _Int32 SalesOrderID { get; private set; }
@@ -65,22 +65,22 @@ namespace DevZest.Samples.AdventureWorksLT
         {
         }
 
-        private Key _primaryKey;
-        public sealed override Key PrimaryKey
+        private PK _primaryKey;
+        public sealed override PK PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = new Key(SalesOrderID, SalesOrderDetailID)); }
+            get { return _primaryKey ?? (_primaryKey = new PK(SalesOrderID, SalesOrderDetailID)); }
         }
 
-        private SalesOrderHeader.Key _salesOrderHeader;
-        public SalesOrderHeader.Key SalesOrderHeader
+        private SalesOrderHeader.PK _salesOrderHeader;
+        public SalesOrderHeader.PK SalesOrderHeader
         {
-            get { return _salesOrderHeader ?? (_salesOrderHeader = new SalesOrderHeader.Key(SalesOrderID)); }
+            get { return _salesOrderHeader ?? (_salesOrderHeader = new SalesOrderHeader.PK(SalesOrderID)); }
         }
 
-        private Product.Key _product;
-        public Product.Key Product
+        private Product.PK _product;
+        public Product.PK Product
         {
-            get { return _product ?? (_product = new Product.Key(ProductID)); }
+            get { return _product ?? (_product = new Product.PK(ProductID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to SalesOrderHeader.SalesOrderID.")]
