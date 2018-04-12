@@ -118,16 +118,16 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _primaryKey ?? (_primaryKey = new PK(CustomerID, AddressID)); }
         }
 
-        private Customer.PK _customer;
-        public Customer.PK Customer
+        private Customer.PK _fk_customer;
+        public Customer.PK FK_Customer
         {
-            get { return _customer ?? (_customer = new Customer.PK(CustomerID)); }
+            get { return _fk_customer ?? (_fk_customer = new Customer.PK(CustomerID)); }
         }
 
-        private Address.PK _address;
-        public Address.PK Address
+        private Address.PK _fk_address;
+        public Address.PK FK_Address
         {
-            get { return _address ?? (_address = new Address.PK(AddressID)); }
+            get { return _fk_address ?? (_fk_address = new Address.PK(AddressID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to Customer.CustomerID.")]

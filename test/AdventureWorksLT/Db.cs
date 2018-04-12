@@ -60,8 +60,8 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _customerAddresses, "[SalesLT].[CustomerAddress]",
-                    _ => DbForeignKey("FK_CustomerAddress_Customer_CustomerID", "Foreign key constraint referencing Customer.CustomerID.", _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
-                    _ => DbForeignKey("FK_CustomerAddress_Address_AddressID", "Foreign key constraint referencing Address.AddressID.", _.Address, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey("FK_CustomerAddress_Customer_CustomerID", "Foreign key constraint referencing Customer.CustomerID.", _.FK_Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey("FK_CustomerAddress_Address_AddressID", "Foreign key constraint referencing Address.AddressID.", _.FK_Address, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -74,7 +74,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 return GetTable(ref _productCategories, "[SalesLT].[ProductCategory]",
                     _ => DbForeignKey("FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID",
                         "Foreign key constraint referencing ProductCategory.ProductCategoryID.",
-                        _.ParentProductCategory, _, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                        _.FK_ParentProductCategory, _, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -100,10 +100,10 @@ namespace DevZest.Samples.AdventureWorksLT
                 return GetTable(ref _productModelProductDescriptions, "[SalesLT].[ProductModelProductDescription]",
                     _ => DbForeignKey("FK_ProductModelProductDescription_ProductModel_ProductModelID",
                         "Foreign key constraint referencing ProductModel.ProductModelID.",
-                        _.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                        _.FK_ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
                     _ => DbForeignKey("FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID",
                         "Foreign key constraint referencing ProductDescription.ProductDescriptionID.",
-                        _.ProductDescription, ProductDescriptions._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                        _.FK_ProductDescription, ProductDescriptions._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -114,8 +114,8 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _products, "[SalesLT].[Product]",
-                    _ => DbForeignKey("FK_Product_ProductModel_ProductModelID", null, _.ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
-                    _ => DbForeignKey("FK_Product_ProductCategory_ProductCategoryID", null, _.ProductCategory, ProductCategories._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey("FK_Product_ProductModel_ProductModelID", null, _.FK_ProductModel, ProductModels._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey("FK_Product_ProductCategory_ProductCategoryID", null, _.FK_ProductCategory, ProductCategories._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -127,11 +127,11 @@ namespace DevZest.Samples.AdventureWorksLT
             {
                 return GetTable(ref _salesOrderHeaders, "[SalesLT].[SalesOrderHeader]",
                     _ => DbForeignKey("FK_SalesOrderHeader_Customer_CustomerID", null,
-                        _.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                        _.FK_Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
                     _ => DbForeignKey("FK_SalesOrderHeader_Address_BillTo_AddressID", null,
-                        _.BillToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                        _.FK_BillToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
                     _ => DbForeignKey("FK_SalesOrderHeader_Address_ShipTo_AddressID", null,
-                        _.ShipToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                        _.FK_ShipToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -142,7 +142,7 @@ namespace DevZest.Samples.AdventureWorksLT
             get
             {
                 return GetTable(ref _salesOrderDetails, "[SalesLT].[SalesOrderDetail]",
-                    _ => DbForeignKey(null, null, _.SalesOrderHeader, SalesOrderHeaders._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
+                    _ => DbForeignKey(null, null, _.FK_SalesOrderHeader, SalesOrderHeaders._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
                     _ => DbForeignKey(null, null, _.Product, Products._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
@@ -181,9 +181,9 @@ namespace DevZest.Samples.AdventureWorksLT
                 var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
                 Debug.Assert(ext != null);
                 builder.From(SalesOrderHeaders, out var o)
-                    .LeftJoin(Customers, o.Customer, out var c)
-                    .LeftJoin(Addresses, o.ShipToAddress, out var shipTo)
-                    .LeftJoin(Addresses, o.BillToAddress, out var billTo)
+                    .LeftJoin(Customers, o.FK_Customer, out var c)
+                    .LeftJoin(Addresses, o.FK_ShipToAddress, out var shipTo)
+                    .LeftJoin(Addresses, o.FK_BillToAddress, out var billTo)
                     .AutoSelect()
                     .AutoSelect(shipTo, ext.ShipToAddress)
                     .AutoSelect(billTo, ext.BillToAddress)
@@ -210,7 +210,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             salesOrders._.ResetRowIdentifiers();
             await SalesOrderHeaders.Update(salesOrders).ExecuteAsync(ct);
-            await SalesOrderDetails.Delete(salesOrders, (s, _) => s.Match(_.SalesOrderHeader)).ExecuteAsync(ct);
+            await SalesOrderDetails.Delete(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader)).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);

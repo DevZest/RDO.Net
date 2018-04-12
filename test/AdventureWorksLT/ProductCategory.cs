@@ -48,13 +48,12 @@ namespace DevZest.Samples.AdventureWorksLT
             _ProductCategoryID = RegisterColumn((ProductCategory _) => _.ProductCategoryID);
             _ParentProductCategoryID = RegisterColumn((ProductCategory _) => _.ParentProductCategoryID);
             _Name = RegisterColumn((ProductCategory _) => _.Name);
-            RegisterChildModel((ProductCategory x) => x.SubCategories, (ProductCategory x) => x.ParentProductCategory);
+            RegisterChildModel((ProductCategory x) => x.SubCategories, (ProductCategory x) => x.FK_ParentProductCategory);
         }
 
         public ProductCategory()
         {
             _primaryKey = new PK(ProductCategoryID);
-            ParentProductCategory = new PK(ParentProductCategoryID);
         }
 
         public ProductCategory SubCategories { get; private set; }
@@ -72,8 +71,12 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.")]
         public _Int32 ParentProductCategoryID { get; private set; }
 
+        private PK _fk_productCategory;
         [DbColumn(Description = "Category description.")]
-        public PK ParentProductCategory { get; private set; }
+        public PK FK_ParentProductCategory
+        {
+            get { return _fk_productCategory ?? (_fk_productCategory = new PK(ParentProductCategoryID)); }
+        }
 
         [UdtName]
         [Required]

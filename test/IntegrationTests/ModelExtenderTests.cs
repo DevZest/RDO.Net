@@ -41,9 +41,9 @@ namespace DevZest.Data
                     {
                         var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
                         builder.From(db.SalesOrderHeaders, out var o)
-                            .InnerJoin(db.Customers, o.Customer, out var c)
-                            .InnerJoin(db.Addresses, o.ShipToAddress, out var shipTo)
-                            .InnerJoin(db.Addresses, o.BillToAddress, out var billTo)
+                            .InnerJoin(db.Customers, o.FK_Customer, out var c)
+                            .InnerJoin(db.Addresses, o.FK_ShipToAddress, out var shipTo)
+                            .InnerJoin(db.Addresses, o.FK_BillToAddress, out var billTo)
                             .AutoSelect()
                             .AutoSelect(shipTo, ext.ShipToAddress)
                             .AutoSelect(billTo, ext.BillToAddress)

@@ -106,10 +106,10 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _primaryKey ?? (_primaryKey = new PK(SalesOrderID, SalesOrderDetailID)); }
         }
 
-        private SalesOrderHeader.PK _salesOrderHeader;
-        public SalesOrderHeader.PK SalesOrderHeader
+        private SalesOrderHeader.PK _fk_salesOrderHeader;
+        public SalesOrderHeader.PK FK_SalesOrderHeader
         {
-            get { return _salesOrderHeader ?? (_salesOrderHeader = new SalesOrderHeader.PK(SalesOrderID)); }
+            get { return _fk_salesOrderHeader ?? (_fk_salesOrderHeader = new SalesOrderHeader.PK(SalesOrderID)); }
         }
 
         private Product.PK _product;

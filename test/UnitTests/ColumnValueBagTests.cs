@@ -54,7 +54,7 @@ namespace DevZest.Data
 
             {
                 var salesOrder = DataSet<SalesOrderInfo>.New().EnsureInitialized()._;
-                var customerKey = salesOrder.Customer;
+                var customerKey = salesOrder.FK_Customer;
                 var customerExt = salesOrder.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>().Customer;
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);

@@ -105,7 +105,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
                 {
                     _Int32 count;
                     builder.From(db.SalesOrderHeaders, out var h)
-                        .InnerJoin(db.SalesOrderDetails, h.PrimaryKey, x => x.SalesOrderHeader, out var d)
+                        .InnerJoin(db.SalesOrderDetails, h.PrimaryKey, x => x.FK_SalesOrderHeader, out var d)
                         .Select(h.SalesOrderID, adhoc)
                         .Select(count = d.SalesOrderID.Count(), adhoc, "LineCount")
                         .Having(count > _Int32.Const(1))
@@ -136,7 +136,7 @@ ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrderHeader].[Sale
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
                     builder.From(db.SalesOrderDetails, out var d)
-                        .InnerJoin(db.SalesOrderHeaders, d.SalesOrderHeader, out var h)
+                        .InnerJoin(db.SalesOrderHeaders, d.FK_SalesOrderHeader, out var h)
                         .InnerJoin(db.Products, d.Product, out var p)
                         .Select(d.SalesOrderID, adhoc)
                         .Select(d.SalesOrderDetailID, adhoc)

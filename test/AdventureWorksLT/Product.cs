@@ -90,16 +90,16 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _primaryKey ?? (_primaryKey = new PK(ProductID)); }
         }
 
-        private ProductCategory.PK _productCategory;
-        public ProductCategory.PK ProductCategory
+        private ProductCategory.PK _fk_productCategory;
+        public ProductCategory.PK FK_ProductCategory
         {
-            get { return _productCategory ?? (_productCategory = new ProductCategory.PK(ProductCategoryID)); }
+            get { return _fk_productCategory ?? (_fk_productCategory = new ProductCategory.PK(ProductCategoryID)); }
         }
 
-        private ProductModel.PK _productModel;
-        public ProductModel.PK ProductModel
+        private ProductModel.PK _fk_productModel;
+        public ProductModel.PK FK_ProductModel
         {
-            get { return _productModel ?? (_productModel = new ProductModel.PK(ProductModelID)); }
+            get { return _fk_productModel ?? (_fk_productModel = new ProductModel.PK(ProductModelID)); }
         }
 
         [Identity(1, 1)]

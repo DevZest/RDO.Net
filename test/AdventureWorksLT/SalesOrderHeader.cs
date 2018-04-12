@@ -151,34 +151,34 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _primaryKey ?? (_primaryKey = new PK(SalesOrderID)); }
         }
 
-        private Customer.PK _customer;
-        public Customer.PK Customer
+        private Customer.PK _fk_customer;
+        public Customer.PK FK_Customer
         {
-            get { return _customer ?? (_customer = new Customer.PK(CustomerID)); }
+            get { return _fk_customer ?? (_fk_customer = new Customer.PK(CustomerID)); }
         }
 
-        private Address.PK _shipToAddress;
-        public Address.PK ShipToAddress
+        private Address.PK _fk_shipToAddress;
+        public Address.PK FK_ShipToAddress
         {
-            get { return _shipToAddress ?? (_shipToAddress = new Address.PK(ShipToAddressID)); }
+            get { return _fk_shipToAddress ?? (_fk_shipToAddress = new Address.PK(ShipToAddressID)); }
         }
 
-        private CustomerAddress.PK _shipToCustomerAddress;
-        public CustomerAddress.PK ShipToCustomerAddress
+        private CustomerAddress.PK _fk_shipToCustomerAddress;
+        public CustomerAddress.PK FK_ShipToCustomerAddress
         {
-            get { return _shipToCustomerAddress ?? (_shipToCustomerAddress = new CustomerAddress.PK(CustomerID, ShipToAddressID)); }
+            get { return _fk_shipToCustomerAddress ?? (_fk_shipToCustomerAddress = new CustomerAddress.PK(CustomerID, ShipToAddressID)); }
         }
 
-        private Address.PK _billToAddress;
-        public Address.PK BillToAddress
+        private Address.PK _fk_billToAddress;
+        public Address.PK FK_BillToAddress
         {
-            get { return _billToAddress ?? (_billToAddress = new Address.PK(BillToAddressID)); }
+            get { return _fk_billToAddress ?? (_fk_billToAddress = new Address.PK(BillToAddressID)); }
         }
 
-        private CustomerAddress.PK _billToCustomerAddress;
-        public CustomerAddress.PK BillToCustomerAddress
+        private CustomerAddress.PK _fk_billToCustomerAddress;
+        public CustomerAddress.PK FK_BillToCustomerAddress
         {
-            get { return _billToCustomerAddress ?? (_billToCustomerAddress = new CustomerAddress.PK(CustomerID, BillToAddressID)); }
+            get { return _fk_billToCustomerAddress ?? (_fk_billToCustomerAddress = new CustomerAddress.PK(CustomerID, BillToAddressID)); }
         }
 
         [Identity(1, 1)]

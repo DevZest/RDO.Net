@@ -43,16 +43,16 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _primaryKey ?? (_primaryKey = new PK(ProductModelID, ProductDescriptionID, Culture)); }
         }
 
-        private ProductModel.PK _productModel;
-        public ProductModel.PK ProductModel
+        private ProductModel.PK _fk_productModel;
+        public ProductModel.PK FK_ProductModel
         {
-            get { return _productModel ?? (_productModel = new ProductModel.PK(ProductModelID)); }
+            get { return _fk_productModel ?? (_fk_productModel = new ProductModel.PK(ProductModelID)); }
         }
 
-        private ProductDescription.PK _productDescription;
-        public ProductDescription.PK ProductDescription
+        private ProductDescription.PK _fk_productDescription;
+        public ProductDescription.PK FK_ProductDescription
         {
-            get { return _productDescription ?? (_productDescription = new ProductDescription.PK(ProductDescriptionID)); }
+            get { return _fk_productDescription ?? (_fk_productDescription = new ProductDescription.PK(ProductDescriptionID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to ProductModel.ProductModelID.")]
