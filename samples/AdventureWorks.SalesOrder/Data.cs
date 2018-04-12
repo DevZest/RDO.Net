@@ -55,7 +55,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<DataSet<Customer>> GetCustomerLookup(CancellationToken ct)
+        public static async Task<DataSet<Customer>> GetCustomerLookupAsync(CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -63,7 +63,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<DataSet<Address>> GetAddressLookup(int customerID, CancellationToken ct)
+        public static async Task<DataSet<Address>> GetAddressLookupAsync(int customerID, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -79,7 +79,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<DataSet<Product>> GetProductLookup(CancellationToken ct)
+        public static async Task<DataSet<Product>> GetProductLookupAsync(CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -87,7 +87,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task UpdateSalesOrder(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
+        public static async Task UpdateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -100,7 +100,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<int?> CreateSalesOrder(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
+        public static async Task<int?> CreateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -113,7 +113,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<DataSet<SalesOrderDetail.ForeignKeyLookup>> Lookup(DataSet<SalesOrderDetail.ForeignKey> data, CancellationToken ct)
+        public static async Task<DataSet<SalesOrderDetail.ForeignKeyLookup>> LookupAsync(DataSet<SalesOrderDetail.ForeignKey> data, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {

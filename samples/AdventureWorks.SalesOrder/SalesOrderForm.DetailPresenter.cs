@@ -90,7 +90,7 @@ namespace AdventureWorks.SalesOrders
                     });
                 }
 
-                if (!App.Execute(ct => Data.Lookup(foreignKeys, ct), Window.GetWindow(View), out var lookup))
+                if (!App.Execute(ct => Data.LookupAsync(foreignKeys, ct), Window.GetWindow(View), out var lookup))
                     return false;
 
                 Debug.Assert(lookup.Count == data.Count);

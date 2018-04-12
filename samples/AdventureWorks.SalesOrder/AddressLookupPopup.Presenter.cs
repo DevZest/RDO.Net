@@ -40,7 +40,7 @@ namespace AdventureWorks.SalesOrders
 
             private Task<DataSet<Address>> LoadDataAsync(CancellationToken ct)
             {
-                return Data.GetAddressLookup(CustomerID, ct);
+                return Data.GetAddressLookupAsync(CustomerID, ct);
             }
 
             public int? CurrentAddressID { get; private set; }

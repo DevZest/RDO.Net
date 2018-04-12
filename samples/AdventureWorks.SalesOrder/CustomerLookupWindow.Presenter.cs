@@ -46,7 +46,7 @@ namespace AdventureWorks.SalesOrders
 
             private Task<DataSet<Customer>> LoadDataAsync(CancellationToken ct)
             {
-                return Data.GetCustomerLookup(ct);
+                return Data.GetCustomerLookupAsync(ct);
             }
 
             public int? CurrentCustomerID { get; private set; }

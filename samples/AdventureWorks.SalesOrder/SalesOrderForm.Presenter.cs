@@ -107,10 +107,10 @@ namespace AdventureWorks.SalesOrders
             public async Task<int?> SaveToDb(CancellationToken ct)
             {
                 if (IsNew)
-                    return await Data.CreateSalesOrder(DataSet, ct);
+                    return await Data.CreateSalesOrderAsync(DataSet, ct);
                 else
                 {
-                    await Data.UpdateSalesOrder(DataSet, ct);
+                    await Data.UpdateSalesOrderAsync(DataSet, ct);
                     return null;
                 }
             }
