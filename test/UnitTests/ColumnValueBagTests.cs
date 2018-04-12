@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Samples.AdventureWorksLT;
 
 namespace DevZest.Data
@@ -12,7 +11,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtender<SalesOrderInfo.Ext>();
+            var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();
@@ -29,7 +28,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtender<SalesOrderInfo.Ext>();
+            var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
             var customer = ext.Customer;
             salesOrders.Add(new DataRow(), (dataRow) =>
             {
@@ -56,7 +55,7 @@ namespace DevZest.Data
             {
                 var salesOrder = DataSet<SalesOrderInfo>.New().EnsureInitialized()._;
                 var customerKey = salesOrder.Customer;
-                var customerExt = salesOrder.GetExtender<SalesOrderInfo.Ext>().Customer;
+                var customerExt = salesOrder.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>().Customer;
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);
                 valueBag.AutoSelect(customerExt, salesOrders[0]);
@@ -84,7 +83,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtender<SalesOrderInfo.Ext>();
+            var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();
@@ -103,7 +102,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtender<SalesOrderInfo.Ext>();
+            var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();

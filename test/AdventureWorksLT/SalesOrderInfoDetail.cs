@@ -3,25 +3,15 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ModelExtender(typeof(Ext))]
+    [ModelExtender(typeof(ForeignKeyLookup.Ext))]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
-        public class Ext : ModelExtender
-        {
-            static Ext()
-            {
-                RegisterChildExtender((Ext _) => _.Product);
-            }
-
-            public Product.Lookup Product { get; private set; }
-        }
-
         [ModelValidator]
         private DataValidationError ValidateProduct(DataRow dataRow)
         {
             if (ProductID[dataRow] == null)
                 return null;
-            var ext = GetExtender<Ext>();
+            var ext = GetExtender<ForeignKeyLookup.Ext>();
             var productNumber = ext.Product.ProductNumber;
             var productName = ext.Product.Name;
 

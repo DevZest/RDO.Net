@@ -178,7 +178,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
             {
-                var ext = _.GetExtender<SalesOrderInfo.Ext>();
+                var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
                 Debug.Assert(ext != null);
                 builder.From(SalesOrderHeaders, out var o)
                     .LeftJoin(Customers, o.Customer, out var c)
@@ -192,7 +192,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
             {
-                Debug.Assert(_.GetExtender<SalesOrderInfoDetail.Ext>() != null);
+                Debug.Assert(_.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>() != null);
                 builder.From(SalesOrderDetails, out var d)
                     .LeftJoin(Products, d.Product, out var p)
                     .AutoSelect();

@@ -44,6 +44,60 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
+        public class ForeignKey : Model<ForeignKey.PK>
+        {
+            public sealed class PK : PrimaryKey
+            {
+                public PK(_Int32 seqNo)
+                {
+                    SeqNo = seqNo;
+                }
+
+                public _Int32 SeqNo { get; private set; }
+            }
+
+            static ForeignKey()
+            {
+                RegisterColumn((ForeignKey _) => _.SeqNo);
+                RegisterColumn((ForeignKey _) => _.ProductID, AdventureWorksLT.Product._ProductID);
+            }
+
+            [Identity(1, 1)]
+            public _Int32 SeqNo { get; private set; }
+            public _Int32 ProductID { get; private set; }
+
+            private PK _pk;
+            public sealed override PK PrimaryKey
+            {
+                get { return _pk ?? (_pk = new PK(SeqNo)); }
+            }
+
+            private Product.PK _product;
+            public Product.PK Product
+            {
+                get { return _product ?? (_product = new Product.PK(ProductID)); }
+            }
+        }
+
+        [ModelExtender(typeof(Ext))]
+        public class ForeignKeyLookup : Model
+        {
+            public class Ext : ModelExtender
+            {
+                static Ext()
+                {
+                    RegisterChildExtender((Ext _) => _.Product);
+                }
+
+                public Product.Lookup Product { get; private set; }
+            }
+
+            public Product.Lookup Product
+            {
+                get { return GetExtender<Ext>().Product; }
+            }
+        }
+
         public static readonly Mounter<_Int32> _SalesOrderDetailID;
         public static readonly Mounter<_Int16> _OrderQty;
         public static readonly Mounter<_Decimal> _UnitPrice;

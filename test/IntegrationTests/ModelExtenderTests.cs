@@ -11,7 +11,7 @@ namespace DevZest.Data
         {
             using (var db = OpenDb())
             {
-                var salesOrderDetails = db.CreateQuery(_ => _.SetExtender<SalesOrderInfoDetail.Ext>(),
+                var salesOrderDetails = db.CreateQuery(_ => _.SetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>(),
                     (DbQueryBuilder builder, SalesOrderDetail _) =>
                     {
                         SalesOrderDetail d;
@@ -26,7 +26,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrderDetail_71774_with_ext.Trim();
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtender<SalesOrderInfoDetail.Ext>(), json);
+                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
@@ -36,10 +36,10 @@ namespace DevZest.Data
         {
             using (var db = OpenDb())
             {
-                var salesOrders = db.CreateQuery(_ => _.SetExtender<SalesOrderInfo.Ext>(),
+                var salesOrders = db.CreateQuery(_ => _.SetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>(),
                     (DbQueryBuilder builder, SalesOrder _) =>
                     {
-                        var ext = _.GetExtender<SalesOrderInfo.Ext>();
+                        var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
                         builder.From(db.SalesOrderHeaders, out var o)
                             .InnerJoin(db.Customers, o.Customer, out var c)
                             .InnerJoin(db.Addresses, o.ShipToAddress, out var shipTo)
@@ -54,7 +54,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrder_71774_with_ext;
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtender<SalesOrderInfo.Ext>(), json);
+                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
