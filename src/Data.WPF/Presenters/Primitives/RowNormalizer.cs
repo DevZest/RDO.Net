@@ -19,12 +19,6 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _rows; }
         }
 
-        protected override void Reload()
-        {
-            base.Reload();
-            Initialize();
-        }
-
         private void Initialize()
         {
             _rows = IsRecursive ? new List<RowPresenter>() : (List<RowPresenter>)base.Rows;

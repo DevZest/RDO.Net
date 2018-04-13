@@ -25,7 +25,7 @@ namespace DevZest.Data.Views
             IReadOnlyList<IColumnComparer> OrderBy { get; set; }
         }
 
-        private sealed class SortService : ISortService
+        private sealed class SortService : ISortService, IReloadableService
         {
             public DataPresenter DataPresenter { get; private set; }
 

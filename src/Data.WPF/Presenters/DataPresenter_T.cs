@@ -34,12 +34,13 @@ namespace DevZest.Data.Presenters
             if (_dataLoader != null)
                 _dataLoader.Reset();
             AttachView(dataView);
-            Mount(dataView, dataSet, where, orderBy, false);
+            Mount(dataView, dataSet, where, orderBy, MountMode.Show);
             OnViewChanged();
         }
 
-        private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool inherit)
+        private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, MountMode mode)
         {
+            var inherit = mode != MountMode.Show;
             var oldLayoutManager = _layoutManager;
             var template = inherit ? Template : new Template();
             Debug.Assert(template != null);
@@ -57,7 +58,8 @@ namespace DevZest.Data.Presenters
                 builder.Seal();
             }
             _layoutManager = LayoutManager.Create(inherit ? oldLayoutManager : null, this, template, dataSet, GetMatchColumns(dataSet._), where, orderBy);
-            OnMounted();
+            ServiceManager.Reset(this, mode == MountMode.Reload);
+            OnMounted(MountEventArgs.Select(mode));
             dataView.OnDataLoaded();
         }
 
@@ -298,7 +300,7 @@ namespace DevZest.Data.Presenters
                             dataSet = DataSet<T>.New();
                         Predicate<DataRow> where = _getWhere == null ? null : _getWhere(dataSet._);
                         IComparer<DataRow> orderBy = _getOrderBy == null ? null : _getOrderBy(dataSet._);
-                        _dataPresenter.Mount(DataView, dataSet, where, orderBy, LayoutManager != null);
+                        _dataPresenter.Mount(DataView, dataSet, where, orderBy, LayoutManager != null ? MountMode.Refresh : MountMode.Show);
                         Dispose();
                         return;
                     }
@@ -383,9 +385,19 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(dataSet));
             if (LayoutManager == null)
                 throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
+            Refresh(dataSet, where, orderBy, false);
+        }
+
+        internal override void PerformApply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        {
+            Refresh(DataSet, where, orderBy, true);
+        }
+
+        private void Refresh(DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool isReload)
+        {
             if (View.IsKeyboardFocusWithin)
                 Template.ResetInitialFocus();
-            Mount(View, dataSet, where, orderBy, true);
+            Mount(View, dataSet, where, orderBy, isReload ? MountMode.Reload : MountMode.Refresh);
         }
 
         public Task RefreshAsync(Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)

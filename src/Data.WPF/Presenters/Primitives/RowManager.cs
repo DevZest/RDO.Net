@@ -710,17 +710,6 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.VirtualRowPlacement; }
         }
 
-        protected override void Reload()
-        {
-            _currentRow = null;
-            _selectedRows.Clear();
-            _lastExtenedSelection = null;
-            _editing = null;
-            VirtualRow = null;
-            base.Reload();
-            Initialize(null);
-        }
-
         private void CoerceVirtualRow()
         {
             Debug.Assert(!IsEditing);

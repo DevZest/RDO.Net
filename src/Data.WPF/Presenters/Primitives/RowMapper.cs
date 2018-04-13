@@ -74,13 +74,6 @@ namespace DevZest.Data.Presenters.Primitives
 
         public Predicate<DataRow> Where { get; private set; }
 
-        private bool ApplyWhere(Predicate<DataRow> where)
-        {
-            var oldValue = Where;
-            Where = where;
-            return where != oldValue;
-        }
-
         private bool IsQuery
         {
             get { return Where != null || OrderBy != null; }
@@ -88,30 +81,8 @@ namespace DevZest.Data.Presenters.Primitives
 
         public IComparer<DataRow> OrderBy { get; private set; }
 
-        private bool ApplyOrderBy(IComparer<DataRow> orderBy)
-        {
-            var oldValue = OrderBy;
-            OrderBy = orderBy;
-            return OrderBy != oldValue;
-        }
-
-        public void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
-        {
-            var whereChanged = ApplyWhere(where);
-            var orderByChanged = ApplyOrderBy(orderBy);
-            if (whereChanged || orderByChanged)
-                Reload();
-        }
-
-        protected virtual void Reload()
-        {
-            Initialize();
-        }
-
         private void Initialize()
         {
-            if (_rowMatches != null)
-                _rowMatches.Clear();
             InitializeMappings();
             InitializeRowPresenters();
         }

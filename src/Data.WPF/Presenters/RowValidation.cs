@@ -150,21 +150,6 @@ namespace DevZest.Data.Presenters
         private Dictionary<RowPresenter, IColumns> _progress;
         private Dictionary<RowPresenter, IColumns> _valueChanged;
 
-        internal void OnReloaded()
-        {
-            if (_progress != null)
-            {
-                _progress.Clear();
-                _valueChanged.Clear();
-            }
-
-            if (_errorsByRow != null)
-                _errorsByRow.Clear();
-            if (_asyncErrorsByRow != null)
-                _asyncErrorsByRow.Clear();
-            ValidateCurrentRowIfImplicit();
-        }
-
         internal void OnCurrentRowChanged(RowPresenter oldValue)
         {
             Template.RowAsyncValidators.ForEach(x => x.Reset());

@@ -48,6 +48,34 @@ namespace DevZest.Data.Presenters
             return null;
         }
 
+        internal static void Reset(DataPresenter dataPresenter, bool isReload)
+        {
+            Debug.Assert(dataPresenter != null);
+
+            if (!_services.TryGetValue(dataPresenter, out var servicesByType))
+                return;
+
+            ConcurrentDictionary<Type, IService> reloadableServicesByType = null;
+            if (isReload)
+            {
+                foreach (var keyValuePair in servicesByType)
+                {
+                    var service = keyValuePair.Value;
+                    if (service is IReloadableService)
+                    {
+                        var type = keyValuePair.Key;
+                        if (reloadableServicesByType == null)
+                            reloadableServicesByType = new ConcurrentDictionary<Type, IService>();
+                        reloadableServicesByType.TryAdd(type, service);
+                    }
+                }
+            }
+
+            _services.Remove(dataPresenter);
+            if (reloadableServicesByType != null)
+                _services.Add(dataPresenter, reloadableServicesByType);
+        }
+
         private static T CreateService<T>(DataPresenter dataPresenter)
             where T : class, IService
         {

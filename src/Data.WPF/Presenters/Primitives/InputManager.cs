@@ -116,12 +116,6 @@ namespace DevZest.Data.Presenters.Primitives
             return _rowValidation == null ? false : _rowValidation.IsValidatingStatus(rowPresenter, input, true);
         }
 
-        protected override void Reload()
-        {
-            base.Reload();
-            _rowValidation?.OnReloaded();
-        }
-
         protected sealed override void OnCurrentRowChanged(RowPresenter oldValue)
         {
             base.OnCurrentRowChanged(oldValue);

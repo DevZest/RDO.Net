@@ -17,18 +17,6 @@ namespace DevZest.Data.Presenters.Primitives
             ContainerViewList = emptyContainerViewList ? Primitives.ContainerViewList.Empty : Primitives.ContainerViewList.Create(this);
         }
 
-        protected override void Reload()
-        {
-            base.Reload();
-            var elementCollection = ElementCollection;
-            ClearElements();
-            ElementCollection = elementCollection;
-            if (ElementCollection != null)
-                InitializeElements();
-            if (ContainerViewList != Primitives.ContainerViewList.Empty)
-                ContainerViewList = Primitives.ContainerViewList.Create(this);
-        }
-
         private static T Create<T>(Func<T> constructor)
             where T : class
         {

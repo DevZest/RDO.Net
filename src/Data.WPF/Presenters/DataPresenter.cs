@@ -12,6 +12,39 @@ namespace DevZest.Data.Presenters
 {
     public abstract class DataPresenter : IDataPresenter, ScalarContainer.IOwner
     {
+        public enum MountMode
+        {
+            Show,
+            Refresh,
+            Reload
+        }
+
+        public sealed class MountEventArgs
+        {
+            public static readonly MountEventArgs Show = new MountEventArgs(MountMode.Show);
+            public static readonly MountEventArgs Refresh = new MountEventArgs(MountMode.Refresh);
+            public static readonly MountEventArgs Reload = new MountEventArgs(MountMode.Reload);
+
+            public static MountEventArgs Select(MountMode mode)
+            {
+                if (mode == MountMode.Show)
+                    return Show;
+                else if (mode == MountMode.Refresh)
+                    return Refresh;
+                else if (mode == MountMode.Reload)
+                    return Reload;
+                else
+                    return null;
+            }
+
+            private MountEventArgs(MountMode mode)
+            {
+                Mode = mode;
+            }
+
+            public MountMode Mode { get; private set; }
+        }
+
         public event EventHandler ViewInvalidating = delegate { };
         public event EventHandler ViewInvalidated = delegate { };
         public event EventHandler ViewRefreshing = delegate { };
@@ -73,11 +106,11 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager != null; }
         }
 
-        public event EventHandler<EventArgs> Mounted = delegate { };
+        public event EventHandler<MountEventArgs> Mounted = delegate { };
 
-        protected virtual void OnMounted()
+        protected virtual void OnMounted(MountEventArgs e)
         {
-            Mounted(this, EventArgs.Empty);
+            Mounted(this, e);
         }
 
         public event EventHandler<EventArgs> ViewChanged = delegate { };
@@ -131,10 +164,12 @@ namespace DevZest.Data.Presenters
 
         public virtual void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
-            SuspendInvalidateView();
-            RequireLayoutManager().Apply(where, orderBy);
-            ResumeInvalidateView();
+            RequireLayoutManager();
+            if (where != Where || OrderBy != orderBy)
+                PerformApply(where, orderBy);
         }
+
+        internal abstract void PerformApply(Predicate<DataRow> where, IComparer<DataRow> orderBy);
 
         public IReadOnlyList<RowPresenter> Rows
         {

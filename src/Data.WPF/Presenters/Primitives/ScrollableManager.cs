@@ -1179,15 +1179,5 @@ namespace DevZest.Data.Presenters.Primitives
             var flowIndex = gridSpan.EndTrack.Ordinal > GridTracksCross.GetGridSpan(Template.RowRange).EndTrack.Ordinal ? FlowRepeatCount : 0;
             EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
         }
-
-        protected sealed override void Reload()
-        {
-            base.Reload();
-
-            _scrollDeltaMain = 0;
-            _scrollOffsetMain = 0;
-            _scrollToMainPlacement = default(GridPlacement);
-            _scrollToMain = default(LogicalExtent);
-        }
     }
 }
