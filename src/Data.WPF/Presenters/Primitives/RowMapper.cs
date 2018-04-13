@@ -110,6 +110,8 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void Initialize()
         {
+            if (_rowMatches != null)
+                _rowMatches.Clear();
             InitializeMappings();
             InitializeRowPresenters();
         }
@@ -126,6 +128,8 @@ namespace DevZest.Data.Presenters.Primitives
         {
             if (IsRecursive || IsQuery)
                 _mappings = new Dictionary<DataRow, RowPresenter>();
+            else
+                _mappings = null;
 
             if (!IsRecursive || Where == null)
                 return;
