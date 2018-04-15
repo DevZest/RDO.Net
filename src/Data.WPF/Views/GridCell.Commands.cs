@@ -1,10 +1,7 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
-using DevZest.Data.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Input;
 
 namespace DevZest.Data.Views
@@ -74,6 +71,26 @@ namespace DevZest.Data.Views
                 yield return Commands.SelectTo.Bind(ExecSelectTo, CanSelectTo, new MouseGesture(MouseAction.LeftClick, ModifierKeys.Shift));
                 yield return Commands.SelectAll.Bind(ExecSelectAll, CanSelectTo);
                 yield return Commands.Copy.Bind(ExecCopy, CanCopy);
+                yield return Commands.SelectLeft.Bind(ExecSelectLeft, CanSelectLeft, new KeyGesture(Key.Left));
+                yield return Commands.SelectToLeft.Bind(ExecSelectToLeft, CanSelectLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
+                yield return Commands.SelectRight.Bind(ExecSelectRight, CanSelectRight, new KeyGesture(Key.Right));
+                yield return Commands.SelectToRight.Bind(ExecSelectToRight, CanSelectRight, new KeyGesture(Key.Right, ModifierKeys.Shift));
+                yield return Commands.SelectUp.Bind(ExecSelectUp, CanSelectUp, new KeyGesture(Key.Up));
+                yield return Commands.SelectToUp.Bind(ExecSelectToUp, CanSelectUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
+                yield return Commands.SelectDown.Bind(ExecSelectDown, CanSelectDown, new KeyGesture(Key.Down));
+                yield return Commands.SelectToDown.Bind(ExecSelectToDown, CanSelectDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
+                yield return Commands.SelectPageUp.Bind(ExecSelectPageUp, CanSelect, new KeyGesture(Key.PageUp));
+                yield return Commands.SelectToPageUp.Bind(ExecSelectToPageUp, CanSelect, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
+                yield return Commands.SelectPageDown.Bind(ExecSelectPageDown, CanSelect, new KeyGesture(Key.PageDown));
+                yield return Commands.SelectToPageDown.Bind(ExecSelectToPageDown, CanSelect, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
+                yield return Commands.SelectRowHome.Bind(ExecSelectRowHome, CanSelect, new KeyGesture(Key.Home));
+                yield return Commands.SelectToRowHome.Bind(ExecSelectToRowHome, CanSelect, new KeyGesture(Key.Home, ModifierKeys.Shift));
+                yield return Commands.SelectRowEnd.Bind(ExecSelectRowEnd, CanSelect, new KeyGesture(Key.End));
+                yield return Commands.SelectToRowEnd.Bind(ExecSelectToRowEnd, CanSelect, new KeyGesture(Key.End, ModifierKeys.Shift));
+                yield return Commands.SelectHome.Bind(ExecSelectHome, CanSelect, new KeyGesture(Key.Home, ModifierKeys.Control));
+                yield return Commands.SelectToHome.Bind(ExecSelectToHome, CanSelect, new KeyGesture(Key.Home, ModifierKeys.Control | ModifierKeys.Shift));
+                yield return Commands.SelectEnd.Bind(ExecSelectEnd, CanSelect, new KeyGesture(Key.End, ModifierKeys.Control));
+                yield return Commands.SelectToEnd.Bind(ExecSelectToEnd, CanSelect, new KeyGesture(Key.End, ModifierKeys.Control | ModifierKeys.Shift));
             }
 
             private void CanToggleMode(object sender, CanExecuteRoutedEventArgs e)
@@ -258,7 +275,7 @@ namespace DevZest.Data.Views
 
             private void CanCopy(object sender, CanExecuteRoutedEventArgs e)
             {
-                e.CanExecute = DataPresenter.GetService<Presenter>().Mode == GridCellMode.Select && SelectedRowsCount > 0 && SelectedColumnsCount > 0;
+                e.CanExecute = Mode == GridCellMode.Select && SelectedRowsCount > 0 && SelectedColumnsCount > 0;
                 if (!e.CanExecute)
                     e.ContinueRouting = true;
             }
@@ -268,6 +285,216 @@ namespace DevZest.Data.Views
                 var selectedRows = GetSelectedRows();
                 var columnSerializers = GetSelectedColumnSerializers();
                 new SerializableSelection(selectedRows, columnSerializers).CopyToClipboard(true, true);
+                e.Handled = true;
+            }
+
+            private IReadOnlyList<RowBinding> GridCellBindings
+            {
+                get { return Presenter.GridCellBindings; }
+            }
+
+            private RowPresenter CurrentRow
+            {
+                get { return DataPresenter.CurrentRow; }
+            }
+
+            private int CurrentBindingIndex
+            {
+                get { return Presenter.CurrentBindingIndex; }
+            }
+
+            private void CanSelectLeft(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = Mode == GridCellMode.Select && CurrentRow != null && GridCellBindings.Count > 0 && CurrentBindingIndex > 0;
+            }
+
+            private void ExecSelectLeft(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectLeft(false, e);
+            }
+
+            private void ExecSelectToLeft(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectLeft(true, e);
+            }
+
+            private void SelectLeft(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Select(CurrentBindingIndex - 1, isExtended, e);
+            }
+
+            private void CanSelectRight(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = Mode == GridCellMode.Select && CurrentRow != null && GridCellBindings.Count > 0 && CurrentBindingIndex < GridCellBindings.Count - 1;
+            }
+
+            private void ExecSelectRight(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectRight(false, e);
+            }
+
+            private void ExecSelectToRight(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectRight(true, e);
+            }
+
+            private void SelectRight(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Select(CurrentBindingIndex + 1, isExtended, e);
+            }
+
+            private IReadOnlyList<RowPresenter> Rows
+            {
+                get { return DataPresenter.Rows; }
+            }
+
+            private void CanSelectUp(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = Mode == GridCellMode.Select && CurrentBindingIndex >= 0 && CurrentRow != null && CurrentRow.Index > 0;
+            }
+
+            private void ExecSelectUp(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectUp(false, e);
+            }
+
+            private void ExecSelectToUp(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectUp(true, e);
+            }
+
+            private void SelectUp(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Select(Rows[CurrentRow.Index - 1], isExtended, e);
+            }
+
+            private void CanSelectDown(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = Mode == GridCellMode.Select && CurrentBindingIndex >= 0 && CurrentRow != null && CurrentRow.Index < Rows.Count - 1;
+            }
+
+            private void ExecSelectDown(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectDown(false, e);
+            }
+
+            private void ExecSelectToDown(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectDown(true, e);
+            }
+
+            private void SelectDown(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Select(Rows[CurrentRow.Index + 1], isExtended, e);
+            }
+
+            private void Select(RowPresenter rowPresenter, bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Presenter.Select(rowPresenter, isExtended);
+                e.Handled = true;
+            }
+
+            private void ExecSelectPageUp(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectPageUp(false, e);
+            }
+
+            private void ExecSelectToPageUp(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectPageUp(true, e);
+            }
+
+            private void SelectPageUp(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Select(DataPresenter.Scrollable.ScrollToPageUp(), isExtended, e);
+            }
+
+            private void ExecSelectPageDown(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectPageDown(false, e);
+            }
+
+            private void ExecSelectToPageDown(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectPageDown(true, e);
+            }
+
+            private void SelectPageDown(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Select(DataPresenter.Scrollable.ScrollToPageDown(), isExtended, e);
+            }
+
+            private void CanSelect(object sender, CanExecuteRoutedEventArgs e)
+            {
+                e.CanExecute = Mode == GridCellMode.Select && CurrentBindingIndex >= 0 && CurrentRow != null;
+            }
+
+            private void ExecSelectRowHome(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectRowHome(false, e);
+            }
+
+            private void ExecSelectToRowHome(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectRowHome(true, e);
+            }
+
+            private void SelectRowHome(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Select(0, isExtended, e);
+            }
+
+            private void ExecSelectRowEnd(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectRowEnd(false, e);
+            }
+
+            private void ExecSelectToRowEnd(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectRowEnd(true, e);
+            }
+
+            private void SelectRowEnd(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Select(GridCellBindings.Count - 1, isExtended, e);
+            }
+
+            private void Select(int bindingIndex, bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                var gridCell = (GridCell)GridCellBindings[bindingIndex][CurrentRow];
+                Presenter.Select(gridCell, isExtended);
+                e.Handled = true;
+            }
+
+            private void ExecSelectHome(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectHome(false, e);
+            }
+
+            private void ExecSelectToHome(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectHome(true, e);
+            }
+
+            private void SelectHome(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Presenter.Select(Rows[0], 0, isExtended);
+                e.Handled = true;
+            }
+
+            private void ExecSelectEnd(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectEnd(false, e);
+            }
+
+            private void ExecSelectToEnd(object sender, ExecutedRoutedEventArgs e)
+            {
+                SelectEnd(true, e);
+            }
+
+            private void SelectEnd(bool isExtended, ExecutedRoutedEventArgs e)
+            {
+                Presenter.Select(Rows[Rows.Count - 1], GridCellBindings.Count - 1, isExtended);
                 e.Handled = true;
             }
         }

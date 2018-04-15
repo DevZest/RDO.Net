@@ -109,7 +109,13 @@ namespace DevZest.Data.Views
             public RowPresenter CurrentRow
             {
                 get { return DataPresenter.CurrentRow; }
+                private set
+                {
+                    DataPresenter.CurrentRow = value;
+                    DataPresenter.Scrollable.EnsureCurrentRowVisible();
+                }
             }
+
             private int _extendedRowSelection;
 
             public int CurrentRowIndex
@@ -188,6 +194,25 @@ namespace DevZest.Data.Views
                 if (!gridCell.IsKeyboardFocusWithin && DataPresenter.View.IsKeyboardFocusWithin)    // Another element in DataView has keyboard focus
                     return false;
                 return CurrentBindingIndex == index && gridCell.GetRowPresenter() == CurrentRow;
+            }
+
+            public void Select(RowPresenter rowPresenter, bool isExtended)
+            {
+                Select(rowPresenter, CurrentBindingIndex, isExtended);
+            }
+
+            public void Select(RowPresenter rowPresenter, int bindingIndex, bool isExtended)
+            {
+                Check.NotNull(rowPresenter, nameof(rowPresenter));
+                if (bindingIndex < 0 || bindingIndex >= GridCellBindings.Count)
+                    throw new ArgumentOutOfRangeException(nameof(bindingIndex));
+
+                if (isExtended)
+                    _extendedRowSelection += CurrentRow.Index - rowPresenter.Index; ;
+
+                CurrentRow = rowPresenter;
+                var gridCell = (GridCell)GridCellBindings[bindingIndex][CurrentRow];
+                Select(gridCell, isExtended);
             }
 
             public void Select(GridCell gridCell, bool isExtended)

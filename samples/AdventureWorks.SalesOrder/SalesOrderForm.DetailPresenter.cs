@@ -26,6 +26,7 @@ namespace AdventureWorks.SalesOrders
                 var product = _.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>().Product;
                 builder.GridRows("Auto", "20")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
+                    .WithFrozenTop(1)
                     .GridLineX(new GridPoint(0, 2), 7)
                     .GridLineY(new GridPoint(2, 1), 1).GridLineY(new GridPoint(3, 1), 1).GridLineY(new GridPoint(4, 1), 1)
                     .GridLineY(new GridPoint(5, 1), 1).GridLineY(new GridPoint(6, 1), 1).GridLineY(new GridPoint(7, 1), 1)
