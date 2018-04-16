@@ -143,7 +143,7 @@ namespace DevZest.Data {
         ///      &quot;UnitPriceDiscount&quot; : 0,
         ///      &quot;RowGuid&quot; : &quot;e3a1994c-7a68-4ce8-96a3-77fdd3bbd730&quot;,
         ///      &quot;ModifiedDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
-        ///      &quot;Extender&quot; : {
+        ///      &quot;__Ext&quot; : {
         ///         &quot;Product&quot; : {
         ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
         ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
@@ -152,7 +152,7 @@ namespace DevZest.Data {
         ///   },
         ///   {
         ///      &quot;SalesOrderID&quot; : 71774,
-        ///    [rest of string was truncated]&quot;;.
+        ///       [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_SalesOrderDetail_71774_with_ext {
             get {
@@ -163,7 +163,7 @@ namespace DevZest.Data {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
-        ///      &quot;Extender&quot; : {
+        ///      &quot;__Ext&quot; : {
         ///         &quot;Product&quot; : {
         ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
         ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
@@ -171,7 +171,7 @@ namespace DevZest.Data {
         ///      }
         ///   },
         ///   {
-        ///      &quot;Extender&quot; : {
+        ///      &quot;__Ext&quot; : {
         ///         &quot;Product&quot; : {
         ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 38&quot;,
         ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-38&quot;
@@ -179,7 +179,7 @@ namespace DevZest.Data {
         ///      }
         ///   },
         ///   {
-        ///      &quot;Extender&quot; : {
+        ///      &quot;__Ext&quot; : {
         ///         &quot;Product&quot; : {
         ///            &quot;Name&quot; : null,
         ///            &quot;ProductNumber&quot; : null
@@ -234,9 +234,9 @@ namespace DevZest.Data {
         ///      &quot;ShipMethod&quot; : &quot;CARGO TRANSPORT 5&quot;,
         ///      &quot;CreditCardApp [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string ExpectedJSON_SalesOrderEdit_71774 {
+        internal static string ExpectedJSON_SalesOrderInfo_71774 {
             get {
-                return ResourceManager.GetString("ExpectedJSON_SalesOrderEdit_71774", resourceCulture);
+                return ResourceManager.GetString("ExpectedJSON_SalesOrderInfo_71774", resourceCulture);
             }
         }
         

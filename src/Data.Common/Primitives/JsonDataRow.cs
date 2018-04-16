@@ -151,7 +151,7 @@ namespace DevZest.Data.Primitives
 
             var model = dataRow.Model;
 
-            if (memberName == nameof(Model.Extender))
+            if (memberName == ModelExtender.ROOT_NAME)
             {
                 var extender = model.Extender;
                 if (model.Extender == null)

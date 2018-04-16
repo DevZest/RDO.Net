@@ -63,7 +63,7 @@ namespace DevZest.Data
         public void ModelExtender_sales_order_with_details()
         {
             var json = GetSalesOrderInfo(71774).ToJsonString(true);
-            var expectedJson = Strings.ExpectedJSON_SalesOrderEdit_71774;
+            var expectedJson = Strings.ExpectedJSON_SalesOrderInfo_71774;
             Assert.AreEqual(expectedJson, json);
 
             var dataSet = DataSet<SalesOrderInfo>.ParseJson(json);

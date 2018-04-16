@@ -11,6 +11,7 @@ namespace DevZest.Data
     public abstract class ModelExtender
     {
         private static MounterManager<ModelExtender, Column> s_columnManager = new MounterManager<ModelExtender, Column>();
+        internal const string ROOT_NAME = "__Ext";
 
         protected static void RegisterColumn<TExtender, TColumn>(Expression<Func<TExtender, TColumn>> getter)
             where TExtender : ModelExtender
@@ -71,7 +72,7 @@ namespace DevZest.Data
         {
             Debug.Assert(model != null);
             Model = model;
-            Name = FullName = nameof(Model.Extender);
+            Name = FullName = ROOT_NAME;
             Mount();
         }
 
