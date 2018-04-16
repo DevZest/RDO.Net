@@ -23,7 +23,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             private GridSpan GridSpan
             {
-                get { return _scrollableManager.GridTracksMain.GetGridSpan(_scrollableManager.Template.ContainerRange); }
+                get { return _scrollableManager.RepeatableGridSpan; }
             }
 
             private bool _isContainerLengthsValid = true;

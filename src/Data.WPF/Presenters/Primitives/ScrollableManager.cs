@@ -1179,5 +1179,10 @@ namespace DevZest.Data.Presenters.Primitives
             var flowIndex = gridSpan.EndTrack.Ordinal > GridTracksCross.GetGridSpan(Template.RowRange).EndTrack.Ordinal ? FlowRepeatCount : 0;
             EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
         }
+
+        private GridSpan RepeatableGridSpan
+        {
+            get { return GridTracksMain.GetGridSpan(Template.ContainerRange); }
+        }
     }
 }
