@@ -204,9 +204,8 @@ namespace DevZest.Data.Views
             protected override void OnEndDrag(UIElement dragElement, bool abort)
             {
                 if (abort)
-                {
                     _gridTrack.Length = _oldValues[_oldValues.Length - 1];
-                }
+
                 var gridTrackOwner = _gridTrack.Owner;
                 for (int i = 0; i < _oldValues.Length - 1; i++)
                 {
