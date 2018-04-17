@@ -3,35 +3,8 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    internal sealed class RowBindingCollection : BindingCollection<RowBinding>, IConcatList<RowBindingCollection>
+    internal sealed class RowBindingCollection : BindingCollection<RowBinding>
     {
-        #region IConcatList<RowBindingCollection>
-
-        IEnumerator<RowBindingCollection> IEnumerable<RowBindingCollection>.GetEnumerator()
-        {
-            yield return this;
-        }
-
-        void IConcatList<RowBindingCollection>.Sort(Comparison<RowBindingCollection> comparision)
-        {
-        }
-
-        int IReadOnlyCollection<RowBindingCollection>.Count
-        {
-            get { return 1; }
-        }
-
-        RowBindingCollection IReadOnlyList<RowBindingCollection>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
-        #endregion
-
         private IReadOnlyList<RowBinding> _autoSizeItems;
 
         internal IReadOnlyList<RowBinding> AutoSizeItems
