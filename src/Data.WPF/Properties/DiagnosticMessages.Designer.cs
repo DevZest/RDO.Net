@@ -356,6 +356,22 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The GridTrack must be repeatable.
+        /// </summary>
+        public static string RowPresenter_Resize_InvalidGridTrack
+        {
+            get { return GetString("RowPresenter_Resize_InvalidGridTrack"); }
+        }
+
+        /// <summary>
+        /// Star length is invalid for repeatable GridTrack.
+        /// </summary>
+        public static string RowPresenter_Resize_InvalidStarLength
+        {
+            get { return GetString("RowPresenter_Resize_InvalidStarLength"); }
+        }
+
+        /// <summary>
         /// The column is invalid. It must belong to the DataSet, or be a valid extended column.
         /// </summary>
         public static string RowPresenter_VerifyColumn

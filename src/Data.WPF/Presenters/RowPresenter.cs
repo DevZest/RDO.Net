@@ -4,6 +4,7 @@ using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
@@ -630,6 +631,22 @@ namespace DevZest.Data.Presenters
         public override string ToString()
         {
             return Index.ToString();
+        }
+
+        private ScrollableManager ScrollableManager
+        {
+            get { return RowMapper as ScrollableManager; }
+        }
+
+        public void Resize(GridTrack gridTrack, GridLength length)
+        {
+            Check.NotNull(gridTrack, nameof(gridTrack));
+            if (gridTrack.VariantByContainerIndex == -1)
+                throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidGridTrack, nameof(gridTrack));
+            if (length.IsStar)
+                throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidStarLength, nameof(length));
+
+            ScrollableManager.Resize(this, gridTrack, length);
         }
     }
 }

@@ -1180,9 +1180,66 @@ namespace DevZest.Data.Presenters.Primitives
             EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
         }
 
-        private GridSpan RepeatableGridSpan
+        private GridSpan ContainerGridSpan
         {
             get { return GridTracksMain.GetGridSpan(Template.ContainerRange); }
+        }
+
+        private Dictionary<RowPresenter, GridLength>[] _resizes;
+
+        private bool IsResized(RowPresenter rowPresenter, GridTrack gridTrack, out Dictionary<RowPresenter, GridLength> resize)
+        {
+            return IsResized(rowPresenter, gridTrack.VariantByContainerIndex, out resize);
+        }
+
+        private bool IsResized(RowPresenter rowPresenter, int resizeIndex, out Dictionary<RowPresenter, GridLength> resize)
+        {
+            if (_resizes == null)
+            {
+                resize = null;
+                return false;
+            }
+
+            resize = _resizes[resizeIndex];
+            return resize != null && resize.ContainsKey(rowPresenter);
+        }
+
+        internal void Resize(RowPresenter rowPresenter, GridTrack gridTrack, GridLength length)
+        {
+            if (IsResized(rowPresenter, gridTrack, out var resize))
+            {
+                if (resize[rowPresenter] == length)
+                    return;
+                if (gridTrack.Length == length)
+                {
+                    resize.Remove(rowPresenter);
+                    InvalidateMeasure();
+                    return;
+                }
+            }
+
+            if (resize == null)
+            {
+                if (_resizes == null)
+                    _resizes = new Dictionary<RowPresenter, GridLength>[ContainerGridSpan.Count];
+                resize = _resizes[gridTrack.VariantByContainerIndex] = new Dictionary<RowPresenter, GridLength>();
+            }
+
+            resize[rowPresenter] = length;
+            InvalidateMeasure();
+        }
+
+        protected override void DisposeRow(RowPresenter rowPresenter)
+        {
+            base.DisposeRow(rowPresenter);
+            if (_resizes == null)
+                return;
+
+            for (int i = 0; i < ContainerGridSpan.Count; i++)
+            {
+                if (IsResized(rowPresenter, i, out var resize))
+                    resize.Remove(rowPresenter);
+            }
         }
     }
 }

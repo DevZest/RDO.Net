@@ -246,6 +246,12 @@
   <data name="RowPresenter_InvalidChildRow" xml:space="preserve">
     <value>The child row is invalid.</value>
   </data>
+  <data name="RowPresenter_Resize_InvalidGridTrack" xml:space="preserve">
+    <value>The GridTrack must be repeatable.</value>
+  </data>
+  <data name="RowPresenter_Resize_InvalidStarLength" xml:space="preserve">
+    <value>Star length is invalid for repeatable GridTrack.</value>
+  </data>
   <data name="RowPresenter_VerifyColumn" xml:space="preserve">
     <value>The column is invalid. It must belong to the DataSet, or be a valid extended column.</value>
   </data>
