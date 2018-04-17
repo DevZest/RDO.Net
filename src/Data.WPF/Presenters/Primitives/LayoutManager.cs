@@ -119,11 +119,12 @@ namespace DevZest.Data.Presenters.Primitives
             return gridTrack.MeasuredLength;
         }
 
-        protected virtual void SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
+        protected virtual double SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
         {
             Debug.Assert(value - gridTrack.MeasuredLength > 0);
             var delta = gridTrack.SetMeasuredLength(value);
             gridTrack.Owner.TotalAutoLength += delta;
+            return delta;
         }
 
         protected abstract Size GetSize(ScalarBinding scalarBinding);

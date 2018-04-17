@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Views.Primitives;
 using System.Diagnostics;
 using DevZest.Data.Views;
+using System;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -141,19 +142,22 @@ namespace DevZest.Data.Presenters.Primitives
                 containerView.StartOffset = 0;
             }
 
-            public void SetMeasuredLength(ContainerView containerView, GridTrack gridTrack, double value)
+            public double SetMeasuredLength(ContainerView containerView, GridTrack gridTrack, double value)
             {
                 Debug.Assert(gridTrack != null && gridTrack.VariantByContainer);
+                value = Math.Max(gridTrack.MinLength, value);
+                value = Math.Min(gridTrack.MaxLength, value);
                 var oldValue = GetMeasuredLength(containerView, gridTrack);
                 var delta = value - oldValue;
                 if (delta == 0)
-                    return;
+                    return 0;
 
                 var index = gridTrack.VariantByContainerIndex;
                 var cumulativeMeasuredLengths = GetCumulativeMeasuredLengths(containerView);
                 for (int i = index; i < cumulativeMeasuredLengths.Length; i++)
                     cumulativeMeasuredLengths[i] += delta;
                 InvalidateContainerLengths();
+                return delta;
             }
 
             private double GetMeasuredLength(ContainerView containerView)

@@ -1017,12 +1017,12 @@ namespace DevZest.Data.Presenters.Primitives
                 : base.GetMeasuredLength(containerView, gridTrack);
         }
 
-        protected sealed override void SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
+        protected sealed override double SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
         {
             if (IsVariantLength(containerView, gridTrack))
-                _variantLengthHandler.SetMeasuredLength(containerView, gridTrack, value);
+                return _variantLengthHandler.SetMeasuredLength(containerView, gridTrack, value);
             else
-                base.SetMeasuredAutoLength(containerView, gridTrack, value);
+                return base.SetMeasuredAutoLength(containerView, gridTrack, value);
         }
 
         private void EnsureVisibleMain(LogicalMainTrack start, LogicalMainTrack end)
