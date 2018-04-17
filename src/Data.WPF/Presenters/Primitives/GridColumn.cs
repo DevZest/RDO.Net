@@ -10,8 +10,9 @@ namespace DevZest.Data.Presenters.Primitives
     {
         #region IConcatList<GridColumn>
 
-        void IConcatList<GridColumn>.Sort(Comparison<GridColumn> comparision)
+        IConcatList<GridColumn> IConcatList<GridColumn>.Sort(Comparison<GridColumn> comparision)
         {
+            return this;
         }
 
         int IReadOnlyCollection<GridColumn>.Count
@@ -37,6 +38,16 @@ namespace DevZest.Data.Presenters.Primitives
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;
+        }
+
+        bool IConcatList<GridColumn>.IsSealed
+        {
+            get { return true; }
+        }
+
+        IConcatList<GridColumn> IConcatList<GridColumn>.Seal()
+        {
+            return this;
         }
 
         #endregion

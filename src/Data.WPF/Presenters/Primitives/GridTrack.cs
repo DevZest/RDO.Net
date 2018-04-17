@@ -11,8 +11,9 @@ namespace DevZest.Data.Presenters.Primitives
     {
         #region IConcatList<GridTrack>
 
-        void IConcatList<GridTrack>.Sort(Comparison<GridTrack> comparision)
+        IConcatList<GridTrack> IConcatList<GridTrack>.Sort(Comparison<GridTrack> comparision)
         {
+            return this;
         }
 
         int IReadOnlyCollection<GridTrack>.Count
@@ -38,6 +39,16 @@ namespace DevZest.Data.Presenters.Primitives
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;
+        }
+
+        bool IConcatList<GridTrack>.IsSealed
+        {
+            get { return true; }
+        }
+
+        IConcatList<GridTrack> IConcatList<GridTrack>.Seal()
+        {
+            return this;
         }
 
         #endregion

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -10,8 +9,9 @@ namespace DevZest.Data.Presenters.Primitives
     {
         #region IConcatList<GridRow>
 
-        void IConcatList<GridRow>.Sort(Comparison<GridRow> comparision)
+        IConcatList<GridRow> IConcatList<GridRow>.Sort(Comparison<GridRow> comparision)
         {
+            return this;
         }
 
         int IReadOnlyCollection<GridRow>.Count
@@ -39,6 +39,15 @@ namespace DevZest.Data.Presenters.Primitives
             yield return this;
         }
 
+        bool IConcatList<GridRow>.IsSealed
+        {
+            get { return true; }
+        }
+
+        IConcatList<GridRow> IConcatList<GridRow>.Seal()
+        {
+            return this;
+        }
         #endregion
 
         internal GridRow(IGridTrackCollection owner, int ordinal, GridLengthParser.Result result)

@@ -9,7 +9,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal IReadOnlyList<RowBinding> AutoSizeItems
         {
-            get { return _autoSizeItems ?? (_autoSizeItems = FilterAutoSizeBindings(x => x.IsAutoSize)); }
+            get { return _autoSizeItems ?? (_autoSizeItems = FilterAutoSizeBindings(x => x.IsAutoSize).Seal()); }
         }
 
         internal override void InvalidateAutoHeightBindings()

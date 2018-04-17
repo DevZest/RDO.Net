@@ -30,8 +30,9 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        void IConcatList<RowBinding>.Sort(Comparison<RowBinding> comparision)
+        IConcatList<RowBinding> IConcatList<RowBinding>.Sort(Comparison<RowBinding> comparision)
         {
+            return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
@@ -44,6 +45,16 @@ namespace DevZest.Data.Presenters
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;
+        }
+
+        bool IConcatList<RowBinding>.IsSealed
+        {
+            get { return true; }
+        }
+
+        IConcatList<RowBinding> IConcatList<RowBinding>.Seal()
+        {
+            return this;
         }
 
         #endregion

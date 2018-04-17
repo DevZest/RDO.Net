@@ -10,13 +10,13 @@ namespace DevZest.Data.Presenters.Primitives
         private IReadOnlyList<T> _preAutoSizeBindings;
         internal IReadOnlyList<T> PreAutoSizeBindings
         {
-            get { return _preAutoSizeBindings ?? (_preAutoSizeBindings = FilterAutoSizeBindings(x => x.IsAutoSize && x.AutoSizeOrder <= 0)); }
+            get { return _preAutoSizeBindings ?? (_preAutoSizeBindings = FilterAutoSizeBindings(x => x.IsAutoSize && x.AutoSizeOrder <= 0).Seal()); }
         }
 
         private IReadOnlyList<T> _postAutoSizeBindings;
         internal IReadOnlyList<T> PostAutoSizeBindings
         {
-            get { return _postAutoSizeBindings ?? (_postAutoSizeBindings = FilterAutoSizeBindings(x => x.IsAutoSize && x.AutoSizeOrder > 0)); }
+            get { return _postAutoSizeBindings ?? (_postAutoSizeBindings = FilterAutoSizeBindings(x => x.IsAutoSize && x.AutoSizeOrder > 0).Seal()); }
         }
 
         internal override void InvalidateAutoHeightBindings()

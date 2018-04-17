@@ -111,7 +111,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return ConcatList<GridColumn>.Empty;
 
                 if (_autoWidthGridColumns == null)
-                    _autoWidthGridColumns = GridRange.FilterColumns(x => x.IsAutoLength);
+                    _autoWidthGridColumns = GridRange.FilterColumns(x => x.IsAutoLength).Seal();
                 return _autoWidthGridColumns;
             }
         }
@@ -135,7 +135,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return ConcatList<GridRow>.Empty;
 
                 if (_autoHeightGridRows == null)
-                    _autoHeightGridRows = GridRange.FilterRows(x => x.IsAutoLength);
+                    _autoHeightGridRows = GridRange.FilterRows(x => x.IsAutoLength).Seal();
                 return _autoHeightGridRows;
             }
         }

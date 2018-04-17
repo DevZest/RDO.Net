@@ -32,8 +32,9 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        void IConcatList<BlockBinding>.Sort(Comparison<BlockBinding> comparision)
+        IConcatList<BlockBinding> IConcatList<BlockBinding>.Sort(Comparison<BlockBinding> comparision)
         {
+            return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
@@ -48,6 +49,15 @@ namespace DevZest.Data.Presenters
             yield return this;
         }
 
+        bool IConcatList<BlockBinding>.IsSealed
+        {
+            get { return true; }
+        }
+
+        IConcatList<BlockBinding> IConcatList<BlockBinding>.Seal()
+        {
+            return this;
+        }
         #endregion
 
         public BlockBinding Parent { get; private set; }
