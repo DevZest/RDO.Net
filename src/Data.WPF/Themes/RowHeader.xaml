@@ -78,7 +78,8 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <mwt:DataGridHeaderBorder IsHovered="{TemplateBinding IsMouseOver}"
+                        <Grid>
+                            <mwt:DataGridHeaderBorder IsHovered="{TemplateBinding IsMouseOver}"
                                                   IsPressed="{TemplateBinding IsPressed}"
                                                   IsSelected="{TemplateBinding IsSelected}"
                                                   Orientation="Horizontal"
@@ -88,8 +89,11 @@
                                                   Padding="{TemplateBinding Control.Padding}"
                                                   BorderBrush="{TemplateBinding BorderBrush}"
                                                   Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="IndicatorContent" />
-                        </mwt:DataGridHeaderBorder>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="IndicatorContent" />
+                            </mwt:DataGridHeaderBorder>
+                            <Border local:RowHeader.IsResizeGripper="True" Visibility="{TemplateBinding ResizeGripperVisibility}"
+                                VerticalAlignment="Bottom" Height="4" Background="Transparent" Cursor="SizeNS" />
+                        </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

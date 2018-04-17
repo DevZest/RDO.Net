@@ -36,6 +36,12 @@ namespace DevZest.Data.Views
         public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register(nameof(SeparatorVisibility), typeof(Visibility),
             typeof(RowHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
+        public static readonly DependencyProperty ResizeGripperVisibilityProperty = DependencyProperty.Register(nameof(ResizeGripperVisibility), typeof(Visibility),
+            typeof(RowHeader), new FrameworkPropertyMetadata(Visibility.Visible));
+
+        public static readonly DependencyProperty IsResizeGripperProperty = DependencyProperty.RegisterAttached("IsResizeGripper", typeof(bool),
+            typeof(RowHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
+
         static RowHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowHeader), new FrameworkPropertyMetadata(typeof(RowHeader)));
@@ -68,6 +74,22 @@ namespace DevZest.Data.Views
         {
             get { return (Visibility)GetValue(SeparatorVisibilityProperty); }
             set { SetValue(SeparatorVisibilityProperty, value); }
+        }
+
+        public Visibility ResizeGripperVisibility
+        {
+            get { return (Visibility)GetValue(ResizeGripperVisibilityProperty); }
+            set { SetValue(ResizeGripperVisibilityProperty, value); }
+        }
+
+        public static bool GetIsResizeGripper(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IsResizeGripperProperty);
+        }
+
+        public static void SetIsResizeGripper(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsResizeGripperProperty, BooleanBoxes.Box(value));
         }
 
         void IRowElement.Setup(RowPresenter p)
