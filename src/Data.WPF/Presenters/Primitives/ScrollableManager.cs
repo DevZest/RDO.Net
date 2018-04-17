@@ -1283,5 +1283,173 @@ namespace DevZest.Data.Presenters.Primitives
             }
             OnResized(invalidateMeasure: false);
         }
+
+        protected override IReadOnlyList<RowBinding> GetAutoSizeBindings(RowView rowView)
+        {
+            var rowPresenter = rowView.RowPresenter;
+            if (AnyAutoLengthChange(rowPresenter))
+            {
+                var result = ConcatList<RowBinding>.Empty;
+                foreach (var rowBinding in rowView.RowBindings)
+                {
+                    if (AnyAutoWidthGridColumn(rowBinding, rowPresenter) || AnyAutoHeightGridRow(rowBinding, rowPresenter))
+                        result = result.Concat(rowBinding);
+                }
+                return result.Seal();
+            }
+            else
+                return base.GetAutoSizeBindings(rowView);
+        }
+
+        private bool AnyAutoLengthChange(RowPresenter rowPresenter)
+        {
+            if (_resizes == null)
+                return false;
+
+            for (int i = 0; i < _resizes.Length; i++)
+            {
+                var resize = _resizes[i];
+                if (resize == null || !resize.ContainsKey(rowPresenter))
+                    continue;
+                var length = resize[rowPresenter];
+                if (length.IsAuto)
+                    return true;
+                else if (ContainerGridSpan[i].IsAutoLength)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool AnyAutoWidthGridColumn(RowBinding rowBinding, RowPresenter rowPresenter)
+        {
+            if (rowBinding.IsAutoWidthWaived)
+                return false;
+
+            if (GridTracksMain.Orientation == Orientation.Vertical)
+                return rowBinding.AutoWidthGridColumns.Count > 0;
+
+            var columnSpan = rowBinding.GridRange.ColumnSpan;
+            for (int i = 0; i < columnSpan.Count; i++)
+            {
+                if (GetLength(columnSpan[i], rowPresenter).IsAuto)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private IReadOnlyList<GridColumn> GetAutoWidthGridColumns(RowBinding rowBinding, RowPresenter rowPresenter)
+        {
+            if (rowBinding.IsAutoWidthWaived)
+                return ConcatList<GridColumn>.Empty;
+
+            if (GridTracksMain.Orientation == Orientation.Vertical || !AnyAutoLengthChange(rowBinding.GridRange.ColumnSpan, rowPresenter))
+                return rowBinding.AutoWidthGridColumns;
+            else
+                return rowBinding.GridRange.FilterColumns(x => GetLength(x, rowPresenter).IsAuto).Seal();
+        }
+
+        private bool AnyAutoHeightGridRow(RowBinding rowBinding, RowPresenter rowPresenter)
+        {
+            if (rowBinding.IsAutoHeigthWaived)
+                return false;
+
+            if (GridTracksMain.Orientation == Orientation.Horizontal)
+                return rowBinding.AutoHeightGridRows.Count > 0;
+
+            var rowSpan = rowBinding.GridRange.RowSpan;
+            for (int i = 0; i < rowSpan.Count; i++)
+            {
+                if (GetLength(rowSpan[i], rowPresenter).IsAuto)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private IReadOnlyList<GridRow> GetAutoHeightGridRows(RowBinding rowBinding, RowPresenter rowPresenter)
+        {
+            if (rowBinding.IsAutoHeigthWaived)
+                return ConcatList<GridRow>.Empty;
+
+            if (GridTracksMain.Orientation == Orientation.Horizontal || !AnyAutoLengthChange(rowBinding.GridRange.RowSpan, rowPresenter))
+                return rowBinding.AutoHeightGridRows;
+            else
+                return rowBinding.GridRange.FilterRows(x => GetLength(x, rowPresenter).IsAuto).Seal();
+        }
+
+        private double GetMeasuredWidth(RowBinding rowBinding, RowPresenter rowPresenter)
+        {
+            if (GridTracksMain.Orientation == Orientation.Vertical || !AnyAutoLengthChange(rowBinding.GridRange.ColumnSpan, rowPresenter))
+                return rowBinding.GridRange.GetMeasuredWidth(x => !x.IsAutoLength);
+
+            var columnSpan = rowBinding.GridRange.ColumnSpan;
+            double result = 0;
+            for (int i = 0; i < columnSpan.Count; i++)
+            {
+                var gridColumn = columnSpan[i];
+                var length = GetLength(gridColumn, rowPresenter);
+                if (length.IsAbsolute)
+                    result += length.Value;
+            }
+            return result;
+        }
+
+        private double GetMeasuredHeight(RowBinding rowBinding, RowPresenter rowPresenter)
+        {
+            if (GridTracksMain.Orientation == Orientation.Horizontal || !AnyAutoLengthChange(rowBinding.GridRange.RowSpan, rowPresenter))
+                return rowBinding.GridRange.GetMeasuredHeight(x => !x.IsAutoLength);
+
+            var rowSpan = rowBinding.GridRange.RowSpan;
+            double result = 0;
+            for (int i = 0; i < rowSpan.Count; i++)
+            {
+                var gridRow = rowSpan[i];
+                var length = GetLength(gridRow, rowPresenter);
+                if (length.IsAbsolute)
+                    result += length.Value;
+            }
+            return result;
+        }
+
+        private bool AnyAutoLengthChange<T>(GridSpan<T> gridTracks, RowPresenter rowPresenter)
+            where T : GridTrack, IConcatList<T>
+        {
+            if (_resizes == null)
+                return false;
+
+            for (int i = 0; i < gridTracks.Count; i++)
+            {
+                var gridTrack = gridTracks[i];
+                var resize = _resizes[gridTrack.ContainerIndex];
+                if (resize == null || !resize.ContainsKey(rowPresenter))
+                    continue;
+                var length = resize[rowPresenter];
+                if (length.IsAuto)
+                    return true;
+                else if (gridTrack.IsAutoLength)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private GridLength GetLength(GridTrack gridTrack, RowPresenter rowPresenter)
+        {
+            return IsResized(rowPresenter, gridTrack, out var resize) ? resize[rowPresenter] : gridTrack.Length;
+        }
+
+        protected override Size GetAvailableAutoSize(RowBinding rowBinding, RowPresenter rowPresenter, out IReadOnlyList<GridColumn> autoWidthGridColumns, out double measuredWidth,
+            out IReadOnlyList<GridRow> autoHeightGridRows, out double measuredHeight)
+        {
+            autoWidthGridColumns = GetAutoWidthGridColumns(rowBinding, rowPresenter);
+            autoHeightGridRows = GetAutoHeightGridRows(rowBinding, rowPresenter);
+            measuredWidth = GetMeasuredWidth(rowBinding, rowPresenter);
+            measuredHeight = GetMeasuredHeight(rowBinding, rowPresenter);
+            var width = autoWidthGridColumns.Count > 0 ? double.PositiveInfinity : measuredWidth;
+            var height = autoHeightGridRows.Count > 0 ? double.PositiveInfinity : measuredHeight;
+            return new Size(width, height);
+        }
     }
 }

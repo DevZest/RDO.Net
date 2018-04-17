@@ -53,24 +53,31 @@ namespace DevZest.Data.Presenters.Primitives
         private void UpdateAutoSize(ContainerView containerView, Binding binding, Size measuredSize)
         {
             Debug.Assert(binding.IsAutoSize);
-
             var gridRange = binding.GridRange;
-            if (binding.AutoWidthGridColumns.Count > 0)
+            var measuredWidth = gridRange.GetMeasuredWidth(x => !x.IsAutoLength);
+            var measuredHeight = gridRange.GetMeasuredHeight(x => !x.IsAutoLength);
+            UpdateAutoSize(containerView, binding.AutoWidthGridColumns, measuredWidth, binding.AutoHeightGridRows, measuredHeight, measuredSize);
+        }
+
+        private void UpdateAutoSize(ContainerView containerView, IReadOnlyList<GridColumn> autoWidthGridColumns, double measuredWidth,
+            IReadOnlyList<GridRow> autoHeightGridRows, double measuredHeight, Size measuredSize)
+        {
+            if (autoWidthGridColumns.Count > 0)
             {
-                double totalAutoWidth = measuredSize.Width - gridRange.GetMeasuredWidth(x => !x.IsAutoLength);
+                double totalAutoWidth = measuredSize.Width - measuredWidth;
                 if (totalAutoWidth > 0)
                 {
-                    DistributeAutoLength(containerView, binding.AutoWidthGridColumns, totalAutoWidth);
+                    DistributeAutoLength(containerView, autoWidthGridColumns, totalAutoWidth);
                     Template.DistributeStarWidths();
                 }
             }
 
-            if (binding.AutoHeightGridRows.Count > 0)
+            if (autoHeightGridRows.Count > 0)
             {
-                double totalAutoHeight = measuredSize.Height - gridRange.GetMeasuredHeight(x => !x.IsAutoLength);
+                double totalAutoHeight = measuredSize.Height - measuredHeight;
                 if (totalAutoHeight > 0)
                 {
-                    DistributeAutoLength(containerView, binding.AutoHeightGridRows, totalAutoHeight);
+                    DistributeAutoLength(containerView, autoHeightGridRows, totalAutoHeight);
                     Template.DistributeStarHeights();
                 }
             }
@@ -259,17 +266,34 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void PrepareMeasure(RowView rowView)
         {
-            var rowBindings = rowView.RowBindings;
-            if (rowBindings.AutoSizeItems.Count == 0)
+            var autoSizeBindings = GetAutoSizeBindings(rowView);
+            if (autoSizeBindings.Count == 0)
                 return;
 
             var containerView = this[rowView];
-            foreach (var rowBinding in rowBindings.AutoSizeItems)
+            foreach (var rowBinding in autoSizeBindings)
             {
                 var element = rowView.Elements[rowBinding.Ordinal];
-                element.Measure(rowBinding.AvailableAutoSize);
-                UpdateAutoSize(containerView, rowBinding, element.DesiredSize);
+                var availableAutoSize = GetAvailableAutoSize(rowBinding, rowView.RowPresenter, out var autoWidthColumns, out var measuredWidth, out var autoHeightRows, out var measuredHeight);
+                element.Measure(availableAutoSize);
+                UpdateAutoSize(containerView, autoWidthColumns, measuredWidth, autoHeightRows, measuredHeight, element.DesiredSize);
             }
+        }
+
+        protected virtual IReadOnlyList<RowBinding> GetAutoSizeBindings(RowView rowView)
+        {
+            return rowView.RowBindings.AutoSizeItems;
+        }
+
+        protected virtual Size GetAvailableAutoSize(RowBinding rowBinding, RowPresenter rowPresenter, out IReadOnlyList<GridColumn> autoWidthColumns, out double measuredWidth,
+            out IReadOnlyList<GridRow> autoHeightGridRows, out double measuredHeight)
+        {
+            autoWidthColumns = rowBinding.AutoWidthGridColumns;
+            autoHeightGridRows = rowBinding.AutoHeightGridRows;
+            var gridRange = rowBinding.GridRange;
+            measuredWidth = gridRange.GetMeasuredWidth(x => !x.IsAutoLength);
+            measuredHeight = gridRange.GetMeasuredHeight(x => !x.IsAutoLength);
+            return rowBinding.AvailableAutoSize;
         }
 
         private void FinalizeMeasure(RowView rowView)

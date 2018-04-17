@@ -98,7 +98,7 @@ namespace DevZest.Data.Presenters.Primitives
             _autoWidthGridColumns = null;
         }
 
-        private bool IsAutoWidthWaived
+        internal bool IsAutoWidthWaived
         {
             get { return (CoercedAutoSizeWaiver & AutoSizeWaiver.Width) == AutoSizeWaiver.Width; }
         }
@@ -122,7 +122,7 @@ namespace DevZest.Data.Presenters.Primitives
             _autoHeightGridRows = null;
         }
 
-        private bool IsAutoHeigthWaived
+        internal bool IsAutoHeigthWaived
         {
             get { return (CoercedAutoSizeWaiver & AutoSizeWaiver.Height) == AutoSizeWaiver.Height; }
         }
@@ -150,8 +150,8 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 Debug.Assert(IsAutoSize);
-                var width = AutoWidthGridColumns.Count > 0 && !IsAutoWidthWaived ? double.PositiveInfinity : GridRange.MeasuredWidth;
-                var height = AutoHeightGridRows.Count > 0 && !IsAutoHeigthWaived ? double.PositiveInfinity : GridRange.MeasuredHeight;
+                var width = AutoWidthGridColumns.Count > 0 ? double.PositiveInfinity : GridRange.MeasuredWidth;
+                var height = AutoHeightGridRows.Count > 0 ? double.PositiveInfinity : GridRange.MeasuredHeight;
                 return new Size(width, height);
             }
         }

@@ -7,52 +7,8 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class GridTrack : IConcatList<GridTrack>
+    public abstract class GridTrack
     {
-        #region IConcatList<GridTrack>
-
-        IConcatList<GridTrack> IConcatList<GridTrack>.Sort(Comparison<GridTrack> comparision)
-        {
-            return this;
-        }
-
-        int IReadOnlyCollection<GridTrack>.Count
-        {
-            get { return 1; }
-        }
-
-        GridTrack IReadOnlyList<GridTrack>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
-
-        IEnumerator<GridTrack> IEnumerable<GridTrack>.GetEnumerator()
-        {
-            yield return this;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            yield return this;
-        }
-
-        bool IConcatList<GridTrack>.IsSealed
-        {
-            get { return true; }
-        }
-
-        IConcatList<GridTrack> IConcatList<GridTrack>.Seal()
-        {
-            return this;
-        }
-
-        #endregion
-
         internal GridTrack(IGridTrackCollection owner, int ordinal, GridLengthParser.Result result)
         {
             _owner = owner;
