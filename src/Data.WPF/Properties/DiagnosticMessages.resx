@@ -252,6 +252,9 @@
   <data name="RowPresenter_Resize_InvalidStarLength" xml:space="preserve">
     <value>Star length is invalid for repeatable GridTrack.</value>
   </data>
+  <data name="RowPresenter_Resize_NotAllowed" xml:space="preserve">
+    <value>Resize is only allowed with scrollable and non-flowable layout.</value>
+  </data>
   <data name="RowPresenter_VerifyColumn" xml:space="preserve">
     <value>The column is invalid. It must belong to the DataSet, or be a valid extended column.</value>
   </data>

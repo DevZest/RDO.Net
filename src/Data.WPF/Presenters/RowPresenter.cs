@@ -645,8 +645,14 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidGridTrack, nameof(gridTrack));
             if (length.IsStar)
                 throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidStarLength, nameof(length));
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
 
-            ScrollableManager.Resize(this, gridTrack, length);
+            var scrollableManager = ScrollableManager;
+            if (scrollableManager == null || Template.FlowRepeatCount != 1)
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_Resize_NotAllowed);
+
+            scrollableManager.Resize(this, gridTrack, length);
         }
     }
 }
