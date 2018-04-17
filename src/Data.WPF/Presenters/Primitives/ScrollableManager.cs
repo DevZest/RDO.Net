@@ -1189,7 +1189,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private bool IsResized(RowPresenter rowPresenter, GridTrack gridTrack, out Dictionary<RowPresenter, GridLength> resize)
         {
-            return IsResized(rowPresenter, gridTrack.VariantByContainerIndex, out resize);
+            return IsResized(rowPresenter, gridTrack.ContainerIndex, out resize);
         }
 
         private bool IsResized(RowPresenter rowPresenter, int resizeIndex, out Dictionary<RowPresenter, GridLength> resize)

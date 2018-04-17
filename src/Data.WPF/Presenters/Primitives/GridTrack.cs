@@ -240,5 +240,10 @@ namespace DevZest.Data.Presenters.Primitives
         {
             get { return VariantByContainerIndex >= 0; }
         }
+
+        internal int ContainerIndex
+        {
+            get { return IsContainer ? Ordinal - Owner.ContainerStart.Ordinal : -1; }
+        }
     }
 }

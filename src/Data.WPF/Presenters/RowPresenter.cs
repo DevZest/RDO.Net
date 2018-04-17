@@ -641,7 +641,7 @@ namespace DevZest.Data.Presenters
         public void Resize(GridTrack gridTrack, GridLength length)
         {
             Check.NotNull(gridTrack, nameof(gridTrack));
-            if (gridTrack.VariantByContainerIndex == -1)
+            if (!gridTrack.IsContainer)
                 throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidGridTrack, nameof(gridTrack));
             if (length.IsStar)
                 throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidStarLength, nameof(length));
