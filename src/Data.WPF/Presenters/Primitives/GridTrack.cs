@@ -1,12 +1,47 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class GridTrack
+    public abstract class GridTrack : IConcatList<GridTrack>
     {
+        #region IConcatList<GridTrack>
+
+        void IConcatList<GridTrack>.Sort(Comparison<GridTrack> comparision)
+        {
+        }
+
+        int IReadOnlyCollection<GridTrack>.Count
+        {
+            get { return 1; }
+        }
+
+        GridTrack IReadOnlyList<GridTrack>.this[int index]
+        {
+            get
+            {
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return this;
+            }
+        }
+
+        IEnumerator<GridTrack> IEnumerable<GridTrack>.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        #endregion
+
         internal GridTrack(IGridTrackCollection owner, int ordinal, GridLengthParser.Result result)
         {
             _owner = owner;
