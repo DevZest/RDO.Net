@@ -233,8 +233,6 @@ namespace DevZest.Data.Presenters.Primitives
 
             foreach (var blockBinding in BlockBindings)
             {
-                if (blockBinding.IsAutoSize)
-                    continue;
                 var element = blockView[blockBinding];
                 element.Measure(GetSize(blockView, blockBinding));
             }
@@ -282,8 +280,6 @@ namespace DevZest.Data.Presenters.Primitives
 
             foreach (var rowBinding in rowBindings)
             {
-                if (rowBinding.IsAutoSize)
-                    continue;
                 var element = rowView.Elements[rowBinding.Ordinal];
                 element.Measure(GetSize(rowView, rowBinding));
             }
