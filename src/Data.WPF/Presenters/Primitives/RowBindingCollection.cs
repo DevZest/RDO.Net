@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DevZest.Data.Presenters.Primitives
+﻿namespace DevZest.Data.Presenters.Primitives
 {
     internal sealed class RowBindingCollection : BindingCollection<RowBinding>
     {
-        private IReadOnlyList<RowBinding> _autoSizeItems;
+        private IConcatList<RowBinding> _autoSizeItems;
 
-        internal IReadOnlyList<RowBinding> AutoSizeItems
+        internal IConcatList<RowBinding> AutoSizeItems
         {
             get { return _autoSizeItems ?? (_autoSizeItems = FilterAutoSizeBindings(x => x.IsAutoSize).Seal()); }
         }
