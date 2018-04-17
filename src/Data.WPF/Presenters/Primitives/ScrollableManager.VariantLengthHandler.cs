@@ -123,7 +123,7 @@ namespace DevZest.Data.Presenters.Primitives
                 InvalidateContainerLengths();
             }
 
-            public void ResetMeasuredLengths(ContainerView containerView)
+            private void ResetMeasuredLengths(ContainerView containerView)
             {
                 if (containerView.CumulativeMeasuredLengths == null)
                     return;
@@ -240,19 +240,6 @@ namespace DevZest.Data.Presenters.Primitives
                 Debug.Assert(count >= 0 && count <= ContainerViewList.Count);
                 return count == 0 ? 0 : GetEndOffset(ContainerViewList[count - 1]);
             }
-        }
-
-        internal sealed override void VirtualizeAll()
-        {
-            _variantLengthHandler?.ResetMeasuredLengths();
-            base.VirtualizeAll();
-        }
-
-        protected sealed override void CoerceCurrentRowView(RowView oldValue)
-        {
-            base.CoerceCurrentRowView(oldValue);
-            _variantLengthHandler?.ResetMeasuredLengths();
-            InvalidateMeasure();
         }
 
         internal sealed override void VirtualizeFirst()

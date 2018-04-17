@@ -426,6 +426,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected sealed override void PrepareMeasureContainers()
         {
+            _variantLengthHandler?.ResetMeasuredLengths();
             _scrollOffsetMain = null;
             if (!UpdateScrollToMain())
                 CoerceScrollToMain();
