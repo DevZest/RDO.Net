@@ -96,22 +96,22 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 Debug.Assert(GridSpan.Count > 0);
                 var result = new double[GridSpan.Count];
-                ClearMeasuredLengths(containerView);
+                ResetMeasuredLengths(containerView);
                 return result;
             }
 
-            public void ClearMeasuredLengths()
+            public void ResetMeasuredLengths()
             {
                 if (_scrollableManager.CurrentContainerView != null && _scrollableManager.CurrentContainerViewPlacement != CurrentContainerViewPlacement.WithinList)
-                    ClearMeasuredLengths(_scrollableManager.CurrentContainerView);
+                    ResetMeasuredLengths(_scrollableManager.CurrentContainerView);
                 foreach (var containerView in ContainerViewList)
-                    ClearMeasuredLengths(containerView);
+                    ResetMeasuredLengths(containerView);
             }
 
             internal void RemoveFirst()
             {
                 var first = _scrollableManager.ContainerViewList.First;
-                ClearMeasuredLengths(first);
+                ResetMeasuredLengths(first);
                 _scrollableManager.ContainerViewList[1].StartOffset = 0;
                 InvalidateContainerLengths();
             }
@@ -119,11 +119,11 @@ namespace DevZest.Data.Presenters.Primitives
             internal void RemoveLast()
             {
                 var last = _scrollableManager.ContainerViewList.Last;
-                ClearMeasuredLengths(last);
+                ResetMeasuredLengths(last);
                 InvalidateContainerLengths();
             }
 
-            private void ClearMeasuredLengths(ContainerView containerView)
+            public void ResetMeasuredLengths(ContainerView containerView)
             {
                 if (containerView.CumulativeMeasuredLengths == null)
                     return;
@@ -133,13 +133,18 @@ namespace DevZest.Data.Presenters.Primitives
                 Debug.Assert(gridSpan.Count == containerView.CumulativeMeasuredLengths.Length);
                 for (int i = 0; i < containerView.CumulativeMeasuredLengths.Length; i++)
                 {
-                    var gridTrack = gridSpan[i];
-                    if (!gridTrack.IsAutoLength)
-                        totalLength += gridTrack.Length.Value;
+                    totalLength += GetInitialMeasuredLength(containerView, gridSpan[i]);
                     containerView.CumulativeMeasuredLengths[i] = totalLength;
                 }
 
                 containerView.StartOffset = 0;
+            }
+
+            private double GetInitialMeasuredLength(ContainerView containerView, GridTrack gridTrack)
+            {
+                var rowView = containerView as RowView;
+                var length = rowView == null ? gridTrack.Length : _scrollableManager.GetLength(gridTrack, rowView.RowPresenter);
+                return length.IsAuto ? 0 : length.Value;
             }
 
             public double SetMeasuredLength(ContainerView containerView, GridTrack gridTrack, double value)
@@ -239,14 +244,14 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override void VirtualizeAll()
         {
-            _variantLengthHandler?.ClearMeasuredLengths();
+            _variantLengthHandler?.ResetMeasuredLengths();
             base.VirtualizeAll();
         }
 
         protected sealed override void CoerceCurrentRowView(RowView oldValue)
         {
             base.CoerceCurrentRowView(oldValue);
-            _variantLengthHandler?.ClearMeasuredLengths();
+            _variantLengthHandler?.ResetMeasuredLengths();
             InvalidateMeasure();
         }
 

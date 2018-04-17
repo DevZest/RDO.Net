@@ -176,8 +176,10 @@ namespace DevZest.Data.Presenters.Primitives
         {
             foreach (var scalarBinding in ScalarBindings)
             {
+                // Resizing auto size binding should invalidate measure, the binding should only be measured with infinity length, which was done in previous PrepareMeasure.
                 if (scalarBinding.IsAutoSize)
                     continue;
+
                 for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
                 {
                     var element = scalarBinding[i];
@@ -240,6 +242,10 @@ namespace DevZest.Data.Presenters.Primitives
 
             foreach (var blockBinding in BlockBindings)
             {
+                // Resizing auto size binding should invalidate measure, the binding should only be measured with infinity length, which was done in previous PrepareMeasure.
+                if (blockBinding.IsAutoSize)
+                    continue;
+
                 var element = blockView[blockBinding];
                 element.Measure(GetSize(blockView, blockBinding));
             }
@@ -304,9 +310,18 @@ namespace DevZest.Data.Presenters.Primitives
 
             foreach (var rowBinding in rowBindings)
             {
+                // Resizing auto size binding should invalidate measure, the binding should only be measured with infinity length, which was done in previous PrepareMeasure.
+                if (IsAutoSize(rowBinding, rowView))
+                    continue;
+
                 var element = rowView.Elements[rowBinding.Ordinal];
                 element.Measure(GetSize(rowView, rowBinding));
             }
+        }
+
+        protected virtual bool IsAutoSize(RowBinding rowBinding, RowView rowView)
+        {
+            return rowBinding.IsAutoSize;
         }
 
         internal Rect GetRect(ScalarBinding scalarBinding, int flowIndex)

@@ -1292,7 +1292,7 @@ namespace DevZest.Data.Presenters.Primitives
                 var result = ConcatList<RowBinding>.Empty;
                 foreach (var rowBinding in rowView.RowBindings)
                 {
-                    if (AnyAutoWidthGridColumn(rowBinding, rowPresenter) || AnyAutoHeightGridRow(rowBinding, rowPresenter))
+                    if (IsAutoSize(rowBinding, rowPresenter))
                         result = result.Concat(rowBinding);
                 }
                 return result.Seal();
@@ -1450,6 +1450,16 @@ namespace DevZest.Data.Presenters.Primitives
             var width = autoWidthGridColumns.Count > 0 ? double.PositiveInfinity : measuredWidth;
             var height = autoHeightGridRows.Count > 0 ? double.PositiveInfinity : measuredHeight;
             return new Size(width, height);
+        }
+
+        protected override bool IsAutoSize(RowBinding rowBinding, RowView rowView)
+        {
+            return IsAutoSize(rowBinding, rowView.RowPresenter);
+        }
+
+        private bool IsAutoSize(RowBinding rowBinding, RowPresenter rowPresenter)
+        {
+            return AnyAutoWidthGridColumn(rowBinding, rowPresenter) || AnyAutoHeightGridRow(rowBinding, rowPresenter);
         }
     }
 }
