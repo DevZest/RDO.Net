@@ -235,30 +235,26 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override void VirtualizeAll()
         {
-            if (_variantLengthHandler != null)
-                _variantLengthHandler.ClearMeasuredLengths();
+            _variantLengthHandler?.ClearMeasuredLengths();
             base.VirtualizeAll();
         }
 
         protected sealed override void CoerceCurrentRowView(RowView oldValue)
         {
             base.CoerceCurrentRowView(oldValue);
-            if (_variantLengthHandler != null)
-                _variantLengthHandler.ClearMeasuredLengths();
+            _variantLengthHandler?.ClearMeasuredLengths();
             InvalidateMeasure();
         }
 
         internal sealed override void VirtualizeFirst()
         {
-            if (_variantLengthHandler != null)
-                _variantLengthHandler.RemoveFirst();
+            _variantLengthHandler?.RemoveFirst();
             base.VirtualizeFirst();
         }
 
         internal sealed override void VirtualizeLast()
         {
-            if (_variantLengthHandler != null)
-                _variantLengthHandler.RemoveLast();
+            _variantLengthHandler?.RemoveLast();
             base.VirtualizeLast();
         }
     }
