@@ -89,7 +89,7 @@ namespace DevZest.Data.Presenters.Primitives
                     SetMeasuredAutoLength(containerView, track, totalMeasuredLength);
             }
             else
-                DistributeOrderedAutoLength(containerView, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray(), totalMeasuredLength);
+                DistributeOrderedAutoLength(containerView, autoLengthTracks.OrderBy(x => x.MaxLength - GetMeasuredLength(containerView, x)).ToArray(), totalMeasuredLength);
         }
 
         private void DistributeOrderedAutoLength<T>(ContainerView containerView, IReadOnlyList<T> orderedAutoLengthTracks, double totalMeasuredLength)
@@ -99,18 +99,16 @@ namespace DevZest.Data.Presenters.Primitives
             Debug.Assert(totalMeasuredLength > 0);
 
             var count = orderedAutoLengthTracks.Count;
-            double avgLength = totalMeasuredLength / count;
             for (int i = 0; i < count; i++)
             {
+                double avgLength = totalMeasuredLength / (count - i);
                 var track = orderedAutoLengthTracks[i];
                 var trackMeasuredLength = GetMeasuredLength(containerView, track);
-                if (trackMeasuredLength >= avgLength)
+                if (trackMeasuredLength < avgLength)
                 {
-                    totalMeasuredLength -= trackMeasuredLength;
-                    avgLength = totalMeasuredLength / (count - i + 1);
+                    var delta = SetMeasuredAutoLength(containerView, track, avgLength);
+                    totalMeasuredLength -= delta;
                 }
-                else
-                    SetMeasuredAutoLength(containerView, track, avgLength);
             }
         }
 
