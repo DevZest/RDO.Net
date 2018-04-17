@@ -306,31 +306,16 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.ScrollableManager; }
         }
 
-        private bool? _variantByContainer;
         public bool VariantByContainer
         {
             get
             {
-                if (!_variantByContainer.HasValue)
-                    _variantByContainer = CalcVariantByContainer();
-                return _variantByContainer.GetValueOrDefault();
+                var scrollableManager = ScrollableManager;
+                if (scrollableManager == null || scrollableManager.GridTracksMain != this)
+                    return false;
+
+                return scrollableManager.IsContainerLengthVariant;
             }
-        }
-
-        private bool CalcVariantByContainer()
-        {
-            var scrollableManager = ScrollableManager;
-            if (scrollableManager == null || scrollableManager.GridTracksMain != this)
-                return false;
-
-            var gridSpan = GetGridSpan(Template.ContainerRange);
-            for (int i = 0; i < gridSpan.Count; i++)
-            {
-                if (gridSpan[i].IsAutoLength)
-                    return true;
-            }
-
-            return false;
         }
     }
 }

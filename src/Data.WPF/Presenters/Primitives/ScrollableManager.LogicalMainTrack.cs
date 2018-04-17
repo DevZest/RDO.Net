@@ -164,7 +164,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             private VariantLengthHandler VariantLengthHandler
             {
-                get { return ScrollableManager.GetVariantLengthHandler(); }
+                get { return ScrollableManager._variantLengthHandler; }
             }
 
             private IGridTrackCollection GridTrackOwner

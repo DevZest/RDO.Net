@@ -45,6 +45,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _scrollToMain = MinScrollToMain;
                 _scrollToMainPlacement = GridPlacement.Head;
             }
+            RefreshIsContainerLengthVariant();
         }
 
         internal abstract IGridTrackCollection GridTracksMain { get; }
@@ -962,12 +963,46 @@ namespace DevZest.Data.Presenters.Primitives
 
         private VariantLengthHandler _variantLengthHandler;
 
-        private VariantLengthHandler GetVariantLengthHandler()
+        public bool IsContainerLengthVariant
         {
-            Debug.Assert(GridTracksMain.VariantByContainer);
-            if (_variantLengthHandler == null)
-                _variantLengthHandler = new VariantLengthHandler(this);
-            return _variantLengthHandler;
+            get { return _variantLengthHandler != null; }
+            private set
+            {
+                var oldValue = IsContainerLengthVariant;
+                if (oldValue == value)
+                    return;
+
+                if (value)
+                    _variantLengthHandler = new VariantLengthHandler(this);
+                else
+                    _variantLengthHandler = null;
+            }
+        }
+
+        private void RefreshIsContainerLengthVariant()
+        {
+            IsContainerLengthVariant = CalcVariantContainerLength();
+        }
+
+        private bool CalcVariantContainerLength()
+        {
+            var gridSpan = ContainerGridSpan;
+            for (int i = 0; i < gridSpan.Count; i++)
+            {
+                if (gridSpan[i].IsAutoLength)
+                    return true;
+            }
+
+            if (_resizes == null)
+                return false;
+
+            for (int i = 0; i < _resizes.Length; i++)
+            {
+                var resize = _resizes[i];
+                if (resize != null && resize.Count > 0)
+                    return true;
+            }
+            return false;
         }
 
         private bool IsVariantLength(ContainerView containerView, GridTrack gridTrack)
@@ -978,14 +1013,14 @@ namespace DevZest.Data.Presenters.Primitives
         protected sealed override double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
         {
             return IsVariantLength(containerView, gridTrack) 
-                ? GetVariantLengthHandler().GetMeasuredLength(containerView, gridTrack)
+                ? _variantLengthHandler.GetMeasuredLength(containerView, gridTrack)
                 : base.GetMeasuredLength(containerView, gridTrack);
         }
 
         protected sealed override void SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
         {
             if (IsVariantLength(containerView, gridTrack))
-                GetVariantLengthHandler().SetMeasuredLength(containerView, gridTrack, value);
+                _variantLengthHandler.SetMeasuredLength(containerView, gridTrack, value);
             else
                 base.SetMeasuredAutoLength(containerView, gridTrack, value);
         }
@@ -1213,7 +1248,7 @@ namespace DevZest.Data.Presenters.Primitives
                 if (gridTrack.Length == length)
                 {
                     resize.Remove(rowPresenter);
-                    InvalidateMeasure();
+                    OnResized();
                     return;
                 }
             }
@@ -1226,6 +1261,12 @@ namespace DevZest.Data.Presenters.Primitives
             }
 
             resize[rowPresenter] = length;
+            OnResized();
+        }
+
+        private void OnResized(bool invalidateMeasure = true)
+        {
+            RefreshIsContainerLengthVariant();
             InvalidateMeasure();
         }
 
@@ -1240,6 +1281,7 @@ namespace DevZest.Data.Presenters.Primitives
                 if (IsResized(rowPresenter, i, out var resize))
                     resize.Remove(rowPresenter);
             }
+            OnResized(invalidateMeasure: false);
         }
     }
 }

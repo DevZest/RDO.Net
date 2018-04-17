@@ -233,12 +233,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal int VariantByContainerIndex
         {
-            get { return Owner.VariantByContainer && IsContainer ? Ordinal - Owner.ContainerStart.Ordinal : -1; }
+            get { return VariantByContainer ? Ordinal - Owner.ContainerStart.Ordinal : -1; }
         }
 
         internal bool VariantByContainer
         {
-            get { return VariantByContainerIndex >= 0; }
+            get { return Owner.VariantByContainer && IsContainer; }
         }
 
         internal int ContainerIndex
