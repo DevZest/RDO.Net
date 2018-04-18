@@ -245,8 +245,7 @@ namespace DevZest.Data.Views
             {
                 if (abort)
                     ResizeTo(_oldValue);
-
-                if (IsShiftKeyDown)
+                else if (IsShiftKeyDown)
                     _gridTrack.Resize(_rowPresenter.GetLength(_gridTrack));
             }
         }
