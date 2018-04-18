@@ -252,6 +252,22 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Must call BeginResize/EndResize in tandem.
+        /// </summary>
+        public static string GridTrack_EndResize_NotInTandem
+        {
+            get { return GetString("GridTrack_EndResize_NotInTandem"); }
+        }
+
+        /// <summary>
+        /// Star length is invalid in {orientation} orientation layout.
+        /// </summary>
+        public static string GridTrack_Resize_InvalidStarLength(object orientation)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridTrack_Resize_InvalidStarLength", "orientation"), orientation);
+        }
+
+        /// <summary>
         /// The Input.Columns property is not a single Column.
         /// </summary>
         public static string InPlaceEditor_EditingRowBindingNotColumn

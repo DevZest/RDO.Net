@@ -1229,13 +1229,18 @@ namespace DevZest.Data.Presenters.Primitives
 
         private bool IsResized(RowPresenter rowPresenter, int resizeIndex, out Dictionary<RowPresenter, GridLength> resize)
         {
-            if (_resizes == null)
+            return IsResized(_resizes, rowPresenter, resizeIndex, out resize);
+        }
+
+        private static bool IsResized(Dictionary<RowPresenter, GridLength>[] resizes, RowPresenter rowPresenter, int resizeIndex, out Dictionary<RowPresenter, GridLength> resize)
+        {
+            if (resizes == null)
             {
                 resize = null;
                 return false;
             }
 
-            resize = _resizes[resizeIndex];
+            resize = resizes[resizeIndex];
             return resize != null && resize.ContainsKey(rowPresenter);
         }
 
@@ -1268,21 +1273,34 @@ namespace DevZest.Data.Presenters.Primitives
         {
             RefreshIsContainerLengthVariant();
             _variantLengthHandler?.InvalidateContainerLengths();
-            InvalidateMeasure();
+            if (invalidateMeasure)
+                InvalidateMeasure();
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)
         {
             base.DisposeRow(rowPresenter);
-            if (_resizes == null)
-                return;
+            var affectsResize = Remove(_resizes, rowPresenter);
+            Remove(_resizings, rowPresenter);
+            if (affectsResize)
+                OnResized(invalidateMeasure: false);
+        }
 
-            for (int i = 0; i < ContainerGridSpan.Count; i++)
+        private static bool Remove(Dictionary<RowPresenter, GridLength>[] resizes, RowPresenter rowPresenter)
+        {
+            var result = false;
+            if (resizes != null)
             {
-                if (IsResized(rowPresenter, i, out var resize))
-                    resize.Remove(rowPresenter);
+                for (int i = 0; i < resizes.Length; i++)
+                {
+                    if (IsResized(resizes, rowPresenter, i, out var resize))
+                    {
+                        result = true;
+                        resize.Remove(rowPresenter);
+                    }
+                }
             }
-            OnResized(invalidateMeasure: false);
+            return result;
         }
 
         protected override IReadOnlyList<RowBinding> GetAutoSizeBindings(RowView rowView)
@@ -1461,6 +1479,31 @@ namespace DevZest.Data.Presenters.Primitives
         private bool IsAutoSize(RowBinding rowBinding, RowPresenter rowPresenter)
         {
             return AnyAutoWidthGridColumn(rowBinding, rowPresenter) || AnyAutoHeightGridRow(rowBinding, rowPresenter);
+        }
+
+        private Dictionary<RowPresenter, GridLength>[] _resizings;
+        internal void BeginResize(GridTrack gridTrack)
+        {
+            if (_resizes == null)
+                return;
+
+            _resizings = new Dictionary<RowPresenter, GridLength>[_resizes.Length];
+            var index = gridTrack.ContainerIndex;
+            _resizings[index] = _resizes[index];
+            _resizes[index] = null;
+            OnResized(invalidateMeasure: false);
+        }
+
+        internal void EndResize(GridTrack gridTrack, bool cancel)
+        {
+            if (_resizings == null)
+                return;
+
+            var index = gridTrack.ContainerIndex;
+            if (cancel)
+                _resizes[index] = _resizings[index];
+            _resizings[index] = null;
+            OnResized(invalidateMeasure: false);
         }
     }
 }

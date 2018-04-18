@@ -191,15 +191,68 @@ namespace DevZest.Data.Views
             get { return this.GetBinding()?.GridRange.RowSpan.EndTrack; }
         }
 
-        private sealed class DragHandler : DragHandlerBase
+        private abstract class DragHandler : DragHandlerBase
         {
+            private sealed class ResizeTrackHandler : DragHandler
+            {
+                protected override void OnBeginDrag()
+                {
+                    base.OnBeginDrag();
+                    _gridTrack.BeginResize();
+                }
+
+                protected override void ResizeTo(GridLength length)
+                {
+                    _gridTrack.Resize(length);
+                }
+
+                protected override void OnEndDrag(UIElement dragElement, bool abort)
+                {
+                    _gridTrack.EndResize(abort);
+                }
+            }
+
+            private sealed class ResizeRowHandler : DragHandler
+            {
+                private GridLength _oldValue;
+
+                public override bool BeginDrag(RowHeader rowHeader, UIElement resizeGripper, MouseEventArgs e)
+                {
+                    var succeed = base.BeginDrag(rowHeader, resizeGripper, e);
+                    if (succeed)
+                        _oldValue = _gridTrack.Length;
+                    return succeed;
+                }
+
+                protected override void ResizeTo(GridLength length)
+                {
+                    _rowPresenter.Resize(_gridTrack, length);
+                }
+
+                protected override void OnEndDrag(UIElement dragElement, bool abort)
+                {
+                    if (abort)
+                        ResizeTo(_oldValue);
+                }
+            }
+
+            public static DragHandler Create()
+            {
+                if (IsShiftDown)
+                    return new ResizeTrackHandler();
+                else
+                    return new ResizeRowHandler();
+            }
+
             private GridTrack _gridTrack;
             private RowPresenter _rowPresenter;
-            private bool _isShiftDown;
-            private GridLength _oldValue;
             private double _resized;
 
-            public bool BeginDrag(RowHeader rowHeader, UIElement resizeGripper, MouseEventArgs e)
+            protected DragHandler()
+            {
+            }
+
+            public virtual bool BeginDrag(RowHeader rowHeader, UIElement resizeGripper, MouseEventArgs e)
             {
                 Debug.Assert(rowHeader != null);
                 Debug.Assert(resizeGripper != null);
@@ -207,11 +260,6 @@ namespace DevZest.Data.Views
                 if (_gridTrack == null)
                     return false;
                 _rowPresenter = rowHeader.RowPresenter;
-                _isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-                if (_isShiftDown)
-                    _oldValue = _gridTrack.Length;
-                else
-                    _oldValue = _rowPresenter.GetLength(_gridTrack);
                 DragDetect(resizeGripper, e);
                 return true;
             }
@@ -241,19 +289,7 @@ namespace DevZest.Data.Views
                 ResizeTo(length);
             }
 
-            private void ResizeTo(GridLength length)
-            {
-                if (_isShiftDown)
-                    _gridTrack.Length = length;
-                else
-                    _rowPresenter.Resize(_gridTrack, length);
-            }
-
-            protected override void OnEndDrag(UIElement dragElement, bool abort)
-            {
-                if (abort)
-                    ResizeTo(_oldValue);
-            }
+            protected abstract void ResizeTo(GridLength length);
         }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -267,9 +303,25 @@ namespace DevZest.Data.Views
                 return;
 
             if (e.ClickCount == 1)
-                e.Handled = new DragHandler().BeginDrag(this, resizeGripper, e);
-            //else if (e.ClickCount == 2)
-            //    e.Handled = AutoResize();
+                e.Handled = DragHandler.Create().BeginDrag(this, resizeGripper, e);
+            else if (e.ClickCount == 2)
+                e.Handled = AutoResize();
+        }
+
+        private static bool IsShiftDown
+        {
+            get { return Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift); }
+        }
+
+        private bool AutoResize()
+        {
+            var isShiftDown = IsShiftDown;
+
+            if (isShiftDown)
+                GridTrackToResize.Resize(GridLength.Auto);
+            else
+                RowPresenter.Resize(GridTrackToResize, GridLength.Auto);
+            return true;
         }
     }
 }

@@ -207,6 +207,12 @@
   <data name="GridRow_InvalidStarHeight" xml:space="preserve">
     <value>Star height GridRows[{ordinal}] is invalid for vertical or flowable layout.</value>
   </data>
+  <data name="GridTrack_EndResize_NotInTandem" xml:space="preserve">
+    <value>Must call BeginResize/EndResize in tandem.</value>
+  </data>
+  <data name="GridTrack_Resize_InvalidStarLength" xml:space="preserve">
+    <value>Star length is invalid in {orientation} orientation layout.</value>
+  </data>
   <data name="InPlaceEditor_EditingRowBindingNotColumn" xml:space="preserve">
     <value>The Input.Columns property is not a single Column.</value>
   </data>

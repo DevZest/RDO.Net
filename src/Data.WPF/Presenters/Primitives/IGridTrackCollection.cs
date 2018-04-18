@@ -28,5 +28,6 @@ namespace DevZest.Data.Presenters.Primitives
         GridSpan GetGridSpan(GridRange gridRange);
         bool VariantByContainer { get; }
         void OnResized(GridTrack gridTrack, GridLength oldValue);
+        ScrollableManager ScrollableManager { get; }
     }
 }

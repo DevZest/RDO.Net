@@ -170,7 +170,7 @@ namespace DevZest.Data.Views
                     var current = gridTrackOwner[i];
                     _oldValues[i] = current.Length;
                     if (current.Length.IsStar)
-                        current.Length = new GridLength(current.MeasuredLength, GridUnitType.Pixel);
+                        current.Resize(new GridLength(current.MeasuredLength, GridUnitType.Pixel));
                 }
                 _oldValues[_oldValues.Length - 1] = _gridTrack.Length;
                 DragDetect(resizeGripper, e);
@@ -198,20 +198,20 @@ namespace DevZest.Data.Views
                 newValue = Math.Max(newValue, MinLength);
                 newValue = Math.Min(newValue, MaxLength);
                 _resized += newValue - _resized;
-                _gridTrack.Length = new GridLength(newValue, GridUnitType.Pixel);
+                _gridTrack.Resize(new GridLength(newValue, GridUnitType.Pixel));
             }
 
             protected override void OnEndDrag(UIElement dragElement, bool abort)
             {
                 if (abort)
-                    _gridTrack.Length = _oldValues[_oldValues.Length - 1];
+                    _gridTrack.Resize(_oldValues[_oldValues.Length - 1]);
 
                 var gridTrackOwner = _gridTrack.Owner;
                 for (int i = 0; i < _oldValues.Length - 1; i++)
                 {
                     var oldValue = _oldValues[i];
                     if (oldValue.IsStar)
-                        gridTrackOwner[i].Length = oldValue;
+                        gridTrackOwner[i].Resize(oldValue);
                 }
             }
         }
@@ -405,7 +405,7 @@ namespace DevZest.Data.Views
             var gridTrackToResize = GridTrackToResize;
             if (gridTrackToResize == null)
                 return false;
-            gridTrackToResize.Length = GridLength.Auto;
+            gridTrackToResize.Resize(GridLength.Auto);
             return true;
         }
     }

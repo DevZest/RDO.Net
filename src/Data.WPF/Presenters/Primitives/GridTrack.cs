@@ -44,17 +44,74 @@ namespace DevZest.Data.Presenters.Primitives
         public GridLength Length
         {
             get { return _length; }
-            set
-            {
-                var oldValue = _length;
-                if (oldValue == value)
-                    return;
+        }
 
-                _length = value;
-                SetMeasuredLength(0);
-                Owner.OnResized(this, oldValue);
+        private ScrollableManager ScrollableManager
+        {
+            get { return Owner?.ScrollableManager; }
+        }
+
+        private ScrollableManager Resizable
+        {
+            get
+            {
+                var result = ScrollableManager;
+                if (result == null)
+                    return result;
+
+                return result.GridTracksMain == Owner && IsContainer ? result : null;
+            }
+        }
+
+        private int _beginResizeCount;
+        public void BeginResize()
+        {
+            _beginResizeCount++;
+
+            if (_beginResizeCount == 1)
+            {
+                Resizable?.BeginResize(this);
                 LayoutManager?.InvalidateMeasure();
             }
+        }
+
+        public void EndResize(bool cancel)
+        {
+            if (_beginResizeCount == 0)
+                throw new InvalidOperationException(DiagnosticMessages.GridTrack_EndResize_NotInTandem);
+
+            _beginResizeCount--;
+            if (_beginResizeCount == 0)
+            {
+                Resizable?.EndResize(this, cancel);
+                LayoutManager?.InvalidateMeasure();
+            }
+        }
+
+        public void Resize(GridLength value)
+        {
+            if (Orientation == Template?.Orientation && value.IsStar)
+                throw new ArgumentException(DiagnosticMessages.GridTrack_Resize_InvalidStarLength(Orientation), nameof(value));
+
+            var resizeBegan = _beginResizeCount > 0;
+            if (!resizeBegan)
+                BeginResize();
+            var oldValue = _length;
+            if (oldValue == value)
+            {
+                if (!resizeBegan)
+                    EndResize(false);
+                return;
+            }
+
+            _length = value;
+            if (!VariantByContainer)
+                SetMeasuredLength(0);
+            Owner.OnResized(this, oldValue);
+            if (resizeBegan)
+                LayoutManager?.InvalidateMeasure();
+            else
+                EndResize(false);
         }
 
         private LayoutManager LayoutManager
