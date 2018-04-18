@@ -1281,7 +1281,6 @@ namespace DevZest.Data.Presenters.Primitives
         {
             base.DisposeRow(rowPresenter);
             var affectsResize = Remove(_resizes, rowPresenter);
-            Remove(_resizings, rowPresenter);
             if (affectsResize)
                 OnResized(invalidateMeasure: false);
         }
@@ -1481,28 +1480,10 @@ namespace DevZest.Data.Presenters.Primitives
             return AnyAutoWidthGridColumn(rowBinding, rowPresenter) || AnyAutoHeightGridRow(rowBinding, rowPresenter);
         }
 
-        private Dictionary<RowPresenter, GridLength>[] _resizings;
-        internal void BeginResize(GridTrack gridTrack)
+        internal void OnResized(GridTrack gridTrack)
         {
-            if (_resizes == null)
-                return;
-
-            _resizings = new Dictionary<RowPresenter, GridLength>[_resizes.Length];
-            var index = gridTrack.ContainerIndex;
-            _resizings[index] = _resizes[index];
-            _resizes[index] = null;
-            OnResized(invalidateMeasure: false);
-        }
-
-        internal void EndResize(GridTrack gridTrack, bool cancel)
-        {
-            if (_resizings == null)
-                return;
-
-            var index = gridTrack.ContainerIndex;
-            if (cancel)
-                _resizes[index] = _resizings[index];
-            _resizings[index] = null;
+            if (_resizes != null)
+                _resizes[gridTrack.ContainerIndex] = null;
             OnResized(invalidateMeasure: false);
         }
     }
