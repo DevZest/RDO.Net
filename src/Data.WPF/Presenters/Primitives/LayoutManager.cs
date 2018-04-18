@@ -119,7 +119,7 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        protected virtual double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
+        public virtual double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
         {
             return gridTrack.MeasuredLength;
         }

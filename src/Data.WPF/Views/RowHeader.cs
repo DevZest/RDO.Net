@@ -4,8 +4,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using DevZest.Data.Presenters;
 using System.Windows.Input;
-using System.Linq;
-using System.Collections.Generic;
+using DevZest.Windows;
+using System.Diagnostics;
+using System;
 
 namespace DevZest.Data.Views
 {
@@ -183,6 +184,92 @@ namespace DevZest.Data.Views
                 if (!IsKeyboardFocusWithin)
                     Focus();
             });
+        }
+
+        private GridTrack GridTrackToResize
+        {
+            get { return this.GetBinding()?.GridRange.RowSpan.EndTrack; }
+        }
+
+        private sealed class DragHandler : DragHandlerBase
+        {
+            private GridTrack _gridTrack;
+            private RowPresenter _rowPresenter;
+            private bool _isShiftDown;
+            private GridLength _oldValue;
+            private double _resized;
+
+            public bool BeginDrag(RowHeader rowHeader, UIElement resizeGripper, MouseEventArgs e)
+            {
+                Debug.Assert(rowHeader != null);
+                Debug.Assert(resizeGripper != null);
+                _gridTrack = rowHeader.GridTrackToResize;
+                if (_gridTrack == null)
+                    return false;
+                _rowPresenter = rowHeader.RowPresenter;
+                _isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+                if (_isShiftDown)
+                    _oldValue = _gridTrack.Length;
+                else
+                    _oldValue = _rowPresenter.GetLength(_gridTrack);
+                DragDetect(resizeGripper, e);
+                return true;
+            }
+
+            protected override void OnBeginDrag()
+            {
+                _resized = _rowPresenter.GetMeasuredLength(_gridTrack).Value;
+            }
+
+            private double MinLength
+            {
+                get { return _gridTrack.MinLength; }
+            }
+
+            private double MaxLength
+            {
+                get { return _gridTrack.MaxLength; }
+            }
+
+            protected override void OnDragDelta()
+            {
+                var newValue = _resized = _resized + MouseDeltaY;
+                newValue = Math.Max(newValue, MinLength);
+                newValue = Math.Min(newValue, MaxLength);
+                _resized += newValue - _resized;
+                var length = new GridLength(newValue, GridUnitType.Pixel);
+                ResizeTo(length);
+            }
+
+            private void ResizeTo(GridLength length)
+            {
+                if (_isShiftDown)
+                    _gridTrack.Length = length;
+                else
+                    _rowPresenter.Resize(_gridTrack, length);
+            }
+
+            protected override void OnEndDrag(UIElement dragElement, bool abort)
+            {
+                if (abort)
+                    ResizeTo(_oldValue);
+            }
+        }
+
+        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseLeftButtonDown(e);
+            if (e.Handled)
+                return;
+
+            var resizeGripper = e.OriginalSource as UIElement;
+            if (resizeGripper == null || !GetIsResizeGripper(resizeGripper))
+                return;
+
+            if (e.ClickCount == 1)
+                e.Handled = new DragHandler().BeginDrag(this, resizeGripper, e);
+            //else if (e.ClickCount == 2)
+            //    e.Handled = AutoResize();
         }
     }
 }

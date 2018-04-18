@@ -188,7 +188,10 @@ namespace DevZest.Windows
         protected virtual void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
+            {
+                e.Handled = true;
                 EndDrag(true);
+            }
         }
 
         protected virtual void OnKeyUp(KeyEventArgs e)

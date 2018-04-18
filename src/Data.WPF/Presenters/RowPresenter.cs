@@ -654,5 +654,39 @@ namespace DevZest.Data.Presenters
 
             scrollableManager.Resize(this, gridTrack, length);
         }
+
+        public GridLength GetLength(GridTrack gridTrack)
+        {
+            Check.NotNull(gridTrack, nameof(gridTrack));
+            if (!gridTrack.IsContainer)
+                throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidGridTrack, nameof(gridTrack));
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            var scrollableManager = ScrollableManager;
+            if (scrollableManager == null || Template.FlowRepeatCount != 1)
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_Resize_NotAllowed);
+
+            return scrollableManager.GetLength(gridTrack, this);
+        }
+
+        public double? GetMeasuredLength(GridTrack gridTrack)
+        {
+            Check.NotNull(gridTrack, nameof(gridTrack));
+            if (!gridTrack.IsContainer)
+                throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidGridTrack, nameof(gridTrack));
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            var scrollableManager = ScrollableManager;
+            if (scrollableManager == null || Template.FlowRepeatCount != 1)
+                throw new InvalidOperationException(DiagnosticMessages.RowPresenter_Resize_NotAllowed);
+
+            var rowView = View;
+            if (rowView == null)
+                return null;
+            var containerView = scrollableManager[rowView.ContainerOrdinal];
+            return scrollableManager.GetMeasuredLength(containerView, gridTrack);
+        }
     }
 }

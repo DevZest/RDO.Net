@@ -1010,7 +1010,7 @@ namespace DevZest.Data.Presenters.Primitives
             return containerView != null && gridTrack.VariantByContainer;
         }
 
-        protected sealed override double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
+        public sealed override double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
         {
             return IsVariantLength(containerView, gridTrack) 
                 ? _variantLengthHandler.GetMeasuredLength(containerView, gridTrack)
@@ -1257,7 +1257,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 if (_resizes == null)
                     _resizes = new Dictionary<RowPresenter, GridLength>[ContainerGridSpan.Count];
-                resize = _resizes[gridTrack.VariantByContainerIndex] = new Dictionary<RowPresenter, GridLength>();
+                resize = _resizes[gridTrack.ContainerIndex] = new Dictionary<RowPresenter, GridLength>();
             }
 
             resize[rowPresenter] = length;
@@ -1267,6 +1267,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void OnResized(bool invalidateMeasure = true)
         {
             RefreshIsContainerLengthVariant();
+            _variantLengthHandler?.InvalidateContainerLengths();
             InvalidateMeasure();
         }
 
@@ -1381,7 +1382,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private double GetMeasuredWidth(RowBinding rowBinding, RowPresenter rowPresenter)
         {
-            if (GridTracksMain.Orientation == Orientation.Vertical || !AnyAutoLengthChange(rowBinding.GridRange.ColumnSpan, rowPresenter))
+            if (GridTracksMain.Orientation == Orientation.Vertical)
                 return rowBinding.GridRange.GetMeasuredWidth(x => !x.IsAutoLength);
 
             var columnSpan = rowBinding.GridRange.ColumnSpan;
@@ -1398,7 +1399,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private double GetMeasuredHeight(RowBinding rowBinding, RowPresenter rowPresenter)
         {
-            if (GridTracksMain.Orientation == Orientation.Horizontal || !AnyAutoLengthChange(rowBinding.GridRange.RowSpan, rowPresenter))
+            if (GridTracksMain.Orientation == Orientation.Horizontal)
                 return rowBinding.GridRange.GetMeasuredHeight(x => !x.IsAutoLength);
 
             var rowSpan = rowBinding.GridRange.RowSpan;
@@ -1435,7 +1436,7 @@ namespace DevZest.Data.Presenters.Primitives
             return false;
         }
 
-        private GridLength GetLength(GridTrack gridTrack, RowPresenter rowPresenter)
+        public GridLength GetLength(GridTrack gridTrack, RowPresenter rowPresenter)
         {
             return IsResized(rowPresenter, gridTrack, out var resize) ? resize[rowPresenter] : gridTrack.Length;
         }
