@@ -940,5 +940,12 @@ namespace DevZest.Data.Presenters.Primitives
             row.IsSelected = false;
             base.DisposeRow(row);
         }
+
+        public override RowPresenter Match(RowPresenter rowPresenter, bool matchVirtual = true)
+        {
+            if (matchVirtual && rowPresenter != null && rowPresenter.IsVirtual && VirtualRow != null)
+                return VirtualRow;
+            return base.Match(rowPresenter, matchVirtual);
+        }
     }
 }

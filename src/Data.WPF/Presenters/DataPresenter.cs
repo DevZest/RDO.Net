@@ -638,9 +638,9 @@ namespace DevZest.Data.Presenters
             return LayoutManager[new RowMatch(dataValues, valueHashCode.Value)];
         }
 
-        public RowPresenter Match(RowPresenter rowPresenter)
+        public RowPresenter Match(RowPresenter rowPresenter, bool matchVirtual = true)
         {
-            return LayoutManager?.Match(rowPresenter);
+            return LayoutManager?.Match(rowPresenter, matchVirtual);
         }
     }
 }

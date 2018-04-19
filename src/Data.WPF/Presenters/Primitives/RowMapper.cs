@@ -352,8 +352,9 @@ namespace DevZest.Data.Presenters.Primitives
         {
             get
             {
+                Debug.Assert(dataRow != null);
                 if (_mappings == null)
-                    return _rows[dataRow.Index];
+                    return dataRow.DataSet == DataSet ? _rows[dataRow.Index] : null;
                 RowPresenter result;
                 return _mappings.TryGetValue(dataRow, out result) ? result : null;
             }
@@ -539,10 +540,18 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _rowMatches == null ? null : _rowMatches.ContainsKey(rowMatch) ? _rowMatches[rowMatch] : null; }
         }
 
-        public RowPresenter Match(RowPresenter rowPresenter)
+        public virtual RowPresenter Match(RowPresenter rowPresenter, bool matchVirtual = true)
         {
             if (rowPresenter == null)
                 return null;
+
+            var dataRow = rowPresenter.DataRow;
+            if (dataRow != null)
+            {
+                var result = this[dataRow];
+                if (result != null)
+                    return result;
+            }
 
             if (!rowPresenter.MatchValueHashCode.HasValue)
                 return null;
