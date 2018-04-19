@@ -785,10 +785,10 @@ namespace DevZest.Data.Presenters.Primitives
                 var last = ContainerViewList.Last;
                 if (last == null)
                     return 0;
-                var lastEndPosition = GetStartPositionMain(last) + GetLengthMain(last);
-                if (TailTracksCountMain - FrozenTailTracksCountMain > 0)
-                    lastEndPosition += GetTailLengthMain(TailTracksCountMain) - FrozenTailLengthMain;
+                var lastEndPosition = GetEndPositionMain(last);
                 var scrollableEnd = availableLength - FrozenTailLengthMain;
+                if (TailTracksCountMain - FrozenTailTracksCountMain > 0)
+                    scrollableEnd -= GetTailLengthMain(TailTracksCountMain) - FrozenTailLengthMain;
                 return scrollableEnd > lastEndPosition ? scrollableEnd - lastEndPosition : 0;
             }
         }
