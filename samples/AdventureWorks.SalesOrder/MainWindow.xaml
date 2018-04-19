@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AdventureWorks.SalesOrders"
         xmlns:dz="clr-namespace:DevZest.Data.Views;assembly=DevZest.Data.WPF"
         mc:Ignorable="d"
-        Height="700" Width="700" WindowStartupLocation="CenterScreen" WindowState="Normal" WindowStyle="ToolWindow"
+        Height="700" Width="702" WindowStartupLocation="CenterScreen" WindowState="Normal" WindowStyle="ToolWindow"
         Title="AdventureWorks.SalesOrders">
     <Window.Background>
         <ImageBrush ImageSource="Images/window_background.jpg" Opacity=".5" />
