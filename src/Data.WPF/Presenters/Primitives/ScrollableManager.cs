@@ -33,6 +33,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             if (inherit != null)
             {
+                InheritResizes(inherit);
                 _scrollDeltaMain = inherit._scrollDeltaMain;
                 _scrollOffsetMain = inherit._scrollOffsetMain;
                 _scrollToMainPlacement = inherit._scrollToMainPlacement;
@@ -46,6 +47,33 @@ namespace DevZest.Data.Presenters.Primitives
                 _scrollToMainPlacement = GridPlacement.Head;
             }
             RefreshIsContainerLengthVariant();
+        }
+
+        private void InheritResizes(ScrollableManager inherit)
+        {
+            var resizes = inherit._resizes;
+            if (resizes == null)
+                return;
+
+            for (int i = 0; i < resizes.Length; i++)
+            {
+                var resize = resizes[i];
+                if (resize == null)
+                    continue;
+
+                foreach (var keyValuePair in resize)
+                {
+                    var matchedRow = Match(keyValuePair.Key);
+                    if (matchedRow == null)
+                        continue;
+
+                    if (_resizes == null)
+                        _resizes = new Dictionary<RowPresenter, GridLength>[resize.Count];
+                    if (_resizes[i] == null)
+                        _resizes[i] = new Dictionary<RowPresenter, GridLength>();
+                    _resizes[i].Add(matchedRow, keyValuePair.Value);
+                }
+            }
         }
 
         internal abstract IGridTrackCollection GridTracksMain { get; }

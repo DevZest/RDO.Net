@@ -106,6 +106,7 @@ namespace DevZest.Data.Presenters.Primitives
                     ResetMeasuredLengths(_scrollableManager.CurrentContainerView);
                 foreach (var containerView in ContainerViewList)
                     ResetMeasuredLengths(containerView);
+                InvalidateContainerLengths();
             }
 
             internal void RemoveFirst()
