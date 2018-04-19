@@ -513,6 +513,9 @@ namespace DevZest.Data.Views
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
+            if (DataView == null)
+                return;
+
             if (this.GetBinding() != null)  // binding can be null when removed from UIElementCollection.
                 IsEditing = Switcher.GetIsEditing(this);
         }
