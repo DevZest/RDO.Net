@@ -560,19 +560,24 @@ namespace DevZest.Data.Presenters.Primitives
                 return MaxContainerCount - 1;
         }
 
+        private double ScrollableLength
+        {
+            get { return GridTracksMain.AvailableLength - FrozenHeadLengthMain - FrozenTailLengthMain; }
+        }
+
         private void FillForward()
         {
             if (ContainerViewList.Count == 0)
                 return;
 
             var existingFilledLength = GetExistingFillForwardLength();
-            var lengthToFillForward = Math.Max(0, GridTracksMain.AvailableLength + _scrollDeltaMain - existingFilledLength);
+            var lengthToFillForward = Math.Max(0, ScrollableLength + _scrollDeltaMain - existingFilledLength);
             var lengthFilledForward = RealizeForward(lengthToFillForward);
 
             var lengthToFillBackward = Math.Max(-_scrollDeltaMain, 0) + Math.Max(0, lengthToFillForward - lengthFilledForward);
             var lengthFilledBackward = RealizeBackward(lengthToFillBackward);
 
-            var extraFillForward = Math.Max(0, GridTracksMain.AvailableLength - existingFilledLength - lengthFilledForward - lengthFilledBackward);
+            var extraFillForward = Math.Max(0, ScrollableLength - existingFilledLength - lengthFilledForward - lengthFilledBackward);
             RealizeForward(extraFillForward);
         }
 
@@ -582,13 +587,13 @@ namespace DevZest.Data.Presenters.Primitives
                 return;
 
             var existingFilledLength = GetExistingFillBackwardLength();
-            var lengthToFillBackward = Math.Max(0, GridTracksMain.AvailableLength - _scrollDeltaMain - existingFilledLength);
+            var lengthToFillBackward = Math.Max(0, ScrollableLength - _scrollDeltaMain - existingFilledLength);
             var lengthFilledBackward = RealizeBackward(lengthToFillBackward);
 
             var lengthToFillForward = Math.Max(-_scrollDeltaMain, 0) + Math.Max(0, lengthToFillBackward - lengthFilledBackward);
             var lengthFilledForward = RealizeForward(lengthToFillForward);
 
-            var extraFillForward = Math.Max(0, GridTracksMain.AvailableLength - existingFilledLength - lengthFilledBackward - lengthFilledForward);
+            var extraFillForward = Math.Max(0, ScrollableLength - existingFilledLength - lengthFilledBackward - lengthFilledForward);
             RealizeForward(extraFillForward);
         }
 
