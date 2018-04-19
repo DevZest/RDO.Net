@@ -115,7 +115,7 @@ namespace DevZest.Data.Views
 
             private void CanExecDeleteSelected(object sender, CanExecuteRoutedEventArgs e)
             {
-                e.CanExecute = DataPresenter.Template.AllowsDelete && DataPresenter.SelectedRows.Count > 0;
+                e.CanExecute = DataPresenter.Template != null && DataPresenter.Template.AllowsDelete && DataPresenter.SelectedRows.Count > 0;
                 if (!e.CanExecute)
                     e.ContinueRouting = true;
             }
