@@ -25,7 +25,13 @@ namespace DevZest.Data.Primitives
 
             public override int GetHashCode()
             {
-                return DeclaringType.GetHashCode() ^ Name.GetHashCode();
+                unchecked
+                {
+                    var hashcode = 23;
+                    hashcode = (hashcode * 37) + DeclaringType.GetHashCode();
+                    hashcode = (hashcode * 37) + Name.GetHashCode();
+                    return hashcode;
+                }
             }
 
             public override bool Equals(object obj)
