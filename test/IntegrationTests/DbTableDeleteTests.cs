@@ -80,7 +80,7 @@ namespace DevZest.Data
                 var countToDelete = db.SalesOrderDetails.Where(_ => _.SalesOrderID == 1 | _.SalesOrderID == 2).Count();
                 Assert.IsTrue(countToDelete > 1);
 
-                var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Key _) =>
+                var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.PK_ _) =>
                 {
                     builder.From(db.SalesOrderHeaders, out var s)
                     .AutoSelect()
@@ -104,7 +104,7 @@ namespace DevZest.Data
                 var countToDelete = await db.SalesOrderDetails.Where(_ => _.SalesOrderID == 1 | _.SalesOrderID == 2).CountAsync();
                 Assert.IsTrue(countToDelete > 1);
 
-                var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Key _) =>
+                var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.PK_ _) =>
                 {
                     builder.From(db.SalesOrderHeaders, out var s)
                     .AutoSelect()

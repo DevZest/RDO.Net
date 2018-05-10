@@ -22,11 +22,11 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(customerId));
         }
 
-        public class Key : Model<PK>
+        public class PK_ : Model<PK>
         {
-            static Key()
+            static PK_()
             {
-                RegisterColumn((Key _) => _.CustomerID, _CustomerID);
+                RegisterColumn((PK_ _) => _.CustomerID, _CustomerID);
             }
 
             private PK _primaryKey;
