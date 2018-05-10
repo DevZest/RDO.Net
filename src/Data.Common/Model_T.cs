@@ -25,13 +25,13 @@ namespace DevZest.Data
 
         protected virtual string GetDbPrimaryKeyName()
         {
-            var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbConstraintAttribute>();
+            var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbPrimaryKeyAttribute>();
             return dbConstraintAttribute == null ? "PK_%" : dbConstraintAttribute.Name;
         }
 
         protected virtual string GetDbPrimaryKeyDescription()
         {
-            var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbConstraintAttribute>();
+            var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbPrimaryKeyAttribute>();
             return dbConstraintAttribute == null ? null : dbConstraintAttribute.Description;
         }
 

@@ -6,7 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class ProductModel : BaseModel<ProductModel.PK>
     {
-        [DbConstraint("PK_ProductModel_ProductModelID", Description = "Clustered index created by a primary key constraint.")]
+        [DbPrimaryKey("PK_ProductModel_ProductModelID", Description = "Clustered index created by a primary key constraint.")]
         public sealed class PK : PrimaryKey
         {
             public PK(_Int32 productModelID)

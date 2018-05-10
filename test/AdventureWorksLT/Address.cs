@@ -9,7 +9,7 @@ namespace DevZest.Samples.AdventureWorksLT
     {
         private const string IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion = nameof(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion);
 
-        [DbConstraint("PK_Address_AddressID", Description = "Primary key (clustered) constraint")]
+        [DbPrimaryKey("PK_Address_AddressID", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
             public PK(_Int32 addressID)

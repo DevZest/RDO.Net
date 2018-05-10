@@ -5,7 +5,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class CustomerAddress : BaseModel<CustomerAddress.PK>
     {
-        [DbConstraint("PK_CustomerAddress_CustomerID_AddressID", Description = "Primary key (clustered) constraint")]
+        [DbPrimaryKey("PK_CustomerAddress_CustomerID_AddressID", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
             public PK(_Int32 customerID, _Int32 addressID)

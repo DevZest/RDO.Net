@@ -3,9 +3,9 @@
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class DbConstraintAttribute : Attribute
+    public sealed class DbPrimaryKeyAttribute : Attribute
     {
-        public DbConstraintAttribute(string name)
+        public DbPrimaryKeyAttribute(string name)
         {
             _name = name;
         }
