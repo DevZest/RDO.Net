@@ -17,7 +17,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task DeleteAsync(DataSet<SalesOrderHeader.Key> dataSet, CancellationToken ct)
+        public static async Task DeleteAsync(DataSet<SalesOrderHeader.PK_> dataSet, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
