@@ -13,15 +13,16 @@ namespace DevZest.Data
         private static MounterManager<ModelExtender, Column> s_columnManager = new MounterManager<ModelExtender, Column>();
         internal const string ROOT_NAME = "__Ext";
 
-        protected static void RegisterColumn<TExtender, TColumn>(Expression<Func<TExtender, TColumn>> getter)
+        protected static void RegisterColumn<TExtender, TColumn>(Expression<Func<TExtender, TColumn>> getter, Mounter<TColumn> fromMounter)
             where TExtender : ModelExtender
             where TColumn : Column, new()
         {
             var initializer = getter.Verify(nameof(getter));
+            Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
 
             var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
-            result.OriginalDeclaringType = result.DeclaringType;
-            result.OriginalName = result.Name;
+            result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;
+            result.OriginalName = fromMounter.OriginalName;
         }
 
         private static T CreateColumn<TExtender, T>(Mounter<TExtender, T> mounter, Action<T> initializer)
@@ -33,18 +34,6 @@ namespace DevZest.Data
             result.Construct(parent.Model, mounter.DeclaringType, parent.GetName(mounter), ColumnKind.Extender, null, initializer);
             parent.Add(result);
             return result;
-        }
-
-        protected static void RegisterColumn<TExtender, TColumn>(Expression<Func<TExtender, TColumn>> getter, Mounter<TColumn> fromMounter)
-            where TExtender : ModelExtender
-            where TColumn : Column, new()
-        {
-            var initializer = getter.Verify(nameof(getter));
-            Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
-
-            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
-            result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;
-            result.OriginalName = fromMounter.OriginalName;
         }
 
         static MounterManager<ModelExtender, ModelExtender> s_childExtenderManager = new MounterManager<ModelExtender, ModelExtender>();
