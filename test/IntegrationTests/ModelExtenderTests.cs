@@ -17,7 +17,7 @@ namespace DevZest.Data
                         SalesOrderDetail d;
                         Product p;
                         builder.From(db.SalesOrderDetails, out d)
-                            .InnerJoin(db.Products, d.Product, out p)
+                            .InnerJoin(db.Products, d.FK_Product, out p)
                             .AutoSelect()
                             .Where(d.SalesOrderID == _Int32.Const(71774));
                     });

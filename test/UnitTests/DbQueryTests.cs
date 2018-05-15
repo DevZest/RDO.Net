@@ -137,7 +137,7 @@ ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrderHeader].[Sale
                 {
                     builder.From(db.SalesOrderDetails, out var d)
                         .InnerJoin(db.SalesOrderHeaders, d.FK_SalesOrderHeader, out var h)
-                        .InnerJoin(db.Products, d.Product, out var p)
+                        .InnerJoin(db.Products, d.FK_Product, out var p)
                         .Select(d.SalesOrderID, adhoc)
                         .Select(d.SalesOrderDetailID, adhoc)
                         .Select(p.Name, adhoc)

@@ -143,7 +143,7 @@ namespace DevZest.Samples.AdventureWorksLT
             {
                 return GetTable(ref _salesOrderDetails, "[SalesLT].[SalesOrderDetail]",
                     _ => DbForeignKey(null, null, _.FK_SalesOrderHeader, SalesOrderHeaders._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction),
-                    _ => DbForeignKey(null, null, _.Product, Products._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
+                    _ => DbForeignKey(null, null, _.FK_Product, Products._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction));
             }
         }
 
@@ -194,7 +194,7 @@ namespace DevZest.Samples.AdventureWorksLT
             {
                 Debug.Assert(_.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>() != null);
                 builder.From(SalesOrderDetails, out var d)
-                    .LeftJoin(Products, d.Product, out var p)
+                    .LeftJoin(Products, d.FK_Product, out var p)
                     .AutoSelect();
             }, ct);
 

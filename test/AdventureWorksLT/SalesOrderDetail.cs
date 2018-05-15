@@ -112,10 +112,10 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _fk_salesOrderHeader ?? (_fk_salesOrderHeader = new SalesOrderHeader.PK(SalesOrderID)); }
         }
 
-        private Product.PK _product;
-        public Product.PK Product
+        private Product.PK _fk_product;
+        public Product.PK FK_Product
         {
-            get { return _product ?? (_product = new Product.PK(ProductID)); }
+            get { return _fk_product ?? (_fk_product = new Product.PK(ProductID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to SalesOrderHeader.SalesOrderID.")]
