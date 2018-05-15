@@ -63,11 +63,11 @@ namespace DevZest.Samples.AdventureWorksLT
         [ModelExtender(typeof(Ext))]
         public class ForeignKeyLookup : Model
         {
-            public class Ext : ModelExtender
+            public class Ext : ColumnContainer
             {
                 static Ext()
                 {
-                    RegisterChildExtender((Ext _) => _.Product);
+                    RegisterChildContainer((Ext _) => _.Product);
                 }
 
                 public Product.Lookup Product { get; private set; }

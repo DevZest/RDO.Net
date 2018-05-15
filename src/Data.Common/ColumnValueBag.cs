@@ -105,20 +105,26 @@ namespace DevZest.Data
             }
         }
 
-        public void AutoSelect(ModelExtender extender, DataRow dataRow, bool ignoreExpression = true)
+        public void AutoSelect(ColumnContainer columnContainer, DataRow dataRow, bool ignoreExpression = true)
         {
-            Check.NotNull(extender, nameof(extender));
+            Check.NotNull(columnContainer, nameof(columnContainer));
             Check.NotNull(dataRow, nameof(dataRow));
 
+            var keyColumns = columnContainer.Columns;
             var valueColumns = dataRow.Model.Columns;
-            foreach (var keyColumn in extender.Columns)
+            for (int i = 0; i < keyColumns.Count; i++)
             {
+                var keyColumn = keyColumns[i];
                 if (keyColumn.IsExpression && ignoreExpression)
                     continue;
                 var valueColumn = valueColumns.AutoSelect(keyColumn);
                 if (valueColumn != null)
                     _columnValues[keyColumn] = valueColumn.GetValue(dataRow);
             }
+
+            var childContainers = columnContainer.ChildContainers;
+            for (int i = 0; i < childContainers.Count; i++)
+                AutoSelect(childContainers[i], dataRow, ignoreExpression);
         }
 
         public void Remove(Column column)

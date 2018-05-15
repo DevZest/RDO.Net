@@ -641,7 +641,7 @@ namespace DevZest.Data
         {
             var prototypeExtender = prototype.Extender;
             if (prototypeExtender != null && Extender == null)
-                Extender = (ModelExtender)Activator.CreateInstance(prototypeExtender.GetType());
+                Extender = (ColumnContainer)Activator.CreateInstance(prototypeExtender.GetType());
         }
 
         private IIndexConstraint _clusteredIndex;
@@ -1247,8 +1247,8 @@ namespace DevZest.Data
                 column8, column9, column10, column11, column12, expression, builder);
         }
 
-        private ModelExtender _extender;
-        internal ModelExtender Extender
+        private ColumnContainer _extender;
+        internal ColumnContainer Extender
         {
             get { return _extender; }
             private set
@@ -1261,7 +1261,7 @@ namespace DevZest.Data
         }
 
         public void SetExtender<T>()
-            where T : ModelExtender, new()
+            where T : ColumnContainer, new()
         {
             VerifyDesignMode();
             if (Extender != null)
@@ -1276,11 +1276,11 @@ namespace DevZest.Data
             if (Extender != null)
                 throw new InvalidOperationException(DiagnosticMessages.Model_ExtensionAlreadyExists);
             else
-                Extender = (ModelExtender)Activator.CreateInstance(extenderType);
+                Extender = (ColumnContainer)Activator.CreateInstance(extenderType);
         }
 
         public T GetExtender<T>()
-            where T : ModelExtender, new()
+            where T : ColumnContainer, new()
         {
             return Extender as T;
         }

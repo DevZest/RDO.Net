@@ -8,13 +8,13 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    public abstract class ModelExtender
+    public abstract class ColumnContainer
     {
-        private static MounterManager<ModelExtender, Column> s_columnManager = new MounterManager<ModelExtender, Column>();
+        private static MounterManager<ColumnContainer, Column> s_columnManager = new MounterManager<ColumnContainer, Column>();
         internal const string ROOT_NAME = "__Ext";
 
         protected static void RegisterColumn<TExtender, TColumn>(Expression<Func<TExtender, TColumn>> getter, Mounter<TColumn> fromMounter)
-            where TExtender : ModelExtender
+            where TExtender : ColumnContainer
             where TColumn : Column, new()
         {
             var initializer = getter.Verify(nameof(getter));
@@ -26,7 +26,7 @@ namespace DevZest.Data
         }
 
         private static T CreateColumn<TExtender, T>(Mounter<TExtender, T> mounter, Action<T> initializer)
-            where TExtender : ModelExtender
+            where TExtender : ColumnContainer
             where T : Column, new()
         {
             var result = Column.Create<T>(mounter.OriginalDeclaringType, mounter.OriginalName);
@@ -36,19 +36,19 @@ namespace DevZest.Data
             return result;
         }
 
-        static MounterManager<ModelExtender, ModelExtender> s_childExtenderManager = new MounterManager<ModelExtender, ModelExtender>();
+        static MounterManager<ColumnContainer, ColumnContainer> s_childContainerManager = new MounterManager<ColumnContainer, ColumnContainer>();
 
-        protected static void RegisterChildExtender<TExtender, TChild>(Expression<Func<TExtender, TChild>> getter)
-            where TExtender : ModelExtender, new()
-            where TChild : ModelExtender, new()
+        protected static void RegisterChildContainer<TContainer, TChild>(Expression<Func<TContainer, TChild>> getter)
+            where TContainer : ColumnContainer, new()
+            where TChild : ColumnContainer, new()
         {
             Check.NotNull(getter, nameof(getter));
-            s_childExtenderManager.Register(getter, CreateChildExtender, null);
+            s_childContainerManager.Register(getter, CreateChildContainer, null);
         }
 
-        private static TChild CreateChildExtender<TExtender, TChild>(Mounter<TExtender, TChild> mounter)
-            where TExtender : ModelExtender, new()
-            where TChild : ModelExtender, new()
+        private static TChild CreateChildContainer<TExtender, TChild>(Mounter<TExtender, TChild> mounter)
+            where TExtender : ColumnContainer, new()
+            where TChild : ColumnContainer, new()
         {
             TChild result = new TChild();
             var parent = mounter.Parent;
@@ -65,7 +65,7 @@ namespace DevZest.Data
             Mount();
         }
 
-        private void Initialize(ModelExtender parent, string name)
+        private void Initialize(ColumnContainer parent, string name)
         {
             Debug.Assert(parent != null);
             Debug.Assert(parent.Model != null);
@@ -78,7 +78,7 @@ namespace DevZest.Data
         private void Mount()
         {
             Mount(s_columnManager);
-            Mount(s_childExtenderManager);
+            Mount(s_childContainerManager);
             OnMounted();
         }
 
@@ -86,7 +86,7 @@ namespace DevZest.Data
         {
         }
 
-        private void Mount<T>(MounterManager<ModelExtender, T> mounterManager)
+        private void Mount<T>(MounterManager<ColumnContainer, T> mounterManager)
             where T : class
         {
             var mounters = mounterManager.GetAll(this.GetType());
@@ -182,18 +182,18 @@ namespace DevZest.Data
             _columns.Add(column);
         }
 
-        private sealed class ExtenderCollection : KeyedCollection<string, ModelExtender>, IReadOnlyDictionary<string, ModelExtender>
+        private sealed class ContainerCollection : KeyedCollection<string, ColumnContainer>, IReadOnlyDictionary<string, ColumnContainer>
         {
             public IEnumerable<string> Keys
             {
                 get
                 {
-                    foreach (var extender in this)
-                        yield return extender.Name;
+                    foreach (var container in this)
+                        yield return container.Name;
                 }
             }
 
-            public IEnumerable<ModelExtender> Values
+            public IEnumerable<ColumnContainer> Values
             {
                 get { return this; }
             }
@@ -203,7 +203,7 @@ namespace DevZest.Data
                 return Contains(key);
             }
 
-            public bool TryGetValue(string key, out ModelExtender value)
+            public bool TryGetValue(string key, out ColumnContainer value)
             {
                 if (Contains(key))
                 {
@@ -217,46 +217,46 @@ namespace DevZest.Data
                 }
             }
 
-            protected override string GetKeyForItem(ModelExtender item)
+            protected override string GetKeyForItem(ColumnContainer item)
             {
                 return item.Name;
             }
 
-            IEnumerator<KeyValuePair<string, ModelExtender>> IEnumerable<KeyValuePair<string, ModelExtender>>.GetEnumerator()
+            IEnumerator<KeyValuePair<string, ColumnContainer>> IEnumerable<KeyValuePair<string, ColumnContainer>>.GetEnumerator()
             {
-                foreach (var extender in this)
-                    yield return new KeyValuePair<string, ModelExtender>(extender.Name, extender);
+                foreach (var container in this)
+                    yield return new KeyValuePair<string, ColumnContainer>(container.Name, container);
             }
         }
 
-        private ExtenderCollection _childExtenders;
-        public IReadOnlyList<ModelExtender> ChildExtenders
+        private ContainerCollection _childContainers;
+        public IReadOnlyList<ColumnContainer> ChildContainers
         {
             get
             {
-                if (_childExtenders == null)
-                    return Array<ModelExtender>.Empty;
+                if (_childContainers == null)
+                    return Array<ColumnContainer>.Empty;
                 else
-                    return _childExtenders;
+                    return _childContainers;
             }
         }
 
-        public IReadOnlyDictionary<string, ModelExtender> ChildExtendersByName
+        public IReadOnlyDictionary<string, ColumnContainer> ChildContainersByName
         {
             get
             {
-                if (_childExtenders == null)
-                    return EmptyDictionary<string, ModelExtender>.Singleton;
+                if (_childContainers == null)
+                    return EmptyDictionary<string, ColumnContainer>.Singleton;
                 else
-                    return _childExtenders;
+                    return _childContainers;
             }
         }
 
-        private void Add(ModelExtender childExtender)
+        private void Add(ColumnContainer childContainer)
         {
-            if (_childExtenders == null)
-                _childExtenders = new ExtenderCollection();
-            _childExtenders.Add(childExtender);
+            if (_childContainers == null)
+                _childContainers = new ContainerCollection();
+            _childContainers.Add(childContainer);
         }
     }
 }

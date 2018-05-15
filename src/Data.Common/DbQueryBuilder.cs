@@ -259,7 +259,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder AutoSelect(Model from, ModelExtender to)
+        public DbQueryBuilder AutoSelect(Model from, ColumnContainer to)
         {
             if (to == null)
                 throw new ArgumentNullException(nameof(to));
@@ -281,6 +281,10 @@ namespace DevZest.Data
                 if (sourceColumn != null)
                     SelectCore(sourceColumn, targetColumn);
             }
+
+            var childContainers = to.ChildContainers;
+            for (int i = 0; i < childContainers.Count; i++)
+                AutoSelect(from, childContainers[i]);
 
             return this;
         }

@@ -38,7 +38,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductModelID { get; private set; }
         }
 
-        public class Lookup : ModelExtender
+        public class Lookup : ColumnContainer
         {
             static Lookup()
             {

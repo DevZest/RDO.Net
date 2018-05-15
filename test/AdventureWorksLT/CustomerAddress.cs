@@ -43,7 +43,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public class Lookup : ModelExtender
+        public class Lookup : ColumnContainer
         {
             static Lookup()
             {
@@ -80,12 +80,12 @@ namespace DevZest.Samples.AdventureWorksLT
         [ModelExtender(typeof(Ext))]
         public class ForeignKeyLookup : Model
         {
-            public sealed class Ext : ModelExtender
+            public sealed class Ext : ColumnContainer
             {
                 static Ext()
                 {
-                    RegisterChildExtender((Ext _) => _.Customer);
-                    RegisterChildExtender((Ext _) => _.Address);
+                    RegisterChildContainer((Ext _) => _.Customer);
+                    RegisterChildContainer((Ext _) => _.Address);
                 }
 
                 public Customer.Lookup Customer { get; private set; }

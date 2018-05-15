@@ -95,7 +95,7 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
         }
 
-        private static void Write(this JsonWriter jsonWriter, ModelExtender extender, DataRow dataRow, JsonFilter jsonFilter)
+        private static void Write(this JsonWriter jsonWriter, ColumnContainer extender, DataRow dataRow, JsonFilter jsonFilter)
         {
             jsonWriter.WriteObjectName(extender.Name);
 
@@ -112,7 +112,7 @@ namespace DevZest.Data.Primitives
                 jsonWriter.Write(dataRow, column);
                 count++;
             }
-            foreach (var childExtender in extender.ChildExtenders)
+            foreach (var childExtender in extender.ChildContainers)
             {
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(childExtender))
                     continue;
@@ -151,7 +151,7 @@ namespace DevZest.Data.Primitives
 
             var model = dataRow.Model;
 
-            if (memberName == ModelExtender.ROOT_NAME)
+            if (memberName == ColumnContainer.ROOT_NAME)
             {
                 var extender = model.Extender;
                 if (model.Extender == null)
@@ -172,7 +172,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static void Parse(this JsonParser jsonParser, ModelExtender extender, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, ColumnContainer extender, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             var token = jsonParser.PeekToken();
@@ -191,13 +191,13 @@ namespace DevZest.Data.Primitives
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Parse(this JsonParser jsonParser, ModelExtender extender, string memberName, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, ColumnContainer extender, string memberName, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.Colon);
             if (extender.ColumnsByRelativeName.ContainsKey(memberName))
                 jsonParser.Parse(extender.ColumnsByRelativeName[memberName], dataRow.Ordinal);
-            else if (extender.ChildExtendersByName.ContainsKey(memberName))
-                jsonParser.Parse(extender.ChildExtendersByName[memberName], dataRow);
+            else if (extender.ChildContainersByName.ContainsKey(memberName))
+                jsonParser.Parse(extender.ChildContainersByName[memberName], dataRow);
             else
                 throw new FormatException(DiagnosticMessages.JsonParser_InvalidExtenderMember(memberName, extender.FullName));
         }
