@@ -27,11 +27,6 @@ namespace DevZest.Data.Primitives
             return _connection;
         }
 
-        public sealed override void OpenConnection()
-        {
-            CreateConnectionInvoker().Open();
-        }
-
         public sealed override Task OpenConnectionAsync(CancellationToken cancellationToken)
         {
             return CreateConnectionInvoker().OpenAsync(cancellationToken);
@@ -101,11 +96,6 @@ namespace DevZest.Data.Primitives
         }
 
         protected internal abstract TCommand GetCreateTableCommand(Model model, string tableName, string tableDescription, bool isTempTable);
-
-        internal sealed override void CreateTable(Model model, string name, string description, bool isTempTable)
-        {
-            ExecuteNonQuery(GetCreateTableCommand(model, name, description, isTempTable));
-        }
 
         internal sealed override Task CreateTableAsync(Model model, string name, string description, bool isTempTable, CancellationToken cancellationToken)
         {
@@ -193,36 +183,9 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        internal sealed override void RecursiveFillDataSet(IDbSet dbSet, DataSet dataSet)
-        {
-            RecursiveFillDataSet(dbSet, dataSet.Model);
-        }
-
         internal sealed override Task RecursiveFillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken)
         {
             return RecursiveFillDataSetAsync(dbSet, dataSet.Model, cancellationToken);
-        }
-
-        private void RecursiveFillDataSet(IDbSet dbSet, Model dataSetModel)
-        {
-            if (dataSetModel.Extender == null)
-                dataSetModel.InitializeExtender(dbSet.Model);
-            using (var reader = CreateReaderInvoker(dbSet.SequentialQueryStatement).Execute())
-            {
-                var columns = GetReaderColumns(dataSetModel);
-                var parentRowIdColumn = reader.Model.GetSysParentRowIdColumn(createIfNotExist: false);
-                var prevParentRowId = -1;
-                DataSet dataSet = null;
-
-                while (reader.Read())
-                {
-                    var parentRowId = object.ReferenceEquals(parentRowIdColumn, null) ? 0 : parentRowIdColumn[reader].Value;
-                    if (parentRowId != prevParentRowId)
-                        dataSet = GetDataSet(dataSetModel, parentRowId);
-                    NewDataRow(dataSet, columns, reader);
-                }
-            }
-            FillChildrenDataSet(dbSet, dataSetModel);
         }
 
         private async Task RecursiveFillDataSetAsync(IDbSet dbSet, Model dataSetModel, CancellationToken cancellationToken)
@@ -278,24 +241,6 @@ namespace DevZest.Data.Primitives
             model.ResumeIdentity();
         }
 
-        private void FillChildrenDataSet(IDbSet dbSet, Model dataSetModel)
-        {
-            var dbSetChildModels = dbSet.Model.ChildModels;
-            var dataSetChildModels = dataSetModel.ChildModels;
-            for (int i = 0; i < dbSetChildModels.Count; i++)
-            {
-                var childDbSet = dbSetChildModels[i].DataSource as IDbSet;
-                if (childDbSet == null)
-                    continue;
-
-                var childDataSetModel = dataSetChildModels[i];
-                if (childDataSetModel == null)
-                    continue;
-
-                RecursiveFillDataSet(childDbSet, childDataSetModel);
-            }
-        }
-
         private async Task FillChildrenDataSetAsync(IDbSet dbSet, Model dataSetModel, CancellationToken cancellationToken)
         {
             var dbSetChildModels = dbSet.Model.ChildModels;
@@ -326,19 +271,6 @@ namespace DevZest.Data.Primitives
                 result[i] = column;
             }
             return result;
-        }
-
-        internal sealed override void FillDataSet(IDbSet dbSet, DataSet dataSet)
-        {
-            using (var reader = CreateReaderInvoker(dbSet.QueryStatement).Execute())
-            {
-                var columns = GetReaderColumns(dataSet.Model);
-
-                while (reader.Read())
-                    NewDataRow(dataSet, columns, reader);
-            }
-
-            FillChildrenDataSet(dbSet, dataSet.Model);
         }
 
         internal sealed override async Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken)
@@ -382,27 +314,6 @@ namespace DevZest.Data.Primitives
             public _Int32 IdentityValue { get; private set; }
         }
 
-        internal sealed override InsertScalarResult InsertScalar(DbSelectStatement statement, bool outputIdentity)
-        {
-            var command = GetInsertScalarCommand(statement, outputIdentity);
-            if (!outputIdentity)
-            {
-                var rowCount = PrepareNonQueryInvoker(command).Execute();
-                return new InsertScalarResult(rowCount > 0, null);
-            }
-
-            var model = ScalarIdentityOutput.Singleton;
-            int? identityValue = null;
-            using (var reader = PrepareReaderInvoker(command, model).Execute())
-            {
-                if (reader.Read())
-                    identityValue = model.IdentityValue[reader];
-            }
-
-            var sucess = identityValue.HasValue;
-            return new InsertScalarResult(sucess, identityValue);
-        }
-
         internal sealed override async Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken)
         {
             var command = GetInsertScalarCommand(statement, outputIdentity);
@@ -426,15 +337,6 @@ namespace DevZest.Data.Primitives
 
         protected abstract TCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity);
 
-        private int ExecuteTableEdit(DbSelectStatement statement, Func<DbSelectStatement, TCommand> getCommand)
-        {
-            var command = getCommand(statement);
-            var result = ExecuteNonQuery(command);
-            if (result != 0)
-                statement.Model.DataSource.UpdateRevision();
-            return result;
-        }
-
         private async Task<int> ExecuteTableEditAsync(DbSelectStatement statement, Func<DbSelectStatement, TCommand> getCommand, CancellationToken cancellationToken)
         {
             var command = getCommand(statement);
@@ -444,11 +346,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal sealed override int Insert(DbSelectStatement statement)
-        {
-            return ExecuteTableEdit(statement, GetInsertCommand);
-        }
-
         internal sealed override Task<int> InsertAsync(DbSelectStatement statement, CancellationToken cancellationToken)
         {
             return ExecuteTableEditAsync(statement, GetInsertCommand, cancellationToken);
@@ -456,22 +353,12 @@ namespace DevZest.Data.Primitives
 
         protected abstract TCommand GetInsertCommand(DbSelectStatement statement);
 
-        internal sealed override int Update(DbSelectStatement statement)
-        {
-            return ExecuteTableEdit(statement, GetUpdateCommand);
-        }
-
         internal sealed override Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken)
         {
             return ExecuteTableEditAsync(statement, GetUpdateCommand, cancellationToken);
         }
 
         protected internal abstract TCommand GetUpdateCommand(DbSelectStatement statement);
-
-        internal sealed override int Delete(DbSelectStatement statement)
-        {
-            return ExecuteTableEdit(statement, GetDeleteCommand);
-        }
 
         internal sealed override Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken)
         {

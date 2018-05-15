@@ -9,7 +9,7 @@ namespace DevZest.Data
         [TestMethod]
         public void ModelExtender_sales_order_detail()
         {
-            using (var db = OpenDb())
+            using (var db = OpenDbAsync().Result)
             {
                 var salesOrderDetails = db.CreateQuery(_ => _.SetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>(),
                     (DbQueryBuilder builder, SalesOrderDetail _) =>
@@ -22,7 +22,7 @@ namespace DevZest.Data
                             .Where(d.SalesOrderID == _Int32.Const(71774));
                     });
 
-                var json = salesOrderDetails.ToDataSet().ToJsonString(true);
+                var json = salesOrderDetails.ToDataSetAsync().Result.ToJsonString(true);
                 var expectedJson = Strings.ExpectedJSON_SalesOrderDetail_71774_with_ext.Trim();
                 Assert.AreEqual(expectedJson, json);
 
@@ -34,7 +34,7 @@ namespace DevZest.Data
         [TestMethod]
         public void ModelExtender_sales_order()
         {
-            using (var db = OpenDb())
+            using (var db = OpenDbAsync().Result)
             {
                 var salesOrders = db.CreateQuery(_ => _.SetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>(),
                     (DbQueryBuilder builder, SalesOrder _) =>
@@ -50,7 +50,7 @@ namespace DevZest.Data
                             .Where(o.SalesOrderID == _Int32.Const(71774));
                     });
 
-                var json = salesOrders.ToDataSet().ToJsonString(true);
+                var json = salesOrders.ToDataSetAsync().Result.ToJsonString(true);
                 var expectedJson = Strings.ExpectedJSON_SalesOrder_71774_with_ext;
                 Assert.AreEqual(expectedJson, json);
 

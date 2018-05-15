@@ -12,14 +12,14 @@ namespace DevZest.Data
         public void DataSet_recursive_fill_and_serialize()
         {
             var log = new StringBuilder();
-            using (var db = OpenDb(log))
+            using (var db = OpenDbAsync(log).Result)
             {
                 var productCategories = db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
                 var children = productCategories;
                 while (children != null)
-                    children = children.CreateChild(x => x.SubCategories, db.ProductCategories.OrderBy(x => x.ProductCategoryID));
+                    children = children.CreateChildAsync(x => x.SubCategories, db.ProductCategories.OrderBy(x => x.ProductCategoryID)).Result;
 
-                var result = productCategories.ToDataSet();
+                var result = productCategories.ToDataSetAsync().Result;
                 var childModel = result._.SubCategories;
                 Assert.AreEqual(4, result.Count);
                 Assert.AreEqual(3, result[0].Children(childModel).Count);
@@ -58,7 +58,7 @@ namespace DevZest.Data
         public void DataSet_DynamicModel_serialize_deserialize()
         {
             var log = new StringBuilder();
-            using (var db = OpenDb(log))
+            using (var db = OpenDbAsync(log).Result)
             {
                 var json = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
@@ -67,7 +67,7 @@ namespace DevZest.Data
                         .Select(o.SalesOrderNumber, adhoc)
                         .Where(o.SalesOrderID == 71774 | o.SalesOrderID == 71776)
                         .OrderBy(o.SalesOrderID);
-                }).ToDataSet().ToString();
+                }).ToDataSetAsync().Result.ToString();
 
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrderDynamicModel, json.Trim());
 
@@ -85,11 +85,11 @@ namespace DevZest.Data
         public void DataSet_CreateChild()
         {
             var log = new StringBuilder();
-            using (var db = OpenDb(log))
+            using (var db = OpenDbAsync(log).Result)
             {
-                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSet();
+                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSetAsync().Result;
                 Assert.IsTrue(salesOrders.Count == 1);
-                salesOrders.Fill(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
+                salesOrders.FillAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetails).Wait();
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
             }
         }

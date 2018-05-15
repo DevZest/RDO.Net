@@ -18,11 +18,6 @@ namespace DevZest.Data.Primitives
 
         public T Connection { get; private set; }
 
-        internal void Open()
-        {
-            Invoke(() => Connection.Open(), x => x.Opening(this), x => x.Opened(this));
-        }
-
         internal Task OpenAsync(CancellationToken cancellationToken)
         {
             return InvokeAsync(GetOpenAsyncTask(cancellationToken), x => x.Opening(this), x => x.Opened(this));

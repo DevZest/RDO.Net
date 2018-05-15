@@ -12,9 +12,9 @@ namespace DevZest.Data
         public void MockDb_ProductCategory()
         {
             var log = new StringBuilder();
-            using (var db = new ProductCategoryMockDb().Initialize(OpenDb(log)))
+            using (var db = new ProductCategoryMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
-                Assert.AreEqual(13, db.ProductCategories.Count());
+                Assert.AreEqual(13, db.ProductCategories.CountAsync().Result);
             }
         }
 
@@ -23,10 +23,10 @@ namespace DevZest.Data
         public void MockDb_SalesOrder()
         {
             var log = new StringBuilder();
-            using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log)))
+            using (var db = new SalesOrderMockDb(null, null).InitializeAsync(OpenDbAsync(log).Result).Result)
             {
-                Assert.AreEqual(0, db.SalesOrderHeaders.Count());
-                Assert.AreEqual(0, db.SalesOrderDetails.Count());
+                Assert.AreEqual(0, db.SalesOrderHeaders.CountAsync().Result);
+                Assert.AreEqual(0, db.SalesOrderDetails.CountAsync().Result);
             }
         }
     }

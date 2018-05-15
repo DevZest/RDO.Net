@@ -2,7 +2,6 @@
 using DevZest.Data.Utilities;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
@@ -29,17 +28,13 @@ namespace DevZest.Data.Primitives
 
         #endregion
 
-        public abstract void OpenConnection();
-
-        public abstract Task OpenConnectionAsync(CancellationToken cancellationToken);
+        public abstract Task OpenConnectionAsync(CancellationToken cancellationToken = default(CancellationToken));
 
         public abstract void CloseConnection();
 
         public abstract int TransactionCount { get; }
 
         protected internal abstract string AssignTempTableName(Model model);
-
-        internal abstract void CreateTable(Model model, string name, string description, bool isTempTable);
 
         internal abstract Task CreateTableAsync(Model model, string name, string description, bool isTempTable, CancellationToken cancellationToken);
 
@@ -57,20 +52,6 @@ namespace DevZest.Data.Primitives
                 var model = new T().ApplyForeignKey(foreignKeys);
                 result = DbTable<T>.Create(model, this, name);
             }
-            return result;
-        }
-
-        public DbTable<T> CreateTempTable<T>(Action<T> initializer)
-            where T : Model, new()
-        {
-            return CreateTempTable<T>(initializer);
-        }
-
-        public DbTable<T> CreateTempTable<T>(T fromModel = null, Action<T> initializer = null)
-            where T : Model, new()
-        {
-            var result = CreateTempTableInstance(fromModel, initializer);
-            CreateTable(result._, result.Name, null, true);
             return result;
         }
 
@@ -112,17 +93,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        private DbTable<T> Import<T>(DataSet<T> source)
-            where T : Model, new()
-        {
-            var result = CreateTempTable(source._);
-            Import(source, result);
-            return result;
-        }
-
-        protected abstract int Import<T>(DataSet<T> source, DbTable<T> target)
-            where T : Model, new();
-
         private async Task<DbTable<T>> ImportAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
             where T : Model, new()
         {
@@ -132,17 +102,6 @@ namespace DevZest.Data.Primitives
         }
 
         protected abstract Task<int> ImportAsync<T>(DataSet<T> source, DbTable<T> target, CancellationToken cancellationToken)
-            where T : Model, new();
-
-        private DbTable<KeyOutput> ImportKey<T>(DataSet<T> source)
-            where T : Model, new()
-        {
-            var result = CreateKeyOutput(source._);
-            ImportKey(source, result);
-            return result;
-        }
-
-        protected abstract int ImportKey<T>(DataSet<T> source, DbTable<KeyOutput> target)
             where T : Model, new();
 
         private async Task<DbTable<KeyOutput>> ImportKeyAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
@@ -222,11 +181,7 @@ namespace DevZest.Data.Primitives
             return PerformCreateQuery(model, builder.BuildQueryStatement(null));
         }
 
-        internal abstract void RecursiveFillDataSet(IDbSet dbSet, DataSet dataSet);
-
         internal abstract Task RecursiveFillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
-
-        internal abstract void FillDataSet(IDbSet dbSet, DataSet dataSet);
 
         internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
@@ -252,13 +207,6 @@ namespace DevZest.Data.Primitives
             return CreateTempTableInstance(model);
         }
 
-        private DbTable<KeyOutput> CreateKeyOutput(Model sourceModel)
-        {
-            var result = CreateKeyOutputInstance(sourceModel);
-            CreateTable(result.Model, result.Name, null, true);
-            return result;
-        }
-
         private async Task<DbTable<KeyOutput>> CreateKeyOutputAsync(Model sourceModel, CancellationToken cancellationToken)
         {
             var result = CreateKeyOutputInstance(sourceModel);
@@ -266,22 +214,9 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal abstract int Insert(DbSelectStatement statement);
-
         internal abstract Task<int> InsertAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        internal abstract InsertScalarResult InsertScalar(DbSelectStatement statement, bool outputIdentity);
-
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
-
-        protected internal virtual int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings)
-            where TSource : Model, new()
-            where TTarget : Model, new()
-        {
-            var tempTable = Import(sourceData);
-            return Insert(tempTable, targetTable, columnMapper, joinTo, identityMappings);
-        }
 
         protected internal virtual async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
             Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
@@ -292,28 +227,12 @@ namespace DevZest.Data.Primitives
             return await InsertAsync(tempTable, targetTable, columnMapper, joinTo, identityMappings, cancellationToken);
         }
 
-        protected internal abstract int Insert<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMappings, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings)
-            where TSource : Model, new()
-            where TTarget : Model, new();
-
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
             Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new();
 
-        internal abstract int Update(DbSelectStatement statement);
-
         internal abstract Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken);
-
-        protected internal virtual int Update<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo)
-            where TSource : Model, new()
-            where TTarget : Model, new()
-        {
-            var import = Import(source);
-            var join = import._.PrimaryKey.Join(joinTo);
-            return Update(target.BuildUpdateStatement(import, columnMapper, join));
-        }
 
         protected internal virtual async Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, CancellationToken ct)
@@ -325,18 +244,7 @@ namespace DevZest.Data.Primitives
             return await UpdateAsync(target.BuildUpdateStatement(import, columnMapper, join), ct);
         }
 
-        internal abstract int Delete(DbSelectStatement statement);
-
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
-
-        protected internal virtual int Delete<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo)
-            where TSource : Model, new()
-            where TTarget : Model, new()
-        {
-            var keys = ImportKey(source);
-            var columnMappings = keys._.PrimaryKey.Join(joinTo);
-            return Delete(target.BuildDeleteStatement(keys, columnMappings));
-        }
 
         protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo, CancellationToken ct)
             where TSource : Model, new()

@@ -10,24 +10,6 @@ namespace DevZest.Data.Primitives
 {
     public abstract class MockDb : IMockDb
     {
-        internal void InternalInitialize(DbSession db, IProgress<string> progress)
-        {
-            Debug.Assert(db != null);
-            Debug.Assert(db.Mock == null);
-            Debug.Assert(Db == null);
-            Db = db;
-            db.Mock = this;
-
-            _isInitializing = true;
-            CreateMockDb();
-            Initialize();
-            RemoveDependencyMockTables();
-            RemoveDependencyForeignKeys();
-            CreateMockTables(progress);
-            _pendingMockTables.Clear();
-            _isInitializing = false;
-        }
-
         internal async Task InternalInitializeAsync(DbSession db, IProgress<string> progress, CancellationToken ct)
         {
             Debug.Assert(db != null);
@@ -79,20 +61,6 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private void CreateMockTables(IProgress<string> progress)
-        {
-            foreach (var mockTable in _mockTables)
-            {
-                var table = mockTable.Table;
-                if (progress != null)
-                    progress.Report(table.Name);
-                Db.CreateTable(table.Model, table.Name, GetTableDescription(table), false);
-                var action = _pendingMockTables[table];
-                if (action != null)
-                    action();
-            }
-        }
-
         internal virtual string GetTableDescription(IDbTable table)
         {
             return null;
@@ -107,9 +75,7 @@ namespace DevZest.Data.Primitives
                 if (progress != null)
                     progress.Report(table.Name);
                 await Db.CreateTableAsync(table.Model, table.Name, GetTableDescription(table), false, ct);
-                var action = _pendingMockTables[table];
-                if (action != null)
-                    action();
+                _pendingMockTables[table]?.Invoke();
             }
         }
 

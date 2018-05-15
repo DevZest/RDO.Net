@@ -25,23 +25,10 @@ namespace DevZest.Data.Primitives
             set { Model.SequentialKeyTempTable = value; }
         }
 
-        internal void EnsureSequentialTempTableCreated(DbSession dbSession)
-        {
-            if (SequentialKeyTempTable == null)
-                SequentialKeyTempTable = CreateSequentialKeyTempTable(dbSession);
-        }
-
         internal async Task EnsureSequentialTempTableCreatedAsync(DbSession dbSession, CancellationToken cancellationToken)
         {
             if (SequentialKeyTempTable == null)
                 SequentialKeyTempTable = await CreateSequentialKeyTempTableAsync(dbSession, cancellationToken);
-        }
-
-        private DbTable<KeyOutput> CreateSequentialKeyTempTable(DbSession dbSession)
-        {
-            var sequentialKeyModel = Model.CreateSequentialKey();
-            var selectStatement = GetSequentialKeySelectStatement(sequentialKeyModel);
-            return selectStatement.ToTempTable(sequentialKeyModel, dbSession);
         }
 
         private async Task<DbTable<KeyOutput>> CreateSequentialKeyTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
@@ -59,18 +46,6 @@ namespace DevZest.Data.Primitives
         }
 
         internal abstract DbSelectStatement BuildToTempTableStatement();
-
-        private DbTable<T> ToTempTable<T>(T model, DbSession dbSession)
-            where T : Model, new()
-        {
-            Debug.Assert(model == this.Model);
-            Debug.Assert(model.DataSource == null);
-            var name = dbSession.AssignTempTableName(model);
-            var result = DbTable<T>.CreateTemp(model, dbSession, name);
-            dbSession.CreateTable(model, name, null, true);
-            result.InitialRowCount = dbSession.Insert(BuildToTempTableStatement());
-            return result;
-        }
 
         private async Task<DbTable<T>> ToTempTableAsync<T>(T model, DbSession dbSession, CancellationToken cancellationToken)
             where T : Model, new()

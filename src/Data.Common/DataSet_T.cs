@@ -219,22 +219,6 @@ namespace DevZest.Data
             return (DataSet<T>)(new JsonParser(json).Parse(() => New(initializer), true));
         }
 
-        public DataSet<TChild> Fill<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer = null)
-            where TChild : Model, new()
-        {
-            var dataRow = this[dataRowOrdinal];
-            var childModel = getChildModel(this._);
-            if (childModel.ParentModel != this._)
-                throw new ArgumentException(DiagnosticMessages.InvalidChildModelGetter, nameof(getChildModel));
-
-            var childDataSet = dataRow.Children(childModel);
-            var parentRelationship = childModel.ParentRelationship;
-            var childQuery = GetChildQuery(sourceData, dataRow, parentRelationship, initializer);
-            sourceData.DbSession.FillDataSet(childQuery, childDataSet);
-
-            return childDataSet;
-        }
-
         private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, IReadOnlyList<ColumnMapping> parentRelationship, Action<TChild> initializer)
             where TChild : Model, new()
         {

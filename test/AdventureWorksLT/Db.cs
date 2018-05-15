@@ -174,7 +174,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return result;
         }
 
-        public DbSet<SalesOrderInfo> GetSalesOrderInfo(int salesOrderID)
+        public async Task<DbSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct = default(CancellationToken))
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
             {
@@ -190,13 +190,13 @@ namespace DevZest.Samples.AdventureWorksLT
                     .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
             });
 
-            result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
+            await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
             {
                 Debug.Assert(_.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>() != null);
                 builder.From(SalesOrderDetails, out var d)
                     .LeftJoin(Products, d.Product, out var p)
                     .AutoSelect();
-            });
+            }, ct);
 
             return result;
         }
@@ -230,21 +230,7 @@ namespace DevZest.Samples.AdventureWorksLT
             await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
         }
 
-        public DataSet<SalesOrderDetail.ForeignKeyLookup> Lookup(DataSet<SalesOrderDetail.ForeignKey> foreignKeys)
-        {
-            var tempTable = CreateTempTable<SalesOrderDetail.ForeignKey>();
-            tempTable.Insert(foreignKeys).Execute();
-            return CreateQuery((DbQueryBuilder builder, SalesOrderDetail.ForeignKeyLookup _) =>
-            {
-                builder.From(tempTable, out var t);
-                var seqNo = t.GetIdentity(true).Column;
-                Debug.Assert(!ReferenceEquals(seqNo, null));
-                builder.LeftJoin(Products, t.Product, out var p)
-                    .AutoSelect().OrderBy(seqNo);
-            }).ToDataSet();
-        }
-
-        public async Task<DataSet<SalesOrderDetail.ForeignKeyLookup>> LookupAsync(DataSet<SalesOrderDetail.ForeignKey> foreignKeys, CancellationToken ct)
+        public async Task<DataSet<SalesOrderDetail.ForeignKeyLookup>> LookupAsync(DataSet<SalesOrderDetail.ForeignKey> foreignKeys, CancellationToken ct = default(CancellationToken))
         {
             var tempTable = await CreateTempTableAsync<SalesOrderDetail.ForeignKey>(ct);
             await tempTable.Insert(foreignKeys).ExecuteAsync(ct);

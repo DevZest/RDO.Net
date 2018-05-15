@@ -23,10 +23,10 @@ namespace DevZest.Data.Primitives
             using (var db = new Db(GetEmptyDbConnectionString()))
             {
                 int count = 0;
-                db.CreateTables(new Progress<string>(x =>
+                db.CreateTablesAsync(new Progress<string>(x =>
                 {
                     count++;
-                }));
+                })).Wait();
                 Assert.IsTrue(count > 0);
                 Assert.AreEqual(db.GetTotalNumberOfTables(), count);
             }

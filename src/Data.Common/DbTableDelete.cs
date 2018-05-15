@@ -65,12 +65,6 @@ namespace DevZest.Data
                 return From.BuildDeleteStatement(_where);
             }
 
-            protected override int PerformExecute()
-            {
-                var statement = BuildDeleteStatement();
-                return From.UpdateOrigin(null, DbSession.Delete(statement));
-            }
-
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 var statement = BuildDeleteStatement();
@@ -95,12 +89,6 @@ namespace DevZest.Data
             private DbSelectStatement BuildDeleteStatement()
             {
                 return From.BuildDeleteStatement(_source, _columnMappings);
-            }
-
-            protected override int PerformExecute()
-            {
-                var statement = BuildDeleteStatement();
-                return From.UpdateOrigin(null, DbSession.Delete(statement));
             }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
@@ -130,12 +118,6 @@ namespace DevZest.Data
                 return From.BuildDeleteScalarStatement(_source, _rowIndex, _columnMappings);
             }
 
-            protected override int PerformExecute()
-            {
-                var statement = BuildDeleteStatement();
-                return From.UpdateOrigin<TSource>(null, DbSession.Delete(statement) > 0) ? 1 : 0;
-            }
-
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 var statement = BuildDeleteStatement();
@@ -156,13 +138,6 @@ namespace DevZest.Data
 
             private readonly DataSet<TSource> _source;
             private readonly PrimaryKey _joinTo;
-
-            protected override int PerformExecute()
-            {
-                if (_source.Count == 0)
-                    return 0;
-                return DbSession.Delete(_source, From, _joinTo);
-            }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {

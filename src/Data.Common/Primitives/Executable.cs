@@ -33,22 +33,7 @@ namespace DevZest.Data.Primitives
                 throw new ObjectDisposedException(GetType().FullName);
         }
 
-        public T Execute()
-        {
-            VerifyNotDisposed();
-            var result = PerformExecute();
-            Dispose();
-            return result;
-        }
-
-        protected abstract T PerformExecute();
-
-        public Task<T> ExecuteAsync()
-        {
-            return ExecuteAsync(CancellationToken.None);
-        }
-
-        public async Task<T> ExecuteAsync(CancellationToken ct)
+        public async Task<T> ExecuteAsync(CancellationToken ct = default(CancellationToken))
         {
             VerifyNotDisposed();
             var result = await PerformExecuteAsync(ct);

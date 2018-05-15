@@ -72,19 +72,7 @@ namespace DevZest.Data.Primitives
                 throw new InvalidOperationException(DiagnosticMessages.DbSession_VerifyNotMocked);
         }
 
-        public static void CreateTables(this DbSession dbSession, IProgress<string> progress)
-        {
-            dbSession.VerifyNotMocked();
-            new TableCreator().InternalInitialize(dbSession, progress);
-            dbSession.Mock = null;
-        }
-
-        public static Task CreateTablesAsync(this DbSession dbSession, IProgress<string> progress)
-        {
-            return dbSession.CreateTablesAsync(progress, CancellationToken.None);
-        }
-
-        public static async Task CreateTablesAsync(this DbSession dbSession, IProgress<string> progress, CancellationToken ct)
+        public static async Task CreateTablesAsync(this DbSession dbSession, IProgress<string> progress, CancellationToken ct = default(CancellationToken))
         {
             dbSession.VerifyNotMocked();
             await new TableCreator().InternalInitializeAsync(dbSession, progress, ct);

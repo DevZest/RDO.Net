@@ -8,19 +8,6 @@ namespace DevZest.Data
 {
     public abstract class AdventureWorksTestsBase
     {
-        protected Db OpenDb()
-        {
-            return new Db(GetConnectionString()).Open();
-        }
-
-        protected Db OpenDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
-        {
-            return new Db(GetConnectionString(), db =>
-            {
-                db.SetLog(s => log.Append(s), logCategory);
-            }).Open();
-        }
-
         protected Task<Db> OpenDbAsync()
         {
             return new Db(GetConnectionString()).OpenAsync();
@@ -44,9 +31,9 @@ namespace DevZest.Data
 
         protected DataSet<SalesOrderInfo> GetSalesOrderInfo(int salesOrderID)
         {
-            using (var db = OpenDb())
+            using (var db = OpenDbAsync().Result)
             {
-                return db.GetSalesOrderInfo(salesOrderID).ToDataSet();
+                return db.GetSalesOrderInfoAsync(salesOrderID).Result.ToDataSetAsync().Result;
             }
         }
     }

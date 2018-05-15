@@ -180,47 +180,23 @@ namespace DevZest.Data
             return childModel;
         }
 
-        public DataSet<T> ToDataSet(Action<T> initializer = null)
+        public Task<DataSet<T>> ToDataSetAsync(CancellationToken ct = default(CancellationToken))
+        {
+            return ToDataSetAsync(null, ct);
+        }
+
+        public async Task<DataSet<T>> ToDataSetAsync(Action<T> initializer, CancellationToken ct = default(CancellationToken))
         {
             T model = Data.Model.Clone(this._, false);
             model.Initialize(initializer);
             var result = DataSet<T>.Create(model);
-            DbSession.RecursiveFillDataSet(this, result);
+            await DbSession.RecursiveFillDataSetAsync(this, result, ct);
             return result;
         }
 
-        public Task<DataSet<T>> ToDataSetAsync(CancellationToken cancellationToken)
+        public async Task<string> ToJsonStringAsync(bool isPretty, CancellationToken ct = default(CancellationToken))
         {
-            return ToDataSetAsync(null, cancellationToken);
-        }
-
-        public async Task<DataSet<T>> ToDataSetAsync(Action<T> initializer, CancellationToken cancellationToken)
-        {
-            T model = Data.Model.Clone(this._, false);
-            model.Initialize(initializer);
-            var result = DataSet<T>.Create(model);
-            await DbSession.RecursiveFillDataSetAsync(this, result, cancellationToken);
-            return result;
-        }
-
-        public Task<DataSet<T>> ToDataSetAsync(Action<T> initializer = null)
-        {
-            return ToDataSetAsync(null, CancellationToken.None);
-        }
-
-        public string ToJsonString(bool isPretty)
-        {
-            return ToDataSet().ToJsonString(isPretty);
-        }
-
-        public Task<string> ToJsonStringAsync(bool isPretty)
-        {
-            return ToJsonStringAsync(isPretty, CancellationToken.None);
-        }
-
-        public async Task<string> ToJsonStringAsync(bool isPretty, CancellationToken cancellationToken)
-        {
-            return (await ToDataSetAsync(cancellationToken)).ToJsonString(isPretty);
+            return (await ToDataSetAsync(ct)).ToJsonString(isPretty);
         }
 
         public DbQuery<T> Union(DbSet<T> dbSet)
@@ -241,18 +217,6 @@ namespace DevZest.Data
             var queryStatement1 = this.GetSimpleQueryStatement();
             var queryStatement2 = dbSet.GetSimpleQueryStatement();
             return new DbQuery<T>(model, DbSession, new DbUnionStatement(model, queryStatement1, queryStatement2, kind));
-        }
-
-        public virtual int Count()
-        {
-            var query = BuildCountQuery();
-            using (var reader = DbSession.ExecuteDbReader(query))
-            {
-                int? result = null;
-                if (reader.Read())
-                    result = ((_Int32)query._.Columns[0])[reader];
-                return result.HasValue ? result.GetValueOrDefault() : 0;
-            }
         }
 
         private DbQuery<Adhoc> BuildCountQuery()

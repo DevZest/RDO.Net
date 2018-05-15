@@ -49,12 +49,6 @@ namespace DevZest.Data
                 return Target.BuildUpdateStatement(_columnMappings, _where);
             }
 
-            protected override int PerformExecute()
-            {
-                var statement = BuildUpdateStatement();
-                return Target.UpdateOrigin(null, DbSession.Update(statement));
-            }
-
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 var statement = BuildUpdateStatement();
@@ -85,14 +79,7 @@ namespace DevZest.Data
 
             private DbSelectStatement BuildUpdateStatement()
             {
-                throw new NotImplementedException();
-                //return Target.BuildUpdateStatement(_source, _columnMappings, _join);
-            }
-
-            protected override int PerformExecute()
-            {
-                var statement = BuildUpdateStatement();
-                return Target.UpdateOrigin(null, DbSession.Update(statement));
+                return Target.BuildUpdateStatement(_source, _columnMappings, _join);
             }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
@@ -130,12 +117,6 @@ namespace DevZest.Data
                 return Target.BuildUpdateScalarStatement(_source, _rowIndex, _columnMappings, _join);
             }
 
-            protected override int PerformExecute()
-            {
-                var statement = BuildUpdateStatement();
-                return Target.UpdateOrigin<TSource>(null, DbSession.Update(statement) > 0) ? 1 : 0;
-            }
-
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 var statement = BuildUpdateStatement();
@@ -164,13 +145,6 @@ namespace DevZest.Data
             private readonly DataSet<TSource> _source;
             private readonly Action<ColumnMapper, TSource, T> _columnMapper;
             private readonly PrimaryKey _joinTo;
-
-            protected override int PerformExecute()
-            {
-                if (_source.Count == 0)
-                    return 0;
-                return DbSession.Update(_source, Target, _columnMapper, _joinTo);
-            }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {

@@ -213,7 +213,7 @@ WHERE ([Product].[ProductID] > 500);
             {
                 var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
-                var childQuery = salesOrders.CreateChild(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID));
+                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID)).Result;
                 var expectedSql =
 @"SELECT
     [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
@@ -243,13 +243,13 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
             {
                 var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
-                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbAggregateQueryBuilder builder, SalesOrderDetail model) =>
+                var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, (DbAggregateQueryBuilder builder, SalesOrderDetail model) =>
                 {
                     SalesOrderDetail d;
                     builder.From(db.SalesOrderDetails, out d)
                         .AutoSelect()
                         .OrderBy(d.SalesOrderDetailID);
-                });
+                }).Result;
                 var expectedSql =
 @"SELECT
     [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
@@ -413,7 +413,7 @@ ORDER BY [sys_sequential_SalesOrderHeader].[sys_row_id] ASC;
             {
                 var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
-                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID));
+                var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID)).Result;
                 salesOrderDetails.MockSequentialKeyTempTable();
                 var expectedSql =
 @"SELECT

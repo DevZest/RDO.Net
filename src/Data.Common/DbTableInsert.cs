@@ -40,28 +40,12 @@ namespace DevZest.Data
             public readonly DbTable<IdentityMapping> IdentityMappings;
         }
 
-        private InsertTableResult InsertTable<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
-            where TSource : Model, new()
-        {
-            var identityMappings = updateIdentity ? DbSession.CreateTempTable<IdentityMapping>() : null;
-            var rowCount = DbSession.Insert(source, Into, columnMapper, joinTo, identityMappings);
-            return new InsertTableResult(rowCount, identityMappings);
-        }
-
         private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             Action<IdentityMapping> initializer = null;
             var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
             var rowCount = await DbSession.InsertAsync(source, Into, columnMapper, joinTo, identityMappings, cancellationToken);
-            return new InsertTableResult(rowCount, identityMappings);
-        }
-
-        private InsertTableResult InsertDataSet<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
-            where TSource : Model, new()
-        {
-            var identityMappings = updateIdentity ? DbSession.CreateTempTable<IdentityMapping>() : null;
-            var rowCount = DbSession.Insert(source, Into, columnMapper, joinTo, identityMappings);
             return new InsertTableResult(rowCount, identityMappings);
         }
 
@@ -72,17 +56,6 @@ namespace DevZest.Data
             var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
             var rowCount = await DbSession.InsertAsync(source, Into, columnMapper, joinTo, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
-        }
-
-        private static void UpdateIdentity<TSource>(DbTable<TSource> dbTable, InsertTableResult result)
-            where TSource : Model, new()
-        {
-            var statements = BuildUpdateIdentityStatement(dbTable, result);
-            if (statements != null)
-            {
-                foreach (var statement in statements)
-                    dbTable.DbSession.Update(statement);
-            }
         }
 
         private static async Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertTableResult result, CancellationToken cancellationToken)
@@ -181,12 +154,6 @@ namespace DevZest.Data
                 return Into.BuildInsertStatement(_source, _columnMappings, _join);
             }
 
-            protected override int PerformExecute()
-            {
-                var statement = BuildInsertStatement();
-                return Into.UpdateOrigin(_source, DbSession.Insert(statement));
-            }
-
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 var statement = Into.BuildInsertStatement(_source, _columnMappings, _join);
@@ -216,13 +183,6 @@ namespace DevZest.Data
             private readonly Action<ColumnMapper, TSource, T> _columnMapper;
             private readonly PrimaryKey _joinTo;
             private readonly bool _updateIdentity;
-
-            protected override int PerformExecute()
-            {
-                var result = InsertTable(_source, _columnMapper, _joinTo, _updateIdentity);
-                UpdateIdentity(_source, result);
-                return Into.UpdateOrigin(_source, result.RowCount);
-            }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
@@ -263,15 +223,6 @@ namespace DevZest.Data
                 return Into.BuildInsertScalarStatement(_source, _rowIndex, _columnMappings, _join);
             }
 
-            protected override int PerformExecute()
-            {
-                var statement = BuildInsertStatement();
-                var result = DbSession.InsertScalar(statement, _updateIdentity);
-                if (_updateIdentity)
-                    UpdateIdentity(_source, _source[_rowIndex], result.IdentityValue);
-                return Into.UpdateOrigin(_source, result.Success) ? 1 : 0;
-            }
-
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {
                 var statement = BuildInsertStatement();
@@ -304,16 +255,6 @@ namespace DevZest.Data
             private readonly Action<ColumnMapper, TSource, T> _columnMapper;
             private readonly PrimaryKey _joinTo;
             private readonly bool _updateIdentity;
-
-            protected override int PerformExecute()
-            {
-                if (_source.Count == 0)
-                    return 0;
-
-                var result = InsertDataSet(_source, _columnMapper, _joinTo, _updateIdentity);
-                UpdateIdentity(_source, result);
-                return Into.UpdateOrigin(_source, result.RowCount);
-            }
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {

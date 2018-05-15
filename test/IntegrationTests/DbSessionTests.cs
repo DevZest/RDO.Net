@@ -33,10 +33,10 @@ namespace DevZest.Data
         public void DbSession_CreateQuery()
         {
             var log = new StringBuilder();
-            using (var db = OpenDb(log))
+            using (var db = OpenDbAsync(log).Result)
             {
                 var salesOrders = CreateSalesOrdersQuery(db);
-                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model));
+                var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model)).Result;
             }
             var expectedSql =
 @"CREATE TABLE [#sys_sequential_SalesOrder] (
@@ -98,7 +98,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderID];
         public void DbSession_ExecuteReader()
         {
             var log = new StringBuilder();
-            using (var db = OpenDb(log))
+            using (var db = OpenDbAsync(log).Result)
             {
                 var customers = db.Customers.OrderBy(x => x.CustomerID);
                 var c = customers._;
@@ -174,7 +174,7 @@ ORDER BY [Customer].[CustomerID];
         public async Task DbSession_ExecuteTransactionAsync_update_sales_order()
         {
             var log = new StringBuilder();
-            using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
+            using (var db = new SalesOrderMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
                 var salesOrder = await db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
                 await salesOrder.FillAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetails);
@@ -189,7 +189,7 @@ ORDER BY [Customer].[CustomerID];
         public async Task DbSession_ExecuteTransactionAsync_insert_sales_order()
         {
             var log = new StringBuilder();
-            using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
+            using (var db = new SalesOrderMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
                 var salesOrder = DataSet<SalesOrder>.ParseJson(Strings.ExpectedJSON_SalesOrder_71774);
                 await db.InsertAsync(salesOrder, CancellationToken.None);
@@ -206,9 +206,9 @@ ORDER BY [Customer].[CustomerID];
         {
             var foreignKeys = DataSet<SalesOrderDetail.ForeignKey>.ParseJson(Strings.JSON_SalesOrderDetail_ForeignKeys);
             var log = new StringBuilder();
-            using (var db = OpenDb(log))
+            using (var db = OpenDbAsync(log).Result)
             {
-                var lookup = db.Lookup(foreignKeys);
+                var lookup = db.LookupAsync(foreignKeys).Result;
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrderDetail_Lookup, lookup.ToJsonString(true));
             }
         }

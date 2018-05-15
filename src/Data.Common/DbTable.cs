@@ -98,24 +98,6 @@ namespace DevZest.Data
             return Name;
         }
 
-        public DbTable<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel)
-            where TChild : Model, new()
-        {
-            return CreateChild(null, getChildModel);
-        }
-
-        public DbTable<TChild> CreateChild<TChild>(Action<TChild> initializer, Func <T, TChild> getChildModel)
-            where TChild : Model, new()
-        {
-            var model = VerifyCreateChild(initializer, getChildModel);
-
-            var dbSession = DbSession;
-            var name = dbSession.AssignTempTableName(model);
-            var result = DbTable<TChild>.CreateTemp(model, dbSession, name);
-            dbSession.CreateTable(model, name, null, true);
-            return result;
-        }
-
         public Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {

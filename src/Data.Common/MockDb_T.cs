@@ -1,6 +1,8 @@
 ﻿using DevZest.Data.Primitives;
 using System;
 using DevZest.Data.Utilities;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace DevZest.Data
 {
@@ -14,14 +16,14 @@ namespace DevZest.Data
 
         public object Tag { get; private set; }
 
-        public T Initialize(T db)
+        public async Task<T> InitializeAsync(T db, CancellationToken ct = default(CancellationToken))
         {
             Check.NotNull(db, nameof(db));
             db.VerifyNotMocked();
             if (Db != null)
                 throw new InvalidOperationException(DiagnosticMessages.MockDb_InitializeTwice);
 
-            InternalInitialize(db, null);
+            await InternalInitializeAsync(db, null, ct);
             return db;
         }
 
@@ -39,7 +41,7 @@ namespace DevZest.Data
                 foreach (var dataSet in dataSets)
                 {
                     if (dataSet != null)
-                        dbTable.Insert(dataSet).Execute();
+                        dbTable.Insert(dataSet).ExecuteAsync().Wait();
                 }
             });
         }
