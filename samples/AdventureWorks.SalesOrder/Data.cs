@@ -43,13 +43,13 @@ namespace AdventureWorks.SalesOrders
                         .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
                 });
 
-                result.CreateChild(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
+                await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
                 {
                     Debug.Assert(_.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>() != null);
                     builder.From(db.SalesOrderDetails, out var d)
                         .LeftJoin(db.Products, d.Product, out var p)
                         .AutoSelect();
-                });
+                }, ct);
 
                 return await result.ToDataSetAsync(ct);
             }
