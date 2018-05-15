@@ -12,7 +12,7 @@ namespace DevZest.Data
         {
             var result = new List<int>();
 
-            using (var reader = ((SqlSession)salesOrders.DbSession).ExecuteReader(salesOrders))
+            using (var reader = ((SqlSession)salesOrders.DbSession).ExecuteReaderAsync(salesOrders).Result)
             {
                 while (reader.Read())
                 {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     public abstract class DbTableInsert<T> : Executable<int>
-        where T : Model, new()
+        where T : class, IModelReference, new()
     {
         protected DbTableInsert(DbTable<T> into)
         {
@@ -41,7 +41,7 @@ namespace DevZest.Data
         }
 
         private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Action<IdentityMapping> initializer = null;
             var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
@@ -50,7 +50,7 @@ namespace DevZest.Data
         }
 
         private async Task<InsertTableResult> InsertDataSetAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Action<IdentityMapping> initializer = null;
             var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
@@ -59,7 +59,7 @@ namespace DevZest.Data
         }
 
         private static async Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertTableResult result, CancellationToken cancellationToken)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             var statements = BuildUpdateIdentityStatement(dbTable, result);
             if (statements != null)
@@ -69,34 +69,14 @@ namespace DevZest.Data
             }
         }
 
-        private void UpdateIdentity<TSource>(DataSet<TSource> dataSet, InsertTableResult result)
-            where TSource : Model, new()
-        {
-            if (result.IdentityMappings == null || result.RowCount == 0)
-                return;
-
-            var identityMappings = result.IdentityMappings;
-            var identityColumn = (_Int32)dataSet._.Columns[Into._.GetIdentity(false).Column.Ordinal];
-            using (var reader = DbSession.ExecuteDbReader(identityMappings))
-            {
-                int ordinal = 0;
-                while (reader.Read())
-                {
-                    var dataRow = dataSet[ordinal++];
-                    identityColumn[dataRow] = identityMappings._.NewValue[reader];
-                    dataRow.IsPrimaryKeySealed = true;
-                }
-            }
-        }
-
         private async Task UpdateIdentityAsync<TSource>(DataSet<TSource> dataSet, InsertTableResult result, CancellationToken cancellationToken)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             if (result.IdentityMappings == null || result.RowCount == 0)
                 return;
 
             var identityOutput = result.IdentityMappings;
-            var identityColumn = (_Int32)dataSet._.Columns[Into._.GetIdentity(false).Column.Ordinal];
+            var identityColumn = (_Int32)dataSet.Model.Columns[Into.Model.GetIdentity(false).Column.Ordinal];
             using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, cancellationToken))
             {
                 int ordinal = 0;
@@ -110,7 +90,7 @@ namespace DevZest.Data
         }
 
         private static IList<DbSelectStatement> BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, InsertTableResult result)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             var identityMappings = result.IdentityMappings;
             if (identityMappings == null || result.RowCount == 0)
@@ -120,22 +100,22 @@ namespace DevZest.Data
         }
 
         private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, int? value)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             dataRow.IsPrimaryKeySealed = false;
-            dataSet._.GetIdentity(false).Column[dataRow] = value;
+            dataSet._.Model.GetIdentity(false).Column[dataRow] = value;
             dataRow.IsPrimaryKeySealed = true;
         }
 
         internal static DbTableInsert<T> Create<TSource>(DbTable<T> into, DbQuery<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new InsertFromDbQuery<TSource>(into, source, columnMappings, join);
         }
 
 
         private sealed class InsertFromDbQuery<TSource> : DbTableInsert<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public InsertFromDbQuery(DbTable<T> into, DbQuery<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
                 : base(into)
@@ -162,13 +142,13 @@ namespace DevZest.Data
         }
 
         internal static DbTableInsert<T> Create<TSource>(DbTable<T> into, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new InsertFromDbTable<TSource>(into, source, columnMapper, joinTo, updateIdentity);
         }
 
         private sealed class InsertFromDbTable<TSource> : DbTableInsert<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public InsertFromDbTable(DbTable<T> into, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
                 : base(into)
@@ -194,13 +174,13 @@ namespace DevZest.Data
 
         internal static DbTableInsert<T> Create<TSource>(DbTable<T> into, DataSet<TSource> source, int rowIndex,
             IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join, bool updateIdentity)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new InsertFromDataRow<TSource>(into, source, rowIndex, columnMappings, join, updateIdentity);
         }
 
         private sealed class InsertFromDataRow<TSource> : DbTableInsert<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public InsertFromDataRow(DbTable<T> into, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join, bool updateIdentity)
                 : base(into)
@@ -234,13 +214,13 @@ namespace DevZest.Data
         }
 
         internal static DbTableInsert<T> Create<TSource>(DbTable<T> into, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new InsertFromDataSet<TSource>(into, source, columnMapper, joinTo, updateIdentity);
         }
 
         private sealed class InsertFromDataSet<TSource> : DbTableInsert<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public InsertFromDataSet(DbTable<T> into, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
                 : base(into)
@@ -262,7 +242,7 @@ namespace DevZest.Data
                     return 0;
 
                 var result = await InsertDataSetAsync(_source, _columnMapper, _joinTo, _updateIdentity, ct);
-                UpdateIdentity(_source, result);
+                await UpdateIdentityAsync(_source, result, ct);
                 return Into.UpdateOrigin(_source, result.RowCount);
             }
         }

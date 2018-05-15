@@ -12,11 +12,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace DevZest.Data
 {
-    public abstract partial class Model : ModelMember, IModels
+    public abstract partial class Model : ModelMember, IModels, IModelReference
     {
         #region RegisterColumn
 
@@ -605,14 +604,6 @@ namespace DevZest.Data
         }
 #endregion
 
-        internal static T Clone<T>(T prototype, bool setDataSource)
-            where T : Model, new()
-        {
-            T result = new T();
-            result.InitializeClone(prototype, setDataSource);
-            return result;
-        }
-
         internal Model Clone(bool setDataSource)
         {
             Model result = (Model)Activator.CreateInstance(this.GetType());
@@ -620,9 +611,9 @@ namespace DevZest.Data
             return result;
         }
 
-        internal Action<Model> Initializer { get; set; }
+        internal Action<IModelReference> Initializer { get; set; }
 
-        private void InitializeClone(Model prototype, bool setDataSource)
+        internal void InitializeClone(Model prototype, bool setDataSource)
         {
             Debug.Assert(prototype != null && prototype != this);
             InitializeColumnLists(prototype);
@@ -1309,6 +1300,11 @@ namespace DevZest.Data
         internal bool IsEditingValueSuspended
         {
             get { return RootModel._suspendEditingValueCount > 0; }
+        }
+
+        Model IModelReference.Model
+        {
+            get { return this; }
         }
     }
 }

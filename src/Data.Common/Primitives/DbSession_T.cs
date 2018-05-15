@@ -118,34 +118,17 @@ namespace DevZest.Data.Primitives
 
         protected abstract DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(TCommand command, Model model);
 
-        internal sealed override DbReader ExecuteDbReader<T>(DbSet<T> dbSet)
-        {
-            return ExecuteReader(dbSet);
-        }
-
         internal sealed override async Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
         {
             return await ExecuteReaderAsync(dbSet, cancellationToken);
         }
 
-        public TReader ExecuteReader<T>(DbSet<T> dbSet)
-            where T : Model, new()
+
+        public Task<TReader> ExecuteReaderAsync<T>(DbSet<T> dbSet, CancellationToken ct = default(CancellationToken))
+            where T : class, IModelReference, new()
         {
             Check.NotNull(dbSet, nameof(dbSet));
-            return CreateReaderInvoker(dbSet.QueryStatement).Execute();
-        }
-
-        public Task<TReader> ExecuteReaderAsync<T>(DbSet<T> dbSet)
-            where T : Model, new()
-        {
-            return ExecuteReaderAsync<T>(dbSet, CancellationToken.None);
-        }
-
-        public Task<TReader> ExecuteReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
-            where T : Model, new()
-        {
-            Check.NotNull(dbSet, nameof(dbSet));
-            return CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(cancellationToken);
+            return CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(ct);
         }
 
         protected virtual DbLogger<TConnection, TTransaction, TCommand, TReader> CreateDbLogger()

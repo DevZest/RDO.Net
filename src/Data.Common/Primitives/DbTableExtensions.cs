@@ -8,28 +8,28 @@ namespace DevZest.Data.Primitives
     {
         public static DbSelectStatement BuildInsertStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             Action<ColumnMapper, TSource, TTarget> columnMapper, IReadOnlyList<ColumnMapping> join = null)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             Check.NotNull(target, nameof(target));
             Check.NotNull(source, nameof(source));
             var columnMappings = target.Verify(columnMapper, nameof(columnMapper), source._);
             if (join != null)
-                Verify(join, nameof(join), source._, target._);
+                Verify(join, nameof(join), source.Model, target.Model);
 
             return target.BuildInsertStatement(source, columnMappings, join);
         }
 
         public static DbSelectStatement BuildInsertStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             Check.NotNull(target, nameof(target));
             Check.NotNull(source, nameof(source));
-            Verify(columnMappings, nameof(columnMappings), source._, target._);
+            Verify(columnMappings, nameof(columnMappings), source.Model, target.Model);
             if (join != null)
-                Verify(join, nameof(join), source._, target._);
+                Verify(join, nameof(join), source.Model, target.Model);
 
             return target.BuildInsertStatement(source, columnMappings, join);
         }
@@ -69,37 +69,37 @@ namespace DevZest.Data.Primitives
 
         public static DbSelectStatement BuildUpdateStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             Check.NotNull(target, nameof(target));
             Check.NotNull(source, nameof(source));
-            Verify(columnMappings, nameof(columnMappings), source._, target._);
-            Verify(join, nameof(join), source._, target._);
+            Verify(columnMappings, nameof(columnMappings), source.Model, target.Model);
+            Verify(join, nameof(join), source.Model, target.Model);
 
             return target.BuildUpdateStatement(source, columnMappings, join);
         }
 
         public static DbSelectStatement BuildUpdateStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             Action<ColumnMapper, TSource, TTarget> columnMapper, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             Check.NotNull(target, nameof(target));
             Check.NotNull(source, nameof(source));
             Check.NotNull(columnMapper, nameof(columnMapper));
-            Verify(join, nameof(join), source._, target._);
+            Verify(join, nameof(join), source.Model, target.Model);
 
             return target.BuildUpdateStatement(source, columnMapper, join);
         }
 
         public static DbSelectStatement BuildDeleteStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             Check.NotNull(target, nameof(target));
             Check.NotNull(source, nameof(source));
-            Verify(join, nameof(join), source._, target._);
+            Verify(join, nameof(join), source.Model, target.Model);
 
             return target.BuildDeleteStatement(source, join);
         }

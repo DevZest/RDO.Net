@@ -40,26 +40,26 @@ namespace DevZest.Data
             HavingExpression = query.Having;
         }
 
-        public new DbAggregateQueryBuilder From<T>(DbSet<T> dbSet, out T model)
-            where T : Model, new()
+        public new DbAggregateQueryBuilder From<T>(DbSet<T> dbSet, out T _)
+            where T : class, IModelReference, new()
         {
-            base.From(dbSet, out model);
+            base.From(dbSet, out _);
             return this;
         }
 
-        public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
+        public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T _)
             where T : Model<TKey>, new()
             where TKey : PrimaryKey
         {
-            base.InnerJoin(dbSet, left, out model);
+            base.InnerJoin(dbSet, left, out _);
             return this;
         }
 
-        public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
-            where T : Model, new()
+        public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
+            where T : class, IModelReference, new()
             where TKey : PrimaryKey
         {
-            base.InnerJoin(dbSet, left, right, out model);
+            base.InnerJoin(dbSet, left, right, out _);
             return this;
         }
 

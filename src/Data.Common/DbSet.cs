@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     public abstract class DbSet<T> : DataSource, IDbSet
-        where T : Model, new()
+        where T : class, IModelReference, new()
     {
-        internal DbSet(T model, DbSession dbSession)
+        internal DbSet(T modelRef, DbSession dbSession)
         {
             Debug.Assert(dbSession != null);
             DbSession = dbSession;
-            _ = model;
+            _ = modelRef;
         }
 
         public DbSession DbSession { get; private set; }
@@ -25,7 +25,7 @@ namespace DevZest.Data
 
         public sealed override Model Model
         {
-            get { return _; }
+            get { return _.Model; }
         }
 
         internal abstract DbQueryStatement QueryStatement { get; }
@@ -155,11 +155,11 @@ namespace DevZest.Data
             return GetSimpleQueryStatement(action, out newModel);
         }
 
-        private DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action, out T newModel)
+        private DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action, out T newModelProvider)
         {
-            var oldModel = _;
-            newModel = Data.Model.Clone(oldModel, false);
-            return new DbQueryBuilder(newModel).BuildQueryStatement(oldModel, action, null);
+            var oldModelProvider = _;
+            newModelProvider = oldModelProvider.MakeCopy(false);
+            return new DbQueryBuilder(newModelProvider.Model).BuildQueryStatement(oldModelProvider.Model, action, null);
         }
 
         internal TChild VerifyCreateChild<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel)
@@ -169,9 +169,9 @@ namespace DevZest.Data
                 throw new InvalidOperationException(DiagnosticMessages.DbSet_VerifyCreateChild_InvalidDataSourceKind);
             Check.NotNull(getChildModel, nameof(getChildModel));
 
-            _.EnsureInitialized();
+            _.Model.EnsureInitialized();
             var childModel = getChildModel(_);
-            if (childModel == null || childModel.ParentModel != _)
+            if (childModel == null || childModel.ParentModel != _.Model)
                 throw new ArgumentException(DiagnosticMessages.InvalidChildModelGetter, nameof(getChildModel));
             if (childModel.DataSource != null)
                 throw new InvalidOperationException(DiagnosticMessages.DbSet_VerifyCreateChild_AlreadyCreated);
@@ -187,9 +187,9 @@ namespace DevZest.Data
 
         public async Task<DataSet<T>> ToDataSetAsync(Action<T> initializer, CancellationToken ct = default(CancellationToken))
         {
-            T model = Data.Model.Clone(this._, false);
-            model.Initialize(initializer);
-            var result = DataSet<T>.Create(model);
+            T modelRef = _.MakeCopy(false);
+            modelRef.Initialize(initializer);
+            var result = DataSet<T>.Create(modelRef);
             await DbSession.RecursiveFillDataSetAsync(this, result, ct);
             return result;
         }
@@ -213,10 +213,10 @@ namespace DevZest.Data
         {
             Check.NotNull(dbSet, nameof(dbSet));
 
-            var model = Data.Model.Clone(_, false);
+            var modelRef = _.MakeCopy(false);
             var queryStatement1 = this.GetSimpleQueryStatement();
             var queryStatement2 = dbSet.GetSimpleQueryStatement();
-            return new DbQuery<T>(model, DbSession, new DbUnionStatement(model, queryStatement1, queryStatement2, kind));
+            return new DbQuery<T>(modelRef, DbSession, new DbUnionStatement(modelRef.Model, queryStatement1, queryStatement2, kind));
         }
 
         private DbQuery<Adhoc> BuildCountQuery()
@@ -225,7 +225,7 @@ namespace DevZest.Data
             {
                 T m;
                 builder.From(this, out m)
-                    .Select(this._.Columns[0].CountRows(), adhoc, "Result");
+                    .Select(this._.Model.Columns[0].CountRows(), adhoc, "Result");
             });
         }
 
@@ -252,7 +252,7 @@ namespace DevZest.Data
         }
 
         public DbQuery<TDerived> ToDbQuery<TDerived>()
-            where TDerived : T, new()
+            where TDerived : class, T, new()
         {
             return DbSession.CreateQuery((DbQueryBuilder builder, TDerived _) =>
             {

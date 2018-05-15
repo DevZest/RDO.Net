@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     public abstract class DbTableDelete<T> : Executable<int>
-        where T : Model, new()
+        where T : class, IModelReference, new()
     {
         internal static DbTableDelete<T> Create(DbTable<T> from, Func<T, _Boolean> where)
         {
@@ -16,19 +16,19 @@ namespace DevZest.Data
         }
 
         internal static DbTableDelete<T> Create<TSource>(DbTable<T> from, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new DeleteFromDbSet<TSource>(from, source, columnMappings);
         }
 
         internal static DbTableDelete<T> Create<TSource>(DbTable<T> from, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new DeleteFromDataRow<TSource>(from, source, rowIndex, columnMappings);
         }
 
         internal static DbTableDelete<T> Create<TSource>(DbTable<T> from, DataSet<TSource> source, PrimaryKey joinTo)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new DeleteFromDataSet<TSource>(from, source, joinTo);
         }
@@ -74,7 +74,7 @@ namespace DevZest.Data
             
 
         private sealed class DeleteFromDbSet<TSource> : DbTableDelete<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public DeleteFromDbSet(DbTable<T> from, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)
                 : base(from)
@@ -99,7 +99,7 @@ namespace DevZest.Data
         }
 
         private sealed class DeleteFromDataRow<TSource> : DbTableDelete<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public DeleteFromDataRow(DbTable<T> from, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings)
                 : base(from)
@@ -126,7 +126,7 @@ namespace DevZest.Data
         }
 
         private sealed class DeleteFromDataSet<TSource> : DbTableDelete<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public DeleteFromDataSet(DbTable<T> from, DataSet<TSource> source, PrimaryKey joinTo)
                 : base(from)

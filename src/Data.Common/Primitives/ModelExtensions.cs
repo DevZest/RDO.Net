@@ -130,18 +130,6 @@ namespace DevZest.Data.Primitives
             return model.Depth;
         }
 
-
-        internal static void Initialize<T>(this T model, Action<T> initializer)
-            where T : Model, new()
-        {
-            Debug.Assert(model != null);
-            if (initializer != null)
-            {
-                model.Initializer = _ => initializer((T)_);
-                initializer(model);
-            }
-        }
-
         internal static T ApplyForeignKey<T>(this T model, Func<T, DbForeignKey>[] foreignKeys)
             where T : Model, new()
         {
@@ -151,6 +139,32 @@ namespace DevZest.Data.Primitives
                     model.AddDbTableConstraint(foreignKey(model), false);
             }
             return model;
+        }
+
+        internal static void Initialize<T>(this T _, Action<T> initializer)
+            where T : class, IModelReference, new()
+        {
+            Debug.Assert(_ != null);
+            if (initializer != null)
+            {
+                _.Model.Initializer = r => initializer((T)r);
+                initializer(_);
+            }
+        }
+
+        internal static T MakeCopy<T>(this T prototype, bool setDataSource)
+            where T : class, IModelReference, new()
+        {
+            T result = new T();
+            result.Model.InitializeClone(prototype.Model, setDataSource);
+            return result;
+        }
+
+        internal static IModelReference MakeCopy(this IModelReference prototype, bool setDataSource)
+        {
+            var result = (IModelReference)Activator.CreateInstance(prototype.GetType());
+            result.Model.InitializeClone(prototype.Model, setDataSource);
+            return result;
         }
     }
 }

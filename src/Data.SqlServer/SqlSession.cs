@@ -101,7 +101,7 @@ namespace DevZest.Data.SqlServer
         }
 
         private SqlXml GetSqlXml<T>(DataSet<T> dataSet, IList<Column> columns)
-            where T : Model, new()
+            where T : class, IModelReference, new()
         {
             var stream = new MemoryStream();
             using (var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings()
@@ -143,28 +143,28 @@ namespace DevZest.Data.SqlServer
         }
 
         internal DbQuery<KeyOutput> BuildImportKeyQuery<T>(DataSet<T> dataSet)
-            where T : Model, new()
+            where T : class, IModelReference, new()
         {
             var targetModel = new KeyOutput(dataSet.Model, false);
-            return BuildQuery(dataSet, targetModel, KeyOutput.BuildKeyMappings);
+            return BuildQuery(dataSet, targetModel, (m, s, t) => KeyOutput.BuildKeyMappings(m, s.Model, t));
         }
 
         internal DbQuery<T> BuildImportQuery<T>(DataSet<T> dataSet)
-            where T : Model, new()
+            where T : class, IModelReference, new()
         {
             return BuildQuery(dataSet, dataSet._, null);
         }
 
         internal DbQuery<TTarget> BuildQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
-            var result = CreateQuery<TTarget>(targetModel, (builder, model) =>
+            var result = CreateQuery<TTarget>(targetModel, (builder, _) =>
             {
                 var dataSetOrdinalColumn = new _Int32();
-                model.AddSystemColumn(dataSetOrdinalColumn, "sys_dataset_ordinal");
+                _.Model.AddSystemColumn(dataSetOrdinalColumn, "sys_dataset_ordinal");
 
-                var columnMappings = ColumnMapping.Map(dataSet._, model, columnMappingsBuilder, true);
+                var columnMappings = ColumnMapping.Map(dataSet._, _, columnMappingsBuilder, true);
 
                 var xml = GetSqlXml(dataSet, columnMappings.Select(x => ((DbColumnExpression)x.SourceExpression).Column).ToList());
 
@@ -189,7 +189,7 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildImportCommand<T>(DataSet<T> source, DbTable<T> target)
-            where T : Model, new()
+            where T : class, IModelReference, new()
         {
             var statement = target.BuildInsertStatement(BuildImportQuery(source), Data.ColumnMapper.AutoSelectInsertable);
             return GetInsertCommand(statement);
@@ -202,7 +202,7 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildImportKeyCommand<T>(DataSet<T> source, DbTable<KeyOutput> target)
-            where T : Model, new()
+            where T : class, IModelReference, new()
         {
             var statement = target.BuildInsertStatement(BuildImportKeyQuery(source), Data.ColumnMapper.AutoSelectInsertable);
             return GetInsertCommand(statement);
@@ -227,12 +227,12 @@ namespace DevZest.Data.SqlServer
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo = null)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
 
         {
             var import = BuildImportQuery(source);
-            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import._.PrimaryKey.Join(joinTo);
+            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import.Model.PrimaryKey.Join(joinTo);
             var statement = target.BuildInsertStatement(import, columnMapper, join);
             return GetInsertCommand(statement);
         }
@@ -240,7 +240,7 @@ namespace DevZest.Data.SqlServer
         protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
             Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, DbTable<IdentityMapping> identityMappings, CancellationToken ct)
         {
-            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source._.PrimaryKey.Join(joinTo);
+            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source.Model.PrimaryKey.Join(joinTo);
             var statement = target.BuildInsertStatement(source, columnMapper, join);
             if (identityMappings == null)
                 return await ExecuteNonQueryAsync(GetInsertCommand(statement), ct);
@@ -259,16 +259,16 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand GetInsertIntoIdentityMappingsCommand<T, TSource>(DbTable<TSource> sourceData, DbTable<IdentityMapping> identityMappings, DbTable<T> targetTable)
-            where T : Model, new()
-            where TSource : Model, new()
+            where T : class, IModelReference, new()
+            where TSource : class, IModelReference, new()
         {
             var statement = BuildInsertIntoIdentityMappingsStatement(sourceData, identityMappings, targetTable);
             return GetInsertCommand(statement);
         }
 
         private DbSelectStatement BuildInsertIntoIdentityMappingsStatement<T, TSource>(DbTable<TSource> sourceData, DbTable<IdentityMapping> identityMappings, DbTable<T> targetTable)
-            where T : Model, new()
-            where TSource : Model, new()
+            where T : class, IModelReference, new()
+            where TSource : class, IModelReference, new()
         {
             var identityMapping = identityMappings._;
             var source = sourceData.Model;
@@ -289,8 +289,8 @@ namespace DevZest.Data.SqlServer
         }
 
         private static DbFromClause GetAutoJoinFromClause<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             if (target == null)
                 return source.GetFromClause();
@@ -338,11 +338,11 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             var import = BuildImportQuery(source);
-            var join = import._.PrimaryKey.Join(joinTo);
+            var join = import.Model.PrimaryKey.Join(joinTo);
             var statement = target.BuildUpdateStatement(import, columnMapper, join);
             return GetUpdateCommand(statement);
         }
@@ -359,8 +359,8 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo)
-            where TSource : Model, new()
-            where TTarget : Model, new()
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             var keys = BuildImportKeyQuery(source);
             var columnMappings = keys._.PrimaryKey.Join(joinTo);

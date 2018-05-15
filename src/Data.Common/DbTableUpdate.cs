@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     public abstract class DbTableUpdate<T> : Executable<int>
-        where T : Model, new()
+        where T : class, IModelReference, new()
     {
         protected DbTableUpdate(DbTable<T> target)
         {
@@ -57,13 +57,13 @@ namespace DevZest.Data
         }
 
         internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new UpdateFromDbSet<TSource>(target, source, columnMappings, join);
         }
 
         private sealed class UpdateFromDbSet<TSource> : DbTableUpdate<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public UpdateFromDbSet(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
                 : base(target)
@@ -90,13 +90,13 @@ namespace DevZest.Data
         }
 
         internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new UpdateFromDataRow<TSource>(target, source, rowIndex, columnMappings, join);
         }
 
         private sealed class UpdateFromDataRow<TSource> : DbTableUpdate<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public UpdateFromDataRow(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
                 : base(target)
@@ -125,13 +125,13 @@ namespace DevZest.Data
         }
 
         internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             return new UpdateFromDataSet<TSource>(target, source, columnMapper, joinTo);
         }
 
         private sealed class UpdateFromDataSet<TSource> : DbTableUpdate<T>
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             public UpdateFromDataSet(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
                 : base(target)

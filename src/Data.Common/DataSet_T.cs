@@ -12,14 +12,14 @@ namespace DevZest.Data
     /// <summary>Represents an in-memory collection of data.</summary>
     /// <typeparam name="T">The type of the model.</typeparam>
     public abstract class DataSet<T> : DataSet
-        where T : Model, new()
+        where T : class, IModelReference, new()
     {
         private sealed class BaseDataSet : DataSet<T>
         {
-            public BaseDataSet(T model)
-                : base(model)
+            public BaseDataSet(T modelRef)
+                : base(modelRef)
             {
-                model.SetDataSource(this);
+                modelRef.Model.SetDataSource(this);
             }
 
             internal override DataSet CreateChildDataSet(DataRow parentRow)
@@ -173,20 +173,20 @@ namespace DevZest.Data
 
         public static DataSet<T> New(Action<T> initializer = null)
         {
-            var model = new T();
-            model.Initialize(initializer);
-            return Create(model);
+            var modelRef = new T();
+            modelRef.Initialize(initializer);
+            return Create(modelRef);
         }
 
-        internal static DataSet<T> Create(T model)
+        internal static DataSet<T> Create(T modelRef)
         {
-            return new BaseDataSet(model);
+            return new BaseDataSet(modelRef);
         }
 
         public new DataSet<T> Clone()
         {
-            var model = Model.Clone(_, false);
-            return Create(model);
+            var modelRef = _.MakeCopy(false);
+            return Create(modelRef);
         }
 
         internal sealed override DataSet InternalClone()
@@ -204,7 +204,7 @@ namespace DevZest.Data
 
         public sealed override Model Model
         {
-            get { return _; }
+            get { return _.Model; }
         }
 
         public static DataSet<T> ParseJson(string json)
@@ -223,7 +223,7 @@ namespace DevZest.Data
             where TChild : Model, new()
         {
             var dbSession = dbSet.DbSession;
-            var childModel = Model.Clone(dbSet._, false);
+            var childModel = dbSet._.MakeCopy(false);
             childModel.Initialize(initializer);
             var queryStatement = dbSet.QueryStatement.BuildQueryStatement(childModel, builder => builder.Where(parentRow, parentRelationship), null);
             return dbSession.PerformCreateQuery(childModel, queryStatement);
@@ -234,7 +234,7 @@ namespace DevZest.Data
         {
             var dataRow = this[dataRowOrdinal];
             var childModel = getChildModel(this._);
-            if (childModel.ParentModel != this._)
+            if (childModel.ParentModel != Model)
                 throw new ArgumentException(DiagnosticMessages.InvalidChildModelGetter, nameof(getChildModel));
 
             var childDataSet = (DataSet<TChild>)dataRow[childModel];
@@ -297,7 +297,7 @@ namespace DevZest.Data
 
         public DataSet<T> EnsureInitialized()
         {
-            _.EnsureInitialized();
+            Model.EnsureInitialized();
             return this;
         }
 

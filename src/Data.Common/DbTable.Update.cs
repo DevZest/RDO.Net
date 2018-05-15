@@ -23,13 +23,13 @@ namespace DevZest.Data
         }
 
         public DbTableUpdate<T> Update<TSource>(DbSet<TSource> source)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
-            return Update(source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return Update(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
         }
 
         public DbTableUpdate<T> Update<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
@@ -38,14 +38,14 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Debug.Assert(source != null);
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, join);
         }
 
         internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Debug.Assert(source != null);
             Debug.Assert(columnMapper != null);
@@ -54,13 +54,13 @@ namespace DevZest.Data
         }
 
         public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
-            return Update(source, rowIndex, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return Update(source, rowIndex, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
         }
 
         public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
@@ -70,13 +70,13 @@ namespace DevZest.Data
         }
 
         public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
-            return Update(source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return Update(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
         }
 
         public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
@@ -88,7 +88,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Debug.Assert(dataSet != null && dataSet._ != null);
             return BuildUpdateScalarStatement(dataSet[ordinal], columnMappings, join);

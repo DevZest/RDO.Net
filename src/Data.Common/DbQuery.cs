@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     public sealed class DbQuery<T> : DbSet<T>
-        where T : Model, new()
+        where T : class, IModelReference, new()
     {
-        internal DbQuery(T model, DbSession dbSession, DbQueryStatement queryStatement)
-            : base(model, dbSession)
+        internal DbQuery(T modelRef, DbSession dbSession, DbQueryStatement queryStatement)
+            : base(modelRef, dbSession)
         {
             _originalQueryStatement = queryStatement;
             this.Model.SetDataSource(this);

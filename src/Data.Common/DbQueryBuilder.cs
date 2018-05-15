@@ -51,16 +51,16 @@ namespace DevZest.Data
 
         public DbFromClause FromClause { get; private set; }
 
-        public DbQueryBuilder From<T>(DbSet<T> dbSet, out T model)
-            where T : Model, new()
+        public DbQueryBuilder From<T>(DbSet<T> dbSet, out T _)
+            where T : class, IModelReference, new()
         {
             Check.NotNull(dbSet, nameof(dbSet));
 
-            model = dbSet._;
+            _ = dbSet._;
             if (_sourceModels.Count > 0)
                 throw new InvalidOperationException(DiagnosticMessages.DbQueryBuilder_DuplicateFrom);
 
-            From(model);
+            From(_.Model);
             return this;
         }
 
@@ -98,11 +98,11 @@ namespace DevZest.Data
             return _.PrimaryKey;
         }
 
-        public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
-            where T : Model, new()
+        public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
+            where T : class, IModelReference, new()
             where TKey : PrimaryKey
         {
-            Join(dbSet, left, right(dbSet._), DbJoinKind.InnerJoin, out model);
+            Join(dbSet, left, right(dbSet._), DbJoinKind.InnerJoin, out _);
             return this;
         }
 
@@ -138,8 +138,8 @@ namespace DevZest.Data
             return this;
         }
 
-        private void Join<T, TKey>(DbSet<T> dbSet, TKey left, TKey right, DbJoinKind kind, out T model)
-            where T : Model, new()
+        private void Join<T, TKey>(DbSet<T> dbSet, TKey left, TKey right, DbJoinKind kind, out T _)
+            where T : class, IModelReference, new()
             where TKey : PrimaryKey
         {
             Check.NotNull(dbSet, nameof(dbSet));
@@ -150,28 +150,28 @@ namespace DevZest.Data
             if (right.ParentModel != dbSet.Model)
                 throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_Join_InvalidRightKey, nameof(right));
 
-            Join(dbSet, kind, left.Join(right), out model);
+            Join(dbSet, kind, left.Join(right), out _);
         }
 
-        private void Join<T>(DbSet<T> dbSet, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship, out T model)
-            where T : Model, new()
+        private void Join<T>(DbSet<T> dbSet, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship, out T _)
+            where T : class, IModelReference, new()
         {
-            model = (T)Join(dbSet.Model, kind, relationship);
+            _ = (T)Join(dbSet.Model, kind, relationship);
         }
 
-        private Model Join(Model model, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship)
+        private IModelReference Join(IModelReference _, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship)
         {
-            Debug.Assert(relationship[0].Target.ParentModel == model);
+            Debug.Assert(relationship[0].Target.ParentModel == _.Model);
 
-            var result = MakeAlias(model);
-            var resultFromClause = result.FromClause;
-            if (result != model)
+            var result = MakeAlias(_);
+            var resultFromClause = result.Model.FromClause;
+            if (result != _)
             {
-                resultFromClause = resultFromClause.Clone(result);
-                relationship = relationship.Select(x => new ColumnMapping(x.SourceExpression, result.Columns[x.Target.Ordinal])).ToList();
+                resultFromClause = resultFromClause.Clone(result.Model);
+                relationship = relationship.Select(x => new ColumnMapping(x.SourceExpression, result.Model.Columns[x.Target.Ordinal])).ToList();
             }
 
-            AddSourceModel(result);
+            AddSourceModel(result.Model);
             FromClause = new DbJoinClause(kind, FromClause, resultFromClause, EliminateSubQuery(relationship));
             return result;
         }
@@ -212,14 +212,14 @@ namespace DevZest.Data
             return this;
         }
 
-        private Model MakeAlias(Model model)
+        private IModelReference MakeAlias(IModelReference _)
         {
-            Debug.Assert(model != null);
+            Debug.Assert(_ != null);
 
-            if (!_sourceModels.Contains(model))
-                return model;
+            if (!_sourceModels.Contains(_.Model))
+                return _;
 
-            return model.Clone(true);
+            return _.MakeCopy(true);
         }
 
         private static DbExpression And(DbExpression where1, DbExpression where2)

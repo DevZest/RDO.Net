@@ -21,13 +21,13 @@ namespace DevZest.Data
         }
 
         public DbTableDelete<T> Delete<TSource>(DbSet<TSource> source)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
             return Delete(source, KeyMapping.Match);
         }
 
         public DbTableDelete<T> Delete<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source));
@@ -36,13 +36,13 @@ namespace DevZest.Data
         }
 
         public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
             return Delete(source, rowIndex, KeyMapping.Match);
         }
 
         public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
@@ -51,13 +51,13 @@ namespace DevZest.Data
         }
 
         public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
             return Delete(source, KeyMapping.Match);
         }
 
         public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
@@ -69,7 +69,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> join)
-            where TLookup : Model, new()
+            where TLookup : class, IModelReference, new()
         {
             Debug.Assert(source != null && source._ != null);
             return BuildDeleteScalarStatement(source[ordinal], join);
@@ -83,7 +83,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildDeleteStatement<TLookup>(DbSet<TLookup> source, IReadOnlyList<ColumnMapping> join)
-            where TLookup : Model, new()
+            where TLookup : class, IModelReference, new()
         {
             Debug.Assert(source != null);
             Debug.Assert(join != null);

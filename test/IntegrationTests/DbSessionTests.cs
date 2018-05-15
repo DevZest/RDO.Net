@@ -102,7 +102,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderID];
             {
                 var customers = db.Customers.OrderBy(x => x.CustomerID);
                 var c = customers._;
-                using (var reader = db.ExecuteReader(customers))
+                using (var reader = db.ExecuteReaderAsync(customers).Result)
                 {
                     reader.Read();
                     var id = c.CustomerID[reader];

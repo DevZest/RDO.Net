@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,13 +10,10 @@ namespace DevZest.Data
     {
         public static KeyMapping Match<TSource, TTarget>(TSource source, TTarget target)
             where TSource : TTarget
-            where TTarget : Model
+            where TTarget : IModelReference
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(target, nameof(target));
-
-            var sourceKey = source.PrimaryKey;
-            var targetKey = target.PrimaryKey;
+            var sourceKey = source.Model.PrimaryKey;
+            var targetKey = target.Model.PrimaryKey;
             return new KeyMapping(sourceKey, targetKey);
         }
 

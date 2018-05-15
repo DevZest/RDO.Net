@@ -206,7 +206,7 @@ namespace DevZest.Data
             DataSource ds1 = mock.Object;
             Init(model1, ds1);
 
-            var clone1 = Model.Clone<CloneModel>(model1, true);
+            var clone1 = model1.MakeCopy(true);
             Verify(clone1);
             Verify(model1, clone1);
         }

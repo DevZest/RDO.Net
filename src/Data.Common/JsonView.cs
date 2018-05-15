@@ -54,20 +54,20 @@ namespace DevZest.Data
     }
 
     public sealed class JsonView<T> : JsonView
-        where T : Model, new()
+        where T : class, IModelReference, new()
     {
-        internal JsonView(T model, JsonFilter jsonFilter)
+        internal JsonView(T modelRef, JsonFilter jsonFilter)
             : base(jsonFilter)
         {
-            Debug.Assert(model != null);
+            Debug.Assert(modelRef != null);
             Debug.Assert(jsonFilter != null);
-            _ = model;
-            _children = new JsonView[_.ChildModels.Count];
+            _ = modelRef;
+            _children = new JsonView[_.Model.ChildModels.Count];
         }
 
         public T _ { get; private set; }
 
-        public override Model Model { get { return _; } }
+        public override Model Model { get { return _.Model; } }
 
         private JsonView[] _children;
         public override IReadOnlyList<JsonView> Children

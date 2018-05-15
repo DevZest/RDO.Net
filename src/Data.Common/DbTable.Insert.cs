@@ -18,13 +18,13 @@ namespace DevZest.Data
         }
 
         public DbTableInsert<T> Insert<TSource>(DbQuery<TSource> source, bool skipExisting = false)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
-            return Insert(source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<TSource>(skipExisting));
+            return Insert(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting));
         }
 
         public DbTableInsert<T> Insert<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper = null)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
@@ -33,13 +33,13 @@ namespace DevZest.Data
         }
 
         public DbTableInsert<T> Insert<TSource>(DbTable<TSource> source, bool skipExisting = false, bool updateIdentity = false)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
-            return Insert(source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<TSource>(skipExisting), updateIdentity);
+            return Insert(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity);
         }
 
         public DbTableInsert<T> Insert<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper = null, bool updateIdentity = false)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             Verify(columnMapper, nameof(columnMapper));
@@ -58,7 +58,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildInsertStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             var sourceModel = source._;
             return source.QueryStatement.BuildInsertStatement(Model, columnMappings, join, ShouldJoinParent(source));
@@ -86,13 +86,13 @@ namespace DevZest.Data
         }
 
         public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, bool skipExisting = false, bool updateIdentity = false)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
-            return Insert(source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<TSource>(skipExisting), updateIdentity);
+            return Insert(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity);
         }
 
         public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity = false)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
@@ -106,14 +106,14 @@ namespace DevZest.Data
         }
 
         public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, int ordinal, bool skipExisting = false, bool updateIdentity = false)
-            where TSource : T, new()
+            where TSource : class, T, new()
         {
-            return Insert(source, ordinal, ColumnMapper.AutoSelectInsertable, GetJoinMapper<TSource>(skipExisting), updateIdentity);
+            return Insert(source, ordinal, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity);
         }
 
         public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, int ordinal,
             Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity = false)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source), ordinal, nameof(ordinal));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
@@ -125,7 +125,7 @@ namespace DevZest.Data
 
         internal DbSelectStatement BuildInsertScalarStatement<TSource>(DataSet<TSource> dataSet, int rowOrdinal,
             IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : Model, new()
+            where TSource : class, IModelReference, new()
         {
             var sourceModel = dataSet._;
             var parentMappings = ShouldJoinParent(dataSet) ? this.Model.GetParentRelationship(columnMappings) : null;
