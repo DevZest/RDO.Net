@@ -59,14 +59,14 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
-            var extender = dataRow.Model.Extender;
-            if (extender != null)
+            var ext = dataRow.Model.ExtraColumns;
+            if (ext != null)
             {
-                if (jsonFilter == null || jsonFilter.ShouldSerialize(extender))
+                if (jsonFilter == null || jsonFilter.ShouldSerialize(ext))
                 {
                     if (count > 0)
                         jsonWriter.WriteComma();
-                    jsonWriter.Write(extender, dataRow, jsonFilter);
+                    jsonWriter.Write(ext, dataRow, jsonFilter);
                     count++;
                 }
             }
@@ -95,13 +95,13 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
         }
 
-        private static void Write(this JsonWriter jsonWriter, ColumnContainer extender, DataRow dataRow, JsonFilter jsonFilter)
+        private static void Write(this JsonWriter jsonWriter, ColumnContainer columnContainer, DataRow dataRow, JsonFilter jsonFilter)
         {
-            jsonWriter.WriteObjectName(extender.Name);
+            jsonWriter.WriteObjectName(columnContainer.Name);
 
             var count = 0;
             jsonWriter.WriteStartObject();
-            foreach (var column in extender.Columns)
+            foreach (var column in columnContainer.Columns)
             {
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))
                     continue;
@@ -112,13 +112,13 @@ namespace DevZest.Data.Primitives
                 jsonWriter.Write(dataRow, column);
                 count++;
             }
-            foreach (var childExtender in extender.ChildContainers)
+            foreach (var childContainer in columnContainer.ChildContainers)
             {
-                if (jsonFilter != null && !jsonFilter.ShouldSerialize(childExtender))
+                if (jsonFilter != null && !jsonFilter.ShouldSerialize(childContainer))
                     continue;
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.Write(childExtender, dataRow, jsonFilter);
+                jsonWriter.Write(childContainer, dataRow, jsonFilter);
                 count++;
             }
             jsonWriter.WriteEndObject();
@@ -153,10 +153,10 @@ namespace DevZest.Data.Primitives
 
             if (memberName == ColumnContainer.ROOT_NAME)
             {
-                var extender = model.Extender;
-                if (model.Extender == null)
+                var ext = model.ExtraColumns;
+                if (ext == null)
                     throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
-                jsonParser.Parse(extender, dataRow);
+                jsonParser.Parse(ext, dataRow);
             }
             else
             {
@@ -172,34 +172,34 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static void Parse(this JsonParser jsonParser, ColumnContainer extender, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, ColumnContainer columnContainer, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             var token = jsonParser.PeekToken();
             if (token.Kind == JsonTokenKind.String)
             {
                 jsonParser.ConsumeToken();
-                jsonParser.Parse(extender, token.Text, dataRow);
+                jsonParser.Parse(columnContainer, token.Text, dataRow);
 
                 while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonParser.ConsumeToken();
                     token = jsonParser.ExpectToken(JsonTokenKind.String);
-                    jsonParser.Parse(extender, token.Text, dataRow);
+                    jsonParser.Parse(columnContainer, token.Text, dataRow);
                 }
             }
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Parse(this JsonParser jsonParser, ColumnContainer extender, string memberName, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, ColumnContainer columnContainer, string memberName, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.Colon);
-            if (extender.ColumnsByRelativeName.ContainsKey(memberName))
-                jsonParser.Parse(extender.ColumnsByRelativeName[memberName], dataRow.Ordinal);
-            else if (extender.ChildContainersByName.ContainsKey(memberName))
-                jsonParser.Parse(extender.ChildContainersByName[memberName], dataRow);
+            if (columnContainer.ColumnsByRelativeName.ContainsKey(memberName))
+                jsonParser.Parse(columnContainer.ColumnsByRelativeName[memberName], dataRow.Ordinal);
+            else if (columnContainer.ChildContainersByName.ContainsKey(memberName))
+                jsonParser.Parse(columnContainer.ChildContainersByName[memberName], dataRow);
             else
-                throw new FormatException(DiagnosticMessages.JsonParser_InvalidExtenderMember(memberName, extender.FullName));
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidColumnContainerMember(memberName, columnContainer.FullName));
         }
 
         private static void Parse(this JsonParser jsonParser, Column column, int ordinal)

@@ -3,7 +3,7 @@
 namespace DevZest.Data.Annotations
 {
     [TestClass]
-    public class ModelExtenderAttributeTests
+    public class ExtraColumnsAttributeTests
     {
         private class Header : Model
         {
@@ -26,20 +26,20 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        [ModelExtender(typeof(Header.Ext))]
+        [ExtraColumns(typeof(Header.Ext))]
         private class HeaderWithExt : Header
         {
-            [ModelExtender(typeof(Detail.Ext))]
+            [ExtraColumns(typeof(Detail.Ext))]
             public override Detail Details => base.Details;
         }
 
         [TestMethod]
-        public void ModeExtenderAttribute()
+        public void ExtraColumnsAttribute()
         {
             var headerWithExt = new HeaderWithExt();
             headerWithExt.EnsureInitialized(false);
-            Assert.IsNotNull(headerWithExt.GetExtender<Header.Ext>());
-            Assert.IsNotNull(headerWithExt.Details.GetExtender<Detail.Ext>());
+            Assert.IsNotNull(headerWithExt.GetExtraColumns<Header.Ext>());
+            Assert.IsNotNull(headerWithExt.Details.GetExtraColumns<Detail.Ext>());
         }
     }
 }

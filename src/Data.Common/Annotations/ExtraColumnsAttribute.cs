@@ -6,14 +6,14 @@ using System.Reflection;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class ModelExtenderAttribute : ModelWireupAttribute
+    public sealed class ExtraColumnsAttribute : ModelWireupAttribute
     {
-        public ModelExtenderAttribute(Type extenderType)
+        public ExtraColumnsAttribute(Type columnContainerType)
         {
-            _extenderType = extenderType;
+            _columnContainerType = columnContainerType;
         }
 
-        private readonly Type _extenderType;
+        private readonly Type _columnContainerType;
 
         protected override void Initialize(Type modelType, MemberInfo memberInfo)
         {
@@ -24,7 +24,7 @@ namespace DevZest.Data.Annotations
         private Action<Model> GetWireupAction(Type modelType, MemberInfo memberInfo)
         {
             if (memberInfo == null)
-                return SetExtender;
+                return SetExtraColumns;
 
             var propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo == null)
@@ -34,21 +34,21 @@ namespace DevZest.Data.Annotations
             if (getMethod == null)
                 return null;
 
-            return BuildWireupAction(modelType, getMethod, (model, type) => model.SetExtender(type), _extenderType);
+            return BuildWireupAction(modelType, getMethod, (model, type) => model.SetExtraColumns(type), _columnContainerType);
         }
 
-        private static Action<Model> BuildWireupAction(Type modelType, MethodInfo getMethod, Expression<Action<Model, Type>> setExtender, Type extenderType)
+        private static Action<Model> BuildWireupAction(Type modelType, MethodInfo getMethod, Expression<Action<Model, Type>> setExt, Type extType)
         {
             var paramModel = Expression.Parameter(typeof(Model));
             var model = Expression.Convert(paramModel, modelType);
             var childModel = Expression.Call(model, getMethod);
-            var call = Expression.Invoke(setExtender, childModel, Expression.Constant(extenderType));
+            var call = Expression.Invoke(setExt, childModel, Expression.Constant(extType));
             return Expression.Lambda<Action<Model>>(call, paramModel).Compile();
         }
 
-        private void SetExtender(Model model)
+        private void SetExtraColumns(Model model)
         {
-            model.SetExtender(_extenderType);
+            model.SetExtraColumns(_columnContainerType);
         }
 
         private ModelWireupEvent _wireupEvent;

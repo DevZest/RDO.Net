@@ -477,8 +477,8 @@
   <data name="Model_ExtensionAlreadyExists" xml:space="preserve">
     <value>Extension already exists.</value>
   </data>
-  <data name="JsonParser_InvalidExtenderMember" xml:space="preserve">
-    <value>Invalid member name "{memberName}" for ModelExtender "{extender}".</value>
+  <data name="JsonParser_InvalidColumnContainerMember" xml:space="preserve">
+    <value>Invalid member name "{memberName}" for ColumnContainer "{columnContainerType}".</value>
   </data>
   <data name="DbQueryBuilder_EmptyFrom" xml:space="preserve">
     <value>The From clause is empty.</value>

@@ -637,11 +637,11 @@ namespace DevZest.Data
             }
         }
 
-        internal void InitializeExtender(Model prototype)
+        internal void InitializeExtraColumns(Model prototype)
         {
-            var prototypeExtender = prototype.Extender;
-            if (prototypeExtender != null && Extender == null)
-                Extender = (ColumnContainer)Activator.CreateInstance(prototypeExtender.GetType());
+            var prototypeExt = prototype.ExtraColumns;
+            if (prototypeExt != null && ExtraColumns == null)
+                ExtraColumns = (ColumnContainer)Activator.CreateInstance(prototypeExt.GetType());
         }
 
         private IIndexConstraint _clusteredIndex;
@@ -1247,42 +1247,42 @@ namespace DevZest.Data
                 column8, column9, column10, column11, column12, expression, builder);
         }
 
-        private ColumnContainer _extender;
-        internal ColumnContainer Extender
+        private ColumnContainer _extraColumns;
+        internal ColumnContainer ExtraColumns
         {
-            get { return _extender; }
+            get { return _extraColumns; }
             private set
             {
-                Debug.Assert(_extender == null);
+                Debug.Assert(_extraColumns == null);
                 Debug.Assert(value != null);
-                _extender = value;
-                _extender.Initialize(this);
+                _extraColumns = value;
+                _extraColumns.Initialize(this);
             }
         }
 
-        public void SetExtender<T>()
+        public void SetExtraColumns<T>()
             where T : ColumnContainer, new()
         {
             VerifyDesignMode();
-            if (Extender != null)
+            if (ExtraColumns != null)
                 throw new InvalidOperationException(DiagnosticMessages.Model_ExtensionAlreadyExists);
             else
-                Extender = new T();
+                ExtraColumns = new T();
         }
 
-        internal void SetExtender(Type extenderType)
+        internal void SetExtraColumns(Type extType)
         {
-            Debug.Assert(extenderType != null);
-            if (Extender != null)
+            Debug.Assert(extType != null);
+            if (ExtraColumns != null)
                 throw new InvalidOperationException(DiagnosticMessages.Model_ExtensionAlreadyExists);
             else
-                Extender = (ColumnContainer)Activator.CreateInstance(extenderType);
+                ExtraColumns = (ColumnContainer)Activator.CreateInstance(extType);
         }
 
-        public T GetExtender<T>()
+        public T GetExtraColumns<T>()
             where T : ColumnContainer, new()
         {
-            return Extender as T;
+            return ExtraColumns as T;
         }
 
         private int _suspendEditingValueCount = 0;

@@ -972,11 +972,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Invalid member name "{memberName}" for ModelExtender "{extender}".
+        /// Invalid member name "{memberName}" for ColumnContainer "{columnContainerType}".
         /// </summary>
-        public static string JsonParser_InvalidExtenderMember(object memberName, object extender)
+        public static string JsonParser_InvalidColumnContainerMember(object memberName, object columnContainerType)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidExtenderMember", "memberName", "extender"), memberName, extender);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidColumnContainerMember", "memberName", "columnContainerType"), memberName, columnContainerType);
         }
 
         /// <summary>

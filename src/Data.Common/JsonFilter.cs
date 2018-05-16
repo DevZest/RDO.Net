@@ -8,7 +8,7 @@ namespace DevZest.Data
 {
     public abstract class JsonFilter
     {
-        public static JsonFilter NoExtender { get { return NoExtenderJsonFilter.Singleton; } }
+        public static JsonFilter NoExtraColumns { get { return NoExtraColumnsJsonFilter.Singleton; } }
         public static JsonFilter NoChildDataSet { get { return NoChildDataSetJsonFilter.Singleton; } }
         public static JsonFilter PrimaryKeyOnly { get { return PrimaryKeyOnlyJsonFilter.Singleton; } }
         public static JsonFilter Explicit(params ModelMember[] members)
@@ -17,7 +17,7 @@ namespace DevZest.Data
         }
         public static JsonFilter Explicit(params ColumnContainer[] columnContainers)
         {
-            return new ExplicitExtendersJsonFilter(Verify(columnContainers, nameof(columnContainers)));
+            return new ExplicitExtraColumnsJsonFilter(Verify(columnContainers, nameof(columnContainers)));
         }
 
         public static JsonFilter Join(params JsonFilter[] filters)
@@ -49,17 +49,17 @@ namespace DevZest.Data
 
         protected internal abstract bool ShouldSerialize(ModelMember member);
 
-        protected internal abstract bool ShouldSerialize(ColumnContainer extender);
+        protected internal abstract bool ShouldSerialize(ColumnContainer ext);
 
-        private sealed class NoExtenderJsonFilter : JsonFilter
+        private sealed class NoExtraColumnsJsonFilter : JsonFilter
         {
-            public static readonly NoExtenderJsonFilter Singleton = new NoExtenderJsonFilter();
+            public static readonly NoExtraColumnsJsonFilter Singleton = new NoExtraColumnsJsonFilter();
 
-            private NoExtenderJsonFilter()
+            private NoExtraColumnsJsonFilter()
             {
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer extender)
+            protected internal override bool ShouldSerialize(ColumnContainer ext)
             {
                 return false;
             }
@@ -78,7 +78,7 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer extender)
+            protected internal override bool ShouldSerialize(ColumnContainer ext)
             {
                 return true;
             }
@@ -98,7 +98,7 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer extender)
+            protected internal override bool ShouldSerialize(ColumnContainer ext)
             {
                 return false;
             }
@@ -125,30 +125,30 @@ namespace DevZest.Data
                 return _members.Contains(member);
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer extender)
+            protected internal override bool ShouldSerialize(ColumnContainer ext)
             {
                 return true;
             }
         }
 
-        private sealed class ExplicitExtendersJsonFilter : JsonFilter
+        private sealed class ExplicitExtraColumnsJsonFilter : JsonFilter
         {
-            public ExplicitExtendersJsonFilter(HashSet<ColumnContainer> extenders)
+            public ExplicitExtraColumnsJsonFilter(HashSet<ColumnContainer> columnContainers)
             {
-                Debug.Assert(extenders != null);
-                _extenders = extenders;
+                Debug.Assert(columnContainers != null);
+                _columnContainers = columnContainers;
             }
 
-            private readonly HashSet<ColumnContainer> _extenders;
+            private readonly HashSet<ColumnContainer> _columnContainers;
 
             protected internal override bool ShouldSerialize(ModelMember member)
             {
                 return true;
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer extender)
+            protected internal override bool ShouldSerialize(ColumnContainer ext)
             {
-                return _extenders.Contains(extender);
+                return _columnContainers.Contains(ext);
             }
         }
 
@@ -172,11 +172,11 @@ namespace DevZest.Data
                 return true;
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer extender)
+            protected internal override bool ShouldSerialize(ColumnContainer ext)
             {
                 for (int i = 0; i < _filters.Length; i++)
                 {
-                    if (!_filters[i].ShouldSerialize(extender))
+                    if (!_filters[i].ShouldSerialize(ext))
                         return false;
                 }
                 return true;

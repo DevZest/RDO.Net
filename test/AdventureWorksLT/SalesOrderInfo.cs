@@ -3,7 +3,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ModelExtender(typeof(ForeignKeyLookup.Ext))]
+    [ExtraColumns(typeof(ForeignKeyLookup.Ext))]
     public class SalesOrderInfo : SalesOrder
     {
         public new SalesOrderInfoDetail SalesOrderDetails

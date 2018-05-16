@@ -60,7 +60,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        [ModelExtender(typeof(Ext))]
+        [ExtraColumns(typeof(Ext))]
         public class ForeignKeyLookup : Model
         {
             public class Ext : ColumnContainer
@@ -75,7 +75,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             public Product.Lookup Product
             {
-                get { return GetExtender<Ext>().Product; }
+                get { return GetExtraColumns<Ext>().Product; }
             }
         }
 

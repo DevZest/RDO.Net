@@ -13,8 +13,8 @@ namespace DevZest.Data
         private static MounterManager<ColumnContainer, Column> s_columnManager = new MounterManager<ColumnContainer, Column>();
         internal const string ROOT_NAME = "__Ext";
 
-        protected static void RegisterColumn<TExtender, TColumn>(Expression<Func<TExtender, TColumn>> getter, Mounter<TColumn> fromMounter)
-            where TExtender : ColumnContainer
+        protected static void RegisterColumn<TContainer, TColumn>(Expression<Func<TContainer, TColumn>> getter, Mounter<TColumn> fromMounter)
+            where TContainer : ColumnContainer
             where TColumn : Column, new()
         {
             var initializer = getter.Verify(nameof(getter));
@@ -25,8 +25,8 @@ namespace DevZest.Data
             result.OriginalName = fromMounter.OriginalName;
         }
 
-        private static T CreateColumn<TExtender, T>(Mounter<TExtender, T> mounter, Action<T> initializer)
-            where TExtender : ColumnContainer
+        private static T CreateColumn<TContainer, T>(Mounter<TContainer, T> mounter, Action<T> initializer)
+            where TContainer : ColumnContainer
             where T : Column, new()
         {
             var result = Column.Create<T>(mounter.OriginalDeclaringType, mounter.OriginalName);
@@ -46,8 +46,8 @@ namespace DevZest.Data
             s_childContainerManager.Register(getter, CreateChildContainer, null);
         }
 
-        private static TChild CreateChildContainer<TExtender, TChild>(Mounter<TExtender, TChild> mounter)
-            where TExtender : ColumnContainer, new()
+        private static TChild CreateChildContainer<TContainer, TChild>(Mounter<TContainer, TChild> mounter)
+            where TContainer : ColumnContainer, new()
             where TChild : ColumnContainer, new()
         {
             TChild result = new TChild();
