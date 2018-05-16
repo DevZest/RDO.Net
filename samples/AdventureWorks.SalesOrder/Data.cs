@@ -17,7 +17,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task DeleteAsync(DataSet<SalesOrderHeader.PK_> dataSet, CancellationToken ct)
+        public static async Task DeleteAsync(DataSet<SalesOrderHeader.Key> dataSet, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
@@ -31,7 +31,7 @@ namespace AdventureWorks.SalesOrders
             {
                 var result = db.CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
                 {
-                    var ext = _.GetExtender<SalesOrderHeader.ForeignKeyLookup.Ext>();
+                    var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
                     Debug.Assert(ext != null);
                     builder.From(db.SalesOrderHeaders, out var o)
                         .LeftJoin(db.Customers, o.FK_Customer, out var c)
@@ -45,9 +45,9 @@ namespace AdventureWorks.SalesOrders
 
                 await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
                 {
-                    Debug.Assert(_.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>() != null);
+                    Debug.Assert(_.GetExtraColumns<Product.Lookup>() != null);
                     builder.From(db.SalesOrderDetails, out var d)
-                        .LeftJoin(db.Products, d.Product, out var p)
+                        .LeftJoin(db.Products, d.FK_Product, out var p)
                         .AutoSelect();
                 }, ct);
 
@@ -113,7 +113,7 @@ namespace AdventureWorks.SalesOrders
             }
         }
 
-        public static async Task<DataSet<SalesOrderDetail.ForeignKeyLookup>> LookupAsync(DataSet<SalesOrderDetail.ForeignKey> data, CancellationToken ct)
+        public static async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> data, CancellationToken ct)
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {

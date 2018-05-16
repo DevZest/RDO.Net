@@ -7,41 +7,41 @@ namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
-        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TExtender>(this TKey key, TExtender extender, Func<ColumnValueBag, TKey, string> toString)
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup>(this TKey key, TLookup lookup, Func<ColumnValueBag, TKey, string> toString)
             where TKey : PrimaryKey
-            where TExtender : ModelExtender
+            where TLookup : ColumnContainer
         {
             if (toString == null)
                 throw new ArgumentNullException(nameof(toString));
 
-            return BindToForeignKeyBox(key, extender, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtender paramExt) =>
+            return BindToForeignKeyBox(key, lookup, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TLookup paramExt) =>
             {
                 v.Text = toString(valueBag, paramKey);
             });
         }
 
-        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TExtender>(this TKey key, TExtender extender, Func<ColumnValueBag, TKey, TExtender, string> toString)
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup>(this TKey key, TLookup lookup, Func<ColumnValueBag, TKey, TLookup, string> toString)
             where TKey : PrimaryKey
-            where TExtender : ModelExtender
+            where TLookup : ColumnContainer
         {
             if (toString == null)
                 throw new ArgumentNullException(nameof(toString));
 
-            return BindToForeignKeyBox(key, extender, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TExtender paramExt) =>
+            return BindToForeignKeyBox(key, lookup, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TLookup paramExt) =>
             {
                 v.Text = toString(valueBag, paramKey, paramExt);
             });
         }
 
-        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TExtender, TView>(this TKey key, TExtender extender, Action<TView, ColumnValueBag, TExtender> refreshAction)
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup, TView>(this TKey key, TLookup lookup, Action<TView, ColumnValueBag, TLookup> refreshAction)
             where TKey : PrimaryKey
-            where TExtender : ModelExtender
+            where TLookup : ColumnContainer
             where TView : UIElement, new()
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
-            if (extender == null)
-                throw new ArgumentNullException(nameof(extender));
+            if (lookup == null)
+                throw new ArgumentNullException(nameof(lookup));
             if (refreshAction == null)
                 throw new ArgumentNullException(nameof(refreshAction));
 
@@ -50,26 +50,26 @@ namespace DevZest.Data.Presenters
                 {
                     v.Content = new TView();
                     v.ForeignKey = key;
-                    v.Extender = extender;
+                    v.Lookup = lookup;
                 },
                 onRefresh: (v, p) => {
-                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extender);
-                    refreshAction((TView)v.Content, v.ValueBag, extender);
+                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Lookup);
+                    refreshAction((TView)v.Content, v.ValueBag, lookup);
                     },
                 onCleanup: (v, p) => {
                     v.Content = null;
-                }).WithInput(key, extender);
+                }).WithInput(key, lookup);
         }
 
-        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TExtender, TView>(this TKey key, TExtender extender, Action<TView, ColumnValueBag, TKey, TExtender> refreshAction)
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup, TView>(this TKey key, TLookup lookup, Action<TView, ColumnValueBag, TKey, TLookup> refreshAction)
             where TKey : PrimaryKey
-            where TExtender : ModelExtender
+            where TLookup : ColumnContainer
             where TView : UIElement, new()
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
-            if (extender == null)
-                throw new ArgumentNullException(nameof(extender));
+            if (lookup == null)
+                throw new ArgumentNullException(nameof(lookup));
             if (refreshAction == null)
                 throw new ArgumentNullException(nameof(refreshAction));
 
@@ -77,25 +77,25 @@ namespace DevZest.Data.Presenters
                 onSetup: (v, p) => {
                     v.Content = new TView();
                     v.ForeignKey = key;
-                    v.Extender = extender;
+                    v.Lookup = lookup;
                 },
                 onRefresh: (v, p) => {
-                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Extender);
-                    refreshAction((TView)v.Content, v.ValueBag, key, extender);
+                    p.SetValueBag(v.ValueBag, v.ForeignKey, v.Lookup);
+                    refreshAction((TView)v.Content, v.ValueBag, key, lookup);
                 },
                 onCleanup: (v, p) => {
                     v.Content = null;
-                }).WithInput(key, extender);
+                }).WithInput(key, lookup);
         }
 
-        private static RowBinding<ForeignKeyBox> WithInput(this RowBinding<ForeignKeyBox> rowBinding, PrimaryKey foreignKey, ModelExtender extender)
+        private static RowBinding<ForeignKeyBox> WithInput(this RowBinding<ForeignKeyBox> rowBinding, PrimaryKey foreignKey, ColumnContainer lookup)
         {
             var rowInput = rowBinding.BeginInput(ForeignKeyBox.ValueBagProperty);
             foreach (var columnSort in foreignKey)
                 rowInput.WithFlush(columnSort.Column, v => v.ValueBag);
-            if (extender != null)
+            if (lookup != null)
             {
-                foreach (var column in extender.Columns)
+                foreach (var column in lookup.Columns)
                 {
                     if (column.IsExpression)
                         continue;

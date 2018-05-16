@@ -23,7 +23,7 @@ namespace AdventureWorks.SalesOrders
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var product = _.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>().Product;
+                var product = _.GetExtraColumns<Product.Lookup>();
                 builder.GridRows("Auto", "20")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
                     .WithFrozenTop(1)
@@ -41,7 +41,7 @@ namespace AdventureWorks.SalesOrders
                     .AddBinding(5, 0, _.OrderQty.BindToColumnHeader("Qty"))
                     .AddBinding(6, 0, _.LineTotal.BindToColumnHeader("Total"))
                     .AddBinding(0, 1, _.BindToRowHeader())
-                    .AddBinding(1, 1, _.Product.BindToForeignKeyBox(product, GetProductNumber).MergeIntoGridCell(product.ProductNumber.BindToTextBlock()).WithSerializableColumns(_.ProductID, product.ProductNumber))
+                    .AddBinding(1, 1, _.FK_Product.BindToForeignKeyBox(product, GetProductNumber).MergeIntoGridCell(product.ProductNumber.BindToTextBlock()).WithSerializableColumns(_.ProductID, product.ProductNumber))
                     .AddBinding(2, 1, product.Name.BindToTextBlock().AddToGridCell().WithSerializableColumns(product.Name))
                     .AddBinding(3, 1, _.UnitPrice.BindToTextBox().MergeIntoGridCell())
                     .AddBinding(4, 1, _.UnitPriceDiscount.BindToTextBox(new PercentageConverter()).MergeIntoGridCell(_.UnitPriceDiscount.BindToTextBlock("{0:P}")))
@@ -56,7 +56,7 @@ namespace AdventureWorks.SalesOrders
 
             bool ForeignKeyBox.ILookupService.CanLookup(PrimaryKey foreignKey)
             {
-                if (foreignKey == _.Product)
+                if (foreignKey == _.FK_Product)
                     return true;
                 else
                     return false;
@@ -64,7 +64,7 @@ namespace AdventureWorks.SalesOrders
 
             void ForeignKeyBox.ILookupService.BeginLookup(ForeignKeyBox foreignKeyBox)
             {
-                if (foreignKeyBox.ForeignKey == _.Product)
+                if (foreignKeyBox.ForeignKey == _.FK_Product)
                 {
                     var dialogWindow = new ProductLookupWindow();
                     dialogWindow.Show(_ownerWindow, foreignKeyBox, CurrentRow.GetValue(_.ProductID));
@@ -80,7 +80,7 @@ namespace AdventureWorks.SalesOrders
 
             bool DataView.IPasteAppendService.Verify(IReadOnlyList<ColumnValueBag> data)
             {
-                var foreignKeys = DataSet<SalesOrderDetail.ForeignKey>.New();
+                var foreignKeys = DataSet<Product.Ref>.New();
                 for (int i = 0; i < data.Count; i++)
                 {
                     var valueBag = data[i];
@@ -95,11 +95,11 @@ namespace AdventureWorks.SalesOrders
                     return false;
 
                 Debug.Assert(lookup.Count == data.Count);
-                var product = _.GetExtender<SalesOrderDetail.ForeignKeyLookup.Ext>().Product;
+                var product = _.GetExtraColumns<Product.Lookup>();
                 for (int i = 0; i < lookup.Count; i++)
                 {
-                    data[i].SetValue(product.Name, lookup._.Product.Name[i]);
-                    data[i].SetValue(product.ProductNumber, lookup._.Product.ProductNumber[i]);
+                    data[i].SetValue(product.Name, lookup._.Name[i]);
+                    data[i].SetValue(product.ProductNumber, lookup._.ProductNumber[i]);
                 }
                 return true;
             }

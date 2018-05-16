@@ -27,7 +27,7 @@ namespace AdventureWorks.SalesOrders
         }
         private Address.Lookup Lookup
         {
-            get { return (Address.Lookup)_foreignKeyBox.Extender; }
+            get { return (Address.Lookup)_foreignKeyBox.Lookup; }
         }
 
         public void Show(ForeignKeyBox foreignKeyBox, int? currentAddressID, int customerID)

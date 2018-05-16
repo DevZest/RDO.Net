@@ -116,7 +116,7 @@ namespace DevZest.Data.Views
 
         public PrimaryKey ForeignKey { get; internal set; }
 
-        public ModelExtender Extender { get; internal set; }
+        public ColumnContainer Lookup { get; internal set; }
 
         public ColumnValueBag ValueBag
         {
@@ -181,7 +181,7 @@ namespace DevZest.Data.Views
         {
             Command = null;
             ForeignKey = null;
-            Extender = null;
+            Lookup = null;
             ValueBag.Clear();
             this.CleanupCommandEntries();
         }
