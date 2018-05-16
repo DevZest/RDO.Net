@@ -11,7 +11,7 @@ namespace DevZest.Data
         {
             using (var db = OpenDbAsync().Result)
             {
-                var salesOrderDetails = db.CreateQuery(_ => _.SetExtraColumns<SalesOrderDetail.ForeignKeyLookup.Ext>(),
+                var salesOrderDetails = db.CreateQuery(_ => _.SetExtraColumns<Product.Lookup>(),
                     (DbQueryBuilder builder, SalesOrderDetail _) =>
                     {
                         SalesOrderDetail d;
@@ -26,7 +26,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrderDetail_71774_with_ext.Trim();
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtraColumns<SalesOrderDetail.ForeignKeyLookup.Ext>(), json);
+                var dataSet = DataSet<SalesOrderDetail>.ParseJson(_ => _.SetExtraColumns<Product.Lookup>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }
@@ -36,10 +36,10 @@ namespace DevZest.Data
         {
             using (var db = OpenDbAsync().Result)
             {
-                var salesOrders = db.CreateQuery(_ => _.SetExtraColumns<SalesOrderHeader.ForeignKeyLookup.Ext>(),
+                var salesOrders = db.CreateQuery(_ => _.SetExtraColumns<SalesOrderHeader.FK.Ext>(),
                     (DbQueryBuilder builder, SalesOrder _) =>
                     {
-                        var ext = _.GetExtraColumns<SalesOrderHeader.ForeignKeyLookup.Ext>();
+                        var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
                         builder.From(db.SalesOrderHeaders, out var o)
                             .InnerJoin(db.Customers, o.FK_Customer, out var c)
                             .InnerJoin(db.Addresses, o.FK_ShipToAddress, out var shipTo)
@@ -54,7 +54,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrder_71774_with_ext;
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtraColumns<SalesOrderHeader.ForeignKeyLookup.Ext>(), json);
+                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtraColumns<SalesOrderHeader.FK.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }

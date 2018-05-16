@@ -22,11 +22,11 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(salesOrderID));
         }
 
-        public class PK_ : Model<PK>
+        public class Key : Model<PK>
         {
-            static PK_()
+            static Key()
             {
-                RegisterColumn((PK_ _) => _.SalesOrderID, _SalesOrderID);
+                RegisterColumn((Key _) => _.SalesOrderID, _SalesOrderID);
             }
 
             private PK _primaryKey;
@@ -38,41 +38,36 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderID { get; private set; }
         }
 
-        public class ForeignKey : Model
+        public class Ref : Ref<PK>
         {
-            static ForeignKey()
+            static Ref()
             {
-                RegisterColumn((ForeignKey _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
-                RegisterColumn((ForeignKey _) => _.ShipToAddressID, Address._AddressID);
-                RegisterColumn((ForeignKey _) => _.BillToAddressID, Address._AddressID);
+                RegisterColumn((Ref _) => _.SalesOrderID, _SalesOrderID);
             }
 
-            public _Int32 CustomerID { get; private set; }
-            public _Int32 ShipToAddressID { get; private set; }
-            public _Int32 BillToAddressID { get; private set; }
+            public _Int32 SalesOrderID { get; private set; }
 
-            private Customer.PK _customer;
-            public Customer.PK Customer
+            protected override PK CreatePrimaryKey()
             {
-                get { return _customer ?? (_customer = new Customer.PK(CustomerID)); }
-            }
-
-            private Address.PK _shipToAddress;
-            public Address.PK ShipToAddress
-            {
-                get { return _shipToAddress ?? (_shipToAddress = new Address.PK(ShipToAddressID)); }
-            }
-
-            private Address.PK _billToAddress;
-            public Address.PK BillToAddress
-            {
-                get { return _billToAddress ?? (_billToAddress = new Address.PK(BillToAddressID)); }
+                return new PK(SalesOrderID);
             }
         }
 
-        [ExtraColumns(typeof(Ext))]
-        public class ForeignKeyLookup : Model
+        public class FK : ForeignKey<PK>
         {
+            static FK()
+            {
+                RegisterChildContainer((FK _) => _.Customer);
+                RegisterChildContainer((FK _) => _.ShipToAddress);
+                RegisterChildContainer((FK _) => _.BillToAddress);
+            }
+
+            public Customer.Ref Customer { get; private set; }
+
+            public Address.Ref ShipToAddress { get; private set; }
+
+            public Address.Ref BillToAddress { get; private set; }
+
             public class Ext : ColumnContainer
             {
                 static Ext()
@@ -85,21 +80,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 public Customer.Lookup Customer { get; private set; }
                 public Address.Lookup ShipToAddress { get; private set; }
                 public Address.Lookup BillToAddress { get; private set; }
-            }
-
-            public Customer.Lookup Customer
-            {
-                get { return GetExtraColumns<Ext>().Customer; }
-            }
-
-            public Address.Lookup ShipToAddress
-            {
-                get { return GetExtraColumns<Ext>().ShipToAddress; }
-            }
-
-            public Address.Lookup BillToAddress
-            {
-                get { return GetExtraColumns<Ext>().BillToAddress; }
             }
         }
 

@@ -82,19 +82,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DataSet_CreateChild()
-        {
-            var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
-            {
-                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSetAsync().Result;
-                Assert.IsTrue(salesOrders.Count == 1);
-                salesOrders.FillAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetails).Wait();
-                Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
-            }
-        }
-
-        [TestMethod]
         public async Task DataSet_CreateChildAsync()
         {
             var log = new StringBuilder();

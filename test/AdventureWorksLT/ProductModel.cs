@@ -22,11 +22,11 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(productModelId));
         }
 
-        public class PK_ : Model<PK>
+        public class Key : Model<PK>
         {
-            static PK_()
+            static Key()
             {
-                RegisterColumn((PK_ _) => _.ProductModelID, _ProductModelID);
+                RegisterColumn((Key _) => _.ProductModelID, _ProductModelID);
             }
 
             private PK _primaryKey;
@@ -38,7 +38,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductModelID { get; private set; }
         }
 
-        public class Lookup : ColumnContainer
+        public class Ref : Ref<PK>
+        {
+            static Ref()
+            {
+                RegisterColumn((Ref _) => _.ProductModelID, _ProductModelID);
+            }
+
+            public _Int32 ProductModelID { get; private set; }
+
+            protected override PK CreatePrimaryKey()
+            {
+                return new PK(ProductModelID);
+            }
+        }
+
+        public class Lookup : Lookup<PK>
         {
             static Lookup()
             {

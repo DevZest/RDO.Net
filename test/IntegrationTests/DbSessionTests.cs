@@ -202,26 +202,14 @@ ORDER BY [Customer].[CustomerID];
         }
 
         [TestMethod]
-        public void DbSession_Lookup()
-        {
-            var foreignKeys = DataSet<SalesOrderDetail.ForeignKey>.ParseJson(Strings.JSON_SalesOrderDetail_ForeignKeys);
-            var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
-            {
-                var lookup = db.LookupAsync(foreignKeys).Result;
-                Assert.AreEqual(Strings.ExpectedJSON_SalesOrderDetail_Lookup, lookup.ToJsonString(true));
-            }
-        }
-
-        [TestMethod]
         public async Task DbSession_LookupAsync()
         {
-            var foreignKeys = DataSet<SalesOrderDetail.ForeignKey>.ParseJson(Strings.JSON_SalesOrderDetail_ForeignKeys);
+            var productIds = DataSet<Product.Ref>.ParseJson(Strings.JSON_ProductIds);
             var log = new StringBuilder();
             using (var db = await OpenDbAsync(log))
             {
-                var lookup = await db.LookupAsync(foreignKeys, CancellationToken.None);
-                Assert.AreEqual(Strings.ExpectedJSON_SalesOrderDetail_Lookup, lookup.ToJsonString(true));
+                var lookup = await db.LookupAsync(productIds, CancellationToken.None);
+                Assert.AreEqual(Strings.ExpectedJSON_Product_Lookup, lookup.ToJsonString(true));
             }
         }
     }

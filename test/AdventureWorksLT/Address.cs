@@ -25,11 +25,11 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(addressId));
         }
 
-        public class PK_ : Model<PK>
+        public class Key : Model<PK>
         {
-            static PK_()
+            static Key()
             {
-                RegisterColumn((PK_ _) => _.AddressID, _AddressID);
+                RegisterColumn((Key _) => _.AddressID, _AddressID);
             }
 
             private PK _primaryKey;
@@ -41,7 +41,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public class Lookup : ColumnContainer
+        public class Ref : Ref<PK>
+        {
+            static Ref()
+            {
+                RegisterColumn((Ref _) => _.AddressID, _AddressID);
+            }
+
+            public _Int32 AddressID { get; private set; }
+
+            protected override PK CreatePrimaryKey()
+            {
+                return new PK(AddressID);
+            }
+        }
+
+        public class Lookup : Lookup<PK>
         {
             static Lookup()
             {

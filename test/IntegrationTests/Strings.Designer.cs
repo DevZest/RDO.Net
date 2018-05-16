@@ -63,6 +63,28 @@ namespace DevZest.Data {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
+        ///      &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
+        ///      &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
+        ///   },
+        ///   {
+        ///      &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 38&quot;,
+        ///      &quot;ProductNumber&quot; : &quot;FR-R72Y-38&quot;
+        ///   },
+        ///   {
+        ///      &quot;Name&quot; : null,
+        ///      &quot;ProductNumber&quot; : null
+        ///   }
+        ///].
+        /// </summary>
+        internal static string ExpectedJSON_Product_Lookup {
+            get {
+                return ResourceManager.GetString("ExpectedJSON_Product_Lookup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///   {
         ///      &quot;ProductCategoryID&quot; : 1,
         ///      &quot;ParentProductCategoryID&quot; : null,
         ///      &quot;Name&quot; : &quot;Bikes&quot;,
@@ -144,53 +166,18 @@ namespace DevZest.Data {
         ///      &quot;RowGuid&quot; : &quot;e3a1994c-7a68-4ce8-96a3-77fdd3bbd730&quot;,
         ///      &quot;ModifiedDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
         ///      &quot;__Ext&quot; : {
-        ///         &quot;Product&quot; : {
-        ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
-        ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
-        ///         }
+        ///         &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
+        ///         &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
         ///      }
         ///   },
         ///   {
         ///      &quot;SalesOrderID&quot; : 71774,
-        ///       [rest of string was truncated]&quot;;.
+        ///      &quot;SalesOrderDetailID&quot; : 110563,
+        ///      &quot;Ord [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_SalesOrderDetail_71774_with_ext {
             get {
                 return ResourceManager.GetString("ExpectedJSON_SalesOrderDetail_71774_with_ext", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [
-        ///   {
-        ///      &quot;__Ext&quot; : {
-        ///         &quot;Product&quot; : {
-        ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
-        ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
-        ///         }
-        ///      }
-        ///   },
-        ///   {
-        ///      &quot;__Ext&quot; : {
-        ///         &quot;Product&quot; : {
-        ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 38&quot;,
-        ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-38&quot;
-        ///         }
-        ///      }
-        ///   },
-        ///   {
-        ///      &quot;__Ext&quot; : {
-        ///         &quot;Product&quot; : {
-        ///            &quot;Name&quot; : null,
-        ///            &quot;ProductNumber&quot; : null
-        ///         }
-        ///      }
-        ///   }
-        ///].
-        /// </summary>
-        internal static string ExpectedJSON_SalesOrderDetail_Lookup {
-            get {
-                return ResourceManager.GetString("ExpectedJSON_SalesOrderDetail_Lookup", resourceCulture);
             }
         }
         
@@ -253,9 +240,9 @@ namespace DevZest.Data {
         ///   }
         ///].
         /// </summary>
-        internal static string JSON_SalesOrderDetail_ForeignKeys {
+        internal static string JSON_ProductIds {
             get {
-                return ResourceManager.GetString("JSON_SalesOrderDetail_ForeignKeys", resourceCulture);
+                return ResourceManager.GetString("JSON_ProductIds", resourceCulture);
             }
         }
         

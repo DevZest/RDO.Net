@@ -178,7 +178,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
             {
-                var ext = _.GetExtraColumns<SalesOrderHeader.ForeignKeyLookup.Ext>();
+                var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
                 Debug.Assert(ext != null);
                 builder.From(SalesOrderHeaders, out var o)
                     .LeftJoin(Customers, o.FK_Customer, out var c)
@@ -192,7 +192,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
             {
-                Debug.Assert(_.GetExtraColumns<SalesOrderDetail.ForeignKeyLookup.Ext>() != null);
+                Debug.Assert(_.GetExtraColumns<Product.Lookup>() != null);
                 builder.From(SalesOrderDetails, out var d)
                     .LeftJoin(Products, d.FK_Product, out var p)
                     .AutoSelect();
@@ -230,16 +230,16 @@ namespace DevZest.Samples.AdventureWorksLT
             await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
         }
 
-        public async Task<DataSet<SalesOrderDetail.ForeignKeyLookup>> LookupAsync(DataSet<SalesOrderDetail.ForeignKey> foreignKeys, CancellationToken ct = default(CancellationToken))
+        public async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> refs, CancellationToken ct = default(CancellationToken))
         {
-            var tempTable = await CreateTempTableAsync<SalesOrderDetail.ForeignKey>(ct);
-            await tempTable.Insert(foreignKeys).ExecuteAsync(ct);
-            return await CreateQuery((DbQueryBuilder builder, SalesOrderDetail.ForeignKeyLookup _) =>
+            var tempTable = await CreateTempTableAsync<Product.Ref>(ct);
+            await tempTable.Insert(refs).ExecuteAsync(ct);
+            return await CreateQuery((DbQueryBuilder builder, Product.Lookup _) =>
             {
                 builder.From(tempTable, out var t);
-                var seqNo = t.GetIdentity(true).Column;
+                var seqNo = t.Model.GetIdentity(true).Column;
                 Debug.Assert(!ReferenceEquals(seqNo, null));
-                builder.LeftJoin(Products, t.Product, out var p)
+                builder.LeftJoin(Products, t.Key, out var p)
                     .AutoSelect().OrderBy(seqNo);
             }).ToDataSetAsync(ct);
         }

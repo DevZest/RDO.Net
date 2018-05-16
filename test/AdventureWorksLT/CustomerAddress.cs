@@ -24,12 +24,12 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(customerId), _Int32.Const(addressId));
         }
 
-        public class PK_ : Model<PK>
+        public class Key : Model<PK>
         {
-            static PK_()
+            static Key()
             {
-                RegisterColumn((PK_ _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
-                RegisterColumn((PK_ _) => _.AddressID, AdventureWorksLT.Address._AddressID);
+                RegisterColumn((Key _) => _.CustomerID, Customer._CustomerID);
+                RegisterColumn((Key _) => _.AddressID, Address._AddressID);
             }
 
             private PK _primaryKey;
@@ -43,7 +43,25 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public class Lookup : ColumnContainer
+        public class Ref : Ref<PK>
+        {
+            static Ref()
+            {
+                RegisterColumn((Ref _) => _.CustomerID, Customer._CustomerID);
+                RegisterColumn((Ref _) => _.AddressID, Address._AddressID);
+            }
+
+            public _Int32 CustomerID { get; private set; }
+
+            public _Int32 AddressID { get; private set; }
+
+            protected override PK CreatePrimaryKey()
+            {
+                return new PK(CustomerID, AddressID);
+            }
+        }
+
+        public class Lookup : Lookup<PK>
         {
             static Lookup()
             {
@@ -53,33 +71,17 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String AddressType { get; private set; }
         }
 
-        public class ForeignKey : Model
+        public sealed class FK : ForeignKey<PK>
         {
-            static ForeignKey()
+            static FK()
             {
-                RegisterColumn((ForeignKey _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
-                RegisterColumn((ForeignKey _) => _.AddressID, AdventureWorksLT.Address._AddressID);
+                RegisterChildContainer((FK _) => _.FK_Customer);
+                RegisterChildContainer((FK _) => _.FK_Address);
             }
 
-            public _Int32 CustomerID { get; private set; }
-            public _Int32 AddressID { get; private set; }
+            public Customer.Ref FK_Customer { get; private set; }
+            public Address.Ref FK_Address { get; private set; }
 
-            private Customer.PK _customer;
-            public Customer.PK Customer
-            {
-                get { return _customer ?? (_customer = new Customer.PK(CustomerID)); }
-            }
-
-            private Address.PK _address;
-            public Address.PK Address
-            {
-                get { return _address ?? (_address = new Address.PK(AddressID)); }
-            }
-        }
-
-        [ExtraColumns(typeof(Ext))]
-        public class ForeignKeyLookup : Model
-        {
             public sealed class Ext : ColumnContainer
             {
                 static Ext()
@@ -90,16 +92,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
                 public Customer.Lookup Customer { get; private set; }
                 public Address.Lookup Address { get; private set; }
-            }
-
-            public Customer.Lookup Customer
-            {
-                get { return GetExtraColumns<Ext>().Customer; }
-            }
-
-            public Address.Lookup Address
-            {
-                get { return GetExtraColumns<Ext>().Address; }
             }
         }
 

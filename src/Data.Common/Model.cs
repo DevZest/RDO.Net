@@ -1251,7 +1251,7 @@ namespace DevZest.Data
         internal ColumnContainer ExtraColumns
         {
             get { return _extraColumns; }
-            private set
+            set
             {
                 Debug.Assert(_extraColumns == null);
                 Debug.Assert(value != null);

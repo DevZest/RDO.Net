@@ -3,7 +3,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ExtraColumns(typeof(ForeignKeyLookup.Ext))]
+    [ExtraColumns(typeof(Product.Lookup))]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
         [ModelValidator]
@@ -11,9 +11,9 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             if (ProductID[dataRow] == null)
                 return null;
-            var ext = GetExtraColumns<ForeignKeyLookup.Ext>();
-            var productNumber = ext.Product.ProductNumber;
-            var productName = ext.Product.Name;
+            var ext = GetExtraColumns<Product.Lookup>();
+            var productNumber = ext.ProductNumber;
+            var productName = ext.Name;
 
             if (string.IsNullOrEmpty(productNumber[dataRow]))
                 return new DataValidationError(string.Format(UserMessages.Validation_ValueIsRequired, productNumber.DisplayName), productNumber);

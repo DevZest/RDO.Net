@@ -61,7 +61,7 @@ namespace DevZest.Data
         {
             Debug.Assert(model != null);
             Model = model;
-            Name = FullName = IsExt ? EXT_ROOT_NAME : string.Empty;
+            Name = FullName = model.IsExtRoot ? string.Empty : EXT_ROOT_NAME;
             Mount();
         }
 
@@ -107,6 +107,12 @@ namespace DevZest.Data
 
         private sealed class ContainerModel : Model
         {
+            public ContainerModel(ColumnContainer ext)
+            {
+                Debug.Assert(ext != null && ext._model == null);
+                ExtraColumns = ext;
+            }
+
             internal override bool IsExtRoot
             {
                 get { return true; }
@@ -116,7 +122,10 @@ namespace DevZest.Data
         private void EnsureInitialized()
         {
             if (_model == null)
-                Initialize(new ContainerModel());
+            {
+                var containerModel = new ContainerModel(this);
+                Debug.Assert(_model == containerModel);
+            }
         }
 
         internal string FullName { get; private set; }
@@ -273,11 +282,6 @@ namespace DevZest.Data
                 else
                     return _childContainers;
             }
-        }
-
-        internal bool IsExt
-        {
-            get { return Model.ExtraColumns == this; }
         }
 
         private void Add(ColumnContainer childContainer)

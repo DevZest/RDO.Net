@@ -25,12 +25,12 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(salesOrderID), _Int32.Const(salesOrderDetailID));
         }
 
-        public class PK_ : Model<PK>
+        public class Key : Model<PK>
         {
-            static PK_()
+            static Key()
             {
-                RegisterColumn((PK_ _) => _.SalesOrderID, AdventureWorksLT.SalesOrderHeader._SalesOrderID);
-                RegisterColumn((PK_ _) => _.SalesOrderDetailID, _SalesOrderDetailID);
+                RegisterColumn((Key _) => _.SalesOrderID, AdventureWorksLT.SalesOrderHeader._SalesOrderID);
+                RegisterColumn((Key _) => _.SalesOrderDetailID, _SalesOrderDetailID);
             }
 
             private PK _primaryKey;
@@ -44,38 +44,21 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
-        public class ForeignKey : Model
+        public class Ref : Ref<PK>
         {
-            static ForeignKey()
+            static Ref()
             {
-                RegisterColumn((ForeignKey _) => _.ProductID, AdventureWorksLT.Product._ProductID);
+                RegisterColumn((Ref _) => _.SalesOrderID, AdventureWorksLT.SalesOrderHeader._SalesOrderID);
+                RegisterColumn((Ref _) => _.SalesOrderDetailID, _SalesOrderDetailID);
             }
 
-            public _Int32 ProductID { get; private set; }
+            public _Int32 SalesOrderID { get; private set; }
 
-            private Product.PK _product;
-            public Product.PK Product
+            public _Int32 SalesOrderDetailID { get; private set; }
+
+            protected override PK CreatePrimaryKey()
             {
-                get { return _product ?? (_product = new Product.PK(ProductID)); }
-            }
-        }
-
-        [ExtraColumns(typeof(Ext))]
-        public class ForeignKeyLookup : Model
-        {
-            public class Ext : ColumnContainer
-            {
-                static Ext()
-                {
-                    RegisterChildContainer((Ext _) => _.Product);
-                }
-
-                public Product.Lookup Product { get; private set; }
-            }
-
-            public Product.Lookup Product
-            {
-                get { return GetExtraColumns<Ext>().Product; }
+                return new PK(SalesOrderID, SalesOrderDetailID);
             }
         }
 
