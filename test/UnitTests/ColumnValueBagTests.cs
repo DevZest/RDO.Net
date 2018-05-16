@@ -11,7 +11,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
+            var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();
@@ -28,7 +28,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
+            var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
             var customer = ext.Customer;
             salesOrders.Add(new DataRow(), (dataRow) =>
             {
@@ -55,7 +55,7 @@ namespace DevZest.Data
             {
                 var salesOrder = DataSet<SalesOrderInfo>.New().EnsureInitialized()._;
                 var customerKey = salesOrder.FK_Customer;
-                var customerExt = salesOrder.GetExtraColumns<SalesOrderHeader.FK.Ext>().Customer;
+                var customerExt = salesOrder.GetExtraColumns<SalesOrderInfo.Ext>().Customer;
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);
                 valueBag.AutoSelect(customerExt, salesOrders[0]);
@@ -83,7 +83,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
+            var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();
@@ -102,7 +102,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
+            var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
             var customer = ext.Customer;
 
             var valueBag = new ColumnValueBag();

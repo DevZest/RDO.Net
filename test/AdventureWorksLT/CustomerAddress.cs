@@ -60,7 +60,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public class Lookup : Lookup<PK>
+        public class Lookup : ColumnContainer
         {
             static Lookup()
             {
@@ -68,30 +68,6 @@ namespace DevZest.Samples.AdventureWorksLT
             }
 
             public _String AddressType { get; private set; }
-        }
-
-        public sealed class FK : ForeignKey<PK>
-        {
-            static FK()
-            {
-                RegisterChildContainer((FK _) => _.FK_Customer);
-                RegisterChildContainer((FK _) => _.FK_Address);
-            }
-
-            public Customer.Ref FK_Customer { get; private set; }
-            public Address.Ref FK_Address { get; private set; }
-
-            public sealed class Ext : ColumnContainer
-            {
-                static Ext()
-                {
-                    RegisterChildContainer((Ext _) => _.Customer);
-                    RegisterChildContainer((Ext _) => _.Address);
-                }
-
-                public Customer.Lookup Customer { get; private set; }
-                public Address.Lookup Address { get; private set; }
-            }
         }
 
         public static readonly Mounter<_String> _AddressType;

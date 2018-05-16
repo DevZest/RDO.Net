@@ -55,7 +55,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public class Lookup : Lookup<PK>
+        public class Lookup : ColumnContainer
         {
             static Lookup()
             {

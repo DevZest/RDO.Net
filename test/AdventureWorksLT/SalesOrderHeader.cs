@@ -52,36 +52,6 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public class FK : ForeignKey<PK>
-        {
-            static FK()
-            {
-                RegisterChildContainer((FK _) => _.Customer);
-                RegisterChildContainer((FK _) => _.ShipToAddress);
-                RegisterChildContainer((FK _) => _.BillToAddress);
-            }
-
-            public Customer.Ref Customer { get; private set; }
-
-            public Address.Ref ShipToAddress { get; private set; }
-
-            public Address.Ref BillToAddress { get; private set; }
-
-            public class Ext : ColumnContainer
-            {
-                static Ext()
-                {
-                    RegisterChildContainer((Ext _) => _.Customer);
-                    RegisterChildContainer((Ext _) => _.ShipToAddress);
-                    RegisterChildContainer((Ext _) => _.BillToAddress);
-                }
-
-                public Customer.Lookup Customer { get; private set; }
-                public Address.Lookup ShipToAddress { get; private set; }
-                public Address.Lookup BillToAddress { get; private set; }
-            }
-        }
-
         public static readonly Mounter<_Int32> _SalesOrderID;
         public static readonly Mounter<_Byte> _RevisionNumber;
         public static readonly Mounter<_DateTime> _OrderDate;

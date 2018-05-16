@@ -36,10 +36,10 @@ namespace DevZest.Data
         {
             using (var db = OpenDbAsync().Result)
             {
-                var salesOrders = db.CreateQuery(_ => _.SetExtraColumns<SalesOrderHeader.FK.Ext>(),
+                var salesOrders = db.CreateQuery(_ => _.SetExtraColumns<SalesOrderInfo.Ext>(),
                     (DbQueryBuilder builder, SalesOrder _) =>
                     {
-                        var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
+                        var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
                         builder.From(db.SalesOrderHeaders, out var o)
                             .InnerJoin(db.Customers, o.FK_Customer, out var c)
                             .InnerJoin(db.Addresses, o.FK_ShipToAddress, out var shipTo)
@@ -54,7 +54,7 @@ namespace DevZest.Data
                 var expectedJson = Strings.ExpectedJSON_SalesOrder_71774_with_ext;
                 Assert.AreEqual(expectedJson, json);
 
-                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtraColumns<SalesOrderHeader.FK.Ext>(), json);
+                var dataSet = DataSet<SalesOrder>.ParseJson(_ => _.SetExtraColumns<SalesOrderInfo.Ext>(), json);
                 Assert.AreEqual(expectedJson, dataSet.ToJsonString(true));
             }
         }

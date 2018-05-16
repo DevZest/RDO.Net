@@ -178,7 +178,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
             {
-                var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
+                var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
                 Debug.Assert(ext != null);
                 builder.From(SalesOrderHeaders, out var o)
                     .LeftJoin(Customers, o.FK_Customer, out var c)
