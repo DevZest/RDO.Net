@@ -39,7 +39,7 @@ namespace DevZest.Data
         static MounterManager<ColumnContainer, ColumnContainer> s_childContainerManager = new MounterManager<ColumnContainer, ColumnContainer>();
 
         protected static void RegisterChildContainer<TContainer, TChild>(Expression<Func<TContainer, TChild>> getter)
-            where TContainer : ColumnContainer, new()
+            where TContainer : ColumnContainer
             where TChild : ColumnContainer, new()
         {
             Check.NotNull(getter, nameof(getter));
@@ -47,7 +47,7 @@ namespace DevZest.Data
         }
 
         private static TChild CreateChildContainer<TContainer, TChild>(Mounter<TContainer, TChild> mounter)
-            where TContainer : ColumnContainer, new()
+            where TContainer : ColumnContainer
             where TChild : ColumnContainer, new()
         {
             TChild result = new TChild();
