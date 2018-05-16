@@ -1306,5 +1306,10 @@ namespace DevZest.Data
         {
             get { return this; }
         }
+
+        internal virtual bool IsExtRoot
+        {
+            get { return false; }
+        }
     }
 }

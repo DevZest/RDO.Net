@@ -22,8 +22,9 @@ namespace DevZest.Data.Primitives
             var jsonFilter = jsonView.Filter;
             var columns = dataRow.Model.Columns;
             int count = 0;
-            foreach (var column in columns)
+            for (int i = 0; i < columns.Count; i++)
             {
+                var column = columns[i];
                 if (!column.ShouldSerialize)
                     continue;
 
@@ -39,23 +40,17 @@ namespace DevZest.Data.Primitives
                 jsonWriter.Write(dataRow, column);
                 count++;
             }
-
-            foreach (var columnList in dataRow.Model.ColumnLists)
+            var columnLists = dataRow.Model.ColumnLists;
+            for (int i =0; i < columnLists.Count; i++)
             {
+                var columnList = columnLists[i];
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(columnList))
                     continue;
 
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.WriteObjectName(columnList.Name);
-                jsonWriter.WriteStartArray();
-                for (int i = 0; i < columnList.Count; i++)
-                {
-                    if (i > 0)
-                        jsonWriter.WriteComma();
-                    jsonWriter.Write(dataRow, columnList[i]);
-                }
-                jsonWriter.WriteEndArray();
+
+                jsonWriter.Write(dataRow, columnList);
                 count++;
             }
 
@@ -66,13 +61,15 @@ namespace DevZest.Data.Primitives
                 {
                     if (count > 0)
                         jsonWriter.WriteComma();
-                    jsonWriter.Write(ext, dataRow, jsonFilter);
+                    jsonWriter.Write(dataRow, ext, jsonFilter);
                     count++;
                 }
             }
 
-            foreach (var dataSet in dataRow.ChildDataSets)
+            var childDataSets = dataRow.ChildDataSets;
+            for (int i = 0; i < childDataSets.Count; i++)
             {
+                var dataSet = childDataSets[i];
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(dataSet.Model))
                     continue;
 
@@ -86,6 +83,19 @@ namespace DevZest.Data.Primitives
             return jsonWriter.WriteEndObject();
         }
 
+        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnList columnList)
+        {
+            jsonWriter.WriteObjectName(columnList.Name);
+            jsonWriter.WriteStartArray();
+            for (int i = 0; i < columnList.Count; i++)
+            {
+                if (i > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.Write(dataRow, columnList[i]);
+            }
+            jsonWriter.WriteEndArray();
+        }
+
         private static void Write(this JsonWriter jsonWriter, DataRow dataRow, Column column)
         {
             var dataSetColumn = column as IDataSetColumn;
@@ -95,14 +105,30 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
         }
 
-        private static void Write(this JsonWriter jsonWriter, ColumnContainer columnContainer, DataRow dataRow, JsonFilter jsonFilter)
+        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnContainer columnContainer, JsonFilter jsonFilter)
         {
-            jsonWriter.WriteObjectName(columnContainer.Name);
+            if (string.IsNullOrEmpty(columnContainer.Name))
+                jsonWriter.WriteMembers(dataRow, columnContainer, jsonFilter);
+            else
+                jsonWriter.WriteExt(dataRow, columnContainer, jsonFilter);
+        }
 
-            var count = 0;
+        private static void WriteExt(this JsonWriter jsonWriter, DataRow dataRow, ColumnContainer columnContainer, JsonFilter jsonFilter)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(columnContainer.Name));
+            jsonWriter.WriteObjectName(columnContainer.Name);
             jsonWriter.WriteStartObject();
-            foreach (var column in columnContainer.Columns)
+            jsonWriter.WriteMembers(dataRow, columnContainer, jsonFilter);
+            jsonWriter.WriteEndObject();
+        }
+
+        private static void WriteMembers(this JsonWriter jsonWriter, DataRow dataRow, ColumnContainer columnContainer, JsonFilter jsonFilter)
+        {
+            var count = 0;
+            var columns = columnContainer.Columns;
+            for (int i = 0; i < columns.Count; i++)
             {
+                var column = columns[i];
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))
                     continue;
 
@@ -112,20 +138,32 @@ namespace DevZest.Data.Primitives
                 jsonWriter.Write(dataRow, column);
                 count++;
             }
-            foreach (var childContainer in columnContainer.ChildContainers)
+
+            var childContainers = columnContainer.ChildContainers;
+            for (int i = 0; i < childContainers.Count; i++)
             {
+                var childContainer = childContainers[i];
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(childContainer))
                     continue;
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.Write(childContainer, dataRow, jsonFilter);
+                jsonWriter.Write(dataRow, childContainer, jsonFilter);
                 count++;
             }
-            jsonWriter.WriteEndObject();
         }
+
 
         public static void Parse(this JsonParser jsonParser, DataRow dataRow)
         {
+            var model = dataRow.Model;
+            if (model.IsExtRoot)
+            {
+                var ext = model.ExtraColumns;
+                Debug.Assert(ext != null);
+                jsonParser.Parse(ext, dataRow);
+                return;
+            }
+
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
 
             var token = jsonParser.PeekToken();
@@ -151,7 +189,7 @@ namespace DevZest.Data.Primitives
 
             var model = dataRow.Model;
 
-            if (memberName == ColumnContainer.ROOT_NAME)
+            if (memberName == ColumnContainer.EXT_ROOT_NAME)
             {
                 var ext = model.ExtraColumns;
                 if (ext == null)

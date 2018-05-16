@@ -98,7 +98,7 @@ namespace DevZest.Data
         }
 
         private DataSet[] _childDataSets;
-        internal IReadOnlyCollection<DataSet> ChildDataSets
+        internal IReadOnlyList<DataSet> ChildDataSets
         {
             get { return _childDataSets; }
         }

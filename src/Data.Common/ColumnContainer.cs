@@ -8,10 +8,10 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    public abstract class ColumnContainer
+    public abstract class ColumnContainer : IModelReference
     {
         private static MounterManager<ColumnContainer, Column> s_columnManager = new MounterManager<ColumnContainer, Column>();
-        internal const string ROOT_NAME = "__Ext";
+        internal const string EXT_ROOT_NAME = "__Ext";
 
         protected static void RegisterColumn<TContainer, TColumn>(Expression<Func<TContainer, TColumn>> getter, Mounter<TColumn> fromMounter)
             where TContainer : ColumnContainer
@@ -61,7 +61,7 @@ namespace DevZest.Data
         {
             Debug.Assert(model != null);
             Model = model;
-            Name = FullName = ROOT_NAME;
+            Name = FullName = IsExt ? EXT_ROOT_NAME : string.Empty;
             Mount();
         }
 
@@ -71,7 +71,7 @@ namespace DevZest.Data
             Debug.Assert(parent.Model != null);
             Model = parent.Model;
             Name = name;
-            FullName = parent.FullName + "." + name;
+            FullName = string.IsNullOrEmpty(parent.FullName) ? name : parent.FullName + "." + name;
             Mount();
         }
 
@@ -94,7 +94,30 @@ namespace DevZest.Data
                 mounter.Mount(this);
         }
 
-        private Model Model { get; set; }
+        private Model _model;
+        public Model Model
+        {
+            get
+            {
+                EnsureInitialized();
+                return _model;
+            }
+            private set { _model = value; }
+        }
+
+        private sealed class ContainerModel : Model
+        {
+            internal override bool IsExtRoot
+            {
+                get { return true; }
+            }
+        }
+
+        private void EnsureInitialized()
+        {
+            if (_model == null)
+                Initialize(new ContainerModel());
+        }
 
         internal string FullName { get; private set; }
 
@@ -250,6 +273,11 @@ namespace DevZest.Data
                 else
                     return _childContainers;
             }
+        }
+
+        internal bool IsExt
+        {
+            get { return Model.ExtraColumns == this; }
         }
 
         private void Add(ColumnContainer childContainer)
