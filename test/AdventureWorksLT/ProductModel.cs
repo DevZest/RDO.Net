@@ -22,17 +22,16 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(productModelId));
         }
 
-        public class Key : Model<PK>
+        public sealed class Key : Model<PK>
         {
             static Key()
             {
                 RegisterColumn((Key _) => _.ProductModelID, _ProductModelID);
             }
 
-            private PK _primaryKey;
-            public sealed override PK PrimaryKey
+            protected override PK CreatePrimaryKey()
             {
-                get { return _primaryKey ?? (_primaryKey = new PK(ProductModelID)); }
+                return new PK(ProductModelID);
             }
 
             public _Int32 ProductModelID { get; private set; }
@@ -74,10 +73,9 @@ namespace DevZest.Samples.AdventureWorksLT
             _CatalogDescription = RegisterColumn((ProductModel _) => _.CatalogDescription);
         }
 
-        private PK _primaryKey;
-        public sealed override PK PrimaryKey
+        protected sealed override PK CreatePrimaryKey()
         {
-            get { return _primaryKey ?? (_primaryKey = new PK(ProductModelID)); }
+            return new PK(ProductModelID);
         }
 
         [Identity(1, 1)]

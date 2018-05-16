@@ -4,12 +4,26 @@ using System;
 
 namespace DevZest.Data.Helpers
 {
-    public abstract class SimpleModelBase : Model<SimpleModelKey>
+    public abstract class SimpleModelBase : Model<SimpleModelBase.PK>
     {
+        public sealed class PK : PrimaryKey
+        {
+            public PK(_Int32 id)
+            {
+                Id = id;
+            }
+
+            public _Int32 Id { get; private set; }
+        }
+
         protected SimpleModelBase()
         {
-            _primaryKey = new SimpleModelKey(Id);
-            ParentKey = new SimpleModelKey(ParentId);
+            ParentKey = new PK(ParentId);
+        }
+
+        protected sealed override PK CreatePrimaryKey()
+        {
+            return new PK(Id);
         }
 
         public static readonly Mounter<_Int32> _Id = RegisterColumn((SimpleModelBase x) => x.Id);
@@ -19,15 +33,9 @@ namespace DevZest.Data.Helpers
         [Required]
         public _Int32 Id { get; private set; }
 
-        private SimpleModelKey _primaryKey;
-        public sealed override SimpleModelKey PrimaryKey
-        {
-            get { return _primaryKey; }
-        }
-
         public _Int32 ParentId { get; private set; }
 
-        public SimpleModelKey ParentKey { get; private set; }
+        public PK ParentKey { get; private set; }
 
         public static DataSet<T> GetDataSet<T>(int count, Func<T, T> childGetter, Action<DataSet<T>, int> addRows, bool createChildren = true)
             where T : SimpleModelBase, new()

@@ -24,7 +24,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(customerId), _Int32.Const(addressId));
         }
 
-        public class Key : Model<PK>
+        public sealed class Key : Model<PK>
         {
             static Key()
             {
@@ -32,10 +32,9 @@ namespace DevZest.Samples.AdventureWorksLT
                 RegisterColumn((Key _) => _.AddressID, Address._AddressID);
             }
 
-            private PK _primaryKey;
-            public sealed override PK PrimaryKey
+            protected override PK CreatePrimaryKey()
             {
-                get { return _primaryKey ?? (_primaryKey = new PK(CustomerID, AddressID)); }
+                return new PK(CustomerID, AddressID);
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -104,10 +103,9 @@ namespace DevZest.Samples.AdventureWorksLT
             _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
         }
 
-        private PK _primaryKey;
-        public override PK PrimaryKey
+        protected sealed override PK CreatePrimaryKey()
         {
-            get { return _primaryKey ?? (_primaryKey = new PK(CustomerID, AddressID)); }
+            return new PK(CustomerID, AddressID);
         }
 
         private Customer.PK _fk_customer;

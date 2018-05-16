@@ -37,10 +37,9 @@ namespace DevZest.Samples.AdventureWorksLT
             _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
         }
 
-        private PK _primaryKey;
-        public sealed override PK PrimaryKey
+        protected sealed override PK CreatePrimaryKey()
         {
-            get { return _primaryKey ?? (_primaryKey = new PK(ProductModelID, ProductDescriptionID, Culture)); }
+            return new PK(ProductModelID, ProductDescriptionID, Culture);
         }
 
         private ProductModel.PK _fk_productModel;

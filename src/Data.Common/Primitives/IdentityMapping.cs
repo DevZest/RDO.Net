@@ -3,11 +3,11 @@ using System;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class IdentityMapping : Model<IdentityMapping.Key>
+    public sealed class IdentityMapping : Model<IdentityMapping.PK>
     {
-        public sealed class Key : PrimaryKey
+        public sealed class PK : PrimaryKey
         {
-            public Key(_Int32 oldValue)
+            public PK(_Int32 oldValue)
             {
                 OldValue = oldValue;
             }
@@ -24,13 +24,11 @@ namespace DevZest.Data.Primitives
 
         public IdentityMapping()
         {
-            _primaryKey = new Key(OldValue);
         }
 
-        Key _primaryKey;
-        public sealed override Key PrimaryKey
+        protected override PK CreatePrimaryKey()
         {
-            get { return _primaryKey; }
+            return new PK(OldValue);
         }
 
         public _Int32 OldValue { get; private set; }

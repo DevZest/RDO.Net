@@ -25,7 +25,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(salesOrderID), _Int32.Const(salesOrderDetailID));
         }
 
-        public class Key : Model<PK>
+        public sealed class Key : Model<PK>
         {
             static Key()
             {
@@ -33,10 +33,9 @@ namespace DevZest.Samples.AdventureWorksLT
                 RegisterColumn((Key _) => _.SalesOrderDetailID, _SalesOrderDetailID);
             }
 
-            private PK _primaryKey;
-            public sealed override PK PrimaryKey
+            protected override PK CreatePrimaryKey()
             {
-                get { return _primaryKey ?? (_primaryKey = new PK(SalesOrderID, SalesOrderDetailID)); }
+                return new PK(SalesOrderID, SalesOrderDetailID);
             }
 
             public _Int32 SalesOrderID { get; private set; }
@@ -83,10 +82,9 @@ namespace DevZest.Samples.AdventureWorksLT
         {
         }
 
-        private PK _primaryKey;
-        public sealed override PK PrimaryKey
+        protected sealed override PK CreatePrimaryKey()
         {
-            get { return _primaryKey ?? (_primaryKey = new PK(SalesOrderID, SalesOrderDetailID)); }
+            return new PK(SalesOrderID, SalesOrderDetailID);
         }
 
         private SalesOrderHeader.PK _fk_salesOrderHeader;

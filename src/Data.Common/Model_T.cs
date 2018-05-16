@@ -1,9 +1,6 @@
 ﻿using DevZest.Data.Annotations;
 using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace DevZest.Data
@@ -16,7 +13,13 @@ namespace DevZest.Data
             AddDbTableConstraint(new DbPrimaryKey(this, GetDbPrimaryKeyName(), GetDbPrimaryKeyDescription(), true, () => PrimaryKey._columns), true);
         }
 
-        public abstract new T PrimaryKey { get; }
+        private T _primaryKey;
+        public new T PrimaryKey
+        {
+            get { return _primaryKey ?? (_primaryKey = CreatePrimaryKey()); }
+        }
+
+        protected abstract T CreatePrimaryKey();
 
         internal sealed override PrimaryKey GetPrimaryKeyCore()
         {

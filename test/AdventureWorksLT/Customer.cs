@@ -22,17 +22,16 @@ namespace DevZest.Samples.AdventureWorksLT
             return DataValues.Create(_Int32.Const(customerId));
         }
 
-        public class Key : Model<PK>
+        public sealed class Key : Model<PK>
         {
             static Key()
             {
                 RegisterColumn((Key _) => _.CustomerID, _CustomerID);
             }
 
-            private PK _primaryKey;
-            public sealed override PK PrimaryKey
+            protected override PK CreatePrimaryKey()
             {
-                get { return _primaryKey ?? (_primaryKey = new PK(CustomerID)); }
+                return new PK(CustomerID);
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -106,10 +105,9 @@ namespace DevZest.Samples.AdventureWorksLT
             _PasswordSalt = RegisterColumn((Customer _) => _.PasswordSalt);
         }
 
-        private PK _primaryKey;
-        public sealed override PK PrimaryKey
+        protected sealed override PK CreatePrimaryKey()
         {
-            get { return _primaryKey ?? (_primaryKey = new PK(CustomerID)); }
+            return new PK(CustomerID);
         }
 
         [Identity(1, 1)]

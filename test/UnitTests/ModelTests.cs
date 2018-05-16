@@ -238,11 +238,11 @@ namespace DevZest.Data
 
         #region Constraints
 
-        private sealed class TempModel : Model<TempModel.Key>
+        private sealed class TempModel : Model<TempModel.PK>
         {
-            public sealed class Key : PrimaryKey
+            public sealed class PK : PrimaryKey
             {
-                public Key(_Int32 id)
+                public PK(_Int32 id)
                 {
                     Id = id;
                 }
@@ -257,18 +257,16 @@ namespace DevZest.Data
 
             public TempModel()
             {
-                _primaryKey = new Key(Id);
-                FkRef = new Key(Unique1);
+                FkRef = new PK(Unique1);
                 Name.SetDefaultValue("DEFAULT NAME", null, null);
                 DbUnique("UQ_Temp", null, false, Unique1, Unique2.Desc());
                 DbCheck("CK_Temp", null, Name.IsNotNull());
                 this.AddDbTableConstraint(DbSession.DbForeignKey(null, null, FkRef, this, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction), false);
             }
 
-            private Key _primaryKey;
-            public sealed override Key PrimaryKey
+            protected sealed override PK CreatePrimaryKey()
             {
-                get { return _primaryKey; }
+                return new PK(Id);
             }
 
             public _Int32 Id { get; private set; }
@@ -279,7 +277,7 @@ namespace DevZest.Data
 
             public _Int32 Unique2 { get; private set; }
 
-            public Key FkRef { get; private set; }
+            public PK FkRef { get; private set; }
 
         }
 
