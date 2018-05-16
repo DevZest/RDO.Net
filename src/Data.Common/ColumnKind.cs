@@ -6,12 +6,12 @@ namespace DevZest.Data
     [Flags]
     public enum ColumnKind
     {
-        /// <summary>The column is a property of the model.</summary>
+        /// <summary>The column is a property of <see cref="Model"/>.</summary>
         ModelProperty = 1,
-        /// <summary></summary>
-        ColumnList = 2,
-        /// <summary>The column is defined by extension.</summary>
-        Extender = 4,
+        /// <summary>The column is a item of <see cref="ColumnListItem"/>.</summary>
+        ColumnListItem = 2,
+        /// <summary>The column is a property of <see cref="ColumnContainer"/>.</summary>
+        ContainerProperty = 4,
         /// <summary>sys_parent_row_id column of sequential key temp table (internal use only).</summary>
         SystemParentRowId = 8,
         /// <summary>sys_row_id column of sequential key temp table (internal use only).</summary>
@@ -21,6 +21,6 @@ namespace DevZest.Data
         /// <summary>Union of <see cref="SystemRowId"/>, <see cref="SystemParentRowId"/> and <see cref="SystemCustom"/>.</summary>
         System = SystemRowId | SystemParentRowId | SystemCustom,
         /// <summary>All kinds of column.</summary>
-        All = ModelProperty | ColumnList | Extender | System
+        All = ModelProperty | ColumnListItem | ContainerProperty | System
     }
 }

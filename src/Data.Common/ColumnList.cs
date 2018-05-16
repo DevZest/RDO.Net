@@ -126,7 +126,7 @@ namespace DevZest.Data
             }
             var result = Column.Create<T>(originalDeclaringType, originalName);
 
-            result.Construct(columnList.ParentModel, columnList.DeclaringType, name, ColumnKind.ColumnList, baseInitializer, initializer);
+            result.Construct(columnList.ParentModel, columnList.DeclaringType, name, ColumnKind.ColumnListItem, baseInitializer, initializer);
             return result;
         }
 

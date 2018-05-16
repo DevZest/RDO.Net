@@ -27,7 +27,7 @@ namespace DevZest.Data.Primitives
                 if (!column.ShouldSerialize)
                     continue;
 
-                if (column.Kind == ColumnKind.ColumnList || column.Kind == ColumnKind.Extender)
+                if (column.Kind == ColumnKind.ColumnListItem || column.Kind == ColumnKind.ContainerProperty)
                     continue;
 
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))

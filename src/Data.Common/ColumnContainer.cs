@@ -31,7 +31,7 @@ namespace DevZest.Data
         {
             var result = Column.Create<T>(mounter.OriginalDeclaringType, mounter.OriginalName);
             var parent = mounter.Parent;
-            result.Construct(parent.Model, mounter.DeclaringType, parent.GetName(mounter), ColumnKind.Extender, null, initializer);
+            result.Construct(parent.Model, mounter.DeclaringType, parent.GetName(mounter), ColumnKind.ContainerProperty, null, initializer);
             parent.Add(result);
             return result;
         }
