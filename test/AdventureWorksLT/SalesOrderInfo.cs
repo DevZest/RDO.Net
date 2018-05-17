@@ -6,7 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
     [ExtraColumns(typeof(Ext))]
     public class SalesOrderInfo : SalesOrder
     {
-        public class Ext : ProjectionComposition
+        public class Ext : LookupContainer
         {
             static Ext()
             {

@@ -3,7 +3,7 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public abstract class RefContainer : ProjectionContainer<RefBase>
+    public abstract class LookupContainer : ProjectionContainer<LookupBase>
     {
         internal sealed override void PreventExternalAssemblyInheritance()
         {

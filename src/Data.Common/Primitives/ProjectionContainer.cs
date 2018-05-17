@@ -122,7 +122,6 @@ namespace DevZest.Data.Primitives
             s_childManager.Mount(this);
         }
 
-        /// <remarks>Disable inheritance to external assemblies.</remarks>
-        internal abstract Type ChildType { get; }
+        internal abstract void PreventExternalAssemblyInheritance();
     }
 }
