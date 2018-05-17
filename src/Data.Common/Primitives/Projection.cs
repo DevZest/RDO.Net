@@ -1,11 +1,10 @@
-﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
-namespace DevZest.Data
+namespace DevZest.Data.Primitives
 {
     public abstract class Projection : ColumnCombination
     {
@@ -125,5 +124,7 @@ namespace DevZest.Data
         {
             s_columnManager.Mount(this);
         }
+
+        internal abstract void PreventExternalAssemblyInheritance();
     }
 }

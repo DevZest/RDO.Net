@@ -53,7 +53,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public class Lookup : Projection
+        public class Lookup : LookupBase
         {
             static Lookup()
             {

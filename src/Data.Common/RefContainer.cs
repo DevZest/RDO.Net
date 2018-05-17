@@ -3,11 +3,11 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public abstract class RefContainer : ProjectionContainer<Ref>
+    public abstract class RefContainer : ProjectionContainer<RefBase>
     {
         internal sealed override Type ChildType
         {
-            get { return typeof(Ref); }
+            get { return typeof(RefBase); }
         }
     }
 }

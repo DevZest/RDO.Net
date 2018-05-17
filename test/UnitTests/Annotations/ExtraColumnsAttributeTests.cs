@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
     {
         private class Header : Model
         {
-            public class Ext : Projection
+            public class Ext : LookupBase
             {
             }
 
@@ -21,7 +21,7 @@ namespace DevZest.Data.Annotations
 
         private class Detail : Model
         {
-            public class Ext : Projection
+            public class Ext : LookupBase
             {
             }
         }

@@ -1,9 +1,8 @@
 ﻿using DevZest.Data.Primitives;
-using System;
 
 namespace DevZest.Data
 {
-    public abstract class Ref<T> : Ref
+    public abstract class Ref<T> : RefBase
         where T : PrimaryKey
     {
         protected abstract T CreatePrimaryKey();
@@ -12,11 +11,6 @@ namespace DevZest.Data
         public T Key
         {
             get { return _key ?? (_key = CreatePrimaryKey()); }
-        }
-
-        internal sealed override Type PrimaryKeyType
-        {
-            get { return typeof(T); }
         }
     }
 }
