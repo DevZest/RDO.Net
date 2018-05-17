@@ -3,9 +3,9 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public abstract class RefComposition : ProjectionContainer<Ref>
+    public abstract class RefContainer : ProjectionContainer<Ref>
     {
-        internal sealed override Type CompositionType
+        internal sealed override Type ChildType
         {
             get { return typeof(Ref); }
         }

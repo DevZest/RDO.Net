@@ -122,6 +122,7 @@ namespace DevZest.Data.Primitives
             s_childManager.Mount(this);
         }
 
-        internal abstract Type CompositionType { get; }
+        /// <remarks>Disable inheritance to external assemblies.</remarks>
+        internal abstract Type ChildType { get; }
     }
 }

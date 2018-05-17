@@ -5,7 +5,7 @@ namespace DevZest.Data
 {
     public abstract class ProjectionComposition : ProjectionContainer<Projection>
     {
-        internal sealed override Type CompositionType
+        internal sealed override Type ChildType
         {
             get { return typeof(Projection); }
         }
