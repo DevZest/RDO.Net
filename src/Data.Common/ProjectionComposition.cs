@@ -3,7 +3,7 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public abstract class ProjectionComposition : Composition<Projection>
+    public abstract class ProjectionComposition : ProjectionContainer<Projection>
     {
         internal sealed override Type CompositionType
         {

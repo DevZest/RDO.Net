@@ -6,21 +6,21 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class Composition<T> : ColumnCombination
+    public abstract class ProjectionContainer<T> : ColumnCombination
         where T : Projection
     {
-        static MounterManager<Composition<T>, T> s_childManager = new MounterManager<Composition<T>, T>();
+        static MounterManager<ProjectionContainer<T>, T> s_childManager = new MounterManager<ProjectionContainer<T>, T>();
 
-        protected static void RegisterChildContainer<TComposition, TChild>(Expression<Func<TComposition, TChild>> getter)
-            where TComposition : Composition<T>
+        protected static void Register<TComposition, TChild>(Expression<Func<TComposition, TChild>> getter)
+            where TComposition : ProjectionContainer<T>
             where TChild : T, new()
         {
             Check.NotNull(getter, nameof(getter));
-            s_childManager.Register(getter, CreateChildContainer, null);
+            s_childManager.Register(getter, CreateChild, null);
         }
 
-        private static TChild CreateChildContainer<TComposition, TChild>(Mounter<TComposition, TChild> mounter)
-            where TComposition : Composition<T>
+        private static TChild CreateChild<TComposition, TChild>(Mounter<TComposition, TChild> mounter)
+            where TComposition : ProjectionContainer<T>
             where TChild : T, new()
         {
             TChild result = new TChild();

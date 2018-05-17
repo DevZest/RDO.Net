@@ -10,9 +10,9 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Ext()
             {
-                RegisterChildContainer((Ext _) => _.Customer);
-                RegisterChildContainer((Ext _) => _.ShipToAddress);
-                RegisterChildContainer((Ext _) => _.BillToAddress);
+                Register((Ext _) => _.Customer);
+                Register((Ext _) => _.ShipToAddress);
+                Register((Ext _) => _.BillToAddress);
             }
 
             public Customer.Lookup Customer { get; private set; }
