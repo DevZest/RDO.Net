@@ -10,7 +10,7 @@ namespace DevZest.Data.Primitives
     {
         private static MounterManager<Projection, Column> s_columnManager = new MounterManager<Projection, Column>();
 
-        protected static void RegisterColumn<TProjection, TColumn>(Expression<Func<TProjection, TColumn>> getter, Mounter<TColumn> fromMounter)
+        protected static void Register<TProjection, TColumn>(Expression<Func<TProjection, TColumn>> getter, Mounter<TColumn> fromMounter)
             where TProjection : Projection
             where TColumn : Column, new()
         {

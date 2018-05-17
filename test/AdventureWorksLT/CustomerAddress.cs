@@ -46,8 +46,8 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Ref()
             {
-                RegisterColumn((Ref _) => _.CustomerID, Customer._CustomerID);
-                RegisterColumn((Ref _) => _.AddressID, Address._AddressID);
+                Register((Ref _) => _.CustomerID, Customer._CustomerID);
+                Register((Ref _) => _.AddressID, Address._AddressID);
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -64,7 +64,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Lookup()
             {
-                RegisterColumn((Lookup _) => _.AddressType, _AddressType);
+                Register((Lookup _) => _.AddressType, _AddressType);
             }
 
             public _String AddressType { get; private set; }

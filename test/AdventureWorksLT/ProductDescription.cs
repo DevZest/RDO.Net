@@ -42,7 +42,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Ref()
             {
-                RegisterColumn((Ref _) => _.ProductDescriptionID, _ProductDescriptionID);
+                Register((Ref _) => _.ProductDescriptionID, _ProductDescriptionID);
             }
 
             public _Int32 ProductDescriptionID { get; private set; }
@@ -57,7 +57,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Lookup()
             {
-                RegisterColumn((Lookup _) => _.Description, _Description);
+                Register((Lookup _) => _.Description, _Description);
             }
 
             public _String Description { get; private set; }

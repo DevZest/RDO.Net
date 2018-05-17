@@ -41,7 +41,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Ref()
             {
-                RegisterColumn((Ref _) => _.CustomerID, _CustomerID);
+                Register((Ref _) => _.CustomerID, _CustomerID);
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -56,13 +56,13 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Lookup()
             {
-                RegisterColumn((Lookup _) => _.Title, _Title);
-                RegisterColumn((Lookup _) => _.FirstName, _FirstName);
-                RegisterColumn((Lookup _) => _.MiddleName, _MiddleName);
-                RegisterColumn((Lookup _) => _.LastName, _LastName);
-                RegisterColumn((Lookup _) => _.CompanyName, _CompanyName);
-                RegisterColumn((Lookup _) => _.EmailAddress, _EmailAddress);
-                RegisterColumn((Lookup _) => _.Phone, _Phone);
+                Register((Lookup _) => _.Title, _Title);
+                Register((Lookup _) => _.FirstName, _FirstName);
+                Register((Lookup _) => _.MiddleName, _MiddleName);
+                Register((Lookup _) => _.LastName, _LastName);
+                Register((Lookup _) => _.CompanyName, _CompanyName);
+                Register((Lookup _) => _.EmailAddress, _EmailAddress);
+                Register((Lookup _) => _.Phone, _Phone);
             }
 
             public _String Title { get; private set; }

@@ -44,7 +44,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Ref()
             {
-                RegisterColumn((Ref _) => _.AddressID, _AddressID);
+                Register((Ref _) => _.AddressID, _AddressID);
             }
 
             public _Int32 AddressID { get; private set; }
@@ -59,12 +59,12 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Lookup()
             {
-                RegisterColumn((Lookup _) => _.AddressLine1, _AddressLine1);
-                RegisterColumn((Lookup _) => _.AddressLine2, _AddressLine2);
-                RegisterColumn((Lookup _) => _.City, _City);
-                RegisterColumn((Lookup _) => _.StateProvince, _StateProvince);
-                RegisterColumn((Lookup _) => _.CountryRegion, _CountryRegion);
-                RegisterColumn((Lookup _) => _.PostalCode, _PostalCode);
+                Register((Lookup _) => _.AddressLine1, _AddressLine1);
+                Register((Lookup _) => _.AddressLine2, _AddressLine2);
+                Register((Lookup _) => _.City, _City);
+                Register((Lookup _) => _.StateProvince, _StateProvince);
+                Register((Lookup _) => _.CountryRegion, _CountryRegion);
+                Register((Lookup _) => _.PostalCode, _PostalCode);
             }
 
             public _String AddressLine1 { get; private set; }

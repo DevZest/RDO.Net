@@ -41,7 +41,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Ref()
             {
-                RegisterColumn((Ref _) => _.SalesOrderID, _SalesOrderID);
+                Register((Ref _) => _.SalesOrderID, _SalesOrderID);
             }
 
             public _Int32 SalesOrderID { get; private set; }
