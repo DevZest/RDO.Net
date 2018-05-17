@@ -15,9 +15,9 @@ namespace DevZest.Data
         {
             return new ExplicitMembersJsonFilter(Verify(members, nameof(members)));
         }
-        public static JsonFilter Explicit(params ColumnContainer[] columnContainers)
+        public static JsonFilter Explicit(params ColumnCombination[] columnCombinations)
         {
-            return new ExplicitExtraColumnsJsonFilter(Verify(columnContainers, nameof(columnContainers)));
+            return new ExplicitExtraColumnsJsonFilter(Verify(columnCombinations, nameof(columnCombinations)));
         }
 
         public static JsonFilter Join(params JsonFilter[] filters)
@@ -49,7 +49,7 @@ namespace DevZest.Data
 
         protected internal abstract bool ShouldSerialize(ModelMember member);
 
-        protected internal abstract bool ShouldSerialize(ColumnContainer ext);
+        protected internal abstract bool ShouldSerialize(ColumnCombination ext);
 
         private sealed class NoExtraColumnsJsonFilter : JsonFilter
         {
@@ -59,7 +59,7 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer ext)
+            protected internal override bool ShouldSerialize(ColumnCombination ext)
             {
                 return false;
             }
@@ -78,7 +78,7 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer ext)
+            protected internal override bool ShouldSerialize(ColumnCombination ext)
             {
                 return true;
             }
@@ -98,7 +98,7 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer ext)
+            protected internal override bool ShouldSerialize(ColumnCombination ext)
             {
                 return false;
             }
@@ -125,7 +125,7 @@ namespace DevZest.Data
                 return _members.Contains(member);
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer ext)
+            protected internal override bool ShouldSerialize(ColumnCombination ext)
             {
                 return true;
             }
@@ -133,22 +133,22 @@ namespace DevZest.Data
 
         private sealed class ExplicitExtraColumnsJsonFilter : JsonFilter
         {
-            public ExplicitExtraColumnsJsonFilter(HashSet<ColumnContainer> columnContainers)
+            public ExplicitExtraColumnsJsonFilter(HashSet<ColumnCombination> columnCombinations)
             {
-                Debug.Assert(columnContainers != null);
-                _columnContainers = columnContainers;
+                Debug.Assert(columnCombinations != null);
+                _columnCombinations = columnCombinations;
             }
 
-            private readonly HashSet<ColumnContainer> _columnContainers;
+            private readonly HashSet<ColumnCombination> _columnCombinations;
 
             protected internal override bool ShouldSerialize(ModelMember member)
             {
                 return true;
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer ext)
+            protected internal override bool ShouldSerialize(ColumnCombination ext)
             {
-                return _columnContainers.Contains(ext);
+                return _columnCombinations.Contains(ext);
             }
         }
 
@@ -172,7 +172,7 @@ namespace DevZest.Data
                 return true;
             }
 
-            protected internal override bool ShouldSerialize(ColumnContainer ext)
+            protected internal override bool ShouldSerialize(ColumnCombination ext)
             {
                 for (int i = 0; i < _filters.Length; i++)
                 {

@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class ColumnContainer : IModelReference
+    public abstract class ColumnCombination : IModelReference
     {
         internal const string EXT_ROOT_NAME = "__Ext";
 
@@ -19,7 +19,7 @@ namespace DevZest.Data.Primitives
             Mount();
         }
 
-        internal void Initialize(ColumnContainer parent, string name)
+        internal void Initialize(ColumnCombination parent, string name)
         {
             Debug.Assert(parent != null);
             Debug.Assert(parent.Model != null);
@@ -44,7 +44,7 @@ namespace DevZest.Data.Primitives
 
         private sealed class ContainerModel : Model
         {
-            public ContainerModel(ColumnContainer ext)
+            public ContainerModel(ColumnCombination ext)
             {
                 Debug.Assert(ext != null && ext._model == null);
                 ExtraColumns = ext;
@@ -78,8 +78,8 @@ namespace DevZest.Data.Primitives
 
         public abstract IReadOnlyDictionary<string, Column> ColumnsByRelativeName { get; }
 
-        public abstract IReadOnlyList<ColumnContainer> Children { get; }
+        public abstract IReadOnlyList<ColumnCombination> Children { get; }
 
-        public abstract IReadOnlyDictionary<string, ColumnContainer> ChildrenByName { get; }
+        public abstract IReadOnlyDictionary<string, ColumnCombination> ChildrenByName { get; }
     }
 }

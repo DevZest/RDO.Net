@@ -633,7 +633,7 @@ namespace DevZest.Data
         {
             var prototypeExt = prototype.ExtraColumns;
             if (prototypeExt != null && ExtraColumns == null)
-                ExtraColumns = (ColumnContainer)Activator.CreateInstance(prototypeExt.GetType());
+                ExtraColumns = (ColumnCombination)Activator.CreateInstance(prototypeExt.GetType());
         }
 
         private IIndexConstraint _clusteredIndex;
@@ -1239,8 +1239,8 @@ namespace DevZest.Data
                 column8, column9, column10, column11, column12, expression, builder);
         }
 
-        private ColumnContainer _extraColumns;
-        internal ColumnContainer ExtraColumns
+        private ColumnCombination _extraColumns;
+        internal ColumnCombination ExtraColumns
         {
             get { return _extraColumns; }
             set
@@ -1253,7 +1253,7 @@ namespace DevZest.Data
         }
 
         public void SetExtraColumns<T>()
-            where T : ColumnContainer, new()
+            where T : ColumnCombination, new()
         {
             VerifyDesignMode();
             if (ExtraColumns != null)
@@ -1268,11 +1268,11 @@ namespace DevZest.Data
             if (ExtraColumns != null)
                 throw new InvalidOperationException(DiagnosticMessages.Model_ExtensionAlreadyExists);
             else
-                ExtraColumns = (ColumnContainer)Activator.CreateInstance(extType);
+                ExtraColumns = (ColumnCombination)Activator.CreateInstance(extType);
         }
 
         public T GetExtraColumns<T>()
-            where T : ColumnContainer, new()
+            where T : ColumnCombination, new()
         {
             return ExtraColumns as T;
         }

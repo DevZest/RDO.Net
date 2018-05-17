@@ -105,27 +105,27 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
         }
 
-        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnContainer columnContainer, JsonFilter jsonFilter)
+        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnCombination columnCombination, JsonFilter jsonFilter)
         {
-            if (string.IsNullOrEmpty(columnContainer.Name))
-                jsonWriter.WriteMembers(dataRow, columnContainer, jsonFilter);
+            if (string.IsNullOrEmpty(columnCombination.Name))
+                jsonWriter.WriteMembers(dataRow, columnCombination, jsonFilter);
             else
-                jsonWriter.WriteExt(dataRow, columnContainer, jsonFilter);
+                jsonWriter.WriteExt(dataRow, columnCombination, jsonFilter);
         }
 
-        private static void WriteExt(this JsonWriter jsonWriter, DataRow dataRow, ColumnContainer columnContainer, JsonFilter jsonFilter)
+        private static void WriteExt(this JsonWriter jsonWriter, DataRow dataRow, ColumnCombination columnCombination, JsonFilter jsonFilter)
         {
-            Debug.Assert(!string.IsNullOrEmpty(columnContainer.Name));
-            jsonWriter.WriteObjectName(columnContainer.Name);
+            Debug.Assert(!string.IsNullOrEmpty(columnCombination.Name));
+            jsonWriter.WriteObjectName(columnCombination.Name);
             jsonWriter.WriteStartObject();
-            jsonWriter.WriteMembers(dataRow, columnContainer, jsonFilter);
+            jsonWriter.WriteMembers(dataRow, columnCombination, jsonFilter);
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteMembers(this JsonWriter jsonWriter, DataRow dataRow, ColumnContainer columnContainer, JsonFilter jsonFilter)
+        private static void WriteMembers(this JsonWriter jsonWriter, DataRow dataRow, ColumnCombination columnCombination, JsonFilter jsonFilter)
         {
             var count = 0;
-            var columns = columnContainer.Columns;
+            var columns = columnCombination.Columns;
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
@@ -139,10 +139,10 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
-            var childContainers = columnContainer.Children;
-            for (int i = 0; i < childContainers.Count; i++)
+            var children = columnCombination.Children;
+            for (int i = 0; i < children.Count; i++)
             {
-                var childContainer = childContainers[i];
+                var childContainer = children[i];
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(childContainer))
                     continue;
                 if (count > 0)
@@ -189,7 +189,7 @@ namespace DevZest.Data.Primitives
 
             var model = dataRow.Model;
 
-            if (memberName == ColumnContainer.EXT_ROOT_NAME)
+            if (memberName == ColumnCombination.EXT_ROOT_NAME)
             {
                 var ext = model.ExtraColumns;
                 if (ext == null)
@@ -210,34 +210,34 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static void Parse(this JsonParser jsonParser, ColumnContainer columnContainer, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, ColumnCombination columnCombination, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             var token = jsonParser.PeekToken();
             if (token.Kind == JsonTokenKind.String)
             {
                 jsonParser.ConsumeToken();
-                jsonParser.Parse(columnContainer, token.Text, dataRow);
+                jsonParser.Parse(columnCombination, token.Text, dataRow);
 
                 while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonParser.ConsumeToken();
                     token = jsonParser.ExpectToken(JsonTokenKind.String);
-                    jsonParser.Parse(columnContainer, token.Text, dataRow);
+                    jsonParser.Parse(columnCombination, token.Text, dataRow);
                 }
             }
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Parse(this JsonParser jsonParser, ColumnContainer columnContainer, string memberName, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, ColumnCombination columnCombination, string memberName, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.Colon);
-            if (columnContainer.ColumnsByRelativeName.ContainsKey(memberName))
-                jsonParser.Parse(columnContainer.ColumnsByRelativeName[memberName], dataRow.Ordinal);
-            else if (columnContainer.ChildrenByName.ContainsKey(memberName))
-                jsonParser.Parse(columnContainer.ChildrenByName[memberName], dataRow);
+            if (columnCombination.ColumnsByRelativeName.ContainsKey(memberName))
+                jsonParser.Parse(columnCombination.ColumnsByRelativeName[memberName], dataRow.Ordinal);
+            else if (columnCombination.ChildrenByName.ContainsKey(memberName))
+                jsonParser.Parse(columnCombination.ChildrenByName[memberName], dataRow);
             else
-                throw new FormatException(DiagnosticMessages.JsonParser_InvalidColumnContainerMember(memberName, columnContainer.FullName));
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidColumnContainerMember(memberName, columnCombination.FullName));
         }
 
         private static void Parse(this JsonParser jsonParser, Column column, int ordinal)

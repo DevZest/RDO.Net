@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    public abstract class Projection : ColumnContainer
+    public abstract class Projection : ColumnCombination
     {
         private static MounterManager<Projection, Column> s_columnManager = new MounterManager<Projection, Column>();
 
@@ -104,14 +104,14 @@ namespace DevZest.Data
             }
         }
 
-        public sealed override IReadOnlyList<ColumnContainer> Children
+        public sealed override IReadOnlyList<ColumnCombination> Children
         {
-            get { return Array<ColumnContainer>.Empty; }
+            get { return Array<ColumnCombination>.Empty; }
         }
 
-        public sealed override IReadOnlyDictionary<string, ColumnContainer> ChildrenByName
+        public sealed override IReadOnlyDictionary<string, ColumnCombination> ChildrenByName
         {
-            get { return EmptyDictionary<string, ColumnContainer>.Singleton; }
+            get { return EmptyDictionary<string, ColumnCombination>.Singleton; }
         }
 
         private void Add(Column column)

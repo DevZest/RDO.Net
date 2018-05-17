@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class Composition<T> : ColumnContainer
+    public abstract class Composition<T> : ColumnCombination
         where T : Projection
     {
         static MounterManager<Composition<T>, T> s_childManager = new MounterManager<Composition<T>, T>();
@@ -40,7 +40,7 @@ namespace DevZest.Data.Primitives
             get { return EmptyDictionary<string, Column>.Singleton; }
         }
 
-        private sealed class ChildrenCollection : KeyedCollection<string, ColumnContainer>, IReadOnlyDictionary<string, ColumnContainer>
+        private sealed class ChildrenCollection : KeyedCollection<string, ColumnCombination>, IReadOnlyDictionary<string, ColumnCombination>
         {
             public IEnumerable<string> Keys
             {
@@ -51,7 +51,7 @@ namespace DevZest.Data.Primitives
                 }
             }
 
-            public IEnumerable<ColumnContainer> Values
+            public IEnumerable<ColumnCombination> Values
             {
                 get { return this; }
             }
@@ -61,7 +61,7 @@ namespace DevZest.Data.Primitives
                 return Contains(key);
             }
 
-            public bool TryGetValue(string key, out ColumnContainer value)
+            public bool TryGetValue(string key, out ColumnCombination value)
             {
                 if (Contains(key))
                 {
@@ -75,36 +75,36 @@ namespace DevZest.Data.Primitives
                 }
             }
 
-            protected override string GetKeyForItem(ColumnContainer item)
+            protected override string GetKeyForItem(ColumnCombination item)
             {
                 return item.Name;
             }
 
-            IEnumerator<KeyValuePair<string, ColumnContainer>> IEnumerable<KeyValuePair<string, ColumnContainer>>.GetEnumerator()
+            IEnumerator<KeyValuePair<string, ColumnCombination>> IEnumerable<KeyValuePair<string, ColumnCombination>>.GetEnumerator()
             {
                 foreach (var container in this)
-                    yield return new KeyValuePair<string, ColumnContainer>(container.Name, container);
+                    yield return new KeyValuePair<string, ColumnCombination>(container.Name, container);
             }
         }
 
         private ChildrenCollection _children;
-        public sealed override IReadOnlyList<ColumnContainer> Children
+        public sealed override IReadOnlyList<ColumnCombination> Children
         {
             get
             {
                 if (_children == null)
-                    return Array<ColumnContainer>.Empty;
+                    return Array<ColumnCombination>.Empty;
                 else
                     return _children;
             }
         }
 
-        public sealed override IReadOnlyDictionary<string, ColumnContainer> ChildrenByName
+        public sealed override IReadOnlyDictionary<string, ColumnCombination> ChildrenByName
         {
             get
             {
                 if (_children == null)
-                    return EmptyDictionary<string, ColumnContainer>.Singleton;
+                    return EmptyDictionary<string, ColumnCombination>.Singleton;
                 else
                     return _children;
             }
