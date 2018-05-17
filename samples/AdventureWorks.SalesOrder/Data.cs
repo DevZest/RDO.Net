@@ -31,7 +31,7 @@ namespace AdventureWorks.SalesOrders
             {
                 var result = db.CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
                 {
-                    var ext = _.GetExtraColumns<SalesOrderHeader.FK.Ext>();
+                    var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
                     Debug.Assert(ext != null);
                     builder.From(db.SalesOrderHeaders, out var o)
                         .LeftJoin(db.Customers, o.FK_Customer, out var c)
