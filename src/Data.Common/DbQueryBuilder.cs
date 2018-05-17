@@ -282,7 +282,7 @@ namespace DevZest.Data
                     SelectCore(sourceColumn, targetColumn);
             }
 
-            var childContainers = to.ChildContainers;
+            var childContainers = to.Children;
             for (int i = 0; i < childContainers.Count; i++)
                 AutoSelect(from, childContainers[i]);
 

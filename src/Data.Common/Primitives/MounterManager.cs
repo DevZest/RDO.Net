@@ -341,5 +341,12 @@ namespace DevZest.Data.Primitives
             _resultRegistrations.Add(targetType, result);
             return result;
         }
+
+        public void Mount(TTarget target)
+        {
+            var mounters = GetAll(target.GetType());
+            foreach (var mounter in mounters)
+                mounter.Mount(target);
+        }
     }
 }

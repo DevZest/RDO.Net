@@ -139,7 +139,7 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
-            var childContainers = columnContainer.ChildContainers;
+            var childContainers = columnContainer.Children;
             for (int i = 0; i < childContainers.Count; i++)
             {
                 var childContainer = childContainers[i];
@@ -234,8 +234,8 @@ namespace DevZest.Data.Primitives
             jsonParser.ExpectToken(JsonTokenKind.Colon);
             if (columnContainer.ColumnsByRelativeName.ContainsKey(memberName))
                 jsonParser.Parse(columnContainer.ColumnsByRelativeName[memberName], dataRow.Ordinal);
-            else if (columnContainer.ChildContainersByName.ContainsKey(memberName))
-                jsonParser.Parse(columnContainer.ChildContainersByName[memberName], dataRow);
+            else if (columnContainer.ChildrenByName.ContainsKey(memberName))
+                jsonParser.Parse(columnContainer.ChildrenByName[memberName], dataRow);
             else
                 throw new FormatException(DiagnosticMessages.JsonParser_InvalidColumnContainerMember(memberName, columnContainer.FullName));
         }

@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -122,7 +123,7 @@ namespace DevZest.Data
                     _columnValues[keyColumn] = valueColumn.GetValue(dataRow);
             }
 
-            var childContainers = columnContainer.ChildContainers;
+            var childContainers = columnContainer.Children;
             for (int i = 0; i < childContainers.Count; i++)
                 AutoSelect(childContainers[i], dataRow, ignoreExpression);
         }

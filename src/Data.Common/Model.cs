@@ -291,8 +291,8 @@ namespace DevZest.Data
             Columns = new ColumnCollection(this);
             ChildModels = new ModelCollection(this);
 
-            Mount(s_columnManager);
-            Mount(s_columnListManager);
+            s_columnManager.Mount(this);
+            s_columnListManager.Mount(this);
             PerformConstructing();
         }
 
@@ -345,7 +345,7 @@ namespace DevZest.Data
             if (verifyDataSource &&  DataSource == null)
                 throw new InvalidOperationException(DiagnosticMessages.Model_EnsureInitializedNullDataSource);
 
-            Mount(s_childModelManager);
+            s_childModelManager.Mount(this);
             PerformChildModelsMounted();
             if (DataSource != null && DataSource.Kind == DataSourceKind.DataSet)
             {
@@ -379,7 +379,7 @@ namespace DevZest.Data
         private void PerformInitializing()
         {
             ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initializing);
-            Mount(s_localColumnManager);
+            s_localColumnManager.Mount(this);
             OnInitializing();
         }
 
@@ -439,14 +439,6 @@ namespace DevZest.Data
             var paramModel = Expression.Parameter(typeof(Model), methodInfo.GetParameters()[0].Name);
             var call = Expression.Call(methodInfo, paramModel);
             return Expression.Lambda<Action<Model>>(call, paramModel).Compile();
-        }
-
-        private void Mount<T>(MounterManager<Model, T> mounterManager)
-            where T : class
-        {
-            var mounters = mounterManager.GetAll(this.GetType());
-            foreach (var mounter in mounters)
-                mounter.Mount(this);
         }
 
         protected internal ColumnCollection Columns { get; private set; }

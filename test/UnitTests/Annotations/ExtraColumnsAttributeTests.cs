@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
     {
         private class Header : Model
         {
-            public class Ext : ColumnContainer
+            public class Ext : Projection
             {
             }
 
@@ -21,7 +21,7 @@ namespace DevZest.Data.Annotations
 
         private class Detail : Model
         {
-            public class Ext : ColumnContainer
+            public class Ext : Projection
             {
             }
         }
