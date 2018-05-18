@@ -11,7 +11,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             Inherits PrimaryKey
 
             Public Sub New(ByVal salesOrderID As _Int32)
-                SalesOrderID = salesOrderID
+                Me.SalesOrderID = salesOrderID
             End Sub
 
             Public ReadOnly Property SalesOrderID As _Int32

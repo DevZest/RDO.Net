@@ -12,7 +12,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             Inherits PrimaryKey
 
             Public Sub New(ByVal productCategoryID As _Int32)
-                ProductCategoryID = productCategoryID
+                Me.ProductCategoryID = productCategoryID
             End Sub
 
             Public ReadOnly Property ProductCategoryID As _Int32

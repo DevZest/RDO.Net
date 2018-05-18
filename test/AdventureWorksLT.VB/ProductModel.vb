@@ -11,7 +11,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             Inherits PrimaryKey
 
             Public Sub New(ByVal productModelID As _Int32)
-                ProductModelID = productModelID
+                Me.ProductModelID = productModelID
             End Sub
 
             Public ReadOnly Property ProductModelID As _Int32
