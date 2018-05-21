@@ -1,19 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RootNamespace></RootNamespace>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>DevZest.Samples.AdventureWorksLT</AssemblyName>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <OptionStrict>On</OptionStrict>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn></NoWarn>
+    <NoWarn />
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn></NoWarn>
+    <NoWarn />
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
 
@@ -21,21 +21,6 @@
     <ProjectReference Include="..\..\src\Data.Common\Data.Common.csproj" />
     <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\DevZest.Data.Common.VisualBasic\Data.Common.VisualBasic.vbproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Update="UserMessages.Designer.vb">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>UserMessages.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <EmbeddedResource Update="UserMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>UserMessages.Designer.vb</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -46,4 +31,19 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="UserMessages.Designer.vb">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="UserMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserMessages.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>  
 </Project>

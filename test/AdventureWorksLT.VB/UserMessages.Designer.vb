@@ -21,24 +21,24 @@ Imports System
 '''<summary>
 '''  A strongly-typed resource class, for looking up localized strings, etc.
 '''</summary>
-<Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0"),
- Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
- Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute()>
+<Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0"),  _
+ Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+ Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute()>  _
 Friend Class UserMessages
-
+    
     Private Shared resourceMan As Global.System.Resources.ResourceManager
-
+    
     Private Shared resourceCulture As Global.System.Globalization.CultureInfo
-
-    <Global.System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")>
+    
+    <Global.System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")>  _
     Friend Sub New()
         MyBase.New
     End Sub
-
+    
     '''<summary>
     '''  Returns the cached ResourceManager instance used by this class.
     '''</summary>
-    <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>
+    <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Friend Shared ReadOnly Property ResourceManager() As Global.System.Resources.ResourceManager
         Get
             If Object.ReferenceEquals(resourceMan, Nothing) Then
@@ -48,21 +48,21 @@ Friend Class UserMessages
             Return resourceMan
         End Get
     End Property
-
+    
     '''<summary>
     '''  Overrides the current thread's CurrentUICulture property for all
     '''  resource lookups using this strongly typed resource class.
     '''</summary>
-    <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>
+    <Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Friend Shared Property Culture() As Global.System.Globalization.CultureInfo
         Get
             Return resourceCulture
         End Get
         Set
-            resourceCulture = Value
+            resourceCulture = value
         End Set
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to ListPrice cannot be negative value..
     '''</summary>
@@ -71,7 +71,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_Product_ListPrice", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to SellEndDate cannot be earlier than SellStartDate..
     '''</summary>
@@ -80,7 +80,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_Product_SellEndDate", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to StandardCost cannot be negative value..
     '''</summary>
@@ -89,7 +89,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_Product_StandardCost", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to Weight cannot be negative value..
     '''</summary>
@@ -98,7 +98,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_Product_Weight", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to OrderQty must be greater than zero..
     '''</summary>
@@ -107,7 +107,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderDetail_OrderQty", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to UnitPrice cannot be negative..
     '''</summary>
@@ -116,7 +116,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderDetail_UnitPrice", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to UnitPriceDiscount cannot be negative..
     '''</summary>
@@ -125,7 +125,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderDetail_UnitPriceDiscount", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to DueDate cannot be earlier than OrderDate..
     '''</summary>
@@ -134,7 +134,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderHeader_DueDate", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to Freight cannot be a negtive value..
     '''</summary>
@@ -143,7 +143,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderHeader_Freight", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to ShipDate cannot be earlier than OrderDate..
     '''</summary>
@@ -152,7 +152,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderHeader_ShipDate", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to Invalid Status value..
     '''</summary>
@@ -161,7 +161,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderHeader_Status", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to SubTotal cannot be a negative value..
     '''</summary>
@@ -170,7 +170,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderHeader_SubTotal", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to TaxAmt cannot be a negtive value..
     '''</summary>
@@ -179,7 +179,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("CK_SalesOrderHeader_TaxAmt", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to Sales order must have detail line(s)..
     '''</summary>
@@ -188,7 +188,7 @@ Friend Class UserMessages
             Return ResourceManager.GetString("Validation_SalesOrder_LineCount", resourceCulture)
         End Get
     End Property
-
+    
     '''<summary>
     '''  Looks up a localized string similar to Value is required for field &apos;{0}&apos;..
     '''</summary>
