@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.Common\Data.Common.csproj" />
     <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
-    <ProjectReference Include="..\..\src\DevZest.Data.Common.VisualBasic\Data.Common.VisualBasic.vbproj" />
   </ItemGroup>
 
   <ItemGroup>
