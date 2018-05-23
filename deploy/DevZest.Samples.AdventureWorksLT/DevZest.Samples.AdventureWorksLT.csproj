@@ -5,13 +5,7 @@
   </PropertyGroup>
 
   <Import Project="..\..\test\AdventureWorksLT\AdventureWorksLT.props" />
-  
-  <PropertyGroup>
-    <DefineConstants>$(DefineConstants);DEPLOY</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+  <Import Project="..\Deploy.props" />
 
   <PropertyGroup>
     <PackageId>DevZest.Samples.AdventureWorksLT</PackageId>

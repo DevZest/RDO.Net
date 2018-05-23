@@ -26,7 +26,9 @@ function showUsage()
 
 function getAssemblyVersion([string]$major, [string]$minor)
 {
-	return $major + '.' + $minor + '.0.0'
+    # Minor version number should be ignored:
+    # https://codingforsmarties.wordpress.com/2016/01/21/how-to-version-assemblies-destined-for-nuget/
+	return $major + '.0.0.0'
 }
 
 function getAssemblyFileVersion([string]$version)

@@ -1,0 +1,15 @@
+﻿<Project>
+  <PropertyGroup>
+    <PackageVersion Condition=" '$(PackageVersion)'=='' ">1.0.0</PackageVersion>
+    <AssemblyVersion Condition=" '$(AssemblyVersion)'=='' ">1.0.0.0</AssemblyVersion>
+    <FileVersion Condition=" '$(FileVersion)'=='' ">1.0.0.0</FileVersion>
+    <InformationalVersion>$(PackageVersion)</InformationalVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);DEPLOY</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+</Project>
