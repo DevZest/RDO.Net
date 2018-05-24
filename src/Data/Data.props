@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <AssemblyName>DevZest.Data.Common</AssemblyName>
+    <AssemblyName>DevZest.Data</AssemblyName>
     <RootNamespace>DevZest.Data</RootNamespace>
   </PropertyGroup>
 

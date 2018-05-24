@@ -4,11 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <Import Project="..\..\src\Data.Common\Data.Common.props" />
+  <Import Project="..\..\src\Data\Data.props" />
   <Import Project="..\Deploy.props" />
   
   <PropertyGroup>
-    <PackageId>DevZest.Data.Common</PackageId>
+    <PackageId>DevZest.Data</PackageId>
     <PackageTags>RDO.NET;ADO.NET</PackageTags>
     <PackageLicenseUrl>http://www.devzest.com</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -18,11 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\Data.Common\**\*.cs" Exclude="..\..\src\Data.Common\bin\**;..\..\src\Data.Common\obj\**;" />
-    <EmbeddedResource Include="..\..\src\Data.Common\Properties\DiagnosticMessages.resx">
+    <Compile Include="..\..\src\Data\**\*.cs" Exclude="..\..\src\Data\bin\**;..\..\src\Data\obj\**;" />
+    <EmbeddedResource Include="..\..\src\Data\Properties\DiagnosticMessages.resx">
       <Link>DiagnosticMessages.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\src\Data.Common\Properties\UserMessages.resx">
+    <EmbeddedResource Include="..\..\src\Data\Properties\UserMessages.resx">
       <Link>UserMessages.resx</Link>
     </EmbeddedResource>
   </ItemGroup>

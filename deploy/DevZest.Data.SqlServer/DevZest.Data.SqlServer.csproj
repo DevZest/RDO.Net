@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevZest.Data.Common" Version="$(PackageVersion)" />
+    <PackageReference Include="DevZest.Data" Version="$(PackageVersion)" />
     <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
   </ItemGroup>
 </Project>

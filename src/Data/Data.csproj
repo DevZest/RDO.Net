@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>DevZest.Data</AssemblyName>
   </PropertyGroup>
 
-  <Import Project="Data.Common.props" />
+  <Import Project="Data.props" />
   
   <ItemGroup>
     <Compile Update="Properties\DiagnosticMessages.Designer.cs">
