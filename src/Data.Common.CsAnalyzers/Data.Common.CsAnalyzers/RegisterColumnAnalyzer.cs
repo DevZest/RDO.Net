@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace DevZest.Data.Analyzers.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class DataCommonCsAnalyzersAnalyzer : DiagnosticAnalyzer
+    public class RegisterColumnAnalyzer : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "DataCommonCsAnalyzers";
 

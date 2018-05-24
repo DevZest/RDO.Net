@@ -30,7 +30,7 @@ namespace DevZest.Data.Primitives
                 where TTarget : TargetType
                 where TProperty : PropertyType, new()
             {
-                return s_propertyManager.Register<TTarget, TProperty>(getter, a => new TProperty(), null);
+                return s_propertyManager.RegisterAttached<TTarget, TProperty>(getter, a => new TProperty(), null);
             }
 
             public TargetType()

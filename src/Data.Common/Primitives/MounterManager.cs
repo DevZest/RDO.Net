@@ -52,13 +52,7 @@ namespace DevZest.Data.Primitives
 
         private struct MounterInfo<TDerivedTarget, TDerivedProperty>
         {
-            public static MounterInfo<TDerivedTarget, TDerivedProperty>? FromGetter(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
-            {
-                var result = GetPropertyInfo(getter);
-                return result.HasValue ? result : GetAttachedPropertyInfo(getter);
-            }
-
-            private static MounterInfo<TDerivedTarget, TDerivedProperty>? GetPropertyInfo(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
+            public static MounterInfo<TDerivedTarget, TDerivedProperty>? GetPropertyInfo(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
             {
                 var propExp = getter.Body as MemberExpression;
                 if (propExp == null)
@@ -66,7 +60,7 @@ namespace DevZest.Data.Primitives
                 return new MounterInfo<TDerivedTarget, TDerivedProperty>(false, typeof(TDerivedTarget), propExp.Member.Name, getter);
             }
 
-            private static MounterInfo<TDerivedTarget, TDerivedProperty>? GetAttachedPropertyInfo(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
+            public static MounterInfo<TDerivedTarget, TDerivedProperty>? GetAttachedPropertyInfo(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
             {
                 var callExp = getter.Body as MethodCallExpression;
                 if (callExp == null)
@@ -253,23 +247,32 @@ namespace DevZest.Data.Primitives
             where TDerivedProperty : class, TProperty
         {
             Debug.Assert(getter != null);
-            var propertyInfo = MounterInfo<TDerivedTarget, TDerivedProperty>.FromGetter(getter);
+            var propertyInfo = MounterInfo<TDerivedTarget, TDerivedProperty>.GetPropertyInfo(getter);
             if (propertyInfo == null)
                 throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression);
 
             var info = propertyInfo.Value;
-            if (info.IsAttached)
-            {
-                var result = new AttachedMounterImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
-                Register(result);
-                return result;
-            }
-            else
-            {
-                var result = new MounterImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
-                Register(result);
-                return result;
-            }
+            var result = new MounterImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
+            Register(result);
+            return result;
+        }
+
+        public Mounter<TDerivedTarget, TDerivedProperty> RegisterAttached<TDerivedTarget, TDerivedProperty>(
+            Expression<Func<TDerivedTarget, TDerivedProperty>> getter,
+            Func<Mounter<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+            Action<TDerivedProperty> initializer = null)
+            where TDerivedTarget : class, TTarget
+            where TDerivedProperty : class, TProperty
+        {
+            Debug.Assert(getter != null);
+            var propertyInfo = MounterInfo<TDerivedTarget, TDerivedProperty>.GetAttachedPropertyInfo(getter);
+            if (propertyInfo == null)
+                throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression);
+
+            var info = propertyInfo.Value;
+            var result = new AttachedMounterImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
+            Register(result);
+            return result;
         }
 
         private void Register(IMounter<TTarget, TProperty> item)

@@ -22,7 +22,7 @@ namespace DevZest.Data.Analyzers.CSharp
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DataCommonCsAnalyzersAnalyzer.DiagnosticId); }
+            get { return ImmutableArray.Create(RegisterColumnAnalyzer.DiagnosticId); }
         }
 
         public sealed override FixAllProvider GetFixAllProvider()

@@ -75,7 +75,7 @@ namespace DevZest.Data.Analyzers.CSharp.Test
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new DataCommonCsAnalyzersAnalyzer();
+            return new RegisterColumnAnalyzer();
         }
     }
 }
