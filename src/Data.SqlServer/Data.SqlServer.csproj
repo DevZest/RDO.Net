@@ -9,9 +9,9 @@
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\Data.Common\Data.Common.csproj" />
+    <ProjectReference Include="..\Data\Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
