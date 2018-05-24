@@ -2,6 +2,6 @@
 {
     static internal class DiagnosticIds
     {
-        public const string ReturningTaskRequiresAsyncAnalyzer = "DevZest.Data.CS001";
+        public const string RegisterColumnMustBeCalledInStaticConstructorOrStaticFieldInitializer = "DevZest.Data.CS001";
     }
 }
