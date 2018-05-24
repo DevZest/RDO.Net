@@ -28,20 +28,11 @@ namespace DevZest.Data
 
         private class RefSimpleModel : Model
         {
-            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((RefSimpleModel x) => x.Col1, SimpleModel._Column1);
-
-            public static readonly Mounter<_Int32> _Column2 = RegisterColumn((RefSimpleModel x) => x.Col2, SimpleModel._Column2);
-
-            public _Int32 Col1 { get; private set; }
-
-            public _Int32 Col2 { get; private set; }
-        }
-
-        private class RefSimpleModel2 : Model
-        {
-            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((RefSimpleModel2 x) => x.Col1, RefSimpleModel._Column1);
-
-            public static readonly Mounter<_Int32> _Column2 = RegisterColumn((RefSimpleModel2 x) => x.Col2, RefSimpleModel._Column2);
+            static RefSimpleModel()
+            {
+                RegisterColumn((RefSimpleModel x) => x.Col1, SimpleModel._Column1);
+                RegisterColumn((RefSimpleModel x) => x.Col2, SimpleModel._Column2);
+            }
 
             public _Int32 Col1 { get; private set; }
 
@@ -75,14 +66,6 @@ namespace DevZest.Data
             var model = new RefSimpleModel();
             model.Col1.Verify(model, typeof(RefSimpleModel), "Col1", typeof(SimpleModel), "Column1");
             model.Col2.Verify(model, typeof(RefSimpleModel), "Col2", typeof(SimpleModel), "Column2");
-        }
-
-        [TestMethod]
-        public void Model_RegisterColumn_reference_to_existing_property_two_levels()
-        {
-            var model = new RefSimpleModel2();
-            model.Col1.Verify(model, typeof(RefSimpleModel2), "Col1", typeof(SimpleModel), "Column1");
-            model.Col2.Verify(model, typeof(RefSimpleModel2), "Col2", typeof(SimpleModel), "Column2");
         }
 
         [TestMethod]

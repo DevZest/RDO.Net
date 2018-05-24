@@ -50,7 +50,7 @@ namespace DevZest.Data
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="fromMounter"/> is null.</exception>
-        public static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Mounter<TColumn> fromMounter)
+        public static void RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Mounter<TColumn> fromMounter)
             where TModel : Model
             where TColumn : Column, new()
         {
@@ -60,7 +60,6 @@ namespace DevZest.Data
             var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, fromMounter, initializer));
             result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;
             result.OriginalName = fromMounter.OriginalName;
-            return result;
         }
 
         private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Action<T> initializer)
