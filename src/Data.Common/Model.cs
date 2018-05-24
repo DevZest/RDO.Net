@@ -265,7 +265,7 @@ namespace DevZest.Data
         /// <param name="constructor">The constructor of the computed local column. If null, a normal local column will be created.</param>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        public static void RegisterLocalColumn<TModel, T>(Expression<Func<TModel, Column<T>>> getter, Func<TModel, Column<T>> constructor = null)
+        protected static void RegisterLocalColumn<TModel, T>(Expression<Func<TModel, Column<T>>> getter, Func<TModel, Column<T>> constructor = null)
             where TModel : Model
         {
             var initializer = getter.Verify(nameof(getter));
