@@ -1,6 +1,10 @@
 ﻿<Project>
 
   <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <AssemblyName>DevZest.Samples.AdventureWorksLT</AssemblyName>
     <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
   </PropertyGroup>

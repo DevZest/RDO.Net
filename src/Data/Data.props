@@ -1,5 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>DevZest.Data</AssemblyName>
     <RootNamespace>DevZest.Data</RootNamespace>
   </PropertyGroup>

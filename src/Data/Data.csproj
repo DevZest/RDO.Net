@@ -1,10 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>DevZest.Data</AssemblyName>
-  </PropertyGroup>
-
   <Import Project="Data.props" />
   
   <ItemGroup>

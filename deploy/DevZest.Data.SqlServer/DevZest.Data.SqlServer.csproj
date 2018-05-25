@@ -1,9 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-
   <Import Project="..\..\src\Data.SqlServer\Data.SqlServer.props" />
   <Import Project="..\Deploy.props" />
 
@@ -26,6 +22,5 @@
 
   <ItemGroup>
     <PackageReference Include="DevZest.Data" Version="$(PackageVersion)" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
   </ItemGroup>
 </Project>
