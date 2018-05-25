@@ -1,4 +1,7 @@
 @echo off
+CALL sync_src.bat
+CD sync_src
+
 setlocal
 SET PARAM_VERSION="-version %1"
 if "%1"=="" (SET PARAM_VERSION=)

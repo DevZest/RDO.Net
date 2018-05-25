@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
 
-  <Import Project="..\..\test\AdventureWorksLT\AdventureWorksLT.props" />
   <Import Project="..\Deploy.props" />
-
+  
   <PropertyGroup>
     <PackageId>DevZest.Samples.AdventureWorksLT</PackageId>
     <PackageTags>RDO.NET;ADO.NET</PackageTags>
@@ -14,12 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\test\AdventureWorksLT\**\*.cs" Exclude="..\..\test\AdventureWorksLT\bin\**;..\..\test\AdventureWorksLT\obj\**;" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\test\AdventureWorksLT\UserMessages.resx" Link="UserMessages.resx">
-    </EmbeddedResource>
+    <ProjectReference Remove="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

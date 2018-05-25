@@ -1,6 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="Data.SqlServer.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>DevZest.Data.SqlServer</AssemblyName>
+    <RootNamespace>DevZest.Data.SqlServer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Authors>Weifen Luo | DevZest</Authors>
+    <Company>DevZest</Company>
+    <Product>DevZest RDO.NET SQL Server Implementation</Product>
+    <Description>DevZest RDO.NET SQL Server Implementation</Description>
+    <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
+  </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj" />
@@ -35,4 +51,9 @@
       <LastGenOutput>Resources.cs</LastGenOutput>
     </None>
   </ItemGroup>
+
+  <PropertyGroup>
+    <DeployProps Condition="Exists('..\Deploy.props')">..\Deploy.props</DeployProps>
+  </PropertyGroup>
+  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' " />
 </Project>

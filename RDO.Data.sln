@@ -24,6 +24,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Analyzers.CSharp", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Analyzers.CSharp.Vsix", "test\Data.Analyzers.CSharp.Vsix\Data.Analyzers.CSharp.Vsix.csproj", "{A64BED82-9113-415E-B2A6-F9A880ABDF2B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{D18D68DC-8D94-4F4C-BFEE-8225544FE15E}"
+	ProjectSection(SolutionItems) = preProject
+		deploy\ReadMe.md = deploy\ReadMe.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

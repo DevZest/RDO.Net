@@ -1,0 +1,1 @@
+ROBOCOPY %~dp0..\..\src\Data %~dp0sync_src /MIR /XD .vs obj bin

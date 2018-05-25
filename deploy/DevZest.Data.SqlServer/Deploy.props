@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
 
-  <Import Project="..\..\src\Data.SqlServer\Data.SqlServer.props" />
   <Import Project="..\Deploy.props" />
-
+  
   <PropertyGroup>
     <PackageId>DevZest.Data.SqlServer</PackageId>
     <PackageTags>RDO.NET;ADO.NET;SQL Server</PackageTags>
@@ -14,10 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\Data.SqlServer\**\*.cs" Exclude=".\..\src\Data.SqlServer\bin\**;..\..\src\Data.SqlServer\obj\**;" />
-    <EmbeddedResource Include="..\..\src\Data.SqlServer\Properties\DiagnosticMessages.resx">
-      <Link>DiagnosticMessages.resx</Link>
-    </EmbeddedResource>
+    <ProjectReference Remove="..\Data\Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
