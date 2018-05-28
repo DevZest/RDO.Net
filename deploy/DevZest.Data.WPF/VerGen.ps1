@@ -58,8 +58,9 @@ function getPackageVersion([string]$version, [string]$additionalLabel)
 function getTemplateFile([string]$file)
 {
     $currentDir = (Get-Item -Path ".\").FullName
+    $verGenDir = Join-Path $currentDir -ChildPath 'VerGen.Template'
     $file = (Split-Path $file -Leaf)
-	return (Join-Path $currentDir -ChildPath ('VerGen.' + $file))
+	return Join-Path $verGenDir -ChildPath $file
 }
 
 function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$assemblyFileVersion, [string]$packageVersion)
