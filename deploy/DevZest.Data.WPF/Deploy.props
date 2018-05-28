@@ -1,0 +1,7 @@
+<Project>
+  <Import Project="..\Deploy.props" />
+
+  <ItemGroup>
+    <Compile Include="AssemblyVersion.cs" />
+  </ItemGroup>
+</Project>

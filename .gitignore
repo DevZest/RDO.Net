@@ -2,6 +2,7 @@
 [Bb]in/
 packages/
 .vs/
+sync_src/
 [Tt]est[Rr]esults
 *.suo
 *proj.user

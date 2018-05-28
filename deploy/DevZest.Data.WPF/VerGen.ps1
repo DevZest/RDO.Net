@@ -7,42 +7,36 @@ param (
 
 function showUsage()
 {
-	echo 'Usage: Build -version Version [-additionalLabel AdditionalLable] [-projectDir ProjectDir] [-files Files...]'
+	echo 'Usage: VerGen -version PackageVersion [-additionalLabel PreRelease] [-projectDir ProjectDir] [-files File1, [File2]...]'
 	echo ''
-	echo 'Version: MAJOR.MINOR.PATCH'
+	echo 'PackageVersion: MAJOR.MINOR.PATCH'
 	echo '  MAJOR version when you make incompatible API changes;'
 	echo '  MINOR version when you add functionality in a backwards-compatible manner;'
 	echo '  PATCH version when you make backwards-compatible bug fixes.'
 	echo ''
-	echo 'AdditionalLable:'
-	echo '  Additional labels for pre-release and build metadata.'
-	echo '  If end "*" exists, it will be replaced with current date "yyyyMMdd".'
+	echo 'PreRelease:'
+	echo '  Additional labels for pre-release.'
+	echo '  If ends with *, a date in yyyyMMdd will be appended.'
 	echo ''
 	echo 'ProjectDir'
-	echo '  The project directory to build.'
-	echo '  If empty, current directory will be used.'
+	echo '  The project directory to build, relative to current directory.'
+	echo '  If empty, "sync_src" will be used.'
 	echo ''
-	echo 'Files...'
-	echo '  List of files to process.'
-	echo '  If empty, two files will be used: project.json and project.cs'.
-	exit
-}
-
-function fileNotFound([string]$fileName)
-{
-	echo ""
+	echo 'File1, [File2]...'
+	echo '  List of files to process, relative to ProjectDir and seperated by comma.'
+	echo '  If empty, default file "AssemblyVersion.cs" will be used:'.
 	exit
 }
 
 function getAssemblyVersion([string]$major, [string]$minor)
 {
-	return $major + '.' + $minor + '.0.0'
+	return $major + '0.0.0'
 }
 
-function getAssemblyFileVersion([string]$version)
+function getAssemblyFileVersion([string]$major, [string]$minor)
 {
 	$span = New-TimeSpan -Start ([datetime]'2000/01/01') -End (Get-Date)
-	return $version + "." + $span.Days
+	return $major + '.' + $minor + '.' + $span.Days + '.0'
 }
 
 function getPackageVersion([string]$version, [string]$additionalLabel)
@@ -61,19 +55,23 @@ function getPackageVersion([string]$version, [string]$additionalLabel)
 	return $version + '-' + $additionalLabel;
 }
 
-function getTemplateFile([string]$dir, [string]$file)
+function getTemplateFile([string]$file)
 {
-	return (Join-Path $dir -ChildPath ('build.' + $file))
+    $currentDir = (Get-Item -Path ".\").FullName
+    $file = (Split-Path $file -Leaf)
+	return (Join-Path $currentDir -ChildPath ('VerGen.' + $file))
 }
 
 function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$assemblyFileVersion, [string]$packageVersion)
 {
 	for ($i=0; $i -lt $files.Count; $i++)
 	{
-		$srcFile = Join-Path $projectDir -ChildPath $files[$i]
-		$templateFile = getTemplateFile -dir $projectDir -file $files[$i]
+		$file = $files[$i]
+		$srcFile = Join-Path $projectDir -ChildPath $file
+		$templateFile = getTemplateFile -file $file
 		$content = [System.IO.File]::ReadAllText($templateFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
 		[System.IO.File]::WriteAllText($srcFile, $content)
+		echo "File $srcFile generated."
 	}
 }
 
@@ -90,17 +88,19 @@ if ($versions.Count -ne 3)
 
 if ($projectDir -eq '')
 {
-	$projectDir = (Get-Item -Path ".\" -Verbose).FullName
+	$projectDir = "sync_src"
 }
+
+$projectDir = Join-Path (Get-Item -Path ".\").FullName -ChildPath $projectDir
 
 if ($files.Count -eq 0)
 {
-	$files = @('project.json', 'project.cs')
+	$files = @('AssemblyVersion.cs')
 }
 
 for ($i=0; $i -lt $files.Count; $i++)
 {
-	$file = getTemplateFile -dir $projectDir -file $files[$i]
+	$file = getTemplateFile -file $files[$i]
 	if (!(Test-Path $file))
 	{
 		echo "File $file not found!"
@@ -112,17 +112,12 @@ $major = $versions[0]
 $minor = $versions[1]
 $patch = $versions[2]
 $assemblyVersion = getAssemblyVersion -major $major -minor $minor
-$assemblyFileVersion = getAssemblyFileVersion -version $version
+$assemblyFileVersion = getAssemblyFileVersion -major $major -minor $minor
 $packageVersion = getPackageVersion -version $version -additionalLabel $additionalLabel
 
-echo "Building..."
 echo "ASSEMBLY_VERSION=$assemblyVersion"
 echo "ASSEMBLY_FILE_VERSION=$assemblyFileVersion"
 echo "PACKAGE_VERSION=$packageVersion"
+echo ""
 
 generateFiles -files $files -assemblyVersion $assemblyVersion -assemblyFileVersion $assemblyFileVersion -packageVersion $packageVersion
-
-dnu restore "$projectDir"
-dnu pack "$projectDir" --configuration Release
-
-generateFiles -files $files -assemblyVersion '0.0.0.0' -assemblyFileVersion '0.0.0.0' -packageVersion '0.0.0-dev'
