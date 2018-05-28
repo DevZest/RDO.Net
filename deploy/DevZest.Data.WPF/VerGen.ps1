@@ -30,7 +30,7 @@ function showUsage()
 
 function getAssemblyVersion([string]$major, [string]$minor)
 {
-	return $major + '0.0.0'
+	return $major + '.0.0.0'
 }
 
 function getAssemblyFileVersion([string]$major, [string]$minor)
