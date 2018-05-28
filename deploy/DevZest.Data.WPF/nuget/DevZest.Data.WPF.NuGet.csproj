@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\sync_src\DevZest.Data.WPF.NuGet.Props" />
+  <Import Project="..\sync_src\NuGet.Props" />
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
