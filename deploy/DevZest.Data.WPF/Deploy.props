@@ -4,7 +4,7 @@
 
   <ItemGroup>
     <Compile Include="AssemblyVersion.cs" />
-    <ProjectReference Remove="..\..\..\RDO.Data\src\Data\Data.csproj" />
+    <ProjectReference Remove="..\..\external\RDO.Data\src\Data\Data.csproj" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

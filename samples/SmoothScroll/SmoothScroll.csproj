@@ -96,8 +96,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\RDO.Data\src\Data\Data.csproj">
-      <Project>{9d963425-c7a1-48cf-910e-1a58a8d9e117}</Project>
+    <ProjectReference Include="..\..\external\RDO.Data\src\Data\Data.csproj">
+      <Project>{9f834693-6746-42c3-9226-ac606aebde09}</Project>
       <Name>Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">
