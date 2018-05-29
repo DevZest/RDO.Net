@@ -1,7 +1,10 @@
 <Project>
   <Import Project="..\Deploy.props" />
+  <Import Project="sync_src\PackageReference.props" />
 
   <ItemGroup>
     <Compile Include="AssemblyVersion.cs" />
+    <ProjectReference Remove="..\..\..\RDO.Data\src\Data\Data.csproj" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
