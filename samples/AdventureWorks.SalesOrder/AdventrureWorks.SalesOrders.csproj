@@ -51,19 +51,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevZest.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.1.0.0-beta-20180525\lib\netstandard2.0\DevZest.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="DevZest.Data.SqlServer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.SqlServer.1.0.0-beta-20180525\lib\netstandard2.0\DevZest.Data.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="DevZest.Samples.AdventureWorksLT, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Samples.AdventureWorksLT.1.0.0-beta-20180525\lib\netstandard2.0\DevZest.Samples.AdventureWorksLT.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SqlClient, Version=4.2.0.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Data.SqlClient.4.4.2\lib\net461\System.Data.SqlClient.dll</HintPath>
+    <Reference Include="System.Data.SqlClient, Version=4.2.0.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Data.SqlClient.4.4.3\lib\net461\System.Data.SqlClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -219,6 +210,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\RDO.Data\src\Data.SqlServer\Data.SqlServer.csproj">
+      <Project>{57c5f612-21b7-426c-b6fb-4ba3fe668b40}</Project>
+      <Name>Data.SqlServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RDO.Data\src\Data\Data.csproj">
+      <Project>{9d963425-c7a1-48cf-910e-1a58a8d9e117}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RDO.Data\test\AdventureWorksLT\AdventureWorksLT.csproj">
+      <Project>{8d566277-84cc-4887-a865-930754eea829}</Project>
+      <Name>AdventureWorksLT</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">
       <Project>{13148e98-0f1a-44d3-8def-99392773af3e}</Project>
       <Name>Data.WPF</Name>
