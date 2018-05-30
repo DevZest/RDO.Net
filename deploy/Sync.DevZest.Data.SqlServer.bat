@@ -1,0 +1,1 @@
+ROBOCOPY %~dp0..\src\Data.SqlServer %~dp0DevZest.Data.SqlServer /MIR /XD .vs obj bin

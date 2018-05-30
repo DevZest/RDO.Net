@@ -1,6 +1,6 @@
 <Project>
 
-  <Import Project="..\Deploy.props" />
+  <Import Project="Deploy.props" />
   
   <PropertyGroup>
     <PackageId>DevZest.Data</PackageId>

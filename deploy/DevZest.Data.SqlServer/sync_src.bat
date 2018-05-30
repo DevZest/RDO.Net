@@ -1,1 +1,0 @@
-ROBOCOPY %~dp0..\..\src\Data.SqlServer %~dp0sync_src /MIR /XD .vs obj bin

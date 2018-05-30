@@ -1,0 +1,1 @@
+ROBOCOPY %~dp0..\src\Data %~dp0DevZest.Data /MIR /XD .vs obj bin

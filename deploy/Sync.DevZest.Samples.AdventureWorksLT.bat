@@ -1,0 +1,1 @@
+ROBOCOPY %~dp0..\test\AdventureWorksLT %~dp0DevZest.Samples.AdventureWorksLT /MIR /XD .vs obj bin
