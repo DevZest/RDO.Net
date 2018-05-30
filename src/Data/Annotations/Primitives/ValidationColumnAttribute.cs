@@ -69,7 +69,7 @@ namespace DevZest.Data.Annotations.Primitives
                     return null;
 
                 if (_messageGetter == null)
-                    _messageGetter = MessageResourceType.ResolveStringGetter(Message);
+                    _messageGetter = MessageResourceType.ResolveStaticGetter<string>(Message);
 
                 return _messageGetter;
             }

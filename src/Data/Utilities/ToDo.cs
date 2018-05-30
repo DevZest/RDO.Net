@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using System;
 
 namespace DevZest
 {
@@ -14,6 +15,11 @@ namespace DevZest
             public static string ArgumentIsNullOrEmptyList(object parameterName)
             {
                 return DiagnosticMessages.ArgumentIsNullOrEmptyList(parameterName);
+            }
+
+            public static string CannotResolveStaticProperty(Type type, string propertyName, Type propertyType)
+            {
+                return DiagnosticMessages.CannotResolveStaticProperty(type, propertyName, propertyType);
             }
         }
     }

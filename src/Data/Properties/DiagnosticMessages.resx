@@ -339,8 +339,8 @@
   <data name="DataSet_InvalidNewDataRow" xml:space="preserve">
     <value>Cannot add DataRow into multiple DataSet.</value>
   </data>
-  <data name="TypeExtensions_CannotResolveStaticStringProperty" xml:space="preserve">
-    <value>Cannot resolve static string property {resourceType}.{resourceName}.</value>
+  <data name="CannotResolveStaticProperty" xml:space="preserve">
+    <value>Cannot resolve static property {type}.{propertyName} of {propertyType}.</value>
   </data>
   <data name="DbTable_VerifyUpdateIdentity" xml:space="preserve">
     <value>Target table must be a permanent table and has a identity column.</value>
@@ -509,9 +509,6 @@
   </data>
   <data name="DbSession_VerifyNotMocked" xml:space="preserve">
     <value>The DbSession is mocked.</value>
-  </data>
-  <data name="TypeExtensions_InvalidResourceName" xml:space="preserve">
-    <value>Resource name cannot be null, empty, or consists of only white-space characters.</value>
   </data>
   <data name="Model_EnsureInitializedNullDataSource" xml:space="preserve">
     <value>Calling EnsureInitialized() is not allowed when Model.DataSource is null.</value>

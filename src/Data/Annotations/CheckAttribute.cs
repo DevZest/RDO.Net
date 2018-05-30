@@ -17,9 +17,8 @@ namespace DevZest.Data.Annotations
 
         public CheckAttribute(Type messageResourceType, string message)
         {
-            messageResourceType.VerifyNotNull(nameof(messageResourceType));
-            _messageResourceType = messageResourceType;
-            _messageGetter = messageResourceType.ResolveStringGetter(message);
+            _messageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));
+            _messageGetter = messageResourceType.ResolveStaticGetter<string>(message.VerifyNotEmpty(nameof(message)));
         }
 
         protected sealed override DataValidationError Validate(Model model, DataRow dataRow)

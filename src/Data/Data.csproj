@@ -24,6 +24,7 @@
     <Compile Include="..\..\external\Utilities\src\Utilities\EmptyEnumerable.Singleton.cs" Link="Utilities\EmptyEnumerable.Singleton.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\EmptyEnumerator.Singleton.cs" Link="Utilities\EmptyEnumerator.Singleton.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\NameSuffixes.GetUniqueName.cs" Link="Utilities\NameSuffixes.GetUniqueName.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\Type.ResolveStaticGetter.cs" Link="Utilities\Type.ResolveStaticGetter.cs" />
   </ItemGroup>
   
   <ItemGroup>

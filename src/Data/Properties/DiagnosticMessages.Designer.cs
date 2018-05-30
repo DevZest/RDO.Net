@@ -604,11 +604,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot resolve static string property {resourceType}.{resourceName}.
+        /// Cannot resolve static property {type}.{propertyName} of {propertyType}.
         /// </summary>
-        public static string TypeExtensions_CannotResolveStaticStringProperty(object resourceType, object resourceName)
+        public static string CannotResolveStaticProperty(object type, object propertyName, object propertyType)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("TypeExtensions_CannotResolveStaticStringProperty", "resourceType", "resourceName"), resourceType, resourceName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("CannotResolveStaticProperty", "type", "propertyName", "propertyType"), type, propertyName, propertyType);
         }
 
         /// <summary>
@@ -1057,14 +1057,6 @@ namespace DevZest.Data
         public static string DbSession_VerifyNotMocked
         {
             get { return GetString("DbSession_VerifyNotMocked"); }
-        }
-
-        /// <summary>
-        /// Resource name cannot be null, empty, or consists of only white-space characters.
-        /// </summary>
-        public static string TypeExtensions_InvalidResourceName
-        {
-            get { return GetString("TypeExtensions_InvalidResourceName"); }
         }
 
         /// <summary>

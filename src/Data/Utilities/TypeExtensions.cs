@@ -51,32 +51,5 @@ namespace DevZest.Data.Utilities
         {
             return !type.GetTypeInfo().IsValueType || (Nullable.GetUnderlyingType(type) != null);
         }
-
-        internal static Func<string> ResolveStringGetter(this Type resourceType, string resourceName)
-        {
-            resourceType.VerifyNotNull(nameof(resourceType));
-            if (string.IsNullOrWhiteSpace(resourceName))
-                throw new ArgumentException(DiagnosticMessages.TypeExtensions_InvalidResourceName, nameof(resourceName));
-
-            try
-            {
-                return BuildStringGetter(resourceType, resourceName);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException(DiagnosticMessages.TypeExtensions_CannotResolveStaticStringProperty(resourceType, resourceName), ex);
-            }
-        }
-
-        private static Func<string> BuildStringGetter(Type resourceType, string resourceName)
-        {
-            Debug.Assert(resourceType != null);
-            Debug.Assert(!string.IsNullOrWhiteSpace(resourceName));
-
-            PropertyInfo property = resourceType.GetProperty(resourceName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            var methodInfo = property.GetGetMethod(true);
-            var call = Expression.Call(methodInfo);
-            return Expression.Lambda<Func<string>>(call).Compile();
-        }
     }
 }

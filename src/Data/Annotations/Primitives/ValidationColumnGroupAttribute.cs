@@ -14,9 +14,8 @@ namespace DevZest.Data.Annotations.Primitives
         protected ValidationColumnGroupAttribute(string name, Type messageResourceType, string message)
             : this(name, message)
         {
-            messageResourceType.VerifyNotNull(nameof(messageResourceType));
-            _messageResourceType = messageResourceType;
-            _messageGetter = messageResourceType.ResolveStringGetter(message);
+            _messageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));
+            _messageGetter = messageResourceType.ResolveStaticGetter<string>(message.VerifyNotEmpty(nameof(message)));
         }
 
         private readonly string _message;

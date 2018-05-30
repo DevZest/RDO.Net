@@ -16,9 +16,8 @@ namespace DevZest.Data.Annotations
         public ColumnValidatorAttribute(string columnName, Type messageResourceType, string message)
             : this(columnName, message)
         {
-            messageResourceType.VerifyNotNull(nameof(messageResourceType));
-            _messageResourceType = messageResourceType;
-            _messageGetter = messageResourceType.ResolveStringGetter(message);
+            _messageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));
+            _messageGetter = messageResourceType.ResolveStaticGetter<string>(message.VerifyNotEmpty(nameof(message)));
         }
 
         private readonly string _columnName;
