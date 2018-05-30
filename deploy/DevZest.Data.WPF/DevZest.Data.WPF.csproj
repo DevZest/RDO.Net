@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\sync_src\NuGet.Props" />
+  <Import Project="..\Sync.DevZest.Data.WPF\NuGet.Props" />
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
@@ -25,12 +25,15 @@
   
   <ItemGroup>
     <Compile Remove="bin\**" />
+    <Compile Remove="VerGen\**" />
     <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="VerGen\**" />
     <None Remove="bin\**" />
+    <None Remove="VerGen\**" />
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\sync_src\Data.WPF.csproj">
+    <ProjectReference Include="..\Sync.DevZest.Data.WPF\Data.WPF.csproj">
       <Private>true</Private>
       <PrivateAssets>All</PrivateAssets>
     </ProjectReference>

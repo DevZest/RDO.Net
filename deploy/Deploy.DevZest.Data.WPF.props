@@ -1,6 +1,6 @@
 <Project>
-  <Import Project="..\Deploy.props" />
-  <Import Project="sync_src\PackageReference.props" />
+  <Import Project="Deploy.props" />
+  <Import Project="Sync.DevZest.Data.WPF\PackageReference.props" />
 
   <ItemGroup>
     <Compile Include="AssemblyVersion.cs" />

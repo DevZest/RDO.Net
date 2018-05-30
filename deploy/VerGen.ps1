@@ -20,7 +20,7 @@ function showUsage()
 	echo ''
 	echo 'ProjectDir'
 	echo '  The project directory to build, relative to current directory.'
-	echo '  If empty, "sync_src" will be used.'
+	echo '  If empty, "..\Sync.%CurrentDirectory%" will be used.'
 	echo ''
 	echo 'File1, [File2]...'
 	echo '  List of files to process, relative to ProjectDir and seperated by comma.'
@@ -58,9 +58,14 @@ function getPackageVersion([string]$version, [string]$additionalLabel)
 function getTemplateFile([string]$file)
 {
     $currentDir = (Get-Item -Path ".\").FullName
-    $verGenDir = Join-Path $currentDir -ChildPath 'VerGen.Template'
+    $verGenDir = Join-Path $currentDir -ChildPath 'VerGen'
     $file = (Split-Path $file -Leaf)
 	return Join-Path $verGenDir -ChildPath $file
+}
+
+function getDefaultProjectDir()
+{
+    return "..\Sync." + (Get-Item -Path ".\").Name
 }
 
 function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$assemblyFileVersion, [string]$packageVersion)
@@ -89,7 +94,7 @@ if ($versions.Count -ne 3)
 
 if ($projectDir -eq '')
 {
-	$projectDir = "sync_src"
+	$projectDir = getDefaultProjectDir
 }
 
 $projectDir = Join-Path (Get-Item -Path ".\").FullName -ChildPath $projectDir
