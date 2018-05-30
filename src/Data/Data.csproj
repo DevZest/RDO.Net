@@ -20,6 +20,9 @@
     <Compile Include="..\..\external\Utilities\src\Utilities\ArgumentListItem.VerifyNotNull.cs" Link="Utilities\ArgumentListItem.VerifyNotNull.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\ArgumentString.VerifyNotEmpty.cs" Link="Utilities\ArgumentString.VerifyNotEmpty.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\Array.Empty.cs" Link="Utilities\Array.Empty.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\EmptyDictionary.Singleton.cs" Link="Utilities\EmptyDictionary.Singleton.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\EmptyEnumerable.Singleton.cs" Link="Utilities\EmptyEnumerable.Singleton.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\EmptyEnumerator.Singleton.cs" Link="Utilities\EmptyEnumerator.Singleton.cs" />
   </ItemGroup>
   
   <ItemGroup>
