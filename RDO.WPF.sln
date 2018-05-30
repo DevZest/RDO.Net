@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "external\RDO.Data\s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.SqlServer", "external\RDO.Data\src\Data.SqlServer\Data.SqlServer.csproj", "{7E15111B-EB4A-40F9-8EED-CCF3D49094D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "external\RDO.Data\test\AdventureWorksLT\AdventureWorksLT.csproj", "{C3607DC8-0CF3-47B6-A151-8B13F65E292F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "external\RDO.Data\samples\AdventureWorksLT\AdventureWorksLT.csproj", "{C3607DC8-0CF3-47B6-A151-8B13F65E292F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

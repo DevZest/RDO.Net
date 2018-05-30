@@ -218,7 +218,7 @@
       <Project>{9f834693-6746-42c3-9226-ac606aebde09}</Project>
       <Name>Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\RDO.Data\test\AdventureWorksLT\AdventureWorksLT.csproj">
+    <ProjectReference Include="..\..\external\RDO.Data\samples\AdventureWorksLT\AdventureWorksLT.csproj">
       <Project>{c3607dc8-0cf3-47b6-a151-8b13f65e292f}</Project>
       <Name>AdventureWorksLT</Name>
     </ProjectReference>
