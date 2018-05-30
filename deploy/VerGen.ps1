@@ -73,7 +73,7 @@ function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$asse
 	for ($i=0; $i -lt $files.Count; $i++)
 	{
 		$file = $files[$i]
-		$srcFile = Join-Path $projectDir -ChildPath $file
+		$srcFile = [System.IO.Path]::GetFullPath((Join-Path $projectDir -ChildPath $file))
 		$templateFile = getTemplateFile -file $file
 		$content = [System.IO.File]::ReadAllText($templateFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
 		[System.IO.File]::WriteAllText($srcFile, $content)
@@ -97,7 +97,7 @@ if ($projectDir -eq '')
 	$projectDir = getDefaultProjectDir
 }
 
-$projectDir = Join-Path (Get-Item -Path ".\").FullName -ChildPath $projectDir
+$projectDir = [System.IO.Path]::GetFullPath((Join-Path (Get-Item -Path ".\").FullName -ChildPath $projectDir))
 
 if ($files.Count -eq 0)
 {
@@ -109,7 +109,7 @@ for ($i=0; $i -lt $files.Count; $i++)
 	$file = getTemplateFile -file $files[$i]
 	if (!(Test-Path $file))
 	{
-		echo "File $file not found!"
+		Write-Error "File $file not found!"
 		exit
 	}
 }
