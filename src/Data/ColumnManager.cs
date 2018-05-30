@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DevZest.Data.Utilities
+namespace DevZest.Data
 {
     internal static class ColumnManager
     {
