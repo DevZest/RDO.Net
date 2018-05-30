@@ -32,7 +32,7 @@ namespace DevZest.Data.Utilities
             return null;
         }
 
-        public static bool IsDerivedFrom(this Type type, Type genericTypeDefinition)
+        public static bool IsDerivedFromGeneric(this Type type, Type genericTypeDefinition)
         {
             for (; type != null; type = type.GetTypeInfo().BaseType)
             {

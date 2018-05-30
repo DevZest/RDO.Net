@@ -319,31 +319,31 @@ namespace DevZest.Data.SqlServer
             var columnType = column.GetType();
             var columnDataType = column.DataType;
             var enumType = columnDataType.GenericTypeArguments[0];
-            if (columnType.IsDerivedFrom(typeof(_ByteEnum<>)))
+            if (columnType.IsDerivedFromGeneric(typeof(_ByteEnum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetByteEnumMapperProvider));
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
-            if (columnType.IsDerivedFrom(typeof(_CharEnum<>)))
+            if (columnType.IsDerivedFromGeneric(typeof(_CharEnum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetCharEnumMapperProvider));
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
-            if (columnType.IsDerivedFrom(typeof(_Int16Enum<>)))
+            if (columnType.IsDerivedFromGeneric(typeof(_Int16Enum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt16EnumMapperProvider));
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
-            if (columnType.IsDerivedFrom(typeof(_Int32Enum<>)))
+            if (columnType.IsDerivedFromGeneric(typeof(_Int32Enum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt32EnumMapperProvider));
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
             }
 
-            if (columnType.IsDerivedFrom(typeof(_Int64Enum<>)))
+            if (columnType.IsDerivedFromGeneric(typeof(_Int64Enum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt64EnumMapperProvider));
                 return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));

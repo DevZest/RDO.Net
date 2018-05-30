@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace DevZest.Data.Utilities
+namespace DevZest
 {
-    internal static class NullableExtensions
+    internal static partial class Extensions
     {
-        public static bool? EqualsTo<T>(this Nullable<T> value, Nullable<T> other)
+        internal static bool? EqualsTo<T>(this T? value, T? other)
             where T : struct
         {
             if (value.HasValue && other.HasValue)
