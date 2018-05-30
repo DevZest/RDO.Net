@@ -32,16 +32,6 @@ namespace DevZest.Data.Utilities
             return null;
         }
 
-        public static bool IsDerivedFromGeneric(this Type type, Type genericTypeDefinition)
-        {
-            for (; type != null; type = type.GetTypeInfo().BaseType)
-            {
-                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == genericTypeDefinition)
-                    return true;
-            }
-            return false;
-        }
-
         public static MethodInfo GetStaticMethodInfo(this Type type, string methodName)
         {
             return type.GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);

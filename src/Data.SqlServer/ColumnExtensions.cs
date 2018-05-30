@@ -352,6 +352,16 @@ namespace DevZest.Data.SqlServer
             throw new NotSupportedException(DiagnosticMessages.ColumnTypeNotSupported(column.GetType()));
         }
 
+        private static bool IsDerivedFromGeneric(this Type type, Type genericTypeDefinition)
+        {
+            for (; type != null; type = type.GetTypeInfo().BaseType)
+            {
+                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == genericTypeDefinition)
+                    return true;
+            }
+            return false;
+        }
+
         private static MapperProvider<T?> GetCharEnumMapperProvider<T>()
             where T : struct, IConvertible
         {
