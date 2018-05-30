@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text;
-using DevZest.Data.Utilities;
 
 namespace DevZest.Data.Primitives
 {
@@ -13,7 +11,7 @@ namespace DevZest.Data.Primitives
         /// <param name="operand">The operand to be casted.</param>
         protected CastExpression(Column<TSource> operand)
         {
-            Check.NotNull(operand, nameof(operand));
+            operand.VerifyNotNull(nameof(operand));
             Operand = operand;
         }
 

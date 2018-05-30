@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,8 +11,8 @@ namespace DevZest.Data.Primitives
         protected DbReaderInvoker(DbSession dbSession, TCommand command, Model model)
             : base(dbSession)
         {
-            Check.NotNull(command, nameof(command));
-            Check.NotNull(model, nameof(model));
+            command.VerifyNotNull(nameof(command));
+            model.VerifyNotNull(nameof(model));
             Command = command;
             Model = model;
         }

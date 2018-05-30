@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace DevZest.Data.Primitives
@@ -35,14 +33,14 @@ namespace DevZest.Data.Primitives
 
         internal void AddExtension(IExtension extension)
         {
-            Check.NotNull(extension, nameof(extension));
+            extension.VerifyNotNull(nameof(extension));
 
             _extensions.Add(extension);
         }
 
         internal void AddOrUpdateExtension(IExtension extension)
         {
-            Check.NotNull(extension, nameof(extension));
+            extension.VerifyNotNull(nameof(extension));
 
             var extensionKey = extension.Key;
             if (_extensions.Contains(extensionKey))
@@ -52,14 +50,14 @@ namespace DevZest.Data.Primitives
 
         internal bool ContainsExtension(object extensionKey)
         {
-            Check.NotNull(extensionKey, nameof(extensionKey));
+            extensionKey.VerifyNotNull(nameof(extensionKey));
 
             return _extensions.Contains(extensionKey);
         }
 
         internal void RemoveExtension(object extensionKey)
         {
-            Check.NotNull(extensionKey, nameof(extensionKey));
+            extensionKey.VerifyNotNull(nameof(extensionKey));
 
             _extensions.Remove(extensionKey);
         }

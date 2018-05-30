@@ -10,7 +10,7 @@ namespace DevZest.Data.Utilities
 
         protected GenericInvoker(MethodInfo methodInfo, Func<Type> typeResolver)
         {
-            Check.NotNull(methodInfo, nameof(methodInfo));
+            methodInfo.VerifyNotNull(nameof(methodInfo));
 
             var resolvedType = typeResolver();
             if (resolvedType == null)

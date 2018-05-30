@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs" Link="Utilities\Argument.VerifyNotNull.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
   </ItemGroup>
 
@@ -52,8 +56,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <DeployProps Condition="Exists('..\Deploy.$(AssemblyName).props')">..\Deploy.$(AssemblyName).props</DeployProps>
   </PropertyGroup>
-  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' "/>
+  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' " />
 </Project>

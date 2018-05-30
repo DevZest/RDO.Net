@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 
 namespace DevZest.Data
 {
@@ -12,7 +11,7 @@ namespace DevZest.Data
 
         public static CaseOn<T> On<T>(Column<T> on)
         {
-            Check.NotNull(on, nameof(on));
+            on.VerifyNotNull(nameof(on));
             return new CaseOn<T>(on);
         }
     }

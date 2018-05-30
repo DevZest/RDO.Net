@@ -28,19 +28,19 @@ namespace DevZest.Data
 
             public bool Contains(Column value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return false;
             }
 
             public IColumns Add(Column value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return value;
             }
 
             public IColumns Remove(Column value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return this;
             }
 
@@ -104,7 +104,7 @@ namespace DevZest.Data
 
             public IColumns Add(Column value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
 
                 if (Contains(value))
                     return this;
@@ -129,7 +129,7 @@ namespace DevZest.Data
 
             public IColumns Remove(Column value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
 
                 if (!Contains(value))
                     return this;
@@ -168,7 +168,7 @@ namespace DevZest.Data
 
             public bool Contains(Column value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return _hashSet.Contains(value);
             }
 
@@ -215,7 +215,7 @@ namespace DevZest.Data
 
         public static IColumns New(params Column[] values)
         {
-            Check.NotNull(values, nameof(values));
+            values.VerifyNotNull(nameof(values));
 
             if (values.Length == 0)
                 return Empty;
@@ -253,8 +253,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IColumns Except(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var column in source)
             {
@@ -270,8 +270,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IColumns Intersect(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var column in source)
             {
@@ -297,8 +297,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSubsetOf(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count < other.Count ? other.ContainsAll(source) : false;
         }
@@ -308,8 +308,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSupersetOf(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count > other.Count ? source.ContainsAll(other) : false;
         }
@@ -320,8 +320,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSubsetOf(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count <= other.Count ? other.ContainsAll(source) : false;
         }
@@ -332,8 +332,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSupersetOf(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count >= other.Count ? source.ContainsAll(other) : false;
         }
@@ -344,8 +344,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool Overlaps(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var column in source)
             {
@@ -361,8 +361,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
         public static bool SetEquals(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count == other.Count ? source.ContainsAll(other) : false;
         }
@@ -373,8 +373,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IColumns SymmetricExcept(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             IColumns removedColumnSet = Columns.Empty;
             foreach (var column in source)
@@ -401,8 +401,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IColumns Union(this IColumns source, IColumns other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var column in other)
                 source = source.Add(column);

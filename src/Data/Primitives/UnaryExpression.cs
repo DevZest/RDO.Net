@@ -1,5 +1,4 @@
 ﻿using System;
-using DevZest.Data.Utilities;
 
 namespace DevZest.Data.Primitives
 {
@@ -11,7 +10,7 @@ namespace DevZest.Data.Primitives
         /// <param name="operand">The operand.</param>
         protected UnaryExpression(Column<T> operand)
         {
-            Check.NotNull(operand, nameof(operand));
+            operand.VerifyNotNull(nameof(operand));
             Operand = operand;
         }
 

@@ -149,8 +149,8 @@ namespace DevZest.Data.SqlServer
 
         public static void RegisterFunctionHandler(FunctionKey functionKey, Action<ExpressionGenerator, DbFunctionExpression> handler)
         {
-            Check.NotNull(functionKey, nameof(functionKey));
-            Check.NotNull(handler, nameof(handler));
+            functionKey.VerifyNotNull(nameof(functionKey));
+            handler.VerifyNotNull(nameof(handler));
 
             s_functionHandlers.Add(functionKey, handler);
         }

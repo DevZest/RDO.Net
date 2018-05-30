@@ -193,7 +193,7 @@ namespace DevZest.Data
         {
             get
             {
-                Check.NotNull(childModel, nameof(childModel));
+                childModel.VerifyNotNull(nameof(childModel));
                 if (childModel.ParentModel != Model)
                     throw new ArgumentException(DiagnosticMessages.InvalidChildModel, nameof(childModel));
                 return _childDataSets[childModel.Ordinal];
@@ -224,7 +224,7 @@ namespace DevZest.Data
         public DataSet<T> Children<T>(T childModel)
             where T : Model, new()
         {
-            Check.NotNull(childModel, nameof(childModel));
+            childModel.VerifyNotNull(nameof(childModel));
             if (childModel.ParentModel != Model)
                 throw new ArgumentException(DiagnosticMessages.InvalidChildModel, nameof(childModel));
 
@@ -325,7 +325,7 @@ namespace DevZest.Data
 
         public void CopyValuesFrom(DataRow from, bool recursive = true)
         {
-            Check.NotNull(from, nameof(from));
+            from.VerifyNotNull(nameof(from));
             if (from.Model == null)
                 throw new ArgumentException(DiagnosticMessages.DataRow_NullModel, nameof(from));
             if (Model == null)
@@ -364,8 +364,8 @@ namespace DevZest.Data
 
         public void CopyValuesFrom(DataRow from, IReadOnlyList<ColumnMapping> columnMappings)
         {
-            Check.NotNull(from, nameof(from));
-            Check.NotNull(columnMappings, nameof(columnMappings));
+            from.VerifyNotNull(nameof(from));
+            columnMappings.VerifyNotNull(nameof(columnMappings));
             for (int i = 0; i < columnMappings.Count; i++)
                 columnMappings[i].CopyValue(from, this);
         }
@@ -604,7 +604,7 @@ namespace DevZest.Data
 
         private static void VerifyOrderBy(Column column, string paramName)
         {
-            Check.NotNull(column, paramName);
+            column.VerifyNotNull(paramName);
             if (column.ScalarSourceModels.Count != 1)
                 throw new ArgumentException(DiagnosticMessages.DataRow_OrderByColumnMustBeSingleSourceModel, paramName);
         }

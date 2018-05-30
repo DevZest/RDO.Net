@@ -30,7 +30,7 @@ namespace DevZest.Data
 
         public static _Boolean IsNull(this Column x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new IsNullFunction(x).MakeColumn<_Boolean>();
         }
 

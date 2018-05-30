@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-
-namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data.Primitives
 {
     public struct CaseWhen
     {
@@ -13,7 +11,7 @@ namespace DevZest.Data.Primitives
 
         public CaseExpression<T> Then<T>(Column<T> then)
         {
-            Check.NotNull(then, nameof(then));
+            then.VerifyNotNull(nameof(then));
             return new CaseExpression<T>().WhenThen(_when, then);
         }
     }
@@ -31,7 +29,7 @@ namespace DevZest.Data.Primitives
 
         public CaseExpression<T> Then(Column<T> then)
         {
-            Check.NotNull(then, nameof(then));
+            then.VerifyNotNull(nameof(then));
             _case.WhenThen(_when, then);
             return _case;
         }

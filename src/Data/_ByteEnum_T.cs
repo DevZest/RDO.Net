@@ -74,7 +74,7 @@ namespace DevZest.Data
 
         public static explicit operator _String(_ByteEnum<T> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
 
@@ -93,7 +93,7 @@ namespace DevZest.Data
 
         public static explicit operator _Byte(_ByteEnum<T> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new ToByteCast(x).MakeColumn<_Byte>();
         }
 
@@ -112,7 +112,7 @@ namespace DevZest.Data
 
         public static explicit operator _ByteEnum<T>(_Byte x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromByteCast(x).MakeColumn<_ByteEnum<T>>();
         }
 
@@ -136,8 +136,8 @@ namespace DevZest.Data
 
         public static _ByteEnum<T> operator &(_ByteEnum<T> x, _ByteEnum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new BitwiseAndExpression(x, y).MakeColumn<_ByteEnum<T>>();
         }
 
@@ -161,8 +161,8 @@ namespace DevZest.Data
 
         public static _ByteEnum<T> operator |(_ByteEnum<T> x, _ByteEnum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new BitwiseOrExpression(x, y).MakeColumn<_ByteEnum<T>>();
         }
 
@@ -186,8 +186,8 @@ namespace DevZest.Data
 
         public static _Boolean operator ==(_ByteEnum<T> x, _ByteEnum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
@@ -212,8 +212,8 @@ namespace DevZest.Data
 
         public static _Boolean operator !=(_ByteEnum<T> x, _ByteEnum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }

@@ -19,8 +19,8 @@ namespace DevZest.Data
 
         public KeyMapping(PrimaryKey sourceKey, PrimaryKey targetKey)
         {
-            Check.NotNull(sourceKey, nameof(sourceKey));
-            Check.NotNull(targetKey, nameof(targetKey));
+            sourceKey.VerifyNotNull(nameof(sourceKey));
+            targetKey.VerifyNotNull(nameof(targetKey));
             if (targetKey.GetType() != sourceKey.GetType())
                 throw new ArgumentException(DiagnosticMessages.KeyMapping_SourceTargetTypeMismatch, nameof(targetKey));
             Debug.Assert(sourceKey.Count == targetKey.Count);

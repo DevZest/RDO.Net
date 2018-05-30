@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Primitives;
 using System;
-using DevZest.Data.Utilities;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -18,7 +17,7 @@ namespace DevZest.Data
 
         public async Task<T> InitializeAsync(T db, CancellationToken ct = default(CancellationToken))
         {
-            Check.NotNull(db, nameof(db));
+            db.VerifyNotNull(nameof(db));
             db.VerifyNotMocked();
             if (Db != null)
                 throw new InvalidOperationException(DiagnosticMessages.MockDb_InitializeTwice);

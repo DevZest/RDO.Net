@@ -33,15 +33,15 @@ namespace DevZest.Data
 
         public static IComparer<DataRow> ThenBy(this IComparer<DataRow> orderBy, IComparer<DataRow> thenBy)
         {
-            Check.NotNull(orderBy, nameof(orderBy));
-            Check.NotNull(thenBy, nameof(thenBy));
+            orderBy.VerifyNotNull(nameof(orderBy));
+            thenBy.VerifyNotNull(nameof(thenBy));
             return new CompositeComparer(orderBy, thenBy);
         }
 
         public static IDataRowComparer ThenBy(this IDataRowComparer orderBy, IDataRowComparer thenBy)
         {
-            Check.NotNull(orderBy, nameof(orderBy));
-            Check.NotNull(thenBy, nameof(thenBy));
+            orderBy.VerifyNotNull(nameof(orderBy));
+            thenBy.VerifyNotNull(nameof(thenBy));
             if (orderBy.ModelType != thenBy.ModelType)
                 throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentDataRowModel, nameof(thenBy));
             return ComparerBase.Create(orderBy, thenBy);
@@ -49,7 +49,7 @@ namespace DevZest.Data
 
         public static IDataRowComparer ThenBy(this IDataRowComparer orderBy, Column column, SortDirection direction = SortDirection.Ascending)
         {
-            Check.NotNull(orderBy, nameof(orderBy));
+            orderBy.VerifyNotNull(nameof(orderBy));
             var thenBy = DataRow.OrderBy(column, direction);
             if (orderBy.ModelType != thenBy.ModelType)
                 throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentDataRowModel, nameof(column));
@@ -58,7 +58,7 @@ namespace DevZest.Data
 
         public static IDataRowComparer ThenBy<T>(this IDataRowComparer orderBy, Column<T> column, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
         {
-            Check.NotNull(orderBy, nameof(orderBy));
+            orderBy.VerifyNotNull(nameof(orderBy));
             var thenBy = DataRow.OrderBy(column, direction, comparer);
             if (orderBy.ModelType != thenBy.ModelType)
                 throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentDataRowModel, nameof(column));
@@ -92,8 +92,8 @@ namespace DevZest.Data
 
             protected Model Verify(DataRow x, DataRow y)
             {
-                Check.NotNull(x, nameof(x));
-                Check.NotNull(y, nameof(y));
+                x.VerifyNotNull(nameof(x));
+                y.VerifyNotNull(nameof(y));
                 var model = x.Model;
                 if (model == null || model.GetType() != ModelType)
                     throw new ArgumentException(DiagnosticMessages.DataRowComparer_InvalidDataRowModel, nameof(x));
@@ -154,7 +154,7 @@ namespace DevZest.Data
                 private readonly IComparer<T> _comparer;
                 public Column GetColumn(Model model)
                 {
-                    Check.NotNull(model, nameof(model));
+                    model.VerifyNotNull(nameof(model));
                     if (model.GetType() != ModelType)
                         throw new ArgumentException(DiagnosticMessages.DataRowComparer_DifferentModelType, nameof(model));
                     return GetTypedColumn(model);

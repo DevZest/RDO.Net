@@ -15,7 +15,7 @@ namespace DevZest.Data.Primitives
             where TColumn : Column, new()
         {
             var initializer = getter.Verify(nameof(getter));
-            Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
+            fromMounter.VerifyNotNull(nameof(fromMounter));
 
             var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
             result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;

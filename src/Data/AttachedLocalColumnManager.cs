@@ -21,8 +21,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         private void Initialize(TModel _)
         {
-            if (_ == null)
-                throw new ArgumentNullException(nameof(_));
+            _.VerifyNotNull(nameof(_));
             if (_.IsInitialized)
                 throw new InvalidOperationException(DiagnosticMessages.VerifyDesignMode);
 

@@ -89,7 +89,7 @@ namespace DevZest.Data
             where T : TColumn, new()
         {
             VerifyDesignMode();
-            Check.NotNull(column, nameof(column));
+            column.VerifyNotNull(nameof(column));
             var baseInitializer = ColumnInitializerManager<T>.GetInitializer(column);
             if (inheritColumnKey)
                 return Add(x => CreateColumn(x, column.OriginalDeclaringType, column.OriginalName, baseInitializer, initializer));
@@ -108,7 +108,7 @@ namespace DevZest.Data
             where T : TColumn, new()
         {
             VerifyDesignMode();
-            Check.NotNull(fromMounter, nameof(fromMounter));
+            fromMounter.VerifyNotNull(nameof(fromMounter));
             if (inheritOriginalId)
                 return Add(x => CreateColumn(x, fromMounter.OriginalDeclaringType, fromMounter.OriginalName, fromMounter.Initializer, initializer));
             else

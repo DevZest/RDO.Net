@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 
 namespace DevZest.Data
 {
@@ -7,7 +6,7 @@ namespace DevZest.Data
     {
         public DataRowEventArgs(DataRow dataRow)
         {
-            Check.NotNull(dataRow, nameof(dataRow));
+            dataRow.VerifyNotNull(nameof(dataRow));
             _dataRow = dataRow;
         }
 

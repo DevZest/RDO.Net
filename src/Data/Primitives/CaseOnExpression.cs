@@ -1,8 +1,6 @@
 ﻿using DevZest.Data.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -61,14 +59,14 @@ namespace DevZest.Data.Primitives
 
         public CaseOnWhen<TOn, TResult> When(Column<TOn> when)
         {
-            Check.NotNull(when, nameof(when));
+            when.VerifyNotNull(nameof(when));
             return new CaseOnWhen<TOn, TResult>(this, when);
         }
 
         internal CaseOnExpression<TOn, TResult> WhenThen(Column<TOn> when, Column<TResult> then)
         {
-            Check.NotNull(when, nameof(when));
-            Check.NotNull(then, nameof(then));
+            when.VerifyNotNull(nameof(when));
+            then.VerifyNotNull(nameof(then));
 
             _when.Add(when);
             _then.Add(then);

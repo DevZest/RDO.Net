@@ -15,7 +15,7 @@ namespace DevZest.Data.Primitives
             where TComposition : ProjectionContainer<T>
             where TChild : T, new()
         {
-            Check.NotNull(getter, nameof(getter));
+            getter.VerifyNotNull(nameof(getter));
             s_childManager.Register(getter, CreateChild, null);
         }
 

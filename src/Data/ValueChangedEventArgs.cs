@@ -1,13 +1,11 @@
-﻿using DevZest.Data.Utilities;
-
-namespace DevZest.Data
+﻿namespace DevZest.Data
 {
     public class ValueChangedEventArgs : DataRowEventArgs
     {
         public ValueChangedEventArgs(DataRow dataRow, IColumns columns)
             : base(dataRow)
         {
-            Check.NotNull(columns, nameof(columns));
+            columns.VerifyNotNull(nameof(columns));
             _columns = columns;
         }
 

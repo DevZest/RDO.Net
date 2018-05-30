@@ -12,7 +12,7 @@ namespace DevZest.Data
         public DataValidationError(string message, IColumns source)
             : base(message, source)
         {
-            Check.NotNull(source, nameof(source));
+            source.VerifyNotNull(nameof(source));
             if (source.Count == 0)
                 throw new ArgumentException(DiagnosticMessages.ValidationError_EmptySourceColumns, nameof(source));
         }
@@ -63,7 +63,7 @@ namespace DevZest.Data
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IDataValidationErrors IDataValidationErrors.Add(DataValidationError value)
         {
-            Check.NotNull(value, nameof(value));
+            value.VerifyNotNull(nameof(value));
             return DataValidationErrors.New(this, value);
         }
 

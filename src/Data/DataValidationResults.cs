@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Collections;
-using DevZest.Data.Utilities;
 
 namespace DevZest.Data
 {
@@ -51,7 +48,7 @@ namespace DevZest.Data
 
             public bool Contains(DataRow dataRow)
             {
-                Check.NotNull(dataRow, nameof(dataRow));
+                dataRow.VerifyNotNull(nameof(dataRow));
                 return false;
             }
 

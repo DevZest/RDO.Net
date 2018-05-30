@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -15,7 +14,7 @@ namespace DevZest.Data.Primitives
         protected DbTransactionInvoker(DbSession dbSession, TConnection connection, IsolationLevel? isolationLevel)
             : base(dbSession)
         {
-            Check.NotNull(connection, nameof(connection));
+            connection.VerifyNotNull(nameof(connection));
             Connection = connection;
             IsolationLevel = isolationLevel;
         }

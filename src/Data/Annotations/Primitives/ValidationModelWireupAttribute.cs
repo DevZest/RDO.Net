@@ -29,7 +29,7 @@ namespace DevZest.Data.Annotations.Primitives
 
         protected void AddValidator(Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             model.Validators.Add(new Validator(this, model));
         }
     }

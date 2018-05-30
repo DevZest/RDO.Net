@@ -66,7 +66,7 @@ namespace DevZest.Data
 
         public static _Double Average(this Column<Int32?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new AverageInt32(x).MakeColumn<_Double>();
         }
 
@@ -106,7 +106,7 @@ namespace DevZest.Data
 
         public static _Double Average(this Column<Int64?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new AverageInt64(x).MakeColumn<_Double>();
         }
 
@@ -146,7 +146,7 @@ namespace DevZest.Data
 
         public static _Decimal Average(this Column<Decimal?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new AverageDecimal(x).MakeColumn<_Decimal>();
         }
 
@@ -186,7 +186,7 @@ namespace DevZest.Data
 
         public static _Double Average(this Column<Double?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new AverageDouble(x).MakeColumn<_Double>();
         }
 
@@ -226,7 +226,7 @@ namespace DevZest.Data
 
         public static _Single Average(this Column<Single?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new AverageSingle(x).MakeColumn<_Single>();
         }
 

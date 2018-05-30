@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +10,7 @@ namespace DevZest.Data.Primitives
         public DbNonQueryInvoker(DbSession dbSession, TCommand command)
             : base(dbSession)
         {
-            Check.NotNull(command, nameof(command));
+            command.VerifyNotNull(nameof(command));
             Command = command;
         }
 

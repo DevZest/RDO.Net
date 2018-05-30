@@ -30,8 +30,8 @@ namespace DevZest.Data.Primitives
         /// <param name="right">The right column operand.</param>
         protected BinaryExpression(Column<T> left, Column<T> right)
         {
-            Check.NotNull(left, nameof(left));
-            Check.NotNull(right, nameof(right));
+            left.VerifyNotNull(nameof(left));
+            right.VerifyNotNull(nameof(right));
 
             Left = left;
             Right = right;

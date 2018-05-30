@@ -1,7 +1,5 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
-using System.Reflection;
 
 namespace DevZest.Data
 {
@@ -66,7 +64,7 @@ namespace DevZest.Data
 
         public static _Int32 Sum(this Column<Int32?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new SumInt32(x).MakeColumn<_Int32>();
         }
 
@@ -104,7 +102,7 @@ namespace DevZest.Data
 
         public static _Int64 Sum(this Column<Int64?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new SumInt64(x).MakeColumn<_Int64>();
         }
 
@@ -142,7 +140,7 @@ namespace DevZest.Data
 
         public static _Decimal Sum(this Column<Decimal?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new SumDecimal(x).MakeColumn<_Decimal>();
         }
 
@@ -180,7 +178,7 @@ namespace DevZest.Data
 
         public static _Double Sum(this Column<Double?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new SumDouble(x).MakeColumn<_Double>();
         }
 
@@ -218,7 +216,7 @@ namespace DevZest.Data
 
         public static _Single Sum(this Column<Single?> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new SumSingle(x).MakeColumn<_Single>();
         }
 

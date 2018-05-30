@@ -17,7 +17,7 @@ namespace DevZest.Data.Primitives
     {
         protected DbSession(TConnection connection)
         {
-            Check.NotNull(connection, nameof(connection));
+            connection.VerifyNotNull(nameof(connection));
             _connection = connection;
         }
 
@@ -55,25 +55,25 @@ namespace DevZest.Data.Primitives
 
         public void ExecuteTransaction(Action action)
         {
-            Check.NotNull(action, nameof(action));
+            action.VerifyNotNull(nameof(action));
             CreateTransactionInvoker(null).Execute(_transactions, action);
         }
 
         public void ExecuteTransaction(IsolationLevel isolationLevel, Action action)
         {
-            Check.NotNull(action, nameof(action));
+            action.VerifyNotNull(nameof(action));
             CreateTransactionInvoker(isolationLevel).Execute(_transactions, action);
         }
 
         public Task ExecuteTransactionAsync(Func<Task> action)
         {
-            Check.NotNull(action, nameof(action));
+            action.VerifyNotNull(nameof(action));
             return CreateTransactionInvoker(null).ExecuteAsync(_transactions, action);
         }
 
         public Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct)
         {
-            Check.NotNull(action, nameof(action));
+            action.VerifyNotNull(nameof(action));
             return CreateTransactionInvoker(null).ExecuteAsync(_transactions, action, ct);
         }
 
@@ -127,7 +127,7 @@ namespace DevZest.Data.Primitives
         public Task<TReader> ExecuteReaderAsync<T>(DbSet<T> dbSet, CancellationToken ct = default(CancellationToken))
             where T : class, IModelReference, new()
         {
-            Check.NotNull(dbSet, nameof(dbSet));
+            dbSet.VerifyNotNull(nameof(dbSet));
             return CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(ct);
         }
 

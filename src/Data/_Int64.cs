@@ -33,7 +33,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Int64" /> object. </param>
         public static explicit operator _String(_Int64 x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
 
@@ -134,7 +134,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Int64" /> object.</param>
         public static _Int64 operator -(_Int64 x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new NegateExpression(x).MakeColumn<_Int64>();
         }
 
@@ -161,7 +161,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator ~(_Int64 x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new OnesComplementExpression(x).MakeColumn<_Int64>();
         }
 
@@ -189,8 +189,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator +(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new AddExpression(x, y).MakeColumn<_Int64>();
         }
 
@@ -218,8 +218,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator -(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new SubstractExpression(x, y).MakeColumn<_Int64>();
         }
 
@@ -247,8 +247,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator *(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new MultiplyExpression(x, y).MakeColumn<_Int64>();
         }
 
@@ -276,8 +276,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator /(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new DivideExpression(x, y).MakeColumn<_Int64>();
         }
 
@@ -305,8 +305,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator %(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new ModuloExpression(x, y).MakeColumn<_Int64>();
         }
 
@@ -334,8 +334,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator &(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new BitwiseAndExpression(x, y).MakeColumn<_Int64>();
         }
 
@@ -363,8 +363,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator |(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new BitwiseOrExpression(x, y).MakeColumn<_Int64>();
         }
 
@@ -392,8 +392,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Int64 operator ^(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new BitwiseXorExpression(x, y).MakeColumn<_Int64>();
         }
 
@@ -423,8 +423,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Boolean operator <(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -454,8 +454,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Boolean operator <=(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -485,8 +485,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Boolean operator >(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -516,8 +516,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Boolean operator >=(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -545,8 +545,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Boolean operator ==(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
@@ -575,8 +575,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Int64" /> object. </param>
         public static _Boolean operator !=(_Int64 x, _Int64 y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }
@@ -601,7 +601,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Boolean" /> object. </param>
         public static explicit operator _Int64(_Boolean x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromBooleanCast(x).MakeColumn<_Int64>();
         }
 
@@ -623,7 +623,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Byte" /> object. </param>
         public static implicit operator _Int64(_Byte x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromByteCast(x).MakeColumn<_Int64>();
         }
 
@@ -645,7 +645,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Int16" /> object. </param>
         public static implicit operator _Int64(_Int16 x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromInt16Cast(x).MakeColumn<_Int64>();
         }
 
@@ -667,7 +667,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Int32" /> object. </param>
         public static implicit operator _Int64(_Int32 x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromInt32Cast(x).MakeColumn<_Int64>();
         }
 
@@ -689,7 +689,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Decimal" /> object. </param>
         public static explicit operator _Int64(_Decimal x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromDecimalCast(x).MakeColumn<_Int64>();
         }
 
@@ -711,7 +711,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Double" /> object. </param>
         public static explicit operator _Int64(_Double x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromDoubleCast(x).MakeColumn<_Int64>();
         }
 
@@ -733,7 +733,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Single" /> object. </param>
         public static explicit operator _Int64(_Single x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromSingleCast(x).MakeColumn<_Int64>();
         }
 
@@ -757,7 +757,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_String" /> object. </param>
         public static explicit operator _Int64(_String x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromStringCast(x).MakeColumn<_Int64>();
         }
 

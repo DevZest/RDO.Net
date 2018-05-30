@@ -193,7 +193,7 @@ namespace DevZest.Data
 
         public IReadOnlyList<ColumnMapping> Join(PrimaryKey target)
         {
-            Check.NotNull(target, nameof(target));
+            target.VerifyNotNull(nameof(target));
             if (Count != target.Count)
                 throw new ArgumentException(DiagnosticMessages.PrimaryKey_Join_ColumnsCountMismatch, nameof(target));
 

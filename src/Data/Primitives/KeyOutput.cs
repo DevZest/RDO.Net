@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace DevZest.Data.Primitives
 {
@@ -12,7 +10,7 @@ namespace DevZest.Data.Primitives
 
         public KeyOutput(Model model, bool addTempTableIdentity)
         {
-            Utilities.Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             var primaryKey = model.PrimaryKey;
             if (primaryKey == null)
                 throw new ArgumentException(DiagnosticMessages.DbTable_NoPrimaryKey(model), nameof(model));

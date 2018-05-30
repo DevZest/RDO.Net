@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data
@@ -8,8 +7,8 @@ namespace DevZest.Data
     {
         public DataValidationResult(DataRow dataRow, IDataValidationErrors messages)
         {
-            Check.NotNull(dataRow, nameof(dataRow));
-            Check.NotNull(messages, nameof(messages));
+            dataRow.VerifyNotNull(nameof(dataRow));
+            messages.VerifyNotNull(nameof(messages));
             if (messages.Count == 0)
                 throw new ArgumentException(DiagnosticMessages.ValidationEntry_EmptyMessages, nameof(messages));
             DataRow = dataRow;

@@ -54,7 +54,7 @@ namespace DevZest.Data
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IValidationErrors IValidationErrors.Add(ValidationError value)
         {
-            Check.NotNull(value, nameof(value));
+            value.VerifyNotNull(nameof(value));
             return ValidationErrors.New(this, value);
         }
 

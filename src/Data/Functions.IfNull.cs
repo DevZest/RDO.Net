@@ -38,8 +38,8 @@ namespace DevZest.Data
         public static T IfNull<T>(this T x, T replaceColumn)
             where T : Column, new()
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(replaceColumn, nameof(replaceColumn));
+            x.VerifyNotNull(nameof(x));
+            replaceColumn.VerifyNotNull(nameof(replaceColumn));
 
             return IfNullFunctionInvoker<T>.Singleton.Invoke(x, replaceColumn);
         }

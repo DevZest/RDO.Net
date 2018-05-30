@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -49,13 +48,13 @@ namespace DevZest.Data
 
             public IModels Add(Model value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return value;
             }
 
             public IModels Remove(Model value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return this;
             }
 
@@ -105,7 +104,7 @@ namespace DevZest.Data
 
             public IModels Add(Model value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
 
                 if (Contains(value))
                     return this;
@@ -130,7 +129,7 @@ namespace DevZest.Data
 
             public IModels Remove(Model value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
 
                 if (!Contains(value))
                     return this;
@@ -166,7 +165,7 @@ namespace DevZest.Data
 
             public bool Contains(Model value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return _hashSet.Contains(value);
             }
 
@@ -189,7 +188,7 @@ namespace DevZest.Data
 
         public static IModels New(params Model[] values)
         {
-            Check.NotNull(values, nameof(values));
+            values.VerifyNotNull(nameof(values));
 
             if (values.Length == 0)
                 return Empty;
@@ -206,8 +205,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IModels Except(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var item in source)
             {
@@ -223,8 +222,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IModels Intersect(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var item in source)
             {
@@ -260,8 +259,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSubsetOf(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count < other.Count ? other.ContainsAll(source) : false;
         }
@@ -271,8 +270,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSupersetOf(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count > other.Count ? source.ContainsAll(other) : false;
         }
@@ -283,8 +282,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSubsetOf(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count <= other.Count ? other.ContainsAll(source) : false;
         }
@@ -295,8 +294,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSupersetOf(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count >= other.Count ? source.ContainsAll(other) : false;
         }
@@ -307,8 +306,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool Overlaps(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var item in source)
             {
@@ -324,8 +323,8 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
         public static bool SetEquals(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count == other.Count ? source.ContainsAll(other) : false;
         }
@@ -336,8 +335,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IModels SymmetricExcept(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             IModels removedModelSet = Models.Empty;
             foreach (var item in source)
@@ -364,8 +363,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IModels Union(this IModels source, IModels other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var item in other)
                 source = source.Add(item);

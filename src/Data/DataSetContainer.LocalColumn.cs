@@ -863,21 +863,21 @@ namespace DevZest.Data
 
         private void VerifyModel(Model model, string paramName)
         {
-            Check.NotNull(model, paramName);
+            model.VerifyNotNull(paramName);
             if (model.DataSetContainer != this)
                 throw new ArgumentException(DiagnosticMessages.DataSetContainer_InvalidLocalColumnModel, paramName);
         }
 
         private void VerifyBaseColumn(Column column, string paramName)
         {
-            Check.NotNull(column, paramName);
+            column.VerifyNotNull(paramName);
             if (column.ParentModel != null && column.ParentModel.DataSetContainer != this)
                 throw new ArgumentException(DiagnosticMessages.DataSetContainer_InvalidBaseColumn, paramName);
         }
 
         private void VerifyExpression(Delegate expression, string paramName)
         {
-            Check.NotNull(expression, paramName);
+            expression.VerifyNotNull(paramName);
             if (expression.Target != null)
                 throw new ArgumentException(DiagnosticMessages.DataSetContainer_InvalidLocalColumnExpression, paramName);
         }

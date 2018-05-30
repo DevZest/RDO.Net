@@ -40,7 +40,7 @@ namespace DevZest.Data.Primitives
 
         public CaseWhen<TResult> When(_Boolean when)
         {
-            Check.NotNull(when, nameof(when));
+            when.VerifyNotNull(nameof(when));
             return new CaseWhen<TResult>(this, when);
         }
 

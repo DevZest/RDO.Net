@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,7 +21,7 @@ namespace DevZest.Data
 
         public static JsonFilter Join(params JsonFilter[] filters)
         {
-            Check.NotNull(filters, nameof(filters));
+            filters.VerifyNotNull(nameof(filters));
             for (int i = 0; i < filters.Length; i++)
             {
                 if (filters[i] == null)
@@ -34,7 +33,7 @@ namespace DevZest.Data
         private static HashSet<T> Verify<T>(T[] items, string paramName)
             where T : class
         {
-            Check.NotNull(items, paramName);
+            items.VerifyNotNull(paramName);
             var result = new HashSet<T>();
             for (int i = 0; i < paramName.Length; i++)
             {

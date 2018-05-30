@@ -84,10 +84,11 @@ namespace DevZest.Data
         internal static T Create<T>(Type originalDeclaringType, string originalName)
             where T : Column, new()
         {
-            var result = new T();
-            result.OriginalDeclaringType = originalDeclaringType;
-            result.OriginalName = originalName;
-            return result;
+            return new T()
+            {
+                OriginalDeclaringType = originalDeclaringType,
+                OriginalName = originalName
+            };
         }
 
         private Action<Column> _initializer;
@@ -107,8 +108,7 @@ namespace DevZest.Data
             Ordinal = columns.Count;
             columns.Add(this);
 
-            if (_initializer != null)
-                _initializer(this);
+            _initializer?.Invoke(this);
         }
 
         /// <summary>Gets the <see cref="ColumnKind"/> of this column.</summary>
@@ -156,7 +156,7 @@ namespace DevZest.Data
         /// <exception cref="ArgumentException">This column does not belong to the <paramref name="reader"/>.</exception>
         protected void VerifyDbReader(DbReader reader)
         {
-            Check.NotNull(reader, nameof(reader));
+            reader.VerifyNotNull(nameof(reader));
             if (reader.Model != this.ParentModel)
                 throw new ArgumentException(DiagnosticMessages.Column_InvalidDbReader, nameof(reader));
         }
@@ -326,7 +326,7 @@ namespace DevZest.Data
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IColumns IColumns.Add(Column value)
         {
-            Check.NotNull(value, nameof(value));
+            value.VerifyNotNull(nameof(value));
             if (value == this)
                 return this;
             return Columns.New(this, value);
@@ -335,7 +335,7 @@ namespace DevZest.Data
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IColumns IColumns.Remove(Column value)
         {
-            Check.NotNull(value, nameof(value));
+            value.VerifyNotNull(nameof(value));
             if (value == this)
                 return Columns.Empty;
             else

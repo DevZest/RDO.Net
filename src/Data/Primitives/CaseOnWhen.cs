@@ -18,7 +18,7 @@ namespace DevZest.Data.Primitives
 
         public CaseOnExpression<TWhen, TResult> Then<TResult>(Column<TResult> then)
         {
-            Check.NotNull(then, nameof(then));
+            then.VerifyNotNull(nameof(then));
             return new CaseOnExpression<TWhen, TResult>(_on).WhenThen(_when, then);
         }
     }
@@ -38,7 +38,7 @@ namespace DevZest.Data.Primitives
 
         public CaseOnExpression<TWhen, TResult> Then(Column<TResult> then)
         {
-            Check.NotNull(then, nameof(then));
+            then.VerifyNotNull(nameof(then));
             return _caseOn.WhenThen(_when, then);
         }
     }

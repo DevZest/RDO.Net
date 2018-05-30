@@ -25,7 +25,7 @@ namespace DevZest.Data
         /// <param name="x">The column.</param>
         public static implicit operator ColumnSort(Column x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new ColumnSort(x, SortDirection.Unspecified);
         }
     }

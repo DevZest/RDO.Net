@@ -40,13 +40,13 @@ namespace DevZest.Data
 
         public KeyMapping Match(T target)
         {
-            Check.NotNull(target, nameof(target));
+            target.VerifyNotNull(nameof(target));
             return new KeyMapping(PrimaryKey, target);
         }
 
         public KeyMapping Match(Model<T> target)
         {
-            Check.NotNull(target, nameof(target));
+            target.VerifyNotNull(nameof(target));
             return new KeyMapping(PrimaryKey, target.PrimaryKey);
         }
     }

@@ -74,7 +74,7 @@ namespace DevZest.Data
 
         public static explicit operator _String(_CharEnum<T> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
 
@@ -93,7 +93,7 @@ namespace DevZest.Data
 
         public static explicit operator _Char(_CharEnum<T> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new ToCharCast(x).MakeColumn<_Char>();
         }
 
@@ -112,7 +112,7 @@ namespace DevZest.Data
 
         public static explicit operator _CharEnum<T>(_Char x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromCharCast(x).MakeColumn<_CharEnum<T>>();
         }
 
@@ -136,8 +136,8 @@ namespace DevZest.Data
 
         public static _Boolean operator ==(_CharEnum<T> x, _CharEnum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
@@ -162,8 +162,8 @@ namespace DevZest.Data
 
         public static _Boolean operator !=(_CharEnum<T> x, _CharEnum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }

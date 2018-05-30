@@ -233,7 +233,7 @@ namespace DevZest.Data
 
         private DataRow VerifyDataRow(DataRow dataRow, string paramName, bool allowTranslate)
         {
-            Check.NotNull(dataRow, paramName);
+            dataRow.VerifyNotNull(paramName);
             if (ParentModel == null)
                 throw new ArgumentException(DiagnosticMessages.Column_InvalidDataRow, paramName);
 
@@ -542,7 +542,7 @@ namespace DevZest.Data
         /// <param name="computation">The computation expression.</param>
         public void ComputedAs(Column<T> computation, bool isConcrete = true, bool isDbComputed = true)
         {
-            Check.NotNull(computation, nameof(computation));
+            computation.VerifyNotNull(nameof(computation));
             if (ParentModel == null)
                 throw new InvalidOperationException(DiagnosticMessages.Column_ComputedColumnMustBeMemberOfModel);
             if (Expression != null)

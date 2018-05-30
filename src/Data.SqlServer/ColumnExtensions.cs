@@ -48,7 +48,8 @@ namespace DevZest.Data.SqlServer
         public static T AsBinary<T>(this T column, int size)
             where T : Column<Binary>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
+
             if (size < MIN_BINARY_SIZE || size > MAX_BINARY_SIZE)
                 throw new ArgumentOutOfRangeException("size");
             column.SetMapper(ColumnMapper.Binary(column, size));
@@ -58,7 +59,7 @@ namespace DevZest.Data.SqlServer
         public static T AsBinaryMax<T>(this T column)
             where T : Column<Binary>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.Binary(column, -1));
             return column;
         }
@@ -66,7 +67,7 @@ namespace DevZest.Data.SqlServer
         public static T AsVarBinary<T>(this T column, int size = MAX_VARBINARY_SIZE)
             where T : Column<Binary>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             if (size < MIN_VARBINARY_SIZE || size > MAX_VARBINARY_SIZE)
                 throw new ArgumentOutOfRangeException("size");
             column.SetMapper(ColumnMapper.VarBinary(column, size));
@@ -76,7 +77,7 @@ namespace DevZest.Data.SqlServer
         public static T AsVarBinaryMax<T>(this T column)
             where T : Column<Binary>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.VarBinary(column, -1));
             return column;
         }
@@ -84,7 +85,7 @@ namespace DevZest.Data.SqlServer
         public static T AsTimestamp<T>(this T column)
             where T : Column<Binary>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.Timestamp(column));
             return column;
         }
@@ -92,7 +93,7 @@ namespace DevZest.Data.SqlServer
         public static T AsDecimal<T>(this T column, byte precision = DEFAULT_DECIMAL_PRECISION, byte scale = DEFAULT_DECIMAL_SCALE)
             where T : Column<Decimal?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             if (precision < MIN_DECIMAL_PRECISION || precision > MAX_DECIMAL_PRECISION)
                 throw new ArgumentOutOfRangeException("precision");
             if (scale < 0 || scale > precision)
@@ -104,7 +105,7 @@ namespace DevZest.Data.SqlServer
         public static T AsSmallMoney<T>(this T column)
             where T : Column<Decimal?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.SmallMoney(column));
             return column;
         }
@@ -112,7 +113,7 @@ namespace DevZest.Data.SqlServer
         public static T AsMoney<T>(this T column)
             where T : Column<Decimal?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.Money(column));
             return column;
         }
@@ -120,7 +121,7 @@ namespace DevZest.Data.SqlServer
         public static T AsDate<T>(this T column)
             where T : Column<DateTime?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.Date(column));
             return column;
         }
@@ -128,7 +129,7 @@ namespace DevZest.Data.SqlServer
         public static T AsTime<T>(this T column)
             where T : Column<DateTime?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.Time(column));
             return column;
         }
@@ -136,7 +137,7 @@ namespace DevZest.Data.SqlServer
         public static T AsSmallDateTime<T>(this T column)
             where T : Column<DateTime?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.SmallDateTime(column));
             return column;
         }
@@ -144,7 +145,7 @@ namespace DevZest.Data.SqlServer
         public static T AsDateTime<T>(this T column)
             where T : Column<DateTime?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.DateTime(column));
             return column;
         }
@@ -152,7 +153,7 @@ namespace DevZest.Data.SqlServer
         public static T AsDateTime2<T>(this T column, byte precision)
             where T : Column<DateTime?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             if (precision < MIN_DATETIME2_PRECISION || precision > MAX_DATETIME2_PRECISION)
                 throw new ArgumentOutOfRangeException("precision");
             column.SetMapper(ColumnMapper.DateTime2(column, precision));
@@ -162,7 +163,7 @@ namespace DevZest.Data.SqlServer
         public static T AsNChar<T>(this T column, int size)
             where T : Column<String>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
             column.SetMapper(ColumnMapper.NChar(column, size));
@@ -172,7 +173,7 @@ namespace DevZest.Data.SqlServer
         public static T AsNCharMax<T>(this T column)
             where T : Column<String>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.NChar(column, -1));
             return column;
         }
@@ -180,7 +181,7 @@ namespace DevZest.Data.SqlServer
         public static T AsNVarChar<T>(this T column, int size = MAX_NVARCHAR_SIZE)
             where T : Column<String>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             if ((size < MIN_NVARCHAR_SIZE || size > MAX_NVARCHAR_SIZE) && size != -1)
                 throw new ArgumentOutOfRangeException("size");
             column.SetMapper(ColumnMapper.NVarChar(column, size));
@@ -190,7 +191,7 @@ namespace DevZest.Data.SqlServer
         public static T AsNVarCharMax<T>(this T column)
             where T : Column<String>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.NVarChar(column, -1));
             return column;
         }
@@ -198,7 +199,7 @@ namespace DevZest.Data.SqlServer
         public static T IsUnicode<T>(this T column, bool isUnicode)
             where T: Column<Char?>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.SingleChar(column, isUnicode));
             return column;
         }
@@ -206,7 +207,7 @@ namespace DevZest.Data.SqlServer
         public static T AsChar<T>(this T column, int size)
             where T : Column<String>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
             column.SetMapper(ColumnMapper.Char(column, size));
@@ -216,7 +217,7 @@ namespace DevZest.Data.SqlServer
         public static T AsCharMax<T>(this T column)
             where T : Column<String>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.Char(column, -1));
             return column;
         }
@@ -224,7 +225,7 @@ namespace DevZest.Data.SqlServer
         public static T AsVarChar<T>(this T column, int size = MAX_VARBINARY_SIZE)
             where T : Column<String>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             if (size < MIN_VARCHAR_SIZE || size > MAX_VARCHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
             column.SetMapper(ColumnMapper.VarChar(column, size));
@@ -234,7 +235,7 @@ namespace DevZest.Data.SqlServer
         public static T AsVarCharMax<T>(this T column)
             where T : Column<String>
         {
-            Check.NotNull(column, "column");
+            column.VerifyNotNull(nameof(column));
             column.SetMapper(ColumnMapper.VarChar(column, -1));
             return column;
         }

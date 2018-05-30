@@ -35,6 +35,7 @@ namespace DevZest.Data
 
     /// <threadsafety static="true" instance="true"/>
     internal abstract class Mounter<TParent, TProperty> : Mounter<TProperty>
+        where TParent : class
     {
         internal Mounter()
         {
@@ -65,8 +66,7 @@ namespace DevZest.Data
         /// <returns>The property value.</returns>
         public TProperty GetMember(TParent parent)
         {
-            if (parent == null)
-                throw new ArgumentNullException(nameof(parent));
+            parent.VerifyNotNull(nameof(parent));
 
             return Getter(parent);
         }

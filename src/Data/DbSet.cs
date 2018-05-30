@@ -51,7 +51,7 @@ namespace DevZest.Data
 
         public DbQuery<T> Where(Func<T, _Boolean> predicate)
         {
-            Check.NotNull(predicate, nameof(predicate));
+            predicate.VerifyNotNull(nameof(predicate));
             return Where(predicate(_));
         }
 
@@ -116,7 +116,7 @@ namespace DevZest.Data
 
         public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, int offset, int fetch, params Func<T, ColumnSort>[] fnOrderBy)
         {
-            Check.NotNull(predicate, nameof(predicate));
+            predicate.VerifyNotNull(nameof(predicate));
 
             var whereQueryBuilder = GetWhereQueryBuilder(predicate(_));
             var orderByQueryBuilder = GetOrderByQueryBuilder(offset, fetch, GetOrderBy(fnOrderBy));
@@ -167,7 +167,7 @@ namespace DevZest.Data
         {
             if (Kind == DataSourceKind.DbTable)
                 throw new InvalidOperationException(DiagnosticMessages.DbSet_VerifyCreateChild_InvalidDataSourceKind);
-            Check.NotNull(getChildModel, nameof(getChildModel));
+            getChildModel.VerifyNotNull(nameof(getChildModel));
 
             _.Model.EnsureInitialized();
             var childModel = getChildModel(_);
@@ -211,7 +211,7 @@ namespace DevZest.Data
 
         private DbQuery<T> Union(DbSet<T> dbSet, DbUnionKind kind)
         {
-            Check.NotNull(dbSet, nameof(dbSet));
+            dbSet.VerifyNotNull(nameof(dbSet));
 
             var modelRef = _.MakeCopy(false);
             var queryStatement1 = this.GetSimpleQueryStatement();

@@ -91,14 +91,14 @@ namespace DevZest.Data
 
         private void VerifyTarget(Column targetColumn, string paramName)
         {
-            Check.NotNull(targetColumn, paramName);
+            targetColumn.VerifyNotNull(paramName);
             if (targetColumn.ParentModel != _targetModel)
                 throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidTarget(targetColumn), paramName);
         }
 
         private void VerifySource(Column sourceColumn, string paramName)
         {
-            Check.NotNull(sourceColumn, paramName);
+            sourceColumn.VerifyNotNull(paramName);
 
             var sourceModels = sourceColumn.ScalarSourceModels;
             foreach (var model in sourceModels)

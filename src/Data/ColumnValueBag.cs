@@ -16,12 +16,12 @@ namespace DevZest.Data
         {
             get
             {
-                Check.NotNull(key, nameof(key));
+                key.VerifyNotNull(nameof(key));
                 return _columnValues[key];
             }
             set
             {
-                Check.NotNull(key, nameof(key));
+                key.VerifyNotNull(nameof(key));
                 if (value == null)
                 {
                     if (!CanAssignNull(key.DataType))
@@ -80,21 +80,21 @@ namespace DevZest.Data
 
         public void SetValue<T>(Column<T> column, T value)
         {
-            Check.NotNull(column, nameof(column));
+            column.VerifyNotNull(nameof(column));
             _columnValues[column] = value;
         }
 
         public void SetValue(Column column, DataRow dataRow)
         {
-            Check.NotNull(column, nameof(column));
-            Check.NotNull(dataRow, nameof(dataRow));
+            column.VerifyNotNull(nameof(column));
+            dataRow.VerifyNotNull(nameof(dataRow));
             _columnValues[column] = column.GetValue(dataRow);
         }
 
         public void AutoSelect(PrimaryKey key, DataRow dataRow)
         {
-            Check.NotNull(key, nameof(key));
-            Check.NotNull(dataRow, nameof(dataRow));
+            key.VerifyNotNull(nameof(key));
+            dataRow.VerifyNotNull(nameof(dataRow));
 
             var valueColumns = dataRow.Model.Columns;
             foreach (var columnSort in key)
@@ -108,8 +108,8 @@ namespace DevZest.Data
 
         public void AutoSelect(ColumnCombination columnCombination, DataRow dataRow, bool ignoreExpression = true)
         {
-            Check.NotNull(columnCombination, nameof(columnCombination));
-            Check.NotNull(dataRow, nameof(dataRow));
+            columnCombination.VerifyNotNull(nameof(columnCombination));
+            dataRow.VerifyNotNull(nameof(dataRow));
 
             var keyColumns = columnCombination.Columns;
             var valueColumns = dataRow.Model.Columns;
@@ -140,7 +140,7 @@ namespace DevZest.Data
 
         public T GetValue<T>(Column<T> column)
         {
-            Check.NotNull(column, nameof(column));
+            column.VerifyNotNull(nameof(column));
             return (T)_columnValues[column];
         }
 

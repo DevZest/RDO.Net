@@ -91,8 +91,8 @@ namespace DevZest.Data.Annotations.Primitives
 
             public void Initialize(TColumnGroupMemberAttribute columnsMemberAttribute, Column column)
             {
-                Check.NotNull(columnsMemberAttribute, nameof(columnsMemberAttribute));
-                Check.NotNull(column, nameof(column));
+                columnsMemberAttribute.VerifyNotNull(nameof(columnsMemberAttribute));
+                column.VerifyNotNull(nameof(column));
 
                 var model = column.ParentModel;
                 var columnsAttribute = GetColumnsAttribute(model.GetType(), columnsMemberAttribute.Name);

@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -55,7 +54,7 @@ namespace DevZest.Data
             where TColumn : Column, new()
         {
             var initializer = getter.Verify(nameof(getter));
-            Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
+            fromMounter.VerifyNotNull(nameof(fromMounter));
 
             var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, fromMounter, initializer));
             result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;
@@ -99,7 +98,7 @@ namespace DevZest.Data
             where TModel : Model
             where T : Column
         {
-            Utilities.Check.NotNull(getter, nameof(getter));
+            getter.VerifyNotNull(nameof(getter));
 
             return s_columnListManager.Register(getter, a => CreateColumnList(a), null);
         }
@@ -144,7 +143,7 @@ namespace DevZest.Data
             where TModel : Model, new()
             where TChildModel : Model, new()
         {
-            Utilities.Check.NotNull(getter, nameof(getter));
+            getter.VerifyNotNull(nameof(getter));
             if (constructor == null)
                 constructor = _ => new TChildModel();
             return s_childModelManager.Register(getter, mounter => CreateChildModel(mounter, constructor), null);
@@ -182,8 +181,8 @@ namespace DevZest.Data
             where TModelKey : PrimaryKey
             where TChildModel : Model, new()
         {
-            Utilities.Check.NotNull(getter, nameof(getter));
-            Utilities.Check.NotNull(relationshipGetter, nameof(relationshipGetter));
+            getter.VerifyNotNull(nameof(getter));
+            relationshipGetter.VerifyNotNull(nameof(relationshipGetter));
             if (constructor == null)
                 constructor = _ => new TChildModel();
             return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, relationshipGetter, constructor), null);
@@ -572,7 +571,7 @@ namespace DevZest.Data
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IModels IModels.Add(Model value)
         {
-            Utilities.Check.NotNull(value, nameof(value));
+            value.VerifyNotNull(nameof(value));
             if (value == this)
                 return this;
             return Models.New(this, value);
@@ -581,7 +580,7 @@ namespace DevZest.Data
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IModels IModels.Remove(Model value)
         {
-            Utilities.Check.NotNull(value, nameof(value));
+            value.VerifyNotNull(nameof(value));
             if (value == this)
                 return Models.Empty;
             else
@@ -824,7 +823,7 @@ namespace DevZest.Data
         protected internal void Index(string name, string description, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, params ColumnSort[] orderByList)
         {
             Utilities.Check.NotEmpty(name, nameof(name));
-            Utilities.Check.NotNull(orderByList, nameof(orderByList));
+            orderByList.VerifyNotNull(nameof(orderByList));
             if (orderByList.Length == 0)
                 throw new ArgumentException(DiagnosticMessages.Model_EmptyColumns, nameof(orderByList));
 
@@ -840,7 +839,7 @@ namespace DevZest.Data
 
         protected internal void DbUnique(string name, string description, bool isClustered, params ColumnSort[] orderByList)
         {
-            Utilities.Check.NotNull(orderByList, nameof(orderByList));
+            orderByList.VerifyNotNull(nameof(orderByList));
             if (orderByList.Length == 0)
                 throw new ArgumentException(DiagnosticMessages.Model_EmptyColumns, nameof(orderByList));
 
@@ -856,7 +855,7 @@ namespace DevZest.Data
 
         protected internal void DbCheck(string name, string description, _Boolean condition)
         {
-            Utilities.Check.NotNull(condition, nameof(condition));
+            condition.VerifyNotNull(nameof(condition));
 
             AddDbTableConstraint(new DbCheck(name, description, condition.DbExpression), false);
         }

@@ -34,36 +34,36 @@ namespace DevZest.Data.Primitives
 
         public static void AddSystemColumn(this Model model, Column column, string name, Action<Column> initializer = null)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             column.Initialize(model, model.GetType(), name, ColumnKind.SystemCustom, initializer);
         }
 
         public static DbTableClause GetDbTableClause(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             var dbTable = model.DataSource as IDbTable;
             return dbTable == null ? null : new DbTableClause(model, dbTable.Name);
         }
 
         public static _Int32 GetTableRowIdColumn(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             return model.Columns[new ColumnId(model.GetType(), Model.SYS_ROW_ID_COL_NAME)] as _Int32;
         }
 
         public static DbTable<T> CreateDbTable<T>(this T model, DbSession dbSession, string name)
             where T : Model, new()
         {
-            Check.NotNull(model, nameof(model));
-            Check.NotNull(dbSession, nameof(dbSession));
-            Check.NotNull(name, nameof(name));
+            model.VerifyNotNull(nameof(model));
+            dbSession.VerifyNotNull(nameof(dbSession));
+            name.VerifyNotNull(nameof(name));
             var result = model.DataSource as DbTable<T>;
             return result ?? DbTable<T>.Create(model, dbSession, name);
         }
 
         public static IEnumerable<Column> GetInsertableColumns(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
 
             IDbTable dbTable = model.DataSource as IDbTable;
             bool isTempTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTempTable;
@@ -85,7 +85,7 @@ namespace DevZest.Data.Primitives
 
         public static IEnumerable<Column> GetUpdatableColumns(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             if (model.DataSource == null || model.DataSource.Kind != DataSourceKind.DbTempTable || model.ParentModel == null)
                 return model.GetInsertableColumns();
             return model.GetUpdatableColumns(model.ParentRelationship);
@@ -102,31 +102,31 @@ namespace DevZest.Data.Primitives
 
         public static ModelCollection GetChildModels(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             return model.ChildModels;
         }
 
         public static int GetOrdinal(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             return model.Ordinal;
         }
 
         public static DataSource GetDataSource(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             return model.DataSource;
         }
 
         public static DataSet GetDataSet(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             return model.DataSet;
         }
 
         public static int GetDepth(this Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             return model.Depth;
         }
 

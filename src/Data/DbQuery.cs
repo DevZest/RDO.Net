@@ -91,7 +91,7 @@ namespace DevZest.Data
         public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
-            Check.NotNull(sourceData, nameof(sourceData));
+            sourceData.VerifyNotNull(nameof(sourceData));
             var model = VerifyCreateChild(initializer, getChildModel);
 
             await EnsureSequentialTempTableCreatedAsync(DbSession, ct);
@@ -103,7 +103,7 @@ namespace DevZest.Data
         public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
-            Check.NotNull(buildQuery, nameof(buildQuery));
+            buildQuery.VerifyNotNull(nameof(buildQuery));
             var childModel = VerifyCreateChild(initializer, getChildModel);
 
             await EnsureSequentialTempTableCreatedAsync(DbSession, ct);
@@ -124,7 +124,7 @@ namespace DevZest.Data
         public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
-            Check.NotNull(buildQuery, nameof(buildQuery));
+            buildQuery.VerifyNotNull(nameof(buildQuery));
             var childModel = VerifyCreateChild(initializer, getChildModel);
 
             await EnsureSequentialTempTableCreatedAsync(DbSession, ct);
@@ -138,7 +138,7 @@ namespace DevZest.Data
         public DbQuery<TChild> GetChild<TChild>(Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
-            Check.NotNull(getChildModel, nameof(getChildModel));
+            getChildModel.VerifyNotNull(nameof(getChildModel));
             var childModel = getChildModel(_);
             if (childModel == null)
                 return null;

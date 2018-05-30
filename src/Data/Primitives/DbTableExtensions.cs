@@ -11,8 +11,8 @@ namespace DevZest.Data.Primitives
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            Check.NotNull(target, nameof(target));
-            Check.NotNull(source, nameof(source));
+            target.VerifyNotNull(nameof(target));
+            source.VerifyNotNull(nameof(source));
             var columnMappings = target.Verify(columnMapper, nameof(columnMapper), source._);
             if (join != null)
                 Verify(join, nameof(join), source.Model, target.Model);
@@ -25,8 +25,8 @@ namespace DevZest.Data.Primitives
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            Check.NotNull(target, nameof(target));
-            Check.NotNull(source, nameof(source));
+            target.VerifyNotNull(nameof(target));
+            source.VerifyNotNull(nameof(source));
             Verify(columnMappings, nameof(columnMappings), source.Model, target.Model);
             if (join != null)
                 Verify(join, nameof(join), source.Model, target.Model);
@@ -72,8 +72,8 @@ namespace DevZest.Data.Primitives
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            Check.NotNull(target, nameof(target));
-            Check.NotNull(source, nameof(source));
+            target.VerifyNotNull(nameof(target));
+            source.VerifyNotNull(nameof(source));
             Verify(columnMappings, nameof(columnMappings), source.Model, target.Model);
             Verify(join, nameof(join), source.Model, target.Model);
 
@@ -85,9 +85,9 @@ namespace DevZest.Data.Primitives
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            Check.NotNull(target, nameof(target));
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(columnMapper, nameof(columnMapper));
+            target.VerifyNotNull(nameof(target));
+            source.VerifyNotNull(nameof(source));
+            columnMapper.VerifyNotNull(nameof(columnMapper));
             Verify(join, nameof(join), source.Model, target.Model);
 
             return target.BuildUpdateStatement(source, columnMapper, join);
@@ -97,8 +97,8 @@ namespace DevZest.Data.Primitives
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            Check.NotNull(target, nameof(target));
-            Check.NotNull(source, nameof(source));
+            target.VerifyNotNull(nameof(target));
+            source.VerifyNotNull(nameof(source));
             Verify(join, nameof(join), source.Model, target.Model);
 
             return target.BuildDeleteStatement(source, join);

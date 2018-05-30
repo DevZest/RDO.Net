@@ -36,7 +36,7 @@ namespace DevZest.Data
 
         private void VerifyColumn<T>(Column<T> column, string paramName)
         {
-            Check.NotNull(column, paramName);
+            column.VerifyNotNull(paramName);
 
             if (column.ParentModel == null || column.ParentModel != _model)
                 throw new ArgumentException(DiagnosticMessages.Scalar_InvalidColumn, paramName);

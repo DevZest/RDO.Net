@@ -11,7 +11,7 @@ namespace DevZest.Data.Primitives
         /// <summary>Initializes a new instance of <see cref="AggregateFunctionExpression{T}"/> class.</summary>
         /// <param name="param">The parameter of the aggregate function.</param>
         protected AggregateFunctionExpression(Column param)
-            : base(new Column[] { Check.NotNull(param, nameof(param)) })
+            : base(new Column[] { param.VerifyNotNull(nameof(param)) })
         {
         }
 

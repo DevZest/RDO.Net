@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Utilities;
+using System;
 using System.Collections.Generic;
 
 namespace DevZest.Data
@@ -13,8 +14,7 @@ namespace DevZest.Data
     {
         public static IDataValues Create(params Column[] columns)
         {
-            if (columns == null || columns.Length == 0)
-                throw new ArgumentNullException();
+            Check.NotEmpty(columns, nameof(columns));
 
             for (int i = 0; i < columns.Length; i++)
             {

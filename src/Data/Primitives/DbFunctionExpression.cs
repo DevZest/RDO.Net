@@ -20,8 +20,8 @@ namespace DevZest.Data.Primitives
 
         public DbFunctionExpression(FunctionKey functionKey, IList<DbExpression> paramList)
         {
-            Check.NotNull(functionKey, nameof(functionKey));
-            Check.NotNull(paramList, nameof(paramList));
+            functionKey.VerifyNotNull(nameof(functionKey));
+            paramList.VerifyNotNull(nameof(paramList));
 
             FunctionKey = functionKey;
             var readonlyCollection = paramList as ReadOnlyCollection<DbExpression>;

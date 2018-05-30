@@ -54,7 +54,7 @@ namespace DevZest.Data.Utilities
 
         internal static Func<string> ResolveStringGetter(this Type resourceType, string resourceName)
         {
-            Check.NotNull(resourceType, nameof(resourceType));
+            resourceType.VerifyNotNull(nameof(resourceType));
             if (string.IsNullOrWhiteSpace(resourceName))
                 throw new ArgumentException(DiagnosticMessages.TypeExtensions_InvalidResourceName, nameof(resourceName));
 

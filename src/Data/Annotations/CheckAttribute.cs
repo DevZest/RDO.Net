@@ -17,7 +17,7 @@ namespace DevZest.Data.Annotations
 
         public CheckAttribute(Type messageResourceType, string message)
         {
-            Check.NotNull(messageResourceType, nameof(messageResourceType));
+            messageResourceType.VerifyNotNull(nameof(messageResourceType));
             _messageResourceType = messageResourceType;
             _messageGetter = messageResourceType.ResolveStringGetter(message);
         }

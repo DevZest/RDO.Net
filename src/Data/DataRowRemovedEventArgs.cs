@@ -7,8 +7,8 @@ namespace DevZest.Data
         public DataRowRemovedEventArgs(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
             : base(dataRow)
         {
-            Check.NotNull(baseDataSet, nameof(baseDataSet));
-            Check.NotNull(dataSet, nameof(dataSet));
+            baseDataSet.VerifyNotNull(nameof(baseDataSet));
+            dataSet.VerifyNotNull(nameof(dataSet));
 
             _baseDataSet = baseDataSet;
             _ordinal = ordinal;

@@ -32,7 +32,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Guid" /> object. </param>
         public static explicit operator _String(_Guid x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
 
@@ -129,7 +129,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_String" /> object. </param>
         public static explicit operator _Guid(_String x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromStringCast(x).MakeColumn<_Guid>();
         }
 
@@ -160,8 +160,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Guid" /> object. </param>
         public static _Boolean operator <(_Guid x, _Guid y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -192,8 +192,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Guid" /> object. </param>
         public static _Boolean operator <=(_Guid x, _Guid y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -224,8 +224,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Guid" /> object. </param>
         public static _Boolean operator >(_Guid x, _Guid y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -256,8 +256,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Guid" /> object. </param>
         public static _Boolean operator >=(_Guid x, _Guid y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -288,8 +288,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Guid" /> object. </param>
         public static _Boolean operator ==(_Guid x, _Guid y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
@@ -321,8 +321,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Guid" /> object. </param>
         public static _Boolean operator !=(_Guid x, _Guid y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }

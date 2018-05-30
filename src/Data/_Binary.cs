@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data
@@ -32,7 +31,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Binary" /> object. </param>
         public static explicit operator _String(_Binary x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
 
@@ -56,7 +55,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_String" /> object. </param>
         public static explicit operator _Binary(_String x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromStringExpression(x).MakeColumn<_Binary>();
         }
 

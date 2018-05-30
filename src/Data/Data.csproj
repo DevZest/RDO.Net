@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs" Link="Utilities\Argument.VerifyNotNull.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\Array.Empty.cs" Link="Utilities\Array.Empty.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\Bytes.ToHexString.cs" Link="Utilities\Bytes.ToHexString.cs" />
   </ItemGroup>

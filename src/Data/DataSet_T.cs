@@ -266,7 +266,7 @@ namespace DevZest.Data
         public DataSet<TChild> Children<TChild>(Func<T, TChild> getChild, DataRow dataRow = null)
             where TChild : Model, new()
         {
-            Check.NotNull(getChild, nameof(getChild));
+            getChild.VerifyNotNull(nameof(getChild));
             var childModel = getChild(_);
             if (childModel == null || childModel.ParentModel != this.Model)
                 throw new ArgumentException(DiagnosticMessages.InvalidChildModelGetter, nameof(getChild));
@@ -303,7 +303,7 @@ namespace DevZest.Data
 
         public JsonView<T> Filter(JsonFilter filter)
         {
-            Check.NotNull(filter, nameof(filter));
+            filter.VerifyNotNull(nameof(filter));
             return new JsonView<T>(_, filter);
         }
 

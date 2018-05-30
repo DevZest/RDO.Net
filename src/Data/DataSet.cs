@@ -76,7 +76,7 @@ namespace DevZest.Data
 
         public void Insert(int index, DataRow dataRow, Action<DataRow> updateAction)
         {
-            Check.NotNull(dataRow, nameof(dataRow));
+            dataRow.VerifyNotNull(nameof(dataRow));
             if (IsReadOnly)
                 throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
             if (index < 0 || index > Count)
@@ -190,7 +190,7 @@ namespace DevZest.Data
 
         public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty)
         {
-            Check.NotNull(dataRows, nameof(dataRows));
+            dataRows.VerifyNotNull(nameof(dataRows));
             return JsonWriter.New().Write(this, dataRows).ToString(isPretty);
         }
 

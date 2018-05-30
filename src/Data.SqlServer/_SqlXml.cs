@@ -32,7 +32,7 @@ namespace DevZest.Data.SqlServer
         /// <param name="x">A <see cref="_SqlXml" /> object. </param>
         public static explicit operator _String(_SqlXml x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
 
@@ -54,7 +54,7 @@ namespace DevZest.Data.SqlServer
         /// <param name="x">A <see cref="_String" /> object. </param>
         public static explicit operator _SqlXml(_String x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromStringCast(x).MakeColumn<_SqlXml>();
         }
 

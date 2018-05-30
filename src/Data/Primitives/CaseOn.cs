@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-
-namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data.Primitives
 {
     public struct CaseOn<T>
     {
@@ -13,7 +11,7 @@ namespace DevZest.Data.Primitives
 
         public CaseOnWhen<T> When(Column<T> when)
         {
-            Check.NotNull(when, nameof(when));
+            when.VerifyNotNull(nameof(when));
             return new CaseOnWhen<T>(_on, when);
         }
     }

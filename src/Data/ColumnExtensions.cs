@@ -44,8 +44,8 @@ namespace DevZest.Data
         public static void SetDefault<T>(this T column, T expression, string name, string description)
             where T : Column, new()
         {
-            Check.NotNull(column, nameof(column));
-            Check.NotNull(expression, nameof(expression));
+            column.VerifyNotNull(nameof(column));
+            expression.VerifyNotNull(nameof(expression));
 
             column.AddOrUpdateExtension(expression.CreateDefault(name, description));
         }
@@ -139,7 +139,7 @@ namespace DevZest.Data
         {
             if (column == null)
                 return null;
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             return (T)column.PerformTranslateTo(model);
         }
     }

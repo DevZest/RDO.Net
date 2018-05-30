@@ -10,6 +10,7 @@ using System.Diagnostics;
 namespace DevZest.Data.Primitives
 {
     internal sealed class MounterManager<TTarget, TProperty>
+        where TTarget : class
     {
         private struct Key
         {
@@ -96,7 +97,7 @@ namespace DevZest.Data.Primitives
         }
 
         private abstract class MounterImplBase<TDerivedTarget, TDerivedProperty> : Mounter<TDerivedTarget, TDerivedProperty>, IMounter<TTarget, TProperty>
-            where TDerivedTarget : TTarget
+            where TDerivedTarget : class, TTarget
             where TDerivedProperty : TProperty
         {
             protected MounterImplBase()
@@ -157,7 +158,7 @@ namespace DevZest.Data.Primitives
             }
         }
         private sealed class MounterImpl<TDerivedTarget, TDerivedProperty> : MounterImplBase<TDerivedTarget, TDerivedProperty>
-            where TDerivedTarget : TTarget
+            where TDerivedTarget : class, TTarget
             where TDerivedProperty : TProperty
         {
             public MounterImpl(MounterInfo<TDerivedTarget, TDerivedProperty> propertyInfo,

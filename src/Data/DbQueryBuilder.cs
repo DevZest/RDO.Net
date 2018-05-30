@@ -54,7 +54,7 @@ namespace DevZest.Data
         public DbQueryBuilder From<T>(DbSet<T> dbSet, out T _)
             where T : class, IModelReference, new()
         {
-            Check.NotNull(dbSet, nameof(dbSet));
+            dbSet.VerifyNotNull(nameof(dbSet));
 
             _ = dbSet._;
             if (_sourceModels.Count > 0)
@@ -142,11 +142,11 @@ namespace DevZest.Data
             where T : class, IModelReference, new()
             where TKey : PrimaryKey
         {
-            Check.NotNull(dbSet, nameof(dbSet));
-            Check.NotNull(left, nameof(left));
+            dbSet.VerifyNotNull(nameof(dbSet));
+            left.VerifyNotNull(nameof(left));
             if (!_sourceModels.Contains(left.ParentModel))
                 throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_Join_InvalidLeftKey, nameof(left));
-            Check.NotNull(right, nameof(right));
+            right.VerifyNotNull(nameof(right));
             if (right.ParentModel != dbSet.Model)
                 throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_Join_InvalidRightKey, nameof(right));
 
@@ -207,7 +207,7 @@ namespace DevZest.Data
         public DbQueryBuilder CrossJoin<T>(DbSet<T> dbSet, out T model)
             where T : Model, new()
         {
-            Check.NotNull(dbSet, nameof(dbSet));
+            dbSet.VerifyNotNull(nameof(dbSet));
             Join(dbSet, DbJoinKind.CrossJoin, null, out model);
             return this;
         }
@@ -261,10 +261,8 @@ namespace DevZest.Data
 
         public DbQueryBuilder AutoSelect(Model from, ColumnCombination to)
         {
-            if (to == null)
-                throw new ArgumentNullException(nameof(to));
-            if (from == null)
-                throw new ArgumentNullException(nameof(from));
+            to.VerifyNotNull(nameof(to));
+            from.VerifyNotNull(nameof(from));
             if (_sourceModels == null)
                 throw new InvalidOperationException(DiagnosticMessages.DbQueryBuilder_EmptyFrom);
             if (!_sourceModels.Contains(from))
@@ -306,7 +304,7 @@ namespace DevZest.Data
 
         private void VerifyTargetColumn(Column target, string paramName)
         {
-            Check.NotNull(target, paramName);
+            target.VerifyNotNull(paramName);
             if (target.ParentModel != Model || _targetColumns.Contains(target))
                 throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_VerifyTargetColumn, paramName);
         }
@@ -348,7 +346,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder Where(_Boolean condition)
         {
-            Check.NotNull(condition, nameof(condition));
+            condition.VerifyNotNull(nameof(condition));
             VerifySourceColumn(condition, nameof(condition));
             WhereExpression = And(WhereExpression, EliminateSubQuery(condition.DbExpression));
 
@@ -412,7 +410,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder OrderBy(int offset, int fetch, params ColumnSort[] orderByList)
         {
-            Check.NotNull(orderByList, nameof(orderByList));
+            orderByList.VerifyNotNull(nameof(orderByList));
             VerifyOrderByList(orderByList);
             VerifyOffsetFetch(offset, fetch);
             OrderByList = new ReadOnlyCollection<DbExpressionSort>(EliminateSubQuery(orderByList));

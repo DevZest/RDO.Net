@@ -102,7 +102,7 @@ namespace DevZest.Data
 
         public JsonValue(string text, bool isTextEscaped, JsonValueType type)
         {
-            Check.NotNull(text, nameof(text));
+            text.VerifyNotNull(nameof(text));
 
             Text = text;
             _isTextEscaped = isTextEscaped;

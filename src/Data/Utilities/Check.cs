@@ -5,15 +5,6 @@ namespace DevZest.Data.Utilities
 {
     internal static class Check
     {
-        internal static T NotNull<T>(T value, string parameterName)
-            where T : class
-        {
-            if (value == null)
-                throw new ArgumentNullException(parameterName);
-
-            return value;
-        }
-
         internal static string NotEmpty(string value, string parameterName)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -32,7 +23,7 @@ namespace DevZest.Data.Utilities
 
         internal static IReadOnlyList<T> NotEmpty<T>(IReadOnlyList<T> list, string parameterName)
         {
-            Check.NotNull(list, nameof(list));
+            list.VerifyNotNull(parameterName);
             if (list.Count == 0)
                 throw new ArgumentException(DiagnosticMessages.ArgumentIsNullOrWhitespace(parameterName), parameterName);
 

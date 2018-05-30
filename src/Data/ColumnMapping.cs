@@ -15,8 +15,8 @@ namespace DevZest.Data
     {
         public static ColumnMapping Map<T>(Column<T> source, Column<T> target)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(target, nameof(target));
+            source.VerifyNotNull(nameof(source));
+            target.VerifyNotNull(nameof(target));
             return new ColumnMapping(source, target);
         }
 
@@ -24,8 +24,8 @@ namespace DevZest.Data
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            Check.NotNull(target, nameof(target));
-            Check.NotNull(source, nameof(source));
+            target.VerifyNotNull(nameof(target));
+            source.VerifyNotNull(nameof(source));
 
             if (columnMapper == null)
                 return GetColumnMappings(source.Model, target.Model, isInsertable);
@@ -44,8 +44,8 @@ namespace DevZest.Data
 
         private static List<ColumnMapping> GetColumnMappings(Model sourceModel, Model targetModel, bool isInsertable)
         {
-            Check.NotNull(targetModel, nameof(targetModel));
-            Check.NotNull(sourceModel, nameof(sourceModel));
+            targetModel.VerifyNotNull(nameof(targetModel));
+            sourceModel.VerifyNotNull(nameof(sourceModel));
 
             var result = new List<ColumnMapping>();
             var sourceColumns = sourceModel.Columns;

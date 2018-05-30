@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Data.Common;
 using System.Threading;
@@ -11,7 +10,7 @@ namespace DevZest.Data
     {
         protected DbReader(Model model)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
             Model = model;
             IsBof = true;
             IsEof = false;

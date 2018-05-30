@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Globalization;
 
 namespace DevZest.Data.Utilities
@@ -9,7 +7,7 @@ namespace DevZest.Data.Utilities
     {
         public static string GetUniqueName(this Dictionary<string, int> suffixes, string name)
         {
-            Check.NotNull(suffixes, nameof(suffixes));
+            suffixes.VerifyNotNull(nameof(suffixes));
             Check.NotEmpty(name, nameof(name));
 
             int suffix;

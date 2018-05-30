@@ -126,7 +126,7 @@ namespace DevZest.Data
         public DbTable<TChild> GetChild<TChild>(Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
-            Check.NotNull(getChildModel, nameof(getChildModel));
+            getChildModel.VerifyNotNull(nameof(getChildModel));
             var childModel = getChildModel(_);
             if (childModel == null)
                 return null;
@@ -226,7 +226,7 @@ namespace DevZest.Data
         internal void Verify<TLookup>(DbSet<TLookup> source, string paramName)
             where TLookup : class, IModelReference, new()
         {
-            Check.NotNull(source, paramName);
+            source.VerifyNotNull(paramName);
             if (source.DbSession != DbSession)
                 throw new ArgumentException(DiagnosticMessages.DbTable_InvalidDbSetSource, paramName);
         }
@@ -234,7 +234,7 @@ namespace DevZest.Data
         internal void Verify<TLookup>(DataSet<TLookup> source, string paramName)
             where TLookup : class, IModelReference, new()
         {
-            Check.NotNull(source, paramName);
+            source.VerifyNotNull(paramName);
         }
 
         internal void Verify<TSource>(DataSet<TSource> source, string sourceParamName, int rowIndex, string rowIndexParamName)
@@ -248,7 +248,7 @@ namespace DevZest.Data
         internal KeyMapping Verify<TSource>(Func<TSource, T, KeyMapping> keyMapper, string paramName, TSource source)
             where TSource : IModelReference
         {
-            Check.NotNull(keyMapper, paramName);
+            keyMapper.VerifyNotNull(paramName);
             var result = keyMapper(source, _);
             if (result.IsEmpty || result.SourceModel != source.Model || result.TargetModel != _.Model)
                 throw new ArgumentException(DiagnosticMessages.DbTable_InvalidReturnedKeyMapping, paramName);
@@ -257,7 +257,7 @@ namespace DevZest.Data
 
         internal IReadOnlyList<ColumnMapping> Verify(Action<ColumnMapper, T> mapper, string paramName)
         {
-            Check.NotNull(mapper, paramName);
+            mapper.VerifyNotNull(paramName);
             var result = new ColumnMapper(null, _.Model).Build(x => mapper(x, _));
             if (result == null || result.Count == 0)
                 throw new ArgumentException(DiagnosticMessages.DbTable_EmptyColumnMapperResult, paramName);
@@ -267,7 +267,7 @@ namespace DevZest.Data
         internal IReadOnlyList<ColumnMapping> Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, string paramName, TSource source)
             where TSource : class, IModelReference, new()
         {
-            Check.NotNull(mapper, paramName);
+            mapper.VerifyNotNull(paramName);
             var result = new ColumnMapper(source.Model, _.Model).Build(x => mapper(x, source, _));
             if (result == null || result.Count == 0)
                 throw new ArgumentException(DiagnosticMessages.DbTable_EmptyColumnMapperResult, paramName);
@@ -277,7 +277,7 @@ namespace DevZest.Data
         internal void Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, string paramName)
             where TSource : class, IModelReference, new()
         {
-            Check.NotNull(mapper, paramName);
+            mapper.VerifyNotNull(paramName);
         }
 
         private IReadOnlyList<ColumnMapping> Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, TSource source)

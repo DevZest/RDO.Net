@@ -74,7 +74,7 @@ namespace DevZest.Data
 
         public static explicit operator _String(_Int32Enum<T> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
 
@@ -93,7 +93,7 @@ namespace DevZest.Data
 
         public static explicit operator _Int32(_Int32Enum<T> x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new ToInt32Cast(x).MakeColumn<_Int32>();
         }
 
@@ -112,7 +112,7 @@ namespace DevZest.Data
 
         public static explicit operator _Int32Enum<T>(_Int32 x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromInt32Cast(x).MakeColumn<_Int32Enum<T>>();
         }
 
@@ -136,8 +136,8 @@ namespace DevZest.Data
 
         public static _Int32Enum<T> operator &(_Int32Enum<T> x, _Int32Enum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new BitwiseAndExpression(x, y).MakeColumn<_Int32Enum<T>>();
         }
 
@@ -161,8 +161,8 @@ namespace DevZest.Data
 
         public static _Int32Enum<T> operator |(_Int32Enum<T> x, _Int32Enum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new BitwiseOrExpression(x, y).MakeColumn<_Int32Enum<T>>();
         }
 
@@ -186,8 +186,8 @@ namespace DevZest.Data
 
         public static _Boolean operator ==(_Int32Enum<T> x, _Int32Enum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
@@ -212,8 +212,8 @@ namespace DevZest.Data
 
         public static _Boolean operator !=(_Int32Enum<T> x, _Int32Enum<T> y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }

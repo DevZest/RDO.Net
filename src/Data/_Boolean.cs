@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data
@@ -118,7 +117,7 @@ namespace DevZest.Data
         /// <param name="x">The original <see cref="_Boolean" /> on which the NOT operation will be performed. </param>
         public static _Boolean operator !(_Boolean x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new NotExpression(x).MakeColumn<_Boolean>();
         }
 
@@ -156,8 +155,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Boolean" /> object.</param>
         public static _Boolean operator &(_Boolean x, _Boolean y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new AndExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -195,8 +194,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_Boolean" /> object.</param>
         public static _Boolean operator |(_Boolean x, _Boolean y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new OrExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -220,7 +219,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_String" /> object. </param>
         public static explicit operator _Boolean(_String x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromStringExpression(x).MakeColumn<_Boolean>();
         }
 
@@ -247,7 +246,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_Boolean" /> object. </param>
         public static explicit operator _String(_Boolean x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
     }

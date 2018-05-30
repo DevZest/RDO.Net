@@ -32,7 +32,7 @@ namespace DevZest.Data
 
             public IDataValidationErrors Add(DataValidationError value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return value;
             }
 
@@ -91,7 +91,7 @@ namespace DevZest.Data
 
             public IDataValidationErrors Add(DataValidationError value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
 
                 if (!IsSealed)
                 {
@@ -135,7 +135,7 @@ namespace DevZest.Data
 
         public static IDataValidationErrors New(params DataValidationError[] values)
         {
-            Check.NotNull(values, nameof(values));
+            values.VerifyNotNull(nameof(values));
 
             if (values.Length == 0)
                 return Empty;

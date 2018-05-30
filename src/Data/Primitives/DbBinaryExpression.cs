@@ -1,14 +1,11 @@
-﻿using DevZest.Data.Utilities;
-using System;
-
-namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data.Primitives
 {
     public sealed class DbBinaryExpression : DbExpression
     {
         public DbBinaryExpression(BinaryExpressionKind kind, DbExpression left, DbExpression right)
         {
-            Check.NotNull(left, nameof(left));
-            Check.NotNull(right, nameof(right));
+            left.VerifyNotNull(nameof(left));
+            right.VerifyNotNull(nameof(right));
 
             Kind = kind;
             Left = left;

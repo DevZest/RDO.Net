@@ -1,5 +1,4 @@
 ﻿using System;
-using DevZest.Data.Utilities;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -85,7 +84,7 @@ namespace DevZest.Data.Primitives
 
         internal void AddMockTable(IDbTable dbTable, Action action)
         {
-            Check.NotNull(dbTable, nameof(dbTable));
+            dbTable.VerifyNotNull(nameof(dbTable));
             if (dbTable.DbSession != Db)
                 throw new ArgumentException(DiagnosticMessages.MockDb_InvalidTable, nameof(dbTable));
             if (!_isInitializing)

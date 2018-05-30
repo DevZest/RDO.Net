@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +16,7 @@ namespace DevZest.Data
     {
         internal JsonView(JsonFilter jsonFilter)
         {
-            Check.NotNull(jsonFilter, nameof(jsonFilter));
+            jsonFilter.VerifyNotNull(nameof(jsonFilter));
             Filter = jsonFilter;
         }
 
@@ -43,7 +42,7 @@ namespace DevZest.Data
 
         public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty)
         {
-            Check.NotNull(dataRows, nameof(dataRows));
+            dataRows.VerifyNotNull(nameof(dataRows));
             return JsonWriter.New().Write(this, dataRows).ToString(isPretty);
         }
 
@@ -77,7 +76,7 @@ namespace DevZest.Data
 
         public JsonView<T> FilterChildren(params JsonView[] childJsonViews)
         {
-            Check.NotNull(childJsonViews, nameof(childJsonViews));
+            childJsonViews.VerifyNotNull(nameof(childJsonViews));
             
             for (int i = 0; i < childJsonViews.Length; i++)
             {

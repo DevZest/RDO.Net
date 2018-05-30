@@ -246,7 +246,8 @@ namespace DevZest.Data.Helpers
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            Check.NotNull(source, nameof(source));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
             if (source.Count == 0)
                 return null;

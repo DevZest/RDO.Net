@@ -38,8 +38,8 @@ namespace DevZest.Data
 
         public static _Boolean Contains(this _String x, _String value)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(value, nameof(value));
+            x.VerifyNotNull(nameof(x));
+            value.VerifyNotNull(nameof(value));
             return new ContainsFunction(x, value).MakeColumn<_Boolean>();
         }
     }

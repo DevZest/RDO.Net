@@ -32,7 +32,7 @@ namespace DevZest.Data.SqlServer
         /// <param name="x">A <see cref="_TimeSpan" /> object. </param>
         public static explicit operator _String(_TimeSpan x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
 
@@ -128,7 +128,7 @@ namespace DevZest.Data.SqlServer
         /// <param name="x">A <see cref="_String" /> object. </param>
         public static explicit operator _TimeSpan(_String x)
         {
-            Check.NotNull(x, "x");
+            x.VerifyNotNull(nameof(x));
             return new FromStringCast(x).MakeColumn<_TimeSpan>();
         }
 
@@ -159,8 +159,8 @@ namespace DevZest.Data.SqlServer
         /// <param name="y">A <see cref="_TimeSpan" /> object. </param>
         public static _Boolean operator <(_TimeSpan x, _TimeSpan y)
         {
-            Check.NotNull(x, "x");
-            Check.NotNull(y, "y");
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -191,8 +191,8 @@ namespace DevZest.Data.SqlServer
         /// <param name="y">A <see cref="_TimeSpan" /> object. </param>
         public static _Boolean operator <=(_TimeSpan x, _TimeSpan y)
         {
-            Check.NotNull(x, "x");
-            Check.NotNull(y, "y");
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -223,8 +223,8 @@ namespace DevZest.Data.SqlServer
         /// <param name="y">A <see cref="_DateTime" /> object. </param>
         public static _Boolean operator >(_TimeSpan x, _TimeSpan y)
         {
-            Check.NotNull(x, "x");
-            Check.NotNull(y, "y");
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -255,8 +255,8 @@ namespace DevZest.Data.SqlServer
         /// <param name="y">A <see cref="_TimeSpan" /> object. </param>
         public static _Boolean operator >=(_TimeSpan x, _TimeSpan y)
         {
-            Check.NotNull(x, "x");
-            Check.NotNull(y, "y");
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -287,8 +287,8 @@ namespace DevZest.Data.SqlServer
         /// <param name="y">A <see cref="_TimeSpan" /> object. </param>
         public static _Boolean operator ==(_TimeSpan x, _TimeSpan y)
         {
-            Check.NotNull(x, "x");
-            Check.NotNull(y, "y");
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
@@ -320,8 +320,8 @@ namespace DevZest.Data.SqlServer
         /// <param name="y">A <see cref="_TimeSpan" /> object. </param>
         public static _Boolean operator !=(_TimeSpan x, _TimeSpan y)
         {
-            Check.NotNull(x, "x");
-            Check.NotNull(y, "y");
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }

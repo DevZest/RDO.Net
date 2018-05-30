@@ -14,7 +14,7 @@ namespace DevZest.Data.Utilities
         internal static Action<TColumn> Verify<TParent, TColumn>(this Expression<Func<TParent, TColumn>> getter, string paramName)
             where TColumn : Column, new()
         {
-            Check.NotNull(getter, paramName);
+            getter.VerifyNotNull(paramName);
             var memberExpr = getter.Body as MemberExpression;
             if (memberExpr == null)
                 throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression, paramName);
@@ -217,7 +217,7 @@ namespace DevZest.Data.Utilities
 
         internal static Action<Column<T>> Verify<TParent, T>(this Expression<Func<TParent, Column<T>>> getter, string paramName)
         {
-            Check.NotNull(getter, paramName);
+            getter.VerifyNotNull(paramName);
             var memberExpr = getter.Body as MemberExpression;
             if (memberExpr == null)
                 throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression, paramName);

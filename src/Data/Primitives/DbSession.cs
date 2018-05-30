@@ -130,7 +130,7 @@ namespace DevZest.Data.Primitives
         public DbQuery<T> CreateQuery<T>(T _, Action<T> initializer, Action<DbQueryBuilder, T> buildQuery)
             where T : class, IModelReference, new()
         {
-            Check.NotNull(buildQuery, nameof(buildQuery));
+            buildQuery.VerifyNotNull(nameof(buildQuery));
 
             var modelRef = _ == null ? new T() : (_.Model.DataSource == null ? _ : _.MakeCopy(false));
             modelRef.Initialize(initializer);
@@ -160,7 +160,7 @@ namespace DevZest.Data.Primitives
         public DbQuery<T> CreateAggregateQuery<T>(T _, Action<T> initializer, Action<DbAggregateQueryBuilder, T> buildQuery)
             where T : class, IModelReference, new()
         {
-            Check.NotNull(buildQuery, nameof(buildQuery));
+            buildQuery.VerifyNotNull(nameof(buildQuery));
 
             var modelRef = _ == null ? new T() : (_.Model.DataSource == null ? _ : _.MakeCopy(false));
             modelRef.Initialize(initializer);
@@ -255,8 +255,8 @@ namespace DevZest.Data.Primitives
         protected internal static DbForeignKey DbForeignKey<TKey>(string name, string description, TKey foreignKey, Model<TKey> refTableModel, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
             where TKey : PrimaryKey
         {
-            Utilities.Check.NotNull(foreignKey, nameof(foreignKey));
-            Utilities.Check.NotNull(refTableModel, nameof(refTableModel));
+            foreignKey.VerifyNotNull(nameof(foreignKey));
+            refTableModel.VerifyNotNull(nameof(refTableModel));
 
             var model = foreignKey.ParentModel;
             var foreignKeyConstraint = new DbForeignKey(name, description, foreignKey, refTableModel.PrimaryKey, onDelete, onUpdate);

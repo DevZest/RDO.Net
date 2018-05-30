@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +10,7 @@ namespace DevZest.Data.Primitives
         public DbConnectionInvoker(DbSession dbSession, T connection)
             : base(dbSession)
         {
-            Check.NotNull(connection, nameof(connection));
+            connection.VerifyNotNull(nameof(connection));
             Connection = connection;
         }
 

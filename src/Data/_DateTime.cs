@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Globalization;
 
@@ -121,7 +120,7 @@ namespace DevZest.Data
         /// <param name="x">A <see cref="_String" /> object. </param>
         public static explicit operator _DateTime(_String x)
         {
-            Check.NotNull(x, nameof(x));
+            x.VerifyNotNull(nameof(x));
             return new FromStringCast(x).MakeColumn<_DateTime>();
         }
 
@@ -152,8 +151,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_DateTime" /> object. </param>
         public static _Boolean operator <(_DateTime x, _DateTime y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -184,8 +183,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_DateTime" /> object. </param>
         public static _Boolean operator <=(_DateTime x, _DateTime y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -216,8 +215,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_DateTime" /> object. </param>
         public static _Boolean operator >(_DateTime x, _DateTime y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -248,8 +247,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_DateTime" /> object. </param>
         public static _Boolean operator >=(_DateTime x, _DateTime y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
@@ -280,8 +279,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_DateTime" /> object. </param>
         public static _Boolean operator ==(_DateTime x, _DateTime y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
@@ -313,8 +312,8 @@ namespace DevZest.Data
         /// <param name="y">A <see cref="_DateTime" /> object. </param>
         public static _Boolean operator !=(_DateTime x, _DateTime y)
         {
-            Check.NotNull(x, nameof(x));
-            Check.NotNull(y, nameof(y));
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
 
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }

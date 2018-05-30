@@ -1,8 +1,5 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
@@ -12,7 +9,7 @@ namespace DevZest.Data.Primitives
     {
         protected ExtensibleObjectInvoker(ExtensibleObject extensibleObject)
         {
-            Check.NotNull(extensibleObject, nameof(extensibleObject));
+            extensibleObject.VerifyNotNull(nameof(extensibleObject));
             _extensibleObject = extensibleObject;
         }
 
