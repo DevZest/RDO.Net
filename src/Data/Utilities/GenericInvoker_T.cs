@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DevZest.Data;
+using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DevZest.Data.Utilities
+namespace DevZest
 {
-    public abstract class GenericInvoker<T>
+    internal abstract class GenericInvoker<T>
     {
         private Func<T, T> _func;
 

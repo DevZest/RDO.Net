@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DevZest.Data.Utilities
+namespace DevZest.Data.Primitives
 {
     public abstract class GenericInvoker<T, T1, T2>
     {
