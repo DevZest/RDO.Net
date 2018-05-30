@@ -8,4 +8,4 @@ Build.bat must be run under respective sub directory. For example, to build pack
 ..\Build.bat 1.0.0 beta-*
 ```
 
-The result `Data.1.0.0-beta-20180525.nupkg` will be built under `DevZest.Data\sync_src\bin\Release` directory.
+The result `Data.1.0.0-beta-20180525.nupkg` will be built under `DevZest.Data\bin\Release` directory.
