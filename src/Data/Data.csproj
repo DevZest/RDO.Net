@@ -13,6 +13,11 @@
     <Description>DevZest RDO.NET - Relational Data Objects .NET</Description>
     <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Array.Empty.cs" Link="Utilities\Array.Empty.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\Bytes.ToHexString.cs" Link="Utilities\Bytes.ToHexString.cs" />
+  </ItemGroup>
   
   <ItemGroup>
     <Compile Update="Properties\DiagnosticMessages.Designer.cs">
@@ -55,5 +60,5 @@
   <PropertyGroup>
     <DeployProps Condition="Exists('..\Deploy.$(AssemblyName).props')">..\Deploy.$(AssemblyName).props</DeployProps>
   </PropertyGroup>
-  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' "/>
+  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' " />
 </Project>
