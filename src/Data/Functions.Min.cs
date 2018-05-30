@@ -141,6 +141,11 @@ namespace DevZest.Data
             return null;
         }
 
+        private static bool IsComparable(this Type type)
+        {
+            return typeof(IComparable).IsAssignableFrom(type);
+        }
+
         private static T ComparableMin<T, TValue>(this T x)
             where T : Column<TValue>, new()
             where TValue : IComparable<TValue>
