@@ -3,7 +3,6 @@ using System.Data.SqlTypes;
 using System;
 using System.IO;
 using System.Xml;
-using DevZest.Data.Utilities;
 
 namespace DevZest.Data.SqlServer
 {

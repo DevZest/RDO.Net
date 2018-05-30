@@ -1,7 +1,5 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
-using System.Reflection;
 
 namespace DevZest.Data
 {
@@ -85,22 +83,24 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class ComparableMaxFunctionInvoker<T> : GenericInvoker<T>
+        private sealed class ComparableMaxFunctionInvoker<T> : ColumnInvoker<T>
+            where T : Column
         {
             public static readonly ComparableMaxFunctionInvoker<T> Singleton = new ComparableMaxFunctionInvoker<T>();
 
             private ComparableMaxFunctionInvoker()
-                : base(typeof(Functions).GetStaticMethodInfo(nameof(ComparableMax)), () => typeof(T).ResolveColumnDataType())
+                : base(typeof(Functions).GetStaticMethodInfo(nameof(ComparableMax)))
             {
             }
         }
 
-        private sealed class NullableMaxFunctionInvoker<T> : GenericInvoker<T>
+        private sealed class NullableMaxFunctionInvoker<T> : ColumnInvoker<T>
+            where T : Column
         {
             public static readonly NullableMaxFunctionInvoker<T> Singleton = new NullableMaxFunctionInvoker<T>();
 
             private NullableMaxFunctionInvoker()
-                : base(typeof(Functions).GetStaticMethodInfo(nameof(NullableMax)), () => typeof(T).ResolveColumnDataType(true))
+                : base(typeof(Functions).GetStaticMethodInfo(nameof(NullableMax)), true)
             {
             }
         }

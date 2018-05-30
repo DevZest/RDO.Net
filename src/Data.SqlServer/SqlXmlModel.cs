@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.Data.SqlTypes;
@@ -58,12 +57,13 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private sealed class ValueFunctionInvoker<T> : GenericInvoker<T, _SqlXml, Column>
+        private sealed class ValueFunctionInvoker<T> : ColumnInvoker<T, _SqlXml, Column>
+            where T : Column
         {
             public static readonly ValueFunctionInvoker<T> Singleton = new ValueFunctionInvoker<T>();
 
             private ValueFunctionInvoker()
-                : base(typeof(SqlXmlModel).GetStaticMethodInfo(nameof(_Value)), () => typeof(T).ResolveColumnDataType())
+                : base(typeof(SqlXmlModel).GetStaticMethodInfo(nameof(_Value)))
             {
             }
         }

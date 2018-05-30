@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {

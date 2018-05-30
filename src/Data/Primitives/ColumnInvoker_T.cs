@@ -1,23 +1,18 @@
-﻿using DevZest.Data;
-using System;
+﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DevZest
+namespace DevZest.Data.Primitives
 {
-    internal abstract class GenericInvoker<T>
+    internal abstract class ColumnInvoker<T>
+        where T : Column
     {
         private Func<T, T> _func;
 
-        protected GenericInvoker(MethodInfo methodInfo, Func<Type> typeResolver)
+        protected ColumnInvoker(MethodInfo methodInfo, bool byPassNullable = false)
         {
             methodInfo.VerifyNotNull(nameof(methodInfo));
-
-            var resolvedType = typeResolver();
-            if (resolvedType == null)
-                throw new ArgumentException(DiagnosticMessages.GenericInvoker_TypeResolverReturnsNull, nameof(typeResolver));
-
-            BuildFunc(methodInfo, resolvedType);
+            BuildFunc(methodInfo, typeof(T).ResolveColumnDataType(byPassNullable));
         }
 
         private void BuildFunc(MethodInfo methodInfo, Type resolvedType)

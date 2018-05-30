@@ -1,7 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
-using System;
-using System.Reflection;
 
 namespace DevZest.Data
 {
@@ -54,12 +51,13 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class LastFunctionInvoker<T> : GenericInvoker<T>
+        private sealed class LastFunctionInvoker<T> : ColumnInvoker<T>
+            where T : Column
         {
             public static readonly LastFunctionInvoker<T> Singleton = new LastFunctionInvoker<T>();
 
             private LastFunctionInvoker()
-                : base(typeof(Functions).GetStaticMethodInfo(nameof(_Last)), () => typeof(T).ResolveColumnDataType())
+                : base(typeof(Functions).GetStaticMethodInfo(nameof(_Last)))
             {
             }
         }

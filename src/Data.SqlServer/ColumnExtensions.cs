@@ -6,7 +6,6 @@ using DevZest.Data.Primitives;
 using System.Data.SqlTypes;
 using System.Collections.Concurrent;
 using System.Reflection;
-using DevZest.Data.Utilities;
 using System.Linq.Expressions;
 
 namespace DevZest.Data.SqlServer

@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Utilities;
-
-namespace DevZest.Data
+﻿namespace DevZest.Data
 {
     public class DataRowRemovedEventArgs : DataRowEventArgs
     {

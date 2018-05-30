@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Reflection;
 
@@ -86,22 +85,24 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class ComparableMinFunctionInvoker<T> : GenericInvoker<T>
+        private sealed class ComparableMinFunctionInvoker<T> : ColumnInvoker<T>
+            where T : Column
         {
             public static readonly ComparableMinFunctionInvoker<T> Singleton = new ComparableMinFunctionInvoker<T>();
 
             private ComparableMinFunctionInvoker()
-                : base(typeof(Functions).GetStaticMethodInfo(nameof(ComparableMin)), () => typeof(T).ResolveColumnDataType())
+                : base(typeof(Functions).GetStaticMethodInfo(nameof(ComparableMin)))
             {
             }
         }
 
-        private sealed class NullableMinFunctionInvoker<T> : GenericInvoker<T>
+        private sealed class NullableMinFunctionInvoker<T> : ColumnInvoker<T>
+            where T : Column
         {
             public static readonly NullableMinFunctionInvoker<T> Singleton = new NullableMinFunctionInvoker<T>();
 
             private NullableMinFunctionInvoker()
-                : base(typeof(Functions).GetStaticMethodInfo(nameof(NullableMin)), () => typeof(T).ResolveColumnDataType(true))
+                : base(typeof(Functions).GetStaticMethodInfo(nameof(NullableMin)), true)
             {
             }
         }

@@ -1,6 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
-using System;
 
 namespace DevZest.Data
 {
@@ -44,12 +42,13 @@ namespace DevZest.Data
             return IfNullFunctionInvoker<T>.Singleton.Invoke(x, replaceColumn);
         }
 
-        private sealed class IfNullFunctionInvoker<T> : GenericInvoker<T, T>
+        private sealed class IfNullFunctionInvoker<T> : ColumnInvoker<T, T>
+            where T : Column
         {
             public static readonly IfNullFunctionInvoker<T> Singleton = new IfNullFunctionInvoker<T>();
 
             private IfNullFunctionInvoker()
-                : base(typeof(Functions).GetStaticMethodInfo(nameof(_IfNull)), () => typeof(T).ResolveColumnDataType())
+                : base(typeof(Functions).GetStaticMethodInfo(nameof(_IfNull)))
             {
             }
         }

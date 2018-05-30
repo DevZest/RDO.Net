@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Annotations.Primitives;
-using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data.Annotations
