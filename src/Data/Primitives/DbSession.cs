@@ -48,7 +48,7 @@ namespace DevZest.Data.Primitives
 
             if (result == null)
             {
-                Check.NotEmpty(name, nameof(name));
+                name.VerifyNotEmpty(nameof(name));
                 var model = new T().ApplyForeignKey(foreignKeys);
                 result = DbTable<T>.Create(model, this, name);
             }

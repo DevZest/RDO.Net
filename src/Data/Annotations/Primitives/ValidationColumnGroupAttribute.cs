@@ -8,8 +8,7 @@ namespace DevZest.Data.Annotations.Primitives
         protected ValidationColumnGroupAttribute(string name, string message)
             : base(name)
         {
-            Check.NotEmpty(message, nameof(message));
-            _message = message;
+            _message = message.VerifyNotEmpty(nameof(message));
         }
 
         protected ValidationColumnGroupAttribute(string name, Type messageResourceType, string message)

@@ -9,10 +9,8 @@ namespace DevZest.Data.Annotations
     {
         public ColumnValidatorAttribute(string columnName, string message)
         {
-            Check.NotEmpty(columnName, nameof(columnName));
-            Check.NotEmpty(message, nameof(message));
-            _columnName = columnName;
-            _message = message;
+            _columnName = columnName.VerifyNotEmpty(nameof(columnName));
+            _message = message.VerifyNotEmpty(nameof(message));
         }
 
         public ColumnValidatorAttribute(string columnName, Type messageResourceType, string message)

@@ -128,8 +128,7 @@ namespace DevZest.Data.Annotations.Primitives
 
         protected ColumnGroupMemberAttribute(string name)
         {
-            Check.NotEmpty(name, nameof(name));
-            Name = name;
+            Name = name.VerifyNotEmpty(nameof(name));
         }
 
         public string Name { get; private set; }

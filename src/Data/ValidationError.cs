@@ -10,9 +10,7 @@ namespace DevZest.Data
     {
         protected ValidationError(string message)
         {
-            Check.NotEmpty(message, nameof(message));
-
-            _message = message;
+            _message = message.VerifyNotEmpty(nameof(message));
         }
 
         private readonly string _message;

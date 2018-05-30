@@ -64,7 +64,7 @@ namespace DevZest.Data
         {
             get
             {
-                Check.NotEmpty(name, nameof(name));
+                name.VerifyNotEmpty(nameof(name));
                 return Model[name] as Column;
             }
         }

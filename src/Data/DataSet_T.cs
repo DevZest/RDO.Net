@@ -214,7 +214,7 @@ namespace DevZest.Data
 
         public static DataSet<T> ParseJson(Action<T> initializer, string json)
         {
-            Check.NotEmpty(json, nameof(json));
+            json.VerifyNotEmpty(nameof(json));
 
             return (DataSet<T>)(new JsonParser(json).Parse(() => New(initializer), true));
         }

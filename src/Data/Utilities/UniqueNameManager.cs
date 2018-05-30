@@ -8,7 +8,7 @@ namespace DevZest.Data.Utilities
         public static string GetUniqueName(this Dictionary<string, int> suffixes, string name)
         {
             suffixes.VerifyNotNull(nameof(suffixes));
-            Check.NotEmpty(name, nameof(name));
+            name.VerifyNotEmpty(nameof(name));
 
             int suffix;
             if (suffixes.TryGetValue(name, out suffix))

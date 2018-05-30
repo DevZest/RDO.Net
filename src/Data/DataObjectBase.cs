@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data
@@ -16,7 +15,7 @@ namespace DevZest.Data
         protected T CreateColumn<T>(string name, Action<T> initializer = null)
             where T : Column, new()
         {
-            Check.NotEmpty(name, nameof(name));
+            name.VerifyNotEmpty(nameof(name));
 
             var result = new T();
             if (initializer != null)
@@ -70,7 +69,7 @@ namespace DevZest.Data
         public static T ParseJson<T>(string json)
             where T : DataObjectBase, new()
         {
-            Check.NotEmpty(json, nameof(json));
+            json.VerifyNotEmpty(nameof(json));
 
             var result = new T();
             var dataSet = result._dataSet;

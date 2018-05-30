@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Text;
 
@@ -14,8 +13,7 @@ namespace DevZest.Data.Primitives
 
         public JsonParser(string json)
         {
-            Check.NotEmpty(json, nameof(json));
-            _json = json;
+            _json = json.VerifyNotEmpty(nameof(json));
         }
 
         public JsonToken PeekToken()

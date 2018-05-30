@@ -11,7 +11,7 @@ namespace DevZest.Data.Annotations
     {
         public CheckAttribute(string message)
         {
-            Check.NotEmpty(message, nameof(message));
+            message.VerifyNotEmpty(nameof(message));
             _message = message;
         }
 

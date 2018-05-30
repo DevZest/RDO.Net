@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Annotations.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -11,8 +10,7 @@ namespace DevZest.Data.Annotations
     {
         public RegularExpressionAttribute(string pattern)
         {
-            Check.NotEmpty(pattern, nameof(pattern));
-            Pattern = pattern;
+            Pattern = pattern.VerifyNotEmpty(nameof(pattern));
         }
 
         public string Pattern { get; private set; }

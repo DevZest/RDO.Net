@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Annotations.Primitives;
-using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data.Annotations
@@ -9,8 +8,7 @@ namespace DevZest.Data.Annotations
     {
         public DbIndexAttribute(string name)
         {
-            Check.NotEmpty(name, nameof(name));
-            Name = name;
+            Name = name.VerifyNotEmpty(nameof(name));
         }
 
         protected override void Initialize(Column column)

@@ -14,7 +14,7 @@ namespace DevZest.Data
     {
         public static IDataValues Create(params Column[] columns)
         {
-            Check.NotEmpty(columns, nameof(columns));
+            columns.VerifyNotEmpty(nameof(columns));
 
             for (int i = 0; i < columns.Length; i++)
             {

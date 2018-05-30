@@ -36,7 +36,7 @@ namespace DevZest.Data.Primitives
 
         private static void Verify(IReadOnlyList<ColumnMapping> columnMappings, string paramName, Model source, Model target)
         {
-            Check.NotEmpty(columnMappings, paramName);
+            columnMappings.VerifyNotEmpty(paramName);
             for (int i = 0; i < columnMappings.Count; i++)
             {
                 var columnMapping = columnMappings[i];

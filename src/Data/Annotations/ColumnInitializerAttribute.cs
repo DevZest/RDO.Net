@@ -9,7 +9,7 @@ namespace DevZest.Data.Annotations
     {
         public ColumnInitializerAttribute(string columnName)
         {
-            Check.NotEmpty(columnName, nameof(columnName));
+            columnName.VerifyNotEmpty(nameof(columnName));
             _columnName = columnName;
         }
 

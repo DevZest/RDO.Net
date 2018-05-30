@@ -822,7 +822,7 @@ namespace DevZest.Data
 
         protected internal void Index(string name, string description, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, params ColumnSort[] orderByList)
         {
-            Utilities.Check.NotEmpty(name, nameof(name));
+            name.VerifyNotEmpty(nameof(name));
             orderByList.VerifyNotNull(nameof(orderByList));
             if (orderByList.Length == 0)
                 throw new ArgumentException(DiagnosticMessages.Model_EmptyColumns, nameof(orderByList));

@@ -139,9 +139,9 @@ namespace DevZest.Data
             if (values.Length == 0)
                 return Empty;
 
-            IValidationErrors result = values[0].CheckNotNull(nameof(values), 0);
+            IValidationErrors result = values.VerifyNotNull(0, nameof(values));
             for (int i = 1; i < values.Length; i++)
-                result = result.Add(values[i].CheckNotNull(nameof(values), i));
+                result = result.Add(values.VerifyNotNull(i, nameof(values)));
             return result;
         }
     }

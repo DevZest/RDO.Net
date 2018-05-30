@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 
 namespace DevZest.Data.Annotations.Primitives
 {
@@ -8,8 +7,7 @@ namespace DevZest.Data.Annotations.Primitives
     {
         protected ColumnGroupAttribute(string name)
         {
-            Check.NotEmpty(name, nameof(name));
-            Name = name;
+            Name = name.VerifyNotEmpty(nameof(name));
         }
 
         public string Name { get; private set; }

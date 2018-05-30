@@ -16,8 +16,10 @@
 
   <ItemGroup>
     <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs" Link="Utilities\Argument.VerifyNotNull.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\ArgumentList.VerifyNotEmpty.cs" Link="Utilities\ArgumentList.VerifyNotEmpty.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\ArgumentListItem.VerifyNotNull.cs" Link="Utilities\ArgumentListItem.VerifyNotNull.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\ArgumentString.VerifyNotEmpty.cs" Link="Utilities\ArgumentString.VerifyNotEmpty.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\Array.Empty.cs" Link="Utilities\Array.Empty.cs" />
-    <Compile Include="..\..\external\Utilities\src\Utilities\Bytes.ToHexString.cs" Link="Utilities\Bytes.ToHexString.cs" />
   </ItemGroup>
   
   <ItemGroup>
