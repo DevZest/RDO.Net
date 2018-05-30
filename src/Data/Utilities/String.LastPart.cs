@@ -1,6 +1,6 @@
-﻿namespace DevZest.Data.Utilities
+﻿namespace DevZest
 {
-    internal static partial class StringExtensions
+    internal static partial class Extensions
     {
         internal static string LastPart(this string str, char separator)
         {
