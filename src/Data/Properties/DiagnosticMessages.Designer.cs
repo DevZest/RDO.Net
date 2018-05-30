@@ -68,14 +68,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The type resolver callback returns null.
-        /// </summary>
-        public static string GenericInvoker_TypeResolverReturnsNull
-        {
-            get { return GetString("GenericInvoker_TypeResolverReturnsNull"); }
-        }
-
-        /// <summary>
         /// The type "{type}" is not implemented correctly. The column getter "{columnGetter}" returns null.
         /// </summary>
         public static string ColumnGroup_GetterReturnsNull(object type, object columnGetter)

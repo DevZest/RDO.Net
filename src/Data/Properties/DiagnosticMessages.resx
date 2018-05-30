@@ -138,9 +138,6 @@
   <data name="ColumnCollection_DuplicateModelId" xml:space="preserve">
     <value>Duplicate ModelId is not allowed: DeclaringType={declaringType}, Name={name}.</value>
   </data>
-  <data name="GenericInvoker_TypeResolverReturnsNull" xml:space="preserve">
-    <value>The type resolver callback returns null.</value>
-  </data>
   <data name="ColumnGroup_GetterReturnsNull" xml:space="preserve">
     <value>The type "{type}" is not implemented correctly. The column getter "{columnGetter}" returns null.</value>
   </data>
