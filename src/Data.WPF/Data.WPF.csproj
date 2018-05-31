@@ -103,7 +103,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Utilities\IInputElement.ContainsKeyboardFocus.cs" />
+    <Compile Include="Utilities\Windows\IInputElement.ContainsKeyboardFocus.cs" />
     <Compile Include="Utilities\Object.GetPropertyOrFieldSetter.cs" />
     <Compile Include="Utilities\Object.GetPropertyOrFieldGetter.cs" />
     <Compile Include="Utilities\SingleChildEnumerator.cs" />
@@ -175,7 +175,7 @@
     <Compile Include="Presenters\ScalarCompositeBinding_T.cs" />
     <Compile Include="Presenters\Scalar_T.cs" />
     <Compile Include="Presenters\StyleId.cs" />
-    <Compile Include="Utilities\DependencyObject.FindVisualAncestor.cs" />
+    <Compile Include="Utilities\Windows\DependencyObject.FindVisualAncestor.cs" />
     <Compile Include="Utilities\Double.IfZero.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />

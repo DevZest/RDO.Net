@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace DevZest
+namespace DevZest.Windows
 {
     static partial class Extensions
     {
