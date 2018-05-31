@@ -1,3 +1,6 @@
 [submodule "external/RDO.Data"]
 	path = external/RDO.Data
 	url = C:/Users/Weifen/Documents/DevZest/RDO.Data
+[submodule "external/Utilities"]
+	path = external/Utilities
+	url = https://github.com/DevZest/Utilities.git
