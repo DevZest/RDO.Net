@@ -1,7 +1,7 @@
 <Project>
   <ItemGroup>
     <Reference Include="DevZest.Data, Version=$ASSEMBLY_VERSION$, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevZest.Data.$PACKAGE_VERSION$\lib\netstandard2.0\DevZest.Data.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.$PACKAGE_VERSION$\lib\netstandard2.0\DevZest.Data.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

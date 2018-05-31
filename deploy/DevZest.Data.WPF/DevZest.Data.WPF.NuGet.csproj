@@ -21,6 +21,7 @@
     <Copyright>Copyright</Copyright>
     <PackageTags>RDO.Net WPF MVP</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <AssemblyName>DevZest.Data.WPF.NuGet</AssemblyName>
   </PropertyGroup>
   
   <ItemGroup>
