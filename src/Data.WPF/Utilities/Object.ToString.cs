@@ -2,7 +2,7 @@
 
 namespace DevZest
 {
-    internal static partial class ObjectExtensions
+    internal static partial class Extensions
     {
         internal static string ToString(this object value, string format, IFormatProvider formatProvider)
         {
