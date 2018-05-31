@@ -212,7 +212,7 @@ namespace DevZest.Data.Presenters
 
         public static DataPresenter GetAttachedTo(this UIElement element)
         {
-            Check.NotNull(element, nameof(element));
+            element.VerifyNotNull(nameof(element));
             return AttachedScalarBinding.GetAttachedScalarBinding(element)?.DataPresenter;
         }
     }

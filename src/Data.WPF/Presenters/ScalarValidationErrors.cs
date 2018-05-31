@@ -31,8 +31,7 @@ namespace DevZest.Data.Presenters
 
             public IScalarValidationErrors Add(ScalarValidationError value)
             {
-                Check.NotNull(value, nameof(value));
-                return value;
+                return value.VerifyNotNull(nameof(value));
             }
 
             public IScalarValidationErrors Seal()
@@ -90,7 +89,7 @@ namespace DevZest.Data.Presenters
 
             public IScalarValidationErrors Add(ScalarValidationError value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
 
                 if (!IsSealed)
                 {
@@ -134,23 +133,23 @@ namespace DevZest.Data.Presenters
 
         public static IScalarValidationErrors New(params ScalarValidationError[] values)
         {
-            Check.NotNull(values, nameof(values));
+            values.VerifyNotNull(nameof(values));
 
             if (values.Length == 0)
                 return Empty;
 
-            IScalarValidationErrors result = values[0].CheckNotNull(nameof(values), 0);
+            IScalarValidationErrors result = values.VerifyNotNull(0, nameof(values));
             for (int i = 1; i < values.Length; i++)
-                result = result.Add(values[i].CheckNotNull(nameof(values), i));
+                result = result.Add(values.VerifyNotNull(i, nameof(values)));
             return result;
         }
 
         public static IScalarValidationErrors Add(this IScalarValidationErrors result, IScalarValidationErrors messages)
         {
-            Check.NotNull(messages, nameof(messages));
+            messages.VerifyNotNull(nameof(messages));
 
             for (int i = 0; i < messages.Count; i++)
-                result = result.Add(messages[i]);
+                result = result.Add(messages.VerifyNotNull(i, nameof(messages)));
 
             return result;
         }

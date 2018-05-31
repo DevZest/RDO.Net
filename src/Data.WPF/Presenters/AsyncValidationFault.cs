@@ -8,7 +8,7 @@ namespace DevZest.Data.Presenters
         internal AsyncValidationFault(AsyncValidator source, Func<AsyncValidator, string> formatMessage)
             : base(FormatMessage(source, formatMessage), source)
         {
-            Check.NotNull(source, nameof(source));
+            source.VerifyNotNull(nameof(source));
         }
 
         private static string FormatMessage(AsyncValidator source, Func<AsyncValidator, string> formatMessage)

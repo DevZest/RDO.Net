@@ -75,7 +75,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public static DataSet<TabularText> Parse(string s, char delimiter)
         {
-            Check.NotNull(s, nameof(s));
+            s.VerifyNotNull(nameof(s));
             using (var textReader = new StringReader(s))
             {
                 return Parse(textReader, delimiter);
@@ -84,7 +84,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public static DataSet<TabularText> Parse(TextReader reader, char delimiter)
         {
-            Check.NotNull(reader, nameof(reader));
+            reader.VerifyNotNull(nameof(reader));
             if (delimiter == QuotationMark)
                 throw new ArgumentException(DiagnosticMessages.TabularText_DelimiterCannotBeQuote, nameof(delimiter));
 

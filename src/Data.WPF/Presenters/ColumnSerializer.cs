@@ -9,15 +9,15 @@ namespace DevZest.Data.Presenters
     {
         public static ColumnSerializer Create(Column column)
         {
-            Check.NotNull(column, nameof(column));
+            column.VerifyNotNull(nameof(column));
             return new DefaultColumnSerializer(column);
         }
 
         public static ColumnSerializer Create<T>(Column<T> column, Func<T, string> serializer, Func<string, T> deserializer)
         {
-            Check.NotNull(column, nameof(column));
-            Check.NotNull(serializer, nameof(serializer));
-            Check.NotNull(deserializer, nameof(deserializer));
+            column.VerifyNotNull(nameof(column));
+            serializer.VerifyNotNull(nameof(serializer));
+            deserializer.VerifyNotNull(nameof(deserializer));
             return new TypedColumnSerializer<T>(column, serializer, deserializer);
         }
 

@@ -5,8 +5,7 @@
         public static T WithSerializableColumns<T>(this T rowBinding, params Column[] columns)
             where T : RowBinding
         {
-            columns.CheckNotNull(nameof(columns));
-            rowBinding.SerializableColumns = columns;
+            rowBinding.SerializableColumns = columns.VerifyNotNull(nameof(columns)).VerifyNoNullItem(nameof(columns));
             return rowBinding;
         }
     }

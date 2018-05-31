@@ -11,7 +11,7 @@ namespace DevZest.Data.Presenters
     {
         public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IColumns source, params RowBinding[] containingBindings)
         {
-            Check.NotNull(source, nameof(source));
+            source.VerifyNotNull(nameof(source));
 
             source = source.Seal();
 
@@ -36,7 +36,7 @@ namespace DevZest.Data.Presenters
 
         public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<RowBinding> source)
         {
-            Check.NotNull(source, nameof(source));
+            source.VerifyNotNull(nameof(source));
 
             var columns = GetTargetColumns(source);
             var input = new RowBinding<ValidationPlaceholder>(onSetup: (v, p) =>
@@ -83,7 +83,7 @@ namespace DevZest.Data.Presenters
 
         public static ScalarBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<ScalarBinding> source)
         {
-            Check.NotNull(source, nameof(source));
+            source.VerifyNotNull(nameof(source));
 
             var scalars = GetTargetScalars(source);
             var input = new ScalarBinding<ValidationPlaceholder>(onSetup: (v, p) =>

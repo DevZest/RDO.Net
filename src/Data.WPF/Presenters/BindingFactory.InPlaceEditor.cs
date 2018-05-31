@@ -24,7 +24,7 @@ namespace DevZest.Data.Presenters
             where TInert : UIElement, new()
         {
             var rowInput = VerifyEditingBinding(editingRowBinding, nameof(editingRowBinding));
-            Check.NotNull(inertRowBinding, nameof(inertRowBinding));
+            inertRowBinding.VerifyNotNull(nameof(inertRowBinding));
             return MergeIntoInPlaceEditor(rowInput, inertRowBinding);
         }
 
@@ -64,7 +64,7 @@ namespace DevZest.Data.Presenters
             where TInert : UIElement, new()
         {
             var scalarInput = VerifyEditingBinding(editingScalarBinding, nameof(editingScalarBinding));
-            Check.NotNull(inertScalarBinding, nameof(inertScalarBinding));
+            inertScalarBinding.VerifyNotNull(nameof(inertScalarBinding));
             return MergeIntoInPlaceEditor(scalarInput, inertScalarBinding);
         }
 

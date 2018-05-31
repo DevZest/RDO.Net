@@ -7,11 +7,8 @@ namespace DevZest.Data.Presenters.Primitives
     {
         public ValueChangedTrigger(IColumns columns, RowBinding<T> rowBinding)
         {
-            Check.NotNull(columns, nameof(columns));
-            Check.NotNull(rowBinding, nameof(rowBinding));
-
-            _columns = columns;
-            _rowBinding = rowBinding;
+            _columns = columns.VerifyNotNull(nameof(columns));
+            _rowBinding = rowBinding.VerifyNotNull(nameof(rowBinding));
         }
 
         private readonly IColumns _columns;

@@ -38,6 +38,18 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.IReadOnlyList.VerifyNoNullItem.cs">
+      <Link>Utilities\Argument.IReadOnlyList.VerifyNoNullItem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.IReadOnlyListItem.VerifyNotNull.cs">
+      <Link>Utilities\Argument.IReadOnlyListItem.VerifyNotNull.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs">
+      <Link>Utilities\Argument.VerifyNotNull.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Array.Empty.cs">
+      <Link>Utilities\Array.Empty.cs</Link>
+    </Compile>
     <Compile Include="Presenters\AsyncValidationFault.cs" />
     <Compile Include="Presenters\AsyncValidator.cs" />
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
@@ -129,8 +141,6 @@
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presenters\ValidationStatus.cs" />
-    <Compile Include="Utilities\Check.NotNull.cs" />
-    <Compile Include="Utilities\Check.CheckNotNull.cs" />
     <Compile Include="Utilities\Windows\DragHandlerBase.cs" />
     <Compile Include="Utilities\Windows\KeyboardManager.cs" />
     <Compile Include="Utilities\Windows\Point.IsClose.cs" />
@@ -232,7 +242,6 @@
     <Compile Include="Presenters\RowBinding.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="Views\ColumnHeader.cs" />
-    <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="Views\Primitives\RowViewPanel.cs" />
     <Compile Include="Views\RowView.cs" />

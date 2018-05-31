@@ -546,19 +546,19 @@ namespace DevZest.Data.Presenters
 
         public ValidationInfo GetValidationInfo(Input<RowBinding, IColumns> input)
         {
-            Check.NotNull(input, nameof(input));
+            input.VerifyNotNull(nameof(input));
             return InputManager.GetValidationInfo(this, input);
         }
 
         public bool HasValidationError(Input<RowBinding, IColumns> input)
         {
-            Check.NotNull(input, nameof(input));
+            input.VerifyNotNull(nameof(input));
             return InputManager.HasValidationError(this, input);
         }
 
         public bool IsValidating(Input<RowBinding, IColumns> input)
         {
-            Check.NotNull(input, nameof(input));
+            input.VerifyNotNull(nameof(input));
             return InputManager.IsValidating(this, input);
         }
 
@@ -640,7 +640,7 @@ namespace DevZest.Data.Presenters
 
         public void Resize(GridTrack gridTrack, GridLength length)
         {
-            Check.NotNull(gridTrack, nameof(gridTrack));
+            gridTrack.VerifyNotNull(nameof(gridTrack));
             if (!gridTrack.IsContainer)
                 throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidGridTrack, nameof(gridTrack));
             if (length.IsStar)
@@ -657,7 +657,7 @@ namespace DevZest.Data.Presenters
 
         public GridLength GetLength(GridTrack gridTrack)
         {
-            Check.NotNull(gridTrack, nameof(gridTrack));
+            gridTrack.VerifyNotNull(nameof(gridTrack));
             if (!gridTrack.IsContainer)
                 throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidGridTrack, nameof(gridTrack));
             if (IsDisposed)
@@ -672,7 +672,7 @@ namespace DevZest.Data.Presenters
 
         public double? GetMeasuredLength(GridTrack gridTrack)
         {
-            Check.NotNull(gridTrack, nameof(gridTrack));
+            gridTrack.VerifyNotNull(nameof(gridTrack));
             if (!gridTrack.IsContainer)
                 throw new ArgumentException(DiagnosticMessages.RowPresenter_Resize_InvalidGridTrack, nameof(gridTrack));
             if (IsDisposed)

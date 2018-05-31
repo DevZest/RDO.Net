@@ -68,8 +68,8 @@ namespace DevZest.Data.Presenters
 
         public ScalarInput<T> WithFlush(Scalar scalar, Func<T, bool> flushFunc)
         {
-            Check.NotNull(scalar, nameof(scalar));
-            Check.NotNull(flushFunc, nameof(flushFunc));
+            scalar.VerifyNotNull(nameof(scalar));
+            flushFunc.VerifyNotNull(nameof(flushFunc));
 
             VerifyNotSealed();
             _target = _target.Union(scalar);

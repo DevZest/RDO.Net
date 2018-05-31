@@ -455,8 +455,7 @@ namespace DevZest.Data.Presenters
 
         public TemplateBuilder WithInitialFocus(InitialFocus initialFocus)
         {
-            Check.NotNull(initialFocus, nameof(initialFocus));
-            Template.InitialFocus = initialFocus;
+            Template.InitialFocus = initialFocus.VerifyNotNull(nameof(initialFocus));
             return this;
         }
 

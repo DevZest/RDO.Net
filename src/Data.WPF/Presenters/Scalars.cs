@@ -27,19 +27,19 @@ namespace DevZest.Data.Presenters
 
             public bool Contains(Scalar value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return false;
             }
 
             public IScalars Add(Scalar value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return value;
             }
 
             public IScalars Remove(Scalar value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return this;
             }
 
@@ -98,7 +98,7 @@ namespace DevZest.Data.Presenters
 
             public IScalars Add(Scalar value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
 
                 if (Contains(value))
                     return this;
@@ -123,7 +123,7 @@ namespace DevZest.Data.Presenters
 
             public IScalars Remove(Scalar value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
 
                 if (!Contains(value))
                     return this;
@@ -162,7 +162,7 @@ namespace DevZest.Data.Presenters
 
             public bool Contains(Scalar value)
             {
-                Check.NotNull(value, nameof(value));
+                value.VerifyNotNull(nameof(value));
                 return _hashSet.Contains(value);
             }
 
@@ -204,14 +204,14 @@ namespace DevZest.Data.Presenters
 
         public static IScalars New(params Scalar[] values)
         {
-            Check.NotNull(values, nameof(values));
+            values.VerifyNotNull(nameof(values));
 
             if (values.Length == 0)
                 return Empty;
 
-            IScalars result = values[0].CheckNotNull(nameof(values), 0);
+            IScalars result = values.VerifyNotNull(0, nameof(values));
             for (int i = 1; i < values.Length; i++)
-                result = result.Add(values[i].CheckNotNull(nameof(values), i));
+                result = result.Add(values.VerifyNotNull(i, nameof(values)));
             return result;
         }
 
@@ -221,8 +221,8 @@ namespace DevZest.Data.Presenters
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IScalars Except(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var column in source)
             {
@@ -238,8 +238,8 @@ namespace DevZest.Data.Presenters
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IScalars Intersect(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var column in source)
             {
@@ -265,8 +265,8 @@ namespace DevZest.Data.Presenters
         /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSubsetOf(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count < other.Count ? other.ContainsAll(source) : false;
         }
@@ -276,8 +276,8 @@ namespace DevZest.Data.Presenters
         /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSupersetOf(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count > other.Count ? source.ContainsAll(other) : false;
         }
@@ -288,8 +288,8 @@ namespace DevZest.Data.Presenters
         /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSubsetOf(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count <= other.Count ? other.ContainsAll(source) : false;
         }
@@ -300,8 +300,8 @@ namespace DevZest.Data.Presenters
         /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSupersetOf(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count >= other.Count ? source.ContainsAll(other) : false;
         }
@@ -312,8 +312,8 @@ namespace DevZest.Data.Presenters
         /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool Overlaps(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var column in source)
             {
@@ -329,8 +329,8 @@ namespace DevZest.Data.Presenters
         /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
         public static bool SetEquals(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             return source.Count == other.Count ? source.ContainsAll(other) : false;
         }
@@ -341,8 +341,8 @@ namespace DevZest.Data.Presenters
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IScalars SymmetricExcept(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             IScalars removedScalarSet = Scalars.Empty;
             foreach (var column in source)
@@ -369,8 +369,8 @@ namespace DevZest.Data.Presenters
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IScalars Union(this IScalars source, IScalars other)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(other, nameof(other));
+            source.VerifyNotNull(nameof(source));
+            other.VerifyNotNull(nameof(other));
 
             foreach (var column in other)
                 source = source.Add(column);

@@ -157,7 +157,7 @@ namespace DevZest.Data.Views
 
             private int VerifyGridCell(GridCell gridCell, string paramName)
             {
-                Check.NotNull(gridCell, paramName);
+                gridCell.VerifyNotNull(paramName);
                 var index = IndexOf(gridCell);
                 if (index < 0)
                     throw new ArgumentException(DiagnosticMessages.GridCell_Presenter_VerifyGridCell, paramName);
@@ -204,7 +204,7 @@ namespace DevZest.Data.Views
 
             public void Select(RowPresenter rowPresenter, int bindingIndex, bool isExtended)
             {
-                Check.NotNull(rowPresenter, nameof(rowPresenter));
+                rowPresenter.VerifyNotNull(nameof(rowPresenter));
                 if (bindingIndex < 0 || bindingIndex >= GridCellBindings.Count)
                     throw new ArgumentOutOfRangeException(nameof(bindingIndex));
 

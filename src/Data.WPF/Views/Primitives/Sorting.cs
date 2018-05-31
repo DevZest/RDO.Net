@@ -9,7 +9,7 @@ namespace DevZest.Data.Views.Primitives
     {
         public static DataSet<Sorting> Convert(Model model, IReadOnlyList<IColumnComparer> orderBy)
         {
-            Check.NotNull(model, nameof(model));
+            model.VerifyNotNull(nameof(model));
 
             var result = DataSet<Sorting>.New();
             if (orderBy == null || orderBy.Count == 0)
@@ -17,7 +17,7 @@ namespace DevZest.Data.Views.Primitives
 
             for (int i = 0; i < orderBy.Count; i++)
             {
-                var orderByItem = orderBy[i].CheckNotNull(nameof(orderBy), i);
+                var orderByItem = orderBy.VerifyNotNull(i, nameof(orderBy));
                 result.AddRow((_, dataRow) =>
                 {
                     var column = orderByItem.GetColumn(model);
@@ -31,7 +31,7 @@ namespace DevZest.Data.Views.Primitives
 
         public static IReadOnlyList<IColumnComparer> Convert(DataSet<Sorting> sortings)
         {
-            Check.NotNull(sortings, nameof(sortings));
+            sortings.VerifyNotNull(nameof(sortings));
             if (sortings.Validate().Count != 0)
                 throw new ArgumentException(DiagnosticMessages.Sorting_HasValidationError, nameof(sortings));
 

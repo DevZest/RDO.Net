@@ -10,7 +10,7 @@ namespace DevZest.Data.Presenters
         public ScalarValidationError(string message, IScalars source)
             : base(message, source)
         {
-            Check.NotNull(source, nameof(source));
+            source.VerifyNotNull(nameof(source));
             if (source.Count == 0)
                 throw new ArgumentException(DiagnosticMessages.ScalarValidationMessage_EmptySourceScalars, nameof(source));
         }
@@ -48,7 +48,7 @@ namespace DevZest.Data.Presenters
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IScalarValidationErrors IScalarValidationErrors.Add(ScalarValidationError value)
         {
-            Check.NotNull(value, nameof(value));
+            value.VerifyNotNull(nameof(value));
             return ScalarValidationErrors.New(this, value);
         }
 

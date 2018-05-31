@@ -110,8 +110,8 @@ namespace DevZest.Data.Presenters
 
         public RowInput<T> WithFlush(Column column, Func<RowPresenter, T, bool> flushFunc)
         {
-            Check.NotNull(column, nameof(column));
-            Check.NotNull(flushFunc, nameof(flushFunc));
+            column.VerifyNotNull(nameof(column));
+            flushFunc.VerifyNotNull(nameof(flushFunc));
             VerifyNotSealed();
             _target = _target.Union(column);
             _flushFuncs.Add(flushFunc);
@@ -184,13 +184,13 @@ namespace DevZest.Data.Presenters
 
         public ValidationInfo GetValidationInfo(RowPresenter rowPresenter)
         {
-            Check.NotNull(rowPresenter, nameof(rowPresenter));
+            rowPresenter.VerifyNotNull(nameof(rowPresenter));
             return RowValidation.GetInfo(rowPresenter, this);
         }
 
         public bool HasValidationError(RowPresenter rowPresenter)
         {
-            Check.NotNull(rowPresenter, nameof(rowPresenter));
+            rowPresenter.VerifyNotNull(nameof(rowPresenter));
             return RowValidation.HasError(rowPresenter, this, true);
         }
 

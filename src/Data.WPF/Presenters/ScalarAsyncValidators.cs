@@ -159,9 +159,9 @@ namespace DevZest.Data.Presenters
             if (values.Length == 0)
                 return Empty;
 
-            IScalarAsyncValidators result = values[0].CheckNotNull(nameof(values), 0);
+            IScalarAsyncValidators result = values.VerifyNotNull(0, nameof(values));
             for (int i = 1; i < values.Length; i++)
-                result = result.Add(values[i].CheckNotNull(nameof(values), 0));
+                result = result.Add(values.VerifyNotNull(i, nameof(values)));
             return result;
         }
     }

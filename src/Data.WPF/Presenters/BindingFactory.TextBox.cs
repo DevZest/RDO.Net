@@ -400,9 +400,9 @@ namespace DevZest.Data.Presenters
 
         public static RowBinding<TextBox> BindToTextBox(this Column source, IValueConverter converter, CultureInfo cultureInfo, string flushErrorDescription = null)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(converter, nameof(converter));
-            Check.NotNull(cultureInfo, nameof(cultureInfo));
+            source.VerifyNotNull(nameof(source));
+            converter.VerifyNotNull(nameof(converter));
+            cultureInfo.VerifyNotNull(nameof(cultureInfo));
 
             return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>
             {

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -20,7 +19,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 get
                 {
-                    Check.NotNull(key, nameof(key));
+                    key.VerifyNotNull(nameof(key));
                     throw new ArgumentOutOfRangeException(nameof(key));
                 }
             }
@@ -42,7 +41,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             public bool ContainsKey(RowPresenter key)
             {
-                Check.NotNull(key, nameof(key));
+                key.VerifyNotNull(nameof(key));
                 return false;
             }
 

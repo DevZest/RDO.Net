@@ -164,10 +164,10 @@ namespace DevZest.Data.Presenters
             where TService : IService
             where TElement : UIElement
         {
-            Check.NotNull(element, nameof(element));
+            element.VerifyNotNull(nameof(element));
             if (commandService == null)
                 throw new ArgumentNullException(nameof(commandService));
-            Check.NotNull(getCommandEntries, nameof(getCommandEntries));
+            getCommandEntries.VerifyNotNull(nameof(getCommandEntries));
 
             var serviceIdentifier = commandService.GetServiceIdentifier(typeof(TService));
             if (!element.Setup(serviceIdentifier))
@@ -193,7 +193,7 @@ namespace DevZest.Data.Presenters
 
         public static void CleanupCommandEntries(this UIElement element)
         {
-            Check.NotNull(element, nameof(element));
+            element.VerifyNotNull(nameof(element));
 
             if (!element.Cleanup())
                 return;

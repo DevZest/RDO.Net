@@ -20,13 +20,13 @@ namespace DevZest.Data.Presenters
 
         public static InitialFocus Explicit(RowBinding binding)
         {
-            Check.NotNull(binding, nameof(binding));
+            binding.VerifyNotNull(nameof(binding));
             return new MoveToRowBinding(binding);
         }
 
         public static InitialFocus Explicit(ScalarBinding binding)
         {
-            Check.NotNull(binding, nameof(binding));
+            binding.VerifyNotNull(nameof(binding));
             return new MoveToScalarBinding(binding);
         }
 

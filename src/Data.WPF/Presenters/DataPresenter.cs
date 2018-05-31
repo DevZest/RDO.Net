@@ -391,8 +391,8 @@ namespace DevZest.Data.Presenters
 
         protected Scalar<T> NewLinkedScalar<T>(Func<T> getter, Action<T> setter, IEqualityComparer<T> equalityComparer = null)
         {
-            Check.NotNull(getter, nameof(getter));
-            Check.NotNull(setter, nameof(setter));
+            getter.VerifyNotNull(nameof(getter));
+            setter.VerifyNotNull(nameof(setter));
             return ScalarContainer.CreateNew(getter, setter, equalityComparer);
         }
 
@@ -594,10 +594,10 @@ namespace DevZest.Data.Presenters
         public void Attach<T>(T element, ScalarBinding<T> scalarBinding)
             where T : UIElement, new()
         {
-            Check.NotNull(element, nameof(element));
+            element.VerifyNotNull(nameof(element));
             if (element.GetAttachedTo() != null)
                 throw new ArgumentException(DiagnosticMessages.DataPresenter_ElementAttachedAlready, nameof(element));
-            Check.NotNull(scalarBinding, nameof(scalarBinding));
+            scalarBinding.VerifyNotNull(nameof(scalarBinding));
             if (scalarBinding.IsSealed)
                 throw new ArgumentException(DiagnosticMessages.Binding_VerifyNotSealed, nameof(scalarBinding));
 
@@ -606,7 +606,7 @@ namespace DevZest.Data.Presenters
 
         public void Detach(UIElement element)
         {
-            Check.NotNull(element, nameof(element));
+            element.VerifyNotNull(nameof(element));
             if (element.GetAttachedTo() != this)
                 throw new ArgumentException(DiagnosticMessages.DataPresenter_ElementNotAttachedToThis, nameof(element));
 
@@ -628,7 +628,7 @@ namespace DevZest.Data.Presenters
 
         public RowPresenter Match(IDataValues dataValues)
         {
-            Check.NotNull(dataValues, nameof(dataValues));
+            dataValues.VerifyNotNull(nameof(dataValues));
             if (!CanMatchRow)
                 return null;
 

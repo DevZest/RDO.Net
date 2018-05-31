@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Presenters.Primitives;
-using System.Windows;
+﻿using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -8,7 +7,7 @@ namespace DevZest.Data.Presenters.Primitives
     {
         public RoutedEventTrigger(RoutedEvent routedEvent)
         {
-            Check.NotNull(routedEvent, nameof(routedEvent));
+            routedEvent.VerifyNotNull(nameof(routedEvent));
             _routedEvent = routedEvent;
         }
 

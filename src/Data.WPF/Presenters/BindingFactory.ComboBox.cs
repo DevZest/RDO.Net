@@ -20,8 +20,8 @@ namespace DevZest.Data.Presenters
 
         public static RowBinding<ComboBox> BindToComboBox<T>(this Column<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(selectionData, nameof(selectionData));
+            source.VerifyNotNull(nameof(source));
+            selectionData.VerifyNotNull(nameof(selectionData));
             if (string.IsNullOrEmpty(selectedValuePath))
                 throw new ArgumentNullException(nameof(selectedValuePath));
             if (string.IsNullOrEmpty(displayMemberPath))
@@ -48,8 +48,8 @@ namespace DevZest.Data.Presenters
 
         public static ScalarBinding<ComboBox> BindToComboBox<T>(this Scalar<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(selectionData, nameof(selectionData));
+            source.VerifyNotNull(nameof(source));
+            selectionData.VerifyNotNull(nameof(selectionData));
             if (string.IsNullOrEmpty(selectedValuePath))
                 throw new ArgumentNullException(nameof(selectedValuePath));
             if (string.IsNullOrEmpty(displayMemberPath))

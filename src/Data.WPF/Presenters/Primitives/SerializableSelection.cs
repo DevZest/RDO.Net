@@ -9,10 +9,8 @@ namespace DevZest.Data.Presenters.Primitives
     {
         public SerializableSelection(IReadOnlyList<RowPresenter> rows, IReadOnlyList<ColumnSerializer> columnSerializers)
         {
-            rows.CheckNotNull(nameof(rows));
-            columnSerializers.CheckNotNull(nameof(columnSerializers));
-            Rows = rows;
-            ColumnSerializers = columnSerializers;
+            Rows = rows.VerifyNotNull(nameof(rows)).VerifyNoNullItem(nameof(rows));
+            ColumnSerializers = columnSerializers.VerifyNotNull(nameof(columnSerializers)).VerifyNoNullItem(nameof(columnSerializers));
         }
 
         public readonly IReadOnlyList<RowPresenter> Rows;
