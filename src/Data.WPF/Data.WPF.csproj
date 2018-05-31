@@ -56,6 +56,15 @@
     <Compile Include="..\..\external\Utilities\src\Utilities\Double.IsClose.cs">
       <Link>Utilities\Double.IsClose.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Windows\DragHandlerBase.cs">
+      <Link>Utilities\Windows\DragHandlerBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Windows\KeyboardManager.cs">
+      <Link>Utilities\Windows\KeyboardManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Windows\Point.IsClose.cs">
+      <Link>Utilities\Windows\Point.IsClose.cs</Link>
+    </Compile>
     <Compile Include="Presenters\AsyncValidationFault.cs" />
     <Compile Include="Presenters\AsyncValidator.cs" />
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
@@ -147,9 +156,6 @@
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presenters\ValidationStatus.cs" />
-    <Compile Include="Utilities\Windows\DragHandlerBase.cs" />
-    <Compile Include="Utilities\Windows\KeyboardManager.cs" />
-    <Compile Include="Utilities\Windows\Point.IsClose.cs" />
     <Compile Include="Presenters\DataLoadState.cs" />
     <Compile Include="Views\ForeignKeyBox.cs" />
     <Compile Include="Views\InPlaceEditor.cs" />
