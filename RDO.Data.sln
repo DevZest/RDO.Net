@@ -22,7 +22,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Analyzers.CSharp.Vsix"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{D18D68DC-8D94-4F4C-BFEE-8225544FE15E}"
 	ProjectSection(SolutionItems) = preProject
+		deploy\.gitignore = deploy\.gitignore
+		deploy\Build.bat = deploy\Build.bat
+		deploy\Build.ps1 = deploy\Build.ps1
+		deploy\Deploy.DevZest.Data.props = deploy\Deploy.DevZest.Data.props
+		deploy\Deploy.DevZest.Data.SqlServer.props = deploy\Deploy.DevZest.Data.SqlServer.props
+		deploy\Deploy.DevZest.Samples.AdventureWorksLT.props = deploy\Deploy.DevZest.Samples.AdventureWorksLT.props
+		deploy\Deploy.props = deploy\Deploy.props
 		deploy\ReadMe.md = deploy\ReadMe.md
+		deploy\Sync.bat = deploy\Sync.bat
+		deploy\Sync.DevZest.Data.bat = deploy\Sync.DevZest.Data.bat
+		deploy\Sync.DevZest.Data.SqlServer.bat = deploy\Sync.DevZest.Data.SqlServer.bat
+		deploy\Sync.DevZest.Samples.AdventureWorksLT.bat = deploy\Sync.DevZest.Samples.AdventureWorksLT.bat
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\AdventureWorksLT\AdventureWorksLT.csproj", "{80ADC5EC-75A7-4C13-96FB-597AF222C804}"
@@ -30,6 +41,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{61BAF81D-3EA2-4493-8474-CC067C4557A0}"
 EndProject
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.VB", "samples\AdventureWorksLT.VB\AdventureWorksLT.VB.vbproj", "{34D15C17-8D0B-4CD8-9DC6-617ED1A28CDB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevZest.Data", "DevZest.Data", "{127B6FF7-FB73-4008-B499-85C490F958EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevZest.Data.SqlServer", "DevZest.Data.SqlServer", "{DE357412-D23F-47AD-BA4E-72315DB79167}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevZest.Samples.AdventureWorksLT", "DevZest.Samples.AdventureWorksLT", "{227706D3-888B-46DE-9B88-8D3E8DE3CF3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +104,9 @@ Global
 		{A64BED82-9113-415E-B2A6-F9A880ABDF2B} = {89626352-7E3E-4025-BD6E-39EE22B3E5BC}
 		{80ADC5EC-75A7-4C13-96FB-597AF222C804} = {61BAF81D-3EA2-4493-8474-CC067C4557A0}
 		{34D15C17-8D0B-4CD8-9DC6-617ED1A28CDB} = {61BAF81D-3EA2-4493-8474-CC067C4557A0}
+		{127B6FF7-FB73-4008-B499-85C490F958EF} = {D18D68DC-8D94-4F4C-BFEE-8225544FE15E}
+		{DE357412-D23F-47AD-BA4E-72315DB79167} = {D18D68DC-8D94-4F4C-BFEE-8225544FE15E}
+		{227706D3-888B-46DE-9B88-8D3E8DE3CF3E} = {D18D68DC-8D94-4F4C-BFEE-8225544FE15E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {715F4075-E102-42F7-B727-98B6383A6556}
