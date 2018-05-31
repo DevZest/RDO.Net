@@ -53,6 +53,9 @@
     <Compile Include="..\..\external\Utilities\src\Utilities\BooleanBoxes.cs">
       <Link>Utilities\BooleanBoxes.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Double.IsClose.cs">
+      <Link>Utilities\Double.IsClose.cs</Link>
+    </Compile>
     <Compile Include="Presenters\AsyncValidationFault.cs" />
     <Compile Include="Presenters\AsyncValidator.cs" />
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
@@ -244,7 +247,6 @@
     <Compile Include="Presenters\Primitives\LostFocusTrigger.cs" />
     <Compile Include="Presenters\RowBinding.cs" />
     <Compile Include="Views\ColumnHeader.cs" />
-    <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="Views\Primitives\RowViewPanel.cs" />
     <Compile Include="Views\RowView.cs" />
     <Compile Include="Presenters\RowPresenter.cs" />
