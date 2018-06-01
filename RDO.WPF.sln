@@ -29,6 +29,34 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.SqlServer", "external\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "external\RDO.Data\samples\AdventureWorksLT\AdventureWorksLT.csproj", "{C3607DC8-0CF3-47B6-A151-8B13F65E292F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{13427EEA-1A40-46D8-919A-FF0B5EAB9D34}"
+	ProjectSection(SolutionItems) = preProject
+		deploy\.gitignore = deploy\.gitignore
+		deploy\Build.bat = deploy\Build.bat
+		deploy\Deploy.DevZest.Data.WPF.props = deploy\Deploy.DevZest.Data.WPF.props
+		deploy\Deploy.DevZest.Data.WPF.sln = deploy\Deploy.DevZest.Data.WPF.sln
+		deploy\Deploy.props = deploy\Deploy.props
+		deploy\Key.snk = deploy\Key.snk
+		deploy\ReadMe.md = deploy\ReadMe.md
+		deploy\Sync.DevZest.Data.WPF.bat = deploy\Sync.DevZest.Data.WPF.bat
+		deploy\VerGen.DevZest.Data.WPF.bat = deploy\VerGen.DevZest.Data.WPF.bat
+		deploy\VerGen.ps1 = deploy\VerGen.ps1
+		deploy\vswhere.exe = deploy\vswhere.exe
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevZest.Data.WPF", "DevZest.Data.WPF", "{AEE06FA6-7FD3-4C48-88A3-243609A6EFAA}"
+	ProjectSection(SolutionItems) = preProject
+		deploy\DevZest.Data.WPF\DevZest.Data.WPF.NuGet.csproj = deploy\DevZest.Data.WPF\DevZest.Data.WPF.NuGet.csproj
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VerGen", "VerGen", "{EFCE9792-B6DC-4DA3-AD7F-43ED42315AF5}"
+	ProjectSection(SolutionItems) = preProject
+		deploy\DevZest.Data.WPF\VerGen\AssemblyVersion.cs = deploy\DevZest.Data.WPF\VerGen\AssemblyVersion.cs
+		deploy\DevZest.Data.WPF\VerGen\NuGet.props = deploy\DevZest.Data.WPF\VerGen\NuGet.props
+		deploy\DevZest.Data.WPF\VerGen\PackageReference.props = deploy\DevZest.Data.WPF\VerGen\PackageReference.props
+		deploy\DevZest.Data.WPF\VerGen\packages.config = deploy\DevZest.Data.WPF\VerGen\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +113,8 @@ Global
 		{9F834693-6746-42C3-9226-AC606AEBDE09} = {D3DBC4A1-E185-4C81-B4A7-FD04E8E1CFFC}
 		{7E15111B-EB4A-40F9-8EED-CCF3D49094D2} = {D3DBC4A1-E185-4C81-B4A7-FD04E8E1CFFC}
 		{C3607DC8-0CF3-47B6-A151-8B13F65E292F} = {D3DBC4A1-E185-4C81-B4A7-FD04E8E1CFFC}
+		{AEE06FA6-7FD3-4C48-88A3-243609A6EFAA} = {13427EEA-1A40-46D8-919A-FF0B5EAB9D34}
+		{EFCE9792-B6DC-4DA3-AD7F-43ED42315AF5} = {AEE06FA6-7FD3-4C48-88A3-243609A6EFAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {58ED37EA-0CF8-4520-BB38-45E348D8222C}
