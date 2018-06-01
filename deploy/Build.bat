@@ -1,7 +1,7 @@
 @echo off
 setlocal
 FOR %%a IN (.) DO SET currentfolder=%%~nxa
-CALL %~dp0Sync.%currentfolder%.bat
+CALL "%~dp0Sync.%currentfolder%.bat"
 
 SET PARAM_VERSION="-version %1"
 if "%1"=="" (SET PARAM_VERSION=)
