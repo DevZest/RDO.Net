@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Data.Analyzers.CSharp\Data.Analyzers.csproj" />
+    <ProjectReference Include="..\..\src\Data.Analyzers\Data.Analyzers.csproj" />
   </ItemGroup>
 
 </Project>
