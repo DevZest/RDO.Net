@@ -20,8 +20,8 @@
     <Copyright>Copyright</Copyright>
     <PackageTags>Data.Common.CsAnalyzers, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
-    <AssemblyName>DevZest.Data.Analyzers.CSharp</AssemblyName>
-    <RootNamespace>DevZest.Data.Analyzers.CSharp</RootNamespace>
+    <AssemblyName>DevZest.Data.Analyzers</AssemblyName>
+    <RootNamespace>DevZest.Data.Analyzers</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>

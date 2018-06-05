@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>DevZest.Data.Analyzers.CSharp.Test</AssemblyName>
-    <RootNamespace>DevZest.Data.Analyzers.CSharp.Test</RootNamespace>
+    <AssemblyName>DevZest.Data.Analyzers.Test</AssemblyName>
+    <RootNamespace>DevZest.Data.Analyzers</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Data.Analyzers.CSharp\Data.Analyzers.CSharp.csproj" />
+    <ProjectReference Include="..\..\src\Data.Analyzers.CSharp\Data.Analyzers.csproj" />
   </ItemGroup>
 
 </Project>

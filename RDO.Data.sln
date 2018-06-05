@@ -14,11 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{89626352-7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "src\Data\Data.csproj", "{C105698D-CA51-4D67-BC8C-16A63CBA647E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Analyzers.CSharp.Test", "test\Data.Analyzers.CSharp\Data.Analyzers.CSharp.Test.csproj", "{BF3A7DC2-D803-41F2-8741-5A53EE7D0425}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Analyzers.Test", "test\Data.Analyzers.CSharp\Data.Analyzers.Test.csproj", "{BF3A7DC2-D803-41F2-8741-5A53EE7D0425}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Analyzers.CSharp", "src\Data.Analyzers.CSharp\Data.Analyzers.CSharp.csproj", "{8FF4772B-6133-4570-814A-BF432F423B7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Analyzers", "src\Data.Analyzers.CSharp\Data.Analyzers.csproj", "{8FF4772B-6133-4570-814A-BF432F423B7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Analyzers.CSharp.Vsix", "test\Data.Analyzers.CSharp.Vsix\Data.Analyzers.CSharp.Vsix.csproj", "{A64BED82-9113-415E-B2A6-F9A880ABDF2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Analyzers.Vsix", "test\Data.Analyzers.CSharp.Vsix\Data.Analyzers.Vsix.csproj", "{A64BED82-9113-415E-B2A6-F9A880ABDF2B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{D18D68DC-8D94-4F4C-BFEE-8225544FE15E}"
 	ProjectSection(SolutionItems) = preProject
