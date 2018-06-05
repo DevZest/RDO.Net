@@ -85,7 +85,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Data.Analyzers.CSharp\Data.Analyzers.csproj">
+    <ProjectReference Include="..\..\src\Data.Analyzers\Data.Analyzers.csproj">
       <Project>{8FF4772B-6133-4570-814A-BF432F423B7B}</Project>
       <Name>Data.Analyzers</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
