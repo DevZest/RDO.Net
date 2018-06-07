@@ -28,6 +28,7 @@ namespace DevZest.Data
         /// <returns>Mounter of the column.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
+        [MounterRegistration]
         protected static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter)
             where TModel : Model
             where TColumn : Column, new()
@@ -48,6 +49,7 @@ namespace DevZest.Data
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="fromMounter"/> is null.</exception>
+        [MounterRegistration]
         protected static void RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Mounter<TColumn> fromMounter)
             where TModel : Model
             where TColumn : Column, new()
@@ -93,13 +95,14 @@ namespace DevZest.Data
         /// <returns>Mounter of the column list.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        protected static Mounter<ColumnList<T>> RegisterColumnList<TModel, T>(Expression<Func<TModel, ColumnList<T>>> getter)
+        [MounterRegistration]
+        protected static void RegisterColumnList<TModel, T>(Expression<Func<TModel, ColumnList<T>>> getter)
             where TModel : Model
             where T : Column
         {
             getter.VerifyNotNull(nameof(getter));
 
-            return s_columnListManager.Register(getter, a => CreateColumnList(a), null);
+            s_columnListManager.Register(getter, a => CreateColumnList(a), null);
         }
 
         private static ColumnList<T> CreateColumnList<TModel, T>(Mounter<TModel, ColumnList<T>> mounter)
@@ -138,6 +141,7 @@ namespace DevZest.Data
 
         static MounterManager<Model, Model> s_childModelManager = new MounterManager<Model, Model>();
 
+        [MounterRegistration]
         protected static Mounter<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter, Func<TModel, TChildModel> constructor = null)
             where TModel : Model, new()
             where TChildModel : Model, new()
@@ -174,6 +178,7 @@ namespace DevZest.Data
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="relationshipGetter"/> is <see langword="null"/>.</exception>
+        [MounterRegistration]
         protected static Mounter<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
             Func<TChildModel, TModelKey> relationshipGetter, Func<TModel, TChildModel> constructor = null)
             where TModel : Model<TModelKey>
@@ -263,6 +268,7 @@ namespace DevZest.Data
         /// <param name="constructor">The constructor of the computed local column. If null, a normal local column will be created.</param>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
+        [MounterRegistration]
         protected static void RegisterLocalColumn<TModel, T>(Expression<Func<TModel, Column<T>>> getter, Func<TModel, Column<T>> constructor = null)
             where TModel : Model
         {

@@ -1,13 +1,13 @@
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 
-namespace TestHelper
+namespace DevZest.Data.Analyzers
 {
     /// <summary>
     /// Class for turning strings into documents and getting the diagnostics on them
@@ -17,8 +17,10 @@ namespace TestHelper
     {
         private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
-        private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
-        private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+        private static readonly MetadataReference DataReference = MetadataReference.CreateFromFile(typeof(Model).Assembly.Location);
+        private static readonly MetadataReference NetStandardReference = MetadataReference.CreateFromFile(Assembly.Load("netstandard, Version=2.0.0.0").Location);
+        private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(Assembly.Load("System.Runtime, Version=0.0.0.0").Location);
+        private static readonly MetadataReference SystemLinqExpressionsReference = MetadataReference.CreateFromFile(Assembly.Load("System.Linq.Expressions").Location);
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
@@ -130,7 +132,7 @@ namespace TestHelper
         /// <returns>A Document created from the source string</returns>
         protected static Document CreateDocument(string source, string language = LanguageNames.CSharp)
         {
-            return CreateProject(new[] { source }, language).Documents.First();
+            return Enumerable.First(CreateProject(new[] { source }, language).Documents);
         }
 
         /// <summary>
@@ -151,8 +153,10 @@ namespace TestHelper
                 .AddProject(projectId, TestProjectName, TestProjectName, language)
                 .AddMetadataReference(projectId, CorlibReference)
                 .AddMetadataReference(projectId, SystemCoreReference)
-                .AddMetadataReference(projectId, CSharpSymbolsReference)
-                .AddMetadataReference(projectId, CodeAnalysisReference);
+                .AddMetadataReference(projectId, DataReference)
+                .AddMetadataReference(projectId, NetStandardReference)
+                .AddMetadataReference(projectId, SystemRuntimeReference)
+                .AddMetadataReference(projectId, SystemLinqExpressionsReference);
 
             int count = 0;
             foreach (var source in sources)

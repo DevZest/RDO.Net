@@ -41,7 +41,10 @@ namespace DevZest.Data
 
         private class ColumnListModel : Model
         {
-            public static readonly Mounter<ColumnList<_Int32>> _Cols = RegisterColumnList((ColumnListModel x) => x.Cols);
+            static ColumnListModel()
+            {
+                RegisterColumnList((ColumnListModel x) => x.Cols);
+            }
 
             public ColumnListModel()
             {
@@ -171,9 +174,12 @@ namespace DevZest.Data
 
         private class CloneModel : SimpleModelBase
         {
-            public static Mounter<ColumnList<_Int32>> _ColumnList = RegisterColumnList((CloneModel x) => x.ColumnList);
-
             public static readonly Mounter<CloneModel> _ChildModel = RegisterChildModel((CloneModel x) => x.ChildModel, x => x.ParentKey);
+
+            static CloneModel()
+            {
+                RegisterColumnList((CloneModel x) => x.ColumnList);
+            }
 
             public ColumnList<_Int32> ColumnList { get; private set; }
 

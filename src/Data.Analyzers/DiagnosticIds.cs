@@ -1,7 +1,10 @@
-﻿namespace DevZest.Data.Analyzers.CSharp
+﻿namespace DevZest.Data.Analyzers
 {
     static internal class DiagnosticIds
     {
-        public const string RegisterColumnMustBeCalledInStaticConstructorOrStaticFieldInitializer = "DevZest.Data.CS001";
+        public const string MounterRegistration_InvalidInvocation = "DZ0001";
+        public const string MounterRegistration_InvalidGetter = "DZ0002";
+        public const string MounterRegistration_DuplicateGetter = "DZ0003";
+        public const string MounterRegistration_MounterNaming = "DZ0004";
     }
 }
