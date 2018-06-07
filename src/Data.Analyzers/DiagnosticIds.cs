@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Analyzers
 {
-    static internal class DiagnosticIds
+    static class DiagnosticIds
     {
         public const string MounterRegistration_InvalidInvocation = "DZ0001";
         public const string MounterRegistration_InvalidGetter = "DZ0002";
