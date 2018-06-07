@@ -42,7 +42,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_InvalidInvocation()
+        public void RegisterColumn_InvalidInvocation_assigned_to_local_variable()
         {
             var test = @"
 using DevZest.Data;
@@ -68,6 +68,37 @@ class SimpleModel : Model
                 Message = Resources.MounterRegistration_InvalidInvocation,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 23) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void RegisterColumn_InvalidInvocation_in_a_separate_method()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
+    public static readonly Mounter<_Int32> _Column2;
+
+    private static void AnotherMethod()
+    {
+        _Column2 = RegisterColumn((SimpleModel x) => x.Column2);
+    }
+
+    public _Int32 Column1 { get; private set; }
+
+    public _Int32 Column2 { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterRegistration_InvalidInvocation,
+                Message = Resources.MounterRegistration_InvalidInvocation,
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 20) }
             };
             VerifyCSharpDiagnostic(test, expected);
         }
