@@ -31,11 +31,14 @@ class SimpleModel : Model
     static SimpleModel()
     {
         _Column2 = RegisterColumn((SimpleModel x) => x.Column2);
+        RegisterColumn((SimpleModel x) => x.Column3);
     }
 
     public _Int32 Column1 { get; private set; }
 
     public _Int32 Column2 { get; private set; }
+
+    public _Int32 Column3 { get; private set; }
 }";
 
             VerifyCSharpDiagnostic(test);

@@ -62,6 +62,15 @@ namespace DevZest.Data.Analyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
+        /// </summary>
+        internal static string MounterRegistration_InvalidGetter {
+            get {
+                return ResourceManager.GetString("MounterRegistration_InvalidGetter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mounter registration is only allowed as static field initializer or static constructor statement..
         /// </summary>
         internal static string MounterRegistration_InvalidInvocation {
