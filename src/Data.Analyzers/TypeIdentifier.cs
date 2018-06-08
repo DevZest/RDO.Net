@@ -6,7 +6,9 @@ namespace DevZest.Data.Analyzers
     {
         private TypeIdentifier(string @namespace, string typeName, string assemblyName)
         {
-            _value = GetTypeIdentifierValue(@namespace, typeName, assemblyName);
+            _namespace = @namespace;
+            _typeName = typeName;
+            _assemblyName = assemblyName;
         }
 
         private static string GetTypeIdentifierValue(string @namespace, string typeName, string assemblyName)
@@ -14,25 +16,45 @@ namespace DevZest.Data.Analyzers
             return string.Format("{0}.{1}, {2}", @namespace, typeName, assemblyName);
         }
 
-        private readonly string _value;
-        public string Value
-        {
-            get { return _value; }
-        }
+        private readonly string _namespace;
+        private readonly string _typeName;
+        private readonly string _assemblyName;
 
         public override string ToString()
         {
-            return _value;
+            return string.Format("{0}.{1}, {2}", _namespace, _typeName, _assemblyName);
         }
 
         public bool IsSameType(INamedTypeSymbol namedType)
         {
-            return _value == GetTypeIdentifierValue(namedType);
+            return IsSameNamespace(namedType) && _typeName == namedType.Name && _assemblyName == namedType.ContainingAssembly.Name;
         }
 
-        private static string GetTypeIdentifierValue(INamedTypeSymbol namedType)
+        private bool IsSameNamespace(INamedTypeSymbol namedTypeSymbol)
         {
-            return GetTypeIdentifierValue(namedType.ContainingNamespace.ToDisplayString(), namedType.Name, namedType.ContainingAssembly.Name);
+            return AreSame(namedTypeSymbol.ContainingNamespace, _namespace, string.IsNullOrEmpty(_namespace) ? -1 : _namespace.Length - 1);
+        }
+
+        private static bool AreSame(INamespaceSymbol @namespace, string displayString, int lastIndex)
+        {
+            if (@namespace.IsGlobalNamespace)
+                return lastIndex == -1;
+
+            var name = @namespace.Name;
+            for (int i = name.Length - 1; i>= 0; i--)
+            {
+                if (lastIndex < 0 || displayString[lastIndex--] != name[i])
+                    return false;
+            }
+
+            var containingNamespace = @namespace.ContainingNamespace;
+            if (!containingNamespace.IsGlobalNamespace)
+            {
+                if (lastIndex < 0 || displayString[lastIndex--] != '.')
+                    return false;
+            }
+
+            return AreSame(containingNamespace, displayString, lastIndex);
         }
 
         private const string DATA_NAMESPACE = "DevZest.Data";
