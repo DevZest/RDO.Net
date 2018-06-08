@@ -62,29 +62,74 @@ namespace DevZest.Data.Analyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate mounter registration for property {0}..
+        /// </summary>
+        internal static string MounterRegistration_Duplicate_Message {
+            get {
+                return ResourceManager.GetString("MounterRegistration_Duplicate_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duplicate mounter registration..
         /// </summary>
-        internal static string MounterRegistration_Duplicate {
+        internal static string MounterRegistration_Duplicate_Title {
             get {
-                return ResourceManager.GetString("MounterRegistration_Duplicate", resourceCulture);
+                return ResourceManager.GetString("MounterRegistration_Duplicate_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
         /// </summary>
-        internal static string MounterRegistration_InvalidGetter {
+        internal static string MounterRegistration_InvalidGetter_Message {
             get {
-                return ResourceManager.GetString("MounterRegistration_InvalidGetter", resourceCulture);
+                return ResourceManager.GetString("MounterRegistration_InvalidGetter_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid getter of mounter registration..
+        /// </summary>
+        internal static string MounterRegistration_InvalidGetter_Title {
+            get {
+                return ResourceManager.GetString("MounterRegistration_InvalidGetter_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Mounter registration is only allowed as static field initializer or static constructor statement..
         /// </summary>
-        internal static string MounterRegistration_InvalidInvocation {
+        internal static string MounterRegistration_InvalidInvocation_Message {
             get {
-                return ResourceManager.GetString("MounterRegistration_InvalidInvocation", resourceCulture);
+                return ResourceManager.GetString("MounterRegistration_InvalidInvocation_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid invocation of mounter registration..
+        /// </summary>
+        internal static string MounterRegistration_InvalidInvocation_Title {
+            get {
+                return ResourceManager.GetString("MounterRegistration_InvalidInvocation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mounter {0} of property {1} does conform to naming convention as {2}..
+        /// </summary>
+        internal static string MounterRegistration_MounterNaming_Message {
+            get {
+                return ResourceManager.GetString("MounterRegistration_MounterNaming_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mounter should conform to naming convention..
+        /// </summary>
+        internal static string MounterRegistration_MounterNaming_Title {
+            get {
+                return ResourceManager.GetString("MounterRegistration_MounterNaming_Title", resourceCulture);
             }
         }
     }

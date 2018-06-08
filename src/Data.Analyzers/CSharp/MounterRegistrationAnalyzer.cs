@@ -40,8 +40,14 @@ namespace DevZest.Data.Analyzers.CSharp
                 return Diagnostic.Create(Rule_InvalidGetter, firstArgument.GetLocation());
 
             if (AnyDuplicate(invocationExpression, propertySymbol, context.Compilation))
-                return Diagnostic.Create(Rule_Duplicate, invocationExpression.GetLocation());
+                return Diagnostic.Create(Rule_Duplicate, invocationExpression.GetLocation(), propertySymbol.Name);
 
+            if (fieldSymbol != null)
+            {
+                var expectedMounterName = "_" + propertySymbol.Name;
+                if (fieldSymbol.Name != expectedMounterName)
+                    return Diagnostic.Create(Rule_MounterNaming, fieldSymbol.DeclaringSyntaxReferences[0].GetSyntax().GetLocation(), fieldSymbol.Name, propertySymbol.Name, expectedMounterName);
+            }
             return null;
         }
 

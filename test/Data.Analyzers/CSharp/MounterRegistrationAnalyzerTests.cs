@@ -73,7 +73,7 @@ class SimpleModel : Model
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.MounterRegistration_InvalidInvocation,
-                Message = Resources.MounterRegistration_InvalidInvocation,
+                Message = Resources.MounterRegistration_InvalidInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 23) }
             };
@@ -104,7 +104,7 @@ class SimpleModel : Model
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.MounterRegistration_InvalidInvocation,
-                Message = Resources.MounterRegistration_InvalidInvocation,
+                Message = Resources.MounterRegistration_InvalidInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 20) }
             };
@@ -132,7 +132,7 @@ class SimpleModel : Model
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.MounterRegistration_Duplicate,
-                Message = Resources.MounterRegistration_Duplicate,
+                Message = string.Format(Resources.MounterRegistration_Duplicate_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 9) }
             };
@@ -160,9 +160,32 @@ class SimpleModel : Model
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.MounterRegistration_Duplicate,
-                Message = Resources.MounterRegistration_Duplicate,
+                Message = string.Format(Resources.MounterRegistration_Duplicate_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 55) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void RegisterColumn_MounterNaming()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public static readonly Mounter<_Int32> _Column2 = RegisterColumn((SimpleModel x) => x.Column1);
+
+    public _Int32 Column1 { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterRegistration_MounterNaming,
+                Message = string.Format(Resources.MounterRegistration_MounterNaming_Message, "_Column2", "Column1", "_Column1"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 44) }
             };
             VerifyCSharpDiagnostic(test, expected);
         }
