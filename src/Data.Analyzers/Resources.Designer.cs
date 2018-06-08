@@ -62,6 +62,15 @@ namespace DevZest.Data.Analyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate mounter registration..
+        /// </summary>
+        internal static string MounterRegistration_Duplicate {
+            get {
+                return ResourceManager.GetString("MounterRegistration_Duplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
         /// </summary>
         internal static string MounterRegistration_InvalidGetter {

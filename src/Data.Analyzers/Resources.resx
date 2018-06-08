@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="MounterRegistration_Duplicate" xml:space="preserve">
+    <value>Duplicate mounter registration.</value>
+  </data>
   <data name="MounterRegistration_InvalidGetter" xml:space="preserve">
     <value>The getter parameter must be a lambda expression which returns a non-readonly property of current class.</value>
   </data>

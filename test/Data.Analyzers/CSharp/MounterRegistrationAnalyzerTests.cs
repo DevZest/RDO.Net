@@ -8,6 +8,11 @@ namespace DevZest.Data.Analyzers.CSharp
     [TestClass]
     public class MounterRegistrationAnalyzerTests : DiagnosticVerifier
     {
+        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        {
+            return new MounterRegistrationAnalyzer();
+        }
+
         //No diagnostics expected to show up
         [TestMethod]
         public void empty_source_generates_no_diagnostics()
@@ -106,9 +111,60 @@ class SimpleModel : Model
             VerifyCSharpDiagnostic(test, expected);
         }
 
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        [TestMethod]
+        public void RegisterColumn_Duplicate_in_static_constructor()
         {
-            return new MounterRegistrationAnalyzer();
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
+
+    static SimpleModel()
+    {
+        RegisterColumn((SimpleModel x) => x.Column1);
+    }
+
+    public _Int32 Column1 { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterRegistration_Duplicate,
+                Message = Resources.MounterRegistration_Duplicate,
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 9) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void RegisterColumn_Duplicate_in_field_initializer()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+        RegisterColumn((SimpleModel x) => x.Column1);
+    }
+
+    public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
+
+    public _Int32 Column1 { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterRegistration_Duplicate,
+                Message = Resources.MounterRegistration_Duplicate,
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 55) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace DevZest.Data.Analyzers
     {
         private static readonly LocalizableString String_InvalidInvocation = new LocalizableResourceString(nameof(Resources.MounterRegistration_InvalidInvocation), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString String_InvalidGetter = new LocalizableResourceString(nameof(Resources.MounterRegistration_InvalidGetter), Resources.ResourceManager, typeof(Resources));
-
+        private static readonly LocalizableString String_Duplicate = new LocalizableResourceString(nameof(Resources.MounterRegistration_Duplicate), Resources.ResourceManager, typeof(Resources));
 
         protected static readonly DiagnosticDescriptor Rule_InvalidInvocation = new DiagnosticDescriptor(
             DiagnosticIds.MounterRegistration_InvalidInvocation, String_InvalidInvocation, String_InvalidInvocation, DiagnosticCategories.Compile, DiagnosticSeverity.Error, isEnabledByDefault: true);
@@ -17,9 +17,12 @@ namespace DevZest.Data.Analyzers
         protected static readonly DiagnosticDescriptor Rule_InvalidGetter = new DiagnosticDescriptor(
             DiagnosticIds.MounterRegistration_InvalidGetter, String_InvalidGetter, String_InvalidGetter, DiagnosticCategories.Compile, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
+        protected static readonly DiagnosticDescriptor Rule_Duplicate = new DiagnosticDescriptor(
+            DiagnosticIds.MounterRegistration_Duplicate, String_Duplicate, String_Duplicate, DiagnosticCategories.Compile, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(Rule_InvalidInvocation, Rule_InvalidGetter); }
+            get { return ImmutableArray.Create(Rule_InvalidInvocation, Rule_InvalidGetter, Rule_Duplicate); }
         }
 
         protected static bool IsMounterRegistration(IMethodSymbol symbol)
