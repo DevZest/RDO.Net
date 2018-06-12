@@ -116,7 +116,7 @@ namespace DevZest.Data.Views
 
         public PrimaryKey ForeignKey { get; internal set; }
 
-        public LookupBase Lookup { get; internal set; }
+        public LeafProjection Lookup { get; internal set; }
 
         public ColumnValueBag ValueBag
         {
