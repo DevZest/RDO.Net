@@ -956,11 +956,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Extension already exists.
+        /// Extra columns already exists.
         /// </summary>
-        public static string Model_ExtensionAlreadyExists
+        public static string Model_ExtraColumnsAlreadyExists
         {
-            get { return GetString("Model_ExtensionAlreadyExists"); }
+            get { return GetString("Model_ExtraColumnsAlreadyExists"); }
         }
 
         /// <summary>

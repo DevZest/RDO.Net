@@ -471,8 +471,8 @@
   <data name="DataRow_NullModel" xml:space="preserve">
     <value>The Model is null.</value>
   </data>
-  <data name="Model_ExtensionAlreadyExists" xml:space="preserve">
-    <value>Extension already exists.</value>
+  <data name="Model_ExtraColumnsAlreadyExists" xml:space="preserve">
+    <value>Extra columns already exists.</value>
   </data>
   <data name="JsonParser_InvalidColumnContainerMember" xml:space="preserve">
     <value>Invalid member name "{memberName}" for ColumnContainer "{columnContainerType}".</value>

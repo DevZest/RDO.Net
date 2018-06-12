@@ -1260,7 +1260,7 @@ namespace DevZest.Data
         {
             VerifyDesignMode();
             if (ExtraColumns != null)
-                throw new InvalidOperationException(DiagnosticMessages.Model_ExtensionAlreadyExists);
+                throw new InvalidOperationException(DiagnosticMessages.Model_ExtraColumnsAlreadyExists);
             else
                 ExtraColumns = new T();
         }
@@ -1269,7 +1269,7 @@ namespace DevZest.Data
         {
             Debug.Assert(extType != null);
             if (ExtraColumns != null)
-                throw new InvalidOperationException(DiagnosticMessages.Model_ExtensionAlreadyExists);
+                throw new InvalidOperationException(DiagnosticMessages.Model_ExtraColumnsAlreadyExists);
             else
                 ExtraColumns = (ColumnCombination)Activator.CreateInstance(extType);
         }
