@@ -44,7 +44,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public Class Ref
-            Inherits Ref(Of PK)
+            Inherits LeafProjection(Of PK)
 
             Shared Sub New()
                 Register(Function(x As Ref) x.SalesOrderID, _SalesOrderID)

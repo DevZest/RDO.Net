@@ -37,7 +37,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderID { get; private set; }
         }
 
-        public class Ref : Ref<PK>
+        public class Ref : LeafProjection<PK>
         {
             static Ref()
             {

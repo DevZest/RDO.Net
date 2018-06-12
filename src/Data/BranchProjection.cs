@@ -1,26 +1,28 @@
-﻿using System;
+﻿using DevZest.Data.Annotations.Primitives;
+using DevZest.Data.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data
 {
-    public abstract class ProjectionContainer<T> : ColumnCombination
-        where T : Projection
+    public abstract class BranchProjection : Projection
     {
-        static MounterManager<ProjectionContainer<T>, T> s_childManager = new MounterManager<ProjectionContainer<T>, T>();
+        static MounterManager<BranchProjection, Projection> s_childManager = new MounterManager<BranchProjection, Projection>();
 
-        protected static void Register<TComposition, TChild>(Expression<Func<TComposition, TChild>> getter)
-            where TComposition : ProjectionContainer<T>
-            where TChild : T, new()
+        [MounterRegistration]
+        protected static void Register<TParent, TChild>(Expression<Func<TParent, TChild>> getter)
+            where TParent : BranchProjection
+            where TChild : Projection, new()
         {
             getter.VerifyNotNull(nameof(getter));
             s_childManager.Register(getter, CreateChild, null);
         }
 
-        private static TChild CreateChild<TComposition, TChild>(Mounter<TComposition, TChild> mounter)
-            where TComposition : ProjectionContainer<T>
-            where TChild : T, new()
+        private static TChild CreateChild<TParent, TChild>(Mounter<TParent, TChild> mounter)
+            where TParent : BranchProjection
+            where TChild : Projection, new()
         {
             TChild result = new TChild();
             var parent = mounter.Parent;
@@ -39,7 +41,7 @@ namespace DevZest.Data.Primitives
             get { return EmptyDictionary<string, Column>.Singleton; }
         }
 
-        private sealed class ChildrenCollection : KeyedCollection<string, ColumnCombination>, IReadOnlyDictionary<string, ColumnCombination>
+        private sealed class ChildrenCollection : KeyedCollection<string, Projection>, IReadOnlyDictionary<string, Projection>
         {
             public IEnumerable<string> Keys
             {
@@ -50,7 +52,7 @@ namespace DevZest.Data.Primitives
                 }
             }
 
-            public IEnumerable<ColumnCombination> Values
+            public IEnumerable<Projection> Values
             {
                 get { return this; }
             }
@@ -60,7 +62,7 @@ namespace DevZest.Data.Primitives
                 return Contains(key);
             }
 
-            public bool TryGetValue(string key, out ColumnCombination value)
+            public bool TryGetValue(string key, out Projection value)
             {
                 if (Contains(key))
                 {
@@ -74,42 +76,42 @@ namespace DevZest.Data.Primitives
                 }
             }
 
-            protected override string GetKeyForItem(ColumnCombination item)
+            protected override string GetKeyForItem(Projection item)
             {
                 return item.Name;
             }
 
-            IEnumerator<KeyValuePair<string, ColumnCombination>> IEnumerable<KeyValuePair<string, ColumnCombination>>.GetEnumerator()
+            IEnumerator<KeyValuePair<string, Projection>> IEnumerable<KeyValuePair<string, Projection>>.GetEnumerator()
             {
                 foreach (var container in this)
-                    yield return new KeyValuePair<string, ColumnCombination>(container.Name, container);
+                    yield return new KeyValuePair<string, Projection>(container.Name, container);
             }
         }
 
         private ChildrenCollection _children;
-        public sealed override IReadOnlyList<ColumnCombination> Children
+        public sealed override IReadOnlyList<Projection> Children
         {
             get
             {
                 if (_children == null)
-                    return Array<ColumnCombination>.Empty;
+                    return Array<Projection>.Empty;
                 else
                     return _children;
             }
         }
 
-        public sealed override IReadOnlyDictionary<string, ColumnCombination> ChildrenByName
+        public sealed override IReadOnlyDictionary<string, Projection> ChildrenByName
         {
             get
             {
                 if (_children == null)
-                    return EmptyDictionary<string, ColumnCombination>.Singleton;
+                    return EmptyDictionary<string, Projection>.Singleton;
                 else
                     return _children;
             }
         }
 
-        private void Add(T child)
+        private void Add(Projection child)
         {
             if (_children == null)
                 _children = new ChildrenCollection();
@@ -120,7 +122,5 @@ namespace DevZest.Data.Primitives
         {
             s_childManager.Mount(this);
         }
-
-        internal abstract void PreventExternalAssemblyInheritance();
     }
 }

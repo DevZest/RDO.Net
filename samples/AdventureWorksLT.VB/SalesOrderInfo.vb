@@ -7,7 +7,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         Inherits SalesOrder
 
         Public Class Ext
-            Inherits LookupContainer
+            Inherits BranchProjection
 
             Shared Sub New()
                 Register(Function(x As Ext) x.Customer)

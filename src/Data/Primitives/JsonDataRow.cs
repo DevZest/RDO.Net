@@ -105,7 +105,7 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
         }
 
-        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnCombination columnCombination, JsonFilter jsonFilter)
+        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, Projection columnCombination, JsonFilter jsonFilter)
         {
             if (string.IsNullOrEmpty(columnCombination.Name))
                 jsonWriter.WriteMembers(dataRow, columnCombination, jsonFilter);
@@ -113,7 +113,7 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteExt(dataRow, columnCombination, jsonFilter);
         }
 
-        private static void WriteExt(this JsonWriter jsonWriter, DataRow dataRow, ColumnCombination columnCombination, JsonFilter jsonFilter)
+        private static void WriteExt(this JsonWriter jsonWriter, DataRow dataRow, Projection columnCombination, JsonFilter jsonFilter)
         {
             Debug.Assert(!string.IsNullOrEmpty(columnCombination.Name));
             jsonWriter.WriteObjectName(columnCombination.Name);
@@ -122,7 +122,7 @@ namespace DevZest.Data.Primitives
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteMembers(this JsonWriter jsonWriter, DataRow dataRow, ColumnCombination columnCombination, JsonFilter jsonFilter)
+        private static void WriteMembers(this JsonWriter jsonWriter, DataRow dataRow, Projection columnCombination, JsonFilter jsonFilter)
         {
             var count = 0;
             var columns = columnCombination.Columns;
@@ -189,7 +189,7 @@ namespace DevZest.Data.Primitives
 
             var model = dataRow.Model;
 
-            if (memberName == ColumnCombination.EXT_ROOT_NAME)
+            if (memberName == Projection.EXT_ROOT_NAME)
             {
                 var ext = model.ExtraColumns;
                 if (ext == null)
@@ -210,7 +210,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static void Parse(this JsonParser jsonParser, ColumnCombination columnCombination, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, Projection columnCombination, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             var token = jsonParser.PeekToken();
@@ -229,7 +229,7 @@ namespace DevZest.Data.Primitives
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Parse(this JsonParser jsonParser, ColumnCombination columnCombination, string memberName, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, Projection columnCombination, string memberName, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.Colon);
             if (columnCombination.ColumnsByRelativeName.ContainsKey(memberName))

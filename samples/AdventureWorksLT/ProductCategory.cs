@@ -38,7 +38,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductCategoryID { get; private set; }
         }
 
-        public class Ref : Ref<PK>
+        public class Ref : LeafProjection<PK>
         {
             static Ref()
             {
@@ -53,7 +53,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public class Lookup : LookupBase
+        public class Lookup : LeafProjection
         {
             static Lookup()
             {

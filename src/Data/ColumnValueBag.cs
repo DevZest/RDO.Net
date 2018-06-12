@@ -105,7 +105,7 @@ namespace DevZest.Data
             }
         }
 
-        public void AutoSelect(ColumnCombination columnCombination, DataRow dataRow, bool ignoreExpression = true)
+        public void AutoSelect(Projection columnCombination, DataRow dataRow, bool ignoreExpression = true)
         {
             columnCombination.VerifyNotNull(nameof(columnCombination));
             dataRow.VerifyNotNull(nameof(dataRow));

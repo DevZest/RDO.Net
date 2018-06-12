@@ -216,7 +216,7 @@ Namespace DevZest.Samples.AdventureWorksLT
                                          Dim seqNo = t.Model.GetIdentity(True).Column
                                          Debug.Assert(seqNo IsNot Nothing)
                                          Dim p As Product = Nothing
-                                         builder.LeftJoin(Products, t.Key, p).AutoSelect().OrderBy(seqNo)
+                                         builder.LeftJoin(Products, t.PrimaryKey, p).AutoSelect().OrderBy(seqNo)
                                      End Sub).ToDataSetAsync(ct)
         End Function
     End Class

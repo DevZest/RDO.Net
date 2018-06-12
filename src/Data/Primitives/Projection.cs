@@ -1,129 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class Projection : ColumnCombination
+    public abstract class Projection : IModelReference
     {
-        private static MounterManager<Projection, Column> s_columnManager = new MounterManager<Projection, Column>();
+        internal const string EXT_ROOT_NAME = "__Ext";
 
-        protected static void Register<TProjection, TColumn>(Expression<Func<TProjection, TColumn>> getter, Mounter<TColumn> fromMounter)
-            where TProjection : Projection
-            where TColumn : Column, new()
+        internal void Initialize(Model model)
         {
-            var initializer = getter.Verify(nameof(getter));
-            fromMounter.VerifyNotNull(nameof(fromMounter));
-
-            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
-            result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;
-            result.OriginalName = fromMounter.OriginalName;
+            Debug.Assert(model != null);
+            Model = model;
+            Name = FullName = model.IsExtRoot ? string.Empty : EXT_ROOT_NAME;
+            Mount();
         }
 
-        private static T CreateColumn<TProjection, T>(Mounter<TProjection, T> mounter, Action<T> initializer)
-            where TProjection : Projection
-            where T : Column, new()
+        internal void Initialize(Projection parent, string name)
         {
-            var result = Column.Create<T>(mounter.OriginalDeclaringType, mounter.OriginalName);
-            var parent = mounter.Parent;
-            result.Construct(parent.Model, mounter.DeclaringType, parent.GetName(mounter), ColumnKind.ContainerProperty, null, initializer);
-            parent.Add(result);
-            return result;
+            Debug.Assert(parent != null);
+            Debug.Assert(parent.Model != null);
+            Model = parent.Model;
+            Name = name;
+            FullName = string.IsNullOrEmpty(parent.FullName) ? name : parent.FullName + "." + name;
+            Mount();
         }
 
-        private sealed class ColumnCollection : KeyedCollection<string, Column>, IReadOnlyDictionary<string, Column>
-        {
-            public IEnumerable<string> Keys
-            {
-                get
-                {
-                    foreach (var column in this)
-                        yield return column.RelativeName;
-                }
-            }
+        internal abstract void Mount();
 
-            public IEnumerable<Column> Values
-            {
-                get { return this; }
-            }
-
-            public bool ContainsKey(string key)
-            {
-                return Contains(key);
-            }
-
-            public bool TryGetValue(string key, out Column value)
-            {
-                if (Contains(key))
-                {
-                    value = this[key];
-                    return true;
-                }
-                else
-                {
-                    value = null;
-                    return false;
-                }
-            }
-
-            protected override string GetKeyForItem(Column item)
-            {
-                return item.RelativeName;
-            }
-
-            IEnumerator<KeyValuePair<string, Column>> IEnumerable<KeyValuePair<string, Column>>.GetEnumerator()
-            {
-                foreach (var column in this)
-                    yield return new KeyValuePair<string, Column>(column.RelativeName, column);
-            }
-        }
-
-        private ColumnCollection _columns;
-        public sealed override IReadOnlyList<Column> Columns
+        private Model _model;
+        public Model Model
         {
             get
             {
-                if (_columns == null)
-                    return Array<Column>.Empty;
-                else
-                    return _columns;
+                EnsureInitialized();
+                return _model;
             }
+            private set { _model = value; }
         }
 
-        public sealed override IReadOnlyDictionary<string, Column> ColumnsByRelativeName
+        private sealed class ContainerModel : Model
         {
-            get
+            public ContainerModel(Projection ext)
             {
-                if (_columns == null)
-                    return EmptyDictionary<string, Column>.Singleton;
-                else
-                    return _columns;
+                Debug.Assert(ext != null && ext._model == null);
+                ExtraColumns = ext;
+            }
+
+            internal override bool IsExtRoot
+            {
+                get { return true; }
             }
         }
 
-        public sealed override IReadOnlyList<ColumnCombination> Children
+        private void EnsureInitialized()
         {
-            get { return Array<ColumnCombination>.Empty; }
+            if (_model == null)
+            {
+                var containerModel = new ContainerModel(this);
+                Debug.Assert(_model == containerModel);
+            }
         }
 
-        public sealed override IReadOnlyDictionary<string, ColumnCombination> ChildrenByName
+        internal string FullName { get; private set; }
+
+        internal string Name { get; private set; }
+
+        internal string GetName<T>(Mounter<T> mounter)
         {
-            get { return EmptyDictionary<string, ColumnCombination>.Singleton; }
+            return FullName + "." + mounter.Name;
         }
 
-        private void Add(Column column)
-        {
-            if (_columns == null)
-                _columns = new ColumnCollection();
-            _columns.Add(column);
-        }
+        public abstract IReadOnlyList<Column> Columns { get; }
 
-        internal sealed override void Mount()
-        {
-            s_columnManager.Mount(this);
-        }
+        public abstract IReadOnlyDictionary<string, Column> ColumnsByRelativeName { get; }
 
-        internal abstract void PreventExternalAssemblyInheritance();
+        public abstract IReadOnlyList<Projection> Children { get; }
+
+        public abstract IReadOnlyDictionary<string, Projection> ChildrenByName { get; }
     }
 }

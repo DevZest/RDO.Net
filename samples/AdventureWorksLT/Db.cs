@@ -239,7 +239,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 builder.From(tempTable, out var t);
                 var seqNo = t.Model.GetIdentity(true).Column;
                 Debug.Assert(!ReferenceEquals(seqNo, null));
-                builder.LeftJoin(Products, t.Key, out var p)
+                builder.LeftJoin(Products, t.PrimaryKey, out var p)
                     .AutoSelect().OrderBy(seqNo);
             }).ToDataSetAsync(ct);
         }

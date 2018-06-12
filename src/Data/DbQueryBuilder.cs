@@ -258,7 +258,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder AutoSelect(Model from, ColumnCombination to)
+        public DbQueryBuilder AutoSelect(Model from, Projection to)
         {
             to.VerifyNotNull(nameof(to));
             from.VerifyNotNull(nameof(from));

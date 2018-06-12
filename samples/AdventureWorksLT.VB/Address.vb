@@ -45,7 +45,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public Class Ref
-            Inherits Ref(Of PK)
+            Inherits LeafProjection(Of PK)
 
             Shared Sub New()
                 Register(Function(x As Ref) x.AddressID, Address._AddressID)
@@ -67,7 +67,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public Class Lookup
-            Inherits LookupBase
+            Inherits LeafProjection
 
             Shared Sub New()
                 Register(Function(x As Lookup) x.AddressLine1, Address._AddressLine1)
