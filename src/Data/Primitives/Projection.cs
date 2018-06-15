@@ -67,7 +67,7 @@ namespace DevZest.Data.Primitives
 
         internal string GetName<T>(Mounter<T> mounter)
         {
-            return FullName + "." + mounter.Name;
+            return string.IsNullOrEmpty(FullName) ? mounter.Name : FullName + "." + mounter.Name;
         }
 
         public abstract IReadOnlyList<Column> Columns { get; }
