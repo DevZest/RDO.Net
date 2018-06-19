@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Helpers;
+using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DevZest.Data

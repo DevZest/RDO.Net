@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DevZest.Data
+namespace DevZest.Data.Primitives
 {
     /// <summary>Extension methods for <see cref="Column"/>.</summary>
     public static class ColumnExtensions
