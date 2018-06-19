@@ -49,7 +49,6 @@ namespace DevZest.Data
 
         private string _dbColumnName;
         /// <summary>Gets or sets the column name in database.</summary>
-        /// <remarks>If not set, the property name will be used; numeric suffix will be appended automatically when duplicate database column names exist.</remarks>
         /// <inheritdoc cref="ModelMember.VerifyDesignMode" select="exception"/>
         public string DbColumnName
         {
