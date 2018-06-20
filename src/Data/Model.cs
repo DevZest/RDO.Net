@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -698,17 +699,25 @@ namespace DevZest.Data
             get { return this.GetType().Name; }
         }
 
-        private Dictionary<string, ModelMember> _members = new Dictionary<string, ModelMember>();
+        private sealed class ModelMemberCollection : KeyedCollection<string, ModelMember>
+        {
+            protected override string GetKeyForItem(ModelMember item)
+            {
+                return item.Name;
+            }
+        }
+
+        private ModelMemberCollection _members = new ModelMemberCollection();
         internal void AddMember(ModelMember member)
         {
             Debug.Assert(member != null);
             Debug.Assert(!string.IsNullOrEmpty(member.Name));
-            _members.Add(member.Name, member);
+            _members.Add(member);
         }
 
         private bool ContainsMember(string memberName)
         {
-            return string.IsNullOrEmpty(memberName) ? false : _members.ContainsKey(memberName);
+            return string.IsNullOrEmpty(memberName) ? false : _members.Contains(memberName);
         }
 
         internal ModelMember this[string memberName]

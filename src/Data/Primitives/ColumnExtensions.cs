@@ -118,13 +118,6 @@ namespace DevZest.Data.Primitives
             return column;
         }
 
-        public static T WithName<T>(this T column, string value)
-            where T : Column, new()
-        {
-            column.Name = value;
-            return column;
-        }
-
         public static TColumn WithValueComparer<TColumn, TValue>(this TColumn column, IComparer<TValue> value)
             where TColumn : Column<TValue>, new()
         {
