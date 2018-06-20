@@ -28,7 +28,7 @@ namespace DevZest.Data.Primitives
                 if (!column.ShouldSerialize)
                     continue;
 
-                if (column.Kind == ColumnKind.ColumnListItem || column.Kind == ColumnKind.ContainerProperty)
+                if (column.Kind == ColumnKind.ColumnListItem || column.Kind == ColumnKind.ColumnGroupMember)
                     continue;
 
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))
