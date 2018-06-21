@@ -429,13 +429,10 @@
   <data name="DataSetContainer_ResumeComputationWithoutSuspendComputation" xml:space="preserve">
     <value>SuspendComputation and ResumeComputation must be called in tandem.</value>
   </data>
-  <data name="DataSetContainer_InvalidLocalColumnExpression" xml:space="preserve">
+  <data name="LocalColumn_ExpressionIsNotStatic" xml:space="preserve">
     <value>The expression must be static.</value>
   </data>
-  <data name="DataSetContainer_InvalidLocalColumnModel" xml:space="preserve">
-    <value>DataSetContainer does not contain this model.</value>
-  </data>
-  <data name="DataSetContainer_InvalidBaseColumn" xml:space="preserve">
+  <data name="LocalColumn_InvalidBaseColumn" xml:space="preserve">
     <value>The base column is invalid, it belongs to a different DataSetContainer.</value>
   </data>
   <data name="DataSetContainer_AlreadyHasLocalColumnBeforeClone" xml:space="preserve">

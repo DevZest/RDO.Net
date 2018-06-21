@@ -102,9 +102,7 @@ namespace DevZest.Data
                 OriginalName = name;
 
             _initializer = initializer;
-            var columns = ParentModel.Columns;
-            Ordinal = columns.Count;
-            columns.Add(this);
+            Ordinal = ParentModel.Add(this);
 
             _initializer?.Invoke(this);
         }
@@ -495,10 +493,6 @@ namespace DevZest.Data
         public abstract object GetDefaultValue();
 
         public abstract void SetDefaultObject(object defaultValue, string name, string description);
-
-        internal virtual void SealLocalColumn()
-        {
-        }
 
         public abstract int GetHashCode(DataRow dataRow);
 

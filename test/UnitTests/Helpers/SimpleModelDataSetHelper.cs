@@ -16,6 +16,11 @@ namespace DevZest.Data.Helpers
 
             public static readonly Mounter<SimpleModel> _Child = RegisterChildModel((SimpleModel _) => _.Child, x => x.ParentKey);
 
+            static SimpleModel()
+            {
+                RegisterLocalColumn((SimpleModel _) => _.LocalColumn);
+            }
+
             private const string ERR_MESSAGE = "The Id must be even.";
 
             [ModelValidator]
@@ -41,6 +46,8 @@ namespace DevZest.Data.Helpers
             public _Int32 ChildCount { get; private set; }
 
             public SimpleModel Child { get; private set; }
+
+            public LocalColumn<int> LocalColumn { get; private set; }
 
             public StringBuilder StartLog(int depth)
             {
@@ -94,6 +101,17 @@ namespace DevZest.Data.Helpers
         protected DataSet<SimpleModel> GetDataSet(int count, bool createChildren = true)
         {
             return SimpleModelBase.GetDataSet<SimpleModel>(count, x => x.Child, AddRows, createChildren);
+        }
+
+        protected DataSet<SimpleModel> GetDataSet(int count, Action<SimpleModel> modelInitializer, bool createChildren = false)
+        {
+            return SimpleModelBase.GetDataSet<SimpleModel>(count, x => x.Child, (dataSet, num) => AddRows(dataSet, num, modelInitializer), createChildren);
+        }
+
+        private void AddRows(DataSet<SimpleModel> dataSet, int count, Action<SimpleModel> modelInitializer)
+        {
+            modelInitializer(dataSet._);
+            AddRows(dataSet, count);
         }
 
         private void AddRows(DataSet<SimpleModel> dataSet, int count)

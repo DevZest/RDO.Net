@@ -846,25 +846,17 @@ namespace DevZest.Data
         /// <summary>
         /// The expression must be static.
         /// </summary>
-        public static string DataSetContainer_InvalidLocalColumnExpression
+        public static string LocalColumn_ExpressionIsNotStatic
         {
-            get { return GetString("DataSetContainer_InvalidLocalColumnExpression"); }
-        }
-
-        /// <summary>
-        /// DataSetContainer does not contain this model.
-        /// </summary>
-        public static string DataSetContainer_InvalidLocalColumnModel
-        {
-            get { return GetString("DataSetContainer_InvalidLocalColumnModel"); }
+            get { return GetString("LocalColumn_ExpressionIsNotStatic"); }
         }
 
         /// <summary>
         /// The base column is invalid, it belongs to a different DataSetContainer.
         /// </summary>
-        public static string DataSetContainer_InvalidBaseColumn
+        public static string LocalColumn_InvalidBaseColumn
         {
-            get { return GetString("DataSetContainer_InvalidBaseColumn"); }
+            get { return GetString("LocalColumn_InvalidBaseColumn"); }
         }
 
         /// <summary>

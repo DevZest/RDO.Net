@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace DevZest.Data
@@ -51,7 +52,7 @@ namespace DevZest.Data
                     _isPrimaryKey = column.GetIsPrimaryKey();
                 }
 
-                private bool _isPrimaryKey;
+                private readonly bool _isPrimaryKey;
                 public override bool IsPrimaryKey
                 {
                     get { return _isPrimaryKey; }
@@ -670,7 +671,9 @@ namespace DevZest.Data
 
         internal sealed override Column CreateBackup(Model model)
         {
-            return model.DataSetContainer.CreateLocalColumn<T>(model);
+            var result = new LocalColumn<T>();
+            result.Construct(model, model.GetType(), "Column" + (model.LocalColumns.Count + 1).ToString(CultureInfo.InvariantCulture), ColumnKind.ModelProperty, null, null);
+            return result;
         }
 
         internal IColumnComparer ToColumnComparer(SortDirection direction, IComparer<T> valueComparer)
@@ -745,8 +748,7 @@ namespace DevZest.Data
 
         public sealed override bool Equals(DataRow dataRow, Column otherColumn, DataRow otherDataRow)
         {
-            var column = otherColumn as Column<T>;
-            if (column == null)
+            if (!(otherColumn is Column<T> column))
                 return false;
 
             if (EqualityComparer != column.EqualityComparer)

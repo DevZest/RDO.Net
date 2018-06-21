@@ -28,8 +28,8 @@ namespace DevZest.Data
 
             private Dictionary<Column, IColumns> _indirectDependencies = new Dictionary<Column, IColumns>();
             private Dictionary<Column, IColumns> _directDependencies = new Dictionary<Column, IColumns>();
-            private Dictionary<Model, List<Column>> _computationColumns = new Dictionary<Model, List<Column>>();
-            private Dictionary<Model, List<Column>> _aggregateColumns = new Dictionary<Model, List<Column>>();
+            private readonly Dictionary<Model, List<Column>> _computationColumns = new Dictionary<Model, List<Column>>();
+            private readonly Dictionary<Model, List<Column>> _aggregateColumns = new Dictionary<Model, List<Column>>();
 
             internal void AddDependency(Column baseColumn, Column computationColumn, bool isDirect)
             {
@@ -48,8 +48,7 @@ namespace DevZest.Data
 
             private static void AddDependency<T>(Dictionary<T, IColumns> dependencies, T key, Column computationColumn)
             {
-                IColumns computationColumns;
-                if (dependencies.TryGetValue(key, out computationColumns))
+                if (dependencies.TryGetValue(key, out var computationColumns))
                     dependencies[key] = computationColumns.Add(computationColumn);
                 else
                     dependencies.Add(key, computationColumn);
@@ -57,13 +56,11 @@ namespace DevZest.Data
 
             private void AddComputationColumn(Dictionary<Model, List<Column>> dictionary, Model key, Column value)
             {
-                List<Column> computationColumns;
-                if (dictionary.TryGetValue(key, out computationColumns))
+                if (dictionary.TryGetValue(key, out var computationColumns))
                     AddComputationColumn(computationColumns, value);
                 else
                 {
-                    computationColumns = new List<Column>();
-                    computationColumns.Add(value);
+                    computationColumns = new List<Column> { value };
                     dictionary.Add(key, computationColumns);
                 }
             }
@@ -97,8 +94,7 @@ namespace DevZest.Data
                 if (dataRow.IsValueChangedNotificationSuspended)
                     return;
 
-                Node node;
-                if (_nodes.TryGetValue(column, out node))
+                if (_nodes.TryGetValue(column, out var node))
                     node.Add(dataRow);
                 else
                     AddNode(new Node(column, dataRow));
@@ -127,8 +123,7 @@ namespace DevZest.Data
 
             private bool IsDependentUpon(Column computationColumn, Column baseColumn)
             {
-                IColumns computationColumns;
-                if (_indirectDependencies.TryGetValue(baseColumn, out computationColumns))
+                if (_indirectDependencies.TryGetValue(baseColumn, out var computationColumns))
                     return computationColumns.Contains(computationColumn);
                 else
                     return false;
@@ -177,8 +172,7 @@ namespace DevZest.Data
 
             private static  IReadOnlyList<Column> GetColumns(Dictionary<Model, List<Column>> dictionary, Model model)
             {
-                List<Column> result;
-                if (dictionary.TryGetValue(model, out result))
+                if (dictionary.TryGetValue(model, out var result))
                     return result;
                 else
                     return Array<Column>.Empty;
@@ -226,11 +220,7 @@ namespace DevZest.Data
 
             private IColumns this[Column column]
             {
-                get
-                {
-                    IColumns result;
-                    return _directDependencies.TryGetValue(column, out result) ? result : Columns.Empty;
-                }
+                get { return _directDependencies.TryGetValue(column, out var result) ? result : Columns.Empty; }
             }
 
             internal void OnValueChanged(DataRow dataRow, Column column)
@@ -292,7 +282,12 @@ namespace DevZest.Data
         internal void MergeComputations(Model model)
         {
             Debug.Assert(model != null);
-            var columns = model.Columns;
+            MergeComputation(model.Columns);
+            MergeComputation(model.LocalColumns);
+        }
+
+        private void MergeComputation(IReadOnlyList<Column> columns)
+        {
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];

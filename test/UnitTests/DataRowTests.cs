@@ -251,9 +251,9 @@ AfterDataRowInserted: DataSet-0[0].
         public void DataRow_Move_with_local_column()
         {
             var dataSet = GetDataSet(3);
-            var localColumn0 = dataSet.Container.CreateLocalColumn<int>(dataSet._);
-            var localColumn1 = dataSet.Container.CreateLocalColumn<int>(dataSet._.ChildModels[0]);
-            var localColumn2 = dataSet.Container.CreateLocalColumn<int>(dataSet._.ChildModels[0].ChildModels[0]);
+            var localColumn0 = dataSet._.LocalColumn;
+            var localColumn1 = dataSet._.Child.LocalColumn;
+            var localColumn2 = dataSet._.Child.Child.LocalColumn;
 
             localColumn0[0] = 1;
             localColumn1[0] = 2;
@@ -297,7 +297,7 @@ AfterDataRowInserted: DataSet-0[0].
 
             public _Int32 Column { get; private set; }
 
-            public Column<int> LocalColumn { get; private set; }
+            public LocalColumn<int> LocalColumn { get; private set; }
         }
 
         [TestMethod]

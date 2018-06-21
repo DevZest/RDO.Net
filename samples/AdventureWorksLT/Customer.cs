@@ -103,6 +103,7 @@ namespace DevZest.Samples.AdventureWorksLT
             _Phone = RegisterColumn((Customer _) => _.Phone);
             _PasswordHash = RegisterColumn((Customer _) => _.PasswordHash);
             _PasswordSalt = RegisterColumn((Customer _) => _.PasswordSalt);
+            RegisterLocalColumn((Customer _) => _.ContactPerson);
         }
 
         protected sealed override PK CreatePrimaryKey()
@@ -166,5 +167,37 @@ namespace DevZest.Samples.AdventureWorksLT
         [AsVarChar(10)]
         [DbColumn(Description = "Random value concatenated with the password string before the password is hashed.")]
         public _String PasswordSalt { get; private set; }
+
+        public LocalColumn<string> ContactPerson { get; private set; }
+
+        [Computation]
+        private void ComputeContactPerson()
+        {
+            ContactPerson.ComputedAs(LastName, FirstName, Title, GetContactPerson, false);
+        }
+
+        private static string GetContactPerson(DataRow dataRow, _String lastName, _String firstName, _String title)
+        {
+            return GetContactPerson(lastName[dataRow], firstName[dataRow], title[dataRow]);
+        }
+
+        public static string GetContactPerson(string lastName, string firstName, string title)
+        {
+            string result = string.IsNullOrEmpty(lastName) ? string.Empty : lastName.ToUpper();
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                if (result.Length > 0)
+                    result += ", ";
+                result += firstName;
+            }
+            if (!string.IsNullOrEmpty(title))
+            {
+                result += " (";
+                result += title;
+                result += ")";
+            }
+
+            return result;
+        }
     }
 }

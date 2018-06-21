@@ -277,9 +277,45 @@ Namespace DevZest.Samples.AdventureWorksLT
             Get
                 Return m_PasswordSalt
             End Get
-            Set
+            Private Set
                 m_PasswordSalt = Value
             End Set
         End Property
+
+        Private m_contactPerson As LocalColumn(Of String)
+        Public Property ContactPerson As LocalColumn(Of String)
+            Get
+                Return m_contactPerson
+            End Get
+            Private Set
+                m_contactPerson = Value
+            End Set
+        End Property
+
+        <Computation>
+        Private Sub ComputeContactPerson()
+            ContactPerson.ComputedAs(LastName, FirstName, Title, AddressOf GetContactPerson, False)
+        End Sub
+
+        Private Shared Function GetContactPerson(ByVal dataRow As DataRow, ByVal lastName As _String, ByVal firstName As _String, ByVal title As _String) As String
+            Return GetContactPerson(lastName(dataRow), firstName(dataRow), title(dataRow))
+        End Function
+
+        Public Shared Function GetContactPerson(ByVal lastName As String, ByVal firstName As String, ByVal title As String) As String
+            Dim result As String = If(String.IsNullOrEmpty(lastName), String.Empty, lastName.ToUpper())
+
+            If Not String.IsNullOrEmpty(firstName) Then
+                If result.Length > 0 Then result += ", "
+                result += firstName
+            End If
+
+            If Not String.IsNullOrEmpty(title) Then
+                result += " ("
+                result += title
+                result += ")"
+            End If
+
+            Return result
+        End Function
     End Class
 End Namespace

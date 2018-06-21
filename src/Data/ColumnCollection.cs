@@ -95,8 +95,7 @@ namespace DevZest.Data
             {
                 var column = this[i];
                 var originalId = column.OriginalId;
-                IColumns columns;
-                if (result.TryGetValue(originalId, out columns))
+                if (result.TryGetValue(originalId, out var columns))
                     result[originalId] = columns.Add(column);
                 else
                     result[originalId] = column;
@@ -115,8 +114,7 @@ namespace DevZest.Data
             if (result != null)
                 return result;
 
-            IColumns columns;
-            if (ByOriginalId.TryGetValue(column.OriginalId, out columns))
+            if (ByOriginalId.TryGetValue(column.OriginalId, out var columns))
             {
                 if (columns.Count == 1)
                     return columns.Single();

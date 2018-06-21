@@ -117,7 +117,7 @@ namespace DevZest.Data
 
         public DataSet BaseDataSet
         {
-            get { return Model == null ? null : Model.DataSet; }
+            get { return Model?.DataSet; }
         }
 
         public DataSet DataSet
@@ -265,8 +265,7 @@ namespace DevZest.Data
             var leftSquareBracketIndex = inputIndex - 1;
             var dataRowOrdinal = ExpectInt(input, ref inputIndex, ']');
 
-            var childModel = parentDataRow.Model[childModelName] as Model;
-            if (childModel == null)
+            if (!(parentDataRow.Model[childModelName] is Model childModel))
                 throw new FormatException(DiagnosticMessages.DataRow_FromString_InvalidChildModelName(childModelName, input.Substring(0, dataRowPathEndIndex)));
 
             var result = GetDataRow(parentDataRow[childModel], dataRowOrdinal, input, leftSquareBracketIndex);
@@ -308,8 +307,7 @@ namespace DevZest.Data
 
         private static int ParseInt(string input)
         {
-            int result;
-            if (!Int32.TryParse(input, out result))
+            if (!Int32.TryParse(input, out var result))
                 throw new FormatException(DiagnosticMessages.DataRow_FromString_ParseInt(input));
             return result;
         }

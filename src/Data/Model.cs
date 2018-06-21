@@ -270,21 +270,30 @@ namespace DevZest.Data
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         [MounterRegistration]
-        protected static void RegisterLocalColumn<TModel, T>(Expression<Func<TModel, Column<T>>> getter, Func<TModel, Column<T>> constructor = null)
+        protected static void RegisterLocalColumn<TModel, T>(Expression<Func<TModel, LocalColumn<T>>> getter)
             where TModel : Model
         {
             var initializer = getter.Verify(nameof(getter));
-
-            if (constructor == null)
-                constructor = _ => _.CreateLocalColumn<T>();
-            s_localColumnManager.Register(getter, mounter => CreateLocalColumn(mounter, constructor, initializer));
+            s_localColumnManager.Register(getter, mounter => CreateLocalColumn(mounter, initializer));
         }
 
-        private static Column<T> CreateLocalColumn<TModel, T>(Mounter<TModel, Column<T>> mounter, Func<TModel, Column<T>> constructor, Action<Column<T>> initializer)
+        private List<Column> _localColumns;
+        protected internal IReadOnlyList<Column> LocalColumns
+        {
+            get
+            {
+                if (_localColumns == null)
+                    return Array<Column>.Empty;
+                else
+                    return _localColumns;
+            }
+        }
+
+        private static LocalColumn<T> CreateLocalColumn<TModel, T>(Mounter<TModel, LocalColumn<T>> mounter, Action<LocalColumn<T>> initializer)
             where TModel : Model
         {
-            var result = constructor(mounter.Parent);
-            initializer(result);
+            var result = new LocalColumn<T>();
+            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.ModelProperty, null, initializer);
             return result;
         }
 
@@ -296,6 +305,7 @@ namespace DevZest.Data
             ChildModels = new ModelCollection(this);
 
             s_columnManager.Mount(this);
+            s_localColumnManager.Mount(this);
             s_columnListManager.Mount(this);
             PerformConstructing();
         }
@@ -361,12 +371,18 @@ namespace DevZest.Data
                 }
                 PerformChildDataSetsCreated();
                 DataSetContainer.MergeComputations(this);
-                foreach (var column in Columns)
-                    column.InitValueManager();
+                InitValueManager(Columns);
+                InitValueManager(LocalColumns);
             }
 
             IsInitialized = true;
             PerformInitialized();
+        }
+
+        private static void InitValueManager(IReadOnlyList<Column> columns)
+        {
+            for (int i = 0; i < columns.Count; i++)
+                columns[i].InitValueManager();
         }
 
         private void PerformConstructing()
@@ -383,7 +399,6 @@ namespace DevZest.Data
         private void PerformInitializing()
         {
             ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initializing);
-            s_localColumnManager.Mount(this);
             OnInitializing();
         }
 
@@ -417,9 +432,6 @@ namespace DevZest.Data
         private void PerformInitialized()
         {
             ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initialized);
-            var localColumns = LocalColumns;
-            for (int i = 0; i < localColumns.Count; i++)
-                localColumns[i].SealLocalColumn();
             OnInitialized();
         }
 
@@ -447,18 +459,22 @@ namespace DevZest.Data
 
         protected internal ColumnCollection Columns { get; private set; }
 
-        protected internal IReadOnlyList<Column> LocalColumns
+        internal int Add(Column column)
         {
-            get
+            Debug.Assert(column != null);
+            if (column.IsLocal)
             {
-                if (LocalColumnList == null)
-                    return Array<Column>.Empty;
-                else
-                    return LocalColumnList;
+                if (_localColumns == null)
+                    _localColumns = new List<Column>();
+                _localColumns.Add(column);
+                return _localColumns.Count - 1;
+            }
+            else
+            {
+                Columns.Add(column);
+                return Columns.Count - 1;
             }
         }
-
-        internal List<Column> LocalColumnList { get; set; }
 
         protected internal ModelCollection ChildModels { get; private set; }
 
@@ -669,8 +685,7 @@ namespace DevZest.Data
             if (!overwritable && ContainsExtension(((IExtension)constraint).Key))
                 throw new InvalidOperationException(DiagnosticMessages.Model_DuplicateConstraintName(constraint.SystemName));
 
-            var index = constraint as IIndexConstraint;
-            if (index != null && index.IsClustered)
+            if (constraint is IIndexConstraint index && index.IsClustered)
                 ClusteredIndex = index;
 
             this.AddOrUpdateExtension(constraint);
@@ -761,11 +776,7 @@ namespace DevZest.Data
 
         internal DbFromClause FromClause
         {
-            get
-            {
-                var dbSet = DataSource as IDbSet;
-                return dbSet == null ? null : dbSet.FromClause;
-            }
+            get { return !(DataSource is IDbSet dbSet) ? null : dbSet.FromClause; }
         }
 
         private _Int32 AddSysRowIdColumn(bool isParent)
@@ -905,8 +916,7 @@ namespace DevZest.Data
                 if (parentModel == null)
                     return null;
 
-                var parentQuery = parentModel.DataSource as IDbSet;
-                if (parentQuery == null || parentQuery.Kind != DataSourceKind.DbQuery)
+                if (!(parentModel.DataSource is IDbSet parentQuery) || parentQuery.Kind != DataSourceKind.DbQuery)
                     return null;
 
                 var result = parentQuery.QueryStatement.SequentialKeyTempTable._;
@@ -1019,8 +1029,7 @@ namespace DevZest.Data
             var e = new DataRowEventArgs(dataRow);
             OnDataRowInserting(e);
             DataSetContainer.OnDataRowInserting(e);
-            if (updateAction != null)
-                updateAction(dataRow);
+            updateAction?.Invoke(dataRow);
             OnBeforeDataRowInserted(e);
             DataSetContainer.OnBeforeDataRowInserted(e);
             dataRow.ResumeValueChangedNotification();
@@ -1094,161 +1103,6 @@ namespace DevZest.Data
         public DataSetContainer DataSetContainer
         {
             get { return RootModel._dataSetContainer; }
-        }
-
-        protected Column<T> CreateLocalColumn<T>(Action<LocalColumnBuilder<T>> builder = null)
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T>(T1 column, Func<DataRow, T1, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T>(T1 column1, T2 column2, Func<DataRow, T1, T2, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T>(T1 column1, T2 column2, T3 column3, Func<DataRow, T1, T2, T3, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T>(T1 column1, T2 column2, T3 column3, T4 column4,
-            Func<DataRow, T1, T2, T3, T4, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5,
-            Func<DataRow, T1, T2, T3, T4, T5, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-            where T5 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            Func<DataRow, T1, T2, T3, T4, T5, T6, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-            where T5 : Column
-            where T6 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7,
-            Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-            where T5 : Column
-            where T6 : Column
-            where T7 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7, T8 column8,
-            Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-            where T5 : Column
-            where T6 : Column
-            where T7 : Column
-            where T8 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7, T8 column8,
-            T9 column9, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-            where T5 : Column
-            where T6 : Column
-            where T7 : Column
-            where T8 : Column
-            where T9 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, column9, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7,
-            T8 column8, T9 column9, T10 column10, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-            where T5 : Column
-            where T6 : Column
-            where T7 : Column
-            where T8 : Column
-            where T9 : Column
-            where T10 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6, T7 column7,
-            T8 column8, T9 column9, T10 column10, T11 column11, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-            where T5 : Column
-            where T6 : Column
-            where T7 : Column
-            where T8 : Column
-            where T9 : Column
-            where T10 : Column
-            where T11 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7,
-                column8, column9, column10, column11, expression, builder);
-        }
-
-        protected Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, T8 column8, T9 column9, T10 column10, T11 column11, T12 column12,
-            Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T> expression, Action<LocalColumnBuilder<T>> builder = null)
-            where T1 : Column
-            where T2 : Column
-            where T3 : Column
-            where T4 : Column
-            where T5 : Column
-            where T6 : Column
-            where T7 : Column
-            where T8 : Column
-            where T9 : Column
-            where T10 : Column
-            where T11 : Column
-            where T12 : Column
-        {
-            return DataSetContainer == null ? null : DataSetContainer.CreateLocalColumn(this, column1, column2, column3, column4, column5, column6, column7,
-                column8, column9, column10, column11, column12, expression, builder);
         }
 
         private Projection _extraColumns;

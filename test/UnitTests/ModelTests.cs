@@ -117,16 +117,16 @@ namespace DevZest.Data
         {
             static LocalModel()
             {
-                RegisterChildModel((LocalModel x) => x.Child);
+                RegisterLocalColumn((LocalModel _) => _.Column);
+                RegisterChildModel((LocalModel _) => _.Child);
             }
 
-            public Column<int> Column { get; private set; }
+            public LocalColumn<int> Column { get; private set; }
 
             public ChildLocalModel Child { get; private set; }
 
             protected override void OnChildDataSetsCreated()
             {
-                Column = DataSetContainer.CreateLocalColumn<int>(this);
                 Child.Initialize(this);
                 base.OnChildDataSetsCreated();
             }
@@ -134,13 +134,19 @@ namespace DevZest.Data
         
         private sealed class ChildLocalModel : Model
         {
-            public Column<int> Column1 { get; private set; }
-            public Column<int> Column2 { get; private set; }
+            static ChildLocalModel()
+            {
+                RegisterLocalColumn((ChildLocalModel _) => _.Column1);
+                RegisterLocalColumn((ChildLocalModel _) => _.Column2);
+            }
+
+            public LocalColumn<int> Column1 { get; private set; }
+            public LocalColumn<int> Column2 { get; private set; }
 
             internal void Initialize(LocalModel localModel)
             {
-                Column1 = DataSetContainer.CreateLocalColumn(this, localModel.Column, GetColumn1Value);
-                Column2 = DataSetContainer.CreateLocalColumn(this, Column1, GetColumn2Value);
+                Column1.ComputedAs(localModel.Column, GetColumn1Value, false);
+                Column2.ComputedAs(Column1, GetColumn2Value, false);
             }
 
             private static int GetColumn1Value(DataRow dataRow, Column<int> column)
