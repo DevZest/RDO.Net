@@ -32,7 +32,13 @@ namespace DevZest.Data.Primitives
             ParentModel = parentModel;
             DeclaringType = declaringType;
             Name = name;
-            ParentModel.AddMember(this);
+            if (!IsLocal)
+                ParentModel.AddMember(this);
+        }
+
+        internal virtual bool IsLocal
+        {
+            get { return false; }
         }
 
         /// <summary>Gets a value indicates whether this <see cref="ModelMember"/> is in design mode.</summary>

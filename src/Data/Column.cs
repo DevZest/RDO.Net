@@ -462,11 +462,6 @@ namespace DevZest.Data
 
         internal abstract void RefreshComputation(DataRow dataRow);
 
-        public virtual bool IsLocal
-        {
-            get { return false; }
-        }
-
         internal abstract Column CreateBackup(Model model);
 
         internal abstract IColumnComparer ToColumnComparer(SortDirection direction);

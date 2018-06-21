@@ -132,7 +132,7 @@ namespace DevZest.Data
         private void Add(ColumnList columnList)
         {
             if (_columnLists == null)
-                _columnLists = new List<Data.ColumnList>();
+                _columnLists = new List<ColumnList>();
             _columnLists.Add(columnList);
         }
 
@@ -293,7 +293,15 @@ namespace DevZest.Data
             where TModel : Model
         {
             var result = new LocalColumn<T>();
-            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.ModelProperty, null, initializer);
+            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.Local | ColumnKind.ModelProperty, null, initializer);
+            return result;
+        }
+
+        protected LocalColumn<T> CreateLocalColumn<T>()
+        {
+            VerifyDesignMode();
+            var result = new LocalColumn<T>();
+            result.Construct(this, GetType(), null, ColumnKind.Local, null, null);
             return result;
         }
 

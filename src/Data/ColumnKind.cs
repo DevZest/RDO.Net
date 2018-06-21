@@ -8,19 +8,19 @@ namespace DevZest.Data
     {
         /// <summary>The column is a property of <see cref="Model"/>.</summary>
         ModelProperty = 1,
+        /// <summary>The column is local column.</summary>
+        Local = 2,
         /// <summary>The column is a item of <see cref="ColumnListItem"/>.</summary>
-        ColumnListItem = 2,
+        ColumnListItem = 4,
         /// <summary>The column is a member of <see cref="ColumnGroup"/>.</summary>
-        ColumnGroupMember = 4,
+        ColumnGroupMember = 8,
         /// <summary>sys_parent_row_id column of sequential key temp table (internal use only).</summary>
-        SystemParentRowId = 8,
+        SystemParentRowId = 16,
         /// <summary>sys_row_id column of sequential key temp table (internal use only).</summary>
-        SystemRowId = 16,
+        SystemRowId = 32,
         /// <summary>Other system column, such as system columns defined by SQL Server implementation (internal use only).</summary>
-        SystemCustom = 32,
+        SystemCustom = 64,
         /// <summary>Union of <see cref="SystemRowId"/>, <see cref="SystemParentRowId"/> and <see cref="SystemCustom"/>.</summary>
         System = SystemRowId | SystemParentRowId | SystemCustom,
-        /// <summary>All kinds of column.</summary>
-        All = ModelProperty | ColumnListItem | ColumnGroupMember | System
     }
 }

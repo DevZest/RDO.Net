@@ -21,7 +21,7 @@ namespace DevZest.Data
             Expression = new LocalColumnExpression(dataRow => value);
         }
 
-        public override bool IsLocal
+        internal override bool IsLocal
         {
             get { return true; }
         }
