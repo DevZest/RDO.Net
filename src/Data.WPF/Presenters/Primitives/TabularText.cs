@@ -88,17 +88,51 @@ namespace DevZest.Data.Presenters.Primitives
             if (delimiter == QuotationMark)
                 throw new ArgumentException(DiagnosticMessages.TabularText_DelimiterCannotBeQuote, nameof(delimiter));
 
-            var result = DataSet<TabularText>.New();
-
+            var rows = new List<List<string>>();
+            int maxColumnsCount = 0;
             var sb = new StringBuilder();
             var hasNext = reader.Peek() != -1;
             while (hasNext)
-                result.AddRow((_, dataRow) => hasNext = Parse(reader, delimiter, _, dataRow, sb));
+            {
+                var columns = new List<string>();
+                rows.Add(columns);
+                hasNext = ParseRow(reader, delimiter, sb, value => columns.Add(value));
+                if (columns.Count > maxColumnsCount)
+                    maxColumnsCount = columns.Count;
+            }
+            return ToDataSet(rows, maxColumnsCount);
+        }
 
+        private static DataSet<TabularText> ToDataSet(List<List<string>> rows, int maxColumnsCount)
+        {
+            var result = DataSet<TabularText>.New();
+            result._.InitializeTextColumns(maxColumnsCount);
+
+            for (int i = 0; i < rows.Count; i++)
+            {
+                var columns = rows[i];
+                result.AddRow((_, dataRow) =>
+                {
+                    for (int j = 0; j < columns.Count; j++)
+                        _.TextColumns[j][dataRow] = columns[j];
+                });
+            }
             return result;
         }
 
-        private static bool Parse(TextReader reader, char delimiter, TabularText _, DataRow dataRow, StringBuilder sb)
+        private readonly List<LocalColumn<string>> _textColumns = new List<LocalColumn<string>>();
+        public IReadOnlyList<Column<string>> TextColumns
+        {
+            get { return _textColumns; }
+        }
+
+        private void InitializeTextColumns(int count)
+        {
+            for (int i = 0; i < count; i++)
+                _textColumns.Add(CreateLocalColumn<string>());
+        }
+
+        private static bool ParseRow(TextReader reader, char delimiter, StringBuilder sb, Action<string> onColumnParsed)
         {
             Debug.Assert(reader.Peek() != -1);
 
@@ -124,7 +158,7 @@ namespace DevZest.Data.Presenters.Primitives
                     else
                     {
                         if (sb.Length > 0)
-                            _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
+                            ReportColumnParsed(sb, ref fieldIndex, ref inQuote, onColumnParsed);
                         return reader.Peek() != -1;
                     }
                 }
@@ -133,7 +167,7 @@ namespace DevZest.Data.Presenters.Primitives
                     if (readChar == QuotationMark)
                         inQuote = true;
                     else if (readChar == delimiter)
-                        _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
+                        ReportColumnParsed(sb, ref fieldIndex, ref inQuote, onColumnParsed);
                     else
                         sb.Append(readChar);
                 }
@@ -142,7 +176,7 @@ namespace DevZest.Data.Presenters.Primitives
                     if (inQuote == true)
                         sb.Append(delimiter);
                     else
-                        _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
+                        ReportColumnParsed(sb, ref fieldIndex, ref inQuote, onColumnParsed);
                 }
                 else if (readChar == QuotationMark)
                 {
@@ -164,37 +198,28 @@ namespace DevZest.Data.Presenters.Primitives
             }
             while (reader.Peek() != -1);
 
-            _.AddValue(dataRow, fieldIndex++, sb, ref inQuote);
+            ReportColumnParsed(sb, ref fieldIndex, ref inQuote, onColumnParsed);
             return false;
         }
 
-        private readonly List<Column<string>> _textColumns = new List<Column<string>>();
-        public IReadOnlyList<Column<string>> TextColumns
+        private static void ReportColumnParsed(StringBuilder sb, ref int fieldIndex, ref bool? inQuote, Action<string> onColumnParsed)
         {
-            get { return _textColumns; }
-        }
-
-        private void AddValue(DataRow dataRow, int fieldIndex, StringBuilder sb, ref bool? inQuote)
-        {
-            Debug.Assert(dataRow.Index == DataSet.Count - 1);
-            Debug.Assert(fieldIndex >= 0 && fieldIndex <= TextColumns.Count);
-
-            if (fieldIndex == TextColumns.Count)
-                _textColumns.Add(CreateLocalColumn<string>());
-
             if (sb.Length > 0)
             {
                 var value = sb.ToString();
                 if (inQuote == true)
                     value = QuotationMark + value;
-                TextColumns[fieldIndex][dataRow] = value;
+                onColumnParsed(value);
                 sb.Clear();
             }
             else if (inQuote == true)
-                TextColumns[fieldIndex][dataRow] = "\"";
+                onColumnParsed("\"");
             else if (inQuote == false)
-                TextColumns[fieldIndex][dataRow] = string.Empty;
+                onColumnParsed(string.Empty);
+            else
+                onColumnParsed(null);
 
+            fieldIndex++;
             inQuote = null;
         }
     }

@@ -9,17 +9,18 @@ namespace FileExplorer
 {
     public abstract class DirectoryItem : Model
     {
-        public Column<string> Path { get; private set; }
-
-        public Column<string> DisplayName { get; private set; }
-
-        public Column<DirectoryItemType> Type { get; private set; }
-
-        protected sealed override void OnInitializing()
+        static DirectoryItem()
         {
-            CreateLocalColumns();
-            base.OnInitializing();
+            RegisterLocalColumn((DirectoryItem _) => _.Path);
+            RegisterLocalColumn((DirectoryItem _) => _.DisplayName);
+            RegisterLocalColumn((DirectoryItem _) => _.Type);
         }
+
+        public LocalColumn<string> Path { get; private set; }
+
+        public LocalColumn<string> DisplayName { get; private set; }
+
+        public LocalColumn<DirectoryItemType> Type { get; private set; }
 
         private const string InvalidChars = @"\/:*?""<>|";
         private const string DisplayInvalidChars = @"\ / : * ? "" < > |";
@@ -43,13 +44,6 @@ namespace FileExplorer
             else if (ContainsInvalidChar(displayName))
                 result = result.Add(new DataValidationError(string.Format("A file name can't contain any of the following characters: {0}", DisplayInvalidChars), DisplayName));
             return result;
-        }
-
-        protected virtual void CreateLocalColumns()
-        {
-            Path = CreateLocalColumn<string>();
-            DisplayName = CreateLocalColumn<string>();
-            Type = CreateLocalColumn<DirectoryItemType>();
         }
 
         public virtual void Initialize(DataRow x, DirectoryInfo directoryInfo)

@@ -7,19 +7,18 @@ namespace FileExplorer
 {
     public sealed class DetailsListItem : DirectoryItem
     {
-        public Column<ImageSource> SmallIcon { get; private set; }
-        public Column<long?> FileSize { get; private set; }
-        public Column<string> FileType { get; private set; }
-        public Column<DateTime> DateModified { get; private set; }
-
-        protected override void CreateLocalColumns()
+        static DetailsListItem()
         {
-            base.CreateLocalColumns();
-            SmallIcon = CreateLocalColumn<ImageSource>();
-            FileSize = CreateLocalColumn<long?>();
-            FileType = CreateLocalColumn<string>();
-            DateModified = CreateLocalColumn<DateTime>();
+            RegisterLocalColumn((DetailsListItem _) => _.SmallIcon);
+            RegisterLocalColumn((DetailsListItem _) => _.FileSize);
+            RegisterLocalColumn((DetailsListItem _) => _.FileType);
+            RegisterLocalColumn((DetailsListItem _) => _.DateModified);
         }
+
+        public LocalColumn<ImageSource> SmallIcon { get; private set; }
+        public LocalColumn<long?> FileSize { get; private set; }
+        public LocalColumn<string> FileType { get; private set; }
+        public LocalColumn<DateTime> DateModified { get; private set; }
 
         public override void Initialize(DataRow x, DirectoryInfo directoryInfo)
         {

@@ -5,25 +5,24 @@ namespace SmoothScroll
 {
     public class Foo : Model
     {
-        public Column<string> Text { get; private set; }
-
-        public Column<bool> IsSectionHeader { get; private set; }
-
-        public Column<byte> BackgroundR { get; private set; }
-
-        public Column<byte> BackgroundG { get; private set; }
-
-        public Column<byte> BackgroundB { get; private set; }
-
-        protected override void OnInitializing()
+        static Foo()
         {
-            Text = CreateLocalColumn<string>();
-            IsSectionHeader = CreateLocalColumn<bool>();
-            BackgroundR = CreateLocalColumn<byte>();
-            BackgroundG = CreateLocalColumn<byte>();
-            BackgroundB = CreateLocalColumn<byte>();
-            base.OnInitializing();
+            RegisterLocalColumn((Foo _) => _.Text);
+            RegisterLocalColumn((Foo _) => _.IsSectionHeader);
+            RegisterLocalColumn((Foo _) => _.BackgroundR);
+            RegisterLocalColumn((Foo _) => _.BackgroundG);
+            RegisterLocalColumn((Foo _) => _.BackgroundB);
         }
+
+        public LocalColumn<string> Text { get; private set; }
+
+        public LocalColumn<bool> IsSectionHeader { get; private set; }
+
+        public LocalColumn<byte> BackgroundR { get; private set; }
+
+        public LocalColumn<byte> BackgroundG { get; private set; }
+
+        public LocalColumn<byte> BackgroundB { get; private set; }
 
         #region Mock
 

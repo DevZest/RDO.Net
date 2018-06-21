@@ -58,10 +58,10 @@ namespace DevZest.Data.Views.Primitives
         }
 
         [Display(Name = nameof(UserMessages.Sorting_SortBy), ResourceType = typeof(UserMessages))]
-        public Column<Column> Column { get; private set; }
+        public LocalColumn<Column> Column { get; private set; }
 
         [Display(Name = nameof(UserMessages.Sorting_Order), ResourceType = typeof(UserMessages))]
-        public Column<SortDirection> Direction { get; private set; }
+        public LocalColumn<SortDirection> Direction { get; private set; }
 
         [ModelValidator]
         private DataValidationError ValidateRequiredColumn(DataRow dataRow)

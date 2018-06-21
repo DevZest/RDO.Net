@@ -311,7 +311,7 @@ namespace DevZest.Data.Presenters
             if (Depth > 0)
             {
                 var model = DataRow.Model;
-                IReadOnlyList<Column> columns = column.IsLocal ? model.GetLocalColumns() : model.GetColumns();
+                IReadOnlyList<Column> columns = (column.Kind & ColumnKind.Local) == ColumnKind.Local ? model.GetLocalColumns() : model.GetColumns();
                 column = (Column<T>)columns[column.Ordinal];
             }
             return DataRow == null ? default(T) : column[DataRow, beforeEdit];
@@ -328,7 +328,7 @@ namespace DevZest.Data.Presenters
             if (Depth > 0)
             {
                 var model = DataRow.Model;
-                IReadOnlyList<Column> columns = column.IsLocal ? model.GetLocalColumns() : model.GetColumns();
+                IReadOnlyList<Column> columns = (column.Kind & ColumnKind.Local) == ColumnKind.Local ? model.GetLocalColumns() : model.GetColumns();
                 column = columns[column.Ordinal];
             }
 

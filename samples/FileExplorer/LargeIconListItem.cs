@@ -6,13 +6,12 @@ namespace FileExplorer
 {
     public sealed class LargeIconListItem : DirectoryItem
     {
-        public Column<ImageSource> LargeIcon { get; private set; }
-
-        protected override void CreateLocalColumns()
+        static LargeIconListItem()
         {
-            base.CreateLocalColumns();
-            LargeIcon = CreateLocalColumn<ImageSource>();
+            RegisterLocalColumn((LargeIconListItem _) => _.LargeIcon);
         }
+
+        public LocalColumn<ImageSource> LargeIcon { get; private set; }
 
         public override void Initialize(DataRow x, DirectoryInfo directoryInfo)
         {

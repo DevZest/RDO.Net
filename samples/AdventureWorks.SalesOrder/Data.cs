@@ -59,7 +59,7 @@ namespace AdventureWorks.SalesOrders
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                return await db.Customers.ToDataSetAsync(CustomerContactPerson.Initializer, ct);
+                return await db.Customers.ToDataSetAsync(ct);
             }
         }
 
@@ -69,10 +69,8 @@ namespace AdventureWorks.SalesOrders
             {
                 var result = db.CreateQuery<Address>((builder, _) =>
                 {
-                    CustomerAddress ca;
-                    Address a;
-                    builder.From(db.CustomerAddresses.Where(db.CustomerAddresses._.CustomerID == customerID), out ca)
-                        .InnerJoin(db.Addresses, ca.FK_Address, out a)
+                    builder.From(db.CustomerAddresses.Where(db.CustomerAddresses._.CustomerID == customerID), out var ca)
+                        .InnerJoin(db.Addresses, ca.FK_Address, out var a)
                         .AutoSelect();
                 });
                 return await result.ToDataSetAsync(ct);

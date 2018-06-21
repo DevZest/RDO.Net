@@ -8,18 +8,13 @@ namespace FileExplorer
     {
         static DirectoryTreeItem()
         {
-            RegisterChildModel((DirectoryTreeItem x) => x.SubFolders);
+            RegisterLocalColumn((DirectoryTreeItem _) => _.Path);
+            RegisterChildModel((DirectoryTreeItem _) => _.SubFolders);
         }
 
-        public Column<string> Path { get; private set; }
+        public LocalColumn<string> Path { get; private set; }
 
         public DirectoryTreeItem SubFolders { get; private set; }
-
-        protected override void OnInitializing()
-        {
-            Path = CreateLocalColumn<string>();
-            base.OnInitializing();
-        }
 
         public static DataSet<DirectoryTreeItem> GetLogicalDrives()
         {
