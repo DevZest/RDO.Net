@@ -133,57 +133,6 @@ namespace DevZest.Data {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
-        ///      &quot;SalesOrderID&quot; : 71774,
-        ///      &quot;RevisionNumber&quot; : 2,
-        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
-        ///      &quot;DueDate&quot; : &quot;2008-06-13T00:00:00.000&quot;,
-        ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00.000&quot;,
-        ///      &quot;Status&quot; : 5,
-        ///      &quot;OnlineOrderFlag&quot; : false,
-        ///      &quot;PurchaseOrderNumber&quot; : &quot;PO348186287&quot;,
-        ///      &quot;AccountNumber&quot; : &quot;10-4020-000609&quot;,
-        ///      &quot;CustomerID&quot; : 29847,
-        ///      &quot;ShipToAddressID&quot; : 1092,
-        ///      &quot;BillToAddressID&quot; : 1092,
-        ///      &quot;ShipMethod&quot; : &quot;CARGO TRANSPORT 5&quot;,
-        ///      &quot;CreditCardApp [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string ExpectedJSON_SalesOrder_71774_with_ext {
-            get {
-                return ResourceManager.GetString("ExpectedJSON_SalesOrder_71774_with_ext", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [
-        ///   {
-        ///      &quot;SalesOrderID&quot; : 71774,
-        ///      &quot;SalesOrderDetailID&quot; : 110562,
-        ///      &quot;OrderQty&quot; : 1,
-        ///      &quot;ProductID&quot; : 836,
-        ///      &quot;UnitPrice&quot; : 356.8980,
-        ///      &quot;UnitPriceDiscount&quot; : 0,
-        ///      &quot;RowGuid&quot; : &quot;e3a1994c-7a68-4ce8-96a3-77fdd3bbd730&quot;,
-        ///      &quot;ModifiedDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
-        ///      &quot;__Ext&quot; : {
-        ///         &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
-        ///         &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
-        ///      }
-        ///   },
-        ///   {
-        ///      &quot;SalesOrderID&quot; : 71774,
-        ///      &quot;SalesOrderDetailID&quot; : 110563,
-        ///      &quot;Ord [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string ExpectedJSON_SalesOrderDetail_71774_with_ext {
-            get {
-                return ResourceManager.GetString("ExpectedJSON_SalesOrderDetail_71774_with_ext", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [
-        ///   {
         ///      &quot;ColumnList&quot; : [
         ///         71774,
         ///         &quot;SO71774&quot;
