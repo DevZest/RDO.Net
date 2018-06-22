@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
             return new ExplicitMembersJsonFilter(Verify(members, nameof(members)));
         }
-        public static JsonFilter Explicit(params Projection[] columnCombinations)
+        public static JsonFilter Explicit(params ColumnGroup[] columnCombinations)
         {
             return new ExplicitExtraColumnsJsonFilter(Verify(columnCombinations, nameof(columnCombinations)));
         }
@@ -48,7 +48,7 @@ namespace DevZest.Data
 
         protected internal abstract bool ShouldSerialize(ModelMember member);
 
-        protected internal abstract bool ShouldSerialize(Projection ext);
+        protected internal abstract bool ShouldSerialize(ColumnGroup columnGroup);
 
         private sealed class NoExtraColumnsJsonFilter : JsonFilter
         {
@@ -58,7 +58,7 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(Projection ext)
+            protected internal override bool ShouldSerialize(ColumnGroup ext)
             {
                 return false;
             }
@@ -77,7 +77,7 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(Projection ext)
+            protected internal override bool ShouldSerialize(ColumnGroup ext)
             {
                 return true;
             }
@@ -97,7 +97,7 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(Projection ext)
+            protected internal override bool ShouldSerialize(ColumnGroup ext)
             {
                 return false;
             }
@@ -124,7 +124,7 @@ namespace DevZest.Data
                 return _members.Contains(member);
             }
 
-            protected internal override bool ShouldSerialize(Projection ext)
+            protected internal override bool ShouldSerialize(ColumnGroup ext)
             {
                 return true;
             }
@@ -132,20 +132,20 @@ namespace DevZest.Data
 
         private sealed class ExplicitExtraColumnsJsonFilter : JsonFilter
         {
-            public ExplicitExtraColumnsJsonFilter(HashSet<Projection> columnCombinations)
+            public ExplicitExtraColumnsJsonFilter(HashSet<ColumnGroup> columnCombinations)
             {
                 Debug.Assert(columnCombinations != null);
                 _columnCombinations = columnCombinations;
             }
 
-            private readonly HashSet<Projection> _columnCombinations;
+            private readonly HashSet<ColumnGroup> _columnCombinations;
 
             protected internal override bool ShouldSerialize(ModelMember member)
             {
                 return true;
             }
 
-            protected internal override bool ShouldSerialize(Projection ext)
+            protected internal override bool ShouldSerialize(ColumnGroup ext)
             {
                 return _columnCombinations.Contains(ext);
             }
@@ -171,7 +171,7 @@ namespace DevZest.Data
                 return true;
             }
 
-            protected internal override bool ShouldSerialize(Projection ext)
+            protected internal override bool ShouldSerialize(ColumnGroup ext)
             {
                 for (int i = 0; i < _filters.Length; i++)
                 {

@@ -15,8 +15,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public Db(string connectionString, Action<Db> initializer = null)
             : base(CreateSqlConnection(connectionString))
         {
-            if (initializer != null)
-                initializer(this);
+            initializer?.Invoke(this);
         }
 
         private static SqlConnection CreateSqlConnection(string connectionString)
@@ -178,24 +177,23 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
             {
-                var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
-                Debug.Assert(ext != null);
                 builder.From(SalesOrderHeaders, out var o)
                     .LeftJoin(Customers, o.FK_Customer, out var c)
                     .LeftJoin(Addresses, o.FK_ShipToAddress, out var shipTo)
                     .LeftJoin(Addresses, o.FK_BillToAddress, out var billTo)
                     .AutoSelect()
-                    .AutoSelect(shipTo, ext.ShipToAddress)
-                    .AutoSelect(billTo, ext.BillToAddress)
+                    .AutoSelect(c, _.LK_Customer)
+                    .AutoSelect(shipTo, _.LK_ShipToAddress)
+                    .AutoSelect(billTo, _.LK_BillToAddress)
                     .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
             });
 
             await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
             {
-                Debug.Assert(_.GetExtraColumns<Product.Lookup>() != null);
                 builder.From(SalesOrderDetails, out var d)
                     .LeftJoin(Products, d.FK_Product, out var p)
-                    .AutoSelect();
+                    .AutoSelect()
+                    .AutoSelect(p, _.LK_Product);
             }, ct);
 
             return result;
@@ -238,8 +236,8 @@ namespace DevZest.Samples.AdventureWorksLT
             {
                 builder.From(tempTable, out var t);
                 var seqNo = t.Model.GetIdentity(true).Column;
-                Debug.Assert(!ReferenceEquals(seqNo, null));
-                builder.LeftJoin(Products, t.PrimaryKey, out var p)
+                Debug.Assert(!(seqNo is null));
+                builder.LeftJoin(Products, t.ForeignKey, out var p)
                     .AutoSelect().OrderBy(seqNo);
             }).ToDataSetAsync(ct);
         }

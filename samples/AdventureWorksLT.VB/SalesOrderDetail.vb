@@ -74,7 +74,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public Class Ref
-            Inherits LeafProjection(Of PK)
+            Inherits Ref(Of PK)
 
             Shared Sub New()
                 Register(Function(ByVal __ As Ref) __.SalesOrderID, AdventureWorksLT.SalesOrderHeader._SalesOrderID)
@@ -101,7 +101,7 @@ Namespace DevZest.Samples.AdventureWorksLT
                 End Set
             End Property
 
-            Protected Overrides Function CreatePrimaryKey() As PK
+            Protected Overrides Function GetForeignKey() As PK
                 Return New PK(SalesOrderID, SalesOrderDetailID)
             End Function
         End Class

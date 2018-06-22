@@ -37,7 +37,7 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 CustomerID { get; private set; }
         }
 
-        public class Ref : LeafProjection<PK>
+        public class Ref : Ref<PK>
         {
             static Ref()
             {
@@ -46,13 +46,13 @@ namespace DevZest.Samples.AdventureWorksLT
 
             public _Int32 CustomerID { get; private set; }
 
-            protected override PK CreatePrimaryKey()
+            protected override PK GetForeignKey()
             {
                 return new PK(CustomerID);
             }
         }
 
-        public class Lookup : LeafProjection
+        public class Lookup : ColumnGroup
         {
             static Lookup()
             {

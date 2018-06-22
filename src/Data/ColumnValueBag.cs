@@ -105,12 +105,12 @@ namespace DevZest.Data
             }
         }
 
-        public void AutoSelect(Projection columnCombination, DataRow dataRow, bool ignoreExpression = true)
+        public void AutoSelect(ColumnGroup columnGroup, DataRow dataRow, bool ignoreExpression = true)
         {
-            columnCombination.VerifyNotNull(nameof(columnCombination));
+            columnGroup.VerifyNotNull(nameof(columnGroup));
             dataRow.VerifyNotNull(nameof(dataRow));
 
-            var keyColumns = columnCombination.Columns;
+            var keyColumns = columnGroup.Columns;
             var valueColumns = dataRow.Model.Columns;
             for (int i = 0; i < keyColumns.Count; i++)
             {
@@ -121,10 +121,6 @@ namespace DevZest.Data
                 if (valueColumn != null)
                     _columnValues[keyColumn] = valueColumn.GetValue(dataRow);
             }
-
-            var childContainers = columnCombination.Children;
-            for (int i = 0; i < childContainers.Count; i++)
-                AutoSelect(childContainers[i], dataRow, ignoreExpression);
         }
 
         public void Remove(Column column)

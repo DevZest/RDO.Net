@@ -20,7 +20,8 @@ namespace DevZest.Data.Primitives
             jsonWriter.WriteStartObject();
 
             var jsonFilter = jsonView.Filter;
-            var columns = dataRow.Model.Columns;
+            var _ = dataRow.Model;
+            var columns = _.Columns;
             int count = 0;
             for (int i = 0; i < columns.Count; i++)
             {
@@ -54,14 +55,15 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
-            var ext = dataRow.Model.ExtraColumns;
-            if (ext != null)
+            var columnGroups = dataRow.Model.ColumnGroups;
+            for (int i = 0; i < columnGroups.Count; i++)
             {
-                if (jsonFilter == null || jsonFilter.ShouldSerialize(ext))
+                var columnGroup = columnGroups[i];
+                if (jsonFilter == null || jsonFilter.ShouldSerialize(columnGroup))
                 {
                     if (count > 0)
                         jsonWriter.WriteComma();
-                    jsonWriter.Write(dataRow, ext, jsonFilter);
+                    jsonWriter.Write(dataRow, columnGroup, jsonFilter);
                     count++;
                 }
             }
@@ -105,27 +107,27 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
         }
 
-        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, Projection columnCombination, JsonFilter jsonFilter)
+        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnGroup columnGroup, JsonFilter jsonFilter)
         {
-            if (string.IsNullOrEmpty(columnCombination.Name))
-                jsonWriter.WriteMembers(dataRow, columnCombination, jsonFilter);
+            if (string.IsNullOrEmpty(columnGroup.Name))
+                jsonWriter.WriteMembers(dataRow, columnGroup, jsonFilter);
             else
-                jsonWriter.WriteExt(dataRow, columnCombination, jsonFilter);
+                jsonWriter.WriteObject(dataRow, columnGroup, jsonFilter);
         }
 
-        private static void WriteExt(this JsonWriter jsonWriter, DataRow dataRow, Projection columnCombination, JsonFilter jsonFilter)
+        private static void WriteObject(this JsonWriter jsonWriter, DataRow dataRow, ColumnGroup columnGroup, JsonFilter jsonFilter)
         {
-            Debug.Assert(!string.IsNullOrEmpty(columnCombination.Name));
-            jsonWriter.WriteObjectName(columnCombination.Name);
+            Debug.Assert(!string.IsNullOrEmpty(columnGroup.Name));
+            jsonWriter.WriteObjectName(columnGroup.Name);
             jsonWriter.WriteStartObject();
-            jsonWriter.WriteMembers(dataRow, columnCombination, jsonFilter);
+            jsonWriter.WriteMembers(dataRow, columnGroup, jsonFilter);
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteMembers(this JsonWriter jsonWriter, DataRow dataRow, Projection columnCombination, JsonFilter jsonFilter)
+        private static void WriteMembers(this JsonWriter jsonWriter, DataRow dataRow, ColumnGroup columnGroup, JsonFilter jsonFilter)
         {
             var count = 0;
-            var columns = columnCombination.Columns;
+            var columns = columnGroup.Columns;
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
@@ -138,29 +140,17 @@ namespace DevZest.Data.Primitives
                 jsonWriter.Write(dataRow, column);
                 count++;
             }
-
-            var children = columnCombination.Children;
-            for (int i = 0; i < children.Count; i++)
-            {
-                var childContainer = children[i];
-                if (jsonFilter != null && !jsonFilter.ShouldSerialize(childContainer))
-                    continue;
-                if (count > 0)
-                    jsonWriter.WriteComma();
-                jsonWriter.Write(dataRow, childContainer, jsonFilter);
-                count++;
-            }
         }
 
 
         public static void Parse(this JsonParser jsonParser, DataRow dataRow)
         {
             var model = dataRow.Model;
-            if (model.IsExtRoot)
+            if (model.IsColumnGroupContainer)
             {
-                var ext = model.ExtraColumns;
-                Debug.Assert(ext != null);
-                jsonParser.Parse(ext, dataRow);
+                Debug.Assert(model.ColumnGroups.Count == 1);
+                var columnGroup = model.ColumnGroups[0];
+                jsonParser.Parse(columnGroup, dataRow);
                 return;
             }
 
@@ -189,55 +179,45 @@ namespace DevZest.Data.Primitives
 
             var model = dataRow.Model;
 
-            if (memberName == Projection.EXT_ROOT_NAME)
-            {
-                var ext = model.ExtraColumns;
-                if (ext == null)
-                    throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
-                jsonParser.Parse(ext, dataRow);
-            }
+            var member = model[memberName];
+            if (member == null)
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
+            if (member is Column column)
+                jsonParser.Parse(column, dataRow.Ordinal);
+            else if (member is ColumnList columnList)
+                jsonParser.Parse(columnList, dataRow.Ordinal);
+            else if (member is ColumnGroup columnGroup)
+                jsonParser.Parse(columnGroup, dataRow);
             else
-            {
-                var member = model[memberName];
-                if (member == null)
-                    throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
-                if (member is Column)
-                    jsonParser.Parse((Column)member, dataRow.Ordinal);
-                else if (member is ColumnList)
-                    jsonParser.Parse((ColumnList)member, dataRow.Ordinal);
-                else
-                    jsonParser.Parse(dataRow[(Model)member], false);
-            }
+                jsonParser.Parse(dataRow[(Model)member], isTopLevel:false);
         }
 
-        private static void Parse(this JsonParser jsonParser, Projection columnCombination, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, ColumnGroup columnGroup, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             var token = jsonParser.PeekToken();
             if (token.Kind == JsonTokenKind.String)
             {
                 jsonParser.ConsumeToken();
-                jsonParser.Parse(columnCombination, token.Text, dataRow);
+                jsonParser.Parse(columnGroup, token.Text, dataRow);
 
                 while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonParser.ConsumeToken();
                     token = jsonParser.ExpectToken(JsonTokenKind.String);
-                    jsonParser.Parse(columnCombination, token.Text, dataRow);
+                    jsonParser.Parse(columnGroup, token.Text, dataRow);
                 }
             }
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Parse(this JsonParser jsonParser, Projection columnCombination, string memberName, DataRow dataRow)
+        private static void Parse(this JsonParser jsonParser, ColumnGroup columnGroup, string memberName, DataRow dataRow)
         {
             jsonParser.ExpectToken(JsonTokenKind.Colon);
-            if (columnCombination.ColumnsByRelativeName.ContainsKey(memberName))
-                jsonParser.Parse(columnCombination.ColumnsByRelativeName[memberName], dataRow.Ordinal);
-            else if (columnCombination.ChildrenByName.ContainsKey(memberName))
-                jsonParser.Parse(columnCombination.ChildrenByName[memberName], dataRow);
+            if (columnGroup.ColumnsByRelativeName.ContainsKey(memberName))
+                jsonParser.Parse(columnGroup.ColumnsByRelativeName[memberName], dataRow.Ordinal);
             else
-                throw new FormatException(DiagnosticMessages.JsonParser_InvalidColumnContainerMember(memberName, columnCombination.FullName));
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidColumnGroupMember(memberName, columnGroup.Name));
         }
 
         private static void Parse(this JsonParser jsonParser, Column column, int ordinal)

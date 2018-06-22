@@ -3,22 +3,18 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ExtraColumns(typeof(Ext))]
     public class SalesOrderInfo : SalesOrder
     {
-        public class Ext : BranchProjection
+        static SalesOrderInfo()
         {
-            static Ext()
-            {
-                Register((Ext _) => _.Customer);
-                Register((Ext _) => _.ShipToAddress);
-                Register((Ext _) => _.BillToAddress);
-            }
-
-            public Customer.Lookup Customer { get; private set; }
-            public Address.Lookup ShipToAddress { get; private set; }
-            public Address.Lookup BillToAddress { get; private set; }
+            RegisterColumnGroup((SalesOrderInfo _) => _.LK_Customer);
+            RegisterColumnGroup((SalesOrderInfo _) => _.LK_ShipToAddress);
+            RegisterColumnGroup((SalesOrderInfo _) => _.LK_BillToAddress);
         }
+
+        public Customer.Lookup LK_Customer { get; private set; }
+        public Address.Lookup LK_ShipToAddress { get; private set; }
+        public Address.Lookup LK_BillToAddress { get; private set; }
 
         public new SalesOrderInfoDetail SalesOrderDetails
         {

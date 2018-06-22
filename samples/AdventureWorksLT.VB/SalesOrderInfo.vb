@@ -1,50 +1,42 @@
-Imports DevZest.Data
-Imports DevZest.Data.Annotations
-
 Namespace DevZest.Samples.AdventureWorksLT
-    <ExtraColumns(GetType(SalesOrderInfo.Ext))>
     Public Class SalesOrderInfo
         Inherits SalesOrder
 
-        Public Class Ext
-            Inherits BranchProjection
+        Shared Sub New()
+            RegisterColumnGroup(Function(x As SalesOrderInfo) x.LK_Customer)
+            RegisterColumnGroup(Function(x As SalesOrderInfo) x.LK_ShipToAddress)
+            RegisterColumnGroup(Function(x As SalesOrderInfo) x.LK_BillToAddress)
+        End Sub
 
-            Shared Sub New()
-                Register(Function(x As Ext) x.Customer)
-                Register(Function(x As Ext) x.ShipToAddress)
-                Register(Function(x As Ext) x.BillToAddress)
-            End Sub
+        Private m_LK_Customer As Customer.Lookup
+        Public Property LK_Customer As Customer.Lookup
+            Get
+                Return m_LK_Customer
+            End Get
+            Private Set
+                m_LK_Customer = Value
+            End Set
+        End Property
 
-            Private m_Customer As Customer.Lookup
-            Public Property Customer As Customer.Lookup
-                Get
-                    Return m_Customer
-                End Get
-                Private Set
-                    m_Customer = Value
-                End Set
-            End Property
+        Private m_LK_ShipToAddress As Address.Lookup
+        Public Property LK_ShipToAddress As Address.Lookup
+            Get
+                Return m_LK_ShipToAddress
+            End Get
+            Private Set
+                m_LK_ShipToAddress = Value
+            End Set
+        End Property
 
-            Private m_ShipToAddress As Address.Lookup
-            Public Property ShipToAddress As Address.Lookup
-                Get
-                    Return m_ShipToAddress
-                End Get
-                Private Set
-                    m_ShipToAddress = Value
-                End Set
-            End Property
-
-            Private m_BillToAddress As Address.Lookup
-            Public Property BillToAddress As Address.Lookup
-                Get
-                    Return m_BillToAddress
-                End Get
-                Private Set
-                    m_BillToAddress = Value
-                End Set
-            End Property
-        End Class
+        Private m_LK_BillToAddress As Address.Lookup
+        Public Property LK_BillToAddress As Address.Lookup
+            Get
+                Return m_LK_BillToAddress
+            End Get
+            Private Set
+                m_LK_BillToAddress = Value
+            End Set
+        End Property
 
         Public Overloads ReadOnly Property SalesOrderDetails As SalesOrderInfoDetail
             Get

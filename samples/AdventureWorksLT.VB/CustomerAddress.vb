@@ -56,7 +56,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public Class Ref
-            Inherits LeafProjection(Of PK)
+            Inherits Ref(Of PK)
 
             Shared Sub New()
                 Register(Function(ByVal __ As Ref) __.CustomerID, Customer._CustomerID)
@@ -83,13 +83,13 @@ Namespace DevZest.Samples.AdventureWorksLT
                 End Set
             End Property
 
-            Protected Overrides Function CreatePrimaryKey() As PK
+            Protected Overrides Function GetForeignKey() As PK
                 Return New PK(CustomerID, AddressID)
             End Function
         End Class
 
         Public Class Lookup
-            Inherits LeafProjection
+            Inherits ColumnGroup
 
             Shared Sub New()
                 Register(Function(ByVal x As Lookup) x.AddressType, _AddressType)

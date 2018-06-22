@@ -3,34 +3,64 @@ using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    public abstract class LeafProjection<T> : LeafProjection
-        where T : PrimaryKey
+    public abstract class ColumnGroup : ModelMember, IModelReference
     {
-        protected abstract T CreatePrimaryKey();
-
-        protected sealed override PrimaryKey GetPrimaryKey()
+        internal void Construct(Model model, Type declaringType, string name)
         {
-            return PrimaryKey;
+            Debug.Assert(model != null);
+            ConstructModelMember(model, declaringType, name);
+            Mount();
         }
 
-        private T _primaryKey;
-        public new T PrimaryKey
+        internal override bool IsLocal
         {
-            get { return _primaryKey ?? (_primaryKey = CreatePrimaryKey()); }
+            get { return string.IsNullOrEmpty(Name); }
         }
-    }
 
-    public abstract class LeafProjection : Projection
-    {
-        private static MounterManager<LeafProjection, Column> s_columnManager = new MounterManager<LeafProjection, Column>();
+        public Model Model
+        {
+            get
+            {
+                EnsureConstructed();
+                return ParentModel;
+            }
+        }
+
+        private sealed class ContainerModel : Model
+        {
+            public ContainerModel(ColumnGroup columnGroup)
+            {
+                Debug.Assert(columnGroup != null);
+                Debug.Assert(columnGroup.ParentModel == null);
+                columnGroup.Construct(this, GetType(), string.Empty);
+                Add(columnGroup);
+            }
+
+            internal override bool IsColumnGroupContainer
+            {
+                get { return true; }
+            }
+        }
+
+        private void EnsureConstructed()
+        {
+            if (ParentModel == null)
+            {
+                var containerModel = new ContainerModel(this);
+                Debug.Assert(ParentModel == containerModel);
+            }
+        }
+
+        private static MounterManager<ColumnGroup, Column> s_columnManager = new MounterManager<ColumnGroup, Column>();
 
         [MounterRegistration]
-        protected static void Register<TProjection, TColumn>(Expression<Func<TProjection, TColumn>> getter, Mounter<TColumn> fromMounter)
-            where TProjection : LeafProjection
+        protected static void Register<TColumnGroup, TColumn>(Expression<Func<TColumnGroup, TColumn>> getter, Mounter<TColumn> fromMounter)
+            where TColumnGroup : ColumnGroup
             where TColumn : Column, new()
         {
             var initializer = getter.Verify(nameof(getter));
@@ -41,13 +71,13 @@ namespace DevZest.Data
             result.OriginalName = fromMounter.OriginalName;
         }
 
-        private static T CreateColumn<TProjection, T>(Mounter<TProjection, T> mounter, Action<T> initializer)
-            where TProjection : LeafProjection
-            where T : Column, new()
+        private static TColumn CreateColumn<TColumnGroup, TColumn>(Mounter<TColumnGroup, TColumn> mounter, Action<TColumn> initializer)
+            where TColumnGroup : ColumnGroup
+            where TColumn : Column, new()
         {
-            var result = Column.Create<T>(mounter.OriginalDeclaringType, mounter.OriginalName);
+            var result = Column.Create<TColumn>(mounter.OriginalDeclaringType, mounter.OriginalName);
             var parent = mounter.Parent;
-            result.Construct(parent.Model, mounter.DeclaringType, parent.GetName(mounter), ColumnKind.ColumnGroupMember, null, initializer);
+            result.Construct(parent.ParentModel, mounter.DeclaringType, parent.GetColumnName(mounter), ColumnKind.ColumnGroupMember, null, initializer);
             parent.Add(result);
             return result;
         }
@@ -100,7 +130,7 @@ namespace DevZest.Data
         }
 
         private ColumnCollection _columns;
-        public sealed override IReadOnlyList<Column> Columns
+        public IReadOnlyList<Column> Columns
         {
             get
             {
@@ -111,7 +141,7 @@ namespace DevZest.Data
             }
         }
 
-        public sealed override IReadOnlyDictionary<string, Column> ColumnsByRelativeName
+        public IReadOnlyDictionary<string, Column> ColumnsByRelativeName
         {
             get
             {
@@ -122,16 +152,6 @@ namespace DevZest.Data
             }
         }
 
-        public sealed override IReadOnlyList<Projection> Children
-        {
-            get { return Array<Projection>.Empty; }
-        }
-
-        public sealed override IReadOnlyDictionary<string, Projection> ChildrenByName
-        {
-            get { return EmptyDictionary<string, Projection>.Singleton; }
-        }
-
         private void Add(Column column)
         {
             if (_columns == null)
@@ -139,19 +159,14 @@ namespace DevZest.Data
             _columns.Add(column);
         }
 
-        internal sealed override void Mount()
+        private void Mount()
         {
             s_columnManager.Mount(this);
         }
 
-        public PrimaryKey PrimaryKey
+        private string GetColumnName<T>(Mounter<T> mounter)
         {
-            get { return GetPrimaryKey(); }
-        }
-
-        protected virtual PrimaryKey GetPrimaryKey()
-        {
-            return null;
+            return IsLocal ? mounter.Name : Name + "." + mounter.Name;
         }
     }
 }

@@ -45,10 +45,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public Class Ref
-            Inherits LeafProjection(Of PK)
+            Inherits Ref(Of PK)
 
             Shared Sub New()
-                Register(Function(x As Ref) x.AddressID, Address._AddressID)
+                Register(Function(x As Ref) x.AddressID, _AddressID)
             End Sub
 
             Private m_AddressID As _Int32
@@ -61,21 +61,21 @@ Namespace DevZest.Samples.AdventureWorksLT
                 End Set
             End Property
 
-            Protected Overrides Function CreatePrimaryKey() As PK
+            Protected Overrides Function GetForeignKey() As PK
                 Return New PK(AddressID)
             End Function
         End Class
 
         Public Class Lookup
-            Inherits LeafProjection
+            Inherits ColumnGroup
 
             Shared Sub New()
-                Register(Function(x As Lookup) x.AddressLine1, Address._AddressLine1)
-                Register(Function(x As Lookup) x.AddressLine2, Address._AddressLine2)
-                Register(Function(x As Lookup) x.City, Address._City)
-                Register(Function(x As Lookup) x.StateProvince, Address._StateProvince)
-                Register(Function(x As Lookup) x.CountryRegion, Address._CountryRegion)
-                Register(Function(x As Lookup) x.PostalCode, Address._PostalCode)
+                Register(Function(x As Lookup) x.AddressLine1, _AddressLine1)
+                Register(Function(x As Lookup) x.AddressLine2, _AddressLine2)
+                Register(Function(x As Lookup) x.City, _City)
+                Register(Function(x As Lookup) x.StateProvince, _StateProvince)
+                Register(Function(x As Lookup) x.CountryRegion, _CountryRegion)
+                Register(Function(x As Lookup) x.PostalCode, _PostalCode)
             End Sub
 
             Private m_AddressLine1 As _String

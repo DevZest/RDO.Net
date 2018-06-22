@@ -160,23 +160,21 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Public Async Function GetSalesOrderInfoAsync(salesOrderID As Integer, Optional ct As CancellationToken = Nothing) As Task(Of DbSet(Of SalesOrderInfo))
             Dim result = CreateQuery(Sub(builder As DbQueryBuilder, x As SalesOrderInfo)
-                                         Dim ext = x.GetExtraColumns(Of SalesOrderInfo.Ext)()
-                                         Debug.Assert(ext IsNot Nothing)
                                          Dim o As SalesOrderHeader = Nothing, c As Customer = Nothing, shipTo As Address = Nothing, billTo As Address = Nothing
                                          builder.From(SalesOrderHeaders, o).
                                          LeftJoin(Customers, o.FK_Customer, c).
                                          LeftJoin(Addresses, o.FK_ShipToAddress, shipTo).
                                          LeftJoin(Addresses, o.FK_BillToAddress, billTo).
                                          AutoSelect().
-                                         AutoSelect(shipTo, ext.ShipToAddress).
-                                         AutoSelect(billTo, ext.BillToAddress).
+                                         AutoSelect(c, x.LK_Customer).
+                                         AutoSelect(shipTo, x.LK_ShipToAddress).
+                                         AutoSelect(billTo, x.LK_BillToAddress).
                                          Where(o.SalesOrderID = _Int32.Param(salesOrderID))
                                      End Sub)
             Await result.CreateChildAsync(Function(x) x.SalesOrderDetails,
                                           Sub(builder As DbQueryBuilder, x As SalesOrderInfoDetail)
-                                              Debug.Assert(x.GetExtraColumns(Of Product.Lookup)() IsNot Nothing)
                                               Dim d As SalesOrderDetail = Nothing, p As Product = Nothing
-                                              builder.From(SalesOrderDetails, d).LeftJoin(Products, d.FK_Product, p).AutoSelect()
+                                              builder.From(SalesOrderDetails, d).LeftJoin(Products, d.FK_Product, p).AutoSelect().AutoSelect(p, x.LK_Product)
                                           End Sub, ct)
             Return result
         End Function
@@ -216,7 +214,7 @@ Namespace DevZest.Samples.AdventureWorksLT
                                          Dim seqNo = t.Model.GetIdentity(True).Column
                                          Debug.Assert(seqNo IsNot Nothing)
                                          Dim p As Product = Nothing
-                                         builder.LeftJoin(Products, t.PrimaryKey, p).AutoSelect().OrderBy(seqNo)
+                                         builder.LeftJoin(Products, t.ForeignKey, p).AutoSelect().OrderBy(seqNo)
                                      End Sub).ToDataSetAsync(ct)
         End Function
     End Class

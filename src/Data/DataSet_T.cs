@@ -79,7 +79,7 @@ namespace DevZest.Data
             }
 
             private DataSet<T> _baseDataSet;
-            private DataRow _parentRow;
+            private readonly DataRow _parentRow;
             public override DataRow ParentDataRow
             {
                 get { return _parentRow; }

@@ -956,11 +956,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Invalid member name "{memberName}" for ColumnContainer "{columnContainerType}".
+        /// Invalid member name "{memberName}" for ColumnGroup "{columnGroupName}".
         /// </summary>
-        public static string JsonParser_InvalidColumnContainerMember(object memberName, object columnContainerType)
+        public static string JsonParser_InvalidColumnGroupMember(object memberName, object columnGroupName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidColumnContainerMember", "memberName", "columnContainerType"), memberName, columnContainerType);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidColumnGroupMember", "memberName", "columnGroupName"), memberName, columnGroupName);
         }
 
         /// <summary>

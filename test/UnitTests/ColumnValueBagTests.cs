@@ -11,8 +11,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
-            var customer = ext.Customer;
+            var customer = _.LK_Customer;
 
             var valueBag = new ColumnValueBag();
             valueBag.SetValue(_.CustomerID, 2);
@@ -28,8 +27,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
-            var customer = ext.Customer;
+            var customer = _.LK_Customer;
             salesOrders.Add(new DataRow(), (dataRow) =>
             {
                 _.CustomerID[dataRow] = 5;
@@ -55,26 +53,26 @@ namespace DevZest.Data
             {
                 var salesOrder = DataSet<SalesOrderInfo>.New().EnsureInitialized()._;
                 var customerKey = salesOrder.FK_Customer;
-                var customerExt = salesOrder.GetExtraColumns<SalesOrderInfo.Ext>().Customer;
+                var customerLookup = salesOrder.LK_Customer;
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);
-                valueBag.AutoSelect(customerExt, salesOrders[0]);
+                valueBag.AutoSelect(customerLookup, salesOrders[0]);
                 Assert.AreEqual(5, valueBag.GetValue(customerKey.CustomerID));
                 Assert.AreEqual(5, valueBag[customerKey.CustomerID]);
-                Assert.AreEqual("Mr.", valueBag.GetValue(customerExt.Title));
-                Assert.AreEqual("John", valueBag.GetValue(customerExt.FirstName));
-                Assert.AreEqual("K", valueBag.GetValue(customerExt.MiddleName));
-                Assert.AreEqual("Smith", valueBag.GetValue(customerExt.LastName));
-                Assert.AreEqual("Good Toys", valueBag.GetValue(customerExt.CompanyName));
-                Assert.AreEqual(@"john.smith@goodtoys.com", valueBag.GetValue(customerExt.EmailAddress));
-                Assert.AreEqual("555-123-4567", valueBag.GetValue(customerExt.Phone));
-                Assert.AreEqual("Mr.", valueBag[customerExt.Title]);
-                Assert.AreEqual("John", valueBag[customerExt.FirstName]);
-                Assert.AreEqual("K", valueBag[customerExt.MiddleName]);
-                Assert.AreEqual("Smith", valueBag[customerExt.LastName]);
-                Assert.AreEqual("Good Toys", valueBag[customerExt.CompanyName]);
-                Assert.AreEqual(@"john.smith@goodtoys.com", valueBag[customerExt.EmailAddress]);
-                Assert.AreEqual("555-123-4567", valueBag[customerExt.Phone]);
+                Assert.AreEqual("Mr.", valueBag.GetValue(customerLookup.Title));
+                Assert.AreEqual("John", valueBag.GetValue(customerLookup.FirstName));
+                Assert.AreEqual("K", valueBag.GetValue(customerLookup.MiddleName));
+                Assert.AreEqual("Smith", valueBag.GetValue(customerLookup.LastName));
+                Assert.AreEqual("Good Toys", valueBag.GetValue(customerLookup.CompanyName));
+                Assert.AreEqual(@"john.smith@goodtoys.com", valueBag.GetValue(customerLookup.EmailAddress));
+                Assert.AreEqual("555-123-4567", valueBag.GetValue(customerLookup.Phone));
+                Assert.AreEqual("Mr.", valueBag[customerLookup.Title]);
+                Assert.AreEqual("John", valueBag[customerLookup.FirstName]);
+                Assert.AreEqual("K", valueBag[customerLookup.MiddleName]);
+                Assert.AreEqual("Smith", valueBag[customerLookup.LastName]);
+                Assert.AreEqual("Good Toys", valueBag[customerLookup.CompanyName]);
+                Assert.AreEqual(@"john.smith@goodtoys.com", valueBag[customerLookup.EmailAddress]);
+                Assert.AreEqual("555-123-4567", valueBag[customerLookup.Phone]);
             }
         }
 
@@ -83,8 +81,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
-            var customer = ext.Customer;
+            var customer = _.LK_Customer;
 
             var valueBag = new ColumnValueBag();
             valueBag.SetValue(_.CustomerID, 2);
@@ -102,8 +99,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
-            var customer = ext.Customer;
+            var customer = _.LK_Customer;
 
             var valueBag = new ColumnValueBag();
             valueBag.SetValue(_.CustomerID, 2);

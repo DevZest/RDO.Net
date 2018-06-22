@@ -471,8 +471,8 @@
   <data name="Model_ExtraColumnsAlreadyExists" xml:space="preserve">
     <value>Extra columns already exists.</value>
   </data>
-  <data name="JsonParser_InvalidColumnContainerMember" xml:space="preserve">
-    <value>Invalid member name "{memberName}" for ColumnContainer "{columnContainerType}".</value>
+  <data name="JsonParser_InvalidColumnGroupMember" xml:space="preserve">
+    <value>Invalid member name "{memberName}" for ColumnGroup "{columnGroupName}".</value>
   </data>
   <data name="DbQueryBuilder_EmptyFrom" xml:space="preserve">
     <value>The From clause is empty.</value>

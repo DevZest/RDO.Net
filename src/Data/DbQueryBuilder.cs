@@ -258,7 +258,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder AutoSelect(Model from, Projection to)
+        public DbQueryBuilder AutoSelect(Model from, ColumnGroup to)
         {
             to.VerifyNotNull(nameof(to));
             from.VerifyNotNull(nameof(from));
@@ -278,10 +278,6 @@ namespace DevZest.Data
                 if (sourceColumn != null)
                     SelectCore(sourceColumn, targetColumn);
             }
-
-            var childContainers = to.Children;
-            for (int i = 0; i < childContainers.Count; i++)
-                AutoSelect(from, childContainers[i]);
 
             return this;
         }

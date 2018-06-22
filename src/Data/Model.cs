@@ -307,12 +307,67 @@ namespace DevZest.Data
 
         #endregion
 
+        #region RegisterColumnGroup
+
+        static MounterManager<Model, ColumnGroup> s_columnGroupManager = new MounterManager<Model, ColumnGroup>();
+
+        /// <summary>Registers a new <see cref="ColumnGroup"/>.</summary>
+        /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
+        /// <typeparam name="TColumnGroup">The type of the <see cref="ColumnGroup"/>.</typeparam>
+        /// <param name="getter">The lambda expression of the <see cref="ColumnGroup"/> getter.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
+        [MounterRegistration]
+        protected static void RegisterColumnGroup<TModel, TColumnGroup>(Expression<Func<TModel, TColumnGroup>> getter)
+            where TModel : Model
+            where TColumnGroup : ColumnGroup, new()
+        {
+            getter.VerifyNotNull(nameof(getter));
+            s_columnGroupManager.Register(getter, mounter => CreateColumnGroup(mounter));
+        }
+
+        private List<ColumnGroup> _columnGroups;
+        protected internal IReadOnlyList<ColumnGroup> ColumnGroups
+        {
+            get
+            {
+                if (_columnGroups == null)
+                    return Array<ColumnGroup>.Empty;
+                else
+                    return _columnGroups;
+            }
+        }
+
+        internal void Add(ColumnGroup columnGroup)
+        {
+            Debug.Assert(columnGroup != null);
+            if (_columnGroups == null)
+                _columnGroups = new List<ColumnGroup>();
+            _columnGroups.Add(columnGroup);
+        }
+
+
+        private static TColumnGroup CreateColumnGroup<TModel, TColumnGroup>(Mounter<TModel, TColumnGroup> mounter)
+            where TModel : Model
+            where TColumnGroup : ColumnGroup, new()
+        {
+            var result = new TColumnGroup();
+            var parent = mounter.Parent;
+            result.Construct(parent, mounter.DeclaringType, mounter.Name);
+            parent.Add(result);
+            return result;
+        }
+
+
+        #endregion
+
         protected Model()
         {
             Columns = new ColumnCollection(this);
             ChildModels = new ModelCollection(this);
 
             s_columnManager.Mount(this);
+            s_columnGroupManager.Mount(this);
             s_localColumnManager.Mount(this);
             s_columnListManager.Mount(this);
             PerformConstructing();
@@ -655,13 +710,6 @@ namespace DevZest.Data
                 var sourceColumnList = property.GetInstance(prototype);
                 columnList.Initialize(sourceColumnList);
             }
-        }
-
-        internal void InitializeExtraColumns(Model prototype)
-        {
-            var prototypeExt = prototype.ExtraColumns;
-            if (prototypeExt != null && ExtraColumns == null)
-                ExtraColumns = (Projection)Activator.CreateInstance(prototypeExt.GetType());
         }
 
         private IIndexConstraint _clusteredIndex;
@@ -1113,44 +1161,6 @@ namespace DevZest.Data
             get { return RootModel._dataSetContainer; }
         }
 
-        private Projection _extraColumns;
-        internal Projection ExtraColumns
-        {
-            get { return _extraColumns; }
-            set
-            {
-                Debug.Assert(_extraColumns == null);
-                Debug.Assert(value != null);
-                _extraColumns = value;
-                _extraColumns.Initialize(this);
-            }
-        }
-
-        public void SetExtraColumns<T>()
-            where T : Projection, new()
-        {
-            VerifyDesignMode();
-            if (ExtraColumns != null)
-                throw new InvalidOperationException(DiagnosticMessages.Model_ExtraColumnsAlreadyExists);
-            else
-                ExtraColumns = new T();
-        }
-
-        internal void SetExtraColumns(Type extType)
-        {
-            Debug.Assert(extType != null);
-            if (ExtraColumns != null)
-                throw new InvalidOperationException(DiagnosticMessages.Model_ExtraColumnsAlreadyExists);
-            else
-                ExtraColumns = (Projection)Activator.CreateInstance(extType);
-        }
-
-        public T GetExtraColumns<T>()
-            where T : Projection, new()
-        {
-            return ExtraColumns as T;
-        }
-
         private int _suspendEditingValueCount = 0;
         internal void SuspendEditingValue()
         {
@@ -1173,7 +1183,7 @@ namespace DevZest.Data
             get { return this; }
         }
 
-        internal virtual bool IsExtRoot
+        internal virtual bool IsColumnGroupContainer
         {
             get { return false; }
         }
