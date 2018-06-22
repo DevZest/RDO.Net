@@ -31,24 +31,23 @@ namespace AdventureWorks.SalesOrders
             {
                 var result = db.CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
                 {
-                    var ext = _.GetExtraColumns<SalesOrderInfo.Ext>();
-                    Debug.Assert(ext != null);
                     builder.From(db.SalesOrderHeaders, out var o)
                         .LeftJoin(db.Customers, o.FK_Customer, out var c)
                         .LeftJoin(db.Addresses, o.FK_ShipToAddress, out var shipTo)
                         .LeftJoin(db.Addresses, o.FK_BillToAddress, out var billTo)
                         .AutoSelect()
-                        .AutoSelect(shipTo, ext.ShipToAddress)
-                        .AutoSelect(billTo, ext.BillToAddress)
+                        .AutoSelect(c, _.LK_Customer)
+                        .AutoSelect(shipTo, _.LK_ShipToAddress)
+                        .AutoSelect(billTo, _.LK_BillToAddress)
                         .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
                 });
 
                 await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
                 {
-                    Debug.Assert(_.GetExtraColumns<Product.Lookup>() != null);
                     builder.From(db.SalesOrderDetails, out var d)
                         .LeftJoin(db.Products, d.FK_Product, out var p)
-                        .AutoSelect();
+                        .AutoSelect()
+                        .AutoSelect(p, _.LK_Product);
                 }, ct);
 
                 return await result.ToDataSetAsync(ct);
