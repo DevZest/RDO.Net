@@ -11,7 +11,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var customer = _.LK_Customer;
+            var customer = _.Customer;
 
             var valueBag = new ColumnValueBag();
             valueBag.SetValue(_.CustomerID, 2);
@@ -27,7 +27,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var customer = _.LK_Customer;
+            var customer = _.Customer;
             salesOrders.Add(new DataRow(), (dataRow) =>
             {
                 _.CustomerID[dataRow] = 5;
@@ -53,7 +53,7 @@ namespace DevZest.Data
             {
                 var salesOrder = DataSet<SalesOrderInfo>.New().EnsureInitialized()._;
                 var customerKey = salesOrder.FK_Customer;
-                var customerLookup = salesOrder.LK_Customer;
+                var customerLookup = salesOrder.Customer;
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);
                 valueBag.AutoSelect(customerLookup, salesOrders[0]);
@@ -81,7 +81,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var customer = _.LK_Customer;
+            var customer = _.Customer;
 
             var valueBag = new ColumnValueBag();
             valueBag.SetValue(_.CustomerID, 2);
@@ -99,7 +99,7 @@ namespace DevZest.Data
         {
             var salesOrders = DataSet<SalesOrderInfo>.New();
             var _ = salesOrders._;
-            var customer = _.LK_Customer;
+            var customer = _.Customer;
 
             var valueBag = new ColumnValueBag();
             valueBag.SetValue(_.CustomerID, 2);

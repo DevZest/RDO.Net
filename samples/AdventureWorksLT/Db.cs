@@ -182,9 +182,9 @@ namespace DevZest.Samples.AdventureWorksLT
                     .LeftJoin(Addresses, o.FK_ShipToAddress, out var shipTo)
                     .LeftJoin(Addresses, o.FK_BillToAddress, out var billTo)
                     .AutoSelect()
-                    .AutoSelect(c, _.LK_Customer)
-                    .AutoSelect(shipTo, _.LK_ShipToAddress)
-                    .AutoSelect(billTo, _.LK_BillToAddress)
+                    .AutoSelect(c, _.Customer)
+                    .AutoSelect(shipTo, _.ShipToAddress)
+                    .AutoSelect(billTo, _.BillToAddress)
                     .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
             });
 
@@ -193,7 +193,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 builder.From(SalesOrderDetails, out var d)
                     .LeftJoin(Products, d.FK_Product, out var p)
                     .AutoSelect()
-                    .AutoSelect(p, _.LK_Product);
+                    .AutoSelect(p, _.Product);
             }, ct);
 
             return result;

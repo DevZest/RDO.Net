@@ -3,38 +3,38 @@ Namespace DevZest.Samples.AdventureWorksLT
         Inherits SalesOrder
 
         Shared Sub New()
-            RegisterColumnGroup(Function(x As SalesOrderInfo) x.LK_Customer)
-            RegisterColumnGroup(Function(x As SalesOrderInfo) x.LK_ShipToAddress)
-            RegisterColumnGroup(Function(x As SalesOrderInfo) x.LK_BillToAddress)
+            RegisterColumnGroup(Function(x As SalesOrderInfo) x.Customer)
+            RegisterColumnGroup(Function(x As SalesOrderInfo) x.ShipToAddress)
+            RegisterColumnGroup(Function(x As SalesOrderInfo) x.BillToAddress)
         End Sub
 
-        Private m_LK_Customer As Customer.Lookup
-        Public Property LK_Customer As Customer.Lookup
+        Private m_Customer As Customer.Lookup
+        Public Property Customer As Customer.Lookup
             Get
-                Return m_LK_Customer
+                Return m_Customer
             End Get
             Private Set
-                m_LK_Customer = Value
+                m_Customer = Value
             End Set
         End Property
 
-        Private m_LK_ShipToAddress As Address.Lookup
-        Public Property LK_ShipToAddress As Address.Lookup
+        Private m_ShipToAddress As Address.Lookup
+        Public Property ShipToAddress As Address.Lookup
             Get
-                Return m_LK_ShipToAddress
+                Return m_ShipToAddress
             End Get
             Private Set
-                m_LK_ShipToAddress = Value
+                m_ShipToAddress = Value
             End Set
         End Property
 
-        Private m_LK_BillToAddress As Address.Lookup
-        Public Property LK_BillToAddress As Address.Lookup
+        Private m_BillToAddress As Address.Lookup
+        Public Property BillToAddress As Address.Lookup
             Get
-                Return m_LK_BillToAddress
+                Return m_BillToAddress
             End Get
             Private Set
-                m_LK_BillToAddress = Value
+                m_BillToAddress = Value
             End Set
         End Property
 

@@ -7,18 +7,18 @@ namespace DevZest.Samples.AdventureWorksLT
     {
         static SalesOrderInfoDetail()
         {
-            RegisterColumnGroup((SalesOrderInfoDetail _) => _.LK_Product);
+            RegisterColumnGroup((SalesOrderInfoDetail _) => _.Product);
         }
 
-        public Product.Lookup LK_Product { get; private set; }
+        public Product.Lookup Product { get; private set; }
 
         [ModelValidator]
         private DataValidationError ValidateProduct(DataRow dataRow)
         {
             if (ProductID[dataRow] == null)
                 return null;
-            var productNumber = LK_Product.ProductNumber;
-            var productName = LK_Product.Name;
+            var productNumber = Product.ProductNumber;
+            var productName = Product.Name;
 
             if (string.IsNullOrEmpty(productNumber[dataRow]))
                 return new DataValidationError(string.Format(UserMessages.Validation_ValueIsRequired, productNumber.DisplayName), productNumber);

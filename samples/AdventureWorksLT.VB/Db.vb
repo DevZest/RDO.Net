@@ -166,15 +166,15 @@ Namespace DevZest.Samples.AdventureWorksLT
                                          LeftJoin(Addresses, o.FK_ShipToAddress, shipTo).
                                          LeftJoin(Addresses, o.FK_BillToAddress, billTo).
                                          AutoSelect().
-                                         AutoSelect(c, x.LK_Customer).
-                                         AutoSelect(shipTo, x.LK_ShipToAddress).
-                                         AutoSelect(billTo, x.LK_BillToAddress).
+                                         AutoSelect(c, x.Customer).
+                                         AutoSelect(shipTo, x.ShipToAddress).
+                                         AutoSelect(billTo, x.BillToAddress).
                                          Where(o.SalesOrderID = _Int32.Param(salesOrderID))
                                      End Sub)
             Await result.CreateChildAsync(Function(x) x.SalesOrderDetails,
                                           Sub(builder As DbQueryBuilder, x As SalesOrderInfoDetail)
                                               Dim d As SalesOrderDetail = Nothing, p As Product = Nothing
-                                              builder.From(SalesOrderDetails, d).LeftJoin(Products, d.FK_Product, p).AutoSelect().AutoSelect(p, x.LK_Product)
+                                              builder.From(SalesOrderDetails, d).LeftJoin(Products, d.FK_Product, p).AutoSelect().AutoSelect(p, x.Product)
                                           End Sub, ct)
             Return result
         End Function

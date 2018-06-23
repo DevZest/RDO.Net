@@ -571,7 +571,7 @@
       "Comment" : null,
       "RowGuid" : "89e42cdc-8506-48a2-b89b-eb3e64e3554e",
       "ModifiedDate" : "2008-06-08T00:00:00.000",
-      "LK_Customer" : {
+      "Customer" : {
          "Title" : "Mr.",
          "FirstName" : "David",
          "MiddleName" : null,
@@ -580,7 +580,7 @@
          "EmailAddress" : "david16@adventure-works.com",
          "Phone" : "969-555-0117"
       },
-      "LK_ShipToAddress" : {
+      "ShipToAddress" : {
          "AddressLine1" : "99700 Bell Road",
          "AddressLine2" : null,
          "City" : "Auburn",
@@ -588,7 +588,7 @@
          "CountryRegion" : "United States",
          "PostalCode" : "95603"
       },
-      "LK_BillToAddress" : {
+      "BillToAddress" : {
          "AddressLine1" : "99700 Bell Road",
          "AddressLine2" : null,
          "City" : "Auburn",
@@ -605,7 +605,7 @@
             "UnitPriceDiscount" : 0,
             "RowGuid" : "e3a1994c-7a68-4ce8-96a3-77fdd3bbd730",
             "ModifiedDate" : "2008-06-01T00:00:00.000",
-            "LK_Product" : {
+            "Product" : {
                "Name" : "ML Road Frame-W - Yellow, 48",
                "ProductNumber" : "FR-R72Y-48"
             }
@@ -618,7 +618,7 @@
             "UnitPriceDiscount" : 0,
             "RowGuid" : "5c77f557-fdb6-43ba-90b9-9a7aec55ca32",
             "ModifiedDate" : "2008-06-01T00:00:00.000",
-            "LK_Product" : {
+            "Product" : {
                "Name" : "ML Road Frame-W - Yellow, 38",
                "ProductNumber" : "FR-R72Y-38"
             }
