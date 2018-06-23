@@ -11,9 +11,9 @@ namespace AdventureWorks.SalesOrders
             out RowBinding<ForeignKeyBox> shipToAddressBinding, out RowBinding<ForeignKeyBox> billToAddressBinding)
         {
             var result = new RowCompositeBinding<SalesOrderHeaderBox>()
-                .AddChild(_.FK_Customer.BindToForeignKeyBox(_.LK_Customer, CustomerBox.RefreshAction), v => v._customer)
-                .AddChild(shipToAddressBinding = _.FK_ShipToAddress.BindToForeignKeyBox(_.LK_ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)
-                .AddChild(billToAddressBinding = _.FK_BillToAddress.BindToForeignKeyBox(_.LK_BillToAddress, AddressBox.RefreshAction), v => v._billTo)
+                .AddChild(_.FK_Customer.BindToForeignKeyBox(_.Customer, CustomerBox.RefreshAction), v => v._customer)
+                .AddChild(shipToAddressBinding = _.FK_ShipToAddress.BindToForeignKeyBox(_.ShipToAddress, AddressBox.RefreshAction), v => v._shipTo)
+                .AddChild(billToAddressBinding = _.FK_BillToAddress.BindToForeignKeyBox(_.BillToAddress, AddressBox.RefreshAction), v => v._billTo)
                 .AddChild(_.OrderDate.BindToDatePicker(), v => v._orderDate)
                 .AddChild(_.ShipDate.BindToDatePicker(), v => v._shipDate)
                 .AddChild(_.DueDate.BindToDatePicker(), v => v._dueDate)

@@ -23,7 +23,7 @@ namespace AdventureWorks.SalesOrders
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                var product = _.LK_Product;
+                var product = _.Product;
                 builder.GridRows("Auto", "20")
                     .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto")
                     .WithFrozenTop(1)
@@ -95,7 +95,7 @@ namespace AdventureWorks.SalesOrders
                     return false;
 
                 Debug.Assert(lookup.Count == data.Count);
-                var product = _.LK_Product;
+                var product = _.Product;
                 for (int i = 0; i < lookup.Count; i++)
                 {
                     data[i].SetValue(product.Name, lookup._.Name[i]);
