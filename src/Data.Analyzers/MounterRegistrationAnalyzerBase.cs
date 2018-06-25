@@ -15,12 +15,17 @@ namespace DevZest.Data.Analyzers
         private static readonly LocalizableString Duplicate_Message = new LocalizableResourceString(nameof(Resources.MounterRegistration_Duplicate_Message), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MounterNaming_Title = new LocalizableResourceString(nameof(Resources.MounterRegistration_MounterNaming_Title), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MounterNaming_Message = new LocalizableResourceString(nameof(Resources.MounterRegistration_MounterNaming_Message), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString InvalidLocalColumn_Title = new LocalizableResourceString(nameof(Resources.MounterRegistration_InvalidLocalColumn_Title), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString InvalidLocalColumn_Message = new LocalizableResourceString(nameof(Resources.MounterRegistration_InvalidLocalColumn_Message), Resources.ResourceManager, typeof(Resources));
 
         protected static readonly DiagnosticDescriptor Rule_InvalidInvocation = new DiagnosticDescriptor(
             DiagnosticIds.MounterRegistration_InvalidInvocation, InvalidInvocation_Title, InvalidInvocation_Message, DiagnosticCategories.Compile, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         protected static readonly DiagnosticDescriptor Rule_InvalidGetter = new DiagnosticDescriptor(
             DiagnosticIds.MounterRegistration_InvalidGetter, InvalidGetter_Title, InvalidGetter_Message, DiagnosticCategories.Compile, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        protected static readonly DiagnosticDescriptor Rule_InvalidLocalColumn = new DiagnosticDescriptor(
+            DiagnosticIds.MounterRegistration_InvalidLocalColumn, InvalidLocalColumn_Title, InvalidLocalColumn_Message, DiagnosticCategories.Compile, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         protected static readonly DiagnosticDescriptor Rule_Duplicate = new DiagnosticDescriptor(
             DiagnosticIds.MounterRegistration_Duplicate, Duplicate_Title, Duplicate_Message, DiagnosticCategories.Compile, DiagnosticSeverity.Error, isEnabledByDefault: true);
@@ -30,7 +35,7 @@ namespace DevZest.Data.Analyzers
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(Rule_InvalidInvocation, Rule_InvalidGetter, Rule_Duplicate, Rule_MounterNaming); }
+            get { return ImmutableArray.Create(Rule_InvalidInvocation, Rule_InvalidGetter, Rule_InvalidLocalColumn, Rule_Duplicate, Rule_MounterNaming); }
         }
 
         protected static bool IsMounterRegistration(IMethodSymbol symbol)

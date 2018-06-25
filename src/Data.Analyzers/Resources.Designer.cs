@@ -116,6 +116,24 @@ namespace DevZest.Data.Analyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Local column {0} is invalid for RegisterColumn..
+        /// </summary>
+        internal static string MounterRegistration_InvalidLocalColumn_Message {
+            get {
+                return ResourceManager.GetString("MounterRegistration_InvalidLocalColumn_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local column is invalid for RegisterColumn..
+        /// </summary>
+        internal static string MounterRegistration_InvalidLocalColumn_Title {
+            get {
+                return ResourceManager.GetString("MounterRegistration_InvalidLocalColumn_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mounter {0} of property {1} does conform to naming convention as {2}..
         /// </summary>
         internal static string MounterRegistration_MounterNaming_Message {

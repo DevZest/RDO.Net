@@ -189,5 +189,31 @@ class SimpleModel : Model
             };
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void RegisterColumn_InvalidLocalColumn()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+        RegisterColumn((SimpleModel _) => _.Column1);
+    }
+
+    public LocalColumn<int> Column1 { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterRegistration_InvalidLocalColumn,
+                Message = string.Format(Resources.MounterRegistration_InvalidLocalColumn_Message, "Column1"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 8, 24) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }

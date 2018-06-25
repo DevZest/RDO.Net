@@ -135,6 +135,12 @@
   <data name="MounterRegistration_InvalidInvocation_Title" xml:space="preserve">
     <value>Invalid invocation of mounter registration.</value>
   </data>
+  <data name="MounterRegistration_InvalidLocalColumn_Message" xml:space="preserve">
+    <value>Local column {0} is invalid for RegisterColumn.</value>
+  </data>
+  <data name="MounterRegistration_InvalidLocalColumn_Title" xml:space="preserve">
+    <value>Local column is invalid for RegisterColumn.</value>
+  </data>
   <data name="MounterRegistration_MounterNaming_Message" xml:space="preserve">
     <value>Mounter {0} of property {1} does conform to naming convention as {2}.</value>
   </data>

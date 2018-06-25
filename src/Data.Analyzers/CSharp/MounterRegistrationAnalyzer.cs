@@ -31,6 +31,8 @@ namespace DevZest.Data.Analyzers.CSharp
             if (!IsMounterRegistration(symbol))
                 return null;
 
+            var isColumnRegistration = symbol.Name == "RegisterColumn";
+
             if (!IsValidInvocation(invocationExpression, semanticModel, out var containingType, out var fieldSymbol))
                 return Diagnostic.Create(Rule_InvalidInvocation, invocationExpression.GetLocation());
 
@@ -38,6 +40,9 @@ namespace DevZest.Data.Analyzers.CSharp
             Debug.Assert(firstArgument != null);
             if (!IsValidGetter(firstArgument, semanticModel, containingType, out var propertySymbol))
                 return Diagnostic.Create(Rule_InvalidGetter, firstArgument.GetLocation());
+
+            if (isColumnRegistration && propertySymbol.Type.MetadataName == "LocalColumn`1")
+                return Diagnostic.Create(Rule_InvalidLocalColumn, firstArgument.GetLocation(), propertySymbol.Name);
 
             if (AnyDuplicate(invocationExpression, propertySymbol, context.Compilation))
                 return Diagnostic.Create(Rule_Duplicate, invocationExpression.GetLocation(), propertySymbol.Name);
