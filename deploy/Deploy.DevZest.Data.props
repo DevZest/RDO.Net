@@ -11,4 +11,20 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>http://www.devzest.com</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevZest.Data.Analyzers\Data.Analyzers.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <AnalyzerOutput>..\DevZest.Data.Analyzers\bin\Release\netstandard1.3</AnalyzerOutput>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="$(AnalyzerOutput)\DevZest.Data.Analyzers.dll" CopyToOutputDirectory="Never" Pack="true" PackagePath="analyzers\dotnet\DevZest.Data.Analyzers.dll" Visible="false" />
+    <None Include="$(AnalyzerOutput)\tools\install.ps1" CopyToOutputDirectory="Never" Pack="true" PackagePath="tools\install.ps1" />
+    <None Include="$(AnalyzerOutput)\tools\uninstall.ps1" CopyToOutputDirectory="Never" Pack="true" PackagePath="tools\uninstall.ps1" />
+  </ItemGroup>
 </Project>

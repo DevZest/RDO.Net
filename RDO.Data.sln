@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{D18D68
 		deploy\.gitignore = deploy\.gitignore
 		deploy\Build.bat = deploy\Build.bat
 		deploy\Build.ps1 = deploy\Build.ps1
+		deploy\Deploy.DevZest.Data.Analyzers.props = deploy\Deploy.DevZest.Data.Analyzers.props
 		deploy\Deploy.DevZest.Data.props = deploy\Deploy.DevZest.Data.props
 		deploy\Deploy.DevZest.Data.SqlServer.props = deploy\Deploy.DevZest.Data.SqlServer.props
 		deploy\Deploy.DevZest.Samples.AdventureWorksLT.props = deploy\Deploy.DevZest.Samples.AdventureWorksLT.props

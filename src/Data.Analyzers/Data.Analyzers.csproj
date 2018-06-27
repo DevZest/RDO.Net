@@ -1,25 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
   
   <PropertyGroup>
-    <PackageId>Data.Common.CsAnalyzers</PackageId>
-    <PackageVersion>1.0.0.0</PackageVersion>
-    <Authors>Weifen</Authors>
-    <PackageLicenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</PackageLicenseUrl>
-    <PackageProjectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</PackageProjectUrl>
-    <PackageIconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</PackageIconUrl>
-    <RepositoryUrl>http://REPOSITORY_URL_HERE_OR_DELETE_THIS_LINE</RepositoryUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>Data.Common.CsAnalyzers</Description>
-    <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
-    <Copyright>Copyright</Copyright>
-    <PackageTags>Data.Common.CsAnalyzers, analyzers</PackageTags>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
     <AssemblyName>DevZest.Data.Analyzers</AssemblyName>
     <RootNamespace>DevZest.Data.Analyzers</RootNamespace>
   </PropertyGroup>
@@ -44,4 +31,8 @@
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <DeployProps Condition="Exists('..\Deploy.$(AssemblyName).props')">..\Deploy.$(AssemblyName).props</DeployProps>
+  </PropertyGroup>
+  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' " />
 </Project>
