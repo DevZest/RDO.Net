@@ -14,4 +14,4 @@ Note:
 - When repo is newly cloned, the respective sub directory does not exist. You need to run `Sync.bat` to create these folders automatically.
 - When building the package, the dependent package with same package version must be present. For example, when building pakcage
 `DevZest.Data.SqlServer.1.0.0-beta-20180525`, the package `DevZest.Data.1.0.0-beta-20180525.nupkg` must first be built and deployed.
-- The best practice is to deploy the packages to local NuGet repository first, after testing, then deploy to nuget.org.
+- The best practice is to deploy the packages to local NuGet repository, testing with `RDO.Data.Samples.sln` (projects in this solution are overrided to reference latest nuget packages), then deploy to nuget.org.
