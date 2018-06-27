@@ -31,7 +31,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "externa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{13427EEA-1A40-46D8-919A-FF0B5EAB9D34}"
 	ProjectSection(SolutionItems) = preProject
-		deploy\.gitignore = deploy\.gitignore
 		deploy\Build.bat = deploy\Build.bat
 		deploy\Deploy.DevZest.Data.WPF.props = deploy\Deploy.DevZest.Data.WPF.props
 		deploy\Deploy.DevZest.Data.WPF.sln = deploy\Deploy.DevZest.Data.WPF.sln
