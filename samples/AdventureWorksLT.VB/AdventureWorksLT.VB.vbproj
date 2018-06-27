@@ -43,5 +43,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UserMessages.Designer.vb</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>  
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DeployProps Condition="Exists('..\Deploy.$(AssemblyName).props')">..\Deploy.$(AssemblyName).props</DeployProps>
+  </PropertyGroup>
+  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' " />
+
+  <Import Project="..\AdventureWorksLT.props" Condition=" '$(SolutionName)' == 'AdventureWorksLT' " />
 </Project>
