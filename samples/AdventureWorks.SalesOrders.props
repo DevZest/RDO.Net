@@ -1,0 +1,13 @@
+<Project>
+  <ItemGroup>
+    <ProjectReference Remove="..\..\external\RDO.Data\src\Data\Data.csproj" />
+    <ProjectReference Remove="..\..\src\Data.WPF\Data.WPF.csproj" />
+    <ProjectReference Remove="..\..\external\RDO.Data\src\Data.SqlServer\Data.SqlServer.csproj" />
+    <ProjectReference Remove="..\..\external\RDO.Data\samples\AdventureWorksLT\AdventureWorksLT.csproj" />
+
+    <PackageReference Include="DevZest.Data" Version="1.0.0-*" />
+    <PackageReference Include="DevZest.Data.WPF" Version="1.0.0-*" />
+    <PackageReference Include="DevZest.Data.SqlServer" Version="1.0.0-*" />
+    <PackageReference Include="DevZest.Samples.AdventureWorksLT" Version="1.0.0-*" />
+  </ItemGroup>
+</Project>

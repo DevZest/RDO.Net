@@ -150,4 +150,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\RDO.WPF.Samples.props" Condition=" '$(SolutionName)' == 'RDO.WPF.Samples' " />
 </Project>

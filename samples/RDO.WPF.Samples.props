@@ -1,0 +1,9 @@
+<Project>
+  <ItemGroup>
+    <ProjectReference Remove="..\..\external\RDO.Data\src\Data\Data.csproj" />
+    <ProjectReference Remove="..\..\src\Data.WPF\Data.WPF.csproj" />
+
+    <PackageReference Include="DevZest.Data" Version="1.0.0-*" />
+    <PackageReference Include="DevZest.Data.WPF" Version="1.0.0-*" />
+  </ItemGroup>
+</Project>

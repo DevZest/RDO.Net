@@ -267,4 +267,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+
+  <Import Project="..\AdventureWorks.SalesOrders.props" Condition=" '$(SolutionName)' == 'RDO.WPF.Samples' " />
 </Project>
