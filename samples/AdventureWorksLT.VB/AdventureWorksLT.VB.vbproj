@@ -50,5 +50,5 @@
   </PropertyGroup>
   <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' " />
 
-  <Import Project="..\AdventureWorksLT.props" Condition=" '$(SolutionName)' == 'AdventureWorksLT' " />
+  <Import Project="..\RDO.Data.Samples.props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
 </Project>
