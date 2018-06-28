@@ -237,5 +237,32 @@ class SimpleModel : Model
             };
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void RegisterColumn_MissingRegistration()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public _Int32 Column { get; private set; }
+
+    private _Int32 _computedColumn;
+    public _Int32 ComputedColumn
+    {
+        get { return _computedColumn ?? (_computedColumn = Column * 2); }
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterRegistration_Missing,
+                Message = string.Format(Resources.MounterRegistration_Missing_Message, "Column"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 19) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }

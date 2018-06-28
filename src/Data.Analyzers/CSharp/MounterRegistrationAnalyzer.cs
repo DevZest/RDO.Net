@@ -211,7 +211,7 @@ namespace DevZest.Data.Analyzers.CSharp
             var containingType = propertySymbol.ContainingType;
             if (!containingType.IsMountable())
                 return null;
-            if (!propertySymbol.IsMountable())
+            if (!propertySymbol.IsMountable() || propertySymbol.SetMethod == null)
                 return null;
 
             var syntaxReferences = containingType.DeclaringSyntaxReferences;
