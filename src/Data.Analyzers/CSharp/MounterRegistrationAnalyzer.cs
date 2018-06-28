@@ -12,17 +12,17 @@ namespace DevZest.Data.Analyzers.CSharp
     {
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(Analyze, SyntaxKind.InvocationExpression);
+            context.RegisterSyntaxNodeAction(AnalyzeMounterRegistration, SyntaxKind.InvocationExpression);
         }
 
-        private static void Analyze(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeMounterRegistration(SyntaxNodeAnalysisContext context)
         {
-            var diagnostic = Analyze(context, (InvocationExpressionSyntax)context.Node);
+            var diagnostic = AnalyzeMounterRegistration(context, (InvocationExpressionSyntax)context.Node);
             if (diagnostic != null)
                 context.ReportDiagnostic(diagnostic);
         }
 
-        private static Diagnostic Analyze(SyntaxNodeAnalysisContext context, InvocationExpressionSyntax invocationExpression)
+        private static Diagnostic AnalyzeMounterRegistration(SyntaxNodeAnalysisContext context, InvocationExpressionSyntax invocationExpression)
         {
             var semanticModel = context.SemanticModel;
             if (!(semanticModel.GetSymbolInfo(invocationExpression).Symbol is IMethodSymbol symbol))
