@@ -33,7 +33,8 @@ namespace DevZest.Data.Analyzers.CSharp
 
             var isColumnRegistration = symbol.Name == "RegisterColumn";
 
-            if (!IsValidInvocation(invocationExpression, semanticModel, out var containingType, out var fieldSymbol))
+            var initializerSyntax = VerifyInvocation(invocationExpression, semanticModel, out var containingType, out var fieldSymbol);
+            if (initializerSyntax == null)
                 return Diagnostic.Create(Rule_InvalidInvocation, invocationExpression.GetLocation());
 
             var firstArgument = invocationExpression.ArgumentList.Arguments[0];
@@ -51,39 +52,40 @@ namespace DevZest.Data.Analyzers.CSharp
             {
                 var expectedMounterName = "_" + propertySymbol.Name;
                 if (fieldSymbol.Name != expectedMounterName)
-                    return Diagnostic.Create(Rule_MounterNaming, fieldSymbol.DeclaringSyntaxReferences[0].GetSyntax().GetLocation(), fieldSymbol.Name, propertySymbol.Name, expectedMounterName);
+                    return Diagnostic.Create(Rule_MounterNaming, initializerSyntax.GetLocation(), fieldSymbol.Name, propertySymbol.Name, expectedMounterName);
             }
             return null;
         }
 
-        private static bool IsValidInvocation(InvocationExpressionSyntax expression, SemanticModel semanticModel, out INamedTypeSymbol containingType, out IFieldSymbol fieldSymbol)
+        private static SyntaxNode VerifyInvocation(InvocationExpressionSyntax expression, SemanticModel semanticModel, out INamedTypeSymbol containingType, out IFieldSymbol fieldSymbol)
         {
-            if (IsStaticFieldInitializer(expression, semanticModel, out fieldSymbol))
+            var result = VerifyStaticFieldInitializer(expression, semanticModel, out fieldSymbol);
+            if (result != null)
             {
                 containingType = fieldSymbol.ContainingType;
-                return true;
+                return result;
             }
-            return IsStaticConstructorInvocation(expression, semanticModel, out containingType, out fieldSymbol);
+            return VerifyStaticConstructorInvocation(expression, semanticModel, out containingType, out fieldSymbol);
         }
 
-        private static bool IsStaticFieldInitializer(InvocationExpressionSyntax expression, SemanticModel semanticModel, out IFieldSymbol fieldSymbol)
+        private static SyntaxNode VerifyStaticFieldInitializer(InvocationExpressionSyntax expression, SemanticModel semanticModel, out IFieldSymbol fieldSymbol)
         {
             fieldSymbol = null;
 
             if (!(expression.Parent is EqualsValueClauseSyntax equalsValueClause))
-                return false;
+                return null;
             if (!(equalsValueClause.Parent is VariableDeclaratorSyntax variableDeclarator))
-                return false;
+                return null;
 
             if (semanticModel.GetDeclaredSymbol(variableDeclarator) is IFieldSymbol result && result.IsStatic)
             {
                 fieldSymbol = result;
-                return true;
+                return variableDeclarator;
             }
-            return false;
+            return null;
         }
 
-        private static bool IsStaticConstructorInvocation(InvocationExpressionSyntax expression, SemanticModel semanticModel, out INamedTypeSymbol containingType, out IFieldSymbol fieldSymbol)
+        private static SyntaxNode VerifyStaticConstructorInvocation(InvocationExpressionSyntax expression, SemanticModel semanticModel, out INamedTypeSymbol containingType, out IFieldSymbol fieldSymbol)
         {
             containingType = null;
             fieldSymbol = null;
@@ -96,34 +98,34 @@ namespace DevZest.Data.Analyzers.CSharp
                 childOfExpressionStatement = expression;
 
             if (!(childOfExpressionStatement.Parent is ExpressionStatementSyntax expressionStatement))
-                return false;
+                return null;
 
             if (!(expressionStatement.Parent is BlockSyntax blockSyntax))
-                return false;
+                return null;
 
             if (!(blockSyntax.Parent is ConstructorDeclarationSyntax constructorDeclaration))
-                return false;
+                return null;
 
             var symbol = semanticModel.GetDeclaredSymbol(constructorDeclaration);
             if (symbol == null || !symbol.IsStatic)
-                return false;
+                return null;
             containingType = symbol.ContainingType;
 
             if (assignmentExpression != null)
             {
                 if (!(assignmentExpression.Left is IdentifierNameSyntax identifierName))
-                    return false;
+                    return null;
 
                 if (semanticModel.GetSymbolInfo(identifierName).Symbol is IFieldSymbol result && result.IsStatic && result.ContainingType == containingType)
                 {
                     fieldSymbol = result;
-                    return true;
+                    return assignmentExpression;
                 }
 
-                return false;
+                return null;
             }
 
-            return true;
+            return expression;
         }
 
         private static bool IsValidGetter(ArgumentSyntax argument, SemanticModel semanticModel, INamedTypeSymbol containingType, out IPropertySymbol propertySymbol)

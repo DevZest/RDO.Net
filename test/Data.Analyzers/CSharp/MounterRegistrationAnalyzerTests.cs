@@ -168,7 +168,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_MounterNaming()
+        public void RegisterColumn_MounterNaming_static_field_initializer()
         {
             var test = @"
 using DevZest.Data;
@@ -186,6 +186,34 @@ class SimpleModel : Model
                 Message = string.Format(Resources.MounterRegistration_MounterNaming_Message, "_Column2", "Column1", "_Column1"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 44) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void RegisterColumn_MounterNaming_static_constructor_initializer()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public static readonly Mounter<_Int32> _Column2
+
+    static SimpleModel()
+    {
+        _Column2 = RegisterColumn((SimpleModel x) => x.Column1);
+    }
+
+    public _Int32 Column1 { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterRegistration_MounterNaming,
+                Message = string.Format(Resources.MounterRegistration_MounterNaming_Message, "_Column2", "Column1", "_Column1"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 9) }
             };
             VerifyCSharpDiagnostic(test, expected);
         }
