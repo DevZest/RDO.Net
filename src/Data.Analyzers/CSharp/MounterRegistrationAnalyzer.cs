@@ -13,6 +13,7 @@ namespace DevZest.Data.Analyzers.CSharp
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzeMounterRegistration, SyntaxKind.InvocationExpression);
+            context.RegisterSymbolAction(AnalyzeModelProperty, SymbolKind.Property);
         }
 
         private static void AnalyzeMounterRegistration(SyntaxNodeAnalysisContext context)
@@ -28,7 +29,7 @@ namespace DevZest.Data.Analyzers.CSharp
             if (!(semanticModel.GetSymbolInfo(invocationExpression).Symbol is IMethodSymbol symbol))
                 return null;
 
-            if (!IsMounterRegistration(symbol))
+            if (!symbol.IsMounterRegistration())
                 return null;
 
             var isColumnRegistration = symbol.Name == "RegisterColumn";
@@ -172,69 +173,14 @@ namespace DevZest.Data.Analyzers.CSharp
 
         private static bool AnyDuplicate(InvocationExpressionSyntax invocationExpression, IPropertySymbol propertySymbol, ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
         {
-            var members = classDeclaration.Members;
-            for (int i = 0; i < members.Count; i++)
-            {
-                var member = members[i];
-                if (member is ConstructorDeclarationSyntax constructorDeclaration)
-                {
-                    if (AnyDuplicate(invocationExpression, propertySymbol, constructorDeclaration, semanticModel))
-                        return true;
-                }
-                if (member is FieldDeclarationSyntax fieldDeclaration)
-                {
-                    if (IsDuplicate(invocationExpression, propertySymbol, fieldDeclaration, semanticModel))
-                        return true;
-                }
-            }
-
-            return false;
+            var result = GetMounterRegistration(propertySymbol, classDeclaration, semanticModel);
+            return result == null ? false : CompareLocation(invocationExpression, result) > 0;
         }
 
         private static bool AnyDuplicate(InvocationExpressionSyntax invocationExpression, IPropertySymbol propertySymbol, ConstructorDeclarationSyntax constructorDeclaration, SemanticModel semanticModel)
         {
-            var symbol = semanticModel.GetDeclaredSymbol(constructorDeclaration);
-            if (symbol == null || !symbol.IsStatic)
-                return false;
-            var containingType = symbol.ContainingType;
-
-            var statements = constructorDeclaration.Body.Statements;
-            for (int i = 0; i < statements.Count; i++)
-            {
-                var statement = statements[i];
-                if (!(statement is ExpressionStatementSyntax expressionStatement))
-                    continue;
-
-                var expression = expressionStatement.Expression;
-                if (expression is AssignmentExpressionSyntax assignmentExpression)
-                {
-                    if (assignmentExpression.Right is InvocationExpressionSyntax other && IsDuplicate(invocationExpression, propertySymbol, other, semanticModel))
-                        return true;
-                }
-                else if (expression is InvocationExpressionSyntax other)
-                {
-                    if (IsDuplicate(invocationExpression, propertySymbol, other, semanticModel))
-                        return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static bool IsDuplicate(InvocationExpressionSyntax invocationExpression, IPropertySymbol propertySymbol, InvocationExpressionSyntax other, SemanticModel semanticModel)
-        {
-            if (!(semanticModel.GetSymbolInfo(other).Symbol is IMethodSymbol symbol))
-                return false;
-
-            if (!IsMounterRegistration(symbol))
-                return false;
-
-            var firstArgument = other.ArgumentList.Arguments[0];
-            Debug.Assert(firstArgument != null);
-            if (!IsValidGetter(firstArgument, semanticModel, propertySymbol.ContainingType, out var otherPropertySymbol))
-                return false;
-
-            return propertySymbol.Name == otherPropertySymbol.Name && CompareLocation(invocationExpression, other) > 0;
+            var result = GetMounterRegistration(propertySymbol, constructorDeclaration, semanticModel);
+            return result == null ? false : CompareLocation(invocationExpression, result) > 0;
         }
 
         private static int CompareLocation(InvocationExpressionSyntax x, InvocationExpressionSyntax y)
@@ -248,23 +194,113 @@ namespace DevZest.Data.Analyzers.CSharp
             return Comparer<int>.Default.Compare(x.GetLocation().SourceSpan.Start, y.GetLocation().SourceSpan.Start);
         }
 
-        private static bool IsDuplicate(InvocationExpressionSyntax invocationExpression, IPropertySymbol propertySymbol, FieldDeclarationSyntax fieldDeclaration, SemanticModel semanticModel)
+        private static void AnalyzeModelProperty(SymbolAnalysisContext context)
+        {
+            var diagnostic = AnalyzeModelProperty((IPropertySymbol)context.Symbol, context.Compilation);
+            if (diagnostic != null)
+                context.ReportDiagnostic(diagnostic);
+        }
+
+        private static Diagnostic AnalyzeModelProperty(IPropertySymbol propertySymbol, Compilation compilation)
+        {
+            var containingType = propertySymbol.ContainingType;
+            if (!containingType.IsMountable())
+                return null;
+            if (!propertySymbol.IsMountable())
+                return null;
+
+            var syntaxReferences = containingType.DeclaringSyntaxReferences;
+            for (int i = 0; i < syntaxReferences.Length; i++)
+            {
+                var classDeclaration = (ClassDeclarationSyntax)syntaxReferences[i].GetSyntax();
+                var semanticModel = compilation.GetSemanticModel(classDeclaration.SyntaxTree);
+                if (GetMounterRegistration(propertySymbol, classDeclaration, semanticModel) != null)
+                    return null;
+            }
+
+            return Diagnostic.Create(Rule_MissingRegistration, propertySymbol.DeclaringSyntaxReferences[0].GetSyntax().GetLocation(), propertySymbol.Name);
+        }
+
+        private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
+        {
+            var members = classDeclaration.Members;
+            for (int i = 0; i < members.Count; i++)
+            {
+                var member = members[i];
+                if (member is ConstructorDeclarationSyntax constructorDeclaration)
+                {
+                    var result = GetMounterRegistration(propertySymbol, constructorDeclaration, semanticModel);
+                    if (result != null)
+                        return result;
+                }
+                if (member is FieldDeclarationSyntax fieldDeclaration)
+                {
+                    var result = GetMounterRegistration(propertySymbol, fieldDeclaration, semanticModel);
+                    if (result != null)
+                        return result;
+                }
+            }
+
+            return null;
+        }
+
+        private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ConstructorDeclarationSyntax constructorDeclaration, SemanticModel semanticModel)
+        {
+            var symbol = semanticModel.GetDeclaredSymbol(constructorDeclaration);
+            if (symbol == null || !symbol.IsStatic)
+                return null;
+
+            var statements = constructorDeclaration.Body.Statements;
+            for (int i = 0; i < statements.Count; i++)
+            {
+                var statement = statements[i];
+                if (!(statement is ExpressionStatementSyntax expressionStatement))
+                    continue;
+
+                var expression = expressionStatement.Expression;
+                if (expression is AssignmentExpressionSyntax assignmentExpression)
+                {
+                    if (assignmentExpression.Right is InvocationExpressionSyntax invocationExpression && IsMounterRegistration(invocationExpression, propertySymbol, semanticModel))
+                        return invocationExpression;
+                }
+                else if (expression is InvocationExpressionSyntax invocationExpression && IsMounterRegistration(invocationExpression, propertySymbol, semanticModel))
+                    return invocationExpression;
+            }
+
+            return null;
+        }
+
+        private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, FieldDeclarationSyntax fieldDeclaration, SemanticModel semanticModel)
         {
             var variables = fieldDeclaration.Declaration.Variables;
             if (variables.Count != 1)
-                return false;
+                return null;
             var variableDeclarator = variables[0];
             var initializer = variableDeclarator.Initializer;
             if (initializer == null)
-                return false;
+                return null;
             var fieldSymbol = semanticModel.GetDeclaredSymbol(variableDeclarator) as IFieldSymbol;
             if (fieldSymbol == null || !fieldSymbol.IsStatic)
+                return null;
+
+            var result = initializer.Value as InvocationExpressionSyntax;
+            return IsMounterRegistration(result, propertySymbol, semanticModel) ? result : null;
+        }
+
+        private static bool IsMounterRegistration(InvocationExpressionSyntax expression, IPropertySymbol propertySymbol, SemanticModel semanticModel)
+        {
+            if (!(semanticModel.GetSymbolInfo(expression).Symbol is IMethodSymbol symbol))
                 return false;
 
-            if (initializer.Value is InvocationExpressionSyntax other)
-                return IsDuplicate(invocationExpression, propertySymbol, other, semanticModel);
+            if (!symbol.IsMounterRegistration())
+                return false;
 
-            return false;
+            var firstArgument = expression.ArgumentList.Arguments[0];
+            Debug.Assert(firstArgument != null);
+            if (!IsValidGetter(firstArgument, semanticModel, propertySymbol.ContainingType, out var otherPropertySymbol))
+                return false;
+
+            return propertySymbol.Name == otherPropertySymbol.Name;
         }
     }
 }

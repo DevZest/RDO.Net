@@ -7,5 +7,6 @@
         public const string MounterRegistration_InvalidLocalColumn = "DZ0003";
         public const string MounterRegistration_Duplicate = "DZ0004";
         public const string MounterRegistration_MounterNaming = "DZ0005";
+        public const string MounterRegistration_Missing = "DZ0006";
     }
 }

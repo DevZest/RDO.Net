@@ -62,7 +62,7 @@ namespace DevZest.Data.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate mounter registration for property {0}..
+        ///   Looks up a localized string similar to Duplicate mounter registration for property &apos;{0}&apos;..
         /// </summary>
         internal static string MounterRegistration_Duplicate_Message {
             get {
@@ -116,7 +116,7 @@ namespace DevZest.Data.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Local column {0} is invalid for RegisterColumn..
+        ///   Looks up a localized string similar to Local column &apos;{0}&apos; is invalid for RegisterColumn, use RegisterLocalColumn instead..
         /// </summary>
         internal static string MounterRegistration_InvalidLocalColumn_Message {
             get {
@@ -134,7 +134,25 @@ namespace DevZest.Data.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mounter {0} of property {1} does conform to naming convention as {2}..
+        ///   Looks up a localized string similar to Missing registration for model property &apos;{0}&apos;..
+        /// </summary>
+        internal static string MounterRegistration_Missing_Message {
+            get {
+                return ResourceManager.GetString("MounterRegistration_Missing_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing registration for model property..
+        /// </summary>
+        internal static string MounterRegistration_Missing_Title {
+            get {
+                return ResourceManager.GetString("MounterRegistration_Missing_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mounter &apos;{0}&apos; of property &apos;{1}&apos; does not conform to naming convention, rename mounter name &apos;{0}&apos; to &apos;{2}&apos;..
         /// </summary>
         internal static string MounterRegistration_MounterNaming_Message {
             get {
@@ -143,7 +161,7 @@ namespace DevZest.Data.Analyzers {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mounter should conform to naming convention..
+        ///   Looks up a localized string similar to Mounter name does not conform to convention..
         /// </summary>
         internal static string MounterRegistration_MounterNaming_Title {
             get {

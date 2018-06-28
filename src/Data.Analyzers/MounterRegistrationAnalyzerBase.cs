@@ -17,6 +17,8 @@ namespace DevZest.Data.Analyzers
         private static readonly LocalizableString MounterNaming_Message = new LocalizableResourceString(nameof(Resources.MounterRegistration_MounterNaming_Message), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString InvalidLocalColumn_Title = new LocalizableResourceString(nameof(Resources.MounterRegistration_InvalidLocalColumn_Title), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString InvalidLocalColumn_Message = new LocalizableResourceString(nameof(Resources.MounterRegistration_InvalidLocalColumn_Message), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString MissingRegistration_Title = new LocalizableResourceString(nameof(Resources.MounterRegistration_Missing_Title), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString MissingRegistration_Message = new LocalizableResourceString(nameof(Resources.MounterRegistration_Missing_Message), Resources.ResourceManager, typeof(Resources));
 
         protected static readonly DiagnosticDescriptor Rule_InvalidInvocation = new DiagnosticDescriptor(
             DiagnosticIds.MounterRegistration_InvalidInvocation, InvalidInvocation_Title, InvalidInvocation_Message, DiagnosticCategories.Compile, DiagnosticSeverity.Error, isEnabledByDefault: true);
@@ -33,17 +35,12 @@ namespace DevZest.Data.Analyzers
         protected static readonly DiagnosticDescriptor Rule_MounterNaming = new DiagnosticDescriptor(
             DiagnosticIds.MounterRegistration_MounterNaming, MounterNaming_Title, MounterNaming_Message, DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+        protected static readonly DiagnosticDescriptor Rule_MissingRegistration = new DiagnosticDescriptor(
+            DiagnosticIds.MounterRegistration_Missing, MissingRegistration_Title, MissingRegistration_Message, DiagnosticCategories.Compile, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(Rule_InvalidInvocation, Rule_InvalidGetter, Rule_InvalidLocalColumn, Rule_Duplicate, Rule_MounterNaming); }
-        }
-
-        protected static bool IsMounterRegistration(IMethodSymbol symbol)
-        {
-            var attributes = symbol.GetAttributes();
-            if (attributes == null)
-                return false;
-            return attributes.Any(x => TypeIdentifier.MounterRegistrationAttribute.IsSameType(x.AttributeClass));
+            get { return ImmutableArray.Create(Rule_InvalidInvocation, Rule_InvalidGetter, Rule_InvalidLocalColumn, Rule_Duplicate, Rule_MounterNaming, Rule_MissingRegistration); }
         }
     }
 }

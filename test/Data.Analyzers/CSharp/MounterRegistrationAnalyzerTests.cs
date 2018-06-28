@@ -58,16 +58,13 @@ using DevZest.Data;
 class SimpleModel : Model
 {
     public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
-    public static readonly Mounter<_Int32> _Column2;
 
     static SimpleModel()
     {
-        var column2 = RegisterColumn((SimpleModel x) => x.Column2);
+        var column1 = RegisterColumn((SimpleModel x) => x.Column1);
     }
 
     public _Int32 Column1 { get; private set; }
-
-    public _Int32 Column2 { get; private set; }
 }";
 
             var expected = new DiagnosticResult
@@ -75,7 +72,7 @@ class SimpleModel : Model
                 Id = DiagnosticIds.MounterRegistration_InvalidInvocation,
                 Message = Resources.MounterRegistration_InvalidInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 23) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 23) }
             };
             VerifyCSharpDiagnostic(test, expected);
         }
@@ -89,16 +86,13 @@ using DevZest.Data;
 class SimpleModel : Model
 {
     public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
-    public static readonly Mounter<_Int32> _Column2;
 
     private static void AnotherMethod()
     {
-        _Column2 = RegisterColumn((SimpleModel x) => x.Column2);
+        _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
     }
 
     public _Int32 Column1 { get; private set; }
-
-    public _Int32 Column2 { get; private set; }
 }";
 
             var expected = new DiagnosticResult
@@ -106,7 +100,7 @@ class SimpleModel : Model
                 Id = DiagnosticIds.MounterRegistration_InvalidInvocation,
                 Message = Resources.MounterRegistration_InvalidInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 20) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 20) }
             };
             VerifyCSharpDiagnostic(test, expected);
         }

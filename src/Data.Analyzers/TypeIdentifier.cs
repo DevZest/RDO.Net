@@ -25,7 +25,17 @@ namespace DevZest.Data.Analyzers
             return string.Format("{0}.{1}, {2}", _namespace, _typeName, _assemblyName);
         }
 
-        public bool IsSameType(INamedTypeSymbol namedType)
+        public bool IsBaseTypeOf(INamedTypeSymbol namedType)
+        {
+            for (var baseType = namedType.BaseType; baseType != null; baseType = baseType.BaseType)
+            {
+                if (IsSameTypeOf(baseType))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool IsSameTypeOf(INamedTypeSymbol namedType)
         {
             return IsSameNamespace(namedType) && _typeName == namedType.Name && _assemblyName == namedType.ContainingAssembly.Name;
         }
@@ -58,9 +68,11 @@ namespace DevZest.Data.Analyzers
         }
 
         private const string DATA_NAMESPACE = "DevZest.Data";
+        private const string DATA_PRIMITIVES_NAMESPACE = "DevZest.Data.Primitives";
         private const string DATA_ANNOTATIONS_PRIMITIVES_NAMESPACE = "DevZest.Data.Annotations.Primitives";
         private const string DATA_ASSEMBLY_NAME = DATA_NAMESPACE;
 
         public static readonly TypeIdentifier MounterRegistrationAttribute = new TypeIdentifier(DATA_ANNOTATIONS_PRIMITIVES_NAMESPACE, nameof(MounterRegistrationAttribute), DATA_ASSEMBLY_NAME);
+        public static readonly TypeIdentifier ModelMember = new TypeIdentifier(DATA_PRIMITIVES_NAMESPACE, nameof(ModelMember), DATA_ASSEMBLY_NAME);
     }
 }

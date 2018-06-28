@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
+    [MounterRegistration]
     public abstract class ColumnGroup : ModelMember, IModelReference
     {
         internal void Construct(Model model, Type declaringType, string name)
