@@ -233,7 +233,7 @@ class SimpleModel : Model
                 Id = DiagnosticIds.MounterRegistration_InvalidLocalColumn,
                 Message = string.Format(Resources.MounterRegistration_InvalidLocalColumn_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 8, 24) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 8, 9) }
             };
             VerifyCSharpDiagnostic(test, expected);
         }

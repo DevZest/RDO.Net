@@ -13,7 +13,7 @@ namespace DevZest.Data.Analyzers.CSharp
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzeMounterRegistration, SyntaxKind.InvocationExpression);
-            context.RegisterSymbolAction(AnalyzeModelProperty, SymbolKind.Property);
+            context.RegisterSyntaxNodeAction(AnalyzeModelProperty, SyntaxKind.PropertyDeclaration);
         }
 
         private static void AnalyzeMounterRegistration(SyntaxNodeAnalysisContext context)
@@ -34,8 +34,7 @@ namespace DevZest.Data.Analyzers.CSharp
 
             var isColumnRegistration = symbol.Name == "RegisterColumn";
 
-            var initializerSyntax = VerifyInvocation(invocationExpression, semanticModel, out var containingType, out var fieldSymbol);
-            if (initializerSyntax == null)
+            if (!VerifyInvocation(invocationExpression, semanticModel, out var containingType, out var fieldSymbol, out var mounterIdentifier))
                 return Diagnostic.Create(Rules.MounterRegistration_InvalidInvocation, invocationExpression.GetLocation());
 
             var firstArgument = invocationExpression.ArgumentList.Arguments[0];
@@ -44,7 +43,7 @@ namespace DevZest.Data.Analyzers.CSharp
                 return Diagnostic.Create(Rules.MounterRegistration_InvalidGetter, firstArgument.GetLocation());
 
             if (isColumnRegistration && propertySymbol.Type.MetadataName == "LocalColumn`1")
-                return Diagnostic.Create(Rules.MounterRegistration_InvalidLocalColumn, firstArgument.GetLocation(), propertySymbol.Name);
+                return Diagnostic.Create(Rules.MounterRegistration_InvalidLocalColumn, invocationExpression.GetLocation(), propertySymbol.Name);
 
             if (AnyDuplicate(invocationExpression, propertySymbol, context.Compilation))
                 return Diagnostic.Create(Rules.MounterRegistration_Duplicate, invocationExpression.GetLocation(), propertySymbol.Name);
@@ -53,43 +52,45 @@ namespace DevZest.Data.Analyzers.CSharp
             {
                 var expectedMounterName = "_" + propertySymbol.Name;
                 if (fieldSymbol.Name != expectedMounterName)
-                    return Diagnostic.Create(Rules.MounterRegistration_MounterNaming, initializerSyntax.GetLocation(), fieldSymbol.Name, propertySymbol.Name, expectedMounterName);
+                    return Diagnostic.Create(Rules.MounterRegistration_MounterNaming, mounterIdentifier.GetLocation(), fieldSymbol.Name, propertySymbol.Name, expectedMounterName);
             }
             return null;
         }
 
-        private static SyntaxNode VerifyInvocation(InvocationExpressionSyntax expression, SemanticModel semanticModel, out INamedTypeSymbol containingType, out IFieldSymbol fieldSymbol)
+        private static bool VerifyInvocation(InvocationExpressionSyntax expression, SemanticModel semanticModel, out INamedTypeSymbol containingType, out IFieldSymbol fieldSymbol, out SyntaxToken mounterIdentifier)
         {
-            var result = VerifyStaticFieldInitializer(expression, semanticModel, out fieldSymbol);
-            if (result != null)
+            if (VerifyStaticFieldInitializer(expression, semanticModel, out fieldSymbol, out mounterIdentifier))
             {
                 containingType = fieldSymbol.ContainingType;
-                return result;
+                return true;
             }
-            return VerifyStaticConstructorInvocation(expression, semanticModel, out containingType, out fieldSymbol);
+            return VerifyStaticConstructorInvocation(expression, semanticModel, out containingType, out fieldSymbol, out mounterIdentifier);
         }
 
-        private static SyntaxNode VerifyStaticFieldInitializer(InvocationExpressionSyntax expression, SemanticModel semanticModel, out IFieldSymbol fieldSymbol)
+        private static bool VerifyStaticFieldInitializer(InvocationExpressionSyntax expression, SemanticModel semanticModel, out IFieldSymbol fieldSymbol, out SyntaxToken mounterIdentifier)
         {
             fieldSymbol = null;
+            mounterIdentifier = default(SyntaxToken);
 
             if (!(expression.Parent is EqualsValueClauseSyntax equalsValueClause))
-                return null;
+                return false;
             if (!(equalsValueClause.Parent is VariableDeclaratorSyntax variableDeclarator))
-                return null;
+                return false;
 
             if (semanticModel.GetDeclaredSymbol(variableDeclarator) is IFieldSymbol result && result.IsStatic)
             {
                 fieldSymbol = result;
-                return variableDeclarator;
+                mounterIdentifier = variableDeclarator.Identifier;
+                return true;
             }
-            return null;
+            return false;
         }
 
-        private static SyntaxNode VerifyStaticConstructorInvocation(InvocationExpressionSyntax expression, SemanticModel semanticModel, out INamedTypeSymbol containingType, out IFieldSymbol fieldSymbol)
+        private static bool VerifyStaticConstructorInvocation(InvocationExpressionSyntax expression, SemanticModel semanticModel, out INamedTypeSymbol containingType, out IFieldSymbol fieldSymbol, out SyntaxToken mounterIdentifier)
         {
             containingType = null;
             fieldSymbol = null;
+            mounterIdentifier = default(SyntaxToken);
 
             SyntaxNode childOfExpressionStatement;
             var assignmentExpression = expression.Parent as AssignmentExpressionSyntax;
@@ -99,34 +100,35 @@ namespace DevZest.Data.Analyzers.CSharp
                 childOfExpressionStatement = expression;
 
             if (!(childOfExpressionStatement.Parent is ExpressionStatementSyntax expressionStatement))
-                return null;
+                return false;
 
             if (!(expressionStatement.Parent is BlockSyntax blockSyntax))
-                return null;
+                return false;
 
             if (!(blockSyntax.Parent is ConstructorDeclarationSyntax constructorDeclaration))
-                return null;
+                return false;
 
             var symbol = semanticModel.GetDeclaredSymbol(constructorDeclaration);
             if (symbol == null || !symbol.IsStatic)
-                return null;
+                return false;
             containingType = symbol.ContainingType;
 
             if (assignmentExpression != null)
             {
                 if (!(assignmentExpression.Left is IdentifierNameSyntax identifierName))
-                    return null;
+                    return false;
 
                 if (semanticModel.GetSymbolInfo(identifierName).Symbol is IFieldSymbol result && result.IsStatic && result.ContainingType == containingType)
                 {
                     fieldSymbol = result;
-                    return assignmentExpression;
+                    mounterIdentifier = identifierName.Identifier;
+                    return true;
                 }
 
-                return null;
+                return false;
             }
 
-            return expression;
+            return true;
         }
 
         private static bool IsValidGetter(ArgumentSyntax argument, SemanticModel semanticModel, INamedTypeSymbol containingType, out IPropertySymbol propertySymbol)
@@ -194,14 +196,17 @@ namespace DevZest.Data.Analyzers.CSharp
             return Comparer<int>.Default.Compare(x.GetLocation().SourceSpan.Start, y.GetLocation().SourceSpan.Start);
         }
 
-        private static void AnalyzeModelProperty(SymbolAnalysisContext context)
+        private static void AnalyzeModelProperty(SyntaxNodeAnalysisContext context)
         {
-            var diagnostic = AnalyzeModelProperty((IPropertySymbol)context.Symbol, context.Compilation);
+            var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
+            var propertySymbol = context.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
+
+            var diagnostic = AnalyzeModelProperty(propertyDeclaration.Identifier, propertySymbol, context.Compilation);
             if (diagnostic != null)
                 context.ReportDiagnostic(diagnostic);
         }
 
-        private static Diagnostic AnalyzeModelProperty(IPropertySymbol propertySymbol, Compilation compilation)
+        private static Diagnostic AnalyzeModelProperty(SyntaxToken identifier, IPropertySymbol propertySymbol, Compilation compilation)
         {
             var containingType = propertySymbol.ContainingType;
             if (!containingType.IsMountable())
@@ -218,7 +223,7 @@ namespace DevZest.Data.Analyzers.CSharp
                     return null;
             }
 
-            return Diagnostic.Create(Rules.MounterRegistration_Missing, propertySymbol.DeclaringSyntaxReferences[0].GetSyntax().GetLocation(), propertySymbol.Name);
+            return Diagnostic.Create(Rules.MounterRegistration_Missing, identifier.GetLocation(), propertySymbol.Name);
         }
 
         private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
@@ -279,8 +284,7 @@ namespace DevZest.Data.Analyzers.CSharp
             var initializer = variableDeclarator.Initializer;
             if (initializer == null)
                 return null;
-            var fieldSymbol = semanticModel.GetDeclaredSymbol(variableDeclarator) as IFieldSymbol;
-            if (fieldSymbol == null || !fieldSymbol.IsStatic)
+            if (!(semanticModel.GetDeclaredSymbol(variableDeclarator) is IFieldSymbol fieldSymbol) || !fieldSymbol.IsStatic)
                 return null;
 
             var result = initializer.Value as InvocationExpressionSyntax;
