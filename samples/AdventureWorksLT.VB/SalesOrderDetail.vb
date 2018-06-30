@@ -73,39 +73,6 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Class Ref
-            Inherits Ref(Of PK)
-
-            Shared Sub New()
-                Register(Function(ByVal __ As Ref) __.SalesOrderID, AdventureWorksLT.SalesOrderHeader._SalesOrderID)
-                Register(Function(ByVal __ As Ref) __.SalesOrderDetailID, _SalesOrderDetailID)
-            End Sub
-
-            Private m_SalesOrderID As _Int32
-            Public Property SalesOrderID As _Int32
-                Get
-                    Return m_SalesOrderID
-                End Get
-                Private Set
-                    m_SalesOrderID = Value
-                End Set
-            End Property
-
-            Private m_SalesOrderDetailID As _Int32
-            Public Property SalesOrderDetailID As _Int32
-                Get
-                    Return m_SalesOrderDetailID
-                End Get
-                Private Set
-                    m_SalesOrderDetailID = Value
-                End Set
-            End Property
-
-            Protected Overrides Function GetForeignKey() As PK
-                Return New PK(SalesOrderID, SalesOrderDetailID)
-            End Function
-        End Class
-
         Public Shared ReadOnly _SalesOrderDetailID As Mounter(Of _Int32)
         Public Shared ReadOnly _OrderQty As Mounter(Of _Int16)
         Public Shared ReadOnly _UnitPrice As Mounter(Of _Decimal)

@@ -13,21 +13,46 @@ namespace DevZest.Data.Analyzers
             return attributes.Any(x => TypeIdentifier.MounterRegistrationAttribute.IsSameTypeOf(x.AttributeClass));
         }
 
-        public static bool IsMountable(this INamedTypeSymbol type)
+        public static ModelMemberKind? GetModelMemberKind(this IPropertySymbol property)
         {
-            var attributes = type.GetAttributes();
-            if (attributes == null)
-                return false;
-            if (attributes.Any(x => TypeIdentifier.MounterRegistrationAttribute.IsSameTypeOf(x.AttributeClass)))
-                return true;
+            if (!(property.Type is INamedTypeSymbol propertyType))
+                return null;
 
-            var baseType = type.BaseType;
-            return baseType == null ? false : IsMountable(baseType);
+            var parent = property.GetModelMemberParent();
+            if (!parent.HasValue)
+                return null;
+
+            var parentValue = parent.Value;
+
+            if (TypeIdentifier.Column.IsBaseTypeOf(propertyType))
+                return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ColumnGroupMember;
+            else if (TypeIdentifier.LocalColumn.IsBaseTypeOf(propertyType))
+                return ModelMemberKind.LocalColumn;
+            else if (TypeIdentifier.ColumnGroup.IsBaseTypeOf(propertyType))
+                return ModelMemberKind.ColumnGroup;
+            else if (TypeIdentifier.ColumnList.IsBaseTypeOf(propertyType))
+                return ModelMemberKind.ColumnList;
+            else if (TypeIdentifier.Model.IsBaseTypeOf(propertyType))
+                return ModelMemberKind.ChildModel;
+            else
+                return null;
         }
 
-        public static bool IsMountable(this IPropertySymbol property)
+        private enum ModelMemberParent
         {
-            return (property.Type is INamedTypeSymbol type) ? TypeIdentifier.ModelMember.IsBaseTypeOf(type) : false;
+            Model,
+            ColumnGroup
+        }
+
+        private static ModelMemberParent? GetModelMemberParent(this IPropertySymbol property)
+        {
+            var containingType = property.ContainingType;
+            if (TypeIdentifier.Model.IsBaseTypeOf(containingType))
+                return ModelMemberParent.Model;
+            else if (TypeIdentifier.ColumnGroup.IsBaseTypeOf(containingType))
+                return ModelMemberParent.ColumnGroup;
+            else
+                return null;
         }
     }
 }

@@ -37,21 +37,6 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderID { get; private set; }
         }
 
-        public class Ref : Ref<PK>
-        {
-            static Ref()
-            {
-                Register((Ref _) => _.SalesOrderID, _SalesOrderID);
-            }
-
-            public _Int32 SalesOrderID { get; private set; }
-
-            protected override PK GetForeignKey()
-            {
-                return new PK(SalesOrderID);
-            }
-        }
-
         public static readonly Mounter<_Int32> _SalesOrderID;
         public static readonly Mounter<_Byte> _RevisionNumber;
         public static readonly Mounter<_DateTime> _OrderDate;

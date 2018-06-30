@@ -43,28 +43,6 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Class Ref
-            Inherits Ref(Of PK)
-
-            Shared Sub New()
-                Register(Function(x As Ref) x.SalesOrderID, _SalesOrderID)
-            End Sub
-
-            Private m_SalesOrderID As _Int32
-            Public Property SalesOrderID As _Int32
-                Get
-                    Return m_SalesOrderID
-                End Get
-                Private Set
-                    m_SalesOrderID = Value
-                End Set
-            End Property
-
-            Protected Overrides Function GetForeignKey() As PK
-                Return New PK(SalesOrderID)
-            End Function
-        End Class
-
         Public Shared ReadOnly _SalesOrderID As Mounter(Of _Int32)
         Public Shared ReadOnly _RevisionNumber As Mounter(Of _Byte)
         Public Shared ReadOnly _OrderDate As Mounter(Of _DateTime)

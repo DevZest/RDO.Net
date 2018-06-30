@@ -208,13 +208,13 @@ namespace DevZest.Data.Analyzers.CSharp
 
         private static Diagnostic AnalyzeModelProperty(SyntaxToken identifier, IPropertySymbol propertySymbol, Compilation compilation)
         {
-            var containingType = propertySymbol.ContainingType;
-            if (!containingType.IsMountable())
-                return null;
-            if (!propertySymbol.IsMountable() || propertySymbol.SetMethod == null)
+            if (propertySymbol.SetMethod == null)
                 return null;
 
-            var syntaxReferences = containingType.DeclaringSyntaxReferences;
+            if (!propertySymbol.GetModelMemberKind().HasValue)
+                return null;
+
+            var syntaxReferences = propertySymbol.ContainingType.DeclaringSyntaxReferences;
             for (int i = 0; i < syntaxReferences.Length; i++)
             {
                 var classDeclaration = (ClassDeclarationSyntax)syntaxReferences[i].GetSyntax();

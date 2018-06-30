@@ -264,5 +264,26 @@ class SimpleModel : Model
             };
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void RegisterColumn_MissingRegistration_LocalColumn()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public LocalColumn<int> Column { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterRegistration_Missing,
+                Message = string.Format(Resources.MounterRegistration_Missing_Message, "Column"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 29) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }
