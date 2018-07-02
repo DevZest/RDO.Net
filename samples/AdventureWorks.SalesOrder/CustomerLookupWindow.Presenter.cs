@@ -81,7 +81,7 @@ namespace AdventureWorks.SalesOrders
 
             private RowPresenter GetRow(int currentCustomerID)
             {
-                return Match(Customer.GetKey(currentCustomerID));
+                return Match(Customer.PK.Const(currentCustomerID));
             }
 
             public async void RefreshAsync()
