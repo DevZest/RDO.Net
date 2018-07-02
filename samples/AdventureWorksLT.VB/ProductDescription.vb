@@ -11,16 +11,20 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public NotInheritable Class PK
             Inherits PrimaryKey
 
+            Public Shared Function [Const](productDescriptionID As Integer) As IDataValues
+                Return DataValues.Create(_Int32.Const(productDescriptionID))
+            End Function
+
             Public Sub New(productDescriptionID As _Int32)
-                Me.ProductDescriptionID = productDescriptionID
+                MyBase.New(productDescriptionID)
             End Sub
 
             Public ReadOnly Property ProductDescriptionID As _Int32
+                Get
+                    Return GetColumn(Of _Int32)(0)
+                End Get
+            End Property
         End Class
-
-        Public Shared Function GetKey(productDescriptionId As Integer) As IDataValues
-            Return DataValues.Create(_Int32.Const(productDescriptionId))
-        End Function
 
         Public NotInheritable Class Key
             Inherits Model(Of PK)

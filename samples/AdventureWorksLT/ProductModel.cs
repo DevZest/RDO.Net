@@ -9,17 +9,20 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_ProductModel_ProductModelID", Description = "Clustered index created by a primary key constraint.")]
         public sealed class PK : PrimaryKey
         {
-            public PK(_Int32 productModelID)
+            public static IDataValues Const(int productModelID)
             {
-                ProductModelID = productModelID;
+                return DataValues.Create(_Int32.Const(productModelID));
             }
 
-            public _Int32 ProductModelID { get; private set; }
-        }
+            public PK(_Int32 productModelID)
+                : base(productModelID)
+            {
+            }
 
-        public static IDataValues GetKey(int productModelId)
-        {
-            return DataValues.Create(_Int32.Const(productModelId));
+            public _Int32 ProductModelID
+            {
+                get { return GetColumn<_Int32>(0); }
+            }
         }
 
         public sealed class Key : Model<PK>

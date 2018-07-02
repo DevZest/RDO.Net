@@ -4,26 +4,38 @@ Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
     Public Class ProductModelProductDescription
-        Inherits BaseModel(Of ProductModelProductDescription.PK)
+        Inherits BaseModel(Of PK)
 
         <DbPrimaryKey("PK_ProductModelProductDescription_ProductModelID_ProductDescriptionID_Culture", Description:="Primary key (clustered) constraint")>
         Public NotInheritable Class PK
             Inherits PrimaryKey
 
+            Public Shared Function [Const](ByVal productModelID As Integer, ByVal productDescriptionID As Integer, ByVal culture As String) As IDataValues
+                Return DataValues.Create(_Int32.[Const](productModelID), _Int32.[Const](productDescriptionID), _String.[Const](culture))
+            End Function
+
             Public Sub New(productModelID As _Int32, productDescriptionID As _Int32, culture As _String)
-                Me.ProductModelID = productModelID
-                Me.ProductDescriptionID = productDescriptionID
-                Me.Culture = culture
+                MyBase.New(productModelID, productDescriptionID, culture)
             End Sub
 
             Public ReadOnly Property ProductModelID As _Int32
-            Public ReadOnly Property ProductDescriptionID As _Int32
-            Public ReadOnly Property Culture As _String
-        End Class
+                Get
+                    Return GetColumn(Of _Int32)(0)
+                End Get
+            End Property
 
-        Public Shared Function GetKey(ByVal productModelId As Integer, ByVal productDescriptionId As Integer, ByVal culture As String) As IDataValues
-            Return DataValues.Create(_Int32.[Const](productModelId), _Int32.[Const](productDescriptionId), _String.[Const](culture))
-        End Function
+            Public ReadOnly Property ProductDescriptionID As _Int32
+                Get
+                    Return GetColumn(Of _Int32)(1)
+                End Get
+            End Property
+
+            Public ReadOnly Property Culture As _String
+                Get
+                    Return GetColumn(Of _String)(2)
+                End Get
+            End Property
+        End Class
 
         Public Shared ReadOnly _Culture As Mounter(Of _String)
 

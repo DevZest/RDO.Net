@@ -1115,6 +1115,14 @@ namespace DevZest.Data
             get { return GetString("DataValues_InvalidColumn"); }
         }
 
+        /// <summary>
+        /// The parent Model is not identical.
+        /// </summary>
+        public static string PrimaryKey_ParentModelNotIdentical
+        {
+            get { return GetString("PrimaryKey_ParentModelNotIdentical"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

@@ -9,20 +9,25 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID", Description = "Clustered index created by a primary key constraint.")]
         public sealed class PK : PrimaryKey
         {
-            public PK(_Int32 salesOrderID, _Int32 salesOrderDetailID)
+            public static IDataValues Const(int salesOrderID, int salesOrderDetailID)
             {
-                SalesOrderID = salesOrderID;
-                SalesOrderDetailID = salesOrderDetailID;
+                return DataValues.Create(_Int32.Const(salesOrderID), _Int32.Const(salesOrderDetailID));
             }
 
-            public _Int32 SalesOrderID { get; private set; }
+            public PK(_Int32 salesOrderID, _Int32 salesOrderDetailID)
+                : base(salesOrderID, salesOrderDetailID)
+            {
+            }
 
-            public _Int32 SalesOrderDetailID { get; private set; }
-        }
+            public _Int32 SalesOrderID
+            {
+                get { return GetColumn<_Int32>(0); }
+            }
 
-        public static IDataValues GetKey(int salesOrderID, int salesOrderDetailID)
-        {
-            return DataValues.Create(_Int32.Const(salesOrderID), _Int32.Const(salesOrderDetailID));
+            public _Int32 SalesOrderDetailID
+            {
+                get { return GetColumn<_Int32>(1); }
+            }
         }
 
         public sealed class Key : Model<PK>

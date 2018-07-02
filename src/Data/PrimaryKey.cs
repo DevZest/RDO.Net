@@ -1,83 +1,37 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Collections;
-using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public abstract class PrimaryKey : IReadOnlyCollection<ColumnSort>
+    public abstract class PrimaryKey : ReadOnlyCollection<ColumnSort>
     {
-        [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-        protected internal sealed class SortAttribute : Attribute
+        protected PrimaryKey(params ColumnSort[] columns)
+            : base(columns)
         {
-            public SortAttribute(SortDirection direction)
-            {
-                Direction = direction;
-            }
-
-            public SortDirection Direction { get; private set; }
+            _parentModel = Verify(columns, nameof(columns));
         }
 
-        internal PrimaryKey Clone(KeyOutput model)
+        private Model Verify(ColumnSort[] columns, string paramName)
         {
-            EnsureIntialized();
-            var result = (PrimaryKey)this.MemberwiseClone();
-            result._parentModel = model;
-            result._columns = new ColumnSort[_columns.Length];
-            for (int i = 0; i < Count; i++)
+            columns.VerifyNotEmpty(paramName);
+
+            Model result = null;
+            for (int i = 0; i < columns.Length; i++)
             {
-                var columnSort = _columns[i];
-                result._columns[i] = new ColumnSort(columnSort.Column.Clone(model), columnSort.Direction);
+                var column = columns[i].Column;
+                if (column == null)
+                    throw new ArgumentNullException(string.Format("{0}[{1}].Column", paramName, i));
+
+                var parentModel = column.ParentModel;
+
+                if (i == 0)
+                    result = parentModel;
+                else if (result != parentModel)
+                    throw new ArgumentException(DiagnosticMessages.PrimaryKey_ParentModelNotIdentical, string.Format("{0}[{1}].Column.Model", paramName, i));
             }
+
             return result;
-        }
-
-        private struct ColumnGetter
-        {
-            public ColumnGetter(string name, Func<PrimaryKey, Column> invoker, SortAttribute sort)
-            {
-                Name = name;
-                Invoker = invoker;
-                Sort = sort;
-            }
-
-            public readonly string Name;
-            public readonly Func<PrimaryKey, Column> Invoker;
-            public readonly SortAttribute Sort;
-        }
-
-        private static readonly ConcurrentDictionary<Type, ReadOnlyCollection<ColumnGetter>> s_columnGetters =
-            new ConcurrentDictionary<Type, ReadOnlyCollection<ColumnGetter>>();
-        protected PrimaryKey()
-        {
-        }
-
-        internal ColumnSort[] _columns;
-        private bool IsInitialized
-        {
-            get { return _columns != null; }
-        }
-
-        public int Count
-        {
-            get
-            {
-                EnsureIntialized();
-                return _columns.Length;
-            }
-        }
-
-        public ColumnSort this[int index]
-        {
-            get
-            {
-                EnsureIntialized();
-                return _columns[index];
-            }
         }
 
         public bool Contains(Column column)
@@ -90,103 +44,10 @@ namespace DevZest.Data
             return false;
         }
 
-        private void EnsureIntialized()
-        {
-            if (IsInitialized)
-                return;
-
-            var columnGetters = GetColumnGetters(this.GetType());
-            _columns = new ColumnSort[columnGetters.Count];
-            for (int i = 0; i < columnGetters.Count; i++)
-            {
-                var column = columnGetters[i].Invoker(this);
-                if (column == null)
-                    throw new InvalidOperationException(DiagnosticMessages.ColumnGroup_GetterReturnsNull(this.GetType().FullName, columnGetters[i].Name));
-                if (i == 0)
-                    _parentModel = column.ParentModel;
-                else if (_parentModel != column.ParentModel)
-                    throw new InvalidOperationException(DiagnosticMessages.ColumnGroup_InconsistentParentModel(this.GetType().FullName, columnGetters[0].Name, columnGetters[i].Name));
-
-                var sort = columnGetters[i].Sort;
-                _columns[i] = new ColumnSort(column, sort == null ? SortDirection.Unspecified : sort.Direction);
-            }
-        }
-
-        private Model _parentModel;
+        private readonly Model _parentModel;
         internal Model ParentModel
         {
-            get
-            {
-                EnsureIntialized();
-                return _parentModel;
-            }
-        }
-
-        private static ReadOnlyCollection<ColumnGetter> GetColumnGetters(Type type)
-        {
-            ReadOnlyCollection<ColumnGetter> result;
-            if (!s_columnGetters.TryGetValue(type, out result))
-            {
-                // It is possible that multiple threads will enter this code to resolve the
-                // column getters.  However, the result will always be the same so we may, in
-                // the rare cases in which this happens, do some work twice, but functionally the
-                // outcome will be correct.
-                var definitions = ResolveColumnGetters(type);
-                result = new ReadOnlyCollection<ColumnGetter>(definitions);
-
-                // If TryAdd fails it just means some other thread got here first, which is okay
-                // since the end result is the same info anyway.
-                s_columnGetters.TryAdd(type, result);
-            }
-            return result;
-        }
-
-        internal static int GetColumnCount(Type type)
-        {
-            return GetColumnGetters(type).Count;
-        }
-
-        private static List<ColumnGetter> ResolveColumnGetters(Type type)
-        {
-            var result = new List<ColumnGetter>();
-
-            foreach (var propertyInfo in type.GetRuntimeProperties())
-            {
-                if (!typeof(Column).IsAssignableFrom(propertyInfo.PropertyType))
-                    continue;
-
-                if (propertyInfo.GetIndexParameters().Length != 0)
-                    continue;
-
-                var getMethod = propertyInfo.GetMethod;
-                if (getMethod == null || getMethod.IsStatic || !getMethod.IsPublic)
-                    continue;
-                result.Add(GetColumnGetter(propertyInfo, getMethod));
-            }
-            return result;
-        }
-
-        private static ColumnGetter GetColumnGetter(PropertyInfo propertyInfo, MethodInfo getMethod)
-        {
-            var modelKeyParam = Expression.Parameter(typeof(PrimaryKey), "modelKey");
-
-            var getterInstance = Expression.Convert(modelKeyParam, getMethod.DeclaringType);
-            var getterExpression = Expression.Call(getterInstance, getMethod);
-            var getter = Expression.Lambda<Func<PrimaryKey, Column>>(getterExpression, modelKeyParam).Compile();
-
-            var sort = propertyInfo.GetCustomAttribute<SortAttribute>();
-            return new ColumnGetter(getMethod.Name, getter, sort);
-        }
-
-        public IEnumerator<ColumnSort> GetEnumerator()
-        {
-            for (int i = 0; i < Count; i++)
-                yield return this[i];
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _columns.GetEnumerator();
+            get { return _parentModel; }
         }
 
         public IReadOnlyList<ColumnMapping> Join(PrimaryKey target)
@@ -214,6 +75,12 @@ namespace DevZest.Data
             for (int i = 0; i < Count; i++)
                 result[i] = this[i].Column;
             return result;
+        }
+
+        protected T GetColumn<T>(int index)
+            where T : Column, new()
+        {
+            return (T)this[index].Column;
         }
     }
 }

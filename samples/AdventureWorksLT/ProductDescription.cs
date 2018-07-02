@@ -1,5 +1,4 @@
-﻿using System;
-using DevZest.Data;
+﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
 using DevZest.Data.Annotations;
 
@@ -10,17 +9,20 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_ProductDescription_ProductDescriptionID", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
-            public PK(_Int32 productDescriptionID)
+            public static IDataValues Const(int productDescriptionID)
             {
-                ProductDescriptionID = productDescriptionID;
+                return DataValues.Create(_Int32.Const(productDescriptionID));
             }
 
-            public _Int32 ProductDescriptionID { get; private set; }
-        }
+            public PK(_Int32 productDescriptionID)
+                : base(productDescriptionID)
+            {
+            }
 
-        public static IDataValues GetKey(int productDescriptionId)
-        {
-            return DataValues.Create(_Int32.Const(productDescriptionId));
+            public _Int32 ProductDescription
+            {
+                get { return GetColumn<_Int32>(0); }
+            }
         }
 
         public sealed class Key : Model<PK>

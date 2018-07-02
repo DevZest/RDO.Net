@@ -4,6 +4,25 @@ namespace DevZest.Data.Primitives
 {
     public sealed class KeyOutput : Model
     {
+        private sealed class PK : PrimaryKey
+        {
+            public PK(KeyOutput keyOutput, PrimaryKey primaryKey)
+                : base(GetColumns(keyOutput, primaryKey))
+            {
+            }
+
+            private static ColumnSort[] GetColumns(KeyOutput _, PrimaryKey primaryKey)
+            {
+                var result = new ColumnSort[primaryKey.Count];
+                for (int i = 0; i < primaryKey.Count; i++)
+                {
+                    var columnSort = primaryKey[i];
+                    result[i] = new ColumnSort(columnSort.Column.Clone(_), columnSort.Direction);
+                }
+                return result;
+            }
+        }
+
         public KeyOutput()
         {
         }
@@ -16,7 +35,7 @@ namespace DevZest.Data.Primitives
                 throw new ArgumentException(DiagnosticMessages.DbTable_NoPrimaryKey(model), nameof(model));
 
             _sourceDbAlias = model.DbAlias;
-            _primaryKey = primaryKey.Clone(this);
+            _primaryKey = new PK(this, primaryKey);
             var sortKeys = new ColumnSort[primaryKey.Count];
             for (int i = 0; i < sortKeys.Length; i++)
                 sortKeys[i] = primaryKey[i];

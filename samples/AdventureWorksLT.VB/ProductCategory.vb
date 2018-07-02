@@ -1,4 +1,3 @@
-Imports System
 Imports DevZest.Data
 Imports DevZest.Data.SqlServer
 Imports DevZest.Data.Annotations
@@ -11,16 +10,20 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public NotInheritable Class PK
             Inherits PrimaryKey
 
+            Public Shared Function [Const](productCategoryID As Integer) As IDataValues
+                Return DataValues.Create(_Int32.Const(productCategoryID))
+            End Function
+
             Public Sub New(ByVal productCategoryID As _Int32)
-                Me.ProductCategoryID = productCategoryID
+                MyBase.New(productCategoryID)
             End Sub
 
             Public ReadOnly Property ProductCategoryID As _Int32
+                Get
+                    Return GetColumn(Of _Int32)(0)
+                End Get
+            End Property
         End Class
-
-        Public Shared Function GetKey(productCategoryId As Integer) As IDataValues
-            Return DataValues.Create(_Int32.Const(productCategoryId))
-        End Function
 
         Public NotInheritable Class Key
             Inherits Model(Of PK)

@@ -8,16 +8,25 @@ namespace DevZest.Data
     {
         private class SimpleKey : PrimaryKey
         {
-            public SimpleKey(_Int32 column1, _Int32 column2)
+            public static IDataValues Const(int column1, int column2)
             {
-                Column1 = column1;
-                Column2 = column2;
+                return DataValues.Create(_Int32.Const(column1), _Int32.Const(column2));
             }
 
-            public _Int32 Column1 { get; private set; }
+            public SimpleKey(_Int32 column1, _Int32 column2)
+                : base(column1, column2.Desc())
+            {
+            }
 
-            [Sort(SortDirection.Descending)]
-            public _Int32 Column2 { get; private set; }
+            public _Int32 Column1
+            {
+                get { return GetColumn<_Int32>(0); }
+            }
+
+            public _Int32 Column2
+            {
+                get { return GetColumn<_Int32>(1); }
+            }
         }
 
         [TestMethod]

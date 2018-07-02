@@ -10,16 +10,20 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public NotInheritable Class PK
             Inherits PrimaryKey
 
+            Public Shared Function [Const](ByVal salesOrderID As Integer) As IDataValues
+                Return DataValues.Create(_Int32.[Const](salesOrderID))
+            End Function
+
             Public Sub New(ByVal salesOrderID As _Int32)
-                Me.SalesOrderID = salesOrderID
+                MyBase.New(salesOrderID)
             End Sub
 
             Public ReadOnly Property SalesOrderID As _Int32
+                Get
+                    Return GetColumn(Of _Int32)(0)
+                End Get
+            End Property
         End Class
-
-        Public Shared Function GetKey(ByVal salesOrderID As Integer) As IDataValues
-            Return DataValues.Create(_Int32.[Const](salesOrderID))
-        End Function
 
         Public NotInheritable Class Key
             Inherits Model(Of PK)

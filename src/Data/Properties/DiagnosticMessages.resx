@@ -531,4 +531,7 @@
   <data name="DataValues_InvalidColumn" xml:space="preserve">
     <value>The column must be a param or const.</value>
   </data>
+  <data name="PrimaryKey_ParentModelNotIdentical" xml:space="preserve">
+    <value>The parent Model is not identical.</value>
+  </data>
 </root>

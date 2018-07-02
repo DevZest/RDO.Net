@@ -8,12 +8,20 @@ namespace DevZest.Data.Helpers
     {
         public sealed class PK : PrimaryKey
         {
-            public PK(_Int32 id)
+            public static IDataValues Const(int id)
             {
-                Id = id;
+                return DataValues.Create(_Int32.Const(id));
             }
 
-            public _Int32 Id { get; private set; }
+            public PK(_Int32 id)
+                : base(id)
+            {
+            }
+
+            public _Int32 Id
+            {
+                get { return GetColumn<_Int32>(0); }
+            }
         }
 
         protected SimpleModelBase()

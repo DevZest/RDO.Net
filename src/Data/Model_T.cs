@@ -9,7 +9,7 @@ namespace DevZest.Data
     {
         protected Model()
         {
-            AddDbTableConstraint(new DbPrimaryKey(this, GetDbPrimaryKeyName(), GetDbPrimaryKeyDescription(), true, () => PrimaryKey._columns), true);
+            AddDbTableConstraint(new DbPrimaryKey(this, GetDbPrimaryKeyName(), GetDbPrimaryKeyDescription(), true, () => PrimaryKey), true);
         }
 
         private T _primaryKey;
@@ -34,7 +34,7 @@ namespace DevZest.Data
         protected virtual string GetDbPrimaryKeyDescription()
         {
             var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbPrimaryKeyAttribute>();
-            return dbConstraintAttribute == null ? null : dbConstraintAttribute.Description;
+            return dbConstraintAttribute?.Description;
         }
 
         public KeyMapping Match(T target)

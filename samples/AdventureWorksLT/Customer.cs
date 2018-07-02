@@ -9,17 +9,20 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_Customer_CustomerID", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
-            public PK(_Int32 customerID)
+            public static IDataValues Const(int customerID)
             {
-                CustomerID = customerID;
+                return DataValues.Create(_Int32.Const(customerID));
             }
 
-            public _Int32 CustomerID { get; private set; }
-        }
+            public PK(_Int32 customerID)
+                : base(customerID)
+            {
+            }
 
-        public static IDataValues GetKey(int customerId)
-        {
-            return DataValues.Create(_Int32.Const(customerId));
+            public _Int32 CustomerID
+            {
+                get { return GetColumn<_Int32>(0); }
+            }
         }
 
         public sealed class Key : Model<PK>

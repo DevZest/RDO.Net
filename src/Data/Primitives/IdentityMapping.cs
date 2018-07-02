@@ -1,18 +1,23 @@
-﻿
-using System;
-
-namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data.Primitives
 {
     public sealed class IdentityMapping : Model<IdentityMapping.PK>
     {
         public sealed class PK : PrimaryKey
         {
-            public PK(_Int32 oldValue)
+            public static IDataValues Const(int oldValue)
             {
-                OldValue = oldValue;
+                return DataValues.Create(_Int32.Const(oldValue));
             }
 
-            public _Int32 OldValue { get; private set; }
+            public PK(_Int32 oldValue)
+                : base(oldValue)
+            {
+            }
+
+            public _Int32 OldValue
+            {
+                get { return GetColumn<_Int32>(0); }
+            }
         }
 
         static IdentityMapping()

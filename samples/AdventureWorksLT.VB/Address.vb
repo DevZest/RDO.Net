@@ -11,16 +11,21 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public NotInheritable Class PK
             Inherits PrimaryKey
 
+            Public Shared Function [Const](addressID As Integer) As IDataValues
+                Return DataValues.Create(_Int32.Const(addressID))
+            End Function
+
             Public Sub New(addressID As _Int32)
-                Me.AddressID = addressID
+                MyBase.New(addressID)
             End Sub
 
             Public ReadOnly Property AddressID As _Int32
-        End Class
+                Get
+                    Return GetColumn(Of _Int32)(0)
+                End Get
+            End Property
 
-        Public Shared Function GetKey(addressId As Integer) As IDataValues
-            Return DataValues.Create(_Int32.Const(addressId))
-        End Function
+        End Class
 
         Public NotInheritable Class Key
             Inherits Model(Of PK)

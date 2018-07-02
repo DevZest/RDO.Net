@@ -9,23 +9,30 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_ProductModelProductDescription_ProductModelID_ProductDescriptionID_Culture", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
-            public PK(_Int32 productModelID, _Int32 productDescriptionID, _String culture)
+            public static IDataValues Const(int productModelID, int productDescriptionID, string culture)
             {
-                ProductModelID = productModelID;
-                ProductDescriptionID = productDescriptionID;
-                Culture = culture;
+                return DataValues.Create(_Int32.Const(productModelID), _Int32.Const(productDescriptionID), _String.Const(culture));
             }
 
-            public _Int32 ProductModelID { get; private set; }
+            public PK(_Int32 productModelID, _Int32 productDescriptionID, _String culture)
+                : base(productModelID, productDescriptionID, culture)
+            {
+            }
 
-            public _Int32 ProductDescriptionID { get; private set; }
+            public _Int32 ProductModelID
+            {
+                get { return GetColumn<_Int32>(0); }
+            }
 
-            public _String Culture { get; private set; }
-        }
+            public _Int32 ProductDescriptionID
+            {
+                get { return GetColumn<_Int32>(1); }
+            }
 
-        public static IDataValues GetKey(int productModelId, int productDescriptionId, string culture)
-        {
-            return DataValues.Create(_Int32.Const(productModelId), _Int32.Const(productDescriptionId), _String.Const(culture));
+            public _Int32 Culture
+            {
+                get { return GetColumn<_Int32>(2); }
+            }
         }
 
         public static readonly Mounter<_String> _Culture;
