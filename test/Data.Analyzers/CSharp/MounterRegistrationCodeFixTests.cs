@@ -18,7 +18,32 @@ namespace DevZest.Data.Analyzers.CSharp
         }
 
         [TestMethod]
-        public void GenerateStaticConstructor()
+        public void RegisterColumn_no_static_constructor()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public _Int32 Column1 { get; private set; }
+}";
+            var expected = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+        RegisterColumn((SimpleModel _) => _.Column1);
+    }
+
+    public _Int32 Column1 { get; private set; }
+}";
+            VerifyCSharpFix(test, expected, 1);
+        }
+
+        [TestMethod]
+        public void RegisterColumn_no_static_constructor_returns_mounter()
         {
             var test = @"
 using DevZest.Data;

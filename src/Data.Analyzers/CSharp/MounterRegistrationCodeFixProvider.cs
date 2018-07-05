@@ -58,7 +58,7 @@ namespace DevZest.Data.Analyzers.CSharp
             else if (kind == ModelMemberKind.LocalColumn)
                 context.RegisterCodeFix(CodeAction.Create(
                     title: Resources.Title_AddRegisterColumn,
-                    createChangedSolution: ct => GenerateMounterRegistration("RegisterColumn", document, propertyDeclaration, propertySymbol, false, ct)),
+                    createChangedSolution: ct => GenerateMounterRegistration("RegisterLocalColumn", document, propertyDeclaration, propertySymbol, false, ct)),
                     diagnostic);
         }
 
@@ -119,7 +119,7 @@ namespace DevZest.Data.Analyzers.CSharp
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
 
             var staticConstructor = editor.Generator.GenerateMounterRegistration(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, returnsMounter, false);
-            var index = (lastMounterIndex.HasValue ? lastMounterIndex.Value : GetMounterDeclarationInsertIndex(classDeclaration, semanticModel)) + 1;
+            var index = lastMounterIndex.HasValue ? lastMounterIndex.Value + 1 : GetMounterDeclarationInsertIndex(classDeclaration, semanticModel);
             editor.InsertMembers(classDeclaration, index, new SyntaxNode[] { staticConstructor });
         }
 
