@@ -153,4 +153,10 @@
   <data name="MounterRegistration_MounterNaming_Title" xml:space="preserve">
     <value>Mounter name does not conform to convention.</value>
   </data>
+  <data name="Title_AddMounterAndRegisterColumn" xml:space="preserve">
+    <value>Add Mounter and RegisterColumn</value>
+  </data>
+  <data name="Title_AddRegisterColumn" xml:space="preserve">
+    <value>Add RegisterColumn</value>
+  </data>
 </root>

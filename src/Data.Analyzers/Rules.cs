@@ -39,7 +39,5 @@ namespace DevZest.Data.Analyzers
             new LocalizableResourceString(nameof(Resources.MounterRegistration_Missing_Title), Resources.ResourceManager, typeof(Resources)),
             new LocalizableResourceString(nameof(Resources.MounterRegistration_Missing_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Compile, DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-
     }
 }

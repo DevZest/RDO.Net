@@ -168,5 +168,23 @@ namespace DevZest.Data.Analyzers {
                 return ResourceManager.GetString("MounterRegistration_MounterNaming_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Mounter and RegisterColumn.
+        /// </summary>
+        internal static string Title_AddMounterAndRegisterColumn {
+            get {
+                return ResourceManager.GetString("Title_AddMounterAndRegisterColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add RegisterColumn.
+        /// </summary>
+        internal static string Title_AddRegisterColumn {
+            get {
+                return ResourceManager.GetString("Title_AddRegisterColumn", resourceCulture);
+            }
+        }
     }
 }

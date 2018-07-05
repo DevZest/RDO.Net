@@ -30,7 +30,7 @@ namespace DevZest.Data.Analyzers
             get { return _typeName.IndexOf('`') >= 0; }
         }
 
-        public bool IsBaseTypeOf(INamedTypeSymbol namedType)
+        public bool IsBaseTypeOf(ITypeSymbol namedType)
         {
             for (var baseType = namedType.BaseType; baseType != null; baseType = baseType.BaseType)
             {
@@ -83,5 +83,6 @@ namespace DevZest.Data.Analyzers
         public static readonly TypeIdentifier ColumnGroup = new TypeIdentifier(DATA_NAMESPACE, nameof(ColumnGroup), DATA_ASSEMBLY_NAME);
         public static readonly TypeIdentifier ColumnList = new TypeIdentifier(DATA_NAMESPACE, nameof(ColumnList), DATA_ASSEMBLY_NAME);
         public static readonly TypeIdentifier Model = new TypeIdentifier(DATA_NAMESPACE, nameof(Model), DATA_ASSEMBLY_NAME);
+        public static readonly TypeIdentifier Mounter = new TypeIdentifier(DATA_NAMESPACE, nameof(Mounter) + "`1", DATA_ASSEMBLY_NAME);
     }
 }
