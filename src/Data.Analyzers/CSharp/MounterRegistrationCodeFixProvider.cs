@@ -40,7 +40,7 @@ namespace DevZest.Data.Analyzers.CSharp
             var diagnostic = context.Diagnostics.First();
             var diagnosticSpan = diagnostic.Location.SourceSpan;
 
-            var propertyDeclaration = root.FindToken(diagnosticSpan.Start).Parent.FirstAncestor<PropertyDeclarationSyntax>();
+            var propertyDeclaration = root.FindToken(diagnosticSpan.Start).Parent.SelfOrFirstAncestor<PropertyDeclarationSyntax>();
             var propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration, context.CancellationToken);
             var kind = propertySymbol.GetModelMemberKind().Value;
 
@@ -77,12 +77,15 @@ namespace DevZest.Data.Analyzers.CSharp
             else
                 classDeclaration = propertyDeclaration.FirstAncestor<ClassDeclarationSyntax>();
 
+            int? insertIndex = null;
             var editor = await DocumentEditor.CreateAsync(document, ct);
             if (newMounterField)
-                GenerateMounterFieldDeclaration(editor, classDeclaration, propertySymbol, ct);
+                insertIndex = GenerateMounterFieldDeclaration(editor, classDeclaration, propertySymbol, ct);
 
-            //if (staticConstructor == null)
-
+            if (staticConstructor == null)
+                GenerateStaticConstructor(editor, classDeclaration, insertIndex, registerMounterMethodName, propertySymbol, newMounterField, ct);
+            else
+                GenerateMounterStatement(editor, classDeclaration, staticConstructor, registerMounterMethodName, propertySymbol, newMounterField, ct);
 
             return editor.GetChangedDocument().Project.Solution;
         }
@@ -98,14 +101,46 @@ namespace DevZest.Data.Analyzers.CSharp
             return (ConstructorDeclarationSyntax)(await staticConstructor.DeclaringSyntaxReferences[0].GetSyntaxAsync(ct));
         }
 
-        private static void GenerateMounterFieldDeclaration(DocumentEditor editor, ClassDeclarationSyntax classDeclaration, IPropertySymbol propertySymbol, CancellationToken ct)
+        private static int GenerateMounterFieldDeclaration(DocumentEditor editor, ClassDeclarationSyntax classDeclaration, IPropertySymbol propertySymbol, CancellationToken ct)
         {
             var semanticModel = editor.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
             var mounterDeclaration = editor.Generator.MounterDeclaration(classSymbol, propertySymbol);
 
             var index = GetMounterDeclarationInsertIndex(classDeclaration, semanticModel);
-            editor.InsertMembers(mounterDeclaration, index, new SyntaxNode[] { mounterDeclaration });
+            editor.InsertMembers(classDeclaration, index, new SyntaxNode[] { mounterDeclaration });
+            return index;
+        }
+
+        private static void GenerateStaticConstructor(DocumentEditor editor, ClassDeclarationSyntax classDeclaration, int? lastMounterIndex,
+            string registerMounterMethodName, IPropertySymbol propertySymbol, bool isAssignment, CancellationToken ct)
+        {
+            var semanticModel = editor.SemanticModel;
+            var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
+
+            var staticConstructor = editor.Generator.GenerateStaticConstructor(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, isAssignment);
+            var index = (lastMounterIndex.HasValue ? lastMounterIndex.Value : GetMounterDeclarationInsertIndex(classDeclaration, semanticModel)) + 1;
+            editor.InsertMembers(classDeclaration, index, new SyntaxNode[] { staticConstructor });
+        }
+
+        private static void GenerateMounterStatement(DocumentEditor editor, ClassDeclarationSyntax classDeclaration, ConstructorDeclarationSyntax staticConstructor,
+            string registerMounterMethodName, IPropertySymbol propertySymbol, bool isAssignment, CancellationToken ct)
+        {
+            var semanticModel = editor.SemanticModel;
+            var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
+
+            var body = staticConstructor.Body;
+            var statements = body.Statements;
+            if (statements.Count > 0)
+            {
+                var statement = editor.Generator.GenerateMounterStatement(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, isAssignment);
+                editor.InsertAfter(statements.Last(), new SyntaxNode[] { statement });
+            }
+            else
+            {
+                var newStaticConstructor = editor.Generator.GenerateStaticConstructor(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, isAssignment);
+                editor.ReplaceNode(staticConstructor, newStaticConstructor);
+            }
         }
 
         private static int GetMounterDeclarationInsertIndex(ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
