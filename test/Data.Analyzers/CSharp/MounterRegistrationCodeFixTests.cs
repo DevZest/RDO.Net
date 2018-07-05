@@ -43,6 +43,35 @@ class SimpleModel : Model
         }
 
         [TestMethod]
+        public void RegisterColumn_empty_static_constructor()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+    }
+
+    public _Int32 Column1 { get; private set; }
+}";
+            var expected = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+        RegisterColumn((SimpleModel _) => _.Column1);
+    }
+
+    public _Int32 Column1 { get; private set; }
+}";
+            VerifyCSharpFix(test, expected, 1);
+        }
+
+        [TestMethod]
         public void RegisterColumn_no_static_constructor_returns_mounter()
         {
             var test = @"
@@ -50,6 +79,37 @@ using DevZest.Data;
 
 class SimpleModel : Model
 {
+    public _Int32 Column1 { get; private set; }
+}";
+            var expected = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public static readonly Mounter<_Int32> _Column1;
+
+    static SimpleModel()
+    {
+        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
+    }
+
+    public _Int32 Column1 { get; private set; }
+}";
+            VerifyCSharpFix(test, expected, 0);
+        }
+
+        [TestMethod]
+        public void RegisterColumn_empty_static_constructor_returns_mounter()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+    }
+
     public _Int32 Column1 { get; private set; }
 }";
             var expected = @"
