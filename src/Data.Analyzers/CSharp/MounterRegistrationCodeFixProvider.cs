@@ -64,7 +64,7 @@ namespace DevZest.Data.Analyzers.CSharp
 
         private static async Task<Solution> GenerateMounterRegistration(string registerMounterMethodName, Document document,
             PropertyDeclarationSyntax propertyDeclaration, IPropertySymbol propertySymbol,
-            bool newMounterField, CancellationToken ct)
+            bool returnsMounter, CancellationToken ct)
         {
             var staticConstructor = await GetStaticConstructor(propertySymbol, ct);
 
@@ -79,13 +79,13 @@ namespace DevZest.Data.Analyzers.CSharp
 
             int? insertIndex = null;
             var editor = await DocumentEditor.CreateAsync(document, ct);
-            if (newMounterField)
+            if (returnsMounter)
                 insertIndex = GenerateMounterFieldDeclaration(editor, classDeclaration, propertySymbol, ct);
 
             if (staticConstructor == null)
-                GenerateStaticConstructor(editor, classDeclaration, insertIndex, registerMounterMethodName, propertySymbol, newMounterField, ct);
+                GenerateStaticConstructor(editor, classDeclaration, insertIndex, registerMounterMethodName, propertySymbol, returnsMounter, ct);
             else
-                GenerateMounterStatement(editor, classDeclaration, staticConstructor, registerMounterMethodName, propertySymbol, newMounterField, ct);
+                GenerateMounterStatement(editor, classDeclaration, staticConstructor, registerMounterMethodName, propertySymbol, returnsMounter, ct);
 
             return editor.GetChangedDocument().Project.Solution;
         }
@@ -105,7 +105,7 @@ namespace DevZest.Data.Analyzers.CSharp
         {
             var semanticModel = editor.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
-            var mounterDeclaration = editor.Generator.MounterDeclaration(classSymbol, propertySymbol);
+            var mounterDeclaration = editor.Generator.GenerateMounterDeclaration(classSymbol, propertySymbol);
 
             var index = GetMounterDeclarationInsertIndex(classDeclaration, semanticModel);
             editor.InsertMembers(classDeclaration, index, new SyntaxNode[] { mounterDeclaration });
@@ -113,18 +113,18 @@ namespace DevZest.Data.Analyzers.CSharp
         }
 
         private static void GenerateStaticConstructor(DocumentEditor editor, ClassDeclarationSyntax classDeclaration, int? lastMounterIndex,
-            string registerMounterMethodName, IPropertySymbol propertySymbol, bool isAssignment, CancellationToken ct)
+            string registerMounterMethodName, IPropertySymbol propertySymbol, bool returnsMounter, CancellationToken ct)
         {
             var semanticModel = editor.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
 
-            var staticConstructor = editor.Generator.GenerateStaticConstructor(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, isAssignment);
+            var staticConstructor = editor.Generator.GenerateMounterRegistration(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, returnsMounter, false);
             var index = (lastMounterIndex.HasValue ? lastMounterIndex.Value : GetMounterDeclarationInsertIndex(classDeclaration, semanticModel)) + 1;
             editor.InsertMembers(classDeclaration, index, new SyntaxNode[] { staticConstructor });
         }
 
         private static void GenerateMounterStatement(DocumentEditor editor, ClassDeclarationSyntax classDeclaration, ConstructorDeclarationSyntax staticConstructor,
-            string registerMounterMethodName, IPropertySymbol propertySymbol, bool isAssignment, CancellationToken ct)
+            string registerMounterMethodName, IPropertySymbol propertySymbol, bool returnsMounter, CancellationToken ct)
         {
             var semanticModel = editor.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
@@ -133,12 +133,12 @@ namespace DevZest.Data.Analyzers.CSharp
             var statements = body.Statements;
             if (statements.Count > 0)
             {
-                var statement = editor.Generator.GenerateMounterStatement(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, isAssignment);
+                var statement = editor.Generator.GenerateMounterRegistration(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, returnsMounter, true);
                 editor.InsertAfter(statements.Last(), new SyntaxNode[] { statement });
             }
             else
             {
-                var newStaticConstructor = editor.Generator.GenerateStaticConstructor(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, isAssignment);
+                var newStaticConstructor = editor.Generator.GenerateMounterRegistration(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, returnsMounter, false);
                 editor.ReplaceNode(staticConstructor, newStaticConstructor);
             }
         }
@@ -167,90 +167,5 @@ namespace DevZest.Data.Analyzers.CSharp
 
             return false;
         }
-
-        #region To be deleted
-        //private static FieldDeclarationSyntax MounterDeclaration(INamedTypeSymbol typeSymbol, IPropertySymbol propertySymbol)
-        //{
-        //    var mounterName = "_" + propertySymbol.Name;
-        //    var propertyTypeName = propertySymbol.Type.Name;
-
-        //    return SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(
-        //        SyntaxFactory.GenericName(Identifier(mounterName))
-        //            .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(SyntaxFactory.SingletonSeparatedList<TypeSyntax>(IdentifierName(propertyTypeName)))))
-        //        .WithVariables(SyntaxFactory.SingletonSeparatedList(SyntaxFactory.VariableDeclarator(Identifier(mounterName)))))
-        //        .WithModifiers(TokenList(SyntaxKind.PublicKeyword, SyntaxKind.StaticKeyword, SyntaxKind.ReadOnlyKeyword));
-        //}
-
-        //private static SyntaxTokenList TokenList(params SyntaxKind[] kinds)
-        //{
-        //    var tokens = new SyntaxToken[kinds.Length];
-        //    for (int i = 0; i < tokens.Length; i++)
-        //        tokens[i] = SyntaxFactory.Token(kinds[i]);
-        //    return SyntaxFactory.TokenList(tokens);
-        //}
-
-        //private static SyntaxToken Token(SyntaxKind kind)
-        //{
-        //    return SyntaxFactory.Token(kind);
-        //}
-
-        //private static ConstructorDeclarationSyntax StaticConstructor(INamedTypeSymbol classSymbol, string propertyName, string registerMounterMethodName, string mounterName)
-        //{
-        //    var type = classSymbol.Name;
-
-        //    return ConstructorDeclaration(Identifier(type)).WithModifiers(TokenList(SyntaxKind.StaticKeyword))
-        //        .WithBody(Block(SingletonList(ConstructorBody(type, propertyName, registerMounterMethodName, mounterName))));
-        //}
-
-        //private static SyntaxNode ConstructorBody(string type, string propertyName, string registerMounterMethodName, string mounterName)
-        //{
-        //    if (string.IsNullOrEmpty(mounterName))
-        //        return Register(registerMounterMethodName, type, propertyName);
-        //    else
-        //        return AssignMounter(mounterName, registerMounterMethodName, type, propertyName);
-        //}
-
-        //private static AssignmentExpressionSyntax AssignMounter(string mounterName, string methodName, string type, string propertyName)
-        //{
-        //    return AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, IdentifierName(mounterName), Register(methodName, type, propertyName));
-        //}
-
-        //private static InvocationExpressionSyntax Register(string methodName, string type, string propertyName)
-        //{
-        //    return InvocationExpression(IdentifierName(methodName)).WithArgumentList(SingleArgument(GetterArgument(type, propertyName)));
-        //}
-
-        //private static ArgumentListSyntax SingleArgument(ArgumentSyntax argumentSyntax)
-        //{
-        //    return ArgumentList(SingletonSeparatedList(argumentSyntax));
-        //}
-
-        //private static ArgumentSyntax GetterArgument(string type, string propertyName)
-        //{
-        //    return Argument(Getter(type, propertyName));
-        //}
-
-        //private static ParenthesizedLambdaExpressionSyntax Getter(string type, string propertyName)
-        //{
-        //    return ParenthesizedLambdaExpression(GetterBody(propertyName)).WithParameterList(SingleParameter(GetterParameter(type)));
-        //}
-
-        //private static ParameterListSyntax SingleParameter(ParameterSyntax parameterSyntax)
-        //{
-        //    return ParameterList(SingletonSeparatedList(parameterSyntax));
-        //}
-
-        //private static ParameterSyntax GetterParameter(string type)
-        //{
-        //    return Parameter(Identifier(GETTER_LAMBDA_PARAM)).WithType(IdentifierName(type));
-        //}
-
-        //private const string GETTER_LAMBDA_PARAM = "_";
-
-        //private static MemberAccessExpressionSyntax GetterBody(string propertyName)
-        //{
-        //    return MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName(GETTER_LAMBDA_PARAM), IdentifierName(propertyName));
-        //}
-        #endregion
     }
 }
