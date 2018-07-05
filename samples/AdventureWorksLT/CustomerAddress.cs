@@ -29,12 +29,12 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public sealed class Key : Model<PK>
+        public sealed class Key : Key<PK>
         {
             static Key()
             {
-                RegisterColumn((Key _) => _.CustomerID, Customer._CustomerID);
-                RegisterColumn((Key _) => _.AddressID, Address._AddressID);
+                RegisterColumn((Key _) => _.CustomerID, _CustomerID);
+                RegisterColumn((Key _) => _.AddressID, _AddressID);
             }
 
             protected override PK CreatePrimaryKey()
@@ -51,8 +51,8 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Ref()
             {
-                Register((Ref _) => _.CustomerID, Customer._CustomerID);
-                Register((Ref _) => _.AddressID, Address._AddressID);
+                Register((Ref _) => _.CustomerID, _CustomerID);
+                Register((Ref _) => _.AddressID, _AddressID);
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -75,12 +75,14 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String AddressType { get; private set; }
         }
 
+        public static readonly Mounter<_Int32> _CustomerID;
+        public static readonly Mounter<_Int32> _AddressID;
         public static readonly Mounter<_String> _AddressType;
 
         static CustomerAddress()
         {
-            RegisterColumn((CustomerAddress _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
-            RegisterColumn((CustomerAddress _) => _.AddressID, AdventureWorksLT.Address._AddressID);
+            _CustomerID = RegisterColumn((CustomerAddress _) => _.CustomerID);
+            _AddressID = RegisterColumn((CustomerAddress _) => _.AddressID);
             _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
         }
 

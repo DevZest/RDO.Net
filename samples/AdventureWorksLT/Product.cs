@@ -25,7 +25,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public sealed class Key : Model<PK>
+        public sealed class Key : Key<PK>
         {
             static Key()
             {
@@ -76,6 +76,8 @@ namespace DevZest.Samples.AdventureWorksLT
         public static readonly Mounter<_Decimal> _ListPrice;
         public static readonly Mounter<_String> _Size;
         public static readonly Mounter<_Decimal> _Weight;
+        public static readonly Mounter<_Int32> _ProductCategoryID;
+        public static readonly Mounter<_Int32> _ProductModelID;
         public static readonly Mounter<_DateTime> _SellStartDate;
         public static readonly Mounter<_DateTime> _SellEndDate;
         public static readonly Mounter<_DateTime> _DiscontinuedDate;
@@ -92,8 +94,8 @@ namespace DevZest.Samples.AdventureWorksLT
             _ListPrice = RegisterColumn((Product _) => _.ListPrice);
             _Size = RegisterColumn((Product _) => _.Size);
             _Weight = RegisterColumn((Product _) => _.Weight);
-            RegisterColumn((Product _) => _.ProductCategoryID, AdventureWorksLT.ProductCategory._ProductCategoryID);
-            RegisterColumn((Product _) => _.ProductModelID, AdventureWorksLT.ProductModel._ProductModelID);
+            _ProductCategoryID = RegisterColumn((Product _) => _.ProductCategoryID);
+            _ProductModelID = RegisterColumn((Product _) => _.ProductModelID);
             _SellStartDate = RegisterColumn((Product _) => _.SellStartDate);
             _SellEndDate = RegisterColumn((Product _) => _.SellEndDate);
             _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate);

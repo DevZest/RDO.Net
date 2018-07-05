@@ -30,11 +30,11 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public sealed class Key : Model<PK>
+        public sealed class Key : Key<PK>
         {
             static Key()
             {
-                RegisterColumn((Key _) => _.SalesOrderID, AdventureWorksLT.SalesOrderHeader._SalesOrderID);
+                RegisterColumn((Key _) => _.SalesOrderID, _SalesOrderID);
                 RegisterColumn((Key _) => _.SalesOrderDetailID, _SalesOrderDetailID);
             }
 
@@ -48,18 +48,20 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
+        public static readonly Mounter<_Int32> _SalesOrderID;
         public static readonly Mounter<_Int32> _SalesOrderDetailID;
         public static readonly Mounter<_Int16> _OrderQty;
+        public static readonly Mounter<_Int32> _ProductID;
         public static readonly Mounter<_Decimal> _UnitPrice;
         public static readonly Mounter<_Decimal> _UnitPriceDiscount;
         public static readonly Mounter<_Decimal> _LineTotal;
 
         static SalesOrderDetail()
         {
-            RegisterColumn((SalesOrderDetail _) => _.SalesOrderID, AdventureWorksLT.SalesOrder._SalesOrderID);
+            _SalesOrderID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderID);
             _SalesOrderDetailID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderDetailID);
             _OrderQty = RegisterColumn((SalesOrderDetail _) => _.OrderQty);
-            RegisterColumn((SalesOrderDetail _) => _.ProductID, AdventureWorksLT.Product._ProductID);
+            _ProductID = RegisterColumn((SalesOrderDetail _) => _.ProductID);
             _UnitPrice = RegisterColumn((SalesOrderDetail _) => _.UnitPrice);
             _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount);
             _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);

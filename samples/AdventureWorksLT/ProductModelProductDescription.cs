@@ -35,12 +35,14 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
+        public static readonly Mounter<_Int32> _ProductModelID;
+        public static readonly Mounter<_Int32> _ProductDescriptionID;
         public static readonly Mounter<_String> _Culture;
 
         static ProductModelProductDescription()
         {
-            RegisterColumn((ProductModelProductDescription _) => _.ProductModelID, AdventureWorksLT.ProductModel._ProductModelID);
-            RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID, AdventureWorksLT.ProductDescription._ProductDescriptionID);
+            _ProductModelID = RegisterColumn((ProductModelProductDescription _) => _.ProductModelID);
+            _ProductDescriptionID = RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID);
             _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
         }
 

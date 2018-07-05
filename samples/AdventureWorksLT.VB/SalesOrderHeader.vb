@@ -26,10 +26,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public NotInheritable Class Key
-            Inherits Model(Of PK)
+            Inherits Key(Of PK)
 
             Shared Sub New()
-                RegisterColumn(Function(ByVal __ As Key) __.SalesOrderID, _SalesOrderID)
+                RegisterColumn(Function(ByVal x As Key) x.SalesOrderID, _SalesOrderID)
             End Sub
 
             Protected Overrides Function CreatePrimaryKey() As PK
@@ -57,6 +57,9 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public Shared ReadOnly _SalesOrderNumber As Mounter(Of _String)
         Public Shared ReadOnly _PurchaseOrderNumber As Mounter(Of _String)
         Public Shared ReadOnly _AccountNumber As Mounter(Of _String)
+        Public Shared ReadOnly _CustomerID As Mounter(Of _Int32)
+        Public Shared ReadOnly _ShipToAddressID As Mounter(Of _Int32)
+        Public Shared ReadOnly _BillToAddressID As Mounter(Of _Int32)
         Public Shared ReadOnly _ShipMethod As Mounter(Of _String)
         Public Shared ReadOnly _CreditCardApprovalCode As Mounter(Of _String)
         Public Shared ReadOnly _SubTotal As Mounter(Of _Decimal)
@@ -76,9 +79,9 @@ Namespace DevZest.Samples.AdventureWorksLT
             _SalesOrderNumber = RegisterColumn(Function(x As SalesOrderHeader) x.SalesOrderNumber)
             _PurchaseOrderNumber = RegisterColumn(Function(x As SalesOrderHeader) x.PurchaseOrderNumber)
             _AccountNumber = RegisterColumn(Function(x As SalesOrderHeader) x.AccountNumber)
-            RegisterColumn(Function(x As SalesOrderHeader) x.CustomerID, Customer._CustomerID)
-            RegisterColumn(Function(x As SalesOrderHeader) x.ShipToAddressID, Address._AddressID)
-            RegisterColumn(Function(x As SalesOrderHeader) x.BillToAddressID, Address._AddressID)
+            _CustomerID = RegisterColumn(Function(x As SalesOrderHeader) x.CustomerID)
+            _ShipToAddressID = RegisterColumn(Function(x As SalesOrderHeader) x.ShipToAddressID)
+            _BillToAddressID = RegisterColumn(Function(x As SalesOrderHeader) x.BillToAddressID)
             _ShipMethod = RegisterColumn(Function(x As SalesOrderHeader) x.ShipMethod)
             _CreditCardApprovalCode = RegisterColumn(Function(x As SalesOrderHeader) x.CreditCardApprovalCode)
             _SubTotal = RegisterColumn(Function(x As SalesOrderHeader) x.SubTotal)

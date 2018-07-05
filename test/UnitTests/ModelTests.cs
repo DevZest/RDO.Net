@@ -26,19 +26,6 @@ namespace DevZest.Data
             public _Int32 Column2 { get; private set; }
         }
 
-        private class RefSimpleModel : Model
-        {
-            static RefSimpleModel()
-            {
-                RegisterColumn((RefSimpleModel x) => x.Col1, SimpleModel._Column1);
-                RegisterColumn((RefSimpleModel x) => x.Col2, SimpleModel._Column2);
-            }
-
-            public _Int32 Col1 { get; private set; }
-
-            public _Int32 Col2 { get; private set; }
-        }
-
         private class ColumnListModel : Model
         {
             static ColumnListModel()
@@ -61,14 +48,6 @@ namespace DevZest.Data
             var model = new SimpleModel();
             model.Column1.Verify(model, typeof(SimpleModel), "Column1");
             model.Column2.Verify(model, typeof(SimpleModel), "Column2");
-        }
-
-        [TestMethod]
-        public void Model_RegisterColumn_reference_to_existing_property()
-        {
-            var model = new RefSimpleModel();
-            model.Col1.Verify(model, typeof(RefSimpleModel), "Col1", typeof(SimpleModel), "Column1");
-            model.Col2.Verify(model, typeof(RefSimpleModel), "Col2", typeof(SimpleModel), "Column2");
         }
 
         [TestMethod]

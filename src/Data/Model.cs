@@ -19,7 +19,7 @@ namespace DevZest.Data
     {
         #region RegisterColumn
 
-        static MounterManager<Model, Column> s_columnManager = new MounterManager<Model, Column>();
+        internal static MounterManager<Model, Column> s_columnManager = new MounterManager<Model, Column>();
 
         /// <summary>
         /// Registers a new column which has a default constructor.
@@ -40,45 +40,12 @@ namespace DevZest.Data
             return s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer));
         }
 
-        /// <summary>
-        /// Registers a column from existing column property, without inheriting its <see cref="ColumnId"/> value.
-        /// </summary>
-        /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
-        /// <typeparam name="TColumn">The type of the column.</typeparam>
-        /// <param name="getter">The lambda expression of the column getter.</param>
-        /// <param name="fromMounter">The existing column mounter.</param>
-        /// <returns>Mounter of the column.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="fromMounter"/> is null.</exception>
-        [MounterRegistration]
-        protected static void RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Mounter<TColumn> fromMounter)
-            where TModel : Model
-            where TColumn : Column, new()
-        {
-            var initializer = getter.Verify(nameof(getter));
-            fromMounter.VerifyNotNull(nameof(fromMounter));
-
-            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, fromMounter, initializer));
-            result.OriginalDeclaringType = fromMounter.OriginalDeclaringType;
-            result.OriginalName = fromMounter.OriginalName;
-        }
-
         private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Action<T> initializer)
             where TModel : Model
             where T : Column, new()
         {
             var result = Column.Create<T>(mounter.DeclaringType, mounter.Name);
             result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.ModelProperty, null, initializer);
-            return result;
-        }
-
-        private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Mounter<T> fromMounter, Action<T> initializer)
-            where TModel : Model
-            where T : Column, new()
-        {
-            var result = Column.Create<T>(fromMounter.OriginalDeclaringType, fromMounter.OriginalName);
-            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.ModelProperty, fromMounter.Initializer, initializer);
             return result;
         }
 

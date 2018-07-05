@@ -37,11 +37,13 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
+        Public Shared ReadOnly _ProductModelID As Mounter(Of _Int32)
+        Public Shared ReadOnly _ProductDescriptionID As Mounter(Of _Int32)
         Public Shared ReadOnly _Culture As Mounter(Of _String)
 
         Shared Sub New()
-            RegisterColumn(Function(x As ProductModelProductDescription) x.ProductModelID, ProductModel._ProductModelID)
-            RegisterColumn(Function(x As ProductModelProductDescription) x.ProductDescriptionID, ProductDescription._ProductDescriptionID)
+            _ProductModelID = RegisterColumn(Function(x As ProductModelProductDescription) x.ProductModelID)
+            _ProductDescriptionID = RegisterColumn(Function(x As ProductModelProductDescription) x.ProductDescriptionID)
             _Culture = RegisterColumn(Function(x As ProductModelProductDescription) x.Culture)
         End Sub
 

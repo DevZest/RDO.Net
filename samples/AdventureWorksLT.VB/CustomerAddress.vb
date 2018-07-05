@@ -25,11 +25,11 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public NotInheritable Class Key
-            Inherits Model(Of PK)
+            Inherits Key(Of PK)
 
             Shared Sub New()
-                RegisterColumn(Function(ByVal x As Key) x.CustomerID, Customer._CustomerID)
-                RegisterColumn(Function(ByVal x As Key) x.AddressID, Address._AddressID)
+                RegisterColumn(Function(ByVal x As Key) x.CustomerID, _CustomerID)
+                RegisterColumn(Function(ByVal x As Key) x.AddressID, _AddressID)
             End Sub
 
             Protected Overrides Function CreatePrimaryKey() As PK
@@ -46,13 +46,13 @@ Namespace DevZest.Samples.AdventureWorksLT
                 End Set
             End Property
 
-            Private _AddressID As _Int32
+            Private m_AddressID As _Int32
             Public Property AddressID As _Int32
                 Get
-                    Return _AddressID
+                    Return m_AddressID
                 End Get
                 Private Set
-                    _AddressID = Value
+                    m_AddressID = Value
                 End Set
             End Property
         End Class
@@ -61,8 +61,8 @@ Namespace DevZest.Samples.AdventureWorksLT
             Inherits Ref(Of PK)
 
             Shared Sub New()
-                Register(Function(ByVal __ As Ref) __.CustomerID, Customer._CustomerID)
-                Register(Function(ByVal __ As Ref) __.AddressID, Address._AddressID)
+                Register(Function(ByVal x As Ref) x.CustomerID, _CustomerID)
+                Register(Function(ByVal x As Ref) x.AddressID, _AddressID)
             End Sub
 
             Private m_CustomerID As _Int32
@@ -108,11 +108,13 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
+        Public Shared ReadOnly _CustomerID As Mounter(Of _Int32)
+        Public Shared ReadOnly _AddressID As Mounter(Of _Int32)
         Public Shared ReadOnly _AddressType As Mounter(Of _String)
 
         Shared Sub New()
-            RegisterColumn(Function(x As CustomerAddress) x.CustomerID, Customer._CustomerID)
-            RegisterColumn(Function(x As CustomerAddress) x.AddressID, Address._AddressID)
+            _CustomerID = RegisterColumn(Function(x As CustomerAddress) x.CustomerID)
+            _AddressID = RegisterColumn(Function(x As CustomerAddress) x.AddressID)
             _AddressType = RegisterColumn(Function(x As CustomerAddress) x.AddressType)
         End Sub
 

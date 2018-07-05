@@ -28,7 +28,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public sealed class Key : Model<PK>
+        public sealed class Key : Key<PK>
         {
             static Key()
             {

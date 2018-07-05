@@ -32,7 +32,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public NotInheritable Class Key
-            Inherits Model(Of PK)
+            Inherits Key(Of PK)
 
             Shared Sub New()
                 RegisterColumn(Function(x As Key) x.SalesOrderID, SalesOrderHeader._SalesOrderID)
@@ -64,17 +64,19 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
+        Public Shared ReadOnly _SalesOrderID As Mounter(Of _Int32)
         Public Shared ReadOnly _SalesOrderDetailID As Mounter(Of _Int32)
         Public Shared ReadOnly _OrderQty As Mounter(Of _Int16)
+        Public Shared ReadOnly _ProductID As Mounter(Of _Int32)
         Public Shared ReadOnly _UnitPrice As Mounter(Of _Decimal)
         Public Shared ReadOnly _UnitPriceDiscount As Mounter(Of _Decimal)
         Public Shared ReadOnly _LineTotal As Mounter(Of _Decimal)
 
         Shared Sub New()
-            RegisterColumn(Function(x As SalesOrderDetail) x.SalesOrderID, SalesOrderHeader._SalesOrderID)
+            _SalesOrderID = RegisterColumn(Function(x As SalesOrderDetail) x.SalesOrderID)
             _SalesOrderDetailID = RegisterColumn(Function(x As SalesOrderDetail) x.SalesOrderDetailID)
             _OrderQty = RegisterColumn(Function(x As SalesOrderDetail) x.OrderQty)
-            RegisterColumn(Function(x As SalesOrderDetail) x.ProductID, Product._ProductID)
+            _ProductID = RegisterColumn(Function(x As SalesOrderDetail) x.ProductID)
             _UnitPrice = RegisterColumn(Function(x As SalesOrderDetail) x.UnitPrice)
             _UnitPriceDiscount = RegisterColumn(Function(x As SalesOrderDetail) x.UnitPriceDiscount)
             _LineTotal = RegisterColumn(Function(x As SalesOrderDetail) x.LineTotal)

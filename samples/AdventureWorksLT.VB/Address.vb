@@ -28,10 +28,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public NotInheritable Class Key
-            Inherits Model(Of PK)
+            Inherits Key(Of PK)
 
             Shared Sub New()
-                RegisterColumn(Function(x As Address) x.AddressID, Address._AddressID)
+                RegisterColumn(Function(x As Address) x.AddressID, _AddressID)
             End Sub
 
             Protected Overrides Function CreatePrimaryKey() As PK

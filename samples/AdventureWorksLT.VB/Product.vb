@@ -26,7 +26,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public NotInheritable Class Key
-            Inherits Model(Of PK)
+            Inherits Key(Of PK)
 
             Shared Sub New()
                 RegisterColumn(Function(x As Key) x.ProductID, _ProductID)
@@ -106,6 +106,8 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public Shared ReadOnly _ListPrice As Mounter(Of _Decimal)
         Public Shared ReadOnly _Size As Mounter(Of _String)
         Public Shared ReadOnly _Weight As Mounter(Of _Decimal)
+        Public Shared ReadOnly _ProductCategoryID As Mounter(Of _Int32)
+        Public Shared ReadOnly _ProductModelID As Mounter(Of _Int32)
         Public Shared ReadOnly _SellStartDate As Mounter(Of _DateTime)
         Public Shared ReadOnly _SellEndDate As Mounter(Of _DateTime)
         Public Shared ReadOnly _DiscontinuedDate As Mounter(Of _DateTime)
@@ -121,8 +123,8 @@ Namespace DevZest.Samples.AdventureWorksLT
             _ListPrice = RegisterColumn(Function(x As Product) x.ListPrice)
             _Size = RegisterColumn(Function(x As Product) x.Size)
             _Weight = RegisterColumn(Function(x As Product) x.Weight)
-            RegisterColumn(Function(x As Product) x.ProductCategoryID, ProductCategory._ProductCategoryID)
-            RegisterColumn(Function(ByVal x As Product) x.ProductModelID, ProductModel._ProductModelID)
+            _ProductCategoryID = RegisterColumn(Function(x As Product) x.ProductCategoryID)
+            _ProductModelID = RegisterColumn(Function(ByVal x As Product) x.ProductModelID)
             _SellStartDate = RegisterColumn(Function(x As Product) x.SellStartDate)
             _SellEndDate = RegisterColumn(Function(x As Product) x.SellEndDate)
             _DiscontinuedDate = RegisterColumn(Function(x As Product) x.DiscontinuedDate)

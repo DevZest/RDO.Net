@@ -26,7 +26,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public NotInheritable Class Key
-            Inherits Model(Of PK)
+            Inherits Key(Of PK)
 
             Shared Sub New()
                 RegisterColumn(Function(x As Key) x.ProductModelID, _ProductModelID)

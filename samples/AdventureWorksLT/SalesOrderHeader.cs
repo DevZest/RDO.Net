@@ -25,7 +25,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public sealed class Key : Model<PK>
+        public sealed class Key : Key<PK>
         {
             static Key()
             {
@@ -50,6 +50,9 @@ namespace DevZest.Samples.AdventureWorksLT
         public static readonly Mounter<_String> _SalesOrderNumber;
         public static readonly Mounter<_String> _PurchaseOrderNumber;
         public static readonly Mounter<_String> _AccountNumber;
+        public static readonly Mounter<_Int32> _CustomerID;
+        public static readonly Mounter<_Int32> _ShipToAddressID;
+        public static readonly Mounter<_Int32> _BillToAddressID;
         public static readonly Mounter<_String> _ShipMethod;
         public static readonly Mounter<_String> _CreditCardApprovalCode;
         public static readonly Mounter<_Decimal> _SubTotal;
@@ -70,9 +73,9 @@ namespace DevZest.Samples.AdventureWorksLT
             _SalesOrderNumber = RegisterColumn((SalesOrderHeader _) => _.SalesOrderNumber);
             _PurchaseOrderNumber = RegisterColumn((SalesOrderHeader _) => _.PurchaseOrderNumber);
             _AccountNumber = RegisterColumn((SalesOrderHeader _) => _.AccountNumber);
-            RegisterColumn((SalesOrderHeader _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
-            RegisterColumn((SalesOrderHeader _) => _.ShipToAddressID, Address._AddressID);
-            RegisterColumn((SalesOrderHeader _) => _.BillToAddressID, Address._AddressID);
+            _CustomerID = RegisterColumn((SalesOrderHeader _) => _.CustomerID);
+            _ShipToAddressID = RegisterColumn((SalesOrderHeader _) => _.ShipToAddressID);
+            _BillToAddressID = RegisterColumn((SalesOrderHeader _) => _.BillToAddressID);
             _ShipMethod = RegisterColumn((SalesOrderHeader _) => _.ShipMethod);
             _CreditCardApprovalCode = RegisterColumn((SalesOrderHeader _) => _.CreditCardApprovalCode);
             _SubTotal = RegisterColumn((SalesOrderHeader _) => _.SubTotal);
