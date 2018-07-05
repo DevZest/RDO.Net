@@ -51,7 +51,7 @@ namespace DevZest.Data.Primitives
 
             jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
             if (result == null)
-                return Array<ColumnSort>.Empty;
+                return Array.Empty<ColumnSort>();
             else
                 return result;
         }

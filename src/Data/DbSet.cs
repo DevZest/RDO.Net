@@ -82,7 +82,7 @@ namespace DevZest.Data
 
         private ColumnSort[] GetOrderBy(Func<T, ColumnSort>[] fnOrderBy)
         {
-            var orderBy = fnOrderBy == null ? Array<ColumnSort>.Empty : new ColumnSort[fnOrderBy.Length];
+            var orderBy = fnOrderBy == null ? Array.Empty<ColumnSort>() : new ColumnSort[fnOrderBy.Length];
             for (int i = 0; i < orderBy.Length; i++)
                 orderBy[i] = fnOrderBy[i](_);
             return orderBy;

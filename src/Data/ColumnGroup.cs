@@ -136,7 +136,7 @@ namespace DevZest.Data
             get
             {
                 if (_columns == null)
-                    return Array<Column>.Empty;
+                    return Array.Empty<Column>();
                 else
                     return _columns;
             }

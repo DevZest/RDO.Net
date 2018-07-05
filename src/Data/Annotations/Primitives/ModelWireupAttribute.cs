@@ -48,7 +48,7 @@ namespace DevZest.Data.Annotations.Primitives
             List<ModelWireupAttribute> result = null;
 
             var baseType = modelType.GetTypeInfo().BaseType;
-            result = result.Append(baseType != null && typeof(Model).IsAssignableFrom(baseType) && baseType != typeof(Model) ? GetOrAddAttributes(baseType) : Array<ModelWireupAttribute>.Empty);
+            result = result.Append(baseType != null && typeof(Model).IsAssignableFrom(baseType) && baseType != typeof(Model) ? GetOrAddAttributes(baseType) : Array.Empty<ModelWireupAttribute>());
 
             result = result.Append(ResolveModelAttributes(modelType));
 
@@ -61,7 +61,7 @@ namespace DevZest.Data.Annotations.Primitives
             if (result != null)
                 return result;
             else
-                return Array<ModelWireupAttribute>.Empty;
+                return Array.Empty<ModelWireupAttribute>();
         }
 
         private static IReadOnlyList<ModelWireupAttribute> ResolveModelAttributes(Type modelType)

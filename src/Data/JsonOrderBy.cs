@@ -9,7 +9,7 @@ namespace DevZest.Data
         public static string ToJson(this IEnumerable<ColumnSort> orderBy, bool isPretty)
         {
             if (orderBy == null)
-                orderBy = Array<ColumnSort>.Empty;
+                orderBy = Array.Empty<ColumnSort>();
             return JsonWriter.New().Write(orderBy).ToString(isPretty);
         }
 

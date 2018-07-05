@@ -175,7 +175,7 @@ namespace DevZest.Data
                 if (dictionary.TryGetValue(model, out var result))
                     return result;
                 else
-                    return Array<Column>.Empty;
+                    return Array.Empty<Column>();
             }
 
             internal void OnBeforeDataRowInserted(DataRow dataRow)

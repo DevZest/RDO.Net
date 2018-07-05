@@ -314,7 +314,11 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static readonly IReadOnlyList<IMounter<TTarget, TProperty>> Empty = Array<IMounter<TTarget, TProperty>>.Empty;
+        private static IReadOnlyList<IMounter<TTarget, TProperty>> Empty
+        {
+            get { return Array.Empty<IMounter<TTarget, TProperty>>(); }
+        }
+
         private IReadOnlyList<IMounter<TTarget, TProperty>> GetProperties(Type targetType)
         {
             Debug.Assert(targetType != null);

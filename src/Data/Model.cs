@@ -124,7 +124,7 @@ namespace DevZest.Data
             get
             {
                 if (_columnLists == null)
-                    return Array<ColumnList>.Empty;
+                    return Array.Empty<ColumnList>();
                 else
                     return _columnLists;
             }
@@ -166,7 +166,7 @@ namespace DevZest.Data
 
         internal void Construct(Model parentModel, Type declaringType, string name)
         {
-            Construct(parentModel, declaringType, name, Array<ColumnMapping>.Empty, Array<ColumnMapping>.Empty);
+            Construct(parentModel, declaringType, name, Array.Empty<ColumnMapping>(), Array.Empty<ColumnMapping>());
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace DevZest.Data
             get
             {
                 if (_localColumns == null)
-                    return Array<Column>.Empty;
+                    return Array.Empty<Column>();
                 else
                     return _localColumns;
             }
@@ -333,7 +333,7 @@ namespace DevZest.Data
             get
             {
                 if (_columnGroups == null)
-                    return Array<ColumnGroup>.Empty;
+                    return Array.Empty<ColumnGroup>();
                 else
                     return _columnGroups;
             }

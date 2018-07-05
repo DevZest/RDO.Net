@@ -154,7 +154,7 @@ namespace DevZest.Data
 
             model.EnsureInitialized();
             var childModels = model.ChildModels;
-            _childDataSets = childModels.Count == 0 ? Array<DataSet>.Empty : new DataSet[childModels.Count];
+            _childDataSets = childModels.Count == 0 ? Array.Empty<DataSet>() : new DataSet[childModels.Count];
             for (int i = 0; i < childModels.Count; i++)
                 _childDataSets[i] = childModels[i].DataSet.CreateChildDataSet(this);
 
