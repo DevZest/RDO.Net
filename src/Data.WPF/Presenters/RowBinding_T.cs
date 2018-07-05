@@ -24,7 +24,7 @@ namespace DevZest.Data.Presenters
 
         public override IReadOnlyList<RowBinding> ChildBindings
         {
-            get { return Array<RowBinding>.Empty; }
+            get { return Array.Empty<RowBinding>(); }
         }
 
         public RowInput<T> Input { get; internal set; }
@@ -208,7 +208,7 @@ namespace DevZest.Data.Presenters
             get
             {
                 if (_behaviors == null)
-                    return Array<IRowBindingBehavior<T>>.Empty;
+                    return Array.Empty<IRowBindingBehavior<T>>();
                 else
                     return _behaviors;
             }

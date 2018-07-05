@@ -24,9 +24,9 @@ namespace DevZest.Data.Views.Primitives
             {
                 var blockView = BlockView;
                 if (blockView == null)
-                    return Array<UIElement>.Empty;
+                    return Array.Empty<UIElement>();
 
-                return blockView.Elements ?? Array<UIElement>.Empty;
+                return blockView.Elements ?? Array.Empty<UIElement>();
             }
         }
 

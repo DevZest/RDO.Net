@@ -42,9 +42,9 @@ namespace DevZest.Data.Views.Primitives
             {
                 var rowView = RowView;
                 if (rowView == null)
-                    return Array<UIElement>.Empty;
+                    return Array.Empty<UIElement>();
 
-                return rowView.Elements ?? Array<UIElement>.Empty;
+                return rowView.Elements ?? Array.Empty<UIElement>();
             }
         }
 

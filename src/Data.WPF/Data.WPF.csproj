@@ -47,9 +47,6 @@
     <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs">
       <Link>Utilities\Argument.VerifyNotNull.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\Utilities\src\Utilities\Array.Empty.cs">
-      <Link>Utilities\Array.Empty.cs</Link>
-    </Compile>
     <Compile Include="..\..\external\Utilities\src\Utilities\BooleanBoxes.cs">
       <Link>Utilities\BooleanBoxes.cs</Link>
     </Compile>

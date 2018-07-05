@@ -158,7 +158,7 @@ namespace DevZest.Data.Presenters
             {
                 if (_children != null)
                     return _children;
-                return Array<RowPresenter>.Empty;
+                return Array.Empty<RowPresenter>();
             }
         }
 

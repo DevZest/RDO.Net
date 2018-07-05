@@ -557,7 +557,7 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 if (_blockViewBehaviors == null)
-                    return Array<BlockViewBehavior>.Empty;
+                    return Array.Empty<BlockViewBehavior>();
                 else
                     return _blockViewBehaviors;
             }
@@ -577,7 +577,7 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 if (_rowViewBehaviors == null)
-                    return Array<RowViewBehavior>.Empty;
+                    return Array.Empty<RowViewBehavior>();
                 else
                     return _rowViewBehaviors;
             }

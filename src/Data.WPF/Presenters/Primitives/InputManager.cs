@@ -274,17 +274,17 @@ namespace DevZest.Data.Presenters.Primitives
 
         private IReadOnlyList<FlushingError> ScalarFlushingErrors
         {
-            get { return _scalarValidation == null ? Array<FlushingError>.Empty : _scalarValidation.FlushingErrors; }
+            get { return _scalarValidation == null ? Array.Empty<FlushingError>() : _scalarValidation.FlushingErrors; }
         }
 
         private IReadOnlyList<FlushingError> RowFlushingErrors
         {
-            get { return _rowValidation == null ? Array<FlushingError>.Empty : _rowValidation.FlushingErrors; }
+            get { return _rowValidation == null ? Array.Empty<FlushingError>() : _rowValidation.FlushingErrors; }
         }
 
         private IReadOnlyList<ScalarValidationError> ScalarValidationErrors
         {
-            get { return _scalarValidation == null ? Array<ScalarValidationError>.Empty : _scalarValidation.Errors; }
+            get { return _scalarValidation == null ? Array.Empty<ScalarValidationError>() : _scalarValidation.Errors; }
         }
 
         private IReadOnlyDictionary<RowPresenter, IDataValidationErrors> RowValidationErrors

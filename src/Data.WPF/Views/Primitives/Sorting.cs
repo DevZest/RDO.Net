@@ -36,7 +36,7 @@ namespace DevZest.Data.Views.Primitives
                 throw new ArgumentException(DiagnosticMessages.Sorting_HasValidationError, nameof(sortings));
 
             if (sortings.Count == 0)
-                return Array<IColumnComparer>.Empty;
+                return Array.Empty<IColumnComparer>();
 
             var _ = sortings._;
             var result = new IColumnComparer[sortings.Count];

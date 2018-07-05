@@ -80,7 +80,7 @@ namespace DevZest.Data.Presenters
             get
             {
                 if (_flushingErrors == null)
-                    return Array<FlushingError>.Empty;
+                    return Array.Empty<FlushingError>();
                 return _flushingErrors;
             }
         }

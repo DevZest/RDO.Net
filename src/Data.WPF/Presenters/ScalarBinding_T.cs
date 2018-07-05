@@ -39,7 +39,7 @@ namespace DevZest.Data.Presenters
 
         public override IReadOnlyList<ScalarBinding> ChildBindings
         {
-            get { return Array<ScalarBinding>.Empty; }
+            get { return Array.Empty<ScalarBinding>(); }
         }
 
         public ScalarInput<T> Input { get; internal set; }
@@ -211,7 +211,7 @@ namespace DevZest.Data.Presenters
             get
             {
                 if (_behaviors == null)
-                    return Array<IScalarBindingBehavior<T>>.Empty;
+                    return Array.Empty<IScalarBindingBehavior<T>>();
                 else
                     return _behaviors;
             }

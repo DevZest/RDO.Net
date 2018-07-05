@@ -16,7 +16,7 @@ namespace DevZest.Data.Presenters.Primitives
         private T[] Create(int startOffset)
         {
             if (startOffset == FlowRepeatCount)
-                return Array<T>.Empty;
+                return Array.Empty<T>();
 
             int count = FlowRepeatCount - startOffset;
             var result = new T[count];

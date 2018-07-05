@@ -94,7 +94,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Assert.AreEqual(dataRow.ParentDataRow, row.Parent.DataRow);
 
             if (childIndexes == null)
-                childIndexes = Array<int>.Empty;
+                childIndexes = Array.Empty<int>();
 
             Assert.AreEqual(childIndexes.Length, row.Children.Count);
             for (int i = 0; i < row.Children.Count; i++)

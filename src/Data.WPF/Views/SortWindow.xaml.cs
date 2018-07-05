@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Views.Primitives;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -97,7 +98,7 @@ namespace DevZest.Data.Views
             }
 
             if (result == null)
-                return Array<ColumnHeader>.Empty;
+                return Array.Empty<ColumnHeader>();
             else
                 return result;
         }

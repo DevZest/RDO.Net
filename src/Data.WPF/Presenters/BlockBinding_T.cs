@@ -122,7 +122,7 @@ namespace DevZest.Data.Presenters
             get
             {
                 if (_behaviors == null)
-                    return Array<IBlockBindingBehavior<T>>.Empty;
+                    return Array.Empty<IBlockBindingBehavior<T>>();
                 else
                     return _behaviors;
             }

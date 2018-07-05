@@ -292,7 +292,7 @@ namespace DevZest.Data.Views.Primitives
             {
                 var layoutManager = LayoutManager;
                 if (layoutManager == null || layoutManager.ElementCollection == null)
-                    return Array<UIElement>.Empty;
+                    return Array.Empty<UIElement>();
 
                 Debug.Assert(layoutManager.ElementCollection.Parent == this);
                 return layoutManager.ElementCollection;
