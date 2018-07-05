@@ -28,7 +28,7 @@ namespace DevZest.Data.Analyzers
 
             if (TypeIdentifier.Column.IsBaseTypeOf(propertyType))
                 return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ColumnGroupMember;
-            else if (TypeIdentifier.LocalColumn.IsBaseTypeOf(propertyType))
+            else if (TypeIdentifier.LocalColumn.IsSameTypeOf(propertyType))
                 return ModelMemberKind.LocalColumn;
             else if (TypeIdentifier.ColumnGroup.IsBaseTypeOf(propertyType))
                 return ModelMemberKind.ColumnGroup;
@@ -94,7 +94,7 @@ namespace DevZest.Data.Analyzers
 
         private static SyntaxNode AssignmentStatement(this SyntaxGenerator g, string language, string mounterName, string methodName, string type, string propertyName)
         {
-            return g.AssignmentStatement(g.IdentifierName(mounterName), g.InvocationExpression(language, methodName, type, propertyName));
+            return g.ExpressionStatement(g.AssignmentStatement(g.IdentifierName(mounterName), g.InvocationExpression(language, methodName, type, propertyName)));
         }
 
         private static SyntaxNode InvocationStatement(this SyntaxGenerator g, string language, string methodName, string type, string propertyName)

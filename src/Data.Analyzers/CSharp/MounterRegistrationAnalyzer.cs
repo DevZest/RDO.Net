@@ -42,7 +42,7 @@ namespace DevZest.Data.Analyzers.CSharp
             if (!IsValidGetter(firstArgument, semanticModel, containingType, out var propertySymbol))
                 return Diagnostic.Create(Rules.MounterRegistration_InvalidGetter, firstArgument.GetLocation());
 
-            if (isColumnRegistration && propertySymbol.Type.MetadataName == "LocalColumn`1")
+            if (isColumnRegistration && TypeIdentifier.LocalColumn.IsSameTypeOf(propertySymbol.Type))
                 return Diagnostic.Create(Rules.MounterRegistration_InvalidLocalColumn, invocationExpression.GetLocation(), propertySymbol.Name);
 
             if (AnyDuplicate(invocationExpression, propertySymbol, context.Compilation))

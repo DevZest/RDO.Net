@@ -130,7 +130,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void GenerateRegisterColumn()
+        public void RegisterColumn_existing_constructor()
         {
             var test = @"
 using DevZest.Data;
@@ -167,6 +167,47 @@ class SimpleModel : Model
     public _Int32 Column2 { get; private set; }
 }";
             VerifyCSharpFix(test, expected, 1);
+        }
+
+        [TestMethod]
+        public void RegisterColumn_existing_constructor_returns_mounter()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public static readonly Mounter<_Int32> _Column1;
+
+    static SimpleModel()
+    {
+        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
+    }
+
+    public _Int32 Column1 { get; private set; }
+
+    public _Int32 Column2 { get; private set; }
+}";
+
+            var expected = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public static readonly Mounter<_Int32> _Column1;
+    public static readonly Mounter<_Int32> _Column2;
+
+    static SimpleModel()
+    {
+        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
+        _Column2 = RegisterColumn((SimpleModel _) => _.Column2);
+    }
+
+    public _Int32 Column1 { get; private set; }
+
+    public _Int32 Column2 { get; private set; }
+}";
+            VerifyCSharpFix(test, expected, 0);
         }
     }
 }

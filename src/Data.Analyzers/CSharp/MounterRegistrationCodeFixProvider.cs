@@ -129,8 +129,7 @@ namespace DevZest.Data.Analyzers.CSharp
             var semanticModel = editor.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
 
-            var body = staticConstructor.Body;
-            var statements = body.Statements;
+            var statements = staticConstructor.Body.Statements;
             if (statements.Count > 0)
             {
                 var statement = editor.Generator.GenerateMounterRegistration(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, returnsMounter, true);
@@ -161,8 +160,11 @@ namespace DevZest.Data.Analyzers.CSharp
         {
             if (memberDeclaration is FieldDeclarationSyntax fieldDeclaration)
             {
-                IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.GetDeclaredSymbol(fieldDeclaration);
-                return TypeIdentifier.Mounter.IsBaseTypeOf(fieldSymbol.Type);
+                var variables = fieldDeclaration.Declaration.Variables;
+                if (variables.Count == 0)
+                    return false;
+                IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.GetDeclaredSymbol(variables[0]);
+                return TypeIdentifier.Mounter.IsSameTypeOf(fieldSymbol.Type);
             }
 
             return false;

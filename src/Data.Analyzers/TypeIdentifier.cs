@@ -25,29 +25,24 @@ namespace DevZest.Data.Analyzers
             return string.Format("{0}.{1}, {2}", _namespace, _typeName, _assemblyName);
         }
 
-        private bool IsGeneric
+        public bool IsBaseTypeOf(ITypeSymbol typeSymbol)
         {
-            get { return _typeName.IndexOf('`') >= 0; }
-        }
-
-        public bool IsBaseTypeOf(ITypeSymbol namedType)
-        {
-            for (var baseType = namedType.BaseType; baseType != null; baseType = baseType.BaseType)
+            for (var currentType = typeSymbol.BaseType; currentType != null; currentType = currentType.BaseType)
             {
-                if (IsSameTypeOf(baseType))
+                if (IsSameTypeOf(currentType))
                     return true;
             }
             return false;
         }
 
-        public bool IsSameTypeOf(INamedTypeSymbol namedType)
+        public bool IsSameTypeOf(ITypeSymbol typeSymbol)
         {
-            return IsSameNamespace(namedType) && _typeName == namedType.Name && _assemblyName == namedType.ContainingAssembly.Name;
+            return IsSameNamespace(typeSymbol) && _typeName == typeSymbol.MetadataName && _assemblyName == typeSymbol.ContainingAssembly.Name;
         }
 
-        private bool IsSameNamespace(INamedTypeSymbol namedTypeSymbol)
+        private bool IsSameNamespace(ITypeSymbol typeSymbol)
         {
-            return AreSame(namedTypeSymbol.ContainingNamespace, _namespace, string.IsNullOrEmpty(_namespace) ? -1 : _namespace.Length - 1);
+            return AreSame(typeSymbol.ContainingNamespace, _namespace, string.IsNullOrEmpty(_namespace) ? -1 : _namespace.Length - 1);
         }
 
         private static bool AreSame(INamespaceSymbol @namespace, string displayString, int lastIndex)
