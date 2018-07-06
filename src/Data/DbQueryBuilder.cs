@@ -114,7 +114,7 @@ namespace DevZest.Data
 
 
         public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
-            where T : Model, new()
+            where T : class, IModelReference, new()
             where TKey : PrimaryKey
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.LeftJoin, out model);
@@ -130,7 +130,7 @@ namespace DevZest.Data
 
 
         public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
-            where T : Model, new()
+            where T : class, IModelReference, new()
             where TKey : PrimaryKey
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.RightJoin, out model);

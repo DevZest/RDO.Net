@@ -209,5 +209,32 @@ class SimpleModel : Model
 }";
             VerifyCSharpFix(test, expected, 0);
         }
+
+        [TestMethod]
+        public void RegisterColumn_abstract_generic()
+        {
+            var test = @"
+using DevZest.Data;
+
+abstract class SimpleModelBase<T> : Model<T>
+    where T : PrimaryKey
+{
+    public _Int32 Column1 { get; private set; }
+}";
+            var expected = @"
+using DevZest.Data;
+
+abstract class SimpleModelBase<T> : Model<T>
+    where T : PrimaryKey
+{
+    static SimpleModelBase()
+    {
+        RegisterColumn((SimpleModelBase<T> _) => _.Column1);
+    }
+
+    public _Int32 Column1 { get; private set; }
+}";
+            VerifyCSharpFix(test, expected, 1);
+        }
     }
 }

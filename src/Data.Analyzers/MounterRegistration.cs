@@ -73,53 +73,55 @@ namespace DevZest.Data.Analyzers
         public static SyntaxNode GenerateMounterRegistration(this SyntaxGenerator g, string language, INamedTypeSymbol classSymbol, IPropertySymbol propertySymbol,
             string registerMounterMethodName, bool returnsMounter, bool hasStaticConstructor)
         {
-            var type = classSymbol.Name;
             var propertyName = propertySymbol.Name;
             var mounterName = returnsMounter ? propertySymbol.GetMounterName() : null;
 
             if (hasStaticConstructor)
-                return g.AssignmentOrInvocationStatement(language, type, propertyName, registerMounterMethodName, mounterName);
+                return g.AssignmentOrInvocationStatement(language, classSymbol, propertyName, registerMounterMethodName, mounterName);
             else
-                return g.ConstructorDeclaration(containingTypeName: type, modifiers: DeclarationModifiers.Static,
-                    statements: new SyntaxNode[] { g.AssignmentOrInvocationStatement(language, type, propertyName, registerMounterMethodName, mounterName) });
+                return g.ConstructorDeclaration(containingTypeName: classSymbol.Name, modifiers: DeclarationModifiers.Static,
+                    statements: new SyntaxNode[] { g.AssignmentOrInvocationStatement(language, classSymbol, propertyName, registerMounterMethodName, mounterName) });
         }
 
-        private static SyntaxNode AssignmentOrInvocationStatement(this SyntaxGenerator g, string language, string type, string propertyName, string registerMounterMethodName, string mounterName)
+        private static SyntaxNode AssignmentOrInvocationStatement(this SyntaxGenerator g, string language, INamedTypeSymbol typeSymbol, string propertyName, string registerMounterMethodName, string mounterName)
         {
             if (string.IsNullOrEmpty(mounterName))
-                return g.InvocationStatement(language, registerMounterMethodName, type, propertyName);
+                return g.InvocationStatement(language, registerMounterMethodName, typeSymbol, propertyName);
             else
-                return g.AssignmentStatement(language, mounterName, registerMounterMethodName, type, propertyName);
+                return g.AssignmentStatement(language, mounterName, registerMounterMethodName, typeSymbol, propertyName);
         }
 
-        private static SyntaxNode AssignmentStatement(this SyntaxGenerator g, string language, string mounterName, string methodName, string type, string propertyName)
+        private static SyntaxNode AssignmentStatement(this SyntaxGenerator g, string language, string mounterName, string methodName, INamedTypeSymbol typeSymbol, string propertyName)
         {
-            return g.ExpressionStatement(g.AssignmentStatement(g.IdentifierName(mounterName), g.InvocationExpression(language, methodName, type, propertyName)));
+            return g.ExpressionStatement(g.AssignmentStatement(g.IdentifierName(mounterName), g.InvocationExpression(language, methodName, typeSymbol, propertyName)));
         }
 
-        private static SyntaxNode InvocationStatement(this SyntaxGenerator g, string language, string methodName, string type, string propertyName)
+        private static SyntaxNode InvocationStatement(this SyntaxGenerator g, string language, string methodName, INamedTypeSymbol typeSymbol, string propertyName)
         {
-            return g.ExpressionStatement(g.InvocationExpression(language, methodName, type, propertyName));
+            return g.ExpressionStatement(g.InvocationExpression(language, methodName, typeSymbol, propertyName));
         }
 
-        private static SyntaxNode InvocationExpression(this SyntaxGenerator g, string language, string methodName, string type, string propertyName)
+        private static SyntaxNode InvocationExpression(this SyntaxGenerator g, string language, string methodName, INamedTypeSymbol typeSymbol, string propertyName)
         {
-            return g.InvocationExpression(g.IdentifierName(methodName), g.GetterArgument(language, type, propertyName));
+            return g.InvocationExpression(g.IdentifierName(methodName), g.GetterArgument(language, typeSymbol, propertyName));
         }
 
-        private static SyntaxNode GetterArgument(this SyntaxGenerator g, string language, string type, string propertyName)
+        private static SyntaxNode GetterArgument(this SyntaxGenerator g, string language, INamedTypeSymbol typeSymbol, string propertyName)
         {
-            return g.Argument(g.Getter(language, type, propertyName));
+            return g.Argument(g.Getter(language, typeSymbol, propertyName));
         }
 
-        private static SyntaxNode Getter(this SyntaxGenerator g, string language, string type, string propertyName)
+        private static SyntaxNode Getter(this SyntaxGenerator g, string language, INamedTypeSymbol typeSymbol, string propertyName)
         {
-            return g.ValueReturningLambdaExpression(new SyntaxNode[] { g.GetterParameter(language, type) }, g.GetterBody(language, propertyName));
+            return g.ValueReturningLambdaExpression(new SyntaxNode[] { g.GetterParameter(language, typeSymbol) }, g.GetterBody(language, propertyName));
         }
 
-        private static SyntaxNode GetterParameter(this SyntaxGenerator g, string language, string type)
+        private static SyntaxNode GetterParameter(this SyntaxGenerator g, string language, INamedTypeSymbol typeSymbol)
         {
-            return g.ParameterDeclaration(g.GetterLambdaParamName(language), g.IdentifierName(type));
+            var typeName = typeSymbol.Name;
+            var type = typeSymbol.IsGenericType ? g.GenericName(typeName, typeSymbol.TypeArguments) : g.IdentifierName(typeName);
+               
+            return g.ParameterDeclaration(g.GetterLambdaParamName(language), type);
         }
 
         private static SyntaxNode GetterBody(this SyntaxGenerator g, string language, string propertyName)

@@ -73,7 +73,7 @@ namespace DevZest.Data
 
 
         public new DbAggregateQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
-            where T : Model, new()
+            where T : class, IModelReference, new()
             where TKey : PrimaryKey
         {
             base.LeftJoin(dbSet, left, right, out model);
@@ -90,7 +90,7 @@ namespace DevZest.Data
 
 
         public new DbAggregateQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
-            where T : Model, new()
+            where T : class, IModelReference, new()
             where TKey : PrimaryKey
         {
             base.RightJoin(dbSet, left, right, out model);
