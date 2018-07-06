@@ -91,7 +91,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Class
 
         Public Class Lookup
-            Inherits Projection
+            Inherits ColumnGroup
 
             Shared Sub New()
                 Register(Function(ByVal x As Lookup) x.AddressType, _AddressType)

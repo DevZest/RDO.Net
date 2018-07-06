@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data
 {
-    public abstract class Ref<T> : Projection
+    public abstract class Ref<T> : ColumnGroup
         where T : PrimaryKey
     {
         protected abstract T GetForeignKey();
