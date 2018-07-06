@@ -45,16 +45,10 @@ namespace DevZest.Data.Analyzers.CSharp
             var kind = propertySymbol.GetModelMemberKind().Value;
 
             if (kind == ModelMemberKind.ModelColumn)
-            {
                 context.RegisterCodeFix(CodeAction.Create(
                     title: Resources.Title_AddMounterAndRegisterColumn,
                     createChangedSolution: ct => GenerateMounterRegistration("RegisterColumn", document, propertyDeclaration, propertySymbol, true, ct)),
                     diagnostic);
-                context.RegisterCodeFix(CodeAction.Create(
-                    title: Resources.Title_AddRegisterColumn,
-                    createChangedSolution: ct => GenerateMounterRegistration("RegisterColumn", document, propertyDeclaration, propertySymbol, false, ct)),
-                    diagnostic);
-            }
             else if (kind == ModelMemberKind.LocalColumn)
                 context.RegisterCodeFix(CodeAction.Create(
                     title: Resources.Title_AddRegisterColumn,
@@ -77,13 +71,11 @@ namespace DevZest.Data.Analyzers.CSharp
             else
                 classDeclaration = propertyDeclaration.FirstAncestor<ClassDeclarationSyntax>();
 
-            int? insertIndex = null;
             var editor = await DocumentEditor.CreateAsync(document, ct);
             if (returnsMounter)
-                insertIndex = GenerateMounterFieldDeclaration(editor, classDeclaration, propertySymbol, ct);
-
-            if (staticConstructor == null)
-                GenerateStaticConstructor(editor, classDeclaration, insertIndex, registerMounterMethodName, propertySymbol, returnsMounter, ct);
+                GenerateMounterFieldDeclaration(editor, registerMounterMethodName, classDeclaration, propertySymbol, ct);
+            else if (staticConstructor == null)
+                GenerateStaticConstructor(editor, classDeclaration, registerMounterMethodName, propertySymbol, returnsMounter, ct);
             else
                 GenerateMounterStatement(editor, classDeclaration, staticConstructor, registerMounterMethodName, propertySymbol, returnsMounter, ct);
 
@@ -98,28 +90,31 @@ namespace DevZest.Data.Analyzers.CSharp
                 return null;
 
             var staticConstructor = staticConstructors[0];
-            return (ConstructorDeclarationSyntax)(await staticConstructor.DeclaringSyntaxReferences[0].GetSyntaxAsync(ct));
+            var references = staticConstructor.DeclaringSyntaxReferences;
+            if (references == null || references.Length == 0)   // compiler generated static constructor
+                return null;
+            return (ConstructorDeclarationSyntax)(await references[0].GetSyntaxAsync(ct));
         }
 
-        private static int GenerateMounterFieldDeclaration(DocumentEditor editor, ClassDeclarationSyntax classDeclaration, IPropertySymbol propertySymbol, CancellationToken ct)
+        private static void GenerateMounterFieldDeclaration(DocumentEditor editor, string registerMounterMethodName,
+            ClassDeclarationSyntax classDeclaration, IPropertySymbol propertySymbol, CancellationToken ct)
         {
             var semanticModel = editor.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
-            var mounterDeclaration = editor.Generator.GenerateMounterDeclaration(classSymbol, propertySymbol);
+            var mounterDeclaration = editor.Generator.GenerateMounterDeclaration(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName);
 
             var index = GetMounterDeclarationInsertIndex(classDeclaration, semanticModel);
             editor.InsertMembers(classDeclaration, index, new SyntaxNode[] { mounterDeclaration });
-            return index;
         }
 
-        private static void GenerateStaticConstructor(DocumentEditor editor, ClassDeclarationSyntax classDeclaration, int? lastMounterIndex,
+        private static void GenerateStaticConstructor(DocumentEditor editor, ClassDeclarationSyntax classDeclaration,
             string registerMounterMethodName, IPropertySymbol propertySymbol, bool returnsMounter, CancellationToken ct)
         {
             var semanticModel = editor.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration, ct);
 
             var staticConstructor = editor.Generator.GenerateMounterRegistration(LanguageNames.CSharp, classSymbol, propertySymbol, registerMounterMethodName, returnsMounter, false);
-            var index = lastMounterIndex.HasValue ? lastMounterIndex.Value + 1 : GetMounterDeclarationInsertIndex(classDeclaration, semanticModel);
+            var index = GetMounterDeclarationInsertIndex(classDeclaration, semanticModel);
             editor.InsertMembers(classDeclaration, index, new SyntaxNode[] { staticConstructor });
         }
 

@@ -26,10 +26,10 @@ namespace DevZest.Data.Analyzers
 
             var parentValue = parent.Value;
 
-            if (TypeIdentifier.Column.IsBaseTypeOf(propertyType))
-                return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ColumnGroupMember;
-            else if (TypeIdentifier.LocalColumn.IsSameTypeOf(propertyType))
+            if (TypeIdentifier.LocalColumn.IsSameTypeOf(propertyType))
                 return ModelMemberKind.LocalColumn;
+            else if (TypeIdentifier.Column.IsBaseTypeOf(propertyType))
+                return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ColumnGroupMember;
             else if (TypeIdentifier.ColumnGroup.IsBaseTypeOf(propertyType))
                 return ModelMemberKind.ColumnGroup;
             else if (TypeIdentifier.ColumnList.IsBaseTypeOf(propertyType))
@@ -62,12 +62,13 @@ namespace DevZest.Data.Analyzers
             return "_" + propertySymbol.Name;
         }
 
-        public static SyntaxNode GenerateMounterDeclaration(this SyntaxGenerator g, INamedTypeSymbol typeSymbol, IPropertySymbol propertySymbol)
+        public static SyntaxNode GenerateMounterDeclaration(this SyntaxGenerator g, string language, INamedTypeSymbol typeSymbol, IPropertySymbol propertySymbol, string registerMounterMethodName)
         {
             var mounterName = propertySymbol.GetMounterName();
             var propertyTypeName = propertySymbol.Type.Name;
 
-            return g.FieldDeclaration(mounterName, g.GenericName("Mounter", propertySymbol.Type), Accessibility.Public, DeclarationModifiers.Static | DeclarationModifiers.ReadOnly);
+            return g.FieldDeclaration(mounterName, g.GenericName("Mounter", propertySymbol.Type), Accessibility.Protected, DeclarationModifiers.Static | DeclarationModifiers.ReadOnly,
+                g.InvocationExpression(language, registerMounterMethodName, typeSymbol, propertySymbol.Name));
         }
 
         public static SyntaxNode GenerateMounterRegistration(this SyntaxGenerator g, string language, INamedTypeSymbol classSymbol, IPropertySymbol propertySymbol,

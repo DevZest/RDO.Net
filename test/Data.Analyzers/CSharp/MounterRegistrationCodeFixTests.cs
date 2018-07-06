@@ -18,7 +18,61 @@ namespace DevZest.Data.Analyzers.CSharp
         }
 
         [TestMethod]
-        public void RegisterColumn_no_static_constructor()
+        public void RegisterLocalColumn_no_static_constructor()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    public LocalColumn<int> Column1 { get; private set; }
+}";
+            var expected = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+        RegisterLocalColumn((SimpleModel _) => _.Column1);
+    }
+
+    public LocalColumn<int> Column1 { get; private set; }
+}";
+            VerifyCSharpFix(test, expected);
+        }
+
+        [TestMethod]
+        public void RegisterLocalColumn_empty_static_constructor()
+        {
+            var test = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+    }
+
+    public LocalColumn<int> Column1 { get; private set; }
+}";
+            var expected = @"
+using DevZest.Data;
+
+class SimpleModel : Model
+{
+    static SimpleModel()
+    {
+        RegisterLocalColumn((SimpleModel _) => _.Column1);
+    }
+
+    public LocalColumn<int> Column1 { get; private set; }
+}";
+            VerifyCSharpFix(test, expected);
+        }
+
+        [TestMethod]
+        public void RegisterColumn()
         {
             var test = @"
 using DevZest.Data;
@@ -32,117 +86,22 @@ using DevZest.Data;
 
 class SimpleModel : Model
 {
-    static SimpleModel()
-    {
-        RegisterColumn((SimpleModel _) => _.Column1);
-    }
+    protected static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
 
     public _Int32 Column1 { get; private set; }
 }";
-            VerifyCSharpFix(test, expected, 1);
+            VerifyCSharpFix(test, expected);
         }
 
         [TestMethod]
-        public void RegisterColumn_empty_static_constructor()
+        public void RegisterColumn_existing_mounter()
         {
             var test = @"
 using DevZest.Data;
 
 class SimpleModel : Model
 {
-    static SimpleModel()
-    {
-    }
-
-    public _Int32 Column1 { get; private set; }
-}";
-            var expected = @"
-using DevZest.Data;
-
-class SimpleModel : Model
-{
-    static SimpleModel()
-    {
-        RegisterColumn((SimpleModel _) => _.Column1);
-    }
-
-    public _Int32 Column1 { get; private set; }
-}";
-            VerifyCSharpFix(test, expected, 1);
-        }
-
-        [TestMethod]
-        public void RegisterColumn_no_static_constructor_returns_mounter()
-        {
-            var test = @"
-using DevZest.Data;
-
-class SimpleModel : Model
-{
-    public _Int32 Column1 { get; private set; }
-}";
-            var expected = @"
-using DevZest.Data;
-
-class SimpleModel : Model
-{
-    public static readonly Mounter<_Int32> _Column1;
-
-    static SimpleModel()
-    {
-        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
-    }
-
-    public _Int32 Column1 { get; private set; }
-}";
-            VerifyCSharpFix(test, expected, 0);
-        }
-
-        [TestMethod]
-        public void RegisterColumn_empty_static_constructor_returns_mounter()
-        {
-            var test = @"
-using DevZest.Data;
-
-class SimpleModel : Model
-{
-    static SimpleModel()
-    {
-    }
-
-    public _Int32 Column1 { get; private set; }
-}";
-            var expected = @"
-using DevZest.Data;
-
-class SimpleModel : Model
-{
-    public static readonly Mounter<_Int32> _Column1;
-
-    static SimpleModel()
-    {
-        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
-    }
-
-    public _Int32 Column1 { get; private set; }
-}";
-            VerifyCSharpFix(test, expected, 0);
-        }
-
-        [TestMethod]
-        public void RegisterColumn_existing_constructor()
-        {
-            var test = @"
-using DevZest.Data;
-
-class SimpleModel : Model
-{
-    public static readonly Mounter<_Int32> _Column1;
-
-    static SimpleModel()
-    {
-        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
-    }
+    protected static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
 
     public _Int32 Column1 { get; private set; }
 
@@ -154,60 +113,14 @@ using DevZest.Data;
 
 class SimpleModel : Model
 {
-    public static readonly Mounter<_Int32> _Column1;
-
-    static SimpleModel()
-    {
-        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
-        RegisterColumn((SimpleModel _) => _.Column2);
-    }
+    protected static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
+    protected static readonly Mounter<_Int32> _Column2 = RegisterColumn((SimpleModel _) => _.Column2);
 
     public _Int32 Column1 { get; private set; }
 
     public _Int32 Column2 { get; private set; }
 }";
-            VerifyCSharpFix(test, expected, 1);
-        }
-
-        [TestMethod]
-        public void RegisterColumn_existing_constructor_returns_mounter()
-        {
-            var test = @"
-using DevZest.Data;
-
-class SimpleModel : Model
-{
-    public static readonly Mounter<_Int32> _Column1;
-
-    static SimpleModel()
-    {
-        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
-    }
-
-    public _Int32 Column1 { get; private set; }
-
-    public _Int32 Column2 { get; private set; }
-}";
-
-            var expected = @"
-using DevZest.Data;
-
-class SimpleModel : Model
-{
-    public static readonly Mounter<_Int32> _Column1;
-    public static readonly Mounter<_Int32> _Column2;
-
-    static SimpleModel()
-    {
-        _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
-        _Column2 = RegisterColumn((SimpleModel _) => _.Column2);
-    }
-
-    public _Int32 Column1 { get; private set; }
-
-    public _Int32 Column2 { get; private set; }
-}";
-            VerifyCSharpFix(test, expected, 0);
+            VerifyCSharpFix(test, expected);
         }
 
         [TestMethod]
@@ -227,14 +140,11 @@ using DevZest.Data;
 abstract class SimpleModelBase<T> : Model<T>
     where T : PrimaryKey
 {
-    static SimpleModelBase()
-    {
-        RegisterColumn((SimpleModelBase<T> _) => _.Column1);
-    }
+    protected static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModelBase<T> _) => _.Column1);
 
     public _Int32 Column1 { get; private set; }
 }";
-            VerifyCSharpFix(test, expected, 1);
+            VerifyCSharpFix(test, expected);
         }
     }
 }
