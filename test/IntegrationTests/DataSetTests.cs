@@ -54,6 +54,19 @@ namespace DevZest.Data
             }
         }
 
+        private sealed class SalesOrderEx : SalesOrder
+        {
+            public static Mounter<_Int32> SalesOrderIDMounter
+            {
+                get { return SalesOrder._SalesOrderID; }
+            }
+
+            public static Mounter<_String> SalesOrderNumberMounter
+            {
+                get { return _SalesOrderNumber; }
+            }
+        }
+
         [TestMethod]
         public void DataSet_DynamicModel_serialize_deserialize()
         {
@@ -73,8 +86,8 @@ namespace DevZest.Data
 
                 var dataSet = DataSet<Adhoc>.ParseJson(_ =>
                 {
-                    _.AddColumn(SalesOrder._SalesOrderID);
-                    _.AddColumn(SalesOrder._SalesOrderNumber);
+                    _.AddColumn(SalesOrderEx.SalesOrderIDMounter);
+                    _.AddColumn(SalesOrderEx.SalesOrderNumberMounter);
                 }, json);
 
                 Assert.AreEqual(json.Trim(), dataSet.ToString().Trim());

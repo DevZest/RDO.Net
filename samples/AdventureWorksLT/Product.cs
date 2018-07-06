@@ -68,40 +68,21 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String ProductNumber { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductID;
-        public static readonly Mounter<_String> _Name;
-        public static readonly Mounter<_String> _ProductNumber;
-        public static readonly Mounter<_String> _Color;
-        public static readonly Mounter<_Decimal> _StandardCost;
-        public static readonly Mounter<_Decimal> _ListPrice;
-        public static readonly Mounter<_String> _Size;
-        public static readonly Mounter<_Decimal> _Weight;
-        public static readonly Mounter<_Int32> _ProductCategoryID;
-        public static readonly Mounter<_Int32> _ProductModelID;
-        public static readonly Mounter<_DateTime> _SellStartDate;
-        public static readonly Mounter<_DateTime> _SellEndDate;
-        public static readonly Mounter<_DateTime> _DiscontinuedDate;
-        public static readonly Mounter<_Binary> _ThumbNailPhoto;
-        public static readonly Mounter<_String> _ThumbnailPhotoFileName;
-
-        static Product()
-        {
-            _ProductID = RegisterColumn((Product _) => _.ProductID);
-            _Name = RegisterColumn((Product _) => _.Name);
-            _ProductNumber = RegisterColumn((Product _) => _.ProductNumber);
-            _Color = RegisterColumn((Product _) => _.Color);
-            _StandardCost = RegisterColumn((Product _) => _.StandardCost);
-            _ListPrice = RegisterColumn((Product _) => _.ListPrice);
-            _Size = RegisterColumn((Product _) => _.Size);
-            _Weight = RegisterColumn((Product _) => _.Weight);
-            _ProductCategoryID = RegisterColumn((Product _) => _.ProductCategoryID);
-            _ProductModelID = RegisterColumn((Product _) => _.ProductModelID);
-            _SellStartDate = RegisterColumn((Product _) => _.SellStartDate);
-            _SellEndDate = RegisterColumn((Product _) => _.SellEndDate);
-            _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate);
-            _ThumbNailPhoto = RegisterColumn((Product _) => _.ThumbNailPhoto);
-            _ThumbnailPhotoFileName = RegisterColumn((Product _) => _.ThumbnailPhotoFileName);
-        }
+        protected static readonly Mounter<_Int32> _ProductID = RegisterColumn((Product _) => _.ProductID);
+        protected static readonly Mounter<_String> _Name = RegisterColumn((Product _) => _.Name);
+        protected static readonly Mounter<_String> _ProductNumber = RegisterColumn((Product _) => _.ProductNumber);
+        protected static readonly Mounter<_String> _Color = RegisterColumn((Product _) => _.Color);
+        protected static readonly Mounter<_Decimal> _StandardCost = RegisterColumn((Product _) => _.StandardCost);
+        protected static readonly Mounter<_Decimal> _ListPrice = RegisterColumn((Product _) => _.ListPrice);
+        protected static readonly Mounter<_String> _Size = RegisterColumn((Product _) => _.Size);
+        protected static readonly Mounter<_Decimal> _Weight = RegisterColumn((Product _) => _.Weight);
+        protected static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((Product _) => _.ProductCategoryID);
+        protected static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((Product _) => _.ProductModelID);
+        protected static readonly Mounter<_DateTime> _SellStartDate = RegisterColumn((Product _) => _.SellStartDate);
+        protected static readonly Mounter<_DateTime> _SellEndDate = RegisterColumn((Product _) => _.SellEndDate);
+        protected static readonly Mounter<_DateTime> _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate);
+        protected static readonly Mounter<_Binary> _ThumbNailPhoto = RegisterColumn((Product _) => _.ThumbNailPhoto);
+        protected static readonly Mounter<_String> _ThumbnailPhotoFileName = RegisterColumn((Product _) => _.ThumbnailPhotoFileName);
 
         protected sealed override PK CreatePrimaryKey()
         {

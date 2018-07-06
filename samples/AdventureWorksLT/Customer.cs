@@ -77,35 +77,22 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Phone { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _CustomerID;
-        public static readonly Mounter<_Boolean> _NameStyle;
-        public static readonly Mounter<_String> _Title;
-        public static readonly Mounter<_String> _FirstName;
-        public static readonly Mounter<_String> _MiddleName;
-        public static readonly Mounter<_String> _LastName;
-        public static readonly Mounter<_String> _Suffix;
-        public static readonly Mounter<_String> _CompanyName;
-        public static readonly Mounter<_String> _SalesPerson;
-        public static readonly Mounter<_String> _EmailAddress;
-        public static readonly Mounter<_String> _Phone;
-        public static readonly Mounter<_String> _PasswordHash;
-        public static readonly Mounter<_String> _PasswordSalt;
+        protected static readonly Mounter<_Int32> _CustomerID = RegisterColumn((Customer _) => _.CustomerID);
+        protected static readonly Mounter<_Boolean> _NameStyle = RegisterColumn((Customer _) => _.NameStyle);
+        protected static readonly Mounter<_String> _Title = RegisterColumn((Customer _) => _.Title);
+        protected static readonly Mounter<_String> _FirstName = RegisterColumn((Customer _) => _.FirstName);
+        protected static readonly Mounter<_String> _MiddleName = RegisterColumn((Customer _) => _.MiddleName);
+        protected static readonly Mounter<_String> _LastName = RegisterColumn((Customer _) => _.LastName);
+        protected static readonly Mounter<_String> _Suffix = RegisterColumn((Customer _) => _.Suffix);
+        protected static readonly Mounter<_String> _CompanyName = RegisterColumn((Customer _) => _.CompanyName);
+        protected static readonly Mounter<_String> _SalesPerson = RegisterColumn((Customer _) => _.SalesPerson);
+        protected static readonly Mounter<_String> _EmailAddress = RegisterColumn((Customer _) => _.EmailAddress);
+        protected static readonly Mounter<_String> _Phone = RegisterColumn((Customer _) => _.Phone);
+        protected static readonly Mounter<_String> _PasswordHash = RegisterColumn((Customer _) => _.PasswordHash);
+        protected static readonly Mounter<_String> _PasswordSalt = RegisterColumn((Customer _) => _.PasswordSalt);
 
         static Customer()
         {
-            _CustomerID = RegisterColumn((Customer _) => _.CustomerID);
-            _NameStyle = RegisterColumn((Customer _) => _.NameStyle);
-            _Title = RegisterColumn((Customer _) => _.Title);
-            _FirstName = RegisterColumn((Customer _) => _.FirstName);
-            _MiddleName = RegisterColumn((Customer _) => _.MiddleName);
-            _LastName = RegisterColumn((Customer _) => _.LastName);
-            _Suffix = RegisterColumn((Customer _) => _.Suffix);
-            _CompanyName = RegisterColumn((Customer _) => _.CompanyName);
-            _SalesPerson = RegisterColumn((Customer _) => _.SalesPerson);
-            _EmailAddress = RegisterColumn((Customer _) => _.EmailAddress);
-            _Phone = RegisterColumn((Customer _) => _.Phone);
-            _PasswordHash = RegisterColumn((Customer _) => _.PasswordHash);
-            _PasswordSalt = RegisterColumn((Customer _) => _.PasswordSalt);
             RegisterLocalColumn((Customer _) => _.ContactPerson);
         }
 

@@ -8,11 +8,8 @@ namespace DevZest.Samples.AdventureWorksLT
     public abstract class BaseModel<T> : Model<T>
         where T : PrimaryKey
     {
-        static BaseModel()
-        {
-            RegisterColumn((BaseModel<T> x) => x.RowGuid);
-            RegisterColumn((BaseModel<T> x) => x.ModifiedDate);
-        }
+        protected static readonly Mounter<_Guid> _RowGuid = RegisterColumn((BaseModel<T> x) => x.RowGuid);
+        protected static readonly Mounter<_DateTime> _ModifiedDate = RegisterColumn((BaseModel<T> x) => x.ModifiedDate);
 
         [Required]
         [AutoGuid(Name = "DF_%_rowguid", Description = "Default constraint value of NEWID()")]

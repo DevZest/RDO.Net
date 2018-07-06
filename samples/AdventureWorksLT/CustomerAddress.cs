@@ -75,16 +75,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String AddressType { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _CustomerID;
-        public static readonly Mounter<_Int32> _AddressID;
-        public static readonly Mounter<_String> _AddressType;
-
-        static CustomerAddress()
-        {
-            _CustomerID = RegisterColumn((CustomerAddress _) => _.CustomerID);
-            _AddressID = RegisterColumn((CustomerAddress _) => _.AddressID);
-            _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
-        }
+        protected static readonly Mounter<_Int32> _CustomerID = RegisterColumn((CustomerAddress _) => _.CustomerID);
+        protected static readonly Mounter<_Int32> _AddressID = RegisterColumn((CustomerAddress _) => _.AddressID);
+        protected static readonly Mounter<_String> _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
 
         protected sealed override PK CreatePrimaryKey()
         {

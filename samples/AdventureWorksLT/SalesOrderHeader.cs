@@ -40,50 +40,26 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _SalesOrderID;
-        public static readonly Mounter<_Byte> _RevisionNumber;
-        public static readonly Mounter<_DateTime> _OrderDate;
-        public static readonly Mounter<_DateTime> _DueDate;
-        public static readonly Mounter<_DateTime> _ShipDate;
-        public static readonly Mounter<_ByteEnum<SalesOrderStatus>> _Status;
-        public static readonly Mounter<_Boolean> _OnlineOrderFlag;
-        public static readonly Mounter<_String> _SalesOrderNumber;
-        public static readonly Mounter<_String> _PurchaseOrderNumber;
-        public static readonly Mounter<_String> _AccountNumber;
-        public static readonly Mounter<_Int32> _CustomerID;
-        public static readonly Mounter<_Int32> _ShipToAddressID;
-        public static readonly Mounter<_Int32> _BillToAddressID;
-        public static readonly Mounter<_String> _ShipMethod;
-        public static readonly Mounter<_String> _CreditCardApprovalCode;
-        public static readonly Mounter<_Decimal> _SubTotal;
-        public static readonly Mounter<_Decimal> _TaxAmt;
-        public static readonly Mounter<_Decimal> _Freight;
-        public static readonly Mounter<_Decimal> _TotalDue;
-        public static readonly Mounter<_String> _Comment;
-
-        static SalesOrderHeader()
-        {
-            _SalesOrderID = RegisterColumn((SalesOrderHeader _) => _.SalesOrderID);
-            _RevisionNumber = RegisterColumn((SalesOrderHeader _) => _.RevisionNumber);
-            _OrderDate = RegisterColumn((SalesOrderHeader _) => _.OrderDate);
-            _DueDate = RegisterColumn((SalesOrderHeader _) => _.DueDate);
-            _ShipDate = RegisterColumn((SalesOrderHeader _) => _.ShipDate);
-            _Status = RegisterColumn((SalesOrderHeader _) => _.Status);
-            _OnlineOrderFlag = RegisterColumn((SalesOrderHeader _) => _.OnlineOrderFlag);
-            _SalesOrderNumber = RegisterColumn((SalesOrderHeader _) => _.SalesOrderNumber);
-            _PurchaseOrderNumber = RegisterColumn((SalesOrderHeader _) => _.PurchaseOrderNumber);
-            _AccountNumber = RegisterColumn((SalesOrderHeader _) => _.AccountNumber);
-            _CustomerID = RegisterColumn((SalesOrderHeader _) => _.CustomerID);
-            _ShipToAddressID = RegisterColumn((SalesOrderHeader _) => _.ShipToAddressID);
-            _BillToAddressID = RegisterColumn((SalesOrderHeader _) => _.BillToAddressID);
-            _ShipMethod = RegisterColumn((SalesOrderHeader _) => _.ShipMethod);
-            _CreditCardApprovalCode = RegisterColumn((SalesOrderHeader _) => _.CreditCardApprovalCode);
-            _SubTotal = RegisterColumn((SalesOrderHeader _) => _.SubTotal);
-            _TaxAmt = RegisterColumn((SalesOrderHeader _) => _.TaxAmt);
-            _Freight = RegisterColumn((SalesOrderHeader _) => _.Freight);
-            _TotalDue = RegisterColumn((SalesOrderHeader _) => _.TotalDue);
-            _Comment = RegisterColumn((SalesOrderHeader _) => _.Comment);
-        }
+        protected static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((SalesOrderHeader _) => _.SalesOrderID);
+        protected static readonly Mounter<_Byte> _RevisionNumber = RegisterColumn((SalesOrderHeader _) => _.RevisionNumber);
+        protected static readonly Mounter<_DateTime> _OrderDate = RegisterColumn((SalesOrderHeader _) => _.OrderDate);
+        protected static readonly Mounter<_DateTime> _DueDate = RegisterColumn((SalesOrderHeader _) => _.DueDate);
+        protected static readonly Mounter<_DateTime> _ShipDate = RegisterColumn((SalesOrderHeader _) => _.ShipDate);
+        protected static readonly Mounter<_ByteEnum<SalesOrderStatus>> _Status = RegisterColumn((SalesOrderHeader _) => _.Status);
+        protected static readonly Mounter<_Boolean> _OnlineOrderFlag = RegisterColumn((SalesOrderHeader _) => _.OnlineOrderFlag);
+        protected static readonly Mounter<_String> _SalesOrderNumber = RegisterColumn((SalesOrderHeader _) => _.SalesOrderNumber);
+        protected static readonly Mounter<_String> _PurchaseOrderNumber = RegisterColumn((SalesOrderHeader _) => _.PurchaseOrderNumber);
+        protected static readonly Mounter<_String> _AccountNumber = RegisterColumn((SalesOrderHeader _) => _.AccountNumber);
+        protected static readonly Mounter<_Int32> _CustomerID = RegisterColumn((SalesOrderHeader _) => _.CustomerID);
+        protected static readonly Mounter<_Int32> _ShipToAddressID = RegisterColumn((SalesOrderHeader _) => _.ShipToAddressID);
+        protected static readonly Mounter<_Int32> _BillToAddressID = RegisterColumn((SalesOrderHeader _) => _.BillToAddressID);
+        protected static readonly Mounter<_String> _ShipMethod = RegisterColumn((SalesOrderHeader _) => _.ShipMethod);
+        protected static readonly Mounter<_String> _CreditCardApprovalCode = RegisterColumn((SalesOrderHeader _) => _.CreditCardApprovalCode);
+        protected static readonly Mounter<_Decimal> _SubTotal = RegisterColumn((SalesOrderHeader _) => _.SubTotal);
+        protected static readonly Mounter<_Decimal> _TaxAmt = RegisterColumn((SalesOrderHeader _) => _.TaxAmt);
+        protected static readonly Mounter<_Decimal> _Freight = RegisterColumn((SalesOrderHeader _) => _.Freight);
+        protected static readonly Mounter<_Decimal> _TotalDue = RegisterColumn((SalesOrderHeader _) => _.TotalDue);
+        protected static readonly Mounter<_String> _Comment = RegisterColumn((SalesOrderHeader _) => _.Comment);
 
         protected sealed override PK CreatePrimaryKey()
         {

@@ -78,24 +78,13 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String PostalCode { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _AddressID;
-        public static readonly Mounter<_String> _AddressLine1;
-        public static readonly Mounter<_String> _AddressLine2;
-        public static readonly Mounter<_String> _City;
-        public static readonly Mounter<_String> _StateProvince;
-        public static readonly Mounter<_String> _CountryRegion;
-        public static readonly Mounter<_String> _PostalCode;
-
-        static Address()
-        {
-            _AddressID = RegisterColumn((Address _) => _.AddressID);
-            _AddressLine1 = RegisterColumn((Address _) => _.AddressLine1);
-            _AddressLine2 = RegisterColumn((Address _) => _.AddressLine2);
-            _City = RegisterColumn((Address _) => _.City);
-            _StateProvince = RegisterColumn((Address _) => _.StateProvince);
-            _CountryRegion = RegisterColumn((Address _) => _.CountryRegion);
-            _PostalCode = RegisterColumn((Address _) => _.PostalCode);
-        }
+        protected static readonly Mounter<_Int32> _AddressID = RegisterColumn((Address _) => _.AddressID);
+        protected static readonly Mounter<_String> _AddressLine1 = RegisterColumn((Address _) => _.AddressLine1);
+        protected static readonly Mounter<_String> _AddressLine2 = RegisterColumn((Address _) => _.AddressLine2);
+        protected static readonly Mounter<_String> _City = RegisterColumn((Address _) => _.City);
+        protected static readonly Mounter<_String> _StateProvince = RegisterColumn((Address _) => _.StateProvince);
+        protected static readonly Mounter<_String> _CountryRegion = RegisterColumn((Address _) => _.CountryRegion);
+        protected static readonly Mounter<_String> _PostalCode = RegisterColumn((Address _) => _.PostalCode);
 
         protected sealed override PK CreatePrimaryKey()
         {
