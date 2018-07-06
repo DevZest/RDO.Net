@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
+using System;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Diagnostics;
@@ -44,15 +45,28 @@ namespace DevZest.Data.Analyzers.CSharp
             var propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration, context.CancellationToken);
             var kind = propertySymbol.GetModelMemberKind().Value;
 
+            string methodName;
+            var returnsMounter = false;
             if (kind == ModelMemberKind.ModelColumn)
-                context.RegisterCodeFix(CodeAction.Create(
-                    title: Resources.Title_AddMounterAndRegisterColumn,
-                    createChangedSolution: ct => GenerateMounterRegistration("RegisterColumn", document, propertyDeclaration, propertySymbol, true, ct)),
-                    diagnostic);
+            {
+                methodName = "RegisterColumn";
+                returnsMounter = true;
+            }
             else if (kind == ModelMemberKind.LocalColumn)
-                context.RegisterCodeFix(CodeAction.Create(
-                    title: Resources.Title_AddRegisterColumn,
-                    createChangedSolution: ct => GenerateMounterRegistration("RegisterLocalColumn", document, propertyDeclaration, propertySymbol, false, ct)),
+                methodName = "RegisterLocalColumn";
+            else if (kind == ModelMemberKind.ColumnGroup)
+                methodName = "RegisterColumnGroup";
+            else if (kind == ModelMemberKind.ColumnList)
+                methodName = "RegisterColumnList";
+            else if (kind == ModelMemberKind.ChildModel)
+                throw new NotImplementedException();
+            else
+                return;
+
+            context.RegisterCodeFix(CodeAction.Create(
+                    title: methodName,
+                    createChangedSolution: ct => GenerateMounterRegistration(methodName, document, propertyDeclaration, propertySymbol, returnsMounter, ct),
+                    equivalenceKey: methodName),
                     diagnostic);
         }
 
