@@ -17,11 +17,6 @@ namespace DevZest.Data.Analyzers.CSharp
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MounterRegistrationCodeFixProvider)), Shared]
     public class MounterRegistrationCodeFixProvider : CodeFixProvider
     {
-        public MounterRegistrationCodeFixProvider()
-        {
-            Debug.WriteLine("constructor called!!!");
-        }
-
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
             get { return ImmutableArray.Create(DiagnosticIds.MounterRegistration_Missing); }
