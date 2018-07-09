@@ -15,7 +15,7 @@ namespace DevZest.Data.Analyzers.CSharp
 
         //No diagnostics expected to show up
         [TestMethod]
-        public void EmptySource_generates_no_diagnostics()
+        public void EmptySource()
         {
             var test = @"";
 
@@ -23,7 +23,7 @@ namespace DevZest.Data.Analyzers.CSharp
         }
 
         [TestMethod]
-        public void RegisterColumn_with_no_error()
+        public void NoError()
         {
             var test = @"
 using DevZest.Data;
@@ -50,7 +50,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_InvalidInvocation_assigned_to_local_variable()
+        public void InvalidInvocation_assigned_to_local_variable()
         {
             var test = @"
 using DevZest.Data;
@@ -78,7 +78,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_InvalidInvocation_in_a_separate_method()
+        public void InvalidInvocation_in_a_separate_method()
         {
             var test = @"
 using DevZest.Data;

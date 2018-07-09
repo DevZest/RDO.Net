@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.Diagnostics;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DevZest.Data.Analyzers.VisualBasic
@@ -12,7 +13,7 @@ namespace DevZest.Data.Analyzers.VisualBasic
         }
 
         [TestMethod]
-        public void EmptySource_generates_no_diagnostics()
+        public void EmptySource()
         {
             var test = @"";
 
@@ -20,7 +21,7 @@ namespace DevZest.Data.Analyzers.VisualBasic
         }
 
         [TestMethod]
-        public void RegisterColumn_with_no_error()
+        public void NoError()
         {
             var test = @"
 Imports DevZest.Data
@@ -68,6 +69,42 @@ Class SimpleModel
 End Class";
 
             VerifyBasicDiagnostic(test);
+        }
+
+        [TestMethod]
+        public void InvalidInvocation_assigned_to_local_variable()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Class SimpleModel
+    Inherits Model
+
+    Protected Shared ReadOnly _Column1 As Mounter(Of _Int32) = RegisterColumn(Function(x As SimpleModel) x.Column1)
+
+    Shared Sub New()
+        Dim column1 = RegisterColumn(Function(x As SimpleModel) x.Column1)
+    End Sub
+
+    Private m_Column1 As _Int32
+    Public Property Column1 As _Int32
+        Get
+            Return m_Column1
+        End Get
+        Private Set
+            m_Column1 = Value
+        End Set
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.InvalidRegisterMounterInvocation,
+                Message = Resources.InvalidRegisterMounterInvocation_Message,
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 10, 23) }
+            };
+            VerifyBasicDiagnostic(test, expected);
         }
     }
 }
