@@ -239,7 +239,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_MissingRegistration()
+        public void MissingRegistration()
         {
             var test = @"
 using DevZest.Data;

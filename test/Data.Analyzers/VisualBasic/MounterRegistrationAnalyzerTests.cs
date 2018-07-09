@@ -316,5 +316,45 @@ End Class";
             };
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MissingRegistration()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Class SimpleModel
+    Inherits Model
+
+    Private m_Column As _Int32
+    Public Property Column As _Int32
+        Get
+            Return m_Column
+        End Get
+        Private Set
+            m_Column = Value
+        End Set
+    End Property
+
+    Private m_ComputedColumn As _Int32
+    Public ReadOnly Property ComputedColumn As _Int32
+        Get
+            If m_ComputedColumn Is Nothing Then
+                m_ComputedColumn = Column * 2
+            End If
+            Return m_ComputedColumn
+        End Get
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MissingMounterRegistration,
+                Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 21) }
+            };
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }
