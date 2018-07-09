@@ -25,7 +25,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public NotInheritable Class Key
+        Public Class Key
             Inherits Key(Of PK)
 
             Shared Sub New()
@@ -98,39 +98,21 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Shared ReadOnly _ProductID As Mounter(Of _Int32)
-        Public Shared ReadOnly _Name As Mounter(Of _String)
-        Public Shared ReadOnly _ProductNumber As Mounter(Of _String)
-        Public Shared ReadOnly _Color As Mounter(Of _String)
-        Public Shared ReadOnly _StandardCost As Mounter(Of _Decimal)
-        Public Shared ReadOnly _ListPrice As Mounter(Of _Decimal)
-        Public Shared ReadOnly _Size As Mounter(Of _String)
-        Public Shared ReadOnly _Weight As Mounter(Of _Decimal)
-        Public Shared ReadOnly _ProductCategoryID As Mounter(Of _Int32)
-        Public Shared ReadOnly _ProductModelID As Mounter(Of _Int32)
-        Public Shared ReadOnly _SellStartDate As Mounter(Of _DateTime)
-        Public Shared ReadOnly _SellEndDate As Mounter(Of _DateTime)
-        Public Shared ReadOnly _DiscontinuedDate As Mounter(Of _DateTime)
-        Public Shared ReadOnly _ThumbNailPhoto As Mounter(Of _Binary)
-        Public Shared ReadOnly _ThumbnailPhotoFileName As Mounter(Of _String)
-
-        Shared Sub New()
-            _ProductID = RegisterColumn(Function(x As Product) x.ProductID)
-            _Name = RegisterColumn(Function(x As Product) x.Name)
-            _ProductNumber = RegisterColumn(Function(x As Product) x.ProductNumber)
-            _Color = RegisterColumn(Function(x As Product) x.Color)
-            _StandardCost = RegisterColumn(Function(x As Product) x.StandardCost)
-            _ListPrice = RegisterColumn(Function(x As Product) x.ListPrice)
-            _Size = RegisterColumn(Function(x As Product) x.Size)
-            _Weight = RegisterColumn(Function(x As Product) x.Weight)
-            _ProductCategoryID = RegisterColumn(Function(x As Product) x.ProductCategoryID)
-            _ProductModelID = RegisterColumn(Function(ByVal x As Product) x.ProductModelID)
-            _SellStartDate = RegisterColumn(Function(x As Product) x.SellStartDate)
-            _SellEndDate = RegisterColumn(Function(x As Product) x.SellEndDate)
-            _DiscontinuedDate = RegisterColumn(Function(x As Product) x.DiscontinuedDate)
-            _ThumbNailPhoto = RegisterColumn(Function(x As Product) x.ThumbNailPhoto)
-            _ThumbnailPhotoFileName = RegisterColumn(Function(x As Product) x.ThumbnailPhotoFileName)
-        End Sub
+        Protected Shared ReadOnly _ProductID As Mounter(Of _Int32) = RegisterColumn(Function(x As Product) x.ProductID)
+        Protected Shared ReadOnly _Name As Mounter(Of _String) = RegisterColumn(Function(x As Product) x.Name)
+        Protected Shared ReadOnly _ProductNumber As Mounter(Of _String) = RegisterColumn(Function(x As Product) x.ProductNumber)
+        Protected Shared ReadOnly _Color As Mounter(Of _String) = RegisterColumn(Function(x As Product) x.Color)
+        Protected Shared ReadOnly _StandardCost As Mounter(Of _Decimal) = RegisterColumn(Function(x As Product) x.StandardCost)
+        Protected Shared ReadOnly _ListPrice As Mounter(Of _Decimal) = RegisterColumn(Function(x As Product) x.ListPrice)
+        Protected Shared ReadOnly _Size As Mounter(Of _String) = RegisterColumn(Function(x As Product) x.Size)
+        Protected Shared ReadOnly _Weight As Mounter(Of _Decimal) = RegisterColumn(Function(x As Product) x.Weight)
+        Protected Shared ReadOnly _ProductCategoryID As Mounter(Of _Int32) = RegisterColumn(Function(x As Product) x.ProductCategoryID)
+        Protected Shared ReadOnly _ProductModelID As Mounter(Of _Int32) = RegisterColumn(Function(ByVal x As Product) x.ProductModelID)
+        Protected Shared ReadOnly _SellStartDate As Mounter(Of _DateTime) = RegisterColumn(Function(x As Product) x.SellStartDate)
+        Protected Shared ReadOnly _SellEndDate As Mounter(Of _DateTime) = RegisterColumn(Function(x As Product) x.SellEndDate)
+        Protected Shared ReadOnly _DiscontinuedDate As Mounter(Of _DateTime) = RegisterColumn(Function(x As Product) x.DiscontinuedDate)
+        Protected Shared ReadOnly _ThumbNailPhoto As Mounter(Of _Binary) = RegisterColumn(Function(x As Product) x.ThumbNailPhoto)
+        Protected Shared ReadOnly _ThumbnailPhotoFileName As Mounter(Of _String) = RegisterColumn(Function(x As Product) x.ThumbnailPhotoFileName)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(ProductID)
