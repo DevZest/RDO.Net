@@ -356,5 +356,35 @@ End Class";
             };
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MissingRegistration_LocalColumn()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Class SimpleModel
+    Inherits Model
+
+    Private m_Column As LocalColumn(Of Int32)
+    Public Property Column As LocalColumn(Of Int32)
+        Get
+            Return m_Column
+        End Get
+        Private Set
+            m_Column = Value
+        End Set
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MissingMounterRegistration,
+                Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 21) }
+            };
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }
