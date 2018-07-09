@@ -214,5 +214,37 @@ End Class";
             };
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MounterNaming_in_field_initializer()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Class SimpleModel
+    Inherits Model
+
+    Protected Shared ReadOnly _Column2 As Mounter(Of _Int32) = RegisterColumn(Function(x As SimpleModel) x.Column1)
+
+    Private m_Column1 As _Int32
+    Public Property Column1 As _Int32
+        Get
+            Return m_Column1
+        End Get
+        Private Set
+            m_Column1 = Value
+        End Set
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MounterNaming,
+                Message = string.Format(Resources.MounterNaming_Message, "_Column2", "Column1", "_Column1"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 31) }
+            };
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }

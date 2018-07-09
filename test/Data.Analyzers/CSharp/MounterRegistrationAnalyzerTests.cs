@@ -162,7 +162,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_MounterNaming_static_field_initializer()
+        public void MounterNaming_in_field_initializer()
         {
             var test = @"
 using DevZest.Data;
@@ -185,7 +185,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_MounterNaming_static_constructor_initializer()
+        public void MounterNaming_in_static_constructor()
         {
             var test = @"
 using DevZest.Data;
