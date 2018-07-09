@@ -213,7 +213,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_InvalidLocalColumn()
+        public void InvalidRegisterLocalColumn()
         {
             var test = @"
 using DevZest.Data;
