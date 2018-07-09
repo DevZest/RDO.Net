@@ -24,7 +24,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public NotInheritable Class Key
+        Public Class Key
             Inherits Key(Of PK)
 
             Shared Sub New()
@@ -108,15 +108,9 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Shared ReadOnly _CustomerID As Mounter(Of _Int32)
-        Public Shared ReadOnly _AddressID As Mounter(Of _Int32)
-        Public Shared ReadOnly _AddressType As Mounter(Of _String)
-
-        Shared Sub New()
-            _CustomerID = RegisterColumn(Function(x As CustomerAddress) x.CustomerID)
-            _AddressID = RegisterColumn(Function(x As CustomerAddress) x.AddressID)
-            _AddressType = RegisterColumn(Function(x As CustomerAddress) x.AddressType)
-        End Sub
+        Protected Shared ReadOnly _CustomerID As Mounter(Of _Int32) = RegisterColumn(Function(x As CustomerAddress) x.CustomerID)
+        Protected Shared ReadOnly _AddressID As Mounter(Of _Int32) = RegisterColumn(Function(x As CustomerAddress) x.AddressID)
+        Protected Shared ReadOnly _AddressType As Mounter(Of _String) = RegisterColumn(Function(x As CustomerAddress) x.AddressType)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(CustomerID, AddressID)

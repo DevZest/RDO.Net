@@ -27,7 +27,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         End Class
 
-        Public NotInheritable Class Key
+        Public Class Key
             Inherits Key(Of PK)
 
             Shared Sub New()
