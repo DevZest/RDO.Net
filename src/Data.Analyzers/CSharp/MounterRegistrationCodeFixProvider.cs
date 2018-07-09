@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.Editing;
 using System;
 using System.Collections.Immutable;
 using System.Composition;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +18,7 @@ namespace DevZest.Data.Analyzers.CSharp
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticIds.MounterRegistration_Missing); }
+            get { return ImmutableArray.Create(DiagnosticIds.MissingMounterRegistration); }
         }
 
         public sealed override FixAllProvider GetFixAllProvider()

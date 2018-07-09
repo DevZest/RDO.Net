@@ -12,18 +12,18 @@ namespace DevZest.Data.Analyzers.CSharp
     {
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(AnalyzeMounterRegistration, SyntaxKind.InvocationExpression);
+            context.RegisterSyntaxNodeAction(AnalyzeRegisterInvocation, SyntaxKind.InvocationExpression);
             context.RegisterSyntaxNodeAction(AnalyzeModelProperty, SyntaxKind.PropertyDeclaration);
         }
 
-        private static void AnalyzeMounterRegistration(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeRegisterInvocation(SyntaxNodeAnalysisContext context)
         {
-            var diagnostic = AnalyzeMounterRegistration(context, (InvocationExpressionSyntax)context.Node);
+            var diagnostic = AnalyzeRegisterInvocation(context, (InvocationExpressionSyntax)context.Node);
             if (diagnostic != null)
                 context.ReportDiagnostic(diagnostic);
         }
 
-        private static Diagnostic AnalyzeMounterRegistration(SyntaxNodeAnalysisContext context, InvocationExpressionSyntax invocationExpression)
+        private static Diagnostic AnalyzeRegisterInvocation(SyntaxNodeAnalysisContext context, InvocationExpressionSyntax invocationExpression)
         {
             var semanticModel = context.SemanticModel;
             if (!(semanticModel.GetSymbolInfo(invocationExpression).Symbol is IMethodSymbol symbol))
@@ -35,24 +35,24 @@ namespace DevZest.Data.Analyzers.CSharp
             var isColumnRegistration = symbol.Name == "RegisterColumn";
 
             if (!VerifyInvocation(invocationExpression, semanticModel, out var containingType, out var fieldSymbol, out var mounterIdentifier))
-                return Diagnostic.Create(Rules.MounterRegistration_InvalidInvocation, invocationExpression.GetLocation());
+                return Diagnostic.Create(Rules.InvalidRegisterMounterInvocation, invocationExpression.GetLocation());
 
             var firstArgument = invocationExpression.ArgumentList.Arguments[0];
             Debug.Assert(firstArgument != null);
             if (!IsValidGetter(firstArgument, semanticModel, containingType, out var propertySymbol))
-                return Diagnostic.Create(Rules.MounterRegistration_InvalidGetter, firstArgument.GetLocation());
+                return Diagnostic.Create(Rules.InvalidRegisterMounterGetterParam, firstArgument.GetLocation());
 
             if (isColumnRegistration && TypeIdentifier.LocalColumn.IsSameTypeOf(propertySymbol.Type))
-                return Diagnostic.Create(Rules.MounterRegistration_InvalidLocalColumn, invocationExpression.GetLocation(), propertySymbol.Name);
+                return Diagnostic.Create(Rules.InvalidRegisterLocalColumn, invocationExpression.GetLocation(), propertySymbol.Name);
 
             if (AnyDuplicate(invocationExpression, propertySymbol, context.Compilation))
-                return Diagnostic.Create(Rules.MounterRegistration_Duplicate, invocationExpression.GetLocation(), propertySymbol.Name);
+                return Diagnostic.Create(Rules.DuplicateMounterRegistration, invocationExpression.GetLocation(), propertySymbol.Name);
 
             if (fieldSymbol != null)
             {
                 var expectedMounterName = "_" + propertySymbol.Name;
                 if (fieldSymbol.Name != expectedMounterName)
-                    return Diagnostic.Create(Rules.MounterRegistration_MounterNaming, mounterIdentifier.GetLocation(), fieldSymbol.Name, propertySymbol.Name, expectedMounterName);
+                    return Diagnostic.Create(Rules.MounterNaming, mounterIdentifier.GetLocation(), fieldSymbol.Name, propertySymbol.Name, expectedMounterName);
             }
             return null;
         }
@@ -223,7 +223,7 @@ namespace DevZest.Data.Analyzers.CSharp
                     return null;
             }
 
-            return Diagnostic.Create(Rules.MounterRegistration_Missing, identifier.GetLocation(), propertySymbol.Name);
+            return Diagnostic.Create(Rules.MissingMounterRegistration, identifier.GetLocation(), propertySymbol.Name);
         }
 
         private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)

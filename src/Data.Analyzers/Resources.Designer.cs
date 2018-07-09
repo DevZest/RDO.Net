@@ -64,126 +64,108 @@ namespace DevZest.Data.Analyzers {
         /// <summary>
         ///   Looks up a localized string similar to Duplicate mounter registration for property &apos;{0}&apos;..
         /// </summary>
-        internal static string MounterRegistration_Duplicate_Message {
+        internal static string DuplicateMounterRegistration_Message {
             get {
-                return ResourceManager.GetString("MounterRegistration_Duplicate_Message", resourceCulture);
+                return ResourceManager.GetString("DuplicateMounterRegistration_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Duplicate mounter registration..
         /// </summary>
-        internal static string MounterRegistration_Duplicate_Title {
+        internal static string DuplicateMounterRegistration_Title {
             get {
-                return ResourceManager.GetString("MounterRegistration_Duplicate_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
-        /// </summary>
-        internal static string MounterRegistration_InvalidGetter_Message {
-            get {
-                return ResourceManager.GetString("MounterRegistration_InvalidGetter_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid getter of mounter registration..
-        /// </summary>
-        internal static string MounterRegistration_InvalidGetter_Title {
-            get {
-                return ResourceManager.GetString("MounterRegistration_InvalidGetter_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mounter registration is only allowed as static field initializer or static constructor statement..
-        /// </summary>
-        internal static string MounterRegistration_InvalidInvocation_Message {
-            get {
-                return ResourceManager.GetString("MounterRegistration_InvalidInvocation_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid invocation of mounter registration..
-        /// </summary>
-        internal static string MounterRegistration_InvalidInvocation_Title {
-            get {
-                return ResourceManager.GetString("MounterRegistration_InvalidInvocation_Title", resourceCulture);
+                return ResourceManager.GetString("DuplicateMounterRegistration_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Local column &apos;{0}&apos; is invalid for RegisterColumn, use RegisterLocalColumn instead..
         /// </summary>
-        internal static string MounterRegistration_InvalidLocalColumn_Message {
+        internal static string InvalidRegisterLocalColumn_Message {
             get {
-                return ResourceManager.GetString("MounterRegistration_InvalidLocalColumn_Message", resourceCulture);
+                return ResourceManager.GetString("InvalidRegisterLocalColumn_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Local column is invalid for RegisterColumn..
         /// </summary>
-        internal static string MounterRegistration_InvalidLocalColumn_Title {
+        internal static string InvalidRegisterLocalColumn_Title {
             get {
-                return ResourceManager.GetString("MounterRegistration_InvalidLocalColumn_Title", resourceCulture);
+                return ResourceManager.GetString("InvalidRegisterLocalColumn_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
+        /// </summary>
+        internal static string InvalidRegisterMounterGetterParam_Message {
+            get {
+                return ResourceManager.GetString("InvalidRegisterMounterGetterParam_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid getter of mounter registration..
+        /// </summary>
+        internal static string InvalidRegisterMounterGetterParam_Title {
+            get {
+                return ResourceManager.GetString("InvalidRegisterMounterGetterParam_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mounter registration is only allowed as static field initializer or static constructor statement..
+        /// </summary>
+        internal static string InvalidRegisterMounterInvocation_Message {
+            get {
+                return ResourceManager.GetString("InvalidRegisterMounterInvocation_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid invocation of mounter registration..
+        /// </summary>
+        internal static string InvalidRegisterMounterInvocation_Title {
+            get {
+                return ResourceManager.GetString("InvalidRegisterMounterInvocation_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Missing registration for model property &apos;{0}&apos;..
         /// </summary>
-        internal static string MounterRegistration_Missing_Message {
+        internal static string MissingMounterRegistration_Message {
             get {
-                return ResourceManager.GetString("MounterRegistration_Missing_Message", resourceCulture);
+                return ResourceManager.GetString("MissingMounterRegistration_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Missing registration for model property..
         /// </summary>
-        internal static string MounterRegistration_Missing_Title {
+        internal static string MissingMounterRegistration_Title {
             get {
-                return ResourceManager.GetString("MounterRegistration_Missing_Title", resourceCulture);
+                return ResourceManager.GetString("MissingMounterRegistration_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Mounter &apos;{0}&apos; of property &apos;{1}&apos; does not conform to naming convention, rename mounter name &apos;{0}&apos; to &apos;{2}&apos;..
         /// </summary>
-        internal static string MounterRegistration_MounterNaming_Message {
+        internal static string MounterNaming_Message {
             get {
-                return ResourceManager.GetString("MounterRegistration_MounterNaming_Message", resourceCulture);
+                return ResourceManager.GetString("MounterNaming_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Mounter name does not conform to convention..
         /// </summary>
-        internal static string MounterRegistration_MounterNaming_Title {
+        internal static string MounterNaming_Title {
             get {
-                return ResourceManager.GetString("MounterRegistration_MounterNaming_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Mounter and RegisterColumn.
-        /// </summary>
-        internal static string Title_AddMounterAndRegisterColumn {
-            get {
-                return ResourceManager.GetString("Title_AddMounterAndRegisterColumn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add RegisterColumn.
-        /// </summary>
-        internal static string Title_AddRegisterColumn {
-            get {
-                return ResourceManager.GetString("Title_AddRegisterColumn", resourceCulture);
+                return ResourceManager.GetString("MounterNaming_Title", resourceCulture);
             }
         }
     }

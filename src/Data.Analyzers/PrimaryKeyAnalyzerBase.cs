@@ -9,7 +9,7 @@ namespace DevZest.Data.Analyzers
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
             get { return ImmutableArray.Create(
-                Rules.MounterRegistration_Duplicate); }
+                Rules.DuplicateMounterRegistration); }
         }
     }
 }

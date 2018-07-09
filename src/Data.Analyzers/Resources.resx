@@ -117,46 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MounterRegistration_Duplicate_Message" xml:space="preserve">
+  <data name="DuplicateMounterRegistration_Message" xml:space="preserve">
     <value>Duplicate mounter registration for property '{0}'.</value>
   </data>
-  <data name="MounterRegistration_Duplicate_Title" xml:space="preserve">
+  <data name="DuplicateMounterRegistration_Title" xml:space="preserve">
     <value>Duplicate mounter registration.</value>
   </data>
-  <data name="MounterRegistration_InvalidGetter_Message" xml:space="preserve">
-    <value>The getter parameter must be a lambda expression which returns a non-readonly property of current class.</value>
-  </data>
-  <data name="MounterRegistration_InvalidGetter_Title" xml:space="preserve">
-    <value>Invalid getter of mounter registration.</value>
-  </data>
-  <data name="MounterRegistration_InvalidInvocation_Message" xml:space="preserve">
-    <value>Mounter registration is only allowed as static field initializer or static constructor statement.</value>
-  </data>
-  <data name="MounterRegistration_InvalidInvocation_Title" xml:space="preserve">
-    <value>Invalid invocation of mounter registration.</value>
-  </data>
-  <data name="MounterRegistration_InvalidLocalColumn_Message" xml:space="preserve">
+  <data name="InvalidRegisterLocalColumn_Message" xml:space="preserve">
     <value>Local column '{0}' is invalid for RegisterColumn, use RegisterLocalColumn instead.</value>
   </data>
-  <data name="MounterRegistration_InvalidLocalColumn_Title" xml:space="preserve">
+  <data name="InvalidRegisterLocalColumn_Title" xml:space="preserve">
     <value>Local column is invalid for RegisterColumn.</value>
   </data>
-  <data name="MounterRegistration_Missing_Message" xml:space="preserve">
+  <data name="InvalidRegisterMounterGetterParam_Message" xml:space="preserve">
+    <value>The getter parameter must be a lambda expression which returns a non-readonly property of current class.</value>
+  </data>
+  <data name="InvalidRegisterMounterGetterParam_Title" xml:space="preserve">
+    <value>Invalid getter of mounter registration.</value>
+  </data>
+  <data name="InvalidRegisterMounterInvocation_Message" xml:space="preserve">
+    <value>Mounter registration is only allowed as static field initializer or static constructor statement.</value>
+  </data>
+  <data name="InvalidRegisterMounterInvocation_Title" xml:space="preserve">
+    <value>Invalid invocation of mounter registration.</value>
+  </data>
+  <data name="MissingMounterRegistration_Message" xml:space="preserve">
     <value>Missing registration for model property '{0}'.</value>
   </data>
-  <data name="MounterRegistration_Missing_Title" xml:space="preserve">
+  <data name="MissingMounterRegistration_Title" xml:space="preserve">
     <value>Missing registration for model property.</value>
   </data>
-  <data name="MounterRegistration_MounterNaming_Message" xml:space="preserve">
+  <data name="MounterNaming_Message" xml:space="preserve">
     <value>Mounter '{0}' of property '{1}' does not conform to naming convention, rename mounter name '{0}' to '{2}'.</value>
   </data>
-  <data name="MounterRegistration_MounterNaming_Title" xml:space="preserve">
+  <data name="MounterNaming_Title" xml:space="preserve">
     <value>Mounter name does not conform to convention.</value>
-  </data>
-  <data name="Title_AddMounterAndRegisterColumn" xml:space="preserve">
-    <value>Add Mounter and RegisterColumn</value>
-  </data>
-  <data name="Title_AddRegisterColumn" xml:space="preserve">
-    <value>Add RegisterColumn</value>
   </data>
 </root>

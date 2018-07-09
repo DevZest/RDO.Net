@@ -69,8 +69,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_InvalidInvocation,
-                Message = Resources.MounterRegistration_InvalidInvocation_Message,
+                Id = DiagnosticIds.InvalidRegisterMounterInvocation,
+                Message = Resources.InvalidRegisterMounterInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 23) }
             };
@@ -97,8 +97,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_InvalidInvocation,
-                Message = Resources.MounterRegistration_InvalidInvocation_Message,
+                Id = DiagnosticIds.InvalidRegisterMounterInvocation,
+                Message = Resources.InvalidRegisterMounterInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 20) }
             };
@@ -125,8 +125,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_Duplicate,
-                Message = string.Format(Resources.MounterRegistration_Duplicate_Message, "Column1"),
+                Id = DiagnosticIds.DuplicateMounterRegistration,
+                Message = string.Format(Resources.DuplicateMounterRegistration_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 9) }
             };
@@ -153,8 +153,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_Duplicate,
-                Message = string.Format(Resources.MounterRegistration_Duplicate_Message, "Column1"),
+                Id = DiagnosticIds.DuplicateMounterRegistration,
+                Message = string.Format(Resources.DuplicateMounterRegistration_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 55) }
             };
@@ -176,8 +176,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_MounterNaming,
-                Message = string.Format(Resources.MounterRegistration_MounterNaming_Message, "_Column2", "Column1", "_Column1"),
+                Id = DiagnosticIds.MounterNaming,
+                Message = string.Format(Resources.MounterNaming_Message, "_Column2", "Column1", "_Column1"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 44) }
             };
@@ -204,8 +204,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_MounterNaming,
-                Message = string.Format(Resources.MounterRegistration_MounterNaming_Message, "_Column2", "Column1", "_Column1"),
+                Id = DiagnosticIds.MounterNaming,
+                Message = string.Format(Resources.MounterNaming_Message, "_Column2", "Column1", "_Column1"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 9) }
             };
@@ -230,8 +230,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_InvalidLocalColumn,
-                Message = string.Format(Resources.MounterRegistration_InvalidLocalColumn_Message, "Column1"),
+                Id = DiagnosticIds.InvalidRegisterLocalColumn,
+                Message = string.Format(Resources.InvalidRegisterLocalColumn_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 8, 9) }
             };
@@ -257,8 +257,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_Missing,
-                Message = string.Format(Resources.MounterRegistration_Missing_Message, "Column"),
+                Id = DiagnosticIds.MissingMounterRegistration,
+                Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 19) }
             };
@@ -278,8 +278,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MounterRegistration_Missing,
-                Message = string.Format(Resources.MounterRegistration_Missing_Message, "Column"),
+                Id = DiagnosticIds.MissingMounterRegistration,
+                Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 29) }
             };

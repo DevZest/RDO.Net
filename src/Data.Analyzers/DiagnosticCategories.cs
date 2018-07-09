@@ -2,8 +2,7 @@
 {
     internal static class DiagnosticCategories
     {
-        public const string Compile = nameof(Compile);
-        public const string Design = nameof(Design);
+        public const string Custom = nameof(Custom);
         public const string Naming = nameof(Naming);
     }
 }
