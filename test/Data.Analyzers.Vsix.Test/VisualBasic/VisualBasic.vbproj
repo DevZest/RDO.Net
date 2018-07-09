@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>DevZest.Data.Analyzers.Vsix.Test.VisualBasic</RootNamespace>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>DevZest.Data.Analyzers.Vsix.Test.VisualBasic</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Data\Data.csproj" />
+  </ItemGroup>
+
+</Project>

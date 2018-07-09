@@ -1,15 +1,15 @@
 ﻿namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class MounterRegistration_InvalidGetter : Model
+    public class InvalidRegisterMounterGetterParam : Model
     {
         private class AnotherModel : Model
         {
             public _Int32 Column1 { get; private set; }
         }
 
-        static MounterRegistration_InvalidGetter()
+        static InvalidRegisterMounterGetterParam()
         {
-            RegisterColumn((MounterRegistration_InvalidGetter _) => _.Column1);
+            RegisterColumn((InvalidRegisterMounterGetterParam _) => _.Column1);
             RegisterColumn((AnotherModel _) => _.Column1);
         }
 

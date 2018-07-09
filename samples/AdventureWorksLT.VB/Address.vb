@@ -144,23 +144,13 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Shared ReadOnly _AddressID As Mounter(Of _Int32)
-        Public Shared ReadOnly _AddressLine1 As Mounter(Of _String)
-        Public Shared ReadOnly _AddressLine2 As Mounter(Of _String)
-        Public Shared ReadOnly _City As Mounter(Of _String)
-        Public Shared ReadOnly _StateProvince As Mounter(Of _String)
-        Public Shared ReadOnly _CountryRegion As Mounter(Of _String)
-        Public Shared ReadOnly _PostalCode As Mounter(Of _String)
-
-        Shared Sub New()
-            _AddressID = RegisterColumn(Function(x As Address) x.AddressID)
-            _AddressLine1 = RegisterColumn(Function(x As Address) x.AddressLine1)
-            _AddressLine2 = RegisterColumn(Function(x As Address) x.AddressLine2)
-            _City = RegisterColumn(Function(x As Address) x.City)
-            _StateProvince = RegisterColumn(Function(x As Address) x.StateProvince)
-            _CountryRegion = RegisterColumn(Function(x As Address) x.CountryRegion)
-            _PostalCode = RegisterColumn(Function(x As Address) x.PostalCode)
-        End Sub
+        Protected Shared ReadOnly _AddressID As Mounter(Of _Int32) = RegisterColumn(Function(x As Address) x.AddressID)
+        Protected Shared ReadOnly _AddressLine1 As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.AddressLine1)
+        Protected Shared ReadOnly _AddressLine2 As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.AddressLine2)
+        Protected Shared ReadOnly _City As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.City)
+        Protected Shared ReadOnly _StateProvince As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.StateProvince)
+        Protected Shared ReadOnly _CountryRegion As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.CountryRegion)
+        Protected Shared ReadOnly _PostalCode As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.PostalCode)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(AddressID)
