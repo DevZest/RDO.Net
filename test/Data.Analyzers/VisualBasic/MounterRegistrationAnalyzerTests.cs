@@ -283,6 +283,38 @@ End Class";
             VerifyBasicDiagnostic(test, expected);
         }
 
+        [TestMethod]
+        public void InvalidRegisterLocalColumn()
+        {
+            var test = @"
+Imports DevZest.Data
 
+Class SimpleModel
+    Inherits Model
+
+    Shared Sub New()
+        RegisterColumn(Function(x As SimpleModel) x.Column1)
+    End Sub
+
+    Private m_Column1 As LocalColumn(Of Int32)
+    Public Property Column1 As LocalColumn(Of Int32)
+        Get
+            Return m_Column1
+        End Get
+        Private Set
+            m_Column1 = Value
+        End Set
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.InvalidRegisterLocalColumn,
+                Message = string.Format(Resources.InvalidRegisterLocalColumn_Message, "Column1"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 9) }
+            };
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }
