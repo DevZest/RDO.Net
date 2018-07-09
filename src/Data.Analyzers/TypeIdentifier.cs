@@ -47,7 +47,7 @@ namespace DevZest.Data.Analyzers
 
         private static bool AreSame(INamespaceSymbol @namespace, string displayString, int lastIndex)
         {
-            if (@namespace.IsGlobalNamespace)
+            if (@namespace == null || @namespace.IsGlobalNamespace)
                 return lastIndex == -1;
 
             var name = @namespace.Name;

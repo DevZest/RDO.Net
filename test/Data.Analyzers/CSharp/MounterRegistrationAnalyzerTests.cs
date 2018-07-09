@@ -15,7 +15,7 @@ namespace DevZest.Data.Analyzers.CSharp
 
         //No diagnostics expected to show up
         [TestMethod]
-        public void empty_source_generates_no_diagnostics()
+        public void EmptySource_generates_no_diagnostics()
         {
             var test = @"";
 

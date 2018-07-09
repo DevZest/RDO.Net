@@ -77,10 +77,12 @@ namespace DevZest.Data.Analyzers.VisualBasic
             if (!(equalsValueClause.Parent is VariableDeclaratorSyntax variableDeclarator))
                 return false;
 
-            if (semanticModel.GetDeclaredSymbol(variableDeclarator) is IFieldSymbol result && result.IsStatic)
+            Debug.Assert(variableDeclarator.Names.Count == 1);
+            var name = variableDeclarator.Names[0];
+            if (semanticModel.GetDeclaredSymbol(name) is IFieldSymbol result && result.IsStatic)
             {
                 fieldSymbol = result;
-                mounterIdentifier = variableDeclarator.Names[0].Identifier;
+                mounterIdentifier = name.Identifier;
                 return true;
             }
             return false;
@@ -158,7 +160,8 @@ namespace DevZest.Data.Analyzers.VisualBasic
             var syntaxReferences = containingType.DeclaringSyntaxReferences;
             for (int i = 0; i < syntaxReferences.Length; i++)
             {
-                var classBlock = (ClassBlockSyntax)syntaxReferences[i].GetSyntax();
+                var classStatement = (ClassStatementSyntax)syntaxReferences[i].GetSyntax();
+                var classBlock = (ClassBlockSyntax)classStatement.Parent;
                 var semanticModel = compilation.GetSemanticModel(classBlock.SyntaxTree);
                 if (AnyDuplicate(invocationExpression, propertySymbol, classBlock, semanticModel))
                     return true;
@@ -211,7 +214,8 @@ namespace DevZest.Data.Analyzers.VisualBasic
             var syntaxReferences = propertySymbol.ContainingType.DeclaringSyntaxReferences;
             for (int i = 0; i < syntaxReferences.Length; i++)
             {
-                var classBlock = (ClassBlockSyntax)syntaxReferences[i].GetSyntax();
+                var classStatement = (ClassStatementSyntax)syntaxReferences[i].GetSyntax();
+                var classBlock = (ClassBlockSyntax)classStatement.Parent;
                 var semanticModel = compilation.GetSemanticModel(classBlock.SyntaxTree);
                 if (GetMounterRegistration(propertySymbol, classBlock, semanticModel) != null)
                     return null;
@@ -278,7 +282,8 @@ namespace DevZest.Data.Analyzers.VisualBasic
             var initializer = variableDeclarator.Initializer;
             if (initializer == null)
                 return null;
-            if (!(semanticModel.GetDeclaredSymbol(variableDeclarator) is IFieldSymbol fieldSymbol) || !fieldSymbol.IsStatic)
+            Debug.Assert(variableDeclarator.Names.Count == 1);
+            if (!(semanticModel.GetDeclaredSymbol(variableDeclarator.Names[0]) is IFieldSymbol fieldSymbol) || !fieldSymbol.IsStatic)
                 return null;
 
             var result = initializer.Value as InvocationExpressionSyntax;
