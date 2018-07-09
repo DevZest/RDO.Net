@@ -106,7 +106,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_Duplicate_in_static_constructor()
+        public void DuplicateRegistration_in_static_constructor()
         {
             var test = @"
 using DevZest.Data;
@@ -134,7 +134,7 @@ class SimpleModel : Model
         }
 
         [TestMethod]
-        public void RegisterColumn_Duplicate_in_field_initializer()
+        public void DuplicateRegistration_in_field_initializer()
         {
             var test = @"
 using DevZest.Data;
