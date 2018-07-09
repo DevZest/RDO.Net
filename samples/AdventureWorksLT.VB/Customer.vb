@@ -82,44 +82,90 @@ Namespace DevZest.Samples.AdventureWorksLT
                 Register(Function(x As Lookup) x.Phone, Customer._Phone)
             End Sub
 
+            Private m_Tilte As _String
             Public Property Title As _String
+                Get
+                    Return m_Tilte
+                End Get
+                Private Set
+                    m_Tilte = Value
+                End Set
+            End Property
+
+            Private m_FirstName As _String
             Public Property FirstName As _String
+                Get
+                    Return m_FirstName
+                End Get
+                Private Set
+                    m_FirstName = Value
+                End Set
+            End Property
+
+            Private m_MiddleName As _String
             Public Property MiddleName As _String
+                Get
+                    Return m_MiddleName
+                End Get
+                Private Set
+                    m_MiddleName = Value
+                End Set
+            End Property
+
+            Private m_LastName As _String
             Public Property LastName As _String
+                Get
+                    Return m_LastName
+                End Get
+                Private Set
+                    m_LastName = Value
+                End Set
+            End Property
+
+            Private m_CompanyName As _String
             Public Property CompanyName As _String
+                Get
+                    Return m_CompanyName
+                End Get
+                Private Set
+                    m_CompanyName = Value
+                End Set
+            End Property
+
+            Private m_EmailAddress As _String
             Public Property EmailAddress As _String
+                Get
+                    Return m_EmailAddress
+                End Get
+                Private Set
+                    m_EmailAddress = Value
+                End Set
+            End Property
+
+            Private m_Phone As _String
             Public Property Phone As _String
+                Get
+                    Return m_Phone
+                End Get
+                Private Set
+                    m_Phone = Value
+                End Set
+            End Property
         End Class
 
-        Public Shared ReadOnly _CustomerID As Mounter(Of _Int32)
-        Public Shared ReadOnly _NameStyle As Mounter(Of _Boolean)
-        Public Shared ReadOnly _Title As Mounter(Of _String)
-        Public Shared ReadOnly _FirstName As Mounter(Of _String)
-        Public Shared ReadOnly _MiddleName As Mounter(Of _String)
-        Public Shared ReadOnly _LastName As Mounter(Of _String)
-        Public Shared ReadOnly _Suffix As Mounter(Of _String)
-        Public Shared ReadOnly _CompanyName As Mounter(Of _String)
-        Public Shared ReadOnly _SalesPerson As Mounter(Of _String)
-        Public Shared ReadOnly _EmailAddress As Mounter(Of _String)
-        Public Shared ReadOnly _Phone As Mounter(Of _String)
-        Public Shared ReadOnly _PasswordHash As Mounter(Of _String)
-        Public Shared ReadOnly _PasswordSalt As Mounter(Of _String)
-
-        Shared Sub New()
-            _CustomerID = RegisterColumn(Function(x As Customer) x.CustomerID)
-            _NameStyle = RegisterColumn(Function(x As Customer) x.NameStyle)
-            _Title = RegisterColumn(Function(x As Customer) x.Title)
-            _FirstName = RegisterColumn(Function(x As Customer) x.FirstName)
-            _MiddleName = RegisterColumn(Function(x As Customer) x.MiddleName)
-            _LastName = RegisterColumn(Function(x As Customer) x.LastName)
-            _Suffix = RegisterColumn(Function(x As Customer) x.Suffix)
-            _CompanyName = RegisterColumn(Function(x As Customer) x.CompanyName)
-            _SalesPerson = RegisterColumn(Function(x As Customer) x.SalesPerson)
-            _EmailAddress = RegisterColumn(Function(x As Customer) x.EmailAddress)
-            _Phone = RegisterColumn(Function(x As Customer) x.Phone)
-            _PasswordHash = RegisterColumn(Function(x As Customer) x.PasswordHash)
-            _PasswordSalt = RegisterColumn(Function(x As Customer) x.PasswordSalt)
-        End Sub
+        Protected Shared ReadOnly _CustomerID As Mounter(Of _Int32) = RegisterColumn(Function(x As Customer) x.CustomerID)
+        Protected Shared ReadOnly _NameStyle As Mounter(Of _Boolean) = RegisterColumn(Function(x As Customer) x.NameStyle)
+        Protected Shared ReadOnly _Title As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.Title)
+        Protected Shared ReadOnly _FirstName As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.FirstName)
+        Protected Shared ReadOnly _MiddleName As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.MiddleName)
+        Protected Shared ReadOnly _LastName As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.LastName)
+        Protected Shared ReadOnly _Suffix As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.Suffix)
+        Protected Shared ReadOnly _CompanyName As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.CompanyName)
+        Protected Shared ReadOnly _SalesPerson As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.SalesPerson)
+        Protected Shared ReadOnly _EmailAddress As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.EmailAddress)
+        Protected Shared ReadOnly _Phone As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.Phone)
+        Protected Shared ReadOnly _PasswordHash As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.PasswordHash)
+        Protected Shared ReadOnly _PasswordSalt As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.PasswordSalt)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(CustomerID)
