@@ -25,7 +25,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public NotInheritable Class Key
+        Public Class Key
             Inherits Key(Of PK)
 
             Shared Sub New()
@@ -47,49 +47,26 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Shared ReadOnly _SalesOrderID As Mounter(Of _Int32)
-        Public Shared ReadOnly _RevisionNumber As Mounter(Of _Byte)
-        Public Shared ReadOnly _OrderDate As Mounter(Of _DateTime)
-        Public Shared ReadOnly _DueDate As Mounter(Of _DateTime)
-        Public Shared ReadOnly _ShipDate As Mounter(Of _DateTime)
-        Public Shared ReadOnly _Status As Mounter(Of _ByteEnum(Of SalesOrderStatus))
-        Public Shared ReadOnly _OnlineOrderFlag As Mounter(Of _Boolean)
-        Public Shared ReadOnly _SalesOrderNumber As Mounter(Of _String)
-        Public Shared ReadOnly _PurchaseOrderNumber As Mounter(Of _String)
-        Public Shared ReadOnly _AccountNumber As Mounter(Of _String)
-        Public Shared ReadOnly _CustomerID As Mounter(Of _Int32)
-        Public Shared ReadOnly _ShipToAddressID As Mounter(Of _Int32)
-        Public Shared ReadOnly _BillToAddressID As Mounter(Of _Int32)
-        Public Shared ReadOnly _ShipMethod As Mounter(Of _String)
-        Public Shared ReadOnly _CreditCardApprovalCode As Mounter(Of _String)
-        Public Shared ReadOnly _SubTotal As Mounter(Of _Decimal)
-        Public Shared ReadOnly _TaxAmt As Mounter(Of _Decimal)
-        Public Shared ReadOnly _Freight As Mounter(Of _Decimal)
-        Public Shared ReadOnly _TotalDue As Mounter(Of _Decimal)
-        Public Shared ReadOnly _Comment As Mounter(Of _String)
-
-        Shared Sub New()
-            _SalesOrderID = RegisterColumn(Function(x As SalesOrderHeader) x.SalesOrderID)
-            _RevisionNumber = RegisterColumn(Function(x As SalesOrderHeader) x.RevisionNumber)
-            _OrderDate = RegisterColumn(Function(x As SalesOrderHeader) x.OrderDate)
-            _DueDate = RegisterColumn(Function(x As SalesOrderHeader) x.DueDate)
-            _ShipDate = RegisterColumn(Function(x As SalesOrderHeader) x.ShipDate)
-            _Status = RegisterColumn(Function(x As SalesOrderHeader) x.Status)
-            _OnlineOrderFlag = RegisterColumn(Function(x As SalesOrderHeader) x.OnlineOrderFlag)
-            _SalesOrderNumber = RegisterColumn(Function(x As SalesOrderHeader) x.SalesOrderNumber)
-            _PurchaseOrderNumber = RegisterColumn(Function(x As SalesOrderHeader) x.PurchaseOrderNumber)
-            _AccountNumber = RegisterColumn(Function(x As SalesOrderHeader) x.AccountNumber)
-            _CustomerID = RegisterColumn(Function(x As SalesOrderHeader) x.CustomerID)
-            _ShipToAddressID = RegisterColumn(Function(x As SalesOrderHeader) x.ShipToAddressID)
-            _BillToAddressID = RegisterColumn(Function(x As SalesOrderHeader) x.BillToAddressID)
-            _ShipMethod = RegisterColumn(Function(x As SalesOrderHeader) x.ShipMethod)
-            _CreditCardApprovalCode = RegisterColumn(Function(x As SalesOrderHeader) x.CreditCardApprovalCode)
-            _SubTotal = RegisterColumn(Function(x As SalesOrderHeader) x.SubTotal)
-            _TaxAmt = RegisterColumn(Function(x As SalesOrderHeader) x.TaxAmt)
-            _Freight = RegisterColumn(Function(x As SalesOrderHeader) x.Freight)
-            _TotalDue = RegisterColumn(Function(x As SalesOrderHeader) x.TotalDue)
-            _Comment = RegisterColumn(Function(x As SalesOrderHeader) x.Comment)
-        End Sub
+        Protected Shared ReadOnly _SalesOrderID As Mounter(Of _Int32) = RegisterColumn(Function(x As SalesOrderHeader) x.SalesOrderID)
+        Protected Shared ReadOnly _RevisionNumber As Mounter(Of _Byte) = RegisterColumn(Function(x As SalesOrderHeader) x.RevisionNumber)
+        Protected Shared ReadOnly _OrderDate As Mounter(Of _DateTime) = RegisterColumn(Function(x As SalesOrderHeader) x.OrderDate)
+        Protected Shared ReadOnly _DueDate As Mounter(Of _DateTime) = RegisterColumn(Function(x As SalesOrderHeader) x.DueDate)
+        Protected Shared ReadOnly _ShipDate As Mounter(Of _DateTime) = RegisterColumn(Function(x As SalesOrderHeader) x.ShipDate)
+        Protected Shared ReadOnly _Status As Mounter(Of _ByteEnum(Of SalesOrderStatus)) = RegisterColumn(Function(x As SalesOrderHeader) x.Status)
+        Protected Shared ReadOnly _OnlineOrderFlag As Mounter(Of _Boolean) = RegisterColumn(Function(x As SalesOrderHeader) x.OnlineOrderFlag)
+        Protected Shared ReadOnly _SalesOrderNumber As Mounter(Of _String) = RegisterColumn(Function(x As SalesOrderHeader) x.SalesOrderNumber)
+        Protected Shared ReadOnly _PurchaseOrderNumber As Mounter(Of _String) = RegisterColumn(Function(x As SalesOrderHeader) x.PurchaseOrderNumber)
+        Protected Shared ReadOnly _AccountNumber As Mounter(Of _String) = RegisterColumn(Function(x As SalesOrderHeader) x.AccountNumber)
+        Protected Shared ReadOnly _CustomerID As Mounter(Of _Int32) = RegisterColumn(Function(x As SalesOrderHeader) x.CustomerID)
+        Protected Shared ReadOnly _ShipToAddressID As Mounter(Of _Int32) = RegisterColumn(Function(x As SalesOrderHeader) x.ShipToAddressID)
+        Protected Shared ReadOnly _BillToAddressID As Mounter(Of _Int32) = RegisterColumn(Function(x As SalesOrderHeader) x.BillToAddressID)
+        Protected Shared ReadOnly _ShipMethod As Mounter(Of _String) = RegisterColumn(Function(x As SalesOrderHeader) x.ShipMethod)
+        Protected Shared ReadOnly _CreditCardApprovalCode As Mounter(Of _String) = RegisterColumn(Function(x As SalesOrderHeader) x.CreditCardApprovalCode)
+        Protected Shared ReadOnly _SubTotal As Mounter(Of _Decimal) = RegisterColumn(Function(x As SalesOrderHeader) x.SubTotal)
+        Protected Shared ReadOnly _TaxAmt As Mounter(Of _Decimal) = RegisterColumn(Function(x As SalesOrderHeader) x.TaxAmt)
+        Protected Shared ReadOnly _Freight As Mounter(Of _Decimal) = RegisterColumn(Function(x As SalesOrderHeader) x.Freight)
+        Protected Shared ReadOnly _TotalDue As Mounter(Of _Decimal) = RegisterColumn(Function(x As SalesOrderHeader) x.TotalDue)
+        Protected Shared ReadOnly _Comment As Mounter(Of _String) = RegisterColumn(Function(x As SalesOrderHeader) x.Comment)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(SalesOrderID)

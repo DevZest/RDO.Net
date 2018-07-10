@@ -35,7 +35,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             Inherits Key(Of PK)
 
             Shared Sub New()
-                RegisterColumn(Function(x As Key) x.SalesOrderID, SalesOrderHeader._SalesOrderID)
+                RegisterColumn(Function(x As Key) x.SalesOrderID, _SalesOrderID)
                 RegisterColumn(Function(x As Key) x.SalesOrderDetailID, _SalesOrderDetailID)
             End Sub
 
