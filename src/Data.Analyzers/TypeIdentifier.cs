@@ -75,7 +75,7 @@ namespace DevZest.Data.Analyzers
         public static readonly TypeIdentifier MounterRegistrationAttribute = new TypeIdentifier(DATA_ANNOTATIONS_PRIMITIVES_NAMESPACE, nameof(MounterRegistrationAttribute), DATA_ASSEMBLY_NAME);
         public static readonly TypeIdentifier Column = new TypeIdentifier(DATA_NAMESPACE, nameof(Column), DATA_ASSEMBLY_NAME);
         public static readonly TypeIdentifier LocalColumn = new TypeIdentifier(DATA_NAMESPACE, nameof(LocalColumn) + "`1", DATA_ASSEMBLY_NAME);
-        public static readonly TypeIdentifier ColumnGroup = new TypeIdentifier(DATA_NAMESPACE, nameof(ColumnGroup), DATA_ASSEMBLY_NAME);
+        public static readonly TypeIdentifier Projection = new TypeIdentifier(DATA_NAMESPACE, nameof(Projection), DATA_ASSEMBLY_NAME);
         public static readonly TypeIdentifier ColumnList = new TypeIdentifier(DATA_NAMESPACE, nameof(ColumnList), DATA_ASSEMBLY_NAME);
         public static readonly TypeIdentifier Model = new TypeIdentifier(DATA_NAMESPACE, nameof(Model), DATA_ASSEMBLY_NAME);
         public static readonly TypeIdentifier Mounter = new TypeIdentifier(DATA_NAMESPACE, nameof(Mounter) + "`1", DATA_ASSEMBLY_NAME);

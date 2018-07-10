@@ -30,7 +30,7 @@ namespace DevZest.Data.Analyzers
                 return ModelMemberKind.LocalColumn;
             else if (TypeIdentifier.Column.IsBaseTypeOf(propertyType))
                 return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ColumnGroupMember;
-            else if (TypeIdentifier.ColumnGroup.IsBaseTypeOf(propertyType))
+            else if (TypeIdentifier.Projection.IsBaseTypeOf(propertyType))
                 return ModelMemberKind.ColumnGroup;
             else if (TypeIdentifier.ColumnList.IsBaseTypeOf(propertyType))
                 return ModelMemberKind.ColumnList;
@@ -43,7 +43,7 @@ namespace DevZest.Data.Analyzers
         private enum ModelMemberParent
         {
             Model,
-            ColumnGroup
+            Projection
         }
 
         private static ModelMemberParent? GetModelMemberParent(this IPropertySymbol property)
@@ -51,8 +51,8 @@ namespace DevZest.Data.Analyzers
             var containingType = property.ContainingType;
             if (TypeIdentifier.Model.IsBaseTypeOf(containingType))
                 return ModelMemberParent.Model;
-            else if (TypeIdentifier.ColumnGroup.IsBaseTypeOf(containingType))
-                return ModelMemberParent.ColumnGroup;
+            else if (TypeIdentifier.Projection.IsBaseTypeOf(containingType))
+                return ModelMemberParent.Projection;
             else
                 return null;
         }
