@@ -37,15 +37,9 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Shared ReadOnly _ProductModelID As Mounter(Of _Int32)
-        Public Shared ReadOnly _ProductDescriptionID As Mounter(Of _Int32)
-        Public Shared ReadOnly _Culture As Mounter(Of _String)
-
-        Shared Sub New()
-            _ProductModelID = RegisterColumn(Function(x As ProductModelProductDescription) x.ProductModelID)
-            _ProductDescriptionID = RegisterColumn(Function(x As ProductModelProductDescription) x.ProductDescriptionID)
-            _Culture = RegisterColumn(Function(x As ProductModelProductDescription) x.Culture)
-        End Sub
+        Protected Shared ReadOnly _ProductModelID As Mounter(Of _Int32) = RegisterColumn(Function(x As ProductModelProductDescription) x.ProductModelID)
+        Protected Shared ReadOnly _ProductDescriptionID As Mounter(Of _Int32) = RegisterColumn(Function(x As ProductModelProductDescription) x.ProductDescriptionID)
+        Protected Shared ReadOnly _Culture As Mounter(Of _String) = RegisterColumn(Function(x As ProductModelProductDescription) x.Culture)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(ProductModelID, ProductDescriptionID, Culture)
