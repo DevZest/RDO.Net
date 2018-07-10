@@ -29,7 +29,7 @@ namespace DevZest.Data.Analyzers.CSharp
             if (!(semanticModel.GetSymbolInfo(invocationExpression).Symbol is IMethodSymbol symbol))
                 return null;
 
-            if (!symbol.IsMounterRegistration())
+            if (!symbol.IsMounterRegistration(context.Compilation))
                 return null;
 
             var isColumnRegistration = symbol.Name == "RegisterColumn";
@@ -42,7 +42,7 @@ namespace DevZest.Data.Analyzers.CSharp
             if (!IsValidGetter(firstArgument, semanticModel, containingType, out var propertySymbol))
                 return Diagnostic.Create(Rules.InvalidRegisterMounterGetterParam, firstArgument.GetLocation());
 
-            if (isColumnRegistration && TypeIdentifier.LocalColumn.IsSameTypeOf(propertySymbol.Type))
+            if (isColumnRegistration && propertySymbol.Type.OriginalDefinition.Equals(context.Compilation.TypeOfLocalColumn()))
                 return Diagnostic.Create(Rules.InvalidRegisterLocalColumn, invocationExpression.GetLocation(), propertySymbol.Name);
 
             if (AnyDuplicate(invocationExpression, propertySymbol, context.Compilation))
@@ -211,7 +211,7 @@ namespace DevZest.Data.Analyzers.CSharp
             if (propertySymbol.SetMethod == null)
                 return null;
 
-            if (!propertySymbol.GetModelMemberKind().HasValue)
+            if (!propertySymbol.GetModelMemberKind(compilation).HasValue)
                 return null;
 
             var syntaxReferences = propertySymbol.ContainingType.DeclaringSyntaxReferences;
@@ -296,7 +296,7 @@ namespace DevZest.Data.Analyzers.CSharp
             if (!(semanticModel.GetSymbolInfo(expression).Symbol is IMethodSymbol symbol))
                 return false;
 
-            if (!symbol.IsMounterRegistration())
+            if (!symbol.IsMounterRegistration(semanticModel.Compilation))
                 return false;
 
             var firstArgument = expression.ArgumentList.Arguments[0];

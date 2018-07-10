@@ -37,7 +37,7 @@ namespace DevZest.Data.Analyzers.CSharp
 
             var propertyDeclaration = root.FindToken(diagnosticSpan.Start).Parent.SelfOrFirstAncestor<PropertyDeclarationSyntax>();
             var propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration, context.CancellationToken);
-            var kind = propertySymbol.GetModelMemberKind().Value;
+            var kind = propertySymbol.GetModelMemberKind(semanticModel.Compilation).Value;
             if (kind == ModelMemberKind.ChildModel)
             {
                 GenerateRegisterChildModel(context, context.Document, propertyDeclaration, propertySymbol, diagnostic);
@@ -175,7 +175,7 @@ namespace DevZest.Data.Analyzers.CSharp
                 if (variables.Count == 0)
                     return false;
                 IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.GetDeclaredSymbol(variables[0]);
-                return TypeIdentifier.Mounter.IsSameTypeOf(fieldSymbol.Type);
+                return semanticModel.Compilation.TypeOfMounter().Equals(fieldSymbol.Type.OriginalDefinition);
             }
 
             return false;

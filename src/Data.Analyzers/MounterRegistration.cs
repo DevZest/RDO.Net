@@ -7,34 +7,34 @@ namespace DevZest.Data.Analyzers
 {
     internal static class MounterRegistration
     {
-        public static bool IsMounterRegistration(this IMethodSymbol symbol)
+        public static bool IsMounterRegistration(this IMethodSymbol symbol, Compilation compilation)
         {
             var attributes = symbol.GetAttributes();
             if (attributes == null)
                 return false;
-            return attributes.Any(x => TypeIdentifier.MounterRegistrationAttribute.IsSameTypeOf(x.AttributeClass));
+            return attributes.Any(x => x.AttributeClass.Equals(compilation.TypeOfMounterRegistrationAttribute()));
         }
 
-        public static ModelMemberKind? GetModelMemberKind(this IPropertySymbol property)
+        public static ModelMemberKind? GetModelMemberKind(this IPropertySymbol property, Compilation compilation)
         {
             if (!(property.Type is INamedTypeSymbol propertyType))
                 return null;
 
-            var parent = property.GetModelMemberParent();
+            var parent = property.GetModelMemberParent(compilation);
             if (!parent.HasValue)
                 return null;
 
             var parentValue = parent.Value;
 
-            if (TypeIdentifier.LocalColumn.IsSameTypeOf(propertyType))
+            if (compilation.TypeOfLocalColumn().Equals(propertyType.OriginalDefinition))
                 return ModelMemberKind.LocalColumn;
-            else if (TypeIdentifier.Column.IsBaseTypeOf(propertyType))
+            else if (compilation.TypeOfColumn().IsBaseTypeOf(propertyType))
                 return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ColumnGroupMember;
-            else if (TypeIdentifier.Projection.IsBaseTypeOf(propertyType))
+            else if (compilation.TypeOfProjection().IsBaseTypeOf(propertyType))
                 return ModelMemberKind.ColumnGroup;
-            else if (TypeIdentifier.ColumnList.IsBaseTypeOf(propertyType))
+            else if (compilation.TypeOfColumnList().IsBaseTypeOf(propertyType))
                 return ModelMemberKind.ColumnList;
-            else if (TypeIdentifier.Model.IsBaseTypeOf(propertyType))
+            else if (compilation.TypeOfModel().IsBaseTypeOf(propertyType))
                 return ModelMemberKind.ChildModel;
             else
                 return null;
@@ -46,12 +46,12 @@ namespace DevZest.Data.Analyzers
             Projection
         }
 
-        private static ModelMemberParent? GetModelMemberParent(this IPropertySymbol property)
+        private static ModelMemberParent? GetModelMemberParent(this IPropertySymbol property, Compilation compilation)
         {
             var containingType = property.ContainingType;
-            if (TypeIdentifier.Model.IsBaseTypeOf(containingType))
+            if (compilation.TypeOfModel().IsBaseTypeOf(containingType))
                 return ModelMemberParent.Model;
-            else if (TypeIdentifier.Projection.IsBaseTypeOf(containingType))
+            else if (compilation.TypeOfProjection().IsBaseTypeOf(containingType))
                 return ModelMemberParent.Projection;
             else
                 return null;
