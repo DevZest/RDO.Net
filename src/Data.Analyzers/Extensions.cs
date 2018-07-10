@@ -22,47 +22,42 @@ namespace DevZest.Data.Analyzers
             return null;
         }
 
-        public static INamedTypeSymbol TypeOfMounterRegistrationAttribute(this Compilation compilation)
+        public static bool IsTypeOfMounterRegistrationAttribute(this ITypeSymbol type, Compilation compilation)
         {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Annotations.Primitives.MounterRegistrationAttribute");
+            return type.Equals(compilation.GetTypeByMetadataName("DevZest.Data.Annotations.Primitives.MounterRegistrationAttribute"));
         }
 
-        public static INamedTypeSymbol TypeOfColumn(this Compilation compilation)
+        public static bool IsTypeOfColumn(this ITypeSymbol type, Compilation compilation)
         {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Column");
+            return compilation.GetTypeByMetadataName("DevZest.Data.Column").IsBaseTypeOf(type);
         }
 
-        public static INamedTypeSymbol TypeOfLocalColumn(this Compilation compilation)
+        public static bool IsTypeOfLocalColumn(this ITypeSymbol type, Compilation compilation)
         {
-            return compilation.GetTypeByMetadataName("DevZest.Data.LocalColumn`1");
+            return type.OriginalDefinition.Equals(compilation.GetTypeByMetadataName("DevZest.Data.LocalColumn`1"));
         }
 
-        public static INamedTypeSymbol TypeOfProjection(this Compilation compilation)
+        public static bool IsTypeOfProjection(this ITypeSymbol type, Compilation compilation)
         {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Projection");
+            return compilation.GetTypeByMetadataName("DevZest.Data.Projection").IsBaseTypeOf(type);
         }
 
-        public static INamedTypeSymbol TypeOfColumnList(this Compilation compilation)
+        public static bool IsTypeOfColumnList(this ITypeSymbol type, Compilation compilation)
         {
-            return compilation.GetTypeByMetadataName("DevZest.Data.ColumnList");
+            return compilation.GetTypeByMetadataName("DevZest.Data.ColumnList").IsBaseTypeOf(type);
         }
 
-        public static INamedTypeSymbol TypeOfModel(this Compilation compilation)
+        public static bool IsTypeOfModel(this ITypeSymbol type, Compilation compilation)
         {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Model");
+            return compilation.GetTypeByMetadataName("DevZest.Data.Model").IsBaseTypeOf(type);
         }
 
-        public static INamedTypeSymbol TypeOfGenericModel(this Compilation compilation)
+        public static bool IsTypeOfMounter(this ITypeSymbol type, Compilation compilation)
         {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Model`1");
+            return compilation.GetTypeByMetadataName("DevZest.Data.Mounter`1").Equals(type.OriginalDefinition);
         }
 
-        public static INamedTypeSymbol TypeOfMounter(this Compilation compilation)
-        {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Mounter`1");
-        }
-
-        public static bool IsBaseTypeOf(this INamedTypeSymbol @this, ITypeSymbol type)
+        private static bool IsBaseTypeOf(this INamedTypeSymbol @this, ITypeSymbol type)
         {
             for (var currentType = type.BaseType; currentType != null; currentType = currentType.BaseType)
             {

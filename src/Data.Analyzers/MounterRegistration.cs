@@ -12,7 +12,7 @@ namespace DevZest.Data.Analyzers
             var attributes = symbol.GetAttributes();
             if (attributes == null)
                 return false;
-            return attributes.Any(x => x.AttributeClass.Equals(compilation.TypeOfMounterRegistrationAttribute()));
+            return attributes.Any(x => x.AttributeClass.IsTypeOfMounterRegistrationAttribute(compilation));
         }
 
         public static ModelMemberKind? GetModelMemberKind(this IPropertySymbol property, Compilation compilation)
@@ -26,15 +26,15 @@ namespace DevZest.Data.Analyzers
 
             var parentValue = parent.Value;
 
-            if (compilation.TypeOfLocalColumn().Equals(propertyType.OriginalDefinition))
+            if (propertyType.IsTypeOfLocalColumn(compilation))
                 return ModelMemberKind.LocalColumn;
-            else if (compilation.TypeOfColumn().IsBaseTypeOf(propertyType))
+            else if (propertyType.IsTypeOfColumn(compilation))
                 return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ColumnGroupMember;
-            else if (compilation.TypeOfProjection().IsBaseTypeOf(propertyType))
+            else if (propertyType.IsTypeOfProjection(compilation))
                 return ModelMemberKind.ColumnGroup;
-            else if (compilation.TypeOfColumnList().IsBaseTypeOf(propertyType))
+            else if (propertyType.IsTypeOfColumnList(compilation))
                 return ModelMemberKind.ColumnList;
-            else if (compilation.TypeOfModel().IsBaseTypeOf(propertyType))
+            else if (propertyType.IsTypeOfModel(compilation))
                 return ModelMemberKind.ChildModel;
             else
                 return null;
@@ -49,9 +49,9 @@ namespace DevZest.Data.Analyzers
         private static ModelMemberParent? GetModelMemberParent(this IPropertySymbol property, Compilation compilation)
         {
             var containingType = property.ContainingType;
-            if (compilation.TypeOfModel().IsBaseTypeOf(containingType))
+            if (containingType.IsTypeOfModel(compilation))
                 return ModelMemberParent.Model;
-            else if (compilation.TypeOfProjection().IsBaseTypeOf(containingType))
+            else if (containingType.IsTypeOfProjection(compilation))
                 return ModelMemberParent.Projection;
             else
                 return null;

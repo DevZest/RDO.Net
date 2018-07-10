@@ -175,7 +175,7 @@ namespace DevZest.Data.Analyzers.CSharp
                 if (variables.Count == 0)
                     return false;
                 IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.GetDeclaredSymbol(variables[0]);
-                return semanticModel.Compilation.TypeOfMounter().Equals(fieldSymbol.Type.OriginalDefinition);
+                return fieldSymbol.Type.IsTypeOfMounter(semanticModel.Compilation);
             }
 
             return false;
