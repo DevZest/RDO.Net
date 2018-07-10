@@ -503,7 +503,7 @@ namespace DevZest.Data.Presenters
                 valueBag[column] = column.GetDefaultValue();
         }
 
-        public void SetValueBag(ColumnValueBag valueBag, PrimaryKey key, ColumnGroup lookup)
+        public void SetValueBag(ColumnValueBag valueBag, PrimaryKey key, Projection lookup)
         {
             if (valueBag == null)
                 throw new ArgumentNullException(nameof(valueBag));
@@ -524,7 +524,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public ColumnValueBag AutoSelect(PrimaryKey key, ColumnGroup lookup)
+        public ColumnValueBag AutoSelect(PrimaryKey key, Projection lookup)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
