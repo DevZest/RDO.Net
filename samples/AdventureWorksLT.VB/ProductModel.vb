@@ -25,7 +25,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public NotInheritable Class Key
+        Public Class Key
             Inherits Key(Of PK)
 
             Shared Sub New()
@@ -87,15 +87,9 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Shared ReadOnly _ProductModelID As Mounter(Of _Int32)
-        Public Shared ReadOnly _Name As Mounter(Of _String)
-        Public Shared ReadOnly _CatalogDescription As Mounter(Of _SqlXml)
-
-        Shared Sub New()
-            _ProductModelID = RegisterColumn(Function(ByVal __ As ProductModel) __.ProductModelID)
-            _Name = RegisterColumn(Function(ByVal __ As ProductModel) __.Name)
-            _CatalogDescription = RegisterColumn(Function(ByVal __ As ProductModel) __.CatalogDescription)
-        End Sub
+        Protected Shared ReadOnly _ProductModelID As Mounter(Of _Int32) = RegisterColumn(Function(ByVal __ As ProductModel) __.ProductModelID)
+        Protected Shared ReadOnly _Name As Mounter(Of _String) = RegisterColumn(Function(ByVal __ As ProductModel) __.Name)
+        Protected Shared ReadOnly _CatalogDescription As Mounter(Of _SqlXml) = RegisterColumn(Function(ByVal __ As ProductModel) __.CatalogDescription)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(ProductModelID)
