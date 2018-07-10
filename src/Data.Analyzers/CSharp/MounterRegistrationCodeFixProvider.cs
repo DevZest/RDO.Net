@@ -38,6 +38,11 @@ namespace DevZest.Data.Analyzers.CSharp
             var propertyDeclaration = root.FindToken(diagnosticSpan.Start).Parent.SelfOrFirstAncestor<PropertyDeclarationSyntax>();
             var propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration, context.CancellationToken);
             var kind = propertySymbol.GetModelMemberKind().Value;
+            if (kind == ModelMemberKind.ChildModel)
+            {
+                GenerateRegisterChildModel(context, context.Document, propertyDeclaration, propertySymbol, diagnostic);
+                return;
+            }
 
             string methodName;
             var returnsMounter = false;
@@ -52,8 +57,6 @@ namespace DevZest.Data.Analyzers.CSharp
                 methodName = "RegisterColumnGroup";
             else if (kind == ModelMemberKind.ColumnList)
                 methodName = "RegisterColumnList";
-            else if (kind == ModelMemberKind.ChildModel)
-                throw new NotImplementedException();
             else
                 return;
 
@@ -62,6 +65,11 @@ namespace DevZest.Data.Analyzers.CSharp
                     createChangedSolution: ct => GenerateMounterRegistration(methodName, document, propertyDeclaration, propertySymbol, returnsMounter, ct),
                     equivalenceKey: methodName),
                     diagnostic);
+        }
+
+        private static void GenerateRegisterChildModel(CodeFixContext context, Document document, PropertyDeclarationSyntax propertyDeclaration, IPropertySymbol propertySymbol, Diagnostic diagnostic)
+        {
+
         }
 
         private static async Task<Solution> GenerateMounterRegistration(string registerMounterMethodName, Document document,

@@ -139,5 +139,14 @@ namespace DevZest.Data.Analyzers
             else
                 throw new ArgumentException("Invalid language.", nameof(language));
         }
+
+        public static SyntaxNode GenerateChildModelRegistration(this SyntaxGenerator g, string language, INamedTypeSymbol typeSymbol, string propertyName,
+            INamedTypeSymbol fkTypeSymbol, string fkPropertyName)
+        {
+            var invocationExpression = g.InvocationExpression(g.IdentifierName("RegisterChildModel"),
+                g.GetterArgument(language, typeSymbol, propertyName),
+                g.GetterArgument(language, fkTypeSymbol, fkPropertyName));
+            return g.ExpressionStatement(invocationExpression);
+        }
     }
 }
