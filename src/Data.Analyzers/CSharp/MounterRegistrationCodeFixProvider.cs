@@ -53,8 +53,8 @@ namespace DevZest.Data.Analyzers.CSharp
             }
             else if (kind == ModelMemberKind.LocalColumn)
                 methodName = "RegisterLocalColumn";
-            else if (kind == ModelMemberKind.ColumnGroup)
-                methodName = "RegisterColumnGroup";
+            else if (kind == ModelMemberKind.Projection)
+                methodName = "RegisterProjection";
             else if (kind == ModelMemberKind.ColumnList)
                 methodName = "RegisterColumnList";
             else

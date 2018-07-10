@@ -29,9 +29,9 @@ namespace DevZest.Data.Analyzers
             if (propertyType.IsTypeOfLocalColumn(compilation))
                 return ModelMemberKind.LocalColumn;
             else if (propertyType.IsTypeOfColumn(compilation))
-                return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ColumnGroupMember;
+                return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ProjectionColumn;
             else if (propertyType.IsTypeOfProjection(compilation))
-                return ModelMemberKind.ColumnGroup;
+                return ModelMemberKind.Projection;
             else if (propertyType.IsTypeOfColumnList(compilation))
                 return ModelMemberKind.ColumnList;
             else if (propertyType.IsTypeOfModel(compilation))

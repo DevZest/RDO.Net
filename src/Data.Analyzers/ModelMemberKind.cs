@@ -3,9 +3,9 @@
     internal enum ModelMemberKind
     {
         ModelColumn,
-        ColumnGroupMember,
+        ProjectionColumn,
         LocalColumn,
-        ColumnGroup,
+        Projection,
         ColumnList,
         ChildModel,
     }
