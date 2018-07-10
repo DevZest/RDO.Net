@@ -167,6 +167,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         Protected Shared ReadOnly _PasswordHash As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.PasswordHash)
         Protected Shared ReadOnly _PasswordSalt As Mounter(Of _String) = RegisterColumn(Function(x As Customer) x.PasswordSalt)
 
+        Shared Sub New()
+            RegisterLocalColumn(Function(x As Customer) x.ContactPerson)
+        End Sub
+
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(CustomerID)
         End Function
