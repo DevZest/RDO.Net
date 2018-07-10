@@ -217,7 +217,7 @@ namespace DevZest.Data
 
         #endregion
 
-        #region RegisterColumnGroup
+        #region RegisterProjection
 
         static MounterManager<Model, Projection> s_projectonManager = new MounterManager<Model, Projection>();
 
