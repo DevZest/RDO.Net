@@ -31,7 +31,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public NotInheritable Class Key
+        Public Class Key
             Inherits Key(Of PK)
 
             Shared Sub New()
@@ -64,23 +64,13 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Public Shared ReadOnly _SalesOrderID As Mounter(Of _Int32)
-        Public Shared ReadOnly _SalesOrderDetailID As Mounter(Of _Int32)
-        Public Shared ReadOnly _OrderQty As Mounter(Of _Int16)
-        Public Shared ReadOnly _ProductID As Mounter(Of _Int32)
-        Public Shared ReadOnly _UnitPrice As Mounter(Of _Decimal)
-        Public Shared ReadOnly _UnitPriceDiscount As Mounter(Of _Decimal)
-        Public Shared ReadOnly _LineTotal As Mounter(Of _Decimal)
-
-        Shared Sub New()
-            _SalesOrderID = RegisterColumn(Function(x As SalesOrderDetail) x.SalesOrderID)
-            _SalesOrderDetailID = RegisterColumn(Function(x As SalesOrderDetail) x.SalesOrderDetailID)
-            _OrderQty = RegisterColumn(Function(x As SalesOrderDetail) x.OrderQty)
-            _ProductID = RegisterColumn(Function(x As SalesOrderDetail) x.ProductID)
-            _UnitPrice = RegisterColumn(Function(x As SalesOrderDetail) x.UnitPrice)
-            _UnitPriceDiscount = RegisterColumn(Function(x As SalesOrderDetail) x.UnitPriceDiscount)
-            _LineTotal = RegisterColumn(Function(x As SalesOrderDetail) x.LineTotal)
-        End Sub
+        Public Shared ReadOnly _SalesOrderID As Mounter(Of _Int32) = RegisterColumn(Function(x As SalesOrderDetail) x.SalesOrderID)
+        Public Shared ReadOnly _SalesOrderDetailID As Mounter(Of _Int32) = RegisterColumn(Function(x As SalesOrderDetail) x.SalesOrderDetailID)
+        Public Shared ReadOnly _OrderQty As Mounter(Of _Int16) = RegisterColumn(Function(x As SalesOrderDetail) x.OrderQty)
+        Public Shared ReadOnly _ProductID As Mounter(Of _Int32) = RegisterColumn(Function(x As SalesOrderDetail) x.ProductID)
+        Public Shared ReadOnly _UnitPrice As Mounter(Of _Decimal) = RegisterColumn(Function(x As SalesOrderDetail) x.UnitPrice)
+        Public Shared ReadOnly _UnitPriceDiscount As Mounter(Of _Decimal) = RegisterColumn(Function(x As SalesOrderDetail) x.UnitPriceDiscount)
+        Public Shared ReadOnly _LineTotal As Mounter(Of _Decimal) = RegisterColumn(Function(x As SalesOrderDetail) x.LineTotal)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(SalesOrderID, SalesOrderDetailID)
