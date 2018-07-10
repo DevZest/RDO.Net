@@ -3,9 +3,9 @@ Namespace DevZest.Samples.AdventureWorksLT
         Inherits SalesOrder
 
         Shared Sub New()
-            RegisterColumnGroup(Function(x As SalesOrderInfo) x.Customer)
-            RegisterColumnGroup(Function(x As SalesOrderInfo) x.ShipToAddress)
-            RegisterColumnGroup(Function(x As SalesOrderInfo) x.BillToAddress)
+            RegisterProjection(Function(x As SalesOrderInfo) x.Customer)
+            RegisterProjection(Function(x As SalesOrderInfo) x.ShipToAddress)
+            RegisterProjection(Function(x As SalesOrderInfo) x.BillToAddress)
         End Sub
 
         Private m_Customer As Customer.Lookup

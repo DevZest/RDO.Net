@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 namespace DevZest.Data
 {
     [MounterRegistration]
-    public abstract class ColumnGroup : ModelMember, IModelReference
+    public abstract class Projection : ModelMember, IModelReference
     {
         internal void Construct(Model model, Type declaringType, string name)
         {
@@ -34,7 +34,7 @@ namespace DevZest.Data
 
         private sealed class ContainerModel : Model
         {
-            public ContainerModel(ColumnGroup columnGroup)
+            public ContainerModel(Projection columnGroup)
             {
                 Debug.Assert(columnGroup != null);
                 Debug.Assert(columnGroup.ParentModel == null);
@@ -57,11 +57,11 @@ namespace DevZest.Data
             }
         }
 
-        private static MounterManager<ColumnGroup, Column> s_columnManager = new MounterManager<ColumnGroup, Column>();
+        private static MounterManager<Projection, Column> s_columnManager = new MounterManager<Projection, Column>();
 
         [MounterRegistration]
         protected static void Register<TColumnGroup, TColumn>(Expression<Func<TColumnGroup, TColumn>> getter, Mounter<TColumn> fromMounter)
-            where TColumnGroup : ColumnGroup
+            where TColumnGroup : Projection
             where TColumn : Column, new()
         {
             var initializer = getter.Verify(nameof(getter));
@@ -73,12 +73,12 @@ namespace DevZest.Data
         }
 
         private static TColumn CreateColumn<TColumnGroup, TColumn>(Mounter<TColumnGroup, TColumn> mounter, Action<TColumn> initializer)
-            where TColumnGroup : ColumnGroup
+            where TColumnGroup : Projection
             where TColumn : Column, new()
         {
             var result = Column.Create<TColumn>(mounter.OriginalDeclaringType, mounter.OriginalName);
             var parent = mounter.Parent;
-            result.Construct(parent.ParentModel, mounter.DeclaringType, parent.GetColumnName(mounter), ColumnKind.ColumnGroupMember, null, initializer);
+            result.Construct(parent.ParentModel, mounter.DeclaringType, parent.GetColumnName(mounter), ColumnKind.ProjectionMember, null, initializer);
             parent.Add(result);
             return result;
         }

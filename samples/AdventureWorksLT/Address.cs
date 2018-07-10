@@ -58,7 +58,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public class Lookup : ColumnGroup
+        public class Lookup : Projection
         {
             static Lookup()
             {

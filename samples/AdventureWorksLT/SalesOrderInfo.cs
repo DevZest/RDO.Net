@@ -7,9 +7,9 @@ namespace DevZest.Samples.AdventureWorksLT
     {
         static SalesOrderInfo()
         {
-            RegisterColumnGroup((SalesOrderInfo _) => _.Customer);
-            RegisterColumnGroup((SalesOrderInfo _) => _.ShipToAddress);
-            RegisterColumnGroup((SalesOrderInfo _) => _.BillToAddress);
+            RegisterProjection((SalesOrderInfo _) => _.Customer);
+            RegisterProjection((SalesOrderInfo _) => _.ShipToAddress);
+            RegisterProjection((SalesOrderInfo _) => _.BillToAddress);
         }
 
         public Customer.Lookup Customer { get; private set; }

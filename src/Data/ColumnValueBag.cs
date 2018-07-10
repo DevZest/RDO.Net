@@ -105,12 +105,12 @@ namespace DevZest.Data
             }
         }
 
-        public void AutoSelect(ColumnGroup columnGroup, DataRow dataRow, bool ignoreExpression = true)
+        public void AutoSelect(Projection projection, DataRow dataRow, bool ignoreExpression = true)
         {
-            columnGroup.VerifyNotNull(nameof(columnGroup));
+            projection.VerifyNotNull(nameof(projection));
             dataRow.VerifyNotNull(nameof(dataRow));
 
-            var keyColumns = columnGroup.Columns;
+            var keyColumns = projection.Columns;
             var valueColumns = dataRow.Model.Columns;
             for (int i = 0; i < keyColumns.Count; i++)
             {

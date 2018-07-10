@@ -7,7 +7,7 @@ namespace DevZest.Samples.AdventureWorksLT
     {
         static SalesOrderInfoDetail()
         {
-            RegisterColumnGroup((SalesOrderInfoDetail _) => _.Product);
+            RegisterProjection((SalesOrderInfoDetail _) => _.Product);
         }
 
         public Product.Lookup Product { get; private set; }

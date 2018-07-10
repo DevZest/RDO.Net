@@ -6,7 +6,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         Inherits SalesOrderDetail
 
         Shared Sub New()
-            RegisterColumnGroup(Function(x As SalesOrderInfoDetail) x.Product)
+            RegisterProjection(Function(x As SalesOrderInfoDetail) x.Product)
         End Sub
 
         Private m_Product As Product.Lookup

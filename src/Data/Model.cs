@@ -219,49 +219,49 @@ namespace DevZest.Data
 
         #region RegisterColumnGroup
 
-        static MounterManager<Model, ColumnGroup> s_columnGroupManager = new MounterManager<Model, ColumnGroup>();
+        static MounterManager<Model, Projection> s_projectonManager = new MounterManager<Model, Projection>();
 
-        /// <summary>Registers a new <see cref="ColumnGroup"/>.</summary>
+        /// <summary>Registers a new <see cref="Projection"/>.</summary>
         /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
-        /// <typeparam name="TColumnGroup">The type of the <see cref="ColumnGroup"/>.</typeparam>
-        /// <param name="getter">The lambda expression of the <see cref="ColumnGroup"/> getter.</param>
+        /// <typeparam name="TProjection">The type of the <see cref="Projection"/>.</typeparam>
+        /// <param name="getter">The lambda expression of the <see cref="Projection"/> getter.</param>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         [MounterRegistration]
-        protected static void RegisterColumnGroup<TModel, TColumnGroup>(Expression<Func<TModel, TColumnGroup>> getter)
+        protected static void RegisterProjection<TModel, TProjection>(Expression<Func<TModel, TProjection>> getter)
             where TModel : Model
-            where TColumnGroup : ColumnGroup, new()
+            where TProjection : Projection, new()
         {
             getter.VerifyNotNull(nameof(getter));
-            s_columnGroupManager.Register(getter, mounter => CreateColumnGroup(mounter));
+            s_projectonManager.Register(getter, mounter => CreateProjection(mounter));
         }
 
-        private List<ColumnGroup> _columnGroups;
-        protected internal IReadOnlyList<ColumnGroup> ColumnGroups
+        private List<Projection> _projections;
+        protected internal IReadOnlyList<Projection> Projections
         {
             get
             {
-                if (_columnGroups == null)
-                    return Array.Empty<ColumnGroup>();
+                if (_projections == null)
+                    return Array.Empty<Projection>();
                 else
-                    return _columnGroups;
+                    return _projections;
             }
         }
 
-        internal void Add(ColumnGroup columnGroup)
+        internal void Add(Projection projection)
         {
-            Debug.Assert(columnGroup != null);
-            if (_columnGroups == null)
-                _columnGroups = new List<ColumnGroup>();
-            _columnGroups.Add(columnGroup);
+            Debug.Assert(projection != null);
+            if (_projections == null)
+                _projections = new List<Projection>();
+            _projections.Add(projection);
         }
 
 
-        private static TColumnGroup CreateColumnGroup<TModel, TColumnGroup>(Mounter<TModel, TColumnGroup> mounter)
+        private static TProjection CreateProjection<TModel, TProjection>(Mounter<TModel, TProjection> mounter)
             where TModel : Model
-            where TColumnGroup : ColumnGroup, new()
+            where TProjection : Projection, new()
         {
-            var result = new TColumnGroup();
+            var result = new TProjection();
             var parent = mounter.Parent;
             result.Construct(parent, mounter.DeclaringType, mounter.Name);
             parent.Add(result);
@@ -277,7 +277,7 @@ namespace DevZest.Data
             ChildModels = new ModelCollection(this);
 
             s_columnManager.Mount(this);
-            s_columnGroupManager.Mount(this);
+            s_projectonManager.Mount(this);
             s_localColumnManager.Mount(this);
             s_columnListManager.Mount(this);
             PerformConstructing();

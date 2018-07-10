@@ -12,8 +12,8 @@ namespace DevZest.Data
         Local = 2,
         /// <summary>The column is a item of <see cref="ColumnListItem"/>.</summary>
         ColumnListItem = 4,
-        /// <summary>The column is a member of <see cref="ColumnGroup"/>.</summary>
-        ColumnGroupMember = 8,
+        /// <summary>The column is a member of <see cref="Projection"/>.</summary>
+        ProjectionMember = 8,
         /// <summary>sys_parent_row_id column of sequential key temp table (internal use only).</summary>
         SystemParentRowId = 16,
         /// <summary>sys_row_id column of sequential key temp table (internal use only).</summary>
