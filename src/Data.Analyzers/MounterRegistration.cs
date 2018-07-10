@@ -140,13 +140,18 @@ namespace DevZest.Data.Analyzers
                 throw new ArgumentException("Invalid language.", nameof(language));
         }
 
-        public static SyntaxNode GenerateChildModelRegistration(this SyntaxGenerator g, string language, INamedTypeSymbol typeSymbol, string propertyName,
-            INamedTypeSymbol fkTypeSymbol, string fkPropertyName)
+        public static SyntaxNode GenerateChildModelRegistration(this SyntaxGenerator g, string language, IPropertySymbol childProperty, IPropertySymbol foreignKey)
         {
             var invocationExpression = g.InvocationExpression(g.IdentifierName("RegisterChildModel"),
-                g.GetterArgument(language, typeSymbol, propertyName),
-                g.GetterArgument(language, fkTypeSymbol, fkPropertyName));
+                g.GetterArgument(language, childProperty.ContainingType, childProperty.Name),
+                g.GetterArgument(language, foreignKey.ContainingType, foreignKey.Name));
             return g.ExpressionStatement(invocationExpression);
+        }
+
+        public static SyntaxNode GenerateChildModelRegistrationStaticConstructor(this SyntaxGenerator g, string language, IPropertySymbol childProperty, IPropertySymbol foreignKey)
+        {
+            return g.ConstructorDeclaration(containingTypeName: childProperty.ContainingType.Name, modifiers: DeclarationModifiers.Static,
+                    statements: new SyntaxNode[] { g.GenerateChildModelRegistration(language, childProperty, foreignKey) });
         }
     }
 }

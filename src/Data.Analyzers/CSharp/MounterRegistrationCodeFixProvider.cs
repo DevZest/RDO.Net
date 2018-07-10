@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace DevZest.Data.Analyzers.CSharp
             var kind = propertySymbol.GetModelMemberKind(semanticModel.Compilation).Value;
             if (kind == ModelMemberKind.ChildModel)
             {
-                GenerateRegisterChildModel(context, context.Document, propertyDeclaration, propertySymbol, diagnostic);
+                GenerateRegisterChildModel(context, document, semanticModel, propertyDeclaration, propertySymbol, diagnostic);
                 return;
             }
 
@@ -67,9 +68,67 @@ namespace DevZest.Data.Analyzers.CSharp
                     diagnostic);
         }
 
-        private static void GenerateRegisterChildModel(CodeFixContext context, Document document, PropertyDeclarationSyntax propertyDeclaration, IPropertySymbol propertySymbol, Diagnostic diagnostic)
+        private static void GenerateRegisterChildModel(CodeFixContext context, Document document, SemanticModel semanticModel,
+            PropertyDeclarationSyntax propertyDeclaration, IPropertySymbol propertySymbol, Diagnostic diagnostic)
         {
+            var compilation = semanticModel.Compilation;
+            var methodName = "RegisterChildModel";
+            var pkType = propertySymbol.ContainingType.GetPrimaryKeyType(compilation);
+            var childModelType = propertySymbol.Type;
+            IPropertySymbol[] foreignKeys = pkType == null ? null : GetForeignKeys(childModelType, pkType).ToArray();
 
+            if (foreignKeys == null)
+                context.RegisterCodeFix(CodeAction.Create(
+                                    title: methodName,
+                                    createChangedSolution: ct => GenerateMounterRegistration(methodName, document, propertyDeclaration, propertySymbol, false, ct),
+                                    equivalenceKey: methodName),
+                                    diagnostic);
+            else
+            {
+                for (int i = 0; i < foreignKeys.Length; i++)
+                {
+                    var foreignKey = foreignKeys[i];
+                    var title = string.Format("{0} ({1}.{2})", methodName, childModelType.Name, foreignKey.Name);
+                    context.RegisterCodeFix(CodeAction.Create(
+                                        title: title,
+                                        createChangedSolution: ct => GenerateRegisterChildModel(document, semanticModel, propertyDeclaration, propertySymbol, foreignKey, ct),
+                                        equivalenceKey: title),
+                                        diagnostic);
+                }
+            }
+        }
+
+        private static IEnumerable<IPropertySymbol> GetForeignKeys(ITypeSymbol childModelType, INamedTypeSymbol pkType)
+        {
+            var members = childModelType.GetMembers();
+            for (int i = 0; i < members.Length; i++)
+            {
+                if (members[i] is IPropertySymbol result)
+                {
+                    if (result.Type.Equals(pkType))
+                        yield return result;
+                }
+            }
+        }
+
+        private static async Task<Solution> GenerateRegisterChildModel(Document document, SemanticModel semanticModel,
+            PropertyDeclarationSyntax propertyDeclaration, IPropertySymbol childProperty, IPropertySymbol foreignKey, CancellationToken ct)
+        {
+            var staticConstructor = await GetStaticConstructor(childProperty, ct);
+
+            ClassDeclarationSyntax classDeclaration;
+            if (staticConstructor != null)
+            {
+                document = document.Project.GetDocument(staticConstructor.SyntaxTree);
+                classDeclaration = staticConstructor.FirstAncestor<ClassDeclarationSyntax>();
+            }
+            else
+                classDeclaration = propertyDeclaration.FirstAncestor<ClassDeclarationSyntax>();
+
+            var editor = await DocumentEditor.CreateAsync(document, ct);
+            GenerateRegisterChildModel(editor, staticConstructor, classDeclaration, semanticModel, childProperty, foreignKey);
+
+            return editor.GetChangedDocument().Project.Solution;
         }
 
         private static async Task<Solution> GenerateMounterRegistration(string registerMounterMethodName, Document document,
@@ -179,6 +238,31 @@ namespace DevZest.Data.Analyzers.CSharp
             }
 
             return false;
+        }
+
+        private static void GenerateRegisterChildModel(DocumentEditor editor, ConstructorDeclarationSyntax staticConstructor, ClassDeclarationSyntax classDeclaration,
+            SemanticModel semanticModel, IPropertySymbol childProperty, IPropertySymbol foreignKey)
+        {
+            if (staticConstructor == null)
+            {
+                var newStaticConstructor = editor.Generator.GenerateChildModelRegistrationStaticConstructor(LanguageNames.CSharp, childProperty, foreignKey);
+                var index = GetMounterDeclarationInsertIndex(classDeclaration, semanticModel);
+                editor.InsertMembers(classDeclaration, index, new SyntaxNode[] { newStaticConstructor });
+            }
+            else
+            {
+                var statements = staticConstructor.Body.Statements;
+                if (statements.Count > 0)
+                {
+                    var statement = editor.Generator.GenerateChildModelRegistration(LanguageNames.CSharp, childProperty, foreignKey);
+                    editor.InsertAfter(statements.Last(), new SyntaxNode[] { statement });
+                }
+                else
+                {
+                    var newStaticConstructor = editor.Generator.GenerateChildModelRegistrationStaticConstructor(LanguageNames.CSharp, childProperty, foreignKey);
+                    editor.ReplaceNode(staticConstructor, newStaticConstructor);
+                }
+            }
         }
     }
 }

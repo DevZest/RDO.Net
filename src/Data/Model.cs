@@ -112,7 +112,7 @@ namespace DevZest.Data
 
         [MounterRegistration]
         protected static Mounter<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter, Func<TModel, TChildModel> constructor = null)
-            where TModel : Model, new()
+            where TModel : Model
             where TChildModel : Model, new()
         {
             getter.VerifyNotNull(nameof(getter));
@@ -122,7 +122,7 @@ namespace DevZest.Data
         }
 
         private static TChildModel CreateChildModel<TModel, TChildModel>(Mounter<TModel, TChildModel> mounter, Func<TModel, TChildModel> constructor)
-            where TModel : Model, new()
+            where TModel : Model
             where TChildModel : Model, new()
         {
             var parentModel = mounter.Parent;

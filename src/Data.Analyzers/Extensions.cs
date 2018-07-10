@@ -66,5 +66,22 @@ namespace DevZest.Data.Analyzers
             }
             return false;
         }
+
+        public static INamedTypeSymbol GetPrimaryKeyType(this INamedTypeSymbol type, Compilation compilation)
+        {
+            var genericModelType = compilation.GetTypeByMetadataName("DevZest.Data.Model`1");
+
+            INamedTypeSymbol baseModelType = null;
+            for (var currentType = type.BaseType; currentType != null; currentType = currentType.BaseType)
+            {
+                if (currentType.OriginalDefinition.Equals(genericModelType))
+                {
+                    baseModelType = currentType;
+                    break;
+                }
+            }
+
+            return baseModelType.TypeArguments[0] as INamedTypeSymbol;
+        }
     }
 }
