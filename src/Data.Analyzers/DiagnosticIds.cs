@@ -2,11 +2,11 @@
 {
     static class DiagnosticIds
     {
-        public const string InvalidRegisterMounterInvocation = "DZ0001";
-        public const string InvalidRegisterMounterGetterParam = "DZ0002";
-        public const string InvalidRegisterLocalColumn = "DZ0003";
-        public const string DuplicateMounterRegistration = "DZ0004";
-        public const string MounterNaming = "DZ0005";
-        public const string MissingMounterRegistration = "DZ0006";
+        public const string InvalidRegisterMounterInvocation = "RDO001";
+        public const string InvalidRegisterMounterGetterParam = "RDO002";
+        public const string InvalidRegisterLocalColumn = "RDO003";
+        public const string DuplicateMounterRegistration = "RDO004";
+        public const string MounterNaming = "RDO005";
+        public const string MissingMounterRegistration = "RDO006";
     }
 }
