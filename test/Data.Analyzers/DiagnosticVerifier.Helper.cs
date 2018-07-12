@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 
-namespace DevZest.Data.Analyzers
+namespace DevZest.Data.CodeAnalysis
 {
     /// <summary>
     /// Class for turning strings into documents and getting the diagnostics on them

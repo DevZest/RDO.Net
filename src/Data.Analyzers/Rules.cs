@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace DevZest.Data.Analyzers
+namespace DevZest.Data.CodeAnalysis
 {
     internal static class Rules
     {

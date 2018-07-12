@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevZest.Data.Analyzers.CSharp
+namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MounterRegistrationCodeFixProvider)), Shared]
     public class MounterRegistrationCodeFixProvider : CodeFixProvider

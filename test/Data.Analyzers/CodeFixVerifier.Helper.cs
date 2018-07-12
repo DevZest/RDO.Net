@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace DevZest.Data.Analyzers
+namespace DevZest.Data.CodeAnalysis
 {
     /// <summary>
     /// Diagnostic Producer class with extra methods dealing with applying codefixes

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DevZest.Data.Analyzers
+namespace DevZest.Data.CodeAnalysis
 {
     /// <summary>
     /// Superclass of all Unit Tests for DiagnosticAnalyzers

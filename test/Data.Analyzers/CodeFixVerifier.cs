@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace DevZest.Data.Analyzers
+namespace DevZest.Data.CodeAnalysis
 {
     /// <summary>
     /// Superclass of all Unit tests made for diagnostics with codefixes.

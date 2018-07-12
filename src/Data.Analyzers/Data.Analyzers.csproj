@@ -8,7 +8,7 @@
   
   <PropertyGroup>
     <AssemblyName>DevZest.Data.Analyzers</AssemblyName>
-    <RootNamespace>DevZest.Data.Analyzers</RootNamespace>
+    <RootNamespace>DevZest.Data.CodeAnalysis</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>

@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace DevZest.Data.Analyzers.CSharp
+namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MounterRegistrationAnalyzer : MounterRegistrationAnalyzerBase

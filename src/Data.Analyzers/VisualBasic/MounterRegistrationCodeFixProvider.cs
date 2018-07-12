@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevZest.Data.Analyzers.VisualBasic
+namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     [ExportCodeFixProvider(LanguageNames.VisualBasic, Name = nameof(MounterRegistrationCodeFixProvider)), Shared]
     public class MounterRegistrationCodeFixProvider : CodeFixProvider

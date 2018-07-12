@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.Editing;
 using System;
 using System.Linq;
 
-namespace DevZest.Data.Analyzers
+namespace DevZest.Data.CodeAnalysis
 {
     internal static class MounterRegistration
     {

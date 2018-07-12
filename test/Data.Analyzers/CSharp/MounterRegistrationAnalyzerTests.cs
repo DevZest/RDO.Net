@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace DevZest.Data.Analyzers.CSharp
+namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [TestClass]
     public class MounterRegistrationAnalyzerTests : DiagnosticVerifier

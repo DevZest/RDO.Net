@@ -1,4 +1,4 @@
-﻿namespace DevZest.Data.Analyzers
+﻿namespace DevZest.Data.CodeAnalysis
 {
     static class DiagnosticIds
     {

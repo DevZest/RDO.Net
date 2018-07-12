@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DevZest.Data.Analyzers.VisualBasic
+namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     [TestClass]
     public class MounterRegistrationCodeFixTests : CodeFixVerifier
