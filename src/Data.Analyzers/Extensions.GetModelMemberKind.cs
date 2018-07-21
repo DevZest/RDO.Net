@@ -1,53 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
-using System.Linq;
 
 namespace DevZest.Data.CodeAnalysis
 {
     internal static partial class Extensions
     {
-        private static bool IsTypeOfMounterRegistrationAttribute(this ITypeSymbol type, Compilation compilation)
-        {
-            return type.Equals(compilation.GetTypeByMetadataName("DevZest.Data.Annotations.Primitives.MounterRegistrationAttribute"));
-        }
-
-        private static bool IsTypeOfColumn(this ITypeSymbol type, Compilation compilation)
-        {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Column").IsBaseTypeOf(type);
-        }
-
-        private static bool IsTypeOfProjection(this ITypeSymbol type, Compilation compilation)
-        {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Projection").IsBaseTypeOf(type);
-        }
-
-        private static bool IsTypeOfColumnList(this ITypeSymbol type, Compilation compilation)
-        {
-            return compilation.GetTypeByMetadataName("DevZest.Data.ColumnList").IsBaseTypeOf(type);
-        }
-
-        private static bool IsTypeOfModel(this ITypeSymbol type, Compilation compilation)
-        {
-            return compilation.GetTypeByMetadataName("DevZest.Data.Model").IsBaseTypeOf(type);
-        }
-
-        private static bool IsBaseTypeOf(this INamedTypeSymbol @this, ITypeSymbol type)
-        {
-            for (var currentType = type.BaseType; currentType != null; currentType = currentType.BaseType)
-            {
-                if (currentType.OriginalDefinition.Equals(@this))
-                    return true;
-            }
-            return false;
-        }
-
-        public static bool IsMounterRegistration(this IMethodSymbol symbol, Compilation compilation)
-        {
-            var attributes = symbol.GetAttributes();
-            if (attributes == null)
-                return false;
-            return attributes.Any(x => x.AttributeClass.IsTypeOfMounterRegistrationAttribute(compilation));
-        }
-
         public static ModelMemberKind? GetModelMemberKind(this IPropertySymbol property, Compilation compilation)
         {
             if (!(property.Type is INamedTypeSymbol propertyType))
