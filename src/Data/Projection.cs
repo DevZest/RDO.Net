@@ -34,15 +34,15 @@ namespace DevZest.Data
 
         private sealed class ContainerModel : Model
         {
-            public ContainerModel(Projection columnGroup)
+            public ContainerModel(Projection projection)
             {
-                Debug.Assert(columnGroup != null);
-                Debug.Assert(columnGroup.ParentModel == null);
-                columnGroup.Construct(this, GetType(), string.Empty);
-                Add(columnGroup);
+                Debug.Assert(projection != null);
+                Debug.Assert(projection.ParentModel == null);
+                projection.Construct(this, GetType(), string.Empty);
+                Add(projection);
             }
 
-            internal override bool IsColumnGroupContainer
+            internal override bool IsProjectionContainer
             {
                 get { return true; }
             }

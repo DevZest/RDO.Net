@@ -146,11 +146,11 @@ namespace DevZest.Data.Primitives
         public static void Parse(this JsonParser jsonParser, DataRow dataRow)
         {
             var model = dataRow.Model;
-            if (model.IsColumnGroupContainer)
+            if (model.IsProjectionContainer)
             {
                 Debug.Assert(model.Projections.Count == 1);
-                var columnGroup = model.Projections[0];
-                jsonParser.Parse(columnGroup, dataRow);
+                var projection = model.Projections[0];
+                jsonParser.Parse(projection, dataRow);
                 return;
             }
 

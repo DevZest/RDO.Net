@@ -1093,7 +1093,7 @@ namespace DevZest.Data
             get { return this; }
         }
 
-        internal virtual bool IsColumnGroupContainer
+        internal virtual bool IsProjectionContainer
         {
             get { return false; }
         }
