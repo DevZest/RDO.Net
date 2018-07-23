@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.CodeAnalysis
 {
-    static class DiagnosticIds
+    static partial class DiagnosticIds
     {
         public const string InvalidRegisterMounterInvocation = "RDO001";
         public const string InvalidRegisterMounterGetterParam = "RDO002";
