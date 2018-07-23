@@ -87,9 +87,9 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Protected Shared ReadOnly _ProductCategoryID As Mounter(Of _Int32) = RegisterColumn(Function(x As ProductCategory) x.ProductCategoryID)
-        Protected Shared ReadOnly _ParentProductCategoryID As Mounter(Of _Int32) = RegisterColumn(Function(x As ProductCategory) x.ParentProductCategoryID)
-        Protected Shared ReadOnly _Name As Mounter(Of _String) = RegisterColumn(Function(x As ProductCategory) x.Name)
+        Public Shared ReadOnly _ProductCategoryID As Mounter(Of _Int32) = RegisterColumn(Function(x As ProductCategory) x.ProductCategoryID)
+        Public Shared ReadOnly _ParentProductCategoryID As Mounter(Of _Int32) = RegisterColumn(Function(x As ProductCategory) x.ParentProductCategoryID)
+        Public Shared ReadOnly _Name As Mounter(Of _String) = RegisterColumn(Function(x As ProductCategory) x.Name)
 
         Shared Sub New()
             RegisterChildModel(Function(x As ProductCategory) x.SubCategories, Function(x As ProductCategory) x.FK_ParentProductCategory)

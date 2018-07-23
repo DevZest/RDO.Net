@@ -65,9 +65,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Name { get; private set; }
         }
 
-        protected static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((ProductCategory _) => _.ProductCategoryID);
-        protected static readonly Mounter<_Int32> _ParentProductCategoryID = RegisterColumn((ProductCategory _) => _.ParentProductCategoryID);
-        protected static readonly Mounter<_String> _Name = RegisterColumn((ProductCategory _) => _.Name);
+        public static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((ProductCategory _) => _.ProductCategoryID);
+        public static readonly Mounter<_Int32> _ParentProductCategoryID = RegisterColumn((ProductCategory _) => _.ParentProductCategoryID);
+        public static readonly Mounter<_String> _Name = RegisterColumn((ProductCategory _) => _.Name);
 
         static ProductCategory()
         {

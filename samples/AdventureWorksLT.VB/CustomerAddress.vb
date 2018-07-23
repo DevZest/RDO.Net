@@ -108,9 +108,9 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Protected Shared ReadOnly _CustomerID As Mounter(Of _Int32) = RegisterColumn(Function(x As CustomerAddress) x.CustomerID)
-        Protected Shared ReadOnly _AddressID As Mounter(Of _Int32) = RegisterColumn(Function(x As CustomerAddress) x.AddressID)
-        Protected Shared ReadOnly _AddressType As Mounter(Of _String) = RegisterColumn(Function(x As CustomerAddress) x.AddressType)
+        Public Shared ReadOnly _CustomerID As Mounter(Of _Int32) = RegisterColumn(Function(x As CustomerAddress) x.CustomerID)
+        Public Shared ReadOnly _AddressID As Mounter(Of _Int32) = RegisterColumn(Function(x As CustomerAddress) x.AddressID)
+        Public Shared ReadOnly _AddressType As Mounter(Of _String) = RegisterColumn(Function(x As CustomerAddress) x.AddressType)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(CustomerID, AddressID)

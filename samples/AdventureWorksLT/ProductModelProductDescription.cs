@@ -35,9 +35,9 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        protected static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModelProductDescription _) => _.ProductModelID);
-        protected static readonly Mounter<_Int32> _ProductDescriptionID = RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID);
-        protected static readonly Mounter<_String> _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
+        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModelProductDescription _) => _.ProductModelID);
+        public static readonly Mounter<_Int32> _ProductDescriptionID = RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID);
+        public static readonly Mounter<_String> _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
 
         protected sealed override PK CreatePrimaryKey()
         {

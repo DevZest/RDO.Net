@@ -48,13 +48,13 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
-        protected static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderID);
-        protected static readonly Mounter<_Int32> _SalesOrderDetailID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderDetailID);
-        protected static readonly Mounter<_Int16> _OrderQty = RegisterColumn((SalesOrderDetail _) => _.OrderQty);
-        protected static readonly Mounter<_Int32> _ProductID = RegisterColumn((SalesOrderDetail _) => _.ProductID);
-        protected static readonly Mounter<_Decimal> _UnitPrice = RegisterColumn((SalesOrderDetail _) => _.UnitPrice);
-        protected static readonly Mounter<_Decimal> _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount);
-        protected static readonly Mounter<_Decimal> _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);
+        public static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderID);
+        public static readonly Mounter<_Int32> _SalesOrderDetailID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderDetailID);
+        public static readonly Mounter<_Int16> _OrderQty = RegisterColumn((SalesOrderDetail _) => _.OrderQty);
+        public static readonly Mounter<_Int32> _ProductID = RegisterColumn((SalesOrderDetail _) => _.ProductID);
+        public static readonly Mounter<_Decimal> _UnitPrice = RegisterColumn((SalesOrderDetail _) => _.UnitPrice);
+        public static readonly Mounter<_Decimal> _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount);
+        public static readonly Mounter<_Decimal> _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);
 
         public SalesOrderDetail()
         {

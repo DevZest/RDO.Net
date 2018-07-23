@@ -144,13 +144,13 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Property
         End Class
 
-        Protected Shared ReadOnly _AddressID As Mounter(Of _Int32) = RegisterColumn(Function(x As Address) x.AddressID)
-        Protected Shared ReadOnly _AddressLine1 As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.AddressLine1)
-        Protected Shared ReadOnly _AddressLine2 As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.AddressLine2)
-        Protected Shared ReadOnly _City As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.City)
-        Protected Shared ReadOnly _StateProvince As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.StateProvince)
-        Protected Shared ReadOnly _CountryRegion As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.CountryRegion)
-        Protected Shared ReadOnly _PostalCode As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.PostalCode)
+        Public Shared ReadOnly _AddressID As Mounter(Of _Int32) = RegisterColumn(Function(x As Address) x.AddressID)
+        Public Shared ReadOnly _AddressLine1 As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.AddressLine1)
+        Public Shared ReadOnly _AddressLine2 As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.AddressLine2)
+        Public Shared ReadOnly _City As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.City)
+        Public Shared ReadOnly _StateProvince As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.StateProvince)
+        Public Shared ReadOnly _CountryRegion As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.CountryRegion)
+        Public Shared ReadOnly _PostalCode As Mounter(Of _String) = RegisterColumn(Function(x As Address) x.PostalCode)
 
         Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
             Return New PK(AddressID)

@@ -65,9 +65,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Name { get; private set; }
         }
 
-        protected static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModel _) => _.ProductModelID);
-        protected static readonly Mounter<_String> _Name = RegisterColumn((ProductModel _) => _.Name);
-        protected static readonly Mounter<_SqlXml> _CatalogDescription = RegisterColumn((ProductModel _) => _.CatalogDescription);
+        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModel _) => _.ProductModelID);
+        public static readonly Mounter<_String> _Name = RegisterColumn((ProductModel _) => _.Name);
+        public static readonly Mounter<_SqlXml> _CatalogDescription = RegisterColumn((ProductModel _) => _.CatalogDescription);
 
         protected sealed override PK CreatePrimaryKey()
         {
