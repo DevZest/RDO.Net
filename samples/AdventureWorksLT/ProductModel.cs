@@ -29,10 +29,10 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Key()
             {
-                RegisterColumn((Key _) => _.ProductModelID, _ProductModelID);
+                Register((Key _) => _.ProductModelID, _ProductModelID);
             }
 
-            protected override PK CreatePrimaryKey()
+            protected override PK GetPrimaryKey()
             {
                 return new PK(ProductModelID);
             }

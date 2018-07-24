@@ -28,11 +28,11 @@ Namespace DevZest.Samples.AdventureWorksLT
             Inherits Key(Of PK)
 
             Shared Sub New()
-                RegisterColumn(Function(ByVal x As Key) x.CustomerID, _CustomerID)
-                RegisterColumn(Function(ByVal x As Key) x.AddressID, _AddressID)
+                Register(Function(ByVal x As Key) x.CustomerID, _CustomerID)
+                Register(Function(ByVal x As Key) x.AddressID, _AddressID)
             End Sub
 
-            Protected Overrides Function CreatePrimaryKey() As PK
+            Protected Overrides Function GetPrimaryKey() As PK
                 Return New PK(CustomerID, AddressID)
             End Function
 

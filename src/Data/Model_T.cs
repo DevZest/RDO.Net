@@ -54,6 +54,12 @@ namespace DevZest.Data
             return new KeyMapping(PrimaryKey, target.PrimaryKey);
         }
 
+        public KeyMapping Match(Key<T> target)
+        {
+            target.VerifyNotNull(nameof(target));
+            return new KeyMapping(PrimaryKey, target.PrimaryKey);
+        }
+
         /// <summary>
         /// Registers a child model.
         /// </summary>

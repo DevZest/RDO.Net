@@ -48,7 +48,7 @@ namespace DevZest.Data
             }
         }
 
-        private void EnsureConstructed()
+        internal virtual void EnsureConstructed()
         {
             if (ParentModel == null)
             {

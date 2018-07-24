@@ -32,10 +32,10 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Key()
             {
-                RegisterColumn((Key _) => _.AddressID, _AddressID);
+                Register((Key _) => _.AddressID, _AddressID);
             }
 
-            protected sealed override PK CreatePrimaryKey()
+            protected sealed override PK GetPrimaryKey()
             {
                 return new PK(AddressID);
             }

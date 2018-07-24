@@ -33,11 +33,11 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             static Key()
             {
-                RegisterColumn((Key _) => _.CustomerID, _CustomerID);
-                RegisterColumn((Key _) => _.AddressID, _AddressID);
+                Register((Key _) => _.CustomerID, _CustomerID);
+                Register((Key _) => _.AddressID, _AddressID);
             }
 
-            protected override PK CreatePrimaryKey()
+            protected override PK GetPrimaryKey()
             {
                 return new PK(CustomerID, AddressID);
             }
