@@ -21,6 +21,6 @@ echo.
 echo msBuildExe=%msBuildExe%
 echo.
 
-call %msBuildExe% "%~dp0Deploy.%currentFolder%.sln" /t:restore /p:Configuration=Release /verbosity:m
+call "%~dp0nuget" restore "%~dp0Deploy.%currentFolder%.sln"
 call %msBuildExe% "%~dp0Deploy.%currentFolder%.sln" /t:build /p:Configuration=Release /verbosity:m
 @IF %ERRORLEVEL% NEQ 0 PAUSE
