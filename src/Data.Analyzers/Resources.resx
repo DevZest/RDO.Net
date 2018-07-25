@@ -153,4 +153,10 @@
   <data name="MounterNaming_Title" xml:space="preserve">
     <value>Mounter name does not conform to convention.</value>
   </data>
+  <data name="PrimaryKeyNotSealed_Message" xml:space="preserve">
+    <value>Class derived from PrimaryKey should be sealed.</value>
+  </data>
+  <data name="PrimaryKeyNotSealed_Title" xml:space="preserve">
+    <value>PrimaryKey should be sealed.</value>
+  </data>
 </root>

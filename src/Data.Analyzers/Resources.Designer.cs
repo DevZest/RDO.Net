@@ -168,5 +168,23 @@ namespace DevZest.Data.CodeAnalysis {
                 return ResourceManager.GetString("MounterNaming_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class derived from PrimaryKey should be sealed..
+        /// </summary>
+        internal static string PrimaryKeyNotSealed_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyNotSealed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryKey should be sealed..
+        /// </summary>
+        internal static string PrimaryKeyNotSealed_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyNotSealed_Title", resourceCulture);
+            }
+        }
     }
 }
