@@ -13,7 +13,9 @@ namespace DevZest.Data.CodeAnalysis
                 Rules.PrimaryKeyNotSealed,
                 Rules.PrimaryKeyInvalidConstructors,
                 Rules.PrimaryKeyParameterlessConstructor,
-                Rules.PrimaryKeyInvalidConstructorParam); }
+                Rules.PrimaryKeyInvalidConstructorParam,
+                Rules.PrimaryKeyMismatchBaseConstructor,
+                Rules.PrimaryKeyMismatchBaseConstructorArgument); }
         }
 
         protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)

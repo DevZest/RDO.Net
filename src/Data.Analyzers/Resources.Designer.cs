@@ -206,6 +206,42 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mismatch in number of arguments passed to PrimaryKey base constructor, {0} argument(s) expected..
+        /// </summary>
+        internal static string PrimaryKeyMismatchBaseConstructor_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyMismatchBaseConstructor_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mismatch in number of arguments passed to PrimaryKey base constructor..
+        /// </summary>
+        internal static string PrimaryKeyMismatchBaseConstructor_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyMismatchBaseConstructor_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument mismatch in PrimaryKey base constructor, {0}, {0}.Asc() or {0}.Desc() expected..
+        /// </summary>
+        internal static string PrimaryKeyMismatchBaseConstructorArgument_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyMismatchBaseConstructorArgument_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument mismatch in PrimaryKey base constructor..
+        /// </summary>
+        internal static string PrimaryKeyMismatchBaseConstructorArgument_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyMismatchBaseConstructorArgument_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Class derived from PrimaryKey should be sealed..
         /// </summary>
         internal static string PrimaryKeyNotSealed_Message {

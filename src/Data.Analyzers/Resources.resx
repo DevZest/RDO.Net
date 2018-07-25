@@ -165,6 +165,18 @@
   <data name="PrimaryKeyInvalidConstructors_Title" xml:space="preserve">
     <value>Invalid PrimaryKey constructors.</value>
   </data>
+  <data name="PrimaryKeyMismatchBaseConstructorArgument_Message" xml:space="preserve">
+    <value>Argument mismatch in PrimaryKey base constructor, {0}, {0}.Asc() or {0}.Desc() expected.</value>
+  </data>
+  <data name="PrimaryKeyMismatchBaseConstructorArgument_Title" xml:space="preserve">
+    <value>Argument mismatch in PrimaryKey base constructor.</value>
+  </data>
+  <data name="PrimaryKeyMismatchBaseConstructor_Message" xml:space="preserve">
+    <value>Mismatch in number of arguments passed to PrimaryKey base constructor, {0} argument(s) expected.</value>
+  </data>
+  <data name="PrimaryKeyMismatchBaseConstructor_Title" xml:space="preserve">
+    <value>Mismatch in number of arguments passed to PrimaryKey base constructor.</value>
+  </data>
   <data name="PrimaryKeyNotSealed_Message" xml:space="preserve">
     <value>Class derived from PrimaryKey should be sealed.</value>
   </data>

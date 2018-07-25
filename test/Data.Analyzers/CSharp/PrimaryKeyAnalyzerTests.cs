@@ -148,5 +148,70 @@ public sealed class PK : PrimaryKey
 
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MismatchBaseConstructor()
+        {
+            var test = @"
+using DevZest.Data;
+
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id)
+        : base()
+    {
+    }
+
+    public _Int32 ID
+    {
+        get { return GetColumn<_Int32>(0); }
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyMismatchBaseConstructor,
+                Message = string.Format(Resources.PrimaryKeyMismatchBaseConstructor_Message, 1),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 9) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void MismatchBaseConstructorArgument()
+        {
+            var test = @"
+using DevZest.Data;
+
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id1, _Int32 id2)
+        : base(id1.Asc(), id1)
+    {
+    }
+
+    public _Int32 ID1
+    {
+        get { return GetColumn<_Int32>(0); }
+    }
+
+    public _Int32 ID2
+    {
+        get { return GetColumn<_Int32>(1); }
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyMismatchBaseConstructorArgument,
+                Message = string.Format(Resources.PrimaryKeyMismatchBaseConstructorArgument_Message, "id2"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 27) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }

@@ -45,17 +45,17 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             var arguments = initializer.ArgumentList.Arguments;
             if (arguments.Count != constructorParams.Length)
             {
-                //context.ReportDiagnostic();
+                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchBaseConstructor, initializer.GetLocation(), constructorParams.Length));
                 return;
             }
 
             for (int i = 0; i < arguments.Count; i++)
             {
-                var sortOrder = arguments[i].Expression.GetSortDirection(constructorParams[i], context.SemanticModel);
+                var argumentExpression = arguments[i].Expression;
+                var constructorParam = constructorParams[i];
+                var sortOrder = argumentExpression.GetSortDirection(constructorParam, context.SemanticModel);
                 if (!sortOrder.HasValue)
-                {
-                    //context.ReportDiagnostic();
-                }
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchBaseConstructorArgument, argumentExpression.GetLocation(), constructorParam.Name));
             }
 
         }
