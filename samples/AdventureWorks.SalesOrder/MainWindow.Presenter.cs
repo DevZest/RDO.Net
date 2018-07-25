@@ -138,7 +138,7 @@ namespace AdventureWorks.SalesOrders
 
             private RowPresenter GetRow(int salesOrderId)
             {
-                return Match(SalesOrder.PK.Const(salesOrderId));
+                return Match(SalesOrderHeader.PK.ValueOf(salesOrderId));
             }
         }
     }
