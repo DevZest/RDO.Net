@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
 
 namespace DevZest.Data.CodeAnalysis.CSharp
 {
@@ -25,10 +26,38 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             if (!IsPrimaryKey(context, classSymbol))
                 return;
 
-            var constructorParams = VerifyConstructor(context, classSymbol);
-            if (constructorParams == null)
+            var constructorParams = VerifyConstructor(context, classSymbol, out var constructorSymbol);
+            if (constructorParams.IsEmpty)
                 return;
+
+            var constructorDeclaration = (ConstructorDeclarationSyntax)constructorSymbol.DeclaringSyntaxReferences[0].GetSyntax();
+            VerifyBaseConstructorInitializer(context, constructorDeclaration, constructorParams);
         }
 
+        private static void VerifyBaseConstructorInitializer(SyntaxNodeAnalysisContext context, ConstructorDeclarationSyntax constructorDeclaration,
+            ImmutableArray<IParameterSymbol> constructorParams)
+        {
+            var initializer = constructorDeclaration.Initializer;
+            if (initializer == null)
+                return;
+            if (initializer.ThisOrBaseKeyword.Kind() != SyntaxKind.BaseKeyword)
+                return;
+            var arguments = initializer.ArgumentList.Arguments;
+            if (arguments.Count != constructorParams.Length)
+            {
+                //context.ReportDiagnostic();
+                return;
+            }
+
+            for (int i = 0; i < arguments.Count; i++)
+            {
+                var sortOrder = arguments[i].Expression.GetSortDirection(constructorParams[i], context.SemanticModel);
+                if (!sortOrder.HasValue)
+                {
+                    //context.ReportDiagnostic();
+                }
+            }
+
+        }
     }
 }

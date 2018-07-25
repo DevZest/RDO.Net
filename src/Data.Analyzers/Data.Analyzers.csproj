@@ -16,6 +16,10 @@
     <EmbeddedResource Remove="bin\**" />
     <None Remove="bin\**" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\Data\SortDirection.cs" Link="SortDirection.cs" />
+  </ItemGroup>
    
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.8.2" PrivateAssets="all" />

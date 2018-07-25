@@ -25,8 +25,8 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
             if (!IsPrimaryKey(context, classSymbol))
                 return;
 
-            var constructorParams = VerifyConstructor(context, classSymbol);
-            if (constructorParams == null)
+            var constructorParams = VerifyConstructor(context, classSymbol, out var constructorSymbol);
+            if (constructorParams.IsEmpty)
                 return;
         }
 

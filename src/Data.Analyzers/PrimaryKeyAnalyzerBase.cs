@@ -27,21 +27,21 @@ namespace DevZest.Data.CodeAnalysis
                 context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyNotSealed, classSymbol.Locations[0]));
         }
 
-        protected static ImmutableArray<IParameterSymbol> VerifyConstructor(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
+        protected static ImmutableArray<IParameterSymbol> VerifyConstructor(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol, out IMethodSymbol constructorSymbol)
         {
             VerifySealed(context, classSymbol);
 
-            var constructor = GetPrimaryKeyConstructor(classSymbol);
-            if (constructor == null)
+            constructorSymbol = GetPrimaryKeyConstructor(classSymbol);
+            if (constructorSymbol == null)
             {
                 context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidConstructors, classSymbol.Locations[0]));
                 return ImmutableArray<IParameterSymbol>.Empty;
             }
 
-            var parameters = constructor.Parameters;
+            var parameters = constructorSymbol.Parameters;
             if (parameters.Length == 0)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyParameterlessConstructor, constructor.Locations[0]));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyParameterlessConstructor, constructorSymbol.Locations[0]));
                 return parameters;
             }
 
