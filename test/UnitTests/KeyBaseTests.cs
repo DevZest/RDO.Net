@@ -8,7 +8,7 @@ namespace DevZest.Data
     {
         private class SimpleKey : PrimaryKey
         {
-            public static IDataValues Const(int column1, int column2)
+            public static IDataValues ValueOf(int column1, int column2)
             {
                 return DataValues.Create(_Int32.Const(column1), _Int32.Const(column2));
             }

@@ -10,7 +10,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public NotInheritable Class PK
             Inherits PrimaryKey
 
-            Public Shared Function [Const](ByVal productModelID As Integer, ByVal productDescriptionID As Integer, ByVal culture As String) As IDataValues
+            Public Shared Function ValueOf(ByVal productModelID As Integer, ByVal productDescriptionID As Integer, ByVal culture As String) As IDataValues
                 Return DataValues.Create(_Int32.[Const](productModelID), _Int32.[Const](productDescriptionID), _String.[Const](culture))
             End Function
 

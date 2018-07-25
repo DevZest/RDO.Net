@@ -4,7 +4,7 @@
     {
         public sealed class PK : PrimaryKey
         {
-            public static IDataValues Const(int oldValue)
+            public static IDataValues ValueOf(int oldValue)
             {
                 return DataValues.Create(_Int32.Const(oldValue));
             }

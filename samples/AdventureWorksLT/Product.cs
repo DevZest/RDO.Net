@@ -9,7 +9,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_Product_ProductID", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
-            public static IDataValues Const(int productID)
+            public static IDataValues ValueOf(int productID)
             {
                 return DataValues.Create(_Int32.Const(productID));
             }
