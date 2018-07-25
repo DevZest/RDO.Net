@@ -170,6 +170,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PrimaryKey must have one constructor only..
+        /// </summary>
+        internal static string PrimaryKeyInvalidConstructors_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyInvalidConstructors_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid PrimaryKey constructors..
+        /// </summary>
+        internal static string PrimaryKeyInvalidConstructors_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyInvalidConstructors_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Class derived from PrimaryKey should be sealed..
         /// </summary>
         internal static string PrimaryKeyNotSealed_Message {

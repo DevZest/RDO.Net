@@ -74,5 +74,32 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void InvalidConstructors()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public NotInheritable Class PK
+    Inherits PrimaryKey
+
+    Public ReadOnly Property ID As _Int32
+        Get
+            Return GetColumn(Of _Int32)(0)
+        End Get
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyInvalidConstructors,
+                Message = Resources.PrimaryKeyInvalidConstructors_Message,
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 4, 29) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }

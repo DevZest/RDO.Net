@@ -28,6 +28,8 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 
             if (!classSymbol.IsSealed)
                 context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyNotSealed, classDeclaration.Identifier.GetLocation()));
+
+            VerifyConstructors(context, classSymbol, classDeclaration.Identifier);
         }
 
     }

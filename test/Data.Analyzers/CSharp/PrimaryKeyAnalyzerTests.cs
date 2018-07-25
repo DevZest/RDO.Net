@@ -73,5 +73,30 @@ public class PK : PrimaryKey
 
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void InvalidConstructors()
+        {
+            var test = @"
+using DevZest.Data;
+
+public sealed class PK : PrimaryKey
+{
+    public _Int32 ID
+    {
+        return GetColumn<_Int32>(0);
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyInvalidConstructors,
+                Message = Resources.PrimaryKeyInvalidConstructors_Message,
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 4, 21) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }

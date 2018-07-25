@@ -9,7 +9,8 @@
         public const string MounterNaming = "RDO005";
         public const string MissingMounterRegistration = "RDO006";
         public const string PrimaryKeyNotSealed = "RDO010";
-        public const string MismatchPrimaryKeyConstructorParam = "RDO011";
-        public const string MismatchPrimaryKeyColumn = "RDO012";
+        public const string PrimaryKeyInvalidConstructors = "RDO011";
+        public const string MismatchPrimaryKeyConstructorParam = "RDO012";
+        public const string MismatchPrimaryKeyColumn = "RDO013";
     }
 }
