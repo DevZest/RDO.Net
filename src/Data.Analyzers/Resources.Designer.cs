@@ -204,5 +204,23 @@ namespace DevZest.Data.CodeAnalysis {
                 return ResourceManager.GetString("PrimaryKeyNotSealed_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameterless constructor is not valid for PrimaryKey..
+        /// </summary>
+        internal static string PrimaryKeyParameterlessConstructor_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyParameterlessConstructor_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameterless PrimaryKey constructor..
+        /// </summary>
+        internal static string PrimaryKeyParameterlessConstructor_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyParameterlessConstructor_Title", resourceCulture);
+            }
+        }
     }
 }

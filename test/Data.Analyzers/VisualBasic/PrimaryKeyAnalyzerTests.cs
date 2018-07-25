@@ -101,5 +101,30 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void ParameterlessConstructor()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public NotInheritable Class PK
+    Inherits PrimaryKey
+
+    Public Sub New()
+        MyBase.New()
+    End Sub
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyParameterlessConstructor,
+                Message = Resources.PrimaryKeyParameterlessConstructor_Message,
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 16) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }

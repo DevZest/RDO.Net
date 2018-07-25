@@ -98,5 +98,30 @@ public sealed class PK : PrimaryKey
 
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void ParameterlessConstructor()
+        {
+            var test = @"
+using DevZest.Data;
+
+public sealed class PK : PrimaryKey
+{
+    public PK()
+        : base()
+    {
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyParameterlessConstructor,
+                Message = Resources.PrimaryKeyParameterlessConstructor_Message,
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 12) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }

@@ -20,16 +20,16 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
 
         private static void AnalyzePrimaryKey(SyntaxNodeAnalysisContext context, ClassBlockSyntax classBlock)
         {
-            var compilation = context.Compilation;
             var semanticModel = context.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classBlock);
-            if (classSymbol == null || !classSymbol.BaseType.Equals(compilation.TypeOfPrimaryKey()))
+            if (!IsPrimaryKey(context, classSymbol))
                 return;
 
-            if (!classSymbol.IsSealed)
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyNotSealed, classBlock.ClassStatement.Identifier.GetLocation()));
+            VerifySealed(context, classSymbol);
 
-            VerifyConstructors(context, classSymbol, classBlock.ClassStatement.Identifier);
+            var constructorSymbol = VerifyConstructor(context, classSymbol);
+            if (constructorSymbol == null)
+                return;
         }
 
     }
