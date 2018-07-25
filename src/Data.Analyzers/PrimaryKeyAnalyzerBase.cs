@@ -12,7 +12,8 @@ namespace DevZest.Data.CodeAnalysis
             get { return ImmutableArray.Create(
                 Rules.PrimaryKeyNotSealed,
                 Rules.PrimaryKeyInvalidConstructors,
-                Rules.PrimaryKeyParameterlessConstructor); }
+                Rules.PrimaryKeyParameterlessConstructor,
+                Rules.PrimaryKeyInvalidConstructorParam); }
         }
 
         protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
@@ -42,7 +43,18 @@ namespace DevZest.Data.CodeAnalysis
                 return parameters;
             }
 
-            return parameters;
+            bool areParametersValid = true;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var parameter = parameters[i];
+                if (!parameter.Type.IsTypeOfColumn(context.Compilation))
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidConstructorParam, parameter.Locations[0], parameter.Name));
+                    areParametersValid = false;
+                }
+            }
+
+            return areParametersValid ? parameters : ImmutableArray<IParameterSymbol>.Empty;
         }
 
         private static IMethodSymbol GetPrimaryKeyConstructor(INamedTypeSymbol classSymbol)

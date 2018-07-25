@@ -170,6 +170,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The PrimaryKey constructor parameter &apos;{0}&apos; must be Column..
+        /// </summary>
+        internal static string PrimaryKeyInvalidConstructorParam_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyInvalidConstructorParam_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid PrimaryKey constructor parameter..
+        /// </summary>
+        internal static string PrimaryKeyInvalidConstructorParam_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyInvalidConstructorParam_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PrimaryKey must have one constructor only..
         /// </summary>
         internal static string PrimaryKeyInvalidConstructors_Message {

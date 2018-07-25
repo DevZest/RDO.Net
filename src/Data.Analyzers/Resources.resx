@@ -153,6 +153,12 @@
   <data name="MounterNaming_Title" xml:space="preserve">
     <value>Mounter name does not conform to convention.</value>
   </data>
+  <data name="PrimaryKeyInvalidConstructorParam_Message" xml:space="preserve">
+    <value>The PrimaryKey constructor parameter '{0}' must be Column.</value>
+  </data>
+  <data name="PrimaryKeyInvalidConstructorParam_Title" xml:space="preserve">
+    <value>Invalid PrimaryKey constructor parameter.</value>
+  </data>
   <data name="PrimaryKeyInvalidConstructors_Message" xml:space="preserve">
     <value>PrimaryKey must have one constructor only.</value>
   </data>

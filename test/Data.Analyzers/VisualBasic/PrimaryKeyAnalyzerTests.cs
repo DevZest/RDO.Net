@@ -126,5 +126,30 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void InvalidConstructorParam()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public NotInheritable Class PK
+    Inherits PrimaryKey
+
+    Public Sub New(id As Int32)
+        MyBase.New()
+    End Sub
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyInvalidConstructorParam,
+                Message = string.Format(Resources.PrimaryKeyInvalidConstructorParam_Message, "id"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 20) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }

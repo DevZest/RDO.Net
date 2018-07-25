@@ -123,5 +123,30 @@ public sealed class PK : PrimaryKey
 
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void InvalidConstructorParam()
+        {
+            var test = @"
+using DevZest.Data;
+
+public sealed class PK : PrimaryKey
+{
+    public PK(int id)
+        : base()
+    {
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyInvalidConstructorParam,
+                Message = string.Format(Resources.PrimaryKeyInvalidConstructorParam_Message, "id"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 19) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }

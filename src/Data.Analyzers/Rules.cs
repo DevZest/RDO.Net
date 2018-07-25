@@ -57,5 +57,11 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.PrimaryKeyParameterlessConstructor_Title), Resources.ResourceManager, typeof(Resources)),
             new LocalizableResourceString(nameof(Resources.PrimaryKeyParameterlessConstructor_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor PrimaryKeyInvalidConstructorParam = new DiagnosticDescriptor(
+            DiagnosticIds.PrimaryKeyInvalidConstructorParam,
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidConstructorParam_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidConstructorParam_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
     }
 }
