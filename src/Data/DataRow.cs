@@ -8,7 +8,7 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a row of in-memory data.
     /// </summary>
-    public class DataRow
+    public class DataRow : IDataValues
     {
         private sealed class BackupModel : Model
         {
@@ -603,6 +603,16 @@ namespace DevZest.Data
             column.VerifyNotNull(paramName);
             if (column.ScalarSourceModels.Count != 1)
                 throw new ArgumentException(DiagnosticMessages.DataRow_OrderByColumnMustBeSingleSourceModel, paramName);
+        }
+
+        DataRow IDataValues.DataRow
+        {
+            get { return this; }
+        }
+
+        IReadOnlyList<Column> IDataValues.Columns
+        {
+            get { return Model?.Columns; }
         }
     }
 }
