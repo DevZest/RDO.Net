@@ -21,7 +21,7 @@ namespace DevZest.Data.CodeAnalysis
             return classSymbol != null && classSymbol.BaseType.Equals(context.Compilation.TypeOfPrimaryKey());
         }
 
-        protected static void VerifySealed(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
+        private static void VerifySealed(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
         {
             if (!classSymbol.IsSealed)
                 context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyNotSealed, classSymbol.Locations[0]));
@@ -29,6 +29,8 @@ namespace DevZest.Data.CodeAnalysis
 
         protected static ImmutableArray<IParameterSymbol> VerifyConstructor(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
         {
+            VerifySealed(context, classSymbol);
+
             var constructor = GetPrimaryKeyConstructor(classSymbol);
             if (constructor == null)
             {
