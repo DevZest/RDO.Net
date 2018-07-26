@@ -18,21 +18,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 : base(productModelID, productDescriptionID, culture)
             {
             }
-
-            public _Int32 ProductModelID
-            {
-                get { return GetColumn<_Int32>(0); }
-            }
-
-            public _Int32 ProductDescriptionID
-            {
-                get { return GetColumn<_Int32>(1); }
-            }
-
-            public _Int32 Culture
-            {
-                get { return GetColumn<_Int32>(2); }
-            }
         }
 
         public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModelProductDescription _) => _.ProductModelID);

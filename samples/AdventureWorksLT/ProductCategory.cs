@@ -18,11 +18,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 : base(productCategoryID)
             {
             }
-
-            public _Int32 ProductCategoryID
-            {
-                get { return GetColumn<_Int32>(0); }
-            }
         }
 
         public class Key : Key<PK>

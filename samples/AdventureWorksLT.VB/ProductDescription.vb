@@ -18,12 +18,6 @@ Namespace DevZest.Samples.AdventureWorksLT
             Public Sub New(productDescriptionID As _Int32)
                 MyBase.New(productDescriptionID)
             End Sub
-
-            Public ReadOnly Property ProductDescriptionID As _Int32
-                Get
-                    Return GetColumn(Of _Int32)(0)
-                End Get
-            End Property
         End Class
 
         Public Class Key

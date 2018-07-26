@@ -17,24 +17,6 @@ Namespace DevZest.Samples.AdventureWorksLT
             Public Sub New(productModelID As _Int32, productDescriptionID As _Int32, culture As _String)
                 MyBase.New(productModelID, productDescriptionID, culture)
             End Sub
-
-            Public ReadOnly Property ProductModelID As _Int32
-                Get
-                    Return GetColumn(Of _Int32)(0)
-                End Get
-            End Property
-
-            Public ReadOnly Property ProductDescriptionID As _Int32
-                Get
-                    Return GetColumn(Of _Int32)(1)
-                End Get
-            End Property
-
-            Public ReadOnly Property Culture As _String
-                Get
-                    Return GetColumn(Of _String)(2)
-                End Get
-            End Property
         End Class
 
         Public Shared ReadOnly _ProductModelID As Mounter(Of _Int32) = RegisterColumn(Function(x As ProductModelProductDescription) x.ProductModelID)

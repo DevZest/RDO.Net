@@ -17,11 +17,6 @@ namespace DevZest.Data.Helpers
                 : base(id)
             {
             }
-
-            public _Int32 Id
-            {
-                get { return GetColumn<_Int32>(0); }
-            }
         }
 
         protected SimpleModelBase()

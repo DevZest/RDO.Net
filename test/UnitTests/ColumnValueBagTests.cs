@@ -57,8 +57,8 @@ namespace DevZest.Data
                 var valueBag = new ColumnValueBag();
                 valueBag.AutoSelect(customerKey, salesOrders[0]);
                 valueBag.AutoSelect(customerLookup, salesOrders[0]);
-                Assert.AreEqual(5, valueBag.GetValue(customerKey.CustomerID));
-                Assert.AreEqual(5, valueBag[customerKey.CustomerID]);
+                Assert.AreEqual(5, valueBag.GetValue(salesOrder.CustomerID));
+                Assert.AreEqual(5, valueBag[salesOrder.CustomerID]);
                 Assert.AreEqual("Mr.", valueBag.GetValue(customerLookup.Title));
                 Assert.AreEqual("John", valueBag.GetValue(customerLookup.FirstName));
                 Assert.AreEqual("K", valueBag.GetValue(customerLookup.MiddleName));

@@ -18,13 +18,6 @@ Namespace DevZest.Samples.AdventureWorksLT
             Public Sub New(addressID As _Int32)
                 MyBase.New(addressID)
             End Sub
-
-            Public ReadOnly Property AddressID As _Int32
-                Get
-                    Return GetColumn(Of _Int32)(0)
-                End Get
-            End Property
-
         End Class
 
         Public Class Key

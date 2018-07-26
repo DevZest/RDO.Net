@@ -21,11 +21,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 : base(addressID)
             {
             }
-
-            public _Int32 AddressID
-            {
-                get { return GetColumn<_Int32>(0); }
-            }
         }
 
         public class Key : Key<PK>

@@ -13,11 +13,6 @@
                 : base(oldValue)
             {
             }
-
-            public _Int32 OldValue
-            {
-                get { return GetColumn<_Int32>(0); }
-            }
         }
 
         static IdentityMapping()

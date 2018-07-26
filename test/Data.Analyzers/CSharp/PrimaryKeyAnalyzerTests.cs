@@ -34,11 +34,6 @@ public sealed class PK : PrimaryKey
         : base(id)
     {
     }
-
-    public _Int32 ID
-    {
-        return GetColumn<_Int32>(0);
-    }
 }";
 
             VerifyCSharpDiagnostic(test);
@@ -55,11 +50,6 @@ public class PK : PrimaryKey
     public PK(_Int32 id)
         : base(id)
     {
-    }
-
-    public _Int32 ID
-    {
-        return GetColumn<_Int32>(0);
     }
 }";
 
@@ -82,10 +72,6 @@ using DevZest.Data;
 
 public sealed class PK : PrimaryKey
 {
-    public _Int32 ID
-    {
-        return GetColumn<_Int32>(0);
-    }
 }";
 
             var expected = new DiagnosticResult
@@ -162,11 +148,6 @@ public sealed class PK : PrimaryKey
         : base(id)
     {
     }
-
-    public _Int32 ID
-    {
-        return GetColumn<_Int32>(0);
-    }
 }";
 
             var expected = new DiagnosticResult
@@ -190,11 +171,6 @@ public sealed class PK : PrimaryKey
 {
     public PK(_Int32 id)
     {
-    }
-
-    public _Int32 ID
-    {
-        get { return GetColumn<_Int32>(0); }
     }
 }";
 
@@ -221,11 +197,6 @@ public sealed class PK : PrimaryKey
         : base()
     {
     }
-
-    public _Int32 ID
-    {
-        get { return GetColumn<_Int32>(0); }
-    }
 }";
 
             var expected = new DiagnosticResult
@@ -251,16 +222,6 @@ public sealed class PK : PrimaryKey
         : base(id1, id1)
     {
     }
-
-    public _Int32 ID1
-    {
-        get { return GetColumn<_Int32>(0); }
-    }
-
-    public _Int32 ID2
-    {
-        get { return GetColumn<_Int32>(1); }
-    }
 }";
 
             var expected = new DiagnosticResult
@@ -285,11 +246,6 @@ public sealed class PK : PrimaryKey
     public PK(_Int32 id)
         : base(id.Asc())
     {
-    }
-
-    public _Int32 ID
-    {
-        get { return GetColumn<_Int32>(0); }
     }
 }";
 

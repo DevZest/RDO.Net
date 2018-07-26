@@ -225,11 +225,6 @@ namespace DevZest.Data
                     : base(id)
                 {
                 }
-
-                public _Int32 Id
-                {
-                    get { return GetColumn<_Int32>(0); }
-                }
             }
 
             public static readonly Mounter<_Int32> _Id = RegisterColumn((TempModel x) => x.Id);

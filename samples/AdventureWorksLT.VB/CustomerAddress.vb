@@ -16,12 +16,6 @@ Namespace DevZest.Samples.AdventureWorksLT
             Public Sub New(customerID As _Int32, addressID As _Int32)
                 MyBase.New(customerID, addressID)
             End Sub
-
-            Public ReadOnly Property CustomerID As _Int32
-                Get
-                    Return GetColumn(Of _Int32)(0)
-                End Get
-            End Property
         End Class
 
         Public Class Key

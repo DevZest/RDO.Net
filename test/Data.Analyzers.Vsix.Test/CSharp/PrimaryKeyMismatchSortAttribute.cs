@@ -8,15 +8,5 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             : base(id1, id2.Desc())
         {
         }
-
-        public _Int32 ID1
-        {
-            get { return GetColumn<_Int32>(0); }
-        }
-
-        public _Int32 ID2
-        {
-            get { return GetColumn<_Int32>(1); }
-        }
     }
 }

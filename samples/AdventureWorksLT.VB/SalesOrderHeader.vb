@@ -17,12 +17,6 @@ Namespace DevZest.Samples.AdventureWorksLT
             Public Sub New(ByVal salesOrderID As _Int32)
                 MyBase.New(salesOrderID)
             End Sub
-
-            Public ReadOnly Property SalesOrderID As _Int32
-                Get
-                    Return GetColumn(Of _Int32)(0)
-                End Get
-            End Property
         End Class
 
         Public Class Key

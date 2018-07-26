@@ -8,11 +8,6 @@
                 : base(id)
             {
             }
-
-            public _Int32 ID
-            {
-                get { return GetColumn<_Int32>(0); }
-            }
         }
 
         protected sealed override PK CreatePrimaryKey()

@@ -33,12 +33,6 @@ Public NotInheritable Class PK
     Public Sub New(id As _Int32)
         MyBase.New(id)
     End Sub
-
-    Public ReadOnly Property ID As _Int32
-        Get
-            Return GetColumn(Of _Int32)(0)
-        End Get
-    End Property
 End Class";
 
             VerifyBasicDiagnostic(test);
@@ -56,12 +50,6 @@ Public Class PK
     Public Sub New(id As _Int32)
         MyBase.New(id)
     End Sub
-
-    Public ReadOnly Property ID As _Int32
-        Get
-            Return GetColumn(Of _Int32)(0)
-        End Get
-    End Property
 End Class";
 
             var expected = new DiagnosticResult
@@ -83,12 +71,6 @@ Imports DevZest.Data
 
 Public NotInheritable Class PK
     Inherits PrimaryKey
-
-    Public ReadOnly Property ID As _Int32
-        Get
-            Return GetColumn(Of _Int32)(0)
-        End Get
-    End Property
 End Class";
 
             var expected = new DiagnosticResult
@@ -165,12 +147,6 @@ Public NotInheritable Class PK
     Public Sub New(<Asc(), Desc()>id As _Int32)
         MyBase.New(id)
     End Sub
-
-    Public ReadOnly Property ID As _Int32
-        Get
-            Return GetColumn(Of _Int32)(0)
-        End Get
-    End Property
 End Class";
 
             var expected = new DiagnosticResult
@@ -195,12 +171,6 @@ Public NotInheritable Class PK
 
     Public Sub New(id As _Int32)
     End Sub
-
-    Public ReadOnly Property ID As _Int32
-        Get
-            Return GetColumn(Of _Int32)(0)
-        End Get
-    End Property
 End Class";
 
             var expected = new DiagnosticResult
@@ -226,12 +196,6 @@ Public NotInheritable Class PK
     Public Sub New(id As _Int32)
         MyBase.New()
     End Sub
-
-    Public ReadOnly Property ID As _Int32
-        Get
-            Return GetColumn(Of _Int32)(0)
-        End Get
-    End Property
 End Class";
 
             var expected = new DiagnosticResult
@@ -257,18 +221,6 @@ Public NotInheritable Class PK
     Public Sub New(id1 As _Int32, id2 As _Int32)
         MyBase.New(id1, id1)
     End Sub
-
-    Public ReadOnly Property ID1 As _Int32
-        Get
-            Return GetColumn(Of _Int32)(0)
-        End Get
-    End Property
-
-    Public ReadOnly Property ID2 As _Int32
-        Get
-            Return GetColumn(Of _Int32)(1)
-        End Get
-    End Property
 End Class";
 
             var expected = new DiagnosticResult
@@ -294,12 +246,6 @@ Public NotInheritable Class PK
     Public Sub New(id As _Int32)
         MyBase.New(id.Asc())
     End Sub
-
-    Public ReadOnly Property ID As _Int32
-        Get
-            Return GetColumn(Of _Int32)(0)
-        End Get
-    End Property
 End Class";
 
             var expected = new DiagnosticResult

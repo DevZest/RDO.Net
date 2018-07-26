@@ -76,11 +76,5 @@ namespace DevZest.Data
                 result[i] = this[i].Column;
             return result;
         }
-
-        protected T GetColumn<T>(int index)
-            where T : Column, new()
-        {
-            return (T)this[index].Column;
-        }
     }
 }
