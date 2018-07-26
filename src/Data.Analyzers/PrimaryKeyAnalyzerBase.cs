@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.FindSymbols;
+using System;
 using System.Collections.Immutable;
 
 namespace DevZest.Data.CodeAnalysis
@@ -14,6 +15,7 @@ namespace DevZest.Data.CodeAnalysis
                 Rules.PrimaryKeyInvalidConstructors,
                 Rules.PrimaryKeyParameterlessConstructor,
                 Rules.PrimaryKeyInvalidConstructorParam,
+                Rules.PrimaryKeySortAttributeConflict,
                 Rules.PrimaryKeyMismatchBaseConstructor,
                 Rules.PrimaryKeyMismatchBaseConstructorArgument); }
         }
@@ -56,9 +58,31 @@ namespace DevZest.Data.CodeAnalysis
                     context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidConstructorParam, parameter.Locations[0], parameter.Name));
                     areParametersValid = false;
                 }
+                VerifyParameterAttributes(context, parameter);
             }
 
             return areParametersValid ? parameters : ImmutableArray<IParameterSymbol>.Empty;
+        }
+
+        private static void VerifyParameterAttributes(SyntaxNodeAnalysisContext context, IParameterSymbol parameter)
+        {
+            int ascAttributeIndex = -1;
+            int descAttributeIndex = -1;
+            var attributes = parameter.GetAttributes();
+            for (int i = 0; i < attributes.Length; i++)
+            {
+                var attribute = attributes[i];
+                if (attribute.IsAsc(context.Compilation))
+                    ascAttributeIndex = i;
+                else if (attribute.IsDesc(context.Compilation))
+                    descAttributeIndex = i;
+            }
+
+            if (ascAttributeIndex >= 0 && descAttributeIndex >= 0)
+            {
+                var attribute = attributes[Math.Max(ascAttributeIndex, descAttributeIndex)];
+                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeySortAttributeConflict, attribute.ApplicationSyntaxReference.GetSyntax().GetLocation()));
+            }
         }
 
         private static IMethodSymbol GetPrimaryKeyConstructor(INamedTypeSymbol classSymbol)

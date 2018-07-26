@@ -150,6 +150,37 @@ public sealed class PK : PrimaryKey
         }
 
         [TestMethod]
+        public void SortAttributeConflicts()
+        {
+            var test = @"
+using DevZest.Data;
+using DevZest.Data.Annotations;
+
+public sealed class PK : PrimaryKey
+{
+    public PK([Asc] [Desc]_Int32 id)
+        : base(id)
+    {
+    }
+
+    public _Int32 ID
+    {
+        return GetColumn<_Int32>(0);
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeySortAttributeConflict,
+                Message = string.Format(Resources.PrimaryKeySortAttributeConflict_Message),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 22) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
         public void MismatchBaseConstructor()
         {
             var test = @"

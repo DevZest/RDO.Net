@@ -189,4 +189,10 @@
   <data name="PrimaryKeyParameterlessConstructor_Title" xml:space="preserve">
     <value>Parameterless PrimaryKey constructor.</value>
   </data>
+  <data name="PrimaryKeySortAttributeConflict_Message" xml:space="preserve">
+    <value>Asc and Desc attributes are mutually exclusive.</value>
+  </data>
+  <data name="PrimaryKeySortAttributeConflict_Title" xml:space="preserve">
+    <value>PrimaryKey SortAttribute conflict.</value>
+  </data>
 </root>

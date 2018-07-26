@@ -11,8 +11,9 @@
         public const string PrimaryKeyNotSealed = "RDO010";
         public const string PrimaryKeyInvalidConstructors = "RDO011";
         public const string PrimaryKeyParameterlessConstructor = "RDO012";
-        public const string PrimaryKeyInvalidConstructorParam = "RDO013";
-        public const string PrimaryKeyMismatchBaseConstructor = "RDO014";
-        public const string PrimaryKeyMismatchBaseConstructorArgument = "RDO015";
+        public const string PrimaryKeySortAttributeConflict = "RDO013";
+        public const string PrimaryKeyInvalidConstructorParam = "RDO014";
+        public const string PrimaryKeyMismatchBaseConstructor = "RDO015";
+        public const string PrimaryKeyMismatchBaseConstructorArgument = "RDO016";
     }
 }

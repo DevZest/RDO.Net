@@ -276,5 +276,23 @@ namespace DevZest.Data.CodeAnalysis {
                 return ResourceManager.GetString("PrimaryKeyParameterlessConstructor_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asc and Desc attributes are mutually exclusive..
+        /// </summary>
+        internal static string PrimaryKeySortAttributeConflict_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeySortAttributeConflict_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryKey SortAttribute conflict..
+        /// </summary>
+        internal static string PrimaryKeySortAttributeConflict_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeySortAttributeConflict_Title", resourceCulture);
+            }
+        }
     }
 }

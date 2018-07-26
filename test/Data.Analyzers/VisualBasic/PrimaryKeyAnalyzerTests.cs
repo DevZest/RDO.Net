@@ -151,5 +151,37 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void SortAttributeConflict()
+        {
+            var test = @"
+Imports DevZest.Data
+Imports DevZest.Data.Annotations
+
+Public NotInheritable Class PK
+    Inherits PrimaryKey
+
+    Public Sub New(<Asc(), Desc()>id As _Int32)
+        MyBase.New(id)
+    End Sub
+
+    Public ReadOnly Property ID As _Int32
+        Get
+            Return GetColumn(Of _Int32)(0)
+        End Get
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeySortAttributeConflict,
+                Message = string.Format(Resources.PrimaryKeySortAttributeConflict_Message),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 28) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }
