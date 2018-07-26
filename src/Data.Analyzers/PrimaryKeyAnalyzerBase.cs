@@ -98,34 +98,24 @@ namespace DevZest.Data.CodeAnalysis
 
         protected static void VerifyMismatchSortAttribute(SyntaxNodeAnalysisContext context, IParameterSymbol parameter, SortDirection sortDirection)
         {
-            if (IsSortAttributeMismatched(context, parameter, sortDirection, out var paramSortDirection))
+            var paramSortDirection = parameter.GetSortDirection(context.Compilation);
+            var isMismatched = paramSortDirection.HasValue ? sortDirection != paramSortDirection.Value : false;
+            if (isMismatched)
                 context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchSortAttribute, parameter.Locations[0], paramSortDirection.Value, sortDirection));
         }
 
-        private static bool IsSortAttributeMismatched(SyntaxNodeAnalysisContext context, IParameterSymbol parameter, SortDirection sortDirection, out SortDirection? paramSortDirection)
+        protected static SortDirection? GetSortDirection(ISymbol expressionSymbol, string methodName, IParameterSymbol constructorParam)
         {
-            bool isAsc = false;
-            bool isDesc = false;
-            var attributes = parameter.GetAttributes();
-            for (int i = 0; i < attributes.Length; i++)
-            {
-                var attribute = attributes[i];
-                if (attribute.IsAsc(context.Compilation))
-                    isAsc = true;
-                else if (attribute.IsDesc(context.Compilation))
-                    isDesc = true;
-            }
+            if (expressionSymbol == null || expressionSymbol != constructorParam)
+                return null;
 
-            if (isAsc && isDesc)
-                paramSortDirection = null;
-            else if (isAsc)
-                paramSortDirection = SortDirection.Ascending;
-            else if (isDesc)
-                paramSortDirection = SortDirection.Descending;
+            if (methodName == "Asc")
+                return SortDirection.Ascending;
+            else if (methodName == "Desc")
+                return SortDirection.Descending;
             else
-                paramSortDirection = SortDirection.Unspecified;
+                return null;
 
-            return paramSortDirection.HasValue ? sortDirection != paramSortDirection.Value : false;
         }
     }
 }

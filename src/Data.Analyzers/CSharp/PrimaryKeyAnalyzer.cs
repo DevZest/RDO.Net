@@ -83,15 +83,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 
             var name = expressionSymbol.Name;
             expressionSymbol = semanticModel.GetSymbolInfo(memberAccessSyntax.Expression).Symbol;
-            if (expressionSymbol == null || expressionSymbol != constructorParam)
-                return null;
-
-            if (name == "Asc")
-                return SortDirection.Ascending;
-            else if (name == "Desc")
-                return SortDirection.Descending;
-            else
-                return null;
+            return GetSortDirection(expressionSymbol, name, constructorParam);
         }
     }
 }
