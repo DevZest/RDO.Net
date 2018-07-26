@@ -81,7 +81,10 @@ namespace AdventureWorks.SalesOrders
                 {
                     var customerID = CurrentRow.GetValue(_.CustomerID);
                     if (customerID.HasValue)
-                        _addressLookupPopup.Show(foreignKeyBox, CurrentRow.GetValue(foreignKey.AddressID), customerID.Value);
+                    {
+                        var addressID = foreignKeyBox.ForeignKey == _.FK_ShipToAddress ? _.ShipToAddressID : _.BillToAddressID;
+                        _addressLookupPopup.Show(foreignKeyBox, CurrentRow.GetValue(addressID), customerID.Value);
+                    }
                 }
             }
 
