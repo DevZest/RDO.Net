@@ -67,7 +67,8 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
 
         private static InvocationExpressionSyntax GetInitializer(ConstructorBlockSyntax constructorBlock)
         {
-            if (!(constructorBlock.Statements[0] is ExpressionStatementSyntax expressionStatement))
+            var statements = constructorBlock.Statements;
+            if (statements.Count == 0 || !(statements[0] is ExpressionStatementSyntax expressionStatement))
                 return null;
 
             if (!(expressionStatement.Expression is InvocationExpressionSyntax invocationExpression))

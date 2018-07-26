@@ -183,5 +183,35 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MissingBaseConstructor()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public NotInheritable Class PK
+    Inherits PrimaryKey
+
+    Public Sub New(id As _Int32)
+    End Sub
+
+    Public ReadOnly Property ID As _Int32
+        Get
+            Return GetColumn(Of _Int32)(0)
+        End Get
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyMissingBaseConstructor,
+                Message = string.Format(Resources.PrimaryKeyMissingBaseConstructor_Message),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 16) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }
