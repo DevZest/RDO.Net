@@ -281,5 +281,36 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MismatchSortAttribute()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public NotInheritable Class PK
+    Inherits PrimaryKey
+
+    Public Sub New(id As _Int32)
+        MyBase.New(id.Asc())
+    End Sub
+
+    Public ReadOnly Property ID As _Int32
+        Get
+            Return GetColumn(Of _Int32)(0)
+        End Get
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyMismatchSortAttribute,
+                Message = string.Format(Resources.PrimaryKeyMismatchSortAttribute_Message, "Unspecified", "Ascending"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 20) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }
