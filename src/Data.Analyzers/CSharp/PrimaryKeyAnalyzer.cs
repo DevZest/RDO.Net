@@ -53,12 +53,43 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             {
                 var argumentExpression = arguments[i].Expression;
                 var constructorParam = constructorParams[i];
-                var sortDirection = argumentExpression.GetSortDirection(constructorParam, context.SemanticModel);
+                var sortDirection = GetSortDirection(argumentExpression, constructorParam, context.SemanticModel);
                 if (!sortDirection.HasValue)
                     context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchBaseConstructorArgument, argumentExpression.GetLocation(), constructorParam.Name));
                 else
                     VerifyMismatchSortAttribute(context, constructorParam, sortDirection.Value);
             }
+        }
+
+        private static SortDirection? GetSortDirection(ExpressionSyntax argumentExpression, IParameterSymbol constructorParam, SemanticModel semanticModel)
+        {
+            var expressionSymbol = semanticModel.GetSymbolInfo(argumentExpression).Symbol;
+            if (expressionSymbol == null)
+                return null;
+
+            if (expressionSymbol == constructorParam)
+                return SortDirection.Unspecified;
+
+            if (!(argumentExpression is InvocationExpressionSyntax invocationSyntax))
+                return null;
+
+            if (!(invocationSyntax.Expression is MemberAccessExpressionSyntax memberAccessSyntax))
+                return null;
+
+            if (memberAccessSyntax.Kind() != SyntaxKind.SimpleMemberAccessExpression)
+                return null;
+
+            var name = expressionSymbol.Name;
+            expressionSymbol = semanticModel.GetSymbolInfo(memberAccessSyntax.Expression).Symbol;
+            if (expressionSymbol == null || expressionSymbol != constructorParam)
+                return null;
+
+            if (name == "Asc")
+                return SortDirection.Ascending;
+            else if (name == "Desc")
+                return SortDirection.Descending;
+            else
+                return null;
         }
     }
 }
