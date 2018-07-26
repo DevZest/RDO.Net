@@ -64,6 +64,12 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidConstructorParam_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
+        public static readonly DiagnosticDescriptor PrimaryKeyMissingBaseConstructor = new DiagnosticDescriptor(
+            DiagnosticIds.PrimaryKeyMissingBaseConstructor,
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyMissingBaseConstructor_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyMissingBaseConstructor_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
         public static readonly DiagnosticDescriptor PrimaryKeySortAttributeConflict = new DiagnosticDescriptor(
             DiagnosticIds.PrimaryKeySortAttributeConflict,
             new LocalizableResourceString(nameof(Resources.PrimaryKeySortAttributeConflict_Title), Resources.ResourceManager, typeof(Resources)),

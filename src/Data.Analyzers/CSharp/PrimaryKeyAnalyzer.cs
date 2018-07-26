@@ -38,10 +38,12 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             ImmutableArray<IParameterSymbol> constructorParams)
         {
             var initializer = constructorDeclaration.Initializer;
-            if (initializer == null)
+            if (initializer == null || initializer.ThisOrBaseKeyword.Kind() != SyntaxKind.BaseKeyword)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMissingBaseConstructor, constructorDeclaration.Identifier.GetLocation()));
                 return;
-            if (initializer.ThisOrBaseKeyword.Kind() != SyntaxKind.BaseKeyword)
-                return;
+            }
+
             var arguments = initializer.ArgumentList.Arguments;
             if (arguments.Count != constructorParams.Length)
             {

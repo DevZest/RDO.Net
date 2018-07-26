@@ -15,6 +15,7 @@ namespace DevZest.Data.CodeAnalysis
                 Rules.PrimaryKeyInvalidConstructors,
                 Rules.PrimaryKeyParameterlessConstructor,
                 Rules.PrimaryKeyInvalidConstructorParam,
+                Rules.PrimaryKeyMissingBaseConstructor,
                 Rules.PrimaryKeySortAttributeConflict,
                 Rules.PrimaryKeyMismatchBaseConstructor,
                 Rules.PrimaryKeyMismatchBaseConstructorArgument,

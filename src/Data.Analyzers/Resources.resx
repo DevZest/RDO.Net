@@ -183,6 +183,12 @@
   <data name="PrimaryKeyMismatchSortAttribute_Title" xml:space="preserve">
     <value>PrimaryKey SortAttribute mismatch.</value>
   </data>
+  <data name="PrimaryKeyMissingBaseConstructor_Message" xml:space="preserve">
+    <value>Invocation to PrimaryKey base constructor is missing.</value>
+  </data>
+  <data name="PrimaryKeyMissingBaseConstructor_Title" xml:space="preserve">
+    <value>Missing PrimaryKey base initializer.</value>
+  </data>
   <data name="PrimaryKeyNotSealed_Message" xml:space="preserve">
     <value>Class derived from PrimaryKey should be sealed.</value>
   </data>

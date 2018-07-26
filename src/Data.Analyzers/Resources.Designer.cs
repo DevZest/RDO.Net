@@ -260,6 +260,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invocation to PrimaryKey base constructor is missing..
+        /// </summary>
+        internal static string PrimaryKeyMissingBaseConstructor_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyMissingBaseConstructor_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing PrimaryKey base initializer..
+        /// </summary>
+        internal static string PrimaryKeyMissingBaseConstructor_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyMissingBaseConstructor_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Class derived from PrimaryKey should be sealed..
         /// </summary>
         internal static string PrimaryKeyNotSealed_Message {

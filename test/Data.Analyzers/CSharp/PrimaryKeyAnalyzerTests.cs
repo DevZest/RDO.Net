@@ -181,6 +181,35 @@ public sealed class PK : PrimaryKey
         }
 
         [TestMethod]
+        public void MissingBaseConstructor()
+        {
+            var test = @"
+using DevZest.Data;
+
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id)
+    {
+    }
+
+    public _Int32 ID
+    {
+        get { return GetColumn<_Int32>(0); }
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyMissingBaseConstructor,
+                Message = string.Format(Resources.PrimaryKeyMissingBaseConstructor_Message),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 12) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
         public void MismatchBaseConstructor()
         {
             var test = @"
