@@ -244,5 +244,42 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MismatchBaseConstructorArgument()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public NotInheritable Class PK
+    Inherits PrimaryKey
+
+    Public Sub New(id1 As _Int32, id2 As _Int32)
+        MyBase.New(id1, id1)
+    End Sub
+
+    Public ReadOnly Property ID1 As _Int32
+        Get
+            Return GetColumn(Of _Int32)(0)
+        End Get
+    End Property
+
+    Public ReadOnly Property ID2 As _Int32
+        Get
+            Return GetColumn(Of _Int32)(1)
+        End Get
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyMismatchBaseConstructorArgument,
+                Message = string.Format(Resources.PrimaryKeyMismatchBaseConstructorArgument_Message, "id2"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 25) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }
