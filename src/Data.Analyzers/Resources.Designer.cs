@@ -242,6 +242,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PrimaryKey SortAttribute mismatch: constructor - {0}, base - {1}..
+        /// </summary>
+        internal static string PrimaryKeyMismatchSortAttribute_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyMismatchSortAttribute_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryKey SortAttribute mismatch..
+        /// </summary>
+        internal static string PrimaryKeyMismatchSortAttribute_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyMismatchSortAttribute_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Class derived from PrimaryKey should be sealed..
         /// </summary>
         internal static string PrimaryKeyNotSealed_Message {

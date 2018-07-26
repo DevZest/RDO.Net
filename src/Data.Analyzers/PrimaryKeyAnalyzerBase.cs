@@ -17,7 +17,8 @@ namespace DevZest.Data.CodeAnalysis
                 Rules.PrimaryKeyInvalidConstructorParam,
                 Rules.PrimaryKeySortAttributeConflict,
                 Rules.PrimaryKeyMismatchBaseConstructor,
-                Rules.PrimaryKeyMismatchBaseConstructorArgument); }
+                Rules.PrimaryKeyMismatchBaseConstructorArgument,
+                Rules.PrimaryKeyMismatchSortAttribute); }
         }
 
         protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
@@ -92,6 +93,38 @@ namespace DevZest.Data.CodeAnalysis
 
             var result = classSymbol.Constructors[0];
             return result.IsStatic || result.IsImplicitlyDeclared ? null : result;
+        }
+
+        protected static void VerifyMismatchSortAttribute(SyntaxNodeAnalysisContext context, IParameterSymbol parameter, SortDirection sortDirection)
+        {
+            if (IsSortAttributeMismatched(context, parameter, sortDirection, out var paramSortDirection))
+                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchSortAttribute, parameter.Locations[0], paramSortDirection.Value, sortDirection));
+        }
+
+        private static bool IsSortAttributeMismatched(SyntaxNodeAnalysisContext context, IParameterSymbol parameter, SortDirection sortDirection, out SortDirection? paramSortDirection)
+        {
+            bool isAsc = false;
+            bool isDesc = false;
+            var attributes = parameter.GetAttributes();
+            for (int i = 0; i < attributes.Length; i++)
+            {
+                var attribute = attributes[i];
+                if (attribute.IsAsc(context.Compilation))
+                    isAsc = true;
+                else if (attribute.IsDesc(context.Compilation))
+                    isDesc = true;
+            }
+
+            if (isAsc && isDesc)
+                paramSortDirection = null;
+            else if (isAsc)
+                paramSortDirection = SortDirection.Ascending;
+            else if (isDesc)
+                paramSortDirection = SortDirection.Descending;
+            else
+                paramSortDirection = SortDirection.Unspecified;
+
+            return paramSortDirection.HasValue ? sortDirection != paramSortDirection.Value : false;
         }
     }
 }

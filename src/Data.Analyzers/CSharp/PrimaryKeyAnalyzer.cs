@@ -53,11 +53,12 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             {
                 var argumentExpression = arguments[i].Expression;
                 var constructorParam = constructorParams[i];
-                var sortOrder = argumentExpression.GetSortDirection(constructorParam, context.SemanticModel);
-                if (!sortOrder.HasValue)
+                var sortDirection = argumentExpression.GetSortDirection(constructorParam, context.SemanticModel);
+                if (!sortDirection.HasValue)
                     context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchBaseConstructorArgument, argumentExpression.GetLocation(), constructorParam.Name));
+                else
+                    VerifyMismatchSortAttribute(context, constructorParam, sortDirection.Value);
             }
-
         }
     }
 }

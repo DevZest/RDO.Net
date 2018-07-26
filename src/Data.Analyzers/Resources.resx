@@ -177,6 +177,12 @@
   <data name="PrimaryKeyMismatchBaseConstructor_Title" xml:space="preserve">
     <value>Mismatch in number of arguments passed to PrimaryKey base constructor.</value>
   </data>
+  <data name="PrimaryKeyMismatchSortAttribute_Message" xml:space="preserve">
+    <value>PrimaryKey SortAttribute mismatch: constructor - {0}, base - {1}.</value>
+  </data>
+  <data name="PrimaryKeyMismatchSortAttribute_Title" xml:space="preserve">
+    <value>PrimaryKey SortAttribute mismatch.</value>
+  </data>
   <data name="PrimaryKeyNotSealed_Message" xml:space="preserve">
     <value>Class derived from PrimaryKey should be sealed.</value>
   </data>

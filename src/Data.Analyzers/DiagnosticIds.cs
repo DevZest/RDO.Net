@@ -15,5 +15,6 @@
         public const string PrimaryKeyInvalidConstructorParam = "RDO014";
         public const string PrimaryKeyMismatchBaseConstructor = "RDO015";
         public const string PrimaryKeyMismatchBaseConstructorArgument = "RDO016";
+        public const string PrimaryKeyMismatchSortAttribute = "RDO017";
     }
 }

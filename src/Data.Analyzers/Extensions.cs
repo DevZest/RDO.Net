@@ -9,6 +9,9 @@ namespace DevZest.Data.CodeAnalysis
         public static SortDirection? GetSortDirection(this ExpressionSyntax argumentExpression, IParameterSymbol constructorParam, SemanticModel semanticModel)
         {
             var expressionSymbol = semanticModel.GetSymbolInfo(argumentExpression).Symbol;
+            if (expressionSymbol == null)
+                return null;
+
             if (expressionSymbol == constructorParam)
                 return SortDirection.Unspecified;
 
@@ -23,7 +26,7 @@ namespace DevZest.Data.CodeAnalysis
 
             var name = expressionSymbol.Name;
             expressionSymbol = semanticModel.GetSymbolInfo(memberAccessSyntax.Expression).Symbol;
-            if (expressionSymbol != constructorParam)
+            if (expressionSymbol == null || expressionSymbol != constructorParam)
                 return null;
 
             if (name == "Asc")

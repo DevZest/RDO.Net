@@ -219,7 +219,7 @@ using DevZest.Data;
 public sealed class PK : PrimaryKey
 {
     public PK(_Int32 id1, _Int32 id2)
-        : base(id1.Asc(), id1)
+        : base(id1, id1)
     {
     }
 
@@ -239,7 +239,37 @@ public sealed class PK : PrimaryKey
                 Id = DiagnosticIds.PrimaryKeyMismatchBaseConstructorArgument,
                 Message = string.Format(Resources.PrimaryKeyMismatchBaseConstructorArgument_Message, "id2"),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 27) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 21) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void MismatchSortAttribute()
+        {
+            var test = @"
+using DevZest.Data;
+
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id)
+        : base(id.Asc())
+    {
+    }
+
+    public _Int32 ID
+    {
+        get { return GetColumn<_Int32>(0); }
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyMismatchSortAttribute,
+                Message = string.Format(Resources.PrimaryKeyMismatchSortAttribute_Message, "Unspecified", "Ascending"),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 22) }
             };
 
             VerifyCSharpDiagnostic(test, expected);

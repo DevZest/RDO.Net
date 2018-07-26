@@ -81,5 +81,11 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchBaseConstructorArgument_Title), Resources.ResourceManager, typeof(Resources)),
             new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchBaseConstructorArgument_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor PrimaryKeyMismatchSortAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.PrimaryKeyMismatchSortAttribute,
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchSortAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchSortAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
     }
 }
