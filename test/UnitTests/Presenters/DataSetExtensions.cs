@@ -3,7 +3,6 @@ using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Linq;
 
 namespace DevZest.Data.Presenters
 {
@@ -11,8 +10,7 @@ namespace DevZest.Data.Presenters
     {
         internal static IReadOnlyList<Column> GetRowMatchColumns(this DataSet dataSet)
         {
-            var primaryKey = dataSet.Model.PrimaryKey;
-            return primaryKey == null ? null : primaryKey.Select(x => x.Column).ToArray();
+            return dataSet.Model.PrimaryKey;
         }
 
         private sealed class AutoInitRowView : RowView

@@ -490,8 +490,7 @@ namespace DevZest.Data.Presenters
 
         protected virtual IReadOnlyList<Column> GetMatchColumns(T _)
         {
-            var primaryKey = _.PrimaryKey;
-            return primaryKey == null ? null : primaryKey.Select(x => x.Column).ToArray();
+            return _.PrimaryKey;
         }
     }
 }

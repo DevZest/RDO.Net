@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowPresenter : ElementPresenter, IDataValues
+    public sealed class RowPresenter : ElementPresenter
     {
         public event EventHandler<ValueChangedEventArgs> ValueChanged = delegate { };
 
@@ -610,7 +610,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        IReadOnlyList<Column> IDataValues.Columns
+        internal IReadOnlyList<Column> MatchColumns
         {
             get { return _rowMapper?.RowMatchColumns; }
         }
@@ -625,7 +625,7 @@ namespace DevZest.Data.Presenters
             if (_rowMapper == null || !_rowMapper.CanMatchRow || DataRow == null || DataRow.BaseDataSet == null)
                 return null;
 
-            return this.GetValueHashCode();
+            return RowMatch.GetHashCode(MatchColumns, DataRow);
         }
 
         public override string ToString()

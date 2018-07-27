@@ -6,14 +6,33 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal struct RowMatch : IEquatable<RowMatch>
     {
-        public RowMatch(IDataValues dataValues, int valueHashCode)
+        public RowMatch(IReadOnlyList<Column> columns, DataRow dataRow, int valueHashCode)
         {
-            Debug.Assert(dataValues != null);
-            DataValues = dataValues;
+            Debug.Assert(columns != null);
+            Columns = columns;
+            DataRow = dataRow;
             ValueHashCode = valueHashCode;
         }
 
-        public readonly IDataValues DataValues;
+        public static int? GetHashCode(IReadOnlyList<Column> columns, DataRow dataRow)
+        {
+            if (columns == null || columns.Count == 0)
+                return null;
+
+            unchecked
+            {
+                var hash = 2166136261;
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    hash = hash ^ (uint)columns[i].GetHashCode(dataRow);
+                    hash = hash * 16777619;
+                }
+                return unchecked((int)hash);
+            }
+        }
+
+        public readonly IReadOnlyList<Column> Columns;
+        public readonly DataRow DataRow;
         public readonly int ValueHashCode;
 
         public override int GetHashCode()
@@ -26,26 +45,15 @@ namespace DevZest.Data.Presenters.Primitives
             if (ValueHashCode != other.ValueHashCode)
                 return false;
 
-            if (DataValues == other.DataValues)
-                return true;
+            if (AreEqual(Columns, other.Columns))
+                return DataRow == other.DataRow;
 
-            if (DataValues == null || other.DataValues == null)
+            if (Columns.Count != other.Columns.Count)
                 return false;
 
-            var sourceDataRow = DataValues.DataRow;
-            var targetDataRow = other.DataValues.DataRow;
-            var sourceColumns = DataValues.Columns;
-            var targetColumns = other.DataValues.Columns;
-
-            if (AreEqual(sourceColumns, targetColumns))
-                return sourceDataRow == targetDataRow;
-
-            if (sourceColumns.Count != targetColumns.Count)
-                return false;
-
-            for (int i = 0; i < sourceColumns.Count; i++)
+            for (int i = 0; i < Columns.Count; i++)
             {
-                if (!sourceColumns[i].Equals(DataValues.DataRow, targetColumns[i], other.DataValues.DataRow))
+                if (!Columns[i].Equals(DataRow, other.Columns[i], other.DataRow))
                     return false;
             }
             return true;

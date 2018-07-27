@@ -131,8 +131,7 @@ namespace DevZest.Data.Presenters.Primitives
             for (int i = GetDepth(dataRow); i > 0; i--)
             {
                 dataRow = dataRow.ParentDataRow;
-                RowPresenter row;
-                bool exists = CreateIfNotExist(dataRow, out row);
+                bool exists = CreateIfNotExist(dataRow, out var row);
                 if (exists)
                     return row;
             }
@@ -142,8 +141,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private RowPresenter GetOrCreate(DataRow dataRow)
         {
-            RowPresenter result;
-            CreateIfNotExist(dataRow, out result);
+            CreateIfNotExist(dataRow, out var result);
             return result;
         }
 
@@ -355,8 +353,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Debug.Assert(dataRow != null);
                 if (_mappings == null)
                     return dataRow.DataSet == DataSet ? _rows[dataRow.Index] : null;
-                RowPresenter result;
-                return _mappings.TryGetValue(dataRow, out result) ? result : null;
+                return _mappings.TryGetValue(dataRow, out var result) ? result : null;
             }
         }
 
@@ -529,10 +526,10 @@ namespace DevZest.Data.Presenters.Primitives
             Debug.Assert(oldValueHashCode.HasValue || newValueHashCode.HasValue);
 
             if (oldValueHashCode.HasValue)
-                _rowMatches.Remove(new RowMatch(rowPresenter, oldValueHashCode.Value));
+                _rowMatches.Remove(new RowMatch(rowPresenter.MatchColumns, rowPresenter.DataRow, oldValueHashCode.Value));
 
             if (newValueHashCode.HasValue)
-                _rowMatches.Add(new RowMatch(rowPresenter, newValueHashCode.Value), rowPresenter);
+                _rowMatches.Add(new RowMatch(rowPresenter.MatchColumns, rowPresenter.DataRow, newValueHashCode.Value), rowPresenter);
         }
 
         public RowPresenter this[RowMatch rowMatch]
@@ -555,7 +552,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             if (!rowPresenter.MatchValueHashCode.HasValue)
                 return null;
-            return this[new RowMatch(rowPresenter, rowPresenter.MatchValueHashCode.Value)];
+            return this[new RowMatch(rowPresenter.MatchColumns, rowPresenter.DataRow, rowPresenter.MatchValueHashCode.Value)];
         }
     }
 }

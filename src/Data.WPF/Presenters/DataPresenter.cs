@@ -626,16 +626,16 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? false : LayoutManager.CanMatchRow; }
         }
 
-        public RowPresenter Match(IDataValues dataValues)
+        public RowPresenter Match(IReadOnlyList<Column> columns, DataRow dataRow = null)
         {
-            dataValues.VerifyNotNull(nameof(dataValues));
+            columns.VerifyNotNull(nameof(columns));
             if (!CanMatchRow)
                 return null;
 
-            var valueHashCode = dataValues.GetValueHashCode();
+            var valueHashCode = RowMatch.GetHashCode(columns, dataRow);
             if (!valueHashCode.HasValue)
                 return null;
-            return LayoutManager[new RowMatch(dataValues, valueHashCode.Value)];
+            return LayoutManager[new RowMatch(columns, dataRow, valueHashCode.Value)];
         }
 
         public RowPresenter Match(RowPresenter rowPresenter, bool matchVirtual = true)
