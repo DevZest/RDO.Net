@@ -11,10 +11,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public NotInheritable Class PK
             Inherits PrimaryKey
 
-            Public Shared Function ValueOf(addressID As Integer) As IDataValues
-                Return DataValues.Create(_Int32.Const(addressID))
-            End Function
-
             Public Sub New(addressID As _Int32)
                 MyBase.New(addressID)
             End Sub

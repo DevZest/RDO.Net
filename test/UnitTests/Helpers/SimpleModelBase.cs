@@ -8,11 +8,6 @@ namespace DevZest.Data.Helpers
     {
         public sealed class PK : PrimaryKey
         {
-            public static IDataValues ValueOf(int id)
-            {
-                return DataValues.Create(_Int32.Const(id));
-            }
-
             public PK(_Int32 id)
                 : base(id)
             {

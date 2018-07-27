@@ -146,10 +146,10 @@ namespace DevZest.Data.SqlServer
         private static void GenerateColumnList(this PrimaryKey key, IndentedStringBuilder sqlBuilder)
         {
             sqlBuilder.Append(" (");
-            for (int i = 0; i < key.Count(); i++)
+            for (int i = 0; i < key.Count; i++)
             {
                 sqlBuilder.Append(key[i].Column.DbColumnName.ToQuotedIdentifier());
-                if (i != key.Count() - 1)
+                if (i != key.Count - 1)
                     sqlBuilder.Append(", ");
             }
             sqlBuilder.AppendLine(")");

@@ -9,11 +9,6 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_SalesOrderHeader_SalesOrderID", Description = "Clustered index created by a primary key constraint.")]
         public sealed class PK : PrimaryKey
         {
-            public static IDataValues ValueOf(int salesOrderID)
-            {
-                return DataValues.Create(_Int32.Const(salesOrderID));
-            }
-
             public PK(_Int32 salesOrderID)
                 : base(salesOrderID)
             {

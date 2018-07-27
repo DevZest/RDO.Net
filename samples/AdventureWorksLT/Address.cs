@@ -12,11 +12,6 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_Address_AddressID", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
-            public static IDataValues ValueOf(int addressID)
-            {
-                return DataValues.Create(_Int32.Const(addressID));
-            }
-
             public PK(_Int32 addressID)
                 : base(addressID)
             {

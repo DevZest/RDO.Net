@@ -9,11 +9,6 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbPrimaryKey("PK_ProductModelProductDescription_ProductModelID_ProductDescriptionID_Culture", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
-            public static IDataValues ValueOf(int productModelID, int productDescriptionID, string culture)
-            {
-                return DataValues.Create(_Int32.Const(productModelID), _Int32.Const(productDescriptionID), _String.Const(culture));
-            }
-
             public PK(_Int32 productModelID, _Int32 productDescriptionID, _String culture)
                 : base(productModelID, productDescriptionID, culture)
             {

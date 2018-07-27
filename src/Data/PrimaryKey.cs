@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace DevZest.Data
 {
-    public abstract class PrimaryKey : ReadOnlyCollection<ColumnSort>
+    public abstract class PrimaryKey : ReadOnlyCollection<ColumnSort>, IReadOnlyList<Column>
     {
         protected PrimaryKey(params ColumnSort[] columns)
             : base(columns)
@@ -50,6 +50,11 @@ namespace DevZest.Data
             get { return _parentModel; }
         }
 
+        Column IReadOnlyList<Column>.this[int index]
+        {
+            get { return this[index].Column; }
+        }
+
         public IReadOnlyList<ColumnMapping> Join(PrimaryKey target)
         {
             target.VerifyNotNull(nameof(target));
@@ -69,12 +74,10 @@ namespace DevZest.Data
             return result;
         }
 
-        public IReadOnlyList<Column> GetColumns()
+        IEnumerator<Column> IEnumerable<Column>.GetEnumerator()
         {
-            var result = new Column[Count];
-            for (int i = 0; i < Count; i++)
-                result[i] = this[i].Column;
-            return result;
+            foreach (var columnSort in this)
+                yield return columnSort.Column;
         }
     }
 }

@@ -4,11 +4,6 @@
     {
         public sealed class PK : PrimaryKey
         {
-            public static IDataValues ValueOf(int oldValue)
-            {
-                return DataValues.Create(_Int32.Const(oldValue));
-            }
-
             public PK(_Int32 oldValue)
                 : base(oldValue)
             {

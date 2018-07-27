@@ -9,11 +9,6 @@ namespace DevZest.Data
     {
         private sealed class SimpleKey : PrimaryKey
         {
-            public static IDataValues ValueOf(int column1, int column2)
-            {
-                return DataValues.Create(_Int32.Const(column1), _Int32.Const(column2));
-            }
-
             public SimpleKey(_Int32 column1, [Desc]_Int32 column2)
                 : base(column1, column2.Desc())
             {

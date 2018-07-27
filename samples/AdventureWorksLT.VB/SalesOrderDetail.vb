@@ -10,10 +10,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Public NotInheritable Class PK
             Inherits PrimaryKey
 
-            Public Shared Function ValueOf(ByVal salesOrderID As Integer, ByVal salesOrderDetailID As Integer) As IDataValues
-                Return DataValues.Create(_Int32.Const(salesOrderID), _Int32.Const(salesOrderDetailID))
-            End Function
-
             Public Sub New(salesOrderID As _Int32, salesOrderDetailID As _Int32)
                 MyBase.New(salesOrderID, salesOrderDetailID)
             End Sub
