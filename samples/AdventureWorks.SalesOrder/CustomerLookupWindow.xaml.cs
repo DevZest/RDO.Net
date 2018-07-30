@@ -30,7 +30,7 @@ namespace AdventureWorks.SalesOrders
         private ForeignKeyBox _foreignKeyBox;
         private ForeignKeyBox _shipToAddressBox;
         private ForeignKeyBox _billToAddressBox;
-        private Customer.PK PK
+        private Customer.PK FK
         {
             get { return (Customer.PK)_foreignKeyBox.ForeignKey; }
         }
@@ -78,7 +78,7 @@ namespace AdventureWorks.SalesOrders
         {
             if (_presenter.CurrentCustomerID != CurrentRow.GetValue(_.CustomerID))
             {
-                _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(PK, Lookup));
+                _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(FK, Lookup));
                 _shipToAddressBox.ClearValue();
                 _billToAddressBox.ClearValue();
             }

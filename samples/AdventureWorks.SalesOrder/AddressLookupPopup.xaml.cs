@@ -1,9 +1,5 @@
-﻿using DevZest.Data;
-using DevZest.Data.Presenters;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
@@ -21,7 +17,7 @@ namespace AdventureWorks.SalesOrders
 
         private Presenter _presenter;
         private ForeignKeyBox _foreignKeyBox;
-        public Address.PK PK
+        public Address.PK FK
         {
             get { return _foreignKeyBox == null ? null : (Address.PK)_foreignKeyBox.ForeignKey; }
         }
@@ -58,7 +54,7 @@ namespace AdventureWorks.SalesOrders
 
         private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
-            _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(PK, Lookup));
+            _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(FK, Lookup));
             IsOpen = false;
         }
 

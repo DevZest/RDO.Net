@@ -75,7 +75,7 @@ namespace AdventureWorks.SalesOrders
             private void BeginLookupAddress(ForeignKeyBox foreignKeyBox)
             {
                 var foreignKey = (Address.PK)foreignKeyBox.ForeignKey;
-                if (_addressLookupPopup.PK == foreignKey)
+                if (_addressLookupPopup.FK == foreignKey)
                     _addressLookupPopup.IsOpen = false;
                 else
                 {
