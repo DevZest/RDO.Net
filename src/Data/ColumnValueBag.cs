@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -62,6 +63,17 @@ namespace DevZest.Data
             return _columnValues.ContainsKey(key);
         }
 
+        public bool ContainsKey(PrimaryKey key)
+        {
+            for (int i = 0; i < key.Count; i++)
+            {
+                var column = key[i].Column;
+                if (!ContainsKey(column))
+                    return false;
+            }
+            return true;
+        }
+
         public IEnumerator<KeyValuePair<Column, object>> GetEnumerator()
         {
             return _columnValues.GetEnumerator();
@@ -90,26 +102,40 @@ namespace DevZest.Data
             _columnValues[column] = column.GetValue(dataRow);
         }
 
-        public void AutoSelect(PrimaryKey key, DataRow dataRow)
+        public int AutoSelect(PrimaryKey key, DataRow dataRow)
         {
             key.VerifyNotNull(nameof(key));
             dataRow.VerifyNotNull(nameof(dataRow));
 
+            var valueKey = dataRow.Model.PrimaryKey;
+            if (valueKey != null && valueKey.GetType() == key.GetType())
+            {
+                for (int i = 0; i < valueKey.Count; i++)
+                    _columnValues[key[i].Column] = valueKey[i].Column.GetValue(dataRow);
+                return valueKey.Count;
+            }
+
+            var result = 0;
             var valueColumns = dataRow.Model.Columns;
             foreach (var columnSort in key)
             {
                 var keyColumn = columnSort.Column;
                 var valueColumn = valueColumns.AutoSelect(keyColumn);
                 if (valueColumn != null)
+                {
                     _columnValues[keyColumn] = valueColumn.GetValue(dataRow);
+                    result++;
+                }
             }
+            return result;
         }
 
-        public void AutoSelect(Projection projection, DataRow dataRow, bool ignoreExpression = true)
+        public int AutoSelect(Projection projection, DataRow dataRow, bool ignoreExpression = true)
         {
             projection.VerifyNotNull(nameof(projection));
             dataRow.VerifyNotNull(nameof(dataRow));
 
+            var result = 0;
             var keyColumns = projection.Columns;
             var valueColumns = dataRow.Model.Columns;
             for (int i = 0; i < keyColumns.Count; i++)
@@ -119,8 +145,13 @@ namespace DevZest.Data
                     continue;
                 var valueColumn = valueColumns.AutoSelect(keyColumn);
                 if (valueColumn != null)
+                {
                     _columnValues[keyColumn] = valueColumn.GetValue(dataRow);
+                    result++;
+                }
             }
+
+            return result;
         }
 
         public void Remove(Column column)
