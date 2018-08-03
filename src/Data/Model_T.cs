@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace DevZest.Data
 {
-    public abstract class Model<T> : Model
+    public abstract class Model<T> : Model, IKey<T>
         where T : PrimaryKey
     {
         protected Model()

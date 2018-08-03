@@ -2,7 +2,7 @@
 
 namespace DevZest.Data
 {
-    public abstract class Key<T> : Projection
+    public abstract class Key<T> : Projection, IKey<T>
         where T : PrimaryKey
     {
         private sealed class ContainerModel : Model<T>
@@ -45,24 +45,6 @@ namespace DevZest.Data
                 var containerModel = new ContainerModel(this);
                 Debug.Assert(ParentModel == containerModel);
             }
-        }
-
-        public KeyMapping Match(T target)
-        {
-            target.VerifyNotNull(nameof(target));
-            return new KeyMapping(PrimaryKey, target);
-        }
-
-        public KeyMapping Match(Model<T> target)
-        {
-            target.VerifyNotNull(nameof(target));
-            return new KeyMapping(PrimaryKey, target.PrimaryKey);
-        }
-
-        public KeyMapping Match(Key<T> target)
-        {
-            target.VerifyNotNull(nameof(target));
-            return new KeyMapping(PrimaryKey, target.PrimaryKey);
         }
     }
 }
