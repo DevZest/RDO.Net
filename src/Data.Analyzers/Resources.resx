@@ -151,7 +151,7 @@
     <value>Mounter '{0}' of property '{1}' does not conform to naming convention, rename mounter name '{0}' to '{2}'.</value>
   </data>
   <data name="MounterNaming_Title" xml:space="preserve">
-    <value>Mounter name does not conform to convention.</value>
+    <value>Mounter naming rule violation.</value>
   </data>
   <data name="PrimaryKeyInvalidConstructorParam_Message" xml:space="preserve">
     <value>The PrimaryKey constructor parameter '{0}' must be Column.</value>
@@ -206,5 +206,11 @@
   </data>
   <data name="PrimaryKeySortAttributeConflict_Title" xml:space="preserve">
     <value>PrimaryKey SortAttribute conflict.</value>
+  </data>
+  <data name="ProjectionColumnNaming_Message" xml:space="preserve">
+    <value>Projection column '{0}' from existing Mounter '{1}' violates naming rule.</value>
+  </data>
+  <data name="ProjectionColumnNaming_Title" xml:space="preserve">
+    <value>Projection column naming rule violation.</value>
   </data>
 </root>

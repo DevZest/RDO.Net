@@ -34,6 +34,12 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.MounterNaming_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+        public static readonly DiagnosticDescriptor ProjectionColumnNaming = new DiagnosticDescriptor(
+            DiagnosticIds.ProjectionColumnNaming,
+            new LocalizableResourceString(nameof(Resources.ProjectionColumnNaming_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.ProjectionColumnNaming_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
         public static readonly DiagnosticDescriptor MissingMounterRegistration = new DiagnosticDescriptor(
             DiagnosticIds.MissingMounterRegistration,
             new LocalizableResourceString(nameof(Resources.MissingMounterRegistration_Title), Resources.ResourceManager, typeof(Resources)),

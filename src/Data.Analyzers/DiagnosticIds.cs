@@ -7,7 +7,8 @@
         public const string InvalidRegisterLocalColumn = "RDO003";
         public const string DuplicateMounterRegistration = "RDO004";
         public const string MounterNaming = "RDO005";
-        public const string MissingMounterRegistration = "RDO006";
+        public const string ProjectionColumnNaming = "RDO006";
+        public const string MissingMounterRegistration = "RDO007";
         public const string PrimaryKeyNotSealed = "RDO010";
         public const string PrimaryKeyInvalidConstructors = "RDO011";
         public const string PrimaryKeyParameterlessConstructor = "RDO012";

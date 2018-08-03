@@ -37,9 +37,10 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             if (!VerifyInvocation(invocationExpression, semanticModel, out var containingType, out var fieldSymbol, out var mounterIdentifier))
                 return Diagnostic.Create(Rules.InvalidRegisterMounterInvocation, invocationExpression.GetLocation());
 
-            var firstArgument = invocationExpression.ArgumentList.Arguments[0];
+            var arguments = invocationExpression.ArgumentList.Arguments;
+            var firstArgument = arguments[0];
             Debug.Assert(firstArgument != null);
-            if (!IsValidGetter(firstArgument, semanticModel, containingType, out var propertySymbol))
+            if (!IsValidGetter(firstArgument, semanticModel, containingType, out var propertySymbol, out var nameSyntax))
                 return Diagnostic.Create(Rules.InvalidRegisterMounterGetterParam, firstArgument.GetLocation());
 
             if (isColumnRegistration && propertySymbol.Type.IsTypeOfLocalColumn(context.Compilation))
@@ -53,6 +54,12 @@ namespace DevZest.Data.CodeAnalysis.CSharp
                 var expectedMounterName = "_" + propertySymbol.Name;
                 if (fieldSymbol.Name != expectedMounterName)
                     return Diagnostic.Create(Rules.MounterNaming, mounterIdentifier.GetLocation(), fieldSymbol.Name, propertySymbol.Name, expectedMounterName);
+            }
+            else if (symbol.Name == "Register" && arguments.Count == 2) // Projection column registration
+            {
+                var fromMounter = semanticModel.GetSymbolInfo(arguments[1].Expression).Symbol as IFieldSymbol;
+                if (fromMounter != null && "_" + propertySymbol.Name != fromMounter.Name)
+                    return Diagnostic.Create(Rules.ProjectionColumnNaming, nameSyntax.GetLocation(), propertySymbol.Name, fromMounter.Name);
             }
             return null;
         }
@@ -131,9 +138,10 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             return true;
         }
 
-        private static bool IsValidGetter(ArgumentSyntax argument, SemanticModel semanticModel, INamedTypeSymbol containingType, out IPropertySymbol propertySymbol)
+        private static bool IsValidGetter(ArgumentSyntax argument, SemanticModel semanticModel, INamedTypeSymbol containingType, out IPropertySymbol propertySymbol, out SimpleNameSyntax nameSyntax)
         {
             propertySymbol = null;
+            nameSyntax = null;
 
             var expression = argument.Expression;
             if (!(expression is LambdaExpressionSyntax lambdaExpression))
@@ -155,6 +163,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
                 return false;
 
             propertySymbol = result;
+            nameSyntax = memberAccessExpression.Name;
             return true;
         }
 
@@ -301,7 +310,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 
             var firstArgument = expression.ArgumentList.Arguments[0];
             Debug.Assert(firstArgument != null);
-            if (!IsValidGetter(firstArgument, semanticModel, propertySymbol.ContainingType, out var otherPropertySymbol))
+            if (!IsValidGetter(firstArgument, semanticModel, propertySymbol.ContainingType, out var otherPropertySymbol, out _))
                 return false;
 
             return propertySymbol.Name == otherPropertySymbol.Name;

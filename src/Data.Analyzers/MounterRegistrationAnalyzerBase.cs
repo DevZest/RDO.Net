@@ -14,6 +14,7 @@ namespace DevZest.Data.CodeAnalysis
                 Rules.InvalidRegisterLocalColumn,
                 Rules.DuplicateMounterRegistration,
                 Rules.MounterNaming,
+                Rules.ProjectionColumnNaming,
                 Rules.MissingMounterRegistration); }
         }
     }

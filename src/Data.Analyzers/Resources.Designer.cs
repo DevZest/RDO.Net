@@ -161,7 +161,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mounter name does not conform to convention..
+        ///   Looks up a localized string similar to Mounter naming rule violation..
         /// </summary>
         internal static string MounterNaming_Title {
             get {
@@ -328,6 +328,24 @@ namespace DevZest.Data.CodeAnalysis {
         internal static string PrimaryKeySortAttributeConflict_Title {
             get {
                 return ResourceManager.GetString("PrimaryKeySortAttributeConflict_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Projection column &apos;{0}&apos; from existing Mounter &apos;{1}&apos; violates naming rule..
+        /// </summary>
+        internal static string ProjectionColumnNaming_Message {
+            get {
+                return ResourceManager.GetString("ProjectionColumnNaming_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Projection column naming rule violation..
+        /// </summary>
+        internal static string ProjectionColumnNaming_Title {
+            get {
+                return ResourceManager.GetString("ProjectionColumnNaming_Title", resourceCulture);
             }
         }
     }

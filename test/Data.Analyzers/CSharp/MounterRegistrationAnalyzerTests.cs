@@ -213,6 +213,39 @@ class SimpleModel : Model
         }
 
         [TestMethod]
+        public void ProjectionColumnNaming()
+        {
+            var test = @"
+using DevZest.Data;
+
+public class ProjectionColumnNaming : Model
+{
+    protected static readonly Mounter<_Int32> _Column1 = RegisterColumn((ProjectionColumnNaming _) => _.Column1);
+
+    public _Int32 Column1 { get; private set; }
+
+    public class Lookup : Projection
+    {
+        static Lookup()
+        {
+            Register((Lookup _) => _.Column2, _Column1);
+        }
+
+        public _Int32 Column2 { get; private set; }
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.ProjectionColumnNaming,
+                Message = string.Format(Resources.ProjectionColumnNaming_Message, "Column2", "_Column1"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 14, 38) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
         public void InvalidRegisterLocalColumn()
         {
             var test = @"
