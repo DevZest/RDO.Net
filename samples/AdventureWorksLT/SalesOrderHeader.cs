@@ -23,7 +23,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 Register((Key _) => _.SalesOrderID, _SalesOrderID);
             }
 
-            protected override PK GetPrimaryKey()
+            protected override PK CreatePrimaryKey()
             {
                 return new PK(SalesOrderID);
             }

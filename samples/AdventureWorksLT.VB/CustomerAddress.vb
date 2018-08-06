@@ -23,7 +23,7 @@ Namespace DevZest.Samples.AdventureWorksLT
                 Register(Function(ByVal x As Key) x.AddressID, _AddressID)
             End Sub
 
-            Protected Overrides Function GetPrimaryKey() As PK
+            Protected Overrides Function CreatePrimaryKey() As PK
                 Return New PK(CustomerID, AddressID)
             End Function
 
@@ -76,7 +76,7 @@ Namespace DevZest.Samples.AdventureWorksLT
                 End Set
             End Property
 
-            Protected Overrides Function GetForeignKey() As PK
+            Protected Overrides Function CreateForeignKey() As PK
                 Return New PK(CustomerID, AddressID)
             End Function
         End Class

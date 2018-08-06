@@ -24,7 +24,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 Register((Key _) => _.SalesOrderDetailID, _SalesOrderDetailID);
             }
 
-            protected override PK GetPrimaryKey()
+            protected override PK CreatePrimaryKey()
             {
                 return new PK(SalesOrderID, SalesOrderDetailID);
             }

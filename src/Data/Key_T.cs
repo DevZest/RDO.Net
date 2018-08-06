@@ -31,12 +31,12 @@ namespace DevZest.Data
         }
 
 
-        protected abstract T GetPrimaryKey();
+        protected abstract T CreatePrimaryKey();
 
         private T _primaryKey;
         public T PrimaryKey
         {
-            get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => GetPrimaryKey()); }
+            get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => CreatePrimaryKey()); }
         }
 
         internal override void EnsureConstructed()

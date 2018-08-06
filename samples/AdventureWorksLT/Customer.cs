@@ -22,7 +22,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 Register((Key _) => _.CustomerID, _CustomerID);
             }
 
-            protected override PK GetPrimaryKey()
+            protected override PK CreatePrimaryKey()
             {
                 return new PK(CustomerID);
             }
@@ -39,7 +39,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             public _Int32 CustomerID { get; private set; }
 
-            protected override PK GetForeignKey()
+            protected override PK CreateForeignKey()
             {
                 return new PK(CustomerID);
             }

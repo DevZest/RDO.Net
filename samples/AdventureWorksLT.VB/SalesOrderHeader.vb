@@ -23,7 +23,7 @@ Namespace DevZest.Samples.AdventureWorksLT
                 Register(Function(ByVal x As Key) x.SalesOrderID, _SalesOrderID)
             End Sub
 
-            Protected Overrides Function GetPrimaryKey() As PK
+            Protected Overrides Function CreatePrimaryKey() As PK
                 Return New PK(SalesOrderID)
             End Function
 
