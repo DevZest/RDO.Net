@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace DevZest.Data.Primitives
 {
@@ -10,7 +11,7 @@ namespace DevZest.Data.Primitives
         private IColumns _baseColumns;
         public IColumns BaseColumns
         {
-            get { return _baseColumns ?? (_baseColumns = GetBaseColumns().Seal()); }
+            get { return LazyInitializer.EnsureInitialized(ref _baseColumns, () => GetBaseColumns().Seal()); }
         }
 
         protected abstract IColumns GetBaseColumns();
@@ -21,7 +22,7 @@ namespace DevZest.Data.Primitives
         /// </summary>
         public IModels ScalarSourceModels
         {
-            get { return _scalarSourceModels ?? (_scalarSourceModels = GetScalarSourceModels().Seal()); }
+            get { return LazyInitializer.EnsureInitialized(ref _scalarSourceModels, () => GetScalarSourceModels().Seal()); }
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace DevZest.Data.Primitives
         /// </summary>
         public IModels AggregateSourceModels
         {
-            get { return _aggregateSourceModels ?? (_aggregateSourceModels = GetAggregateBaseModels().Seal()); }
+            get { return LazyInitializer.EnsureInitialized(ref _aggregateSourceModels, () => GetAggregateBaseModels().Seal()); }
         }
 
         /// <summary>

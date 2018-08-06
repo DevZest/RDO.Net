@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
+using System.Threading;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -82,13 +83,13 @@ namespace DevZest.Samples.AdventureWorksLT
         private ProductCategory.PK _fk_productCategory;
         public ProductCategory.PK FK_ProductCategory
         {
-            get { return _fk_productCategory ?? (_fk_productCategory = new ProductCategory.PK(ProductCategoryID)); }
+            get { return LazyInitializer.EnsureInitialized(ref _fk_productCategory, () => new ProductCategory.PK(ProductCategoryID)); }
         }
 
         private ProductModel.PK _fk_productModel;
         public ProductModel.PK FK_ProductModel
         {
-            get { return _fk_productModel ?? (_fk_productModel = new ProductModel.PK(ProductModelID)); }
+            get { return LazyInitializer.EnsureInitialized(ref _fk_productModel, () => new ProductModel.PK(ProductModelID)); }
         }
 
         [Identity(1, 1)]
@@ -159,28 +160,28 @@ namespace DevZest.Samples.AdventureWorksLT
         [Check(typeof(UserMessages), nameof(UserMessages.CK_Product_ListPrice), Name = nameof(CK_Product_ListPrice), Description = "Check constraint [ListPrice] >= (0.00)")]
         private _Boolean CK_Product_ListPrice
         {
-            get { return _ck_Product_ListPrice ?? (_ck_Product_ListPrice = ListPrice >= _Decimal.Const(0)); }
+            get { return LazyInitializer.EnsureInitialized(ref _ck_Product_ListPrice, () => ListPrice >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_Product_SellEndDate;
         [Check(typeof(UserMessages), nameof(UserMessages.CK_Product_SellEndDate), Name = nameof(CK_Product_SellEndDate), Description = "Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")]
         private _Boolean CK_Product_SellEndDate
         {
-            get { return _ck_Product_SellEndDate ?? (_ck_Product_SellEndDate = SellEndDate >= SellStartDate | SellEndDate.IsNull()); }
+            get { return LazyInitializer.EnsureInitialized(ref _ck_Product_SellEndDate, () => SellEndDate >= SellStartDate | SellEndDate.IsNull()); }
         }
 
         private _Boolean _ck_Product_StandardCost;
         [Check(typeof(UserMessages), nameof(UserMessages.CK_Product_StandardCost), Name = nameof(CK_Product_StandardCost), Description = "Check constraint [StandardCost] >= (0.00)")]
         private _Boolean CK_Product_StandardCost
         {
-            get { return _ck_Product_StandardCost ?? (_ck_Product_StandardCost = StandardCost >= _Decimal.Const(0)); }
+            get { return LazyInitializer.EnsureInitialized(ref _ck_Product_StandardCost, () => StandardCost >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_Product_Weight;
         [Check(typeof(UserMessages), nameof(UserMessages.CK_Product_Weight), Name = nameof(CK_Product_Weight), Description = "Check constraint [Weight] >= (0.00)")]
         private _Boolean CK_Product_Weight
         {
-            get { return _ck_Product_Weight ?? (_ck_Product_Weight = Weight >= _Decimal.Const(0)); }
+            get { return LazyInitializer.EnsureInitialized(ref _ck_Product_Weight, () => Weight >= _Decimal.Const(0)); }
         }
     }
 }

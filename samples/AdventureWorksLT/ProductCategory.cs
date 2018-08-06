@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
 using DevZest.Data.Annotations;
+using System.Threading;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -78,11 +79,11 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.")]
         public _Int32 ParentProductCategoryID { get; private set; }
 
-        private PK _fk_productCategory;
+        private PK _fk_parentProductCategory;
         [DbColumn(Description = "Category description.")]
         public PK FK_ParentProductCategory
         {
-            get { return _fk_productCategory ?? (_fk_productCategory = new PK(ParentProductCategoryID)); }
+            get { return LazyInitializer.EnsureInitialized(ref _fk_parentProductCategory, () => new PK(ParentProductCategoryID)); }
         }
 
         [UdtName]

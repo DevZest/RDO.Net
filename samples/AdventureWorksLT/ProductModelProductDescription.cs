@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
+using System.Threading;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -27,13 +28,13 @@ namespace DevZest.Samples.AdventureWorksLT
         private ProductModel.PK _fk_productModel;
         public ProductModel.PK FK_ProductModel
         {
-            get { return _fk_productModel ?? (_fk_productModel = new ProductModel.PK(ProductModelID)); }
+            get { return LazyInitializer.EnsureInitialized(ref _fk_productModel, () => new ProductModel.PK(ProductModelID)); }
         }
 
         private ProductDescription.PK _fk_productDescription;
         public ProductDescription.PK FK_ProductDescription
         {
-            get { return _fk_productDescription ?? (_fk_productDescription = new ProductDescription.PK(ProductDescriptionID)); }
+            get { return LazyInitializer.EnsureInitialized(ref _fk_productDescription, () => new ProductDescription.PK(ProductDescriptionID)); }
         }
 
         [DbColumn(Description = "Primary key. Foreign key to ProductModel.ProductModelID.")]

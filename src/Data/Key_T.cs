@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Threading;
 
 namespace DevZest.Data
 {
@@ -35,7 +36,7 @@ namespace DevZest.Data
         private T _primaryKey;
         public T PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = GetPrimaryKey()); }
+            get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => GetPrimaryKey()); }
         }
 
         internal override void EnsureConstructed()

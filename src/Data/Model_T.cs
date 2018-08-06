@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 
 namespace DevZest.Data
 {
@@ -19,7 +20,7 @@ namespace DevZest.Data
         private T _primaryKey;
         public new T PrimaryKey
         {
-            get { return _primaryKey ?? (_primaryKey = CreatePrimaryKey()); }
+            get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => CreatePrimaryKey()); }
         }
 
         protected abstract T CreatePrimaryKey();

@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data
+﻿using System.Threading;
+
+namespace DevZest.Data
 {
     public abstract class Ref<T> : Projection
         where T : PrimaryKey
@@ -8,7 +10,7 @@
         private T _foreignKey;
         public T ForeignKey
         {
-            get { return _foreignKey ?? (_foreignKey = GetForeignKey()); }
+            get { return LazyInitializer.EnsureInitialized(ref _foreignKey, () => GetForeignKey()); }
         }
     }
 

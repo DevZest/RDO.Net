@@ -44,7 +44,7 @@ namespace DevZest.Data
         private DbSelectStatement _selectStatement;
         private DbSelectStatement SelectStatement
         {
-            get { return _selectStatement ?? (_selectStatement = GetSelectStatement()); }
+            get { return LazyInitializer.EnsureInitialized(ref _selectStatement, () => GetSelectStatement()); }
         }
 
         private DbSelectStatement GetSelectStatement()
@@ -77,7 +77,7 @@ namespace DevZest.Data
         private DbQueryStatement _queryStatement;
         internal override DbQueryStatement QueryStatement
         {
-            get { return _queryStatement ?? (_queryStatement = SelectStatement.RemoveSystemColumns()); }
+            get { return LazyInitializer.EnsureInitialized(ref _queryStatement, () => SelectStatement.RemoveSystemColumns()); }
         }
 
         internal override DbQueryStatement SequentialQueryStatement
@@ -88,7 +88,7 @@ namespace DevZest.Data
         private DbFromClause _fromClause;
         internal override DbFromClause FromClause
         {
-            get { return _fromClause ?? (_fromClause = new DbTableClause(Model, Name)); }
+            get { return LazyInitializer.EnsureInitialized(ref _fromClause, () => new DbTableClause(Model, Name)); }
         }
 
         public override string ToString()

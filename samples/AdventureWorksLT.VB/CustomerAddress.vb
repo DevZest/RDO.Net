@@ -1,3 +1,4 @@
+Imports System.Threading
 Imports DevZest.Data
 Imports DevZest.Data.Annotations
 
@@ -109,20 +110,14 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_FK_Customer As Customer.PK
         Public ReadOnly Property FK_Customer As Customer.PK
             Get
-                If m_FK_Customer Is Nothing Then
-                    m_FK_Customer = New Customer.PK(CustomerID)
-                End If
-                Return m_FK_Customer
+                Return LazyInitializer.EnsureInitialized(m_FK_Customer, Function() New Customer.PK(CustomerID))
             End Get
         End Property
 
         Private m_FK_Address As Address.PK
         Public ReadOnly Property FK_Address As Address.PK
             Get
-                If m_FK_Address Is Nothing Then
-                    m_FK_Address = New Address.PK(AddressID)
-                End If
-                Return m_FK_Address
+                Return LazyInitializer.EnsureInitialized(m_FK_Address, Function() New Address.PK(AddressID))
             End Get
         End Property
 

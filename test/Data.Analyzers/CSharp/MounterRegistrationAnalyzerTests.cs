@@ -276,6 +276,7 @@ class SimpleModel : Model
         {
             var test = @"
 using DevZest.Data;
+using System.Threading;
 
 class SimpleModel : Model
 {
@@ -284,7 +285,7 @@ class SimpleModel : Model
     private _Int32 _computedColumn;
     public _Int32 ComputedColumn
     {
-        get { return _computedColumn ?? (_computedColumn = Column * 2); }
+        get { return LazyInitializer.EnsureInitialized(ref _computedColumn () => Column * 2); }
     }
 }";
 
@@ -293,7 +294,7 @@ class SimpleModel : Model
                 Id = DiagnosticIds.MissingMounterRegistration,
                 Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
                 Severity = DiagnosticSeverity.Warning,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 19) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 19) }
             };
             VerifyCSharpDiagnostic(test, expected);
         }

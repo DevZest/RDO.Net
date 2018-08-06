@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace DevZest.Data.Primitives
 {
@@ -22,7 +23,7 @@ namespace DevZest.Data.Primitives
         private string _systemName;
         public virtual string SystemName
         {
-            get { return _systemName ?? (_systemName = string.IsNullOrEmpty(Name) ? Guid.NewGuid().ToString() : Name); }
+            get { return LazyInitializer.EnsureInitialized(ref _systemName, () => string.IsNullOrEmpty(Name) ? Guid.NewGuid().ToString() : Name); }
         }
     }
 }

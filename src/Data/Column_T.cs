@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 
 namespace DevZest.Data
 {
@@ -379,7 +380,7 @@ namespace DevZest.Data
         {
             get
             {
-                return _dbExpression ?? (_dbExpression = IsAbsoluteExpression ? Expression.GetDbExpression() : new DbColumnExpression(this));
+                return LazyInitializer.EnsureInitialized(ref _dbExpression, () => IsAbsoluteExpression ? Expression.GetDbExpression() : new DbColumnExpression(this));
             }
         }
 

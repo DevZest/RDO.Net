@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace DevZest.Data.Primitives
 {
@@ -31,7 +32,7 @@ namespace DevZest.Data.Primitives
         private DbExpression _dbExpression;
         public sealed override DbExpression GetDbExpression()
         {
-            return _dbExpression ?? (_dbExpression = CreateDbExpression());
+            return LazyInitializer.EnsureInitialized(ref _dbExpression, () => CreateDbExpression());
         }
 
         private DbExpression CreateDbExpression()

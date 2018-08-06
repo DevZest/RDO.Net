@@ -1,6 +1,7 @@
 Imports DevZest.Data
 Imports DevZest.Data.SqlServer
 Imports DevZest.Data.Annotations
+Imports System.Threading
 
 Namespace DevZest.Samples.AdventureWorksLT
     Public Class ProductCategory
@@ -122,12 +123,11 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Set
         End Property
 
-        Private m_FK_productCategory As PK
+        Private m_FK_parentProductCategory As PK
         <DbColumn(Description:="Category description.")>
         Public ReadOnly Property FK_ParentProductCategory As PK
             Get
-                If m_FK_productCategory Is Nothing Then m_FK_productCategory = New PK(ParentProductCategoryID)
-                Return m_FK_productCategory
+                Return LazyInitializer.EnsureInitialized(m_FK_parentProductCategory, Function() New PK(ParentProductCategoryID))
             End Get
         End Property
 

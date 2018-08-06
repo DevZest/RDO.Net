@@ -373,6 +373,7 @@ End Class";
         {
             var test = @"
 Imports DevZest.Data
+Imports System.Threading
 
 Class SimpleModel
     Inherits Model
@@ -390,10 +391,7 @@ Class SimpleModel
     Private m_ComputedColumn As _Int32
     Public ReadOnly Property ComputedColumn As _Int32
         Get
-            If m_ComputedColumn Is Nothing Then
-                m_ComputedColumn = Column * 2
-            End If
-            Return m_ComputedColumn
+            Return LazyInitializer.EnsureInitialized(m_ComputedColumn, Function() Column * 2)
         End Get
     End Property
 End Class";
@@ -403,7 +401,7 @@ End Class";
                 Id = DiagnosticIds.MissingMounterRegistration,
                 Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
                 Severity = DiagnosticSeverity.Warning,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 21) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 9, 21) }
             };
             VerifyBasicDiagnostic(test, expected);
         }

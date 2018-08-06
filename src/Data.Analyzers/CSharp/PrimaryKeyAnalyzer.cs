@@ -12,6 +12,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzePrimaryKey, SyntaxKind.ClassDeclaration);
+            context.RegisterSyntaxNodeAction(AnalyzePrimaryKeyCreation, SyntaxKind.ObjectCreationExpression);
         }
 
         private static void AnalyzePrimaryKey(SyntaxNodeAnalysisContext context)
@@ -84,6 +85,29 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             var name = expressionSymbol.Name;
             expressionSymbol = semanticModel.GetSymbolInfo(memberAccessSyntax.Expression).Symbol;
             return GetSortDirection(expressionSymbol, name, constructorParam);
+        }
+
+        private static void AnalyzePrimaryKeyCreation(SyntaxNodeAnalysisContext context)
+        {
+            AnalyzePrimaryKeyCreation(context, (ObjectCreationExpressionSyntax)context.Node);
+        }
+
+        private static void AnalyzePrimaryKeyCreation(SyntaxNodeAnalysisContext context, ObjectCreationExpressionSyntax objectCreation)
+        {
+            var semanticModel = context.SemanticModel;
+            if (!(semanticModel.GetDeclaredSymbol(objectCreation.Type) is INamedTypeSymbol typeSymbol))
+                return;
+
+            if (!IsPrimaryKey(context, typeSymbol))
+                return;
+
+            var arguments = objectCreation.ArgumentList.Arguments;
+            
+        }
+
+        private static INamedTypeSymbol GetContainingType(SyntaxNodeAnalysisContext context, ObjectCreationExpressionSyntax objectCreation)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
