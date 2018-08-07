@@ -258,5 +258,93 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void InvalidArgument()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public Class PrimaryKeyInvalidArgument
+    Inherits Model(Of PrimaryKeyInvalidArgument.PK)
+
+    Public NotInheritable Class PK
+        Inherits PrimaryKey
+        Public Sub New(id As _Int32)
+            MyBase.New(id)
+        End Sub
+    End Class
+
+    Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
+        Return New PK(1)
+    End Function
+
+    Public Shared ReadOnly _ID As Mounter(Of _Int32) = RegisterColumn(Function(x As PrimaryKeyInvalidArgument) x.ID)
+
+    Private m_ID As _Int32
+    Public Property ID As _Int32
+        Get
+            Return m_ID
+        End Get
+        Private Set
+            m_ID = Value
+        End Set
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyInvalidArgument,
+                Message = string.Format(Resources.PrimaryKeyInvalidArgument_Message),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 15, 23) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void ArgumentNaming()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public Class PrimaryKeyArgumentNaming
+    Inherits Model(Of PrimaryKeyArgumentNaming.PK)
+
+    Public NotInheritable Class PK
+        Inherits PrimaryKey
+        Public Sub New(id2 As _Int32)
+            MyBase.New(id2)
+        End Sub
+    End Class
+
+    Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
+        Return New PK(ID)
+    End Function
+
+    Public Shared ReadOnly _ID As Mounter(Of _Int32) = RegisterColumn(Function(x As PrimaryKeyArgumentNaming) x.ID)
+
+    Private m_ID As _Int32
+    Public Property ID As _Int32
+        Get
+            Return m_ID
+        End Get
+        Private Set
+            m_ID = Value
+        End Set
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyArgumentNaming,
+                Message = string.Format(Resources.PrimaryKeyArgumentNaming_Message, "ID", "id2"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 15, 23) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }

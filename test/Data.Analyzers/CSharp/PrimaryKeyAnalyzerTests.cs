@@ -259,5 +259,79 @@ public sealed class PK : PrimaryKey
 
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void InvalidArgument()
+        {
+            var test = @"
+using DevZest.Data;
+
+public class PrimaryKeyInvalidArgument : Model<PrimaryKeyInvalidArgument.PK>
+{
+    public sealed class PK : PrimaryKey
+    {
+        public PK(_Int32 id)
+            : base(id)
+        {
+        }
+    }
+
+    protected sealed override PK CreatePrimaryKey()
+    {
+        return new PK(1);
+    }
+
+    public static readonly Mounter<_Int32> _ID = RegisterColumn((PrimaryKeyInvalidArgument _) => _.ID);
+
+    public _Int32 ID { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyInvalidArgument,
+                Message = string.Format(Resources.PrimaryKeyInvalidArgument_Message),
+                Severity = DiagnosticSeverity.Error,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 16, 23) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void ArgumentNaming()
+        {
+            var test = @"
+using DevZest.Data;
+
+public class PrimaryKeyArgumentNaming : Model<PrimaryKeyArgumentNaming.PK>
+{
+    public sealed class PK : PrimaryKey
+    {
+        public PK(_Int32 id2)
+            : base(id2)
+        {
+        }
+    }
+
+    protected sealed override PK CreatePrimaryKey()
+    {
+        return new PK(ID);
+    }
+
+    public static readonly Mounter<_Int32> _ID = RegisterColumn((PrimaryKeyArgumentNaming _) => _.ID);
+
+    public _Int32 ID { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PrimaryKeyArgumentNaming,
+                Message = string.Format(Resources.PrimaryKeyArgumentNaming_Message, "ID", "id2"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 16, 23) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }
