@@ -302,6 +302,9 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 
         private static bool IsMounterRegistration(InvocationExpressionSyntax expression, IPropertySymbol propertySymbol, SemanticModel semanticModel)
         {
+            if (expression == null)
+                return false;
+
             if (!(semanticModel.GetSymbolInfo(expression).Symbol is IMethodSymbol symbol))
                 return false;
 

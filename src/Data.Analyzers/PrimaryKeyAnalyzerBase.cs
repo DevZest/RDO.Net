@@ -19,7 +19,9 @@ namespace DevZest.Data.CodeAnalysis
                 Rules.PrimaryKeySortAttributeConflict,
                 Rules.PrimaryKeyMismatchBaseConstructor,
                 Rules.PrimaryKeyMismatchBaseConstructorArgument,
-                Rules.PrimaryKeyMismatchSortAttribute); }
+                Rules.PrimaryKeyMismatchSortAttribute,
+                Rules.PrimaryKeyInvalidArgument,
+                Rules.PrimaryKeyArgumentNaming); }
         }
 
         protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)

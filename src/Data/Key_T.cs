@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using DevZest.Data.Annotations.Primitives;
+using System.Diagnostics;
 using System.Threading;
 
 namespace DevZest.Data
@@ -30,7 +31,7 @@ namespace DevZest.Data
             }
         }
 
-
+        [CreateKey]
         protected abstract T CreatePrimaryKey();
 
         private T _primaryKey;

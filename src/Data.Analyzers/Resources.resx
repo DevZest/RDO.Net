@@ -153,6 +153,18 @@
   <data name="MounterNaming_Title" xml:space="preserve">
     <value>Mounter naming rule violation.</value>
   </data>
+  <data name="PrimaryKeyArgumentNaming_Message" xml:space="preserve">
+    <value>Property '{0}' passed to PrimaryKey constructor does not match the parameter name '{1}'.</value>
+  </data>
+  <data name="PrimaryKeyArgumentNaming_Title" xml:space="preserve">
+    <value>PrimaryKey argument naming rule violation.</value>
+  </data>
+  <data name="PrimaryKeyInvalidArgument_Message" xml:space="preserve">
+    <value>Argument passed to PrimaryKey constructor must be a column of current Model.</value>
+  </data>
+  <data name="PrimaryKeyInvalidArgument_Title" xml:space="preserve">
+    <value>Invalid PrimaryKey argument.</value>
+  </data>
   <data name="PrimaryKeyInvalidConstructorParam_Message" xml:space="preserve">
     <value>The PrimaryKey constructor parameter '{0}' must be Column.</value>
   </data>

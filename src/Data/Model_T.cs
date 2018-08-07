@@ -23,6 +23,7 @@ namespace DevZest.Data
             get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => CreatePrimaryKey()); }
         }
 
+        [CreateKey]
         protected abstract T CreatePrimaryKey();
 
         internal sealed override PrimaryKey GetPrimaryKeyCore()

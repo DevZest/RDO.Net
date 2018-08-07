@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace DevZest.Data.CodeAnalysis.CSharp
 {
@@ -12,7 +13,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzePrimaryKey, SyntaxKind.ClassDeclaration);
-            context.RegisterSyntaxNodeAction(AnalyzePrimaryKeyCreation, SyntaxKind.ObjectCreationExpression);
+            context.RegisterSyntaxNodeAction(AnalyzePrimaryKeyCreation, SyntaxKind.MethodDeclaration);
         }
 
         private static void AnalyzePrimaryKey(SyntaxNodeAnalysisContext context)
@@ -89,25 +90,29 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 
         private static void AnalyzePrimaryKeyCreation(SyntaxNodeAnalysisContext context)
         {
-            AnalyzePrimaryKeyCreation(context, (ObjectCreationExpressionSyntax)context.Node);
+            AnalyzePrimaryKeyCreation(context, (MethodDeclarationSyntax)context.Node);
         }
 
-        private static void AnalyzePrimaryKeyCreation(SyntaxNodeAnalysisContext context, ObjectCreationExpressionSyntax objectCreation)
+        private static void AnalyzePrimaryKeyCreation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
             var semanticModel = context.SemanticModel;
-            if (!(semanticModel.GetDeclaredSymbol(objectCreation.Type) is INamedTypeSymbol typeSymbol))
+            var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
+            if (!methodSymbol.IsKeyCreation(context.Compilation))
                 return;
 
-            if (!IsPrimaryKey(context, typeSymbol))
+            var arguments = methodDeclaration.GetObjectCreationArguments(semanticModel, out var parameters);
+            if (arguments == null)
                 return;
 
-            var arguments = objectCreation.ArgumentList.Arguments;
-            
-        }
-
-        private static INamedTypeSymbol GetContainingType(SyntaxNodeAnalysisContext context, ObjectCreationExpressionSyntax objectCreation)
-        {
-            throw new System.NotImplementedException();
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                var argument = arguments[i];
+                if (!(semanticModel.GetSymbolInfo(argument.Expression).Symbol is IPropertySymbol propertySymbol) ||
+                    propertySymbol.ContainingType != methodSymbol.ContainingType)
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidArgument, argument.GetLocation()));
+                else if (propertySymbol.Name.ToLower() != parameters[i].Name.ToLower())
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyArgumentNaming, argument.GetLocation(), propertySymbol.Name, parameters[i].Name));
+            }
         }
     }
 }

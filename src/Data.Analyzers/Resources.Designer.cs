@@ -170,6 +170,42 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; passed to PrimaryKey constructor does not match the parameter name &apos;{1}&apos;..
+        /// </summary>
+        internal static string PrimaryKeyArgumentNaming_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyArgumentNaming_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryKey argument naming rule violation..
+        /// </summary>
+        internal static string PrimaryKeyArgumentNaming_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyArgumentNaming_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument passed to PrimaryKey constructor must be a column of current Model..
+        /// </summary>
+        internal static string PrimaryKeyInvalidArgument_Message {
+            get {
+                return ResourceManager.GetString("PrimaryKeyInvalidArgument_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid PrimaryKey argument..
+        /// </summary>
+        internal static string PrimaryKeyInvalidArgument_Title {
+            get {
+                return ResourceManager.GetString("PrimaryKeyInvalidArgument_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The PrimaryKey constructor parameter &apos;{0}&apos; must be Column..
         /// </summary>
         internal static string PrimaryKeyInvalidConstructorParam_Message {

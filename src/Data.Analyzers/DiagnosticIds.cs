@@ -18,5 +18,7 @@
         public const string PrimaryKeyMismatchBaseConstructor = "RDO016";
         public const string PrimaryKeyMismatchBaseConstructorArgument = "RDO017";
         public const string PrimaryKeyMismatchSortAttribute = "RDO018";
+        public const string PrimaryKeyInvalidArgument = "RDO019";
+        public const string PrimaryKeyArgumentNaming = "RDO020";
     }
 }

@@ -99,5 +99,17 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchSortAttribute_Title), Resources.ResourceManager, typeof(Resources)),
             new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchSortAttribute_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor PrimaryKeyInvalidArgument = new DiagnosticDescriptor(
+            DiagnosticIds.PrimaryKeyInvalidArgument,
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidArgument_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidArgument_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor PrimaryKeyArgumentNaming = new DiagnosticDescriptor(
+            DiagnosticIds.PrimaryKeyArgumentNaming,
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyArgumentNaming_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.PrimaryKeyArgumentNaming_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
     }
 }

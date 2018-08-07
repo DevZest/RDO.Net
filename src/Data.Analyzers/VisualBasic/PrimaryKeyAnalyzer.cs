@@ -12,6 +12,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzePrimaryKey, SyntaxKind.ClassBlock);
+            context.RegisterSyntaxNodeAction(AnalyzePrimaryKeyCreation, SyntaxKind.FunctionBlock);
         }
 
         private static void AnalyzePrimaryKey(SyntaxNodeAnalysisContext context)
@@ -104,6 +105,33 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
             var name = expressionSymbol.Name;
             expressionSymbol = semanticModel.GetSymbolInfo(memberAccessSyntax.Expression).Symbol;
             return GetSortDirection(expressionSymbol, name, constructorParam);
+        }
+
+        private static void AnalyzePrimaryKeyCreation(SyntaxNodeAnalysisContext context)
+        {
+            AnalyzePrimaryKeyCreation(context, (MethodBlockSyntax)context.Node);
+        }
+
+        private static void AnalyzePrimaryKeyCreation(SyntaxNodeAnalysisContext context, MethodBlockSyntax methodDeclaration)
+        {
+            var semanticModel = context.SemanticModel;
+            var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
+            if (!methodSymbol.IsKeyCreation(context.Compilation))
+                return;
+
+            var arguments = methodDeclaration.GetObjectCreationArguments(semanticModel, out var parameters);
+            if (arguments == null)
+                return;
+
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                var argument = arguments[i];
+                if (!(semanticModel.GetSymbolInfo(argument.GetExpression()).Symbol is IPropertySymbol propertySymbol) ||
+                    propertySymbol.ContainingType != methodSymbol.ContainingType)
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidArgument, argument.GetLocation()));
+                else if (propertySymbol.Name.ToLower() != parameters[i].Name.ToLower())
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyArgumentNaming, argument.GetLocation(), propertySymbol.Name, parameters[i].Name));
+            }
         }
     }
 }
