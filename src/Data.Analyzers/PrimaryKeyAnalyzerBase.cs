@@ -39,7 +39,7 @@ namespace DevZest.Data.CodeAnalysis
         {
             VerifySealed(context, classSymbol);
 
-            constructorSymbol = GetPrimaryKeyConstructor(classSymbol);
+            constructorSymbol = classSymbol.GetSingleConstructor();
             if (constructorSymbol == null)
             {
                 context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidConstructors, classSymbol.Locations[0]));
@@ -87,15 +87,6 @@ namespace DevZest.Data.CodeAnalysis
                 var attribute = attributes[Math.Max(ascAttributeIndex, descAttributeIndex)];
                 context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeySortAttributeConflict, attribute.ApplicationSyntaxReference.GetSyntax().GetLocation()));
             }
-        }
-
-        private static IMethodSymbol GetPrimaryKeyConstructor(INamedTypeSymbol classSymbol)
-        {
-            if (classSymbol.Constructors.Length != 1)
-                return null;
-
-            var result = classSymbol.Constructors[0];
-            return result.IsStatic || result.IsImplicitlyDeclared ? null : result;
         }
 
         protected static void VerifyMismatchSortAttribute(SyntaxNodeAnalysisContext context, IParameterSymbol parameter, SortDirection sortDirection)
