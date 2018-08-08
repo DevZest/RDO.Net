@@ -116,10 +116,11 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
         {
             var semanticModel = context.SemanticModel;
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
-            if (!methodSymbol.IsKeyCreation(context.Compilation))
+            var parameters = methodSymbol.GetKeyConstructorParams(context.Compilation);
+            if (parameters.Length == 0)
                 return;
 
-            var arguments = methodDeclaration.GetObjectCreationArguments(semanticModel, out var parameters);
+            var arguments = methodDeclaration.GetObjectCreationArguments(parameters);
             if (arguments == null)
                 return;
 

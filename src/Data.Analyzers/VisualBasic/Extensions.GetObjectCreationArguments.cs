@@ -6,10 +6,10 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     internal static partial class Extensions
     {
-        public static ArgumentSyntax[] GetObjectCreationArguments(this MethodBlockSyntax methodBlock, SemanticModel semanticModel, out ImmutableArray<IParameterSymbol> parameters)
+        public static ArgumentSyntax[] GetObjectCreationArguments(this MethodBlockSyntax methodBlock, ImmutableArray<IParameterSymbol> parameters)
         {
             var objectCreationExpression = GetObjectCreationExpression(methodBlock);
-            return objectCreationExpression == null ? null : GetArguments(objectCreationExpression, semanticModel, out parameters);
+            return objectCreationExpression == null ? null : GetArguments(objectCreationExpression, parameters);
         }
 
         private static ObjectCreationExpressionSyntax GetObjectCreationExpression(MethodBlockSyntax methodBlock)
@@ -24,12 +24,8 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
             return returnStatement.Expression as ObjectCreationExpressionSyntax;
         }
 
-        private static ArgumentSyntax[] GetArguments(ObjectCreationExpressionSyntax objectCreationExpression, SemanticModel semanticModel, out ImmutableArray<IParameterSymbol> parameters)
+        private static ArgumentSyntax[] GetArguments(ObjectCreationExpressionSyntax objectCreationExpression, ImmutableArray<IParameterSymbol> parameters)
         {
-            var constructor = semanticModel.GetSymbolInfo(objectCreationExpression).Symbol as IMethodSymbol;
-            if (constructor == null)
-                return null;
-            parameters = constructor.Parameters;
             var argumentList = objectCreationExpression.ArgumentList;
             if (argumentList == null)
                 return null;
