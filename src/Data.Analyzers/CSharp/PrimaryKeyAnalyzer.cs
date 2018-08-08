@@ -101,7 +101,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             if (parameters.Length == 0)
                 return;
 
-            var arguments = methodDeclaration.GetObjectCreationArguments(parameters);
+            var arguments = methodDeclaration.GetConstructorArguments(parameters);
             if (arguments == null)
                 return;
 

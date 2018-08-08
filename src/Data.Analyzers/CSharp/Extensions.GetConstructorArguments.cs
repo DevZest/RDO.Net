@@ -6,13 +6,13 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 {
     internal static partial class Extensions
     {
-        public static ArgumentSyntax[] GetObjectCreationArguments(this MethodDeclarationSyntax methodDeclaration, ImmutableArray<IParameterSymbol> parameters)
+        public static ArgumentSyntax[] GetConstructorArguments(this MethodDeclarationSyntax methodDeclaration, ImmutableArray<IParameterSymbol> constructorParams)
         {
-            var objectCreationExpression = GetObjectCreationExpression(methodDeclaration);
-            return objectCreationExpression == null ? null : GetArguments(objectCreationExpression, parameters);
+            var constructorExpression = GetConstructorExpression(methodDeclaration);
+            return constructorExpression == null ? null : GetConstructorArguments(constructorExpression, constructorParams);
         }
 
-        private static ObjectCreationExpressionSyntax GetObjectCreationExpression(MethodDeclarationSyntax methodDeclaration)
+        private static ObjectCreationExpressionSyntax GetConstructorExpression(MethodDeclarationSyntax methodDeclaration)
         {
             var body = methodDeclaration.Body;
             if (body == null)
@@ -28,13 +28,13 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             return returnStatement.Expression as ObjectCreationExpressionSyntax;
         }
 
-        private static ArgumentSyntax[] GetArguments(ObjectCreationExpressionSyntax objectCreationExpression, ImmutableArray<IParameterSymbol> parameters)
+        private static ArgumentSyntax[] GetConstructorArguments(ObjectCreationExpressionSyntax constructorExpression, ImmutableArray<IParameterSymbol> constructorParams)
         {
-            var argumentList = objectCreationExpression.ArgumentList;
+            var argumentList = constructorExpression.ArgumentList;
             if (argumentList == null)
                 return null;
             var arguments = argumentList.Arguments;
-            if (parameters.Length != arguments.Count)
+            if (constructorParams.Length != arguments.Count)
                 return null;
 
             var result = new ArgumentSyntax[arguments.Count];
@@ -49,7 +49,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
                 }
 
                 var name = nameColon.Name.Identifier.Text;
-                var index = parameters.IndexOf(name);
+                var index = constructorParams.IndexOf(name);
                 if (index < 0 || result[index] != null)
                     return null;
                 result[index] = argument;

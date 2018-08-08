@@ -6,13 +6,13 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     internal static partial class Extensions
     {
-        public static ArgumentSyntax[] GetObjectCreationArguments(this MethodBlockSyntax methodBlock, ImmutableArray<IParameterSymbol> parameters)
+        public static ArgumentSyntax[] GetConstructorArguments(this MethodBlockSyntax methodBlock, ImmutableArray<IParameterSymbol> constructorParams)
         {
-            var objectCreationExpression = GetObjectCreationExpression(methodBlock);
-            return objectCreationExpression == null ? null : GetArguments(objectCreationExpression, parameters);
+            var constructorExpression = GetConstructorExpression(methodBlock);
+            return constructorExpression == null ? null : GetConstructorArguments(constructorExpression, constructorParams);
         }
 
-        private static ObjectCreationExpressionSyntax GetObjectCreationExpression(MethodBlockSyntax methodBlock)
+        private static ObjectCreationExpressionSyntax GetConstructorExpression(MethodBlockSyntax methodBlock)
         {
             var statements = methodBlock.Statements;
             if (statements.Count != 1)
@@ -24,13 +24,13 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
             return returnStatement.Expression as ObjectCreationExpressionSyntax;
         }
 
-        private static ArgumentSyntax[] GetArguments(ObjectCreationExpressionSyntax objectCreationExpression, ImmutableArray<IParameterSymbol> parameters)
+        private static ArgumentSyntax[] GetConstructorArguments(ObjectCreationExpressionSyntax constructorExpression, ImmutableArray<IParameterSymbol> constructorParams)
         {
-            var argumentList = objectCreationExpression.ArgumentList;
+            var argumentList = constructorExpression.ArgumentList;
             if (argumentList == null)
                 return null;
             var arguments = argumentList.Arguments;
-            if (parameters.Length != arguments.Count)
+            if (constructorParams.Length != arguments.Count)
                 return null;
 
             var result = new ArgumentSyntax[arguments.Count];
@@ -44,7 +44,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
                 }
 
                 var name = ((SimpleArgumentSyntax)argument).NameColonEquals.Name.Identifier.Text;
-                var index = parameters.IndexOf(name);
+                var index = constructorParams.IndexOf(name);
                 if (index < 0 || result[index] != null)
                     return null;
                 result[index] = argument;
