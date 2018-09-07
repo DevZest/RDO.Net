@@ -109,7 +109,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private _Boolean _ck_SalesOrderDetail_UnitPrice;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPrice), Name = nameof(CK_SalesOrderDetail_UnitPrice), Description = "heck constraint [UnitPrice] >= (0.00)")]
+        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPrice), Name = nameof(CK_SalesOrderDetail_UnitPrice), Description = "Check constraint [UnitPrice] >= (0.00)")]
         private _Boolean CK_SalesOrderDetail_UnitPrice
         {
             get { return LazyInitializer.EnsureInitialized(ref _ck_SalesOrderDetail_UnitPrice, () => UnitPrice >= _Decimal.Const(0)); }
