@@ -6,9 +6,10 @@ namespace DevZest.Data.CodeAnalysis
 {
     internal static partial class Extensions
     {
-        public static ImmutableArray<IParameterSymbol> GetConstructorParams(this IMethodSymbol methodSymbol, Compilation compilation, bool verifyIsKey = true)
+        public static ImmutableArray<IParameterSymbol> GetConstructorParams(this IMethodSymbol methodSymbol, Compilation compilation, out bool isKeyCreation)
         {
-            if (verifyIsKey && !IsKeyCreation(methodSymbol, compilation))
+            isKeyCreation = IsKeyCreation(methodSymbol, compilation);
+            if (!isKeyCreation)
                 return default(ImmutableArray<IParameterSymbol>);
 
             if (!(methodSymbol.ReturnType is INamedTypeSymbol keyType))
