@@ -47,7 +47,7 @@ namespace DevZest.Data.CodeAnalysis
             }
 
             var parameters = constructorSymbol.Parameters;
-            if (parameters.Length == 0)
+            if (parameters.IsEmpty)
             {
                 context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyParameterlessConstructor, constructorSymbol.Locations[0]));
                 return parameters;

@@ -10,13 +10,13 @@ namespace DevZest.Data.CodeAnalysis
         {
             isKeyCreation = IsKeyCreation(methodSymbol, compilation);
             if (!isKeyCreation)
-                return default(ImmutableArray<IParameterSymbol>);
+                return ImmutableArray<IParameterSymbol>.Empty;
 
             if (!(methodSymbol.ReturnType is INamedTypeSymbol keyType))
-                return default(ImmutableArray<IParameterSymbol>);
+                return ImmutableArray<IParameterSymbol>.Empty;
 
             var constructor = keyType.GetSingleConstructor();
-            return constructor == null ? default(ImmutableArray<IParameterSymbol>) : constructor.Parameters;
+            return constructor == null ? ImmutableArray<IParameterSymbol>.Empty : constructor.Parameters;
         }
 
         private static bool IsKeyCreation(this IMethodSymbol methodSymbol, Compilation compilation)
