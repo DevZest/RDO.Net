@@ -8,7 +8,7 @@ namespace FileExplorer
         private static void Refresh(DirectoryTreeItemView v, DirectoryTreeItem _, RowPresenter p)
         {
             var depth = p.Depth;
-            v.Refresh(depth, depth == 0 ? Images.DiskDrive : Images.Folder, GetDisplayText(_, p));
+            v.Refresh(depth, depth == 0 ? Icons.DiskDrive : Icons.Folder, GetDisplayText(_, p));
         }
 
         public static RowBinding<DirectoryTreeItemView> BindToDirectoryTreeItemView(this DirectoryTreeItem _)
