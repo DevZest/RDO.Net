@@ -11,7 +11,7 @@
         <dz:RowExpander Name="_rowExpander" VerticalAlignment="Center" />
         <dz:RowSelector>
             <StackPanel Orientation="Horizontal">
-                <Image Name="_image" Width="20" Height="20" Stretch="Fill" />
+                <Image Name="_icon" Width="20" Height="20" Stretch="Fill" />
                 <TextBlock Name="_textBlock" Margin="5,0" />
             </StackPanel>
         </dz:RowSelector>

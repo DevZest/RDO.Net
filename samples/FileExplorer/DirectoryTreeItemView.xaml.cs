@@ -24,10 +24,10 @@ namespace FileExplorer
             }
         }
 
-        public ImageSource ImageSource
+        public ImageSource Icon
         {
-            get { return _image.Source; }
-            private set { _image.Source = value; }
+            get { return _icon.Source; }
+            private set { _icon.Source = value; }
         }
 
         public string Text
@@ -36,10 +36,10 @@ namespace FileExplorer
             private set { _textBlock.Text = value; }
         }
 
-        public void Refresh(int depth, ImageSource imageSource, string text)
+        public void Refresh(int depth, ImageSource icon, string text)
         {
             Depth = depth;
-            ImageSource = imageSource;
+            Icon = icon;
             Text = text;
         }
     }
