@@ -22,6 +22,17 @@ namespace DevZest.Data.Presenters
             _serviceProviders.Add(serviceType, () => new TServiceImpl());
         }
 
+        public static void Register<TService, TServiceImpl>(Func<TServiceImpl> createService)
+            where TService : class, IService
+            where TServiceImpl : TService
+        {
+            if (createService == null)
+                throw new ArgumentNullException(nameof(createService));
+
+            var serviceType = typeof(TService);
+            _serviceProviders.Add(serviceType, () => createService());
+        }
+
         public static bool IsRegistered<TService>()
             where TService : class, IService
         {
@@ -79,8 +90,7 @@ namespace DevZest.Data.Presenters
         private static T CreateService<T>(DataPresenter dataPresenter)
             where T : class, IService
         {
-            Func<IService> constructor;
-            if (_serviceProviders.TryGetValue(typeof(T), out constructor))
+            if (_serviceProviders.TryGetValue(typeof(T), out var constructor))
             {
                 var result = (T)constructor();
                 result.Initialize(dataPresenter);
@@ -206,8 +216,7 @@ namespace DevZest.Data.Presenters
         {
             for (int i = commandBindings.Count - 1; i >= 0; i--)
             {
-                var commandBindingEx = commandBindings[i] as CommandBindingEx;
-                if (commandBindingEx != null)
+                if (commandBindings[i] is CommandBindingEx)
                     commandBindings.RemoveAt(i);
             }
         }
@@ -216,8 +225,7 @@ namespace DevZest.Data.Presenters
         {
             for (int i = inputBindings.Count - 1; i >= 0; i--)
             {
-                var inputBindingEx = inputBindings[i] as InputBindingEx;
-                if (inputBindingEx != null)
+                if (inputBindings[i] is InputBindingEx)
                     inputBindings.RemoveAt(i);
             }
         }

@@ -10,32 +10,9 @@ namespace FileExplorer
 {
     public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>,
         InPlaceEditor.ICommandService,
+        InPlaceEditor.IConfiguration,
         DataView.ICommandService
     {
-        public static InPlaceEditor.ISwitcher InPlaceEditorSwitcher
-        {
-            get { return Switcher.Singleton; }
-        }
-
-        private sealed class Switcher : InPlaceEditor.ISwitcher
-        {
-            public static Switcher Singleton = new Switcher();
-
-            private Switcher()
-            {
-            }
-
-            public bool GetIsEditing(InPlaceEditor inPlaceEditor)
-            {
-                return inPlaceEditor.IsScalarEditing;
-            }
-
-            public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
-            {
-                return true;
-            }
-        }
-
         public sealed class Item : Model
         {
         }
@@ -115,6 +92,16 @@ namespace FileExplorer
             _directoryTree.Select(path);
             ScalarContainer.CancelEdit();
             return false;
+        }
+
+        bool InPlaceEditor.IConfiguration.QueryEditingMode(InPlaceEditor inPlaceEditor)
+        {
+            return inPlaceEditor.IsScalarEditing;
+        }
+
+        bool InPlaceEditor.IConfiguration.QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
+        {
+            return true;
         }
     }
 }

@@ -11,25 +11,34 @@ namespace DevZest.Data.Views
 {
     public partial class GridCell : Control, IRowElement
     {
-        public static InPlaceEditor.ISwitcher InPlaceEditorSwitcher
+        public static InPlaceEditor.IConfiguration InPlaceEditorConfiguration
         {
-            get { return Switcher.Singleton; }
+            get { return Configuration.Singleton; }
         }
 
-        private sealed class Switcher : InPlaceEditor.ISwitcher
+        private sealed class Configuration : InPlaceEditor.IConfiguration
         {
-            public static Switcher Singleton = new Switcher();
+            public static Configuration Singleton = new Configuration();
 
-            private Switcher()
+            private Configuration()
             {
             }
 
-            public bool GetIsEditing(InPlaceEditor inPlaceEditor)
+            public DataPresenter DataPresenter
+            {
+                get { return null; }
+            }
+
+            void IService.Initialize(DataPresenter dataPresenter)
+            {
+            }
+
+            public bool QueryEditingMode(InPlaceEditor inPlaceEditor)
             {
                 return GetMode(inPlaceEditor) == GridCellMode.Edit || GetPreviewMode(inPlaceEditor) == GridCellMode.Edit;
             }
 
-            public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
+            public bool QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
             {
                 return GetMode(inPlaceEditor) == GridCellMode.Edit;
             }
@@ -92,8 +101,7 @@ namespace DevZest.Data.Views
                 if (child == null)
                     return false;
 
-                var binding = child.GetBinding() as RowBinding;
-                return binding != null && binding.IsEditable;
+                return (child.GetBinding() is RowBinding binding) && binding.IsEditable;
             }
         }
 
@@ -261,10 +269,7 @@ namespace DevZest.Data.Views
                 var focusScope = FocusManager.GetFocusScope(this);
                 if (focusScope == null)
                     return false;
-                var focusedElement = FocusManager.GetFocusedElement(focusScope) as DependencyObject;
-                if (focusedElement == null)
-                    return false;
-                return IsAncestorOf(focusedElement);
+                return FocusManager.GetFocusedElement(focusScope) is DependencyObject focusedElement ? IsAncestorOf(focusedElement): false;
             }
         }
 

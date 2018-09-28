@@ -24,27 +24,9 @@ namespace FileExplorer
         public static readonly RoutedUICommand Start = new RoutedUICommand();
     }
 
-    public sealed class DirectoryListInPlaceEditorSwitcher : InPlaceEditor.ISwitcher
-    {
-        public static DirectoryListInPlaceEditorSwitcher Singleton = new DirectoryListInPlaceEditorSwitcher();
-
-        private DirectoryListInPlaceEditorSwitcher()
-        {
-        }
-
-        public bool GetIsEditing(InPlaceEditor inPlaceEditor)
-        {
-            return inPlaceEditor.IsRowEditing;
-        }
-
-        public bool ShouldFocusToEditorElement(InPlaceEditor inPlaceEditor)
-        {
-            return true;
-        }
-    }
-
     public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList,
         InPlaceEditor.ICommandService,
+        InPlaceEditor.IConfiguration,
         RowSelector.ICommandService,
         DataView.ICommandService
         where T : DirectoryItem, new()
@@ -199,7 +181,7 @@ namespace FileExplorer
 
         private string CurrentPath
         {
-            get { return CurrentRow == null ? null : CurrentRow.GetValue(_.Path); }
+            get { return CurrentRow?.GetValue(_.Path); }
         }
 
         private void SelectPath(string path)
@@ -256,6 +238,16 @@ namespace FileExplorer
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        bool InPlaceEditor.IConfiguration.QueryEditingMode(InPlaceEditor inPlaceEditor)
+        {
+            return inPlaceEditor.IsRowEditing;
+        }
+
+        bool InPlaceEditor.IConfiguration.QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
+        {
+            return true;
         }
     }
 }
