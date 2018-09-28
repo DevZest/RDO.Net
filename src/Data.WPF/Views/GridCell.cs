@@ -11,16 +11,16 @@ namespace DevZest.Data.Views
 {
     public partial class GridCell : Control, IRowElement
     {
-        public static InPlaceEditor.IConfiguration InPlaceEditorConfiguration
+        public static InPlaceEditor.IPresenter InPlaceEditorPresenter
         {
-            get { return Configuration.Singleton; }
+            get { return EditorPresenter.Singleton; }
         }
 
-        private sealed class Configuration : InPlaceEditor.IConfiguration
+        private sealed class EditorPresenter : InPlaceEditor.IPresenter
         {
-            public static Configuration Singleton = new Configuration();
+            public static EditorPresenter Singleton = new EditorPresenter();
 
-            private Configuration()
+            private EditorPresenter()
             {
             }
 

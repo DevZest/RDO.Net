@@ -234,17 +234,17 @@ namespace DevZest.Data.Views
             }
         }
 
-        public interface IConfiguration : IService
+        public interface IPresenter : IService
         {
             bool QueryEditingMode(InPlaceEditor inPlaceEditor);
             bool QueryEditorElementFocus(InPlaceEditor inPlaceEditor);
         }
 
-        private sealed class DefaultConfiguration : IConfiguration
+        private sealed class DefaultPresenter : IPresenter
         {
-            public static DefaultConfiguration Singleton = new DefaultConfiguration();
+            public static DefaultPresenter Singleton = new DefaultPresenter();
 
-            private DefaultConfiguration()
+            private DefaultPresenter()
             {
             }
 
@@ -302,23 +302,23 @@ namespace DevZest.Data.Views
             new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty IsScalarEditingProperty = IsScalarEditingPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty ConfigurationProperty = DependencyProperty.RegisterAttached("Configuration", typeof(IConfiguration), typeof(InPlaceEditor),
+        public static readonly DependencyProperty PresenterProperty = DependencyProperty.RegisterAttached("Presenter", typeof(IPresenter), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
-        public static IConfiguration GetConfiguration(DependencyObject obj)
+        public static IPresenter GetPresenter(DependencyObject obj)
         {
-            return (IConfiguration)obj.GetValue(ConfigurationProperty);
+            return (IPresenter)obj.GetValue(PresenterProperty);
         }
 
-        public static void SetConfiguration(DependencyObject obj, IConfiguration value)
+        public static void SetPresenter(DependencyObject obj, IPresenter value)
         {
-            obj.SetValue(ConfigurationProperty, value);
+            obj.SetValue(PresenterProperty, value);
         }
 
         static InPlaceEditor()
         {
             FocusableProperty.OverrideMetadata(typeof(InPlaceEditor), new FrameworkPropertyMetadata(BooleanBoxes.True));
-            ServiceManager.Register<IConfiguration, DefaultConfiguration>(() => DefaultConfiguration.Singleton);
+            ServiceManager.Register<IPresenter, DefaultPresenter>(() => DefaultPresenter.Singleton);
             ServiceManager.Register<IChildInitializer, ChildInitializer>();
         }
 
@@ -334,9 +334,9 @@ namespace DevZest.Data.Views
             private set { SetValue(IsScalarEditingPropertyKey, BooleanBoxes.Box(value)); }
         }
 
-        private IConfiguration GetConfiguration()
+        private IPresenter Presenter
         {
-            return GetConfiguration(this) ?? DataPresenter.GetService<IConfiguration>();
+            get { return GetPresenter(this) ?? DataPresenter.GetService<IPresenter>(); }
         }
 
         private bool _isEditing;
@@ -363,7 +363,7 @@ namespace DevZest.Data.Views
                 {
                     if (setup)
                     {
-                        if (GetConfiguration().QueryEditorElementFocus(this))
+                        if (Presenter.QueryEditorElementFocus(this))
                             EditorElement.Focus();
                     }
 
@@ -525,7 +525,7 @@ namespace DevZest.Data.Views
                 return;
 
             if (this.GetBinding() != null)  // binding can be null when removed from UIElementCollection.
-                IsEditing = GetConfiguration().QueryEditingMode(this);
+                IsEditing = Presenter.QueryEditingMode(this);
         }
 
         void IRowElement.Setup(RowPresenter p)

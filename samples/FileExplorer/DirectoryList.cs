@@ -26,7 +26,7 @@ namespace FileExplorer
 
     public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList,
         InPlaceEditor.ICommandService,
-        InPlaceEditor.IConfiguration,
+        InPlaceEditor.IPresenter,
         RowSelector.ICommandService,
         DataView.ICommandService
         where T : DirectoryItem, new()
@@ -240,12 +240,12 @@ namespace FileExplorer
             }
         }
 
-        bool InPlaceEditor.IConfiguration.QueryEditingMode(InPlaceEditor inPlaceEditor)
+        bool InPlaceEditor.IPresenter.QueryEditingMode(InPlaceEditor inPlaceEditor)
         {
             return inPlaceEditor.IsRowEditing;
         }
 
-        bool InPlaceEditor.IConfiguration.QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
+        bool InPlaceEditor.IPresenter.QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
         {
             return true;
         }

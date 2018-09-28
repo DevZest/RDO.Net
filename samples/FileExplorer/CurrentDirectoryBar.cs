@@ -10,7 +10,7 @@ namespace FileExplorer
 {
     public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>,
         InPlaceEditor.ICommandService,
-        InPlaceEditor.IConfiguration,
+        InPlaceEditor.IPresenter,
         DataView.ICommandService
     {
         public sealed class Item : Model
@@ -94,12 +94,12 @@ namespace FileExplorer
             return false;
         }
 
-        bool InPlaceEditor.IConfiguration.QueryEditingMode(InPlaceEditor inPlaceEditor)
+        bool InPlaceEditor.IPresenter.QueryEditingMode(InPlaceEditor inPlaceEditor)
         {
             return inPlaceEditor.IsScalarEditing;
         }
 
-        bool InPlaceEditor.IConfiguration.QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
+        bool InPlaceEditor.IPresenter.QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
         {
             return true;
         }
