@@ -78,6 +78,10 @@ namespace DevZest.Data.Views
             }
         }
 
+        public static readonly DependencyPropertyKey IsActivePropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsActive), typeof(bool?), typeof(RowSelector),
+            new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty IsActiveProperty = IsActivePropertyKey.DependencyProperty;
+
         static RowSelector()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowSelector), new FrameworkPropertyMetadata(typeof(RowSelector)));
@@ -87,6 +91,12 @@ namespace DevZest.Data.Views
 
         public RowSelector()
         {
+        }
+
+        public bool? IsActive
+        {
+            get { return (bool?)GetValue(IsActiveProperty); }
+            private set { SetValue(IsActivePropertyKey, value.HasValue ? BooleanBoxes.Box(value.Value) : null); }
         }
 
         private void OnRowViewChanged(RowView oldValue, RowView newValue)
@@ -181,15 +191,25 @@ namespace DevZest.Data.Views
             else
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateUnfocused);
 
-            if (IsSelected)
-            {
-                if (IsKeyboardFocusWithin)
-                    VisualStates.GoToState(this, useTransitions, VisualStates.StateSelected);
-                else
-                    VisualStates.GoToState(this, useTransitions, VisualStates.StateSelectedInactive, VisualStates.StateSelected);
-            }
-            else
+            var oldIsActive = IsActive;
+            var newIsActive = IsActive = GetIsActive();
+            if (!newIsActive.HasValue)
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateUnselected);
+            else if (newIsActive.Value)
+                VisualStates.GoToState(this, useTransitions, VisualStates.StateSelected);
+            else
+                VisualStates.GoToState(this, useTransitions, VisualStates.StateSelectedInactive, VisualStates.StateSelected);
+
+            if (IsSelected && RowPresenter == DataPresenter?.CurrentRow && oldIsActive != newIsActive)
+                DataPresenter.InvalidateView();
+        }
+
+        private bool? GetIsActive()
+        {
+            if (!IsSelected)
+                return null;
+
+            return DataPresenter != null && DataPresenter.CurrentRow != null && DataPresenter.CurrentRow.View != null && DataPresenter.CurrentRow.View.IsKeyboardFocusWithin;
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
@@ -197,7 +217,7 @@ namespace DevZest.Data.Views
             base.OnPropertyChanged(e);
             if (e.Property == RowView.CurrentProperty)
                 OnRowViewChanged((RowView)e.OldValue, (RowView)e.NewValue);
-            else if (e.Property == IsMouseOverProperty || e.Property == IsEnabledProperty || e.Property == IsKeyboardFocusedProperty || e.Property == IsKeyboardFocusWithinProperty)
+            else if (e.Property == IsMouseOverProperty || e.Property == IsEnabledProperty || e.Property == IsKeyboardFocusedProperty)
                 UpdateVisualState();
         }
 

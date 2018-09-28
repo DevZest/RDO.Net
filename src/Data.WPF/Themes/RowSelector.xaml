@@ -13,7 +13,7 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="fillColor" Storyboard.TargetProperty="Opacity" Duration="0" To=".35"/>
+                                        <DoubleAnimation Storyboard.TargetName="mouseOver" Storyboard.TargetProperty="Opacity" Duration="0" To=".35"/>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
@@ -24,9 +24,14 @@
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="SelectionStates">
                                 <VisualState x:Name="Unselected" />
+                                <VisualState x:Name="SelectedInactive">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="selectedInactive" Storyboard.TargetProperty="Opacity" Duration="0" To="1"/>
+                                    </Storyboard>
+                                </VisualState>
                                 <VisualState x:Name="Selected">
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="fillColor2" Storyboard.TargetProperty="Opacity" Duration="0" To=".75"/>
+                                        <DoubleAnimation Storyboard.TargetName="selected" Storyboard.TargetProperty="Opacity" Duration="0" To=".75"/>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
@@ -45,8 +50,9 @@
                                 <VisualState x:Name="Unfocused"/>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Rectangle x:Name="fillColor" Opacity="0" Fill="#FFBADDE9" IsHitTestVisible="False" RadiusX="1" RadiusY="1"/>
-                        <Rectangle x:Name="fillColor2" Opacity="0" Fill="#FFBADDE9" IsHitTestVisible="False" RadiusX="1" RadiusY="1"/>
+                        <Rectangle x:Name="selectedInactive" Opacity="0" Fill="LightGray" IsHitTestVisible="False" RadiusX="1" RadiusY="1"/>
+                        <Rectangle x:Name="mouseOver" Opacity="0" Fill="#FFBADDE9" IsHitTestVisible="False" RadiusX="1" RadiusY="1"/>
+                        <Rectangle x:Name="selected" Opacity="0" Fill="#FFBADDE9" IsHitTestVisible="False" RadiusX="1" RadiusY="1"/>
                         <ContentPresenter
                             x:Name="contentPresenter"
                             ContentSource="Content"
