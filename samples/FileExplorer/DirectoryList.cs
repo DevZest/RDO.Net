@@ -26,7 +26,6 @@ namespace FileExplorer
 
     public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList,
         InPlaceEditor.ICommandService,
-        InPlaceEditor.IPresenter,
         RowSelector.ICommandService,
         DataView.ICommandService
         where T : DirectoryItem, new()
@@ -238,16 +237,6 @@ namespace FileExplorer
             {
                 MessageBox.Show(ex.Message);
             }
-        }
-
-        bool InPlaceEditor.IPresenter.QueryEditingMode(InPlaceEditor inPlaceEditor)
-        {
-            return inPlaceEditor.IsRowEditing;
-        }
-
-        bool InPlaceEditor.IPresenter.QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
-        {
-            return true;
         }
     }
 }

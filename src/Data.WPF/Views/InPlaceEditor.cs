@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Controls;
+using DevZest.Windows;
 
 namespace DevZest.Data.Views
 {
@@ -259,12 +260,15 @@ namespace DevZest.Data.Views
 
             public bool QueryEditingMode(InPlaceEditor inPlaceEditor)
             {
-                return inPlaceEditor.IsMouseOver || inPlaceEditor.IsKeyboardFocusWithin;
+                return inPlaceEditor.IsRowEditing || inPlaceEditor.IsScalarEditing;
             }
 
             public bool QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
             {
-                return inPlaceEditor.IsKeyboardFocusWithin;
+                if (!(Keyboard.FocusedElement is DependencyObject obj))
+                    return true;
+
+                return obj.FindVisaulAncestor<InPlaceEditor>() == null;
             }
         }
 
