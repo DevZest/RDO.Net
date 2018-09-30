@@ -235,17 +235,21 @@ namespace DevZest.Data.Views
             }
         }
 
-        public interface IPresenter : IService
+        public interface IPresenter
         {
             bool QueryEditingMode(InPlaceEditor inPlaceEditor);
             bool QueryEditorElementFocus(InPlaceEditor inPlaceEditor);
         }
 
-        private sealed class DefaultPresenter : IPresenter
+        public interface IPresenterService : IPresenter, IService
         {
-            public static DefaultPresenter Singleton = new DefaultPresenter();
+        }
 
-            private DefaultPresenter()
+        private sealed class PresenterService : IPresenterService
+        {
+            public static PresenterService Singleton = new PresenterService();
+
+            private PresenterService()
             {
             }
 
@@ -322,7 +326,7 @@ namespace DevZest.Data.Views
         static InPlaceEditor()
         {
             FocusableProperty.OverrideMetadata(typeof(InPlaceEditor), new FrameworkPropertyMetadata(BooleanBoxes.True));
-            ServiceManager.Register<IPresenter, DefaultPresenter>(() => DefaultPresenter.Singleton);
+            ServiceManager.Register<IPresenterService, PresenterService>(() => PresenterService.Singleton);
             ServiceManager.Register<IChildInitializer, ChildInitializer>();
         }
 
@@ -340,7 +344,7 @@ namespace DevZest.Data.Views
 
         private IPresenter Presenter
         {
-            get { return GetPresenter(this) ?? DataPresenter.GetService<IPresenter>(); }
+            get { return GetPresenter(this) ?? DataPresenter.GetService<IPresenterService>(); }
         }
 
         private bool _isEditing;

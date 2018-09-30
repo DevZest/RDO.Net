@@ -24,15 +24,6 @@ namespace DevZest.Data.Views
             {
             }
 
-            public DataPresenter DataPresenter
-            {
-                get { return null; }
-            }
-
-            void IService.Initialize(DataPresenter dataPresenter)
-            {
-            }
-
             public bool QueryEditingMode(InPlaceEditor inPlaceEditor)
             {
                 return GetMode(inPlaceEditor) == GridCellMode.Edit || GetPreviewMode(inPlaceEditor) == GridCellMode.Edit;
