@@ -16,7 +16,20 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingRowBindingNotColumn, nameof(rowInput));
             var inertRowBinding = column.BindToTextBlock(format, formatProvider);
             return MergeIntoInPlaceEditor(rowInput, inertRowBinding);
+        }
 
+        public static RowBinding<InPlaceEditor> MergeIntoInPlaceEditor<T>(this RowBinding<T> editingRowBinding, Func<RowPresenter, string> format, IFormatProvider formatProvider = null)
+            where T : UIElement, new()
+        {
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+
+            var rowInput = VerifyEditingBinding(editingRowBinding, nameof(editingRowBinding));
+            var column = rowInput.Target as Column;
+            if (column == null)
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingRowBindingNotColumn, nameof(rowInput));
+            var inertRowBinding = column.BindToTextBlock(format, formatProvider);
+            return MergeIntoInPlaceEditor(rowInput, inertRowBinding);
         }
 
         public static RowBinding<InPlaceEditor> MergeIntoInPlaceEditor<TEditing, TInert>(this RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)

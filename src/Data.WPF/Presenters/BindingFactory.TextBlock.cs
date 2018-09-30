@@ -19,6 +19,21 @@ namespace DevZest.Data.Presenters
                 });
         }
 
+        public static RowBinding<TextBlock> BindToTextBlock(this Column source, Func<RowPresenter, string> format, IFormatProvider formatProvider = null)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+
+            return new RowBinding<TextBlock>(
+                onRefresh: (v, p) =>
+                {
+                    v.Text = p[source]?.ToString(format(p), formatProvider);
+                });
+        }
+
         public static RowBinding<TextBlock> BindToTextBlock(this Model _, string text)
         {
             return new RowBinding<TextBlock>(
