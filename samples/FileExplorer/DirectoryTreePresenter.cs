@@ -16,7 +16,7 @@ namespace FileExplorer
         }
     }
 
-    public class DirectoryTree : DataPresenter<DirectoryTreeItem>, DataView.ICommandService
+    public class DirectoryTreePresenter : DataPresenter<DirectoryTreeItem>, DataView.ICommandService
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {

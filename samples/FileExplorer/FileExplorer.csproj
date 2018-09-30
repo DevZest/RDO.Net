@@ -53,24 +53,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CurrentDirectoryBar.cs" />
+    <Compile Include="CurrentDirectoryPresenter.cs" />
     <Compile Include="DetailsListItem.cs" />
     <Compile Include="DirectoryPresenter.cs" />
     <Compile Include="EnumToBooleanConverter.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
     <Compile Include="DirectoryItem.cs" />
-    <Compile Include="DirectoryList.cs" />
+    <Compile Include="DirectoryListPresenter.cs" />
     <Compile Include="DirectoryItemType.cs" />
-    <Compile Include="DetailsList.cs" />
+    <Compile Include="DetailsListPresenter.cs" />
     <Compile Include="LargeIconListItem.cs" />
     <Compile Include="LargeIconListItemView.xaml.cs">
       <DependentUpon>LargeIconListItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DirectoryListMode.cs" />
     <Compile Include="Win32.cs" />
-    <Compile Include="DirectoryTree.cs" />
-    <Compile Include="LargeIconList.cs" />
-    <Page Include="DetailsList.Styles.xaml">
+    <Compile Include="DirectoryTreePresenter.cs" />
+    <Compile Include="LargeIconListPresenter.cs" />
+    <Page Include="DetailsListPresenter.Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

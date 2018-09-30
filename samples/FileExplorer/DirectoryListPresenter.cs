@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer
 {
-    public interface IDirectoryList : IDataPresenter, IDisposable
+    public interface IDirectoryListPresenter : IDataPresenter, IDisposable
     {
         DirectoryListMode Mode { get; }
     }
@@ -24,16 +24,16 @@ namespace FileExplorer
         public static readonly RoutedUICommand Start = new RoutedUICommand();
     }
 
-    public abstract class DirectoryList<T> : DirectoryPresenter<T>, IDirectoryList,
+    public abstract class DirectoryListPresenter<T> : DirectoryPresenter<T>, IDirectoryListPresenter,
         InPlaceEditor.ICommandService,
         RowSelector.ICommandService,
         DataView.ICommandService
         where T : DirectoryItem, new()
     {
-        protected DirectoryList(DataView directoryListView, DirectoryTree directoryTree)
+        protected DirectoryListPresenter(DataView directoryListView, DirectoryTreePresenter directoryTree)
             : base(directoryTree)
         {
-            _currentDirectory = DirectoryTree.CurrentPath;
+            _currentDirectory = DirectoryTreePresenter.CurrentPath;
             Refresh(directoryListView);
         }
 
@@ -86,7 +86,7 @@ namespace FileExplorer
 
             CurrentRow.EditValue(_.Path, newPath);
             if (type == DirectoryItemType.Directory)
-                DirectoryTree.OnSubDirectoryRenamed(path, newPath);
+                DirectoryTreePresenter.OnSubDirectoryRenamed(path, newPath);
             return true;
         }
 
@@ -222,7 +222,7 @@ namespace FileExplorer
             var type = CurrentRow.GetValue(_.Type);
             var path = CurrentRow.GetValue(_.Path);
             if (type == DirectoryItemType.Directory)
-                DirectoryTree.SelectSubDirectory(path);
+                DirectoryTreePresenter.SelectSubDirectory(path);
             else
                 ProcessStart(path);
         }

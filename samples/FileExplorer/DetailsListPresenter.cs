@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace FileExplorer
 {
-    public class DetailsList : DirectoryList<DetailsListItem>
+    public class DetailsListPresenter : DirectoryListPresenter<DetailsListItem>
     {
-        public static readonly StyleId FileSizeTextBlockStyleKey = new StyleId(typeof(DetailsList));
+        public static readonly StyleId FileSizeTextBlockStyleKey = new StyleId(typeof(DetailsListPresenter));
 
-        public DetailsList(DataView directoryListView, DirectoryTree directoryTree)
+        public DetailsListPresenter(DataView directoryListView, DirectoryTreePresenter directoryTree)
             : base(directoryListView, directoryTree)
         {
         }

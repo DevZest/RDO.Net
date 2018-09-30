@@ -7,23 +7,23 @@ namespace FileExplorer
     public abstract class DirectoryPresenter<T> : DataPresenter<T>, IDisposable
         where T : Model, new()
     {
-        protected DirectoryPresenter(DirectoryTree directoryTree)
+        protected DirectoryPresenter(DirectoryTreePresenter directoryTree)
         {
-            _directoryTree = directoryTree;
-            _directoryTree.ViewInvalidated += OnDirectoryTreeViewInvalidated;
+            _directoryTreePresenter = directoryTree;
+            _directoryTreePresenter.ViewInvalidated += OnDirectoryTreeViewInvalidated;
         }
 
-        private readonly DirectoryTree _directoryTree;
-        protected DirectoryTree DirectoryTree
+        private readonly DirectoryTreePresenter _directoryTreePresenter;
+        protected DirectoryTreePresenter DirectoryTreePresenter
         {
-            get { return _directoryTree; }
+            get { return _directoryTreePresenter; }
         }
 
         protected abstract string CurrentDirectory { get; set; }
 
         private void OnDirectoryTreeViewInvalidated(object sender, EventArgs e)
         {
-            CurrentDirectory = _directoryTree.CurrentPath;
+            CurrentDirectory = _directoryTreePresenter.CurrentPath;
         }
 
         #region IDisposable Support
@@ -35,7 +35,7 @@ namespace FileExplorer
             {
                 if (disposing)
                 {
-                    DirectoryTree.ViewInvalidated -= OnDirectoryTreeViewInvalidated;
+                    DirectoryTreePresenter.ViewInvalidated -= OnDirectoryTreeViewInvalidated;
                     DetachView();
                 }
 

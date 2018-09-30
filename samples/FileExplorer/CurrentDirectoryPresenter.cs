@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace FileExplorer
 {
-    public sealed class CurrentDirectoryBar : DirectoryPresenter<CurrentDirectoryBar.Item>,
+    public sealed class CurrentDirectoryPresenter : DirectoryPresenter<CurrentDirectoryPresenter.Item>,
         InPlaceEditor.ICommandService,
         DataView.ICommandService
     {
@@ -16,18 +16,18 @@ namespace FileExplorer
         {
         }
 
-        public CurrentDirectoryBar(DataView dataView, DirectoryTree directoryTree)
+        public CurrentDirectoryPresenter(DataView dataView, DirectoryTreePresenter directoryTree)
             : base(directoryTree)
         {
             _directoryTree = directoryTree;
             _currentDirectory = NewScalar<string>(null, StringComparer.OrdinalIgnoreCase).AddValidator(ValidateDirectory);
-            CurrentDirectory = DirectoryTree.CurrentPath;
+            CurrentDirectory = DirectoryTreePresenter.CurrentPath;
 
             var dataSet = DataSet<Item>.New();
             Show(dataView, dataSet);
         }
 
-        private readonly DirectoryTree _directoryTree;
+        private readonly DirectoryTreePresenter _directoryTree;
 
         private static string ValidateDirectory(string path)
         {

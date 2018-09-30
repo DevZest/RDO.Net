@@ -4,9 +4,9 @@ using System.Windows.Controls;
 
 namespace FileExplorer
 {
-    public class LargeIconList : DirectoryList<LargeIconListItem>
+    public class LargeIconListPresenter : DirectoryListPresenter<LargeIconListItem>
     {
-        public LargeIconList(DataView directoryListView, DirectoryTree directoryTree)
+        public LargeIconListPresenter(DataView directoryListView, DirectoryTreePresenter directoryTree)
             : base(directoryListView, directoryTree)
         {
         }

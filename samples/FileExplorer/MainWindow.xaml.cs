@@ -12,16 +12,16 @@ namespace FileExplorer
         public static readonly DependencyProperty DirectoryListModeProperty = DependencyProperty.Register(nameof(DirectoryListMode), typeof(DirectoryListMode),
             typeof(MainWindow), new FrameworkPropertyMetadata(OnDirectoryListModeChanged));
 
-        private DirectoryTree _directoryTree = new DirectoryTree();
-        private IDirectoryList _directoryList;
-        private CurrentDirectoryBar _currentDirectoryBar;
+        private DirectoryTreePresenter _directoryTreePresenter = new DirectoryTreePresenter();
+        private IDirectoryListPresenter _directoryListPresenter;
+        private CurrentDirectoryPresenter _currentDirectoryPresenter;
 
         public MainWindow()
         {
             InitializeComponent();
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, ExecuteCloseCommand));
-            _directoryTree.Show(_directoryTreeView, DirectoryTreeItem.GetLogicalDrives());
-            _currentDirectoryBar = new CurrentDirectoryBar(_currentDirectoryBarView, _directoryTree);
+            _directoryTreePresenter.Show(_directoryTreeView, DirectoryTreeItem.GetLogicalDrives());
+            _currentDirectoryPresenter = new CurrentDirectoryPresenter(_currentDirectoryBarView, _directoryTreePresenter);
             DirectoryListMode = DirectoryListMode.LargeIcon;
         }
 
@@ -36,7 +36,7 @@ namespace FileExplorer
             ((MainWindow)d).SetDirectoryList((DirectoryListMode)e.NewValue);
         }
 
-        private IDirectoryList CreateDirectoryList(IDirectoryList oldValue, DirectoryListMode mode)
+        private IDirectoryListPresenter CreateDirectoryList(IDirectoryListPresenter oldValue, DirectoryListMode mode)
         {
             if (oldValue != null)
             {
@@ -47,16 +47,16 @@ namespace FileExplorer
             }
 
             if (mode == DirectoryListMode.LargeIcon)
-                return new LargeIconList(_directoryListView, _directoryTree);
+                return new LargeIconListPresenter(_directoryListView, _directoryTreePresenter);
             else if (mode == DirectoryListMode.Details)
-                return new DetailsList(_directoryListView, _directoryTree);
+                return new DetailsListPresenter(_directoryListView, _directoryTreePresenter);
             else
                 throw new ArgumentException("Invalid DirectoryListMode", nameof(mode));
         }
 
         private void SetDirectoryList(DirectoryListMode value)
         {
-            _directoryList = CreateDirectoryList(_directoryList, value);
+            _directoryListPresenter = CreateDirectoryList(_directoryListPresenter, value);
         }
 
         private void ExecuteCloseCommand(object sener, ExecutedRoutedEventArgs e)
