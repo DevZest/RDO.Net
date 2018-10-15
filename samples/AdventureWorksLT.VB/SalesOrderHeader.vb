@@ -66,35 +66,50 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_FK_Customer As Customer.PK
         Public ReadOnly Property FK_Customer As Customer.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_Customer, Function() New Customer.PK(CustomerID))
+                If m_FK_Customer Is Nothing Then
+                    m_FK_Customer = New Customer.PK(CustomerID)
+                End If
+                Return m_FK_Customer
             End Get
         End Property
 
         Private m_FK_ShipToAddress As Address.PK
         Public ReadOnly Property FK_ShipToAddress As Address.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_ShipToAddress, Function() New Address.PK(ShipToAddressID))
+                If m_FK_ShipToAddress Is Nothing Then
+                    m_FK_ShipToAddress = New Address.PK(ShipToAddressID)
+                End If
+                Return m_FK_ShipToAddress
             End Get
         End Property
 
         Private m_FK_ShipToCustomerAddress As CustomerAddress.PK
         Public ReadOnly Property FK_ShipToCustomerAddress As CustomerAddress.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_ShipToCustomerAddress, Function() New CustomerAddress.PK(CustomerID, ShipToAddressID))
+                If m_FK_ShipToCustomerAddress Is Nothing Then
+                    m_FK_ShipToCustomerAddress = New CustomerAddress.PK(CustomerID, ShipToAddressID)
+                End If
+                Return m_FK_ShipToCustomerAddress
             End Get
         End Property
 
         Private m_FK_BillToAddress As Address.PK
         Public ReadOnly Property FK_BillToAddress As Address.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_BillToAddress, Function() New Address.PK(BillToAddressID))
+                If m_FK_BillToAddress Is Nothing Then
+                    m_FK_BillToAddress = New Address.PK(BillToAddressID)
+                End If
+                Return m_FK_BillToAddress
             End Get
         End Property
 
         Private m_FK_BillToCustomerAddress As CustomerAddress.PK
         Public ReadOnly Property FK_BillToCustomerAddress As CustomerAddress.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_BillToCustomerAddress, Function() New CustomerAddress.PK(CustomerID, BillToAddressID))
+                If m_FK_BillToCustomerAddress Is Nothing Then
+                    m_FK_BillToCustomerAddress = New CustomerAddress.PK(CustomerID, BillToAddressID)
+                End If
+                Return m_FK_BillToCustomerAddress
             End Get
         End Property
 
@@ -366,7 +381,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_DueDate), Name:=NameOf(CK_SalesOrderHeader_DueDate), Description:="Check constraint [DueDate] >= [OrderDate]")>
         Private ReadOnly Property CK_SalesOrderHeader_DueDate As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderHeader_DueDate, Function() DueDate >= OrderDate)
+                If m_CK_SalesOrderHeader_DueDate Is Nothing Then
+                    m_CK_SalesOrderHeader_DueDate = DueDate >= OrderDate
+                End If
+                Return m_CK_SalesOrderHeader_DueDate
             End Get
         End Property
 
@@ -374,7 +392,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Freight), Name:=NameOf(CK_SalesOrderHeader_Freight), Description:="Check constraint [Freight] >= (0.00)")>
         Private ReadOnly Property CK_SalesOrderHeader_Freight As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderHeader_Freight, Function() Freight >= _Decimal.Const(0))
+                If m_CK_SalesOrderHeader_Freight Is Nothing Then
+                    m_CK_SalesOrderHeader_Freight = Freight >= _Decimal.Const(0)
+                End If
+                Return m_CK_SalesOrderHeader_Freight
             End Get
         End Property
 
@@ -382,7 +403,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_ShipDate), Name:=NameOf(CK_SalesOrderHeader_ShipDate), Description:="Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")>
         Private ReadOnly Property CK_SalesOrderHeader_ShipDate As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderHeader_ShipDate, Function() ShipDate >= OrderDate Or ShipDate.IsNull())
+                If m_CK_SalesOrderHeader_ShipDate Is Nothing Then
+                    m_CK_SalesOrderHeader_ShipDate = ShipDate >= OrderDate Or ShipDate.IsNull()
+                End If
+                Return m_CK_SalesOrderHeader_ShipDate
             End Get
         End Property
 
@@ -390,7 +414,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_SubTotal), Name:=NameOf(CK_SalesOrderHeader_SubTotal), Description:="Check constraint [SubTotal] >= (0.00)")>
         Private ReadOnly Property CK_SalesOrderHeader_SubTotal As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderHeader_SubTotal, Function() SubTotal >= _Decimal.Const(0))
+                If m_CK_SalesOrderHeader_SubTotal Is Nothing Then
+                    m_CK_SalesOrderHeader_SubTotal = SubTotal >= _Decimal.Const(0)
+                End If
+                Return m_CK_SalesOrderHeader_SubTotal
             End Get
         End Property
 
@@ -398,7 +425,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_TaxAmt), Name:=NameOf(CK_SalesOrderHeader_TaxAmt), Description:="Check constraint [TaxAmt] >= (0.00)")>
         Private ReadOnly Property CK_SalesOrderHeader_TaxAmt As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderHeader_TaxAmt, Function() TaxAmt >= _Decimal.Const(0))
+                If m_CK_SalesOrderHeader_TaxAmt Is Nothing Then
+                    m_CK_SalesOrderHeader_TaxAmt = TaxAmt >= _Decimal.Const(0)
+                End If
+                Return m_CK_SalesOrderHeader_TaxAmt
             End Get
         End Property
 
@@ -406,7 +436,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Status), Name:=NameOf(CK_SalesOrderHeader_Status), Description:="Check constraint [Status] BETWEEN (1) AND (6)")>
         Private ReadOnly Property CK_SalesOrderHeader_Status As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderHeader_Status, Function() IsValid(Status))
+                If m_CK_SalesOrderHeader_Status Is Nothing Then
+                    m_CK_SalesOrderHeader_Status = IsValid(Status)
+                End If
+                Return m_CK_SalesOrderHeader_Status
             End Get
         End Property
 

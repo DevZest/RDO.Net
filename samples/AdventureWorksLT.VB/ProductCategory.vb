@@ -124,15 +124,18 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_FK_parentProductCategory As PK
-        <DbColumn(Description:="Category description.")>
         Public ReadOnly Property FK_ParentProductCategory As PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_parentProductCategory, Function() New PK(ParentProductCategoryID))
+                If m_FK_parentProductCategory Is Nothing Then
+                    m_FK_parentProductCategory = New PK(ParentProductCategoryID)
+                End If
+                Return m_FK_parentProductCategory
             End Get
         End Property
 
         Private m_Name As _String
         <UdtName>
+        <DbColumn(Description:="Category description.")>
         <Required>
         <AsNVarChar(50)>
         <Unique(Name:="AK_ProductCategory_Name", Description:="Unique nonclustered constraint.")>

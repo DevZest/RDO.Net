@@ -110,14 +110,20 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_FK_Customer As Customer.PK
         Public ReadOnly Property FK_Customer As Customer.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_Customer, Function() New Customer.PK(CustomerID))
+                If m_FK_Customer Is Nothing Then
+                    m_FK_Customer = New Customer.PK(CustomerID)
+                End If
+                Return m_FK_Customer
             End Get
         End Property
 
         Private m_FK_Address As Address.PK
         Public ReadOnly Property FK_Address As Address.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_Address, Function() New Address.PK(AddressID))
+                If m_FK_Address Is Nothing Then
+                    m_FK_Address = New Address.PK(AddressID)
+                End If
+                Return m_FK_Address
             End Get
         End Property
 
@@ -127,7 +133,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             Get
                 Return m_CustomerID
             End Get
-            Set
+            Private Set
                 m_CustomerID = Value
             End Set
         End Property
@@ -138,7 +144,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             Get
                 Return m_AddressID
             End Get
-            Set
+            Private Set
                 m_AddressID = Value
             End Set
         End Property
@@ -154,13 +160,5 @@ Namespace DevZest.Samples.AdventureWorksLT
                 m_AddressType = Value
             End Set
         End Property
-
-        Private Class CSharpImpl
-            <Obsolete("Please refactor calling code to use normal Visual Basic assignment")>
-            Shared Function __Assign(Of T)(ByRef target As T, value As T) As T
-                target = value
-                Return value
-            End Function
-        End Class
     End Class
 End Namespace

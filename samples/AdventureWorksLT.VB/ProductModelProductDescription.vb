@@ -27,14 +27,20 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_FK_ProductModel As ProductModel.PK
         Public ReadOnly Property FK_ProductModel As ProductModel.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_ProductModel, Function() New ProductModel.PK(ProductModelID))
+                If m_FK_ProductModel Is Nothing Then
+                    m_FK_ProductModel = New ProductModel.PK(ProductModelID)
+                End If
+                Return m_FK_ProductModel
             End Get
         End Property
 
         Private m_FK_ProductDescription As ProductDescription.PK
         Public ReadOnly Property FK_ProductDescription As ProductDescription.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_ProductDescription, Function() New ProductDescription.PK(ProductDescriptionID))
+                If m_FK_ProductDescription Is Nothing Then
+                    m_FK_ProductDescription = New ProductDescription.PK(ProductDescriptionID)
+                End If
+                Return m_FK_ProductDescription
             End Get
         End Property
 

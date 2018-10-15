@@ -112,14 +112,20 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_FK_ProductCategory As ProductCategory.PK
         Public ReadOnly Property FK_ProductCategory As ProductCategory.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_ProductCategory, Function() New ProductCategory.PK(ProductCategoryID))
+                If m_FK_ProductCategory Is Nothing Then
+                    m_FK_ProductCategory = New ProductCategory.PK(ProductCategoryID)
+                End If
+                Return m_FK_ProductCategory
             End Get
         End Property
 
         Private m_Fk_ProductModel As ProductModel.PK
         Public ReadOnly Property FK_ProductModel As ProductModel.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_Fk_ProductModel, Function() New ProductModel.PK(ProductModelID))
+                If m_Fk_ProductModel Is Nothing Then
+                    m_Fk_ProductModel = New ProductModel.PK(ProductModelID)
+                End If
+                Return m_Fk_ProductModel
             End Get
         End Property
 
@@ -311,7 +317,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_Product_ListPrice), Name:=NameOf(CK_Product_ListPrice), Description:="Check constraint [ListPrice] >= (0.00)")>
         Private ReadOnly Property CK_Product_ListPrice As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_Product_ListPrice, Function() ListPrice >= _Decimal.Const(0))
+                If m_CK_Product_ListPrice Is Nothing Then
+                    m_CK_Product_ListPrice = ListPrice >= _Decimal.Const(0)
+                End If
+                Return m_CK_Product_ListPrice
             End Get
         End Property
 
@@ -319,7 +328,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_Product_SellEndDate), Name:=NameOf(CK_Product_SellEndDate), Description:="Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")>
         Private ReadOnly Property CK_Product_SellEndDate As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_Ck_Product_SellEndDate, Function() SellEndDate >= SellStartDate Or SellEndDate.IsNull())
+                If m_Ck_Product_SellEndDate Is Nothing Then
+                    m_Ck_Product_SellEndDate = SellEndDate >= SellStartDate Or SellEndDate.IsNull()
+                End If
+                Return m_Ck_Product_SellEndDate
             End Get
         End Property
 
@@ -327,7 +339,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_Product_StandardCost), Name:=NameOf(CK_Product_StandardCost), Description:="Check constraint [StandardCost] >= (0.00)")>
         Private ReadOnly Property CK_Product_StandardCost As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_Product_StandardCost, Function() StandardCost >= _Decimal.[Const](0))
+                If m_CK_Product_StandardCost Is Nothing Then
+                    m_CK_Product_StandardCost = StandardCost >= _Decimal.[Const](0)
+                End If
+                Return m_CK_Product_StandardCost
             End Get
         End Property
 
@@ -335,7 +350,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_Product_Weight), Name:=NameOf(CK_Product_Weight), Description:="Check constraint [Weight] >= (0.00)")>
         Private ReadOnly Property CK_Product_Weight As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_Product_Weight, Function() Weight >= _Decimal.[Const](0))
+                If m_CK_Product_Weight Is Nothing Then
+                    m_CK_Product_Weight = Weight >= _Decimal.[Const](0)
+                End If
+                Return m_CK_Product_Weight
             End Get
         End Property
     End Class

@@ -64,14 +64,20 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_FK_SalesOrderHeader As SalesOrderHeader.PK
         Public ReadOnly Property FK_SalesOrderHeader As SalesOrderHeader.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_SalesOrderHeader, Function() New SalesOrderHeader.PK(SalesOrderID))
+                If m_FK_SalesOrderHeader Is Nothing Then
+                    m_FK_SalesOrderHeader = New SalesOrderHeader.PK(SalesOrderID)
+                End If
+                Return m_FK_SalesOrderHeader
             End Get
         End Property
 
         Private m_FK_Product As Product.PK
         Public ReadOnly Property FK_Product As Product.PK
             Get
-                Return LazyInitializer.EnsureInitialized(m_FK_Product, Function() New Product.PK(ProductID))
+                If m_FK_Product Is Nothing Then
+                    m_FK_Product = New Product.PK(ProductID)
+                End If
+                Return m_FK_Product
             End Get
         End Property
 
@@ -172,7 +178,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_OrderQty), Name:=NameOf(CK_SalesOrderDetail_OrderQty), Description:="Check constraint [OrderQty] > (0)")>
         Private ReadOnly Property CK_SalesOrderDetail_OrderQty As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderDetail_OrderQty, Function() OrderQty > _Decimal.Const(0))
+                If m_CK_SalesOrderDetail_OrderQty Is Nothing Then
+                    m_CK_SalesOrderDetail_OrderQty = OrderQty > _Decimal.Const(0)
+                End If
+                Return m_CK_SalesOrderDetail_OrderQty
             End Get
         End Property
 
@@ -180,7 +189,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPrice), Name:=NameOf(CK_SalesOrderDetail_UnitPrice), Description:="heck constraint [UnitPrice] >= (0.00)")>
         Private ReadOnly Property CK_SalesOrderDetail_UnitPrice As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderDetail_UnitPrice, Function() UnitPrice >= _Decimal.Const(0))
+                If m_CK_SalesOrderDetail_UnitPrice Is Nothing Then
+                    m_CK_SalesOrderDetail_UnitPrice = UnitPrice >= _Decimal.Const(0)
+                End If
+                Return m_CK_SalesOrderDetail_UnitPrice
             End Get
         End Property
 
@@ -188,7 +200,10 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Name:=NameOf(CK_SalesOrderDetail_UnitPriceDiscount), Description:="Check constraint [UnitPriceDiscount] >= (0.00)")>
         Private ReadOnly Property CK_SalesOrderDetail_UnitPriceDiscount As _Boolean
             Get
-                Return LazyInitializer.EnsureInitialized(m_CK_SalesOrderDetail_UnitPriceDiscount, Function() UnitPriceDiscount >= _Decimal.Const(0))
+                If m_CK_SalesOrderDetail_UnitPriceDiscount Is Nothing Then
+                    m_CK_SalesOrderDetail_UnitPriceDiscount = UnitPriceDiscount >= _Decimal.Const(0)
+                End If
+                Return m_CK_SalesOrderDetail_UnitPriceDiscount
             End Get
         End Property
     End Class

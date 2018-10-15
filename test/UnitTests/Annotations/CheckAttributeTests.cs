@@ -21,7 +21,7 @@ namespace DevZest.Data.Annotations
             [Check("ERR_Check", Name = nameof(CK_TestModel_Id))]
             private _Boolean CK_TestModel_Id
             {
-                get { return LazyInitializer.EnsureInitialized(ref _ck_TestModel_Id, () => Id > _Int32.Const(0)); }
+                get { return _ck_TestModel_Id ?? (_ck_TestModel_Id = Id > _Int32.Const(0)); }
             }
         }
 
