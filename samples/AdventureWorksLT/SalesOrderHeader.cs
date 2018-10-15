@@ -60,31 +60,31 @@ namespace DevZest.Samples.AdventureWorksLT
         private Customer.PK _fk_customer;
         public Customer.PK FK_Customer
         {
-            get { return LazyInitializer.EnsureInitialized(ref _fk_customer, () => new Customer.PK(CustomerID)); }
+            get { return _fk_customer ?? (_fk_customer = new Customer.PK(CustomerID)); }
         }
 
         private Address.PK _fk_shipToAddress;
         public Address.PK FK_ShipToAddress
         {
-            get { return LazyInitializer.EnsureInitialized(ref _fk_shipToAddress, () => new Address.PK(ShipToAddressID)); }
+            get { return _fk_shipToAddress ?? (_fk_shipToAddress = new Address.PK(ShipToAddressID)); }
         }
 
         private CustomerAddress.PK _fk_shipToCustomerAddress;
         public CustomerAddress.PK FK_ShipToCustomerAddress
         {
-            get { return LazyInitializer.EnsureInitialized(ref _fk_shipToCustomerAddress, () => new CustomerAddress.PK(CustomerID, ShipToAddressID)); }
+            get { return _fk_shipToCustomerAddress ?? (_fk_shipToCustomerAddress = new CustomerAddress.PK(CustomerID, ShipToAddressID)); }
         }
 
         private Address.PK _fk_billToAddress;
         public Address.PK FK_BillToAddress
         {
-            get { return LazyInitializer.EnsureInitialized(ref _fk_billToAddress, () => new Address.PK(BillToAddressID)); }
+            get { return _fk_billToAddress ?? (_fk_billToAddress = new Address.PK(BillToAddressID)); }
         }
 
         private CustomerAddress.PK _fk_billToCustomerAddress;
         public CustomerAddress.PK FK_BillToCustomerAddress
         {
-            get { return LazyInitializer.EnsureInitialized(ref _fk_billToCustomerAddress, () => new CustomerAddress.PK(CustomerID, BillToAddressID)); }
+            get { return _fk_billToCustomerAddress ?? (_fk_billToCustomerAddress = new CustomerAddress.PK(CustomerID, BillToAddressID)); }
         }
 
         [Identity(1, 1)]
@@ -197,42 +197,42 @@ namespace DevZest.Samples.AdventureWorksLT
         [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_DueDate), Name = nameof(CK_SalesOrderHeader_DueDate), Description = "Check constraint [DueDate] >= [OrderDate]")]
         private _Boolean CK_SalesOrderHeader_DueDate
         {
-            get { return LazyInitializer.EnsureInitialized(ref _ck_SalesOrderHeader_DueDate, () => DueDate >= OrderDate); }
+            get { return _ck_SalesOrderHeader_DueDate ?? (_ck_SalesOrderHeader_DueDate = DueDate >= OrderDate); }
         }
 
         private _Boolean _ck_SalesOrderHeader_Freight;
         [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Freight), Name = nameof(CK_SalesOrderHeader_Freight), Description = "Check constraint [Freight] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_Freight
         {
-            get { return LazyInitializer.EnsureInitialized(ref _ck_SalesOrderHeader_Freight, () => Freight >= _Decimal.Const(0)); }
+            get { return _ck_SalesOrderHeader_Freight ?? (_ck_SalesOrderHeader_Freight = Freight >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_SalesOrderHeader_ShipDate;
         [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_ShipDate), Name = nameof(CK_SalesOrderHeader_ShipDate), Description = "Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")]
         private _Boolean CK_SalesOrderHeader_ShipDate
         {
-            get { return LazyInitializer.EnsureInitialized(ref _ck_SalesOrderHeader_ShipDate, () => ShipDate >= OrderDate | ShipDate.IsNull()); }
+            get { return _ck_SalesOrderHeader_ShipDate ?? (_ck_SalesOrderHeader_ShipDate = ShipDate >= OrderDate | ShipDate.IsNull()); }
         }
 
         private _Boolean _ck_SalesOrderHeader_SubTotal;
         [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_SubTotal), Name = nameof(CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_SubTotal
         {
-            get { return LazyInitializer.EnsureInitialized(ref _ck_SalesOrderHeader_SubTotal, () => SubTotal >= _Decimal.Const(0)); }
+            get { return _ck_SalesOrderHeader_SubTotal ?? (_ck_SalesOrderHeader_SubTotal = SubTotal >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_SalesOrderHeader_TaxAmt;
         [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_TaxAmt), Name = nameof(CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_TaxAmt
         {
-            get { return LazyInitializer.EnsureInitialized(ref _ck_SalesOrderHeader_TaxAmt, () => TaxAmt >= _Decimal.Const(0)); }
+            get { return _ck_SalesOrderHeader_TaxAmt ?? (_ck_SalesOrderHeader_TaxAmt = TaxAmt >= _Decimal.Const(0)); }
         }
 
         private _Boolean _ck_SalesOrderHeader_Status;
         [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Status), Name = nameof(CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
         private _Boolean CK_SalesOrderHeader_Status
         {
-            get { return LazyInitializer.EnsureInitialized(ref _ck_SalesOrderHeader_Status, () => IsValid(Status)); }
+            get { return _ck_SalesOrderHeader_Status ?? (_ck_SalesOrderHeader_Status = IsValid(Status)); }
         }
 
         private static _Boolean IsValid(_ByteEnum<SalesOrderStatus> status)

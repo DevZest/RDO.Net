@@ -80,13 +80,13 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 ParentProductCategoryID { get; private set; }
 
         private PK _fk_parentProductCategory;
-        [DbColumn(Description = "Category description.")]
         public PK FK_ParentProductCategory
         {
-            get { return LazyInitializer.EnsureInitialized(ref _fk_parentProductCategory, () => new PK(ParentProductCategoryID)); }
+            get { return _fk_parentProductCategory ?? (_fk_parentProductCategory = new PK(ParentProductCategoryID)); }
         }
 
         [UdtName]
+        [DbColumn(Description = "Category description.")]
         [Required]
         [AsNVarChar(50)]
         [Unique(Name = "AK_ProductCategory_Name", Description = "Unique nonclustered constraint.")]
