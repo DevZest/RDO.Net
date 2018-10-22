@@ -960,9 +960,20 @@ namespace DevZest.Data
 
         internal DataRow EditingRow { get; private set; }
 
+        internal DataRow AddingRow
+        {
+            get
+            {
+                var editingRow = EditingRow;
+                if (editingRow == null)
+                    return null;
+                return editingRow.Ordinal < 0 ? editingRow : null;
+            }
+        }
+
         internal void BeginEdit(DataRow dataRow)
         {
-            Debug.Assert(EditingRow == null && dataRow != null);
+            Debug.Assert(EditingRow == null && dataRow != null && dataRow.Model == this);
             EnsureInitialized();
             EditingRow = dataRow;
             for (int i = 0; i < Columns.Count; i++)
@@ -971,18 +982,19 @@ namespace DevZest.Data
                 LocalColumns[i].BeginEdit(dataRow);
         }
 
-        internal void EndEdit(DataRow dataRow, bool discardChanges)
+        internal void EndEdit(bool discardChanges)
         {
             Debug.Assert(EditingRow != null);
-            Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
 
-            dataRow.SuspendValueChangedNotification(discardChanges);
+            var editingRow = EditingRow;
+
+            editingRow.SuspendValueChangedNotification(discardChanges);
             for (int i = 0; i < Columns.Count; i++)
-                Columns[i].EndEdit(dataRow);
+                Columns[i].EndEdit(editingRow);
             for (int i = 0; i < LocalColumns.Count; i++)
-                LocalColumns[i].EndEdit(dataRow);
+                LocalColumns[i].EndEdit(editingRow);
             EditingRow = null;
-            dataRow.ResumeValueChangedNotification();
+            editingRow.ResumeValueChangedNotification();
         }
 
         internal void CancelEdit()
@@ -994,7 +1006,7 @@ namespace DevZest.Data
         internal void LockEditingRow(Action action)
         {
             var editingRow = EditingRow;
-            EditingRow = DataRow.Placeholder;
+            EditingRow = null;
             action();
             EditingRow = editingRow;
         }
@@ -1086,8 +1098,14 @@ namespace DevZest.Data
 
         internal void HandlesValueChanged(DataRow dataRow, IColumns columns)
         {
-            DataSetContainer.SuspendComputation();
             var e = new ValueChangedEventArgs(dataRow, columns);
+            if (dataRow.IsEditing)
+            {
+                OnValueChanged(e);
+                return;
+            }
+
+            DataSetContainer.SuspendComputation();
             OnValueChanged(e);
             DataSetContainer.OnValueChanged(e);
             DataSetContainer.ResumeComputation();

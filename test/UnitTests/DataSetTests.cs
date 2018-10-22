@@ -361,7 +361,6 @@ namespace DevZest.Data
         {
             var dataSet = DataSet<SimpleModel>.New();
             var dataRow = dataSet.BeginAdd();
-            Assert.AreEqual(DataRow.Placeholder, dataRow);
             Assert.AreEqual(dataRow, dataSet.EditingRow);
             dataSet._.Id[dataRow] = 5;
             Assert.AreEqual(5, dataSet._.Id[dataRow]);
@@ -376,7 +375,6 @@ namespace DevZest.Data
         {
             var dataSet = DataSet<SimpleModel>.New();
             var dataRow = dataSet.BeginAdd();
-            Assert.AreEqual(DataRow.Placeholder, dataRow);
             Assert.AreEqual(dataRow, dataSet.EditingRow);
             dataSet._.Id[dataRow] = 5;
             Assert.AreEqual(5, dataSet._.Id[dataRow]);
@@ -401,6 +399,47 @@ namespace DevZest.Data
             childDataSet.Insert(0, dataRow);
             Assert.AreEqual(4, dataRow.Ordinal);
             Assert.AreEqual(0, dataRow.Index);
+        }
+
+        private sealed class TestModel : Model
+        {
+            static TestModel()
+            {
+                RegisterLocalColumn((TestModel _) => _.Num1);
+                RegisterLocalColumn((TestModel _) => _.Num2);
+                RegisterLocalColumn((TestModel _) => _.Num3);
+            }
+
+            public TestModel()
+            {
+                Num2.ComputedAs(Num1, CalculateNum2, true);
+            }
+
+            private static int CalculateNum2(DataRow dataRow, LocalColumn<int> num1)
+            {
+                return num1[dataRow] * 2;
+            }
+
+            public LocalColumn<int> Num1 { get; private set; }
+            public LocalColumn<int> Num2 { get; private set; }
+            public LocalColumn<int> Num3 { get; private set; }
+
+            protected override void OnValueChanged(ValueChangedEventArgs e)
+            {
+                base.OnValueChanged(e);
+                if (e.Columns.Contains(Num1))
+                    Num3[e.DataRow] = 3 * Num1[e.DataRow];
+            }
+        }
+
+        [TestMethod]
+        public void DataSet_AddingRow_computed_and_auto_updated_columns()
+        {
+            var dataSet = DataSet<TestModel>.New();
+            var addingRow = dataSet.BeginAdd();
+            dataSet._.Num1[addingRow] = 5;
+            Assert.AreEqual(10, dataSet._.Num2[addingRow]);
+            Assert.AreEqual(15, dataSet._.Num3[addingRow]);
         }
     }
 }

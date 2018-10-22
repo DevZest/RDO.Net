@@ -80,7 +80,7 @@ namespace DevZest.Data
                 throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            if (dataRow.ParentDataRow != null)
+            if (dataRow.Ordinal >= 0)
                 throw new ArgumentException(DiagnosticMessages.DataSet_InvalidNewDataRow, nameof(dataRow));
 
             InternalInsert(index, dataRow);
@@ -230,11 +230,7 @@ namespace DevZest.Data
 
         public DataRow AddingRow
         {
-            get
-            {
-                var editingRow = EditingRow;
-                return editingRow == DataRow.Placeholder ? editingRow : null;
-            }
+            get { return Model.AddingRow; }
         }
 
         public IDataValidationErrors ValidateAddingRow()
@@ -253,8 +249,9 @@ namespace DevZest.Data
             if (EditingRow != null)
                 return null;
 
-            Model.BeginEdit(DataRow.Placeholder);
-            return DataRow.Placeholder;
+            var result = new DataRow(Model);
+            Model.BeginEdit(result);
+            return result;
         }
 
         public DataRow EndAdd()
@@ -267,11 +264,12 @@ namespace DevZest.Data
             if (IsReadOnly)
                 throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
 
-            if (EditingRow != DataRow.Placeholder)
+            if (AddingRow == null)
                 return null;
 
-            var result = new DataRow();
-            Insert(index, result, dataRow => Model.EndEdit(dataRow, true));
+            var result = AddingRow;
+            result.ResetModel();
+            Insert(index, result, dataRow => Model.EndEdit(true));
             return result;
         }
 
@@ -280,9 +278,11 @@ namespace DevZest.Data
             if (IsReadOnly)
                 throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
 
-            if (EditingRow != DataRow.Placeholder)
+            var addingRow = AddingRow;
+            if (addingRow == null)
                 return false;
 
+            addingRow.ResetModel();
             Model.CancelEdit();
             return true;
         }

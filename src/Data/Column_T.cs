@@ -215,10 +215,20 @@ namespace DevZest.Data
 
         private void SetValueCore(DataRow dataRow, T value, bool beforeEdit)
         {
-            if (dataRow == ParentModel.EditingRow && !beforeEdit)
-                _editingValue = value;
+            if (dataRow.IsEditing && !beforeEdit)
+                SetEditingValue(value);
             else
                 UpdateValue(dataRow, value);
+        }
+
+        private void SetEditingValue(T value)
+        {
+            bool areEqual = AreEqual(_editingValue, value);
+            if (!areEqual)
+            {
+                _editingValue = value;
+                ParentModel.EditingRow.OnValueChanged(this);
+            }
         }
 
         private void UpdateValue(DataRow dataRow, T value)
@@ -631,7 +641,7 @@ namespace DevZest.Data
         private T _editingValue;
         internal sealed override void BeginEdit(DataRow dataRow)
         {
-            _editingValue = dataRow == DataRow.Placeholder || _valueManager == null ? DefaultValue : _valueManager[dataRow.Ordinal];
+            _editingValue = dataRow.IsAdding || _valueManager == null ? DefaultValue : _valueManager[dataRow.Ordinal];
         }
 
         internal sealed override void EndEdit(DataRow dataRow)

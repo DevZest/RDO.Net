@@ -79,20 +79,17 @@ namespace DevZest.Data
             }
         }
 
-        internal static readonly DataRow Placeholder = CreatePlaceholderDataRow();
-
-        private static DataRow CreatePlaceholderDataRow()
-        {
-            var result = new DataRow();
-            result.SuspendValueChangedNotification(true);
-            return result;
-        }
-
         /// <summary>Initializes a new instance of <see cref="DataRow"/> object.</summary>
         public DataRow()
         {
             Ordinal = -1;
             _index = -1;
+        }
+
+        internal DataRow(Model model)
+            : this()
+        {
+            Model = model;
         }
 
         private DataSet[] _childDataSets;
@@ -103,6 +100,11 @@ namespace DevZest.Data
 
         /// <summary>Gets the <see cref="Model"/> which associated with this <see cref="DataRow"/>.</summary>
         public Model Model { get; private set; }
+
+        internal void ResetModel()
+        {
+            Model = null;
+        }
 
         public int Ordinal { get; private set; }
 
@@ -127,6 +129,16 @@ namespace DevZest.Data
                 var parentRow = ParentDataRow;
                 return parentRow == null ? BaseDataSet : parentRow[Model];
             }
+        }
+
+        public bool IsEditing
+        {
+            get { return Model == null ? false : Model.EditingRow == this; }
+        }
+
+        public bool IsAdding
+        {
+            get { return Model == null ? false : Model.AddingRow == this; }
         }
 
         internal void InitializeByChildDataSet(DataRow parent, int index)
@@ -389,7 +401,7 @@ namespace DevZest.Data
             if (Model.EditingRow == null && !HasChild)
             {
                 Model.BeginEdit(this);
-                return dataRow => dataRow.Model.EndEdit(dataRow, true);
+                return dataRow => dataRow.Model.EndEdit(true);
             }
             else
             {
@@ -460,12 +472,12 @@ namespace DevZest.Data
 
         public bool EndEdit()
         {
-            if (Model == null || Model.EditingRow != this)
+            if (!IsEditing || IsAdding)
                 return false;
 
             SuspendValueChangedNotification(false);
             Model.DataSetContainer.SuspendComputation();
-            Model.EndEdit(this, false);
+            Model.EndEdit(false);
             Model.DataSetContainer.ResumeComputation();
             ResumeValueChangedNotification();
             return true;
@@ -545,6 +557,9 @@ namespace DevZest.Data
 
         private void UpdateDataSetRevision()
         {
+            if (IsEditing)
+                return;
+
             BaseDataSet.UpdateRevision();
             if (DataSet != BaseDataSet)
                 DataSet.UpdateRevision();
