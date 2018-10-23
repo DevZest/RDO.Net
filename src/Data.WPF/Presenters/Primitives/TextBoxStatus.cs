@@ -43,6 +43,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             textBox.PreviewTextInput -= TextBox_PreviewTextInput;
             textBox.LostFocus -= TextBox_LostFocus;
+            textBox.SetIsEditing(false);
         }
     }
 }
