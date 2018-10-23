@@ -622,7 +622,7 @@ namespace DevZest.Data.Presenters
 
         private int? GetMatchValueHashCode()
         {
-            if (_rowMapper == null || !_rowMapper.CanMatchRow || DataRow == null || DataRow.BaseDataSet == null)
+            if (_rowMapper == null || !_rowMapper.CanMatchRow || DataRow == null || DataRow.IsAdding)
                 return null;
 
             return RowMatch.GetHashCode(MatchColumns, DataRow);
