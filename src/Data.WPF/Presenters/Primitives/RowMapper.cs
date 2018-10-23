@@ -402,7 +402,10 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void OnValueChanged(object sender, ValueChangedEventArgs e)
         {
-            var dataRow= e.DataRow;
+            var dataRow = e.DataRow;
+            if (dataRow.IsEditing)
+                return;
+
             var row = this[dataRow];
             if (row == null)
                 Add(dataRow);
