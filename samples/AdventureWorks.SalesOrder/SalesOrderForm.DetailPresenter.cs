@@ -19,7 +19,7 @@ namespace AdventureWorks.SalesOrders
                 _ownerWindow = ownerWindow;
             }
 
-            private Window _ownerWindow;
+            private readonly Window _ownerWindow;
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
