@@ -187,13 +187,6 @@ namespace DevZest.Data.Presenters
                 _children = null;
         }
 
-        private void Invalidate()
-        {
-            var elementManager = ElementManager;
-            if (elementManager != null)
-                elementManager.InvalidateView();
-        }
-
         internal int RawIndex { get; set; }
 
         public int Index
@@ -244,7 +237,7 @@ namespace DevZest.Data.Presenters
             private set
             {
                 _isExpanded = value;
-                Invalidate();
+                ElementManager?.InvalidateView();
             }
         }
 
@@ -347,7 +340,7 @@ namespace DevZest.Data.Presenters
                 BeginEdit();
                 column.SetValue(DataRow, value);
                 DataPresenter?.OnEdit(column);
-                Invalidate();
+                elementManager?.InvalidateView();
                 elementManager?.ResumeInvalidateView();
             }
         }
@@ -409,7 +402,7 @@ namespace DevZest.Data.Presenters
             BeginEdit();
             column[DataRow] = value;
             DataPresenter?.OnEdit(column);
-            Invalidate();
+            elementManager?.InvalidateView();
             elementManager?.ResumeInvalidateView();
         }
 
