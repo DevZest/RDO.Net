@@ -23,7 +23,6 @@ namespace DevZest.Data.Presenters
         internal ScalarValidation(InputManager inputManager)
         {
             _inputManager = inputManager;
-            InitInputs();
             if (Mode == ValidationMode.Progressive)
             {
                 _progress = Scalars.Empty;
@@ -426,14 +425,39 @@ namespace DevZest.Data.Presenters
         private Input<ScalarBinding, IScalars>[] _inputs;
         public IReadOnlyList<Input<ScalarBinding, IScalars>> Inputs
         {
-            get { return _inputs; }
+            get
+            {
+                InitInputs();
+                return _inputs;
+            }
+        }
+
+        private bool IsAttachedScalarBindingsInvalidated
+        {
+            get { return DataPresenter == null ? false : DataPresenter.IsAttachedScalarBindingsInvalidated; }
         }
 
         private void InitInputs()
         {
-            _inputs = GetInputs(Template.ScalarBindings).ToArray();
-            for (int i = 0; i < Inputs.Count; i++)
-                Inputs[i].Index = i;
+            if (_inputs != null && !IsAttachedScalarBindingsInvalidated)
+                return;
+
+            _inputs = GetInputs().ToArray();
+            for (int i = 0; i < _inputs.Length; i++)
+                _inputs[i].Index = i;
+            DataPresenter?.ResetIsAttachedScalarBindingsInvalidated();
+        }
+
+        private IEnumerable<Input<ScalarBinding, IScalars>> GetInputs()
+        {
+            foreach (var result in GetInputs(Template.ScalarBindings))
+                yield return result;
+
+            if (DataPresenter != null)
+            {
+                foreach (var result in GetInputs(DataPresenter.AttachedScalarBindings))
+                    yield return result;
+            }
         }
 
         private static IEnumerable<Input<ScalarBinding, IScalars>> GetInputs(IReadOnlyList<ScalarBinding> scalarBindings)

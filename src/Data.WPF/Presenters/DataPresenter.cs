@@ -591,6 +591,24 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager?[dataRow]; }
         }
 
+        private List<ScalarBinding> _attachedScalarBindings;
+        public IReadOnlyList<ScalarBinding> AttachedScalarBindings
+        {
+            get
+            {
+                if (_attachedScalarBindings == null)
+                    return Array.Empty<ScalarBinding>();
+                return _attachedScalarBindings;
+            }
+        }
+
+        internal bool IsAttachedScalarBindingsInvalidated { get; private set; }
+
+        internal void ResetIsAttachedScalarBindingsInvalidated()
+        {
+            IsAttachedScalarBindingsInvalidated = false;
+        }
+
         public void Attach<T>(T element, ScalarBinding<T> scalarBinding)
             where T : UIElement, new()
         {
@@ -601,7 +619,11 @@ namespace DevZest.Data.Presenters
             if (scalarBinding.IsSealed)
                 throw new ArgumentException(DiagnosticMessages.Binding_VerifyNotSealed, nameof(scalarBinding));
 
-            AttachedScalarBinding.Attach(this, element, scalarBinding);
+            var result = AttachedScalarBinding.Attach(this, element, scalarBinding);
+            if (_attachedScalarBindings == null)
+                _attachedScalarBindings = new List<ScalarBinding>();
+            _attachedScalarBindings.Add(result);
+            IsAttachedScalarBindingsInvalidated = true;
         }
 
         public void Detach(UIElement element)
@@ -610,7 +632,9 @@ namespace DevZest.Data.Presenters
             if (element.GetAttachedTo() != this)
                 throw new ArgumentException(DiagnosticMessages.DataPresenter_ElementNotAttachedToThis, nameof(element));
 
-            AttachedScalarBinding.Detach(element);
+            var result = AttachedScalarBinding.Detach(element);
+            _attachedScalarBindings.Remove(result);
+            IsAttachedScalarBindingsInvalidated = true;
         }
 
         protected internal virtual void OnEdit(Column column)

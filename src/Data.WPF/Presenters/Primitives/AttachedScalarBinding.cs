@@ -8,19 +8,21 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class AttachedScalarBinding : ScalarBinding, IDisposable
     {
-        internal static void Attach<T>(DataPresenter dataPresenter, T element, ScalarBinding<T> baseBinding)
+        internal static AttachedScalarBinding Attach<T>(DataPresenter dataPresenter, T element, ScalarBinding<T> baseBinding)
             where T : UIElement, new()
         {
             Debug.Assert(dataPresenter != null);
             Debug.Assert(element != null && element.GetAttachedTo() == null);
             Debug.Assert(baseBinding != null && !baseBinding.IsSealed);
-            new TypedAttachedScalarBinding<T>(dataPresenter, element, baseBinding);
+            return new TypedAttachedScalarBinding<T>(dataPresenter, element, baseBinding);
         }
 
-        internal static void Detach(UIElement element)
+        internal static AttachedScalarBinding Detach(UIElement element)
         {
             Debug.Assert(element != null && GetAttachedScalarBinding(element) != null);
-            GetAttachedScalarBinding(element).Dispose();
+            var result = GetAttachedScalarBinding(element);
+            result.Dispose();
+            return result;
         }
 
         private static ConditionalWeakTable<UIElement, AttachedScalarBinding> s_bindingsByElement = new ConditionalWeakTable<UIElement, AttachedScalarBinding>();
