@@ -59,6 +59,12 @@ namespace DevZest.Data.Views
                     .AddBinding(1, 1, _.Column.BindToComboBox(ColumnHeaderSelection, "Value", "Display"))
                     .AddBinding(2, 1, _.Direction.BindToComboBox(DirectionSelection, "Value", "Display"));
             }
+
+            protected internal override void OnEdit(Column column)
+            {
+                if (CurrentRow.GetValue(_.Column) != null && CurrentRow.GetValue(_.Direction) != SortDirection.Unspecified)
+                    CurrentRow.EndEdit();   // Auto EndEdit when both columns has value entered
+            }
         }
 
         public static RoutedUICommand MoveUp { get { return ComponentCommands.MoveUp; } }
