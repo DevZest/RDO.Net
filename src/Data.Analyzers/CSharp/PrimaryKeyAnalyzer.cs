@@ -97,11 +97,11 @@ namespace DevZest.Data.CodeAnalysis.CSharp
         {
             var semanticModel = context.SemanticModel;
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
-            var parameters = methodSymbol.GetConstructorParams(context.Compilation, out _);
+            var parameters = methodSymbol.GetKeyConstructorParams(context.Compilation, out _);
             if (parameters.IsDefaultOrEmpty)
                 return;
 
-            var arguments = methodDeclaration.GetConstructorArguments(parameters);
+            var arguments = methodDeclaration.GetKeyConstructorArguments(parameters);
             if (arguments == null)
                 return;
 

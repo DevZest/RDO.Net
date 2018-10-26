@@ -6,7 +6,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 {
     internal static partial class Extensions
     {
-        public static ArgumentSyntax[] GetConstructorArguments(this MethodDeclarationSyntax methodDeclaration, ImmutableArray<IParameterSymbol> constructorParams)
+        public static ArgumentSyntax[] GetKeyConstructorArguments(this MethodDeclarationSyntax methodDeclaration, ImmutableArray<IParameterSymbol> constructorParams)
         {
             var constructorExpression = GetConstructorExpression(methodDeclaration);
             return constructorExpression == null ? null : GetConstructorArguments(constructorExpression, constructorParams);

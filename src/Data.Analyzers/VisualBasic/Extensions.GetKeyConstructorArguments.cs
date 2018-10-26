@@ -6,7 +6,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     internal static partial class Extensions
     {
-        public static ArgumentSyntax[] GetConstructorArguments(this MethodBlockSyntax methodBlock, ImmutableArray<IParameterSymbol> constructorParams)
+        public static ArgumentSyntax[] GetKeyConstructorArguments(this MethodBlockSyntax methodBlock, ImmutableArray<IParameterSymbol> constructorParams)
         {
             var constructorExpression = GetConstructorExpression(methodBlock);
             return constructorExpression == null ? null : GetConstructorArguments(constructorExpression, constructorParams);
