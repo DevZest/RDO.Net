@@ -19,7 +19,7 @@ namespace DevZest.Data.CodeAnalysis
             return constructor == null ? ImmutableArray<IParameterSymbol>.Empty : constructor.Parameters;
         }
 
-        private static bool IsKeyCreation(this IMethodSymbol methodSymbol, Compilation compilation)
+        public static bool IsKeyCreation(this IMethodSymbol methodSymbol, Compilation compilation)
         {
             if (methodSymbol == null)
                 return false;
