@@ -415,13 +415,14 @@ namespace DevZest.Data.Presenters.Primitives
                 Update(row, e);
         }
 
-        private void Update(RowPresenter row, ValueChangedEventArgs e)
+        internal void Update(RowPresenter row, ValueChangedEventArgs e)
         {
             var oldIndex = IndexOf(row);
             var newIndex = GetIndex(row, oldIndex);
             if (oldIndex == newIndex)
             {
-                OnRowUpdated(row, e);
+                if (e != null)
+                    OnRowUpdated(row, e);
                 return;
             }
 

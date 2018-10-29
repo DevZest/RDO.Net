@@ -54,7 +54,7 @@ namespace DevZest.Data.Presenters
             get { return _isDisposing || _rowMapper == null; }
         }
 
-        private void VerifyDisposed()
+        private void VerifyNotDisposed()
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(GetType().FullName);
@@ -66,7 +66,7 @@ namespace DevZest.Data.Presenters
         {
             get
             {
-                VerifyDisposed();
+                VerifyNotDisposed();
                 return _rowMapper;
             }
         }
@@ -471,7 +471,7 @@ namespace DevZest.Data.Presenters
 
         public void Delete()
         {
-            VerifyDisposed();
+            VerifyNotDisposed();
             if (IsVirtual)
                 return;
 
@@ -677,6 +677,11 @@ namespace DevZest.Data.Presenters
                 return null;
             var containerView = scrollableManager[rowView.ContainerOrdinal];
             return scrollableManager.GetMeasuredLength(containerView, gridTrack);
+        }
+
+        public void UpdateIndex()
+        {
+            RowManager.Update(this, null);
         }
     }
 }
