@@ -619,7 +619,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public RowPresenter InsertingRow
         {
-            get { return _editing == null ? null : _editing.InsertingRow; }
+            get { return _editing?.InsertingRow; }
         }
 
         private int VirtualRowIndex
@@ -910,15 +910,22 @@ namespace DevZest.Data.Presenters.Primitives
             return _selectedRows.Contains(row);
         }
 
+        internal virtual DataPresenter DataPresenter
+        {
+            get { return null; }
+        }
+
         internal void AddSelectedRow(RowPresenter row)
         {
             _selectedRows.Add(row);
+            DataPresenter?.OnIsSelectedChanged(row);
             InvalidateView();
         }
 
         internal void RemoveSelectedRow(RowPresenter row)
         {
             _selectedRows.Remove(row);
+            DataPresenter?.OnIsSelectedChanged(row);
             InvalidateView();
         }
 

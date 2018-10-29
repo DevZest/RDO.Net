@@ -403,11 +403,6 @@ namespace DevZest.Data.Presenters.Primitives
                 scalarBindings[i].EndSetup();
         }
 
-        internal virtual DataPresenter DataPresenter
-        {
-            get { return null; }
-        }
-
         private void RefreshView()
         {
             if (Elements == null || Elements.Count == 0)

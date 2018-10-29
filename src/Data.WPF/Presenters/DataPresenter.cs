@@ -666,5 +666,9 @@ namespace DevZest.Data.Presenters
         {
             return LayoutManager?.Match(rowPresenter, matchVirtual);
         }
+
+        internal protected virtual void OnIsSelectedChanged(RowPresenter row)
+        {
+        }
     }
 }
