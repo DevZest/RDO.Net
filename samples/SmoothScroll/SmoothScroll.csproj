@@ -61,7 +61,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BindingFactory.cs" />
-    <Compile Include="Foo.cs" />
+    <Compile Include="ListItem.cs" />
     <Compile Include="MainWindow.Presenter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -6,7 +6,7 @@ namespace SmoothScroll
 {
     partial class MainWindow
     {
-        private class Presenter : DataPresenter<Foo>
+        private class Presenter : DataPresenter<ListItem>
         {
             protected override void BuildTemplate(TemplateBuilder builder)
             {

@@ -3,15 +3,15 @@ using System;
 
 namespace SmoothScroll
 {
-    public class Foo : Model
+    public class ListItem : Model
     {
-        static Foo()
+        static ListItem()
         {
-            RegisterLocalColumn((Foo _) => _.Text);
-            RegisterLocalColumn((Foo _) => _.IsSectionHeader);
-            RegisterLocalColumn((Foo _) => _.BackgroundR);
-            RegisterLocalColumn((Foo _) => _.BackgroundG);
-            RegisterLocalColumn((Foo _) => _.BackgroundB);
+            RegisterLocalColumn((ListItem _) => _.Text);
+            RegisterLocalColumn((ListItem _) => _.IsSectionHeader);
+            RegisterLocalColumn((ListItem _) => _.BackgroundR);
+            RegisterLocalColumn((ListItem _) => _.BackgroundG);
+            RegisterLocalColumn((ListItem _) => _.BackgroundB);
         }
 
         public LocalColumn<string> Text { get; private set; }
@@ -26,7 +26,7 @@ namespace SmoothScroll
 
         #region Mock
 
-        private static void AddSectionHeader(DataSet<Foo> dataSet, int index)
+        private static void AddSectionHeader(DataSet<ListItem> dataSet, int index)
         {
             dataSet.AddRow((_, dataRow) =>
             {
@@ -35,7 +35,7 @@ namespace SmoothScroll
             });
         }
 
-        private static void AddItem(DataSet<Foo> dataSet, string text, byte r, byte g, byte b)
+        private static void AddItem(DataSet<ListItem> dataSet, string text, byte r, byte g, byte b)
         {
             dataSet.AddRow((_, dataRow) =>
             {
@@ -47,9 +47,9 @@ namespace SmoothScroll
             });
         }
 
-        public static DataSet<Foo> Mock(int count)
+        public static DataSet<ListItem> Mock(int count)
         {
-            var result = DataSet<Foo>.New();
+            var result = DataSet<ListItem>.New();
 
             const string LoremIpsumText =
 @"Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,

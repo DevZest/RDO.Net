@@ -12,7 +12,7 @@ namespace SmoothScroll
             element.Margin = new Thickness(10, 0, 0, 0);
         }
 
-        private static void Refresh(TextBlock element, Foo _, RowPresenter rowPresenter)
+        private static void Refresh(TextBlock element, ListItem _, RowPresenter rowPresenter)
         {
             element.Text = rowPresenter.GetValue(_.Text);
             if (rowPresenter.GetValue(_.IsSectionHeader))
@@ -34,7 +34,7 @@ namespace SmoothScroll
             }
         }
 
-        public static RowBinding<TextBlock> AsTextBlock(this Foo _)
+        public static RowBinding<TextBlock> AsTextBlock(this ListItem _)
         {
             return new RowBinding<TextBlock>(Setup, (e, r) => Refresh(e, _, r), null);
         }
