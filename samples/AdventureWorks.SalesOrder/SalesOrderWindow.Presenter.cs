@@ -9,11 +9,11 @@ using System.Threading;
 
 namespace AdventureWorks.SalesOrders
 {
-    partial class SalesOrderForm
+    partial class SalesOrderWindow
     {
         public static class Styles
         {
-            public static readonly StyleId DataSheet = new StyleId(typeof(SalesOrderForm));
+            public static readonly StyleId DataSheet = new StyleId(typeof(SalesOrderWindow));
         }
 
         private class Presenter : DataPresenter<SalesOrderInfo>, ForeignKeyBox.ILookupService

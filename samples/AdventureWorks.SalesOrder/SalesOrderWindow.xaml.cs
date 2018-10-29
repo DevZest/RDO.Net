@@ -2,24 +2,22 @@
 using DevZest.Samples.AdventureWorksLT;
 using System;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace AdventureWorks.SalesOrders
 {
     /// <summary>
-    /// Interaction logic for SalesOrderForm.xaml
+    /// Interaction logic for SalesOrderWindow.xaml
     /// </summary>
-    public partial class SalesOrderForm : Window
+    public partial class SalesOrderWindow : Window
     {
         public static class Commands
         {
-            public static readonly RoutedCommand Submit = new RoutedCommand(nameof(Submit), typeof(SalesOrderForm));
+            public static readonly RoutedCommand Submit = new RoutedCommand(nameof(Submit), typeof(SalesOrderWindow));
         }
 
-        public SalesOrderForm()
+        public SalesOrderWindow()
         {
             InitializeComponent();
             CommandBindings.Add(new CommandBinding(Commands.Submit, ExecSubmit, CanExecSubmit));

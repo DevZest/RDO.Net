@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace AdventureWorks.SalesOrders
 {
-    partial class SalesOrderForm
+    partial class SalesOrderWindow
     {
         private class DetailPresenter : DataPresenter<SalesOrderInfoDetail>, ForeignKeyBox.ILookupService, DataView.IPasteAppendService
         {

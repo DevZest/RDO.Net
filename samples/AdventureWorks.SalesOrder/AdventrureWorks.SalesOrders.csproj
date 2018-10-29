@@ -102,14 +102,14 @@
     <Compile Include="SalesOrderFooterBox.xaml.cs">
       <DependentUpon>SalesOrderFooterBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SalesOrderForm.DetailPresenter.cs" />
-    <Compile Include="SalesOrderForm.xaml.cs">
-      <DependentUpon>SalesOrderForm.xaml</DependentUpon>
+    <Compile Include="SalesOrderWindow.DetailPresenter.cs" />
+    <Compile Include="SalesOrderWindow.xaml.cs">
+      <DependentUpon>SalesOrderWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SalesOrderHeaderBox.xaml.cs">
       <DependentUpon>SalesOrderHeaderBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SalesOrderForm.Presenter.cs" />
+    <Compile Include="SalesOrderWindow.Presenter.cs" />
     <Compile Include="MainWindow.Presenter.cs" />
     <Compile Include="SearchBox.xaml.cs">
       <DependentUpon>SearchBox.xaml</DependentUpon>
@@ -136,7 +136,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SalesOrderForm.Styles.xaml">
+    <Page Include="SalesOrderWindow.Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -148,7 +148,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SalesOrderForm.xaml">
+    <Page Include="SalesOrderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
