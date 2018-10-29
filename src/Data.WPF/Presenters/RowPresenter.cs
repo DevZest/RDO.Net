@@ -679,7 +679,11 @@ namespace DevZest.Data.Presenters
             return scrollableManager.GetMeasuredLength(containerView, gridTrack);
         }
 
-        public void UpdateIndex()
+        /// <summary>Update sort order of this <see cref="RowPresenter"/>.</summary>
+        /// <remarks>Sort order of <see cref="RowPresenter"/> will be maintained automatically when underlying <see cref="DataRow"/> value changed, there is
+        /// no need to call this method to reflect sort order change when underlying value changed; This method is provided for scenario of custom sort
+        /// when order is decided other than value change, for example, sort by <see cref="RowPresenter.IsSelected"/>.</remarks>
+        public void UpdateSortOrder()
         {
             RowManager.Update(this, null);
         }
