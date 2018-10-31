@@ -5,7 +5,7 @@ Namespace DevZest.Samples.AdventureWorksLT
     Public NotInheritable Class UdtFlagAttribute
         Inherits ColumnAttribute
 
-        Protected Overrides Sub Initialize(column As Column)
+        Protected Overrides Sub Wireup(column As Column)
             column.Nullable(False)
         End Sub
     End Class

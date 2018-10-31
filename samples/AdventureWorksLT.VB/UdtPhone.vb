@@ -6,7 +6,7 @@ Namespace DevZest.Samples.AdventureWorksLT
     Public NotInheritable Class UdtPhone
         Inherits ColumnAttribute
 
-        Protected Overrides Sub Initialize(column As Column)
+        Protected Overrides Sub Wireup(column As Column)
             column.Nullable(True)
             CType(column, Column(Of String)).AsNVarChar(25)
         End Sub
