@@ -1,10 +1,11 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.Presenters;
-using System;
 
 namespace ValidationUI
 {
+    [ModelValidator(nameof(ValidatePasswordConfirmation))]
+    [ModelValidator(nameof(ValidateInterests))]
     public class Registration : Login
     {
         static Registration()
@@ -36,7 +37,11 @@ namespace ValidationUI
 
         private const string ERR_PASSWORD_MISMATCH = "Passwords do not match";
 
-        [ColumnValidator(nameof(Interests), "At least 3 interests must be selected.")]
+        private DataValidationError ValidateInterests(DataRow dataRow)
+        {
+            return IsValidInterests(Interests, dataRow) ? null : new DataValidationError("At least 3 interests must be selected.", Interests);
+        }
+
         private static bool IsValidInterests(_ByteEnum<Interests> column, DataRow dataRow)
         {
             var interests = column[dataRow];
@@ -53,7 +58,6 @@ namespace ValidationUI
             return count >= 3;
         }
 
-        [ModelValidator]
         private DataValidationError ValidatePasswordConfirmation(DataRow dataRow)
         {
             return PasswordConfirmation[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_PASSWORD_MISMATCH, PasswordMismatchErrorSource);
