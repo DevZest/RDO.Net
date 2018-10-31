@@ -14,20 +14,16 @@ namespace DevZest.Data.Annotations.Primitives
         {
             Debug.Assert(ModelType == null && modelType != null);
             ModelType = modelType;
-            _wireupAction = Initialize();
+            Initialize();
         }
 
         public Type ModelType { get; private set; }
 
-        protected abstract Action<Model> Initialize();
+        protected abstract void Initialize();
 
         protected abstract ModelWireupEvent WireupEvent { get; }
 
-        private Action<Model> _wireupAction;
-        private void Wireup(Model model)
-        {
-            _wireupAction?.Invoke(model);
-        }
+        protected abstract void Wireup(Model model);
 
         private static ConcurrentDictionary<Type, IReadOnlyList<ModelAttribute>> s_attributes = new ConcurrentDictionary<Type, IReadOnlyList<ModelAttribute>>();
 

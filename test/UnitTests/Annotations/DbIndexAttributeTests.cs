@@ -7,6 +7,8 @@ namespace DevZest.Data.Annotations
     [TestClass]
     public class DbIndexAttributeTests
     {
+        [DbIndex(nameof(IDX_ID), IsUnique = true)]
+        [DbIndex(nameof(IDX_ID_VALUE))]
         private sealed class TestModel : Model
         {
             static TestModel()
@@ -15,11 +17,13 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Value);
             }
 
-            [DbIndex("IDX_ID", IsUnique = true)]
             public _Int32 Id { get; private set; }
 
-            [DbIndex("IDX_VALUE", SortDirection = SortDirection.Descending)]
             public _Int32 Value { get; private set; }
+
+            private ColumnSort[] IDX_ID => new ColumnSort[] { Id.Asc() };
+
+            private ColumnSort[] IDX_ID_VALUE => new ColumnSort[] { Id, Value.Desc() };
         }
 
         private sealed class TestDb : SqlSession
@@ -42,14 +46,14 @@ namespace DevZest.Data.Annotations
         {
             using (var testDb = new TestDb(SqlVersion.Sql11))
             {
-                var command = testDb.GetCreateTableCommand(new TestModel(), nameof(TestDb.TestTable), null, false);
+                var command = testDb.GetCreateTableCommand(testDb.TestTable._, nameof(TestDb.TestTable), null, false);
                 var expectedSql =
 @"CREATE TABLE [TestTable] (
     [Id] INT NULL,
     [Value] INT NULL
 
     INDEX [IDX_ID] UNIQUE NONCLUSTERED ([Id] ASC),
-    INDEX [IDX_VALUE] NONCLUSTERED ([Value] DESC)
+    INDEX [IDX_ID_VALUE] NONCLUSTERED ([Id], [Value] DESC)
 );
 ";
                 Assert.AreEqual(expectedSql, command.CommandText);

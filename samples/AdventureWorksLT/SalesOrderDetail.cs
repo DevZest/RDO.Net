@@ -8,6 +8,7 @@ namespace DevZest.Samples.AdventureWorksLT
     [Check(nameof(CK_SalesOrderDetail_OrderQty), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_OrderQty), Description = "Check constraint [OrderQty] > (0)")]
     [Check(nameof(CK_SalesOrderDetail_UnitPrice), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPrice), Description = "Check constraint [UnitPrice] >= (0.00)")]
     [Check(nameof(CK_SalesOrderDetail_UnitPriceDiscount), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Description = "Check constraint [UnitPriceDiscount] >= (0.00)")]
+    [DbIndex(nameof(IX_SalesOrderDetail_ProductID), Description = "Nonclustered index.")]
     public class SalesOrderDetail : BaseModel<SalesOrderDetail.PK>
     {
         [DbPrimaryKey("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID", Description = "Clustered index created by a primary key constraint.")]
@@ -79,7 +80,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [DbColumn(Description = "Product sold to customer. Foreign key to Product.ProductID.")]
-        [DbIndex("IX_SalesOrderDetail_ProductID", Description = "Nonclustered index.")]
         public _Int32 ProductID { get; private set; }
 
         [Required]
@@ -117,5 +117,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get { return UnitPriceDiscount >= _Decimal.Const(0); }
         }
+
+        private ColumnSort[] IX_SalesOrderDetail_ProductID => new ColumnSort[] { ProductID };
     }
 }

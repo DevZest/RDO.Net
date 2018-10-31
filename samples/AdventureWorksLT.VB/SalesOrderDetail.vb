@@ -7,6 +7,7 @@ Namespace DevZest.Samples.AdventureWorksLT
     <Check(SalesOrderDetail._CK_SalesOrderDetail_OrderQty, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_OrderQty), Description:="Check constraint [OrderQty] > (0)")>
     <Check(SalesOrderDetail._CK_SalesOrderDetail_UnitPrice, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPrice), Description:="heck constraint [UnitPrice] >= (0.00)")>
     <Check(SalesOrderDetail._CK_SalesOrderDetail_UnitPriceDiscount, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Description:="Check constraint [UnitPriceDiscount] >= (0.00)")>
+    <DbIndex(SalesOrderDetail._IX_SalesOrderDetail_ProductID, Description:="Nonclustered index.")>
     Public Class SalesOrderDetail
         Inherits BaseModel(Of PK)
 
@@ -122,7 +123,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_ProductID As _Int32
         <Required>
         <DbColumn(Description:="Product sold to customer. Foreign key to Product.ProductID.")>
-        <DbIndex("IX_SalesOrderDetail_ProductID", Description:="Nonclustered index.")>
         Public Property ProductID As _Int32
             Get
                 Return m_ProductID
@@ -195,6 +195,13 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private ReadOnly Property CK_SalesOrderDetail_UnitPriceDiscount As _Boolean
             Get
                 Return UnitPriceDiscount >= _Decimal.Const(0)
+            End Get
+        End Property
+
+        Friend Const _IX_SalesOrderDetail_ProductID = NameOf(IX_SalesOrderDetail_ProductID)
+        Private ReadOnly Property IX_SalesOrderDetail_ProductID As ColumnSort()
+            Get
+                Return New ColumnSort() {ProductID}
             End Get
         End Property
     End Class

@@ -7,6 +7,8 @@ Namespace DevZest.Samples.AdventureWorksLT
     <Check(Product._CK_Product_SellEndDate, GetType(UserMessages), NameOf(UserMessages.CK_Product_SellEndDate), Description:="Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")>
     <Check(Product._CK_Product_StandardCost, GetType(UserMessages), NameOf(UserMessages.CK_Product_StandardCost), Description:="Check constraint [StandardCost] >= (0.00)")>
     <Check(Product._CK_Product_Weight, GetType(UserMessages), NameOf(UserMessages.CK_Product_Weight), Description:="Check constraint [Weight] >= (0.00)")>
+    <Unique(Product._AK_Product_Name, Description:="Unique nonclustered constraint.")>
+    <Unique(Product._AK_Product_ProductNumber, Description:="Unique nonclustered constraint.")>
     Public Class Product
         Inherits BaseModel(Of Product.PK)
 
@@ -147,7 +149,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_Name As _String
         <UdtName>
         <DbColumn(Description:="Name of the product.")>
-        <Unique(Name:="AK_Product_Name", Description:="Unique nonclustered constraint.")>
         Public Property Name As _String
             Get
                 Return m_Name
@@ -161,7 +162,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Required>
         <AsNVarChar(25)>
         <DbColumn(Description:="Unique product identification number.")>
-        <Unique(Name:="AK_Product_ProductNumber", Description:="Unique nonclustered constraint.")>
         Public Property ProductNumber As _String
             Get
                 Return m_ProductNumber
@@ -341,6 +341,20 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private ReadOnly Property CK_Product_Weight As _Boolean
             Get
                 Return Weight >= _Decimal.[Const](0)
+            End Get
+        End Property
+
+        Friend Const _AK_Product_Name = NameOf(AK_Product_Name)
+        Private ReadOnly Property AK_Product_Name As ColumnSort()
+            Get
+                Return New ColumnSort() {Name}
+            End Get
+        End Property
+
+        Friend Const _AK_Product_ProductNumber = NameOf(AK_Product_ProductNumber)
+        Private ReadOnly Property AK_Product_ProductNumber As ColumnSort()
+            Get
+                Return New ColumnSort() {ProductNumber}
             End Get
         End Property
     End Class

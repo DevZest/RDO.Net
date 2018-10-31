@@ -1,38 +1,23 @@
 ﻿using DevZest.Data.Annotations.Primitives;
-using System;
 
 namespace DevZest.Data.Annotations
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DbIndexAttribute : ColumnAttribute
+    public sealed class DbIndexAttribute : DbIndexBaseAttribute
     {
         public DbIndexAttribute(string name)
+            : base(name)
         {
-            Name = name.VerifyNotEmpty(nameof(name));
         }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Model model, string dbName, ColumnSort[] sortOrder)
         {
-            column.ParentModel.Index(Name, Description, IsUnique, IsCluster, IsMemberOfTable, IsMemberOfTempTable, SortDirection == SortDirection.Descending ? column.Desc() : column.Asc());
+            model.Index(dbName, Description, IsUnique, IsCluster, IsMemberOfTable, IsMemberOfTempTable, sortOrder);
         }
-
-        public string Name { get; private set; }
-
-        public string Description { get; set; }
 
         public bool IsUnique { get; set; } = false;
-
-        public bool IsCluster { get; set; }
 
         public bool IsMemberOfTable { get; set; } = true;
 
         public bool IsMemberOfTempTable { get; set; } = false;
-
-        public SortDirection SortDirection { get; set; }
-
-        protected override bool CoerceDeclaringTypeOnly(bool value)
-        {
-            return true;
-        }
     }
 }

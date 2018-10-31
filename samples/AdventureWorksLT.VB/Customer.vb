@@ -4,6 +4,7 @@ Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
     <Computation(Customer._ComputeContacPerson)>
+    <DbIndex(Customer._IX_Customer_EmailAddress, Description:="Nonclustered index.")>
     Public Class Customer
         Inherits BaseModel(Of PK)
 
@@ -279,7 +280,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         <AsNVarChar(256)>
         <EmailAddress>
         <DbColumn(Description:="E-mail address for the person.")>
-        <DbIndex("IX_Customer_EmailAddress", Description:="Nonclustered index.")>
         Public Property EmailAddress As _String
             Get
                 Return m_EmailAddress
@@ -363,5 +363,12 @@ Namespace DevZest.Samples.AdventureWorksLT
 
             Return result
         End Function
+
+        Friend Const _IX_Customer_EmailAddress = NameOf(IX_Customer_EmailAddress)
+        Private ReadOnly Property IX_Customer_EmailAddress As ColumnSort()
+            Get
+                Return New ColumnSort() {EmailAddress}
+            End Get
+        End Property
     End Class
 End Namespace

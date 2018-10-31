@@ -1,9 +1,9 @@
 Imports DevZest.Data
 Imports DevZest.Data.SqlServer
 Imports DevZest.Data.Annotations
-Imports System.Threading
 
 Namespace DevZest.Samples.AdventureWorksLT
+    <Unique(ProductCategory._AK_ProductCategory_Name, Description:="Unique nonclustered constraint.")>
     Public Class ProductCategory
         Inherits BaseModel(Of ProductCategory.PK)
 
@@ -138,7 +138,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         <DbColumn(Description:="Category description.")>
         <Required>
         <AsNVarChar(50)>
-        <Unique(Name:="AK_ProductCategory_Name", Description:="Unique nonclustered constraint.")>
         Public Property Name As _String
             Get
                 Return m_Name
@@ -146,6 +145,13 @@ Namespace DevZest.Samples.AdventureWorksLT
             Private Set
                 m_Name = Value
             End Set
+        End Property
+
+        Friend Const _AK_ProductCategory_Name = NameOf(AK_ProductCategory_Name)
+        Private ReadOnly Property AK_ProductCategory_Name As ColumnSort()
+            Get
+                Return New ColumnSort() {Name}
+            End Get
         End Property
     End Class
 End Namespace

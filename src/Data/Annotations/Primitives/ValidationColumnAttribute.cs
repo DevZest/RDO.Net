@@ -17,8 +17,8 @@ namespace DevZest.Data.Annotations.Primitives
                 _column = column;
             }
 
-            private ValidationColumnAttribute _owner;
-            private Column _column;
+            private readonly ValidationColumnAttribute _owner;
+            private readonly Column _column;
 
             public DataValidationError Validate(DataRow dataRow)
             {

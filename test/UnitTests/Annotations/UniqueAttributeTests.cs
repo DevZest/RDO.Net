@@ -8,6 +8,7 @@ namespace DevZest.Data.Annotations
     [TestClass]
     public class UniqueAttributeTests
     {
+        [Unique(nameof(AK_Id))]
         private sealed class TestModel : Model
         {
             static TestModel()
@@ -15,8 +16,9 @@ namespace DevZest.Data.Annotations
                 RegisterColumn((TestModel _) => _.Id);
             }
 
-            [Unique]
             public _Int32 Id { get; private set; }
+
+            private ColumnSort[] AK_Id => new ColumnSort[] { Id };
         }
 
         private sealed class TestDb : SqlSession
@@ -39,12 +41,12 @@ namespace DevZest.Data.Annotations
         {
             using (var testDb = new TestDb(SqlVersion.Sql11))
             {
-                var command = testDb.GetCreateTableCommand(new TestModel(), nameof(TestDb.TestTable), null, false);
+                var command = testDb.GetCreateTableCommand(testDb.TestTable._, nameof(TestDb.TestTable), null, false);
                 var expectedSql =
 @"CREATE TABLE [TestTable] (
     [Id] INT NULL
 
-    UNIQUE NONCLUSTERED ([Id] ASC)
+    CONSTRAINT [AK_Id] UNIQUE NONCLUSTERED ([Id])
 );
 ";
                 Assert.AreEqual(expectedSql, command.CommandText);

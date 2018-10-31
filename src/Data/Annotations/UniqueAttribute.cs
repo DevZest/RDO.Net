@@ -1,46 +1,109 @@
 ﻿using DevZest.Data.Annotations.Primitives;
 using System;
+using System.Linq;
 
 namespace DevZest.Data.Annotations
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class UniqueAttribute : ValidationColumnAttribute
+    public sealed class UniqueAttribute : DbIndexBaseAttribute
     {
-        protected override void Initialize(Column column)
+        private sealed class Validator : IValidator
         {
-            base.Initialize(column);
-            column.ParentModel.DbUnique(Name, Description, IsCluster, SortDirection == SortDirection.Descending ? column.Desc() : column.Asc());
-        }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public bool IsCluster { get; set; }
-
-        public SortDirection SortDirection { get; set; }
-
-        protected override bool IsValid(Column column, DataRow dataRow)
-        {
-            var dataSet = column.ParentModel.DataSet;
-            foreach (var other in dataSet)
+            public Validator(UniqueAttribute uniqueAttribute, ColumnSort[] sortOrder)
             {
-                if (other == dataRow)
-                    continue;
-                if (column.Compare(dataRow, other, SortDirection) == 0)
-                    return false;
+                _uniqueAttribute = uniqueAttribute;
+                _columns = Columns.Empty;
+                for (int i = 0; i < sortOrder.Length; i++)
+                    _columns = _columns.Add(sortOrder[i].Column);
+                _columns.Seal();
             }
-            return true;
+
+            private readonly UniqueAttribute _uniqueAttribute;
+            private readonly IColumns _columns;
+
+            public DataValidationError Validate(DataRow dataRow)
+            {
+                return IsValid(dataRow) ? null : new DataValidationError(_uniqueAttribute.GetMessage(_columns), _columns);
+            }
+
+            private bool IsValid(DataRow dataRow)
+            {
+                var model = dataRow.Model;
+                var dataSet = model.DataSet;
+                foreach (var other in dataSet)
+                {
+                    if (other == dataRow)
+                        continue;
+                    if (AreEqual(dataRow, other))
+                        return false;
+                }
+                return true;
+            }
+
+            private bool AreEqual(DataRow x, DataRow y)
+            {
+                foreach (var column in _columns)
+                {
+                    if (column.Compare(x, y) != 0)
+                        return false;
+                }
+
+                return true;
+            }
         }
 
-        protected override string DefaultMessageString
+        public UniqueAttribute(string name)
+            : base(name)
         {
-            get { return UserMessages.UniqueAttribute; }
         }
 
-        protected override bool CoerceDeclaringTypeOnly(bool value)
+        public UniqueAttribute(string name, string message)
+            : base(name)
         {
-            return true;
+            message.VerifyNotEmpty(nameof(message));
+            _message = message;
+        }
+
+        public UniqueAttribute(string name, Type messageResourceType, string message)
+            : base(name)
+        {
+            _messageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));
+            _messageGetter = messageResourceType.ResolveStaticGetter<string>(message.VerifyNotEmpty(nameof(message)));
+        }
+
+        private readonly string _message;
+        public string Message
+        {
+            get { return _message; }
+        }
+
+        private readonly Type _messageResourceType;
+        public Type ResourceType
+        {
+            get { return _messageResourceType; }
+        }
+
+        private readonly Func<string> _messageGetter;
+
+        private string GetMessage(IColumns columns)
+        {
+            var result = _messageGetter != null ? _messageGetter() : _message;
+            return string.IsNullOrEmpty(result) ? string.Format(UserMessages.UniqueAttribute, GetDisplayNames(columns)) : result;
+        }
+
+        private string GetDisplayNames(IColumns columns)
+        {
+            if (columns.Count == 0)
+                return null;
+            else if (columns.Count == 1)
+                return columns.Single().DisplayName;
+            else
+                return string.Format("({0})", string.Join(", ", columns.Select(x => x.DisplayName)));
+        }
+
+        protected override void Wireup(Model model, string dbName, ColumnSort[] sortOrder)
+        {
+            model.DbUnique(dbName, Description, IsCluster, sortOrder);
+            model.Validators.Add(new Validator(this, sortOrder));
         }
     }
 }

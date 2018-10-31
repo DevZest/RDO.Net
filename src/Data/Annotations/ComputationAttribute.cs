@@ -20,10 +20,11 @@ namespace DevZest.Data.Annotations
 
         public ComputationMode? Mode { get; }
 
-        protected sealed override Action<Model> Initialize()
+        private Action<Model> _wireupAction;
+        protected sealed override void Initialize()
         {
             var methodInfo = GetMethodInfo(Array.Empty<Type>(), typeof(void));
-            return BuildWireupAction(ModelType, methodInfo);
+            _wireupAction = BuildWireupAction(ModelType, methodInfo);
         }
 
         private Action<Model> BuildWireupAction(Type modelType, MethodInfo methodInfo)
@@ -32,6 +33,11 @@ namespace DevZest.Data.Annotations
             var model = Expression.Convert(paramModel, modelType);
             var call = Expression.Call(model, methodInfo);
             return Expression.Lambda<Action<Model>>(call, paramModel).Compile();
+        }
+
+        protected override void Wireup(Model model)
+        {
+            _wireupAction(model);
         }
 
         protected override ModelWireupEvent WireupEvent

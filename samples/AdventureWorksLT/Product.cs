@@ -1,13 +1,14 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
-using System.Threading;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
     [Check(nameof(CK_Product_ListPrice), typeof(UserMessages), nameof(UserMessages.CK_Product_ListPrice), Description = "Check constraint [ListPrice] >= (0.00)")]
     [Check(nameof(CK_Product_SellEndDate), typeof(UserMessages), nameof(UserMessages.CK_Product_SellEndDate), Description = "Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")]
     [Check(nameof(CK_Product_Weight), typeof(UserMessages), nameof(UserMessages.CK_Product_Weight), Description = "Check constraint [Weight] >= (0.00)")]
+    [Unique(nameof(AK_Product_Name), Description = "Unique nonclustered constraint.")]
+    [Unique(nameof(AK_Product_ProductNumber), Description = "Unique nonclustered constraint.")]
     public class Product : BaseModel<Product.PK>
     {
         [DbPrimaryKey("PK_Product_ProductID", Description = "Primary key (clustered) constraint")]
@@ -101,13 +102,11 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [UdtName]
         [DbColumn(Description = "Name of the product.")]
-        [Unique(Name = "AK_Product_Name", Description = "Unique nonclustered constraint.")]
         public _String Name { get; private set; }
 
         [Required]
         [AsNVarChar(25)]
         [DbColumn(Description = "Unique product identification number.")]
-        [Unique(Name = "AK_Product_ProductNumber", Description = "Unique nonclustered constraint.")]
         public _String ProductNumber { get; private set; }
 
         [AsNVarChar(15)]
@@ -178,5 +177,9 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get { return Weight >= _Decimal.Const(0); }
         }
+
+        private ColumnSort[] AK_Product_Name => new ColumnSort[] { Name };
+
+        private ColumnSort[] AK_Product_ProductNumber => new ColumnSort[] { ProductNumber };
     }
 }

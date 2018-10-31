@@ -3,6 +3,7 @@ Imports DevZest.Data.Annotations
 Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
+    <Unique(BaseModel(Of PrimaryKey)._AK_RowGuid, DbName:="AK_%_rowguid", Description:="Unique nonclustered constraint. Used to support replication samples.")>
     Public MustInherit Class BaseModel(Of T As PrimaryKey)
         Inherits Model(Of T)
 
@@ -14,7 +15,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_RowGuid As _Guid
         <Required>
         <AutoGuid(Name:="DF_%_rowguid", Description:="Default constraint value of NEWID()")>
-        <Unique(Name:="AK_%_rowguid", Description:="Unique nonclustered constraint. Used to support replication samples.")>
         <DbColumn(Description:="ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.")>
         Public Property RowGuid As _Guid
             Get
@@ -48,5 +48,12 @@ Namespace DevZest.Samples.AdventureWorksLT
                 ModifiedDate(i) = DateTime.Now
             Next
         End Sub
+
+        Friend Const _AK_RowGuid = NameOf(AK_RowGuid)
+        Private ReadOnly Property AK_RowGuid As ColumnSort()
+            Get
+                Return New ColumnSort() {RowGuid}
+            End Get
+        End Property
     End Class
 End Namespace

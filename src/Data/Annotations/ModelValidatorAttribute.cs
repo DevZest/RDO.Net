@@ -13,11 +13,10 @@ namespace DevZest.Data.Annotations
         }
 
         private Func<Model, DataRow, DataValidationError> _validatorFunc;
-        protected override Action<Model> Initialize()
+        protected override void Initialize()
         {
             var methodInfo = GetMethodInfo(new Type[] { typeof(DataRow) }, typeof(DataValidationError));
             _validatorFunc = BuildValidatorFunc(methodInfo);
-            return Wireup;
         }
 
         private Func<Model, DataRow, DataValidationError> BuildValidatorFunc(MethodInfo methodInfo)
@@ -35,7 +34,7 @@ namespace DevZest.Data.Annotations
             get { return ModelWireupEvent.Initialized; }
         }
 
-        private void Wireup(Model model)
+        protected override void Wireup(Model model)
         {
             model.Validators.Add(this);
         }

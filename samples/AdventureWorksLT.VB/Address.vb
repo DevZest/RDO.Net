@@ -3,7 +3,8 @@ Imports DevZest.Data.Annotations
 Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
-    <DbCompositeIndex("IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion", Description:="Nonclustered index.")>
+    <DbIndex(Address._IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Description:="Nonclustered index.")>
+    <DbIndex(Address._IX_Address_StateProvince, Description:="Nonclustered index.")>
     Public Class Address
         Inherits BaseModel(Of Address.PK)
 
@@ -162,7 +163,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Required>
         <AsNVarChar(60)>
         <DbColumn(Description:="First street address line.")>
-        <DbCompositeIndexMember("IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion", Order:=1)>
         Public Property AddressLine1 As _String
             Get
                 Return m_AddressLine1
@@ -175,7 +175,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_AddressLine2 As _String
         <AsNVarChar(60)>
         <DbColumn(Description:="Second street address line.")>
-        <DbCompositeIndexMember("IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion", Order:=2)>
         Public Property AddressLine2 As _String
             Get
                 Return m_AddressLine2
@@ -189,7 +188,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         <Required>
         <AsNVarChar(30)>
         <DbColumn(Description:="Name of the city.")>
-        <DbCompositeIndexMember("IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion", Order:=3)>
         Public Property City As _String
             Get
                 Return m_City
@@ -202,8 +200,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_StateProvince As _String
         <UdtName>
         <DbColumn(Description:="Name of state or province.")>
-        <DbCompositeIndexMember("IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion", Order:=4)>
-        <DbIndex("IX_Address_StateProvince", Description:="Nonclustered index.")>
         Public Property StateProvince As _String
             Get
                 Return m_StateProvince
@@ -216,7 +212,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_CountryRegion As _String
 
         <UdtName>
-        <DbCompositeIndexMember("IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion", Order:=5)>
         Public Property CountryRegion As _String
             Get
                 Return m_CountryRegion
@@ -237,6 +232,20 @@ Namespace DevZest.Samples.AdventureWorksLT
             Private Set
                 m_PostalCode = Value
             End Set
+        End Property
+
+        Friend Const _IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion = NameOf(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion)
+        Private ReadOnly Property IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion As ColumnSort()
+            Get
+                Return New ColumnSort() {AddressLine1, AddressLine2, City, StateProvince, PostalCode, CountryRegion}
+            End Get
+        End Property
+
+        Friend Const _IX_Address_StateProvince = NameOf(IX_Address_StateProvince)
+        Private ReadOnly Property IX_Address_StateProvince As ColumnSort()
+            Get
+                Return New ColumnSort() {StateProvince}
+            End Get
         End Property
     End Class
 End Namespace

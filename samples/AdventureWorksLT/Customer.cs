@@ -5,6 +5,7 @@ using DevZest.Data.SqlServer;
 namespace DevZest.Samples.AdventureWorksLT
 {
     [Computation(nameof(ComputeContactPerson))]
+    [DbIndex(nameof(IX_Customer_EmailAddress), Description = "Nonclustered index.")]
     public class Customer : BaseModel<Customer.PK>
     {
         [DbPrimaryKey("PK_Customer_CustomerID", Description = "Primary key (clustered) constraint")]
@@ -132,7 +133,6 @@ namespace DevZest.Samples.AdventureWorksLT
         [AsNVarChar(256)]
         [EmailAddress]
         [DbColumn(Description = "E-mail address for the person.")]
-        [DbIndex("IX_Customer_EmailAddress", Description = "Nonclustered index.")]
         public _String EmailAddress { get; private set; }
 
         [UdtPhone]
@@ -179,5 +179,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             return result;
         }
+
+        private ColumnSort[] IX_Customer_EmailAddress => new ColumnSort[] { EmailAddress };
     }
 }

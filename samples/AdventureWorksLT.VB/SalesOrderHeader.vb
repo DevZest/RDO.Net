@@ -11,6 +11,8 @@ Namespace DevZest.Samples.AdventureWorksLT
     <Check(SalesOrderHeader._CK_SalesOrderHeader_SubTotal, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_SubTotal), Description:="Check constraint [SubTotal] >= (0.00)")>
     <Check(SalesOrderHeader._CK_SalesOrderHeader_TaxAmt, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_TaxAmt), Description:="Check constraint [TaxAmt] >= (0.00)")>
     <Check(SalesOrderHeader._CK_SalesOrderHeader_Status, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Status), Description:="Check constraint [Status] BETWEEN (1) AND (6)")>
+    <Unique(SalesOrderHeader._AK_SalesOrderHeader_SalesOrderNumber, Description:="Unique nonclustered constraint.")>
+    <DbIndex(SalesOrderHeader._IX_SalesOrderHeader_CustomerID, Description:="Nonclustered index.")>
     Public Class SalesOrderHeader
         Inherits BaseModel(Of PK)
 
@@ -213,7 +215,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_SalesOrderNumber As _String
         <UdtOrderNumber>
         <DbColumn(Description:="Unique sales order identification number.")>
-        <Unique(Name:="AK_SalesOrderHeader_SalesOrderNumber", Description:="Unique nonclustered constraint.")>
         Public Property SalesOrderNumber As _String
             Get
                 Return m_SalesOrderNumber
@@ -250,7 +251,6 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_CustomerID As _Int32
         <Required>
         <DbColumn(Description:="Customer identification number. Foreign key to Customer.CustomerID.")>
-        <DbIndex("IX_SalesOrderHeader_CustomerID", Description:="Nonclustered index.")>
         Public Property CustomerID As _Int32
             Get
                 Return m_CustomerID
@@ -430,5 +430,19 @@ Namespace DevZest.Samples.AdventureWorksLT
             Dim byteExpr = CType(status, _Byte)
             Return byteExpr >= _Byte.[Const](1) And byteExpr <= _Byte.[Const](6)
         End Function
+
+        Friend Const _AK_SalesOrderHeader_SalesOrderNumber = NameOf(AK_SalesOrderHeader_SalesOrderNumber)
+        Private ReadOnly Property AK_SalesOrderHeader_SalesOrderNumber As ColumnSort()
+            Get
+                Return New ColumnSort() {SalesOrderNumber}
+            End Get
+        End Property
+
+        Friend Const _IX_SalesOrderHeader_CustomerID = NameOf(IX_SalesOrderHeader_CustomerID)
+        Private ReadOnly Property IX_SalesOrderHeader_CustomerID As ColumnSort()
+            Get
+                Return New ColumnSort() {CustomerID}
+            End Get
+        End Property
     End Class
 End Namespace

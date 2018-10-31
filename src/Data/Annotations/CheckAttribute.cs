@@ -20,7 +20,7 @@ namespace DevZest.Data.Annotations
 
             DataValidationError IValidator.Validate(DataRow dataRow)
             {
-                return IsValid(dataRow) ? null : new DataValidationError(_checkAttribute.MessageString, GetValidationSource());
+                return IsValid(dataRow) ? null : new DataValidationError(_checkAttribute.GetMessage(), GetValidationSource());
             }
 
             private bool IsValid(DataRow dataRow)
@@ -63,17 +63,16 @@ namespace DevZest.Data.Annotations
 
         private readonly Func<string> _messageGetter;
 
-        private string MessageString
+        private string GetMessage()
         {
-            get { return _messageGetter != null ? _messageGetter() : _message; }
+            return _messageGetter != null ? _messageGetter() : _message;
         }
 
         private Func<Model, _Boolean> _conditionGetter;
-        protected override Action<Model> Initialize()
+        protected override void Initialize()
         {
             var getMethod = GetPropertyGetter(typeof(_Boolean));
             _conditionGetter = BuildConditionGetter(ModelType, getMethod);
-            return Wireup;
         }
 
         private static Func<Model, _Boolean> BuildConditionGetter(Type modelType, MethodInfo getMethod)
@@ -94,7 +93,7 @@ namespace DevZest.Data.Annotations
             return _conditionGetter(model);
         }
 
-        private void Wireup(Model model)
+        protected override void Wireup(Model model)
         {
             var condition = GetCondition(model);
             model.DbCheck(Name, Description, condition);

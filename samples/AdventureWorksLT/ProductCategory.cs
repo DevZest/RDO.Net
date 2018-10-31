@@ -1,10 +1,10 @@
 ﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
 using DevZest.Data.Annotations;
-using System.Threading;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [Unique(nameof(AK_ProductCategory_Name), Description = "Unique nonclustered constraint.")]
     public class ProductCategory : BaseModel<ProductCategory.PK>
     {
         [DbPrimaryKey("PK_ProductCategory_ProductCategoryID", Description = "Primary key (clustered) constraint")]
@@ -89,7 +89,8 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Category description.")]
         [Required]
         [AsNVarChar(50)]
-        [Unique(Name = "AK_ProductCategory_Name", Description = "Unique nonclustered constraint.")]
         public _String Name { get; private set; }
+
+        private ColumnSort[] AK_ProductCategory_Name => new ColumnSort[] { Name };
     }
 }

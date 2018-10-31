@@ -12,6 +12,8 @@ namespace DevZest.Samples.AdventureWorksLT
     [Check(nameof(CK_SalesOrderHeader_SubTotal), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
     [Check(nameof(CK_SalesOrderHeader_TaxAmt), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
     [Check(nameof(CK_SalesOrderHeader_Status), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
+    [Unique(nameof(AK_SalesOrderHeader_SalesOrderNumber), Description = "Unique nonclustered constraint.")]
+    [DbIndex(nameof(IX_SalesOrderHeader_CustomerID), Description = "Nonclustered index.")]
     public class SalesOrderHeader : BaseModel<SalesOrderHeader.PK>
     {
         [DbPrimaryKey("PK_SalesOrderHeader_SalesOrderID", Description = "Clustered index created by a primary key constraint.")]
@@ -130,7 +132,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [UdtOrderNumber]
         [DbColumn(Description = "Unique sales order identification number.")]
-        [Unique(Name = "AK_SalesOrderHeader_SalesOrderNumber", Description = "Unique nonclustered constraint.")]
         public _String SalesOrderNumber { get; private set; }
 
         [UdtOrderNumber]
@@ -143,7 +144,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Required]
         [DbColumn(Description = "Customer identification number. Foreign key to Customer.CustomerID.")]
-        [DbIndex("IX_SalesOrderHeader_CustomerID", Description = "Nonclustered index.")]
         public _Int32 CustomerID { get; private set; }
 
         [DbColumn(Description = "The ID of the location to send goods.  Foreign key to the Address table.")]
@@ -233,5 +233,9 @@ namespace DevZest.Samples.AdventureWorksLT
             var byteExpr = (_Byte)status;
             return byteExpr >= _Byte.Const(1) & byteExpr <= _Byte.Const(6);
         }
+
+        private ColumnSort[] AK_SalesOrderHeader_SalesOrderNumber => new ColumnSort[] { SalesOrderNumber };
+
+        private ColumnSort[] IX_SalesOrderHeader_CustomerID => new ColumnSort[] { CustomerID };
     }
 }

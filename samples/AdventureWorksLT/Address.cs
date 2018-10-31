@@ -4,11 +4,10 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [DbCompositeIndex(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Description = "Nonclustered index.")]
+    [DbIndex(nameof(IX_Address_StateProvince), Description = "Nonclustered index.")]
+    [DbIndex(nameof(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion), Description = "Nonclustered index.")]
     public class Address : BaseModel<Address.PK>
     {
-        private const string IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion = nameof(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion);
-
         [DbPrimaryKey("PK_Address_AddressID", Description = "Primary key (clustered) constraint")]
         public sealed class PK : PrimaryKey
         {
@@ -88,33 +87,37 @@ namespace DevZest.Samples.AdventureWorksLT
         [Required]
         [AsNVarChar(60)]
         [DbColumn(Description = "First street address line.")]
-        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 1)]
         public _String AddressLine1 { get; private set; }
 
         [AsNVarChar(60)]
         [DbColumn(Description = "Second street address line.")]
-        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 2)]
         public _String AddressLine2 { get; private set; }
 
         [Required]
         [AsNVarChar(30)]
         [DbColumn(Description = "Name of the city.")]
-        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 3)]
         public _String City { get; private set; }
 
         [UdtName]
         [DbColumn(Description = "Name of state or province.")]
-        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 4)]
-        [DbIndex("IX_Address_StateProvince", Description = "Nonclustered index.")]
         public _String StateProvince { get; private set; }
 
         [UdtName]
-        [DbCompositeIndexMember(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Order = 5)]
         public _String CountryRegion { get; private set; }
 
         [Required]
         [AsNVarChar(15)]
         [DbColumn(Description = "Postal code for the street address.")]
         public _String PostalCode { get; private set; }
+
+        private ColumnSort[] IX_Address_StateProvince
+        {
+            get { return new ColumnSort[] { StateProvince }; }
+        }
+
+        private ColumnSort[] IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion
+        {
+            get { return new ColumnSort[] { AddressLine1, AddressLine2, City, StateProvince, CountryRegion }; }
+        }
     }
 }

@@ -5,6 +5,7 @@ using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [Unique(nameof(AK_RowGuid), DbName = "AK_%_rowguid", Description = "Unique nonclustered constraint. Used to support replication samples.")]
     public abstract class BaseModel<T> : Model<T>
         where T : PrimaryKey
     {
@@ -12,11 +13,10 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             RegisterColumn((BaseModel<T> x) => x.RowGuid);
             RegisterColumn((BaseModel<T> x) => x.ModifiedDate);
-        }   
+        }
 
         [Required]
         [AutoGuid(Name = "DF_%_rowguid", Description = "Default constraint value of NEWID()")]
-        [Unique(Name = "AK_%_rowguid", Description = "Unique nonclustered constraint. Used to support replication samples.")]
         [DbColumn(Description = "ROWGUIDCOL number uniquely identifying the record. Used to support a merge replication sample.")]
         public _Guid RowGuid { get; private set; }
 
@@ -36,6 +36,11 @@ namespace DevZest.Samples.AdventureWorksLT
                 RowGuid[i] = Guid.NewGuid();
                 ModifiedDate[i] = DateTime.Now;
             }
+        }
+
+        private ColumnSort[] AK_RowGuid
+        {
+            get { return new ColumnSort[] { RowGuid }; }
         }
     }
 }
