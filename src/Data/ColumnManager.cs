@@ -45,7 +45,7 @@ namespace DevZest.Data
             if (columnAttributes == null)
                 return;
             foreach (var columnAttribute in columnAttributes)
-                columnAttribute.TryInitialize(column);
+                columnAttribute.TryWireup(column);
         }
 
         internal static Action<Column<T>> Verify<TParent, T>(this Expression<Func<TParent, Column<T>>> getter, string paramName)

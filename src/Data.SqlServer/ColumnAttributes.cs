@@ -12,7 +12,7 @@ namespace DevZest.Data.SqlServer
 
         public int Size { get; private set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<Binary>)column).AsBinary(Size);
         }
@@ -20,7 +20,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsBinaryMaxAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<Binary>)column).AsBinaryMax();
         }
@@ -35,7 +35,7 @@ namespace DevZest.Data.SqlServer
 
         public int Size { get; private set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<string>)column).AsChar(Size);
         }
@@ -43,7 +43,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsCharMaxAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<string>)column).AsCharMax();
         }
@@ -51,7 +51,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsDateAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<DateTime?>)column).AsDate();
         }
@@ -59,7 +59,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsDateTimeAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<DateTime?>)column).AsDateTime();
         }
@@ -74,7 +74,7 @@ namespace DevZest.Data.SqlServer
 
         public byte Precision { get; private set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<DateTime?>)column).AsDateTime2(Precision);
         }
@@ -92,7 +92,7 @@ namespace DevZest.Data.SqlServer
 
         public byte Scale { get; private set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<Decimal?>)column).AsDecimal(Precision, Scale);
         }
@@ -100,7 +100,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsMoneyAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<Decimal?>)column).AsMoney();
         }
@@ -115,7 +115,7 @@ namespace DevZest.Data.SqlServer
 
         public int Size { get; private set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<string>)column).AsNChar(Size);
         }
@@ -123,7 +123,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsNCharMaxAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<string>)column).AsNCharMax();
         }
@@ -138,7 +138,7 @@ namespace DevZest.Data.SqlServer
 
         public int Size { get; private set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<string>)column).AsNVarChar(Size);
         }
@@ -146,7 +146,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsNVarCharMaxAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<string>)column).AsNVarCharMax();
         }
@@ -154,7 +154,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsSmallDateTimeAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<DateTime?>)column).AsSmallDateTime();
         }
@@ -162,7 +162,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsSmallMoneyAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<Decimal?>)column).AsSmallMoney();
         }
@@ -170,7 +170,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsTimeAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<DateTime?>)column).AsTime();
         }
@@ -178,7 +178,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsTimeStampAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<Binary>)column).AsTimestamp();
         }
@@ -193,7 +193,7 @@ namespace DevZest.Data.SqlServer
 
         public int Size { get; private set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<Binary>)column).AsVarBinary(Size);
         }
@@ -201,7 +201,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsVarBinaryMaxAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<Binary>)column).AsVarBinaryMax();
         }
@@ -216,7 +216,7 @@ namespace DevZest.Data.SqlServer
 
         public int Size { get; private set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<string>)column).AsVarChar(Size);
         }
@@ -224,7 +224,7 @@ namespace DevZest.Data.SqlServer
 
     public sealed class AsVarCharMaxAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((Column<string>)column).AsVarCharMax();
         }

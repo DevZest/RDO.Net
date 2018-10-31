@@ -9,7 +9,7 @@ namespace DevZest.Data.Annotations
             DeclaringTypeOnly = true;
         }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             column.JsonIgnore();
         }

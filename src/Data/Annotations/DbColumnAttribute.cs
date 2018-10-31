@@ -22,7 +22,7 @@ namespace DevZest.Data.Annotations
         public string Description { get; set; }
 
         /// <inheritdoc/>
-        protected sealed override void Initialize(Column column)
+        protected sealed override void Wireup(Column column)
         {
             column.DbColumnName = Name;
             column.DbColumnDescription = Description;

@@ -92,7 +92,7 @@ namespace DevZest.Data.Annotations
         {
         }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             var shortNameGetter = _shortName.LocalizableValueGetter;
             if (shortNameGetter != null)

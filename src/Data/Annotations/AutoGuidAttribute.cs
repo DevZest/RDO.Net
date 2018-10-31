@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class AutoGuidAttribute : ColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             ((_Guid)column).SetDefault(Functions.NewGuid(), Name, Description);
         }

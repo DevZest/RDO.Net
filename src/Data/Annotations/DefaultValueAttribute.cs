@@ -63,7 +63,7 @@ namespace DevZest.Data.Annotations
 
         public string Description { get; set; }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             column.SetDefaultObject(TypeDescriptor.GetConverter(column.DataType).ConvertFrom(_defaultValue), Name, Description);
         }

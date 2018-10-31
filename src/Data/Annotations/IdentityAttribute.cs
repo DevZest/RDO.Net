@@ -16,7 +16,7 @@ namespace DevZest.Data.Annotations
 
         public int Increment { get; private set; }
 
-        protected sealed override void Initialize(Column column)
+        protected sealed override void Wireup(Column column)
         {
             ((_Int32)column).Identity(Seed, Increment);
         }

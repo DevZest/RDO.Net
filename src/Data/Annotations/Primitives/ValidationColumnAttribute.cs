@@ -74,7 +74,7 @@ namespace DevZest.Data.Annotations.Primitives
             }
         }
 
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
             var model = column.ParentModel;
             model.Validators.Add(new Validator(this, column));

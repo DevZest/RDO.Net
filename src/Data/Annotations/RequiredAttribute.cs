@@ -6,9 +6,9 @@ namespace DevZest.Data.Annotations
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class RequiredAttribute : ValidationColumnAttribute
     {
-        protected override void Initialize(Column column)
+        protected override void Wireup(Column column)
         {
-            base.Initialize(column);
+            base.Wireup(column);
             column.Nullable(false);
         }
 
