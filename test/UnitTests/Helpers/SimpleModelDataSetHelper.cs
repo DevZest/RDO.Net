@@ -1,13 +1,13 @@
 ﻿using DevZest.Data.Annotations;
-using DevZest.Data.Primitives;
 using System;
-using System.Linq;
 using System.Text;
 
 namespace DevZest.Data.Helpers
 {
     public abstract class SimpleModelDataSetHelper
     {
+        [ModelValidator(nameof(ValidateId))]
+        [Computation(nameof(ComputeInheritedValue), ComputationMode.Inherit)]
         protected class SimpleModel : SimpleModelBase
         {
             public static readonly Mounter<_Int32> _InheritedValue = RegisterColumn((SimpleModel _) => _.InheritedValue);
@@ -23,7 +23,6 @@ namespace DevZest.Data.Helpers
 
             private const string ERR_MESSAGE = "The Id must be even.";
 
-            [ModelValidator]
             private DataValidationError ValidateId(DataRow dataRow)
             {
                 return (Id[dataRow] % 2) == 0 ? null : new DataValidationError(ERR_MESSAGE, Id);
@@ -37,7 +36,6 @@ namespace DevZest.Data.Helpers
 
             public _Int32 InheritedValue { get; private set; }
 
-            [Computation(ComputationMode.Inherit)]
             private void ComputeInheritedValue()
             {
                 Child.InheritedValue.ComputedAs(InheritedValue);

@@ -7,6 +7,8 @@ namespace DevZest.Data.Annotations
     [TestClass]
     public class ComputationAttributeTests
     {
+        [Computation(nameof(ComputeIdPlusOne))]
+        [Computation(nameof(ComputeTotalValue), ComputationMode.Aggregate)]
         private sealed class Header : Model
         {
             static Header()
@@ -25,13 +27,11 @@ namespace DevZest.Data.Annotations
 
             public Detail Details { get; private set; }
 
-            [Computation]
             private void ComputeIdPlusOne()
             {
                 IdPlusOne.ComputedAs(Id + _Int32.Const(1));
             }
 
-            [Computation(ComputationMode.Aggregate)]
             private void ComputeTotalValue()
             {
                 TotalValue.ComputedAs(Details.Value.Sum());

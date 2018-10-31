@@ -393,7 +393,7 @@ namespace DevZest.Data
 
         private void PerformConstructing()
         {
-            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Constructing);
+            ModelAttribute.WireupAttributes(this, ModelWireupEvent.Constructing);
             OnConstructing();
         }
 
@@ -404,7 +404,7 @@ namespace DevZest.Data
 
         private void PerformInitializing()
         {
-            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initializing);
+            ModelAttribute.WireupAttributes(this, ModelWireupEvent.Initializing);
             OnInitializing();
         }
 
@@ -415,7 +415,7 @@ namespace DevZest.Data
 
         private void PerformChildModelsMounted()
         {
-            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.ChildModelsMounted);
+            ModelAttribute.WireupAttributes(this, ModelWireupEvent.ChildModelsMounted);
             OnChildModelsMounted();
         }
 
@@ -426,7 +426,7 @@ namespace DevZest.Data
 
         private void PerformChildDataSetsCreated()
         {
-            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.ChildDataSetsCreated);
+            ModelAttribute.WireupAttributes(this, ModelWireupEvent.ChildDataSetsCreated);
             OnChildDataSetsCreated();
         }
 
@@ -437,7 +437,7 @@ namespace DevZest.Data
 
         private void PerformInitialized()
         {
-            ModelWireupAttribute.WireupAttributes(this, ModelWireupEvent.Initialized);
+            ModelAttribute.WireupAttributes(this, ModelWireupEvent.Initialized);
             OnInitialized();
         }
 

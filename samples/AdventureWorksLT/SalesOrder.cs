@@ -3,6 +3,9 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [ModelValidator(nameof(ValidateLineCount))]
+    [Computation(nameof(ComputeLineCount), ComputationMode.Aggregate)]
+    [Computation(nameof(ComputeSubTotal), ComputationMode.Aggregate)]
     public class SalesOrder : SalesOrderHeader
     {
         static SalesOrder()
@@ -13,13 +16,11 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public _Int32 LineCount { get; private set; }
 
-        [ModelValidator]
         private DataValidationError ValidateLineCount(DataRow dataRow)
         {
             return LineCount[dataRow] > 0 ? null : new DataValidationError(UserMessages.Validation_SalesOrder_LineCount, LineCount);
         }
 
-        [Computation(ComputationMode.Aggregate)]
         private void ComputeLineCount()
         {
             LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows());
@@ -32,7 +33,6 @@ namespace DevZest.Samples.AdventureWorksLT
             return new SalesOrderDetail();
         }
 
-        [Computation(ComputationMode.Aggregate)]
         private void ComputeSubTotal()
         {
             SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);

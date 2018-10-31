@@ -1,10 +1,13 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
-using System.Threading;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [Computation(nameof(ComputeLineTotal))]
+    [Check(nameof(CK_SalesOrderDetail_OrderQty), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_OrderQty), Description = "Check constraint [OrderQty] > (0)")]
+    [Check(nameof(CK_SalesOrderDetail_UnitPrice), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPrice), Description = "Check constraint [UnitPrice] >= (0.00)")]
+    [Check(nameof(CK_SalesOrderDetail_UnitPriceDiscount), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Description = "Check constraint [UnitPriceDiscount] >= (0.00)")]
     public class SalesOrderDetail : BaseModel<SalesOrderDetail.PK>
     {
         [DbPrimaryKey("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID", Description = "Clustered index created by a primary key constraint.")]
@@ -95,31 +98,24 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Per product subtotal. Computed as UnitPrice * (1 - UnitPriceDiscount) * OrderQty.")]
         public _Decimal LineTotal { get; private set; }
 
-        [Computation]
         private void ComputeLineTotal()
         {
             LineTotal.ComputedAs((UnitPrice * (_Decimal.Const(1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.Const(0)));
         }
 
-        private _Boolean _ck_SalesOrderDetail_OrderQty;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_OrderQty), Name = nameof(CK_SalesOrderDetail_OrderQty), Description = "Check constraint [OrderQty] > (0)")]
         private _Boolean CK_SalesOrderDetail_OrderQty
         {
-            get { return _ck_SalesOrderDetail_OrderQty ?? (_ck_SalesOrderDetail_OrderQty = OrderQty > _Decimal.Const(0)); }
+            get { return OrderQty > _Decimal.Const(0); }
         }
 
-        private _Boolean _ck_SalesOrderDetail_UnitPrice;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPrice), Name = nameof(CK_SalesOrderDetail_UnitPrice), Description = "Check constraint [UnitPrice] >= (0.00)")]
         private _Boolean CK_SalesOrderDetail_UnitPrice
         {
-            get { return _ck_SalesOrderDetail_UnitPrice ?? (_ck_SalesOrderDetail_UnitPrice = UnitPrice >= _Decimal.Const(0)); }
+            get { return UnitPrice >= _Decimal.Const(0); }
         }
 
-        private _Boolean _ck_SalesOrderDetail_UnitPriceDiscount;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Name = nameof(CK_SalesOrderDetail_UnitPriceDiscount), Description = "Check constraint [UnitPriceDiscount] >= (0.00)")]
         private _Boolean CK_SalesOrderDetail_UnitPriceDiscount
         {
-            get { return _ck_SalesOrderDetail_UnitPriceDiscount ?? (_ck_SalesOrderDetail_UnitPriceDiscount = UnitPriceDiscount >= _Decimal.Const(0)); }
+            get { return UnitPriceDiscount >= _Decimal.Const(0); }
         }
     }
 }

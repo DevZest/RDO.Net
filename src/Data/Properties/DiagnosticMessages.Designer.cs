@@ -1123,6 +1123,22 @@ namespace DevZest.Data
             get { return GetString("PrimaryKey_ParentModelNotIdentical"); }
         }
 
+        /// <summary>
+        /// Failed to resolve instance method {model}.{methodName}({parameters}) with return type {returnType}.
+        /// </summary>
+        public static string NamedModelAttribute_FailedToResolveMethod(object model, object methodName, object parameters, object returnType)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("NamedModelAttribute_FailedToResolveMethod", "model", "methodName", "parameters", "returnType"), model, methodName, parameters, returnType);
+        }
+
+        /// <summary>
+        /// Failed to resolve instance property getter {model}.{property} of type {returnType}.
+        /// </summary>
+        public static string NamedModelAttribute_FailedToResolvePropertyGetter(object model, object property, object returnType)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("NamedModelAttribute_FailedToResolvePropertyGetter", "model", "property", "returnType"), model, property, returnType);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

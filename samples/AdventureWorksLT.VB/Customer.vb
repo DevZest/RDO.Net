@@ -3,6 +3,7 @@ Imports DevZest.Data.Annotations
 Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
+    <Computation(Customer._ComputeContacPerson)>
     Public Class Customer
         Inherits BaseModel(Of PK)
 
@@ -63,13 +64,13 @@ Namespace DevZest.Samples.AdventureWorksLT
             Inherits Projection
 
             Shared Sub New()
-                Register(Function(x As Lookup) x.Title, Customer._Title)
-                Register(Function(x As Lookup) x.FirstName, Customer._FirstName)
-                Register(Function(x As Lookup) x.MiddleName, Customer._MiddleName)
-                Register(Function(x As Lookup) x.LastName, Customer._LastName)
-                Register(Function(x As Lookup) x.CompanyName, Customer._CompanyName)
-                Register(Function(x As Lookup) x.EmailAddress, Customer._EmailAddress)
-                Register(Function(x As Lookup) x.Phone, Customer._Phone)
+                Register(Function(x As Lookup) x.Title, _Title)
+                Register(Function(x As Lookup) x.FirstName, _FirstName)
+                Register(Function(x As Lookup) x.MiddleName, _MiddleName)
+                Register(Function(x As Lookup) x.LastName, _LastName)
+                Register(Function(x As Lookup) x.CompanyName, _CompanyName)
+                Register(Function(x As Lookup) x.EmailAddress, _EmailAddress)
+                Register(Function(x As Lookup) x.Phone, _Phone)
             End Sub
 
             Private m_Tilte As _String
@@ -336,7 +337,8 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Set
         End Property
 
-        <Computation>
+        Friend Const _ComputeContacPerson = NameOf(ComputeContactPerson)
+
         Private Sub ComputeContactPerson()
             ContactPerson.ComputedAs(LastName, FirstName, Title, AddressOf GetContactPerson, False)
         End Sub

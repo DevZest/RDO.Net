@@ -1,13 +1,13 @@
 ﻿using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.SqlClient;
-using System.Threading;
 
 namespace DevZest.Data.Annotations
 {
     [TestClass]
     public class CheckAttributeTests
     {
+        [Check(nameof(CK_TestModel_Id), "ERR_Check")]
         private sealed class TestModel : Model
         {
             static TestModel()
@@ -17,11 +17,9 @@ namespace DevZest.Data.Annotations
 
             public _Int32 Id { get; private set; }
 
-            private _Boolean _ck_TestModel_Id;
-            [Check("ERR_Check", Name = nameof(CK_TestModel_Id))]
             private _Boolean CK_TestModel_Id
             {
-                get { return _ck_TestModel_Id ?? (_ck_TestModel_Id = Id > _Int32.Const(0)); }
+                get { return Id > _Int32.Const(0); }
             }
         }
 

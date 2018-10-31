@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\samples\AdventureWorksLT\AdventureWorksLT.csproj" />
     <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\Data\Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

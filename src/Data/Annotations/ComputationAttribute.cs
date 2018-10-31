@@ -1,21 +1,38 @@
 ﻿using DevZest.Data.Annotations.Primitives;
 using System;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class ComputationAttribute : ParameterlessModelWireupAttribute
+    public sealed class ComputationAttribute : NamedModelAttribute
     {
-        public ComputationAttribute()
+        public ComputationAttribute(string name)
+            : base(name)
         {
         }
 
-        public ComputationAttribute(ComputationMode mode)
+        public ComputationAttribute(string name, ComputationMode mode)
+            : this(name)
         {
             Mode = mode;
         }
 
-        public ComputationMode? Mode { get; private set; }
+        public ComputationMode? Mode { get; }
+
+        protected sealed override Action<Model> Initialize()
+        {
+            var methodInfo = GetMethodInfo(Array.Empty<Type>(), typeof(void));
+            return BuildWireupAction(ModelType, methodInfo);
+        }
+
+        private Action<Model> BuildWireupAction(Type modelType, MethodInfo methodInfo)
+        {
+            var paramModel = Expression.Parameter(typeof(Model));
+            var model = Expression.Convert(paramModel, modelType);
+            var call = Expression.Call(model, methodInfo);
+            return Expression.Lambda<Action<Model>>(call, paramModel).Compile();
+        }
 
         protected override ModelWireupEvent WireupEvent
         {

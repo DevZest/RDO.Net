@@ -3,6 +3,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [ModelValidator(nameof(ValidateProduct))]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
         static SalesOrderInfoDetail()
@@ -12,7 +13,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public Product.Lookup Product { get; private set; }
 
-        [ModelValidator]
         private DataValidationError ValidateProduct(DataRow dataRow)
         {
             if (ProductID[dataRow] == null)

@@ -2,6 +2,9 @@ Imports DevZest.Data
 Imports DevZest.Data.Annotations
 
 Namespace DevZest.Samples.AdventureWorksLT
+    <ModelValidator(SalesOrder._ValidateLineCount)>
+    <Computation(SalesOrder._ComputeLineCount, ComputationMode.Aggregate)>
+    <Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
     Public Class SalesOrder
         Inherits SalesOrderHeader
 
@@ -20,12 +23,12 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Set
         End Property
 
-        <ModelValidator>
+        Friend Const _ValidateLineCount = NameOf(ValidateLineCount)
         Private Function ValidateLineCount(ByVal dataRow As DataRow) As DataValidationError
             Return If(LineCount(dataRow) > 0, Nothing, New DataValidationError(UserMessages.Validation_SalesOrder_LineCount, LineCount))
         End Function
 
-        <Computation(ComputationMode.Aggregate)>
+        Friend Const _ComputeLineCount = NameOf(ComputeLineCount)
         Private Sub ComputeLineCount()
             LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows())
         End Sub
@@ -44,7 +47,7 @@ Namespace DevZest.Samples.AdventureWorksLT
             Return New SalesOrderDetail()
         End Function
 
-        <Computation(ComputationMode.Aggregate)>
+        Friend Const _ComputeSubTotal = NameOf(ComputeSubTotal)
         Private Sub ComputeSubTotal()
             SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), False)
         End Sub

@@ -5,24 +5,48 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class CheckAttribute : ValidationModelWireupAttribute
+    public sealed class CheckAttribute : NamedModelAttribute
     {
-        public CheckAttribute(string message)
+        private sealed class Validator : IValidator
+        {
+            public Validator(CheckAttribute checkAttribute, _Boolean condition)
+            {
+                _checkAttribute = checkAttribute;
+                _condition = condition;
+            }
+
+            private readonly CheckAttribute _checkAttribute;
+            private readonly _Boolean _condition;
+
+            DataValidationError IValidator.Validate(DataRow dataRow)
+            {
+                return IsValid(dataRow) ? null : new DataValidationError(_checkAttribute.MessageString, GetValidationSource());
+            }
+
+            private bool IsValid(DataRow dataRow)
+            {
+                return _condition[dataRow] != false;
+            }
+
+            private IColumns GetValidationSource()
+            {
+                var expression = _condition.Expression;
+                return expression == null ? Columns.Empty : expression.BaseColumns;
+            }
+        }
+
+        public CheckAttribute(string name, string message)
+            : base(name)
         {
             message.VerifyNotEmpty(nameof(message));
             _message = message;
         }
 
-        public CheckAttribute(Type messageResourceType, string message)
+        public CheckAttribute(string name, Type messageResourceType, string message)
+            : base(name)
         {
             _messageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));
             _messageGetter = messageResourceType.ResolveStaticGetter<string>(message.VerifyNotEmpty(nameof(message)));
-        }
-
-        protected sealed override DataValidationError Validate(Model model, DataRow dataRow)
-        {
-            return IsValid(model, dataRow) ? null : new DataValidationError(MessageString, GetValidationSource(model));
         }
 
         private readonly string _message;
@@ -44,22 +68,12 @@ namespace DevZest.Data.Annotations
             get { return _messageGetter != null ? _messageGetter() : _message; }
         }
 
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
         private Func<Model, _Boolean> _conditionGetter;
-        protected override void Initialize(Type modelType, MemberInfo memberInfo)
+        protected override Action<Model> Initialize()
         {
-            var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo == null)
-                return;
-
-            var getMethod = propertyInfo.GetGetMethod(true);
-            if (getMethod == null)
-                return;
-
-            _conditionGetter = BuildConditionGetter(modelType, getMethod);
+            var getMethod = GetPropertyGetter(typeof(_Boolean));
+            _conditionGetter = BuildConditionGetter(ModelType, getMethod);
+            return Wireup;
         }
 
         private static Func<Model, _Boolean> BuildConditionGetter(Type modelType, MethodInfo getMethod)
@@ -75,37 +89,17 @@ namespace DevZest.Data.Annotations
             get { return ModelWireupEvent.Initializing; }
         }
 
-        protected override Action<Model> WireupAction
-        {
-            get { return Wireup; }
-        }
-
         private _Boolean GetCondition(Model model)
         {
-            return _conditionGetter == null ? null : _conditionGetter(model);
-        }
-
-        private bool IsValid(Model model, DataRow dataRow)
-        {
-            var condition = GetCondition(model);
-            return condition[dataRow] != false;
-        }
-
-        private IColumns GetValidationSource(Model model)
-        {
-            var condition = GetCondition(model);
-            var expression = condition.Expression;
-            return expression == null ? Columns.Empty : expression.BaseColumns;
+            return _conditionGetter(model);
         }
 
         private void Wireup(Model model)
         {
             var condition = GetCondition(model);
-            if (condition != null)
-            {
-                model.DbCheck(Name, Description, condition);
-                AddValidator(model);
-            }
+            model.DbCheck(Name, Description, condition);
+            model.Validators.Add(new Validator(this, condition));
         }
+
     }
 }

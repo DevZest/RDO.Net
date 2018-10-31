@@ -1,10 +1,17 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
-using System.Threading;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [Computation(nameof(ComputeSalesOrderNumber))]
+    [Computation(nameof(ComputeTotalDue))]
+    [Check(nameof(CK_SalesOrderHeader_DueDate), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_DueDate), Description = "Check constraint [DueDate] >= [OrderDate]")]
+    [Check(nameof(CK_SalesOrderHeader_Freight), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Freight), Description = "Check constraint [Freight] >= (0.00)")]
+    [Check(nameof(CK_SalesOrderHeader_ShipDate), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_ShipDate), Description = "Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")]
+    [Check(nameof(CK_SalesOrderHeader_SubTotal), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
+    [Check(nameof(CK_SalesOrderHeader_TaxAmt), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
+    [Check(nameof(CK_SalesOrderHeader_Status), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
     public class SalesOrderHeader : BaseModel<SalesOrderHeader.PK>
     {
         [DbPrimaryKey("PK_SalesOrderHeader_SalesOrderID", Description = "Clustered index created by a primary key constraint.")]
@@ -181,58 +188,44 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Sales representative comments.")]
         public _String Comment { get; private set; }
 
-        [Computation]
         private void ComputeSalesOrderNumber()
         {
             SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsNVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
         }
 
-        [Computation]
         private void ComputeTotalDue()
         {
             TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.Const(0)));
         }
 
-        private _Boolean _ck_SalesOrderHeader_DueDate;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_DueDate), Name = nameof(CK_SalesOrderHeader_DueDate), Description = "Check constraint [DueDate] >= [OrderDate]")]
         private _Boolean CK_SalesOrderHeader_DueDate
         {
-            get { return _ck_SalesOrderHeader_DueDate ?? (_ck_SalesOrderHeader_DueDate = DueDate >= OrderDate); }
+            get { return DueDate >= OrderDate; }
         }
 
-        private _Boolean _ck_SalesOrderHeader_Freight;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Freight), Name = nameof(CK_SalesOrderHeader_Freight), Description = "Check constraint [Freight] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_Freight
         {
-            get { return _ck_SalesOrderHeader_Freight ?? (_ck_SalesOrderHeader_Freight = Freight >= _Decimal.Const(0)); }
+            get { return Freight >= _Decimal.Const(0); }
         }
 
-        private _Boolean _ck_SalesOrderHeader_ShipDate;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_ShipDate), Name = nameof(CK_SalesOrderHeader_ShipDate), Description = "Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")]
         private _Boolean CK_SalesOrderHeader_ShipDate
         {
-            get { return _ck_SalesOrderHeader_ShipDate ?? (_ck_SalesOrderHeader_ShipDate = ShipDate >= OrderDate | ShipDate.IsNull()); }
+            get { return ShipDate >= OrderDate | ShipDate.IsNull(); }
         }
 
-        private _Boolean _ck_SalesOrderHeader_SubTotal;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_SubTotal), Name = nameof(CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_SubTotal
         {
-            get { return _ck_SalesOrderHeader_SubTotal ?? (_ck_SalesOrderHeader_SubTotal = SubTotal >= _Decimal.Const(0)); }
+            get { return SubTotal >= _Decimal.Const(0); }
         }
 
-        private _Boolean _ck_SalesOrderHeader_TaxAmt;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_TaxAmt), Name = nameof(CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
         private _Boolean CK_SalesOrderHeader_TaxAmt
         {
-            get { return _ck_SalesOrderHeader_TaxAmt ?? (_ck_SalesOrderHeader_TaxAmt = TaxAmt >= _Decimal.Const(0)); }
+            get { return TaxAmt >= _Decimal.Const(0); }
         }
 
-        private _Boolean _ck_SalesOrderHeader_Status;
-        [Check(typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Status), Name = nameof(CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
         private _Boolean CK_SalesOrderHeader_Status
         {
-            get { return _ck_SalesOrderHeader_Status ?? (_ck_SalesOrderHeader_Status = IsValid(Status)); }
+            get { return IsValid(Status); }
         }
 
         private static _Boolean IsValid(_ByteEnum<SalesOrderStatus> status)

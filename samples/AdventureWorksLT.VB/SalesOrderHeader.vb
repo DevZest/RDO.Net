@@ -1,9 +1,16 @@
-Imports System.Threading
 Imports DevZest.Data
 Imports DevZest.Data.Annotations
 Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
+    <Computation(SalesOrderHeader._ComputeSalesOrderNumber)>
+    <Computation(SalesOrderHeader._ComputeTotalDue)>
+    <Check(SalesOrderHeader._CK_SalesOrderHeader_DueDate, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_DueDate), Description:="Check constraint [DueDate] >= [OrderDate]")>
+    <Check(SalesOrderHeader._CK_SalesOrderHeader_Freight, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Freight), Description:="Check constraint [Freight] >= (0.00)")>
+    <Check(SalesOrderHeader._CK_SalesOrderHeader_ShipDate, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_ShipDate), Description:="Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")>
+    <Check(SalesOrderHeader._CK_SalesOrderHeader_SubTotal, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_SubTotal), Description:="Check constraint [SubTotal] >= (0.00)")>
+    <Check(SalesOrderHeader._CK_SalesOrderHeader_TaxAmt, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_TaxAmt), Description:="Check constraint [TaxAmt] >= (0.00)")>
+    <Check(SalesOrderHeader._CK_SalesOrderHeader_Status, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Status), Description:="Check constraint [Status] BETWEEN (1) AND (6)")>
     Public Class SalesOrderHeader
         Inherits BaseModel(Of PK)
 
@@ -367,79 +374,55 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Set
         End Property
 
-        <Computation>
+        Friend Const _ComputeSalesOrderNumber = NameOf(ComputeSalesOrderNumber)
         Private Sub ComputeSalesOrderNumber()
             SalesOrderNumber.ComputedAs((_String.[Const]("SO") + (CType(SalesOrderID, _String)).AsNVarChar(23)).IfNull(_String.[Const]("*** ERROR ***")))
         End Sub
 
-        <Computation>
+        Friend Const _ComputeTotalDue = NameOf(ComputeTotalDue)
         Private Sub ComputeTotalDue()
             TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.[Const](0)))
         End Sub
 
-        Private m_CK_SalesOrderHeader_DueDate As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_DueDate), Name:=NameOf(CK_SalesOrderHeader_DueDate), Description:="Check constraint [DueDate] >= [OrderDate]")>
+        Friend Const _CK_SalesOrderHeader_DueDate = NameOf(CK_SalesOrderHeader_DueDate)
         Private ReadOnly Property CK_SalesOrderHeader_DueDate As _Boolean
             Get
-                If m_CK_SalesOrderHeader_DueDate Is Nothing Then
-                    m_CK_SalesOrderHeader_DueDate = DueDate >= OrderDate
-                End If
-                Return m_CK_SalesOrderHeader_DueDate
+                Return DueDate >= OrderDate
             End Get
         End Property
 
-        Private m_CK_SalesOrderHeader_Freight As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Freight), Name:=NameOf(CK_SalesOrderHeader_Freight), Description:="Check constraint [Freight] >= (0.00)")>
+        Friend Const _CK_SalesOrderHeader_Freight = NameOf(CK_SalesOrderHeader_Freight)
         Private ReadOnly Property CK_SalesOrderHeader_Freight As _Boolean
             Get
-                If m_CK_SalesOrderHeader_Freight Is Nothing Then
-                    m_CK_SalesOrderHeader_Freight = Freight >= _Decimal.Const(0)
-                End If
-                Return m_CK_SalesOrderHeader_Freight
+                Return Freight >= _Decimal.Const(0)
             End Get
         End Property
 
-        Private m_CK_SalesOrderHeader_ShipDate As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_ShipDate), Name:=NameOf(CK_SalesOrderHeader_ShipDate), Description:="Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")>
+        Friend Const _CK_SalesOrderHeader_ShipDate = NameOf(CK_SalesOrderHeader_ShipDate)
         Private ReadOnly Property CK_SalesOrderHeader_ShipDate As _Boolean
             Get
-                If m_CK_SalesOrderHeader_ShipDate Is Nothing Then
-                    m_CK_SalesOrderHeader_ShipDate = ShipDate >= OrderDate Or ShipDate.IsNull()
-                End If
-                Return m_CK_SalesOrderHeader_ShipDate
+                Return ShipDate >= OrderDate Or ShipDate.IsNull()
             End Get
         End Property
 
-        Private m_CK_SalesOrderHeader_SubTotal As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_SubTotal), Name:=NameOf(CK_SalesOrderHeader_SubTotal), Description:="Check constraint [SubTotal] >= (0.00)")>
+        Friend Const _CK_SalesOrderHeader_SubTotal = NameOf(CK_SalesOrderHeader_SubTotal)
         Private ReadOnly Property CK_SalesOrderHeader_SubTotal As _Boolean
             Get
-                If m_CK_SalesOrderHeader_SubTotal Is Nothing Then
-                    m_CK_SalesOrderHeader_SubTotal = SubTotal >= _Decimal.Const(0)
-                End If
-                Return m_CK_SalesOrderHeader_SubTotal
+                Return SubTotal >= _Decimal.Const(0)
             End Get
         End Property
 
-        Private m_CK_SalesOrderHeader_TaxAmt As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_TaxAmt), Name:=NameOf(CK_SalesOrderHeader_TaxAmt), Description:="Check constraint [TaxAmt] >= (0.00)")>
+        Friend Const _CK_SalesOrderHeader_TaxAmt = NameOf(CK_SalesOrderHeader_TaxAmt)
         Private ReadOnly Property CK_SalesOrderHeader_TaxAmt As _Boolean
             Get
-                If m_CK_SalesOrderHeader_TaxAmt Is Nothing Then
-                    m_CK_SalesOrderHeader_TaxAmt = TaxAmt >= _Decimal.Const(0)
-                End If
-                Return m_CK_SalesOrderHeader_TaxAmt
+                Return TaxAmt >= _Decimal.Const(0)
             End Get
         End Property
 
-        Private m_CK_SalesOrderHeader_Status As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Status), Name:=NameOf(CK_SalesOrderHeader_Status), Description:="Check constraint [Status] BETWEEN (1) AND (6)")>
+        Friend Const _CK_SalesOrderHeader_Status = NameOf(CK_SalesOrderHeader_Status)
         Private ReadOnly Property CK_SalesOrderHeader_Status As _Boolean
             Get
-                If m_CK_SalesOrderHeader_Status Is Nothing Then
-                    m_CK_SalesOrderHeader_Status = IsValid(Status)
-                End If
-                Return m_CK_SalesOrderHeader_Status
+                Return IsValid(Status)
             End Get
         End Property
 

@@ -1,11 +1,14 @@
-Imports System.Threading
 Imports DevZest.Data
 Imports DevZest.Data.Annotations
 Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
+    <Computation(SalesOrderDetail._ComputeLineTotal)>
+    <Check(SalesOrderDetail._CK_SalesOrderDetail_OrderQty, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_OrderQty), Description:="Check constraint [OrderQty] > (0)")>
+    <Check(SalesOrderDetail._CK_SalesOrderDetail_UnitPrice, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPrice), Description:="heck constraint [UnitPrice] >= (0.00)")>
+    <Check(SalesOrderDetail._CK_SalesOrderDetail_UnitPriceDiscount, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Description:="Check constraint [UnitPriceDiscount] >= (0.00)")>
     Public Class SalesOrderDetail
-        Inherits BaseModel(Of SalesOrderDetail.PK)
+        Inherits BaseModel(Of PK)
 
         <DbPrimaryKey("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID", Description:="Clustered index created by a primary key constraint.")>
         Public NotInheritable Class PK
@@ -169,41 +172,29 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Set
         End Property
 
-        <Computation>
+        Friend Const _ComputeLineTotal = NameOf(ComputeLineTotal)
         Private Sub ComputeLineTotal()
             LineTotal.ComputedAs((UnitPrice * (_Decimal.[Const](1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.[Const](0)))
         End Sub
 
-        Private m_CK_SalesOrderDetail_OrderQty As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_OrderQty), Name:=NameOf(CK_SalesOrderDetail_OrderQty), Description:="Check constraint [OrderQty] > (0)")>
+        Friend Const _CK_SalesOrderDetail_OrderQty = NameOf(CK_SalesOrderDetail_OrderQty)
         Private ReadOnly Property CK_SalesOrderDetail_OrderQty As _Boolean
             Get
-                If m_CK_SalesOrderDetail_OrderQty Is Nothing Then
-                    m_CK_SalesOrderDetail_OrderQty = OrderQty > _Decimal.Const(0)
-                End If
-                Return m_CK_SalesOrderDetail_OrderQty
+                Return OrderQty > _Decimal.Const(0)
             End Get
         End Property
 
-        Private m_CK_SalesOrderDetail_UnitPrice As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPrice), Name:=NameOf(CK_SalesOrderDetail_UnitPrice), Description:="heck constraint [UnitPrice] >= (0.00)")>
+        Friend Const _CK_SalesOrderDetail_UnitPrice = NameOf(CK_SalesOrderDetail_UnitPrice)
         Private ReadOnly Property CK_SalesOrderDetail_UnitPrice As _Boolean
             Get
-                If m_CK_SalesOrderDetail_UnitPrice Is Nothing Then
-                    m_CK_SalesOrderDetail_UnitPrice = UnitPrice >= _Decimal.Const(0)
-                End If
-                Return m_CK_SalesOrderDetail_UnitPrice
+                Return UnitPrice >= _Decimal.Const(0)
             End Get
         End Property
 
-        Private m_CK_SalesOrderDetail_UnitPriceDiscount As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Name:=NameOf(CK_SalesOrderDetail_UnitPriceDiscount), Description:="Check constraint [UnitPriceDiscount] >= (0.00)")>
+        Friend Const _CK_SalesOrderDetail_UnitPriceDiscount = NameOf(CK_SalesOrderDetail_UnitPriceDiscount)
         Private ReadOnly Property CK_SalesOrderDetail_UnitPriceDiscount As _Boolean
             Get
-                If m_CK_SalesOrderDetail_UnitPriceDiscount Is Nothing Then
-                    m_CK_SalesOrderDetail_UnitPriceDiscount = UnitPriceDiscount >= _Decimal.Const(0)
-                End If
-                Return m_CK_SalesOrderDetail_UnitPriceDiscount
+                Return UnitPriceDiscount >= _Decimal.Const(0)
             End Get
         End Property
     End Class

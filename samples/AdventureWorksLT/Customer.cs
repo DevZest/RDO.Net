@@ -4,6 +4,7 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [Computation(nameof(ComputeContactPerson))]
     public class Customer : BaseModel<Customer.PK>
     {
         [DbPrimaryKey("PK_Customer_CustomerID", Description = "Primary key (clustered) constraint")]
@@ -150,7 +151,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public LocalColumn<string> ContactPerson { get; private set; }
 
-        [Computation]
         private void ComputeContactPerson()
         {
             ContactPerson.ComputedAs(LastName, FirstName, Title, GetContactPerson, false);

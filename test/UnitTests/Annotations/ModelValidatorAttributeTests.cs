@@ -7,6 +7,7 @@ namespace DevZest.Data.Annotations
     {
         private const string ERR_MESSAGE = "Confirm password different from password";
 
+        [ModelValidator(nameof(ValidateConfirmPassword))]
         private class User : Model
         {
             static User()
@@ -19,7 +20,6 @@ namespace DevZest.Data.Annotations
 
             public _String ConfirmPassword { get; private set; }
 
-            [ModelValidator]
             private DataValidationError ValidateConfirmPassword(DataRow dataRow)
             {
                 return ConfirmPassword[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_MESSAGE, ConfirmPassword);

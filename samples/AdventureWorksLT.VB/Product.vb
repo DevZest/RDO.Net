@@ -1,9 +1,12 @@
-Imports System.Threading
 Imports DevZest.Data
 Imports DevZest.Data.Annotations
 Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
+    <Check(Product._CK_Product_ListPrice, GetType(UserMessages), NameOf(UserMessages.CK_Product_ListPrice), Description:="Check constraint [ListPrice] >= (0.00)")>
+    <Check(Product._CK_Product_SellEndDate, GetType(UserMessages), NameOf(UserMessages.CK_Product_SellEndDate), Description:="Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")>
+    <Check(Product._CK_Product_StandardCost, GetType(UserMessages), NameOf(UserMessages.CK_Product_StandardCost), Description:="Check constraint [StandardCost] >= (0.00)")>
+    <Check(Product._CK_Product_Weight, GetType(UserMessages), NameOf(UserMessages.CK_Product_Weight), Description:="Check constraint [Weight] >= (0.00)")>
     Public Class Product
         Inherits BaseModel(Of Product.PK)
 
@@ -313,47 +316,31 @@ Namespace DevZest.Samples.AdventureWorksLT
             End Set
         End Property
 
-        Private m_CK_Product_ListPrice As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_Product_ListPrice), Name:=NameOf(CK_Product_ListPrice), Description:="Check constraint [ListPrice] >= (0.00)")>
+        Friend Const _CK_Product_ListPrice = NameOf(CK_Product_ListPrice)
         Private ReadOnly Property CK_Product_ListPrice As _Boolean
             Get
-                If m_CK_Product_ListPrice Is Nothing Then
-                    m_CK_Product_ListPrice = ListPrice >= _Decimal.Const(0)
-                End If
-                Return m_CK_Product_ListPrice
+                Return ListPrice >= _Decimal.Const(0)
             End Get
         End Property
 
-        Private m_Ck_Product_SellEndDate As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_Product_SellEndDate), Name:=NameOf(CK_Product_SellEndDate), Description:="Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")>
+        Friend Const _CK_Product_SellEndDate = NameOf(CK_Product_SellEndDate)
         Private ReadOnly Property CK_Product_SellEndDate As _Boolean
             Get
-                If m_Ck_Product_SellEndDate Is Nothing Then
-                    m_Ck_Product_SellEndDate = SellEndDate >= SellStartDate Or SellEndDate.IsNull()
-                End If
-                Return m_Ck_Product_SellEndDate
+                Return SellEndDate >= SellStartDate Or SellEndDate.IsNull()
             End Get
         End Property
 
-        Private m_CK_Product_StandardCost As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_Product_StandardCost), Name:=NameOf(CK_Product_StandardCost), Description:="Check constraint [StandardCost] >= (0.00)")>
-        Private ReadOnly Property CK_Product_StandardCost As _Boolean
+        Friend Const _CK_Product_StandardCost = NameOf(CK_Product_StandardCost)
+        ReadOnly Property CK_Product_StandardCost As _Boolean
             Get
-                If m_CK_Product_StandardCost Is Nothing Then
-                    m_CK_Product_StandardCost = StandardCost >= _Decimal.[Const](0)
-                End If
-                Return m_CK_Product_StandardCost
+                Return StandardCost >= _Decimal.[Const](0)
             End Get
         End Property
 
-        Private m_CK_Product_Weight As _Boolean
-        <Check(GetType(UserMessages), NameOf(UserMessages.CK_Product_Weight), Name:=NameOf(CK_Product_Weight), Description:="Check constraint [Weight] >= (0.00)")>
+        Friend Const _CK_Product_Weight = NameOf(CK_Product_Weight)
         Private ReadOnly Property CK_Product_Weight As _Boolean
             Get
-                If m_CK_Product_Weight Is Nothing Then
-                    m_CK_Product_Weight = Weight >= _Decimal.[Const](0)
-                End If
-                Return m_CK_Product_Weight
+                Return Weight >= _Decimal.[Const](0)
             End Get
         End Property
     End Class

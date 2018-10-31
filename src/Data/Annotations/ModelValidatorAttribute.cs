@@ -1,29 +1,30 @@
 ﻿using DevZest.Data.Annotations.Primitives;
 using System;
-using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class ModelValidatorAttribute : ValidationModelWireupAttribute
+    public sealed class ModelValidatorAttribute : NamedModelAttribute, IValidator
     {
-        protected override void Initialize(Type modelType, MemberInfo memberInfo)
+        public ModelValidatorAttribute(string name)
+            : base(name)
         {
-            _validatorFunc = BuildValidatorFunc(modelType, memberInfo);
         }
 
-        private Func<Model, DataRow, DataValidationError> BuildValidatorFunc(Type modelType, MemberInfo memberInfo)
+        private Func<Model, DataRow, DataValidationError> _validatorFunc;
+        protected override Action<Model> Initialize()
         {
-            var methodInfo = memberInfo as MethodInfo;
-            if (methodInfo == null)
-                return null;
+            var methodInfo = GetMethodInfo(new Type[] { typeof(DataRow) }, typeof(DataValidationError));
+            _validatorFunc = BuildValidatorFunc(methodInfo);
+            return Wireup;
+        }
 
+        private Func<Model, DataRow, DataValidationError> BuildValidatorFunc(MethodInfo methodInfo)
+        {
             var paramModel = Expression.Parameter(typeof(Model));
             var paramDataRow = Expression.Parameter(typeof(DataRow));
-
-            var model = Expression.Convert(paramModel, modelType);
+            var model = Expression.Convert(paramModel, ModelType);
             var call = Expression.Call(model, methodInfo, paramDataRow);
 
             return Expression.Lambda<Func<Model, DataRow, DataValidationError>>(call, paramModel, paramDataRow).Compile();
@@ -34,21 +35,14 @@ namespace DevZest.Data.Annotations
             get { return ModelWireupEvent.Initialized; }
         }
 
-        protected override Action<Model> WireupAction
+        private void Wireup(Model model)
         {
-            get
-            {
-                if (_validatorFunc == null)
-                    return null;
-                else
-                    return AddValidator;
-            }
+            model.Validators.Add(this);
         }
 
-        private Func<Model, DataRow, DataValidationError> _validatorFunc;
-        protected override DataValidationError Validate(Model model, DataRow dataRow)
+        DataValidationError IValidator.Validate(DataRow dataRow)
         {
-            Debug.Assert(_validatorFunc != null);
+            var model = dataRow.Model;
             return _validatorFunc(model, dataRow);
         }
     }
