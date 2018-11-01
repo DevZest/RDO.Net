@@ -39,33 +39,25 @@ namespace DevZest.Data.Annotations
             : base(name)
         {
             message.VerifyNotEmpty(nameof(message));
-            _message = message;
+            Message = message;
         }
 
         public CheckAttribute(string name, Type messageResourceType, string message)
-            : base(name)
+            : this(name, message)
         {
-            _messageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));
-            _messageGetter = messageResourceType.ResolveStaticGetter<string>(message.VerifyNotEmpty(nameof(message)));
+            MessageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));
+            _messageGetter = messageResourceType.ResolveStaticGetter<string>(message);
         }
 
-        private readonly string _message;
-        public string Message
-        {
-            get { return _message; }
-        }
+        public string Message { get; }
 
-        private readonly Type _messageResourceType;
-        public Type ResourceType
-        {
-            get { return _messageResourceType; }
-        }
+        public Type MessageResourceType { get; }
 
         private readonly Func<string> _messageGetter;
 
         private string GetMessage()
         {
-            return _messageGetter != null ? _messageGetter() : _message;
+            return _messageGetter != null ? _messageGetter() : Message;
         }
 
         private Func<Model, _Boolean> _conditionGetter;
