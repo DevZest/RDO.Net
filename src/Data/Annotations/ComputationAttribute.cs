@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
+    [Implementation(typeof(_ComputationAttribute))]
     public sealed class ComputationAttribute : NamedModelAttribute
     {
         public ComputationAttribute(string name)

@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
+    [Implementation(typeof(_CheckConstraintAttribute))]
     public sealed class CheckConstraintAttribute : NamedModelAttribute
     {
         private sealed class Validator : IValidator

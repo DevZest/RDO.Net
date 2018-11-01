@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
+    [Implementation(typeof(_ValidatorAttribute))]
     public sealed class ValidatorAttribute : NamedModelAttribute, IValidator
     {
         public ValidatorAttribute(string name)
