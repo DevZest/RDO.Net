@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations.Primitives
 {
+    /// <summary>
+    /// Attribute for <see cref="Model"/> derived class, which can be wired up during <see cref="Model"/> object creation and initialization.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public abstract class ModelAttribute : Attribute
     {

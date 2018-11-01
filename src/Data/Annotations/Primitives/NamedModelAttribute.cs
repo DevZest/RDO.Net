@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 
 namespace DevZest.Data.Annotations.Primitives
 {
+    /// <summary>
+    /// Attribute for <see cref="Model"/> derived class, with name to specify the implementation as member of the class.
+    /// </summary>
     public abstract class NamedModelAttribute : ModelAttribute
     {
         protected NamedModelAttribute(string name)
