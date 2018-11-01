@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    [CrossReference(typeof(_ComputationAttribute))]
+    [CrossReference(typeof(_ComputationAttribute), typeof(void))]
     public sealed class ComputationAttribute : NamedModelAttribute
     {
         public ComputationAttribute(string name)

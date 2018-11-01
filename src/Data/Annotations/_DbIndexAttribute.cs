@@ -3,7 +3,7 @@ using System;
 
 namespace DevZest.Data.Annotations
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     [CrossReference(typeof(DbIndexAttribute))]
     public sealed class _DbIndexAttribute : Attribute
     {
