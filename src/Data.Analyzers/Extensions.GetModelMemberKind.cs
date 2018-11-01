@@ -15,15 +15,15 @@ namespace DevZest.Data.CodeAnalysis
 
             var parentValue = parent.Value;
 
-            if (propertyType.IsTypeOfLocalColumn(compilation))
+            if (propertyType.EqualsTo(KnownTypes.LocalColumn, compilation))
                 return ModelMemberKind.LocalColumn;
-            else if (propertyType.IsTypeOfColumn(compilation))
+            else if (propertyType.IsDerivedFrom(KnownTypes.Column, compilation))
                 return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ProjectionColumn;
-            else if (propertyType.IsTypeOfProjection(compilation))
+            else if (propertyType.IsDerivedFrom(KnownTypes.Projection, compilation))
                 return ModelMemberKind.Projection;
-            else if (propertyType.IsTypeOfColumnList(compilation))
+            else if (propertyType.IsDerivedFrom(KnownTypes.ColumnList, compilation))
                 return ModelMemberKind.ColumnList;
-            else if (propertyType.IsTypeOfModel(compilation))
+            else if (propertyType.IsDerivedFrom(KnownTypes.Model, compilation))
                 return ModelMemberKind.ChildModel;
             else
                 return null;
@@ -38,9 +38,9 @@ namespace DevZest.Data.CodeAnalysis
         private static ModelMemberParent? GetModelMemberParent(this IPropertySymbol property, Compilation compilation)
         {
             var containingType = property.ContainingType;
-            if (containingType.IsTypeOfModel(compilation))
+            if (containingType.IsDerivedFrom(KnownTypes.Model, compilation))
                 return ModelMemberParent.Model;
-            else if (containingType.IsTypeOfProjection(compilation))
+            else if (containingType.IsDerivedFrom(KnownTypes.Projection, compilation))
                 return ModelMemberParent.Projection;
             else
                 return null;

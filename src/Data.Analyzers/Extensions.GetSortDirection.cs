@@ -11,10 +11,10 @@ namespace DevZest.Data.CodeAnalysis
             var attributes = parameter.GetAttributes();
             for (int i = 0; i < attributes.Length; i++)
             {
-                var attribute = attributes[i];
-                if (attribute.IsAsc(compilation))
+                var attributeClass = attributes[i].AttributeClass;
+                if (attributeClass.EqualsTo(KnownTypes.AscAttribute, compilation))
                     isAsc = true;
-                else if (attribute.IsDesc(compilation))
+                else if (attributeClass.EqualsTo(KnownTypes.DescAttribute, compilation))
                     isDesc = true;
             }
 

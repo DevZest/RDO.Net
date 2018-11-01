@@ -2,13 +2,14 @@
 
 namespace DevZest.Data.CodeAnalysis
 {
-    internal static partial class Extensions
+    static partial class Extensions
     {
-        public static bool IsBaseTypeOf(this INamedTypeSymbol @this, ITypeSymbol type)
+        public static bool IsDerivedFrom(this ITypeSymbol type, string knownType, Compilation compilation)
         {
+            var x = compilation.GetKnownType(knownType);
             for (var currentType = type.BaseType; currentType != null; currentType = currentType.BaseType)
             {
-                if (currentType.OriginalDefinition.Equals(@this))
+                if (currentType.OriginalDefinition.Equals(x))
                     return true;
             }
             return false;

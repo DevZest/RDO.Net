@@ -26,7 +26,7 @@ namespace DevZest.Data.CodeAnalysis
 
         protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
         {
-            return classSymbol != null && classSymbol.BaseType.Equals(context.Compilation.TypeOfPrimaryKey());
+            return classSymbol != null && classSymbol.BaseTypeEqualsTo(KnownTypes.PrimaryKey, context.Compilation);
         }
 
         private static void VerifySealed(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
@@ -57,7 +57,7 @@ namespace DevZest.Data.CodeAnalysis
             for (int i = 0; i < parameters.Length; i++)
             {
                 var parameter = parameters[i];
-                if (!parameter.Type.IsTypeOfColumn(context.Compilation))
+                if (!parameter.Type.IsDerivedFrom(KnownTypes.Column, context.Compilation))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidConstructorParam, parameter.Locations[0], parameter.Name));
                     areParametersValid = false;
@@ -75,10 +75,10 @@ namespace DevZest.Data.CodeAnalysis
             var attributes = parameter.GetAttributes();
             for (int i = 0; i < attributes.Length; i++)
             {
-                var attribute = attributes[i];
-                if (attribute.IsAsc(context.Compilation))
+                var attributeClass = attributes[i].AttributeClass;
+                if (attributeClass.EqualsTo(KnownTypes.AscAttribute, context.Compilation))
                     ascAttributeIndex = i;
-                else if (attribute.IsDesc(context.Compilation))
+                else if (attributeClass.EqualsTo(KnownTypes.DescAttribute, context.Compilation))
                     descAttributeIndex = i;
             }
 
