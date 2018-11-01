@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class ModelValidatorAttribute : NamedModelAttribute, IValidator
+    public sealed class ValidatorAttribute : NamedModelAttribute, IValidator
     {
-        public ModelValidatorAttribute(string name)
+        public ValidatorAttribute(string name)
             : base(name)
         {
         }

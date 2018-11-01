@@ -3,7 +3,7 @@ Imports DevZest.Data.SqlServer
 Imports DevZest.Data.Annotations
 
 Namespace DevZest.Samples.AdventureWorksLT
-    <Unique(ProductCategory._AK_ProductCategory_Name, Description:="Unique nonclustered constraint.")>
+    <UniqueConstraint(ProductCategory._AK_ProductCategory_Name, Description:="Unique nonclustered constraint.")>
     Public Class ProductCategory
         Inherits BaseModel(Of ProductCategory.PK)
 

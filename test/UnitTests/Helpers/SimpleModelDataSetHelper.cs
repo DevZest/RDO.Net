@@ -6,7 +6,7 @@ namespace DevZest.Data.Helpers
 {
     public abstract class SimpleModelDataSetHelper
     {
-        [ModelValidator(nameof(ValidateId))]
+        [Validator(nameof(ValidateId))]
         [Computation(nameof(ComputeInheritedValue), ComputationMode.Inherit)]
         protected class SimpleModel : SimpleModelBase
         {

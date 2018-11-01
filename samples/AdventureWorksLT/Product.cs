@@ -4,11 +4,11 @@ using DevZest.Data.SqlServer;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Check(nameof(CK_Product_ListPrice), typeof(UserMessages), nameof(UserMessages.CK_Product_ListPrice), Description = "Check constraint [ListPrice] >= (0.00)")]
-    [Check(nameof(CK_Product_SellEndDate), typeof(UserMessages), nameof(UserMessages.CK_Product_SellEndDate), Description = "Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")]
-    [Check(nameof(CK_Product_Weight), typeof(UserMessages), nameof(UserMessages.CK_Product_Weight), Description = "Check constraint [Weight] >= (0.00)")]
-    [Unique(nameof(AK_Product_Name), Description = "Unique nonclustered constraint.")]
-    [Unique(nameof(AK_Product_ProductNumber), Description = "Unique nonclustered constraint.")]
+    [CheckConstraint(nameof(CK_Product_ListPrice), typeof(UserMessages), nameof(UserMessages.CK_Product_ListPrice), Description = "Check constraint [ListPrice] >= (0.00)")]
+    [CheckConstraint(nameof(CK_Product_SellEndDate), typeof(UserMessages), nameof(UserMessages.CK_Product_SellEndDate), Description = "Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")]
+    [CheckConstraint(nameof(CK_Product_Weight), typeof(UserMessages), nameof(UserMessages.CK_Product_Weight), Description = "Check constraint [Weight] >= (0.00)")]
+    [UniqueConstraint(nameof(AK_Product_Name), Description = "Unique nonclustered constraint.")]
+    [UniqueConstraint(nameof(AK_Product_ProductNumber), Description = "Unique nonclustered constraint.")]
     public class Product : BaseModel<Product.PK>
     {
         [DbPrimaryKey("PK_Product_ProductID", Description = "Primary key (clustered) constraint")]

@@ -8,7 +8,7 @@ namespace DevZest.Data.Annotations
     [TestClass]
     public class UniqueAttributeTests
     {
-        [Unique(nameof(AK_Id))]
+        [UniqueConstraint(nameof(AK_Id))]
         private sealed class TestModel : Model
         {
             static TestModel()

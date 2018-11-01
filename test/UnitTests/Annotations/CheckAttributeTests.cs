@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
     [TestClass]
     public class CheckAttributeTests
     {
-        [Check(nameof(CK_TestModel_Id), "ERR_Check")]
+        [CheckConstraint(nameof(CK_TestModel_Id), "ERR_Check")]
         private sealed class TestModel : Model
         {
             static TestModel()

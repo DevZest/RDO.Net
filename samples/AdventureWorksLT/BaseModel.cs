@@ -5,7 +5,7 @@ using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Unique(nameof(AK_RowGuid), DbName = "AK_%_rowguid", Description = "Unique nonclustered constraint. Used to support replication samples.")]
+    [UniqueConstraint(nameof(AK_RowGuid), DbName = "AK_%_rowguid", Description = "Unique nonclustered constraint. Used to support replication samples.")]
     public abstract class BaseModel<T> : Model<T>
         where T : PrimaryKey
     {

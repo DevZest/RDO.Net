@@ -2,7 +2,7 @@ Imports DevZest.Data
 Imports DevZest.Data.Annotations
 
 Namespace DevZest.Samples.AdventureWorksLT
-    <ModelValidator(SalesOrderInfoDetail._ValidateProduct)>
+    <Validator(SalesOrderInfoDetail._ValidateProduct)>
     Public Class SalesOrderInfoDetail
         Inherits SalesOrderDetail
 

@@ -3,7 +3,7 @@ Imports DevZest.Data.Annotations
 Imports DevZest.Data.SqlServer
 
 Namespace DevZest.Samples.AdventureWorksLT
-    <Unique(BaseModel(Of PrimaryKey)._AK_RowGuid, DbName:="AK_%_rowguid", Description:="Unique nonclustered constraint. Used to support replication samples.")>
+    <UniqueConstraint(BaseModel(Of PrimaryKey)._AK_RowGuid, DbName:="AK_%_rowguid", Description:="Unique nonclustered constraint. Used to support replication samples.")>
     Public MustInherit Class BaseModel(Of T As PrimaryKey)
         Inherits Model(Of T)
 

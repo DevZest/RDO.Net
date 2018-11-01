@@ -3,7 +3,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ModelValidator(nameof(ValidateProduct))]
+    [Validator(nameof(ValidateProduct))]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
         static SalesOrderInfoDetail()

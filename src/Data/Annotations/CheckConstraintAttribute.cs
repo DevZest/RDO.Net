@@ -5,17 +5,17 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class CheckAttribute : NamedModelAttribute
+    public sealed class CheckConstraintAttribute : NamedModelAttribute
     {
         private sealed class Validator : IValidator
         {
-            public Validator(CheckAttribute checkAttribute, _Boolean condition)
+            public Validator(CheckConstraintAttribute checkAttribute, _Boolean condition)
             {
                 _checkAttribute = checkAttribute;
                 _condition = condition;
             }
 
-            private readonly CheckAttribute _checkAttribute;
+            private readonly CheckConstraintAttribute _checkAttribute;
             private readonly _Boolean _condition;
 
             DataValidationError IValidator.Validate(DataRow dataRow)
@@ -35,14 +35,14 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        public CheckAttribute(string name, string message)
+        public CheckConstraintAttribute(string name, string message)
             : base(name)
         {
             message.VerifyNotEmpty(nameof(message));
             Message = message;
         }
 
-        public CheckAttribute(string name, Type messageResourceType, string message)
+        public CheckConstraintAttribute(string name, Type messageResourceType, string message)
             : this(name, message)
         {
             MessageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));

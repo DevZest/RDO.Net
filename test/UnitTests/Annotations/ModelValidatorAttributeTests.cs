@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
     {
         private const string ERR_MESSAGE = "Confirm password different from password";
 
-        [ModelValidator(nameof(ValidateConfirmPassword))]
+        [Validator(nameof(ValidateConfirmPassword))]
         private class User : Model
         {
             static User()

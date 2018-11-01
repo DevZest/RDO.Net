@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace DevZest.Data.Annotations
 {
-    public sealed class UniqueAttribute : DbIndexBaseAttribute
+    public sealed class UniqueConstraintAttribute : DbIndexBaseAttribute
     {
         private sealed class Validator : IValidator
         {
-            public Validator(UniqueAttribute uniqueAttribute, ColumnSort[] sortOrder)
+            public Validator(UniqueConstraintAttribute uniqueAttribute, ColumnSort[] sortOrder)
             {
                 _uniqueAttribute = uniqueAttribute;
                 _columns = Columns.Empty;
@@ -17,7 +17,7 @@ namespace DevZest.Data.Annotations
                 _columns.Seal();
             }
 
-            private readonly UniqueAttribute _uniqueAttribute;
+            private readonly UniqueConstraintAttribute _uniqueAttribute;
             private readonly IColumns _columns;
 
             public DataValidationError Validate(DataRow dataRow)
@@ -51,19 +51,19 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        public UniqueAttribute(string name)
+        public UniqueConstraintAttribute(string name)
             : base(name)
         {
         }
 
-        public UniqueAttribute(string name, string message)
+        public UniqueConstraintAttribute(string name, string message)
             : base(name)
         {
             message.VerifyNotEmpty(nameof(message));
             _message = message;
         }
 
-        public UniqueAttribute(string name, Type messageResourceType, string message)
+        public UniqueConstraintAttribute(string name, Type messageResourceType, string message)
             : base(name)
         {
             _messageResourceType = messageResourceType.VerifyNotNull(nameof(messageResourceType));

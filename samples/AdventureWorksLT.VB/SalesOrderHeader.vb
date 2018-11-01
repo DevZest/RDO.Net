@@ -5,13 +5,13 @@ Imports DevZest.Data.SqlServer
 Namespace DevZest.Samples.AdventureWorksLT
     <Computation(SalesOrderHeader._ComputeSalesOrderNumber)>
     <Computation(SalesOrderHeader._ComputeTotalDue)>
-    <Check(SalesOrderHeader._CK_SalesOrderHeader_DueDate, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_DueDate), Description:="Check constraint [DueDate] >= [OrderDate]")>
-    <Check(SalesOrderHeader._CK_SalesOrderHeader_Freight, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Freight), Description:="Check constraint [Freight] >= (0.00)")>
-    <Check(SalesOrderHeader._CK_SalesOrderHeader_ShipDate, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_ShipDate), Description:="Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")>
-    <Check(SalesOrderHeader._CK_SalesOrderHeader_SubTotal, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_SubTotal), Description:="Check constraint [SubTotal] >= (0.00)")>
-    <Check(SalesOrderHeader._CK_SalesOrderHeader_TaxAmt, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_TaxAmt), Description:="Check constraint [TaxAmt] >= (0.00)")>
-    <Check(SalesOrderHeader._CK_SalesOrderHeader_Status, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Status), Description:="Check constraint [Status] BETWEEN (1) AND (6)")>
-    <Unique(SalesOrderHeader._AK_SalesOrderHeader_SalesOrderNumber, Description:="Unique nonclustered constraint.")>
+    <CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_DueDate, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_DueDate), Description:="Check constraint [DueDate] >= [OrderDate]")>
+    <CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_Freight, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Freight), Description:="Check constraint [Freight] >= (0.00)")>
+    <CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_ShipDate, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_ShipDate), Description:="Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")>
+    <CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_SubTotal, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_SubTotal), Description:="Check constraint [SubTotal] >= (0.00)")>
+    <CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_TaxAmt, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_TaxAmt), Description:="Check constraint [TaxAmt] >= (0.00)")>
+    <CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_Status, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderHeader_Status), Description:="Check constraint [Status] BETWEEN (1) AND (6)")>
+    <UniqueConstraint(SalesOrderHeader._AK_SalesOrderHeader_SalesOrderNumber, Description:="Unique nonclustered constraint.")>
     <DbIndex(SalesOrderHeader._IX_SalesOrderHeader_CustomerID, Description:="Nonclustered index.")>
     Public Class SalesOrderHeader
         Inherits BaseModel(Of PK)

@@ -6,13 +6,13 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     [Computation(nameof(ComputeSalesOrderNumber))]
     [Computation(nameof(ComputeTotalDue))]
-    [Check(nameof(CK_SalesOrderHeader_DueDate), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_DueDate), Description = "Check constraint [DueDate] >= [OrderDate]")]
-    [Check(nameof(CK_SalesOrderHeader_Freight), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Freight), Description = "Check constraint [Freight] >= (0.00)")]
-    [Check(nameof(CK_SalesOrderHeader_ShipDate), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_ShipDate), Description = "Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")]
-    [Check(nameof(CK_SalesOrderHeader_SubTotal), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
-    [Check(nameof(CK_SalesOrderHeader_TaxAmt), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
-    [Check(nameof(CK_SalesOrderHeader_Status), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
-    [Unique(nameof(AK_SalesOrderHeader_SalesOrderNumber), Description = "Unique nonclustered constraint.")]
+    [CheckConstraint(nameof(CK_SalesOrderHeader_DueDate), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_DueDate), Description = "Check constraint [DueDate] >= [OrderDate]")]
+    [CheckConstraint(nameof(CK_SalesOrderHeader_Freight), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Freight), Description = "Check constraint [Freight] >= (0.00)")]
+    [CheckConstraint(nameof(CK_SalesOrderHeader_ShipDate), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_ShipDate), Description = "Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")]
+    [CheckConstraint(nameof(CK_SalesOrderHeader_SubTotal), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_SubTotal), Description = "Check constraint [SubTotal] >= (0.00)")]
+    [CheckConstraint(nameof(CK_SalesOrderHeader_TaxAmt), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_TaxAmt), Description = "Check constraint [TaxAmt] >= (0.00)")]
+    [CheckConstraint(nameof(CK_SalesOrderHeader_Status), typeof(UserMessages), nameof(UserMessages.CK_SalesOrderHeader_Status), Description = "Check constraint [Status] BETWEEN (1) AND (6)")]
+    [UniqueConstraint(nameof(AK_SalesOrderHeader_SalesOrderNumber), Description = "Unique nonclustered constraint.")]
     [DbIndex(nameof(IX_SalesOrderHeader_CustomerID), Description = "Nonclustered index.")]
     public class SalesOrderHeader : BaseModel<SalesOrderHeader.PK>
     {

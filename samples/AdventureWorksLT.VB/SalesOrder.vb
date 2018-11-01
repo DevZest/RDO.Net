@@ -2,7 +2,7 @@ Imports DevZest.Data
 Imports DevZest.Data.Annotations
 
 Namespace DevZest.Samples.AdventureWorksLT
-    <ModelValidator(SalesOrder._ValidateLineCount)>
+    <Validator(SalesOrder._ValidateLineCount)>
     <Computation(SalesOrder._ComputeLineCount, ComputationMode.Aggregate)>
     <Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
     Public Class SalesOrder

@@ -4,7 +4,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Unique(nameof(AK_ProductCategory_Name), Description = "Unique nonclustered constraint.")]
+    [UniqueConstraint(nameof(AK_ProductCategory_Name), Description = "Unique nonclustered constraint.")]
     public class ProductCategory : BaseModel<ProductCategory.PK>
     {
         [DbPrimaryKey("PK_ProductCategory_ProductCategoryID", Description = "Primary key (clustered) constraint")]
