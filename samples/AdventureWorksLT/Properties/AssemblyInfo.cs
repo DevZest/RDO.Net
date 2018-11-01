@@ -10,4 +10,4 @@ using DevZest.Data.Annotations;
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
 
-[assembly: MessageResourceTypes(typeof(UserMessages))]
+[assembly: MessageResource(typeof(UserMessages))]

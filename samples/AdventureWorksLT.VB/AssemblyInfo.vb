@@ -6,5 +6,5 @@ Imports DevZest.Data.Annotations
 <Assembly: AssemblyCulture("")>
 <Assembly: NeutralResourcesLanguage("en")>
 
-<Assembly: MessageResourceTypes(GetType(UserMessages))>
+<Assembly: MessageResource(GetType(UserMessages))>
 
