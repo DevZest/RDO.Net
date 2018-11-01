@@ -2,9 +2,10 @@
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public sealed class ImplementationAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class CrossReferenceAttribute : Attribute
     {
-        public ImplementationAttribute(Type type)
+        public CrossReferenceAttribute(Type type)
         {
             Type = type.VerifyNotNull(nameof(type));
         }

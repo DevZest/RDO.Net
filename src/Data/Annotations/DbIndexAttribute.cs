@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Annotations
 {
-    [Implementation(typeof(_DbIndexAttribute))]
+    [CrossReference(typeof(_DbIndexAttribute))]
     public sealed class DbIndexAttribute : DbIndexBaseAttribute
     {
         public DbIndexAttribute(string name)
