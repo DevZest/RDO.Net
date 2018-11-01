@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DevZest.Data.Annotations
 {
-    [Implementation(typeof(_DbIndexAttribute))]
+    [Implementation(typeof(_UniqueConstraintAttribute))]
     public sealed class UniqueConstraintAttribute : DbIndexBaseAttribute
     {
         private sealed class Validator : IValidator
