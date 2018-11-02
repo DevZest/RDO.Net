@@ -13,10 +13,5 @@ namespace DevZest.Data.CodeAnalysis
 
             return type.GetMembers(name).Where(x => HasAttribute(x, crossRefAttributeType)).FirstOrDefault();
         }
-
-        public static bool HasAttribute(this ISymbol symbol, ITypeSymbol attributeClass)
-        {
-            return symbol.GetAttributes().Any(x => x.AttributeClass.Equals(attributeClass));
-        }
     }
 }
