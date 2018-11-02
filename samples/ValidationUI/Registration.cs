@@ -4,8 +4,8 @@ using DevZest.Data.Presenters;
 
 namespace ValidationUI
 {
-    [ModelValidator(nameof(ValidatePasswordConfirmation))]
-    [ModelValidator(nameof(ValidateInterests))]
+    [Validator(nameof(ValidatePasswordConfirmation))]
+    [Validator(nameof(ValidateInterests))]
     public class Registration : Login
     {
         static Registration()
@@ -37,6 +37,7 @@ namespace ValidationUI
 
         private const string ERR_PASSWORD_MISMATCH = "Passwords do not match";
 
+        [_Validator]
         private DataValidationError ValidateInterests(DataRow dataRow)
         {
             return IsValidInterests(Interests, dataRow) ? null : new DataValidationError("At least 3 interests must be selected.", Interests);
@@ -58,6 +59,7 @@ namespace ValidationUI
             return count >= 3;
         }
 
+        [_Validator]
         private DataValidationError ValidatePasswordConfirmation(DataRow dataRow)
         {
             return PasswordConfirmation[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_PASSWORD_MISMATCH, PasswordMismatchErrorSource);

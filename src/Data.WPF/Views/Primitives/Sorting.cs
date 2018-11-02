@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Views.Primitives
 {
-    [ModelValidator(nameof(ValidateRequiredColumn))]
-    [ModelValidator(nameof(ValidateDuplicateColumn))]
-    [ModelValidator(nameof(ValidateDirection))]
+    [Validator(nameof(ValidateRequiredColumn))]
+    [Validator(nameof(ValidateDuplicateColumn))]
+    [Validator(nameof(ValidateDirection))]
     public class Sorting : Model
     {
         public static DataSet<Sorting> Convert(Model model, IReadOnlyList<IColumnComparer> orderBy)
@@ -66,6 +66,7 @@ namespace DevZest.Data.Views.Primitives
         [Display(Name = nameof(UserMessages.Sorting_Order), ResourceType = typeof(UserMessages))]
         public LocalColumn<SortDirection> Direction { get; private set; }
 
+        [_Validator]
         private DataValidationError ValidateRequiredColumn(DataRow dataRow)
         {
             return Column[dataRow] == null
@@ -73,6 +74,7 @@ namespace DevZest.Data.Views.Primitives
                 : null;
         }
 
+        [_Validator]
         private DataValidationError ValidateDuplicateColumn(DataRow dataRow)
         {
             var dataSet = DataSet;
@@ -86,6 +88,7 @@ namespace DevZest.Data.Views.Primitives
             return null;
         }
 
+        [_Validator]
         private DataValidationError ValidateDirection(DataRow dataRow)
         {
             return Direction[dataRow] == SortDirection.Unspecified
