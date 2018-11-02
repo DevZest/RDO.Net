@@ -111,5 +111,41 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.PrimaryKeyArgumentNaming_Title), Resources.ResourceManager, typeof(Resources)),
             new LocalizableResourceString(nameof(Resources.PrimaryKeyArgumentNaming_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor DuplicateModelAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.DuplicateModelAttribute,
+            new LocalizableResourceString(nameof(Resources.DuplicateModelAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.DuplicateModelAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor MissingImplementation = new DiagnosticDescriptor(
+            DiagnosticIds.MissingImplementation,
+            new LocalizableResourceString(nameof(Resources.MissingImplementation_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.MissingImplementation_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor MissingImplementationAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.MissingImplementationAttribute,
+            new LocalizableResourceString(nameof(Resources.MissingImplementationAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.MissingImplementationAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor MultipleImplementationAttributes = new DiagnosticDescriptor(
+            DiagnosticIds.MultipleImplementationAttributes,
+            new LocalizableResourceString(nameof(Resources.MultipleImplementationAttributes_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.MultipleImplementationAttributes_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor InvalidImplementationAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.InvalidImplementationAttribute,
+            new LocalizableResourceString(nameof(Resources.InvalidImplementationAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.InvalidImplementationAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor MissingModelAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.MissingModelAttribute,
+            new LocalizableResourceString(nameof(Resources.MissingModelAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.MissingModelAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
     }
 }

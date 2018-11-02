@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DuplicateModelAttribute_Message" xml:space="preserve">
+    <value>Duplicate model attribute: attribue class - {0}, name - {1}.</value>
+  </data>
+  <data name="DuplicateModelAttribute_Title" xml:space="preserve">
+    <value>Duplicate model attribute.</value>
+  </data>
   <data name="DuplicateMounterRegistration_Message" xml:space="preserve">
     <value>Duplicate mounter registration for property '{0}'.</value>
   </data>
   <data name="DuplicateMounterRegistration_Title" xml:space="preserve">
     <value>Duplicate mounter registration.</value>
+  </data>
+  <data name="InvalidImplementationAttribute_Message" xml:space="preserve">
+    <value>Implementation attribute {0} must be applied for {1} implementation: {2}, return type - {3}.</value>
+  </data>
+  <data name="InvalidImplementationAttribute_Title" xml:space="preserve">
+    <value>Invalid implementation attribute.</value>
   </data>
   <data name="InvalidRegisterLocalColumn_Message" xml:space="preserve">
     <value>Local column '{0}' is invalid for RegisterColumn, use RegisterLocalColumn instead.</value>
@@ -141,6 +153,27 @@
   <data name="InvalidRegisterMounterInvocation_Title" xml:space="preserve">
     <value>Invalid invocation of mounter registration.</value>
   </data>
+  <data name="Method" xml:space="preserve">
+    <value>method</value>
+  </data>
+  <data name="MissingImplementationAttribute_Message" xml:space="preserve">
+    <value>Missing implementation attribute: {0}.</value>
+  </data>
+  <data name="MissingImplementationAttribute_Title" xml:space="preserve">
+    <value>Missing implementation attribute.</value>
+  </data>
+  <data name="MissingImplementation_Message" xml:space="preserve">
+    <value>Missing {0} implementation: {1},  return type - {2}.</value>
+  </data>
+  <data name="MissingImplementation_Title" xml:space="preserve">
+    <value>Missing implementation.</value>
+  </data>
+  <data name="MissingModelAttribute_Message" xml:space="preserve">
+    <value>Missing model attribute {0} with name {1}.</value>
+  </data>
+  <data name="MissingModelAttribute_Title" xml:space="preserve">
+    <value>Missing model attribute.</value>
+  </data>
   <data name="MissingMounterRegistration_Message" xml:space="preserve">
     <value>Missing registration for model property '{0}'.</value>
   </data>
@@ -152,6 +185,12 @@
   </data>
   <data name="MounterNaming_Title" xml:space="preserve">
     <value>Mounter naming rule violation.</value>
+  </data>
+  <data name="MultipleImplementationAttributes_Message" xml:space="preserve">
+    <value>Multiple implementation attributes for {0} {1}.</value>
+  </data>
+  <data name="MultipleImplementationAttributes_Title" xml:space="preserve">
+    <value>Multiple implementation attributes.</value>
   </data>
   <data name="PrimaryKeyArgumentNaming_Message" xml:space="preserve">
     <value>Property '{0}' passed to PrimaryKey constructor does not match the parameter name '{1}'.</value>
@@ -224,5 +263,8 @@
   </data>
   <data name="ProjectionColumnNaming_Title" xml:space="preserve">
     <value>Projection column naming rule violation.</value>
+  </data>
+  <data name="Property" xml:space="preserve">
+    <value>property</value>
   </data>
 </root>

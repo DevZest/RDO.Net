@@ -10,7 +10,6 @@
 
 namespace DevZest.Data.CodeAnalysis {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace DevZest.Data.CodeAnalysis {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevZest.Data.CodeAnalysis.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevZest.Data.CodeAnalysis.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,6 +61,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate model attribute: attribue class - {0}, name - {1}..
+        /// </summary>
+        internal static string DuplicateModelAttribute_Message {
+            get {
+                return ResourceManager.GetString("DuplicateModelAttribute_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate model attribute..
+        /// </summary>
+        internal static string DuplicateModelAttribute_Title {
+            get {
+                return ResourceManager.GetString("DuplicateModelAttribute_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duplicate mounter registration for property &apos;{0}&apos;..
         /// </summary>
         internal static string DuplicateMounterRegistration_Message {
@@ -76,6 +93,24 @@ namespace DevZest.Data.CodeAnalysis {
         internal static string DuplicateMounterRegistration_Title {
             get {
                 return ResourceManager.GetString("DuplicateMounterRegistration_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Implementation attribute {0} must be applied for {1} implementation: {2}, return type - {3}..
+        /// </summary>
+        internal static string InvalidImplementationAttribute_Message {
+            get {
+                return ResourceManager.GetString("InvalidImplementationAttribute_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid implementation attribute..
+        /// </summary>
+        internal static string InvalidImplementationAttribute_Title {
+            get {
+                return ResourceManager.GetString("InvalidImplementationAttribute_Title", resourceCulture);
             }
         }
         
@@ -134,6 +169,69 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to method.
+        /// </summary>
+        internal static string Method {
+            get {
+                return ResourceManager.GetString("Method", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing {0} implementation: {1},  return type - {2}..
+        /// </summary>
+        internal static string MissingImplementation_Message {
+            get {
+                return ResourceManager.GetString("MissingImplementation_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing implementation..
+        /// </summary>
+        internal static string MissingImplementation_Title {
+            get {
+                return ResourceManager.GetString("MissingImplementation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing implementation attribute: {0}..
+        /// </summary>
+        internal static string MissingImplementationAttribute_Message {
+            get {
+                return ResourceManager.GetString("MissingImplementationAttribute_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing implementation attribute..
+        /// </summary>
+        internal static string MissingImplementationAttribute_Title {
+            get {
+                return ResourceManager.GetString("MissingImplementationAttribute_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing model attribute {0} with name {1}..
+        /// </summary>
+        internal static string MissingModelAttribute_Message {
+            get {
+                return ResourceManager.GetString("MissingModelAttribute_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing model attribute..
+        /// </summary>
+        internal static string MissingModelAttribute_Title {
+            get {
+                return ResourceManager.GetString("MissingModelAttribute_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing registration for model property &apos;{0}&apos;..
         /// </summary>
         internal static string MissingMounterRegistration_Message {
@@ -166,6 +264,24 @@ namespace DevZest.Data.CodeAnalysis {
         internal static string MounterNaming_Title {
             get {
                 return ResourceManager.GetString("MounterNaming_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple implementation attributes for {0} {1}..
+        /// </summary>
+        internal static string MultipleImplementationAttributes_Message {
+            get {
+                return ResourceManager.GetString("MultipleImplementationAttributes_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple implementation attributes..
+        /// </summary>
+        internal static string MultipleImplementationAttributes_Title {
+            get {
+                return ResourceManager.GetString("MultipleImplementationAttributes_Title", resourceCulture);
             }
         }
         
@@ -382,6 +498,15 @@ namespace DevZest.Data.CodeAnalysis {
         internal static string ProjectionColumnNaming_Title {
             get {
                 return ResourceManager.GetString("ProjectionColumnNaming_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to property.
+        /// </summary>
+        internal static string Property {
+            get {
+                return ResourceManager.GetString("Property", resourceCulture);
             }
         }
     }
