@@ -5,7 +5,7 @@ namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     [CrossReference(typeof(ComputationAttribute))]
-    public sealed class _ComputationAttribute : Attribute
+    public sealed class _ComputationAttribute : _NamedModelAttribute
     {
     }
 }

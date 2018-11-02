@@ -5,7 +5,7 @@ namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     [CrossReference(typeof(UniqueConstraintAttribute))]
-    public sealed class _UniqueConstraintAttribute : Attribute
+    public sealed class _UniqueConstraintAttribute : _NamedModelAttribute
     {
     }
 }

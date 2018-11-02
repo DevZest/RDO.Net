@@ -38,6 +38,7 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
+        [_UniqueConstraint]
         private ColumnSort[] AK_RowGuid
         {
             get { return new ColumnSort[] { RowGuid }; }

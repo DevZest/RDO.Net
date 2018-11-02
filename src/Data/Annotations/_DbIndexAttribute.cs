@@ -5,7 +5,7 @@ namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     [CrossReference(typeof(DbIndexAttribute))]
-    public sealed class _DbIndexAttribute : Attribute
+    public sealed class _DbIndexAttribute : _NamedModelAttribute
     {
     }
 }

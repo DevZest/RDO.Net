@@ -5,7 +5,8 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    [CrossReference(typeof(_CheckConstraintAttribute), typeof(_Boolean))]
+    [CrossReference(typeof(_CheckConstraintAttribute))]
+    [Implementation(ImplementationKind.Property, typeof(_Boolean))]
     public sealed class CheckConstraintAttribute : NamedModelAttribute
     {
         private sealed class Validator : IValidator
