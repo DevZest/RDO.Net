@@ -17,11 +17,12 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ColumnList));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.Projection));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.PrimaryKey));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.NamedModelAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.AscAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DescAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.MounterRegistrationAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CreateKeyAttribute));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.NamedModelAttribute));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes._NamedModelAttribute));
         }
     }
 }
