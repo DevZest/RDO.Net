@@ -61,7 +61,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate model attribute: attribue class - {0}, name - {1}..
+        ///   Looks up a localized string similar to Duplicate model attribute {0} with name {1}..
         /// </summary>
         internal static string DuplicateModelAttribute_Message {
             get {

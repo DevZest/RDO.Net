@@ -118,6 +118,9 @@ namespace DevZest.Data.CodeAnalysis
 
             var implementationValue = implementation.Value;
             var name = GetName(attribute);
+            if (name == null)
+                return;
+
             var implementationSymbol = GetImplementationSymbol(modelType, name, implementationValue);
             if (implementationSymbol == null)
             {

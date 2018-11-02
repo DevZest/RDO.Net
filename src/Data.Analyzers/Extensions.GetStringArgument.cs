@@ -6,7 +6,8 @@ namespace DevZest.Data.CodeAnalysis
     {
         public static string GetStringArgument(this AttributeData attribute, int index = 0)
         {
-            return (string)attribute.ConstructorArguments[index].Value;
+            var constructorArguments = attribute.ConstructorArguments;
+            return index >= 0 && index < constructorArguments.Length ? attribute.ConstructorArguments[index].Value as string : null;
         }
     }
 }

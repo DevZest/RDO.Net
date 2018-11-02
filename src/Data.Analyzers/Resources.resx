@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DuplicateModelAttribute_Message" xml:space="preserve">
-    <value>Duplicate model attribute: attribue class - {0}, name - {1}.</value>
+    <value>Duplicate model attribute {0} with name {1}.</value>
   </data>
   <data name="DuplicateModelAttribute_Title" xml:space="preserve">
     <value>Duplicate model attribute.</value>
