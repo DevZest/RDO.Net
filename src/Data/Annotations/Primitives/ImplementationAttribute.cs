@@ -4,14 +4,14 @@ namespace DevZest.Data.Annotations.Primitives
 {
     public sealed class ImplementationAttribute : Attribute
     {
-        public ImplementationAttribute(ImplementationKind kind, Type returnType, params Type[] parameterTypes)
+        public ImplementationAttribute(bool isProperty, Type returnType, params Type[] parameterTypes)
         {
-            Kind = kind;
+            IsProperty = isProperty;
             ReturnType = returnType.VerifyNotNull(nameof(returnType));
             ParameterTypes = parameterTypes ?? Array.Empty<Type>();
         }
 
-        public ImplementationKind Kind { get; }
+        public bool IsProperty { get; }
 
         public Type ReturnType { get; }
 
