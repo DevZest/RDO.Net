@@ -130,7 +130,7 @@
     <value>Duplicate mounter registration.</value>
   </data>
   <data name="InvalidImplementationAttribute_Message" xml:space="preserve">
-    <value>Implementation attribute {0} is supposed to be applied for {1} which returns {2}, with parameters ({3}).</value>
+    <value>Attribute {0} should be applied for {1} that returns {2}, with parameters ({3}).</value>
   </data>
   <data name="InvalidImplementationAttribute_Title" xml:space="preserve">
     <value>Invalid implementation attribute.</value>

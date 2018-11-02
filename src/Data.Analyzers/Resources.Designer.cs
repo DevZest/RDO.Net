@@ -97,7 +97,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Implementation attribute {0} is supposed to be applied for {1} which returns {2}, with parameters ({3})..
+        ///   Looks up a localized string similar to Attribute {0} should be applied for {1} that returns {2}, with parameters ({3})..
         /// </summary>
         internal static string InvalidImplementationAttribute_Message {
             get {

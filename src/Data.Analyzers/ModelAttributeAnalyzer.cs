@@ -72,14 +72,14 @@ namespace DevZest.Data.CodeAnalysis
             var parameterTypes = implementationValue.ParameterTypes;
             if (!IsImplementation(symbol, isProperty, implementationValue.ReturnType, implementationValue.ParameterTypes))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidImplementationAttribute, symbol.Locations[0], attribute.AttributeClass,
+                context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidImplementationAttribute, attribute.GetLocation(), attribute.AttributeClass,
                     isProperty ? Resources.Property : Resources.Method, returnType, GetImplementationSignature(parameterTypes)));
                 return;
             }
 
             var modelAttribute = modelType.GetAttributes().Where(x => x.AttributeClass.Equals(modelAttributeType) && GetName(x) == name).FirstOrDefault();
             if (modelAttribute == null)
-                context.ReportDiagnostic(Diagnostic.Create(Rules.MissingModelAttribute, symbol.Locations[0], modelAttributeType, name));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.MissingModelAttribute, attribute.GetLocation(), modelAttributeType, name));
 
         }
 
@@ -136,7 +136,7 @@ namespace DevZest.Data.CodeAnalysis
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementationAttribute, implementationSymbol.Locations[0], crossRefAttributeType));
         }
 
-        private static string GetImplementationSignature(INamedTypeSymbol[] parameterTypes)
+        private static string GetImplementationSignature(ITypeSymbol[] parameterTypes)
         {
             return string.Join(", ", (object[])parameterTypes);
         }
@@ -146,7 +146,7 @@ namespace DevZest.Data.CodeAnalysis
             return namedModelAttribute.GetStringArgument();
         }
 
-        private static ISymbol GetImplementationSymbol(INamedTypeSymbol modelType, string name, (bool IsProperty, INamedTypeSymbol ReturnType, INamedTypeSymbol[] ParameterTypes) implementation)
+        private static ISymbol GetImplementationSymbol(INamedTypeSymbol modelType, string name, (bool IsProperty, ITypeSymbol ReturnType, ITypeSymbol[] ParameterTypes) implementation)
         {
             var isProperty = implementation.IsProperty;
             var returnType = implementation.ReturnType;
@@ -154,18 +154,18 @@ namespace DevZest.Data.CodeAnalysis
             return modelType.GetMembers(name).Where(x => IsImplementation(x, isProperty, returnType, parameterTypes)).FirstOrDefault();
         }
 
-        private static bool IsImplementation(ISymbol symbol, bool isProperty, INamedTypeSymbol returnType, ITypeSymbol[] parameterTypes)
+        private static bool IsImplementation(ISymbol symbol, bool isProperty, ITypeSymbol returnType, ITypeSymbol[] parameterTypes)
         {
             return isProperty ? IsImplementation(symbol as IPropertySymbol, returnType, parameterTypes)
                 : IsImplementation(symbol as IMethodSymbol, returnType, parameterTypes);
         }
 
-        private static bool IsImplementation(IPropertySymbol property, INamedTypeSymbol returnType, ITypeSymbol[] parameterTypes)
+        private static bool IsImplementation(IPropertySymbol property, ITypeSymbol returnType, ITypeSymbol[] parameterTypes)
         {
             return property == null ? false : property.Type.Equals(returnType) && AreEqual(property.Parameters, parameterTypes);
         }
 
-        private static bool IsImplementation(IMethodSymbol method, INamedTypeSymbol returnType, ITypeSymbol[] parameterTypes)
+        private static bool IsImplementation(IMethodSymbol method, ITypeSymbol returnType, ITypeSymbol[] parameterTypes)
         {
             return method == null ? false : method.ReturnType.Equals(returnType) && AreEqual(method.Parameters, parameterTypes);
         }
