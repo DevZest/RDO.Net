@@ -97,7 +97,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Implementation attribute {0} must be applied for {1} implementation: {2}, return type - {3}..
+        ///   Looks up a localized string similar to Implementation attribute {0} is supposed to be applied for {1} which returns {2}, with parameters ({3})..
         /// </summary>
         internal static string InvalidImplementationAttribute_Message {
             get {
@@ -178,7 +178,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Missing {0} implementation: {1},  return type - {2}..
+        ///   Looks up a localized string similar to Missing implementation of {0} {1}, which returns {2}, with parameters ({3})..
         /// </summary>
         internal static string MissingImplementation_Message {
             get {
@@ -264,24 +264,6 @@ namespace DevZest.Data.CodeAnalysis {
         internal static string MounterNaming_Title {
             get {
                 return ResourceManager.GetString("MounterNaming_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Multiple implementation attributes for {0} {1}..
-        /// </summary>
-        internal static string MultipleImplementationAttributes_Message {
-            get {
-                return ResourceManager.GetString("MultipleImplementationAttributes_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Multiple implementation attributes..
-        /// </summary>
-        internal static string MultipleImplementationAttributes_Title {
-            get {
-                return ResourceManager.GetString("MultipleImplementationAttributes_Title", resourceCulture);
             }
         }
         

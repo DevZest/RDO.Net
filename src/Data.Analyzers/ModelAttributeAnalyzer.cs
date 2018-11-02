@@ -20,7 +20,6 @@ namespace DevZest.Data.CodeAnalysis
                       Rules.DuplicateModelAttribute,
                       Rules.MissingImplementation,
                       Rules.MissingImplementationAttribute,
-                      Rules.MultipleImplementationAttributes,
                       Rules.InvalidImplementationAttribute,
                       Rules.MissingModelAttribute); }
         }
@@ -31,6 +30,11 @@ namespace DevZest.Data.CodeAnalysis
             if (!modelType.IsDerivedFrom(KnownTypes.Model, context.Compilation))
                 return;
 
+            var members = modelType.GetMembers();
+            for (int i = 0; i < members.Length; i++)
+                AnalyzeImplementation(context, modelType, members[i]);
+
+
             var compilation = context.Compilation;
 
             var attributes = ImmutableArray.CreateRange(modelType.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes.NamedModelAttribute, compilation)));
@@ -40,10 +44,48 @@ namespace DevZest.Data.CodeAnalysis
                     continue;
                 AnalyzeModelAttribute(context, modelType, attributes[i]);
             }
+        }
 
-            var members = modelType.GetMembers();
-            for (int i = 0; i < members.Length; i++)
-                AnalyzeImplementation(context, modelType, members[i]);
+        private static void AnalyzeImplementation(SymbolAnalysisContext context, INamedTypeSymbol modelType, ISymbol symbol)
+        {
+            var compilation = context.Compilation;
+
+            var attributes = GetImplementationAttributes(symbol, compilation);
+            for (int i = 0; i < attributes.Length; i++)
+                AnalyzeImplementation(context, modelType, symbol, attributes[i], compilation);
+        }
+
+        private static void AnalyzeImplementation(SymbolAnalysisContext context, INamedTypeSymbol modelType, ISymbol symbol, AttributeData attribute, Compilation compilation)
+        {
+            var name = symbol.Name;
+
+            var modelAttributeType = attribute.GetCrossReferenceAttributeType(compilation);
+            if (modelAttributeType == null)
+                return;
+
+            var implementation = modelAttributeType.GetImplementation(compilation);
+            if (!implementation.HasValue)
+                return;
+            var implementationValue = implementation.Value;
+            var isProperty = implementationValue.IsProperty;
+            var returnType = implementationValue.ReturnType;
+            var parameterTypes = implementationValue.ParameterTypes;
+            if (!IsImplementation(symbol, isProperty, implementationValue.ReturnType, implementationValue.ParameterTypes))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidImplementationAttribute, symbol.Locations[0], attribute.AttributeClass,
+                    isProperty ? Resources.Property : Resources.Method, returnType, GetImplementationSignature(parameterTypes)));
+                return;
+            }
+
+            var modelAttribute = modelType.GetAttributes().Where(x => x.AttributeClass.Equals(modelAttributeType) && GetName(x) == name).FirstOrDefault();
+            if (modelAttribute == null)
+                context.ReportDiagnostic(Diagnostic.Create(Rules.MissingModelAttribute, symbol.Locations[0], modelAttributeType, name));
+
+        }
+
+        private static ImmutableArray<AttributeData> GetImplementationAttributes(ISymbol symbol, Compilation compilation)
+        {
+            return ImmutableArray.CreateRange(symbol.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes._NamedModelAttribute, compilation)));
         }
 
         private static bool AnalyzeDuplicateModelAttribute(SymbolAnalysisContext context, ImmutableArray<AttributeData> attributes, int index)
@@ -83,7 +125,7 @@ namespace DevZest.Data.CodeAnalysis
                 var parameterTypes = implementationValue.ParameterTypes;
                 var returnType = implementationValue.ReturnType;
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementation, attribute.GetLocation(),
-                    (isProperty ? Resources.Property : Resources.Method), GetImplementationSignature(name, isProperty, parameterTypes), returnType));
+                    (isProperty ? Resources.Property : Resources.Method), name, returnType, GetImplementationSignature(parameterTypes)));
                 return;
             }
 
@@ -94,13 +136,9 @@ namespace DevZest.Data.CodeAnalysis
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementationAttribute, implementationSymbol.Locations[0], crossRefAttributeType));
         }
 
-        private static string GetImplementationSignature(string name, bool isProperty, INamedTypeSymbol[] parameterTypes)
+        private static string GetImplementationSignature(INamedTypeSymbol[] parameterTypes)
         {
-            var paramList = string.Join(", ", (object[])parameterTypes);
-            if (isProperty)
-                return parameterTypes.Length == 0 ? name : string.Format("{0}[{1}]", name, paramList);
-            else
-                return string.Format("{0}({1})", name, paramList);
+            return string.Join(", ", (object[])parameterTypes);
         }
 
         private static string GetName(AttributeData namedModelAttribute)
@@ -145,52 +183,6 @@ namespace DevZest.Data.CodeAnalysis
             }
 
             return true;
-        }
-
-        private static void AnalyzeImplementation(SymbolAnalysisContext context, INamedTypeSymbol modelType, ISymbol symbol)
-        {
-            var compilation = context.Compilation;
-
-            var attributes = GetImplementationAttributes(symbol, compilation);
-            if (attributes.Length == 0)
-                return;
-
-            var name = symbol.Name;
-
-            if (attributes.Length > 1)
-            {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.MultipleImplementationAttributes, symbol.Locations[0],
-                    symbol.Kind == SymbolKind.Property ? Resources.Property : Resources.Method, name));
-                return;
-            }
-
-            var attribute = attributes[0];
-            var modelAttributeType = attribute.GetCrossReferenceAttributeType(compilation);
-            if (modelAttributeType == null)
-                return;
-
-            var implementation = modelAttributeType.GetImplementation(compilation);
-            if (!implementation.HasValue)
-                return;
-            var implementationValue = implementation.Value;
-            var isProperty = implementationValue.IsProperty;
-            var returnType = implementationValue.ReturnType;
-            var parameterTypes = implementationValue.ParameterTypes;
-            if (!IsImplementation(symbol, isProperty, implementationValue.ReturnType, implementationValue.ParameterTypes))
-            {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidImplementationAttribute, symbol.Locations[0], attribute.AttributeClass,
-                    isProperty ? Resources.Property : Resources.Method, GetImplementationSignature(name, isProperty, parameterTypes), returnType));
-                return;
-            }
-
-            var modelAttribute = modelType.GetAttributes().Where(x => x.AttributeClass.Equals(modelAttributeType) && GetName(x) == name).FirstOrDefault();
-            if (modelAttribute == null)
-                context.ReportDiagnostic(Diagnostic.Create(Rules.MissingModelAttribute, symbol.Locations[0], modelAttributeType, name));
-        }
-
-        private static ImmutableArray<AttributeData> GetImplementationAttributes(ISymbol symbol, Compilation compilation)
-        {
-            return ImmutableArray.CreateRange(symbol.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes._NamedModelAttribute, compilation)));
         }
     }
 }

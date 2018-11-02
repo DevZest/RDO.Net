@@ -20,11 +20,10 @@
         public const string PrimaryKeyMismatchSortAttribute = "RDO018";
         public const string PrimaryKeyInvalidArgument = "RDO019";
         public const string PrimaryKeyArgumentNaming = "RDO020";
-        public const string DuplicateModelAttribute = "RDO021";
-        public const string MissingImplementation = "RDO022";
-        public const string MissingImplementationAttribute = "RDO023";
-        public const string MultipleImplementationAttributes = "RDO024";
-        public const string InvalidImplementationAttribute = "RDO025";
-        public const string MissingModelAttribute = "RDO026";
+        public const string InvalidImplementationAttribute = "RDO030";
+        public const string MissingModelAttribute = "RDO031";
+        public const string DuplicateModelAttribute = "RDO032";
+        public const string MissingImplementation = "RDO033";
+        public const string MissingImplementationAttribute = "RDO034";
     }
 }

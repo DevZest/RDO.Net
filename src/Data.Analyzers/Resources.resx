@@ -130,7 +130,7 @@
     <value>Duplicate mounter registration.</value>
   </data>
   <data name="InvalidImplementationAttribute_Message" xml:space="preserve">
-    <value>Implementation attribute {0} must be applied for {1} implementation: {2}, return type - {3}.</value>
+    <value>Implementation attribute {0} is supposed to be applied for {1} which returns {2}, with parameters ({3}).</value>
   </data>
   <data name="InvalidImplementationAttribute_Title" xml:space="preserve">
     <value>Invalid implementation attribute.</value>
@@ -163,7 +163,7 @@
     <value>Missing implementation attribute.</value>
   </data>
   <data name="MissingImplementation_Message" xml:space="preserve">
-    <value>Missing {0} implementation: {1},  return type - {2}.</value>
+    <value>Missing implementation of {0} {1}, which returns {2}, with parameters ({3}).</value>
   </data>
   <data name="MissingImplementation_Title" xml:space="preserve">
     <value>Missing implementation.</value>
@@ -185,12 +185,6 @@
   </data>
   <data name="MounterNaming_Title" xml:space="preserve">
     <value>Mounter naming rule violation.</value>
-  </data>
-  <data name="MultipleImplementationAttributes_Message" xml:space="preserve">
-    <value>Multiple implementation attributes for {0} {1}.</value>
-  </data>
-  <data name="MultipleImplementationAttributes_Title" xml:space="preserve">
-    <value>Multiple implementation attributes.</value>
   </data>
   <data name="PrimaryKeyArgumentNaming_Message" xml:space="preserve">
     <value>Property '{0}' passed to PrimaryKey constructor does not match the parameter name '{1}'.</value>
