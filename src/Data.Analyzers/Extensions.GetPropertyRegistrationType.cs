@@ -4,44 +4,44 @@ namespace DevZest.Data.CodeAnalysis
 {
     internal static partial class Extensions
     {
-        public static ModelMemberKind? GetModelMemberKind(this IPropertySymbol property, Compilation compilation)
+        public static PropertyRegistrationType? GetPropertyRegistrationType(this IPropertySymbol property, Compilation compilation)
         {
             if (!(property.Type is INamedTypeSymbol propertyType))
                 return null;
 
-            var parent = property.GetModelMemberParent(compilation);
+            var parent = property.GetPropertyRegistrationParentType(compilation);
             if (!parent.HasValue)
                 return null;
 
             var parentValue = parent.Value;
 
             if (propertyType.EqualsTo(KnownTypes.LocalColumn, compilation))
-                return ModelMemberKind.LocalColumn;
+                return PropertyRegistrationType.LocalColumn;
             else if (propertyType.IsDerivedFrom(KnownTypes.Column, compilation))
-                return parentValue == ModelMemberParent.Model ? ModelMemberKind.ModelColumn : ModelMemberKind.ProjectionColumn;
+                return parentValue == PropertyRegistrationParentType.Model ? PropertyRegistrationType.ModelColumn : PropertyRegistrationType.ProjectionColumn;
             else if (propertyType.IsDerivedFrom(KnownTypes.Projection, compilation))
-                return ModelMemberKind.Projection;
+                return PropertyRegistrationType.Projection;
             else if (propertyType.IsDerivedFrom(KnownTypes.ColumnList, compilation))
-                return ModelMemberKind.ColumnList;
+                return PropertyRegistrationType.ColumnList;
             else if (propertyType.IsDerivedFrom(KnownTypes.Model, compilation))
-                return ModelMemberKind.ChildModel;
+                return PropertyRegistrationType.ChildModel;
             else
                 return null;
         }
 
-        private enum ModelMemberParent
+        private enum PropertyRegistrationParentType
         {
             Model,
             Projection
         }
 
-        private static ModelMemberParent? GetModelMemberParent(this IPropertySymbol property, Compilation compilation)
+        private static PropertyRegistrationParentType? GetPropertyRegistrationParentType(this IPropertySymbol property, Compilation compilation)
         {
             var containingType = property.ContainingType;
             if (containingType.IsDerivedFrom(KnownTypes.Model, compilation))
-                return ModelMemberParent.Model;
+                return PropertyRegistrationParentType.Model;
             else if (containingType.IsDerivedFrom(KnownTypes.Projection, compilation))
-                return ModelMemberParent.Projection;
+                return PropertyRegistrationParentType.Projection;
             else
                 return null;
         }

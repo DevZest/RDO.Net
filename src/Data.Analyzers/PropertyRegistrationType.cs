@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.CodeAnalysis
 {
-    internal enum ModelMemberKind
+    internal enum PropertyRegistrationType
     {
         ModelColumn,
         ProjectionColumn,

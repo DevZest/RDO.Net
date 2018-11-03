@@ -217,7 +217,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
             if (propertySymbol.SetMethod == null)
                 return null;
 
-            if (!propertySymbol.GetModelMemberKind(compilation).HasValue)
+            if (!propertySymbol.GetPropertyRegistrationType(compilation).HasValue)
                 return null;
 
             var syntaxReferences = propertySymbol.ContainingType.DeclaringSyntaxReferences;

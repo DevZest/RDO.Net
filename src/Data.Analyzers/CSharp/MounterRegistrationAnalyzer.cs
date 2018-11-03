@@ -220,7 +220,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             if (propertySymbol.SetMethod == null)
                 return null;
 
-            if (!propertySymbol.GetModelMemberKind(compilation).HasValue)
+            if (!propertySymbol.GetPropertyRegistrationType(compilation).HasValue)
                 return null;
 
             var syntaxReferences = propertySymbol.ContainingType.DeclaringSyntaxReferences;
