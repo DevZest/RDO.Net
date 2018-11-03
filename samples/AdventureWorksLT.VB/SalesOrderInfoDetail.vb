@@ -21,6 +21,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _ValidateProduct = NameOf(ValidateProduct)
+        <_Validator>
         Private Function ValidateProduct(ByVal dataRow As DataRow) As DataValidationError
             If ProductID(dataRow) Is Nothing Then Return Nothing
             Dim productNumber = Product.ProductNumber

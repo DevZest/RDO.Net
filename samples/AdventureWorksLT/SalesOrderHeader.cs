@@ -188,41 +188,49 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Sales representative comments.")]
         public _String Comment { get; private set; }
 
+        [_Computation]
         private void ComputeSalesOrderNumber()
         {
             SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsNVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
         }
 
+        [_Computation]
         private void ComputeTotalDue()
         {
             TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.Const(0)));
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderHeader_DueDate
         {
             get { return DueDate >= OrderDate; }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderHeader_Freight
         {
             get { return Freight >= _Decimal.Const(0); }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderHeader_ShipDate
         {
             get { return ShipDate >= OrderDate | ShipDate.IsNull(); }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderHeader_SubTotal
         {
             get { return SubTotal >= _Decimal.Const(0); }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderHeader_TaxAmt
         {
             get { return TaxAmt >= _Decimal.Const(0); }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderHeader_Status
         {
             get { return IsValid(Status); }
@@ -234,8 +242,10 @@ namespace DevZest.Samples.AdventureWorksLT
             return byteExpr >= _Byte.Const(1) & byteExpr <= _Byte.Const(6);
         }
 
+        [_UniqueConstraint]
         private ColumnSort[] AK_SalesOrderHeader_SalesOrderNumber => new ColumnSort[] { SalesOrderNumber };
 
+        [_DbIndex]
         private ColumnSort[] IX_SalesOrderHeader_CustomerID => new ColumnSort[] { CustomerID };
     }
 }

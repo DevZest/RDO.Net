@@ -151,6 +151,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public LocalColumn<string> ContactPerson { get; private set; }
 
+        [_Computation]
         private void ComputeContactPerson()
         {
             ContactPerson.ComputedAs(LastName, FirstName, Title, GetContactPerson, false);
@@ -180,6 +181,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return result;
         }
 
+        [_DbIndex]
         private ColumnSort[] IX_Customer_EmailAddress => new ColumnSort[] { EmailAddress };
     }
 }

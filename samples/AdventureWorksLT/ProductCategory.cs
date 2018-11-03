@@ -91,6 +91,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [SqlNVarChar(50)]
         public _String Name { get; private set; }
 
+        [_UniqueConstraint]
         private ColumnSort[] AK_ProductCategory_Name => new ColumnSort[] { Name };
     }
 }

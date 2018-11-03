@@ -16,11 +16,13 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public _Int32 LineCount { get; private set; }
 
+        [_Validator]
         private DataValidationError ValidateLineCount(DataRow dataRow)
         {
             return LineCount[dataRow] > 0 ? null : new DataValidationError(UserMessages.Validation_SalesOrder_LineCount, LineCount);
         }
 
+        [_Computation]
         private void ComputeLineCount()
         {
             LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows());
@@ -33,6 +35,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return new SalesOrderDetail();
         }
 
+        [_Computation]
         private void ComputeSubTotal()
         {
             SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);

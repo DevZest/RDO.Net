@@ -24,11 +24,13 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _ValidateLineCount = NameOf(ValidateLineCount)
+        <_Validator>
         Private Function ValidateLineCount(ByVal dataRow As DataRow) As DataValidationError
             Return If(LineCount(dataRow) > 0, Nothing, New DataValidationError(UserMessages.Validation_SalesOrder_LineCount, LineCount))
         End Function
 
         Friend Const _ComputeLineCount = NameOf(ComputeLineCount)
+        <_Computation>
         Private Sub ComputeLineCount()
             LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows())
         End Sub
@@ -48,6 +50,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Function
 
         Friend Const _ComputeSubTotal = NameOf(ComputeSubTotal)
+        <_Computation>
         Private Sub ComputeSubTotal()
             SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), False)
         End Sub

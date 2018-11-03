@@ -173,11 +173,13 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _ComputeLineTotal = NameOf(ComputeLineTotal)
+        <_Computation>
         Private Sub ComputeLineTotal()
             LineTotal.ComputedAs((UnitPrice * (_Decimal.[Const](1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.[Const](0)))
         End Sub
 
         Friend Const _CK_SalesOrderDetail_OrderQty = NameOf(CK_SalesOrderDetail_OrderQty)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderDetail_OrderQty As _Boolean
             Get
                 Return OrderQty > _Decimal.Const(0)
@@ -185,6 +187,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_SalesOrderDetail_UnitPrice = NameOf(CK_SalesOrderDetail_UnitPrice)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderDetail_UnitPrice As _Boolean
             Get
                 Return UnitPrice >= _Decimal.Const(0)
@@ -192,6 +195,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_SalesOrderDetail_UnitPriceDiscount = NameOf(CK_SalesOrderDetail_UnitPriceDiscount)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderDetail_UnitPriceDiscount As _Boolean
             Get
                 Return UnitPriceDiscount >= _Decimal.Const(0)
@@ -199,6 +203,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _IX_SalesOrderDetail_ProductID = NameOf(IX_SalesOrderDetail_ProductID)
+        <_DbIndex>
         Private ReadOnly Property IX_SalesOrderDetail_ProductID As ColumnSort()
             Get
                 Return New ColumnSort() {ProductID}

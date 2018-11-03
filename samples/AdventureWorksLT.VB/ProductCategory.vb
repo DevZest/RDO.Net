@@ -148,6 +148,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _AK_ProductCategory_Name = NameOf(AK_ProductCategory_Name)
+        <_UniqueConstraint>
         Private ReadOnly Property AK_ProductCategory_Name As ColumnSort()
             Get
                 Return New ColumnSort() {Name}

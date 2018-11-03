@@ -235,6 +235,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion = NameOf(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion)
+        <_DbIndex>
         Private ReadOnly Property IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion As ColumnSort()
             Get
                 Return New ColumnSort() {AddressLine1, AddressLine2, City, StateProvince, PostalCode, CountryRegion}
@@ -242,6 +243,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _IX_Address_StateProvince = NameOf(IX_Address_StateProvince)
+        <_DbIndex>
         Private ReadOnly Property IX_Address_StateProvince As ColumnSort()
             Get
                 Return New ColumnSort() {StateProvince}

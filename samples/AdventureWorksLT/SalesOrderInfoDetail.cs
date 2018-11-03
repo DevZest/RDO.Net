@@ -13,6 +13,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public Product.Lookup Product { get; private set; }
 
+        [_Validator]
         private DataValidationError ValidateProduct(DataRow dataRow)
         {
             if (ProductID[dataRow] == null)

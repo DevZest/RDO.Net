@@ -98,26 +98,31 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Per product subtotal. Computed as UnitPrice * (1 - UnitPriceDiscount) * OrderQty.")]
         public _Decimal LineTotal { get; private set; }
 
+        [_Computation]
         private void ComputeLineTotal()
         {
             LineTotal.ComputedAs((UnitPrice * (_Decimal.Const(1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.Const(0)));
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderDetail_OrderQty
         {
             get { return OrderQty > _Decimal.Const(0); }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderDetail_UnitPrice
         {
             get { return UnitPrice >= _Decimal.Const(0); }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_SalesOrderDetail_UnitPriceDiscount
         {
             get { return UnitPriceDiscount >= _Decimal.Const(0); }
         }
 
+        [_DbIndex]
         private ColumnSort[] IX_SalesOrderDetail_ProductID => new ColumnSort[] { ProductID };
     }
 }

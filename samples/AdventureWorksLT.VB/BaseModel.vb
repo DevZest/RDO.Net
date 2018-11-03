@@ -50,6 +50,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Sub
 
         Friend Const _AK_RowGuid = NameOf(AK_RowGuid)
+        <_UniqueConstraint>
         Private ReadOnly Property AK_RowGuid As ColumnSort()
             Get
                 Return New ColumnSort() {RowGuid}

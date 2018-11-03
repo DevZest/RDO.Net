@@ -110,11 +110,13 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Postal code for the street address.")]
         public _String PostalCode { get; private set; }
 
+        [_DbIndex]
         private ColumnSort[] IX_Address_StateProvince
         {
             get { return new ColumnSort[] { StateProvince }; }
         }
 
+        [_DbIndex]
         private ColumnSort[] IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion
         {
             get { return new ColumnSort[] { AddressLine1, AddressLine2, City, StateProvince, CountryRegion }; }

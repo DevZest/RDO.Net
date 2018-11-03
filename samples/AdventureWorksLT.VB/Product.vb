@@ -317,6 +317,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_Product_ListPrice = NameOf(CK_Product_ListPrice)
+        <_CheckConstraint>
         Private ReadOnly Property CK_Product_ListPrice As _Boolean
             Get
                 Return ListPrice >= _Decimal.Const(0)
@@ -324,6 +325,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_Product_SellEndDate = NameOf(CK_Product_SellEndDate)
+        <_CheckConstraint>
         Private ReadOnly Property CK_Product_SellEndDate As _Boolean
             Get
                 Return SellEndDate >= SellStartDate Or SellEndDate.IsNull()
@@ -331,6 +333,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_Product_StandardCost = NameOf(CK_Product_StandardCost)
+        <_CheckConstraint>
         ReadOnly Property CK_Product_StandardCost As _Boolean
             Get
                 Return StandardCost >= _Decimal.[Const](0)
@@ -338,6 +341,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_Product_Weight = NameOf(CK_Product_Weight)
+        <_CheckConstraint>
         Private ReadOnly Property CK_Product_Weight As _Boolean
             Get
                 Return Weight >= _Decimal.[Const](0)
@@ -345,6 +349,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _AK_Product_Name = NameOf(AK_Product_Name)
+        <_UniqueConstraint>
         Private ReadOnly Property AK_Product_Name As ColumnSort()
             Get
                 Return New ColumnSort() {Name}
@@ -352,6 +357,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _AK_Product_ProductNumber = NameOf(AK_Product_ProductNumber)
+        <_UniqueConstraint>
         Private ReadOnly Property AK_Product_ProductNumber As ColumnSort()
             Get
                 Return New ColumnSort() {ProductNumber}

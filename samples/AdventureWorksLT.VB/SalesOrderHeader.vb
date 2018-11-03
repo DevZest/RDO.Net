@@ -375,16 +375,19 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _ComputeSalesOrderNumber = NameOf(ComputeSalesOrderNumber)
+        <_Computation>
         Private Sub ComputeSalesOrderNumber()
             SalesOrderNumber.ComputedAs((_String.[Const]("SO") + (CType(SalesOrderID, _String)).AsNVarChar(23)).IfNull(_String.[Const]("*** ERROR ***")))
         End Sub
 
         Friend Const _ComputeTotalDue = NameOf(ComputeTotalDue)
+        <_Computation>
         Private Sub ComputeTotalDue()
             TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.[Const](0)))
         End Sub
 
         Friend Const _CK_SalesOrderHeader_DueDate = NameOf(CK_SalesOrderHeader_DueDate)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderHeader_DueDate As _Boolean
             Get
                 Return DueDate >= OrderDate
@@ -392,6 +395,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_SalesOrderHeader_Freight = NameOf(CK_SalesOrderHeader_Freight)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderHeader_Freight As _Boolean
             Get
                 Return Freight >= _Decimal.Const(0)
@@ -399,6 +403,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_SalesOrderHeader_ShipDate = NameOf(CK_SalesOrderHeader_ShipDate)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderHeader_ShipDate As _Boolean
             Get
                 Return ShipDate >= OrderDate Or ShipDate.IsNull()
@@ -406,6 +411,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_SalesOrderHeader_SubTotal = NameOf(CK_SalesOrderHeader_SubTotal)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderHeader_SubTotal As _Boolean
             Get
                 Return SubTotal >= _Decimal.Const(0)
@@ -413,6 +419,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_SalesOrderHeader_TaxAmt = NameOf(CK_SalesOrderHeader_TaxAmt)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderHeader_TaxAmt As _Boolean
             Get
                 Return TaxAmt >= _Decimal.Const(0)
@@ -420,6 +427,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _CK_SalesOrderHeader_Status = NameOf(CK_SalesOrderHeader_Status)
+        <_CheckConstraint>
         Private ReadOnly Property CK_SalesOrderHeader_Status As _Boolean
             Get
                 Return IsValid(Status)
@@ -432,6 +440,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Function
 
         Friend Const _AK_SalesOrderHeader_SalesOrderNumber = NameOf(AK_SalesOrderHeader_SalesOrderNumber)
+        <_UniqueConstraint>
         Private ReadOnly Property AK_SalesOrderHeader_SalesOrderNumber As ColumnSort()
             Get
                 Return New ColumnSort() {SalesOrderNumber}
@@ -439,6 +448,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Friend Const _IX_SalesOrderHeader_CustomerID = NameOf(IX_SalesOrderHeader_CustomerID)
+        <_DbIndex>
         Private ReadOnly Property IX_SalesOrderHeader_CustomerID As ColumnSort()
             Get
                 Return New ColumnSort() {CustomerID}

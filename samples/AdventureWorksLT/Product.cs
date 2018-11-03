@@ -158,11 +158,13 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Small image file name.")]
         public _String ThumbnailPhotoFileName { get; private set; }
 
+        [_CheckConstraint]
         private _Boolean CK_Product_ListPrice
         {
             get { return ListPrice >= _Decimal.Const(0); }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_Product_SellEndDate
         {
             get { return SellEndDate >= SellStartDate | SellEndDate.IsNull(); }
@@ -173,13 +175,16 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return StandardCost >= _Decimal.Const(0); }
         }
 
+        [_CheckConstraint]
         private _Boolean CK_Product_Weight
         {
             get { return Weight >= _Decimal.Const(0); }
         }
 
+        [_UniqueConstraint]
         private ColumnSort[] AK_Product_Name => new ColumnSort[] { Name };
 
+        [_UniqueConstraint]
         private ColumnSort[] AK_Product_ProductNumber => new ColumnSort[] { ProductNumber };
     }
 }
