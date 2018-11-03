@@ -44,7 +44,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
                 return Diagnostic.Create(Rules.InvalidRegistrationGetterParam, firstArgument.GetLocation());
 
             if (isColumnRegistration && propertySymbol.Type.EqualsTo(KnownTypes.LocalColumn, context.Compilation))
-                return Diagnostic.Create(Rules.InvalidRegisterLocalColumn, invocationExpression.GetLocation(), propertySymbol.Name);
+                return Diagnostic.Create(Rules.InvalidLocalColumnRegistration, invocationExpression.GetLocation(), propertySymbol.Name);
 
             if (AnyDuplicate(invocationExpression, propertySymbol, context.Compilation))
                 return Diagnostic.Create(Rules.DuplicateMounterRegistration, invocationExpression.GetLocation(), propertySymbol.Name);

@@ -11,7 +11,7 @@ namespace DevZest.Data.CodeAnalysis
             get { return ImmutableArray.Create(
                 Rules.InvalidRegistrationInvocation, 
                 Rules.InvalidRegistrationGetterParam,
-                Rules.InvalidRegisterLocalColumn,
+                Rules.InvalidLocalColumnRegistration,
                 Rules.DuplicateMounterRegistration,
                 Rules.MounterNaming,
                 Rules.ProjectionColumnNaming,

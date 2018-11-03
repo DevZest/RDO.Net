@@ -360,8 +360,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.InvalidRegisterLocalColumn,
-                Message = string.Format(Resources.InvalidRegisterLocalColumn_Message, "Column1"),
+                Id = DiagnosticIds.InvalidLocalColumnRegistration,
+                Message = string.Format(Resources.InvalidLocalColumnRegistration_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 9) }
             };

@@ -117,18 +117,18 @@ namespace DevZest.Data.CodeAnalysis {
         /// <summary>
         ///   Looks up a localized string similar to Local column &apos;{0}&apos; is invalid for RegisterColumn, use RegisterLocalColumn instead..
         /// </summary>
-        internal static string InvalidRegisterLocalColumn_Message {
+        internal static string InvalidLocalColumnRegistration_Message {
             get {
-                return ResourceManager.GetString("InvalidRegisterLocalColumn_Message", resourceCulture);
+                return ResourceManager.GetString("InvalidLocalColumnRegistration_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Local column is invalid for RegisterColumn..
         /// </summary>
-        internal static string InvalidRegisterLocalColumn_Title {
+        internal static string InvalidLocalColumnRegistration_Title {
             get {
-                return ResourceManager.GetString("InvalidRegisterLocalColumn_Title", resourceCulture);
+                return ResourceManager.GetString("InvalidLocalColumnRegistration_Title", resourceCulture);
             }
         }
         

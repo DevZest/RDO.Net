@@ -16,10 +16,10 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.InvalidRegistrationGetterParam_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor InvalidRegisterLocalColumn = new DiagnosticDescriptor(
-            DiagnosticIds.InvalidRegisterLocalColumn,
-            new LocalizableResourceString(nameof(Resources.InvalidRegisterLocalColumn_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.InvalidRegisterLocalColumn_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor InvalidLocalColumnRegistration = new DiagnosticDescriptor(
+            DiagnosticIds.InvalidLocalColumnRegistration,
+            new LocalizableResourceString(nameof(Resources.InvalidLocalColumnRegistration_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.InvalidLocalColumnRegistration_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         public static readonly DiagnosticDescriptor DuplicateMounterRegistration = new DiagnosticDescriptor(
