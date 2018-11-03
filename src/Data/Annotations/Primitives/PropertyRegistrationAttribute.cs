@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     internal class PropertyRegistrationAttribute : Attribute
     {
     }

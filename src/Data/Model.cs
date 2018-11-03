@@ -14,7 +14,6 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    [PropertyRegistration]
     public abstract partial class Model : ModelMember, IModels, IModelReference
     {
         #region RegisterColumn

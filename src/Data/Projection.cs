@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    [PropertyRegistration]
     public abstract class Projection : ModelMember, IModelReference
     {
         internal void Construct(Model model, Type declaringType, string name)
