@@ -335,7 +335,7 @@ End Class
         }
 
         [TestMethod]
-        public void InvalidRegisterLocalColumn()
+        public void InvalidLocalColumnRegistration()
         {
             var test = @"
 Imports DevZest.Data

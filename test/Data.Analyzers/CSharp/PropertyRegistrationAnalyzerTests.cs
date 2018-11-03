@@ -246,7 +246,7 @@ public class ProjectionColumnNaming : Model
         }
 
         [TestMethod]
-        public void InvalidRegisterLocalColumn()
+        public void InvalidLocalColumnRegistration()
         {
             var test = @"
 using DevZest.Data;
