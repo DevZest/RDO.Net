@@ -4,13 +4,13 @@ using System.Collections.Immutable;
 
 namespace DevZest.Data.CodeAnalysis
 {
-    public abstract class MounterRegistrationAnalyzerBase : DiagnosticAnalyzer
+    public abstract class PropertyRegistrationAnalyzerBase : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
             get { return ImmutableArray.Create(
                 Rules.InvalidRegisterMounterInvocation, 
-                Rules.InvalidRegisterMounterGetterParam,
+                Rules.InvalidRegistrationGetterParam,
                 Rules.InvalidRegisterLocalColumn,
                 Rules.DuplicateMounterRegistration,
                 Rules.MounterNaming,

@@ -10,10 +10,10 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.InvalidRegisterMounterInvocation_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor InvalidRegisterMounterGetterParam = new DiagnosticDescriptor(
-            DiagnosticIds.InvalidRegisterMounterGetterParam,
-            new LocalizableResourceString(nameof(Resources.InvalidRegisterMounterGetterParam_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.InvalidRegisterMounterGetterParam_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor InvalidRegistrationGetterParam = new DiagnosticDescriptor(
+            DiagnosticIds.InvalidRegistrationGetterParam,
+            new LocalizableResourceString(nameof(Resources.InvalidRegistrationGetterParam_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.InvalidRegistrationGetterParam_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         public static readonly DiagnosticDescriptor InvalidRegisterLocalColumn = new DiagnosticDescriptor(

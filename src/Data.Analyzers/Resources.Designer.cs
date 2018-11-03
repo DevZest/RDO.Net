@@ -133,24 +133,6 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
-        /// </summary>
-        internal static string InvalidRegisterMounterGetterParam_Message {
-            get {
-                return ResourceManager.GetString("InvalidRegisterMounterGetterParam_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid getter of mounter registration..
-        /// </summary>
-        internal static string InvalidRegisterMounterGetterParam_Title {
-            get {
-                return ResourceManager.GetString("InvalidRegisterMounterGetterParam_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Mounter registration is only allowed as static field initializer or static constructor statement..
         /// </summary>
         internal static string InvalidRegisterMounterInvocation_Message {
@@ -165,6 +147,24 @@ namespace DevZest.Data.CodeAnalysis {
         internal static string InvalidRegisterMounterInvocation_Title {
             get {
                 return ResourceManager.GetString("InvalidRegisterMounterInvocation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
+        /// </summary>
+        internal static string InvalidRegistrationGetterParam_Message {
+            get {
+                return ResourceManager.GetString("InvalidRegistrationGetterParam_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid getter of property registration..
+        /// </summary>
+        internal static string InvalidRegistrationGetterParam_Title {
+            get {
+                return ResourceManager.GetString("InvalidRegistrationGetterParam_Title", resourceCulture);
             }
         }
         

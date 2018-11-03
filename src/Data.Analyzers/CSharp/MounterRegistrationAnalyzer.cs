@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MounterRegistrationAnalyzer : MounterRegistrationAnalyzerBase
+    public class MounterRegistrationAnalyzer : PropertyRegistrationAnalyzerBase
     {
         public override void Initialize(AnalysisContext context)
         {
@@ -41,7 +41,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             var firstArgument = arguments[0];
             Debug.Assert(firstArgument != null);
             if (!IsValidGetter(firstArgument, semanticModel, containingType, out var propertySymbol, out var nameSyntax))
-                return Diagnostic.Create(Rules.InvalidRegisterMounterGetterParam, firstArgument.GetLocation());
+                return Diagnostic.Create(Rules.InvalidRegistrationGetterParam, firstArgument.GetLocation());
 
             if (isColumnRegistration && propertySymbol.Type.EqualsTo(KnownTypes.LocalColumn, context.Compilation))
                 return Diagnostic.Create(Rules.InvalidRegisterLocalColumn, invocationExpression.GetLocation(), propertySymbol.Name);
