@@ -5,7 +5,7 @@ using System.Linq;
 namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_UniqueConstraintAttribute))]
-    [Implementation(true, typeof(ColumnSort[]))]
+    [NamedModelAttributeSpec(true, typeof(ColumnSort[]))]
     public sealed class UniqueConstraintAttribute : DbIndexBaseAttribute
     {
         private sealed class Validator : IValidator

@@ -21,9 +21,10 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DescAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.MounterRegistrationAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CreateKeyAttribute));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CrossReferenceAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.NamedModelAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes._NamedModelAttribute));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CrossReferenceAttribute));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.NamedModelAttributeSpecAttribute));
         }
     }
 }

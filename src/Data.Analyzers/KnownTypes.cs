@@ -23,6 +23,6 @@
         public const string NamedModelAttribute = Namespaces.Data_Annotations_Primitives + nameof(NamedModelAttribute);
         public const string _NamedModelAttribute = Namespaces.Data_Annotations_Primitives + nameof(_NamedModelAttribute);
         public const string CrossReferenceAttribute = Namespaces.Data_Annotations_Primitives + nameof(CrossReferenceAttribute);
-        public const string ImplementationAttribute = Namespaces.Data_Annotations_Primitives + nameof(ImplementationAttribute);
+        public const string NamedModelAttributeSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(NamedModelAttributeSpecAttribute);
     }
 }

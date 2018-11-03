@@ -1,18 +1,23 @@
 ﻿using Microsoft.CodeAnalysis;
+using System.Diagnostics;
 using System.Linq;
 
 namespace DevZest.Data.CodeAnalysis
 {
     static partial class Extensions
     {
-        public static (bool IsProperty, ITypeSymbol ReturnType, ITypeSymbol[] ParameterTypes)? GetImplementation(this ITypeSymbol attributeClass, Compilation compilation)
+        public static (bool IsProperty, ITypeSymbol ReturnType, ITypeSymbol[] ParameterTypes)? GetNamedModelAttributeSpec(this ITypeSymbol attributeClass, Compilation compilation)
         {
-            var implementationAttribute = attributeClass.GetAttributes().Where(x => x.AttributeClass.EqualsTo(KnownTypes.ImplementationAttribute, compilation)).FirstOrDefault();
-            if (implementationAttribute == null)
+            Debug.Assert(attributeClass.IsDerivedFrom(KnownTypes.NamedModelAttribute, compilation));
+
+            var specAttribute = attributeClass.GetAttributes().Where(x => x.AttributeClass.EqualsTo(KnownTypes.NamedModelAttributeSpecAttribute, compilation)).FirstOrDefault();
+            if (specAttribute == null)
                 return null;
 
-            var constructorArguments = implementationAttribute.ConstructorArguments;
+            var constructorArguments = specAttribute.ConstructorArguments;
+
             var isProperty = (bool)constructorArguments[0].Value;
+
             var returnType = (ITypeSymbol)constructorArguments[1].Value;
 
             var values = constructorArguments[2].Values;
