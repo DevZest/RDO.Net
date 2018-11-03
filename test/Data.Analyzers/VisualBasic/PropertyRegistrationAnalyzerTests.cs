@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     [TestClass]
-    public class MounterRegistrationAnalyzerTests : DiagnosticVerifier
+    public class PropertyRegistrationAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {

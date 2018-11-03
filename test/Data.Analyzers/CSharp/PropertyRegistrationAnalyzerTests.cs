@@ -6,7 +6,7 @@ using System;
 namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [TestClass]
-    public class MounterRegistrationAnalyzerTests : DiagnosticVerifier
+    public class PropertyRegistrationAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
