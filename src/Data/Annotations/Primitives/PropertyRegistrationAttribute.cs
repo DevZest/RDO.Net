@@ -3,10 +3,7 @@
 namespace DevZest.Data.Annotations.Primitives
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
-    internal class MounterRegistrationAttribute : Attribute
+    internal class PropertyRegistrationAttribute : Attribute
     {
-        internal MounterRegistrationAttribute()
-        {
-        }
     }
 }

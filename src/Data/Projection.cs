@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    [MounterRegistration]
+    [PropertyRegistration]
     public abstract class Projection : ModelMember, IModelReference
     {
         internal void Construct(Model model, Type declaringType, string name)
@@ -59,7 +59,7 @@ namespace DevZest.Data
 
         private static MounterManager<Projection, Column> s_columnManager = new MounterManager<Projection, Column>();
 
-        [MounterRegistration]
+        [PropertyRegistration]
         protected static void Register<TColumnGroup, TColumn>(Expression<Func<TColumnGroup, TColumn>> getter, Mounter<TColumn> fromMounter)
             where TColumnGroup : Projection
             where TColumn : Column, new()

@@ -29,7 +29,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
             if (!(semanticModel.GetSymbolInfo(invocationExpression).Symbol is IMethodSymbol symbol))
                 return null;
 
-            if (!symbol.IsMounterRegistration(context.Compilation))
+            if (!symbol.IsPropertyRegistration(context.Compilation))
                 return null;
 
             var isColumnRegistration = symbol.Name == "RegisterColumn";
@@ -304,7 +304,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
             if (!(semanticModel.GetSymbolInfo(expression).Symbol is IMethodSymbol symbol))
                 return false;
 
-            if (!symbol.IsMounterRegistration(semanticModel.Compilation))
+            if (!symbol.IsPropertyRegistration(semanticModel.Compilation))
                 return false;
 
             var firstArgument = expression.ArgumentList.Arguments[0];

@@ -72,7 +72,7 @@ namespace DevZest.Data
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="relationshipGetter"/> is <see langword="null"/>.</exception>
-        [MounterRegistration]
+        [PropertyRegistration]
         protected static Mounter<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
             Func<TChildModel, T> relationshipGetter, Func<TModel, TChildModel> constructor = null)
             where TModel : Model<T>
