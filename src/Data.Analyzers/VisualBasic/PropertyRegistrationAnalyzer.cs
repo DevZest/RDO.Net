@@ -1,19 +1,19 @@
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.VisualBasic;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace DevZest.Data.CodeAnalysis.CSharp
+namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MounterRegistrationAnalyzer : PropertyRegistrationAnalyzerBase
+    [DiagnosticAnalyzer(LanguageNames.VisualBasic)]
+    public class PropertyRegistrationAnalyzer : PropertyRegistrationAnalyzerBase
     {
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(AnalyzeRegisterInvocation, SyntaxKind.InvocationExpression);
-            context.RegisterSyntaxNodeAction(AnalyzeModelProperty, SyntaxKind.PropertyDeclaration);
+            context.RegisterSyntaxNodeAction(AnalyzeModelProperty, SyntaxKind.PropertyBlock);
         }
 
         private static void AnalyzeRegisterInvocation(SyntaxNodeAnalysisContext context)
@@ -57,7 +57,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             }
             else if (symbol.Name == "Register" && arguments.Count == 2) // Projection column registration
             {
-                var fromMounter = semanticModel.GetSymbolInfo(arguments[1].Expression).Symbol as IFieldSymbol;
+                var fromMounter = semanticModel.GetSymbolInfo(arguments[1].GetExpression()).Symbol as IFieldSymbol;
                 if (fromMounter != null && "_" + propertySymbol.Name != fromMounter.Name)
                     return Diagnostic.Create(Rules.ProjectionColumnNaming, nameSyntax.GetLocation(), propertySymbol.Name, fromMounter.Name);
             }
@@ -79,15 +79,17 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             fieldSymbol = null;
             mounterIdentifier = default(SyntaxToken);
 
-            if (!(expression.Parent is EqualsValueClauseSyntax equalsValueClause))
+            if (!(expression.Parent is EqualsValueSyntax equalsValueClause))
                 return false;
             if (!(equalsValueClause.Parent is VariableDeclaratorSyntax variableDeclarator))
                 return false;
 
-            if (semanticModel.GetDeclaredSymbol(variableDeclarator) is IFieldSymbol result && result.IsStatic)
+            Debug.Assert(variableDeclarator.Names.Count == 1);
+            var name = variableDeclarator.Names[0];
+            if (semanticModel.GetDeclaredSymbol(name) is IFieldSymbol result && result.IsStatic)
             {
                 fieldSymbol = result;
-                mounterIdentifier = variableDeclarator.Identifier;
+                mounterIdentifier = name.Identifier;
                 return true;
             }
             return false;
@@ -99,23 +101,17 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             fieldSymbol = null;
             mounterIdentifier = default(SyntaxToken);
 
-            SyntaxNode childOfExpressionStatement;
-            var assignmentExpression = expression.Parent as AssignmentExpressionSyntax;
+            ConstructorBlockSyntax constructorBlock = null;
+            var assignmentExpression = expression.Parent as AssignmentStatementSyntax;
             if (assignmentExpression != null)
-                childOfExpressionStatement = assignmentExpression;
-            else
-                childOfExpressionStatement = expression;
+                constructorBlock = assignmentExpression.Parent as ConstructorBlockSyntax;
+            else if (expression.Parent is ExpressionStatementSyntax expressionStatement)
+                constructorBlock = expressionStatement.Parent as ConstructorBlockSyntax;
 
-            if (!(childOfExpressionStatement.Parent is ExpressionStatementSyntax expressionStatement))
+            if (constructorBlock == null)
                 return false;
 
-            if (!(expressionStatement.Parent is BlockSyntax blockSyntax))
-                return false;
-
-            if (!(blockSyntax.Parent is ConstructorDeclarationSyntax constructorDeclaration))
-                return false;
-
-            var symbol = semanticModel.GetDeclaredSymbol(constructorDeclaration);
+            var symbol = semanticModel.GetDeclaredSymbol(constructorBlock);
             if (symbol == null || !symbol.IsStatic)
                 return false;
             containingType = symbol.ContainingType;
@@ -143,8 +139,8 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             propertySymbol = null;
             nameSyntax = null;
 
-            var expression = argument.Expression;
-            if (!(expression is LambdaExpressionSyntax lambdaExpression))
+            var expression = argument.GetExpression();
+            if (!(expression is SingleLineLambdaExpressionSyntax lambdaExpression))
                 return false;
 
             if (!(lambdaExpression.Body is MemberAccessExpressionSyntax memberAccessExpression))
@@ -173,24 +169,25 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             var syntaxReferences = containingType.DeclaringSyntaxReferences;
             for (int i = 0; i < syntaxReferences.Length; i++)
             {
-                var classDeclaration = (ClassDeclarationSyntax)syntaxReferences[i].GetSyntax();
-                var semanticModel = compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-                if (AnyDuplicate(invocationExpression, propertySymbol, classDeclaration, semanticModel))
+                var classStatement = (ClassStatementSyntax)syntaxReferences[i].GetSyntax();
+                var classBlock = (ClassBlockSyntax)classStatement.Parent;
+                var semanticModel = compilation.GetSemanticModel(classBlock.SyntaxTree);
+                if (AnyDuplicate(invocationExpression, propertySymbol, classBlock, semanticModel))
                     return true;
             }
 
             return false;
         }
 
-        private static bool AnyDuplicate(InvocationExpressionSyntax invocationExpression, IPropertySymbol propertySymbol, ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
+        private static bool AnyDuplicate(InvocationExpressionSyntax invocationExpression, IPropertySymbol propertySymbol, ClassBlockSyntax classBlock, SemanticModel semanticModel)
         {
-            var result = GetMounterRegistration(propertySymbol, classDeclaration, semanticModel);
+            var result = GetMounterRegistration(propertySymbol, classBlock, semanticModel);
             return result == null ? false : CompareLocation(invocationExpression, result) > 0;
         }
 
-        private static bool AnyDuplicate(InvocationExpressionSyntax invocationExpression, IPropertySymbol propertySymbol, ConstructorDeclarationSyntax constructorDeclaration, SemanticModel semanticModel)
+        private static bool AnyDuplicate(InvocationExpressionSyntax invocationExpression, IPropertySymbol propertySymbol, ConstructorBlockSyntax constructorBlock, SemanticModel semanticModel)
         {
-            var result = GetMounterRegistration(propertySymbol, constructorDeclaration, semanticModel);
+            var result = GetMounterRegistration(propertySymbol, constructorBlock, semanticModel);
             return result == null ? false : CompareLocation(invocationExpression, result) > 0;
         }
 
@@ -207,10 +204,10 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 
         private static void AnalyzeModelProperty(SyntaxNodeAnalysisContext context)
         {
-            var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
-            var propertySymbol = context.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
+            var propertyBlock = (PropertyBlockSyntax)context.Node;
+            var propertySymbol = context.SemanticModel.GetDeclaredSymbol(propertyBlock);
 
-            var diagnostic = AnalyzeModelProperty(propertyDeclaration.Identifier, propertySymbol, context.Compilation);
+            var diagnostic = AnalyzeModelProperty(propertyBlock.PropertyStatement.Identifier, propertySymbol, context.Compilation);
             if (diagnostic != null)
                 context.ReportDiagnostic(diagnostic);
         }
@@ -226,24 +223,25 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             var syntaxReferences = propertySymbol.ContainingType.DeclaringSyntaxReferences;
             for (int i = 0; i < syntaxReferences.Length; i++)
             {
-                var classDeclaration = (ClassDeclarationSyntax)syntaxReferences[i].GetSyntax();
-                var semanticModel = compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-                if (GetMounterRegistration(propertySymbol, classDeclaration, semanticModel) != null)
+                var classStatement = (ClassStatementSyntax)syntaxReferences[i].GetSyntax();
+                var classBlock = (ClassBlockSyntax)classStatement.Parent;
+                var semanticModel = compilation.GetSemanticModel(classBlock.SyntaxTree);
+                if (GetMounterRegistration(propertySymbol, classBlock, semanticModel) != null)
                     return null;
             }
 
             return Diagnostic.Create(Rules.MissingRegistration, identifier.GetLocation(), propertySymbol.Name);
         }
 
-        private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
+        private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ClassBlockSyntax classBlock, SemanticModel semanticModel)
         {
-            var members = classDeclaration.Members;
+            var members = classBlock.Members;
             for (int i = 0; i < members.Count; i++)
             {
                 var member = members[i];
-                if (member is ConstructorDeclarationSyntax constructorDeclaration)
+                if (member is ConstructorBlockSyntax constructorBlock)
                 {
-                    var result = GetMounterRegistration(propertySymbol, constructorDeclaration, semanticModel);
+                    var result = GetMounterRegistration(propertySymbol, constructorBlock, semanticModel);
                     if (result != null)
                         return result;
                 }
@@ -258,27 +256,27 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             return null;
         }
 
-        private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ConstructorDeclarationSyntax constructorDeclaration, SemanticModel semanticModel)
+        private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ConstructorBlockSyntax constructorBlock, SemanticModel semanticModel)
         {
-            var symbol = semanticModel.GetDeclaredSymbol(constructorDeclaration);
+            var symbol = semanticModel.GetDeclaredSymbol(constructorBlock);
             if (symbol == null || !symbol.IsStatic)
                 return null;
 
-            var statements = constructorDeclaration.Body.Statements;
+            var statements = constructorBlock.Statements;
             for (int i = 0; i < statements.Count; i++)
             {
                 var statement = statements[i];
-                if (!(statement is ExpressionStatementSyntax expressionStatement))
-                    continue;
-
-                var expression = expressionStatement.Expression;
-                if (expression is AssignmentExpressionSyntax assignmentExpression)
+                if (statement is AssignmentStatementSyntax assignmentStatement)
                 {
-                    if (assignmentExpression.Right is InvocationExpressionSyntax invocationExpression && IsMounterRegistration(invocationExpression, propertySymbol, semanticModel))
+                    if (assignmentStatement.Right is InvocationExpressionSyntax invocationExpression && IsMounterRegistration(invocationExpression, propertySymbol, semanticModel))
                         return invocationExpression;
                 }
-                else if (expression is InvocationExpressionSyntax invocationExpression && IsMounterRegistration(invocationExpression, propertySymbol, semanticModel))
-                    return invocationExpression;
+                else if (statement is ExpressionStatementSyntax expressionStatement)
+                {
+                    var expression = expressionStatement.Expression;
+                    if (expression is InvocationExpressionSyntax invocationExpression && IsMounterRegistration(invocationExpression, propertySymbol, semanticModel))
+                        return invocationExpression;
+                }
             }
 
             return null;
@@ -286,14 +284,15 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 
         private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, FieldDeclarationSyntax fieldDeclaration, SemanticModel semanticModel)
         {
-            var variables = fieldDeclaration.Declaration.Variables;
-            if (variables.Count != 1)
+            var declarators = fieldDeclaration.Declarators;
+            if (declarators.Count != 1)
                 return null;
-            var variableDeclarator = variables[0];
+            var variableDeclarator = declarators[0];
             var initializer = variableDeclarator.Initializer;
             if (initializer == null)
                 return null;
-            if (!(semanticModel.GetDeclaredSymbol(variableDeclarator) is IFieldSymbol fieldSymbol) || !fieldSymbol.IsStatic)
+            Debug.Assert(variableDeclarator.Names.Count == 1);
+            if (!(semanticModel.GetDeclaredSymbol(variableDeclarator.Names[0]) is IFieldSymbol fieldSymbol) || !fieldSymbol.IsStatic)
                 return null;
 
             var result = initializer.Value as InvocationExpressionSyntax;
@@ -302,9 +301,6 @@ namespace DevZest.Data.CodeAnalysis.CSharp
 
         private static bool IsMounterRegistration(InvocationExpressionSyntax expression, IPropertySymbol propertySymbol, SemanticModel semanticModel)
         {
-            if (expression == null)
-                return false;
-
             if (!(semanticModel.GetSymbolInfo(expression).Symbol is IMethodSymbol symbol))
                 return false;
 

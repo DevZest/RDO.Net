@@ -10,7 +10,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new MounterRegistrationAnalyzer();
+            return new PropertyRegistrationAnalyzer();
         }
 
         //No diagnostics expected to show up

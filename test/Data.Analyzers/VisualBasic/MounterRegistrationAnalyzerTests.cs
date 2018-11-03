@@ -9,7 +9,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
     {
         protected override DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {
-            return new MounterRegistrationAnalyzer();
+            return new PropertyRegistrationAnalyzer();
         }
 
         [TestMethod]
