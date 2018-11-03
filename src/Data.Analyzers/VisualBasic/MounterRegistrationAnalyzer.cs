@@ -47,7 +47,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
                 return Diagnostic.Create(Rules.InvalidLocalColumnRegistration, invocationExpression.GetLocation(), propertySymbol.Name);
 
             if (AnyDuplicate(invocationExpression, propertySymbol, context.Compilation))
-                return Diagnostic.Create(Rules.DuplicateMounterRegistration, invocationExpression.GetLocation(), propertySymbol.Name);
+                return Diagnostic.Create(Rules.DuplicateRegistration, invocationExpression.GetLocation(), propertySymbol.Name);
 
             if (fieldSymbol != null)
             {

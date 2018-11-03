@@ -171,8 +171,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.DuplicateMounterRegistration,
-                Message = string.Format(Resources.DuplicateMounterRegistration_Message, "Column1"),
+                Id = DiagnosticIds.DuplicateRegistration,
+                Message = string.Format(Resources.DuplicateRegistration_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 10, 9) }
             };
@@ -207,8 +207,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.DuplicateMounterRegistration,
-                Message = string.Format(Resources.DuplicateMounterRegistration_Message, "Column1"),
+                Id = DiagnosticIds.DuplicateRegistration,
+                Message = string.Format(Resources.DuplicateRegistration_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 11, 64) }
             };

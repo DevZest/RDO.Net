@@ -5,7 +5,7 @@
         public const string InvalidRegistrationInvocation = "RDO001";
         public const string InvalidRegistrationGetterParam = "RDO002";
         public const string InvalidLocalColumnRegistration = "RDO003";
-        public const string DuplicateMounterRegistration = "RDO004";
+        public const string DuplicateRegistration = "RDO004";
         public const string MounterNaming = "RDO005";
         public const string ProjectionColumnNaming = "RDO006";
         public const string MissingMounterRegistration = "RDO007";

@@ -12,7 +12,7 @@ namespace DevZest.Data.CodeAnalysis
                 Rules.InvalidRegistrationInvocation, 
                 Rules.InvalidRegistrationGetterParam,
                 Rules.InvalidLocalColumnRegistration,
-                Rules.DuplicateMounterRegistration,
+                Rules.DuplicateRegistration,
                 Rules.MounterNaming,
                 Rules.ProjectionColumnNaming,
                 Rules.MissingMounterRegistration); }

@@ -125,8 +125,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.DuplicateMounterRegistration,
-                Message = string.Format(Resources.DuplicateMounterRegistration_Message, "Column1"),
+                Id = DiagnosticIds.DuplicateRegistration,
+                Message = string.Format(Resources.DuplicateRegistration_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 9) }
             };
@@ -153,8 +153,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.DuplicateMounterRegistration,
-                Message = string.Format(Resources.DuplicateMounterRegistration_Message, "Column1"),
+                Id = DiagnosticIds.DuplicateRegistration,
+                Message = string.Format(Resources.DuplicateRegistration_Message, "Column1"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 55) }
             };

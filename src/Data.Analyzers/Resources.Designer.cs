@@ -79,20 +79,20 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate mounter registration for property &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Duplicate registration for property &apos;{0}&apos;..
         /// </summary>
-        internal static string DuplicateMounterRegistration_Message {
+        internal static string DuplicateRegistration_Message {
             get {
-                return ResourceManager.GetString("DuplicateMounterRegistration_Message", resourceCulture);
+                return ResourceManager.GetString("DuplicateRegistration_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate mounter registration..
+        ///   Looks up a localized string similar to Duplicate property registration..
         /// </summary>
-        internal static string DuplicateMounterRegistration_Title {
+        internal static string DuplicateRegistration_Title {
             get {
-                return ResourceManager.GetString("DuplicateMounterRegistration_Title", resourceCulture);
+                return ResourceManager.GetString("DuplicateRegistration_Title", resourceCulture);
             }
         }
         

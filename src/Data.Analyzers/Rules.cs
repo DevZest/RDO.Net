@@ -22,10 +22,10 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.InvalidLocalColumnRegistration_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor DuplicateMounterRegistration = new DiagnosticDescriptor(
-            DiagnosticIds.DuplicateMounterRegistration,
-            new LocalizableResourceString(nameof(Resources.DuplicateMounterRegistration_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.DuplicateMounterRegistration_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor DuplicateRegistration = new DiagnosticDescriptor(
+            DiagnosticIds.DuplicateRegistration,
+            new LocalizableResourceString(nameof(Resources.DuplicateRegistration_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.DuplicateRegistration_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         public static readonly DiagnosticDescriptor MounterNaming = new DiagnosticDescriptor(
