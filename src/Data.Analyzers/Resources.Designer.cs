@@ -178,7 +178,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Missing implementation of {0} {1}, which returns {2}, with parameters ({3})..
+        ///   Looks up a localized string similar to Missing implementation of instance {0} {1}, which returns {2}, with parameters ({3})..
         /// </summary>
         internal static string MissingImplementation_Message {
             get {

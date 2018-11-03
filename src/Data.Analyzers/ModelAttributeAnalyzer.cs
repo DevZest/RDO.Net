@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -158,17 +159,21 @@ namespace DevZest.Data.CodeAnalysis
 
         private static bool IsImplementation(ISymbol symbol, bool isProperty, ITypeSymbol returnType, ITypeSymbol[] parameterTypes)
         {
+            if (symbol.IsStatic)
+                return false;
             return isProperty ? IsPropertyImplementation(symbol as IPropertySymbol, returnType, parameterTypes)
                 : IsMethodImplementation(symbol as IMethodSymbol, returnType, parameterTypes);
         }
 
         private static bool IsPropertyImplementation(IPropertySymbol property, ITypeSymbol returnType, ITypeSymbol[] parameterTypes)
         {
+            Debug.Assert(!property.IsStatic);
             return property == null ? false : property.Type.Equals(returnType) && AreEqual(property.Parameters, parameterTypes);
         }
 
         private static bool IsMethodImplementation(IMethodSymbol method, ITypeSymbol returnType, ITypeSymbol[] parameterTypes)
         {
+            Debug.Assert(!method.IsStatic);
             return method == null ? false : method.ReturnType.Equals(returnType) && AreEqual(method.Parameters, parameterTypes);
         }
 

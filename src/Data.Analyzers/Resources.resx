@@ -163,7 +163,7 @@
     <value>Missing implementation attribute.</value>
   </data>
   <data name="MissingImplementation_Message" xml:space="preserve">
-    <value>Missing implementation of {0} {1}, which returns {2}, with parameters ({3}).</value>
+    <value>Missing implementation of instance {0} {1}, which returns {2}, with parameters ({3}).</value>
   </data>
   <data name="MissingImplementation_Title" xml:space="preserve">
     <value>Missing implementation.</value>
