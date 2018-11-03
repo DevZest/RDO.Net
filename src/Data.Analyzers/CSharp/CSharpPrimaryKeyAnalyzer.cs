@@ -8,7 +8,7 @@ using System.Linq;
 namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class PrimaryKeyAnalyzer : PrimaryKeyAnalyzerBase
+    public class CSharpPrimaryKeyAnalyzer : PrimaryKeyAnalyzerBase
     {
         public override void Initialize(AnalysisContext context)
         {

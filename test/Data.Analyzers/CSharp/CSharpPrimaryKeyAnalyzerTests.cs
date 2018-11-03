@@ -1,15 +1,16 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
-namespace DevZest.Data.CodeAnalysis.VisualBasic
+namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [TestClass]
-    public class PrimaryKeyAnalyzerTests : DiagnosticVerifier
+    public class CSharpPrimaryKeyAnalyzerTests : DiagnosticVerifier
     {
-        protected override DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
+        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new PrimaryKeyAnalyzer();
+            return new CSharpPrimaryKeyAnalyzer();
         }
 
         //No diagnostics expected to show up
@@ -18,333 +19,319 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
         {
             var test = @"";
 
-            VerifyBasicDiagnostic(test);
+            VerifyCSharpDiagnostic(test);
         }
 
         [TestMethod]
         public void NoError()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id)
+        : base(id)
+    {
+    }
+}";
 
-    Public Sub New(id As _Int32)
-        MyBase.New(id)
-    End Sub
-End Class";
-
-            VerifyBasicDiagnostic(test);
+            VerifyCSharpDiagnostic(test);
         }
 
         [TestMethod]
         public void NotSealed()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public Class PK
-    Inherits PrimaryKey
-
-    Public Sub New(id As _Int32)
-        MyBase.New(id)
-    End Sub
-End Class";
+public class PK : PrimaryKey
+{
+    public PK(_Int32 id)
+        : base(id)
+    {
+    }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyNotSealed,
                 Message = Resources.PrimaryKeyNotSealed_Message,
                 Severity = DiagnosticSeverity.Warning,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 4, 14) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 4, 14) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void InvalidConstructors()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
-End Class";
+public sealed class PK : PrimaryKey
+{
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyInvalidConstructors,
                 Message = Resources.PrimaryKeyInvalidConstructors_Message,
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 4, 29) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 4, 21) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void ParameterlessConstructor()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
-
-    Public Sub New()
-        MyBase.New()
-    End Sub
-End Class";
+public sealed class PK : PrimaryKey
+{
+    public PK()
+        : base()
+    {
+    }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyParameterlessConstructor,
                 Message = Resources.PrimaryKeyParameterlessConstructor_Message,
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 16) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 12) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void InvalidConstructorParam()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
-
-    Public Sub New(id As Int32)
-        MyBase.New()
-    End Sub
-End Class";
+public sealed class PK : PrimaryKey
+{
+    public PK(int id)
+        : base()
+    {
+    }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyInvalidConstructorParam,
                 Message = string.Format(Resources.PrimaryKeyInvalidConstructorParam_Message, "id"),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 20) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 19) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
-        public void SortAttributeConflict()
+        public void SortAttributeConflicts()
         {
             var test = @"
-Imports DevZest.Data
-Imports DevZest.Data.Annotations
+using DevZest.Data;
+using DevZest.Data.Annotations;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
-
-    Public Sub New(<Asc(), Desc()>id As _Int32)
-        MyBase.New(id)
-    End Sub
-End Class";
+public sealed class PK : PrimaryKey
+{
+    public PK([Asc] [Desc]_Int32 id)
+        : base(id)
+    {
+    }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeySortAttributeConflict,
                 Message = string.Format(Resources.PrimaryKeySortAttributeConflict_Message),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 28) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 22) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void MissingBaseConstructor()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
-
-    Public Sub New(id As _Int32)
-    End Sub
-End Class";
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id)
+    {
+    }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyMissingBaseConstructor,
                 Message = string.Format(Resources.PrimaryKeyMissingBaseConstructor_Message),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 16) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 12) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void MismatchBaseConstructor()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
-
-    Public Sub New(id As _Int32)
-        MyBase.New()
-    End Sub
-End Class";
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id)
+        : base()
+    {
+    }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyMismatchBaseConstructor,
                 Message = string.Format(Resources.PrimaryKeyMismatchBaseConstructor_Message, 1),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 9) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 9) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void MismatchBaseConstructorArgument()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
-
-    Public Sub New(id1 As _Int32, id2 As _Int32)
-        MyBase.New(id1, id1)
-    End Sub
-End Class";
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id1, _Int32 id2)
+        : base(id1, id1)
+    {
+    }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyMismatchBaseConstructorArgument,
                 Message = string.Format(Resources.PrimaryKeyMismatchBaseConstructorArgument_Message, "id2"),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 25) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 21) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void MismatchSortAttribute()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public NotInheritable Class PK
-    Inherits PrimaryKey
-
-    Public Sub New(id As _Int32)
-        MyBase.New(id.Asc())
-    End Sub
-End Class";
+public sealed class PK : PrimaryKey
+{
+    public PK(_Int32 id)
+        : base(id.Asc())
+    {
+    }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyMismatchSortAttribute,
                 Message = string.Format(Resources.PrimaryKeyMismatchSortAttribute_Message, "Unspecified", "Ascending"),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 20) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 22) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void InvalidArgument()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public Class PrimaryKeyInvalidArgument
-    Inherits Model(Of PrimaryKeyInvalidArgument.PK)
+public class PrimaryKeyInvalidArgument : Model<PrimaryKeyInvalidArgument.PK>
+{
+    public sealed class PK : PrimaryKey
+    {
+        public PK(_Int32 id)
+            : base(id)
+        {
+        }
+    }
 
-    Public NotInheritable Class PK
-        Inherits PrimaryKey
-        Public Sub New(id As _Int32)
-            MyBase.New(id)
-        End Sub
-    End Class
+    protected sealed override PK CreatePrimaryKey()
+    {
+        return new PK(1);
+    }
 
-    Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
-        Return New PK(1)
-    End Function
+    public static readonly Mounter<_Int32> _ID = RegisterColumn((PrimaryKeyInvalidArgument _) => _.ID);
 
-    Public Shared ReadOnly _ID As Mounter(Of _Int32) = RegisterColumn(Function(x As PrimaryKeyInvalidArgument) x.ID)
-
-    Private m_ID As _Int32
-    Public Property ID As _Int32
-        Get
-            Return m_ID
-        End Get
-        Private Set
-            m_ID = Value
-        End Set
-    End Property
-End Class";
+    public _Int32 ID { get; private set; }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyInvalidArgument,
                 Message = string.Format(Resources.PrimaryKeyInvalidArgument_Message),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 15, 23) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 16, 23) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
 
         [TestMethod]
         public void ArgumentNaming()
         {
             var test = @"
-Imports DevZest.Data
+using DevZest.Data;
 
-Public Class PrimaryKeyArgumentNaming
-    Inherits Model(Of PrimaryKeyArgumentNaming.PK)
+public class PrimaryKeyArgumentNaming : Model<PrimaryKeyArgumentNaming.PK>
+{
+    public sealed class PK : PrimaryKey
+    {
+        public PK(_Int32 id2)
+            : base(id2)
+        {
+        }
+    }
 
-    Public NotInheritable Class PK
-        Inherits PrimaryKey
-        Public Sub New(id2 As _Int32)
-            MyBase.New(id2)
-        End Sub
-    End Class
+    protected sealed override PK CreatePrimaryKey()
+    {
+        return new PK(ID);
+    }
 
-    Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
-        Return New PK(ID)
-    End Function
+    public static readonly Mounter<_Int32> _ID = RegisterColumn((PrimaryKeyArgumentNaming _) => _.ID);
 
-    Public Shared ReadOnly _ID As Mounter(Of _Int32) = RegisterColumn(Function(x As PrimaryKeyArgumentNaming) x.ID)
-
-    Private m_ID As _Int32
-    Public Property ID As _Int32
-        Get
-            Return m_ID
-        End Get
-        Private Set
-            m_ID = Value
-        End Set
-    End Property
-End Class";
+    public _Int32 ID { get; private set; }
+}";
 
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.PrimaryKeyArgumentNaming,
                 Message = string.Format(Resources.PrimaryKeyArgumentNaming_Message, "ID", "id2"),
                 Severity = DiagnosticSeverity.Warning,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 15, 23) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 16, 23) }
             };
 
-            VerifyBasicDiagnostic(test, expected);
+            VerifyCSharpDiagnostic(test, expected);
         }
     }
 }

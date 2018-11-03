@@ -5,11 +5,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     [TestClass]
-    public class PropertyRegistrationAnalyzerTests : DiagnosticVerifier
+    public class VisualBasicPropertyRegistrationAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {
-            return new PropertyRegistrationAnalyzer();
+            return new VisualBasicPropertyRegistrationAnalyzer();
         }
 
         [TestMethod]
