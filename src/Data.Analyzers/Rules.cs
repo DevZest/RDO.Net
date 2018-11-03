@@ -40,10 +40,10 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.ProjectionColumnNaming_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor MissingMounterRegistration = new DiagnosticDescriptor(
-            DiagnosticIds.MissingMounterRegistration,
-            new LocalizableResourceString(nameof(Resources.MissingMounterRegistration_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.MissingMounterRegistration_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor MissingRegistration = new DiagnosticDescriptor(
+            DiagnosticIds.MissingRegistration,
+            new LocalizableResourceString(nameof(Resources.MissingRegistration_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.MissingRegistration_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
         public static readonly DiagnosticDescriptor PrimaryKeyNotSealed = new DiagnosticDescriptor(

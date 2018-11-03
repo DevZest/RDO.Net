@@ -8,7 +8,7 @@
         public const string DuplicateRegistration = "RDO004";
         public const string MounterNaming = "RDO005";
         public const string ProjectionColumnNaming = "RDO006";
-        public const string MissingMounterRegistration = "RDO007";
+        public const string MissingRegistration = "RDO007";
         public const string PrimaryKeyNotSealed = "RDO010";
         public const string PrimaryKeyInvalidConstructors = "RDO011";
         public const string PrimaryKeyParameterlessConstructor = "RDO012";

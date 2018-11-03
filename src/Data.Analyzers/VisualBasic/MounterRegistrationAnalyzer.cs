@@ -230,7 +230,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
                     return null;
             }
 
-            return Diagnostic.Create(Rules.MissingMounterRegistration, identifier.GetLocation(), propertySymbol.Name);
+            return Diagnostic.Create(Rules.MissingRegistration, identifier.GetLocation(), propertySymbol.Name);
         }
 
         private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ClassBlockSyntax classBlock, SemanticModel semanticModel)

@@ -398,8 +398,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MissingMounterRegistration,
-                Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
+                Id = DiagnosticIds.MissingRegistration,
+                Message = string.Format(Resources.MissingRegistration_Message, "Column"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 9, 21) }
             };
@@ -428,8 +428,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MissingMounterRegistration,
-                Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
+                Id = DiagnosticIds.MissingRegistration,
+                Message = string.Format(Resources.MissingRegistration_Message, "Column"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 21) }
             };

@@ -232,7 +232,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
                     return null;
             }
 
-            return Diagnostic.Create(Rules.MissingMounterRegistration, identifier.GetLocation(), propertySymbol.Name);
+            return Diagnostic.Create(Rules.MissingRegistration, identifier.GetLocation(), propertySymbol.Name);
         }
 
         private static InvocationExpressionSyntax GetMounterRegistration(IPropertySymbol propertySymbol, ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)

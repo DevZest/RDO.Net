@@ -232,20 +232,20 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Missing registration for model property &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Missing registration for property &apos;{0}&apos;..
         /// </summary>
-        internal static string MissingMounterRegistration_Message {
+        internal static string MissingRegistration_Message {
             get {
-                return ResourceManager.GetString("MissingMounterRegistration_Message", resourceCulture);
+                return ResourceManager.GetString("MissingRegistration_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Missing registration for model property..
+        ///   Looks up a localized string similar to Missing property registration..
         /// </summary>
-        internal static string MissingMounterRegistration_Title {
+        internal static string MissingRegistration_Title {
             get {
-                return ResourceManager.GetString("MissingMounterRegistration_Title", resourceCulture);
+                return ResourceManager.GetString("MissingRegistration_Title", resourceCulture);
             }
         }
         
@@ -466,7 +466,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Projection column &apos;{0}&apos; from existing Mounter &apos;{1}&apos; violates naming rule..
+        ///   Looks up a localized string similar to Projection column &apos;{0}&apos; from Mounter &apos;{1}&apos; violates naming convention..
         /// </summary>
         internal static string ProjectionColumnNaming_Message {
             get {
@@ -475,7 +475,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Projection column naming rule violation..
+        ///   Looks up a localized string similar to Projection column naming convention violation..
         /// </summary>
         internal static string ProjectionColumnNaming_Title {
             get {

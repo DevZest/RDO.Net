@@ -291,8 +291,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MissingMounterRegistration,
-                Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
+                Id = DiagnosticIds.MissingRegistration,
+                Message = string.Format(Resources.MissingRegistration_Message, "Column"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 19) }
             };
@@ -312,8 +312,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MissingMounterRegistration,
-                Message = string.Format(Resources.MissingMounterRegistration_Message, "Column"),
+                Id = DiagnosticIds.MissingRegistration,
+                Message = string.Format(Resources.MissingRegistration_Message, "Column"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 29) }
             };

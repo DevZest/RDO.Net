@@ -174,11 +174,11 @@
   <data name="MissingModelAttribute_Title" xml:space="preserve">
     <value>Missing model attribute.</value>
   </data>
-  <data name="MissingMounterRegistration_Message" xml:space="preserve">
-    <value>Missing registration for model property '{0}'.</value>
+  <data name="MissingRegistration_Message" xml:space="preserve">
+    <value>Missing registration for property '{0}'.</value>
   </data>
-  <data name="MissingMounterRegistration_Title" xml:space="preserve">
-    <value>Missing registration for model property.</value>
+  <data name="MissingRegistration_Title" xml:space="preserve">
+    <value>Missing property registration.</value>
   </data>
   <data name="MounterNaming_Message" xml:space="preserve">
     <value>Mounter '{0}' of property '{1}' does not conform to naming convention, rename to '{2}'.</value>
@@ -253,10 +253,10 @@
     <value>PrimaryKey SortAttribute conflict.</value>
   </data>
   <data name="ProjectionColumnNaming_Message" xml:space="preserve">
-    <value>Projection column '{0}' from existing Mounter '{1}' violates naming rule.</value>
+    <value>Projection column '{0}' from Mounter '{1}' violates naming convention.</value>
   </data>
   <data name="ProjectionColumnNaming_Title" xml:space="preserve">
-    <value>Projection column naming rule violation.</value>
+    <value>Projection column naming convention violation.</value>
   </data>
   <data name="Property" xml:space="preserve">
     <value>property</value>
