@@ -19,7 +19,7 @@
   </ItemGroup>
   
   <PropertyGroup>
-    <AnalyzerOutput>..\DevZest.Data.Analyzers\bin\Release\netstandard1.3</AnalyzerOutput>
+    <AnalyzerOutput>..\DevZest.Data.Analyzers\bin\Release\netstandard2.0</AnalyzerOutput>
   </PropertyGroup>
   
   <ItemGroup>
