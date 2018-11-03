@@ -250,7 +250,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mounter &apos;{0}&apos; of property &apos;{1}&apos; does not conform to naming convention, rename mounter name &apos;{0}&apos; to &apos;{2}&apos;..
+        ///   Looks up a localized string similar to Mounter &apos;{0}&apos; of property &apos;{1}&apos; does not conform to naming convention, rename to &apos;{2}&apos;..
         /// </summary>
         internal static string MounterNaming_Message {
             get {
@@ -259,7 +259,7 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mounter naming rule violation..
+        ///   Looks up a localized string similar to Mounter naming convention violation..
         /// </summary>
         internal static string MounterNaming_Title {
             get {
