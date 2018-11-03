@@ -137,7 +137,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         <UdtName>
         <DbColumn(Description:="Category description.")>
         <Required>
-        <AsNVarChar(50)>
+        <SqlNVarChar(50)>
         Public Property Name As _String
             Get
                 Return m_Name

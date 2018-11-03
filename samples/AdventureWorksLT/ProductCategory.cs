@@ -88,7 +88,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         [DbColumn(Description = "Category description.")]
         [Required]
-        [AsNVarChar(50)]
+        [SqlNVarChar(50)]
         public _String Name { get; private set; }
 
         private ColumnSort[] AK_ProductCategory_Name => new ColumnSort[] { Name };

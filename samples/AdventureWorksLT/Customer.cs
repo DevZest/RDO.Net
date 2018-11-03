@@ -102,7 +102,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.")]
         public _Boolean NameStyle { get; private set; }
 
-        [AsNVarChar(8)]
+        [SqlNVarChar(8)]
         [DbColumn(Description = "A courtesy title. For example, Mr. or Ms.")]
         public _String Title { get; private set; }
 
@@ -118,19 +118,19 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Last name of the person.")]
         public _String LastName { get; private set; }
 
-        [AsNVarChar(10)]
+        [SqlNVarChar(10)]
         [DbColumn(Description = "Surname suffix. For example, Sr. or Jr.")]
         public _String Suffix { get; private set; }
 
-        [AsNVarChar(128)]
+        [SqlNVarChar(128)]
         [DbColumn(Description = "The customer's organization.")]
         public _String CompanyName { get; private set; }
 
-        [AsNVarChar(256)]
+        [SqlNVarChar(256)]
         [DbColumn(Description = "The customer's sales person, an employee of AdventureWorks Cycles.")]
         public _String SalesPerson { get; private set; }
 
-        [AsNVarChar(256)]
+        [SqlNVarChar(256)]
         [EmailAddress]
         [DbColumn(Description = "E-mail address for the person.")]
         public _String EmailAddress { get; private set; }
@@ -140,12 +140,12 @@ namespace DevZest.Samples.AdventureWorksLT
         public _String Phone { get; private set; }
 
         [Required]
-        [AsVarChar(128)]
+        [SqlVarChar(128)]
         [DbColumn(Description = "Password for the e-mail account.")]
         public _String PasswordHash { get; private set; }
 
         [Required]
-        [AsVarChar(10)]
+        [SqlVarChar(10)]
         [DbColumn(Description = "Random value concatenated with the password string before the password is hashed.")]
         public _String PasswordSalt { get; private set; }
 

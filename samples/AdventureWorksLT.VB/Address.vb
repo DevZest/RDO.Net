@@ -161,7 +161,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         Private m_AddressLine1 As _String
 
         <Required>
-        <AsNVarChar(60)>
+        <SqlNVarChar(60)>
         <DbColumn(Description:="First street address line.")>
         Public Property AddressLine1 As _String
             Get
@@ -173,7 +173,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_AddressLine2 As _String
-        <AsNVarChar(60)>
+        <SqlNVarChar(60)>
         <DbColumn(Description:="Second street address line.")>
         Public Property AddressLine2 As _String
             Get
@@ -186,7 +186,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_City As _String
         <Required>
-        <AsNVarChar(30)>
+        <SqlNVarChar(30)>
         <DbColumn(Description:="Name of the city.")>
         Public Property City As _String
             Get
@@ -223,7 +223,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_PostalCode As _String
         <Required>
-        <AsNVarChar(15)>
+        <SqlNVarChar(15)>
         <DbColumn(Description:="Postal code for the street address.")>
         Public Property PostalCode As _String
             Get

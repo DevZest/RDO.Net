@@ -67,7 +67,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_Culture As _String
-        <AsNChar(6)>
+        <SqlNChar(6)>
         <DbColumn(Description:="The culture for which the description is written.")>
         Public Property Culture As _String
             Get

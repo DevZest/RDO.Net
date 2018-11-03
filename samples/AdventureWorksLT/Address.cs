@@ -85,16 +85,16 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 AddressID { get; private set; }
 
         [Required]
-        [AsNVarChar(60)]
+        [SqlNVarChar(60)]
         [DbColumn(Description = "First street address line.")]
         public _String AddressLine1 { get; private set; }
 
-        [AsNVarChar(60)]
+        [SqlNVarChar(60)]
         [DbColumn(Description = "Second street address line.")]
         public _String AddressLine2 { get; private set; }
 
         [Required]
-        [AsNVarChar(30)]
+        [SqlNVarChar(30)]
         [DbColumn(Description = "Name of the city.")]
         public _String City { get; private set; }
 
@@ -106,7 +106,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _String CountryRegion { get; private set; }
 
         [Required]
-        [AsNVarChar(15)]
+        [SqlNVarChar(15)]
         [DbColumn(Description = "Postal code for the street address.")]
         public _String PostalCode { get; private set; }
 

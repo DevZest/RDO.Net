@@ -27,7 +27,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private _ModifiedDate As _DateTime
         <Required>
-        <AsDateTime>
+        <SqlDateTime>
         <AutoDateTime(Name:="DF_%_ModifiedDate", Description:="Default constraint value of GETDATE()")>
         <DbColumn(Description:="Date and time the record was last updated.")>
         Public Property ModifiedDate As _DateTime

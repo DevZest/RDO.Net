@@ -16,7 +16,7 @@ namespace DevZest.Data.Annotations
             }
 
             [AutoDateTime]
-            [AsDateTime]
+            [SqlDateTime]
             public _DateTime DateTime { get; private set; }
         }
 

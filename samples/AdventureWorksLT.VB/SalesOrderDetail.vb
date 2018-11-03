@@ -134,7 +134,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_UnitPrice As _Decimal
         <Required>
-        <AsMoney>
+        <SqlMoney>
         <DbColumn(Description:="Selling price of a single product.")>
         Public Property UnitPrice As _Decimal
             Get
@@ -147,7 +147,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_UnitPriceDiscount As _Decimal
         <Required>
-        <AsMoney>
+        <SqlMoney>
         <DefaultValue(GetType(Decimal), "0", Name:="DF_SalesOrderDetail_UnitPriceDiscount")>
         <DbColumn(Description:="Discount amount.")>
         Public Property UnitPriceDiscount As _Decimal
@@ -161,7 +161,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_LineTotal As _Decimal
         <Required>
-        <AsMoney>
+        <SqlMoney>
         <DbColumn(Description:="Per product subtotal. Computed as UnitPrice * (1 - UnitPriceDiscount) * OrderQty.")>
         Public Property LineTotal As _Decimal
             Get

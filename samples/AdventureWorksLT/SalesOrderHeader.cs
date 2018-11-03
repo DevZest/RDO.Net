@@ -106,17 +106,17 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Byte RevisionNumber { get; private set; }
 
         [Required]
-        [AsDateTime]
+        [SqlDateTime]
         [AutoDateTime(Name = "DF_SalesOrderHeader_OrderDate")]
         [DbColumn(Description = "Dates the sales order was created.")]
         public _DateTime OrderDate { get; private set; }
 
         [Required]
-        [AsDateTime]
+        [SqlDateTime]
         [DbColumn(Description = "Date the order is due to the customer.")]
         public _DateTime DueDate { get; private set; }
 
-        [AsDateTime]
+        [SqlDateTime]
         [DbColumn(Description = "Date the order was shipped to the customer.")]
         public _DateTime ShipDate { get; private set; }
 
@@ -153,38 +153,38 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 BillToAddressID { get; private set; }
 
         [Required]
-        [AsNVarChar(50)]
+        [SqlNVarChar(50)]
         [DbColumn(Description = "Shipping method. Foreign key to ShipMethod.ShipMethodID.")]
         public _String ShipMethod { get; private set; }
 
-        [AsNVarChar(15)]
+        [SqlNVarChar(15)]
         [DbColumn(Description = "Approval code provided by the credit card company.")]
         public _String CreditCardApprovalCode { get; private set; }
 
         [Required]
-        [AsMoney]
+        [SqlMoney]
         [DefaultValue(typeof(decimal), "0", Name = "DF_SalesOrderHeader_SubTotal")]
         [DbColumn(Description = "Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.")]
         public _Decimal SubTotal { get; private set; }
 
         [Required]
-        [AsMoney]
+        [SqlMoney]
         [DefaultValue(typeof(decimal), "0", Name = "DF_SalesOrderHeader_TaxAmt")]
         [DbColumn(Description = "Tax amount.")]
         public _Decimal TaxAmt { get; private set; }
 
         [Required]
-        [AsMoney]
+        [SqlMoney]
         [DefaultValue(typeof(decimal), "0", Name = "DF_SalesOrderHeader_Freight")]
         [DbColumn(Description = "Shipping cost.")]
         public _Decimal Freight { get; private set; }
 
         [Required]
-        [AsMoney]
+        [SqlMoney]
         [DbColumn(Description = "Total due from customer. Computed as Subtotal + TaxAmt + Freight.")]
         public _Decimal TotalDue { get; private set; }
 
-        [AsNVarCharMax]
+        [SqlNVarCharMax]
         [DbColumn(Description = "Sales representative comments.")]
         public _String Comment { get; private set; }
 

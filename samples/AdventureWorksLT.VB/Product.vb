@@ -160,7 +160,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_ProductNumber As _String
         <Required>
-        <AsNVarChar(25)>
+        <SqlNVarChar(25)>
         <DbColumn(Description:="Unique product identification number.")>
         Public Property ProductNumber As _String
             Get
@@ -172,7 +172,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_Color As _String
-        <AsNVarChar(15)>
+        <SqlNVarChar(15)>
         <DbColumn(Description:="Product color.")>
         Public Property Color As _String
             Get
@@ -185,7 +185,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_StandardCost As _Decimal
         <Required>
-        <AsMoney()>
+        <SqlMoney()>
         <DbColumn(Description:="Standard cost of the product.")>
         Public Property StandardCost As _Decimal
             Get
@@ -198,7 +198,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_ListPrice As _Decimal
         <Required>
-        <AsMoney()>
+        <SqlMoney()>
         <DbColumn(Description:="Selling price.")>
         Public Property ListPrice As _Decimal
             Get
@@ -210,7 +210,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_Size As _String
-        <AsNVarChar(5)>
+        <SqlNVarChar(5)>
         <DbColumn(Description:="Product size.")>
         Public Property Size As _String
             Get
@@ -222,7 +222,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_Weight As _Decimal
-        <AsDecimal(8, 2)>
+        <SqlDecimal(8, 2)>
         <DbColumn(Description:="Product weight.")>
         Public Property Weight As _Decimal
             Get
@@ -257,7 +257,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_SellStartDate As _DateTime
         <Required>
-        <AsDateTime>
+        <SqlDateTime>
         <DbColumn(Description:="Date the product was available for sale.")>
         Public Property SellStartDate As _DateTime
             Get
@@ -269,7 +269,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_SellEndDate As _DateTime
-        <AsDateTime>
+        <SqlDateTime>
         <DbColumn(Description:="Date the product was no longer available for sale.")>
         Public Property SellEndDate As _DateTime
             Get
@@ -281,7 +281,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_DiscontinuedDate As _DateTime
-        <AsDateTime>
+        <SqlDateTime>
         <DbColumn(Description:="Date the product was discontinued.")>
         Public Property DiscontinuedDate As _DateTime
             Get
@@ -293,7 +293,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_ThumbNailPhoto As _Binary
-        <AsVarBinaryMax>
+        <SqlVarBinaryMax>
         <DbColumn(Description:="Small image of the product.")>
         Public Property ThumbNailPhoto As _Binary
             Get
@@ -305,7 +305,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_ThumbnailPhotoFileName As _String
-        <AsNVarChar(50)>
+        <SqlNVarChar(50)>
         <DbColumn(Description:="Small image file name.")>
         Public Property ThumbnailPhotoFileName As _String
             Get

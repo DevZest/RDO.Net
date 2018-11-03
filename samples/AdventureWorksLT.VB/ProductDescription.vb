@@ -99,7 +99,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_Description As _String
         <Required>
-        <AsNVarChar(400)>
+        <SqlNVarChar(400)>
         <DbColumn(Description:="Description of the product.")>
         Public Property Description As _String
             Get

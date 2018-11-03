@@ -83,18 +83,18 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 ProductID { get; private set; }
 
         [Required]
-        [AsMoney]
+        [SqlMoney]
         [DbColumn(Description = "Selling price of a single product.")]
         public _Decimal UnitPrice { get; private set; }
 
         [Required]
-        [AsMoney]
+        [SqlMoney]
         [DefaultValue(typeof(decimal), "0", Name = "DF_SalesOrderDetail_UnitPriceDiscount")]
         [DbColumn(Description = "Discount amount.")]
         public _Decimal UnitPriceDiscount { get; private set; }
 
         [Required]
-        [AsMoney]
+        [SqlMoney]
         [DbColumn(Description = "Per product subtotal. Computed as UnitPrice * (1 - UnitPriceDiscount) * OrderQty.")]
         public _Decimal LineTotal { get; private set; }
 

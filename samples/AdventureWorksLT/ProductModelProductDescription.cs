@@ -43,7 +43,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Primary key. Foreign key to ProductDescription.ProductDescriptionID.")]
         public _Int32 ProductDescriptionID { get; private set; }
 
-        [AsNChar(6)]
+        [SqlNChar(6)]
         [DbColumn(Description = "The culture for which the description is written.")]
         public _String Culture { get; private set; }
     }

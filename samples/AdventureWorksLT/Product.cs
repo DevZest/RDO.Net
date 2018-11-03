@@ -105,29 +105,29 @@ namespace DevZest.Samples.AdventureWorksLT
         public _String Name { get; private set; }
 
         [Required]
-        [AsNVarChar(25)]
+        [SqlNVarChar(25)]
         [DbColumn(Description = "Unique product identification number.")]
         public _String ProductNumber { get; private set; }
 
-        [AsNVarChar(15)]
+        [SqlNVarChar(15)]
         [DbColumn(Description = "Product color.")]
         public _String Color { get; private set; }
 
         [Required]
-        [AsMoney()]
+        [SqlMoney()]
         [DbColumn(Description = "Standard cost of the product.")]
         public _Decimal StandardCost { get; private set; }
 
         [Required]
-        [AsMoney()]
+        [SqlMoney()]
         [DbColumn(Description = "Selling price.")]
         public _Decimal ListPrice { get; private set; }
 
-        [AsNVarChar(5)]
+        [SqlNVarChar(5)]
         [DbColumn(Description = "Product size.")]
         public _String Size { get; private set; }
 
-        [AsDecimal(8, 2)]
+        [SqlDecimal(8, 2)]
         [DbColumn(Description = "Product weight.")]
         public _Decimal Weight { get; private set; }
 
@@ -138,23 +138,23 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 ProductModelID { get; private set; }
 
         [Required]
-        [AsDateTime]
+        [SqlDateTime]
         [DbColumn(Description = "Date the product was available for sale.")]
         public _DateTime SellStartDate { get; private set; }
 
-        [AsDateTime]
+        [SqlDateTime]
         [DbColumn(Description = "Date the product was no longer available for sale.")]
         public _DateTime SellEndDate { get; private set; }
 
-        [AsDateTime]
+        [SqlDateTime]
         [DbColumn(Description = "Date the product was discontinued.")]
         public _DateTime DiscontinuedDate { get; private set; }
 
-        [AsVarBinaryMax]
+        [SqlVarBinaryMax]
         [DbColumn(Description = "Small image of the product.")]
         public _Binary ThumbNailPhoto { get; private set; }
 
-        [AsNVarChar(50)]
+        [SqlNVarChar(50)]
         [DbColumn(Description = "Small image file name.")]
         public _String ThumbnailPhotoFileName { get; private set; }
 

@@ -21,7 +21,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Guid RowGuid { get; private set; }
 
         [Required]
-        [AsDateTime]
+        [SqlDateTime]
         [AutoDateTime(Name = "DF_%_ModifiedDate", Description = "Default constraint value of GETDATE()")]
         [DbColumn(Description = "Date and time the record was last updated.")]
         public _DateTime ModifiedDate { get; private set; }

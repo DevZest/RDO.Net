@@ -193,7 +193,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_Title As _String
-        <AsNVarChar(8)>
+        <SqlNVarChar(8)>
         <DbColumn(Description:="A courtesy title. For example, Mr. or Ms.")>
         Public Property Title As _String
             Get
@@ -241,7 +241,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_Suffix As _String
-        <AsNVarChar(10)>
+        <SqlNVarChar(10)>
         <DbColumn(Description:="Surname suffix. For example, Sr. or Jr.")>
         Public Property Suffix As _String
             Get
@@ -253,7 +253,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_CompanyName As _String
-        <AsNVarChar(128)>
+        <SqlNVarChar(128)>
         <DbColumn(Description:="The customer's organization.")>
         Public Property CompanyName As _String
             Get
@@ -265,7 +265,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_SalesPerson As _String
-        <AsNVarChar(256)>
+        <SqlNVarChar(256)>
         <DbColumn(Description:="The customer's sales person, an employee of AdventureWorks Cycles.")>
         Public Property SalesPerson As _String
             Get
@@ -277,7 +277,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_EmailAddress As _String
-        <AsNVarChar(256)>
+        <SqlNVarChar(256)>
         <EmailAddress>
         <DbColumn(Description:="E-mail address for the person.")>
         Public Property EmailAddress As _String
@@ -303,7 +303,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_PasswordHash As _String
         <Required>
-        <AsVarChar(128)>
+        <SqlVarChar(128)>
         <DbColumn(Description:="Password for the e-mail account.")>
         Public Property PasswordHash As _String
             Get
@@ -316,7 +316,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_PasswordSalt As _String
         <Required>
-        <AsVarChar(10)>
+        <SqlVarChar(10)>
         <DbColumn(Description:="Random value concatenated with the password string before the password is hashed.")>
         Public Property PasswordSalt As _String
             Get

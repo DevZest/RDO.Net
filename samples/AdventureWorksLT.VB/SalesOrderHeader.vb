@@ -149,7 +149,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_OrderDate As _DateTime
         <Required>
-        <AsDateTime>
+        <SqlDateTime>
         <AutoDateTime(Name:="DF_SalesOrderHeader_OrderDate")>
         <DbColumn(Description:="Dates the sales order was created.")>
         Public Property OrderDate As _DateTime
@@ -163,7 +163,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_DueDate As _DateTime
         <Required>
-        <AsDateTime>
+        <SqlDateTime>
         <DbColumn(Description:="Date the order is due to the customer.")>
         Public Property DueDate As _DateTime
             Get
@@ -175,7 +175,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_ShipDate As _DateTime
-        <AsDateTime>
+        <SqlDateTime>
         <DbColumn(Description:="Date the order was shipped to the customer.")>
         Public Property ShipDate As _DateTime
             Get
@@ -284,7 +284,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_ShipMethod As _String
         <Required>
-        <AsNVarChar(50)>
+        <SqlNVarChar(50)>
         <DbColumn(Description:="Shipping method. Foreign key to ShipMethod.ShipMethodID.")>
         Public Property ShipMethod As _String
             Get
@@ -296,7 +296,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_CreditCardApprovalCode As _String
-        <AsNVarChar(15)>
+        <SqlNVarChar(15)>
         <DbColumn(Description:="Approval code provided by the credit card company.")>
         Public Property CreditCardApprovalCode As _String
             Get
@@ -309,7 +309,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_SubToal As _Decimal
         <Required>
-        <AsMoney>
+        <SqlMoney>
         <DefaultValue(GetType(Decimal), "0", Name:="DF_SalesOrderHeader_SubTotal")>
         <DbColumn(Description:="Sales subtotal. Computed as SUM(SalesOrderDetail.LineTotal)for the appropriate SalesOrderID.")>
         Public Property SubTotal As _Decimal
@@ -323,7 +323,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_TaxAmt As _Decimal
         <Required>
-        <AsMoney>
+        <SqlMoney>
         <DefaultValue(GetType(Decimal), "0", Name:="DF_SalesOrderHeader_TaxAmt")>
         <DbColumn(Description:="Tax amount.")>
         Public Property TaxAmt As _Decimal
@@ -337,7 +337,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_Freight As _Decimal
         <Required>
-        <AsMoney>
+        <SqlMoney>
         <DefaultValue(GetType(Decimal), "0", Name:="DF_SalesOrderHeader_Freight")>
         <DbColumn(Description:="Shipping cost.")>
         Public Property Freight As _Decimal
@@ -351,7 +351,7 @@ Namespace DevZest.Samples.AdventureWorksLT
 
         Private m_TotalDue As _Decimal
         <Required>
-        <AsMoney>
+        <SqlMoney>
         <DbColumn(Description:="Total due from customer. Computed as Subtotal + TaxAmt + Freight.")>
         Public Property TotalDue As _Decimal
             Get
@@ -363,7 +363,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         End Property
 
         Private m_Comment As _String
-        <AsNVarCharMax>
+        <SqlNVarCharMax>
         <DbColumn(Description:="Sales representative comments.")>
         Public Property Comment As _String
             Get
