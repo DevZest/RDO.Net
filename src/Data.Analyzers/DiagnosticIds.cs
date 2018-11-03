@@ -2,7 +2,7 @@
 {
     static partial class DiagnosticIds
     {
-        public const string InvalidRegisterMounterInvocation = "RDO001";
+        public const string InvalidRegistrationInvocation = "RDO001";
         public const string InvalidRegistrationGetterParam = "RDO002";
         public const string InvalidRegisterLocalColumn = "RDO003";
         public const string DuplicateMounterRegistration = "RDO004";

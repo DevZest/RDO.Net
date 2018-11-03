@@ -9,7 +9,7 @@ namespace DevZest.Data.CodeAnalysis
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
             get { return ImmutableArray.Create(
-                Rules.InvalidRegisterMounterInvocation, 
+                Rules.InvalidRegistrationInvocation, 
                 Rules.InvalidRegistrationGetterParam,
                 Rules.InvalidRegisterLocalColumn,
                 Rules.DuplicateMounterRegistration,

@@ -4,10 +4,10 @@ namespace DevZest.Data.CodeAnalysis
 {
     internal static class Rules
     {
-        public static readonly DiagnosticDescriptor InvalidRegisterMounterInvocation = new DiagnosticDescriptor(
-            DiagnosticIds.InvalidRegisterMounterInvocation,
-            new LocalizableResourceString(nameof(Resources.InvalidRegisterMounterInvocation_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.InvalidRegisterMounterInvocation_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor InvalidRegistrationInvocation = new DiagnosticDescriptor(
+            DiagnosticIds.InvalidRegistrationInvocation,
+            new LocalizableResourceString(nameof(Resources.InvalidRegistrationInvocation_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.InvalidRegistrationInvocation_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         public static readonly DiagnosticDescriptor InvalidRegistrationGetterParam = new DiagnosticDescriptor(

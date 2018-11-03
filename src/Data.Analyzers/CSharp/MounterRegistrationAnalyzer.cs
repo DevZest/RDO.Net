@@ -35,7 +35,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             var isColumnRegistration = symbol.Name == "RegisterColumn";
 
             if (!VerifyInvocation(invocationExpression, semanticModel, out var containingType, out var fieldSymbol, out var mounterIdentifier))
-                return Diagnostic.Create(Rules.InvalidRegisterMounterInvocation, invocationExpression.GetLocation());
+                return Diagnostic.Create(Rules.InvalidRegistrationInvocation, invocationExpression.GetLocation());
 
             var arguments = invocationExpression.ArgumentList.Arguments;
             var firstArgument = arguments[0];

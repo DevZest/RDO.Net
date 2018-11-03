@@ -69,8 +69,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.InvalidRegisterMounterInvocation,
-                Message = Resources.InvalidRegisterMounterInvocation_Message,
+                Id = DiagnosticIds.InvalidRegistrationInvocation,
+                Message = Resources.InvalidRegistrationInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 23) }
             };
@@ -97,8 +97,8 @@ class SimpleModel : Model
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.InvalidRegisterMounterInvocation,
-                Message = Resources.InvalidRegisterMounterInvocation_Message,
+                Id = DiagnosticIds.InvalidRegistrationInvocation,
+                Message = Resources.InvalidRegistrationInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 10, 20) }
             };

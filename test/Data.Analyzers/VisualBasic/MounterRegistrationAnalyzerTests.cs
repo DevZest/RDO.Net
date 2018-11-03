@@ -99,8 +99,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.InvalidRegisterMounterInvocation,
-                Message = Resources.InvalidRegisterMounterInvocation_Message,
+                Id = DiagnosticIds.InvalidRegistrationInvocation,
+                Message = Resources.InvalidRegistrationInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 10, 23) }
             };
@@ -135,8 +135,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.InvalidRegisterMounterInvocation,
-                Message = Resources.InvalidRegisterMounterInvocation_Message,
+                Id = DiagnosticIds.InvalidRegistrationInvocation,
+                Message = Resources.InvalidRegistrationInvocation_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 10, 20) }
             };
