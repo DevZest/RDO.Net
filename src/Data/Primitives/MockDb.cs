@@ -51,11 +51,11 @@ namespace DevZest.Data.Primitives
             foreach (var mockTable in _mockTables)
             {
                 var model = mockTable.Table.Model;
-                var foreignKeys = model.GetExtensions<DbForeignKey>();
+                var foreignKeys = model.GetAddons<DbForeignKey>();
                 foreach (var item in foreignKeys)
                 {
                     if (!tableNames.Contains(item.ReferencedTableName))
-                        model.BrutalRemoveExtension(((IExtension)item).Key);
+                        model.BrutalRemoveAddon(((IAddon)item).Key);
                 }
             }
         }

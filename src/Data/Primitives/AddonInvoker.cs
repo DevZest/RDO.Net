@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class ExtensibleObjectInvoker<T>
-        where T : class, IExtension
+    public abstract class AddonInvoker<T>
+        where T : class, IAddon
     {
-        protected ExtensibleObjectInvoker(ExtensibleObject extensibleObject)
+        protected AddonInvoker(AddonBag addonBag)
         {
-            extensibleObject.VerifyNotNull(nameof(extensibleObject));
-            _extensibleObject = extensibleObject;
+            addonBag.VerifyNotNull(nameof(addonBag));
+            _addonBag = addonBag;
         }
 
-        private ExtensibleObject _extensibleObject;
+        private AddonBag _addonBag;
 
         public bool IsAsync { get; private set; }
 
@@ -29,9 +29,9 @@ namespace DevZest.Data.Primitives
             Exception = exception;
         }
 
-        protected void Invoke(Action operation, Action<T> executing, Action<T> executed)
+        protected void Invoke(Action operation, Action<T> onExecuting, Action<T> onExecuted)
         {
-            var extensions = Executing(false, executing);
+            var addons = BeginExecute(false, onExecuting);
             try
             {
                 operation();
@@ -39,19 +39,19 @@ namespace DevZest.Data.Primitives
             catch (Exception ex)
             {
                 SetExceptionThrown(ex);
-                Executed(executed, extensions);
+                OnExecuted(onExecuted, addons);
                 throw;
             }
 
-            Executed(executed, extensions);
+            OnExecuted(onExecuted, addons);
         }
 
-        private void Executed(Action<T> executed, ReadOnlyCollection<T> extensions)
+        private void OnExecuted(Action<T> onExecuted, ReadOnlyCollection<T> addons)
         {
             try
             {
-                foreach (var extension in extensions)
-                    executed(extension);
+                foreach (var addon in addons)
+                    onExecuted(addon);
             }
             catch (Exception outerEx)
             {
@@ -60,21 +60,21 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private ReadOnlyCollection<T> Executing(bool isAsync, Action<T> executing)
+        private ReadOnlyCollection<T> BeginExecute(bool isAsync, Action<T> onExecuting)
         {
             IsAsync = isAsync;
             if (isAsync)
                 TaskStatus = TaskStatus.Created;
             SetExceptionThrown(null);
-            var extensions = _extensibleObject.GetExtensions<T>();
-            foreach (var extension in extensions)
-                executing(extension);
-            return extensions;
+            var addons = _addonBag.GetAddons<T>();
+            foreach (var addon in addons)
+                onExecuting(addon);
+            return addons;
         }
 
         protected Task InvokeAsync(Task operation, Action<T> executing, Action<T> executed)
         {
-            var extensions = Executing(true, executing);
+            var addons = BeginExecute(true, executing);
 
             var tcs = new TaskCompletionSource<object>();
             operation.ContinueWith(
@@ -87,8 +87,8 @@ namespace DevZest.Data.Primitives
 
                     try
                     {
-                        foreach (var extension in extensions)
-                            executed(extension);
+                        foreach (var addon in addons)
+                            executed(addon);
                     }
                     catch (Exception ex)
                     {

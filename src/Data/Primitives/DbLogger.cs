@@ -180,15 +180,15 @@ namespace DevZest.Data.Primitives
             Write(LogCategory.CommandExecuting, Environment.NewLine);
         }
 
-        private void Executed<TInterceptor, TResult>(TCommand command, ExtensibleObjectInvoker<TInterceptor> invoker, TResult result)
-            where TInterceptor : class, IExtension
+        private void Executed<TInterceptor, TResult>(TCommand command, AddonInvoker<TInterceptor> invoker, TResult result)
+            where TInterceptor : class, IAddon
         {
             Stopwatch.Stop();
             CommandExecuted(command, invoker, result);
         }
 
-        protected virtual void CommandExecuted<TInterceptor, TResult>(TCommand command, ExtensibleObjectInvoker<TInterceptor> invoker, TResult result)
-            where TInterceptor : class, IExtension
+        protected virtual void CommandExecuted<TInterceptor, TResult>(TCommand command, AddonInvoker<TInterceptor> invoker, TResult result)
+            where TInterceptor : class, IAddon
         {
             var exception = invoker.Exception;
             if (exception != null)
@@ -228,7 +228,7 @@ namespace DevZest.Data.Primitives
             Executed(invoker.Command, invoker, invoker.Result);
         }
 
-        object IExtension.Key
+        object IAddon.Key
         {
             get { return typeof(DbLogger<TConnection, TTransaction, TCommand, TReader>); }
         }

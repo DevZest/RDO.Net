@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbTransactionInvoker<TConnection, TTransaction> : ExtensibleObjectInvoker<IDbTransactionInterceptor<TConnection, TTransaction>>
+    public abstract class DbTransactionInvoker<TConnection, TTransaction> : AddonInvoker<IDbTransactionInterceptor<TConnection, TTransaction>>
         where TConnection : DbConnection
         where TTransaction : DbTransaction
     {

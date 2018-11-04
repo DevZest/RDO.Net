@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class DbIndex : DbTableElement, IIndexConstraint, IExtension
+    public sealed class DbIndex : DbTableElement, IIndexConstraint, IAddon
     {
         internal DbIndex(string name, string description, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, IList<ColumnSort> columns)
         {
@@ -50,7 +50,7 @@ namespace DevZest.Data.Primitives
             get { return Name; }
         }
 
-        object IExtension.Key
+        object IAddon.Key
         {
             get { return Name; }
         }

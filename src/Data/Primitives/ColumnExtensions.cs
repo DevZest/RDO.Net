@@ -45,7 +45,7 @@ namespace DevZest.Data.Primitives
             column.VerifyNotNull(nameof(column));
             expression.VerifyNotNull(nameof(expression));
 
-            column.AddOrUpdateExtension(expression.CreateDefault(name, description));
+            column.AddOrUpdate(expression.CreateDefault(name, description));
         }
 
         public static T WithDefault<T>(this T column, T expression, string name, string description)

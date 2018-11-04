@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class DbNonQueryInvoker<TCommand> : ExtensibleObjectInvoker<IDbNonQueryInterceptor<TCommand>>
+    public sealed class DbNonQueryInvoker<TCommand> : AddonInvoker<IDbNonQueryInterceptor<TCommand>>
         where TCommand : DbCommand
     {
         public DbNonQueryInvoker(DbSession dbSession, TCommand command)

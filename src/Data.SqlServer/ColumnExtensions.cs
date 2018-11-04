@@ -41,7 +41,7 @@ namespace DevZest.Data.SqlServer
 
         private static void SetMapper(this Column column, SqlColumnDescriptor columnMapper)
         {
-            column.AddOrUpdateExtension(columnMapper);
+            column.AddOrUpdate(columnMapper);
         }
 
         public static _Binary AsSqlBinary(this _Binary column, int size)
@@ -221,7 +221,7 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlColumnDescriptor GetSqlColumnDescriptor(this Column column)
         {
-            var result = column.GetExtension<SqlColumnDescriptor>() ?? column.GetDefaultSqlColumnDescriptor();
+            var result = column.GetAddon<SqlColumnDescriptor>() ?? column.GetDefaultSqlColumnDescriptor();
             return result;
         }
 

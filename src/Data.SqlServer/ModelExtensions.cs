@@ -48,7 +48,7 @@ namespace DevZest.Data.SqlServer
 
         private static int GenerateConstraints(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable)
         {
-            IReadOnlyList<DbTableConstraint> constraints = model.GetExtensions<DbTableConstraint>();
+            IReadOnlyList<DbTableConstraint> constraints = model.GetAddons<DbTableConstraint>();
             if (isTempTable)
                 constraints = constraints.Where(x => x.IsMemberOfTempTable).ToList();
             else
@@ -180,7 +180,7 @@ namespace DevZest.Data.SqlServer
 
         private static int GenerateIndexes(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable, bool hasConstraint)
         {
-            IReadOnlyList<DbIndex> indexes = model.GetExtensions<DbIndex>();
+            IReadOnlyList<DbIndex> indexes = model.GetAddons<DbIndex>();
             if (isTempTable)
                 indexes = indexes.Where(x => x.IsMemberOfTempTable).ToList();
             else
@@ -250,14 +250,14 @@ namespace DevZest.Data.SqlServer
 
             }
 
-            var constraints = model.GetExtensions<DbTableConstraint>().Where(x => x.IsMemberOfTable).ToList();
+            var constraints = model.GetAddons<DbTableConstraint>().Where(x => x.IsMemberOfTable).ToList();
             for (int i = 0; i < constraints.Count; i++)
             {
                 var constraint = constraints[i];
                 constraint.GenerateConstraintDescriptionSql(sqlBuilder, sqlVersion, schema, table);
             }
 
-            var indexes = model.GetExtensions<DbIndex>().Where(x => x.IsMemberOfTable).ToList();
+            var indexes = model.GetAddons<DbIndex>().Where(x => x.IsMemberOfTable).ToList();
             for (int i = 0; i < indexes.Count; i++)
             {
                 var index = indexes[i];

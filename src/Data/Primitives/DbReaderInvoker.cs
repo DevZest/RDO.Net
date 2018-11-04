@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbReaderInvoker<TCommand, TReader> : ExtensibleObjectInvoker<IDbReaderInterceptor<TCommand, TReader>>
+    public abstract class DbReaderInvoker<TCommand, TReader> : AddonInvoker<IDbReaderInterceptor<TCommand, TReader>>
         where TCommand : DbCommand
         where TReader : DbReader
     {

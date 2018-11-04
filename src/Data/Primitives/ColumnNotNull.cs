@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Primitives
 {
-    public sealed class ColumnNotNull : IExtension
+    public sealed class ColumnNotNull : IAddon
     {
         public static readonly ColumnNotNull Singleton = new ColumnNotNull();
 

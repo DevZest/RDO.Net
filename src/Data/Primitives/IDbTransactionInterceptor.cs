@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace DevZest.Data.Primitives
 {
-    public interface IDbTransactionInterceptor<TConnection, TTransaction> : IExtension
+    public interface IDbTransactionInterceptor<TConnection, TTransaction> : IAddon
         where TConnection : DbConnection
         where TTransaction : DbTransaction
     {

@@ -8,28 +8,28 @@ using System.Runtime.CompilerServices;
 
 namespace DevZest.Data.Primitives
 {
-    partial class ExtensibleObject
+    partial class AddonBag
     {
-        private sealed class ExtensionCollection : KeyedCollection<object, IExtension>
+        private sealed class AddonCollection : KeyedCollection<object, IAddon>
         {
             private static class Cache<T>
-                where T : class, IExtension
+                where T : class, IAddon
             {
-                private static ConditionalWeakTable<ExtensionCollection, ReadOnlyCollection<T>> s_results = new ConditionalWeakTable<ExtensionCollection, ReadOnlyCollection<T>>();
+                private static ConditionalWeakTable<AddonCollection, ReadOnlyCollection<T>> s_results = new ConditionalWeakTable<AddonCollection, ReadOnlyCollection<T>>();
 
-                public static void Remove(ExtensionCollection collection)
+                public static void Remove(AddonCollection collection)
                 {
                     ReadOnlyCollection<T> results;
                     if (s_results.TryGetValue(collection, out results))
                         s_results.Remove(collection);
                 }
 
-                public static ReadOnlyCollection<T> GetResult(ExtensionCollection collection)
+                public static ReadOnlyCollection<T> GetResult(AddonCollection collection)
                 {
                     return s_results.GetValue(collection, x => new ReadOnlyCollection<T>(Filter(x).ToArray()));
                 }
 
-                private static IEnumerable<T> Filter(ExtensionCollection collection)
+                private static IEnumerable<T> Filter(AddonCollection collection)
                 {
                     foreach (var item in collection)
                     {
@@ -40,9 +40,9 @@ namespace DevZest.Data.Primitives
                 }
             }
 
-            public ExtensionCollection(ExtensibleObject interceptable)
+            public AddonCollection(AddonBag addonBag)
             {
-                _designable = interceptable as IDesignable;
+                _designable = addonBag as IDesignable;
             }
 
             private IDesignable _designable;
@@ -57,12 +57,12 @@ namespace DevZest.Data.Primitives
                 _allowFrozenChange = value;
             }
 
-            protected override object GetKeyForItem(IExtension item)
+            protected override object GetKeyForItem(IAddon item)
             {
                 return item.Key;
             }
 
-            protected override void InsertItem(int index, IExtension item)
+            protected override void InsertItem(int index, IAddon item)
             {
                 OnItemChanging(item);
                 base.InsertItem(index, item);
@@ -75,16 +75,16 @@ namespace DevZest.Data.Primitives
 
             protected override void RemoveItem(int index)
             {
-                OnItemChanging(((Collection<IExtension>)this)[index]);
+                OnItemChanging(((Collection<IAddon>)this)[index]);
                 base.RemoveItem(index);
             }
 
-            protected override void SetItem(int index, IExtension item)
+            protected override void SetItem(int index, IAddon item)
             {
                 Debug.Fail("Not supported.");
             }
 
-            private void OnItemChanging(IExtension item)
+            private void OnItemChanging(IAddon item)
             {
                 if (IsFrozen)
                     throw new InvalidOperationException(DiagnosticMessages.VerifyDesignMode);
@@ -106,7 +106,7 @@ namespace DevZest.Data.Primitives
 
             Dictionary<Type, Action> _cacheInvalidators = new Dictionary<Type, Action>();
             private void OnCacheAccessing<T>()
-                where T : class, IExtension
+                where T : class, IAddon
             {
                 var type = typeof(T);
                 if (_cacheInvalidators.ContainsKey(type))
@@ -115,7 +115,7 @@ namespace DevZest.Data.Primitives
             }
 
             public ReadOnlyCollection<T> Filter<T>()
-                where T : class, IExtension
+                where T : class, IAddon
             {
                 OnCacheAccessing<T>();
                 return Cache<T>.GetResult(this);

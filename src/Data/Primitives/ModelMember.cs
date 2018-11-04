@@ -5,7 +5,7 @@ namespace DevZest.Data.Primitives
     /// <summary>
     /// Base class for member properties which can be registered with <see cref="Model"/> derived class.
     /// </summary>
-    public abstract class ModelMember : ExtensibleObject, IDesignable
+    public abstract class ModelMember : AddonBag, IDesignable
     {
         internal ModelMember()
         {

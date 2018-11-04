@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbTableConstraint : DbTableElement, IExtension
+    public abstract class DbTableConstraint : DbTableElement, IAddon
     {
         protected DbTableConstraint(string name, string description)
         {
@@ -15,7 +15,7 @@ namespace DevZest.Data.Primitives
 
         public string Description { get; private set; }
 
-        object IExtension.Key
+        object IAddon.Key
         {
             get { return typeof(DbTableConstraint).FullName + "." + SystemName; }
         }

@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace DevZest.Data.SqlServer
 {
-    public abstract class SqlColumnDescriptor : IExtension
+    public abstract class SqlColumnDescriptor : IAddon
     {
         private const string NULL = "NULL";
 
@@ -138,7 +138,7 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        object IExtension.Key
+        object IAddon.Key
         {
             get { return typeof(SqlColumnDescriptor); }
         }

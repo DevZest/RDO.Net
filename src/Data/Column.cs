@@ -210,7 +210,7 @@ namespace DevZest.Data
         /// <returns>The <see cref="Identity"/> object, or <see langword="null"/> if this is not a identity column.</returns>
         public Identity GetIdentity(bool isTempTable)
         {
-            return (Identity)GetExtension(isTempTable ? Identity.FULL_NAME_TEMP_TABLE : Identity.FULL_NAME_TABLE);
+            return (Identity)GetAddon(isTempTable ? Identity.FULL_NAME_TEMP_TABLE : Identity.FULL_NAME_TABLE);
         }
 
         /// <summary>Gets this column as asending sorted.</summary>
@@ -235,11 +235,11 @@ namespace DevZest.Data
             if (isNullable)
             {
                 var key = ColumnNotNull.Singleton.Key;
-                if (ContainsExtension(key))
-                    RemoveExtension(key);
+                if (ContainsAddon(key))
+                    RemoveAddon(key);
             }
             else
-                AddOrUpdateExtension(ColumnNotNull.Singleton);
+                AddOrUpdate(ColumnNotNull.Singleton);
         }
 
         /// <summary>Gets a value indicates whether this column is nullable.</summary>
@@ -254,7 +254,7 @@ namespace DevZest.Data
                 if (IsPrimaryKey || GetIdentity(true) != null || GetIdentity(false) != null)
                     return false;
                 var resourceKey = Primitives.ColumnNotNull.Singleton.Key;
-                return !ContainsExtension(resourceKey);
+                return !ContainsAddon(resourceKey);
             }
         }
 
@@ -262,7 +262,7 @@ namespace DevZest.Data
         /// <returns>The <see cref="ColumnDefault"/> object associated with this column.</returns>
         public ColumnDefault GetDefault()
         {
-            return GetExtension<ColumnDefault>();
+            return GetAddon<ColumnDefault>();
         }
 
         public abstract bool IsDbComputed { get; }
@@ -497,11 +497,11 @@ namespace DevZest.Data
         {
             VerifyDesignMode();
 
-            AddOrUpdateExtension(identity);
+            AddOrUpdate(identity);
             var model = ParentModel;
-            if (model.ContainsExtension(((IExtension)identity).Key))
+            if (model.ContainsAddon(((IAddon)identity).Key))
                 throw new InvalidOperationException(DiagnosticMessages.Model_MultipleIdentityColumn);
-            model.AddExtension(identity);
+            model.Add(identity);
         }
     }
 }

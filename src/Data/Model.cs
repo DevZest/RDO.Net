@@ -680,26 +680,26 @@ namespace DevZest.Data
         {
             Debug.Assert(constraint != null);
 
-            if (!overwritable && ContainsExtension(((IExtension)constraint).Key))
+            if (!overwritable && ContainsAddon(((IAddon)constraint).Key))
                 throw new InvalidOperationException(DiagnosticMessages.Model_DuplicateConstraintName(constraint.SystemName));
 
             if (constraint is IIndexConstraint index && index.IsClustered)
                 ClusteredIndex = index;
 
-            this.AddOrUpdateExtension(constraint);
+            this.AddOrUpdate(constraint);
         }
 
         internal void AddIndex(DbIndex index)
         {
             Debug.Assert(index != null);
 
-            if (ContainsExtension(((IExtension)index).Key))
+            if (ContainsAddon(((IAddon)index).Key))
                 throw new InvalidOperationException(DiagnosticMessages.Model_DuplicateIndexName(index.Name));
 
             if (index.IsClustered)
                 ClusteredIndex = index;
 
-            this.AddOrUpdateExtension(index);
+            this.AddOrUpdate(index);
         }
 
         internal KeyOutput CreateSequentialKey()
@@ -740,7 +740,7 @@ namespace DevZest.Data
 
         public Identity GetIdentity(bool isTempTable)
         {
-            var results = GetExtensions<Identity>();
+            var results = GetAddons<Identity>();
             foreach (var result in results)
             {
                 if (result.IsTempTable == isTempTable)
@@ -757,7 +757,7 @@ namespace DevZest.Data
             var identityColumn = AddSysRowIdColumn(false);
             var identity = identityColumn.SetIdentity(1, 1, true);
 
-            var primaryKeyConstraint = GetExtension<DbPrimaryKey>();
+            var primaryKeyConstraint = GetAddon<DbPrimaryKey>();
             if (primaryKeyConstraint == null)
                 AddDbTableConstraint(new DbPrimaryKey(this, null, null, true, () => GetIdentityOrderByList(identity)), false);
             else
@@ -785,7 +785,7 @@ namespace DevZest.Data
             return result;
         }
 
-        private class SysRowId : IExtension
+        private class SysRowId : IAddon
         {
             public SysRowId(_Int32 column)
             {
@@ -800,7 +800,7 @@ namespace DevZest.Data
             public _Int32 Column { get; }
         }
 
-        private sealed class SysParentRowId : IExtension
+        private sealed class SysParentRowId : IAddon
         {
             public SysParentRowId(_Int32 column)
             {
@@ -817,28 +817,28 @@ namespace DevZest.Data
 
         internal _Int32 GetSysRowIdColumn(bool createIfNotExist)
         {
-            var sysRowId = GetExtension<SysRowId>();
+            var sysRowId = GetAddon<SysRowId>();
             if (sysRowId == null)
             {
                 if (!createIfNotExist)
                     return null;
 
                 sysRowId = new SysRowId(AddSysRowIdColumn(false));
-                AddOrUpdateExtension(sysRowId);
+                AddOrUpdate(sysRowId);
             }
             return sysRowId.Column;
         }
 
         internal _Int32 GetSysParentRowIdColumn(bool createIfNotExist)
         {
-            var sysParentRowId = GetExtension<SysParentRowId>();
+            var sysParentRowId = GetAddon<SysParentRowId>();
             if (sysParentRowId == null)
             {
                 if (!createIfNotExist)
                     return null;
 
                 sysParentRowId = new SysParentRowId(AddSysRowIdColumn(true));
-                AddOrUpdateExtension(sysParentRowId);
+                AddOrUpdate(sysParentRowId);
             }
             return sysParentRowId.Column;
         }

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public sealed class Identity : IExtension
+    public sealed class Identity : IAddon
     {
         internal static readonly string FULL_NAME_TABLE = typeof(Identity).FullName + ".Table";
         internal static readonly string FULL_NAME_TEMP_TABLE = typeof(Identity).FullName + ".TempTable";
@@ -31,7 +31,7 @@ namespace DevZest.Data
             IsTempTable = isTempTable;
         }
 
-        object IExtension.Key
+        object IAddon.Key
         {
             get { return IsTempTable ? FULL_NAME_TEMP_TABLE : FULL_NAME_TABLE; }
         }

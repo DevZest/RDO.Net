@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbSession : ExtensibleObject, IDisposable
+    public abstract class DbSession : AddonBag, IDisposable
     {
         #region IDisposable
 

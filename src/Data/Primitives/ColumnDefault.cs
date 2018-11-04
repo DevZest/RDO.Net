@@ -1,7 +1,7 @@
 ﻿
 namespace DevZest.Data.Primitives
 {
-    public abstract class ColumnDefault : IExtension
+    public abstract class ColumnDefault : IAddon
     {
         internal ColumnDefault(string name, string description)
         {
@@ -15,7 +15,7 @@ namespace DevZest.Data.Primitives
 
         public abstract DbExpression DbExpression { get; }
 
-        object IExtension.Key
+        object IAddon.Key
         {
             get { return typeof(ColumnDefault); }
         }
