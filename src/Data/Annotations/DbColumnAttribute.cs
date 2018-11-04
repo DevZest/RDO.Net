@@ -3,6 +3,7 @@
 namespace DevZest.Data.Annotations
 {
     /// <summary>Defines name of the column in the database.</summary>
+    [ModelMemberAttributeSpec(null, false, typeof(Column))]
     public sealed class DbColumnAttribute : ColumnAttribute
     {
         public DbColumnAttribute()

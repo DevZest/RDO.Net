@@ -4,6 +4,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [ModelMemberAttributeSpec(typeof(Identity), true, typeof(_Int32), typeof(_Int64), typeof(_Int16))]
     public sealed class IdentityAttribute : ColumnAttribute
     {
         public IdentityAttribute(int seed, int increment)

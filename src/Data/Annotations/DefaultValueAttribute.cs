@@ -1,10 +1,12 @@
 ﻿using DevZest.Data.Annotations.Primitives;
+using DevZest.Data.Primitives;
 using System;
 using System.ComponentModel;
 
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [ModelMemberAttributeSpec(typeof(ColumnDefault), true, typeof(Column))]
     public sealed class DefaultValueAttribute : ColumnAttribute
     {
         public DefaultValueAttribute(Type type, string value)

@@ -5,6 +5,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [ModelMemberAttributeSpec(typeof(ColumnDefault), true, typeof(_DateTime))]
     public sealed class AutoDateTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)

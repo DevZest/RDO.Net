@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace DevZest.Data.Annotations
 {
+    [ModelMemberAttributeSpec(null, false, typeof(Column<string>))]
     public sealed class EmailAddressAttribute : ValidationColumnAttribute
     {
         private static Regex s_regex = CreateRegEx();
