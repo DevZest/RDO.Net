@@ -754,8 +754,8 @@ namespace DevZest.Data
 
         internal void AddTempTableIdentity()
         {
-            _Int32 identityColumn = AddSysRowIdColumn(false);
-            var identity = identityColumn.Identity(1, 1, true);
+            var identityColumn = AddSysRowIdColumn(false);
+            var identity = identityColumn.SetIdentity(1, 1, true);
 
             var primaryKeyConstraint = GetExtension<DbPrimaryKey>();
             if (primaryKeyConstraint == null)
@@ -797,7 +797,7 @@ namespace DevZest.Data
                 get { return this.GetType(); }
             }
 
-            public _Int32 Column { get; private set; }
+            public _Int32 Column { get; }
         }
 
         private sealed class SysParentRowId : IExtension
@@ -812,7 +812,7 @@ namespace DevZest.Data
                 get { return this.GetType(); }
             }
 
-            public _Int32 Column { get; private set; }
+            public _Int32 Column { get; }
         }
 
         internal _Int32 GetSysRowIdColumn(bool createIfNotExist)

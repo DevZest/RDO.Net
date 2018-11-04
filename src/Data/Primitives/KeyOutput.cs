@@ -45,13 +45,13 @@ namespace DevZest.Data.Primitives
         }
 
 
-        private PrimaryKey _primaryKey;
+        private readonly PrimaryKey _primaryKey;
         internal override PrimaryKey GetPrimaryKeyCore()
         {
             return _primaryKey;
         }
 
-        private string _sourceDbAlias;
+        private readonly string _sourceDbAlias;
 
         protected internal override string DbAlias
         {

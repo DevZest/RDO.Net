@@ -2,7 +2,7 @@
 
 namespace DevZest.Data
 {
-    internal interface IDbSet
+    public interface IDbSet
     {
         DataSourceKind Kind { get; }
 

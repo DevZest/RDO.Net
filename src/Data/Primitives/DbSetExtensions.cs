@@ -2,8 +2,7 @@
 {
     public static class DbSetExtensions
     {
-        public static DbFromClause GetFromClause<T>(this DbSet<T> dbSet)
-            where T : class, IModelReference, new()
+        public static DbFromClause GetFromClause(this IDbSet dbSet)
         {
             dbSet.VerifyNotNull(nameof(dbSet));
             return dbSet.FromClause;

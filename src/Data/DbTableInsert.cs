@@ -29,7 +29,7 @@ namespace DevZest.Data
 
         private struct InsertTableResult
         {
-            public InsertTableResult(int rowCount, DbTable<IdentityMapping> identityMappings)
+            public InsertTableResult(int rowCount, IDbTable identityMappings)
             {
                 RowCount = rowCount;
                 IdentityMappings = identityMappings;
@@ -37,25 +37,43 @@ namespace DevZest.Data
 
             public readonly int RowCount;
 
-            public readonly DbTable<IdentityMapping> IdentityMappings;
+            public readonly IDbTable IdentityMappings;
         }
 
-        private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
+        private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            Action<IdentityMapping> initializer = null;
-            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
-            var rowCount = await DbSession.InsertAsync(source, Into, columnMapper, joinTo, identityMappings, cancellationToken);
+            var identityMappings = await CreateIdentityMappingsAsync(source.Model, updateIdentity, ct);
+            var rowCount = await DbSession.InsertAsync(source, Into, columnMapper, joinTo, identityMappings, ct);
             return new InsertTableResult(rowCount, identityMappings);
         }
 
-        private async Task<InsertTableResult> InsertDataSetAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
+        private async Task<InsertTableResult> InsertDataSetAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            Action<IdentityMapping> initializer = null;
-            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
-            var rowCount = await DbSession.InsertAsync(source, Into, columnMapper, joinTo, identityMappings, cancellationToken);
+            var identityMappings = await CreateIdentityMappingsAsync(source.Model, updateIdentity, ct);
+            var rowCount = await DbSession.InsertAsync(source, Into, columnMapper, joinTo, identityMappings, ct);
             return new InsertTableResult(rowCount, identityMappings);
+        }
+
+        private async Task<IDbTable> CreateIdentityMappingsAsync(Model model, bool updateIdentity, CancellationToken ct)
+        {
+            if (!updateIdentity)
+                return null;
+
+            var identity = model.GetIdentity(false);
+            if (identity == null)
+                return null;
+
+            var column = identity.Column;
+            if (column is _Int32)
+                return await DbSession.CreateTempTableAsync<Int32IdentityMapping>(ct);
+            else if (column is _Int64)
+                return await DbSession.CreateTempTableAsync<Int64IdentityMapping>(ct);
+            else if (column is _Int16)
+                return await DbSession.CreateTempTableAsync<Int16IdentityMapping>(ct);
+            else
+                return null;
         }
 
         private static async Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertTableResult result, CancellationToken cancellationToken)
@@ -69,18 +87,58 @@ namespace DevZest.Data
             }
         }
 
-        private async Task UpdateIdentityAsync<TSource>(DataSet<TSource> dataSet, InsertTableResult result, CancellationToken cancellationToken)
+        private async Task UpdateIdentityAsync<TSource>(DataSet<TSource> dataSet, InsertTableResult result, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
             if (result.IdentityMappings == null || result.RowCount == 0)
                 return;
 
             var identityOutput = result.IdentityMappings;
-            var identityColumn = (_Int32)dataSet.Model.Columns[Into.Model.GetIdentity(false).Column.Ordinal];
-            using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, cancellationToken))
+            var identityColumn = dataSet.Model.Columns[Into.Model.GetIdentity(false).Column.Ordinal];
+            if (identityOutput is DbTable<Int32IdentityMapping> int32IdentityOutput)
+                await UpdateIdentityAsnc(dataSet, (_Int32)identityColumn, int32IdentityOutput, ct);
+            else if (identityOutput is DbTable<Int64IdentityMapping> int64IdentityOutput)
+                await UpdateIdentityAsnc(dataSet, (_Int64)identityColumn, int64IdentityOutput, ct);
+            else if (identityOutput is DbTable<Int16IdentityMapping> int16IdentityOutput)
+                await UpdateIdentityAsnc(dataSet, (_Int16)identityColumn, int16IdentityOutput, ct);
+            else
+                Debug.Fail("identityOutput must be a table of Int32IdentityMapping, Int64IdentityMapping or Int16IdentityMapping.");
+        }
+
+        private async Task UpdateIdentityAsnc(DataSet dataSet, _Int32 identityColumn, DbTable<Int32IdentityMapping> identityOutput, CancellationToken ct)
+        {
+            using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, ct))
             {
                 int ordinal = 0;
-                while (await reader.ReadAsync(cancellationToken))
+                while (await reader.ReadAsync(ct))
+                {
+                    var dataRow = dataSet[ordinal++];
+                    identityColumn[dataRow] = identityOutput._.NewValue[reader];
+                    dataRow.IsPrimaryKeySealed = true;
+                }
+            }
+        }
+
+        private async Task UpdateIdentityAsnc(DataSet dataSet, _Int64 identityColumn, DbTable<Int64IdentityMapping> identityOutput, CancellationToken ct)
+        {
+            using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, ct))
+            {
+                int ordinal = 0;
+                while (await reader.ReadAsync(ct))
+                {
+                    var dataRow = dataSet[ordinal++];
+                    identityColumn[dataRow] = identityOutput._.NewValue[reader];
+                    dataRow.IsPrimaryKeySealed = true;
+                }
+            }
+        }
+
+        private async Task UpdateIdentityAsnc(DataSet dataSet, _Int16 identityColumn, DbTable<Int16IdentityMapping> identityOutput, CancellationToken ct)
+        {
+            using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, ct))
+            {
+                int ordinal = 0;
+                while (await reader.ReadAsync(ct))
                 {
                     var dataRow = dataSet[ordinal++];
                     identityColumn[dataRow] = identityOutput._.NewValue[reader];
@@ -99,11 +157,19 @@ namespace DevZest.Data
             return dbTable.BuildUpdateIdentityStatement(identityMappings);
         }
 
-        private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, int? value)
+        private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, long? value)
             where TSource : class, IModelReference, new()
         {
             dataRow.IsPrimaryKeySealed = false;
-            dataSet._.Model.GetIdentity(false).Column[dataRow] = value;
+            var identityColumn = dataSet._.Model.GetIdentity(false).Column;
+            if (identityColumn is _Int32 int32Column)
+                int32Column[dataRow] = (int?)value;
+            else if (identityColumn is _Int64 int64Column)
+                int64Column[dataRow] = value;
+            else if (identityColumn is _Int16 int16Column)
+                int16Column[dataRow] = (short?)value;
+            else
+                Debug.Fail("Identity column must be _Int32, _Int64 or _Int16.");
             dataRow.IsPrimaryKeySealed = true;
         }
 

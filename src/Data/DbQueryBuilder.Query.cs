@@ -32,8 +32,7 @@ namespace DevZest.Data
             for (int i = 0; i < columns.Count; i++)
                 SelectList.Add(new ColumnMapping(query.Select[i].SourceExpression, columns[i]));
 
-            if (action != null)
-                action(this);
+            action?.Invoke(this);
 
             return BuildQueryStatement(sequentialKeys);
         }
@@ -50,16 +49,14 @@ namespace DevZest.Data
                 SelectCore(sourceColumns.AutoSelect(targetColumn), targetColumn);
             }
 
-            if (action != null)
-                action(this);
+            action?.Invoke(this);
 
             return BuildQueryStatement(sequentialKeys);
         }
 
         private static Column GetColumnByOriginalId(IReadOnlyDictionary<ColumnId, IColumns> columnsByOriginalId, ColumnId originalId)
         {
-            IColumns columns;
-            if (columnsByOriginalId.TryGetValue(originalId, out columns))
+            if (columnsByOriginalId.TryGetValue(originalId, out var columns))
             {
                 if (columns.Count == 1)
                     return columns.Single();
@@ -140,7 +137,8 @@ namespace DevZest.Data
             var relationship = ResolveRelationship(Model.PrimaryKey.Join(sequentialKeyModel.PrimaryKey), sequentialKeyModel);
             Join(sequentialKeyModel, DbJoinKind.InnerJoin, relationship);
             var result = sequentialKeyModel.GetIdentity(true);
-            Select(result.Column, sysRowId);
+            Debug.Assert(!ReferenceEquals(result.Int32Column, null));
+            Select(result.Int32Column, sysRowId);
             return result;
         }
 

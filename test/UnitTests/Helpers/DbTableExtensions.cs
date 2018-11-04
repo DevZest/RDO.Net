@@ -121,7 +121,7 @@ namespace DevZest.Data.Helpers
             var result = new List<SqlCommand>();
             var sqlSession = dbTable.SqlSession();
 
-            var identityMappings = updateIdentity ? dbTable.SqlSession().MockTempTable<IdentityMapping>(result) : null;
+            var identityMappings = updateIdentity ? MockIdentityMappings(dbTable, source, result) : null;
             if (identityMappings == null)
                 result.Add(dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.Join(joinTo))));
             else
@@ -141,6 +141,25 @@ namespace DevZest.Data.Helpers
                 result.Add(sqlSession.GetUpdateCommand(statement));
 
             return result;
+        }
+
+        private static IDbTable MockIdentityMappings<TSource, TTarget>(DbTable<TTarget> dbTable, DbTable<TSource> source, IList<SqlCommand> commands)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            var identity = source.Model.GetIdentity(false);
+            if (identity == null)
+                return null;
+
+            var identityColumn = identity.Column;
+            if (identityColumn is _Int32 int32IdentityColumn)
+                return dbTable.SqlSession().MockTempTable<Int32IdentityMapping>(commands);
+            else if (identityColumn is _Int64 int64IdentityColumn)
+                return dbTable.SqlSession().MockTempTable<Int64IdentityMapping>(commands);
+            else if (identityColumn is _Int16 int16IdentityColumn)
+                return dbTable.SqlSession().MockTempTable<Int16IdentityMapping>(commands);
+            else
+                return null;
         }
 
         public static IList<SqlCommand> MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DataSet<T> source, bool skipExisting = false, bool updateIdentity = false)

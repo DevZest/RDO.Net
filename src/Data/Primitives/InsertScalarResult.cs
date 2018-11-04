@@ -3,7 +3,7 @@ namespace DevZest.Data.Primitives
 {
     public struct InsertScalarResult
     {
-        public InsertScalarResult(bool success, int? identityValue)
+        public InsertScalarResult(bool success, long? identityValue)
         {
             Success = success;
             IdentityValue = identityValue;
@@ -11,6 +11,6 @@ namespace DevZest.Data.Primitives
 
         public readonly bool Success;
 
-        public readonly int? IdentityValue;
+        public readonly long? IdentityValue;
     }
 }

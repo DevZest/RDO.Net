@@ -133,5 +133,12 @@ namespace DevZest.Data.Primitives
             model.VerifyNotNull(nameof(model));
             return (T)column.PerformTranslateTo(model);
         }
+
+        public static ColumnMapping UnsafeMap(this Column source, Column target)
+        {
+            source.VerifyNotNull(nameof(source));
+            target.VerifyNotNull(nameof(target));
+            return new ColumnMapping(source, target);
+        }
     }
 }

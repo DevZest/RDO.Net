@@ -772,5 +772,46 @@ namespace DevZest.Data
             // override to eliminate compile warning
             return base.GetHashCode();
         }
+
+        internal Identity SetIdentity(int seed, int increment, bool isTempTable)
+        {
+            VerifyDesignMode();
+
+            var result = Identity.FromInt16Column(this, seed, increment, isTempTable);
+            SetIdentity(result);
+            return result;
+        }
+
+        bool _isIdentityInitialized;
+        Identity _identity;
+        short _currentIdentityValue;
+
+        public override short? DefaultValue
+        {
+            get
+            {
+                if (ParentModel.IsIdentitySuspended)
+                    return base.DefaultValue;
+
+                EnsureIdentityInitialized();
+                if (_identity != null)
+                    return _currentIdentityValue -= (short)_identity.Increment;
+                return base.DefaultValue;
+            }
+        }
+
+        private void EnsureIdentityInitialized()
+        {
+            if (!_isIdentityInitialized)
+            {
+                var identity = this.GetIdentity(false);
+                if (identity != null && object.ReferenceEquals(identity.Column, this))
+                {
+                    _identity = identity;
+                    _currentIdentityValue = (short)_identity.Seed;
+                }
+                _isIdentityInitialized = true;
+            }
+        }
     }
 }

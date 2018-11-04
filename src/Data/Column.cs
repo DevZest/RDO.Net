@@ -492,5 +492,16 @@ namespace DevZest.Data
         public abstract int GetHashCode(DataRow dataRow);
 
         public abstract bool Equals(DataRow dataRow, Column otherColumn, DataRow otherDataRow);
+
+        internal void SetIdentity(Identity identity)
+        {
+            VerifyDesignMode();
+
+            AddOrUpdateExtension(identity);
+            var model = ParentModel;
+            if (model.ContainsExtension(((IExtension)identity).Key))
+                throw new InvalidOperationException(DiagnosticMessages.Model_MultipleIdentityColumn);
+            model.AddExtension(identity);
+        }
     }
 }

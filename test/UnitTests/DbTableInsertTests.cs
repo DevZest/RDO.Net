@@ -265,7 +265,7 @@ WHERE ([Product].[ProductID] > 800));
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
-                var identityOutput = db.MockTempTable<IdentityMapping>();
+                var identityOutput = db.MockTempTable<Int32IdentityMapping>();
                 var statements = tempSalesOrders.BuildUpdateIdentityStatement(identityOutput);
                 Assert.AreEqual(1, statements.Count);
                 var command = db.GetUpdateCommand(statements[0]);
@@ -468,7 +468,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
         }
 
         [TestMethod]
-        public void DbTable_Insert_from_tem_table_updateIdentity()
+        public void DbTable_Insert_from_temp_table_updateIdentity()
         {
             using (var db = new Db(SqlVersion.Sql11))
             {

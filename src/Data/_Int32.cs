@@ -773,30 +773,13 @@ namespace DevZest.Data
             return base.GetHashCode();
         }
 
-        /// <summary>Declares this column as identity column.</summary>
-        /// <param name="seed">The seed of the identity.</param>
-        /// <param name="increment">The increment of the identity.</param>
-        /// <returns>The <see cref="Data.Identity"/> object.</returns>
-        /// <inheritdoc cref="ModelMember.VerifyDesignMode" select="exception"/>
-        public Identity Identity(int seed, int increment)
-        {
-            return Identity(seed, increment, false);
-        }
-
-        internal Identity Identity(int seed, int increment, bool isTempTable)
+        internal Identity SetIdentity(int seed, int increment, bool isTempTable)
         {
             VerifyDesignMode();
 
-            if (increment == 0)
-                throw new ArgumentException(DiagnosticMessages.Model_InvalidIdentityIncrement, nameof(increment));
-
-            var identity = new Identity(this, seed, increment, isTempTable);
-            AddOrUpdateExtension(identity);
-            var model = ParentModel;
-            if (model.ContainsExtension(((IExtension)identity).Key))
-                throw new InvalidOperationException(DiagnosticMessages.Model_MultipleIdentityColumn);
-            model.AddExtension(identity);
-            return identity;
+            var result = Identity.FromInt32Column(this, seed, increment, isTempTable);
+            SetIdentity(result);
+            return result;
         }
 
         bool _isIdentityInitialized;
