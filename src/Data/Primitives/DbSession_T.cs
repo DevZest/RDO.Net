@@ -130,12 +130,12 @@ namespace DevZest.Data.Primitives
             return CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(ct);
         }
 
-        protected virtual DbLogger<TConnection, TTransaction, TCommand, TReader> CreateDbLogger()
+        protected virtual DbLogger<TConnection, TTransaction, TCommand, TReader> CreateLogger()
         {
             return new DbLogger<TConnection, TTransaction, TCommand, TReader>();
         }
 
-        private DbLogger<TConnection, TTransaction, TCommand, TReader> CurrentDbLogger
+        private DbLogger<TConnection, TTransaction, TCommand, TReader> CurrentLogger
         {
             get { return this.GetAddon<DbLogger<TConnection, TTransaction, TCommand, TReader>>(); }
         }
@@ -147,21 +147,21 @@ namespace DevZest.Data.Primitives
 
         public void SetLog(Action<string> value, LogCategory logCategory)
         {
-            var currentDbLogger = CurrentDbLogger;
+            var currentLogger = CurrentLogger;
             if (value == null)
             {
-                if (currentDbLogger != null)
-                    this.RemoveAddon(((IAddon)currentDbLogger).Key);
+                if (currentLogger != null)
+                    this.RemoveAddon(((IAddon)currentLogger).Key);
             }
             else
             {
-                if (currentDbLogger == null)
+                if (currentLogger == null)
                 {
-                    currentDbLogger = CreateDbLogger();
-                    this.Add(currentDbLogger);
+                    currentLogger = CreateLogger();
+                    this.Add(currentLogger);
                 }
-                currentDbLogger.WriteAction = value;
-                currentDbLogger.LogCategory = logCategory;
+                currentLogger.WriteAction = value;
+                currentLogger.LogCategory = logCategory;
             }
         }
 
