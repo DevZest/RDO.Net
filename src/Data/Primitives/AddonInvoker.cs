@@ -4,7 +4,18 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class AddonInvoker<T>
+    public abstract class AddonInvoker
+    {
+        public bool IsAsync { get; protected set; }
+
+        public TaskStatus TaskStatus { get; protected set; }
+
+        public Exception OriginalException { get; protected set; }
+
+        public Exception Exception { get; protected set; }
+    }
+
+    public abstract class AddonInvoker<T> : AddonInvoker
         where T : class, IAddon
     {
         protected AddonInvoker(AddonBag addonBag)
@@ -14,14 +25,6 @@ namespace DevZest.Data.Primitives
         }
 
         private AddonBag _addonBag;
-
-        public bool IsAsync { get; private set; }
-
-        public TaskStatus TaskStatus { get; private set; }
-
-        public Exception OriginalException { get; private set; }
-
-        public Exception Exception { get; private set; }
 
         private void SetExceptionThrown(Exception exception)
         {

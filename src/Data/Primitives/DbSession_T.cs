@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbSession<TConnection, TTransaction, TCommand, TReader> : DbSession
+    public abstract partial class DbSession<TConnection, TTransaction, TCommand, TReader> : DbSession
         where TConnection : DbConnection
         where TTransaction : DbTransaction
         where TCommand : DbCommand
@@ -17,28 +17,24 @@ namespace DevZest.Data.Primitives
         protected DbSession(TConnection connection)
         {
             connection.VerifyNotNull(nameof(connection));
-            _connection = connection;
+            Connection = connection;
         }
 
-        private TConnection _connection;
-        public TConnection GetConnection()
-        {
-            return _connection;
-        }
+        public TConnection Connection { get; }
 
         public sealed override Task OpenConnectionAsync(CancellationToken cancellationToken)
         {
-            return CreateConnectionInvoker().OpenAsync(cancellationToken);
+            return CreateConnectionInterceptorInvoker().OpenAsync(cancellationToken);
         }
 
         public sealed override void CloseConnection()
         {
-            CreateConnectionInvoker().Close();
+            CreateConnectionInterceptorInvoker().Close();
         }
 
-        private DbConnectionInterceptorInvoker<TConnection> CreateConnectionInvoker()
+        private ConnectionInterceptorInvoker CreateConnectionInterceptorInvoker()
         {
-            return new DbConnectionInterceptorInvoker<TConnection>(this, GetConnection());
+            return new ConnectionInterceptorInvoker(this, Connection);
         }
 
         private Stack<TTransaction> _transactions = new Stack<TTransaction>();
@@ -130,14 +126,14 @@ namespace DevZest.Data.Primitives
             return CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(ct);
         }
 
-        protected virtual DbLogger<TConnection, TTransaction, TCommand, TReader> CreateLogger()
+        protected virtual Logger CreateLogger()
         {
-            return new DbLogger<TConnection, TTransaction, TCommand, TReader>();
+            return new Logger();
         }
 
-        private DbLogger<TConnection, TTransaction, TCommand, TReader> CurrentLogger
+        private Logger CurrentLogger
         {
-            get { return this.GetAddon<DbLogger<TConnection, TTransaction, TCommand, TReader>>(); }
+            get { return this.GetAddon<Logger>(); }
         }
 
         public void SetLog(Action<string> value)

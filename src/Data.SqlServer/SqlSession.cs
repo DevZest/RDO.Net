@@ -30,7 +30,7 @@ namespace DevZest.Data.SqlServer
             get
             {
                 if (_sqlVersion == 0)
-                    _sqlVersion = GetConnection().GetSqlVersion();
+                    _sqlVersion = Connection.GetSqlVersion();
                 return _sqlVersion;
             }
             set { _sqlVersion = value; }
@@ -45,13 +45,13 @@ namespace DevZest.Data.SqlServer
 
         protected sealed override DbTransactionInvoker<SqlConnection, SqlTransaction> CreateTransactionInvoker(IsolationLevel? isolationLevel)
         {
-            return new SqlTransactionInvoker(this, GetConnection(), isolationLevel);
+            return new SqlTransactionInvoker(this, Connection, isolationLevel);
         }
 
         protected sealed override SqlCommand GetQueryCommand(DbQueryStatement queryStatement)
         {
             var queryGenerator = SqlGenerator.Select(this, queryStatement);
-            return queryGenerator.CreateCommand(GetConnection());
+            return queryGenerator.CreateCommand(Connection);
         }
 
         protected sealed override DbReaderInvoker<SqlCommand, SqlReader> CreateReaderInvoker(SqlCommand command, Model model)
@@ -78,7 +78,7 @@ namespace DevZest.Data.SqlServer
         {
             var sqlBuilder = new IndentedStringBuilder();
             model.GenerateCreateTableSql(sqlBuilder, SqlVersion, tableName, tableDescription, isTempTable);
-            return sqlBuilder.ToString().CreateSqlCommand(this.GetConnection());
+            return sqlBuilder.ToString().CreateSqlCommand(Connection);
         }
 
         public DbTable<SqlXmlModel> GetTable(SqlXml xml, string xPath)
@@ -265,7 +265,7 @@ namespace DevZest.Data.SqlServer
 
         internal SqlCommand GetInsertCommand(DbSelectStatement statement, IDbTable identityOutput = null)
         {
-            return SqlGenerator.Insert(this, statement, identityOutput).CreateCommand(GetConnection());
+            return SqlGenerator.Insert(this, statement, identityOutput).CreateCommand(Connection);
         }
 
         internal SqlCommand GetInsertIntoIdentityMappingsCommand<T, TSource>(DbTable<TSource> sourceData, IDbTable identityMappings, DbTable<T> targetTable)
@@ -335,12 +335,12 @@ namespace DevZest.Data.SqlServer
 
         protected sealed override SqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)
         {
-            return SqlGenerator.InsertScalar(this, statement, outputIdentity).CreateCommand(GetConnection());
+            return SqlGenerator.InsertScalar(this, statement, outputIdentity).CreateCommand(Connection);
         }
 
         protected sealed override SqlCommand GetUpdateCommand(DbSelectStatement statement)
         {
-            return SqlGenerator.Update(this, statement).CreateCommand(GetConnection());
+            return SqlGenerator.Update(this, statement).CreateCommand(Connection);
         }
 
         protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
@@ -362,7 +362,7 @@ namespace DevZest.Data.SqlServer
 
         protected sealed override SqlCommand GetDeleteCommand(DbSelectStatement statement)
         {
-            return SqlGenerator.Delete(this, statement).CreateCommand(GetConnection());
+            return SqlGenerator.Delete(this, statement).CreateCommand(Connection);
         }
 
         protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo, CancellationToken cancellationToken)
@@ -394,7 +394,7 @@ declare @sql nvarchar(50) = N'create schema ' + @mockschema;
 exec tempdb..sp_executesql @sql;
 select @mockschema;
 ";
-            var sqlCommand = new SqlCommand(sqlCommandText, GetConnection());
+            var sqlCommand = new SqlCommand(sqlCommandText, Connection);
             return sqlCommand.ExecuteScalar();
         }
 
