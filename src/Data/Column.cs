@@ -234,12 +234,12 @@ namespace DevZest.Data
         {
             if (isNullable)
             {
-                var key = NotNull.Singleton.Key;
+                var key = ColumnNotNull.Singleton.Key;
                 if (ContainsExtension(key))
                     RemoveExtension(key);
             }
             else
-                AddOrUpdateExtension(NotNull.Singleton);
+                AddOrUpdateExtension(ColumnNotNull.Singleton);
         }
 
         /// <summary>Gets a value indicates whether this column is nullable.</summary>
@@ -253,7 +253,7 @@ namespace DevZest.Data
                     return false;
                 if (IsPrimaryKey || GetIdentity(true) != null || GetIdentity(false) != null)
                     return false;
-                var resourceKey = Primitives.NotNull.Singleton.Key;
+                var resourceKey = Primitives.ColumnNotNull.Singleton.Key;
                 return !ContainsExtension(resourceKey);
             }
         }

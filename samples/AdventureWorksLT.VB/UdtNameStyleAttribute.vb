@@ -3,7 +3,7 @@ Imports DevZest.Data.Primitives
 Imports DevZest.Data.Annotations.Primitives
 
 Namespace DevZest.Samples.AdventureWorksLT
-    <ModelMemberAttributeSpec(GetType(NotNull), True, GetType(_Boolean))>
+    <ModelMemberAttributeSpec(GetType(ColumnNotNull), True, GetType(_Boolean))>
     Public NotInheritable Class UdtNameStyleAttribute
         Inherits ColumnAttribute
 

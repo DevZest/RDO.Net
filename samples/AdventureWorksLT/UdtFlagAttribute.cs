@@ -5,7 +5,7 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ModelMemberAttributeSpec(typeof(NotNull), true, typeof(_Boolean))]
+    [ModelMemberAttributeSpec(typeof(ColumnNotNull), true, typeof(_Boolean))]
     public sealed class UdtFlagAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)

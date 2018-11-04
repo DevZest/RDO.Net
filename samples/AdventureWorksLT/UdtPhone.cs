@@ -6,7 +6,7 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ModelMemberAttributeSpec(new Type[] { typeof(NotNull), typeof(SqlColumnDescriptor) }, true, typeof(_String))]
+    [ModelMemberAttributeSpec(new Type[] { typeof(ColumnNotNull), typeof(SqlColumnDescriptor) }, true, typeof(_String))]
     public sealed class UdtPhone : ColumnAttribute
     {
         protected override void Wireup(Column column)
