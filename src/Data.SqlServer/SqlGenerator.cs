@@ -21,7 +21,7 @@ namespace DevZest.Data.SqlServer
             });
         }
 
-        internal static SqlGenerator Insert(SqlSession sqlSession, DbSelectStatement statement, DbTable<IdentityOutput> identityOutput)
+        internal static SqlGenerator Insert(SqlSession sqlSession, DbSelectStatement statement, IDbTable identityOutput)
         {
             var result = new SqlGenerator(sqlSession.SqlVersion);
             var model = statement.Model;
@@ -31,11 +31,12 @@ namespace DevZest.Data.SqlServer
 
             if (identityOutput != null)
             {
-                Column identityColumn = model.GetIdentity(false).Column;
+                var identityColumn = model.GetIdentity(false).Column;
+                var identityOutputNewValue = ((IIdentityOutput)identityOutput.Model).NewValue;
                 sqlBuilder.AppendLine(string.Format("OUTPUT INSERTED.{0} INTO {1} ({2})",
                     identityColumn.DbColumnName.ToQuotedIdentifier(),
                     identityOutput.Name.ToQuotedIdentifier(),
-                    identityOutput._.NewValue.DbColumnName.ToQuotedIdentifier()));
+                    identityOutputNewValue.DbColumnName.ToQuotedIdentifier()));
             }
 
             if (statement.Select == null)

@@ -126,7 +126,7 @@ namespace DevZest.Data.Helpers
                 result.Add(dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.Join(joinTo))));
             else
             {
-                var identityOutput = sqlSession.MockTempTable<IdentityOutput>(result);
+                var identityOutput = MockIdentityOutputTable(identityMappings, sqlSession, result);
                 var statement = dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.Join(joinTo));
                 result.Add(sqlSession.GetInsertCommand(statement, identityOutput));
                 result.Add(sqlSession.GetInsertIntoIdentityMappingsCommand(source, identityMappings, joinTo == null ? null : dbTable));
@@ -141,6 +141,19 @@ namespace DevZest.Data.Helpers
                 result.Add(sqlSession.GetUpdateCommand(statement));
 
             return result;
+        }
+
+        private static IDbTable MockIdentityOutputTable(IDbTable identityMappings, SqlSession sqlSession, IList<SqlCommand> commands)
+        {
+            if (identityMappings is DbTable<Int32IdentityMapping>)
+                return sqlSession.MockTempTable<Int32IdentityOutput>(commands);
+            else if (identityMappings is DbTable<Int64IdentityMapping>)
+                return sqlSession.MockTempTable<Int64IdentityOutput>(commands);
+            else
+            {
+                Debug.Assert(identityMappings is DbTable<Int16IdentityMapping>);
+                return sqlSession.MockTempTable<Int16IdentityOutput>(commands);
+            }
         }
 
         private static IDbTable MockIdentityMappings<TSource, TTarget>(DbTable<TTarget> dbTable, DbTable<TSource> source, IList<SqlCommand> commands)

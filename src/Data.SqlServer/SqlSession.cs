@@ -243,15 +243,27 @@ namespace DevZest.Data.SqlServer
             if (identityMappings == null)
                 return await ExecuteNonQueryAsync(GetInsertCommand(statement), ct);
 
-            Action<IdentityOutput> action = null;
-            var identityOutput = await CreateTempTableAsync<IdentityOutput>(null, action, ct);
+            var identityOutput = await CreateIdentityOutputTable(identityMappings, ct);
             var result = await ExecuteNonQueryAsync(GetInsertCommand(statement, identityOutput), ct);
             await ExecuteNonQueryAsync(GetInsertIntoIdentityMappingsCommand(source, identityMappings, joinTo != null ? target : null), ct);
             await ExecuteNonQueryAsync(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput), ct);
             return result;
         }
 
-        internal SqlCommand GetInsertCommand(DbSelectStatement statement, DbTable<IdentityOutput> identityOutput = null)
+        private async Task<IDbTable> CreateIdentityOutputTable(IDbTable identityMappings, CancellationToken ct)
+        {
+            if (identityMappings is DbTable<Int32IdentityMapping>)
+                return await CreateTempTableAsync<Int32IdentityOutput>(ct);
+            else if (identityMappings is DbTable<Int64IdentityMapping>)
+                return await CreateTempTableAsync<Int64IdentityOutput>(ct);
+            else
+            {
+                Debug.Assert(identityMappings is DbTable<Int16IdentityMapping>);
+                return await CreateTempTableAsync<Int16IdentityOutput>(ct);
+            }
+        }
+
+        internal SqlCommand GetInsertCommand(DbSelectStatement statement, IDbTable identityOutput = null)
         {
             return SqlGenerator.Insert(this, statement, identityOutput).CreateCommand(GetConnection());
         }
@@ -298,23 +310,24 @@ namespace DevZest.Data.SqlServer
             return new DbJoinClause(DbJoinKind.LeftJoin, source.GetFromClause(), target.GetFromClause(), new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
-        internal SqlCommand GetUpdateIdentityMappingsCommand(IDbTable identityMappings, DbTable<IdentityOutput> identityOutput)
+        internal SqlCommand GetUpdateIdentityMappingsCommand(IDbTable identityMappings, IDbTable identityOutput)
         {
             var statement = BuildUpdateIdentityMappingsStatement(identityMappings, identityOutput);
             return GetUpdateCommand(statement);
         }
 
-        private static DbSelectStatement BuildUpdateIdentityMappingsStatement(IDbTable identityMappings, DbTable<IdentityOutput> identityOutputs)
+        private static DbSelectStatement BuildUpdateIdentityMappingsStatement(IDbTable identityMappings, IDbTable identityOutputs)
         {
             var identityMappingModel = identityMappings.Model;
             var identityMapping = (IIdentityMapping)identityMappingModel;
-            var identityOutput = identityOutputs._;
+            var identityOutputModel = identityOutputs.Model;
+            var identityOutput = (IIdentityOutput)identityOutputModel;
             var select = new ColumnMapping[]
             {
                 identityOutput.NewValue.UnsafeMap(identityMapping.NewValue)
             };
 
-            var mappings = new ColumnMapping[] { identityMappingModel.GetIdentity(true).Column.UnsafeMap(identityOutput.GetIdentity(true).Column) };
+            var mappings = new ColumnMapping[] { identityMappingModel.GetIdentity(true).Column.UnsafeMap(identityOutputModel.GetIdentity(true).Column) };
             var from = new DbJoinClause(DbJoinKind.InnerJoin, identityMappings.GetFromClause(), identityOutputs.GetFromClause(),
                 new ReadOnlyCollection<ColumnMapping>(mappings));
             return new DbSelectStatement(identityMappingModel, select, from, null, null, -1, -1);
