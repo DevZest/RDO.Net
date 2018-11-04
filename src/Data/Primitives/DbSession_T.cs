@@ -293,7 +293,7 @@ namespace DevZest.Data.Primitives
             {
             }
 
-            public _Int32 IdentityValue { get; private set; }
+            public _Int64 IdentityValue { get; private set; }
         }
 
         internal sealed override async Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken)
@@ -306,7 +306,7 @@ namespace DevZest.Data.Primitives
             }
 
             var model = ScalarIdentityOutput.Singleton;
-            int? identityValue = null;
+            long? identityValue = null;
             using (var reader = await PrepareReaderInvoker(command, model).ExecuteAsync(cancellationToken))
             {
                 if (await reader.ReadAsync(cancellationToken))
