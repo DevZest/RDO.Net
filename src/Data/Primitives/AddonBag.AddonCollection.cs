@@ -33,8 +33,7 @@ namespace DevZest.Data.Primitives
                 {
                     foreach (var item in collection)
                     {
-                        var result = item as T;
-                        if (result != null)
+                        if (item is T result)
                             yield return result;
                     }
                 }
