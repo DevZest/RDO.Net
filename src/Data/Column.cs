@@ -234,12 +234,12 @@ namespace DevZest.Data
         {
             if (isNullable)
             {
-                var resourceKey = Primitives.NotNull.Singleton.Key;
-                if (ContainsExtension(resourceKey))
-                    RemoveExtension(resourceKey);
+                var key = NotNull.Singleton.Key;
+                if (ContainsExtension(key))
+                    RemoveExtension(key);
             }
             else
-                AddOrUpdateExtension(Primitives.NotNull.Singleton);
+                AddOrUpdateExtension(NotNull.Singleton);
         }
 
         /// <summary>Gets a value indicates whether this column is nullable.</summary>

@@ -2,15 +2,20 @@
 using DevZest.Data;
 using DevZest.Data.SqlServer;
 using DevZest.Data.Annotations.Primitives;
+using DevZest.Data.Primitives;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [ModelMemberAttributeSpec(new Type[] { typeof(NotNull), typeof(SqlColumnDescriptor) }, true, typeof(_String))]
     public sealed class UdtNameAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            column.Nullable(true);
-            ((Column<string>)column).AsNVarChar(50);
+            if (column is _String stringColumn)
+            {
+                stringColumn.Nullable(true);
+                stringColumn.AsSqlNVarChar(50);
+            }
         }
     }
 }

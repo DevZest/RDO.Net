@@ -3,6 +3,7 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.SqlServer
 {
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_Binary))]
     public sealed class SqlBinaryAttribute : ColumnAttribute
     {
         public SqlBinaryAttribute(int size)
@@ -14,18 +15,22 @@ namespace DevZest.Data.SqlServer
 
         protected override void Wireup(Column column)
         {
-            ((Column<Binary>)column).AsBinary(Size);
+            if (column is _Binary binary)
+                binary.AsSqlBinary(Size);
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_Binary))]
     public sealed class SqlBinaryMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<Binary>)column).AsBinaryMax();
+            if (column is _Binary binary)
+                binary.AsSqlBinaryMax();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_String))]
     public sealed class SqlCharAttribute : ColumnAttribute
     {
         public SqlCharAttribute(int size)
@@ -37,34 +42,42 @@ namespace DevZest.Data.SqlServer
 
         protected override void Wireup(Column column)
         {
-            ((Column<string>)column).AsChar(Size);
+            if (column is _String stringColumn)
+                stringColumn.AsSqlChar(Size);
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_String))]
     public sealed class SqlCharMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<string>)column).AsCharMax();
+            if (column is _String stringColumn)
+                stringColumn.AsSqlCharMax();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_DateTime))]
     public sealed class SqlDateAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<DateTime?>)column).AsDate();
+            if (column is _DateTime dateTime)
+                dateTime.AsSqlDate();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_DateTime))]
     public sealed class SqlDateTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<DateTime?>)column).AsDateTime();
+            if (column is _DateTime dateTime)
+                dateTime.AsSqlDateTime();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_DateTime))]
     public sealed class SqlDateTime2Attribute : ColumnAttribute
     {
         public SqlDateTime2Attribute(byte precision)
@@ -76,10 +89,12 @@ namespace DevZest.Data.SqlServer
 
         protected override void Wireup(Column column)
         {
-            ((Column<DateTime?>)column).AsDateTime2(Precision);
+            if (column is _DateTime dateTime)
+                dateTime.AsSqlDateTime2(Precision);
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_Decimal))]
     public sealed class SqlDecimalAttribute : ColumnAttribute
     {
         public SqlDecimalAttribute(byte precision, byte scale)
@@ -94,18 +109,22 @@ namespace DevZest.Data.SqlServer
 
         protected override void Wireup(Column column)
         {
-            ((Column<Decimal?>)column).AsDecimal(Precision, Scale);
+            if (column is _Decimal decimalColumn)
+                decimalColumn.AsSqlDecimal(Precision, Scale);
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_Decimal))]
     public sealed class SqlMoneyAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<Decimal?>)column).AsMoney();
+            if (column is _Decimal decimalColumn)
+                decimalColumn.AsSqlMoney();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_String))]
     public sealed class SqlNCharAttribute : ColumnAttribute
     {
         public SqlNCharAttribute(int size)
@@ -117,18 +136,22 @@ namespace DevZest.Data.SqlServer
 
         protected override void Wireup(Column column)
         {
-            ((Column<string>)column).AsNChar(Size);
+            if (column is _String stringColumn)
+                stringColumn.AsSqlNChar(Size);
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_String))]
     public sealed class SqlNCharMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<string>)column).AsNCharMax();
+            if (column is _String stringColumn)
+                stringColumn.AsSqlNCharMax();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_String))]
     public sealed class SqlNVarCharAttribute : ColumnAttribute
     {
         public SqlNVarCharAttribute(int size)
@@ -140,50 +163,62 @@ namespace DevZest.Data.SqlServer
 
         protected override void Wireup(Column column)
         {
-            ((Column<string>)column).AsNVarChar(Size);
+            if (column is _String stringColumn)
+                stringColumn.AsSqlNVarChar(Size);
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_String))]
     public sealed class SqlNVarCharMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<string>)column).AsNVarCharMax();
+            if (column is _String stringColumn)
+                stringColumn.AsSqlNVarCharMax();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_DateTime))]
     public sealed class SqlSmallDateTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<DateTime?>)column).AsSmallDateTime();
+            if (column is _DateTime dateTime)
+                dateTime.AsSqlSmallDateTime();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_Decimal))]
     public sealed class SqlSmallMoneyAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<Decimal?>)column).AsSmallMoney();
+            if (column is _Decimal decimalColumn)
+                decimalColumn.AsSqlSmallMoney();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_DateTime))]
     public sealed class SqlTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<DateTime?>)column).AsTime();
+            if (column is _DateTime dateTime)
+                dateTime.AsSqlTime();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_Binary))]
     public sealed class SqlTimeStampAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<Binary>)column).AsTimestamp();
+            if (column is _Binary binary)
+                binary.AsSqlTimestamp();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_Binary))]
     public sealed class SqlVarBinaryAttribute : ColumnAttribute
     {
         public SqlVarBinaryAttribute(int size)
@@ -195,18 +230,22 @@ namespace DevZest.Data.SqlServer
 
         protected override void Wireup(Column column)
         {
-            ((Column<Binary>)column).AsVarBinary(Size);
+            if (column is _Binary binary)
+                binary.AsSqlVarBinary(Size);
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_Binary))]
     public sealed class SqlVarBinaryMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<Binary>)column).AsVarBinaryMax();
+            if (column is _Binary binary)
+                binary.AsSqlVarBinaryMax();
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_String))]
     public sealed class SqlVarCharAttribute : ColumnAttribute
     {
         public SqlVarCharAttribute(int size)
@@ -218,15 +257,18 @@ namespace DevZest.Data.SqlServer
 
         protected override void Wireup(Column column)
         {
-            ((Column<string>)column).AsVarChar(Size);
+            if (column is _String stringColumn)
+                stringColumn.AsSqlVarChar(Size);
         }
     }
 
+    [ModelMemberAttributeSpec(typeof(SqlColumnDescriptor), true, typeof(_String))]
     public sealed class SqlVarCharMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
-            ((Column<string>)column).AsVarCharMax();
+            if (column is _String stringColumn)
+                stringColumn.AsSqlVarCharMax();
         }
     }
 }

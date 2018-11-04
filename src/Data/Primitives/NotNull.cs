@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data.Primitives
 {
-    internal sealed class NotNull : IExtension
+    public sealed class NotNull : IExtension
     {
         public static readonly NotNull Singleton = new NotNull();
 
@@ -12,7 +10,7 @@ namespace DevZest.Data.Primitives
 
         public object Key
         {
-            get { return this.GetType(); }
+            get { return typeof(NotNull); }
         }
     }
 }

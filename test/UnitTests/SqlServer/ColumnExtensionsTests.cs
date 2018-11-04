@@ -85,12 +85,12 @@ namespace DevZest.Data.SqlServer
 
         private static void VerifyColumnMapper(SqlVersion sqlVersion, Column column, SqlParameterInfo expectedParamInfo, string expectedSqlString)
         {
-            var columnMapper = column.GetMapper();
+            var columnMapper = column.GetSqlColumnDescriptor();
             VerifySqlParamInfo(sqlVersion, columnMapper, expectedParamInfo);
             Assert.AreEqual(expectedSqlString, columnMapper.GetDataTypeSql(sqlVersion));
         }
 
-        private static void VerifySqlParamInfo(SqlVersion sqlVersion, ColumnMapper columnMapper, SqlParameterInfo expected)
+        private static void VerifySqlParamInfo(SqlVersion sqlVersion, SqlColumnDescriptor columnMapper, SqlParameterInfo expected)
         {
             var actual = columnMapper.GetSqlParameterInfo(sqlVersion);
             Assert.AreEqual(expected.SqlDbType, actual.SqlDbType);
@@ -104,107 +104,107 @@ namespace DevZest.Data.SqlServer
         public void Column_intercepted_column_mappers()
         {
             {
-                var binary = new _Binary().AsBinary(500);
+                var binary = new _Binary().AsSqlBinary(500);
                 VerifyColumnMapper(SqlVersion.Sql11, binary, SqlDbType.Binary, 500, "BINARY(500)");
             }
 
             {
-                var binaryMax = new _Binary().AsBinaryMax();
+                var binaryMax = new _Binary().AsSqlBinaryMax();
                 VerifyColumnMapper(SqlVersion.Sql11, binaryMax, SqlDbType.Binary, -1, "BINARY(MAX)");
             }
 
             {
-                var varBinary = new _Binary().AsVarBinary(225);
+                var varBinary = new _Binary().AsSqlVarBinary(225);
                 VerifyColumnMapper(SqlVersion.Sql11, varBinary, SqlDbType.VarBinary, 225, "VARBINARY(225)");
             }
 
             {
-                var varBinaryMax = new _Binary().AsVarBinaryMax();
+                var varBinaryMax = new _Binary().AsSqlVarBinaryMax();
                 VerifyColumnMapper(SqlVersion.Sql11, varBinaryMax, SqlDbType.VarBinary, -1, "VARBINARY(MAX)");
             }
 
             {
-                var timestamp = new _Binary().AsTimestamp();
+                var timestamp = new _Binary().AsSqlTimestamp();
                 VerifyColumnMapper(SqlVersion.Sql11, timestamp, SqlDbType.Timestamp, "TIMESTAMP");
             }
 
             {
-                var decimalColumn = new _Decimal().AsDecimal(28, 8);
+                var decimalColumn = new _Decimal().AsSqlDecimal(28, 8);
                 VerifyColumnMapper(SqlVersion.Sql11, decimalColumn, SqlDbType.Decimal, "DECIMAL(28, 8)", 28, 8);
             }
 
             {
-                var smallMoney = new _Decimal().AsSmallMoney();
+                var smallMoney = new _Decimal().AsSqlSmallMoney();
                 VerifyColumnMapper(SqlVersion.Sql11, smallMoney, SqlDbType.SmallMoney, "SMALLMONEY");
             }
 
             {
-                var money = new _Decimal().AsMoney();
+                var money = new _Decimal().AsSqlMoney();
                 VerifyColumnMapper(SqlVersion.Sql11, money, SqlDbType.Money, "MONEY");
             }
 
             {
-                var date = new _DateTime().AsDate();
+                var date = new _DateTime().AsSqlDate();
                 VerifyColumnMapper(SqlVersion.Sql11, date, SqlDbType.Date, "DATE");
             }
 
             {
-                var time = new _DateTime().AsTime();
+                var time = new _DateTime().AsSqlTime();
                 VerifyColumnMapper(SqlVersion.Sql11, time, SqlDbType.Time, "TIME");
             }
 
             {
-                var dateTime = new _DateTime().AsDateTime();
+                var dateTime = new _DateTime().AsSqlDateTime();
                 VerifyColumnMapper(SqlVersion.Sql11, dateTime, SqlDbType.DateTime, "DATETIME");
             }
 
             {
-                var smallDateTime = new _DateTime().AsSmallDateTime();
+                var smallDateTime = new _DateTime().AsSqlSmallDateTime();
                 VerifyColumnMapper(SqlVersion.Sql11, smallDateTime, SqlDbType.SmallDateTime, "SMALLDATETIME");
             }
 
             {
-                var dateTime2 = new _DateTime().AsDateTime2(5);
+                var dateTime2 = new _DateTime().AsSqlDateTime2(5);
                 VerifyColumnMapper(SqlVersion.Sql11, dateTime2, SqlDbType.DateTime2, "DATETIME2(5)", 5);
             }
 
             {
-                var charColumn = new _String().AsChar(478);
+                var charColumn = new _String().AsSqlChar(478);
                 VerifyColumnMapper(SqlVersion.Sql11, charColumn, SqlDbType.Char, 478, "CHAR(478)");
             }
 
             {
-                var charMax = new _String().AsCharMax();
+                var charMax = new _String().AsSqlCharMax();
                 VerifyColumnMapper(SqlVersion.Sql11, charMax, SqlDbType.Char, -1, "CHAR(MAX)");
             }
 
             {
-                var nchar = new _String().AsNChar(333);
+                var nchar = new _String().AsSqlNChar(333);
                 VerifyColumnMapper(SqlVersion.Sql11, nchar, SqlDbType.NChar, 333, "NCHAR(333)");
             }
 
             {
-                var ncharMax = new _String().AsNCharMax();
+                var ncharMax = new _String().AsSqlNCharMax();
                 VerifyColumnMapper(SqlVersion.Sql11, ncharMax, SqlDbType.NChar, -1, "NCHAR(MAX)");
             }
 
             {
-                var varchar = new _String().AsVarChar(512);
+                var varchar = new _String().AsSqlVarChar(512);
                 VerifyColumnMapper(SqlVersion.Sql11, varchar, SqlDbType.VarChar, 512, "VARCHAR(512)");
             }
 
             {
-                var varcharMax = new _String().AsVarCharMax();
+                var varcharMax = new _String().AsSqlVarCharMax();
                 VerifyColumnMapper(SqlVersion.Sql11, varcharMax, SqlDbType.VarChar, -1, "VARCHAR(MAX)");
             }
 
             {
-                var nvarchar = new _String().AsNVarChar(1024);
+                var nvarchar = new _String().AsSqlNVarChar(1024);
                 VerifyColumnMapper(SqlVersion.Sql11, nvarchar, SqlDbType.NVarChar, 1024, "NVARCHAR(1024)");
             }
 
             {
-                var nvarcharMax = new _String().AsNVarCharMax();
+                var nvarcharMax = new _String().AsSqlNVarCharMax();
                 VerifyColumnMapper(SqlVersion.Sql11, nvarcharMax, SqlDbType.NVarChar, -1, "NVARCHAR(MAX)");
             }
 

@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace DevZest.Data.SqlServer
 {
-    internal abstract class ColumnMapper : IExtension
+    public abstract class SqlColumnDescriptor : IExtension
     {
         private const string NULL = "NULL";
 
@@ -18,9 +18,9 @@ namespace DevZest.Data.SqlServer
             XmlValue
         }
 
-        public abstract SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion);
+        internal abstract SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion);
 
-        public void GenerateColumnDefinitionSql(IndentedStringBuilder sqlBuilder, string tableName, bool isTempTable, SqlVersion sqlVersion)
+        internal void GenerateColumnDefinitionSql(IndentedStringBuilder sqlBuilder, string tableName, bool isTempTable, SqlVersion sqlVersion)
         {
             GenerateDataTypeSql(sqlBuilder, isTempTable, sqlVersion);
 
@@ -81,21 +81,22 @@ namespace DevZest.Data.SqlServer
             get { return GetColumn().IsNullable; }
         }
 
-        public abstract string GetDataTypeSql(SqlVersion sqlVersion);
+        internal abstract string GetDataTypeSql(SqlVersion sqlVersion);
 
-        public abstract string GetTSqlLiteral(object value, SqlVersion sqlVersion);
+        internal abstract string GetTSqlLiteral(object value, SqlVersion sqlVersion);
 
-        public abstract string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion);
+        internal abstract string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion);
 
-        public abstract Column GetColumn();
+        internal abstract Column GetColumn();
 
-        protected abstract object ConvertParameterValue(object value);
+        internal abstract object ConvertParameterValue(object value);
 
-        public SqlParameter CreateSqlParameter(string name, ParameterDirection direction, object value, SqlVersion version)
+        internal SqlParameter CreateSqlParameter(string name, ParameterDirection direction, object value, SqlVersion version)
         {
-            var result = new SqlParameter();
-            
-            result.ParameterName = name;
+            var result = new SqlParameter
+            {
+                ParameterName = name
+            };
 
             // .Direction
             if (result.Direction != direction)
@@ -139,24 +140,24 @@ namespace DevZest.Data.SqlServer
 
         object IExtension.Key
         {
-            get { return typeof(ColumnMapper); }
+            get { return typeof(SqlColumnDescriptor); }
         }
 
-        private abstract class MapperBase<T> : ColumnMapper
+        private abstract class SqlColumnTypeBase<T> : SqlColumnDescriptor
         {
-            protected MapperBase(Column<T> column)
+            protected SqlColumnTypeBase(Column<T> column)
             {
                 Column = column;
             }
 
             public Column<T> Column { get; private set; }
 
-            public sealed override string GetTSqlLiteral(object value, SqlVersion sqlVersion)
+            internal sealed override string GetTSqlLiteral(object value, SqlVersion sqlVersion)
             {
                 return value == null ? NULL : GetTSqlLiteral((T)value, sqlVersion);
             }
 
-            public sealed override string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion)
+            internal sealed override string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion)
             {
                 return GetXmlValue(Column[ordinal], sqlVersion);
             }
@@ -165,21 +166,21 @@ namespace DevZest.Data.SqlServer
 
             protected abstract string GetXmlValue(T value, SqlVersion sqlVersion);
 
-            public sealed override Column GetColumn()
+            internal sealed override Column GetColumn()
             {
                 return Column;
             }
         }
 
-        private abstract class StructMapper<T> : MapperBase<Nullable<T>>
+        private abstract class StructSqlColumnType<T> : SqlColumnTypeBase<Nullable<T>>
             where T : struct
         {
-            protected StructMapper(Column<Nullable<T>> column)
+            protected StructSqlColumnType(Column<Nullable<T>> column)
                 : base(column)
             {
             }
 
-            protected sealed override object ConvertParameterValue(object value)
+            internal sealed override object ConvertParameterValue(object value)
             {
                 Nullable<T> x = (Nullable<T>)value;
                 if (x.HasValue)
@@ -201,19 +202,19 @@ namespace DevZest.Data.SqlServer
             protected abstract string GetValue(T value, ValueKind kind, SqlVersion sqlVersion);
         }
 
-        private sealed class BigIntMapper : StructMapper<Int64>
+        private sealed class SqlBigInt : StructSqlColumnType<Int64>
         {
-            public BigIntMapper(Column<Int64?> column)
+            public SqlBigInt(Column<Int64?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.BigInt();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "BIGINT";
             }
@@ -224,14 +225,14 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper BigInt(Column<Int64?> int64Column)
+        internal static SqlColumnDescriptor BigInt(Column<Int64?> int64Column)
         {
-            return new BigIntMapper(int64Column);
+            return new SqlBigInt(int64Column);
         }
 
-        private sealed class DecimalMapper : StructMapper<Decimal>
+        private sealed class SqlDecimal : StructSqlColumnType<Decimal>
         {
-            public DecimalMapper(Column<Decimal?> column, Byte precision, Byte scale)
+            public SqlDecimal(Column<Decimal?> column, Byte precision, Byte scale)
                 : base(column)
             {
                 Precision = precision;
@@ -242,12 +243,12 @@ namespace DevZest.Data.SqlServer
 
             public Byte Scale { get; private set; }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Decimal(Precision, Scale);
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return string.Format("DECIMAL({0}, {1})", Precision, Scale);
             }
@@ -258,24 +259,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Decimal(Column<Decimal?> decimalColumn, Byte precision, Byte scale)
+        internal static SqlColumnDescriptor Decimal(Column<Decimal?> decimalColumn, Byte precision, Byte scale)
         {
-            return new DecimalMapper(decimalColumn, precision, scale);
+            return new SqlDecimal(decimalColumn, precision, scale);
         }
 
-        private sealed class BitMapper : StructMapper<Boolean>
+        private sealed class SqlBit : StructSqlColumnType<Boolean>
         {
-            public BitMapper(Column<Boolean?> column)
+            public SqlBit(Column<Boolean?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Bit();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "BIT";
             }
@@ -286,24 +287,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Bit(Column<Boolean?> booleanColumn)
+        internal static SqlColumnDescriptor Bit(Column<Boolean?> booleanColumn)
         {
-            return new BitMapper(booleanColumn);
+            return new SqlBit(booleanColumn);
         }
 
-        private sealed class TinyIntMapper : StructMapper<Byte>
+        private sealed class SqlTinyInt : StructSqlColumnType<Byte>
         {
-            public TinyIntMapper(Column<Byte?> column)
+            public SqlTinyInt(Column<Byte?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.TinyInt();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "TINYINT";
             }
@@ -314,24 +315,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper TinyInt(Column<Byte?> byteColumn)
+        internal static SqlColumnDescriptor TinyInt(Column<Byte?> byteColumn)
         {
-            return new TinyIntMapper(byteColumn);
+            return new SqlTinyInt(byteColumn);
         }
 
-        private sealed class SmallIntMapper : StructMapper<Int16>
+        private sealed class SqlSmallInt : StructSqlColumnType<Int16>
         {
-            public SmallIntMapper(Column<Int16?> column)
+            public SqlSmallInt(Column<Int16?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.SmallInt();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "SMALLINT";
             }
@@ -342,24 +343,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper SmallInt(Column<Int16?> int16Column)
+        internal static SqlColumnDescriptor SmallInt(Column<Int16?> int16Column)
         {
-            return new SmallIntMapper(int16Column);
+            return new SqlSmallInt(int16Column);
         }
 
-        private sealed class IntMapper : StructMapper<Int32>
+        private sealed class SqlInt : StructSqlColumnType<Int32>
         {
-            public IntMapper(Column<Int32?> column)
+            public SqlInt(Column<Int32?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Int();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "INT";
             }
@@ -370,24 +371,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Int(Column<Int32?> int32Column)
+        internal static SqlColumnDescriptor Int(Column<Int32?> int32Column)
         {
-            return new IntMapper(int32Column);
+            return new SqlInt(int32Column);
         }
 
-        private sealed class SmallMoneyMapper : StructMapper<Decimal>
+        private sealed class SqlSmallMoney : StructSqlColumnType<Decimal>
         {
-            public SmallMoneyMapper(Column<Decimal?> column)
+            public SqlSmallMoney(Column<Decimal?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.SmallMoney();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "SMALLMONEY";
             }
@@ -398,24 +399,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper SmallMoney(Column<Decimal?> decimalColumn)
+        internal static SqlColumnDescriptor SmallMoney(Column<Decimal?> decimalColumn)
         {
-            return new SmallMoneyMapper(decimalColumn);
+            return new SqlSmallMoney(decimalColumn);
         }
 
-        private sealed class MoneyMapper : StructMapper<Decimal>
+        private sealed class SqlMoney : StructSqlColumnType<Decimal>
         {
-            public MoneyMapper(Column<Decimal?> column)
+            public SqlMoney(Column<Decimal?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Money();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "MONEY";
             }
@@ -426,15 +427,15 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Money(Column<Decimal?> decimalColumn)
+        internal static SqlColumnDescriptor Money(Column<Decimal?> decimalColumn)
         {
-            return new MoneyMapper(decimalColumn);
+            return new SqlMoney(decimalColumn);
         }
 
-        private abstract class MaxSizeColumnMapper<T> : MapperBase<T>
+        private abstract class MaxSizeSqlColumn<T> : SqlColumnTypeBase<T>
             where T : class
         {
-            protected MaxSizeColumnMapper(Column<T> column, int size)
+            protected MaxSizeSqlColumn(Column<T> column, int size)
                 : base(column)
             {
                 Size = size;
@@ -446,12 +447,12 @@ namespace DevZest.Data.SqlServer
 
             protected abstract string GetSqlDataType();
 
-            public sealed override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal sealed override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return GetSqlParameterInfo(Size);
             }
 
-            public sealed override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal sealed override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 SqlParameterInfo paramInfo = GetSqlParameterInfo(sqlVersion);
                 Debug.Assert(paramInfo.Size.HasValue);
@@ -460,14 +461,14 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private abstract class BinaryMapperBase : MaxSizeColumnMapper<Binary>
+        private abstract class SqlBinaryColumnBase : MaxSizeSqlColumn<Binary>
         {
-            protected BinaryMapperBase(Column<Binary> column, int size)
+            protected SqlBinaryColumnBase(Column<Binary> column, int size)
                 : base(column, size)
             {
             }
 
-            protected sealed override object ConvertParameterValue(object value)
+            internal sealed override object ConvertParameterValue(object value)
             {
                 var result = (Binary)value;
                 if (result == null)
@@ -487,9 +488,9 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private sealed class BinaryMapper : BinaryMapperBase
+        private sealed class SqlBinary : SqlBinaryColumnBase
         {
-            public BinaryMapper(Column<Binary> column, int size)
+            public SqlBinary(Column<Binary> column, int size)
                 : base(column, size)
             {
             }
@@ -515,14 +516,14 @@ namespace DevZest.Data.SqlServer
         }
 
 
-        public static ColumnMapper Binary(Column<Binary> binaryColumn, int size)
+        internal static SqlColumnDescriptor Binary(Column<Binary> binaryColumn, int size)
         {
-            return new BinaryMapper(binaryColumn, size);
+            return new SqlBinary(binaryColumn, size);
         }
 
-        private sealed class VarBinaryMapper : BinaryMapperBase
+        private sealed class SqlVarBinary : SqlBinaryColumnBase
         {
-            public VarBinaryMapper(Column<Binary> column, int size)
+            public SqlVarBinary(Column<Binary> column, int size)
                 : base(column, size)
             {
             }
@@ -538,19 +539,19 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper VarBinary(Column<Binary> binaryColumn, int size)
+        internal static SqlColumnDescriptor VarBinary(Column<Binary> binaryColumn, int size)
         {
-            return new VarBinaryMapper(binaryColumn, size);
+            return new SqlVarBinary(binaryColumn, size);
         }
 
-        private sealed class TimestampMapper : MapperBase<Binary>
+        private sealed class SqlTimestamp : SqlColumnTypeBase<Binary>
         {
-            public TimestampMapper(Column<Binary> column)
+            public SqlTimestamp(Column<Binary> column)
                 : base(column)
             {
             }
 
-            protected override object ConvertParameterValue(object value)
+            internal override object ConvertParameterValue(object value)
             {
                 var result = (Binary)value;
                 if (result == null)
@@ -559,12 +560,12 @@ namespace DevZest.Data.SqlServer
                     return result.ToArray();
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Timestamp();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "TIMESTAMP";
             }
@@ -580,24 +581,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Timestamp(Column<Binary> binaryColumn)
+        internal static SqlColumnDescriptor Timestamp(Column<Binary> binaryColumn)
         {
-            return new TimestampMapper(binaryColumn);
+            return new SqlTimestamp(binaryColumn);
         }
 
-        private sealed class UniqueIdentifierMapper : StructMapper<Guid>
+        private sealed class SqlUniqueIdentifier : StructSqlColumnType<Guid>
         {
-            public UniqueIdentifierMapper(Column<Guid?> column)
+            public SqlUniqueIdentifier(Column<Guid?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.UniqueIdentifier();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "UNIQUEIDENTIFIER";
             }
@@ -609,14 +610,14 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper UniqueIdentifier(Column<Guid?> column)
+        internal static SqlColumnDescriptor UniqueIdentifier(Column<Guid?> column)
         {
-            return new UniqueIdentifierMapper(column);
+            return new SqlUniqueIdentifier(column);
         }
 
-        private abstract class DateTimeMapperBase : StructMapper<DateTime>
+        private abstract class SqlDateTimeBase : StructSqlColumnType<DateTime>
         {
-            protected DateTimeMapperBase(Column<DateTime?> column)
+            protected SqlDateTimeBase(Column<DateTime?> column)
                 : base(column)
             {
             }
@@ -630,19 +631,19 @@ namespace DevZest.Data.SqlServer
             protected abstract string GetXmlValue(DateTime value, SqlVersion sqlVersion);
         }
 
-        private sealed class DateMapper : DateTimeMapperBase
+        private sealed class SqlDate : SqlDateTimeBase
         {
-            public DateMapper(Column<DateTime?> column)
+            public SqlDate(Column<DateTime?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Date();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "DATE";
             }
@@ -653,24 +654,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Date(Column<DateTime?> dateTimeColumn)
+        internal static SqlColumnDescriptor Date(Column<DateTime?> dateTimeColumn)
         {
-            return new DateMapper(dateTimeColumn);
+            return new SqlDate(dateTimeColumn);
         }
 
-        private sealed class TimeMapper : DateTimeMapperBase
+        private sealed class SqlTime : SqlDateTimeBase
         {
-            public TimeMapper(Column<DateTime?> column)
+            public SqlTime(Column<DateTime?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Time();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "TIME";
             }
@@ -681,24 +682,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Time(Column<DateTime?> column)
+        internal static SqlColumnDescriptor Time(Column<DateTime?> column)
         {
-            return new TimeMapper(column);
+            return new SqlTime(column);
         }
 
-        private sealed class DateTimeMapper : DateTimeMapperBase
+        private sealed class SqlDateTime : SqlDateTimeBase
         {
-            public DateTimeMapper(Column<DateTime?> column)
+            public SqlDateTime(Column<DateTime?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.DateTime();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "DATETIME";
             }
@@ -709,24 +710,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper DateTime(Column<DateTime?> column)
+        internal static SqlColumnDescriptor DateTime(Column<DateTime?> column)
         {
-            return new DateTimeMapper(column);
+            return new SqlDateTime(column);
         }
 
-        private sealed class SmallDateTimeMapper : DateTimeMapperBase
+        private sealed class SqlSmallDateTime : SqlDateTimeBase
         {
-            public SmallDateTimeMapper(Column<DateTime?> column)
+            public SqlSmallDateTime(Column<DateTime?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.SmallDateTime();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "SMALLDATETIME";
             }
@@ -737,14 +738,14 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper SmallDateTime(Column<DateTime?> column)
+        internal static SqlColumnDescriptor SmallDateTime(Column<DateTime?> column)
         {
-            return new SmallDateTimeMapper(column);
+            return new SqlSmallDateTime(column);
         }
 
-        private sealed class DateTime2Mapper : DateTimeMapperBase
+        private sealed class SqlDateTime2 : SqlDateTimeBase
         {
-            public DateTime2Mapper(Column<DateTime?> column, byte precision)
+            public SqlDateTime2(Column<DateTime?> column, byte precision)
                 : base(column)
             {
                 Precision = precision;
@@ -752,12 +753,12 @@ namespace DevZest.Data.SqlServer
 
             public Byte Precision { get; private set; }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.DateTime2(Precision);
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return string.Format(CultureInfo.InvariantCulture, "DATETIME2({0})", Precision);
             }
@@ -768,24 +769,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper DateTime2(Column<DateTime?> column, byte precision)
+        internal static SqlColumnDescriptor DateTime2(Column<DateTime?> column, byte precision)
         {
-            return new DateTime2Mapper(column, precision);
+            return new SqlDateTime2(column, precision);
         }
 
-        private sealed class DateTimeOffsetMapper : StructMapper<DateTimeOffset>
+        private sealed class SqlDateTimeOffset : StructSqlColumnType<DateTimeOffset>
         {
-            public DateTimeOffsetMapper(Column<DateTimeOffset?> column)
+            public SqlDateTimeOffset(Column<DateTimeOffset?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.DateTimeOffset();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "DATETIMEOFFSET";
             }
@@ -797,24 +798,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper DateTimeOffset(Column<DateTimeOffset?> dateTimeOffsetColumn)
+        internal static SqlColumnDescriptor DateTimeOffset(Column<DateTimeOffset?> dateTimeOffsetColumn)
         {
-            return new DateTimeOffsetMapper(dateTimeOffsetColumn);
+            return new SqlDateTimeOffset(dateTimeOffsetColumn);
         }
 
-        private sealed class SingleMapper : StructMapper<Single>
+        private sealed class SqlSingle : StructSqlColumnType<Single>
         {
-            public SingleMapper(Column<Single?> column)
+            public SqlSingle(Column<Single?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Single();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "FLOAT(24)";
             }
@@ -825,25 +826,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Single(Column<Single?> column)
+        internal static SqlColumnDescriptor Single(Column<Single?> column)
         {
-            return new SingleMapper(column);
+            return new SqlSingle(column);
         }
 
-
-        private sealed class DoubleMapper : StructMapper<Double>
+        private sealed class SqlDouble : StructSqlColumnType<Double>
         {
-            public DoubleMapper(Column<Double?> column)
+            public SqlDouble(Column<Double?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Double();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "FLOAT(53)";
             }
@@ -854,19 +854,19 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Double(Column<Double?> column)
+        internal static SqlColumnDescriptor Double(Column<Double?> column)
         {
-            return new DoubleMapper(column);
+            return new SqlDouble(column);
         }
 
-        private abstract class StringMapperBase : MaxSizeColumnMapper<String>
+        private abstract class SqlStringColumnBase : MaxSizeSqlColumn<String>
         {
-            protected StringMapperBase(Column<String> column, int size)
+            protected SqlStringColumnBase(Column<String> column, int size)
                 : base(column, size)
             {
             }
 
-            protected sealed override object ConvertParameterValue(object value)
+            internal sealed override object ConvertParameterValue(object value)
             {
                 if (value == null)
                     return DBNull.Value;
@@ -887,9 +887,9 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private sealed class NVarCharMapper : StringMapperBase
+        private sealed class SqlNVarChar : SqlStringColumnBase
         {
-            public NVarCharMapper(Column<String> column, int size)
+            public SqlNVarChar(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -910,14 +910,14 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper NVarChar(Column<String> column, int size)
+        internal static SqlColumnDescriptor NVarChar(Column<String> column, int size)
         {
-            return new NVarCharMapper(column, size);
+            return new SqlNVarChar(column, size);
         }
 
-        private sealed class NCharMapper : StringMapperBase
+        private sealed class SqlNChar : SqlStringColumnBase
         {
-            public NCharMapper(Column<String> column, int size)
+            public SqlNChar(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -938,14 +938,14 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper NChar(Column<String> column, int size)
+        internal static SqlColumnDescriptor NChar(Column<String> column, int size)
         {
-            return new NCharMapper(column, size);
+            return new SqlNChar(column, size);
         }
 
-        private sealed class VarCharMapper : StringMapperBase
+        private sealed class SqlVarChar : SqlStringColumnBase
         {
-            public VarCharMapper(Column<String> column, int size)
+            public SqlVarChar(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -966,14 +966,14 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper VarChar(Column<String> column, int size)
+        internal static SqlColumnDescriptor VarChar(Column<String> column, int size)
         {
-            return new VarCharMapper(column, size);
+            return new SqlVarChar(column, size);
         }
 
-        private sealed class CharMapper : StringMapperBase
+        private sealed class SqlChar : SqlStringColumnBase
         {
-            public CharMapper(Column<String> column, int size)
+            public SqlChar(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -994,14 +994,14 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Char(Column<String> column, int size)
+        internal static SqlColumnDescriptor Char(Column<String> column, int size)
         {
-            return new CharMapper(column, size);
+            return new SqlChar(column, size);
         }
 
-        private sealed class SingleCharMapper : StructMapper<Char>
+        private sealed class SqlSingleChar : StructSqlColumnType<Char>
         {
-            public SingleCharMapper(Column<Char?> column, bool isUnicode)
+            public SqlSingleChar(Column<Char?> column, bool isUnicode)
                 : base(column)
             {
                 IsUnicode = isUnicode;
@@ -1009,12 +1009,12 @@ namespace DevZest.Data.SqlServer
 
             public bool IsUnicode { get; private set; }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return IsUnicode ? SqlParameterInfo.NChar(1) : SqlParameterInfo.Char(1);
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return IsUnicode ? "NCHAR(1)" : "CHAR(1)";
             }
@@ -1026,24 +1026,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper SingleChar(Column<Char?> column, bool isUnicode)
+        internal static SqlColumnDescriptor SingleChar(Column<Char?> column, bool isUnicode)
         {
-            return new SingleCharMapper(column, isUnicode);
+            return new SqlSingleChar(column, isUnicode);
         }
 
-        private sealed class TimeSpanMapper : StructMapper<TimeSpan>
+        private sealed class SqlTimeSpan : StructSqlColumnType<TimeSpan>
         {
-            public TimeSpanMapper(Column<TimeSpan?> column)
+            public SqlTimeSpan(Column<TimeSpan?> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Time();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "TIME";
             }
@@ -1055,29 +1055,29 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper TimeSpan(Column<TimeSpan?> column)
+        internal static SqlColumnDescriptor TimeSpan(Column<TimeSpan?> column)
         {
-            return new TimeSpanMapper(column);
+            return new SqlTimeSpan(column);
         }
 
-        private sealed class XmlMapper : MapperBase<SqlXml>
+        private sealed class SqlXmlColumn : SqlColumnTypeBase<SqlXml>
         {
-            public XmlMapper(Column<SqlXml> column)
+            public SqlXmlColumn(Column<SqlXml> column)
                 : base(column)
             {
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Xml();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "XML";
             }
 
-            protected override object ConvertParameterValue(object value)
+            internal override object ConvertParameterValue(object value)
             {
                 if (value == null)
                     return DBNull.Value;
@@ -1085,26 +1085,26 @@ namespace DevZest.Data.SqlServer
                     return value;
             }
 
-            protected override string GetTSqlLiteral(SqlXml value, SqlVersion sqlVersion)
+            protected override string GetTSqlLiteral(System.Data.SqlTypes.SqlXml value, SqlVersion sqlVersion)
             {
                 return value == null ? NULL : value.Value.ToTSqlLiteral(true);
             }
 
-            protected override string GetXmlValue(SqlXml value, SqlVersion sqlVersion)
+            protected override string GetXmlValue(System.Data.SqlTypes.SqlXml value, SqlVersion sqlVersion)
             {
                 return value == null ? string.Empty : value.Value;
             }
         }
 
-        public static ColumnMapper Xml(Column<SqlXml> column)
+        internal static SqlColumnDescriptor Xml(Column<SqlXml> column)
         {
-            return new XmlMapper(column);
+            return new SqlXmlColumn(column);
         }
 
-        private abstract class EnumMapperBase<TEnum, TValue> : ColumnMapper
+        private abstract class EnumColumnBase<TEnum, TValue> : SqlColumnDescriptor
             where TValue : struct
         {
-            protected sealed override object ConvertParameterValue(object value)
+            internal sealed override object ConvertParameterValue(object value)
             {
                 if (value == null)
                     return DBNull.Value;
@@ -1118,14 +1118,14 @@ namespace DevZest.Data.SqlServer
 
             protected abstract Column<TEnum> GetEnumColumn();
 
-            public sealed override Column GetColumn()
+            internal sealed override Column GetColumn()
             {
                 return GetEnumColumn();
             }
 
             protected abstract TValue? GetDbValue(TEnum enumValue);
 
-            public sealed override string GetTSqlLiteral(object value, SqlVersion sqlVersion)
+            internal sealed override string GetTSqlLiteral(object value, SqlVersion sqlVersion)
             {
                 if (value == null)
                     return NULL;
@@ -1134,7 +1134,7 @@ namespace DevZest.Data.SqlServer
                 return dbValue.HasValue ? GetTSqlLiteral(dbValue.GetValueOrDefault(), sqlVersion) : NULL;
             }
 
-            public sealed override string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion)
+            internal sealed override string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion)
             {
                 var enumValue = GetEnumColumn()[ordinal];
                 var dbValue = GetDbValue(enumValue);
@@ -1146,10 +1146,10 @@ namespace DevZest.Data.SqlServer
             protected abstract string GetXmlValue(TValue value, SqlVersion sqlVersion);
         }
 
-        private sealed class CharEnumMapper<T> : EnumMapperBase<T?, char>
+        private sealed class CharEnumColumn<T> : EnumColumnBase<T?, char>
             where T : struct, IConvertible
         {
-            public CharEnumMapper(_CharEnum<T> column)
+            public CharEnumColumn(_CharEnum<T> column)
             {
                 Column = column;
             }
@@ -1161,12 +1161,12 @@ namespace DevZest.Data.SqlServer
                 return Column;
             }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Char(1);
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "CHAR(1)";
             }
@@ -1187,28 +1187,28 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper CharEnum<T>(_CharEnum<T> column)
+        internal static SqlColumnDescriptor CharEnum<T>(_CharEnum<T> column)
             where T : struct, IConvertible
         {
-            return new CharEnumMapper<T>(column);
+            return new CharEnumColumn<T>(column);
         }
 
-        private sealed class ByteEnumMapper<T> : EnumMapperBase<T?, byte>
+        private sealed class ByteEnumColumn<T> : EnumColumnBase<T?, byte>
             where T : struct, IConvertible
         {
-            public ByteEnumMapper(_ByteEnum<T> column)
+            public ByteEnumColumn(_ByteEnum<T> column)
             {
                 Column = column;
             }
 
             public _ByteEnum<T> Column { get; private set; }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.TinyInt();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "TINYINT";
             }
@@ -1234,28 +1234,28 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper ByteEnum<T>(_ByteEnum<T> column)
+        internal static SqlColumnDescriptor ByteEnum<T>(_ByteEnum<T> column)
             where T : struct, IConvertible
         {
-            return new ByteEnumMapper<T>(column);
+            return new ByteEnumColumn<T>(column);
         }
 
-        private sealed class Int16EnumMapper<T> : EnumMapperBase<T?, Int16>
+        private sealed class Int16EnumColumn<T> : EnumColumnBase<T?, Int16>
             where T : struct, IConvertible
         {
-            public Int16EnumMapper(_Int16Enum<T> column)
+            public Int16EnumColumn(_Int16Enum<T> column)
             {
                 Column = column;
             }
 
             public _Int16Enum<T> Column { get; private set; }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.SmallInt();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "SMALLINT";
             }
@@ -1281,28 +1281,28 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Int16Enum<T>(_Int16Enum<T> column)
+        internal static SqlColumnDescriptor Int16Enum<T>(_Int16Enum<T> column)
             where T : struct, IConvertible
         {
-            return new Int16EnumMapper<T>(column);
+            return new Int16EnumColumn<T>(column);
         }
 
-        private sealed class Int32EnumMapper<T> : EnumMapperBase<T?, Int32>
+        private sealed class Int32EnumColumn<T> : EnumColumnBase<T?, Int32>
             where T : struct, IConvertible
         {
-            public Int32EnumMapper(_Int32Enum<T> column)
+            public Int32EnumColumn(_Int32Enum<T> column)
             {
                 Column = column;
             }
 
             public _Int32Enum<T> Column { get; private set; }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.Int();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "INT";
             }
@@ -1328,28 +1328,28 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Int32Enum<T>(_Int32Enum<T> column)
+        internal static SqlColumnDescriptor Int32Enum<T>(_Int32Enum<T> column)
             where T : struct, IConvertible
         {
-            return new Int32EnumMapper<T>(column);
+            return new Int32EnumColumn<T>(column);
         }
 
-        private sealed class Int64EnumMapper<T> : EnumMapperBase<T?, Int64>
+        private sealed class Int64EnumColumn<T> : EnumColumnBase<T?, Int64>
             where T : struct, IConvertible
         {
-            public Int64EnumMapper(_Int64Enum<T> column)
+            public Int64EnumColumn(_Int64Enum<T> column)
             {
                 Column = column;
             }
 
             public _Int64Enum<T> Column { get; private set; }
 
-            public override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
+            internal override SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion)
             {
                 return SqlParameterInfo.BigInt();
             }
 
-            public override string GetDataTypeSql(SqlVersion sqlVersion)
+            internal override string GetDataTypeSql(SqlVersion sqlVersion)
             {
                 return "BIGINT";
             }
@@ -1375,10 +1375,10 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public static ColumnMapper Int64Enum<T>(_Int64Enum<T> column)
+        internal static SqlColumnDescriptor Int64Enum<T>(_Int64Enum<T> column)
             where T : struct, IConvertible
         {
-            return new Int64EnumMapper<T>(column);
+            return new Int64EnumColumn<T>(column);
         }
     }
 }

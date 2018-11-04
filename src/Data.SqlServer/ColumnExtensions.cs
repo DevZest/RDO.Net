@@ -39,159 +39,142 @@ namespace DevZest.Data.SqlServer
         private const int MIN_BINARY_SIZE = 1;
         internal const int MAX_BINARY_SIZE = 8000;        
 
-        private static void SetMapper(this Column column, ColumnMapper columnMapper)
+        private static void SetMapper(this Column column, SqlColumnDescriptor columnMapper)
         {
             column.AddOrUpdateExtension(columnMapper);
         }
 
-        public static T AsBinary<T>(this T column, int size)
-            where T : Column<Binary>
+        public static _Binary AsSqlBinary(this _Binary column, int size)
         {
             column.VerifyNotNull(nameof(column));
 
             if (size < MIN_BINARY_SIZE || size > MAX_BINARY_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(ColumnMapper.Binary(column, size));
+            column.SetMapper(SqlColumnDescriptor.Binary(column, size));
             return column;
         }
 
-        public static T AsBinaryMax<T>(this T column)
-            where T : Column<Binary>
+        public static _Binary AsSqlBinaryMax(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.Binary(column, -1));
+            column.SetMapper(SqlColumnDescriptor.Binary(column, -1));
             return column;
         }
 
-        public static T AsVarBinary<T>(this T column, int size = MAX_VARBINARY_SIZE)
-            where T : Column<Binary>
+        public static _Binary AsSqlVarBinary(this _Binary column, int size = MAX_VARBINARY_SIZE)
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_VARBINARY_SIZE || size > MAX_VARBINARY_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(ColumnMapper.VarBinary(column, size));
+            column.SetMapper(SqlColumnDescriptor.VarBinary(column, size));
             return column;
         }
 
-        public static T AsVarBinaryMax<T>(this T column)
-            where T : Column<Binary>
+        public static _Binary AsSqlVarBinaryMax(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.VarBinary(column, -1));
+            column.SetMapper(SqlColumnDescriptor.VarBinary(column, -1));
             return column;
         }
 
-        public static T AsTimestamp<T>(this T column)
-            where T : Column<Binary>
+        public static _Binary AsSqlTimestamp(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.Timestamp(column));
+            column.SetMapper(SqlColumnDescriptor.Timestamp(column));
             return column;
         }
 
-        public static T AsDecimal<T>(this T column, byte precision = DEFAULT_DECIMAL_PRECISION, byte scale = DEFAULT_DECIMAL_SCALE)
-            where T : Column<Decimal?>
+        public static _Decimal AsSqlDecimal(this _Decimal column, byte precision = DEFAULT_DECIMAL_PRECISION, byte scale = DEFAULT_DECIMAL_SCALE)
         {
             column.VerifyNotNull(nameof(column));
             if (precision < MIN_DECIMAL_PRECISION || precision > MAX_DECIMAL_PRECISION)
                 throw new ArgumentOutOfRangeException("precision");
             if (scale < 0 || scale > precision)
                 throw new ArgumentOutOfRangeException("scale");
-            column.SetMapper(ColumnMapper.Decimal(column, precision, scale));
+            column.SetMapper(SqlColumnDescriptor.Decimal(column, precision, scale));
             return column;
         }
 
-        public static T AsSmallMoney<T>(this T column)
-            where T : Column<Decimal?>
+        public static _Decimal AsSqlSmallMoney(this _Decimal column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.SmallMoney(column));
+            column.SetMapper(SqlColumnDescriptor.SmallMoney(column));
             return column;
         }
 
-        public static T AsMoney<T>(this T column)
-            where T : Column<Decimal?>
+        public static _Decimal AsSqlMoney(this _Decimal column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.Money(column));
+            column.SetMapper(SqlColumnDescriptor.Money(column));
             return column;
         }
 
-        public static T AsDate<T>(this T column)
-            where T : Column<DateTime?>
+        public static _DateTime AsSqlDate(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.Date(column));
+            column.SetMapper(SqlColumnDescriptor.Date(column));
             return column;
         }
 
-        public static T AsTime<T>(this T column)
-            where T : Column<DateTime?>
+        public static _DateTime AsSqlTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.Time(column));
+            column.SetMapper(SqlColumnDescriptor.Time(column));
             return column;
         }
 
-        public static T AsSmallDateTime<T>(this T column)
-            where T : Column<DateTime?>
+        public static _DateTime AsSqlSmallDateTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.SmallDateTime(column));
+            column.SetMapper(SqlColumnDescriptor.SmallDateTime(column));
             return column;
         }
 
-        public static T AsDateTime<T>(this T column)
-            where T : Column<DateTime?>
+        public static _DateTime AsSqlDateTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.DateTime(column));
+            column.SetMapper(SqlColumnDescriptor.DateTime(column));
             return column;
         }
 
-        public static T AsDateTime2<T>(this T column, byte precision)
-            where T : Column<DateTime?>
+        public static _DateTime AsSqlDateTime2(this _DateTime column, byte precision)
         {
             column.VerifyNotNull(nameof(column));
             if (precision < MIN_DATETIME2_PRECISION || precision > MAX_DATETIME2_PRECISION)
                 throw new ArgumentOutOfRangeException("precision");
-            column.SetMapper(ColumnMapper.DateTime2(column, precision));
+            column.SetMapper(SqlColumnDescriptor.DateTime2(column, precision));
             return column;
         }
 
-        public static T AsNChar<T>(this T column, int size)
-            where T : Column<String>
+        public static _String AsSqlNChar(this _String column, int size)
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(ColumnMapper.NChar(column, size));
+            column.SetMapper(SqlColumnDescriptor.NChar(column, size));
             return column;
         }
 
-        public static T AsNCharMax<T>(this T column)
-            where T : Column<String>
+        public static _String AsSqlNCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.NChar(column, -1));
+            column.SetMapper(SqlColumnDescriptor.NChar(column, -1));
             return column;
         }
 
-        public static T AsNVarChar<T>(this T column, int size = MAX_NVARCHAR_SIZE)
-            where T : Column<String>
+        public static _String AsSqlNVarChar(this _String column, int size = MAX_NVARCHAR_SIZE)
         {
             column.VerifyNotNull(nameof(column));
             if ((size < MIN_NVARCHAR_SIZE || size > MAX_NVARCHAR_SIZE) && size != -1)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(ColumnMapper.NVarChar(column, size));
+            column.SetMapper(SqlColumnDescriptor.NVarChar(column, size));
             return column;
         }
 
-        public static T AsNVarCharMax<T>(this T column)
-            where T : Column<String>
+        public static _String AsSqlNVarCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.NVarChar(column, -1));
+            column.SetMapper(SqlColumnDescriptor.NVarChar(column, -1));
             return column;
         }
 
@@ -199,120 +182,117 @@ namespace DevZest.Data.SqlServer
             where T: Column<Char?>
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.SingleChar(column, isUnicode));
+            column.SetMapper(SqlColumnDescriptor.SingleChar(column, isUnicode));
             return column;
         }
 
-        public static T AsChar<T>(this T column, int size)
-            where T : Column<String>
+        public static _String AsSqlChar(this _String column, int size)
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(ColumnMapper.Char(column, size));
+            column.SetMapper(SqlColumnDescriptor.Char(column, size));
             return column;
         }
 
-        public static T AsCharMax<T>(this T column)
-            where T : Column<String>
+        public static _String AsSqlCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.Char(column, -1));
+            column.SetMapper(SqlColumnDescriptor.Char(column, -1));
             return column;
         }
 
-        public static T AsVarChar<T>(this T column, int size = MAX_VARBINARY_SIZE)
+        public static T AsSqlVarChar<T>(this T column, int size = MAX_VARBINARY_SIZE)
             where T : Column<String>
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_VARCHAR_SIZE || size > MAX_VARCHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(ColumnMapper.VarChar(column, size));
+            column.SetMapper(SqlColumnDescriptor.VarChar(column, size));
             return column;
         }
 
-        public static T AsVarCharMax<T>(this T column)
-            where T : Column<String>
+        public static _String AsSqlVarCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(ColumnMapper.VarChar(column, -1));
+            column.SetMapper(SqlColumnDescriptor.VarChar(column, -1));
             return column;
         }
 
-        internal static ColumnMapper GetMapper(this Column column)
+        internal static SqlColumnDescriptor GetSqlColumnDescriptor(this Column column)
         {
-            var result = column.GetExtension<ColumnMapper>() ?? column.GetDefaultMapper();
+            var result = column.GetExtension<SqlColumnDescriptor>() ?? column.GetDefaultSqlColumnDescriptor();
             return result;
         }
 
-        private abstract class MapperProvider
+        private abstract class SqlColumnDescriptorProvider
         {
-            public abstract ColumnMapper GetDefaultMapper(Column column);
+            public abstract SqlColumnDescriptor GetDefaultSqlColumnDescriptor(Column column);
 
             public abstract Type DataType { get; }
         }
 
-        private sealed class MapperProvider<T> : MapperProvider
+        private sealed class SqlColumnDescriptorProvider<T> : SqlColumnDescriptorProvider
         {
-            public MapperProvider(Func<Column<T>, ColumnMapper> callback)
+            public SqlColumnDescriptorProvider(Func<Column<T>, SqlColumnDescriptor> callback)
             {
                 Debug.Assert(callback != null);
                 _callback = callback;
             }
 
-            Func<Column<T>, ColumnMapper> _callback;
+            readonly Func<Column<T>, SqlColumnDescriptor> _callback;
 
             public override Type DataType
             {
                 get { return typeof(T); }
             }
 
-            public override ColumnMapper GetDefaultMapper(Column column)
+            public override SqlColumnDescriptor GetDefaultSqlColumnDescriptor(Column column)
             {
                 var x = column as Column<T>;
                 return x == null ? null : _callback(x);
             }
         }
 
-        private sealed class MapperProviderCollection : Dictionary<Type, MapperProvider>
+        private sealed class SqlColumnDescriptorProviderCollection : Dictionary<Type, SqlColumnDescriptorProvider>
         {
-            public void Add(MapperProvider value)
+            public void Add(SqlColumnDescriptorProvider value)
             {
                 base.Add(value.DataType, value);
             }
         }
 
-        private static readonly ConcurrentDictionary<Type, MapperProvider> s_defaultMapperProviders = new ConcurrentDictionary<Type, MapperProvider>(
-            new MapperProviderCollection()
+        private static readonly ConcurrentDictionary<Type, SqlColumnDescriptorProvider> s_defaultSqlColumnDescriptorProviders = new ConcurrentDictionary<Type, SqlColumnDescriptorProvider>(
+            new SqlColumnDescriptorProviderCollection()
             {
-                new MapperProvider<Binary>(x => ColumnMapper.VarBinary(x, MAX_VARBINARY_SIZE)),
-                new MapperProvider<Boolean?>(x => ColumnMapper.Bit(x)),
-                new MapperProvider<Byte?>(x => ColumnMapper.TinyInt(x)),
-                new MapperProvider<Char?>(x => ColumnMapper.SingleChar(x, false)),
-                new MapperProvider<DateTime?>(x => ColumnMapper.DateTime2(x, MAX_DATETIME2_PRECISION)),
-                new MapperProvider<DateTimeOffset?>(x => ColumnMapper.DateTimeOffset(x)),
-                new MapperProvider<Decimal?>(x => ColumnMapper.Decimal(x, DEFAULT_DECIMAL_PRECISION, DEFAULT_DECIMAL_SCALE)),
-                new MapperProvider<Double?>(x => ColumnMapper.Double(x)),
-                new MapperProvider<Guid?>(x => ColumnMapper.UniqueIdentifier(x)),
-                new MapperProvider<Int16?>(x => ColumnMapper.SmallInt(x)),
-                new MapperProvider<Int32?>(x => ColumnMapper.Int(x)),
-                new MapperProvider<Int64?>(x => ColumnMapper.BigInt(x)),
-                new MapperProvider<Single?>(x => ColumnMapper.Single(x)),
-                new MapperProvider<String>(x => ColumnMapper.NVarChar(x, MAX_NVARCHAR_SIZE)),
-                new MapperProvider<TimeSpan?>(x => ColumnMapper.TimeSpan(x)),
-                new MapperProvider<SqlXml>(x => ColumnMapper.Xml(x))
+                new SqlColumnDescriptorProvider<Binary>(x => SqlColumnDescriptor.VarBinary(x, MAX_VARBINARY_SIZE)),
+                new SqlColumnDescriptorProvider<Boolean?>(x => SqlColumnDescriptor.Bit(x)),
+                new SqlColumnDescriptorProvider<Byte?>(x => SqlColumnDescriptor.TinyInt(x)),
+                new SqlColumnDescriptorProvider<Char?>(x => SqlColumnDescriptor.SingleChar(x, false)),
+                new SqlColumnDescriptorProvider<DateTime?>(x => SqlColumnDescriptor.DateTime2(x, MAX_DATETIME2_PRECISION)),
+                new SqlColumnDescriptorProvider<DateTimeOffset?>(x => SqlColumnDescriptor.DateTimeOffset(x)),
+                new SqlColumnDescriptorProvider<Decimal?>(x => SqlColumnDescriptor.Decimal(x, DEFAULT_DECIMAL_PRECISION, DEFAULT_DECIMAL_SCALE)),
+                new SqlColumnDescriptorProvider<Double?>(x => SqlColumnDescriptor.Double(x)),
+                new SqlColumnDescriptorProvider<Guid?>(x => SqlColumnDescriptor.UniqueIdentifier(x)),
+                new SqlColumnDescriptorProvider<Int16?>(x => SqlColumnDescriptor.SmallInt(x)),
+                new SqlColumnDescriptorProvider<Int32?>(x => SqlColumnDescriptor.Int(x)),
+                new SqlColumnDescriptorProvider<Int64?>(x => SqlColumnDescriptor.BigInt(x)),
+                new SqlColumnDescriptorProvider<Single?>(x => SqlColumnDescriptor.Single(x)),
+                new SqlColumnDescriptorProvider<String>(x => SqlColumnDescriptor.NVarChar(x, MAX_NVARCHAR_SIZE)),
+                new SqlColumnDescriptorProvider<TimeSpan?>(x => SqlColumnDescriptor.TimeSpan(x)),
+                new SqlColumnDescriptorProvider<SqlXml>(x => SqlColumnDescriptor.Xml(x))
             });
 
-        private static ColumnMapper GetDefaultMapper(this Column column)
+        private static SqlColumnDescriptor GetDefaultSqlColumnDescriptor(this Column column)
         {
             Debug.Assert(column != null);
-            return column.GetDefaultMapperProvider().GetDefaultMapper(column);
+            return column.GetDefaultSqlColumnDescriptorProvider().GetDefaultSqlColumnDescriptor(column);
         }
 
-        private static MapperProvider GetDefaultMapperProvider(this Column column)
+        private static SqlColumnDescriptorProvider GetDefaultSqlColumnDescriptorProvider(this Column column)
         {
-            MapperProvider result;
-            if (s_defaultMapperProviders.TryGetValue(column.DataType, out result))
+            SqlColumnDescriptorProvider result;
+            if (s_defaultSqlColumnDescriptorProviders.TryGetValue(column.DataType, out result))
                 return result;
 
             var columnType = column.GetType();
@@ -320,32 +300,32 @@ namespace DevZest.Data.SqlServer
             var enumType = columnDataType.GenericTypeArguments[0];
             if (columnType.IsDerivedFromGeneric(typeof(_ByteEnum<>)))
             {
-                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetByteEnumMapperProvider));
-                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
+                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetByteEnumColumnDescriptorProvider));
+                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFromGeneric(typeof(_CharEnum<>)))
             {
-                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetCharEnumMapperProvider));
-                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
+                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetCharEnumColumnDescriptorProvider));
+                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFromGeneric(typeof(_Int16Enum<>)))
             {
-                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt16EnumMapperProvider));
-                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
+                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt16EnumColumnDescriptorProvider));
+                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFromGeneric(typeof(_Int32Enum<>)))
             {
-                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt32EnumMapperProvider));
-                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
+                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt32EnumColumnDescriptorProvider));
+                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFromGeneric(typeof(_Int64Enum<>)))
             {
-                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt64EnumMapperProvider));
-                return s_defaultMapperProviders.GetOrAdd(columnType, BuildMapperProviderFactory(methodInfo, enumType));
+                var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt64EnumColumnDescriptorProvider));
+                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
             }
 
             throw new NotSupportedException(DiagnosticMessages.ColumnTypeNotSupported(column.GetType()));
@@ -361,46 +341,46 @@ namespace DevZest.Data.SqlServer
             return false;
         }
 
-        private static MapperProvider<T?> GetCharEnumMapperProvider<T>()
+        private static SqlColumnDescriptorProvider<T?> GetCharEnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new MapperProvider<T?>(x => ColumnMapper.CharEnum<T>((_CharEnum<T>)x));
+            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.CharEnum<T>((_CharEnum<T>)x));
         }
 
-        private static MapperProvider<T?> GetByteEnumMapperProvider<T>()
+        private static SqlColumnDescriptorProvider<T?> GetByteEnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new MapperProvider<T?>(x => ColumnMapper.ByteEnum<T>((_ByteEnum<T>)x));
+            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.ByteEnum<T>((_ByteEnum<T>)x));
         }
 
-        private static MapperProvider<T?> GetInt16EnumMapperProvider<T>()
+        private static SqlColumnDescriptorProvider<T?> GetInt16EnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new MapperProvider<T?>(x => ColumnMapper.Int16Enum<T>((_Int16Enum<T>)x));
+            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.Int16Enum<T>((_Int16Enum<T>)x));
         }
 
-        private static MapperProvider<T?> GetInt32EnumMapperProvider<T>()
+        private static SqlColumnDescriptorProvider<T?> GetInt32EnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new MapperProvider<T?>(x => ColumnMapper.Int32Enum<T>((_Int32Enum<T>)x));
+            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.Int32Enum<T>((_Int32Enum<T>)x));
         }
 
-        private static MapperProvider<T?> GetInt64EnumMapperProvider<T>()
+        private static SqlColumnDescriptorProvider<T?> GetInt64EnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new MapperProvider<T?>(x => ColumnMapper.Int64Enum<T>((_Int64Enum<T>)x));
+            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.Int64Enum<T>((_Int64Enum<T>)x));
         }
 
-        private static Func<Type, MapperProvider> BuildMapperProviderFactory(MethodInfo methodInfo, Type columnDataType)
+        private static Func<Type, SqlColumnDescriptorProvider> BuildSqlColumnDescriptorProviderFactory(MethodInfo methodInfo, Type columnDataType)
         {
             methodInfo = methodInfo.MakeGenericMethod(columnDataType);
             var call = Expression.Call(methodInfo);
-            return Expression.Lambda<Func<Type, MapperProvider>>(call, Expression.Parameter(typeof(Type))).Compile();
+            return Expression.Lambda<Func<Type, SqlColumnDescriptorProvider>>(call, Expression.Parameter(typeof(Type))).Compile();
         }
 
         internal static SqlDbType GetSqlDbType(this Column column, SqlVersion sqlVersion)
         {
-            return column.GetMapper().GetSqlParameterInfo(sqlVersion).SqlDbType;
+            return column.GetSqlColumnDescriptor().GetSqlParameterInfo(sqlVersion).SqlDbType;
         }
 
         internal static bool IsUnicode(this Column column, SqlVersion sqlVersion)

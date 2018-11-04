@@ -191,7 +191,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [_Computation]
         private void ComputeSalesOrderNumber()
         {
-            SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsNVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
+            SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsSqlNVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
         }
 
         [_Computation]

@@ -43,13 +43,13 @@ namespace DevZest.Data.SqlServer
                 var dateTime = new DateTime(2015, 5, 14, 17, 14, 20, 888);
                 expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime);
                 VerifyDbExpression(SqlVersion.Sql11, expr, "'2015-05-14 17:14:20.8880000'");
-                expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime, x => x.AsDate());
+                expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime, x => x.AsSqlDate());
                 VerifyDbExpression(SqlVersion.Sql11, expr, "'2015-05-14'");
-                expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime, x => x.AsTime());
+                expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime, x => x.AsSqlTime());
                 VerifyDbExpression(SqlVersion.Sql11, expr, "'17:14:20.888'");
-                expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime, x => x.AsDateTime());
+                expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime, x => x.AsSqlDateTime());
                 VerifyDbExpression(SqlVersion.Sql11, expr, "'2015-05-14 17:14:20.888'");
-                expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime, x => x.AsSmallDateTime());
+                expr = CreateDbConstantExpression<_DateTime, DateTime?>(dateTime, x => x.AsSqlSmallDateTime());
                 VerifyDbExpression(SqlVersion.Sql11, expr, "'2015-05-14 17:14:20.888'");
             }
 
@@ -66,9 +66,9 @@ namespace DevZest.Data.SqlServer
                 VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
                 expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M);
                 VerifyDbExpression(SqlVersion.Sql11, expr, "3.1415926");
-                expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M, x => x.AsMoney());
+                expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M, x => x.AsSqlMoney());
                 VerifyDbExpression(SqlVersion.Sql11, expr, "3.1415926");
-                expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M, x => x.AsSmallMoney());
+                expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M, x => x.AsSqlSmallMoney());
                 VerifyDbExpression(SqlVersion.Sql11, expr, "3.1415926");
             }
 
@@ -120,7 +120,7 @@ namespace DevZest.Data.SqlServer
                 VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
                 expr = CreateDbConstantExpression<_String, String>("ABCD'EFG");
                 VerifyDbExpression(SqlVersion.Sql11, expr, "N'ABCD''EFG'");
-                expr = CreateDbConstantExpression<_String, String>("ABCD'EFG", x => x.AsVarChar(100));
+                expr = CreateDbConstantExpression<_String, String>("ABCD'EFG", x => x.AsSqlVarChar(100));
                 VerifyDbExpression(SqlVersion.Sql11, expr, "'ABCD''EFG'");
             }
 

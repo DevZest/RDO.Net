@@ -40,7 +40,7 @@ namespace DevZest.Data.SqlServer
         {
             var columnName = column.DbColumnName.ToQuotedIdentifier();
             sqlBuilder.Append(columnName).Append(' ');
-            column.GetMapper().GenerateColumnDefinitionSql(sqlBuilder, tableName, isTempTable, sqlVersion);
+            column.GetSqlColumnDescriptor().GenerateColumnDefinitionSql(sqlBuilder, tableName, isTempTable, sqlVersion);
             if (!isLastColumn)
                 sqlBuilder.Append(",");
             sqlBuilder.AppendLine();

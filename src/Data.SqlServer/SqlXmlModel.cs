@@ -96,7 +96,7 @@ namespace DevZest.Data.SqlServer
         private static T _InvokeValue<T>(_SqlXml xmlColumn, string xPath, T asColumn)
             where T : Column, new()
         {
-            return ValueFunctionInvoker<T>.Singleton.Invoke(asColumn, xmlColumn, _String.Const(xPath).AsVarCharMax());
+            return ValueFunctionInvoker<T>.Singleton.Invoke(asColumn, xmlColumn, _String.Const(xPath).AsSqlVarCharMax());
         }
 
         private static Func<_SqlXml, string, Column, Column> BuildValueInvoker(Type columnType)

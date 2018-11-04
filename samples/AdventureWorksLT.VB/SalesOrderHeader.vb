@@ -377,7 +377,7 @@ Namespace DevZest.Samples.AdventureWorksLT
         Friend Const _ComputeSalesOrderNumber = NameOf(ComputeSalesOrderNumber)
         <_Computation>
         Private Sub ComputeSalesOrderNumber()
-            SalesOrderNumber.ComputedAs((_String.[Const]("SO") + (CType(SalesOrderID, _String)).AsNVarChar(23)).IfNull(_String.[Const]("*** ERROR ***")))
+            SalesOrderNumber.ComputedAs((_String.[Const]("SO") + (CType(SalesOrderID, _String)).AsSqlNVarChar(23)).IfNull(_String.[Const]("*** ERROR ***")))
         End Sub
 
         Friend Const _ComputeTotalDue = NameOf(ComputeTotalDue)
