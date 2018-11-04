@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class DbConnectionInvoker<T> : AddonInvoker<IDbConnectionInterceptor<T>>
+    public sealed class DbConnectionInterceptorInvoker<T> : AddonInvoker<IDbConnectionInterceptor<T>>
         where T : DbConnection
     {
-        public DbConnectionInvoker(DbSession dbSession, T connection)
+        public DbConnectionInterceptorInvoker(DbSession dbSession, T connection)
             : base(dbSession)
         {
             connection.VerifyNotNull(nameof(connection));

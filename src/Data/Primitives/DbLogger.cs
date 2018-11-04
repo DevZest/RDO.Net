@@ -45,11 +45,11 @@ namespace DevZest.Data.Primitives
             get { return _stopwatch; }
         }
 
-        public virtual void ConnectionOpening(DbConnectionInvoker<TConnection> invoker)
+        public virtual void ConnectionOpening(DbConnectionInterceptorInvoker<TConnection> invoker)
         {
         }
 
-        public virtual void ConnectionOpened(DbConnectionInvoker<TConnection> invoker)
+        public virtual void ConnectionOpened(DbConnectionInterceptorInvoker<TConnection> invoker)
         {
             if (invoker.Exception != null)
                 Write(LogCategory.ConnectionOpened, invoker.IsAsync ? DiagnosticMessages.DbLogger_ConnectionOpenErrorAsync(DateTimeOffset.Now, invoker.Exception.Message) : DiagnosticMessages.DbLogger_ConnectionOpenError(DateTimeOffset.Now, invoker.Exception.Message));
@@ -60,11 +60,11 @@ namespace DevZest.Data.Primitives
             Write(LogCategory.ConnectionOpened, Environment.NewLine);
         }
 
-        public virtual void ConnectionClosing(DbConnectionInvoker<TConnection> invoker)
+        public virtual void ConnectionClosing(DbConnectionInterceptorInvoker<TConnection> invoker)
         {
         }
 
-        public virtual void ConnectionClosed(DbConnectionInvoker<TConnection> invoker)
+        public virtual void ConnectionClosed(DbConnectionInterceptorInvoker<TConnection> invoker)
         {
             if (invoker.Exception != null)
                 Write(LogCategory.ConnectionClosed, DiagnosticMessages.DbLogger_ConnectionCloseError(DateTimeOffset.Now, invoker.Exception.Message));
@@ -258,25 +258,25 @@ namespace DevZest.Data.Primitives
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        void IDbConnectionInterceptor<TConnection>.Opening(DbConnectionInvoker<TConnection> invoker)
+        void IDbConnectionInterceptor<TConnection>.Opening(DbConnectionInterceptorInvoker<TConnection> invoker)
         {
             ConnectionOpening(invoker);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        void IDbConnectionInterceptor<TConnection>.Opened(DbConnectionInvoker<TConnection> invoker)
+        void IDbConnectionInterceptor<TConnection>.Opened(DbConnectionInterceptorInvoker<TConnection> invoker)
         {
             ConnectionOpened(invoker);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        void IDbConnectionInterceptor<TConnection>.Closing(DbConnectionInvoker<TConnection> invoker)
+        void IDbConnectionInterceptor<TConnection>.Closing(DbConnectionInterceptorInvoker<TConnection> invoker)
         {
             ConnectionClosing(invoker);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        void IDbConnectionInterceptor<TConnection>.Closed(DbConnectionInvoker<TConnection> invoker)
+        void IDbConnectionInterceptor<TConnection>.Closed(DbConnectionInterceptorInvoker<TConnection> invoker)
         {
             ConnectionClosed(invoker);
         }

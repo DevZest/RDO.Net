@@ -36,9 +36,9 @@ namespace DevZest.Data.Primitives
             CreateConnectionInvoker().Close();
         }
 
-        private DbConnectionInvoker<TConnection> CreateConnectionInvoker()
+        private DbConnectionInterceptorInvoker<TConnection> CreateConnectionInvoker()
         {
-            return new DbConnectionInvoker<TConnection>(this, GetConnection());
+            return new DbConnectionInterceptorInvoker<TConnection>(this, GetConnection());
         }
 
         private Stack<TTransaction> _transactions = new Stack<TTransaction>();
