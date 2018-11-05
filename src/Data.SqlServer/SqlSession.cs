@@ -54,9 +54,9 @@ namespace DevZest.Data.SqlServer
             return queryGenerator.CreateCommand(Connection);
         }
 
-        protected sealed override DbReaderInvoker<SqlCommand, SqlReader> CreateReaderInvoker(SqlCommand command, Model model)
+        protected sealed override DbReaderInvoker<SqlCommand, SqlReader> CreateReaderInvoker(Model model, SqlCommand command)
         {
-            return new SqlReaderInvoker(this, command, model);
+            return new SqlReaderInvoker(this, model, command);
         }
 
         ConditionalWeakTable<Model, string> _tempTableNamesByModel = new ConditionalWeakTable<Model, string>();

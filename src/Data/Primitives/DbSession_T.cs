@@ -100,18 +100,18 @@ namespace DevZest.Data.Primitives
         private DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(DbQueryStatement queryStatement)
         {
             var command = GetQueryCommand(queryStatement);
-            return PrepareReaderInvoker(command, queryStatement.Model);
+            return PrepareReaderInvoker(queryStatement.Model, command);
         }
 
         protected abstract TCommand GetQueryCommand(DbQueryStatement queryStatement);
 
-        private DbReaderInvoker<TCommand, TReader> PrepareReaderInvoker(TCommand command, Model model)
+        private DbReaderInvoker<TCommand, TReader> PrepareReaderInvoker(Model model, TCommand command)
         {
             command.Transaction = CurrentTransaction;
-            return CreateReaderInvoker(command, model);
+            return CreateReaderInvoker(model, command);
         }
 
-        protected abstract DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(TCommand command, Model model);
+        protected abstract DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(Model model, TCommand command);
 
         internal sealed override async Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
         {
@@ -303,7 +303,7 @@ namespace DevZest.Data.Primitives
 
             var model = ScalarIdentityOutput.Singleton;
             long? identityValue = null;
-            using (var reader = await PrepareReaderInvoker(command, model).ExecuteAsync(cancellationToken))
+            using (var reader = await PrepareReaderInvoker(model, command).ExecuteAsync(cancellationToken))
             {
                 if (await reader.ReadAsync(cancellationToken))
                     identityValue = model.IdentityValue[reader];

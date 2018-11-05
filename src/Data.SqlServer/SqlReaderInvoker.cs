@@ -8,8 +8,8 @@ namespace DevZest.Data.SqlServer
 {
     internal sealed class SqlReaderInvoker : DbReaderInvoker<SqlCommand, SqlReader>
     {
-        internal SqlReaderInvoker(SqlSession sqlSession, SqlCommand sqlCommand, Model model)
-            : base(sqlSession, sqlCommand, model)
+        internal SqlReaderInvoker(SqlSession sqlSession, Model model, SqlCommand sqlCommand)
+            : base(sqlSession, model, sqlCommand)
         {
         }
 

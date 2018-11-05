@@ -204,31 +204,21 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.CommandExecuted, Environment.NewLine);
             }
 
-            public void OnReaderExecuting(DbReaderInvoker<TCommand, TReader> invoker)
-            {
-                OnExecuting(invoker.Command, invoker);
-            }
-
-            public void OnReaderExecuted(DbReaderInvoker<TCommand, TReader> invoker)
-            {
-                OnExecuted(invoker.Command, invoker.Result, invoker);
-            }
-
             object IAddon.Key
             {
                 get { return typeof(Logger); }
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbReaderInterceptor<TCommand, TReader>.Executing(DbReaderInvoker<TCommand, TReader> invoker)
+            void IDbReaderInterceptor<TCommand, TReader>.Executing(Model model, TCommand command, AddonInvoker invoker)
             {
-                OnReaderExecuting(invoker);
+                OnExecuting(command, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbReaderInterceptor<TCommand, TReader>.Executed(DbReaderInvoker<TCommand, TReader> invoker)
+            void IDbReaderInterceptor<TCommand, TReader>.Executed(Model model, TCommand command, TReader result, AddonInvoker invoker)
             {
-                OnReaderExecuted(invoker);
+                OnExecuted(command, result, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]

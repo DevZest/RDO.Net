@@ -8,18 +8,16 @@ namespace DevZest.Data.Primitives
         where TCommand : DbCommand
         where TReader : DbReader
     {
-        protected DbReaderInvoker(DbSession dbSession, TCommand command, Model model)
+        protected DbReaderInvoker(DbSession dbSession, Model model, TCommand command)
             : base(dbSession)
         {
-            command.VerifyNotNull(nameof(command));
-            model.VerifyNotNull(nameof(model));
-            Command = command;
-            Model = model;
+            Model = model.VerifyNotNull(nameof(model));
+            Command = command.VerifyNotNull(nameof(command));
         }
 
-        public TCommand Command { get; private set; }
+        public Model Model { get; }
 
-        public Model Model { get; private set; }
+        public TCommand Command { get; }
 
         public TReader Result { get; private set; }
 
@@ -30,16 +28,16 @@ namespace DevZest.Data.Primitives
         internal TReader Execute()
         {
             base.Invoke(() => { Result = ExecuteCore(); },
-                x => x.Executing(this),
-                x => x.Executed(this));
+                x => x.Executing(Model, Command, this),
+                x => x.Executed(Model, Command, Result, this));
             return Result;
         }
 
         internal async Task<TReader> ExecuteAsync(CancellationToken cancellationToken)
         {
             await InvokeAsync(GetAsyncOperation(cancellationToken),
-                x => x.Executing(this),
-                x => x.Executed(this));
+                x => x.Executing(Model, Command, this),
+                x => x.Executed(Model, Command, Result, this));
             return Result;
         }
 
