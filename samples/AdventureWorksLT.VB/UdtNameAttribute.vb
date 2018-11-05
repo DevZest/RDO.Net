@@ -5,7 +5,7 @@ Imports DevZest.Data.Addons
 Imports DevZest.Data.SqlServer.Addons
 
 Namespace DevZest.Samples.AdventureWorksLT
-    <ModelMemberAttributeSpec(New Type() {GetType(ColumnNotNull), GetType(SqlType)}, True, GetType(_String))>
+    <ModelMemberAttributeSpec(New Type() {GetType(ColumnNotNull), GetType(SqlType)}, New Type() {GetType(_String)})>
     Public NotInheritable Class UdtNameAttribute
         Inherits ColumnAttribute
 

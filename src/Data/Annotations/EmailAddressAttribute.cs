@@ -1,9 +1,10 @@
 ﻿using DevZest.Data.Annotations.Primitives;
+using System;
 using System.Text.RegularExpressions;
 
 namespace DevZest.Data.Annotations
 {
-    [ModelMemberAttributeSpec(null, false, typeof(Column<string>))]
+    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class EmailAddressAttribute : ValidationColumnAttribute
     {
         private static Regex s_regex = CreateRegEx();

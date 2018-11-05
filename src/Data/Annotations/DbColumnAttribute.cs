@@ -1,9 +1,10 @@
 ﻿using DevZest.Data.Annotations.Primitives;
+using System;
 
 namespace DevZest.Data.Annotations
 {
     /// <summary>Defines name of the column in the database.</summary>
-    [ModelMemberAttributeSpec(null, false, typeof(Column))]
+    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
     public sealed class DbColumnAttribute : ColumnAttribute
     {
         public DbColumnAttribute()

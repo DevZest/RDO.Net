@@ -1,21 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Annotations.Primitives
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class ModelMemberAttributeSpecAttribute : Attribute
     {
-        public ModelMemberAttributeSpecAttribute(object extensionKey, bool isExclusive, params Type[] types)
+        public ModelMemberAttributeSpecAttribute(Type[] addonTypes, Type[] validOnTypes)
         {
-            ExtensionKey = extensionKey;
-            IsExclusive = isExclusive;
-            Types = types ?? Array.Empty<Type>();
+            AddonTypes = addonTypes ?? Array.Empty<Type>();
+            ValidOnTypes = validOnTypes ?? Array.Empty<Type>();
         }
 
-        public object ExtensionKey { get; }
+        public IReadOnlyList<Type> AddonTypes { get; }
 
-        public bool IsExclusive { get; }
-
-        public Type[] Types { get; }
+        public IReadOnlyList<Type> ValidOnTypes { get; }
     }
 }

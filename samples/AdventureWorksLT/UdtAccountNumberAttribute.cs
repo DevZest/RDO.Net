@@ -7,7 +7,7 @@ using DevZest.Data.SqlServer.Addons;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ModelMemberAttributeSpec(new Type[] { typeof(ColumnNotNull), typeof(SqlType) }, true, typeof(_String))]
+    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(ColumnNotNull), typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class UdtAccountNumberAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)

@@ -6,7 +6,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelMemberAttributeSpec(typeof(ColumnDefault), true, typeof(_Guid))]
+    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(ColumnDefault) }, validOnTypes: new Type[] { typeof(_Guid) })]
     public sealed class AutoGuidAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
