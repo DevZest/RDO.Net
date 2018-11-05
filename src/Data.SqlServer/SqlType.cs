@@ -1102,7 +1102,7 @@ namespace DevZest.Data.SqlServer
             return new SqlXmlColumn(column);
         }
 
-        private abstract class EnumColumnBase<TEnum, TValue> : SqlType
+        private abstract class EnumType<TEnum, TValue> : SqlType
             where TValue : struct
         {
             internal sealed override object ConvertParameterValue(object value)
@@ -1147,10 +1147,10 @@ namespace DevZest.Data.SqlServer
             protected abstract string GetXmlValue(TValue value, SqlVersion sqlVersion);
         }
 
-        private sealed class CharEnumColumn<T> : EnumColumnBase<T?, char>
+        private sealed class CharEnumType<T> : EnumType<T?, char>
             where T : struct, IConvertible
         {
-            public CharEnumColumn(_CharEnum<T> column)
+            public CharEnumType(_CharEnum<T> column)
             {
                 Column = column;
             }
@@ -1191,13 +1191,13 @@ namespace DevZest.Data.SqlServer
         internal static SqlType CharEnum<T>(_CharEnum<T> column)
             where T : struct, IConvertible
         {
-            return new CharEnumColumn<T>(column);
+            return new CharEnumType<T>(column);
         }
 
-        private sealed class ByteEnumColumn<T> : EnumColumnBase<T?, byte>
+        private sealed class ByteEnumType<T> : EnumType<T?, byte>
             where T : struct, IConvertible
         {
-            public ByteEnumColumn(_ByteEnum<T> column)
+            public ByteEnumType(_ByteEnum<T> column)
             {
                 Column = column;
             }
@@ -1238,13 +1238,13 @@ namespace DevZest.Data.SqlServer
         internal static SqlType ByteEnum<T>(_ByteEnum<T> column)
             where T : struct, IConvertible
         {
-            return new ByteEnumColumn<T>(column);
+            return new ByteEnumType<T>(column);
         }
 
-        private sealed class Int16EnumColumn<T> : EnumColumnBase<T?, Int16>
+        private sealed class Int16EnumType<T> : EnumType<T?, Int16>
             where T : struct, IConvertible
         {
-            public Int16EnumColumn(_Int16Enum<T> column)
+            public Int16EnumType(_Int16Enum<T> column)
             {
                 Column = column;
             }
@@ -1285,13 +1285,13 @@ namespace DevZest.Data.SqlServer
         internal static SqlType Int16Enum<T>(_Int16Enum<T> column)
             where T : struct, IConvertible
         {
-            return new Int16EnumColumn<T>(column);
+            return new Int16EnumType<T>(column);
         }
 
-        private sealed class Int32EnumColumn<T> : EnumColumnBase<T?, Int32>
+        private sealed class Int32EnumType<T> : EnumType<T?, Int32>
             where T : struct, IConvertible
         {
-            public Int32EnumColumn(_Int32Enum<T> column)
+            public Int32EnumType(_Int32Enum<T> column)
             {
                 Column = column;
             }
@@ -1332,13 +1332,13 @@ namespace DevZest.Data.SqlServer
         internal static SqlType Int32Enum<T>(_Int32Enum<T> column)
             where T : struct, IConvertible
         {
-            return new Int32EnumColumn<T>(column);
+            return new Int32EnumType<T>(column);
         }
 
-        private sealed class Int64EnumColumn<T> : EnumColumnBase<T?, Int64>
+        private sealed class Int64EnumType<T> : EnumType<T?, Int64>
             where T : struct, IConvertible
         {
-            public Int64EnumColumn(_Int64Enum<T> column)
+            public Int64EnumType(_Int64Enum<T> column)
             {
                 Column = column;
             }
@@ -1379,7 +1379,7 @@ namespace DevZest.Data.SqlServer
         internal static SqlType Int64Enum<T>(_Int64Enum<T> column)
             where T : struct, IConvertible
         {
-            return new Int64EnumColumn<T>(column);
+            return new Int64EnumType<T>(column);
         }
     }
 }
