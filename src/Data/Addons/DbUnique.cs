@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Addons
