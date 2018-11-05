@@ -774,11 +774,20 @@ namespace DevZest.Data
             return base.GetHashCode();
         }
 
-        internal Identity SetIdentity(int seed, int increment, bool isTempTable)
+        internal Identity SetIdentity(int seed, int increment)
         {
             VerifyDesignMode();
 
-            var result = Identity.FromInt32Column(this, seed, increment, isTempTable);
+            var result = Identity.FromInt32Column(this, seed, increment);
+            SetIdentity(result);
+            return result;
+        }
+
+        internal Identity SetTempTableIdentity(int seed, int increment)
+        {
+            VerifyDesignMode();
+
+            var result = TempTableIdentity.FromInt32Column(this, seed, increment);
             SetIdentity(result);
             return result;
         }

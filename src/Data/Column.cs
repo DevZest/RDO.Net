@@ -211,7 +211,7 @@ namespace DevZest.Data
         /// <returns>The <see cref="Identity"/> object, or <see langword="null"/> if this is not a identity column.</returns>
         public Identity GetIdentity(bool isTempTable)
         {
-            return (Identity)GetAddon(isTempTable ? Identity.FULL_NAME_TEMP_TABLE : Identity.FULL_NAME_TABLE);
+            return (Identity)GetAddon(isTempTable ? typeof(TempTableIdentity) : typeof(Identity));
         }
 
         /// <summary>Gets this column as asending sorted.</summary>

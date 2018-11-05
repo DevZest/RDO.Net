@@ -21,11 +21,11 @@ namespace DevZest.Data.Annotations
         protected sealed override void Wireup(Column column)
         {
             if (column is _Int32 int32Column)
-                int32Column.SetIdentity(Seed, Increment, false);
+                int32Column.SetIdentity(Seed, Increment);
             else if (column is _Int64 int64Column)
-                int64Column.SetIdentity(Seed, Increment, false);
+                int64Column.SetIdentity(Seed, Increment);
             else if (column is _Int16 int16Column)
-                int16Column.SetIdentity(Seed, Increment, false);
+                int16Column.SetIdentity(Seed, Increment);
         }
 
         protected override bool CoerceDeclaringTypeOnly(bool value)

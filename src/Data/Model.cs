@@ -741,13 +741,7 @@ namespace DevZest.Data
 
         public Identity GetIdentity(bool isTempTable)
         {
-            var results = GetAddons<Identity>();
-            foreach (var result in results)
-            {
-                if (result.IsTempTable == isTempTable)
-                    return result;
-            }
-            return null;
+            return (Identity)GetAddon(isTempTable ? typeof(TempTableIdentity) : typeof(Identity));
         }
 
         internal const string SYS_ROW_ID_COL_NAME = "sys_row_id";
@@ -756,7 +750,7 @@ namespace DevZest.Data
         internal void AddTempTableIdentity()
         {
             var identityColumn = AddSysRowIdColumn(false);
-            var identity = identityColumn.SetIdentity(1, 1, true);
+            var identity = identityColumn.SetTempTableIdentity(1, 1);
 
             var primaryKeyConstraint = GetAddon<DbPrimaryKey>();
             if (primaryKeyConstraint == null)

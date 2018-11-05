@@ -3,6 +3,7 @@ using System.Threading;
 
 namespace DevZest.Data.Addons
 {
+    [Addon]
     public abstract class DbTableConstraint : IAddon
     {
         protected DbTableConstraint(string name, string description)
