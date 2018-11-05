@@ -40,9 +40,9 @@ namespace DevZest.Data.SqlServer
         private const int MIN_BINARY_SIZE = 1;
         internal const int MAX_BINARY_SIZE = 8000;        
 
-        private static void SetMapper(this Column column, SqlColumnDescriptor columnMapper)
+        private static void SetSqlType(this Column column, SqlType sqlType)
         {
-            column.AddOrUpdate(columnMapper);
+            column.AddOrUpdate(sqlType);
         }
 
         public static _Binary AsSqlBinary(this _Binary column, int size)
@@ -51,14 +51,14 @@ namespace DevZest.Data.SqlServer
 
             if (size < MIN_BINARY_SIZE || size > MAX_BINARY_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(SqlColumnDescriptor.Binary(column, size));
+            column.SetSqlType(SqlType.Binary(column, size));
             return column;
         }
 
         public static _Binary AsSqlBinaryMax(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.Binary(column, -1));
+            column.SetSqlType(SqlType.Binary(column, -1));
             return column;
         }
 
@@ -67,21 +67,21 @@ namespace DevZest.Data.SqlServer
             column.VerifyNotNull(nameof(column));
             if (size < MIN_VARBINARY_SIZE || size > MAX_VARBINARY_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(SqlColumnDescriptor.VarBinary(column, size));
+            column.SetSqlType(SqlType.VarBinary(column, size));
             return column;
         }
 
         public static _Binary AsSqlVarBinaryMax(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.VarBinary(column, -1));
+            column.SetSqlType(SqlType.VarBinary(column, -1));
             return column;
         }
 
         public static _Binary AsSqlTimestamp(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.Timestamp(column));
+            column.SetSqlType(SqlType.Timestamp(column));
             return column;
         }
 
@@ -92,49 +92,49 @@ namespace DevZest.Data.SqlServer
                 throw new ArgumentOutOfRangeException("precision");
             if (scale < 0 || scale > precision)
                 throw new ArgumentOutOfRangeException("scale");
-            column.SetMapper(SqlColumnDescriptor.Decimal(column, precision, scale));
+            column.SetSqlType(SqlType.Decimal(column, precision, scale));
             return column;
         }
 
         public static _Decimal AsSqlSmallMoney(this _Decimal column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.SmallMoney(column));
+            column.SetSqlType(SqlType.SmallMoney(column));
             return column;
         }
 
         public static _Decimal AsSqlMoney(this _Decimal column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.Money(column));
+            column.SetSqlType(SqlType.Money(column));
             return column;
         }
 
         public static _DateTime AsSqlDate(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.Date(column));
+            column.SetSqlType(SqlType.Date(column));
             return column;
         }
 
         public static _DateTime AsSqlTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.Time(column));
+            column.SetSqlType(SqlType.Time(column));
             return column;
         }
 
         public static _DateTime AsSqlSmallDateTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.SmallDateTime(column));
+            column.SetSqlType(SqlType.SmallDateTime(column));
             return column;
         }
 
         public static _DateTime AsSqlDateTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.DateTime(column));
+            column.SetSqlType(SqlType.DateTime(column));
             return column;
         }
 
@@ -143,7 +143,7 @@ namespace DevZest.Data.SqlServer
             column.VerifyNotNull(nameof(column));
             if (precision < MIN_DATETIME2_PRECISION || precision > MAX_DATETIME2_PRECISION)
                 throw new ArgumentOutOfRangeException("precision");
-            column.SetMapper(SqlColumnDescriptor.DateTime2(column, precision));
+            column.SetSqlType(SqlType.DateTime2(column, precision));
             return column;
         }
 
@@ -152,14 +152,14 @@ namespace DevZest.Data.SqlServer
             column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(SqlColumnDescriptor.NChar(column, size));
+            column.SetSqlType(SqlType.NChar(column, size));
             return column;
         }
 
         public static _String AsSqlNCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.NChar(column, -1));
+            column.SetSqlType(SqlType.NChar(column, -1));
             return column;
         }
 
@@ -168,14 +168,14 @@ namespace DevZest.Data.SqlServer
             column.VerifyNotNull(nameof(column));
             if ((size < MIN_NVARCHAR_SIZE || size > MAX_NVARCHAR_SIZE) && size != -1)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(SqlColumnDescriptor.NVarChar(column, size));
+            column.SetSqlType(SqlType.NVarChar(column, size));
             return column;
         }
 
         public static _String AsSqlNVarCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.NVarChar(column, -1));
+            column.SetSqlType(SqlType.NVarChar(column, -1));
             return column;
         }
 
@@ -183,7 +183,7 @@ namespace DevZest.Data.SqlServer
             where T: Column<Char?>
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.SingleChar(column, isUnicode));
+            column.SetSqlType(SqlType.SingleChar(column, isUnicode));
             return column;
         }
 
@@ -192,14 +192,14 @@ namespace DevZest.Data.SqlServer
             column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(SqlColumnDescriptor.Char(column, size));
+            column.SetSqlType(SqlType.Char(column, size));
             return column;
         }
 
         public static _String AsSqlCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.Char(column, -1));
+            column.SetSqlType(SqlType.Char(column, -1));
             return column;
         }
 
@@ -209,91 +209,91 @@ namespace DevZest.Data.SqlServer
             column.VerifyNotNull(nameof(column));
             if (size < MIN_VARCHAR_SIZE || size > MAX_VARCHAR_SIZE)
                 throw new ArgumentOutOfRangeException("size");
-            column.SetMapper(SqlColumnDescriptor.VarChar(column, size));
+            column.SetSqlType(SqlType.VarChar(column, size));
             return column;
         }
 
         public static _String AsSqlVarCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMapper(SqlColumnDescriptor.VarChar(column, -1));
+            column.SetSqlType(SqlType.VarChar(column, -1));
             return column;
         }
 
-        internal static SqlColumnDescriptor GetSqlColumnDescriptor(this Column column)
+        internal static SqlType GetSqlType(this Column column)
         {
-            var result = column.GetAddon<SqlColumnDescriptor>() ?? column.GetDefaultSqlColumnDescriptor();
+            var result = column.GetAddon<SqlType>() ?? column.GetDefaultSqlType();
             return result;
         }
 
-        private abstract class SqlColumnDescriptorProvider
+        private abstract class SqlTypeProvider
         {
-            public abstract SqlColumnDescriptor GetDefaultSqlColumnDescriptor(Column column);
+            public abstract SqlType GetDefaultSqlType(Column column);
 
             public abstract Type DataType { get; }
         }
 
-        private sealed class SqlColumnDescriptorProvider<T> : SqlColumnDescriptorProvider
+        private sealed class SqlTypeProvider<T> : SqlTypeProvider
         {
-            public SqlColumnDescriptorProvider(Func<Column<T>, SqlColumnDescriptor> callback)
+            public SqlTypeProvider(Func<Column<T>, SqlType> callback)
             {
                 Debug.Assert(callback != null);
                 _callback = callback;
             }
 
-            readonly Func<Column<T>, SqlColumnDescriptor> _callback;
+            readonly Func<Column<T>, SqlType> _callback;
 
             public override Type DataType
             {
                 get { return typeof(T); }
             }
 
-            public override SqlColumnDescriptor GetDefaultSqlColumnDescriptor(Column column)
+            public override SqlType GetDefaultSqlType(Column column)
             {
                 var x = column as Column<T>;
                 return x == null ? null : _callback(x);
             }
         }
 
-        private sealed class SqlColumnDescriptorProviderCollection : Dictionary<Type, SqlColumnDescriptorProvider>
+        private sealed class SqlTypeProviderCollection : Dictionary<Type, SqlTypeProvider>
         {
-            public void Add(SqlColumnDescriptorProvider value)
+            public void Add(SqlTypeProvider value)
             {
                 base.Add(value.DataType, value);
             }
         }
 
-        private static readonly ConcurrentDictionary<Type, SqlColumnDescriptorProvider> s_defaultSqlColumnDescriptorProviders = new ConcurrentDictionary<Type, SqlColumnDescriptorProvider>(
-            new SqlColumnDescriptorProviderCollection()
+        private static readonly ConcurrentDictionary<Type, SqlTypeProvider> s_defaultSqlTypeProviders = new ConcurrentDictionary<Type, SqlTypeProvider>(
+            new SqlTypeProviderCollection()
             {
-                new SqlColumnDescriptorProvider<Binary>(x => SqlColumnDescriptor.VarBinary(x, MAX_VARBINARY_SIZE)),
-                new SqlColumnDescriptorProvider<Boolean?>(x => SqlColumnDescriptor.Bit(x)),
-                new SqlColumnDescriptorProvider<Byte?>(x => SqlColumnDescriptor.TinyInt(x)),
-                new SqlColumnDescriptorProvider<Char?>(x => SqlColumnDescriptor.SingleChar(x, false)),
-                new SqlColumnDescriptorProvider<DateTime?>(x => SqlColumnDescriptor.DateTime2(x, MAX_DATETIME2_PRECISION)),
-                new SqlColumnDescriptorProvider<DateTimeOffset?>(x => SqlColumnDescriptor.DateTimeOffset(x)),
-                new SqlColumnDescriptorProvider<Decimal?>(x => SqlColumnDescriptor.Decimal(x, DEFAULT_DECIMAL_PRECISION, DEFAULT_DECIMAL_SCALE)),
-                new SqlColumnDescriptorProvider<Double?>(x => SqlColumnDescriptor.Double(x)),
-                new SqlColumnDescriptorProvider<Guid?>(x => SqlColumnDescriptor.UniqueIdentifier(x)),
-                new SqlColumnDescriptorProvider<Int16?>(x => SqlColumnDescriptor.SmallInt(x)),
-                new SqlColumnDescriptorProvider<Int32?>(x => SqlColumnDescriptor.Int(x)),
-                new SqlColumnDescriptorProvider<Int64?>(x => SqlColumnDescriptor.BigInt(x)),
-                new SqlColumnDescriptorProvider<Single?>(x => SqlColumnDescriptor.Single(x)),
-                new SqlColumnDescriptorProvider<String>(x => SqlColumnDescriptor.NVarChar(x, MAX_NVARCHAR_SIZE)),
-                new SqlColumnDescriptorProvider<TimeSpan?>(x => SqlColumnDescriptor.TimeSpan(x)),
-                new SqlColumnDescriptorProvider<SqlXml>(x => SqlColumnDescriptor.Xml(x))
+                new SqlTypeProvider<Binary>(x => SqlType.VarBinary(x, MAX_VARBINARY_SIZE)),
+                new SqlTypeProvider<Boolean?>(x => SqlType.Bit(x)),
+                new SqlTypeProvider<Byte?>(x => SqlType.TinyInt(x)),
+                new SqlTypeProvider<Char?>(x => SqlType.SingleChar(x, false)),
+                new SqlTypeProvider<DateTime?>(x => SqlType.DateTime2(x, MAX_DATETIME2_PRECISION)),
+                new SqlTypeProvider<DateTimeOffset?>(x => SqlType.DateTimeOffset(x)),
+                new SqlTypeProvider<Decimal?>(x => SqlType.Decimal(x, DEFAULT_DECIMAL_PRECISION, DEFAULT_DECIMAL_SCALE)),
+                new SqlTypeProvider<Double?>(x => SqlType.Double(x)),
+                new SqlTypeProvider<Guid?>(x => SqlType.UniqueIdentifier(x)),
+                new SqlTypeProvider<Int16?>(x => SqlType.SmallInt(x)),
+                new SqlTypeProvider<Int32?>(x => SqlType.Int(x)),
+                new SqlTypeProvider<Int64?>(x => SqlType.BigInt(x)),
+                new SqlTypeProvider<Single?>(x => SqlType.Single(x)),
+                new SqlTypeProvider<String>(x => SqlType.NVarChar(x, MAX_NVARCHAR_SIZE)),
+                new SqlTypeProvider<TimeSpan?>(x => SqlType.TimeSpan(x)),
+                new SqlTypeProvider<SqlXml>(x => SqlType.Xml(x))
             });
 
-        private static SqlColumnDescriptor GetDefaultSqlColumnDescriptor(this Column column)
+        private static SqlType GetDefaultSqlType(this Column column)
         {
             Debug.Assert(column != null);
-            return column.GetDefaultSqlColumnDescriptorProvider().GetDefaultSqlColumnDescriptor(column);
+            return column.GetDefaultSqlTypeProvider().GetDefaultSqlType(column);
         }
 
-        private static SqlColumnDescriptorProvider GetDefaultSqlColumnDescriptorProvider(this Column column)
+        private static SqlTypeProvider GetDefaultSqlTypeProvider(this Column column)
         {
-            SqlColumnDescriptorProvider result;
-            if (s_defaultSqlColumnDescriptorProviders.TryGetValue(column.DataType, out result))
+            SqlTypeProvider result;
+            if (s_defaultSqlTypeProviders.TryGetValue(column.DataType, out result))
                 return result;
 
             var columnType = column.GetType();
@@ -302,31 +302,31 @@ namespace DevZest.Data.SqlServer
             if (columnType.IsDerivedFromGeneric(typeof(_ByteEnum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetByteEnumColumnDescriptorProvider));
-                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
+                return s_defaultSqlTypeProviders.GetOrAdd(columnType, BuildSqlTypeProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFromGeneric(typeof(_CharEnum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetCharEnumColumnDescriptorProvider));
-                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
+                return s_defaultSqlTypeProviders.GetOrAdd(columnType, BuildSqlTypeProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFromGeneric(typeof(_Int16Enum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt16EnumColumnDescriptorProvider));
-                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
+                return s_defaultSqlTypeProviders.GetOrAdd(columnType, BuildSqlTypeProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFromGeneric(typeof(_Int32Enum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt32EnumColumnDescriptorProvider));
-                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
+                return s_defaultSqlTypeProviders.GetOrAdd(columnType, BuildSqlTypeProviderFactory(methodInfo, enumType));
             }
 
             if (columnType.IsDerivedFromGeneric(typeof(_Int64Enum<>)))
             {
                 var methodInfo = typeof(ColumnExtensions).GetStaticMethodInfo(nameof(GetInt64EnumColumnDescriptorProvider));
-                return s_defaultSqlColumnDescriptorProviders.GetOrAdd(columnType, BuildSqlColumnDescriptorProviderFactory(methodInfo, enumType));
+                return s_defaultSqlTypeProviders.GetOrAdd(columnType, BuildSqlTypeProviderFactory(methodInfo, enumType));
             }
 
             throw new NotSupportedException(DiagnosticMessages.ColumnTypeNotSupported(column.GetType()));
@@ -342,46 +342,46 @@ namespace DevZest.Data.SqlServer
             return false;
         }
 
-        private static SqlColumnDescriptorProvider<T?> GetCharEnumColumnDescriptorProvider<T>()
+        private static SqlTypeProvider<T?> GetCharEnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.CharEnum<T>((_CharEnum<T>)x));
+            return new SqlTypeProvider<T?>(x => SqlType.CharEnum<T>((_CharEnum<T>)x));
         }
 
-        private static SqlColumnDescriptorProvider<T?> GetByteEnumColumnDescriptorProvider<T>()
+        private static SqlTypeProvider<T?> GetByteEnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.ByteEnum<T>((_ByteEnum<T>)x));
+            return new SqlTypeProvider<T?>(x => SqlType.ByteEnum<T>((_ByteEnum<T>)x));
         }
 
-        private static SqlColumnDescriptorProvider<T?> GetInt16EnumColumnDescriptorProvider<T>()
+        private static SqlTypeProvider<T?> GetInt16EnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.Int16Enum<T>((_Int16Enum<T>)x));
+            return new SqlTypeProvider<T?>(x => SqlType.Int16Enum<T>((_Int16Enum<T>)x));
         }
 
-        private static SqlColumnDescriptorProvider<T?> GetInt32EnumColumnDescriptorProvider<T>()
+        private static SqlTypeProvider<T?> GetInt32EnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.Int32Enum<T>((_Int32Enum<T>)x));
+            return new SqlTypeProvider<T?>(x => SqlType.Int32Enum<T>((_Int32Enum<T>)x));
         }
 
-        private static SqlColumnDescriptorProvider<T?> GetInt64EnumColumnDescriptorProvider<T>()
+        private static SqlTypeProvider<T?> GetInt64EnumColumnDescriptorProvider<T>()
             where T : struct, IConvertible
         {
-            return new SqlColumnDescriptorProvider<T?>(x => SqlColumnDescriptor.Int64Enum<T>((_Int64Enum<T>)x));
+            return new SqlTypeProvider<T?>(x => SqlType.Int64Enum<T>((_Int64Enum<T>)x));
         }
 
-        private static Func<Type, SqlColumnDescriptorProvider> BuildSqlColumnDescriptorProviderFactory(MethodInfo methodInfo, Type columnDataType)
+        private static Func<Type, SqlTypeProvider> BuildSqlTypeProviderFactory(MethodInfo methodInfo, Type columnDataType)
         {
             methodInfo = methodInfo.MakeGenericMethod(columnDataType);
             var call = Expression.Call(methodInfo);
-            return Expression.Lambda<Func<Type, SqlColumnDescriptorProvider>>(call, Expression.Parameter(typeof(Type))).Compile();
+            return Expression.Lambda<Func<Type, SqlTypeProvider>>(call, Expression.Parameter(typeof(Type))).Compile();
         }
 
         internal static SqlDbType GetSqlDbType(this Column column, SqlVersion sqlVersion)
         {
-            return column.GetSqlColumnDescriptor().GetSqlParameterInfo(sqlVersion).SqlDbType;
+            return column.GetSqlType().GetSqlParameterInfo(sqlVersion).SqlDbType;
         }
 
         internal static bool IsUnicode(this Column column, SqlVersion sqlVersion)

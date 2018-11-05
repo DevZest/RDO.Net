@@ -7,7 +7,7 @@ using DevZest.Data.Addons;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [ModelMemberAttributeSpec(new Type[] { typeof(ColumnNotNull), typeof(SqlColumnDescriptor) }, true, typeof(_String))]
+    [ModelMemberAttributeSpec(new Type[] { typeof(ColumnNotNull), typeof(SqlType) }, true, typeof(_String))]
     public sealed class UdtAccountNumberAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)

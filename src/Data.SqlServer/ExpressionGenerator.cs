@@ -80,8 +80,8 @@ namespace DevZest.Data.SqlServer
 
         public override void Visit(DbCastExpression e)
         {
-            var sourceMapper = e.SourceColumn.GetSqlColumnDescriptor();
-            var targetMapper = e.TargetColumn.GetSqlColumnDescriptor();
+            var sourceMapper = e.SourceColumn.GetSqlType();
+            var targetMapper = e.TargetColumn.GetSqlType();
             if (CanEliminateCast(sourceMapper, targetMapper))
                 e.Operand.Accept(this);
             else
@@ -94,7 +94,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private bool CanEliminateCast(SqlColumnDescriptor sourceMapper, SqlColumnDescriptor targetMapper)
+        private bool CanEliminateCast(SqlType sourceMapper, SqlType targetMapper)
         {
             return sourceMapper.GetSqlParameterInfo(SqlVersion).SqlDbType == targetMapper.GetSqlParameterInfo(SqlVersion).SqlDbType;
         }
@@ -124,7 +124,7 @@ namespace DevZest.Data.SqlServer
                 return;
             }
 
-            sqlBuilder.Append(column.GetSqlColumnDescriptor().GetTSqlLiteral(value, sqlVersion));
+            sqlBuilder.Append(column.GetSqlType().GetTSqlLiteral(value, sqlVersion));
         }
 
         private static Dictionary<FunctionKey, Action<ExpressionGenerator, DbFunctionExpression>> s_functionHandlers = new Dictionary<FunctionKey, Action<ExpressionGenerator, DbFunctionExpression>>()
@@ -296,7 +296,7 @@ namespace DevZest.Data.SqlServer
             paramList[1].Accept(this);
             SqlBuilder.Append(", ");
             var targetColumn = ((DbColumnExpression)paramList[2]).Column;
-            SqlBuilder.AppendSingleQuoted(targetColumn.GetSqlColumnDescriptor().GetDataTypeSql(SqlVersion));
+            SqlBuilder.AppendSingleQuoted(targetColumn.GetSqlType().GetDataTypeSql(SqlVersion));
             SqlBuilder.Append(")");
         }
 
@@ -316,7 +316,7 @@ namespace DevZest.Data.SqlServer
         {
             var dbParamExpression = DbParamExpressions[index];
             var column = dbParamExpression.SourceColumn ?? dbParamExpression.Column;
-            var columnMapper = column.GetSqlColumnDescriptor();
+            var columnMapper = column.GetSqlType();
             return columnMapper.CreateSqlParameter(GetParamName(index), ParameterDirection.Input, dbParamExpression.Value, SqlVersion);
         }
 

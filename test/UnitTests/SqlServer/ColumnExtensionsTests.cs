@@ -85,12 +85,12 @@ namespace DevZest.Data.SqlServer
 
         private static void VerifyColumnMapper(SqlVersion sqlVersion, Column column, SqlParameterInfo expectedParamInfo, string expectedSqlString)
         {
-            var columnMapper = column.GetSqlColumnDescriptor();
+            var columnMapper = column.GetSqlType();
             VerifySqlParamInfo(sqlVersion, columnMapper, expectedParamInfo);
             Assert.AreEqual(expectedSqlString, columnMapper.GetDataTypeSql(sqlVersion));
         }
 
-        private static void VerifySqlParamInfo(SqlVersion sqlVersion, SqlColumnDescriptor columnMapper, SqlParameterInfo expected)
+        private static void VerifySqlParamInfo(SqlVersion sqlVersion, SqlType columnMapper, SqlParameterInfo expected)
         {
             var actual = columnMapper.GetSqlParameterInfo(sqlVersion);
             Assert.AreEqual(expected.SqlDbType, actual.SqlDbType);

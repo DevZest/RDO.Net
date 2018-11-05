@@ -119,7 +119,7 @@ namespace DevZest.Data.SqlServer
                     for (int i = 0; i < columns.Count; i++)
                     {
                         xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, i));
-                        xmlWriter.WriteString(columns[i].GetSqlColumnDescriptor().GetXmlValueByOrdinal(dataSet.IndexOf(row), SqlVersion));
+                        xmlWriter.WriteString(columns[i].GetSqlType().GetXmlValueByOrdinal(dataSet.IndexOf(row), SqlVersion));
                         xmlWriter.WriteEndElement();
                     }
 

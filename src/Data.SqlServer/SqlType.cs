@@ -9,7 +9,7 @@ using System.Globalization;
 
 namespace DevZest.Data.SqlServer
 {
-    public abstract class SqlColumnDescriptor : IAddon
+    public abstract class SqlType : IAddon
     {
         private const string NULL = "NULL";
 
@@ -141,10 +141,10 @@ namespace DevZest.Data.SqlServer
 
         object IAddon.Key
         {
-            get { return typeof(SqlColumnDescriptor); }
+            get { return typeof(SqlType); }
         }
 
-        private abstract class SqlColumnTypeBase<T> : SqlColumnDescriptor
+        private abstract class SqlColumnTypeBase<T> : SqlType
         {
             protected SqlColumnTypeBase(Column<T> column)
             {
@@ -226,7 +226,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor BigInt(Column<Int64?> int64Column)
+        internal static SqlType BigInt(Column<Int64?> int64Column)
         {
             return new SqlBigInt(int64Column);
         }
@@ -260,7 +260,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Decimal(Column<Decimal?> decimalColumn, Byte precision, Byte scale)
+        internal static SqlType Decimal(Column<Decimal?> decimalColumn, Byte precision, Byte scale)
         {
             return new SqlDecimal(decimalColumn, precision, scale);
         }
@@ -288,7 +288,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Bit(Column<Boolean?> booleanColumn)
+        internal static SqlType Bit(Column<Boolean?> booleanColumn)
         {
             return new SqlBit(booleanColumn);
         }
@@ -316,7 +316,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor TinyInt(Column<Byte?> byteColumn)
+        internal static SqlType TinyInt(Column<Byte?> byteColumn)
         {
             return new SqlTinyInt(byteColumn);
         }
@@ -344,7 +344,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor SmallInt(Column<Int16?> int16Column)
+        internal static SqlType SmallInt(Column<Int16?> int16Column)
         {
             return new SqlSmallInt(int16Column);
         }
@@ -372,7 +372,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Int(Column<Int32?> int32Column)
+        internal static SqlType Int(Column<Int32?> int32Column)
         {
             return new SqlInt(int32Column);
         }
@@ -400,7 +400,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor SmallMoney(Column<Decimal?> decimalColumn)
+        internal static SqlType SmallMoney(Column<Decimal?> decimalColumn)
         {
             return new SqlSmallMoney(decimalColumn);
         }
@@ -428,7 +428,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Money(Column<Decimal?> decimalColumn)
+        internal static SqlType Money(Column<Decimal?> decimalColumn)
         {
             return new SqlMoney(decimalColumn);
         }
@@ -517,7 +517,7 @@ namespace DevZest.Data.SqlServer
         }
 
 
-        internal static SqlColumnDescriptor Binary(Column<Binary> binaryColumn, int size)
+        internal static SqlType Binary(Column<Binary> binaryColumn, int size)
         {
             return new SqlBinary(binaryColumn, size);
         }
@@ -540,7 +540,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor VarBinary(Column<Binary> binaryColumn, int size)
+        internal static SqlType VarBinary(Column<Binary> binaryColumn, int size)
         {
             return new SqlVarBinary(binaryColumn, size);
         }
@@ -582,7 +582,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Timestamp(Column<Binary> binaryColumn)
+        internal static SqlType Timestamp(Column<Binary> binaryColumn)
         {
             return new SqlTimestamp(binaryColumn);
         }
@@ -611,7 +611,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor UniqueIdentifier(Column<Guid?> column)
+        internal static SqlType UniqueIdentifier(Column<Guid?> column)
         {
             return new SqlUniqueIdentifier(column);
         }
@@ -655,7 +655,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Date(Column<DateTime?> dateTimeColumn)
+        internal static SqlType Date(Column<DateTime?> dateTimeColumn)
         {
             return new SqlDate(dateTimeColumn);
         }
@@ -683,7 +683,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Time(Column<DateTime?> column)
+        internal static SqlType Time(Column<DateTime?> column)
         {
             return new SqlTime(column);
         }
@@ -711,7 +711,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor DateTime(Column<DateTime?> column)
+        internal static SqlType DateTime(Column<DateTime?> column)
         {
             return new SqlDateTime(column);
         }
@@ -739,7 +739,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor SmallDateTime(Column<DateTime?> column)
+        internal static SqlType SmallDateTime(Column<DateTime?> column)
         {
             return new SqlSmallDateTime(column);
         }
@@ -770,7 +770,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor DateTime2(Column<DateTime?> column, byte precision)
+        internal static SqlType DateTime2(Column<DateTime?> column, byte precision)
         {
             return new SqlDateTime2(column, precision);
         }
@@ -799,7 +799,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor DateTimeOffset(Column<DateTimeOffset?> dateTimeOffsetColumn)
+        internal static SqlType DateTimeOffset(Column<DateTimeOffset?> dateTimeOffsetColumn)
         {
             return new SqlDateTimeOffset(dateTimeOffsetColumn);
         }
@@ -827,7 +827,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Single(Column<Single?> column)
+        internal static SqlType Single(Column<Single?> column)
         {
             return new SqlSingle(column);
         }
@@ -855,7 +855,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Double(Column<Double?> column)
+        internal static SqlType Double(Column<Double?> column)
         {
             return new SqlDouble(column);
         }
@@ -911,7 +911,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor NVarChar(Column<String> column, int size)
+        internal static SqlType NVarChar(Column<String> column, int size)
         {
             return new SqlNVarChar(column, size);
         }
@@ -939,7 +939,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor NChar(Column<String> column, int size)
+        internal static SqlType NChar(Column<String> column, int size)
         {
             return new SqlNChar(column, size);
         }
@@ -967,7 +967,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor VarChar(Column<String> column, int size)
+        internal static SqlType VarChar(Column<String> column, int size)
         {
             return new SqlVarChar(column, size);
         }
@@ -995,7 +995,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Char(Column<String> column, int size)
+        internal static SqlType Char(Column<String> column, int size)
         {
             return new SqlChar(column, size);
         }
@@ -1027,7 +1027,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor SingleChar(Column<Char?> column, bool isUnicode)
+        internal static SqlType SingleChar(Column<Char?> column, bool isUnicode)
         {
             return new SqlSingleChar(column, isUnicode);
         }
@@ -1056,7 +1056,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor TimeSpan(Column<TimeSpan?> column)
+        internal static SqlType TimeSpan(Column<TimeSpan?> column)
         {
             return new SqlTimeSpan(column);
         }
@@ -1097,12 +1097,12 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Xml(Column<SqlXml> column)
+        internal static SqlType Xml(Column<SqlXml> column)
         {
             return new SqlXmlColumn(column);
         }
 
-        private abstract class EnumColumnBase<TEnum, TValue> : SqlColumnDescriptor
+        private abstract class EnumColumnBase<TEnum, TValue> : SqlType
             where TValue : struct
         {
             internal sealed override object ConvertParameterValue(object value)
@@ -1188,7 +1188,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor CharEnum<T>(_CharEnum<T> column)
+        internal static SqlType CharEnum<T>(_CharEnum<T> column)
             where T : struct, IConvertible
         {
             return new CharEnumColumn<T>(column);
@@ -1235,7 +1235,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor ByteEnum<T>(_ByteEnum<T> column)
+        internal static SqlType ByteEnum<T>(_ByteEnum<T> column)
             where T : struct, IConvertible
         {
             return new ByteEnumColumn<T>(column);
@@ -1282,7 +1282,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Int16Enum<T>(_Int16Enum<T> column)
+        internal static SqlType Int16Enum<T>(_Int16Enum<T> column)
             where T : struct, IConvertible
         {
             return new Int16EnumColumn<T>(column);
@@ -1329,7 +1329,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Int32Enum<T>(_Int32Enum<T> column)
+        internal static SqlType Int32Enum<T>(_Int32Enum<T> column)
             where T : struct, IConvertible
         {
             return new Int32EnumColumn<T>(column);
@@ -1376,7 +1376,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal static SqlColumnDescriptor Int64Enum<T>(_Int64Enum<T> column)
+        internal static SqlType Int64Enum<T>(_Int64Enum<T> column)
             where T : struct, IConvertible
         {
             return new Int64EnumColumn<T>(column);

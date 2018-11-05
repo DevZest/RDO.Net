@@ -10,19 +10,19 @@ namespace DevZest.Data.SqlServer
 {
     internal static class SqlParameterExtensions
     {
-        private static ConditionalWeakTable<SqlParameter, Tuple<SqlColumnDescriptor, object, SqlVersion>> s_debugInfo = 
-            new ConditionalWeakTable<SqlParameter, Tuple<SqlColumnDescriptor, object, SqlVersion>>();
+        private static ConditionalWeakTable<SqlParameter, Tuple<SqlType, object, SqlVersion>> s_debugInfo = 
+            new ConditionalWeakTable<SqlParameter, Tuple<SqlType, object, SqlVersion>>();
 
-        internal static void SetDebugInfo(this SqlParameter sqlParameter, SqlColumnDescriptor columnMapper, object value, SqlVersion sqlVersion)
+        internal static void SetDebugInfo(this SqlParameter sqlParameter, SqlType columnMapper, object value, SqlVersion sqlVersion)
         {
             Debug.Assert(sqlParameter != null);
             Debug.Assert(columnMapper != null);
-            s_debugInfo.Add(sqlParameter, new Tuple<SqlColumnDescriptor, object, SqlVersion>(columnMapper, value, sqlVersion));
+            s_debugInfo.Add(sqlParameter, new Tuple<SqlType, object, SqlVersion>(columnMapper, value, sqlVersion));
         }
 
-        private static void GetDebugInfo(this SqlParameter sqlParameter, out SqlColumnDescriptor columnMapper, out object value, out SqlVersion sqlVersion)
+        private static void GetDebugInfo(this SqlParameter sqlParameter, out SqlType columnMapper, out object value, out SqlVersion sqlVersion)
         {
-            Tuple<SqlColumnDescriptor, object, SqlVersion> result = null;
+            Tuple<SqlType, object, SqlVersion> result = null;
             s_debugInfo.TryGetValue(sqlParameter, out result);
             columnMapper = result.Item1;
             value = result.Item2;
@@ -31,7 +31,7 @@ namespace DevZest.Data.SqlServer
 
         internal static void GenerateDebugSql(this SqlParameter sqlParameter, IndentedStringBuilder sqlBuilder)
         {
-            SqlColumnDescriptor columnMapper;
+            SqlType columnMapper;
             object value;
             SqlVersion sqlVersion;
             sqlParameter.GetDebugInfo(out columnMapper, out value, out sqlVersion);
