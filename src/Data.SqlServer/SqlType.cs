@@ -144,9 +144,9 @@ namespace DevZest.Data.SqlServer
             get { return typeof(SqlType); }
         }
 
-        private abstract class SqlColumnTypeBase<T> : SqlType
+        private abstract class GenericSqlType<T> : SqlType
         {
-            protected SqlColumnTypeBase(Column<T> column)
+            protected GenericSqlType(Column<T> column)
             {
                 Column = column;
             }
@@ -173,10 +173,10 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private abstract class StructSqlColumnType<T> : SqlColumnTypeBase<Nullable<T>>
+        private abstract class StructSqlType<T> : GenericSqlType<Nullable<T>>
             where T : struct
         {
-            protected StructSqlColumnType(Column<Nullable<T>> column)
+            protected StructSqlType(Column<Nullable<T>> column)
                 : base(column)
             {
             }
@@ -203,9 +203,9 @@ namespace DevZest.Data.SqlServer
             protected abstract string GetValue(T value, ValueKind kind, SqlVersion sqlVersion);
         }
 
-        private sealed class SqlBigInt : StructSqlColumnType<Int64>
+        private sealed class BigIntType : StructSqlType<Int64>
         {
-            public SqlBigInt(Column<Int64?> column)
+            public BigIntType(Column<Int64?> column)
                 : base(column)
             {
             }
@@ -228,12 +228,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType BigInt(Column<Int64?> int64Column)
         {
-            return new SqlBigInt(int64Column);
+            return new BigIntType(int64Column);
         }
 
-        private sealed class SqlDecimal : StructSqlColumnType<Decimal>
+        private sealed class DecimalType : StructSqlType<Decimal>
         {
-            public SqlDecimal(Column<Decimal?> column, Byte precision, Byte scale)
+            public DecimalType(Column<Decimal?> column, Byte precision, Byte scale)
                 : base(column)
             {
                 Precision = precision;
@@ -262,12 +262,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Decimal(Column<Decimal?> decimalColumn, Byte precision, Byte scale)
         {
-            return new SqlDecimal(decimalColumn, precision, scale);
+            return new DecimalType(decimalColumn, precision, scale);
         }
 
-        private sealed class SqlBit : StructSqlColumnType<Boolean>
+        private sealed class BitType : StructSqlType<Boolean>
         {
-            public SqlBit(Column<Boolean?> column)
+            public BitType(Column<Boolean?> column)
                 : base(column)
             {
             }
@@ -290,12 +290,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Bit(Column<Boolean?> booleanColumn)
         {
-            return new SqlBit(booleanColumn);
+            return new BitType(booleanColumn);
         }
 
-        private sealed class SqlTinyInt : StructSqlColumnType<Byte>
+        private sealed class TinyIntType : StructSqlType<Byte>
         {
-            public SqlTinyInt(Column<Byte?> column)
+            public TinyIntType(Column<Byte?> column)
                 : base(column)
             {
             }
@@ -318,12 +318,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType TinyInt(Column<Byte?> byteColumn)
         {
-            return new SqlTinyInt(byteColumn);
+            return new TinyIntType(byteColumn);
         }
 
-        private sealed class SqlSmallInt : StructSqlColumnType<Int16>
+        private sealed class SmallIntType : StructSqlType<Int16>
         {
-            public SqlSmallInt(Column<Int16?> column)
+            public SmallIntType(Column<Int16?> column)
                 : base(column)
             {
             }
@@ -346,12 +346,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType SmallInt(Column<Int16?> int16Column)
         {
-            return new SqlSmallInt(int16Column);
+            return new SmallIntType(int16Column);
         }
 
-        private sealed class SqlInt : StructSqlColumnType<Int32>
+        private sealed class IntType : StructSqlType<Int32>
         {
-            public SqlInt(Column<Int32?> column)
+            public IntType(Column<Int32?> column)
                 : base(column)
             {
             }
@@ -374,12 +374,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Int(Column<Int32?> int32Column)
         {
-            return new SqlInt(int32Column);
+            return new IntType(int32Column);
         }
 
-        private sealed class SqlSmallMoney : StructSqlColumnType<Decimal>
+        private sealed class SmallMoneyType : StructSqlType<Decimal>
         {
-            public SqlSmallMoney(Column<Decimal?> column)
+            public SmallMoneyType(Column<Decimal?> column)
                 : base(column)
             {
             }
@@ -402,12 +402,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType SmallMoney(Column<Decimal?> decimalColumn)
         {
-            return new SqlSmallMoney(decimalColumn);
+            return new SmallMoneyType(decimalColumn);
         }
 
-        private sealed class SqlMoney : StructSqlColumnType<Decimal>
+        private sealed class MoneyType : StructSqlType<Decimal>
         {
-            public SqlMoney(Column<Decimal?> column)
+            public MoneyType(Column<Decimal?> column)
                 : base(column)
             {
             }
@@ -430,13 +430,13 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Money(Column<Decimal?> decimalColumn)
         {
-            return new SqlMoney(decimalColumn);
+            return new MoneyType(decimalColumn);
         }
 
-        private abstract class MaxSizeSqlColumn<T> : SqlColumnTypeBase<T>
+        private abstract class MaxSizeSqlType<T> : GenericSqlType<T>
             where T : class
         {
-            protected MaxSizeSqlColumn(Column<T> column, int size)
+            protected MaxSizeSqlType(Column<T> column, int size)
                 : base(column)
             {
                 Size = size;
@@ -462,9 +462,9 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private abstract class SqlBinaryColumnBase : MaxSizeSqlColumn<Binary>
+        private abstract class BinaryTypeBase : MaxSizeSqlType<Binary>
         {
-            protected SqlBinaryColumnBase(Column<Binary> column, int size)
+            protected BinaryTypeBase(Column<Binary> column, int size)
                 : base(column, size)
             {
             }
@@ -489,9 +489,9 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private sealed class SqlBinary : SqlBinaryColumnBase
+        private sealed class BinaryType : BinaryTypeBase
         {
-            public SqlBinary(Column<Binary> column, int size)
+            public BinaryType(Column<Binary> column, int size)
                 : base(column, size)
             {
             }
@@ -519,12 +519,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Binary(Column<Binary> binaryColumn, int size)
         {
-            return new SqlBinary(binaryColumn, size);
+            return new BinaryType(binaryColumn, size);
         }
 
-        private sealed class SqlVarBinary : SqlBinaryColumnBase
+        private sealed class VarBinaryType : BinaryTypeBase
         {
-            public SqlVarBinary(Column<Binary> column, int size)
+            public VarBinaryType(Column<Binary> column, int size)
                 : base(column, size)
             {
             }
@@ -542,12 +542,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType VarBinary(Column<Binary> binaryColumn, int size)
         {
-            return new SqlVarBinary(binaryColumn, size);
+            return new VarBinaryType(binaryColumn, size);
         }
 
-        private sealed class SqlTimestamp : SqlColumnTypeBase<Binary>
+        private sealed class TimestampType : GenericSqlType<Binary>
         {
-            public SqlTimestamp(Column<Binary> column)
+            public TimestampType(Column<Binary> column)
                 : base(column)
             {
             }
@@ -584,12 +584,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Timestamp(Column<Binary> binaryColumn)
         {
-            return new SqlTimestamp(binaryColumn);
+            return new TimestampType(binaryColumn);
         }
 
-        private sealed class SqlUniqueIdentifier : StructSqlColumnType<Guid>
+        private sealed class UniqueIdentifierType : StructSqlType<Guid>
         {
-            public SqlUniqueIdentifier(Column<Guid?> column)
+            public UniqueIdentifierType(Column<Guid?> column)
                 : base(column)
             {
             }
@@ -613,12 +613,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType UniqueIdentifier(Column<Guid?> column)
         {
-            return new SqlUniqueIdentifier(column);
+            return new UniqueIdentifierType(column);
         }
 
-        private abstract class SqlDateTimeBase : StructSqlColumnType<DateTime>
+        private abstract class DateTimeTypeBase : StructSqlType<DateTime>
         {
-            protected SqlDateTimeBase(Column<DateTime?> column)
+            protected DateTimeTypeBase(Column<DateTime?> column)
                 : base(column)
             {
             }
@@ -632,9 +632,9 @@ namespace DevZest.Data.SqlServer
             protected abstract string GetXmlValue(DateTime value, SqlVersion sqlVersion);
         }
 
-        private sealed class SqlDate : SqlDateTimeBase
+        private sealed class DateType : DateTimeTypeBase
         {
-            public SqlDate(Column<DateTime?> column)
+            public DateType(Column<DateTime?> column)
                 : base(column)
             {
             }
@@ -657,12 +657,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Date(Column<DateTime?> dateTimeColumn)
         {
-            return new SqlDate(dateTimeColumn);
+            return new DateType(dateTimeColumn);
         }
 
-        private sealed class SqlTime : SqlDateTimeBase
+        private sealed class TimeType : DateTimeTypeBase
         {
-            public SqlTime(Column<DateTime?> column)
+            public TimeType(Column<DateTime?> column)
                 : base(column)
             {
             }
@@ -685,12 +685,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Time(Column<DateTime?> column)
         {
-            return new SqlTime(column);
+            return new TimeType(column);
         }
 
-        private sealed class SqlDateTime : SqlDateTimeBase
+        private sealed class DateTimeType : DateTimeTypeBase
         {
-            public SqlDateTime(Column<DateTime?> column)
+            public DateTimeType(Column<DateTime?> column)
                 : base(column)
             {
             }
@@ -713,12 +713,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType DateTime(Column<DateTime?> column)
         {
-            return new SqlDateTime(column);
+            return new DateTimeType(column);
         }
 
-        private sealed class SqlSmallDateTime : SqlDateTimeBase
+        private sealed class SmallDateTimeType : DateTimeTypeBase
         {
-            public SqlSmallDateTime(Column<DateTime?> column)
+            public SmallDateTimeType(Column<DateTime?> column)
                 : base(column)
             {
             }
@@ -741,12 +741,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType SmallDateTime(Column<DateTime?> column)
         {
-            return new SqlSmallDateTime(column);
+            return new SmallDateTimeType(column);
         }
 
-        private sealed class SqlDateTime2 : SqlDateTimeBase
+        private sealed class DateTime2Type : DateTimeTypeBase
         {
-            public SqlDateTime2(Column<DateTime?> column, byte precision)
+            public DateTime2Type(Column<DateTime?> column, byte precision)
                 : base(column)
             {
                 Precision = precision;
@@ -772,12 +772,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType DateTime2(Column<DateTime?> column, byte precision)
         {
-            return new SqlDateTime2(column, precision);
+            return new DateTime2Type(column, precision);
         }
 
-        private sealed class SqlDateTimeOffset : StructSqlColumnType<DateTimeOffset>
+        private sealed class DateTimeOffsetType : StructSqlType<DateTimeOffset>
         {
-            public SqlDateTimeOffset(Column<DateTimeOffset?> column)
+            public DateTimeOffsetType(Column<DateTimeOffset?> column)
                 : base(column)
             {
             }
@@ -801,12 +801,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType DateTimeOffset(Column<DateTimeOffset?> dateTimeOffsetColumn)
         {
-            return new SqlDateTimeOffset(dateTimeOffsetColumn);
+            return new DateTimeOffsetType(dateTimeOffsetColumn);
         }
 
-        private sealed class SqlSingle : StructSqlColumnType<Single>
+        private sealed class SingleType : StructSqlType<Single>
         {
-            public SqlSingle(Column<Single?> column)
+            public SingleType(Column<Single?> column)
                 : base(column)
             {
             }
@@ -829,12 +829,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Single(Column<Single?> column)
         {
-            return new SqlSingle(column);
+            return new SingleType(column);
         }
 
-        private sealed class SqlDouble : StructSqlColumnType<Double>
+        private sealed class DoubleType : StructSqlType<Double>
         {
-            public SqlDouble(Column<Double?> column)
+            public DoubleType(Column<Double?> column)
                 : base(column)
             {
             }
@@ -857,12 +857,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Double(Column<Double?> column)
         {
-            return new SqlDouble(column);
+            return new DoubleType(column);
         }
 
-        private abstract class SqlStringColumnBase : MaxSizeSqlColumn<String>
+        private abstract class StringTypeBase : MaxSizeSqlType<String>
         {
-            protected SqlStringColumnBase(Column<String> column, int size)
+            protected StringTypeBase(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -888,9 +888,9 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        private sealed class SqlNVarChar : SqlStringColumnBase
+        private sealed class NVarCharType : StringTypeBase
         {
-            public SqlNVarChar(Column<String> column, int size)
+            public NVarCharType(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -913,12 +913,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType NVarChar(Column<String> column, int size)
         {
-            return new SqlNVarChar(column, size);
+            return new NVarCharType(column, size);
         }
 
-        private sealed class SqlNChar : SqlStringColumnBase
+        private sealed class NCharType : StringTypeBase
         {
-            public SqlNChar(Column<String> column, int size)
+            public NCharType(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -941,12 +941,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType NChar(Column<String> column, int size)
         {
-            return new SqlNChar(column, size);
+            return new NCharType(column, size);
         }
 
-        private sealed class SqlVarChar : SqlStringColumnBase
+        private sealed class VarCharType : StringTypeBase
         {
-            public SqlVarChar(Column<String> column, int size)
+            public VarCharType(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -969,12 +969,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType VarChar(Column<String> column, int size)
         {
-            return new SqlVarChar(column, size);
+            return new VarCharType(column, size);
         }
 
-        private sealed class SqlChar : SqlStringColumnBase
+        private sealed class CharType : StringTypeBase
         {
-            public SqlChar(Column<String> column, int size)
+            public CharType(Column<String> column, int size)
                 : base(column, size)
             {
             }
@@ -997,12 +997,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Char(Column<String> column, int size)
         {
-            return new SqlChar(column, size);
+            return new CharType(column, size);
         }
 
-        private sealed class SqlSingleChar : StructSqlColumnType<Char>
+        private sealed class SingleCharType : StructSqlType<Char>
         {
-            public SqlSingleChar(Column<Char?> column, bool isUnicode)
+            public SingleCharType(Column<Char?> column, bool isUnicode)
                 : base(column)
             {
                 IsUnicode = isUnicode;
@@ -1029,12 +1029,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType SingleChar(Column<Char?> column, bool isUnicode)
         {
-            return new SqlSingleChar(column, isUnicode);
+            return new SingleCharType(column, isUnicode);
         }
 
-        private sealed class SqlTimeSpan : StructSqlColumnType<TimeSpan>
+        private sealed class TimeSpanType : StructSqlType<TimeSpan>
         {
-            public SqlTimeSpan(Column<TimeSpan?> column)
+            public TimeSpanType(Column<TimeSpan?> column)
                 : base(column)
             {
             }
@@ -1058,12 +1058,12 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType TimeSpan(Column<TimeSpan?> column)
         {
-            return new SqlTimeSpan(column);
+            return new TimeSpanType(column);
         }
 
-        private sealed class SqlXmlColumn : SqlColumnTypeBase<SqlXml>
+        private sealed class XmlType : GenericSqlType<SqlXml>
         {
-            public SqlXmlColumn(Column<SqlXml> column)
+            public XmlType(Column<SqlXml> column)
                 : base(column)
             {
             }
@@ -1099,7 +1099,7 @@ namespace DevZest.Data.SqlServer
 
         internal static SqlType Xml(Column<SqlXml> column)
         {
-            return new SqlXmlColumn(column);
+            return new XmlType(column);
         }
 
         private abstract class EnumType<TEnum, TValue> : SqlType
