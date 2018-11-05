@@ -2,6 +2,7 @@ Imports DevZest.Data
 Imports DevZest.Data.SqlServer
 Imports DevZest.Data.Annotations.Primitives
 Imports DevZest.Data.Addons
+Imports DevZest.Data.SqlServer.Addons
 
 Namespace DevZest.Samples.AdventureWorksLT
     <ModelMemberAttributeSpec(New Type() {GetType(ColumnNotNull), GetType(SqlType)}, True, GetType(_String))>

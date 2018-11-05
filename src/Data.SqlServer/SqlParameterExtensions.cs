@@ -1,10 +1,10 @@
 ﻿using DevZest.Data.Primitives;
+using DevZest.Data.SqlServer.Addons;
 using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace DevZest.Data.SqlServer
 {
@@ -20,22 +20,19 @@ namespace DevZest.Data.SqlServer
             s_debugInfo.Add(sqlParameter, new Tuple<SqlType, object, SqlVersion>(columnMapper, value, sqlVersion));
         }
 
-        private static void GetDebugInfo(this SqlParameter sqlParameter, out SqlType columnMapper, out object value, out SqlVersion sqlVersion)
+        private static void GetDebugInfo(this SqlParameter sqlParameter, out SqlType sqlType, out object value, out SqlVersion sqlVersion)
         {
             Tuple<SqlType, object, SqlVersion> result = null;
             s_debugInfo.TryGetValue(sqlParameter, out result);
-            columnMapper = result.Item1;
+            sqlType = result.Item1;
             value = result.Item2;
             sqlVersion = result.Item3;
         }
 
         internal static void GenerateDebugSql(this SqlParameter sqlParameter, IndentedStringBuilder sqlBuilder)
         {
-            SqlType columnMapper;
-            object value;
-            SqlVersion sqlVersion;
-            sqlParameter.GetDebugInfo(out columnMapper, out value, out sqlVersion);
-            var dataTypeSql = columnMapper.GetDataTypeSql(sqlVersion);
+            sqlParameter.GetDebugInfo(out var sqlType, out var value, out var sqlVersion);
+            var dataTypeSql = sqlType.GetDataTypeSql(sqlVersion);
 
             sqlBuilder.Append("DECLARE ")
                 .Append(sqlParameter.ParameterName)
@@ -44,7 +41,7 @@ namespace DevZest.Data.SqlServer
             if (sqlParameter.Direction == ParameterDirection.Input || sqlParameter.Direction == ParameterDirection.InputOutput)
             {
                 sqlBuilder.Append(" = ");
-                ExpressionGenerator.GenerateConst(sqlBuilder, sqlVersion, columnMapper.GetColumn(), value);
+                ExpressionGenerator.GenerateConst(sqlBuilder, sqlVersion, sqlType.GetColumn(), value);
             }
             sqlBuilder.AppendLine(";");
         }

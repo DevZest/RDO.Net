@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Primitives;
+using DevZest.Data.SqlServer.Addons;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -80,23 +81,23 @@ namespace DevZest.Data.SqlServer
 
         public override void Visit(DbCastExpression e)
         {
-            var sourceMapper = e.SourceColumn.GetSqlType();
-            var targetMapper = e.TargetColumn.GetSqlType();
-            if (CanEliminateCast(sourceMapper, targetMapper))
+            var sourceSqlType = e.SourceColumn.GetSqlType();
+            var targetSqlType = e.TargetColumn.GetSqlType();
+            if (CanEliminateCast(sourceSqlType, targetSqlType))
                 e.Operand.Accept(this);
             else
             {
                 SqlBuilder.Append("CAST(");
                 e.Operand.Accept(this);
                 SqlBuilder.Append(" AS ");
-                SqlBuilder.Append(targetMapper.GetDataTypeSql(this.SqlVersion));
+                SqlBuilder.Append(targetSqlType.GetDataTypeSql(this.SqlVersion));
                 SqlBuilder.Append(")");
             }
         }
 
-        private bool CanEliminateCast(SqlType sourceMapper, SqlType targetMapper)
+        private bool CanEliminateCast(SqlType sourceSqlType, SqlType targetSqlType)
         {
-            return sourceMapper.GetSqlParameterInfo(SqlVersion).SqlDbType == targetMapper.GetSqlParameterInfo(SqlVersion).SqlDbType;
+            return sourceSqlType.GetSqlParameterInfo(SqlVersion).SqlDbType == targetSqlType.GetSqlParameterInfo(SqlVersion).SqlDbType;
         }
 
         public override void Visit(DbColumnExpression e)
@@ -316,8 +317,8 @@ namespace DevZest.Data.SqlServer
         {
             var dbParamExpression = DbParamExpressions[index];
             var column = dbParamExpression.SourceColumn ?? dbParamExpression.Column;
-            var columnMapper = column.GetSqlType();
-            return columnMapper.CreateSqlParameter(GetParamName(index), ParameterDirection.Input, dbParamExpression.Value, SqlVersion);
+            var columnSqlType = column.GetSqlType();
+            return columnSqlType.CreateSqlParameter(GetParamName(index), ParameterDirection.Input, dbParamExpression.Value, SqlVersion);
         }
 
         public override void Visit(DbParamExpression e)

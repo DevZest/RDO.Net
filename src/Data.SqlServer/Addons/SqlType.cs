@@ -7,7 +7,7 @@ using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace DevZest.Data.SqlServer
+namespace DevZest.Data.SqlServer.Addons
 {
     public abstract class SqlType : IAddon
     {

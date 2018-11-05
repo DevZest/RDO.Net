@@ -3,6 +3,7 @@ using DevZest.Data;
 using DevZest.Data.SqlServer;
 using DevZest.Data.Annotations.Primitives;
 using DevZest.Data.Addons;
+using DevZest.Data.SqlServer.Addons;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
