@@ -6,8 +6,8 @@ namespace DevZest.Data.Primitives
     public interface IDbNonQueryInterceptor<TCommand> : IAddon
         where TCommand : DbCommand
     {
-        void Executing(DbNonQueryInvoker<TCommand> invoker);
+        void Executing(TCommand command, int result, AddonInvoker invoker);
 
-        void Executed(DbNonQueryInvoker<TCommand> invoker);
+        void Executed(TCommand command, int result, AddonInvoker invoker);
     }
 }

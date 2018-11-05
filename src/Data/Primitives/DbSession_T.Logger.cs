@@ -178,15 +178,13 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.CommandExecuting, Environment.NewLine);
             }
 
-            private void OnExecuted<TInterceptor, TResult>(TCommand command, AddonInvoker<TInterceptor> invoker, TResult result)
-                where TInterceptor : class, IAddon
+            private void OnExecuted<TResult>(TCommand command, TResult result, AddonInvoker invoker)
             {
                 Stopwatch.Stop();
-                OnCommandExecuted(command, invoker, result);
+                OnCommandExecuted(command, result, invoker);
             }
 
-            protected virtual void OnCommandExecuted<TInterceptor, TResult>(TCommand command, AddonInvoker<TInterceptor> invoker, TResult result)
-                where TInterceptor : class, IAddon
+            protected virtual void OnCommandExecuted<TResult>(TCommand command, TResult result, AddonInvoker invoker)
             {
                 var exception = invoker.Exception;
                 if (exception != null)
@@ -213,17 +211,17 @@ namespace DevZest.Data.Primitives
 
             public void OnReaderExecuted(DbReaderInvoker<TCommand, TReader> invoker)
             {
-                OnExecuted(invoker.Command, invoker, invoker.Result);
+                OnExecuted(invoker.Command, invoker.Result, invoker);
             }
 
-            public void OnNonQueryExecuting(DbNonQueryInvoker<TCommand> invoker)
+            public void OnNonQueryExecuting(TCommand command, int result, AddonInvoker invoker)
             {
-                OnExecuting(invoker.Command, invoker.IsAsync);
+                OnExecuting(command, invoker.IsAsync);
             }
 
-            public void OnNonQueryExecuted(DbNonQueryInvoker<TCommand> invoker)
+            public void OnNonQueryExecuted(TCommand command, int result, AddonInvoker invoker)
             {
-                OnExecuted(invoker.Command, invoker, invoker.Result);
+                OnExecuted(command, result, invoker);
             }
 
             object IAddon.Key
@@ -244,15 +242,15 @@ namespace DevZest.Data.Primitives
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbNonQueryInterceptor<TCommand>.Executing(DbNonQueryInvoker<TCommand> invoker)
+            void IDbNonQueryInterceptor<TCommand>.Executing(TCommand command, int result, AddonInvoker invoker)
             {
-                OnNonQueryExecuting(invoker);
+                OnNonQueryExecuting(command, result, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbNonQueryInterceptor<TCommand>.Executed(DbNonQueryInvoker<TCommand> invoker)
+            void IDbNonQueryInterceptor<TCommand>.Executed(TCommand command, int result, AddonInvoker invoker)
             {
-                OnNonQueryExecuted(invoker);
+                OnNonQueryExecuted(command, result, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]

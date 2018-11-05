@@ -74,20 +74,20 @@ namespace DevZest.Data.Primitives
 
         protected abstract TransactionInvoker CreateTransactionInvoker(IsolationLevel? isolationLevel);
 
-        private DbNonQueryInvoker<TCommand> PrepareNonQueryInvoker(TCommand command)
+        private NonQueryCommandInvoker PrepareNonQueryCommandInvoker(TCommand command)
         {
             command.Transaction = CurrentTransaction;
-            return new DbNonQueryInvoker<TCommand>(this, command);
+            return new NonQueryCommandInvoker(this, command);
         }
 
         protected int ExecuteNonQuery(TCommand command)
         {
-            return PrepareNonQueryInvoker(command).Execute();
+            return PrepareNonQueryCommandInvoker(command).Execute();
         }
 
         protected Task<int> ExecuteNonQueryAsync(TCommand command, CancellationToken cancellationToken)
         {
-            return PrepareNonQueryInvoker(command).ExecuteAsync(cancellationToken);
+            return PrepareNonQueryCommandInvoker(command).ExecuteAsync(cancellationToken);
         }
 
         protected internal abstract TCommand GetCreateTableCommand(Model model, string tableName, string tableDescription, bool isTempTable);
@@ -297,7 +297,7 @@ namespace DevZest.Data.Primitives
             var command = GetInsertScalarCommand(statement, outputIdentity);
             if (!outputIdentity)
             {
-                var rowCount = await PrepareNonQueryInvoker(command).ExecuteAsync(cancellationToken);
+                var rowCount = await PrepareNonQueryCommandInvoker(command).ExecuteAsync(cancellationToken);
                 return new InsertScalarResult(rowCount > 0, null);
             }
 
