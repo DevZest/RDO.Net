@@ -210,13 +210,13 @@ namespace DevZest.Data.Primitives
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbReaderInterceptor<TCommand, TReader>.Executing(Model model, TCommand command, AddonInvoker invoker)
+            void IDbReaderInterceptor<TCommand, TReader>.OnExecuting(Model model, TCommand command, AddonInvoker invoker)
             {
                 OnExecuting(command, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbReaderInterceptor<TCommand, TReader>.Executed(Model model, TCommand command, TReader result, AddonInvoker invoker)
+            void IDbReaderInterceptor<TCommand, TReader>.OnExecuted(Model model, TCommand command, TReader result, AddonInvoker invoker)
             {
                 OnExecuted(command, result, invoker);
             }

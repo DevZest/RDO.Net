@@ -28,16 +28,16 @@ namespace DevZest.Data.Primitives
         internal TReader Execute()
         {
             base.Invoke(() => { Result = ExecuteCore(); },
-                x => x.Executing(Model, Command, this),
-                x => x.Executed(Model, Command, Result, this));
+                x => x.OnExecuting(Model, Command, this),
+                x => x.OnExecuted(Model, Command, Result, this));
             return Result;
         }
 
         internal async Task<TReader> ExecuteAsync(CancellationToken cancellationToken)
         {
             await InvokeAsync(GetAsyncOperation(cancellationToken),
-                x => x.Executing(Model, Command, this),
-                x => x.Executed(Model, Command, Result, this));
+                x => x.OnExecuting(Model, Command, this),
+                x => x.OnExecuted(Model, Command, Result, this));
             return Result;
         }
 

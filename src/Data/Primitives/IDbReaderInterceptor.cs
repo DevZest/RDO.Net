@@ -7,8 +7,8 @@ namespace DevZest.Data.Primitives
         where TCommand : DbCommand
         where TReader : DbReader
     {
-        void Executing(Model model, TCommand command, AddonInvoker invoker);
+        void OnExecuting(Model model, TCommand command, AddonInvoker invoker);
 
-        void Executed(Model model, TCommand command, TReader result, AddonInvoker invoker);
+        void OnExecuted(Model model, TCommand command, TReader result, AddonInvoker invoker);
     }
 }
