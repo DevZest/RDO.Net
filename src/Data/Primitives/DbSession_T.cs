@@ -97,7 +97,7 @@ namespace DevZest.Data.Primitives
             return ExecuteNonQueryAsync(GetCreateTableCommand(model, name, description, isTempTable), cancellationToken);
         }
 
-        private DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(DbQueryStatement queryStatement)
+        private ReaderInvoker CreateReaderInvoker(DbQueryStatement queryStatement)
         {
             var command = GetQueryCommand(queryStatement);
             return PrepareReaderInvoker(queryStatement.Model, command);
@@ -105,13 +105,13 @@ namespace DevZest.Data.Primitives
 
         protected abstract TCommand GetQueryCommand(DbQueryStatement queryStatement);
 
-        private DbReaderInvoker<TCommand, TReader> PrepareReaderInvoker(Model model, TCommand command)
+        private ReaderInvoker PrepareReaderInvoker(Model model, TCommand command)
         {
             command.Transaction = CurrentTransaction;
             return CreateReaderInvoker(model, command);
         }
 
-        protected abstract DbReaderInvoker<TCommand, TReader> CreateReaderInvoker(Model model, TCommand command);
+        protected abstract ReaderInvoker CreateReaderInvoker(Model model, TCommand command);
 
         internal sealed override async Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
         {

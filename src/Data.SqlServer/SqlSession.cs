@@ -54,7 +54,7 @@ namespace DevZest.Data.SqlServer
             return queryGenerator.CreateCommand(Connection);
         }
 
-        protected sealed override DbReaderInvoker<SqlCommand, SqlReader> CreateReaderInvoker(Model model, SqlCommand command)
+        protected sealed override ReaderInvoker CreateReaderInvoker(Model model, SqlCommand command)
         {
             return new SqlReaderInvoker(this, model, command);
         }
