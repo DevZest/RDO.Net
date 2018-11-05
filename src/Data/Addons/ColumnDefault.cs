@@ -1,5 +1,6 @@
-﻿
-namespace DevZest.Data.Primitives
+﻿using DevZest.Data.Primitives;
+
+namespace DevZest.Data.Addons
 {
     public abstract class ColumnDefault : IAddon
     {

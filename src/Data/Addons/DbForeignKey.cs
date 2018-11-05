@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public sealed class DbForeignKey : DbTableConstraint
     {

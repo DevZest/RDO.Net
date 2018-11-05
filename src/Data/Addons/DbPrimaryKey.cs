@@ -1,9 +1,10 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public sealed class DbPrimaryKey : DbTableConstraint, IIndexConstraint
     {

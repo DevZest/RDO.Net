@@ -7,6 +7,7 @@ using System.Data.SqlTypes;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Linq.Expressions;
+using DevZest.Data.Addons;
 
 namespace DevZest.Data.SqlServer
 {

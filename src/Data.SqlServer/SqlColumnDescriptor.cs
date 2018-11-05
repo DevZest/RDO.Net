@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Primitives;
+﻿using DevZest.Data.Addons;
+using DevZest.Data.Primitives;
 using System;
 using System.Data;
 using System.Data.SqlClient;

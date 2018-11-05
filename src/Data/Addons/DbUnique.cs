@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using DevZest.Data.Primitives;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public sealed class DbUnique : DbTableConstraint, IIndexConstraint
     {

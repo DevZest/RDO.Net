@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
+using DevZest.Data.Addons;
 
 namespace DevZest.Data
 {
@@ -253,8 +254,8 @@ namespace DevZest.Data
                     return false;
                 if (IsPrimaryKey || GetIdentity(true) != null || GetIdentity(false) != null)
                     return false;
-                var resourceKey = Primitives.ColumnNotNull.Singleton.Key;
-                return !ContainsAddon(resourceKey);
+                var key = ColumnNotNull.Singleton.Key;
+                return !ContainsAddon(key);
             }
         }
 

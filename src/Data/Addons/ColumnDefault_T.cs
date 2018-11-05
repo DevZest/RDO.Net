@@ -1,6 +1,7 @@
-﻿using System.Diagnostics;
+﻿using DevZest.Data.Primitives;
+using System.Diagnostics;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public sealed class ColumnDefault<T> : ColumnDefault
     {

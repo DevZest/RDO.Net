@@ -1,7 +1,8 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Threading;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public abstract class DbTableConstraint : DbTableElement, IAddon
     {

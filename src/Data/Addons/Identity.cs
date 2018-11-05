@@ -1,7 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using System.Diagnostics;
-
-namespace DevZest.Data
+﻿namespace DevZest.Data.Addons
 {
     public sealed class Identity : IAddon
     {

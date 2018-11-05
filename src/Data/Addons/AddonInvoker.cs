@@ -1,8 +1,9 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public abstract class AddonInvoker
     {

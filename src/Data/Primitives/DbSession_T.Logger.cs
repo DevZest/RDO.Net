@@ -6,12 +6,17 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
+using DevZest.Data.Addons;
 
 namespace DevZest.Data.Primitives
 {
     partial class DbSession<TConnection, TTransaction, TCommand, TReader>
     {
-        protected class Logger : IDbConnectionInterceptor<TConnection>, IDbTransactionInterceptor<TConnection, TTransaction>, IDbReaderInterceptor<TCommand, TReader>, IDbNonQueryInterceptor<TCommand>
+        protected class Logger :
+            IDbConnectionInterceptor<TConnection>,
+            IDbTransactionInterceptor<TConnection, TTransaction>,
+            IDbReaderInterceptor<TCommand, TReader>,
+            IDbNonQueryInterceptor<TCommand>
         {
             internal Action<string> WriteAction { get; set; }
 

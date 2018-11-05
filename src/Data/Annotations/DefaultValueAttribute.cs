@@ -1,5 +1,5 @@
-﻿using DevZest.Data.Annotations.Primitives;
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Addons;
+using DevZest.Data.Annotations.Primitives;
 using System;
 using System.ComponentModel;
 

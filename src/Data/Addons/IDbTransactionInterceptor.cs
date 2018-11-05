@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.Common;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public interface IDbTransactionInterceptor<TConnection, TTransaction> : IAddon
         where TConnection : DbConnection

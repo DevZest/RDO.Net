@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Annotations.Primitives;
+﻿using DevZest.Data.Addons;
+using DevZest.Data.Annotations.Primitives;
 using DevZest.Data.Primitives;
 using System;
 
@@ -10,7 +11,8 @@ namespace DevZest.Data.Annotations
     {
         protected override void Wireup(Column column)
         {
-            ((_Guid)column).SetDefault(Functions.NewGuid(), Name, Description);
+            if (column is _Guid guidColumn)
+                guidColumn.SetDefault(Functions.NewGuid(), Name, Description);
         }
 
         public string Name { get; set; }

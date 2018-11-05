@@ -1,6 +1,6 @@
 Imports DevZest.Data
-Imports DevZest.Data.Primitives
 Imports DevZest.Data.Annotations.Primitives
+Imports DevZest.Data.Addons
 
 Namespace DevZest.Samples.AdventureWorksLT
     <ModelMemberAttributeSpec(GetType(ColumnNotNull), True, GetType(_Boolean))>

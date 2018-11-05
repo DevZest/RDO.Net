@@ -1,7 +1,6 @@
-﻿using System;
-using DevZest.Data;
+﻿using DevZest.Data;
+using DevZest.Data.Addons;
 using DevZest.Data.Annotations.Primitives;
-using DevZest.Data.Primitives;
 
 namespace DevZest.Samples.AdventureWorksLT
 {

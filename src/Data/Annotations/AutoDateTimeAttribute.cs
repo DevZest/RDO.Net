@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Annotations.Primitives;
+﻿using DevZest.Data.Addons;
+using DevZest.Data.Annotations.Primitives;
 using DevZest.Data.Primitives;
 using System;
 
@@ -10,7 +11,8 @@ namespace DevZest.Data.Annotations
     {
         protected override void Wireup(Column column)
         {
-            ((_DateTime)column).SetDefault(Functions.GetDate(), Name, Description);
+            if (column is _DateTime dateTime)
+                dateTime.SetDefault(Functions.GetDate(), Name, Description);
         }
 
         public string Name { get; set; }

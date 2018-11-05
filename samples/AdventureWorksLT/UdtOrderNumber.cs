@@ -2,7 +2,7 @@
 using DevZest.Data.SqlServer;
 using DevZest.Data.Annotations.Primitives;
 using System;
-using DevZest.Data.Primitives;
+using DevZest.Data.Addons;
 
 namespace DevZest.Samples.AdventureWorksLT
 {

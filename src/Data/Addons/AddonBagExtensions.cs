@@ -1,6 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using DevZest.Data.Primitives;
+using System.Collections.ObjectModel;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public static class AddonBagExtensions
     {

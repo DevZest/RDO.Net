@@ -1,4 +1,4 @@
-﻿namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data.Addons
 {
     public sealed class ColumnNotNull : IAddon
     {

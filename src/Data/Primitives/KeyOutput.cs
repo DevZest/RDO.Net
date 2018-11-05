@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Addons;
+using System;
 
 namespace DevZest.Data.Primitives
 {

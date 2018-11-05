@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data.Addons
 {
     public interface IDbReaderInterceptor<TCommand, TReader> : IAddon
         where TCommand : DbCommand
