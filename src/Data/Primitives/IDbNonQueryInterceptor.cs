@@ -1,13 +1,12 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 
 namespace DevZest.Data.Primitives
 {
     public interface IDbNonQueryInterceptor<TCommand> : IAddon
         where TCommand : DbCommand
     {
-        void Executing(TCommand command, int result, AddonInvoker invoker);
+        void OnExecuting(TCommand command, AddonInvoker invoker);
 
-        void Executed(TCommand command, int result, AddonInvoker invoker);
+        void OnExecuted(TCommand command, int result, AddonInvoker invoker);
     }
 }

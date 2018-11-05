@@ -34,7 +34,7 @@ namespace DevZest.Data.Primitives
             private readonly Stopwatch _stopwatch = new Stopwatch();
             /// <summary>
             /// The stop watch used to time executions. This stop watch is started at the end of
-            /// <see cref="OnNonQueryExecuting" /> and <see cref="OnReaderExecuting" />
+            /// <see cref="OnNonQueryCommandExecuting" /> and <see cref="OnReaderExecuting" />
             /// methods and is stopped at the beginning of the <see cref="OnNonQueryExecuted" />
             /// and <see cref="OnReaderExecuted" /> methods.
             /// </summary>
@@ -164,17 +164,17 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.CommandText, builder.ToString());
             }
 
-            private void OnExecuting(TCommand command, bool isAsync)
+            private void OnExecuting(TCommand command, AddonInvoker invoker)
             {
-                OnCommandExecuting(command, isAsync);
+                OnCommandExecuting(command, invoker);
                 Stopwatch.Restart();
             }
 
-            protected virtual void OnCommandExecuting(TCommand command, bool isAsync)
+            protected virtual void OnCommandExecuting(TCommand command, AddonInvoker invoker)
             {
                 Write(LogCategory.CommandExecuting, Environment.NewLine);
                 LogCommand(command);
-                Write(LogCategory.CommandExecuting, isAsync ? DiagnosticMessages.DbLogger_CommandExecutingAsync(DateTimeOffset.Now) : DiagnosticMessages.DbLogger_CommandExecuting(DateTimeOffset.Now));
+                Write(LogCategory.CommandExecuting, invoker.IsAsync ? DiagnosticMessages.DbLogger_CommandExecutingAsync(DateTimeOffset.Now) : DiagnosticMessages.DbLogger_CommandExecuting(DateTimeOffset.Now));
                 Write(LogCategory.CommandExecuting, Environment.NewLine);
             }
 
@@ -206,22 +206,12 @@ namespace DevZest.Data.Primitives
 
             public void OnReaderExecuting(DbReaderInvoker<TCommand, TReader> invoker)
             {
-                OnExecuting(invoker.Command, invoker.IsAsync);
+                OnExecuting(invoker.Command, invoker);
             }
 
             public void OnReaderExecuted(DbReaderInvoker<TCommand, TReader> invoker)
             {
                 OnExecuted(invoker.Command, invoker.Result, invoker);
-            }
-
-            public void OnNonQueryExecuting(TCommand command, int result, AddonInvoker invoker)
-            {
-                OnExecuting(command, invoker.IsAsync);
-            }
-
-            public void OnNonQueryExecuted(TCommand command, int result, AddonInvoker invoker)
-            {
-                OnExecuted(command, result, invoker);
             }
 
             object IAddon.Key
@@ -242,15 +232,15 @@ namespace DevZest.Data.Primitives
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbNonQueryInterceptor<TCommand>.Executing(TCommand command, int result, AddonInvoker invoker)
+            void IDbNonQueryInterceptor<TCommand>.OnExecuting(TCommand command, AddonInvoker invoker)
             {
-                OnNonQueryExecuting(command, result, invoker);
+                OnExecuting(command, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbNonQueryInterceptor<TCommand>.Executed(TCommand command, int result, AddonInvoker invoker)
+            void IDbNonQueryInterceptor<TCommand>.OnExecuted(TCommand command, int result, AddonInvoker invoker)
             {
-                OnNonQueryExecuted(command, result, invoker);
+                OnExecuted(command, result, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]

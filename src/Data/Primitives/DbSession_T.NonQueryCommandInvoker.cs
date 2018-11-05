@@ -21,13 +21,13 @@ namespace DevZest.Data.Primitives
 
             internal int Execute()
             {
-                Invoke(() => { Result = Command.ExecuteNonQuery(); }, x => x.Executing(Command, Result, this), x => x.Executed(Command, Result, this));
+                Invoke(() => { Result = Command.ExecuteNonQuery(); }, x => x.OnExecuting(Command, this), x => x.OnExecuted(Command, Result, this));
                 return Result;
             }
 
             internal async Task<int> ExecuteAsync(CancellationToken cancellationToken)
             {
-                await InvokeAsync(GetAsyncOperation(cancellationToken), x => x.Executing(Command, Result, this), x => x.Executed(Command, Result, this));
+                await InvokeAsync(GetAsyncOperation(cancellationToken), x => x.OnExecuting(Command, this), x => x.OnExecuted(Command, Result, this));
                 return Result;
             }
 
