@@ -6,6 +6,13 @@ namespace DevZest.Data.Primitives
 {
     public abstract class AddonInvoker
     {
+        protected AddonInvoker(AddonBag addonBag)
+        {
+            AddonBag = addonBag.VerifyNotNull(nameof(addonBag));
+        }
+
+        public AddonBag AddonBag { get; }
+
         public bool IsAsync { get; protected set; }
 
         public TaskStatus TaskStatus { get; protected set; }
@@ -19,12 +26,9 @@ namespace DevZest.Data.Primitives
         where T : class, IAddon
     {
         protected AddonInvoker(AddonBag addonBag)
+            : base(addonBag)
         {
-            addonBag.VerifyNotNull(nameof(addonBag));
-            _addonBag = addonBag;
         }
-
-        private AddonBag _addonBag;
 
         private void SetExceptionThrown(Exception exception)
         {
@@ -69,7 +73,7 @@ namespace DevZest.Data.Primitives
             if (isAsync)
                 TaskStatus = TaskStatus.Created;
             SetExceptionThrown(null);
-            var addons = _addonBag.GetAddons<T>();
+            var addons = AddonBag.GetAddons<T>();
             foreach (var addon in addons)
                 onExecuting(addon);
             return addons;

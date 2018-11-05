@@ -6,12 +6,12 @@ namespace DevZest.Data.Primitives
     public interface IDbConnectionInterceptor<T> : IAddon
         where T : DbConnection
     {
-        void Opening(T connection, AddonInvoker invoker);
+        void OnOpening(T connection, AddonInvoker invoker);
 
-        void Opened(T connection, AddonInvoker invoker);
+        void OnOpened(T connection, AddonInvoker invoker);
 
-        void Closing(T connection, AddonInvoker invoker);
+        void OnClosing(T connection, AddonInvoker invoker);
 
-        void Closed(T connection, AddonInvoker invoker);
+        void OnClosed(T connection, AddonInvoker invoker);
     }
 }

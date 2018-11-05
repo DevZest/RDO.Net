@@ -34,20 +34,20 @@ namespace DevZest.Data.Primitives
             private readonly Stopwatch _stopwatch = new Stopwatch();
             /// <summary>
             /// The stop watch used to time executions. This stop watch is started at the end of
-            /// <see cref="NonQueryExecuting" /> and <see cref="ReaderExecuting" />
-            /// methods and is stopped at the beginning of the <see cref="NonQueryExecuted" />
-            /// and <see cref="ReaderExecuted" /> methods.
+            /// <see cref="OnNonQueryExecuting" /> and <see cref="OnReaderExecuting" />
+            /// methods and is stopped at the beginning of the <see cref="OnNonQueryExecuted" />
+            /// and <see cref="OnReaderExecuted" /> methods.
             /// </summary>
             protected Stopwatch Stopwatch
             {
                 get { return _stopwatch; }
             }
 
-            public virtual void ConnectionOpening(AddonInvoker invoker)
+            public virtual void OnConnectionOpening(TConnection connection, AddonInvoker invoker)
             {
             }
 
-            public virtual void ConnectionOpened(AddonInvoker invoker)
+            public virtual void OnConnectionOpened(TConnection connection, AddonInvoker invoker)
             {
                 if (invoker.Exception != null)
                     Write(LogCategory.ConnectionOpened, invoker.IsAsync ? DiagnosticMessages.DbLogger_ConnectionOpenErrorAsync(DateTimeOffset.Now, invoker.Exception.Message) : DiagnosticMessages.DbLogger_ConnectionOpenError(DateTimeOffset.Now, invoker.Exception.Message));
@@ -58,11 +58,11 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.ConnectionOpened, Environment.NewLine);
             }
 
-            public virtual void ConnectionClosing(AddonInvoker invoker)
+            public virtual void OnConnectionClosing(TConnection connection, AddonInvoker invoker)
             {
             }
 
-            public virtual void ConnectionClosed(AddonInvoker invoker)
+            public virtual void OnConnectionClosed(TConnection connection, AddonInvoker invoker)
             {
                 if (invoker.Exception != null)
                     Write(LogCategory.ConnectionClosed, DiagnosticMessages.DbLogger_ConnectionCloseError(DateTimeOffset.Now, invoker.Exception.Message));
@@ -71,11 +71,11 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.ConnectionClosed, Environment.NewLine);
             }
 
-            public virtual void TransactionBeginning(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            public virtual void OnTransactionBeginning(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
             }
 
-            public virtual void TransactionBegan(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            public virtual void OnTransactionBegan(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
                 if (invoker.Exception != null)
                     Write(LogCategory.TransactionBegan, DiagnosticMessages.DbLogger_TransactionStartError(DateTimeOffset.Now, invoker.Exception.Message));
@@ -84,11 +84,11 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.TransactionBegan, Environment.NewLine);
             }
 
-            public virtual void TransactionCommitting(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            public virtual void OnTransactionCommitting(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
             }
 
-            public virtual void TransactionCommitted(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            public virtual void OnTransactionCommitted(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
                 if (invoker.Exception != null)
                     Write(LogCategory.TransactionCommitted, DiagnosticMessages.DbLogger_TransactionCommitError(DateTimeOffset.Now, invoker.Exception.Message));
@@ -97,11 +97,11 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.TransactionCommitted, Environment.NewLine);
             }
 
-            public virtual void TransactionRollingBack(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            public virtual void OnTransactionRollingBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
             }
 
-            public virtual void TransactionRolledBack(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            public virtual void OnTransactionRolledBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
                 if (invoker.Exception != null)
                     Write(LogCategory.TransactionRolledBack, DiagnosticMessages.DbLogger_TransactionRollbackError(DateTimeOffset.Now, invoker.Exception.Message));
@@ -164,13 +164,13 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.CommandText, builder.ToString());
             }
 
-            private void Executing(TCommand command, bool isAsync)
+            private void OnExecuting(TCommand command, bool isAsync)
             {
-                CommandExecuting(command, isAsync);
+                OnCommandExecuting(command, isAsync);
                 Stopwatch.Restart();
             }
 
-            protected virtual void CommandExecuting(TCommand command, bool isAsync)
+            protected virtual void OnCommandExecuting(TCommand command, bool isAsync)
             {
                 Write(LogCategory.CommandExecuting, Environment.NewLine);
                 LogCommand(command);
@@ -178,14 +178,14 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.CommandExecuting, Environment.NewLine);
             }
 
-            private void Executed<TInterceptor, TResult>(TCommand command, AddonInvoker<TInterceptor> invoker, TResult result)
+            private void OnExecuted<TInterceptor, TResult>(TCommand command, AddonInvoker<TInterceptor> invoker, TResult result)
                 where TInterceptor : class, IAddon
             {
                 Stopwatch.Stop();
-                CommandExecuted(command, invoker, result);
+                OnCommandExecuted(command, invoker, result);
             }
 
-            protected virtual void CommandExecuted<TInterceptor, TResult>(TCommand command, AddonInvoker<TInterceptor> invoker, TResult result)
+            protected virtual void OnCommandExecuted<TInterceptor, TResult>(TCommand command, AddonInvoker<TInterceptor> invoker, TResult result)
                 where TInterceptor : class, IAddon
             {
                 var exception = invoker.Exception;
@@ -206,24 +206,24 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.CommandExecuted, Environment.NewLine);
             }
 
-            public void ReaderExecuting(DbReaderInvoker<TCommand, TReader> invoker)
+            public void OnReaderExecuting(DbReaderInvoker<TCommand, TReader> invoker)
             {
-                Executing(invoker.Command, invoker.IsAsync);
+                OnExecuting(invoker.Command, invoker.IsAsync);
             }
 
-            public void ReaderExecuted(DbReaderInvoker<TCommand, TReader> invoker)
+            public void OnReaderExecuted(DbReaderInvoker<TCommand, TReader> invoker)
             {
-                Executed(invoker.Command, invoker, invoker.Result);
+                OnExecuted(invoker.Command, invoker, invoker.Result);
             }
 
-            public void NonQueryExecuting(DbNonQueryInvoker<TCommand> invoker)
+            public void OnNonQueryExecuting(DbNonQueryInvoker<TCommand> invoker)
             {
-                Executing(invoker.Command, invoker.IsAsync);
+                OnExecuting(invoker.Command, invoker.IsAsync);
             }
 
-            public void NonQueryExecuted(DbNonQueryInvoker<TCommand> invoker)
+            public void OnNonQueryExecuted(DbNonQueryInvoker<TCommand> invoker)
             {
-                Executed(invoker.Command, invoker, invoker.Result);
+                OnExecuted(invoker.Command, invoker, invoker.Result);
             }
 
             object IAddon.Key
@@ -234,85 +234,85 @@ namespace DevZest.Data.Primitives
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
             void IDbReaderInterceptor<TCommand, TReader>.Executing(DbReaderInvoker<TCommand, TReader> invoker)
             {
-                ReaderExecuting(invoker);
+                OnReaderExecuting(invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
             void IDbReaderInterceptor<TCommand, TReader>.Executed(DbReaderInvoker<TCommand, TReader> invoker)
             {
-                ReaderExecuted(invoker);
+                OnReaderExecuted(invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
             void IDbNonQueryInterceptor<TCommand>.Executing(DbNonQueryInvoker<TCommand> invoker)
             {
-                NonQueryExecuting(invoker);
+                OnNonQueryExecuting(invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
             void IDbNonQueryInterceptor<TCommand>.Executed(DbNonQueryInvoker<TCommand> invoker)
             {
-                NonQueryExecuted(invoker);
+                OnNonQueryExecuted(invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbConnectionInterceptor<TConnection>.Opening(TConnection connection, AddonInvoker invoker)
+            void IDbConnectionInterceptor<TConnection>.OnOpening(TConnection connection, AddonInvoker invoker)
             {
-                ConnectionOpening(invoker);
+                OnConnectionOpening(connection, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbConnectionInterceptor<TConnection>.Opened(TConnection connection, AddonInvoker invoker)
+            void IDbConnectionInterceptor<TConnection>.OnOpened(TConnection connection, AddonInvoker invoker)
             {
-                ConnectionOpened(invoker);
+                OnConnectionOpened(connection, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbConnectionInterceptor<TConnection>.Closing(TConnection connection, AddonInvoker invoker)
+            void IDbConnectionInterceptor<TConnection>.OnClosing(TConnection connection, AddonInvoker invoker)
             {
-                ConnectionClosing(invoker);
+                OnConnectionClosing(connection, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbConnectionInterceptor<TConnection>.Closed(TConnection connection, AddonInvoker invoker)
+            void IDbConnectionInterceptor<TConnection>.OnClosed(TConnection connection, AddonInvoker invoker)
             {
-                ConnectionClosed(invoker);
+                OnConnectionClosed(connection, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.Beginning(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            void IDbTransactionInterceptor<TConnection, TTransaction>.OnBeginning(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
-                TransactionBeginning(invoker);
+                OnTransactionBeginning(connection, isolationLevel, transaction, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.Began(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            void IDbTransactionInterceptor<TConnection, TTransaction>.OnBegan(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
-                TransactionBegan(invoker);
+                OnTransactionBegan(connection, isolationLevel, transaction, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.Committing(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            void IDbTransactionInterceptor<TConnection, TTransaction>.OnCommitting(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
-                TransactionCommitting(invoker);
+                OnTransactionCommitting(connection, isolationLevel, transaction, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.Committed(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            void IDbTransactionInterceptor<TConnection, TTransaction>.OnCommitted(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
-                TransactionCommitted(invoker);
+                OnTransactionCommitted(connection, isolationLevel, transaction, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.RollingBack(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            void IDbTransactionInterceptor<TConnection, TTransaction>.OnRollingBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
-                TransactionRollingBack(invoker);
+                OnTransactionRollingBack(connection, isolationLevel, transaction, invoker);
             }
 
             [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.RolledBack(DbTransactionInvoker<TConnection, TTransaction> invoker)
+            void IDbTransactionInterceptor<TConnection, TTransaction>.OnRolledBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
             {
-                TransactionRolledBack(invoker);
+                OnTransactionRolledBack(connection, isolationLevel, transaction, invoker);
             }
         }
     }

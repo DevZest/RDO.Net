@@ -32,9 +32,9 @@ namespace DevZest.Data.Primitives
             CreateConnectionInterceptorInvoker().Close();
         }
 
-        private ConnectionInterceptorInvoker CreateConnectionInterceptorInvoker()
+        private ConnectionInvoker CreateConnectionInterceptorInvoker()
         {
-            return new ConnectionInterceptorInvoker(this, Connection);
+            return new ConnectionInvoker(this, Connection);
         }
 
         private Stack<TTransaction> _transactions = new Stack<TTransaction>();
@@ -72,7 +72,7 @@ namespace DevZest.Data.Primitives
             return CreateTransactionInvoker(null).ExecuteAsync(_transactions, action, ct);
         }
 
-        protected abstract DbTransactionInvoker<TConnection, TTransaction> CreateTransactionInvoker(IsolationLevel? isolationLevel);
+        protected abstract TransactionInvoker CreateTransactionInvoker(IsolationLevel? isolationLevel);
 
         private DbNonQueryInvoker<TCommand> PrepareNonQueryInvoker(TCommand command)
         {

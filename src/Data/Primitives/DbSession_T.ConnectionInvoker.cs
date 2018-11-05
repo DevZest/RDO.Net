@@ -5,9 +5,9 @@ namespace DevZest.Data.Primitives
 {
     partial class DbSession<TConnection, TTransaction, TCommand, TReader>
     {
-        private sealed class ConnectionInterceptorInvoker : AddonInvoker<IDbConnectionInterceptor<TConnection>>
+        private sealed class ConnectionInvoker : AddonInvoker<IDbConnectionInterceptor<TConnection>>
         {
-            public ConnectionInterceptorInvoker(DbSession dbSession, TConnection connection)
+            public ConnectionInvoker(DbSession dbSession, TConnection connection)
                 : base(dbSession)
             {
                 connection.VerifyNotNull(nameof(connection));
@@ -18,7 +18,7 @@ namespace DevZest.Data.Primitives
 
             internal Task OpenAsync(CancellationToken cancellationToken)
             {
-                return InvokeAsync(PerformOpenAsync(cancellationToken), x => x.Opening(Connection, this), x => x.Opened(Connection, this));
+                return InvokeAsync(PerformOpenAsync(cancellationToken), x => x.OnOpening(Connection, this), x => x.OnOpened(Connection, this));
             }
 
             private async Task PerformOpenAsync(CancellationToken cancellationToken)
@@ -28,7 +28,7 @@ namespace DevZest.Data.Primitives
 
             internal void Close()
             {
-                Invoke(() => Connection.Close(), x => x.Closing(Connection, this), x => x.Closed(Connection, this));
+                Invoke(() => Connection.Close(), x => x.OnClosing(Connection, this), x => x.OnClosed(Connection, this));
             }
         }
     }

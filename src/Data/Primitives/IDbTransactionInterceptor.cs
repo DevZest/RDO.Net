@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Data;
 using System.Data.Common;
 
 namespace DevZest.Data.Primitives
@@ -7,16 +7,16 @@ namespace DevZest.Data.Primitives
         where TConnection : DbConnection
         where TTransaction : DbTransaction
     {
-        void Beginning(DbTransactionInvoker<TConnection, TTransaction> invoker);
+        void OnBeginning(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker);
 
-        void Began(DbTransactionInvoker<TConnection, TTransaction> invoker);
+        void OnBegan(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker);
 
-        void Committing(DbTransactionInvoker<TConnection, TTransaction> invoker);
+        void OnCommitting(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker);
 
-        void Committed(DbTransactionInvoker<TConnection, TTransaction> invoker);
+        void OnCommitted(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker);
 
-        void RollingBack(DbTransactionInvoker<TConnection, TTransaction> invoker);
+        void OnRollingBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker);
 
-        void RolledBack(DbTransactionInvoker<TConnection, TTransaction> invoker);
+        void OnRolledBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker);
     }
 }
