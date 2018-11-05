@@ -51,9 +51,9 @@ namespace DevZest.Data.SqlServer
         {
             IReadOnlyList<DbTableConstraint> constraints = model.GetAddons<DbTableConstraint>();
             if (isTempTable)
-                constraints = constraints.Where(x => x.IsMemberOfTempTable).ToList();
+                constraints = constraints.Where(x => x.IsValidOnTempTable).ToList();
             else
-                constraints = constraints.Where(x => x.IsMemberOfTable).ToList();
+                constraints = constraints.Where(x => x.IsValidOnTable).ToList();
             if (constraints.Count == 0)
                 return 0;
 
@@ -183,9 +183,9 @@ namespace DevZest.Data.SqlServer
         {
             IReadOnlyList<DbIndex> indexes = model.GetAddons<DbIndex>();
             if (isTempTable)
-                indexes = indexes.Where(x => x.IsMemberOfTempTable).ToList();
+                indexes = indexes.Where(x => x.IsValidOnTempTable).ToList();
             else
-                indexes = indexes.Where(x => x.IsMemberOfTable).ToList();
+                indexes = indexes.Where(x => x.IsValidOnTable).ToList();
             if (indexes.Count == 0)
                 return 0;
 
@@ -251,14 +251,14 @@ namespace DevZest.Data.SqlServer
 
             }
 
-            var constraints = model.GetAddons<DbTableConstraint>().Where(x => x.IsMemberOfTable).ToList();
+            var constraints = model.GetAddons<DbTableConstraint>().Where(x => x.IsValidOnTable).ToList();
             for (int i = 0; i < constraints.Count; i++)
             {
                 var constraint = constraints[i];
                 constraint.GenerateConstraintDescriptionSql(sqlBuilder, sqlVersion, schema, table);
             }
 
-            var indexes = model.GetAddons<DbIndex>().Where(x => x.IsMemberOfTable).ToList();
+            var indexes = model.GetAddons<DbIndex>().Where(x => x.IsValidOnTable).ToList();
             for (int i = 0; i < indexes.Count; i++)
             {
                 var index = indexes[i];

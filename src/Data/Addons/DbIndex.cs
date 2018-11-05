@@ -7,15 +7,15 @@ namespace DevZest.Data.Addons
 {
     public sealed class DbIndex : IIndexConstraint, IAddon
     {
-        internal DbIndex(string name, string description, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, IList<ColumnSort> columns)
+        internal DbIndex(string name, string description, bool isUnique, bool isClustered, bool isValidOnTable, bool isValidOnTempTable, IList<ColumnSort> columns)
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
             Name = name;
             Description = description;
             IsUnique = isUnique;
             IsClustered = isClustered;
-            IsMemberOfTable = isMemberOfTable;
-            IsMemberOfTempTable = isMemberOfTempTable;
+            IsValidOnTable = isValidOnTable;
+            IsValidOnTempTable = isValidOnTempTable;
             Columns = new ReadOnlyCollection<ColumnSort>(columns);
         }
 
@@ -34,9 +34,9 @@ namespace DevZest.Data.Addons
             IsClustered = false;
         }
 
-        public bool IsMemberOfTable { get; }
+        public bool IsValidOnTable { get; }
 
-        public bool IsMemberOfTempTable { get; }
+        public bool IsValidOnTempTable { get; }
 
         string IIndexConstraint.SystemName
         {

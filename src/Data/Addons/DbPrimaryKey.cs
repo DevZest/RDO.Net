@@ -49,12 +49,12 @@ namespace DevZest.Data.Addons
             get { return string.IsNullOrEmpty(Name) ? "PrimaryKey" : Name; }
         }
 
-        public override bool IsMemberOfTable
+        public override bool IsValidOnTable
         {
             get { return true; }
         }
 
-        public override bool IsMemberOfTempTable
+        public override bool IsValidOnTempTable
         {
             get { return true; }
         }

@@ -22,12 +22,12 @@ namespace DevZest.Data.Addons
             IsClustered = false;
         }
 
-        public override bool IsMemberOfTable
+        public override bool IsValidOnTable
         {
             get { return true; }
         }
 
-        public override bool IsMemberOfTempTable
+        public override bool IsValidOnTempTable
         {
             get { return true; }
         }

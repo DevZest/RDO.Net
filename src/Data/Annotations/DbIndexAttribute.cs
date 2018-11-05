@@ -13,13 +13,13 @@ namespace DevZest.Data.Annotations
 
         protected override void Wireup(Model model, string dbName, ColumnSort[] sortOrder)
         {
-            model.Index(dbName, Description, IsUnique, IsCluster, IsMemberOfTable, IsMemberOfTempTable, sortOrder);
+            model.Index(dbName, Description, IsUnique, IsCluster, IsValidOnTable, IsValidOnTempTable, sortOrder);
         }
 
         public bool IsUnique { get; set; } = false;
 
-        public bool IsMemberOfTable { get; set; } = true;
+        public bool IsValidOnTable { get; set; } = true;
 
-        public bool IsMemberOfTempTable { get; set; } = false;
+        public bool IsValidOnTempTable { get; set; } = false;
     }
 }

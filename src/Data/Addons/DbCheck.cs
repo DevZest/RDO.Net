@@ -14,12 +14,12 @@ namespace DevZest.Data.Addons
         /// <summary>Gets the logical expression of this CHECK constraint.</summary>
         public DbExpression LogicalExpression { get; private set; }
 
-        public override bool IsMemberOfTable
+        public override bool IsValidOnTable
         {
             get { return true; }
         }
 
-        public override bool IsMemberOfTempTable
+        public override bool IsValidOnTempTable
         {
             get { return true; }
         }

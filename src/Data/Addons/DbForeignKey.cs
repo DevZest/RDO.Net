@@ -35,12 +35,12 @@ namespace DevZest.Data.Addons
 
         public ForeignKeyAction OnUpdate { get; private set; }
 
-        public override bool IsMemberOfTable
+        public override bool IsValidOnTable
         {
             get { return true; }
         }
 
-        public override bool IsMemberOfTempTable
+        public override bool IsValidOnTempTable
         {
             get { return false; }
         }

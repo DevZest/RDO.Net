@@ -26,8 +26,8 @@ namespace DevZest.Data.Addons
             get { return LazyInitializer.EnsureInitialized(ref _systemName, () => string.IsNullOrEmpty(Name) ? Guid.NewGuid().ToString() : Name); }
         }
 
-        public abstract bool IsMemberOfTable { get; }
+        public abstract bool IsValidOnTable { get; }
 
-        public abstract bool IsMemberOfTempTable { get; }
+        public abstract bool IsValidOnTempTable { get; }
     }
 }
