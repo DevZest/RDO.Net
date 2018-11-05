@@ -154,7 +154,7 @@ namespace DevZest.Data.SqlServer
             return BuildQuery(dataSet, dataSet._, null);
         }
 
-        internal DbQuery<TTarget> BuildQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<Data.ColumnMapper, TSource, TTarget> columnMappingsBuilder)
+        internal DbQuery<TTarget> BuildQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
@@ -189,7 +189,7 @@ namespace DevZest.Data.SqlServer
         internal SqlCommand BuildImportCommand<T>(DataSet<T> source, DbTable<T> target)
             where T : class, IModelReference, new()
         {
-            var statement = target.BuildInsertStatement(BuildImportQuery(source), Data.ColumnMapper.AutoSelectInsertable);
+            var statement = target.BuildInsertStatement(BuildImportQuery(source), ColumnMapper.AutoSelectInsertable);
             return GetInsertCommand(statement);
         }
 
@@ -202,7 +202,7 @@ namespace DevZest.Data.SqlServer
         internal SqlCommand BuildImportKeyCommand<T>(DataSet<T> source, DbTable<KeyOutput> target)
             where T : class, IModelReference, new()
         {
-            var statement = target.BuildInsertStatement(BuildImportKeyQuery(source), Data.ColumnMapper.AutoSelectInsertable);
+            var statement = target.BuildInsertStatement(BuildImportKeyQuery(source), ColumnMapper.AutoSelectInsertable);
             return GetInsertCommand(statement);
         }
 
@@ -212,7 +212,7 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken ct)
         {
             if (identityMappings == null)
             {
@@ -224,7 +224,7 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo = null)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo = null)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
 
@@ -236,7 +236,7 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken ct)
         {
             IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source.Model.PrimaryKey.Join(joinTo);
             var statement = target.BuildInsertStatement(source, columnMapper, join);
@@ -344,13 +344,13 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, CancellationToken ct)
         {
             var command = BuildUpdateCommand(source, target, columnMapper, joinTo);
             return ExecuteNonQueryAsync(command, ct);
         }
 
-        internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<Data.ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo)
+        internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {

@@ -13,11 +13,11 @@ namespace DevZest.Data.SqlServer
         private static ConditionalWeakTable<SqlParameter, Tuple<SqlType, object, SqlVersion>> s_debugInfo = 
             new ConditionalWeakTable<SqlParameter, Tuple<SqlType, object, SqlVersion>>();
 
-        internal static void SetDebugInfo(this SqlParameter sqlParameter, SqlType columnMapper, object value, SqlVersion sqlVersion)
+        internal static void SetDebugInfo(this SqlParameter sqlParameter, SqlType sqlType, object value, SqlVersion sqlVersion)
         {
             Debug.Assert(sqlParameter != null);
-            Debug.Assert(columnMapper != null);
-            s_debugInfo.Add(sqlParameter, new Tuple<SqlType, object, SqlVersion>(columnMapper, value, sqlVersion));
+            Debug.Assert(sqlType != null);
+            s_debugInfo.Add(sqlParameter, new Tuple<SqlType, object, SqlVersion>(sqlType, value, sqlVersion));
         }
 
         private static void GetDebugInfo(this SqlParameter sqlParameter, out SqlType sqlType, out object value, out SqlVersion sqlVersion)

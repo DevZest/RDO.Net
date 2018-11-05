@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Addons
 {
-    public sealed class DbIndex : DbTableElement, IIndexConstraint, IAddon
+    public sealed class DbIndex : IIndexConstraint, IAddon
     {
         internal DbIndex(string name, string description, bool isUnique, bool isClustered, bool isMemberOfTable, bool isMemberOfTempTable, IList<ColumnSort> columns)
         {
@@ -14,8 +14,8 @@ namespace DevZest.Data.Addons
             Description = description;
             IsUnique = isUnique;
             IsClustered = isClustered;
-            _isMemberOfTable = isMemberOfTable;
-            _isMemberOfTempTable = isMemberOfTempTable;
+            IsMemberOfTable = isMemberOfTable;
+            IsMemberOfTempTable = isMemberOfTempTable;
             Columns = new ReadOnlyCollection<ColumnSort>(columns);
         }
 
@@ -34,17 +34,9 @@ namespace DevZest.Data.Addons
             IsClustered = false;
         }
 
-        private bool _isMemberOfTable;
-        public override bool IsMemberOfTable
-        {
-            get { return _isMemberOfTable; }
-        }
+        public bool IsMemberOfTable { get; }
 
-        private bool _isMemberOfTempTable;
-        public override bool IsMemberOfTempTable
-        {
-            get { return _isMemberOfTempTable; }
-        }
+        public bool IsMemberOfTempTable { get; }
 
         string IIndexConstraint.SystemName
         {

@@ -1,10 +1,9 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Threading;
 
 namespace DevZest.Data.Addons
 {
-    public abstract class DbTableConstraint : DbTableElement, IAddon
+    public abstract class DbTableConstraint : IAddon
     {
         protected DbTableConstraint(string name, string description)
         {
@@ -26,5 +25,9 @@ namespace DevZest.Data.Addons
         {
             get { return LazyInitializer.EnsureInitialized(ref _systemName, () => string.IsNullOrEmpty(Name) ? Guid.NewGuid().ToString() : Name); }
         }
+
+        public abstract bool IsMemberOfTable { get; }
+
+        public abstract bool IsMemberOfTempTable { get; }
     }
 }
