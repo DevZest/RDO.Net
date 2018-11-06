@@ -6,10 +6,14 @@ namespace DevZest.Data.CodeAnalysis
     {
         public static bool IsDerivedFrom(this ITypeSymbol type, string knownType, Compilation compilation)
         {
-            var x = compilation.GetKnownType(knownType);
+            return type.IsDerivedFrom(compilation.GetKnownType(knownType));
+        }
+
+        public static bool IsDerivedFrom(this ITypeSymbol type, INamedTypeSymbol baseType)
+        {
             for (var currentType = type.BaseType; currentType != null; currentType = currentType.BaseType)
             {
-                if (currentType.OriginalDefinition.Equals(x))
+                if (currentType.OriginalDefinition.Equals(baseType))
                     return true;
             }
             return false;
