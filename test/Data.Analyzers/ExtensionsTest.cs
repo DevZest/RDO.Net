@@ -45,5 +45,24 @@ namespace DevZest.Data.CodeAnalysis
                 Assert.AreEqual(compilation.GetTypeByMetadataName("DevZest.Data._Int16"), validOnTypes[2]);
             }
         }
+
+        [TestMethod]
+        public void GetAddonType()
+        {
+            var project = string.Empty.CreateProject();
+            var compilation = project.GetCompilationAsync().Result;
+
+            {
+                var identity = compilation.GetTypeByMetadataName("DevZest.Data.Addons.Identity");
+                Assert.IsNotNull(identity);
+                Assert.AreEqual(identity, identity.GetAddonTypeKey(compilation));
+            }
+
+            {
+                var dbIndex = compilation.GetTypeByMetadataName("DevZest.Data.Addons.DbIndex");
+                Assert.IsNotNull(dbIndex);
+                Assert.AreEqual(null, dbIndex.GetAddonTypeKey(compilation));
+            }
+        }
     }
 }
