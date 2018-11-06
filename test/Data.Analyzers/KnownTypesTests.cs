@@ -11,6 +11,8 @@ namespace DevZest.Data.CodeAnalysis
             var project = string.Empty.CreateProject();
             var compilation = project.GetCompilationAsync().Result;
 
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.AttributeUsageAttribute));
+
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.Model));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.Column));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.LocalColumn));

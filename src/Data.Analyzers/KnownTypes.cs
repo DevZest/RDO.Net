@@ -5,10 +5,13 @@
         private static class Namespaces
         {
             // Must end with "."
+            public const string System = "System.";
             public const string Data = "DevZest.Data.";
             public const string Data_Annotations = Data + "Annotations.";
             public const string Data_Annotations_Primitives = Data_Annotations + "Primitives.";
         }
+
+        public const string AttributeUsageAttribute = Namespaces.System + nameof(AttributeUsageAttribute);
 
         public const string Model = Namespaces.Data + nameof(Model);
         public const string Column = Namespaces.Data + nameof(Column);
