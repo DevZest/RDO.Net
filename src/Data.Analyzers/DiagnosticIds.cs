@@ -25,5 +25,6 @@
         public const string DuplicateModelAttribute = "RDO032";
         public const string MissingImplementation = "RDO033";
         public const string MissingImplementationAttribute = "RDO034";
+        public const string InvalidModelMemberAttribute = "RDO040";
     }
 }

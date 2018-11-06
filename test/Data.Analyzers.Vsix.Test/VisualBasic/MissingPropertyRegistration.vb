@@ -1,4 +1,4 @@
-﻿Public Class MissingMounterRegistration
+﻿Public Class MissingPropertyRegistration
     Inherits Model
 
     Private m_Column As _Int32

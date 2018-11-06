@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class MissingMounterRegistration : Model
+    public class MissingPropertyRegistration : Model
     {
         public _String Column { get; private set; }
 

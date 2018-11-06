@@ -133,6 +133,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute {0} is valid on type {1}, while applied model member is type {2}..
+        /// </summary>
+        internal static string InvalidModelMemberAttribute_Message {
+            get {
+                return ResourceManager.GetString("InvalidModelMemberAttribute_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid model member attribute..
+        /// </summary>
+        internal static string InvalidModelMemberAttribute_Title {
+            get {
+                return ResourceManager.GetString("InvalidModelMemberAttribute_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
         /// </summary>
         internal static string InvalidRegistrationGetterParam_Message {

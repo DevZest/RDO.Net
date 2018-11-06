@@ -5,7 +5,7 @@ namespace DevZest.Data.CodeAnalysis
 {
     static partial class Extensions
     {
-        public static (ITypeSymbol[] AddonTypes, ITypeSymbol[] ValidOnTypes)? GetModelMemberAttributeSpec(this AttributeData attribute, Compilation compilation)
+        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes)? GetModelMemberAttributeSpec(this AttributeData attribute, Compilation compilation)
         {
             return attribute.AttributeClass.GetModelMemberAttributeSpec(compilation);
         }
@@ -33,6 +33,9 @@ namespace DevZest.Data.CodeAnalysis
                     return null;
 
                 var values = parameter.Values;
+                if (values == null)
+                    return null;
+
                 var result = new INamedTypeSymbol[values.Length];
                 for (int i = 0; i < values.Length; i++)
                     result[i] = values[i].Value as INamedTypeSymbol;

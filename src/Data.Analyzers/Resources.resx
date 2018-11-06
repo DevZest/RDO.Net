@@ -141,6 +141,12 @@
   <data name="InvalidLocalColumnRegistration_Title" xml:space="preserve">
     <value>Local column is invalid for RegisterColumn.</value>
   </data>
+  <data name="InvalidModelMemberAttribute_Message" xml:space="preserve">
+    <value>Attribute {0} is valid on type {1}, while applied model member is type {2}.</value>
+  </data>
+  <data name="InvalidModelMemberAttribute_Title" xml:space="preserve">
+    <value>Invalid model member attribute.</value>
+  </data>
   <data name="InvalidRegistrationGetterParam_Message" xml:space="preserve">
     <value>The getter parameter must be a lambda expression which returns a non-readonly property of current class.</value>
   </data>
