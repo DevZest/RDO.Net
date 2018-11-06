@@ -9,6 +9,7 @@
             public const string Data = "DevZest.Data.";
             public const string Data_Annotations = Data + "Annotations.";
             public const string Data_Annotations_Primitives = Data_Annotations + "Primitives.";
+            public const string Data_Addons = Data + "Addons.";
         }
 
         public const string AttributeUsageAttribute = Namespaces.System + nameof(AttributeUsageAttribute);
@@ -27,5 +28,7 @@
         public const string _NamedModelAttribute = Namespaces.Data_Annotations_Primitives + nameof(_NamedModelAttribute);
         public const string CrossReferenceAttribute = Namespaces.Data_Annotations_Primitives + nameof(CrossReferenceAttribute);
         public const string NamedModelAttributeSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(NamedModelAttributeSpecAttribute);
+
+        public const string AddonAttribute = Namespaces.Data_Addons + nameof(AddonAttribute);
     }
 }

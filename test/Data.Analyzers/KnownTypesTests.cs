@@ -27,6 +27,8 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes._NamedModelAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CrossReferenceAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.NamedModelAttributeSpecAttribute));
+
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.AddonAttribute));
         }
     }
 }
