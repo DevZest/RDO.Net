@@ -13,7 +13,7 @@ namespace DevZest.Data.CodeAnalysis
         {
             for (var currentType = type.BaseType; currentType != null; currentType = currentType.BaseType)
             {
-                if (currentType.OriginalDefinition.Equals(baseType))
+                if (currentType.Equals(baseType) || currentType.OriginalDefinition.Equals(baseType))
                     return true;
             }
             return false;
