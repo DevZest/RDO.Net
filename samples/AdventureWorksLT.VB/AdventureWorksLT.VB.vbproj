@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>DevZest.Samples.AdventureWorksLT</AssemblyName>
     <OptionStrict>On</OptionStrict>
@@ -43,6 +43,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UserMessages.Designer.vb</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Import Include="DevZest.Data" />
+    <Import Include="DevZest.Data.Annotations" />
+    <Import Include="DevZest.Data.SqlServer" />
   </ItemGroup>
 
   <PropertyGroup>
