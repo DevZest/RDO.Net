@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DevZest.Data.CodeAnalysis
 {
-    static partial class Extensions
+    static partial class TestingExtensions
     {
         /// <summary>
         /// Create a Document from a string through creating a project that contains it.
