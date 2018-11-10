@@ -15,5 +15,7 @@ namespace DevZest.Data.Annotations.Primitives
         public IReadOnlyList<Type> AddonTypes { get; }
 
         public IReadOnlyList<Type> ValidOnTypes { get; }
+
+        public bool ForceArgumentList { get; set; }
     }
 }
