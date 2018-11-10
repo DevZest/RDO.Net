@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     /// <summary>Defines name of the column in the database.</summary>
-    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
+    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) }, ForceArgumentList = true)]
     public sealed class DbColumnAttribute : ColumnAttribute
     {
         public DbColumnAttribute()
