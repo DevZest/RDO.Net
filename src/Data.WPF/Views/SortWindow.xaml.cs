@@ -56,8 +56,8 @@ namespace DevZest.Data.Views
                     .AddBinding(1, 0, this.BindToTextBlock(_.Column.DisplayName))
                     .AddBinding(2, 0, this.BindToTextBlock(_.Direction.DisplayName))
                     .AddBinding(0, 1, _.BindToRowHeader().WithStyle(RowHeader.Styles.Flat))
-                    .AddBinding(1, 1, _.Column.BindToComboBox(ColumnHeaderSelection, "Value", "Display"))
-                    .AddBinding(2, 1, _.Direction.BindToComboBox(DirectionSelection, "Value", "Display"));
+                    .AddBinding(1, 1, _.Column.BindToComboBox(ColumnHeaderSelection))
+                    .AddBinding(2, 1, _.Direction.BindToComboBox(DirectionSelection));
             }
 
             protected internal override void OnEdit(Column column)
