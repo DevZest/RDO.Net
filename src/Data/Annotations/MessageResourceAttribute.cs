@@ -7,9 +7,9 @@ namespace DevZest.Data.Annotations
     {
         public MessageResourceAttribute(Type type)
         {
-            Types = type;
+            Type = type;
         }
 
-        public Type Types { get; }
+        public Type Type { get; }
     }
 }
