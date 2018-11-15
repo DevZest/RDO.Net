@@ -26,5 +26,6 @@
         public const string MissingImplementation = "RDO033";
         public const string MissingImplementationAttribute = "RDO034";
         public const string InvalidModelMemberAttribute = "RDO040";
+        public const string ModelMemberAttributeRequiresArgument = "RDO041";
     }
 }

@@ -147,5 +147,11 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.InvalidModelMemberAttribute_Title), Resources.ResourceManager, typeof(Resources)),
             new LocalizableResourceString(nameof(Resources.InvalidModelMemberAttribute_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor ModelMemberAttributeRequiresArgument = new DiagnosticDescriptor(
+            DiagnosticIds.ModelMemberAttributeRequiresArgument,
+            new LocalizableResourceString(nameof(Resources.ModelMemberAttributeRequiresArgument_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.ModelMemberAttributeRequiresArgument_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
     }
 }

@@ -17,7 +17,7 @@ namespace DevZest.Data.CodeAnalysis
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(Rules.InvalidModelMemberAttribute); }
+            get { return ImmutableArray.Create(Rules.InvalidModelMemberAttribute, Rules.ModelMemberAttributeRequiresArgument); }
         }
 
         private static void AnalyzeModelMemberAttribute(SymbolAnalysisContext context)
@@ -57,7 +57,16 @@ namespace DevZest.Data.CodeAnalysis
             
             validOnTypes = validOnTypes.Where(x => x != null).ToArray();
             if (!IsValid(type, validOnTypes))
+            {
                 context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidModelMemberAttribute, attribute.GetLocation(), attribute.AttributeClass, FormatString(validOnTypes), type));
+                return;
+            }
+
+            if (ArgumentMissing(attribute, spec.Value.RequiresArgument))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Rules.ModelMemberAttributeRequiresArgument, attribute.GetLocation(), attribute.AttributeClass));
+                return;
+            }
         }
 
         private static bool IsValid(ITypeSymbol type, INamedTypeSymbol[] validOnTypes)
@@ -73,6 +82,29 @@ namespace DevZest.Data.CodeAnalysis
             }
 
             return validOnTypes.Length == 0;
+        }
+
+        private static bool ArgumentMissing(AttributeData attribute, bool requiresArgument)
+        {
+            if (!requiresArgument)
+                return false;
+
+            return attribute.ConstructorArguments.Length == 0 && HasParameterlessConstructor(attribute);
+        }
+
+        private static bool HasParameterlessConstructor(AttributeData attribute)
+        {
+            var attributeClass = attribute.AttributeClass;
+            if (attributeClass == null)
+                return false;
+
+            var constructors = attributeClass.Constructors;
+            for (int i = 0; i < constructors.Length; i++)
+            {
+                if (constructors[i].Parameters.Length == 0)
+                    return true;
+            }
+            return false;
         }
 
         private static string FormatString(INamedTypeSymbol[] validOnTypes)

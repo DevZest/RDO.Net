@@ -86,6 +86,76 @@ End Class";
 
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void ModelMemberAttributeRequiresArgument_CS()
+        {
+            var test =
+@"using DevZest.Data.Annotations;
+
+namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
+{
+    public class ModelMemberAttributeRequiresArgument : Model
+    {
+        static ModelMemberAttributeRequiresArgument()
+        {
+            RegisterColumn((ModelMemberAttributeRequiresArgument _) => _.Id);
+        }
+
+        [DbColumn]
+        public _Int32 Id { get; private set; }
+    }
+}
+";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.ModelMemberAttributeRequiresArgument,
+                Message = string.Format(Resources.ModelMemberAttributeRequiresArgument_Message, typeof(DbColumnAttribute)),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 12, 10) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void ModelMemberAttributeRequiresArgument_VB()
+        {
+            var test =
+@"Imports DevZest.Data
+Imports DevZest.Data.Annotations
+
+Public Class ModelMemberAttributeRequiresArgument
+    Inherits Model
+
+    Shared Sub New()
+        RegisterColumn(Function(x As ModelMemberAttributeRequiresArgument) x.ID)
+    End Sub
+
+    Private m_ID As _Int32
+    <DbColumn>
+    Public Property ID As _Int32
+        Get
+            Return m_ID
+        End Get
+        Private Set
+            m_ID = Value
+        End Set
+    End Property
+End Class
+";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.ModelMemberAttributeRequiresArgument,
+                Message = string.Format(Resources.ModelMemberAttributeRequiresArgument_Message, typeof(DbColumnAttribute)),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 12, 6) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }
 

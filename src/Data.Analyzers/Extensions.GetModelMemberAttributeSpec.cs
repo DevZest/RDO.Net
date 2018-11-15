@@ -1,16 +1,17 @@
 ﻿using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace DevZest.Data.CodeAnalysis
 {
     static partial class Extensions
     {
-        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes)? GetModelMemberAttributeSpec(this AttributeData attribute, Compilation compilation)
+        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes, bool RequiresArgument)? GetModelMemberAttributeSpec(this AttributeData attribute, Compilation compilation)
         {
             return attribute.AttributeClass.GetModelMemberAttributeSpec(compilation);
         }
 
-        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes)? GetModelMemberAttributeSpec(this INamedTypeSymbol attributeClass, Compilation compilation)
+        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes, bool RequiresArgument)? GetModelMemberAttributeSpec(this INamedTypeSymbol attributeClass, Compilation compilation)
         {
             var specAttribute = attributeClass.GetAttribute(compilation.GetKnownType(KnownTypes.ModelMemberAttributeSpecAttribute));
             if (specAttribute == null)
@@ -18,30 +19,46 @@ namespace DevZest.Data.CodeAnalysis
 
             var constructorArguments = specAttribute.ConstructorArguments;
 
-            var addonTypes = GetSpecParame(constructorArguments, 0);
-            var validOnTypes = GetSpecParame(constructorArguments, 1);
+            var addonTypes = GetSpecArgument(constructorArguments, 0);
+            var validOnTypes = GetSpecArgument(constructorArguments, 1);
+            var requiresArgument = GetRequiresArgument(specAttribute.NamedArguments);
 
-            return (addonTypes, validOnTypes);
+            return (addonTypes, validOnTypes, requiresArgument);
+        }
 
-            INamedTypeSymbol[] GetSpecParame(ImmutableArray<TypedConstant> constructorParameters, int index)
+        private static INamedTypeSymbol[] GetSpecArgument(ImmutableArray<TypedConstant> constructorArguments, int index)
+        {
+            if (index >= constructorArguments.Length)
+                return null;
+
+            var argument = constructorArguments[index];
+            if (argument.Kind != TypedConstantKind.Array)
+                return null;
+
+            var values = argument.Values;
+            if (values == null)
+                return null;
+
+            var result = new INamedTypeSymbol[values.Length];
+            for (int i = 0; i < values.Length; i++)
+                result[i] = values[i].Value as INamedTypeSymbol;
+
+            return result;
+        }
+
+        private static bool GetRequiresArgument(ImmutableArray<KeyValuePair<string, TypedConstant>> namedArguments)
+        {
+            for (int i = 0; i < namedArguments.Length; i++)
             {
-                if (index >= constructorParameters.Length)
-                    return null;
-
-                var parameter = constructorParameters[index];
-                if (parameter.Kind != TypedConstantKind.Array)
-                    return null;
-
-                var values = parameter.Values;
-                if (values == null)
-                    return null;
-
-                var result = new INamedTypeSymbol[values.Length];
-                for (int i = 0; i < values.Length; i++)
-                    result[i] = values[i].Value as INamedTypeSymbol;
-
-                return result;
+                var namedArguemnt = namedArguments[i];
+                if (namedArguemnt.Key == "RequiresArgument")
+                {
+                    var argument = namedArguemnt.Value;
+                    if (argument.Value is bool result)
+                        return result;
+                }
             }
+            return false;
         }
     }
 }

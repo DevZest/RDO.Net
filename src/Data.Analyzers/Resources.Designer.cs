@@ -268,6 +268,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute {0} requires argument..
+        /// </summary>
+        internal static string ModelMemberAttributeRequiresArgument_Message {
+            get {
+                return ResourceManager.GetString("ModelMemberAttributeRequiresArgument_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model member attribute requires argument..
+        /// </summary>
+        internal static string ModelMemberAttributeRequiresArgument_Title {
+            get {
+                return ResourceManager.GetString("ModelMemberAttributeRequiresArgument_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mounter &apos;{0}&apos; of property &apos;{1}&apos; does not conform to naming convention, rename to &apos;{2}&apos;..
         /// </summary>
         internal static string MounterNaming_Message {
