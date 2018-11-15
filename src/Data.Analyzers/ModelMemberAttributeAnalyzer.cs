@@ -89,7 +89,7 @@ namespace DevZest.Data.CodeAnalysis
             if (!requiresArgument)
                 return false;
 
-            return attribute.ConstructorArguments.Length == 0 && HasParameterlessConstructor(attribute);
+            return attribute.ConstructorArguments.Length == 0 && attribute.NamedArguments.Length == 0 && HasParameterlessConstructor(attribute);
         }
 
         private static bool HasParameterlessConstructor(AttributeData attribute)

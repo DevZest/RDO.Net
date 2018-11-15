@@ -100,10 +100,14 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         static ModelMemberAttributeRequiresArgument()
         {
             RegisterColumn((ModelMemberAttributeRequiresArgument _) => _.Id);
+            RegisterColumn((ModelMemberAttributeRequiresArgument _) => _.Name);
         }
 
         [DbColumn]
         public _Int32 Id { get; private set; }
+
+        [DbColumn(Description=""Description""]
+        public _String Name { get; private set; }        
     }
 }
 ";
@@ -113,7 +117,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
                 Id = DiagnosticIds.ModelMemberAttributeRequiresArgument,
                 Message = string.Format(Resources.ModelMemberAttributeRequiresArgument_Message, typeof(DbColumnAttribute)),
                 Severity = DiagnosticSeverity.Warning,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 12, 10) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 13, 10) }
             };
 
             VerifyCSharpDiagnostic(test, expected);
@@ -131,6 +135,7 @@ Public Class ModelMemberAttributeRequiresArgument
 
     Shared Sub New()
         RegisterColumn(Function(x As ModelMemberAttributeRequiresArgument) x.ID)
+        RegisterColumn(Function(x As ModelMemberAttributeRequiresArgument) x.Name)
     End Sub
 
     Private m_ID As _Int32
@@ -143,6 +148,17 @@ Public Class ModelMemberAttributeRequiresArgument
             m_ID = Value
         End Set
     End Property
+
+    Private m_Name As _String
+    <DbColumn(Description=""Description"")>
+    Public Property Name As _String
+        Get
+            Return m_Name
+        End Get
+        Private Set
+            m_Name = Value
+        End Set
+    End Property
 End Class
 ";
 
@@ -151,7 +167,7 @@ End Class
                 Id = DiagnosticIds.ModelMemberAttributeRequiresArgument,
                 Message = string.Format(Resources.ModelMemberAttributeRequiresArgument_Message, typeof(DbColumnAttribute)),
                 Severity = DiagnosticSeverity.Warning,
-                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 12, 6) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 13, 6) }
             };
 
             VerifyBasicDiagnostic(test, expected);
