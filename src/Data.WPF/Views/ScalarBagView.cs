@@ -4,12 +4,12 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Views
 {
-    public class ScalarBagView : ContentControl, IDataView
+    public class ScalarBagView : ContentControl, ICommonView
     {
 
         public ScalarBagPresenter Presenter { get; private set; }
 
-        CommonPresenter IDataView.Presenter
+        CommonPresenter ICommonView.Presenter
         {
             get { return Presenter; }
             set { Presenter = (ScalarBagPresenter)value; }
@@ -20,7 +20,7 @@ namespace DevZest.Data.Views
             get { return Presenter.LayoutManager; }
         }
 
-        void IDataView.RefreshScalarValidation()
+        void ICommonView.RefreshScalarValidation()
         {
             var layoutManager = LayoutManager;
             if (layoutManager != null)

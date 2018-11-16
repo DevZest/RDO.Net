@@ -87,7 +87,7 @@
     <Compile Include="Presenters\Primitives\IContainerElement.cs" />
     <Compile Include="Presenters\Primitives\AttachedScalarBinding.cs" />
     <Compile Include="Presenters\ScalarBagPresenter.cs" />
-    <Compile Include="Views\IDataView.cs" />
+    <Compile Include="Views\ICommonView.cs" />
     <Compile Include="Presenters\Primitives\RowMatch.cs" />
     <Compile Include="Presenters\Primitives\ValueChangedTrigger.cs" />
     <Compile Include="Presenters\Primitives\SerializableSelection.cs" />

@@ -19,12 +19,12 @@ namespace DevZest.Data.Presenters
 
         public new DataView View { get; private set; }
 
-        internal sealed override IDataView GetView()
+        internal sealed override ICommonView GetView()
         {
             return View;
         }
 
-        internal sealed override void SetView(IDataView value)
+        internal sealed override void SetView(ICommonView value)
         {
             View = (DataView)value;
         }

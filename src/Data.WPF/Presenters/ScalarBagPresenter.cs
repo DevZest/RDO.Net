@@ -41,12 +41,12 @@ namespace DevZest.Data.Presenters
 
         public new ScalarBagView View { get; private set; }
 
-        internal override IDataView GetView()
+        internal override ICommonView GetView()
         {
             return View;
         }
 
-        internal override void SetView(IDataView value)
+        internal override void SetView(ICommonView value)
         {
             View = (ScalarBagView)value;
         }

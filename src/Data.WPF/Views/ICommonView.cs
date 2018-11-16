@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Views
 {
-    internal interface IDataView
+    internal interface ICommonView
     {
         CommonPresenter Presenter { get; set; }
         void RefreshScalarValidation();

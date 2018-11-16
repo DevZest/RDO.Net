@@ -52,15 +52,15 @@ namespace DevZest.Data.Presenters.Primitives
         public event EventHandler ViewRefreshing = delegate { };
         public event EventHandler ViewRefreshed = delegate { };
 
-        internal IDataView View
+        internal ICommonView View
         {
             get { return GetView(); }
             set { SetView(value); }
         }
 
-        internal abstract IDataView GetView();
+        internal abstract ICommonView GetView();
 
-        internal abstract void SetView(IDataView value);
+        internal abstract void SetView(ICommonView value);
 
         public virtual void DetachView()
         {
@@ -70,7 +70,7 @@ namespace DevZest.Data.Presenters.Primitives
             View = null;
         }
 
-        internal void AttachView(IDataView value)
+        internal void AttachView(ICommonView value)
         {
             if (View != null)
                 DetachView();
