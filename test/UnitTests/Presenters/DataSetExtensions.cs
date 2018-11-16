@@ -29,11 +29,11 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private static T CreateManager<T>(this DataSet dataSet, Action<TemplateBuilder> buildTemplateAction, Func<Template, DataSet, T> createFunc)
+        private static T CreateManager<T>(this DataSet dataSet, Action<DataPresenter.TemplateBuilder> buildTemplateAction, Func<Template, DataSet, T> createFunc)
             where T : ElementManager
         {
             var template = new Template();
-            using (var templateBuilder = new TemplateBuilder(template, dataSet.Model))
+            using (var templateBuilder = new DataPresenter.TemplateBuilder(template, dataSet.Model))
             {
                 buildTemplateAction(templateBuilder);
                 templateBuilder.BlockView<AutoInitBlockView>().RowView<AutoInitRowView>();
@@ -52,17 +52,17 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        internal static ElementManager CreateElementManager(this DataSet dataSet, Action<TemplateBuilder> buildTemplateAction)
+        internal static ElementManager CreateElementManager(this DataSet dataSet, Action<DataPresenter.TemplateBuilder> buildTemplateAction)
         {
             return dataSet.CreateManager(buildTemplateAction, (t, d) => new ConcreteElementManager(t, d));
         }
 
-        internal static ConcreteInputManager CreateInputManager(this DataSet dataSet, Action<TemplateBuilder> buildTemplateAction)
+        internal static ConcreteInputManager CreateInputManager(this DataSet dataSet, Action<DataPresenter.TemplateBuilder> buildTemplateAction)
         {
             return dataSet.CreateManager(buildTemplateAction, (t, d) => new ConcreteInputManager(t, d));
         }
 
-        internal static LayoutManager CreateLayoutManager(this DataSet dataSet, Action<TemplateBuilder> buildTemplateAction)
+        internal static LayoutManager CreateLayoutManager(this DataSet dataSet, Action<DataPresenter.TemplateBuilder> buildTemplateAction)
         {
             return dataSet.CreateManager(buildTemplateAction, (t, d) => LayoutManager.Create(null, t, d, d.GetRowMatchColumns()));
         }

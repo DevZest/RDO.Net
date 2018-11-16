@@ -250,7 +250,7 @@
     <Compile Include="Views\BlockView.cs" />
     <Compile Include="Presenters\Primitives\ContainerViewList.cs" />
     <Compile Include="Presenters\VirtualRowPlacement.cs" />
-    <Compile Include="Presenters\TemplateBuilder.cs" />
+    <Compile Include="Presenters\DataPresenter.TemplateBuilder.cs" />
     <Compile Include="Presenters\Primitives\LostFocusTrigger.cs" />
     <Compile Include="Presenters\RowBinding.cs" />
     <Compile Include="Views\ColumnHeader.cs" />

@@ -4,13 +4,11 @@ using System;
 using System.Windows.Controls;
 using DevZest.Data.Views;
 using DevZest.Data.Views.Primitives;
-using System.Diagnostics;
 using System.Windows.Input;
-using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class DataPresenter : CommonPresenter, IDataPresenter
+    public abstract partial class DataPresenter : CommonPresenter, IDataPresenter
     {
         protected DataPresenter()
             : base()
