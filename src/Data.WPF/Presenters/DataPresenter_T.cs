@@ -383,8 +383,8 @@ namespace DevZest.Data.Presenters
         {
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
-            if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
+            RequireLayoutManager();
+
             Refresh(dataSet, where, orderBy, false);
         }
 
@@ -412,8 +412,7 @@ namespace DevZest.Data.Presenters
         {
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
-            if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
+            RequireLayoutManager();
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);
@@ -432,8 +431,7 @@ namespace DevZest.Data.Presenters
         {
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
-            if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
+            RequireLayoutManager();
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);

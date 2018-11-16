@@ -17,8 +17,7 @@ namespace DevZest.Data.Views
 
             void IService.Initialize(DataPresenter dataPresenter)
             {
-                if (!dataPresenter.IsMounted)
-                    throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
+                dataPresenter.RequireLayoutManager();
                 DataPresenter = dataPresenter;
                 _gridCellBindings = Template.RowBindings.Where(x => typeof(GridCell).IsAssignableFrom(x.ViewType)).ToArray();
                 CurrentBindingIndex = GridCellBindings.Count > 0 ? 0 : -1;
