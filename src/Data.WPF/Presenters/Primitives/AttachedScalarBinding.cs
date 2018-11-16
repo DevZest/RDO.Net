@@ -53,7 +53,9 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _presenter.Template; }
         }
 
-        private class TypedAttachedScalarBinding<T> : AttachedScalarBinding
+        public abstract void Mount();
+
+        private sealed class TypedAttachedScalarBinding<T> : AttachedScalarBinding
             where T : UIElement, new()
         {
             public TypedAttachedScalarBinding(BasePresenter presenter, T element, ScalarBinding<T> baseBinding)
@@ -63,10 +65,16 @@ namespace DevZest.Data.Presenters.Primitives
                 s_bindingsByElement.Add(element, this);
                 _baseBinding = baseBinding;
                 _baseBinding.Seal(this, 0);
-                baseBinding.BeginSetup(element);
-                baseBinding.Setup(0);
-                baseBinding.Refresh(element);
-                baseBinding.EndSetup();
+                if (Presenter.IsMounted)
+                    Mount();
+            }
+
+            public override void Mount()
+            {
+                _baseBinding.BeginSetup(_element);
+                _baseBinding.Setup(0);
+                _baseBinding.Refresh(_element);
+                _baseBinding.EndSetup();
                 Presenter.ViewRefreshing += OnViewRefreshing;
             }
 

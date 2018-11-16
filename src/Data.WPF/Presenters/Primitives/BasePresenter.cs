@@ -117,6 +117,11 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal void OnMounted(MountMode mode)
         {
+            if (_attachedScalarBindings != null)
+            {
+                for (int i = 0; i < _attachedScalarBindings.Count; i++)
+                    _attachedScalarBindings[i].Mount();
+            }
             OnMounted(MountEventArgs.Select(mode));
         }
 
@@ -275,7 +280,7 @@ namespace DevZest.Data.Presenters.Primitives
             return AsyncValidationFault.FormatMessage(asyncValidator);
         }
 
-        private List<ScalarBinding> _attachedScalarBindings;
+        private List<AttachedScalarBinding> _attachedScalarBindings;
         public IReadOnlyList<ScalarBinding> AttachedScalarBindings
         {
             get
@@ -305,7 +310,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             var result = AttachedScalarBinding.Attach(this, element, scalarBinding);
             if (_attachedScalarBindings == null)
-                _attachedScalarBindings = new List<ScalarBinding>();
+                _attachedScalarBindings = new List<AttachedScalarBinding>();
             _attachedScalarBindings.Add(result);
             IsAttachedScalarBindingsInvalidated = true;
         }
