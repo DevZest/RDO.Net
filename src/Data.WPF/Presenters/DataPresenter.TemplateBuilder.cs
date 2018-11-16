@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Presenters.Primitives;
 using DevZest.Data.Primitives;
 using System;
-using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
@@ -15,12 +14,11 @@ namespace DevZest.Data.Presenters
 {
     partial class DataPresenter
     {
-        protected internal sealed class TemplateBuilder : IDisposable
+        protected internal sealed class TemplateBuilder : CommonTemplateBuilder<TemplateBuilder>
         {
             internal TemplateBuilder(Template template, Model model, bool inherited = false)
+                : base(template)
             {
-                Debug.Assert(template != null);
-                Template = template;
                 _model = model;
                 _inherited = inherited;
                 if (inherited)
@@ -28,18 +26,6 @@ namespace DevZest.Data.Presenters
             }
 
             private readonly bool _inherited;
-
-            internal void Seal()
-            {
-                Template.Seal();
-            }
-
-            public void Dispose()
-            {
-                Template = null;
-            }
-
-            internal Template Template { get; private set; }
 
             private Model _model;
 
@@ -168,26 +154,6 @@ namespace DevZest.Data.Presenters
                 return this;
             }
 
-            public TemplateBuilder AddAsyncValidator(IScalars sourceScalars, Func<Task<string>> validator, string displayName)
-            {
-                if (sourceScalars == null || sourceScalars.Count == 0)
-                    throw new ArgumentNullException(nameof(sourceScalars));
-                if (validator == null)
-                    throw new ArgumentNullException(nameof(validator));
-                Template.AddAsyncValidator(ScalarAsyncValidator.Create(displayName, sourceScalars, validator));
-                return this;
-            }
-
-            public TemplateBuilder AddAsyncValidator(IScalars sourceScalars, Func<Task<IEnumerable<string>>> validator, string displayName)
-            {
-                if (sourceScalars == null || sourceScalars.Count == 0)
-                    throw new ArgumentNullException(nameof(sourceScalars));
-                if (validator == null)
-                    throw new ArgumentNullException(nameof(validator));
-                Template.AddAsyncValidator(ScalarAsyncValidator.Create(displayName, sourceScalars, validator));
-                return this;
-            }
-
             public TemplateBuilder AddAsyncValidator<T>(ScalarInput<T> input, Func<Task<string>> validator, string displayName)
                 where T : UIElement, new()
             {
@@ -266,14 +232,11 @@ namespace DevZest.Data.Presenters
                 return this;
             }
 
-            [DefaultValue(ValidationMode.Progressive)]
-            public TemplateBuilder WithScalarValidationMode(ValidationMode value)
+            public override TemplateBuilder WithScalarValidationMode(ValidationMode value)
             {
                 if (_inherited)
                     return this;
-
-                Template.ScalarValidationMode = value;
-                return this;
+                return base.WithScalarValidationMode(value);
             }
 
             public TemplateBuilder MakeRecursive(Model childModel)

@@ -4,10 +4,18 @@ using System;
 
 namespace DevZest.Data.Presenters
 {
-    public class ScalarBagPresenter : CommonPresenter
+    public abstract class ScalarBagPresenter : CommonPresenter
     {
         private sealed class DummyModel : Model
         {
+        }
+
+        protected sealed class TemplateBuilder : CommonTemplateBuilder<TemplateBuilder>
+        {
+            internal TemplateBuilder(Template template)
+                : base(template)
+            {
+            }
         }
 
         public void Show(ScalarBagView view)
@@ -30,7 +38,11 @@ namespace DevZest.Data.Presenters
             template.AddGridColumns("*");
             template.AddGridRows("*");
             template.RowRange = new GridRange(template.GridColumns[0], template.GridRows[0]);
-            template.Seal();
+            using (var builder = new TemplateBuilder(template))
+            {
+                BuildTemplate(builder);
+                builder.Seal();
+            }
 
             dataSet.EnsureInitialized();
             _layoutManager = LayoutManager.Create(null, this, template, dataSet, null, null, null);
@@ -54,5 +66,7 @@ namespace DevZest.Data.Presenters
         {
             View = (ScalarBagView)value;
         }
+
+        protected abstract void BuildTemplate(TemplateBuilder builder);
     }
 }
