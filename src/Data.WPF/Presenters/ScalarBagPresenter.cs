@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
 
-            if (view.ScalarBagPresenter != null && view.ScalarBagPresenter != this)
+            if (view.Presenter != null && view.Presenter != this)
                 throw new ArgumentException(DiagnosticMessages.DataPresenter_InvalidDataView, nameof(view));
 
             var dataSet = DataSet<DummyModel>.New();

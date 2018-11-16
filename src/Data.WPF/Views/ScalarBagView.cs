@@ -7,17 +7,17 @@ namespace DevZest.Data.Views
     public class ScalarBagView : ContentControl, IDataView
     {
 
-        public ScalarBagPresenter ScalarBagPresenter { get; private set; }
+        public ScalarBagPresenter Presenter { get; private set; }
 
         DataPresenterBase IDataView.DataPresenter
         {
-            get { return ScalarBagPresenter; }
-            set { ScalarBagPresenter = (ScalarBagPresenter)value; }
+            get { return Presenter; }
+            set { Presenter = (ScalarBagPresenter)value; }
         }
 
         private LayoutManager LayoutManager
         {
-            get { return ScalarBagPresenter.LayoutManager; }
+            get { return Presenter.LayoutManager; }
         }
 
         void IDataView.RefreshScalarValidation()
