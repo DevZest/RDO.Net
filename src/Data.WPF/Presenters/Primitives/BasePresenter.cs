@@ -115,6 +115,11 @@ namespace DevZest.Data.Presenters.Primitives
 
         public event EventHandler<MountEventArgs> Mounted = delegate { };
 
+        internal void OnMounted(MountMode mode)
+        {
+            OnMounted(MountEventArgs.Select(mode));
+        }
+
         protected virtual void OnMounted(MountEventArgs e)
         {
             Mounted(this, e);

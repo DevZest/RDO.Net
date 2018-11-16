@@ -59,7 +59,7 @@ namespace DevZest.Data.Presenters
             }
             _layoutManager = LayoutManager.Create(inherit ? oldLayoutManager : null, this, template, dataSet, GetMatchColumns(dataSet._), where, orderBy);
             ServiceManager.Reset(this, mode == MountMode.Reload);
-            OnMounted(MountEventArgs.Select(mode));
+            OnMounted(mode);
             dataView.OnDataLoaded();
         }
 

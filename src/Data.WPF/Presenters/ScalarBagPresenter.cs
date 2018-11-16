@@ -46,7 +46,7 @@ namespace DevZest.Data.Presenters
 
             dataSet.EnsureInitialized();
             _layoutManager = LayoutManager.Create(null, this, template, dataSet, null, null, null);
-            OnMounted(MountEventArgs.Select(MountMode.Show));
+            OnMounted(MountMode.Show);
         }
 
         private LayoutManager _layoutManager;
