@@ -12,7 +12,7 @@ using DevZest.Windows;
 namespace DevZest.Data.Views
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
-    public partial class DataView : Control
+    public partial class DataView : Control, IDataView
     {
         public static DataView GetCurrent(DependencyObject target)
         {
@@ -199,7 +199,7 @@ namespace DevZest.Data.Views
             set { SetValue(DataLoadCancellablePropertyKey, BooleanBoxes.Box(value)); }
         }
 
-        internal void RefreshScalarValidation()
+        void IDataView.RefreshScalarValidation()
         {
             var layoutManager = LayoutManager;
             if (layoutManager != null)
@@ -213,6 +213,12 @@ namespace DevZest.Data.Views
                 var layoutManager = LayoutManager;
                 return layoutManager == null ? ValidationInfo.Empty : layoutManager.GetScalarValidationInfo();
             }
+        }
+
+        DataPresenterBase IDataView.DataPresenter
+        {
+            get { return DataPresenter; }
+            set { DataPresenter = (DataPresenter)value; }
         }
     }
 }

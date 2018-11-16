@@ -83,8 +83,11 @@
     <Compile Include="Presenters\ColumnSerializer.cs" />
     <Compile Include="Presenters\IDataPresenter.cs" />
     <Compile Include="Presenters\InitialFocus.cs" />
+    <Compile Include="Presenters\Primitives\DataPresenterBase.cs" />
     <Compile Include="Presenters\Primitives\IContainerElement.cs" />
     <Compile Include="Presenters\Primitives\AttachedScalarBinding.cs" />
+    <Compile Include="Presenters\ScalarBagPresenter.cs" />
+    <Compile Include="Views\IDataView.cs" />
     <Compile Include="Presenters\Primitives\RowMatch.cs" />
     <Compile Include="Presenters\Primitives\ValueChangedTrigger.cs" />
     <Compile Include="Presenters\Primitives\SerializableSelection.cs" />
@@ -149,6 +152,7 @@
     <Compile Include="Views\PasteAppendWindow.xaml.cs">
       <DependentUpon>PasteAppendWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ScalarBagView.cs" />
     <Compile Include="Views\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>

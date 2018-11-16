@@ -12,10 +12,10 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract partial class LayoutManager : InputManager
     {
-        internal static LayoutManager Create(LayoutManager inherit, DataPresenter dataPresenter, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        internal static LayoutManager Create(LayoutManager inherit, DataPresenterBase dataPresenter, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             var result = Create(inherit, template, dataSet, rowMatchColumns, where, orderBy);
-            result._dataPresenter = dataPresenter;
+            result._dataPresenterBase = dataPresenter;
             return result;
         }
 
@@ -34,10 +34,10 @@ namespace DevZest.Data.Presenters.Primitives
         {
         }
 
-        private DataPresenter _dataPresenter;
-        internal override DataPresenter DataPresenter
+        private DataPresenterBase _dataPresenterBase;
+        internal override DataPresenterBase DataPresenterBase
         {
-            get { return _dataPresenter; }
+            get { return _dataPresenterBase; }
         }
 
         protected RecapBindingCollection<ScalarBinding> ScalarBindings

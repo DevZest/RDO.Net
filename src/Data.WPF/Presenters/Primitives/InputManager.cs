@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal virtual IScalarValidationErrors PerformValidateScalars()
         {
-            var dataPresenter = DataPresenter;
+            var dataPresenter = DataPresenterBase;
             return dataPresenter == null ? Presenters.ScalarValidationErrors.Empty : dataPresenter.ValidateScalars();
         }
 
@@ -137,7 +137,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override void CancelEdit()
         {
-            var cancelEdit = DataPresenter == null ? true : DataPresenter.QueryCancelEdit();
+            var cancelEdit = DataPresenterBase == null ? true : DataPresenter.QueryCancelEdit();
             if (cancelEdit)
             {
                 var rowAfterEditing = CurrentRow.IsInserting ? null : CurrentRow;
@@ -148,7 +148,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override RowPresenter EndEdit(bool staysOnInserting)
         {
-            var endEdit = DataPresenter == null ? QueryEndEdit() : DataPresenter.QueryEndEdit();
+            var endEdit = DataPresenterBase == null ? QueryEndEdit() : DataPresenter.QueryEndEdit();
             if (!endEdit)
                 return null;
 
@@ -175,7 +175,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (isValidating)
                 return false;
 
-            if (DataPresenter != null)
+            if (DataPresenterBase != null)
                 return DataPresenter.ConfirmEndEdit();
             return true;
         }
@@ -197,8 +197,8 @@ namespace DevZest.Data.Presenters.Primitives
             if (isValidating)
                 return false;
 
-            if (DataPresenter != null)
-                return DataPresenter.ConfirmEndEditScalars();
+            if (DataPresenterBase != null)
+                return DataPresenterBase.ConfirmEndEditScalars();
             return true;
         }
 

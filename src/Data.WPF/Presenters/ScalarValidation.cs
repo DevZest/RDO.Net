@@ -39,9 +39,9 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.Template; }
         }
 
-        private DataPresenter DataPresenter
+        private DataPresenterBase DataPresenterBase
         {
-            get { return _inputManager.DataPresenter; }
+            get { return _inputManager.DataPresenterBase; }
         }
 
         private void InvalidateView()
@@ -432,7 +432,7 @@ namespace DevZest.Data.Presenters
 
         private bool IsAttachedScalarBindingsInvalidated
         {
-            get { return DataPresenter == null ? false : DataPresenter.IsAttachedScalarBindingsInvalidated; }
+            get { return DataPresenterBase == null ? false : DataPresenterBase.IsAttachedScalarBindingsInvalidated; }
         }
 
         private void InitInputs()
@@ -443,7 +443,7 @@ namespace DevZest.Data.Presenters
             _inputs = GetInputs().ToArray();
             for (int i = 0; i < _inputs.Length; i++)
                 _inputs[i].Index = i;
-            DataPresenter?.ResetIsAttachedScalarBindingsInvalidated();
+            DataPresenterBase?.ResetIsAttachedScalarBindingsInvalidated();
         }
 
         private IEnumerable<Input<ScalarBinding, IScalars>> GetInputs()
@@ -451,9 +451,9 @@ namespace DevZest.Data.Presenters
             foreach (var result in GetInputs(Template.ScalarBindings))
                 yield return result;
 
-            if (DataPresenter != null)
+            if (DataPresenterBase != null)
             {
-                foreach (var result in GetInputs(DataPresenter.AttachedScalarBindings))
+                foreach (var result in GetInputs(DataPresenterBase.AttachedScalarBindings))
                     yield return result;
             }
         }
@@ -604,7 +604,7 @@ namespace DevZest.Data.Presenters
 
         internal void ExitEdit()
         {
-            Debug.Assert(!DataPresenter.ScalarContainer.IsEditing);
+            Debug.Assert(!DataPresenterBase.ScalarContainer.IsEditing);
 
             _snapshot = null;
             _flushingErrors = null;

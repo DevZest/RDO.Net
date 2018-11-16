@@ -73,9 +73,9 @@ namespace DevZest.Data.Presenters
         internal abstract Task LastRunTask { get; }
 #endif
 
-        private DataPresenter DataPresenter
+        private DataPresenterBase DataPresenterBase
         {
-            get { return InputManager.DataPresenter; }
+            get { return InputManager.DataPresenterBase; }
         }
 
         protected AsyncValidationFault Fault { get; private set; }
@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters
             if (Exception == null)
                 return null;
 
-            var dataPresenter = DataPresenter;
+            var dataPresenter = DataPresenterBase;
             if (dataPresenter == null)
                 return new AsyncValidationFault(this, null);
             else
