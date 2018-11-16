@@ -156,23 +156,23 @@
   <data name="ColumnComparer_InvalidModelType" xml:space="preserve">
     <value>Invalid Model type, it must be type: {type}.</value>
   </data>
+  <data name="CommonPresenter_ElementAttachedAlready" xml:space="preserve">
+    <value>The UIElement is already attached to Presenter.</value>
+  </data>
+  <data name="CommonPresenter_ElementNotAttachedToThis" xml:space="preserve">
+    <value>The UIElement is not attached to this Presenter.</value>
+  </data>
+  <data name="CommonPresenter_NotMounted" xml:space="preserve">
+    <value>The Presenter is not mounted.</value>
+  </data>
   <data name="DataPresenter_CurrentRowIsEditing" xml:space="preserve">
     <value>The CurrentRow is editing.</value>
-  </data>
-  <data name="DataPresenter_ElementAttachedAlready" xml:space="preserve">
-    <value>The UIElement is already attached to DataPresenter.</value>
-  </data>
-  <data name="DataPresenter_ElementNotAttachedToThis" xml:space="preserve">
-    <value>The UIElement is not attached to this DataPresenter.</value>
   </data>
   <data name="DataPresenter_InvalidDataView" xml:space="preserve">
     <value>The DataView is invalid. It has been associated with another DataPresenter.</value>
   </data>
   <data name="DataPresenter_InvalidRowPresenter" xml:space="preserve">
     <value>The RowPresenter is invalid for this DataPresenter or it's collapsed.</value>
-  </data>
-  <data name="DataPresenter_NotMounted" xml:space="preserve">
-    <value>The DataPresenter is not mounted.</value>
   </data>
   <data name="DataPresenter_VerifyCanInsert" xml:space="preserve">
     <value>The CanInsert property must be true.</value>

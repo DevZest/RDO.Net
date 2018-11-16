@@ -130,7 +130,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal LayoutManager RequireLayoutManager()
         {
             if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.DataPresenter_NotMounted);
+                throw new InvalidOperationException(DiagnosticMessages.CommonPresenter_NotMounted);
             return LayoutManager;
         }
 
@@ -293,7 +293,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             element.VerifyNotNull(nameof(element));
             if (element.GetAttachedTo() != null)
-                throw new ArgumentException(DiagnosticMessages.DataPresenter_ElementAttachedAlready, nameof(element));
+                throw new ArgumentException(DiagnosticMessages.CommonPresenter_ElementAttachedAlready, nameof(element));
             scalarBinding.VerifyNotNull(nameof(scalarBinding));
             if (scalarBinding.IsSealed)
                 throw new ArgumentException(DiagnosticMessages.Binding_VerifyNotSealed, nameof(scalarBinding));
@@ -309,7 +309,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             element.VerifyNotNull(nameof(element));
             if (element.GetAttachedTo() != this)
-                throw new ArgumentException(DiagnosticMessages.DataPresenter_ElementNotAttachedToThis, nameof(element));
+                throw new ArgumentException(DiagnosticMessages.CommonPresenter_ElementNotAttachedToThis, nameof(element));
 
             var result = AttachedScalarBinding.Detach(element);
             _attachedScalarBindings.Remove(result);

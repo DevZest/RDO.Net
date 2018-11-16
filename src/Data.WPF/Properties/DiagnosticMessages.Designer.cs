@@ -116,27 +116,35 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The UIElement is already attached to Presenter.
+        /// </summary>
+        public static string CommonPresenter_ElementAttachedAlready
+        {
+            get { return GetString("CommonPresenter_ElementAttachedAlready"); }
+        }
+
+        /// <summary>
+        /// The UIElement is not attached to this Presenter.
+        /// </summary>
+        public static string CommonPresenter_ElementNotAttachedToThis
+        {
+            get { return GetString("CommonPresenter_ElementNotAttachedToThis"); }
+        }
+
+        /// <summary>
+        /// The Presenter is not mounted.
+        /// </summary>
+        public static string CommonPresenter_NotMounted
+        {
+            get { return GetString("CommonPresenter_NotMounted"); }
+        }
+
+        /// <summary>
         /// The CurrentRow is editing.
         /// </summary>
         public static string DataPresenter_CurrentRowIsEditing
         {
             get { return GetString("DataPresenter_CurrentRowIsEditing"); }
-        }
-
-        /// <summary>
-        /// The UIElement is already attached to DataPresenter.
-        /// </summary>
-        public static string DataPresenter_ElementAttachedAlready
-        {
-            get { return GetString("DataPresenter_ElementAttachedAlready"); }
-        }
-
-        /// <summary>
-        /// The UIElement is not attached to this DataPresenter.
-        /// </summary>
-        public static string DataPresenter_ElementNotAttachedToThis
-        {
-            get { return GetString("DataPresenter_ElementNotAttachedToThis"); }
         }
 
         /// <summary>
@@ -153,14 +161,6 @@ namespace DevZest.Data
         public static string DataPresenter_InvalidRowPresenter
         {
             get { return GetString("DataPresenter_InvalidRowPresenter"); }
-        }
-
-        /// <summary>
-        /// The DataPresenter is not mounted.
-        /// </summary>
-        public static string DataPresenter_NotMounted
-        {
-            get { return GetString("DataPresenter_NotMounted"); }
         }
 
         /// <summary>
