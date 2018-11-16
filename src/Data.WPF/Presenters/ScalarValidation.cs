@@ -94,10 +94,8 @@ namespace DevZest.Data.Presenters
             get { return _errors; }
         }
 
-        internal ValidationInfo GetInfo(DataView dataView)
+        internal ValidationInfo GetInfo()
         {
-            Debug.Assert(dataView != null);
-
             if (FlowRepeatCount == 1)
             {
                 for (int i = 0; i < Inputs.Count; i++)
@@ -492,7 +490,7 @@ namespace DevZest.Data.Presenters
                 }
 
                 {
-                    var errors = _inputManager.GetValidationInfo(DataPresenter.View).Errors;
+                    var errors = _inputManager.GetScalarValidationInfo().Errors;
                     for (int i = 0; i < errors.Count; i++)
                         result = result.Add(errors[i]);
                 }

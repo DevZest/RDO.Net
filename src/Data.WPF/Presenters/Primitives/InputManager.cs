@@ -73,9 +73,9 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _scalarValidation ?? (_scalarValidation = new ScalarValidation(this)); }
         }
 
-        internal ValidationInfo GetValidationInfo(DataView dataView)
+        internal ValidationInfo GetScalarValidationInfo()
         {
-            return _scalarValidation == null ? ValidationInfo.Empty : _scalarValidation.GetInfo(dataView);
+            return _scalarValidation == null ? ValidationInfo.Empty : _scalarValidation.GetInfo();
         }
 
         internal ValidationInfo GetValidationInfo(Input<ScalarBinding, IScalars> input, int flowIndex)

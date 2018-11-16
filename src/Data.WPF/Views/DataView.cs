@@ -203,7 +203,7 @@ namespace DevZest.Data.Views
         {
             var layoutManager = LayoutManager;
             if (layoutManager != null)
-                this.RefreshValidation(layoutManager.GetValidationInfo(this));
+                this.RefreshValidation(layoutManager.GetScalarValidationInfo());
         }
 
         public ValidationInfo ValidationInfo
@@ -211,7 +211,7 @@ namespace DevZest.Data.Views
             get
             {
                 var layoutManager = LayoutManager;
-                return layoutManager == null ? ValidationInfo.Empty : layoutManager.GetValidationInfo(this);
+                return layoutManager == null ? ValidationInfo.Empty : layoutManager.GetScalarValidationInfo();
             }
         }
     }
