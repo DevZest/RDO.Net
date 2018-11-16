@@ -8,13 +8,13 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class AttachedScalarBinding : ScalarBinding, IDisposable
     {
-        internal static AttachedScalarBinding Attach<T>(DataPresenterBase dataPresenter, T element, ScalarBinding<T> baseBinding)
+        internal static AttachedScalarBinding Attach<T>(CommonPresenter presenter, T element, ScalarBinding<T> baseBinding)
             where T : UIElement, new()
         {
-            Debug.Assert(dataPresenter != null);
+            Debug.Assert(presenter != null);
             Debug.Assert(element != null && element.GetAttachedTo() == null);
             Debug.Assert(baseBinding != null && !baseBinding.IsSealed);
-            return new TypedAttachedScalarBinding<T>(dataPresenter, element, baseBinding);
+            return new TypedAttachedScalarBinding<T>(presenter, element, baseBinding);
         }
 
         internal static AttachedScalarBinding Detach(UIElement element)
@@ -34,30 +34,30 @@ namespace DevZest.Data.Presenters.Primitives
             return null;
         }
 
-        protected AttachedScalarBinding(DataPresenterBase dataPresenter)
+        protected AttachedScalarBinding(CommonPresenter presenter)
         {
-            Debug.Assert(dataPresenter != null);
-            _dataPresenter = dataPresenter;
+            Debug.Assert(presenter != null);
+            _presenter = presenter;
         }
 
         public abstract void Dispose();
 
-        private readonly DataPresenterBase _dataPresenter;
-        public DataPresenterBase DataPresenter
+        private readonly CommonPresenter _presenter;
+        public CommonPresenter Presenter
         {
-            get { return _dataPresenter; }
+            get { return _presenter; }
         }
 
         public override Template Template
         {
-            get { return _dataPresenter.Template; }
+            get { return _presenter.Template; }
         }
 
         private class TypedAttachedScalarBinding<T> : AttachedScalarBinding
             where T : UIElement, new()
         {
-            public TypedAttachedScalarBinding(DataPresenterBase dataPresenter, T element, ScalarBinding<T> baseBinding)
-                : base(dataPresenter)
+            public TypedAttachedScalarBinding(CommonPresenter presenter, T element, ScalarBinding<T> baseBinding)
+                : base(presenter)
             {
                 _element = element;
                 s_bindingsByElement.Add(element, this);
@@ -67,7 +67,7 @@ namespace DevZest.Data.Presenters.Primitives
                 baseBinding.Setup(0);
                 baseBinding.Refresh(element);
                 baseBinding.EndSetup();
-                DataPresenter.ViewRefreshing += OnViewRefreshing;
+                Presenter.ViewRefreshing += OnViewRefreshing;
             }
 
             private readonly T _element;
@@ -147,7 +147,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             public override void Dispose()
             {
-                _dataPresenter.ViewRefreshing -= OnViewRefreshing;
+                _presenter.ViewRefreshing -= OnViewRefreshing;
                 _baseBinding.Cleanup(_element);
                 s_bindingsByElement.Remove(_element);
             }

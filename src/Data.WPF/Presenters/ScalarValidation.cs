@@ -39,9 +39,9 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.Template; }
         }
 
-        private DataPresenterBase DataPresenterBase
+        private CommonPresenter Presenter
         {
-            get { return _inputManager.DataPresenterBase; }
+            get { return _inputManager.Presenter; }
         }
 
         private void InvalidateView()
@@ -432,7 +432,7 @@ namespace DevZest.Data.Presenters
 
         private bool IsAttachedScalarBindingsInvalidated
         {
-            get { return DataPresenterBase == null ? false : DataPresenterBase.IsAttachedScalarBindingsInvalidated; }
+            get { return Presenter == null ? false : Presenter.IsAttachedScalarBindingsInvalidated; }
         }
 
         private void InitInputs()
@@ -443,7 +443,7 @@ namespace DevZest.Data.Presenters
             _inputs = GetInputs().ToArray();
             for (int i = 0; i < _inputs.Length; i++)
                 _inputs[i].Index = i;
-            DataPresenterBase?.ResetIsAttachedScalarBindingsInvalidated();
+            Presenter?.ResetIsAttachedScalarBindingsInvalidated();
         }
 
         private IEnumerable<Input<ScalarBinding, IScalars>> GetInputs()
@@ -451,9 +451,9 @@ namespace DevZest.Data.Presenters
             foreach (var result in GetInputs(Template.ScalarBindings))
                 yield return result;
 
-            if (DataPresenterBase != null)
+            if (Presenter != null)
             {
-                foreach (var result in GetInputs(DataPresenterBase.AttachedScalarBindings))
+                foreach (var result in GetInputs(Presenter.AttachedScalarBindings))
                     yield return result;
             }
         }
@@ -604,7 +604,7 @@ namespace DevZest.Data.Presenters
 
         internal void ExitEdit()
         {
-            Debug.Assert(!DataPresenterBase.ScalarContainer.IsEditing);
+            Debug.Assert(!Presenter.ScalarContainer.IsEditing);
 
             _snapshot = null;
             _flushingErrors = null;

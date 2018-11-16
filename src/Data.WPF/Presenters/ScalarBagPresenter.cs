@@ -4,7 +4,7 @@ using System;
 
 namespace DevZest.Data.Presenters
 {
-    public class ScalarBagPresenter : DataPresenterBase
+    public class ScalarBagPresenter : CommonPresenter
     {
         private sealed class DummyModel : Model
         {

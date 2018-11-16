@@ -215,7 +215,7 @@ namespace DevZest.Data.Views
             }
         }
 
-        DataPresenterBase IDataView.DataPresenter
+        CommonPresenter IDataView.Presenter
         {
             get { return DataPresenter; }
             set { DataPresenter = (DataPresenter)value; }

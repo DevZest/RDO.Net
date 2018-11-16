@@ -910,14 +910,14 @@ namespace DevZest.Data.Presenters.Primitives
             return _selectedRows.Contains(row);
         }
 
-        internal virtual DataPresenterBase DataPresenterBase
+        internal virtual CommonPresenter Presenter
         {
             get { return null; }
         }
 
         internal DataPresenter DataPresenter
         {
-            get { return DataPresenterBase as DataPresenter; }
+            get { return Presenter as DataPresenter; }
         }
 
         internal void AddSelectedRow(RowPresenter row)

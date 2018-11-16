@@ -9,7 +9,7 @@ namespace DevZest.Data.Views
 
         public ScalarBagPresenter Presenter { get; private set; }
 
-        DataPresenterBase IDataView.DataPresenter
+        CommonPresenter IDataView.Presenter
         {
             get { return Presenter; }
             set { Presenter = (ScalarBagPresenter)value; }

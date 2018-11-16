@@ -4,7 +4,7 @@ namespace DevZest.Data.Views
 {
     internal interface IDataView
     {
-        DataPresenterBase DataPresenter { get; set; }
+        CommonPresenter Presenter { get; set; }
         void RefreshScalarValidation();
     }
 }

@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class DataPresenter : DataPresenterBase, IDataPresenter
+    public abstract class DataPresenter : CommonPresenter, IDataPresenter
     {
         protected DataPresenter()
             : base()

@@ -85,8 +85,8 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal virtual IScalarValidationErrors PerformValidateScalars()
         {
-            var dataPresenter = DataPresenterBase;
-            return dataPresenter == null ? Presenters.ScalarValidationErrors.Empty : dataPresenter.ValidateScalars();
+            var presenter = Presenter;
+            return presenter == null ? Presenters.ScalarValidationErrors.Empty : presenter.ValidateScalars();
         }
 
         private RowValidation _rowValidation;
@@ -137,7 +137,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override void CancelEdit()
         {
-            var cancelEdit = DataPresenterBase == null ? true : DataPresenter.QueryCancelEdit();
+            var cancelEdit = DataPresenter == null ? true : DataPresenter.QueryCancelEdit();
             if (cancelEdit)
             {
                 var rowAfterEditing = CurrentRow.IsInserting ? null : CurrentRow;
@@ -148,7 +148,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override RowPresenter EndEdit(bool staysOnInserting)
         {
-            var endEdit = DataPresenterBase == null ? QueryEndEdit() : DataPresenter.QueryEndEdit();
+            var endEdit = DataPresenter == null ? QueryEndEdit() : DataPresenter.QueryEndEdit();
             if (!endEdit)
                 return null;
 
@@ -175,7 +175,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (isValidating)
                 return false;
 
-            if (DataPresenterBase != null)
+            if (DataPresenter != null)
                 return DataPresenter.ConfirmEndEdit();
             return true;
         }
@@ -197,8 +197,8 @@ namespace DevZest.Data.Presenters.Primitives
             if (isValidating)
                 return false;
 
-            if (DataPresenterBase != null)
-                return DataPresenterBase.ConfirmEndEditScalars();
+            if (Presenter != null)
+                return Presenter.ConfirmEndEditScalars();
             return true;
         }
 

@@ -46,14 +46,14 @@ namespace DevZest.Data.Presenters.Primitives
             get { return RowManager as ScrollableManager; }
         }
 
-        private DataPresenterBase DataPresenterBase
+        private CommonPresenter Presenter
         {
-            get { return LayoutManager == null ? null : LayoutManager.DataPresenterBase; }
+            get { return LayoutManager == null ? null : LayoutManager.Presenter; }
         }
 
         public DataPresenter DataPresenter
         {
-            get { return DataPresenterBase as DataPresenter; }
+            get { return Presenter as DataPresenter; }
         }
 
         public Orientation? Orientation { get; private set; }

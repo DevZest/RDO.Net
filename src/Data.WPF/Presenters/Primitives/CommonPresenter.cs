@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class DataPresenterBase : ScalarContainer.IOwner
+    public abstract class CommonPresenter : ScalarContainer.IOwner
     {
         public enum MountMode
         {
@@ -42,7 +42,7 @@ namespace DevZest.Data.Presenters.Primitives
             public MountMode Mode { get; private set; }
         }
 
-        protected DataPresenterBase()
+        protected CommonPresenter()
         {
             _scalarContainer = new ScalarContainer(this);
         }
@@ -66,7 +66,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             if (View == null)
                 return;
-            View.DataPresenter = null;
+            View.Presenter = null;
             View = null;
         }
 
@@ -77,7 +77,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             Debug.Assert(View == null && value != null);
             View = value;
-            View.DataPresenter = this;
+            View.Presenter = this;
         }
 
         public event EventHandler<EventArgs> ViewChanged = delegate { };

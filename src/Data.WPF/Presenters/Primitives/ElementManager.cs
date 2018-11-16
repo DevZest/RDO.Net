@@ -408,15 +408,15 @@ namespace DevZest.Data.Presenters.Primitives
             if (Elements == null || Elements.Count == 0)
                 return;
 
-            DataPresenterBase?.OnViewRefreshing();
+            Presenter?.OnViewRefreshing();
 
-            DataPresenterBase?.View?.RefreshScalarValidation();
+            Presenter?.View?.RefreshScalarValidation();
 
             RefreshScalarElements();
             RefreshContainerViews();
 
             _isDirty = false;
-            DataPresenterBase?.OnViewRefreshed();
+            Presenter?.OnViewRefreshed();
         }
 
         private void RefreshScalarElements()
@@ -672,9 +672,9 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void PerformInvalidateView()
         {
-            DataPresenterBase?.OnViewInvalidating();
+            Presenter?.OnViewInvalidating();
             _isViewInvalid = false;
-            DataPresenterBase?.OnViewInvalidated();
+            Presenter?.OnViewInvalidated();
 
             if (_isDirty || ElementCollection == null)
                 return;
