@@ -27,6 +27,10 @@ namespace DevZest.Data.Presenters
         private void Mount(ScalarBagView view, DataSet<DummyModel> dataSet)
         {
             var template = new Template();
+            template.AddGridColumns("*");
+            template.AddGridRows("*");
+            template.RowRange = new GridRange(template.GridColumns[0], template.GridRows[0]);
+            template.Seal();
 
             dataSet.EnsureInitialized();
             _layoutManager = LayoutManager.Create(null, this, template, dataSet, null, null, null);
