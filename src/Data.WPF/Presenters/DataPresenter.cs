@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract partial class DataPresenter : CommonPresenter, IDataPresenter
+    public abstract partial class DataPresenter : BasePresenter, IDataPresenter
     {
         protected DataPresenter()
             : base()
@@ -17,12 +17,12 @@ namespace DevZest.Data.Presenters
 
         public new DataView View { get; private set; }
 
-        internal sealed override ICommonView GetView()
+        internal sealed override IBaseView GetView()
         {
             return View;
         }
 
-        internal sealed override void SetView(ICommonView value)
+        internal sealed override void SetView(IBaseView value)
         {
             View = (DataView)value;
         }

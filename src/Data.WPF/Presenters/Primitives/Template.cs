@@ -46,7 +46,7 @@ namespace DevZest.Data.Presenters.Primitives
             get { return RowManager as ScrollableManager; }
         }
 
-        private CommonPresenter Presenter
+        private BasePresenter Presenter
         {
             get { return LayoutManager == null ? null : LayoutManager.Presenter; }
         }

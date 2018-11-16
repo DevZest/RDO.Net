@@ -8,7 +8,7 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class AttachedScalarBinding : ScalarBinding, IDisposable
     {
-        internal static AttachedScalarBinding Attach<T>(CommonPresenter presenter, T element, ScalarBinding<T> baseBinding)
+        internal static AttachedScalarBinding Attach<T>(BasePresenter presenter, T element, ScalarBinding<T> baseBinding)
             where T : UIElement, new()
         {
             Debug.Assert(presenter != null);
@@ -34,7 +34,7 @@ namespace DevZest.Data.Presenters.Primitives
             return null;
         }
 
-        protected AttachedScalarBinding(CommonPresenter presenter)
+        protected AttachedScalarBinding(BasePresenter presenter)
         {
             Debug.Assert(presenter != null);
             _presenter = presenter;
@@ -42,8 +42,8 @@ namespace DevZest.Data.Presenters.Primitives
 
         public abstract void Dispose();
 
-        private readonly CommonPresenter _presenter;
-        public CommonPresenter Presenter
+        private readonly BasePresenter _presenter;
+        public BasePresenter Presenter
         {
             get { return _presenter; }
         }
@@ -56,7 +56,7 @@ namespace DevZest.Data.Presenters.Primitives
         private class TypedAttachedScalarBinding<T> : AttachedScalarBinding
             where T : UIElement, new()
         {
-            public TypedAttachedScalarBinding(CommonPresenter presenter, T element, ScalarBinding<T> baseBinding)
+            public TypedAttachedScalarBinding(BasePresenter presenter, T element, ScalarBinding<T> baseBinding)
                 : base(presenter)
             {
                 _element = element;

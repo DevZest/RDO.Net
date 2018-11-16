@@ -39,7 +39,7 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.Template; }
         }
 
-        private CommonPresenter Presenter
+        private BasePresenter Presenter
         {
             get { return _inputManager.Presenter; }
         }

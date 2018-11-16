@@ -83,12 +83,12 @@
     <Compile Include="Presenters\ColumnSerializer.cs" />
     <Compile Include="Presenters\IDataPresenter.cs" />
     <Compile Include="Presenters\InitialFocus.cs" />
-    <Compile Include="Presenters\Primitives\CommonPresenter.cs" />
-    <Compile Include="Presenters\Primitives\CommonTemplateBuilder.cs" />
+    <Compile Include="Presenters\Primitives\BasePresenter.cs" />
+    <Compile Include="Presenters\Primitives\BaseTemplateBuilder.cs" />
     <Compile Include="Presenters\Primitives\IContainerElement.cs" />
     <Compile Include="Presenters\Primitives\AttachedScalarBinding.cs" />
     <Compile Include="Presenters\ScalarBagPresenter.cs" />
-    <Compile Include="Views\ICommonView.cs" />
+    <Compile Include="Views\IBaseView.cs" />
     <Compile Include="Presenters\Primitives\RowMatch.cs" />
     <Compile Include="Presenters\Primitives\ValueChangedTrigger.cs" />
     <Compile Include="Presenters\Primitives\SerializableSelection.cs" />

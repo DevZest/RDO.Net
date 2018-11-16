@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class CommonTemplateBuilder<T> : IDisposable
-        where T : CommonTemplateBuilder<T>
+    public abstract class BaseTemplateBuilder<T> : IDisposable
+        where T : BaseTemplateBuilder<T>
     {
-        internal CommonTemplateBuilder(Template template)
+        internal BaseTemplateBuilder(Template template)
         {
             Debug.Assert(template != null);
             Template = template;

@@ -14,7 +14,7 @@ namespace DevZest.Data.Presenters
 {
     partial class DataPresenter
     {
-        protected internal sealed class TemplateBuilder : CommonTemplateBuilder<TemplateBuilder>
+        protected internal sealed class TemplateBuilder : BaseTemplateBuilder<TemplateBuilder>
         {
             internal TemplateBuilder(Template template, Model model, bool inherited = false)
                 : base(template)

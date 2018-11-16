@@ -4,13 +4,13 @@ using System;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class ScalarBagPresenter : CommonPresenter
+    public abstract class ScalarBagPresenter : BasePresenter
     {
         private sealed class DummyModel : Model
         {
         }
 
-        protected sealed class TemplateBuilder : CommonTemplateBuilder<TemplateBuilder>
+        protected sealed class TemplateBuilder : BaseTemplateBuilder<TemplateBuilder>
         {
             internal TemplateBuilder(Template template)
                 : base(template)
@@ -57,12 +57,12 @@ namespace DevZest.Data.Presenters
 
         public new ScalarBagView View { get; private set; }
 
-        internal override ICommonView GetView()
+        internal override IBaseView GetView()
         {
             return View;
         }
 
-        internal override void SetView(ICommonView value)
+        internal override void SetView(IBaseView value)
         {
             View = (ScalarBagView)value;
         }

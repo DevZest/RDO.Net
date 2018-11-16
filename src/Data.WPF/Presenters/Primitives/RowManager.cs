@@ -910,7 +910,7 @@ namespace DevZest.Data.Presenters.Primitives
             return _selectedRows.Contains(row);
         }
 
-        internal virtual CommonPresenter Presenter
+        internal virtual BasePresenter Presenter
         {
             get { return null; }
         }

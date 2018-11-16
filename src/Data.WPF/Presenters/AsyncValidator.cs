@@ -73,7 +73,7 @@ namespace DevZest.Data.Presenters
         internal abstract Task LastRunTask { get; }
 #endif
 
-        private CommonPresenter Presenter
+        private BasePresenter Presenter
         {
             get { return InputManager.Presenter; }
         }

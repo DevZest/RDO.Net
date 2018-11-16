@@ -12,7 +12,7 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract partial class LayoutManager : InputManager
     {
-        internal static LayoutManager Create(LayoutManager inherit, CommonPresenter presenter, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        internal static LayoutManager Create(LayoutManager inherit, BasePresenter presenter, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             var result = Create(inherit, template, dataSet, rowMatchColumns, where, orderBy);
             result._presenter = presenter;
@@ -34,8 +34,8 @@ namespace DevZest.Data.Presenters.Primitives
         {
         }
 
-        private CommonPresenter _presenter;
-        internal override CommonPresenter Presenter
+        private BasePresenter _presenter;
+        internal override BasePresenter Presenter
         {
             get { return _presenter; }
         }
