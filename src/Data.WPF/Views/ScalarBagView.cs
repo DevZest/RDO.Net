@@ -11,8 +11,6 @@ namespace DevZest.Data.Views
         static ScalarBagView()
         {
             FocusableProperty.OverrideMetadata(typeof(ScalarBagView), new FrameworkPropertyMetadata(BooleanBoxes.False));
-            KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(ScalarBagView), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
-            KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(ScalarBagView), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
         }
 
         public ScalarBagPresenter Presenter { get; private set; }
