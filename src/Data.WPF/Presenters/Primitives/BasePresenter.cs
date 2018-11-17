@@ -65,6 +65,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             if (View == null)
                 return;
+            Template.UnmountAttachedScalarBindings();
             View.Presenter = null;
             View = null;
         }

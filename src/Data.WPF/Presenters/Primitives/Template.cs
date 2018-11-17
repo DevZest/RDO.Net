@@ -679,14 +679,13 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private void Detach(UIElement element)
+        internal void UnmountAttachedScalarBindings()
         {
-            element.VerifyNotNull(nameof(element));
-            if (element.GetAttachedTo() != this)
-                throw new ArgumentException(DiagnosticMessages.CommonPresenter_ElementNotAttachedToThis, nameof(element));
+            if (_attachedScalarBindings == null)
+                return;
 
-            var result = AttachedScalarBinding.Detach(element);
-            _attachedScalarBindings.Remove(result);
+            for (int i = 0; i < _attachedScalarBindings.Count; i++)
+                _attachedScalarBindings[i].Dispose();
         }
     }
 }
