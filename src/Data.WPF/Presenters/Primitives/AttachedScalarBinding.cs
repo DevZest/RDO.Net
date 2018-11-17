@@ -8,13 +8,13 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class AttachedScalarBinding : ScalarBinding, IDisposable
     {
-        internal static AttachedScalarBinding Attach<T>(BasePresenter presenter, T element, ScalarBinding<T> baseBinding)
+        internal static AttachedScalarBinding Attach<T>(Template template, T element, ScalarBinding<T> baseBinding)
             where T : UIElement, new()
         {
-            Debug.Assert(presenter != null);
+            Debug.Assert(template != null);
             Debug.Assert(element != null && element.GetAttachedTo() == null);
             Debug.Assert(baseBinding != null && !baseBinding.IsSealed);
-            return new TypedAttachedScalarBinding<T>(presenter, element, baseBinding);
+            return new TypedAttachedScalarBinding<T>(template, element, baseBinding);
         }
 
         internal static AttachedScalarBinding Detach(UIElement element)
@@ -34,39 +34,41 @@ namespace DevZest.Data.Presenters.Primitives
             return null;
         }
 
-        protected AttachedScalarBinding(BasePresenter presenter)
+        protected AttachedScalarBinding(Template template)
         {
-            Debug.Assert(presenter != null);
-            _presenter = presenter;
+            Debug.Assert(template != null);
+            _template = template;
         }
 
         public abstract void Dispose();
 
-        private readonly BasePresenter _presenter;
-        public BasePresenter Presenter
-        {
-            get { return _presenter; }
-        }
-
+        private readonly Template _template;
         public override Template Template
         {
-            get { return _presenter.Template; }
+            get { return _template; }
         }
+
+        public BasePresenter Presenter
+        {
+            get { return Template.Presenter; }
+        }
+
+        public abstract UIElement Element { get; }
+
+        public abstract ScalarBinding BaseBinding { get; }
 
         public abstract void Mount();
 
         private sealed class TypedAttachedScalarBinding<T> : AttachedScalarBinding
             where T : UIElement, new()
         {
-            public TypedAttachedScalarBinding(BasePresenter presenter, T element, ScalarBinding<T> baseBinding)
-                : base(presenter)
+            public TypedAttachedScalarBinding(Template template, T element, ScalarBinding<T> baseBinding)
+                : base(template)
             {
                 _element = element;
                 s_bindingsByElement.Add(element, this);
                 _baseBinding = baseBinding;
                 _baseBinding.Seal(this, 0);
-                if (Presenter.IsMounted)
-                    Mount();
             }
 
             public override void Mount()
@@ -79,7 +81,16 @@ namespace DevZest.Data.Presenters.Primitives
             }
 
             private readonly T _element;
+            public override UIElement Element
+            {
+                get { return _element; }
+            }
+
             private readonly ScalarBinding<T> _baseBinding;
+            public override ScalarBinding BaseBinding
+            {
+                get { return _baseBinding; }
+            }
 
             public override IReadOnlyList<ScalarBinding> ChildBindings
             {
@@ -155,7 +166,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             public override void Dispose()
             {
-                _presenter.ViewRefreshing -= OnViewRefreshing;
+                Presenter.ViewRefreshing -= OnViewRefreshing;
                 _baseBinding.Cleanup(_element);
                 s_bindingsByElement.Remove(_element);
             }

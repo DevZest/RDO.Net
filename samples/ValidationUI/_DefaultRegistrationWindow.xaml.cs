@@ -16,6 +16,14 @@ namespace ValidationUI
         {
             public Presenter(_DefaultRegistrationWindow window)
             {
+                _window = window;
+                Show(window._view);
+            }
+
+            private readonly _DefaultRegistrationWindow _window;
+
+            protected override void BuildTemplate(TemplateBuilder builder)
+            {
                 var userName = _userName.BindToTextBox();
                 var password = _password.BindToPasswordBox();
                 var confirmPassword = _passwordConfirmation.BindToPasswordBox();
@@ -28,27 +36,22 @@ namespace ValidationUI
                 var interests7 = _interests.BindToCheckBox(Interests.Shopping);
                 var interests8 = _interests.BindToCheckBox(Interests.Sports);
 
-                Attach(window._textBoxUserName, userName);
-                Attach(window._textBoxEmailAddress, _emailAddress.BindToTextBox());
-                Attach(window._passwordBoxPassword, password);
-                Attach(window._passwordBoxConfirmPassword, confirmPassword);
-                //Attach(window._passwordMismatch, new ScalarBinding[] { password, confirmPassword }.BindToValidationPlaceholder());
-                Attach(window._checkBoxInterests1, interests1);
-                Attach(window._checkBoxInterests2, interests2);
-                Attach(window._checkBoxInterests3, interests3);
-                Attach(window._checkBoxInterests4, interests4);
-                Attach(window._checkBoxInterests5, interests5);
-                Attach(window._checkBoxInterests6, interests6);
-                Attach(window._checkBoxInterests7, interests7);
-                Attach(window._checkBoxInterests8, interests8);
-                //Attach(window._interestsValidation, new ScalarBinding[] { interests1, interests2, interests3, interests4, interests5, interests6, interests7, interests8 }.BindToValidationPlaceholder());
-                Attach(window._validationErrorsControl, this.BindToValidationErrorsControl());
-                Show(window._view);
-            }
-
-            protected override void BuildTemplate(TemplateBuilder builder)
-            {
-                //builder.AddAsyncValidator(userName.Input, ValidateUserNameFunc, "User Name");
+                builder.AddAsyncValidator(userName.Input, ValidateUserNameFunc, "User Name")
+                    .AddBinding(_window._textBoxUserName, userName)
+                    .AddBinding(_window._textBoxEmailAddress, _emailAddress.BindToTextBox())
+                    .AddBinding(_window._passwordBoxPassword, password)
+                    .AddBinding(_window._passwordBoxConfirmPassword, confirmPassword)
+                    //Attach(window._passwordMismatch, new ScalarBinding[] { password, confirmPassword }.BindToValidationPlaceholder());
+                    .AddBinding(_window._checkBoxInterests1, interests1)
+                    .AddBinding(_window._checkBoxInterests2, interests2)
+                    .AddBinding(_window._checkBoxInterests3, interests3)
+                    .AddBinding(_window._checkBoxInterests4, interests4)
+                    .AddBinding(_window._checkBoxInterests5, interests5)
+                    .AddBinding(_window._checkBoxInterests6, interests6)
+                    .AddBinding(_window._checkBoxInterests7, interests7)
+                    .AddBinding(_window._checkBoxInterests8, interests8)
+                    //Attach(window._interestsValidation, new ScalarBinding[] { interests1, interests2, interests3, interests4, interests5, interests6, interests7, interests8 }.BindToValidationPlaceholder());
+                    .AddBinding(_window._validationErrorsControl, this.BindToValidationErrorsControl());
             }
         }
 

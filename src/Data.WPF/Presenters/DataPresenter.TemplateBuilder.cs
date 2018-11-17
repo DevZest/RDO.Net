@@ -154,24 +154,6 @@ namespace DevZest.Data.Presenters
                 return this;
             }
 
-            public TemplateBuilder AddAsyncValidator<T>(ScalarInput<T> input, Func<Task<string>> validator, string displayName)
-                where T : UIElement, new()
-            {
-                if (input == null)
-                    throw new ArgumentNullException(nameof(input));
-
-                return AddAsyncValidator(input.Target, validator, displayName);
-            }
-
-            public TemplateBuilder AddAsyncValidator<T>(ScalarInput<T> input, Func<Task<IEnumerable<string>>> validator, string displayName)
-                where T : UIElement, new()
-            {
-                if (input == null)
-                    throw new ArgumentNullException(nameof(input));
-
-                return AddAsyncValidator(input.Target, validator, displayName);
-            }
-
             private static string GetDefaultDisplayName(IColumns sourceColumns)
             {
                 if (sourceColumns.Count == 1)

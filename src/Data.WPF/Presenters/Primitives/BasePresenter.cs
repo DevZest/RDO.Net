@@ -117,12 +117,16 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal void OnMounted(MountMode mode)
         {
-            if (_attachedScalarBindings != null)
-            {
-                for (int i = 0; i < _attachedScalarBindings.Count; i++)
-                    _attachedScalarBindings[i].Mount();
-            }
+            Template.MountAttachedScalarBindings();
+            IsAttachedScalarBindingsInvalidated = true;
             OnMounted(MountEventArgs.Select(mode));
+        }
+
+        internal bool IsAttachedScalarBindingsInvalidated { get; private set; }
+
+        internal void ResetIsAttachedScalarBindingsInvalidated()
+        {
+            IsAttachedScalarBindingsInvalidated = false;
         }
 
         protected virtual void OnMounted(MountEventArgs e)
@@ -278,52 +282,6 @@ namespace DevZest.Data.Presenters.Primitives
         protected internal virtual string FormatFaultMessage(AsyncValidator asyncValidator)
         {
             return AsyncValidationFault.FormatMessage(asyncValidator);
-        }
-
-        private List<AttachedScalarBinding> _attachedScalarBindings;
-        public IReadOnlyList<ScalarBinding> AttachedScalarBindings
-        {
-            get
-            {
-                if (_attachedScalarBindings == null)
-                    return Array.Empty<ScalarBinding>();
-                return _attachedScalarBindings;
-            }
-        }
-
-        internal bool IsAttachedScalarBindingsInvalidated { get; private set; }
-
-        internal void ResetIsAttachedScalarBindingsInvalidated()
-        {
-            IsAttachedScalarBindingsInvalidated = false;
-        }
-
-        public void Attach<T>(T element, ScalarBinding<T> scalarBinding)
-            where T : UIElement, new()
-        {
-            element.VerifyNotNull(nameof(element));
-            if (element.GetAttachedTo() != null)
-                throw new ArgumentException(DiagnosticMessages.CommonPresenter_ElementAttachedAlready, nameof(element));
-            scalarBinding.VerifyNotNull(nameof(scalarBinding));
-            if (scalarBinding.IsSealed)
-                throw new ArgumentException(DiagnosticMessages.Binding_VerifyNotSealed, nameof(scalarBinding));
-
-            var result = AttachedScalarBinding.Attach(this, element, scalarBinding);
-            if (_attachedScalarBindings == null)
-                _attachedScalarBindings = new List<AttachedScalarBinding>();
-            _attachedScalarBindings.Add(result);
-            IsAttachedScalarBindingsInvalidated = true;
-        }
-
-        public void Detach(UIElement element)
-        {
-            element.VerifyNotNull(nameof(element));
-            if (element.GetAttachedTo() != this)
-                throw new ArgumentException(DiagnosticMessages.CommonPresenter_ElementNotAttachedToThis, nameof(element));
-
-            var result = AttachedScalarBinding.Detach(element);
-            _attachedScalarBindings.Remove(result);
-            IsAttachedScalarBindingsInvalidated = true;
         }
     }
 }

@@ -625,5 +625,51 @@ namespace DevZest.Data.Presenters.Primitives
 
         [DefaultValue(false)]
         public bool AllowsDelete { get; internal set; }
+
+        private List<AttachedScalarBinding> _attachedScalarBindings;
+        public IReadOnlyList<ScalarBinding> AttachedScalarBindings
+        {
+            get
+            {
+                if (_attachedScalarBindings == null)
+                    return Array.Empty<ScalarBinding>();
+                return _attachedScalarBindings;
+            }
+        }
+
+        internal void AddBinding<T>(T element, ScalarBinding<T> scalarBinding)
+            where T : UIElement, new()
+        {
+            element.VerifyNotNull(nameof(element));
+            if (element.GetAttachedTo() != null)
+                throw new ArgumentException(DiagnosticMessages.CommonPresenter_ElementAttachedAlready, nameof(element));
+            scalarBinding.VerifyNotNull(nameof(scalarBinding));
+            if (scalarBinding.IsSealed)
+                throw new ArgumentException(DiagnosticMessages.Binding_VerifyNotSealed, nameof(scalarBinding));
+
+            var result = AttachedScalarBinding.Attach(this, element, scalarBinding);
+            if (_attachedScalarBindings == null)
+                _attachedScalarBindings = new List<AttachedScalarBinding>();
+            _attachedScalarBindings.Add(result);
+        }
+
+        internal void MountAttachedScalarBindings()
+        {
+            if (_attachedScalarBindings == null)
+                return;
+
+            for (int i = 0; i < _attachedScalarBindings.Count; i++)
+                _attachedScalarBindings[i].Mount();
+        }
+
+        private void Detach(UIElement element)
+        {
+            element.VerifyNotNull(nameof(element));
+            if (element.GetAttachedTo() != this)
+                throw new ArgumentException(DiagnosticMessages.CommonPresenter_ElementNotAttachedToThis, nameof(element));
+
+            var result = AttachedScalarBinding.Detach(element);
+            _attachedScalarBindings.Remove(result);
+        }
     }
 }

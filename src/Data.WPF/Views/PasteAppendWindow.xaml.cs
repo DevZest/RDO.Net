@@ -79,8 +79,7 @@ namespace DevZest.Data.Views
         private Presenter _presenter;
         public IReadOnlyList<ColumnValueBag> Show(DataPresenter sourcePresenter, IReadOnlyList<Column> columns)
         {
-            _presenter = new Presenter(sourcePresenter, columns, _dataView);
-            _presenter.Attach(_firstRowContainsColumnHeadings, _presenter.BindableFirstRowContainsColumnHeadings.BindToCheckBox());
+            _presenter = new Presenter(sourcePresenter, columns, _dataView, _firstRowContainsColumnHeadings);
             Owner = Window.GetWindow(sourcePresenter.View);
             ShowDialog();
             return _result;

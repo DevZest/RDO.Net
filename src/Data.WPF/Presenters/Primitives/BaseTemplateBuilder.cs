@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -47,11 +48,37 @@ namespace DevZest.Data.Presenters.Primitives
             return (T)this;
         }
 
+        public T AddAsyncValidator<TElement>(ScalarInput<TElement> input, Func<Task<string>> validator, string displayName)
+            where TElement : UIElement, new()
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            return AddAsyncValidator(input.Target, validator, displayName);
+        }
+
+        public T AddAsyncValidator<TElement>(ScalarInput<TElement> input, Func<Task<IEnumerable<string>>> validator, string displayName)
+            where TElement : UIElement, new()
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            return AddAsyncValidator(input.Target, validator, displayName);
+        }
+
         [DefaultValue(ValidationMode.Progressive)]
         public virtual T WithScalarValidationMode(ValidationMode value)
         {
             Template.ScalarValidationMode = value;
             return (T)this;
         }
+
+        public T AddBinding<TElement>(TElement element, ScalarBinding<TElement> scalarBinding)
+            where TElement : UIElement, new()
+        {
+            Template.AddBinding(element, scalarBinding);
+            return (T)this;
+        }
+
     }
 }

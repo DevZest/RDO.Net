@@ -30,12 +30,13 @@ namespace DevZest.Data.Views
                 }
             }
 
-            public Presenter(DataPresenter sourcePresenter, IReadOnlyList<Column> targetColumns, DataView dataView)
+            public Presenter(DataPresenter sourcePresenter, IReadOnlyList<Column> targetColumns, DataView dataView, CheckBox checkBoxFirstRowContainsColumnHeadings)
             {
                 Debug.Assert(sourcePresenter != null);
                 Debug.Assert(targetColumns != null && targetColumns.Count > 0);
                 _sourcePresenter = sourcePresenter;
                 _columnSelections = InitColumnSelection(targetColumns);
+                _checkBoxFirstRowContainsRowHeaders = checkBoxFirstRowContainsColumnHeadings;
                 BindableFirstRowContainsColumnHeadings = NewLinkedScalar<bool>(nameof(FirstRowContainsColumnHeadings));
 
                 var tabularText = TabularText.PasteFromClipboard();
@@ -125,7 +126,7 @@ namespace DevZest.Data.Views
             private readonly Scalar<Column>[] _columnMappings;
             private readonly string[] _columnHeadings;
             private readonly Func<string>[] _bindableColumnHeadings;
-            public readonly Scalar<bool> BindableFirstRowContainsColumnHeadings;
+            private readonly Scalar<bool> BindableFirstRowContainsColumnHeadings;
 
             private bool _firstRowContainsColumnHeadings;
             private bool FirstRowContainsColumnHeadings
@@ -184,6 +185,7 @@ namespace DevZest.Data.Views
                 }
             }
 
+            private CheckBox _checkBoxFirstRowContainsRowHeaders;
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 var textColumns = _.TextColumns;
@@ -208,6 +210,8 @@ namespace DevZest.Data.Views
                     builder.AddBinding(i, 2, gridCellBinding);
                     builder.GridLineY(new GridPoint(i + 1, 2), 1);
                 }
+
+                builder.AddBinding(_checkBoxFirstRowContainsRowHeaders, BindableFirstRowContainsColumnHeadings.BindToCheckBox());
 
                 builder.GridLineX(new GridPoint(0, 3), textColumns.Count);
             }

@@ -16,14 +16,16 @@ namespace ValidationUI
         {
             public Presenter(_LoginWindow window)
             {
-                Attach(window._textBoxEmailAddress, _emailAddress.BindToTextBox());
-                Attach(window._passwordBox, _password.BindToPasswordBox());
+                _window = window;
                 Show(window._view);
             }
 
+            private readonly _LoginWindow _window;
             protected override void BuildTemplate(TemplateBuilder builder)
             {
-                builder.WithScalarValidationMode(ValidationMode.Implicit);
+                builder.WithScalarValidationMode(ValidationMode.Implicit)
+                    .AddBinding(_window._textBoxEmailAddress, _emailAddress.BindToTextBox())
+                    .AddBinding(_window._passwordBox, _password.BindToPasswordBox());
             }
         }
 

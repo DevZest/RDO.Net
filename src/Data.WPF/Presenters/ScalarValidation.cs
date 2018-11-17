@@ -451,11 +451,8 @@ namespace DevZest.Data.Presenters
             foreach (var result in GetInputs(Template.ScalarBindings))
                 yield return result;
 
-            if (Presenter != null)
-            {
-                foreach (var result in GetInputs(Presenter.AttachedScalarBindings))
-                    yield return result;
-            }
+            foreach (var result in GetInputs(Template.AttachedScalarBindings))
+                yield return result;
         }
 
         private static IEnumerable<Input<ScalarBinding, IScalars>> GetInputs(IReadOnlyList<ScalarBinding> scalarBindings)

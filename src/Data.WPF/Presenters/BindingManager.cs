@@ -210,10 +210,10 @@ namespace DevZest.Data.Presenters
             return blockBinding;
         }
 
-        public static BasePresenter GetAttachedTo(this UIElement element)
+        public static Template GetAttachedTo(this UIElement element)
         {
             element.VerifyNotNull(nameof(element));
-            return AttachedScalarBinding.GetAttachedScalarBinding(element)?.Presenter;
+            return AttachedScalarBinding.GetAttachedScalarBinding(element)?.Template;
         }
     }
 }
