@@ -83,7 +83,7 @@
     <Compile Include="Presenters\ColumnSerializer.cs" />
     <Compile Include="Presenters\IDataPresenter.cs" />
     <Compile Include="Presenters\InitialFocus.cs" />
-    <Compile Include="Presenters\BasePresenter.cs" />
+    <Compile Include="Presenters\Primitives\BasePresenter.cs" />
     <Compile Include="Presenters\Primitives\BaseTemplateBuilder.cs" />
     <Compile Include="Presenters\Primitives\IContainerElement.cs" />
     <Compile Include="Presenters\Primitives\AttachedScalarBinding.cs" />

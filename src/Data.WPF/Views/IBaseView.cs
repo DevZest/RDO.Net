@@ -1,4 +1,4 @@
-﻿using DevZest.Data.Presenters;
+﻿using DevZest.Data.Presenters.Primitives;
 
 namespace DevZest.Data.Views
 {
