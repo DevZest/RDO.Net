@@ -41,7 +41,7 @@ namespace ValidationUI
                     .AddBinding(_window._textBoxEmailAddress, _emailAddress.BindToTextBox())
                     .AddBinding(_window._passwordBoxPassword, password)
                     .AddBinding(_window._passwordBoxConfirmPassword, confirmPassword)
-                    //Attach(window._passwordMismatch, new ScalarBinding[] { password, confirmPassword }.BindToValidationPlaceholder());
+                    .AddBinding(_window._passwordMismatch, new ScalarBinding[] { password, confirmPassword }.BindToValidationPlaceholder())
                     .AddBinding(_window._checkBoxInterests1, interests1)
                     .AddBinding(_window._checkBoxInterests2, interests2)
                     .AddBinding(_window._checkBoxInterests3, interests3)
@@ -50,7 +50,7 @@ namespace ValidationUI
                     .AddBinding(_window._checkBoxInterests6, interests6)
                     .AddBinding(_window._checkBoxInterests7, interests7)
                     .AddBinding(_window._checkBoxInterests8, interests8)
-                    //Attach(window._interestsValidation, new ScalarBinding[] { interests1, interests2, interests3, interests4, interests5, interests6, interests7, interests8 }.BindToValidationPlaceholder());
+                    .AddBinding(_window._interestsValidation, new ScalarBinding[] { interests1, interests2, interests3, interests4, interests5, interests6, interests7, interests8 }.BindToValidationPlaceholder())
                     .AddBinding(_window._validationErrorsControl, this.BindToValidationErrorsControl());
             }
         }

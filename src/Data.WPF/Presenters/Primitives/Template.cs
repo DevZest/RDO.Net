@@ -659,7 +659,24 @@ namespace DevZest.Data.Presenters.Primitives
                 return;
 
             for (int i = 0; i < _attachedScalarBindings.Count; i++)
-                _attachedScalarBindings[i].Mount();
+            {
+                var binding = _attachedScalarBindings[i];
+                binding.BaseBinding.BeginSetup(binding.Element);
+            }
+
+            for (int i = 0; i < _attachedScalarBindings.Count; i++)
+            {
+                var binding = _attachedScalarBindings[i];
+                binding.BaseBinding.Setup(0);
+                binding.BaseBinding.Refresh(binding.Element);
+            }
+
+            for (int i = 0; i < _attachedScalarBindings.Count; i++)
+            {
+                var binding = _attachedScalarBindings[i];
+                binding.EndSetup();
+                binding.Mount();
+            }
         }
 
         private void Detach(UIElement element)

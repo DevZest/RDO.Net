@@ -73,10 +73,6 @@ namespace DevZest.Data.Presenters.Primitives
 
             public override void Mount()
             {
-                _baseBinding.BeginSetup(_element);
-                _baseBinding.Setup(0);
-                _baseBinding.Refresh(_element);
-                _baseBinding.EndSetup();
                 Presenter.ViewRefreshing += OnViewRefreshing;
             }
 
