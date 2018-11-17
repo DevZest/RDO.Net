@@ -642,7 +642,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             element.VerifyNotNull(nameof(element));
             if (element.GetAttachedTo() != null)
-                throw new ArgumentException(DiagnosticMessages.CommonPresenter_ElementAttachedAlready, nameof(element));
+                throw new ArgumentException(DiagnosticMessages.Template_ElementAttachedAlready, nameof(element));
             scalarBinding.VerifyNotNull(nameof(scalarBinding));
             if (scalarBinding.IsSealed)
                 throw new ArgumentException(DiagnosticMessages.Binding_VerifyNotSealed, nameof(scalarBinding));
@@ -686,6 +686,8 @@ namespace DevZest.Data.Presenters.Primitives
 
             for (int i = 0; i < _attachedScalarBindings.Count; i++)
                 _attachedScalarBindings[i].Dispose();
+
+            _attachedScalarBindings = null;
         }
     }
 }

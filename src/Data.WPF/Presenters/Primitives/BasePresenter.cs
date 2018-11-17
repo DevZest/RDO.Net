@@ -144,7 +144,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal LayoutManager RequireLayoutManager()
         {
             if (LayoutManager == null)
-                throw new InvalidOperationException(DiagnosticMessages.CommonPresenter_NotMounted);
+                throw new InvalidOperationException(DiagnosticMessages.BasePresenter_NotMounted);
             return LayoutManager;
         }
 

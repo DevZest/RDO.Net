@@ -20,6 +20,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The Presenter is not mounted.
+        /// </summary>
+        public static string BasePresenter_NotMounted
+        {
+            get { return GetString("BasePresenter_NotMounted"); }
+        }
+
+        /// <summary>
         /// {typeArgName} must be an enum type.
         /// </summary>
         public static string BindingFactory_EnumTypeRequired(object typeArgName)
@@ -113,30 +121,6 @@ namespace DevZest.Data
         public static string ColumnComparer_InvalidModelType(object type)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("ColumnComparer_InvalidModelType", "type"), type);
-        }
-
-        /// <summary>
-        /// The UIElement is already attached to Presenter.
-        /// </summary>
-        public static string CommonPresenter_ElementAttachedAlready
-        {
-            get { return GetString("CommonPresenter_ElementAttachedAlready"); }
-        }
-
-        /// <summary>
-        /// The UIElement is not attached to this Presenter.
-        /// </summary>
-        public static string CommonPresenter_ElementNotAttachedToThis
-        {
-            get { return GetString("CommonPresenter_ElementNotAttachedToThis"); }
-        }
-
-        /// <summary>
-        /// The Presenter is not mounted.
-        /// </summary>
-        public static string CommonPresenter_NotMounted
-        {
-            get { return GetString("CommonPresenter_NotMounted"); }
         }
 
         /// <summary>
@@ -505,6 +489,14 @@ namespace DevZest.Data
         public static string TemplateBuilder_InvalidRecursiveChildModel
         {
             get { return GetString("TemplateBuilder_InvalidRecursiveChildModel"); }
+        }
+
+        /// <summary>
+        /// The UIElement is already attached to Template.
+        /// </summary>
+        public static string Template_ElementAttachedAlready
+        {
+            get { return GetString("Template_ElementAttachedAlready"); }
         }
 
         /// <summary>
