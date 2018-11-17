@@ -10,9 +10,19 @@ namespace DevZest.Data.Presenters
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            return new RowBinding<Image>(onRefresh: (e, row) =>
+            return new RowBinding<Image>(onRefresh: (v, p) =>
             {
-                e.Source = row.GetValue(source);
+                v.Source = p.GetValue(source);
+            });
+        }
+
+        public static ScalarBinding<Image> BindToImage(this Scalar<ImageSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            return new ScalarBinding<Image>(onRefresh: (v, p) =>
+            {
+                v.Source = source.Value;
             });
         }
     }

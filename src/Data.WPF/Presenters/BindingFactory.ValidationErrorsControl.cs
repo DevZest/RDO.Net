@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Views;
+﻿using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,12 +67,12 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
-        public static ScalarBinding<ValidationErrorsControl> BindToValidationErrorsControl(this DataPresenter source)
+        public static ScalarBinding<ValidationErrorsControl> BindToValidationErrorsControl(this BasePresenter source)
         {
             return new ScalarBinding<ValidationErrorsControl>(
                 onRefresh: (v, p) =>
                 {
-                    var errors = p.DataPresenter.ScalarValidation.VisibleErrors;
+                    var errors = p.Presenter.ScalarValidation.VisibleErrors;
                     if (ShouldUpdateItemsSource(v, errors))
                         v.ItemsSource = errors;
                 },

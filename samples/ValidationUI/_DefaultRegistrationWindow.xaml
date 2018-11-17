@@ -1,0 +1,89 @@
+﻿<Window x:Class="ValidationUI._DefaultRegistrationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ValidationUI"
+        xmlns:dz="http://schemas.devzest.com/data/windows"
+        mc:Ignorable="d"
+        Title="User Registration (Default - Scalar)" WindowStartupLocation="CenterOwner" Width="350" SizeToContent="Height" ResizeMode="CanResize">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Margin" Value="5,5,0,5" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5,0,5,0" />
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5,0,5,0" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <dz:ScalarBagView x:Name="_view" Background="White" Margin="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label>User Name:</Label>
+                <TextBox x:Name="_textBoxUserName" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" />
+                <Label Grid.Row="1">Email Address:</Label>
+                <TextBox x:Name="_textBoxEmailAddress" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
+                <dz:ValidationPlaceholder x:Name="_passwordMismatch" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" />
+                <Label Grid.Row="2">Password:</Label>
+                <PasswordBox x:Name="_passwordBoxPassword" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" />
+                <Label Grid.Row="3">Confirm Password:</Label>
+                <PasswordBox x:Name="_passwordBoxConfirmPassword" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" />
+                <Label Grid.Row="4" Grid.RowSpan="4">Interests:</Label>
+                <dz:ValidationPlaceholder x:Name="_interestsValidation" Grid.Row="4" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="2" />
+                <CheckBox x:Name="_checkBoxInterests1" Grid.Row="4" Grid.Column="1"></CheckBox>
+                <CheckBox x:Name="_checkBoxInterests2" Grid.Row="4" Grid.Column="2"></CheckBox>
+                <CheckBox x:Name="_checkBoxInterests3" Grid.Row="5" Grid.Column="1"></CheckBox>
+                <CheckBox x:Name="_checkBoxInterests4" Grid.Row="5" Grid.Column="2"></CheckBox>
+                <CheckBox x:Name="_checkBoxInterests5" Grid.Row="6" Grid.Column="1"></CheckBox>
+                <CheckBox x:Name="_checkBoxInterests6" Grid.Row="6" Grid.Column="2"></CheckBox>
+                <CheckBox x:Name="_checkBoxInterests7" Grid.Row="7" Grid.Column="1"></CheckBox>
+                <CheckBox x:Name="_checkBoxInterests8" Grid.Row="7" Grid.Column="2"></CheckBox>
+                <dz:ValidationErrorsControl x:Name="_validationErrorsControl" Grid.Row="8" Grid.ColumnSpan="3" />
+            </Grid>
+        </dz:ScalarBagView>
+        <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
+            <Button Content="OK" IsDefault="True" Command="{x:Static local:_DefaultRegistrationWindow+Commands.Submit}" />
+            <Button Content="Cancel" IsCancel="True" />
+        </UniformGrid>
+        <TextBlock Grid.Row="2">
+            <TextBlock.Inlines>
+                <Run>User name "paul", "john" and "tony" are taken;</Run>
+                <LineBreak />
+                <Run>Enter "error" in User Name field will have 50% chance to trigger an async validation exception.</Run>
+            </TextBlock.Inlines>
+        </TextBlock>
+    </Grid>
+</Window>

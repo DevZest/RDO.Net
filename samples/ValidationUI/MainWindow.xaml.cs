@@ -38,8 +38,8 @@ namespace ValidationUI
 
         private void DefaultScalarUserRegister_Click(object sender, RoutedEventArgs e)
         {
-            var window = new RegistrationWindow();
-            window.ShowDefaultScalar(this);
+            var window = new _DefaultRegistrationWindow();
+            window.Show(this);
         }
 
         private void VerboseScalarUserRegister_Click(object sender, RoutedEventArgs e)

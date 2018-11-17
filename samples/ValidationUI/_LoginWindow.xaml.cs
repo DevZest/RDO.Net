@@ -14,11 +14,11 @@ namespace ValidationUI
     {
         private sealed class Presenter : _LoginPresenter
         {
-            public Presenter(ScalarBagView view, TextBox textBoxEmailAddress, PasswordBox passwordBox)
+            public Presenter(_LoginWindow window)
             {
-                Show(view);
-                Attach(textBoxEmailAddress, _emailAddress.BindToTextBox());
-                Attach(passwordBox, _password.BindToPasswordBox());
+                Attach(window._textBoxEmailAddress, _emailAddress.BindToTextBox());
+                Attach(window._passwordBox, _password.BindToPasswordBox());
+                Show(window._view);
             }
 
             protected override void BuildTemplate(TemplateBuilder builder)
@@ -57,9 +57,7 @@ namespace ValidationUI
         private Presenter _presenter;
         public void Show(Window ownerWindow)
         {
-            var dataSet = DataSet<Login>.New();
-            dataSet.Add(new DataRow());
-            _presenter = new Presenter(_view, _textBoxEmailAddress, _passwordBox);
+            _presenter = new Presenter(this);
             Owner = ownerWindow;
             ShowDialog();
         }

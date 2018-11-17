@@ -49,6 +49,9 @@
     <Compile Include="DummyModel.cs" />
     <Compile Include="EmailAddressValidator.cs" />
     <Compile Include="Interests.cs" />
+    <Compile Include="_DefaultRegistrationWindow.xaml.cs">
+      <DependentUpon>_DefaultRegistrationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="_LoginWindow.xaml.cs">
       <DependentUpon>_LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -65,6 +68,10 @@
     </Compile>
     <Compile Include="_LoginPresenter.cs" />
     <Compile Include="ScalarPresenterBase.cs" />
+    <Page Include="_DefaultRegistrationWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="_LoginWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
