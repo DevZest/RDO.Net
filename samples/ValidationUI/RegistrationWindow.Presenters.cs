@@ -14,7 +14,7 @@ namespace ValidationUI
         private static string[] s_errorNames = new string[] { "error" };
         private static int s_retryCount = 0;
 
-        private static async Task<string> PerformValidateUserName(string userName)
+        internal static async Task<string> PerformValidateUserName(string userName)
         {
             await Task.Delay(1000);
             if (s_takenUserNames.Any(x => x == userName))

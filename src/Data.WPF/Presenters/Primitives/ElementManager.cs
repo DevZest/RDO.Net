@@ -405,7 +405,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void RefreshView()
         {
-            if (Elements == null || Elements.Count == 0)
+            if (Presenter == null && (Elements == null || Elements.Count == 0))
                 return;
 
             Presenter?.OnViewRefreshing();
@@ -676,7 +676,7 @@ namespace DevZest.Data.Presenters.Primitives
             _isViewInvalid = false;
             Presenter?.OnViewInvalidated();
 
-            if (_isDirty || ElementCollection == null)
+            if (_isDirty || (Presenter == null && ElementCollection == null))
                 return;
 
             _isDirty = true;
@@ -700,18 +700,26 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void BeginRefreshView()
         {
-            Debug.Assert(ElementCollection != null && _isDirty);
+            Debug.Assert((Presenter != null || ElementCollection != null) && _isDirty);
 
-            var panel = ElementCollection.Parent;
-            if (panel == null)
+            var dispatcher = GetDispatcher();
+            if (dispatcher == null)
                 RefreshView();
             else
             {
-                panel.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                 {
                     RefreshView();
                 }));
             }
+        }
+
+        private Dispatcher GetDispatcher()
+        {
+            if (ElementCollection != null)
+                return ElementCollection.Parent?.Dispatcher;
+            else
+                return ((UIElement)Presenter?.View)?.Dispatcher;
         }
 
         public override string ToString()

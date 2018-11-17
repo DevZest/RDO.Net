@@ -20,8 +20,8 @@ namespace ValidationUI
 
         private void ScalarLogin_Click(object sender, RoutedEventArgs e)
         {
-            var window = new LoginWindow();
-            window.ShowScalar(this);
+            var window = new _LoginWindow();
+            window.Show(this);
         }
 
         private void DefaultUserRegister_Click(object sender, RoutedEventArgs e)
