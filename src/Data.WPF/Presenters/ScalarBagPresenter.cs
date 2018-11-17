@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Presenters.Primitives;
 using DevZest.Data.Views;
 using System;
+using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
@@ -28,11 +29,11 @@ namespace DevZest.Data.Presenters
 
             var dataSet = DataSet<DummyModel>.New();
             AttachView(view);
-            Mount(view, dataSet);
+            Mount(dataSet);
             OnViewChanged();
         }
 
-        private void Mount(ScalarBagView view, DataSet<DummyModel> dataSet)
+        private void Mount(DataSet<DummyModel> dataSet)
         {
             var template = new Template();
             template.AddGridColumns("*");
@@ -47,6 +48,17 @@ namespace DevZest.Data.Presenters
             dataSet.EnsureInitialized();
             _layoutManager = LayoutManager.Create(null, this, template, dataSet, null, null, null);
             OnMounted(MountMode.Show);
+
+            if (View.IsLoaded)
+                Template.InitFocus();
+            else
+                View.Loaded += OnViewLoaded;
+        }
+
+        private void OnViewLoaded(object sender, RoutedEventArgs e)
+        {
+            View.Loaded -= OnViewLoaded;
+            Template.InitFocus();
         }
 
         private LayoutManager _layoutManager;
