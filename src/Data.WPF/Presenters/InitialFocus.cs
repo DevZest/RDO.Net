@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Views;
+﻿using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Views;
 using DevZest.Windows;
 using System.Diagnostics;
 using System.Windows;
@@ -30,6 +31,12 @@ namespace DevZest.Data.Presenters
             return new MoveToScalarBinding(binding);
         }
 
+        public static InitialFocus Explicit(UIElement element)
+        {
+            element.VerifyNotNull(nameof(element));
+            return new MoveToElement(element);
+        }
+
         private sealed class MoveToNone : InitialFocus
         {
             public static readonly MoveToNone Singleton = new MoveToNone();
@@ -38,7 +45,7 @@ namespace DevZest.Data.Presenters
             {
             }
 
-            protected override void MoveFocus(DataView dataView)
+            protected override void MoveFocus(UIElement view)
             {
             }
         }
@@ -51,13 +58,19 @@ namespace DevZest.Data.Presenters
             {
             }
 
-            protected override void MoveFocus(DataView dataView)
+            protected override void MoveFocus(UIElement view)
             {
-                var currentRow = dataView.DataPresenter.CurrentRow;
-                if (currentRow != null)
-                    currentRow.View.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-                else
-                    dataView.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                if (view is DataView dataView)
+                {
+                    var currentRow = dataView.DataPresenter.CurrentRow;
+                    if (currentRow != null)
+                    {
+                        currentRow.View.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                        return;
+                    }
+                }
+
+                view.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
             }
         }
 
@@ -71,11 +84,14 @@ namespace DevZest.Data.Presenters
 
             private readonly RowBinding _binding;
 
-            protected override void MoveFocus(DataView dataView)
+            protected override void MoveFocus(UIElement view)
             {
-                var currentRow = dataView.DataPresenter.CurrentRow;
-                if (currentRow != null)
-                    _binding[currentRow].Focus();
+                if (view is DataView dataView)
+                {
+                    var currentRow = dataView.DataPresenter.CurrentRow;
+                    if (currentRow != null)
+                        _binding[currentRow].Focus();
+                }
             }
         }
 
@@ -89,19 +105,34 @@ namespace DevZest.Data.Presenters
 
             private readonly ScalarBinding _binding;
 
-            protected override void MoveFocus(DataView dataView)
+            protected override void MoveFocus(UIElement view)
             {
-                _binding[0].Focus();
+                _binding[0]?.Focus();
             }
         }
 
-        internal void MoveFocus(DataPresenter dataPresenter)
+        private sealed class MoveToElement : InitialFocus
         {
-            var dataView = dataPresenter.View;
-            if (!dataView.ContainsKeyboardFocus())
-                MoveFocus(dataView);
+            public MoveToElement(UIElement element)
+            {
+                _element = element;
+            }
+
+            private readonly UIElement _element;
+
+            protected override void MoveFocus(UIElement view)
+            {
+                _element.Focus();
+            }
         }
 
-        protected abstract void MoveFocus(DataView dataView);
+        internal void MoveFocus(BasePresenter presenter)
+        {
+            var view = (UIElement)presenter.View;
+            if (!view.ContainsKeyboardFocus())
+                MoveFocus(view);
+        }
+
+        protected abstract void MoveFocus(UIElement view);
     }
 }
