@@ -619,7 +619,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (_initialFocusFlag)
             {
                 _initialFocusFlag = false;
-                InitialFocus.MoveFocus(DataPresenter);
+                InitialFocus.MoveFocus(Presenter);
             }
         }
 
