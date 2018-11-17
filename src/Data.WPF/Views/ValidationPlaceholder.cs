@@ -3,6 +3,7 @@ using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,45 +13,51 @@ namespace DevZest.Data.Views
 {
     public class ValidationPlaceholder : Control, IRowElement, IScalarElement
     {
-        private interface IMouseTracker : IService
+        private sealed class MouseTracker
         {
-            event EventHandler<EventArgs> EnterMouseTrack;
-            event EventHandler<EventArgs> ExitMouseTrack;
-        }
-
-        private sealed class MouseTracker : IMouseTracker
-        {
-            private DataPresenter _dataPresenter;
-            public DataPresenter DataPresenter
+            public MouseTracker(BasePresenter presenter)
             {
-                get { return _dataPresenter; }
+                _presenter = presenter;
+                View = (UIElement)presenter.View;
+                _presenter.ViewChanged += OnViewChanged;
             }
 
-            private DataView _dataView;
+            private void OnViewChanged(object sender, EventArgs e)
+            {
+                View = (UIElement)Presenter.View;
+            }
+
+            private readonly BasePresenter _presenter;
+            public BasePresenter Presenter
+            {
+                get { return _presenter; }
+            }
+
+            private UIElement _view;
 
             public event EventHandler<EventArgs> EnterMouseTrack;
             public event EventHandler<EventArgs> ExitMouseTrack;
 
-            private DataView DataView
+            private UIElement View
             {
-                get { return _dataView; }
+                get { return _view; }
                 set
                 {
-                    if (_dataView == value)
+                    if (_view == value)
                         return;
 
-                    if (_dataView != null)
+                    if (_view != null)
                     {
-                        _dataView.MouseEnter -= TrackMouse;
-                        _dataView.PreviewMouseMove -= TrackMouse;
-                        _dataView.MouseLeave -= OnMouseLeave;
+                        _view.MouseEnter -= TrackMouse;
+                        _view.PreviewMouseMove -= TrackMouse;
+                        _view.MouseLeave -= OnMouseLeave;
                     }
-                    _dataView = value;
-                    if (_dataView != null)
+                    _view = value;
+                    if (_view != null)
                     {
-                        _dataView.MouseEnter += TrackMouse;
-                        _dataView.PreviewMouseMove += TrackMouse;
-                        _dataView.MouseLeave += OnMouseLeave;
+                        _view.MouseEnter += TrackMouse;
+                        _view.PreviewMouseMove += TrackMouse;
+                        _view.MouseLeave += OnMouseLeave;
                     }
                 }
             }
@@ -80,9 +87,9 @@ namespace DevZest.Data.Views
 
             private void HitTest(object sender, MouseEventArgs e)
             {
-                var dataView = (DataView)sender;
-                var parameters = new PointHitTestParameters(e.GetPosition(dataView));
-                VisualTreeHelper.HitTest(dataView, element =>
+                var view = (UIElement)sender;
+                var parameters = new PointHitTestParameters(e.GetPosition(view));
+                VisualTreeHelper.HitTest(view, element =>
                 {
                     var validationPlaceholder = element as ValidationPlaceholder;
                     if (validationPlaceholder != null)
@@ -92,18 +99,6 @@ namespace DevZest.Data.Views
                     }
                     return HitTestFilterBehavior.Continue;
                 }, result => HitTestResultBehavior.Continue, parameters);
-            }
-
-            public void Initialize(DataPresenter dataPresenter)
-            {
-                _dataPresenter = dataPresenter;
-                DataView = dataPresenter.View;
-                _dataPresenter.ViewChanged += OnViewChanged;
-            }
-
-            private void OnViewChanged(object sender, EventArgs e)
-            {
-                DataView = DataPresenter.View;
             }
         }
 
@@ -127,13 +122,16 @@ namespace DevZest.Data.Views
             element.SetValue(IsActivePropertyKey, BooleanBoxes.Box(value));
         }
 
-        private static IMouseTracker GetMouseTrackerService(DataPresenter dataPresenter)
+        private static readonly ConditionalWeakTable<BasePresenter, MouseTracker> s_mouseTrackers = new ConditionalWeakTable<BasePresenter, MouseTracker>();
+
+        private static MouseTracker GetMouseTracker(BasePresenter presenter)
         {
-            if (!ServiceManager.IsRegistered<IMouseTracker>())
-                ServiceManager.Register<IMouseTracker, MouseTracker>();
-            var service = ServiceManager.GetService<IMouseTracker>(dataPresenter);
-            Debug.Assert(service != null);
-            return service;
+            return s_mouseTrackers.GetValue(presenter, CreateMouseTracker);
+        }
+
+        private static MouseTracker CreateMouseTracker(BasePresenter presenter)
+        {
+            return new MouseTracker(presenter);
         }
 
         private void CoerceIsActive()
@@ -171,7 +169,7 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Setup(ScalarPresenter scalarPresenter)
         {
-            WireMouseTrack(scalarPresenter.DataPresenter);
+            WireMouseTrack(scalarPresenter.Presenter);
         }
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
@@ -180,19 +178,19 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
         {
-            UnwireMouseTrack(scalarPresenter.DataPresenter);
+            UnwireMouseTrack(scalarPresenter.Presenter);
         }
 
-        private void WireMouseTrack(DataPresenter dataPresenter)
+        private void WireMouseTrack(BasePresenter presenter)
         {
-            var mouseTracker = GetMouseTrackerService(dataPresenter);
+            var mouseTracker = GetMouseTracker(presenter);
             mouseTracker.EnterMouseTrack += OnEnterMouseTrack;
             mouseTracker.ExitMouseTrack += OnExitMouseTrack;
         }
 
-        private void UnwireMouseTrack(DataPresenter dataPresenter)
+        private void UnwireMouseTrack(BasePresenter presenter)
         {
-            var mouseTracker = GetMouseTrackerService(dataPresenter);
+            var mouseTracker = GetMouseTracker(presenter);
             mouseTracker.EnterMouseTrack -= OnEnterMouseTrack;
             mouseTracker.ExitMouseTrack -= OnExitMouseTrack;
         }

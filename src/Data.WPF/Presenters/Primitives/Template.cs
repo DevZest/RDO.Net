@@ -674,7 +674,7 @@ namespace DevZest.Data.Presenters.Primitives
             for (int i = 0; i < _attachedScalarBindings.Count; i++)
             {
                 var binding = _attachedScalarBindings[i];
-                binding.EndSetup();
+                binding.BaseBinding.EndSetup();
                 binding.Mount();
             }
         }
