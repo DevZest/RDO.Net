@@ -10,6 +10,21 @@ namespace ValidationUI
     /// </summary>
     public partial class LoginWindow : Window
     {
+        private sealed class Presenter : DataPresenter<Login>
+        {
+            protected override void BuildTemplate(TemplateBuilder builder)
+            {
+                var emailAddress = _.EmailAddress.BindToTextBox();
+                var password = _.Password.BindToPasswordBox();
+                builder
+                    .WithRowValidationMode(ValidationMode.Implicit)
+                    .GridColumns("Auto", "*", "20")
+                    .GridRows("Auto", "Auto")
+                    .AddBinding(0, 0, _.EmailAddress.BindToLabel(emailAddress, "{0}:")).AddBinding(1, 0, emailAddress)
+                    .AddBinding(0, 1, _.Password.BindToLabel(password, "{0}:")).AddBinding(1, 1, password);
+            }
+        }
+
         public static class Commands
         {
             public static readonly RoutedUICommand Submit = new RoutedUICommand();
@@ -44,17 +59,6 @@ namespace ValidationUI
             var dataSet = DataSet<Login>.New();
             dataSet.Add(new DataRow());
             var presenter = new Presenter();
-            _presenter = presenter;
-            presenter.Show(_dataView, dataSet);
-            Owner = ownerWindow;
-            ShowDialog();
-        }
-
-        public void ShowScalar(Window ownerWindow)
-        {
-            Title = string.Format("{0} ({1})", Title, "ScalarValidation");
-            var dataSet = DataSet<DummyModel>.New();
-            var presenter = new ScalarPresenter();
             _presenter = presenter;
             presenter.Show(_dataView, dataSet);
             Owner = ownerWindow;

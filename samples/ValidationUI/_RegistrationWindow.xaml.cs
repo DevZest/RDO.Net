@@ -1,26 +1,23 @@
-﻿using DevZest.Data;
-using DevZest.Data.Presenters;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Presenters;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ValidationUI
 {
     /// <summary>
-    /// Interaction logic for _DefaultRegistrationWindow.xaml
+    /// Interaction logic for _RegistrationWindow.xaml
     /// </summary>
-    public partial class _DefaultRegistrationWindow : Window
+    public partial class _RegistrationWindow : Window
     {
         private sealed class Presenter : _RegistrationPresenter
         {
-            public Presenter(_DefaultRegistrationWindow window)
+            public Presenter(_RegistrationWindow window)
             {
                 _window = window;
                 Show(window._view);
             }
 
-            private readonly _DefaultRegistrationWindow _window;
+            private readonly _RegistrationWindow _window;
 
             protected override void BuildTemplate(TemplateBuilder builder)
             {
@@ -60,7 +57,7 @@ namespace ValidationUI
             public static readonly RoutedUICommand Submit = new RoutedUICommand();
         }
 
-        public _DefaultRegistrationWindow()
+        public _RegistrationWindow()
         {
             InitializeComponent();
             InitializeCommandBindings();

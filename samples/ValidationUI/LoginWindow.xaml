@@ -6,7 +6,7 @@
         xmlns:dz="http://schemas.devzest.com/data/windows"
         xmlns:local="clr-namespace:ValidationUI"
         mc:Ignorable="d"
-        Title="User Login (Lite)" WindowStartupLocation="CenterOwner" Width="370" SizeToContent="Height" ResizeMode="NoResize">
+        Title="User Login" WindowStartupLocation="CenterOwner" Width="370" SizeToContent="Height" ResizeMode="NoResize">
     <Window.Resources>
         <ControlTemplate x:Key="ErrorTemplate">
             <StackPanel Orientation="Horizontal">

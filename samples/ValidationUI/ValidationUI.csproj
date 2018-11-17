@@ -46,29 +46,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DummyModel.cs" />
     <Compile Include="EmailAddressValidator.cs" />
     <Compile Include="Interests.cs" />
-    <Compile Include="_DefaultRegistrationWindow.xaml.cs">
-      <DependentUpon>_DefaultRegistrationWindow.xaml</DependentUpon>
+    <Compile Include="_RegistrationWindow.xaml.cs">
+      <DependentUpon>_RegistrationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="_LoginWindow.xaml.cs">
       <DependentUpon>_LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="_RegistrationPresenter.cs" />
-    <Compile Include="RegistrationWindow.Presenters.cs" />
     <Compile Include="RegistrationWindow.xaml.cs">
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LoginWindow.Presenters.cs" />
     <Compile Include="Registration.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="_LoginPresenter.cs" />
-    <Compile Include="ScalarPresenterBase.cs" />
-    <Page Include="_DefaultRegistrationWindow.xaml">
+    <Page Include="_RegistrationWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
