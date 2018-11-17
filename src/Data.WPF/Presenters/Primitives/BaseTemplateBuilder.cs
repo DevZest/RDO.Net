@@ -80,5 +80,10 @@ namespace DevZest.Data.Presenters.Primitives
             return (T)this;
         }
 
+        public T WithInitialFocus(InitialFocus initialFocus)
+        {
+            Template.InitialFocus = initialFocus.VerifyNotNull(nameof(initialFocus));
+            return (T)this;
+        }
     }
 }

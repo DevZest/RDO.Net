@@ -399,12 +399,6 @@ namespace DevZest.Data.Presenters
                 return this;
             }
 
-            public TemplateBuilder WithInitialFocus(InitialFocus initialFocus)
-            {
-                Template.InitialFocus = initialFocus.VerifyNotNull(nameof(initialFocus));
-                return this;
-            }
-
             public TemplateBuilder AllowDelete()
             {
                 Template.AllowsDelete = true;
