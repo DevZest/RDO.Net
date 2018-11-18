@@ -11,7 +11,7 @@ namespace DevZest.Data.Presenters
         {
         }
 
-        protected sealed class TemplateBuilder : BaseTemplateBuilder<TemplateBuilder>
+        protected sealed class TemplateBuilder : TemplateBuilder<TemplateBuilder>
         {
             internal TemplateBuilder(Template template)
                 : base(template)

@@ -7,10 +7,10 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class BaseTemplateBuilder<T> : IDisposable
-        where T : BaseTemplateBuilder<T>
+    public abstract class TemplateBuilder<T> : IDisposable
+        where T : TemplateBuilder<T>
     {
-        internal BaseTemplateBuilder(Template template)
+        internal TemplateBuilder(Template template)
         {
             Debug.Assert(template != null);
             Template = template;
