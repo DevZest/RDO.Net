@@ -67,6 +67,12 @@ namespace DevZest.Data.Presenters
             get { return _layoutManager; }
         }
 
+        public override void DetachView()
+        {
+            base.DetachView();
+            _layoutManager = null;  // This must be called after base.DetachView()
+        }
+
         public new ScalarBagView View { get; private set; }
 
         internal override IBaseView GetView()
