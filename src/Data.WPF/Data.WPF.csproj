@@ -84,7 +84,7 @@
     <Compile Include="Presenters\IDataPresenter.cs" />
     <Compile Include="Presenters\InitialFocus.cs" />
     <Compile Include="Presenters\Primitives\BasePresenter.cs" />
-    <Compile Include="Presenters\Primitives\TemplateBuilder_T.cs" />
+    <Compile Include="Presenters\TemplateBuilder_T.cs" />
     <Compile Include="Presenters\Primitives\IContainerElement.cs" />
     <Compile Include="Presenters\Primitives\AttachedScalarBinding.cs" />
     <Compile Include="Presenters\ScalarBagPresenter.cs" />

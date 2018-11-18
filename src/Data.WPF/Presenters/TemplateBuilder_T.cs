@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DevZest.Data.Presenters.Primitives;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DevZest.Data.Presenters.Primitives
+namespace DevZest.Data.Presenters
 {
     public abstract class TemplateBuilder<T> : IDisposable
         where T : TemplateBuilder<T>
