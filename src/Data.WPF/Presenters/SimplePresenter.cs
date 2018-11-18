@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class ScalarBagPresenter : BasePresenter
+    public abstract class SimplePresenter : BasePresenter
     {
         private sealed class DummyModel : Model
         {
@@ -19,7 +19,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public void Show(ScalarBagView view)
+        public void Show(SimpleView view)
         {
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
@@ -73,7 +73,7 @@ namespace DevZest.Data.Presenters
             _layoutManager = null;  // This must be called after base.DetachView()
         }
 
-        public new ScalarBagView View { get; private set; }
+        public new SimpleView View { get; private set; }
 
         internal override IBaseView GetView()
         {
@@ -82,7 +82,7 @@ namespace DevZest.Data.Presenters
 
         internal override void SetView(IBaseView value)
         {
-            View = (ScalarBagView)value;
+            View = (SimpleView)value;
         }
 
         protected abstract void BuildTemplate(TemplateBuilder builder);

@@ -38,7 +38,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <dz:ScalarBagView x:Name="_view" Background="White" Margin="5" dz:Validation.FailedTemplate="{StaticResource ErrorTemplate}">
+        <dz:SimpleView x:Name="_view" Background="White" Margin="5" dz:Validation.FailedTemplate="{StaticResource ErrorTemplate}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -54,7 +54,7 @@
                 <Label Grid.Row="1">Password:</Label>
                 <PasswordBox x:Name="_passwordBox" Grid.Row="1" Grid.Column="1" />
             </Grid>
-        </dz:ScalarBagView>
+        </dz:SimpleView>
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
             <Button Content="OK" IsDefault="True" Command="{x:Static local:_LoginWindow+Commands.Submit}" />
             <Button Content="Cancel" IsCancel="True" />

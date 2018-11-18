@@ -2,23 +2,22 @@
 using DevZest.Data.Presenters.Primitives;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace DevZest.Data.Views
 {
-    public class ScalarBagView : ContentControl, IBaseView
+    public class SimpleView : ContentControl, IBaseView
     {
-        static ScalarBagView()
+        static SimpleView()
         {
-            FocusableProperty.OverrideMetadata(typeof(ScalarBagView), new FrameworkPropertyMetadata(BooleanBoxes.False));
+            FocusableProperty.OverrideMetadata(typeof(SimpleView), new FrameworkPropertyMetadata(BooleanBoxes.False));
         }
 
-        public ScalarBagPresenter Presenter { get; private set; }
+        public SimplePresenter Presenter { get; private set; }
 
         BasePresenter IBaseView.Presenter
         {
             get { return Presenter; }
-            set { Presenter = (ScalarBagPresenter)value; }
+            set { Presenter = (SimplePresenter)value; }
         }
 
         private LayoutManager LayoutManager

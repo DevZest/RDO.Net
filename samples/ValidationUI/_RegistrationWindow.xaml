@@ -34,7 +34,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <dz:ScalarBagView x:Name="_view" Background="White" Margin="5">
+        <dz:SimpleView x:Name="_view" Background="White" Margin="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -73,7 +73,7 @@
                 <CheckBox x:Name="_checkBoxInterests8" Grid.Row="7" Grid.Column="2"></CheckBox>
                 <dz:ValidationErrorsControl x:Name="_validationErrorsControl" Grid.Row="8" Grid.ColumnSpan="3" />
             </Grid>
-        </dz:ScalarBagView>
+        </dz:SimpleView>
         <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1">
             <Button Content="OK" IsDefault="True" Command="{x:Static local:_RegistrationWindow+Commands.Submit}" />
             <Button Content="Cancel" IsCancel="True" />

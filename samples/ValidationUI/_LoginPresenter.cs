@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace ValidationUI
 {
-    internal abstract class _LoginPresenter : ScalarBagPresenter
+    internal abstract class _LoginPresenter : SimplePresenter
     {
         protected Scalar<string> _emailAddress { get; private set; }
         protected Scalar<string> _password { get; private set; }
