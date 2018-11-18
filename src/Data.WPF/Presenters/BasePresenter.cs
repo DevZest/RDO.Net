@@ -1,10 +1,11 @@
-﻿using DevZest.Data.Views;
+﻿using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace DevZest.Data.Presenters.Primitives
+namespace DevZest.Data.Presenters
 {
     public abstract class BasePresenter : ScalarContainer.IOwner
     {
