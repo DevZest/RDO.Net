@@ -2,7 +2,7 @@
 {
     static partial class KnownTypes
     {
-        private static class Namespaces
+        private static partial class Namespaces
         {
             // Must end with "."
             public const string System = "System.";
