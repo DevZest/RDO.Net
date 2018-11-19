@@ -7,16 +7,14 @@ namespace DevZest.Data
 {
     public struct KeyMapping
     {
-        public static KeyMapping Match<TSource, TTarget>(TSource source, TTarget target)
+        internal static KeyMapping Match<TSource, TTarget>(TSource source, TTarget target)
             where TSource : TTarget
             where TTarget : IModelReference
         {
-            var sourceKey = source.Model.PrimaryKey;
-            var targetKey = target.Model.PrimaryKey;
-            return new KeyMapping(sourceKey, targetKey);
+            return new KeyMapping(source.Model.PrimaryKey, target.Model.PrimaryKey);
         }
 
-        public KeyMapping(PrimaryKey sourceKey, PrimaryKey targetKey)
+        internal KeyMapping(PrimaryKey sourceKey, PrimaryKey targetKey)
         {
             sourceKey.VerifyNotNull(nameof(sourceKey));
             targetKey.VerifyNotNull(nameof(targetKey));
