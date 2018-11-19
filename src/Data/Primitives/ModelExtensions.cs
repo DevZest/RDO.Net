@@ -166,5 +166,25 @@ namespace DevZest.Data.Primitives
             result.Model.InitializeClone(prototype.Model, setDataSource);
             return result;
         }
+
+        public static string GetDbTableName(this Model model)
+        {
+            return model.DbTableName;
+        }
+
+        public static void SetDbTableName(this Model model, string value)
+        {
+            model.DbTableName = value;
+        }
+
+        public static string GetDbTableDescription(this Model model)
+        {
+            return model.DbTableDescription;
+        }
+
+        public static void SetDbTableDescription(this Model model, string value)
+        {
+            model.DbTableDescription = value;
+        }
     }
 }
