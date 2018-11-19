@@ -1,4 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DevZest.Data.CodeAnalysis
@@ -11,9 +13,19 @@ namespace DevZest.Data.CodeAnalysis
         /// <param name="source">Classes in the form of a string</param>
         /// <param name="language">The language the source code is in</param>
         /// <returns>A Document created from the source string</returns>
+        public static Document CreateDocument(this string source, IEnumerable<MetadataReference> additionalReferences, string language = LanguageNames.CSharp)
+        {
+            return Enumerable.First(source.CreateProject(additionalReferences, language).Documents);
+        }
+
         public static Document CreateDocument(this string source, string language = LanguageNames.CSharp)
         {
-            return Enumerable.First(source.CreateProject(language).Documents);
+            return source.CreateDocument(Array.Empty<MetadataReference>(), language);
+        }
+
+        public static Document CreateDocument(this string source, MetadataReference metadataReference, string language = LanguageNames.CSharp)
+        {
+            return source.CreateDocument(new MetadataReference[] { metadataReference }, language);
         }
     }
 }
