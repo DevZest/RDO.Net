@@ -117,7 +117,7 @@ namespace DevZest.Data
             var dbSession = DbSession;
             var name = dbSession.AssignTempTableName(model);
             var result = DbTable<TChild>.CreateTemp(model, dbSession, name);
-            await dbSession.CreateTableAsync(model, name, null, true, cancellationToken);
+            await dbSession.CreateTableAsync(model, true, cancellationToken);
             return result;
         }
 

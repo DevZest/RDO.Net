@@ -74,7 +74,7 @@ namespace DevZest.Data.Primitives
                 var table = mockTable.Table;
                 if (progress != null)
                     progress.Report(table.Name);
-                await Db.CreateTableAsync(table.Model, table.Name, GetTableDescription(table), false, ct);
+                await Db.CreateTableAsync(table.Model, false, ct);
                 _pendingMockTables[table]?.Invoke();
             }
         }

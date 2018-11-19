@@ -172,9 +172,11 @@ namespace DevZest.Data.Primitives
             return model.DbTableName;
         }
 
-        public static void SetDbTableName(this Model model, string value)
+        public static T SetDbTableName<T>(this T model, string value)
+            where T : Model
         {
             model.DbTableName = value;
+            return model;
         }
 
         public static string GetDbTableDescription(this Model model)
@@ -182,9 +184,11 @@ namespace DevZest.Data.Primitives
             return model.DbTableDescription;
         }
 
-        public static void SetDbTableDescription(this Model model, string value)
+        public static T SetDbTableDescription<T>(this T model, string value)
+            where T : Model
         {
             model.DbTableDescription = value;
+            return model;
         }
     }
 }

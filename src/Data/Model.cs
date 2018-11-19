@@ -1148,7 +1148,7 @@ namespace DevZest.Data
         /// <inheritdoc cref="ModelMember.VerifyDesignMode" select="exception"/>
         internal string DbTableName
         {
-            get { return _dbTableName ?? Name; }
+            get { return _dbTableName ?? (DataSource as IDbTable)?.Name; }
             set
             {
                 VerifyDesignMode();

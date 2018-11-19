@@ -19,7 +19,7 @@ namespace DevZest.Data.Helpers
             where T : Model, new()
         {
             var result = sqlSession.MockTempTable<T>(fromModel, initializer);
-            commands.Add(sqlSession.GetCreateTableCommand(result.Model, result.Name, null, true));
+            commands.Add(sqlSession.GetCreateTableCommand(result.Model, true));
             return result;
         }
     }

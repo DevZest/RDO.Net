@@ -43,7 +43,7 @@ namespace DevZest.Data.Annotations
         {
             using (var testDb = new TestDb(SqlVersion.Sql11))
             {
-                var command = testDb.GetCreateTableCommand(testDb.TestTable.Model, nameof(TestDb.TestTable), null, false);
+                var command = testDb.GetCreateTableCommand(testDb.TestTable.Model, false);
                 var expectedSql =
 @"CREATE TABLE [TestTable] (
     [Id] INT NULL

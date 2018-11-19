@@ -1,6 +1,6 @@
-﻿using DevZest.Data.SqlServer;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Data.SqlClient;
 
 namespace DevZest.Data.Annotations
@@ -39,7 +39,7 @@ namespace DevZest.Data.Annotations
         {
             using (var testDb = new TestDb(SqlVersion.Sql11))
             {
-                var command = testDb.GetCreateTableCommand(new TestModel(), nameof(TestDb.TestTable), null, false);
+                var command = testDb.GetCreateTableCommand(new TestModel().SetDbTableName(nameof(TestDb.TestTable)), false);
                 var expectedSql =
 @"CREATE TABLE [TestTable] (
     [Guid] UNIQUEIDENTIFIER NULL DEFAULT(NEWID())

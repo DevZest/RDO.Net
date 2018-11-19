@@ -36,7 +36,7 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract string AssignTempTableName(Model model);
 
-        internal abstract Task CreateTableAsync(Model model, string name, string description, bool isTempTable, CancellationToken cancellationToken);
+        internal abstract Task CreateTableAsync(Model model, bool isTempTable, CancellationToken cancellationToken);
 
         protected internal abstract string GetSqlString(DbQueryStatement query);
 
@@ -77,7 +77,7 @@ namespace DevZest.Data.Primitives
             where T : class, IModelReference, new()
         {
             var result = CreateTempTableInstance(_, initializer);
-            await CreateTableAsync(result._.Model, result.Name, null, true, ct);
+            await CreateTableAsync(result._.Model, true, ct);
             return result;
         }
 
@@ -198,7 +198,7 @@ namespace DevZest.Data.Primitives
         private async Task<DbTable<KeyOutput>> CreateKeyOutputAsync(Model sourceModel, CancellationToken cancellationToken)
         {
             var result = CreateKeyOutputInstance(sourceModel);
-            await CreateTableAsync(result.Model, result.Name, null, true, cancellationToken);
+            await CreateTableAsync(result.Model, true, cancellationToken);
             return result;
         }
 

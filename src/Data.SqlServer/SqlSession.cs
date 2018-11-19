@@ -74,10 +74,10 @@ namespace DevZest.Data.SqlServer
             return _tempTableNamesByModel.GetValue(model, GetUniqueTempTableName);
         }
 
-        protected sealed override SqlCommand GetCreateTableCommand(Model model, string tableName, string tableDescription, bool isTempTable)
+        protected sealed override SqlCommand GetCreateTableCommand(Model model, bool isTempTable)
         {
             var sqlBuilder = new IndentedStringBuilder();
-            model.GenerateCreateTableSql(sqlBuilder, SqlVersion, tableName, tableDescription, isTempTable);
+            model.GenerateCreateTableSql(sqlBuilder, SqlVersion, isTempTable);
             return sqlBuilder.ToString().CreateSqlCommand(Connection);
         }
 

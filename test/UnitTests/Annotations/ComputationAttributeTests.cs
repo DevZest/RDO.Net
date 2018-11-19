@@ -68,7 +68,7 @@ namespace DevZest.Data.Annotations
         {
             using (var testDb = new TestDb(SqlVersion.Sql11))
             {
-                var command = testDb.GetCreateTableCommand(testDb.Headers._, nameof(TestDb.Headers), null, false);
+                var command = testDb.GetCreateTableCommand(testDb.Headers._, false);
                 var expectedSql =
 @"CREATE TABLE [Headers] (
     [Id] INT NULL,

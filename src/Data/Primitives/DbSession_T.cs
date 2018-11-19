@@ -91,11 +91,11 @@ namespace DevZest.Data.Primitives
             return PrepareNonQueryCommandInvoker(command).ExecuteAsync(cancellationToken);
         }
 
-        protected internal abstract TCommand GetCreateTableCommand(Model model, string tableName, string tableDescription, bool isTempTable);
+        protected internal abstract TCommand GetCreateTableCommand(Model model, bool isTempTable);
 
-        internal sealed override Task CreateTableAsync(Model model, string name, string description, bool isTempTable, CancellationToken cancellationToken)
+        internal sealed override Task CreateTableAsync(Model model, bool isTempTable, CancellationToken cancellationToken)
         {
-            return ExecuteNonQueryAsync(GetCreateTableCommand(model, name, description, isTempTable), cancellationToken);
+            return ExecuteNonQueryAsync(GetCreateTableCommand(model, isTempTable), cancellationToken);
         }
 
         private ReaderInvoker CreateReaderInvoker(DbQueryStatement queryStatement)
