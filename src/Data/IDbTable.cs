@@ -8,7 +8,7 @@ namespace DevZest.Data
     {
         string Name { get; }
         string Description { get; }
-        string PropertyName { get; }
+        string Identifier { get; }
         bool DesignMode { get; }
     }
 

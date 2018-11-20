@@ -11,17 +11,17 @@ namespace DevZest.Data
     public sealed partial class DbTable<T> : DbSet<T>, IDbTable
         where T : class, IModelReference, new()
     {
-        internal static DbTable<T> Create(T modelRef, DbSession dbSession, string propertyName, Action<DbTable<T>> initializer = null)
+        internal static DbTable<T> Create(T modelRef, DbSession dbSession, string identifier, Action<DbTable<T>> initializer = null)
         {
-            var result = new DbTable<T>(modelRef, dbSession, propertyName, DataSourceKind.DbTable);
+            var result = new DbTable<T>(modelRef, dbSession, identifier, DataSourceKind.DbTable);
             initializer?.Invoke(result);
             result.DesignMode = false;
             return result;
         }
 
-        internal static DbTable<T> CreateTemp(T modelRef, DbSession dbSession, string propertyName, Action<DbTable<T>> initializer = null)
+        internal static DbTable<T> CreateTemp(T modelRef, DbSession dbSession, string identifier, Action<DbTable<T>> initializer = null)
         {
-            var result = new DbTable<T>(modelRef, dbSession, propertyName, DataSourceKind.DbTempTable);
+            var result = new DbTable<T>(modelRef, dbSession, identifier, DataSourceKind.DbTempTable);
             initializer?.Invoke(result);
             result.DesignMode = false;
             return result;
@@ -32,19 +32,19 @@ namespace DevZest.Data
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName));
 
-            PropertyName = propertyName;
+            Identifier = propertyName;
             _kind = kind;
             modelRef.Model.SetDataSource(this);
         }
 
         internal int InitialRowCount { get; set; }
 
-        public string PropertyName { get; private set; }
+        public string Identifier { get; private set; }
 
         private string _name;
         public string Name
         {
-            get { return _name ?? PropertyName; }
+            get { return _name ?? Identifier; }
             internal set { _name = value; }
         }
 

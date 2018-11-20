@@ -103,7 +103,7 @@ namespace DevZest.Data.Primitives
         {
             protected override string GetKeyForItem(IDbTable item)
             {
-                return item.PropertyName;
+                return item.Identifier;
             }
         }
 
