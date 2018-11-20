@@ -14,9 +14,9 @@ namespace DevZest.Data
         /// <summary>
         /// The provided getter expression is invalid.
         /// </summary>
-        public static string InvalidGetterExpression
+        public static string Common_InvalidGetterExpression
         {
-            get { return GetString("InvalidGetterExpression"); }
+            get { return GetString("Common_InvalidGetterExpression"); }
         }
 
         /// <summary>

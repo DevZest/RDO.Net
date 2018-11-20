@@ -15,7 +15,7 @@ namespace DevZest.Data
         {
             getter.VerifyNotNull(paramName);
             if (!(getter.Body is MemberExpression memberExpr))
-                throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression, paramName);
+                throw new ArgumentException(DiagnosticMessages.Common_InvalidGetterExpression, paramName);
             var columnName = memberExpr.Member.Name;
 
             var columnAttributes = GetColumnAttributes<TParent>(columnName, paramName);
@@ -26,7 +26,7 @@ namespace DevZest.Data
         {
             var propertyInfo = typeof(T).GetProperty(columnName, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (propertyInfo == null)
-                throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression, paramName);
+                throw new ArgumentException(DiagnosticMessages.Common_InvalidGetterExpression, paramName);
 
             var result = propertyInfo.GetCustomAttributes<ColumnAttribute>().ToArray();
             foreach (var columnAttribute in result)
@@ -52,7 +52,7 @@ namespace DevZest.Data
         {
             getter.VerifyNotNull(paramName);
             if (!(getter.Body is MemberExpression memberExpr))
-                throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression, paramName);
+                throw new ArgumentException(DiagnosticMessages.Common_InvalidGetterExpression, paramName);
             var columnName = memberExpr.Member.Name;
 
             var columnAttributes = GetColumnAttributes<TParent>(columnName, paramName);

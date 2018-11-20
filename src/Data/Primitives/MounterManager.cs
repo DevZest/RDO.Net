@@ -169,7 +169,7 @@ namespace DevZest.Data.Primitives
                 var name = propertyInfo.Name;
                 var setter = GetSetter(name);
                 if (setter == null)
-                    throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression, nameof(propertyInfo));
+                    throw new ArgumentException(DiagnosticMessages.Common_InvalidGetterExpression, nameof(propertyInfo));
                 Init(name, propertyInfo.Getter.Compile(), setter, constructor, initializer);
             }
 
@@ -249,7 +249,7 @@ namespace DevZest.Data.Primitives
             Debug.Assert(getter != null);
             var propertyInfo = MounterInfo<TDerivedTarget, TDerivedProperty>.GetPropertyInfo(getter);
             if (propertyInfo == null)
-                throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression);
+                throw new ArgumentException(DiagnosticMessages.Common_InvalidGetterExpression);
 
             var info = propertyInfo.Value;
             var result = new MounterImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
@@ -267,7 +267,7 @@ namespace DevZest.Data.Primitives
             Debug.Assert(getter != null);
             var propertyInfo = MounterInfo<TDerivedTarget, TDerivedProperty>.GetAttachedPropertyInfo(getter);
             if (propertyInfo == null)
-                throw new ArgumentException(DiagnosticMessages.InvalidGetterExpression);
+                throw new ArgumentException(DiagnosticMessages.Common_InvalidGetterExpression);
 
             var info = propertyInfo.Value;
             var result = new AttachedMounterImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
