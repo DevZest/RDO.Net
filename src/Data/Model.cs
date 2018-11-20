@@ -932,7 +932,7 @@ namespace DevZest.Data
                 var mapping = parentRelationship[i];
                 var source = GetSource(columnMappings, mapping.SourceExpression);
                 if (source == null)
-                    throw new InvalidOperationException(DiagnosticMessages.ChildColumnNotExistInColumnMappings(mapping.SourceExpression));
+                    throw new InvalidOperationException(DiagnosticMessages.Common_ChildColumnNotExistInColumnMappings(mapping.SourceExpression));
                 result[i] = new ColumnMapping(source, mapping.Target);
             }
 

@@ -558,9 +558,9 @@ namespace DevZest.Data
         /// <summary>
         /// The child column '{childColumn}' does not exist in the column mappings.
         /// </summary>
-        public static string ChildColumnNotExistInColumnMappings(object childColumn)
+        public static string Common_ChildColumnNotExistInColumnMappings(object childColumn)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ChildColumnNotExistInColumnMappings", "childColumn"), childColumn);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Common_ChildColumnNotExistInColumnMappings", "childColumn"), childColumn);
         }
 
         /// <summary>
