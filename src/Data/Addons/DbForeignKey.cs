@@ -25,7 +25,7 @@ namespace DevZest.Data.Addons
             get
             {
                 var dbTable = ReferencedKey.ParentModel.DataSource as IDbTable;
-                return dbTable == null ? null : dbTable.Name;
+                return dbTable?.Name;
             }
         }
 
