@@ -360,9 +360,6 @@
   <data name="DataRow_FromString_ParseInt" xml:space="preserve">
     <value>Cannot parse string '{input}' into an integer value.</value>
   </data>
-  <data name="Scalar_InvalidColumn" xml:space="preserve">
-    <value>The column is invalid. It must be created by calling CreateColumn method.</value>
-  </data>
   <data name="DataRow_DeserializeColumn_InvalidColumnName" xml:space="preserve">
     <value>The column name '{columnName}' is invalid for DataRow '{dataRowString}'.</value>
   </data>

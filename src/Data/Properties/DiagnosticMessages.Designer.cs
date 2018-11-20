@@ -660,14 +660,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The column is invalid. It must be created by calling CreateColumn method.
-        /// </summary>
-        public static string Scalar_InvalidColumn
-        {
-            get { return GetString("Scalar_InvalidColumn"); }
-        }
-
-        /// <summary>
         /// The column name '{columnName}' is invalid for DataRow '{dataRowString}'.
         /// </summary>
         public static string DataRow_DeserializeColumn_InvalidColumnName(object columnName, object dataRowString)
