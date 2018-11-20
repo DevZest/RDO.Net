@@ -222,7 +222,7 @@
   <data name="DbQueryBuilder_VerifyTargetColumn" xml:space="preserve">
     <value>Invalid targetColumn. It must be a column of target model, and cannot be selected already.</value>
   </data>
-  <data name="InvalidChildModel" xml:space="preserve">
+  <data name="DataRow_InvalidChildModel" xml:space="preserve">
     <value>The child model's ParentModel must be the same as this object's Model.</value>
   </data>
   <data name="InvalidChildModelGetter" xml:space="preserve">

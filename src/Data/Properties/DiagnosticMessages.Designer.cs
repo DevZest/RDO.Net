@@ -294,9 +294,9 @@ namespace DevZest.Data
         /// <summary>
         /// The child model's ParentModel must be the same as this object's Model.
         /// </summary>
-        public static string InvalidChildModel
+        public static string DataRow_InvalidChildModel
         {
-            get { return GetString("InvalidChildModel"); }
+            get { return GetString("DataRow_InvalidChildModel"); }
         }
 
         /// <summary>

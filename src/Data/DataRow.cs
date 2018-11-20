@@ -205,7 +205,7 @@ namespace DevZest.Data
             {
                 childModel.VerifyNotNull(nameof(childModel));
                 if (childModel.ParentModel != Model)
-                    throw new ArgumentException(DiagnosticMessages.InvalidChildModel, nameof(childModel));
+                    throw new ArgumentException(DiagnosticMessages.DataRow_InvalidChildModel, nameof(childModel));
                 return _childDataSets[childModel.Ordinal];
             }
         }
@@ -236,7 +236,7 @@ namespace DevZest.Data
         {
             childModel.VerifyNotNull(nameof(childModel));
             if (childModel.ParentModel != Model)
-                throw new ArgumentException(DiagnosticMessages.InvalidChildModel, nameof(childModel));
+                throw new ArgumentException(DiagnosticMessages.DataRow_InvalidChildModel, nameof(childModel));
 
             return this[childModel.Ordinal] as DataSet<T>;
         }
