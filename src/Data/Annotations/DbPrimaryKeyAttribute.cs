@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    [AttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(PrimaryKey) })]
+    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(PrimaryKey) })]
     public sealed class DbPrimaryKeyAttribute : Attribute
     {
         public DbPrimaryKeyAttribute(string name)

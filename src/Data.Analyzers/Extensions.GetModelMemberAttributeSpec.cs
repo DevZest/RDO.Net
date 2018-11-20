@@ -6,14 +6,14 @@ namespace DevZest.Data.CodeAnalysis
 {
     static partial class Extensions
     {
-        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes, bool RequiresArgument)? GetAttributeSpec(this AttributeData attribute, Compilation compilation)
+        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes, bool RequiresArgument)? GetModelMemberAttributeSpec(this AttributeData attribute, Compilation compilation)
         {
-            return attribute.AttributeClass.GetAttributeSpec(compilation);
+            return attribute.AttributeClass.GetModelMemberAttributeSpec(compilation);
         }
 
-        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes, bool RequiresArgument)? GetAttributeSpec(this INamedTypeSymbol attributeClass, Compilation compilation)
+        public static (INamedTypeSymbol[] AddonTypes, INamedTypeSymbol[] ValidOnTypes, bool RequiresArgument)? GetModelMemberAttributeSpec(this INamedTypeSymbol attributeClass, Compilation compilation)
         {
-            var specAttribute = attributeClass.GetAttribute(compilation.GetKnownType(KnownTypes.AttributeSpecAttribute));
+            var specAttribute = attributeClass.GetAttribute(compilation.GetKnownType(KnownTypes.ModelMemberAttributeSpecAttribute));
             if (specAttribute == null)
                 return null;
 

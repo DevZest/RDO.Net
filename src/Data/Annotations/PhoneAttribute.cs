@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [AttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
+    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class PhoneAttribute : ValidationColumnAttribute
     {
         private static Regex s_regex = CreateRegEx();

@@ -47,7 +47,7 @@ namespace DevZest.Data.CodeAnalysis
 
         private static void AnalyzeModelMemberAttribute(SymbolAnalysisContext context, ISymbol symbol, ITypeSymbol type, AttributeData attribute)
         {
-            var spec = attribute.GetAttributeSpec(context.Compilation);
+            var spec = attribute.GetModelMemberAttributeSpec(context.Compilation);
             if (!spec.HasValue)
                 return;
 

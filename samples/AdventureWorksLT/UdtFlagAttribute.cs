@@ -5,7 +5,7 @@ using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [AttributeSpec(addonTypes: new Type[] { typeof(ColumnNotNull) }, validOnTypes: new Type[] { typeof(_Boolean) })]
+    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(ColumnNotNull) }, validOnTypes: new Type[] { typeof(_Boolean) })]
     public sealed class UdtFlagAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
