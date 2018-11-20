@@ -38,9 +38,9 @@ namespace DevZest.Data
         /// <summary>
         /// The argument '{argumentName}' cannot be null, empty or contain only white space.
         /// </summary>
-        public static string ArgumentIsNullOrWhitespace(object argumentName)
+        public static string Common_ArgumentIsNullOrWhitespace(object argumentName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ArgumentIsNullOrWhitespace", "argumentName"), argumentName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Common_ArgumentIsNullOrWhitespace", "argumentName"), argumentName);
         }
 
         /// <summary>
@@ -598,9 +598,9 @@ namespace DevZest.Data
         /// <summary>
         /// Cannot resolve static property {type}.{propertyName} of {propertyType}.
         /// </summary>
-        public static string CannotResolveStaticProperty(object type, object propertyName, object propertyType)
+        public static string Common_FailedToResolveStaticProperty(object type, object propertyName, object propertyType)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("CannotResolveStaticProperty", "type", "propertyName", "propertyType"), type, propertyName, propertyType);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Common_FailedToResolveStaticProperty", "type", "propertyName", "propertyType"), type, propertyName, propertyType);
         }
 
         /// <summary>
@@ -1102,9 +1102,9 @@ namespace DevZest.Data
         /// <summary>
         /// The argument '{argumentName}' cannot be null or empty.
         /// </summary>
-        public static string ArgumentIsNullOrEmptyList(object argumentName)
+        public static string Common_ArgumentIsNullOrEmptyList(object argumentName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ArgumentIsNullOrEmptyList", "argumentName"), argumentName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Common_ArgumentIsNullOrEmptyList", "argumentName"), argumentName);
         }
 
         /// <summary>
