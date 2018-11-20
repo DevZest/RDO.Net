@@ -5,7 +5,7 @@ namespace DevZest
 {
     internal static partial class Extensions
     {
-        private static class ToDo
+        private static class Stubs
         {
             public static string ArgumentIsNullOrWhitespace(string parameterName)
             {
@@ -17,7 +17,7 @@ namespace DevZest
                 return DiagnosticMessages.Common_ArgumentIsNullOrEmptyList(parameterName);
             }
 
-            public static string CannotResolveStaticProperty(Type type, string propertyName, Type propertyType)
+            public static string FailedToResolveStaticProperty(Type type, string propertyName, Type propertyType)
             {
                 return DiagnosticMessages.Common_FailedToResolveStaticProperty(type, propertyName, propertyType);
             }
