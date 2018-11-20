@@ -6,8 +6,8 @@ using System.Reflection;
 namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_ComputationAttribute))]
-    [NamedModelAttributeSpec(false, typeof(void))]
-    public sealed class ComputationAttribute : NamedModelAttribute
+    [ModelDeclarationSpec(false, typeof(void))]
+    public sealed class ComputationAttribute : ModelDeclarationAttribute
     {
         public ComputationAttribute(string name)
             : base(name)

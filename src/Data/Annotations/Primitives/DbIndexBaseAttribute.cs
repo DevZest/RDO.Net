@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public abstract class DbIndexBaseAttribute : NamedModelAttribute
+    public abstract class DbIndexBaseAttribute : ModelDeclarationAttribute
     {
         protected DbIndexBaseAttribute(string name)
             : base(name)

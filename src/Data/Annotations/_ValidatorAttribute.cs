@@ -5,7 +5,7 @@ namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     [CrossReference(typeof(ValidatorAttribute))]
-    public sealed class _ValidatorAttribute : _NamedModelAttribute
+    public sealed class _ValidatorAttribute : ModelImplementationAttribute
     {
     }
 }

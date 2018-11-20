@@ -24,10 +24,10 @@
         public const string DescAttribute = Namespaces.Data_Annotations + nameof(DescAttribute);
         public const string PropertyRegistrationAttribute = Namespaces.Data_Annotations_Primitives + nameof(PropertyRegistrationAttribute);
         public const string CreateKeyAttribute = Namespaces.Data_Annotations_Primitives + nameof(CreateKeyAttribute);
-        public const string NamedModelAttribute = Namespaces.Data_Annotations_Primitives + nameof(NamedModelAttribute);
-        public const string _NamedModelAttribute = Namespaces.Data_Annotations_Primitives + nameof(_NamedModelAttribute);
+        public const string ModelDeclarationAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDeclarationAttribute);
+        public const string ModelImplementationAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelImplementationAttribute);
         public const string CrossReferenceAttribute = Namespaces.Data_Annotations_Primitives + nameof(CrossReferenceAttribute);
-        public const string NamedModelAttributeSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(NamedModelAttributeSpecAttribute);
+        public const string ModelDeclarationSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDeclarationSpecAttribute);
 
         public const string ModelMemberAttributeSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelMemberAttributeSpecAttribute);
         public const string AddonAttribute = Namespaces.Data_Addons + nameof(AddonAttribute);

@@ -6,9 +6,9 @@ namespace DevZest.Data.Annotations.Primitives
     /// <summary>
     /// Attribute for <see cref="Model"/> derived class, with name to specify the implementation as member of the class.
     /// </summary>
-    public abstract class NamedModelAttribute : ModelAttribute
+    public abstract class ModelDeclarationAttribute : ModelAttribute
     {
-        protected NamedModelAttribute(string name)
+        protected ModelDeclarationAttribute(string name)
         {
             name.VerifyNotEmpty(nameof(name));
             Name = name;

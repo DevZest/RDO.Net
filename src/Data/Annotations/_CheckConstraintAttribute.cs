@@ -5,7 +5,7 @@ namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     [CrossReference(typeof(CheckConstraintAttribute))]
-    public sealed class _CheckConstraintAttribute : _NamedModelAttribute
+    public sealed class _CheckConstraintAttribute : ModelImplementationAttribute
     {
     }
 }

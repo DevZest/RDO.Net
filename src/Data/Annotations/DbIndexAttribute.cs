@@ -3,7 +3,7 @@
 namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_DbIndexAttribute))]
-    [NamedModelAttributeSpec(true, typeof(ColumnSort[]))]
+    [ModelDeclarationSpec(true, typeof(ColumnSort[]))]
     public sealed class DbIndexAttribute : DbIndexBaseAttribute
     {
         public DbIndexAttribute(string name)

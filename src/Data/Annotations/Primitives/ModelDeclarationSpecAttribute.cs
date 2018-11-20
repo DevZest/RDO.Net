@@ -2,9 +2,9 @@
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public sealed class NamedModelAttributeSpecAttribute : Attribute
+    public sealed class ModelDeclarationSpecAttribute : Attribute
     {
-        public NamedModelAttributeSpecAttribute(bool isProperty, Type returnType, params Type[] parameterTypes)
+        public ModelDeclarationSpecAttribute(bool isProperty, Type returnType, params Type[] parameterTypes)
         {
             IsProperty = isProperty;
             ReturnType = returnType.VerifyNotNull(nameof(returnType));

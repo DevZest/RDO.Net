@@ -38,12 +38,12 @@ namespace DevZest.Data.CodeAnalysis
 
             var compilation = context.Compilation;
 
-            var attributes = ImmutableArray.CreateRange(modelType.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes.NamedModelAttribute, compilation)));
+            var attributes = ImmutableArray.CreateRange(modelType.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes.ModelDeclarationAttribute, compilation)));
             for (int i = 0; i < attributes.Length; i++)
             {
                 if (AnalyzeDuplicateModelAttribute(context, attributes, i))
                     continue;
-                AnalyzeModelAttribute(context, modelType, attributes[i]);
+                AnalyzeModelDeclarationAttribute(context, modelType, attributes[i]);
             }
         }
 
@@ -64,7 +64,7 @@ namespace DevZest.Data.CodeAnalysis
             if (modelAttributeType == null)
                 return;
 
-            var spec = modelAttributeType.GetNamedModelAttributeSpec(compilation);
+            var spec = modelAttributeType.GetModelDeclarationSpec(compilation);
             if (!spec.HasValue)
                 return;
             var specValue = spec.Value;
@@ -85,7 +85,7 @@ namespace DevZest.Data.CodeAnalysis
 
         private static ImmutableArray<AttributeData> GetImplementationAttributes(ISymbol symbol, Compilation compilation)
         {
-            return ImmutableArray.CreateRange(symbol.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes._NamedModelAttribute, compilation)));
+            return ImmutableArray.CreateRange(symbol.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes.ModelImplementationAttribute, compilation)));
         }
 
         private static bool AnalyzeDuplicateModelAttribute(SymbolAnalysisContext context, ImmutableArray<AttributeData> attributes, int index)
@@ -108,11 +108,11 @@ namespace DevZest.Data.CodeAnalysis
             return false;
         }
 
-        private static void AnalyzeModelAttribute(SymbolAnalysisContext context, INamedTypeSymbol modelType, AttributeData attribute)
+        private static void AnalyzeModelDeclarationAttribute(SymbolAnalysisContext context, INamedTypeSymbol modelType, AttributeData attribute)
         {
             var compilation = context.Compilation;
 
-            var spec = attribute.AttributeClass.GetNamedModelAttributeSpec(compilation);
+            var spec = attribute.AttributeClass.GetModelDeclarationSpec(compilation);
             if (!spec.HasValue)
                 return;
 

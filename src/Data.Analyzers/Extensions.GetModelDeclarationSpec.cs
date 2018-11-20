@@ -6,11 +6,11 @@ namespace DevZest.Data.CodeAnalysis
 {
     static partial class Extensions
     {
-        public static (bool IsProperty, ITypeSymbol ReturnType, ITypeSymbol[] ParameterTypes)? GetNamedModelAttributeSpec(this ITypeSymbol attributeClass, Compilation compilation)
+        public static (bool IsProperty, ITypeSymbol ReturnType, ITypeSymbol[] ParameterTypes)? GetModelDeclarationSpec(this ITypeSymbol attributeClass, Compilation compilation)
         {
-            Debug.Assert(attributeClass.IsDerivedFrom(KnownTypes.NamedModelAttribute, compilation));
+            Debug.Assert(attributeClass.IsDerivedFrom(KnownTypes.ModelDeclarationAttribute, compilation));
 
-            var specAttribute = attributeClass.GetAttributes().Where(x => x.AttributeClass.EqualsTo(KnownTypes.NamedModelAttributeSpecAttribute, compilation)).FirstOrDefault();
+            var specAttribute = attributeClass.GetAttributes().Where(x => x.AttributeClass.EqualsTo(KnownTypes.ModelDeclarationSpecAttribute, compilation)).FirstOrDefault();
             if (specAttribute == null)
                 return null;
 

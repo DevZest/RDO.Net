@@ -6,8 +6,8 @@ using System.Reflection;
 namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_ValidatorAttribute))]
-    [NamedModelAttributeSpec(false, typeof(DataValidationError), typeof(DataRow))]
-    public sealed class ValidatorAttribute : NamedModelAttribute, IValidator
+    [ModelDeclarationSpec(false, typeof(DataValidationError), typeof(DataRow))]
+    public sealed class ValidatorAttribute : ModelDeclarationAttribute, IValidator
     {
         public ValidatorAttribute(string name)
             : base(name)
