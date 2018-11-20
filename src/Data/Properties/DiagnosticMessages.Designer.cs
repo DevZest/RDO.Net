@@ -1108,14 +1108,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The column must be a param or const.
-        /// </summary>
-        public static string DataValues_InvalidColumn
-        {
-            get { return GetString("DataValues_InvalidColumn"); }
-        }
-
-        /// <summary>
         /// The parent Model is not identical.
         /// </summary>
         public static string PrimaryKey_ParentModelNotIdentical
