@@ -126,7 +126,7 @@
   <data name="MounterManager_RegisterDuplicate" xml:space="preserve">
     <value>The property with DeclaringType '{declaringType}' and Name '{name}' has been registered already.</value>
   </data>
-  <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
+  <data name="Common_ArgumentIsNullOrWhitespace" xml:space="preserve">
     <value>The argument '{argumentName}' cannot be null, empty or contain only white space.</value>
   </data>
   <data name="ColumnAggregateFunction_EvalOnNonDataSet" xml:space="preserve">
@@ -336,7 +336,7 @@
   <data name="DataSet_InvalidNewDataRow" xml:space="preserve">
     <value>Cannot add DataRow into multiple DataSet.</value>
   </data>
-  <data name="CannotResolveStaticProperty" xml:space="preserve">
+  <data name="Common_FailedToResolveStaticProperty" xml:space="preserve">
     <value>Cannot resolve static property {type}.{propertyName} of {propertyType}.</value>
   </data>
   <data name="DbTable_VerifyUpdateIdentity" xml:space="preserve">
@@ -525,7 +525,7 @@
   <data name="DbTable_EmptyColumnMapperResult" xml:space="preserve">
     <value>The result returned by ColumnMapper is empty.</value>
   </data>
-  <data name="ArgumentIsNullOrEmptyList" xml:space="preserve">
+  <data name="Common_ArgumentIsNullOrEmptyList" xml:space="preserve">
     <value>The argument '{argumentName}' cannot be null or empty.</value>
   </data>
   <data name="DataValues_InvalidColumn" xml:space="preserve">
