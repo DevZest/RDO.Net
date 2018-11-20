@@ -326,9 +326,9 @@ namespace DevZest.Data
         /// <summary>
         /// The operation is only allowed in design mode.
         /// </summary>
-        public static string VerifyDesignMode
+        public static string Common_VerifyDesignMode
         {
-            get { return GetString("VerifyDesignMode"); }
+            get { return GetString("Common_VerifyDesignMode"); }
         }
 
         /// <summary>

@@ -234,7 +234,7 @@
   <data name="Model_VerifyChildColumn" xml:space="preserve">
     <value>The column must be child of this model.</value>
   </data>
-  <data name="VerifyDesignMode" xml:space="preserve">
+  <data name="Common_VerifyDesignMode" xml:space="preserve">
     <value>The operation is only allowed in design mode.</value>
   </data>
   <data name="Model_MultipleIdentityColumn" xml:space="preserve">
