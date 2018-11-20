@@ -40,7 +40,7 @@ namespace DevZest.Data.Annotations
             var result = dbSessionType.GetMethod(Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, paramTypes, null);
             var returnType = typeof(KeyMapping);
             if (result == null || result.ReturnType != returnType)
-                throw new InvalidOperationException(DiagnosticMessages.NamedModelAttribute_FailedToResolveMethod(dbSessionType, Name, string.Join(", ", (object[])paramTypes), returnType));
+                throw new InvalidOperationException(DiagnosticMessages.Common_FailedToResolveInstanceMethod(dbSessionType, Name, string.Join(", ", (object[])paramTypes), returnType));
             return result;
         }
 

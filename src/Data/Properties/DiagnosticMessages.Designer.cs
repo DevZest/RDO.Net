@@ -1124,11 +1124,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Failed to resolve instance method {model}.{methodName}({parameters}) with return type {returnType}.
+        /// Failed to resolve instance method {type}.{methodName}({parameters}) with return type {returnType}.
         /// </summary>
-        public static string NamedModelAttribute_FailedToResolveMethod(object model, object methodName, object parameters, object returnType)
+        public static string Common_FailedToResolveInstanceMethod(object type, object methodName, object parameters, object returnType)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("NamedModelAttribute_FailedToResolveMethod", "model", "methodName", "parameters", "returnType"), model, methodName, parameters, returnType);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Common_FailedToResolveInstanceMethod", "type", "methodName", "parameters", "returnType"), type, methodName, parameters, returnType);
         }
 
         /// <summary>

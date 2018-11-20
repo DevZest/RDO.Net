@@ -534,8 +534,8 @@
   <data name="PrimaryKey_ParentModelNotIdentical" xml:space="preserve">
     <value>The parent Model is not identical.</value>
   </data>
-  <data name="NamedModelAttribute_FailedToResolveMethod" xml:space="preserve">
-    <value>Failed to resolve instance method {model}.{methodName}({parameters}) with return type {returnType}.</value>
+  <data name="Common_FailedToResolveInstanceMethod" xml:space="preserve">
+    <value>Failed to resolve instance method {type}.{methodName}({parameters}) with return type {returnType}.</value>
   </data>
   <data name="NamedModelAttribute_FailedToResolvePropertyGetter" xml:space="preserve">
     <value>Failed to resolve instance property getter {model}.{property} of type {returnType}.</value>

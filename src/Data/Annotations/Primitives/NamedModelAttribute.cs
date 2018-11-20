@@ -40,7 +40,7 @@ namespace DevZest.Data.Annotations.Primitives
             returnType.VerifyNotNull(nameof(returnType));
             var result = ModelType.GetMethod(Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, paramTypes, null);
             if (result == null || result.ReturnType != returnType)
-                throw new InvalidOperationException(DiagnosticMessages.NamedModelAttribute_FailedToResolveMethod(ModelType, Name, string.Join(", ", (object[])paramTypes), returnType));
+                throw new InvalidOperationException(DiagnosticMessages.Common_FailedToResolveInstanceMethod(ModelType, Name, string.Join(", ", (object[])paramTypes), returnType));
             return result;
         }
     }
