@@ -7,6 +7,7 @@ namespace DevZest.Data
     public interface IDbTable : IDbSet
     {
         string Name { get; }
+        bool DesignMode { get; }
     }
 
     internal static class IDbTableExtensions

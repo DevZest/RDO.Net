@@ -16,7 +16,7 @@ namespace DevZest.Data.Annotations
 
         public string Name { get; private set; }
 
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
         protected override void Initialize(PropertyInfo propertyInfo)
         {

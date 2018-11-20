@@ -542,6 +542,9 @@ namespace DevZest.Data
         {
             get
             {
+                if (DataSource is IDbTable dbTable)
+                    return dbTable.DesignMode;
+
                 if (DataSource == null)
                     return true;
                 if (DataSource.Kind != DataSourceKind.DataSet)

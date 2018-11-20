@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.Threading;
 using DevZest.Data.Addons;
+using System.Runtime.CompilerServices;
+using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Primitives
 {
@@ -228,7 +230,7 @@ namespace DevZest.Data.Primitives
             where TTarget : class, IModelReference, new()
         {
             var import = await ImportAsync(source, ct);
-            var join = import._.Model.PrimaryKey.Join(joinTo);
+            var join = import._.Model.PrimaryKey.UnsafeJoin(joinTo);
             return await UpdateAsync(target.BuildUpdateStatement(import, columnMapper, join), ct);
         }
 
@@ -239,7 +241,7 @@ namespace DevZest.Data.Primitives
             where TTarget : class, IModelReference, new()
         {
             var keys = await ImportKeyAsync(source, ct);
-            var columnMappings = keys._.PrimaryKey.Join(joinTo);
+            var columnMappings = keys._.PrimaryKey.UnsafeJoin(joinTo);
             return await DeleteAsync(target.BuildDeleteStatement(keys, columnMappings), ct);
         }
 
@@ -263,6 +265,18 @@ namespace DevZest.Data.Primitives
             if (refTableModel != model && string.IsNullOrEmpty(foreignKeyConstraint.ReferencedTableName))
                 throw new ArgumentException(DiagnosticMessages.Model_InvalidRefTableModel, nameof(refTableModel));
             return foreignKeyConstraint;
+        }
+
+        protected virtual DbTable<T> GetTable2<T>(ref DbTable<T> result, [CallerMemberName]string name = null)
+            where T : Model, new()
+        {
+            if (result == null)
+            {
+                name.VerifyNotEmpty(nameof(name));
+                var model = new T();
+                result = DbTable<T>.Create(model, this, name, DbTablePropertyAttribute.WireupAttributes);
+            }
+            return result;
         }
     }
 }

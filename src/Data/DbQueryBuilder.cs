@@ -149,7 +149,7 @@ namespace DevZest.Data
             if (right.ParentModel != dbSet.Model)
                 throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_Join_InvalidRightKey, nameof(right));
 
-            Join(dbSet, kind, left.Join(right), out _);
+            Join(dbSet, kind, left.UnsafeJoin(right), out _);
         }
 
         private void Join<T>(DbSet<T> dbSet, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship, out T _)

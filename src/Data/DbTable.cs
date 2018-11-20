@@ -11,14 +11,20 @@ namespace DevZest.Data
     public sealed partial class DbTable<T> : DbSet<T>, IDbTable
         where T : class, IModelReference, new()
     {
-        internal static DbTable<T> Create(T modelRef, DbSession dbSession, string name)
+        internal static DbTable<T> Create(T modelRef, DbSession dbSession, string name, Action<DbTable<T>> initializer = null)
         {
-            return new DbTable<T>(modelRef, dbSession, name, DataSourceKind.DbTable);
+            var result = new DbTable<T>(modelRef, dbSession, name, DataSourceKind.DbTable);
+            initializer?.Invoke(result);
+            result.DesignMode = false;
+            return result;
         }
 
-        internal static DbTable<T> CreateTemp(T modelRef, DbSession dbSession, string name)
+        internal static DbTable<T> CreateTemp(T modelRef, DbSession dbSession, string name, Action<DbTable<T>> initializer = null)
         {
-            return new DbTable<T>(modelRef, dbSession, name, DataSourceKind.DbTempTable);
+            var result = new DbTable<T>(modelRef, dbSession, name, DataSourceKind.DbTempTable);
+            initializer?.Invoke(result);
+            result.DesignMode = false;
+            return result;
         }
 
         private DbTable(T modelRef, DbSession dbSession, string name, DataSourceKind kind)
@@ -34,6 +40,8 @@ namespace DevZest.Data
         internal int InitialRowCount { get; set; }
 
         public string Name { get; private set; }
+
+        public bool DesignMode { get; private set; } = true;
 
         private DataSourceKind _kind;
         public override DataSourceKind Kind

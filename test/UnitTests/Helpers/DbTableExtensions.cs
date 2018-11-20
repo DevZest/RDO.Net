@@ -123,11 +123,11 @@ namespace DevZest.Data.Helpers
 
             var identityMappings = updateIdentity ? MockIdentityMappings(dbTable, source, result) : null;
             if (identityMappings == null)
-                result.Add(dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.Join(joinTo))));
+                result.Add(dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.UnsafeJoin(joinTo))));
             else
             {
                 var identityOutput = MockIdentityOutputTable(identityMappings, sqlSession, result);
-                var statement = dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.Join(joinTo));
+                var statement = dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.UnsafeJoin(joinTo));
                 result.Add(sqlSession.GetInsertCommand(statement, identityOutput));
                 result.Add(sqlSession.GetInsertIntoIdentityMappingsCommand(source, identityMappings, joinTo == null ? null : dbTable));
                 result.Add(sqlSession.GetUpdateIdentityMappingsCommand(identityMappings, identityOutput));

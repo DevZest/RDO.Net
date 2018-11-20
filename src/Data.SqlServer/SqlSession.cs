@@ -230,7 +230,7 @@ namespace DevZest.Data.SqlServer
 
         {
             var import = BuildImportQuery(source);
-            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import.Model.PrimaryKey.Join(joinTo);
+            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import.Model.PrimaryKey.UnsafeJoin(joinTo);
             var statement = target.BuildInsertStatement(import, columnMapper, join);
             return GetInsertCommand(statement);
         }
@@ -238,7 +238,7 @@ namespace DevZest.Data.SqlServer
         protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken ct)
         {
-            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source.Model.PrimaryKey.Join(joinTo);
+            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source.Model.PrimaryKey.UnsafeJoin(joinTo);
             var statement = target.BuildInsertStatement(source, columnMapper, join);
             if (identityMappings == null)
                 return await ExecuteNonQueryAsync(GetInsertCommand(statement), ct);
@@ -355,7 +355,7 @@ namespace DevZest.Data.SqlServer
             where TTarget : class, IModelReference, new()
         {
             var import = BuildImportQuery(source);
-            var join = import.Model.PrimaryKey.Join(joinTo);
+            var join = import.Model.PrimaryKey.UnsafeJoin(joinTo);
             var statement = target.BuildUpdateStatement(import, columnMapper, join);
             return GetUpdateCommand(statement);
         }
@@ -376,7 +376,7 @@ namespace DevZest.Data.SqlServer
             where TTarget : class, IModelReference, new()
         {
             var keys = BuildImportKeyQuery(source);
-            var columnMappings = keys._.PrimaryKey.Join(joinTo);
+            var columnMappings = keys._.PrimaryKey.UnsafeJoin(joinTo);
             var statement = target.BuildDeleteStatement(keys, columnMappings);
             return GetDeleteCommand(statement);
         }

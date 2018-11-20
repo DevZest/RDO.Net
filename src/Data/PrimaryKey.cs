@@ -55,7 +55,7 @@ namespace DevZest.Data
             get { return this[index].Column; }
         }
 
-        public IReadOnlyList<ColumnMapping> Join(PrimaryKey target)
+        public IReadOnlyList<ColumnMapping> UnsafeJoin(PrimaryKey target)
         {
             target.VerifyNotNull(nameof(target));
             if (Count != target.Count)
