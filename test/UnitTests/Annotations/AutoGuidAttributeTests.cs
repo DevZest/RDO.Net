@@ -30,7 +30,7 @@ namespace DevZest.Data.Annotations
             private DbTable<TestModel> _testTable;
             public DbTable<TestModel> TestTable
             {
-                get { return GetTable(ref _testTable, nameof(TestTable)); }
+                get { return GetTable(ref _testTable); }
             }
         }
 
@@ -39,7 +39,7 @@ namespace DevZest.Data.Annotations
         {
             using (var testDb = new TestDb(SqlVersion.Sql11))
             {
-                var command = testDb.GetCreateTableCommand(new TestModel().SetDbTableName(nameof(TestDb.TestTable)), false);
+                var command = testDb.GetCreateTableCommand(testDb.TestTable._, false);
                 var expectedSql =
 @"CREATE TABLE [TestTable] (
     [Guid] UNIQUEIDENTIFIER NULL DEFAULT(NEWID())

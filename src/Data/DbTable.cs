@@ -11,35 +11,44 @@ namespace DevZest.Data
     public sealed partial class DbTable<T> : DbSet<T>, IDbTable
         where T : class, IModelReference, new()
     {
-        internal static DbTable<T> Create(T modelRef, DbSession dbSession, string name, Action<DbTable<T>> initializer = null)
+        internal static DbTable<T> Create(T modelRef, DbSession dbSession, string propertyName, Action<DbTable<T>> initializer = null)
         {
-            var result = new DbTable<T>(modelRef, dbSession, name, DataSourceKind.DbTable);
+            var result = new DbTable<T>(modelRef, dbSession, propertyName, DataSourceKind.DbTable);
             initializer?.Invoke(result);
             result.DesignMode = false;
             return result;
         }
 
-        internal static DbTable<T> CreateTemp(T modelRef, DbSession dbSession, string name, Action<DbTable<T>> initializer = null)
+        internal static DbTable<T> CreateTemp(T modelRef, DbSession dbSession, string propertyName, Action<DbTable<T>> initializer = null)
         {
-            var result = new DbTable<T>(modelRef, dbSession, name, DataSourceKind.DbTempTable);
+            var result = new DbTable<T>(modelRef, dbSession, propertyName, DataSourceKind.DbTempTable);
             initializer?.Invoke(result);
             result.DesignMode = false;
             return result;
         }
 
-        private DbTable(T modelRef, DbSession dbSession, string name, DataSourceKind kind)
+        private DbTable(T modelRef, DbSession dbSession, string propertyName, DataSourceKind kind)
             : base(modelRef, dbSession)
         {
-            Debug.Assert(!string.IsNullOrEmpty(name));
+            Debug.Assert(!string.IsNullOrEmpty(propertyName));
 
-            Name = name;
+            PropertyName = propertyName;
             _kind = kind;
             modelRef.Model.SetDataSource(this);
         }
 
         internal int InitialRowCount { get; set; }
 
-        public string Name { get; private set; }
+        public string PropertyName { get; private set; }
+
+        private string _name;
+        public string Name
+        {
+            get { return _name ?? PropertyName; }
+            internal set { _name = value; }
+        }
+
+        public string Description { get; internal set; }
 
         public bool DesignMode { get; private set; } = true;
 

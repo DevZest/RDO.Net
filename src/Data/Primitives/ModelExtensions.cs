@@ -169,26 +169,12 @@ namespace DevZest.Data.Primitives
 
         public static string GetDbTableName(this Model model)
         {
-            return model.DbTableName;
-        }
-
-        public static T SetDbTableName<T>(this T model, string value)
-            where T : Model
-        {
-            model.DbTableName = value;
-            return model;
+            return (model.DataSource as IDbTable)?.Name;
         }
 
         public static string GetDbTableDescription(this Model model)
         {
-            return model.DbTableDescription;
-        }
-
-        public static T SetDbTableDescription<T>(this T model, string value)
-            where T : Model
-        {
-            model.DbTableDescription = value;
-            return model;
+            return (model.DataSource as IDbTable)?.Description;
         }
     }
 }

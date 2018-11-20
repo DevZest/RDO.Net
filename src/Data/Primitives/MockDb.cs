@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 using DevZest.Data.Addons;
+using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Primitives
 {
@@ -32,11 +33,11 @@ namespace DevZest.Data.Primitives
 
         private void RemoveDependencyMockTables()
         {
-            var toRemove = new List<MockTable>();
-            foreach (var mockTable in _mockTables)
+            var toRemove = new List<IDbTable>();
+            foreach (var table in _mockTables)
             {
-                if (!_pendingMockTables.ContainsKey(mockTable.Table))
-                    toRemove.Add(mockTable);
+                if (!_pendingMockTables.ContainsKey(table))
+                    toRemove.Add(table);
             }
 
             foreach (var mockTable in toRemove)
@@ -46,12 +47,12 @@ namespace DevZest.Data.Primitives
         private void RemoveDependencyForeignKeys()
         {
             var tableNames = new HashSet<string>();
-            foreach (var mockTable in _mockTables)
-                tableNames.Add(mockTable.Table.Name);
+            foreach (var table in _mockTables)
+                tableNames.Add(table.Name);
 
-            foreach (var mockTable in _mockTables)
+            foreach (var table in _mockTables)
             {
-                var model = mockTable.Table.Model;
+                var model = table.Model;
                 var foreignKeys = model.GetAddons<DbForeignKey>();
                 foreach (var item in foreignKeys)
                 {
@@ -68,10 +69,9 @@ namespace DevZest.Data.Primitives
 
         private async Task CreateMockTablesAsync(IProgress<string> progress, CancellationToken ct)
         {
-            foreach (var mockTable in _mockTables)
+            foreach (var table in _mockTables)
             {
                 ct.ThrowIfCancellationRequested();
-                var table = mockTable.Table;
                 if (progress != null)
                     progress.Report(table.Name);
                 await Db.CreateTableAsync(table.Model, false, ct);
@@ -99,23 +99,11 @@ namespace DevZest.Data.Primitives
         private bool _isInitializing;
         private HashSet<string> _creatingTableNames = new HashSet<string>();
 
-        private struct MockTable
+        private sealed class MockTableCollection : KeyedCollection<string, IDbTable>
         {
-            public MockTable(string name, IDbTable table)
+            protected override string GetKeyForItem(IDbTable item)
             {
-                Name = name;
-                Table = table;
-            }
-
-            public readonly string Name;
-            public readonly IDbTable Table;
-        }
-
-        private sealed class MockTableCollection : KeyedCollection<string, MockTable>
-        {
-            protected override string GetKeyForItem(MockTable item)
-            {
-                return item.Name;
+                return item.PropertyName;
             }
         }
 
@@ -125,30 +113,36 @@ namespace DevZest.Data.Primitives
 
         internal abstract string GetMockTableName(string name);
 
-        DbTable<TModel> IMockDb.GetMockTable<TModel>(string tableName, params Func<TModel, DbForeignKey>[] foreignKeys)
+        DbTable<T> IMockDb.GetMockTable<T>(string propertyName)
         {
-            if (_mockTables.Contains(tableName))
+            if (_mockTables.Contains(propertyName))
             {
-                var result = _mockTables[tableName];
-                var resultModelType = result.Table.GetType().GenericTypeArguments[0];
-                if (typeof(TModel) != resultModelType)
-                    throw new InvalidOperationException(DiagnosticMessages.MockDb_ModelTypeMismatch(typeof(TModel).FullName, resultModelType.FullName, tableName));
-                return (DbTable<TModel>)result.Table;
+                var result = _mockTables[propertyName];
+                var resultModelType = result.GetType().GenericTypeArguments[0];
+                if (typeof(T) != resultModelType)
+                    throw new InvalidOperationException(DiagnosticMessages.MockDb_ModelTypeMismatch(typeof(T).FullName, resultModelType.FullName, propertyName));
+                return (DbTable<T>)result;
             }
 
             if (!_isInitializing)
                 return null;
 
-            if (_creatingTableNames.Contains(tableName))
-                throw new InvalidOperationException(DiagnosticMessages.MockDb_CircularReference(tableName));
+            if (_creatingTableNames.Contains(propertyName))
+                throw new InvalidOperationException(DiagnosticMessages.MockDb_CircularReference(propertyName));
 
-            _creatingTableNames.Add(tableName);
+            _creatingTableNames.Add(propertyName);
 
-            var model = new TModel().ApplyForeignKey(foreignKeys);
-            var table = DbTable<TModel>.Create(model, Db, GetMockTableName(tableName));
-            _mockTables.Add(new MockTable(tableName, table));
-            _creatingTableNames.Remove(tableName);
+            var table = DbTable<T>.Create(new T(), Db, propertyName, Initialize);
+            _mockTables.Add(table);
+            _creatingTableNames.Remove(propertyName);
             return table;
+        }
+
+        private void Initialize<T>(DbTable<T> dbTable)
+            where T : Model, new()
+        {
+            DbTablePropertyAttribute.WireupAttributes(dbTable);
+            dbTable.Name = GetMockTableName(dbTable.Name);
         }
     }
 }

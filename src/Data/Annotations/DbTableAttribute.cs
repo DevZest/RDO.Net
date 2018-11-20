@@ -24,9 +24,8 @@ namespace DevZest.Data.Annotations
 
         protected override void Wireup<T>(DbTable<T> dbTable)
         {
-            var model = dbTable.Model;
-            model.DbTableName = Name;
-            model.DbTableDescription = Description;
+            dbTable.Name = Name;
+            dbTable.Description = Description;
         }
     }
 }

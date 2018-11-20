@@ -1145,29 +1145,5 @@ namespace DevZest.Data
         {
             get { return false; }
         }
-
-        private string _dbTableName;
-        /// <summary>Gets or sets the column name in database.</summary>
-        /// <inheritdoc cref="ModelMember.VerifyDesignMode" select="exception"/>
-        internal string DbTableName
-        {
-            get { return _dbTableName ?? (DataSource as IDbTable)?.Name; }
-            set
-            {
-                VerifyDesignMode();
-                _dbTableName = value;
-            }
-        }
-
-        private string _dbTableDescription;
-        internal string DbTableDescription
-        {
-            get { return _dbTableDescription; }
-            set
-            {
-                VerifyDesignMode();
-                _dbTableDescription = value;
-            }
-        }
     }
 }

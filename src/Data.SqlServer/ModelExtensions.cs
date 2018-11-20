@@ -11,7 +11,12 @@ namespace DevZest.Data.SqlServer
     {
         internal static void GenerateCreateTableSql(this Model model, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, bool isTempTable)
         {
-            var tableName = model.GetDbTableName().ToQuotedIdentifier();
+            model.GenerateCreateTableSql(model.GetDbTableName(), model.GetDbTableDescription(), sqlBuilder, sqlVersion, isTempTable);
+        }
+
+        internal static void GenerateCreateTableSql(this Model model, string tableName, string description, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, bool isTempTable)
+        {
+            tableName = tableName.ToQuotedIdentifier();
 
             sqlBuilder.Append("CREATE TABLE ");
             sqlBuilder.Append(tableName);
@@ -34,7 +39,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.AppendLine(");");
 
             if (!isTempTable)
-                model.GenerateDescriptionSql(sqlBuilder, sqlVersion, tableName, model.GetDbTableDescription());
+                model.GenerateDescriptionSql(sqlBuilder, sqlVersion, tableName, description);
         }
 
         private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, string tableName, bool isTempTable, bool isLastColumn)

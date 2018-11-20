@@ -8,6 +8,7 @@ using System.Reflection;
 namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_ForeignKeyAttribute))]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public sealed class ForeignKeyAttribute : DbTablePropertyAttribute
     {
         public ForeignKeyAttribute(string name)

@@ -256,8 +256,8 @@ namespace DevZest.Data
         [TestMethod]
         public void Model_GenerateCreateTableSql_permanent_table()
         {
-            var temp = new TempModel().SetDbTableName("Test");
-            DbTable<TempModel>.Create(temp, new Mock<DbSession>().Object, temp.DbTableName);
+            var temp = new TempModel();
+            DbTable<TempModel>.Create(temp, new Mock<DbSession>().Object, "Test");
             var sqlBuilder = new IndentedStringBuilder();
 
             temp.GenerateCreateTableSql(sqlBuilder, SqlVersion.Sql11, false);
@@ -283,11 +283,11 @@ namespace DevZest.Data
         [TestMethod]
         public void Model_GenerateCreateTableSql_temp_table()
         {
-            var temp = new TempModel().SetDbTableName("#Temp");
+            var temp = new TempModel();
             temp.AddTempTableIdentity();
             var sqlBuilder = new IndentedStringBuilder();
 
-            temp.GenerateCreateTableSql(sqlBuilder, SqlVersion.Sql11, true);
+            temp.GenerateCreateTableSql("#Temp", null, sqlBuilder, SqlVersion.Sql11, true);
             var expectedSql =
 @"CREATE TABLE [#Temp] (
     [Id] INT NOT NULL,

@@ -42,17 +42,17 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract string GetSqlString(DbQueryStatement query);
 
-        protected virtual DbTable<T> GetTable<T>(ref DbTable<T> result, string name, params Func<T, DbForeignKey>[] foreignKeys)
+        protected DbTable<T> GetTable<T>(ref DbTable<T> result, [CallerMemberName]string name = null)
             where T : Model, new()
         {
             if (Mock != null)
-                return Mock.GetMockTable<T>(name, foreignKeys);
+                return Mock.GetMockTable<T>(name);
 
             if (result == null)
             {
                 name.VerifyNotEmpty(nameof(name));
-                var model = new T().ApplyForeignKey(foreignKeys);
-                result = DbTable<T>.Create(model, this, name);
+                var model = new T();
+                result = DbTable<T>.Create(model, this, name, DbTablePropertyAttribute.WireupAttributes);
             }
             return result;
         }
@@ -265,18 +265,6 @@ namespace DevZest.Data.Primitives
             if (refTableModel != model && string.IsNullOrEmpty(foreignKeyConstraint.ReferencedTableName))
                 throw new ArgumentException(DiagnosticMessages.Model_InvalidRefTableModel, nameof(refTableModel));
             return foreignKeyConstraint;
-        }
-
-        protected virtual DbTable<T> GetTable2<T>(ref DbTable<T> result, [CallerMemberName]string name = null)
-            where T : Model, new()
-        {
-            if (result == null)
-            {
-                name.VerifyNotEmpty(nameof(name));
-                var model = new T();
-                result = DbTable<T>.Create(model, this, name, DbTablePropertyAttribute.WireupAttributes);
-            }
-            return result;
         }
     }
 }

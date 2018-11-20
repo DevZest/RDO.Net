@@ -68,7 +68,7 @@ namespace DevZest.Data.Annotations
             [DbTable("dbo.Address", Description = "Description of Address table.")]
             public DbTable<Address> Address
             {
-                get { return GetTable2(ref _address); }
+                get { return GetTable(ref _address); }
             }
 
             private DbTable<Customer> _customer;
@@ -76,7 +76,7 @@ namespace DevZest.Data.Annotations
             [ForeignKey(nameof(FK_Customer_Address), Description = "Description of foreign key.")]
             public DbTable<Customer> Customer
             {
-                get { return GetTable2(ref _customer); }
+                get { return GetTable(ref _customer); }
             }
 
             [_ForeignKey]
