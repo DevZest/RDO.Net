@@ -27,8 +27,8 @@ namespace DevZest.Data
         protected override void Initialize()
         {
             // The order of mocking table does not matter, the dependencies will be sorted out automatically.
-            Mock(Db.SalesOrderDetails, _salesOrderDetail);
-            Mock(Db.SalesOrderHeaders, _salesOrderHeader);
+            Mock(Db.SalesOrderDetail, _salesOrderDetail);
+            Mock(Db.SalesOrderHeader, _salesOrderHeader);
         }
     }
 }

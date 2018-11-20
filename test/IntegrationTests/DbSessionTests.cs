@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
             return db.CreateQuery((DbQueryBuilder builder, SalesOrder model) =>
             {
-                builder.From(db.SalesOrderHeaders, out var h)
+                builder.From(db.SalesOrderHeader, out var h)
                     .AutoSelect()
                     .Where(h.SalesOrderID == _Int32.Const(71774) | h.SalesOrderID == _Int32.Const(71776))
                     .OrderBy(h.SalesOrderID);
@@ -24,7 +24,7 @@ namespace DevZest.Data
         private static void GetSalesOrderDetails(Db db, DbQueryBuilder queryBuilder, SalesOrderDetail model)
         {
             SalesOrderDetail d;
-            queryBuilder.From(db.SalesOrderDetails, out d)
+            queryBuilder.From(db.SalesOrderDetail, out d)
                 .AutoSelect()
                 .OrderBy(d.SalesOrderDetailID);
         }
@@ -89,7 +89,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderID];
         private static void GetDistinctSalesOrderDetails(Db db, DbAggregateQueryBuilder queryBuilder, SalesOrderDetail model)
         {
             SalesOrderDetail d;
-            queryBuilder.From(db.SalesOrderDetails, out d)
+            queryBuilder.From(db.SalesOrderDetail, out d)
                 .AutoSelect()
                 .OrderBy(d.SalesOrderDetailID);
         }
@@ -100,7 +100,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderID];
             var log = new StringBuilder();
             using (var db = OpenDbAsync(log).Result)
             {
-                var customers = db.Customers.OrderBy(x => x.CustomerID);
+                var customers = db.Customer.OrderBy(x => x.CustomerID);
                 var c = customers._;
                 using (var reader = db.ExecuteReaderAsync(customers).Result)
                 {
@@ -138,7 +138,7 @@ ORDER BY [Customer].[CustomerID];
             var log = new StringBuilder();
             using (var db = await OpenDbAsync(log))
             {
-                var customers = db.Customers.OrderBy(x => x.CustomerID);
+                var customers = db.Customer.OrderBy(x => x.CustomerID);
                 var c = customers._;
                 using (var reader = await db.ExecuteReaderAsync(customers))
                 {
@@ -176,11 +176,11 @@ ORDER BY [Customer].[CustomerID];
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
-                var salesOrder = await db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
-                await salesOrder.FillAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetails);
+                var salesOrder = await db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
+                await salesOrder.FillAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetail);
                 await db.UpdateAsync(salesOrder, CancellationToken.None);
 
-                var dataSet = await db.SalesOrderDetails.Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
+                var dataSet = await db.SalesOrderDetail.Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
                 Assert.IsTrue(dataSet._.ModifiedDate[0].Value.AddSeconds(1) > DateTime.Now);
             }
         }
@@ -196,7 +196,7 @@ ORDER BY [Customer].[CustomerID];
 
                 int salesOrderID = salesOrder._.SalesOrderID[0].Value;
                 Assert.AreEqual(5, salesOrderID);
-                var dataSet = await db.SalesOrderDetails.Where(_ => _.SalesOrderID == salesOrderID).ToDataSetAsync(CancellationToken.None);
+                var dataSet = await db.SalesOrderDetail.Where(_ => _.SalesOrderID == salesOrderID).ToDataSetAsync(CancellationToken.None);
                 Assert.IsTrue(dataSet._.ModifiedDate[0].Value.AddSeconds(1) > DateTime.Now);
             }
         }

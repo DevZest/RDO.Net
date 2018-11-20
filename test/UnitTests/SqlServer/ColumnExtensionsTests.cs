@@ -222,7 +222,7 @@ namespace DevZest.Data.SqlServer
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var column = db.SalesOrderHeaders._.AccountNumber.Clone(new Mock<Model>().Object);
+                var column = db.SalesOrderHeader._.AccountNumber.Clone(new Mock<Model>().Object);
                 VerifySqlType(SqlVersion.Sql11, column, SqlDbType.NVarChar, 15, "NVARCHAR(15)");
             }
         }

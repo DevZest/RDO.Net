@@ -24,7 +24,7 @@ namespace DevZest.Data
 
         protected override void Initialize()
         {
-            Mock(Db.ProductCategories, _productCategories);
+            Mock(Db.ProductCategory, _productCategories);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var query = db.SalesOrderHeaders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                var query = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 var expectedSql =
 @"SELECT
     [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID],
@@ -52,7 +52,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderID];
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var query = db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()).Where(x => x.Name.IsNotNull());
+                var query = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).Where(x => x.Name.IsNotNull());
                 var expectedSql =
 @"SELECT
     [ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
@@ -72,7 +72,7 @@ WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCatego
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var query = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
+                var query = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
                 var expectedSql =
 @"(SELECT
     [Product].[ProductID] AS [ProductID],
@@ -191,7 +191,7 @@ ORDER BY [Product].[Name] ASC;
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var query = db.SalesOrderDetails.OrderBy(10, 20, x => x.SalesOrderDetailID);
+                var query = db.SalesOrderDetail.OrderBy(10, 20, x => x.SalesOrderDetailID);
                 var expectedSql =
 @"SELECT
     [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],

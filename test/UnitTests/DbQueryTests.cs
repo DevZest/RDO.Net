@@ -17,7 +17,7 @@ namespace DevZest.Data
                 var query = db.CreateQuery((DbQueryBuilder builder, ProductDescription model) =>
                 {
                     ProductDescription d;
-                    builder.From(db.ProductDescriptions, out d)
+                    builder.From(db.ProductDescription, out d)
                     .AutoSelect()
                     .Where(d.ProductDescriptionID > 5)
                     .OrderBy(d.ProductDescriptionID.Desc());
@@ -46,7 +46,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID] DESC;
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
                     ProductDescription d;
-                    builder.From(db.ProductDescriptions, out d)
+                    builder.From(db.ProductDescription, out d)
                     .Select(d.ProductDescriptionID, adhoc, "Id");
                 });
                 var expectedSql =
@@ -65,7 +65,7 @@ FROM [SalesLT].[ProductDescription] [ProductDescription];
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
                     ProductDescription d;
-                    builder.From(db.ProductDescriptions, out d)
+                    builder.From(db.ProductDescription, out d)
                         .Select(d.ProductDescriptionID, adhoc, "Id")
                         .Select(d.Description, adhoc)
                         .OrderBy(d.ProductDescriptionID);
@@ -90,7 +90,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
                     ProductDescription d;
-                    builder.From(db.ProductDescriptions, out d)
+                    builder.From(db.ProductDescription, out d)
                         .Select(d.ProductDescriptionID.Count(), adhoc);
                 });
             }
@@ -104,8 +104,8 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
                 var query = db.CreateAggregateQuery<Adhoc>((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
                 {
                     _Int32 count;
-                    builder.From(db.SalesOrderHeaders, out var h)
-                        .InnerJoin(db.SalesOrderDetails, h.PrimaryKey, x => x.FK_SalesOrderHeader, out var d)
+                    builder.From(db.SalesOrderHeader, out var h)
+                        .InnerJoin(db.SalesOrderDetail, h.PrimaryKey, x => x.FK_SalesOrderHeader, out var d)
                         .Select(h.SalesOrderID, adhoc)
                         .Select(count = d.SalesOrderID.Count(), adhoc, "LineCount")
                         .Having(count > _Int32.Const(1))
@@ -135,9 +135,9 @@ ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrderHeader].[Sale
             {
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
-                    builder.From(db.SalesOrderDetails, out var d)
-                        .InnerJoin(db.SalesOrderHeaders, d.FK_SalesOrderHeader, out var h)
-                        .InnerJoin(db.Products, d.FK_Product, out var p)
+                    builder.From(db.SalesOrderDetail, out var d)
+                        .InnerJoin(db.SalesOrderHeader, d.FK_SalesOrderHeader, out var h)
+                        .InnerJoin(db.Product, d.FK_Product, out var p)
                         .Select(d.SalesOrderID, adhoc)
                         .Select(d.SalesOrderDetailID, adhoc)
                         .Select(p.Name, adhoc)
@@ -173,7 +173,7 @@ ORDER BY [SalesOrderDetail].[SalesOrderID], [SalesOrderDetail].[SalesOrderDetail
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var query = db.Products.Where(x => x.ProductID > _Int32.Const(500));
+                var query = db.Product.Where(x => x.ProductID > _Int32.Const(500));
                 var query2 = db.CreateQuery((DbQueryBuilder builder, Product model) =>
                 {
                     Product p;
@@ -211,9 +211,9 @@ WHERE ([Product].[ProductID] > 500);
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
-                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID)).Result;
+                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
                 var expectedSql =
 @"SELECT
     [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
@@ -241,12 +241,12 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
                 var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, (DbAggregateQueryBuilder builder, SalesOrderDetail model) =>
                 {
                     SalesOrderDetail d;
-                    builder.From(db.SalesOrderDetails, out d)
+                    builder.From(db.SalesOrderDetail, out d)
                         .AutoSelect()
                         .OrderBy(d.SalesOrderDetailID);
                 }).Result;
@@ -289,7 +289,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var unionQuery = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
+                var unionQuery = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
                 unionQuery.MockSequentialKeyTempTable();
                 var expectedSql =
 @"SELECT
@@ -367,7 +367,7 @@ ORDER BY [sys_sequential_Product].[sys_row_id] ASC;
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrderHeaders = db.SalesOrderHeaders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                var salesOrderHeaders = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 salesOrderHeaders.MockSequentialKeyTempTable();
                 var expectedSql =
 @"SELECT
@@ -411,9 +411,9 @@ ORDER BY [sys_sequential_SalesOrderHeader].[sys_row_id] ASC;
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
-                var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID)).Result;
+                var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
                 salesOrderDetails.MockSequentialKeyTempTable();
                 var expectedSql =
 @"SELECT
@@ -447,7 +447,7 @@ ORDER BY [sys_sequential_SalesOrderDetail].[sys_row_id] ASC;
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrderHeaders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
                 var expectedSql = new string[]
                 {
@@ -477,7 +477,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderID];"
             {
                 var salesOrders = db.CreateAggregateQuery((DbAggregateQueryBuilder queryBuilder, SalesOrder model) =>
                 {
-                    queryBuilder.From(db.SalesOrderHeaders, out var h)
+                    queryBuilder.From(db.SalesOrderHeader, out var h)
                         .AutoSelect()
                         .Where(h.SalesOrderID == _Int32.Const(71774) | h.SalesOrderID == _Int32.Const(71776))
                         .OrderBy(h.SalesOrderNumber.Desc());
@@ -535,7 +535,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderNumber] DESC;"
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var unionQuery = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
+                var unionQuery = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
                 var commands = unionQuery.GetCreateSequentialKeyTempTableCommands();
 
                 var expectedSql = new string[]

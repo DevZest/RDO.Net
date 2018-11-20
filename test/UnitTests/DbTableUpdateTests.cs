@@ -15,7 +15,7 @@ namespace DevZest.Data
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var command = db.ProductCategories.MockUpdate(0, (builder, x) => builder.Select(Functions.GetDate(), x.ModifiedDate),
+                var command = db.ProductCategory.MockUpdate(0, (builder, x) => builder.Select(Functions.GetDate(), x.ModifiedDate),
                     x => x.ModifiedDate.IsNull());
                 var expectedSql =
 @"UPDATE [ProductCategory] SET
@@ -33,7 +33,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var tempTable = db.MockTempTable<ProductCategory>();
-                var command = db.ProductCategories.MockUpdate(0, tempTable);
+                var command = db.ProductCategory.MockUpdate(0, tempTable);
                 var expectedSql =
 @"UPDATE [ProductCategory1] SET
     [ParentProductCategoryID] = [ProductCategory].[ParentProductCategoryID],
@@ -55,8 +55,8 @@ FROM
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var query = db.ProductCategories.Where(x => x.ModifiedDate.IsNull());
-                var command = db.ProductCategories.MockUpdate(0, query);
+                var query = db.ProductCategory.Where(x => x.ModifiedDate.IsNull());
+                var command = db.ProductCategory.MockUpdate(0, query);
                 var expectedSql =
 @"UPDATE [ProductCategory] SET
     [ParentProductCategoryID] = [ProductCategory].[ParentProductCategoryID],
@@ -80,7 +80,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
-                var command = db.ProductCategories.MockUpdate(0, query);
+                var command = db.ProductCategory.MockUpdate(0, query);
                 var expectedSql =
 @"UPDATE [ProductCategory1] SET
     [ParentProductCategoryID] = [ProductCategory].[ParentProductCategoryID],
@@ -108,7 +108,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
                 dataSet._.Name[index] = "Name";
                 dataSet._.RowGuid[index] = new Guid("EC359D7D-AE3A-4A9D-BDCB-03F0A7799514");
                 dataSet._.ModifiedDate[index] = new DateTime(2015, 9, 23);
-                var command = db.ProductCategories.MockUpdate(true, dataSet, 0);
+                var command = db.ProductCategory.MockUpdate(true, dataSet, 0);
                 var expectedSql =
 @"DECLARE @p1 INT = NULL;
 DECLARE @p2 NVARCHAR(50) = N'Name';
@@ -169,7 +169,7 @@ FROM
     [SalesLT].[ProductCategory] [ProductCategory]
     ON [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') = [ProductCategory].[ProductCategoryID]);
 ";
-                var command = db.ProductCategories.MockUpdate(dataSet.Count, dataSet);
+                var command = db.ProductCategory.MockUpdate(dataSet.Count, dataSet);
                 command.Verify(expectedSql);
             }
         }

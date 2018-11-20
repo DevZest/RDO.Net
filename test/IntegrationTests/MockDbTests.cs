@@ -14,7 +14,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = new ProductCategoryMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
-                Assert.AreEqual(13, db.ProductCategories.CountAsync().Result);
+                Assert.AreEqual(13, db.ProductCategory.CountAsync().Result);
             }
         }
 
@@ -25,8 +25,8 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb(null, null).InitializeAsync(OpenDbAsync(log).Result).Result)
             {
-                Assert.AreEqual(0, db.SalesOrderHeaders.CountAsync().Result);
-                Assert.AreEqual(0, db.SalesOrderDetails.CountAsync().Result);
+                Assert.AreEqual(0, db.SalesOrderHeader.CountAsync().Result);
+                Assert.AreEqual(0, db.SalesOrderDetail.CountAsync().Result);
             }
         }
     }

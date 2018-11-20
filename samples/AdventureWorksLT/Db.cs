@@ -38,46 +38,46 @@ namespace DevZest.Samples.AdventureWorksLT
         {
         }
 
-        private DbTable<Address> _addresses;
+        private DbTable<Address> _address;
         [DbTable("[SalesLT].[Address]", Description = "Street address information for customers.")]
-        public DbTable<Address> Addresses
+        public DbTable<Address> Address
         {
-            get { return GetTable(ref _addresses); }
+            get { return GetTable(ref _address); }
         }
 
-        private DbTable<Customer> _customers;
+        private DbTable<Customer> _customer;
         [DbTable("[SalesLT].[Customer]", Description = "Customer information.")]
-        public DbTable<Customer> Customers
+        public DbTable<Customer> Customer
         {
-            get { return GetTable(ref _customers); }
+            get { return GetTable(ref _customer); }
         }
 
-        private DbTable<CustomerAddress> _customerAddresses;
+        private DbTable<CustomerAddress> _customerAddress;
         [DbTable("[SalesLT].[CustomerAddress]", Description = "Cross-reference table mapping customers to their address(es).")]
         [ForeignKey(nameof(FK_CustomerAddress_Customer_CustomerID), Description = "Foreign key constraint referencing Customer.CustomerID.")]
         [ForeignKey(nameof(FK_CustomerAddress_Address_AddressID), Description = "Foreign key constraint referencing Address.AddressID.")]
-        public DbTable<CustomerAddress> CustomerAddresses
+        public DbTable<CustomerAddress> CustomerAddress
         {
-            get { return GetTable(ref _customerAddresses); }
+            get { return GetTable(ref _customerAddress); }
         }
 
         [_ForeignKey]
         private KeyMapping FK_CustomerAddress_Customer_CustomerID(CustomerAddress _)
         {
-            return _.FK_Customer.Join(Customers._);
+            return _.FK_Customer.Join(Customer._);
         }
 
         private KeyMapping FK_CustomerAddress_Address_AddressID(CustomerAddress _)
         {
-            return _.FK_Address.Join(Addresses._);
+            return _.FK_Address.Join(Address._);
         }
 
-        private DbTable<ProductCategory> _productCategories;
+        private DbTable<ProductCategory> _productCategory;
         [DbTable("[SalesLT].[ProductCategory]", Description = "High-level product categorization.")]
         [ForeignKey(nameof(FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID), Description = "Foreign key constraint referencing ProductCategory.ProductCategoryID.")]
-        public DbTable<ProductCategory> ProductCategories
+        public DbTable<ProductCategory> ProductCategory
         {
-            get { return GetTable(ref _productCategories); }
+            get { return GetTable(ref _productCategory); }
         }
 
         [_ForeignKey]
@@ -86,118 +86,118 @@ namespace DevZest.Samples.AdventureWorksLT
             return _.FK_ParentProductCategory.Join(_);
         }
 
-        private DbTable<ProductModel> _productModels;
+        private DbTable<ProductModel> _productModel;
         [DbTable("[SalesLT].[ProductModel]")]
-        public DbTable<ProductModel> ProductModels
+        public DbTable<ProductModel> ProductModel
         {
-            get { return GetTable(ref _productModels); }
+            get { return GetTable(ref _productModel); }
         }
 
-        private DbTable<ProductDescription> _productDescriptions;
+        private DbTable<ProductDescription> _productDescription;
         [DbTable("[SalesLT].[ProductDescription]", Description = "Product descriptions in several languages.")]
-        public DbTable<ProductDescription> ProductDescriptions
+        public DbTable<ProductDescription> ProductDescription
         {
-            get { return GetTable(ref _productDescriptions); }
+            get { return GetTable(ref _productDescription); }
         }
 
-        private DbTable<ProductModelProductDescription> _productModelProductDescriptions;
+        private DbTable<ProductModelProductDescription> _productModelProductDescription;
         [DbTable("[SalesLT].[ProductModelProductDescription]", Description = "Cross-reference table mapping product descriptions and the language the description is written in.")]
         [ForeignKey(nameof(FK_ProductModelProductDescription_ProductModel_ProductModelID), Description = "Foreign key constraint referencing ProductModel.ProductModelID.")]
         [ForeignKey(nameof(FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID), Description = "Foreign key constraint referencing ProductDescription.ProductDescriptionID.")]
-        public DbTable<ProductModelProductDescription> ProductModelProductDescriptions
+        public DbTable<ProductModelProductDescription> ProductModelProductDescription
         {
-            get { return GetTable(ref _productModelProductDescriptions); }
+            get { return GetTable(ref _productModelProductDescription); }
         }
 
         [_ForeignKey]
         private KeyMapping FK_ProductModelProductDescription_ProductModel_ProductModelID(ProductModelProductDescription _)
         {
-            return _.FK_ProductModel.Join(ProductModels._);
+            return _.FK_ProductModel.Join(ProductModel._);
         }
 
         [_ForeignKey]
         private KeyMapping FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID(ProductModelProductDescription _)
         {
-            return _.FK_ProductDescription.Join(ProductDescriptions._);
+            return _.FK_ProductDescription.Join(ProductDescription._);
         }
 
-        private DbTable<Product> _products;
+        private DbTable<Product> _product;
         [DbTable("[SalesLT].[Product]", Description = "Products sold or used in the manfacturing of sold products.")]
         [ForeignKey(nameof(FK_Product_ProductModel_ProductModelID))]
         [ForeignKey(nameof(FK_Product_ProductCategory_ProductCategoryID))]
-        public DbTable<Product> Products
+        public DbTable<Product> Product
         {
-            get { return GetTable(ref _products); }
+            get { return GetTable(ref _product); }
         }
 
         [_ForeignKey]
         private KeyMapping FK_Product_ProductModel_ProductModelID(Product _)
         {
-            return _.FK_ProductModel.Join(ProductModels._);
+            return _.FK_ProductModel.Join(ProductModel._);
         }
 
         [_ForeignKey]
         private KeyMapping FK_Product_ProductCategory_ProductCategoryID(Product _)
         {
-            return _.FK_ProductCategory.Join(ProductCategories._);
+            return _.FK_ProductCategory.Join(ProductCategory._);
         }
 
-        private DbTable<SalesOrderHeader> _salesOrderHeaders;
+        private DbTable<SalesOrderHeader> _salesOrderHeader;
         [DbTable("[SalesLT].[SalesOrderHeader]", Description = "General sales order information.")]
         [ForeignKey(nameof(FK_SalesOrderHeader_Customer_CustomerID))]
         [ForeignKey(nameof(FK_SalesOrderHeader_Address_BillTo_AddressID))]
         [ForeignKey(nameof(FK_SalesOrderHeader_Address_ShipTo_AddressID))]
-        public DbTable<SalesOrderHeader> SalesOrderHeaders
+        public DbTable<SalesOrderHeader> SalesOrderHeader
         {
-            get { return GetTable(ref _salesOrderHeaders); }
+            get { return GetTable(ref _salesOrderHeader); }
         }
 
         [_ForeignKey]
         private KeyMapping FK_SalesOrderHeader_Customer_CustomerID(SalesOrderHeader _)
         {
-            return _.FK_Customer.Join(Customers._);
+            return _.FK_Customer.Join(Customer._);
         }
 
         [_ForeignKey]
         private KeyMapping FK_SalesOrderHeader_Address_BillTo_AddressID(SalesOrderHeader _)
         {
-            return _.FK_BillToCustomerAddress.Join(CustomerAddresses._);
+            return _.FK_BillToCustomerAddress.Join(CustomerAddress._);
         }
 
         [_ForeignKey]
         private KeyMapping FK_SalesOrderHeader_Address_ShipTo_AddressID(SalesOrderHeader _)
         {
-            return _.FK_ShipToCustomerAddress.Join(CustomerAddresses._);
+            return _.FK_ShipToCustomerAddress.Join(CustomerAddress._);
         }
 
-        private DbTable<SalesOrderDetail> _salesOrderDetails;
+        private DbTable<SalesOrderDetail> _salesOrderDetail;
         [DbTable("[SalesLT].[SalesOrderDetail]", Description = "Individual products associated with a specific sales order. See SalesOrderHeader.")]
         [ForeignKey(nameof(FK_SalesOrderDetail_SalesOrderHeader))]
         [ForeignKey(nameof(FK_SalesOrderDetail_Product))]
-        public DbTable<SalesOrderDetail> SalesOrderDetails
+        public DbTable<SalesOrderDetail> SalesOrderDetail
         {
-            get { return GetTable(ref _salesOrderDetails); }
+            get { return GetTable(ref _salesOrderDetail); }
         }
 
         [_ForeignKey]
         private KeyMapping FK_SalesOrderDetail_SalesOrderHeader(SalesOrderDetail _)
         {
-            return _.FK_SalesOrderHeader.Join(SalesOrderHeaders._);
+            return _.FK_SalesOrderHeader.Join(SalesOrderHeader._);
         }
 
         [_ForeignKey]
         private KeyMapping FK_SalesOrderDetail_Product(SalesOrderDetail _)
         {
-            return _.FK_Product.Join(Products._);
+            return _.FK_Product.Join(Product._);
         }
 
         public DbSet<SalesOrderHeader> GetSalesOrderHeaders(string filterText, IReadOnlyList<IColumnComparer> orderBy)
         {
             DbSet<SalesOrderHeader> result;
             if (string.IsNullOrEmpty(filterText))
-                result = SalesOrderHeaders;
+                result = SalesOrderHeader;
             else
-                result = SalesOrderHeaders.Where(_ => _.SalesOrderNumber.Contains(filterText) | _.PurchaseOrderNumber.Contains(filterText));
+                result = SalesOrderHeader.Where(_ => _.SalesOrderNumber.Contains(filterText) | _.PurchaseOrderNumber.Contains(filterText));
 
             if (orderBy != null && orderBy.Count > 0)
                 result = result.OrderBy(GetOrderBy(result._, orderBy));
@@ -222,10 +222,10 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
             {
-                builder.From(SalesOrderHeaders, out var o)
-                    .LeftJoin(Customers, o.FK_Customer, out var c)
-                    .LeftJoin(Addresses, o.FK_ShipToAddress, out var shipTo)
-                    .LeftJoin(Addresses, o.FK_BillToAddress, out var billTo)
+                builder.From(SalesOrderHeader, out var o)
+                    .LeftJoin(Customer, o.FK_Customer, out var c)
+                    .LeftJoin(Address, o.FK_ShipToAddress, out var shipTo)
+                    .LeftJoin(Address, o.FK_BillToAddress, out var billTo)
                     .AutoSelect()
                     .AutoSelect(c, _.Customer)
                     .AutoSelect(shipTo, _.ShipToAddress)
@@ -235,8 +235,8 @@ namespace DevZest.Samples.AdventureWorksLT
 
             await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
             {
-                builder.From(SalesOrderDetails, out var d)
-                    .LeftJoin(Products, d.FK_Product, out var p)
+                builder.From(SalesOrderDetail, out var d)
+                    .LeftJoin(Product, d.FK_Product, out var p)
                     .AutoSelect()
                     .AutoSelect(p, _.Product);
             }, ct);
@@ -252,11 +252,11 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeaders.Update(salesOrders).ExecuteAsync(ct);
-            await SalesOrderDetails.Delete(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader)).ExecuteAsync(ct);
+            await SalesOrderHeader.Update(salesOrders).ExecuteAsync(ct);
+            await SalesOrderDetail.Delete(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader)).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
+            await SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct);
         }
 
         public Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
@@ -267,10 +267,10 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeaders.Insert(salesOrders, updateIdentity: true).ExecuteAsync(ct);
+            await SalesOrderHeader.Insert(salesOrders, updateIdentity: true).ExecuteAsync(ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct);
+            await SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct);
         }
 
         public async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> refs, CancellationToken ct = default(CancellationToken))
@@ -282,7 +282,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 builder.From(tempTable, out var t);
                 var seqNo = t.Model.GetIdentity(true).Column;
                 Debug.Assert(!(seqNo is null));
-                builder.LeftJoin(Products, t.ForeignKey, out var p)
+                builder.LeftJoin(Product, t.ForeignKey, out var p)
                     .AutoSelect().OrderBy(seqNo);
             }).ToDataSetAsync(ct);
         }

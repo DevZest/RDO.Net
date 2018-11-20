@@ -14,10 +14,10 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = OpenDbAsync(log).Result)
             {
-                var productCategories = db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
+                var productCategories = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
                 var children = productCategories;
                 while (children != null)
-                    children = children.CreateChildAsync(x => x.SubCategories, db.ProductCategories.OrderBy(x => x.ProductCategoryID)).Result;
+                    children = children.CreateChildAsync(x => x.SubCategories, db.ProductCategory.OrderBy(x => x.ProductCategoryID)).Result;
 
                 var result = productCategories.ToDataSetAsync().Result;
                 var childModel = result._.SubCategories;
@@ -37,10 +37,10 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = await OpenDbAsync(log))
             {
-                var productCategories = db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
+                var productCategories = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
                 var children = productCategories;
                 while (children != null)
-                    children = await children.CreateChildAsync(x => x.SubCategories, db.ProductCategories.OrderBy(x => x.ProductCategoryID));
+                    children = await children.CreateChildAsync(x => x.SubCategories, db.ProductCategory.OrderBy(x => x.ProductCategoryID));
 
                 var result = await productCategories.ToDataSetAsync();
                 var childModel = result._.SubCategories;
@@ -75,7 +75,7 @@ namespace DevZest.Data
             {
                 var json = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
-                    builder.From(db.SalesOrderHeaders, out var o)
+                    builder.From(db.SalesOrderHeader, out var o)
                         .Select(o.SalesOrderID, adhoc)
                         .Select(o.SalesOrderNumber, adhoc)
                         .Where(o.SalesOrderID == 71774 | o.SalesOrderID == 71776)
@@ -100,9 +100,9 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = await OpenDbAsync(log))
             {
-                var salesOrders = await db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
+                var salesOrders = await db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
                 Assert.IsTrue(salesOrders.Count == 1);
-                await salesOrders.FillAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
+                await salesOrders.FillAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetail);
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
             }
         }

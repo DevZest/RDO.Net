@@ -17,7 +17,7 @@ namespace DevZest.Data
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<Product>();
-                var commands = table.MockInsert(0, db.Products);
+                var commands = table.MockInsert(0, db.Product);
                 var expectedSql =
 @"INSERT INTO [#Product]
 ([ProductID], [Name], [ProductNumber], [Color], [StandardCost], [ListPrice], [Size], [Weight], [ProductCategoryID], [ProductModelID], [SellStartDate], [SellEndDate], [DiscontinuedDate], [ThumbNailPhoto], [ThumbnailPhotoFileName], [RowGuid], [ModifiedDate])
@@ -51,7 +51,7 @@ FROM [SalesLT].[Product] [Product];
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
-                var command = table.MockInsert(0, db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()));
+                var command = table.MockInsert(0, db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()));
                 var expectedSql =
 @"INSERT INTO [#ProductCategory]
 ([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
@@ -74,7 +74,7 @@ WHERE ([ProductCategory].[ParentProductCategoryID] IS NULL);
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
-                var command = table.MockInsert(0, db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()), skipExisting: true);
+                var command = table.MockInsert(0, db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()), skipExisting: true);
                 var expectedSql =
 @"INSERT INTO [#ProductCategory]
 ([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
@@ -100,9 +100,9 @@ WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCatego
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var salesOrders = db.SalesOrderHeaders.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
-                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID)).Result;
+                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
                 var tempTable = db.MockTempTable<SalesOrderDetail>();
                 var command = tempTable.MockInsert(0, childQuery);
 
@@ -208,7 +208,7 @@ WHERE ([ProductCategory1].[ProductCategoryID] IS NULL);
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var tempTable = db.MockTempTable<Product>();
-                var unionQuery = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
+                var unionQuery = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
                 var command = tempTable.MockInsert(0, unionQuery);
                 var expectedSql =
 @"INSERT INTO [#Product]
@@ -475,7 +475,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
                 var sourceData = db.MockTempTable<ProductCategory>();
                 var children = sourceData.MockCreateChild(x => x.SubCategories);
                 var grandChildren = children.MockCreateChild(x => x.SubCategories);
-                var commands = db.ProductCategories.MockInsert(10, sourceData, updateIdentity: true);
+                var commands = db.ProductCategory.MockInsert(10, sourceData, updateIdentity: true);
 
                 var expectedSql = new string[]
                 {
