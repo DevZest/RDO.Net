@@ -297,8 +297,8 @@
   <data name="DbTable_GetKeyMappings_CannotMatch" xml:space="preserve">
     <value>Cannot match primary key of current table and the source Model.</value>
   </data>
-  <data name="NotSupportedByReadOnlyList" xml:space="preserve">
-    <value>The operation is not supported by readonly list.</value>
+  <data name="DataSet_VerifyNotReadOnly" xml:space="preserve">
+    <value>The operation is not supported by readonly DataSet.</value>
   </data>
   <data name="MockDb_CircularReference" xml:space="preserve">
     <value>Circular reference detected for table "{tableName}".</value>

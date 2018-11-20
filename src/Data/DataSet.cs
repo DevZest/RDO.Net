@@ -76,8 +76,8 @@ namespace DevZest.Data
         public void Insert(int index, DataRow dataRow, Action<DataRow> updateAction)
         {
             dataRow.VerifyNotNull(nameof(dataRow));
-            if (IsReadOnly)
-                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
+            VerifyNotReadOnly();
+
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
             if (dataRow.Ordinal >= 0)
@@ -109,8 +109,7 @@ namespace DevZest.Data
         /// <inheritdoc cref="IList{T}.RemoveAt(int)"/>
         public void RemoveAt(int index)
         {
-            if (IsReadOnly)
-                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
+            VerifyNotReadOnly();
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
@@ -148,8 +147,7 @@ namespace DevZest.Data
 
         public void Clear()
         {
-            if (IsReadOnly)
-                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
+            VerifyNotReadOnly();
 
             for (int i = Count - 1; i >= 0; i--)
                 OuterRemoveAt(i);
@@ -243,8 +241,7 @@ namespace DevZest.Data
 
         public DataRow BeginAdd()
         {
-            if (IsReadOnly)
-                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
+            VerifyNotReadOnly();
 
             if (EditingRow != null)
                 return null;
@@ -261,8 +258,7 @@ namespace DevZest.Data
 
         public DataRow EndAdd(int index)
         {
-            if (IsReadOnly)
-                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
+            VerifyNotReadOnly();
 
             if (AddingRow == null)
                 return null;
@@ -275,8 +271,7 @@ namespace DevZest.Data
 
         public bool CancelAdd()
         {
-            if (IsReadOnly)
-                throw new NotSupportedException(DiagnosticMessages.NotSupportedByReadOnlyList);
+            VerifyNotReadOnly();
 
             var addingRow = AddingRow;
             if (addingRow == null)
@@ -285,6 +280,12 @@ namespace DevZest.Data
             addingRow.ResetModel();
             Model.CancelEdit();
             return true;
+        }
+
+        private void VerifyNotReadOnly()
+        {
+            if (IsReadOnly)
+                throw new NotSupportedException(DiagnosticMessages.DataSet_VerifyNotReadOnly);
         }
 
         IJsonView IJsonView.GetChildView(DataSet childDataSet)

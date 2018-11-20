@@ -492,11 +492,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The operation is not supported by readonly list.
+        /// The operation is not supported by readonly DataSet.
         /// </summary>
-        public static string NotSupportedByReadOnlyList
+        public static string DataSet_VerifyNotReadOnly
         {
-            get { return GetString("NotSupportedByReadOnlyList"); }
+            get { return GetString("DataSet_VerifyNotReadOnly"); }
         }
 
         /// <summary>
