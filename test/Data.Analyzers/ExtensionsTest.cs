@@ -25,7 +25,7 @@ namespace DevZest.Data.CodeAnalysis
             var identityAttribute = compilation.GetTypeByMetadataName("DevZest.Data.Annotations.IdentityAttribute");
             Assert.IsNotNull(identityAttribute);
 
-            var result = identityAttribute.GetModelMemberAttributeSpec(compilation).Value;
+            var result = identityAttribute.GetAttributeSpec(compilation).Value;
 
             {
                 var addonTypes = result.AddonTypes;

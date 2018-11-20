@@ -4,7 +4,7 @@ using DevZest.Data.SqlServer.Addons;
 
 namespace DevZest.Data.SqlServer
 {
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
     public sealed class SqlBinaryAttribute : ColumnAttribute
     {
         public SqlBinaryAttribute(int size)
@@ -21,7 +21,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
     public sealed class SqlBinaryMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -31,7 +31,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class SqlCharAttribute : ColumnAttribute
     {
         public SqlCharAttribute(int size)
@@ -48,7 +48,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class SqlCharMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -58,7 +58,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class SqlDateAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -68,7 +68,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class SqlDateTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -78,7 +78,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class SqlDateTime2Attribute : ColumnAttribute
     {
         public SqlDateTime2Attribute(byte precision)
@@ -95,7 +95,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
     public sealed class SqlDecimalAttribute : ColumnAttribute
     {
         public SqlDecimalAttribute(byte precision, byte scale)
@@ -115,7 +115,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
     public sealed class SqlMoneyAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -125,7 +125,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class SqlNCharAttribute : ColumnAttribute
     {
         public SqlNCharAttribute(int size)
@@ -142,7 +142,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class SqlNCharMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -152,7 +152,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class SqlNVarCharAttribute : ColumnAttribute
     {
         public SqlNVarCharAttribute(int size)
@@ -169,7 +169,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class SqlNVarCharMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -179,7 +179,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class SqlSmallDateTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -189,7 +189,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
     public sealed class SqlSmallMoneyAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -199,7 +199,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class SqlTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -209,7 +209,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
     public sealed class SqlTimeStampAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -219,7 +219,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
     public sealed class SqlVarBinaryAttribute : ColumnAttribute
     {
         public SqlVarBinaryAttribute(int size)
@@ -236,7 +236,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
     public sealed class SqlVarBinaryMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
@@ -246,7 +246,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class SqlVarCharAttribute : ColumnAttribute
     {
         public SqlVarCharAttribute(int size)
@@ -263,7 +263,7 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    [AttributeSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class SqlVarCharMaxAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)

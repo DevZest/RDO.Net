@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace DevZest.Data.Annotations.Primitives
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class ModelMemberAttributeSpecAttribute : Attribute
+    public sealed class AttributeSpecAttribute : Attribute
     {
-        public ModelMemberAttributeSpecAttribute(Type[] addonTypes, Type[] validOnTypes)
+        public AttributeSpecAttribute(Type[] addonTypes, Type[] validOnTypes)
         {
-            AddonTypes = addonTypes ?? Array.Empty<Type>();
             ValidOnTypes = validOnTypes ?? Array.Empty<Type>();
+            AddonTypes = addonTypes ?? Array.Empty<Type>();
         }
 
         public IReadOnlyList<Type> AddonTypes { get; }

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace DevZest.Data.Annotations
 {
-    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
+    [AttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class EmailAddressAttribute : ValidationColumnAttribute
     {
         private static Regex s_regex = CreateRegEx();

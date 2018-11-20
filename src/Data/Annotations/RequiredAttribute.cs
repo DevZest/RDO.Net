@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
+    [AttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
     public sealed class RequiredAttribute : ValidationColumnAttribute
     {
         protected override void Wireup(Column column)

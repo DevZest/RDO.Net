@@ -5,7 +5,7 @@ using System.Linq;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
+    [AttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class CreditCardAttribute : ValidationColumnAttribute
     {
         protected override bool IsValid(Column column, DataRow dataRow)

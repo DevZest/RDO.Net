@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
+    [AttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
     public sealed class RegularExpressionAttribute : ValidationColumnAttribute
     {
         public RegularExpressionAttribute(string pattern)
