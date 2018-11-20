@@ -302,9 +302,9 @@ namespace DevZest.Data
         /// <summary>
         /// The child model returned by the getter is invalid. It cannot be null and its ParentModel must be the calling model.
         /// </summary>
-        public static string InvalidChildModelGetter
+        public static string DataSet_InvalidChildModelGetter
         {
-            get { return GetString("InvalidChildModelGetter"); }
+            get { return GetString("DataSet_InvalidChildModelGetter"); }
         }
 
         /// <summary>

@@ -234,7 +234,7 @@ namespace DevZest.Data
             var dataRow = this[dataRowOrdinal];
             var childModel = getChildModel(this._);
             if (childModel.ParentModel != Model)
-                throw new ArgumentException(DiagnosticMessages.InvalidChildModelGetter, nameof(getChildModel));
+                throw new ArgumentException(DiagnosticMessages.DataSet_InvalidChildModelGetter, nameof(getChildModel));
 
             var childDataSet = (DataSet<TChild>)dataRow[childModel];
             var mappings = childModel.ParentRelationship;
@@ -268,7 +268,7 @@ namespace DevZest.Data
             getChild.VerifyNotNull(nameof(getChild));
             var childModel = getChild(_);
             if (childModel == null || childModel.ParentModel != this.Model)
-                throw new ArgumentException(DiagnosticMessages.InvalidChildModelGetter, nameof(getChild));
+                throw new ArgumentException(DiagnosticMessages.DataSet_InvalidChildModelGetter, nameof(getChild));
             return dataRow == null ? childModel.DataSet as DataSet<TChild> : dataRow.Children(childModel);
         }
 

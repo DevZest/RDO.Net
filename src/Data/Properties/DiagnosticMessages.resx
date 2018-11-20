@@ -225,7 +225,7 @@
   <data name="DataRow_InvalidChildModel" xml:space="preserve">
     <value>The child model's ParentModel must be the same as this object's Model.</value>
   </data>
-  <data name="InvalidChildModelGetter" xml:space="preserve">
+  <data name="DataSet_InvalidChildModelGetter" xml:space="preserve">
     <value>The child model returned by the getter is invalid. It cannot be null and its ParentModel must be the calling model.</value>
   </data>
   <data name="Model_InvalidIdentityIncrement" xml:space="preserve">

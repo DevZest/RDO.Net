@@ -171,7 +171,7 @@ namespace DevZest.Data
             _.Model.EnsureInitialized();
             var childModel = getChildModel(_);
             if (childModel == null || childModel.ParentModel != _.Model)
-                throw new ArgumentException(DiagnosticMessages.InvalidChildModelGetter, nameof(getChildModel));
+                throw new ArgumentException(DiagnosticMessages.DataSet_InvalidChildModelGetter, nameof(getChildModel));
             if (childModel.DataSource != null)
                 throw new InvalidOperationException(DiagnosticMessages.DbSet_VerifyCreateChild_AlreadyCreated);
 
