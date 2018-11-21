@@ -1,7 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Linq;
 
 namespace DevZest.Data.CodeAnalysis
 {
@@ -27,6 +30,123 @@ namespace DevZest.Data.CodeAnalysis
                     Rules.PkColumnAttributeIndexOutOfRange,
                     Rules.PkColumnAttributeDuplicate);
             }
+        }
+
+        public override void Initialize(AnalysisContext context)
+        {
+            context.RegisterSymbolAction(AnalyzeInvalidPkColumnAttribute, SymbolKind.NamedType);
+        }
+
+        private static void AnalyzeInvalidPkColumnAttribute(SymbolAnalysisContext context)
+        {
+            AnalyzeInvalidPkColumnAttribute(context, (INamedTypeSymbol)context.Symbol);
+        }
+
+        private static void AnalyzeInvalidPkColumnAttribute(SymbolAnalysisContext context, INamedTypeSymbol type)
+        {
+            var compilation = context.Compilation;
+            if (type == null || !type.IsDerivedFrom(KnownTypes.Model, compilation))
+                return;
+
+            var pkColumnsCount = GetPkColumnsCount(type, compilation);
+            if (pkColumnsCount < 0)
+                return;
+
+            var pkColumns = pkColumnsCount == 0 ? null : new IPropertySymbol[pkColumnsCount];
+            if (pkColumns != null)
+                ResolveExistingPkColumns(type, pkColumns, compilation);
+
+            var pkColumnAttribute = compilation.GetKnownType(KnownTypes.PkColumnAttribute);
+            foreach (var property in type.GetMembers().OfType<IPropertySymbol>())
+            {
+                var attributes = property.GetAttributes().Where(x => pkColumnAttribute.Equals(x.AttributeClass)).ToArray();
+                if (attributes.Length != 1)
+                    continue;
+                var attribute = attributes[0];
+                AnalyzeInvalidPkColumnAttribute(context, property, attribute, pkColumns);
+            }
+        }
+
+        private static void ResolveExistingPkColumns(INamedTypeSymbol type, IPropertySymbol[] result, Compilation compilation)
+        {
+            if (compilation.GetKnownType(KnownTypes.GenericModel).Equals(type.OriginalDefinition))
+                return;
+
+            ResolveExistingPkColumns(type.BaseType, result, compilation);
+            var pkColumnAttribute = compilation.GetKnownType(KnownTypes.PkColumnAttribute);
+            foreach (var property in type.GetMembers().OfType<IPropertySymbol>())
+            {
+                var attributes = property.GetAttributes().Where(x => pkColumnAttribute.Equals(x.AttributeClass)).ToArray();
+                if (attributes.Length != 1)
+                    continue;
+                var attribute = attributes[0];
+                var index = GetPkColumnAttributeIndex(attribute);
+                if (!index.HasValue)
+                    continue;
+                var indexValue = index.Value;
+                if (!IsIndexOutOfRange(indexValue, result.Length))
+                    result[indexValue] = property;
+            }
+        }
+
+        private static void AnalyzeInvalidPkColumnAttribute(SymbolAnalysisContext context, IPropertySymbol property, AttributeData attribute, IPropertySymbol[] pkColumns)
+        {
+            var index = GetPkColumnAttributeIndex(attribute);
+            if (!index.HasValue)
+                return;
+
+            var indexValue = index.Value;
+            var pkColumnsCount = pkColumns == null ? 0 : pkColumns.Length;
+            if (IsIndexOutOfRange(indexValue, pkColumnsCount))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Rules.PkColumnAttributeIndexOutOfRange, attribute.GetLocation(), indexValue));
+                return;
+            }
+
+            if (pkColumns != null)
+            {
+                if (pkColumns[indexValue] == null)
+                {
+                    pkColumns[indexValue] = property;
+                    return;
+                }
+                context.ReportDiagnostic(Diagnostic.Create(Rules.PkColumnAttributeDuplicate, attribute.GetLocation(), indexValue, pkColumns[indexValue].Name));
+            }
+        }
+
+        /// <remakes>Returns -1 to quit analyzer.</remakes>
+        private static int GetPkColumnsCount(INamedTypeSymbol modelType, Compilation compilation)
+        {
+            var pkType = modelType.GetPkType(compilation);
+            if (pkType == null)
+                return 0;
+
+            var constructors = pkType.Constructors;
+            if (constructors.Length != 1)
+                return -1;
+
+            var constructor = constructors[0];
+            if (constructor.Parameters.Length == 0)
+                return -1;
+            return constructor.Parameters.Length;
+        }
+
+        private static int? GetPkColumnAttributeIndex(AttributeData pkColumnAttribute)
+        {
+            var arguments = pkColumnAttribute.ConstructorArguments;
+            if (arguments.IsDefaultOrEmpty)
+                return 0;
+
+            var argument = arguments[0];
+            if (argument.Value is int result)
+                return result;
+            else
+                return null;
+        }
+
+        private static bool IsIndexOutOfRange(int index, int pkColumnsCount)
+        {
+            return index >= pkColumnsCount || index < 0;
         }
 
         protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)

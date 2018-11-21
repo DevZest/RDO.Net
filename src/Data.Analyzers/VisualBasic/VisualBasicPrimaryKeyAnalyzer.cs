@@ -11,6 +11,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
     {
         public override void Initialize(AnalysisContext context)
         {
+            base.Initialize(context);
             context.RegisterSyntaxNodeAction(AnalyzePrimaryKey, SyntaxKind.ClassBlock);
             context.RegisterSyntaxNodeAction(AnalyzePrimaryKeyCreation, SyntaxKind.FunctionBlock);
         }
