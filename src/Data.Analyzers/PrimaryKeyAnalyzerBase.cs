@@ -54,7 +54,7 @@ namespace DevZest.Data.CodeAnalysis
 
             var pkColumns = pkColumnsCount == 0 ? null : new IPropertySymbol[pkColumnsCount];
             if (pkColumns != null)
-                ResolveExistingPkColumns(type, pkColumns, compilation);
+                ResolveExistingPkColumns(type.BaseType, pkColumns, compilation);
 
             var pkColumnAttribute = compilation.GetKnownType(KnownTypes.PkColumnAttribute);
             foreach (var property in type.GetMembers().OfType<IPropertySymbol>())

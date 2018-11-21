@@ -1,6 +1,9 @@
-﻿namespace DevZest.Data.Annotations
+﻿using System;
+
+namespace DevZest.Data.Annotations
 {
-    public sealed class PkColumnAttribute
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public sealed class PkColumnAttribute : Attribute
     {
         public PkColumnAttribute(int index = 0)
         {
