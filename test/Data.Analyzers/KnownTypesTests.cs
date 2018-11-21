@@ -21,6 +21,7 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.PrimaryKey));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.AscAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DescAttribute));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.PkColumnAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.PropertyRegistrationAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CreateKeyAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ModelDeclarationAttribute));

@@ -22,6 +22,7 @@
         public const string PrimaryKey = Namespaces.Data + nameof(PrimaryKey);
         public const string AscAttribute = Namespaces.Data_Annotations + nameof(AscAttribute);
         public const string DescAttribute = Namespaces.Data_Annotations + nameof(DescAttribute);
+        public const string PkColumnAttribute = Namespaces.Data_Annotations + nameof(PkColumnAttribute);
         public const string PropertyRegistrationAttribute = Namespaces.Data_Annotations_Primitives + nameof(PropertyRegistrationAttribute);
         public const string CreateKeyAttribute = Namespaces.Data_Annotations_Primitives + nameof(CreateKeyAttribute);
         public const string ModelDeclarationAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDeclarationAttribute);
