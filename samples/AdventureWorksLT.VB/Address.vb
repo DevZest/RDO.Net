@@ -24,7 +24,6 @@ Public Class Address
         End Function
 
         Private m_AddressID As _Int32
-        <PkColumn>
         Public Property AddressID As _Int32
             Get
                 Return m_AddressID
@@ -43,7 +42,6 @@ Public Class Address
         End Sub
 
         Private m_AddressID As _Int32
-        <PkColumn>
         Public Property AddressID As _Int32
             Get
                 Return m_AddressID
@@ -146,7 +144,6 @@ Public Class Address
     Private m_AddressID As _Int32
     <Identity(1, 1)>
     <DbColumn(Description:="Primary key for Address records.")>
-    <PkColumn>
     Public Property AddressID As _Int32
         Get
             Return m_AddressID

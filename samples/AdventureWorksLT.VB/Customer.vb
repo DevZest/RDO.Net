@@ -24,7 +24,6 @@ Public Class Customer
         End Function
 
         Private m_CustomerID As _Int32
-        <PkColumn>
         Public Property CustomerID As _Int32
             Get
                 Return m_CustomerID
@@ -43,7 +42,6 @@ Public Class Customer
         End Sub
 
         Private m_CustomerID As _Int32
-        <PkColumn>
         Public Property CustomerID As _Int32
             Get
                 Return m_CustomerID
@@ -167,7 +165,6 @@ Public Class Customer
     Private m_CustomerID As _Int32
     <Identity(1, 1)>
     <DbColumn(Description:="Primary key for Customer records.")>
-    <PkColumn>
     Public Property CustomerID As _Int32
         Get
             Return m_CustomerID

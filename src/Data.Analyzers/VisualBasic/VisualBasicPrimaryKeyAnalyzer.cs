@@ -11,7 +11,6 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
     {
         public override void Initialize(AnalysisContext context)
         {
-            base.Initialize(context);
             context.RegisterSyntaxNodeAction(AnalyzePrimaryKey, SyntaxKind.ClassBlock);
             context.RegisterSyntaxNodeAction(AnalyzePrimaryKeyCreation, SyntaxKind.FunctionBlock);
         }
@@ -130,18 +129,9 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
                 var argument = arguments[i];
                 if (!(semanticModel.GetSymbolInfo(argument.GetExpression()).Symbol is IPropertySymbol propertySymbol) ||
                     propertySymbol.ContainingType != methodSymbol.ContainingType)
-                {
                     context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidArgument, argument.GetLocation()));
-                    continue;
-                }
-
-                if (propertySymbol.Name.ToLower() != parameters[i].Name.ToLower())
+                else if (propertySymbol.Name.ToLower() != parameters[i].Name.ToLower())
                     context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyArgumentNaming, argument.GetLocation(), propertySymbol.Name, parameters[i].Name));
-
-                var index = GetPkColumnAttributeIndex(propertySymbol, context.Compilation);
-                if (!index.HasValue || index.Value != i)
-                    context.ReportDiagnostic(Diagnostic.Create(Rules.PkColumnAttributeMissing, argument.GetLocation(), i));
-
             }
         }
     }

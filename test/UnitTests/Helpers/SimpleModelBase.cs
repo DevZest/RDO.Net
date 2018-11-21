@@ -29,7 +29,6 @@ namespace DevZest.Data.Helpers
         public static readonly Mounter<_Int32> _ParentId = RegisterColumn((SimpleModelBase x) => x.ParentId);
 
         [Required]
-        [PkColumn]
         public _Int32 Id { get; private set; }
 
         public _Int32 ParentId { get; private set; }

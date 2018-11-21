@@ -27,7 +27,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 return new PK(ProductDescriptionID);
             }
 
-            [PkColumn]
             public _Int32 ProductDescriptionID { get; private set; }
         }
 
@@ -38,7 +37,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 Register((Ref _) => _.ProductDescriptionID, _ProductDescriptionID);
             }
 
-            [PkColumn]
             public _Int32 ProductDescriptionID { get; private set; }
 
             protected override PK CreateForeignKey()
@@ -67,7 +65,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Identity(1, 1)]
         [DbColumn(Description = "Primary key for ProductDescription records.")]
-        [PkColumn]
         public _Int32 ProductDescriptionID { get; private set; }
 
         [Required]

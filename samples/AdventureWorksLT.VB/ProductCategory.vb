@@ -23,7 +23,6 @@ Public Class ProductCategory
         End Function
 
         Private m_ProductCategoryID As _Int32
-        <PkColumn>
         Public Property ProductCategoryID As _Int32
             Get
                 Return m_ProductCategoryID
@@ -42,7 +41,6 @@ Public Class ProductCategory
         End Sub
 
         Private m_ProductCategoryID As _Int32
-        <PkColumn>
         Public Property ProductCategoryID As _Int32
             Get
                 Return m_ProductCategoryID
@@ -100,7 +98,6 @@ Public Class ProductCategory
     Private m_ProductCategoryID As _Int32
     <Identity(1, 1)>
     <DbColumn(Description:="Primary key for ProductCategory records.")>
-    <PkColumn>
     Public Property ProductCategoryID As _Int32
         Get
             Return m_ProductCategoryID

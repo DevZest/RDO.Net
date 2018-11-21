@@ -241,7 +241,6 @@ namespace DevZest.Data
                 return new PK(Id);
             }
 
-            [PkColumn]
             public _Int32 Id { get; private set; }
 
             public new _String Name { get; private set; }

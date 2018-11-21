@@ -37,7 +37,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 return new PK(SalesOrderID);
             }
 
-            [PkColumn]
             public _Int32 SalesOrderID { get; private set; }
         }
 
@@ -99,7 +98,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Identity(1, 1)]
         [DbColumn(Description = "Primary key.")]
-        [PkColumn]
         public _Int32 SalesOrderID { get; private set; }
 
         [Required]

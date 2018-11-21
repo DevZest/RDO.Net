@@ -33,10 +33,8 @@ namespace DevZest.Samples.AdventureWorksLT
                 return new PK(SalesOrderID, SalesOrderDetailID);
             }
 
-            [PkColumn]
             public _Int32 SalesOrderID { get; private set; }
 
-            [PkColumn(1)]
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
@@ -70,12 +68,10 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [DbColumn(Description = "Primary key. Foreign key to SalesOrderHeader.SalesOrderID.")]
-        [PkColumn]
         public _Int32 SalesOrderID { get; private set; }
 
         [Identity(1, 1)]
         [DbColumn(Description = "Primary key. One incremental unique number per product sold.")]
-        [PkColumn(1)]
         public _Int32 SalesOrderDetailID { get; private set; }
 
         [Required]

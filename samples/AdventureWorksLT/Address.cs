@@ -29,7 +29,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 return new PK(AddressID);
             }
 
-            [PkColumn]
             public _Int32 AddressID { get; private set; }
         }
 
@@ -40,7 +39,6 @@ namespace DevZest.Samples.AdventureWorksLT
                 Register((Ref _) => _.AddressID, _AddressID);
             }
 
-            [PkColumn]
             public _Int32 AddressID { get; private set; }
 
             protected override PK CreateForeignKey()
@@ -84,7 +82,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Identity(1, 1)]
         [DbColumn(Description = "Primary key for Address records.")]
-        [PkColumn]
         public _Int32 AddressID { get; private set; }
 
         [Required]

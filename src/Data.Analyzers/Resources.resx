@@ -195,24 +195,6 @@
   <data name="MounterNaming_Title" xml:space="preserve">
     <value>Mounter naming convention violation.</value>
   </data>
-  <data name="PkColumnAttributeDuplicate_Message" xml:space="preserve">
-    <value>Duplicate PkColumn attribute with index {0}, which is also declared with property {1}.</value>
-  </data>
-  <data name="PkColumnAttributeDuplicate_Title" xml:space="preserve">
-    <value>Duplicate PkColumn attribute.</value>
-  </data>
-  <data name="PkColumnAttributeIndexOutOfRange_Message" xml:space="preserve">
-    <value>The index value {0} of PkColumn attriubte is out of range.</value>
-  </data>
-  <data name="PkColumnAttributeIndexOutOfRange_Title" xml:space="preserve">
-    <value>Index value of PkColumn attribute is out of range.</value>
-  </data>
-  <data name="PkColumnAttributeMissing_Message" xml:space="preserve">
-    <value>Missing PkColumn attribute with index {0}.</value>
-  </data>
-  <data name="PkColumnAttributeMissing_Title" xml:space="preserve">
-    <value>Missing PkColumn attribute.</value>
-  </data>
   <data name="PrimaryKeyArgumentNaming_Message" xml:space="preserve">
     <value>Property '{0}' passed to PrimaryKey constructor does not match the parameter name '{1}'.</value>
   </data>

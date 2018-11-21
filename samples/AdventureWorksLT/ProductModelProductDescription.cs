@@ -38,16 +38,13 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [DbColumn(Description = "Primary key. Foreign key to ProductModel.ProductModelID.")]
-        [PkColumn]
         public _Int32 ProductModelID { get; private set; }
 
         [DbColumn(Description = "Primary key. Foreign key to ProductDescription.ProductDescriptionID.")]
-        [PkColumn(1)]
         public _Int32 ProductDescriptionID { get; private set; }
 
         [SqlNChar(6)]
         [DbColumn(Description = "The culture for which the description is written.")]
-        [PkColumn(2)]
         public _String Culture { get; private set; }
     }
 }

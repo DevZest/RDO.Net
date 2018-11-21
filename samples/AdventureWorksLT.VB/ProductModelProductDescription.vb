@@ -40,7 +40,6 @@ Public Class ProductModelProductDescription
 
     Private m_ProductModelID As _Int32
     <DbColumn(Description:="Primary key. Foreign key to ProductModel.ProductModelID.")>
-    <PkColumn>
     Public Property ProductModelID As _Int32
         Get
             Return m_ProductModelID
@@ -52,7 +51,6 @@ Public Class ProductModelProductDescription
 
     Private m_ProductDescriptionID As _Int32
     <DbColumn(Description:="Primary key. Foreign key to ProductDescription.ProductDescriptionID.")>
-    <PkColumn(1)>
     Public Property ProductDescriptionID As _Int32
         Get
             Return m_ProductDescriptionID
@@ -65,7 +63,6 @@ Public Class ProductModelProductDescription
     Private m_Culture As _String
     <SqlNChar(6)>
     <DbColumn(Description:="The culture for which the description is written.")>
-    <PkColumn(2)>
     Public Property Culture As _String
         Get
             Return m_Culture

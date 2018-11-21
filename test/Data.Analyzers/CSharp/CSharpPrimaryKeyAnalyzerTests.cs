@@ -335,43 +335,5 @@ public class PrimaryKeyArgumentNaming : Model<PrimaryKeyArgumentNaming.PK>
 
             VerifyCSharpDiagnostic(test, expected);
         }
-
-        [TestMethod]
-        public void PkColumnAttributeMissing()
-        {
-            var test = 
-@"namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
-{
-    public class PkColumnAttributeMissing : Model<PkColumnAttributeMissing.PK>
-    {
-        public sealed class PK : PrimaryKey
-        {
-            public PK(_Int32 id)
-                : base(id)
-            {
-            }
-        }
-
-        protected sealed override PK CreatePrimaryKey()
-        {
-            return new PK(ID);
-        }
-
-        public static readonly Mounter<_Int32> _ID = RegisterColumn((PkColumnAttributeMissing _) => _.ID);
-
-        public _Int32 ID { get; private set; }
-    }
-}";
-
-            var expected = new DiagnosticResult
-            {
-                Id = DiagnosticIds.PkColumnAttributeMissing,
-                Message = string.Format(Resources.PkColumnAttributeMissing_Message, 0),
-                Severity = DiagnosticSeverity.Warning,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 15, 27) }
-            };
-
-            VerifyCSharpDiagnostic(test, expected);
-        }
     }
 }

@@ -28,10 +28,8 @@ namespace DevZest.Samples.AdventureWorksLT
                 return new PK(CustomerID, AddressID);
             }
 
-            [PkColumn]
             public _Int32 CustomerID { get; private set; }
 
-            [PkColumn(1)]
             public _Int32 AddressID { get; private set; }
         }
 
@@ -43,10 +41,8 @@ namespace DevZest.Samples.AdventureWorksLT
                 Register((Ref _) => _.AddressID, _AddressID);
             }
 
-            [PkColumn]
             public _Int32 CustomerID { get; private set; }
 
-            [PkColumn(1)]
             public _Int32 AddressID { get; private set; }
 
             protected override PK CreateForeignKey()
@@ -87,11 +83,9 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [DbColumn(Description = "Primary key. Foreign key to Customer.CustomerID.")]
-        [PkColumn]
         public _Int32 CustomerID { get; private set; }
 
         [DbColumn(Description = "Primary key. Foreign key to Address.AddressID.")]
-        [PkColumn(1)]
         public _Int32 AddressID { get; private set; }
 
         [UdtName]

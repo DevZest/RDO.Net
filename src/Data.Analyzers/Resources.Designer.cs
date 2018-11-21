@@ -295,60 +295,6 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate PkColumn attribute with index {0}, which is also declared with property {1}..
-        /// </summary>
-        internal static string PkColumnAttributeDuplicate_Message {
-            get {
-                return ResourceManager.GetString("PkColumnAttributeDuplicate_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Duplicate PkColumn attribute..
-        /// </summary>
-        internal static string PkColumnAttributeDuplicate_Title {
-            get {
-                return ResourceManager.GetString("PkColumnAttributeDuplicate_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The index value {0} of PkColumn attriubte is out of range..
-        /// </summary>
-        internal static string PkColumnAttributeIndexOutOfRange_Message {
-            get {
-                return ResourceManager.GetString("PkColumnAttributeIndexOutOfRange_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Index value of PkColumn attribute is out of range..
-        /// </summary>
-        internal static string PkColumnAttributeIndexOutOfRange_Title {
-            get {
-                return ResourceManager.GetString("PkColumnAttributeIndexOutOfRange_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Missing PkColumn attribute with index {0}..
-        /// </summary>
-        internal static string PkColumnAttributeMissing_Message {
-            get {
-                return ResourceManager.GetString("PkColumnAttributeMissing_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Missing PkColumn attribute..
-        /// </summary>
-        internal static string PkColumnAttributeMissing_Title {
-            get {
-                return ResourceManager.GetString("PkColumnAttributeMissing_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; passed to PrimaryKey constructor does not match the parameter name &apos;{1}&apos;..
         /// </summary>
         internal static string PrimaryKeyArgumentNaming_Message {

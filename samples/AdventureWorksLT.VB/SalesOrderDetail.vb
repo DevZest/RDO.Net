@@ -28,7 +28,6 @@ Public Class SalesOrderDetail
         End Function
 
         Private m_SalesOrderID As _Int32
-        <PkColumn>
         Public Property SalesOrderID As _Int32
             Get
                 Return m_SalesOrderID
@@ -39,7 +38,6 @@ Public Class SalesOrderDetail
         End Property
 
         Private m_SalesOrderDetailID As _Int32
-        <PkColumn(1)>
         Public Property SalesOrderDetailID As _Int32
             Get
                 Return m_SalesOrderDetailID
@@ -84,7 +82,6 @@ Public Class SalesOrderDetail
 
     Private m_SalesOrderID As _Int32
     <DbColumn(Description:="Primary key. Foreign key to SalesOrderHeader.SalesOrderID.")>
-    <PkColumn>
     Public Property SalesOrderID As _Int32
         Get
             Return m_SalesOrderID
@@ -97,7 +94,6 @@ Public Class SalesOrderDetail
     Private m_SalesOrderDetailID As _Int32
     <Identity(1, 1)>
     <DbColumn(Description:="Primary key. One incremental unique number per product sold.")>
-    <PkColumn(1)>
     Public Property SalesOrderDetailID As _Int32
         Get
             Return m_SalesOrderDetailID
