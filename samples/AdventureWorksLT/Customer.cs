@@ -29,6 +29,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 return new PK(CustomerID);
             }
 
+            [PkColumn]
             public _Int32 CustomerID { get; private set; }
         }
 
@@ -39,6 +40,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 Register((Ref _) => _.CustomerID, _CustomerID);
             }
 
+            [PkColumn]
             public _Int32 CustomerID { get; private set; }
 
             protected override PK CreateForeignKey()

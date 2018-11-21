@@ -54,6 +54,7 @@ Public Class CustomerAddress
         End Sub
 
         Private m_CustomerID As _Int32
+        <PkColumn>
         Public Property CustomerID As _Int32
             Get
                 Return m_CustomerID
@@ -64,6 +65,7 @@ Public Class CustomerAddress
         End Property
 
         Private m_AddressID As _Int32
+        <PkColumn(1)>
         Public Property AddressID As _Int32
             Get
                 Return m_AddressID
@@ -126,6 +128,7 @@ Public Class CustomerAddress
 
     Private m_CustomerID As _Int32
     <DbColumn(Description:="Primary key. Foreign key to Customer.CustomerID.")>
+    <PkColumn>
     Public Property CustomerID As _Int32
         Get
             Return m_CustomerID
@@ -137,6 +140,7 @@ Public Class CustomerAddress
 
     Private m_AddressID As _Int32
     <DbColumn(Description:="Primary key. Foreign key to Address.AddressID.")>
+    <PkColumn(1)>
     Public Property AddressID As _Int32
         Get
             Return m_AddressID

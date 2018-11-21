@@ -37,6 +37,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 return new PK(SalesOrderID);
             }
 
+            [PkColumn]
             public _Int32 SalesOrderID { get; private set; }
         }
 

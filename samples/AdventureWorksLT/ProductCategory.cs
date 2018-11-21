@@ -28,6 +28,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 return new PK(ProductCategoryID);
             }
 
+            [PkColumn]
             public _Int32 ProductCategoryID { get; private set; }
         }
 
@@ -38,6 +39,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 Register((Ref _) => _.ProductCategoryID, _ProductCategoryID);
             }
 
+            [PkColumn]
             public _Int32 ProductCategoryID { get; private set; }
 
             protected override PK CreateForeignKey()

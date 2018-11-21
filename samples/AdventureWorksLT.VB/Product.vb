@@ -47,6 +47,7 @@ Public Class Product
         End Sub
 
         Private m_ProductID As _Int32
+        <PkColumn>
         Public Property ProductID As _Int32
             Get
                 Return m_ProductID
@@ -133,6 +134,7 @@ Public Class Product
     Private m_ProductID As _Int32
     <Identity(1, 1)>
     <DbColumn(Description:="Primary key for Product records.")>
+    <PkColumn>
     Public Property ProductID As _Int32
         Get
             Return m_ProductID

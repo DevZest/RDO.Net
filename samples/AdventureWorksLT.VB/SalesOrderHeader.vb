@@ -121,6 +121,7 @@ Public Class SalesOrderHeader
     Private m_SalesOrderID As _Int32
     <Identity(1, 1)>
     <DbColumn(Description:="Primary key.")>
+    <PkColumn>
     Public Property SalesOrderID As _Int32
         Get
             Return m_SalesOrderID

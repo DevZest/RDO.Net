@@ -41,6 +41,7 @@ Public Class ProductDescription
         End Sub
 
         Private m_ProductDescriptionID As _Int32
+        <PkColumn>
         Public Property ProductDescriptionID As _Int32
             Get
                 Return m_ProductDescriptionID
@@ -83,6 +84,7 @@ Public Class ProductDescription
     Private m_ProductDescriptionID As _Int32
     <Identity(1, 1)>
     <DbColumn(Description:="Primary key for ProductDescription records.")>
+    <PkColumn>
     Public Property ProductDescriptionID As _Int32
         Get
             Return m_ProductDescriptionID
