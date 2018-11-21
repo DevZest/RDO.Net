@@ -14,6 +14,7 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.AttributeUsageAttribute));
 
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.Model));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.GenericModel));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.Column));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.LocalColumn));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ColumnList));

@@ -15,6 +15,7 @@
         public const string AttributeUsageAttribute = Namespaces.System + nameof(AttributeUsageAttribute);
 
         public const string Model = Namespaces.Data + nameof(Model);
+        public const string GenericModel = Namespaces.Data + "Model`1";
         public const string Column = Namespaces.Data + nameof(Column);
         public const string LocalColumn = Namespaces.Data + nameof(LocalColumn) + "`1";
         public const string ColumnList = Namespaces.Data + nameof(ColumnList);
