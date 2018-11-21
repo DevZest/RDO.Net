@@ -141,12 +141,6 @@
   <data name="InvalidLocalColumnRegistration_Title" xml:space="preserve">
     <value>Local column is invalid for RegisterColumn.</value>
   </data>
-  <data name="InvalidModelMemberAttribute_Message" xml:space="preserve">
-    <value>Attribute {0} is valid on type {1}, while applied model member is type {2}.</value>
-  </data>
-  <data name="InvalidModelMemberAttribute_Title" xml:space="preserve">
-    <value>Invalid model member attribute.</value>
-  </data>
   <data name="InvalidRegistrationGetterParam_Message" xml:space="preserve">
     <value>The getter parameter must be a lambda expression which returns a non-readonly property of current class.</value>
   </data>
@@ -186,10 +180,16 @@
   <data name="MissingRegistration_Title" xml:space="preserve">
     <value>Missing property registration.</value>
   </data>
-  <data name="ModelMemberAttributeRequiresArgument_Message" xml:space="preserve">
+  <data name="ModelDesignerSpecInvalidType_Message" xml:space="preserve">
+    <value>Attribute {0} is valid on type {1}, while applied model member is type {2}.</value>
+  </data>
+  <data name="ModelDesignerSpecInvalidType_Title" xml:space="preserve">
+    <value>Invalid model member attribute.</value>
+  </data>
+  <data name="ModelDesignerSpecRequiresArgument_Message" xml:space="preserve">
     <value>Attribute {0} requires argument.</value>
   </data>
-  <data name="ModelMemberAttributeRequiresArgument_Title" xml:space="preserve">
+  <data name="ModelDesignerSpecRequiresArgument_Title" xml:space="preserve">
     <value>Model member attribute requires argument.</value>
   </data>
   <data name="MounterNaming_Message" xml:space="preserve">

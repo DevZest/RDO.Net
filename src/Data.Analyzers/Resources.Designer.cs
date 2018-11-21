@@ -133,24 +133,6 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attribute {0} is valid on type {1}, while applied model member is type {2}..
-        /// </summary>
-        internal static string InvalidModelMemberAttribute_Message {
-            get {
-                return ResourceManager.GetString("InvalidModelMemberAttribute_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid model member attribute..
-        /// </summary>
-        internal static string InvalidModelMemberAttribute_Title {
-            get {
-                return ResourceManager.GetString("InvalidModelMemberAttribute_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The getter parameter must be a lambda expression which returns a non-readonly property of current class..
         /// </summary>
         internal static string InvalidRegistrationGetterParam_Message {
@@ -268,20 +250,38 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute {0} is valid on type {1}, while applied model member is type {2}..
+        /// </summary>
+        internal static string ModelDesignerSpecInvalidType_Message {
+            get {
+                return ResourceManager.GetString("ModelDesignerSpecInvalidType_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid model member attribute..
+        /// </summary>
+        internal static string ModelDesignerSpecInvalidType_Title {
+            get {
+                return ResourceManager.GetString("ModelDesignerSpecInvalidType_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attribute {0} requires argument..
         /// </summary>
-        internal static string ModelMemberAttributeRequiresArgument_Message {
+        internal static string ModelDesignerSpecRequiresArgument_Message {
             get {
-                return ResourceManager.GetString("ModelMemberAttributeRequiresArgument_Message", resourceCulture);
+                return ResourceManager.GetString("ModelDesignerSpecRequiresArgument_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Model member attribute requires argument..
         /// </summary>
-        internal static string ModelMemberAttributeRequiresArgument_Title {
+        internal static string ModelDesignerSpecRequiresArgument_Title {
             get {
-                return ResourceManager.GetString("ModelMemberAttributeRequiresArgument_Title", resourceCulture);
+                return ResourceManager.GetString("ModelDesignerSpecRequiresArgument_Title", resourceCulture);
             }
         }
         

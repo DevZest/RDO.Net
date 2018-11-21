@@ -1,11 +1,11 @@
 ﻿Imports DevZest.Data.Annotations
 
-Public Class InvalidModelMemberAttribute
+Public Class ModelDesignerSpecInvalidType
     Inherits Model
 
     Shared Sub New()
-        RegisterColumn(Function(x As InvalidModelMemberAttribute) x.ID)
-        RegisterColumn(Function(x As InvalidModelMemberAttribute) x.Name)
+        RegisterColumn(Function(x As ModelDesignerSpecInvalidType) x.ID)
+        RegisterColumn(Function(x As ModelDesignerSpecInvalidType) x.Name)
     End Sub
 
     Private m_ID As _Int32

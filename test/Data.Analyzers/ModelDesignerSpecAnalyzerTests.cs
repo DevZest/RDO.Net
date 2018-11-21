@@ -19,18 +19,18 @@ namespace DevZest.Data.CodeAnalysis
         }
 
         [TestMethod]
-        public void InvalidModelMemberAttribute_CS()
+        public void ModelDesignerSpecInvalidType_CS()
         {
             var test =
 @"using DevZest.Data.Annotations;
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class InvalidModelMemberAttribute : Model
+    public class ModelDesignerSpecInvalidType : Model
     {
-        static InvalidModelMemberAttribute()
+        static ModelDesignerSpecInvalidType()
         {
-            RegisterColumn((InvalidModelMemberAttribute _) => _.Id);
+            RegisterColumn((ModelDesignerSpecInvalidType _) => _.Id);
         }
 
         [CreditCard]
@@ -41,8 +41,8 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.InvalidModelMemberAttribute,
-                Message = string.Format(Resources.InvalidModelMemberAttribute_Message, typeof(CreditCardAttribute), "DevZest.Data.Column<string>", typeof(_Int32)),
+                Id = DiagnosticIds.ModelDesignerSpecInvalidType,
+                Message = string.Format(Resources.ModelDesignerSpecInvalidType_Message, typeof(CreditCardAttribute), "DevZest.Data.Column<string>", typeof(_Int32)),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 12, 10) }
             };
@@ -51,17 +51,17 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         [TestMethod]
-        public void InvalidModelMemberAttribute_VB()
+        public void ModelDesignerSpecInvalidType_VB()
         {
             var test =
 @"Imports DevZest.Data
 Imports DevZest.Data.Annotations
 
-Public Class InvalidModelMemberAttribute
+Public Class ModelDesignerSpecInvalidType
     Inherits Model
 
     Shared Sub New()
-        RegisterColumn(Function(x As InvalidModelMemberAttribute) x.ID)
+        RegisterColumn(Function(x As ModelDesignerSpecInvalidType) x.ID)
     End Sub
 
     Private m_ID As _Int32
@@ -78,8 +78,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.InvalidModelMemberAttribute,
-                Message = string.Format(Resources.InvalidModelMemberAttribute_Message, typeof(CreditCardAttribute), "DevZest.Data.Column(Of String)", typeof(_Int32)),
+                Id = DiagnosticIds.ModelDesignerSpecInvalidType,
+                Message = string.Format(Resources.ModelDesignerSpecInvalidType_Message, typeof(CreditCardAttribute), "DevZest.Data.Column(Of String)", typeof(_Int32)),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 12, 6) }
             };
@@ -88,19 +88,19 @@ End Class";
         }
 
         [TestMethod]
-        public void ModelMemberAttributeRequiresArgument_CS()
+        public void ModelDesignerSpecRequiresArgument_CS()
         {
             var test =
 @"using DevZest.Data.Annotations;
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class ModelMemberAttributeRequiresArgument : Model
+    public class ModelDesignerSpecRequiresArgument : Model
     {
-        static ModelMemberAttributeRequiresArgument()
+        static ModelDesignerSpecRequiresArgument()
         {
-            RegisterColumn((ModelMemberAttributeRequiresArgument _) => _.Id);
-            RegisterColumn((ModelMemberAttributeRequiresArgument _) => _.Name);
+            RegisterColumn((ModelDesignerSpecRequiresArgument _) => _.Id);
+            RegisterColumn((ModelDesignerSpecRequiresArgument _) => _.Name);
         }
 
         [DbColumn]
@@ -114,8 +114,8 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.ModelMemberAttributeRequiresArgument,
-                Message = string.Format(Resources.ModelMemberAttributeRequiresArgument_Message, typeof(DbColumnAttribute)),
+                Id = DiagnosticIds.ModelDesignerSpecRequiresArgument,
+                Message = string.Format(Resources.ModelDesignerSpecRequiresArgument_Message, typeof(DbColumnAttribute)),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 13, 10) }
             };
@@ -124,18 +124,18 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         [TestMethod]
-        public void ModelMemberAttributeRequiresArgument_VB()
+        public void ModelDesignerSpecRequiresArgument_VB()
         {
             var test =
 @"Imports DevZest.Data
 Imports DevZest.Data.Annotations
 
-Public Class ModelMemberAttributeRequiresArgument
+Public Class ModelDesignerSpecRequiresArgument
     Inherits Model
 
     Shared Sub New()
-        RegisterColumn(Function(x As ModelMemberAttributeRequiresArgument) x.ID)
-        RegisterColumn(Function(x As ModelMemberAttributeRequiresArgument) x.Name)
+        RegisterColumn(Function(x As ModelDesignerSpecRequiresArgument) x.ID)
+        RegisterColumn(Function(x As ModelDesignerSpecRequiresArgument) x.Name)
     End Sub
 
     Private m_ID As _Int32
@@ -164,8 +164,8 @@ End Class
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.ModelMemberAttributeRequiresArgument,
-                Message = string.Format(Resources.ModelMemberAttributeRequiresArgument_Message, typeof(DbColumnAttribute)),
+                Id = DiagnosticIds.ModelDesignerSpecRequiresArgument,
+                Message = string.Format(Resources.ModelDesignerSpecRequiresArgument_Message, typeof(DbColumnAttribute)),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 13, 6) }
             };

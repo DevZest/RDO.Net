@@ -142,16 +142,16 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.MissingImplementationAttribute_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor InvalidModelMemberAttribute = new DiagnosticDescriptor(
-            DiagnosticIds.InvalidModelMemberAttribute,
-            new LocalizableResourceString(nameof(Resources.InvalidModelMemberAttribute_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.InvalidModelMemberAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor ModelDesignerSpecInvalidType = new DiagnosticDescriptor(
+            DiagnosticIds.ModelDesignerSpecInvalidType,
+            new LocalizableResourceString(nameof(Resources.ModelDesignerSpecInvalidType_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.ModelDesignerSpecInvalidType_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor ModelMemberAttributeRequiresArgument = new DiagnosticDescriptor(
-            DiagnosticIds.ModelMemberAttributeRequiresArgument,
-            new LocalizableResourceString(nameof(Resources.ModelMemberAttributeRequiresArgument_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.ModelMemberAttributeRequiresArgument_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor ModelDesignerSpecRequiresArgument = new DiagnosticDescriptor(
+            DiagnosticIds.ModelDesignerSpecRequiresArgument,
+            new LocalizableResourceString(nameof(Resources.ModelDesignerSpecRequiresArgument_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.ModelDesignerSpecRequiresArgument_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
     }
 }

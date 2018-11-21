@@ -17,7 +17,7 @@ namespace DevZest.Data.CodeAnalysis
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(Rules.InvalidModelMemberAttribute, Rules.ModelMemberAttributeRequiresArgument); }
+            get { return ImmutableArray.Create(Rules.ModelDesignerSpecInvalidType, Rules.ModelDesignerSpecRequiresArgument); }
         }
 
         private static void AnalyzeModelDesignerSpec(SymbolAnalysisContext context)
@@ -58,13 +58,13 @@ namespace DevZest.Data.CodeAnalysis
             validOnTypes = validOnTypes.Where(x => x != null).ToArray();
             if (!IsValid(type, validOnTypes))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidModelMemberAttribute, attribute.GetLocation(), attribute.AttributeClass, FormatString(validOnTypes), type));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.ModelDesignerSpecInvalidType, attribute.GetLocation(), attribute.AttributeClass, FormatString(validOnTypes), type));
                 return;
             }
 
             if (ArgumentMissing(attribute, spec.Value.RequiresArgument))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.ModelMemberAttributeRequiresArgument, attribute.GetLocation(), attribute.AttributeClass));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.ModelDesignerSpecRequiresArgument, attribute.GetLocation(), attribute.AttributeClass));
                 return;
             }
         }

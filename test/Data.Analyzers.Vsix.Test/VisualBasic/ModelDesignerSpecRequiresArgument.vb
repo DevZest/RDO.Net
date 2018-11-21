@@ -1,10 +1,10 @@
 ﻿Imports DevZest.Data.Annotations
 
-Public Class ModelMemberAttributeRequiresArgument
+Public Class ModelDesignerSpecRequiresArgument
     Inherits Model
 
     Shared Sub New()
-        RegisterColumn(Function(x As ModelMemberAttributeRequiresArgument) x.ID)
+        RegisterColumn(Function(x As ModelDesignerSpecRequiresArgument) x.ID)
     End Sub
 
     Private m_ID As _Int32

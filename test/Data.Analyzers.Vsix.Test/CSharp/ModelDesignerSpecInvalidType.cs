@@ -2,12 +2,12 @@
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class InvalidModelMemberAttribute : Model
+    public class ModelDesignerSpecInvalidType : Model
     {
-        static InvalidModelMemberAttribute()
+        static ModelDesignerSpecInvalidType()
         {
-            RegisterColumn((InvalidModelMemberAttribute _) => _.Id);
-            RegisterColumn((InvalidModelMemberAttribute _) => _.Name);
+            RegisterColumn((ModelDesignerSpecInvalidType _) => _.Id);
+            RegisterColumn((ModelDesignerSpecInvalidType _) => _.Name);
         }
 
         [CreditCard]
