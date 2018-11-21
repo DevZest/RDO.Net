@@ -2,15 +2,15 @@
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class PkColumnIndexOutOfRange1 : Model
+    public class PkColumnAttributeIndexOutOfRange1 : Model
     {
-        public static readonly Mounter<_Int32> _ID = RegisterColumn((PkColumnIndexOutOfRange1 _) => _.ID);
+        public static readonly Mounter<_Int32> _ID = RegisterColumn((PkColumnAttributeIndexOutOfRange1 _) => _.ID);
 
         [PkColumn]
         public _Int32 ID { get; private set; }
     }
 
-    public class PkColumnIndexOutOfRange2 : Model<PkColumnIndexOutOfRange2.PK>
+    public class PkColumnAttributeIndexOutOfRange2 : Model<PkColumnAttributeIndexOutOfRange2.PK>
     {
         public sealed class PK : PrimaryKey
         {
@@ -25,8 +25,8 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             return new PK(ID);
         }
 
-        public static readonly Mounter<_Int32> _ID = RegisterColumn((PkColumnIndexOutOfRange2 _) => _.ID);
-        public static readonly Mounter<_String> _Name = RegisterColumn((PkColumnIndexOutOfRange2 _) => _.Name);
+        public static readonly Mounter<_Int32> _ID = RegisterColumn((PkColumnAttributeIndexOutOfRange2 _) => _.ID);
+        public static readonly Mounter<_String> _Name = RegisterColumn((PkColumnAttributeIndexOutOfRange2 _) => _.Name);
 
         [PkColumn]
         public _Int32 ID { get; private set; }
