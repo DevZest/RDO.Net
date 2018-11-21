@@ -24,6 +24,7 @@ Public Class Address
         End Function
 
         Private m_AddressID As _Int32
+        <PkColumn>
         Public Property AddressID As _Int32
             Get
                 Return m_AddressID

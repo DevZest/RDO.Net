@@ -22,6 +22,7 @@ Public Class ProductModel
         End Function
 
         Private m_ProductModelID As _Int32
+        <PkColumn>
         Public Property ProductModelID As _Int32
             Get
                 Return m_ProductModelID

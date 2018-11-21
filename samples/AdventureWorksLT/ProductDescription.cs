@@ -65,6 +65,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Identity(1, 1)]
         [DbColumn(Description = "Primary key for ProductDescription records.")]
+        [PkColumn]
         public _Int32 ProductDescriptionID { get; private set; }
 
         [Required]

@@ -98,6 +98,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Identity(1, 1)]
         [DbColumn(Description = "Primary key.")]
+        [PkColumn]
         public _Int32 SalesOrderID { get; private set; }
 
         [Required]

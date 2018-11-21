@@ -22,6 +22,7 @@ Public Class ProductDescription
         End Function
 
         Private m_ProductDescriptionID As _Int32
+        <PkColumn>
         Public Property ProductDescriptionID As _Int32
             Get
                 Return m_ProductDescriptionID

@@ -74,6 +74,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Identity(1, 1)]
         [DbColumn(Description = "Primary key for ProductCategory records.")]
+        [PkColumn]
         public _Int32 ProductCategoryID { get; private set; }
 
         [DbColumn(Description = "Product category identification number of immediate ancestor category. Foreign key to ProductCategory.ProductCategoryID.")]

@@ -24,6 +24,7 @@ Public Class Customer
         End Function
 
         Private m_CustomerID As _Int32
+        <PkColumn>
         Public Property CustomerID As _Int32
             Get
                 Return m_CustomerID

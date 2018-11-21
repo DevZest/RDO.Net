@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data.Primitives
+﻿using DevZest.Data.Annotations;
+
+namespace DevZest.Data.Primitives
 {
     public interface IIdentityMapping
     {
@@ -62,6 +64,7 @@
             return new PK(OldValue);
         }
 
+        [PkColumn]
         public _Int16 OldValue { get; private set; }
 
         protected override Column OldValueColumn => OldValue;
@@ -96,6 +99,7 @@
             return new PK(OldValue);
         }
 
+        [PkColumn]
         public _Int32 OldValue { get; private set; }
 
         protected override Column OldValueColumn => OldValue;
@@ -131,6 +135,7 @@
             return new PK(OldValue);
         }
 
+        [PkColumn]
         public _Int64 OldValue { get; private set; }
 
         protected override Column OldValueColumn => OldValue;

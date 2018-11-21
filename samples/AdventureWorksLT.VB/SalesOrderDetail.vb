@@ -28,6 +28,7 @@ Public Class SalesOrderDetail
         End Function
 
         Private m_SalesOrderID As _Int32
+        <PkColumn>
         Public Property SalesOrderID As _Int32
             Get
                 Return m_SalesOrderID
@@ -38,6 +39,7 @@ Public Class SalesOrderDetail
         End Property
 
         Private m_SalesOrderDetailID As _Int32
+        <PkColumn>
         Public Property SalesOrderDetailID As _Int32
             Get
                 Return m_SalesOrderDetailID

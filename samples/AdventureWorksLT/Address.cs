@@ -82,6 +82,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         [Identity(1, 1)]
         [DbColumn(Description = "Primary key for Address records.")]
+        [PkColumn]
         public _Int32 AddressID { get; private set; }
 
         [Required]

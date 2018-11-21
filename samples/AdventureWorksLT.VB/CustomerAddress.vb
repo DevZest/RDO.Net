@@ -23,6 +23,7 @@ Public Class CustomerAddress
         End Function
 
         Private m_CustomerID As _Int32
+        <PkColumn>
         Public Property CustomerID As _Int32
             Get
                 Return m_CustomerID
@@ -33,6 +34,7 @@ Public Class CustomerAddress
         End Property
 
         Private m_AddressID As _Int32
+        <PkColumn(1)>
         Public Property AddressID As _Int32
             Get
                 Return m_AddressID

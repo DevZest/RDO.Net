@@ -65,6 +65,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [Identity(1, 1)]
+        [PkColumn]
         public _Int32 ProductModelID { get; private set; }
 
         [UdtName]

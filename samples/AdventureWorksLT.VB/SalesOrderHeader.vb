@@ -32,6 +32,7 @@ Public Class SalesOrderHeader
         End Function
 
         Private m_SalesOrderID As _Int32
+        <PkColumn>
         Public Property SalesOrderID As _Int32
             Get
                 Return m_SalesOrderID

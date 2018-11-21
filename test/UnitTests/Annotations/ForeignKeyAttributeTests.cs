@@ -25,6 +25,7 @@ namespace DevZest.Data.Annotations
 
             public static readonly Mounter<_Int32> _AddressId = RegisterColumn((Address _) => _.AddressId);
 
+            [PkColumn]
             public _Int32 AddressId { get; private set; }
         }
 
@@ -46,6 +47,7 @@ namespace DevZest.Data.Annotations
             public static readonly Mounter<_Int32> _CustomerId = RegisterColumn((Customer _) => _.CustomerId);
             public static readonly Mounter<_Int32> _AddressId = RegisterColumn((Customer _) => _.AddressId);
 
+            [PkColumn]
             public _Int32 CustomerId { get; private set; }
 
             public _Int32 AddressId { get; private set; }
