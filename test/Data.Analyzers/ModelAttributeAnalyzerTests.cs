@@ -41,7 +41,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.InvalidImplementationAttribute,
-                Message = string.Format(Resources.InvalidImplementationAttribute_Message, typeof(_DbIndexAttribute), Resources.Property, typeof(ColumnSort[]), null),
+                Message = string.Format(Resources.InvalidImplementationAttribute_Message, typeof(_DbIndexAttribute), Resources.StringFormatArg_Property, typeof(ColumnSort[]), null),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 10) }
             };
@@ -129,7 +129,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.MissingImplementation,
-                Message = string.Format(Resources.MissingImplementation_Message, Resources.Property, "CK_AlwaysTrue", typeof(_Boolean), null),
+                Message = string.Format(Resources.MissingImplementation_Message, Resources.StringFormatArg_Property, "CK_AlwaysTrue", typeof(_Boolean), null),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 5, 6) }
             };
@@ -188,7 +188,7 @@ End Class";
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.InvalidImplementationAttribute,
-                Message = string.Format(Resources.InvalidImplementationAttribute_Message, typeof(_DbIndexAttribute), Resources.Property, "DevZest.Data.ColumnSort()", null),
+                Message = string.Format(Resources.InvalidImplementationAttribute_Message, typeof(_DbIndexAttribute), Resources.StringFormatArg_Property, "DevZest.Data.ColumnSort()", null),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 6) }
             };

@@ -169,15 +169,6 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to method.
-        /// </summary>
-        internal static string Method {
-            get {
-                return ResourceManager.GetString("Method", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Missing implementation of instance {0} {1}, which returns {2}, with parameters ({3})..
         /// </summary>
         internal static string MissingImplementation_Message {
@@ -520,11 +511,20 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to method.
+        /// </summary>
+        internal static string StringFormatArg_Method {
+            get {
+                return ResourceManager.GetString("StringFormatArg_Method", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to property.
         /// </summary>
-        internal static string Property {
+        internal static string StringFormatArg_Property {
             get {
-                return ResourceManager.GetString("Property", resourceCulture);
+                return ResourceManager.GetString("StringFormatArg_Property", resourceCulture);
             }
         }
     }

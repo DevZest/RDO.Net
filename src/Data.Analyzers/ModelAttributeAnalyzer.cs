@@ -74,7 +74,7 @@ namespace DevZest.Data.CodeAnalysis
             if (!IsImplementation(symbol, isProperty, specValue.ReturnType, specValue.ParameterTypes))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidImplementationAttribute, attribute.GetLocation(), attribute.AttributeClass,
-                    isProperty ? Resources.Property : Resources.Method, returnType, FormatString(parameterTypes)));
+                    isProperty ? Resources.StringFormatArg_Property : Resources.StringFormatArg_Method, returnType, FormatString(parameterTypes)));
                 return;
             }
 
@@ -128,7 +128,7 @@ namespace DevZest.Data.CodeAnalysis
                 var parameterTypes = specValue.ParameterTypes;
                 var returnType = specValue.ReturnType;
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementation, attribute.GetLocation(),
-                    (isProperty ? Resources.Property : Resources.Method), name, returnType, FormatString(parameterTypes)));
+                    (isProperty ? Resources.StringFormatArg_Property : Resources.StringFormatArg_Method), name, returnType, FormatString(parameterTypes)));
                 return;
             }
 
