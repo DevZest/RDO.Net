@@ -2,9 +2,7 @@
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    [CheckConstraint(nameof(CK_AlwaysTrue), "CK")]
-    [CheckConstraint(nameof(CK_AlwaysTrue), "CK")]
-    public class DuplicateModelAttribute : Model
+    public class MissingModelDeclaration : Model
     {
         [_CheckConstraint]
         private _Boolean CK_AlwaysTrue

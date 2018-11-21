@@ -7,16 +7,16 @@ using System;
 namespace DevZest.Data.CodeAnalysis
 {
     [TestClass]
-    public class ModelAttributeAnalyzerTests : DiagnosticVerifier
+    public class ModelDeclarationAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new ModelAttributeAnalyzer();
+            return new ModelDeclarationAnalyzer();
         }
 
         protected override DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {
-            return new ModelAttributeAnalyzer();
+            return new ModelDeclarationAnalyzer();
         }
 
         [TestMethod]
@@ -50,14 +50,14 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         [TestMethod]
-        public void MissingModelAttribute_CS()
+        public void MissingDeclarationAttribute_CS()
         {
             var test =
 @"using DevZest.Data.Annotations;
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class MissingModelAttribute : Model
+    public class MissingDeclarationAttribute : Model
     {
         [_CheckConstraint]
         private _Boolean CK_AlwaysTrue
@@ -70,8 +70,8 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MissingModelAttribute,
-                Message = string.Format(Resources.MissingModelAttribute_Message, typeof(CheckConstraintAttribute), "CK_AlwaysTrue"),
+                Id = DiagnosticIds.MissingDeclarationAttribute,
+                Message = string.Format(Resources.MissingDeclarationAttribute_Message, typeof(CheckConstraintAttribute), "CK_AlwaysTrue"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 10) }
             };
@@ -80,7 +80,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         [TestMethod]
-        public void DuplicateModelAttribute_CS()
+        public void DuplicateDeclarationAttribute_CS()
         {
             var test =
 @"using DevZest.Data.Annotations;
@@ -89,7 +89,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
     [CheckConstraint(nameof(CK_AlwaysTrue), ""CK"")]
     [CheckConstraint(nameof(CK_AlwaysTrue), ""CK"")]
-    public class DuplicateModelAttribute : Model
+    public class DuplicateDeclarationAttribute : Model
     {
         [_CheckConstraint]
         private _Boolean CK_AlwaysTrue
@@ -102,8 +102,8 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.DuplicateModelAttribute,
-                Message = string.Format(Resources.DuplicateModelAttribute_Message, typeof(CheckConstraintAttribute), "CK_AlwaysTrue"),
+                Id = DiagnosticIds.DuplicateDeclarationAttribute,
+                Message = string.Format(Resources.DuplicateDeclarationAttribute_Message, typeof(CheckConstraintAttribute), "CK_AlwaysTrue"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 6, 6) }
             };

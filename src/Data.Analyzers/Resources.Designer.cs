@@ -61,20 +61,20 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate model attribute {0} with name {1}..
+        ///   Looks up a localized string similar to Duplicate declaration attribute {0} with name {1}..
         /// </summary>
-        internal static string DuplicateModelAttribute_Message {
+        internal static string DuplicateDeclarationAttribute_Message {
             get {
-                return ResourceManager.GetString("DuplicateModelAttribute_Message", resourceCulture);
+                return ResourceManager.GetString("DuplicateDeclarationAttribute_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate model attribute..
+        ///   Looks up a localized string similar to Duplicate declaration attribute..
         /// </summary>
-        internal static string DuplicateModelAttribute_Title {
+        internal static string DuplicateDeclarationAttribute_Title {
             get {
-                return ResourceManager.GetString("DuplicateModelAttribute_Title", resourceCulture);
+                return ResourceManager.GetString("DuplicateDeclarationAttribute_Title", resourceCulture);
             }
         }
         
@@ -169,6 +169,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing declaration attribute {0} with name {1}..
+        /// </summary>
+        internal static string MissingDeclarationAttribute_Message {
+            get {
+                return ResourceManager.GetString("MissingDeclarationAttribute_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing declaration attribute..
+        /// </summary>
+        internal static string MissingDeclarationAttribute_Title {
+            get {
+                return ResourceManager.GetString("MissingDeclarationAttribute_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing implementation of instance {0} {1}, which returns {2}, with parameters ({3})..
         /// </summary>
         internal static string MissingImplementation_Message {
@@ -201,24 +219,6 @@ namespace DevZest.Data.CodeAnalysis {
         internal static string MissingImplementationAttribute_Title {
             get {
                 return ResourceManager.GetString("MissingImplementationAttribute_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Missing model attribute {0} with name {1}..
-        /// </summary>
-        internal static string MissingModelAttribute_Message {
-            get {
-                return ResourceManager.GetString("MissingModelAttribute_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Missing model attribute..
-        /// </summary>
-        internal static string MissingModelAttribute_Title {
-            get {
-                return ResourceManager.GetString("MissingModelAttribute_Title", resourceCulture);
             }
         }
         

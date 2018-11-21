@@ -117,11 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DuplicateModelAttribute_Message" xml:space="preserve">
-    <value>Duplicate model attribute {0} with name {1}.</value>
+  <data name="DuplicateDeclarationAttribute_Message" xml:space="preserve">
+    <value>Duplicate declaration attribute {0} with name {1}.</value>
   </data>
-  <data name="DuplicateModelAttribute_Title" xml:space="preserve">
-    <value>Duplicate model attribute.</value>
+  <data name="DuplicateDeclarationAttribute_Title" xml:space="preserve">
+    <value>Duplicate declaration attribute.</value>
   </data>
   <data name="DuplicateRegistration_Message" xml:space="preserve">
     <value>Duplicate registration for property '{0}'.</value>
@@ -153,6 +153,12 @@
   <data name="InvalidRegistrationInvocation_Title" xml:space="preserve">
     <value>Invalid invocation of property registration.</value>
   </data>
+  <data name="MissingDeclarationAttribute_Message" xml:space="preserve">
+    <value>Missing declaration attribute {0} with name {1}.</value>
+  </data>
+  <data name="MissingDeclarationAttribute_Title" xml:space="preserve">
+    <value>Missing declaration attribute.</value>
+  </data>
   <data name="MissingImplementationAttribute_Message" xml:space="preserve">
     <value>Missing implementation attribute: {0}.</value>
   </data>
@@ -164,12 +170,6 @@
   </data>
   <data name="MissingImplementation_Title" xml:space="preserve">
     <value>Missing implementation.</value>
-  </data>
-  <data name="MissingModelAttribute_Message" xml:space="preserve">
-    <value>Missing model attribute {0} with name {1}.</value>
-  </data>
-  <data name="MissingModelAttribute_Title" xml:space="preserve">
-    <value>Missing model attribute.</value>
   </data>
   <data name="MissingRegistration_Message" xml:space="preserve">
     <value>Missing registration for property '{0}'.</value>

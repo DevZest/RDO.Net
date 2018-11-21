@@ -8,24 +8,24 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace DevZest.Data.CodeAnalysis
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
-    public sealed class ModelAttributeAnalyzer : DiagnosticAnalyzer
+    public sealed class ModelDeclarationAnalyzer : DiagnosticAnalyzer
     {
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSymbolAction(AnalyzeModelAttribute, SymbolKind.NamedType);
+            context.RegisterSymbolAction(AnalyzeModelDeclartion, SymbolKind.NamedType);
         }
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
             get { return ImmutableArray.Create(
-                      Rules.DuplicateModelAttribute,
+                      Rules.DuplicateDeclarationAttribute,
                       Rules.MissingImplementation,
                       Rules.MissingImplementationAttribute,
                       Rules.InvalidImplementationAttribute,
-                      Rules.MissingModelAttribute); }
+                      Rules.MissingDeclarationAttribute); }
         }
 
-        private static void AnalyzeModelAttribute(SymbolAnalysisContext context)
+        private static void AnalyzeModelDeclartion(SymbolAnalysisContext context)
         {
             var modelType = (INamedTypeSymbol)context.Symbol;
             if (!modelType.IsDerivedFrom(KnownTypes.Model, context.Compilation))
@@ -41,7 +41,7 @@ namespace DevZest.Data.CodeAnalysis
             var attributes = ImmutableArray.CreateRange(modelType.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes.ModelDeclarationAttribute, compilation)));
             for (int i = 0; i < attributes.Length; i++)
             {
-                if (AnalyzeDuplicateModelAttribute(context, attributes, i))
+                if (AnalyzeDuplicateDeclarationAttribute(context, attributes, i))
                     continue;
                 AnalyzeModelDeclarationAttribute(context, modelType, attributes[i]);
             }
@@ -80,7 +80,7 @@ namespace DevZest.Data.CodeAnalysis
 
             var modelAttribute = modelType.GetAttributes().Where(x => x.AttributeClass.Equals(modelAttributeType) && GetName(x) == name).FirstOrDefault();
             if (modelAttribute == null)
-                context.ReportDiagnostic(Diagnostic.Create(Rules.MissingModelAttribute, attribute.GetLocation(), modelAttributeType, name));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.MissingDeclarationAttribute, attribute.GetLocation(), modelAttributeType, name));
         }
 
         private static ImmutableArray<AttributeData> GetImplementationAttributes(ISymbol symbol, Compilation compilation)
@@ -88,7 +88,7 @@ namespace DevZest.Data.CodeAnalysis
             return ImmutableArray.CreateRange(symbol.GetAttributes().Where(x => x.AttributeClass.IsDerivedFrom(KnownTypes.ModelImplementationAttribute, compilation)));
         }
 
-        private static bool AnalyzeDuplicateModelAttribute(SymbolAnalysisContext context, ImmutableArray<AttributeData> attributes, int index)
+        private static bool AnalyzeDuplicateDeclarationAttribute(SymbolAnalysisContext context, ImmutableArray<AttributeData> attributes, int index)
         {
             if (index == 0)
                 return false;
@@ -100,7 +100,7 @@ namespace DevZest.Data.CodeAnalysis
                 var prevAttribute = attributes[i];
                 if (prevAttribute.AttributeClass.Equals(current.AttributeClass) && GetName(prevAttribute) == name)
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Rules.DuplicateModelAttribute, current.GetLocation(), current.AttributeClass, name));
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.DuplicateDeclarationAttribute, current.GetLocation(), current.AttributeClass, name));
                     return true;
                 }
             }

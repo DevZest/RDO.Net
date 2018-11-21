@@ -118,16 +118,16 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.InvalidImplementationAttribute_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor MissingModelAttribute = new DiagnosticDescriptor(
-            DiagnosticIds.MissingModelAttribute,
-            new LocalizableResourceString(nameof(Resources.MissingModelAttribute_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.MissingModelAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor MissingDeclarationAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.MissingDeclarationAttribute,
+            new LocalizableResourceString(nameof(Resources.MissingDeclarationAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.MissingDeclarationAttribute_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor DuplicateModelAttribute = new DiagnosticDescriptor(
-            DiagnosticIds.DuplicateModelAttribute,
-            new LocalizableResourceString(nameof(Resources.DuplicateModelAttribute_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.DuplicateModelAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor DuplicateDeclarationAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.DuplicateDeclarationAttribute,
+            new LocalizableResourceString(nameof(Resources.DuplicateDeclarationAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.DuplicateDeclarationAttribute_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         public static readonly DiagnosticDescriptor MissingImplementation = new DiagnosticDescriptor(

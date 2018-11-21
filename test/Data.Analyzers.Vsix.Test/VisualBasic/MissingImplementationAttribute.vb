@@ -1,6 +1,6 @@
 ﻿Imports DevZest.Data.Annotations
 
-<CheckConstraint(DuplicateModelAttribute._CK_AlwaysTrue, "CK")>
+<CheckConstraint(MissingImplementationAttribute._CK_AlwaysTrue, "CK")>
 Public Class MissingImplementationAttribute
     Inherits Model
 
