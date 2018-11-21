@@ -73,14 +73,9 @@ namespace DevZest.Data.CodeAnalysis
                 return;
 
             ResolveExistingPkColumns(type.BaseType, result, compilation);
-            var pkColumnAttribute = compilation.GetKnownType(KnownTypes.PkColumnAttribute);
             foreach (var property in type.GetMembers().OfType<IPropertySymbol>())
             {
-                var attributes = property.GetAttributes().Where(x => pkColumnAttribute.Equals(x.AttributeClass)).ToArray();
-                if (attributes.Length != 1)
-                    continue;
-                var attribute = attributes[0];
-                var index = GetPkColumnAttributeIndex(attribute);
+                var index = GetPkColumnAttributeIndex(property, compilation);
                 if (!index.HasValue)
                     continue;
                 var indexValue = index.Value;
@@ -129,6 +124,16 @@ namespace DevZest.Data.CodeAnalysis
             if (constructor.Parameters.Length == 0)
                 return -1;
             return constructor.Parameters.Length;
+        }
+
+        protected static int? GetPkColumnAttributeIndex(IPropertySymbol property, Compilation compilation)
+        {
+            var pkColumnAttribute = compilation.GetKnownType(KnownTypes.PkColumnAttribute);
+            var attributes = property.GetAttributes().Where(x => pkColumnAttribute.Equals(x.AttributeClass)).ToArray();
+            if (attributes.Length != 1)
+                return null;
+            var attribute = attributes[0];
+            return GetPkColumnAttributeIndex(attribute);
         }
 
         private static int? GetPkColumnAttributeIndex(AttributeData pkColumnAttribute)

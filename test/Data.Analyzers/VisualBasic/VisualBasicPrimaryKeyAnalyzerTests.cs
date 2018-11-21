@@ -308,6 +308,7 @@ End Class";
         {
             var test = @"
 Imports DevZest.Data
+Imports DevZest.Data.Annotations
 
 Public Class PrimaryKeyArgumentNaming
     Inherits Model(Of PrimaryKeyArgumentNaming.PK)
@@ -326,6 +327,7 @@ Public Class PrimaryKeyArgumentNaming
     Public Shared ReadOnly _ID As Mounter(Of _Int32) = RegisterColumn(Function(x As PrimaryKeyArgumentNaming) x.ID)
 
     Private m_ID As _Int32
+    <PkColumn>
     Public Property ID As _Int32
         Get
             Return m_ID
@@ -340,6 +342,50 @@ End Class";
             {
                 Id = DiagnosticIds.PrimaryKeyArgumentNaming,
                 Message = string.Format(Resources.PrimaryKeyArgumentNaming_Message, "ID", "id2"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 16, 23) }
+            };
+
+            VerifyBasicDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void PkColumnAttributeMissing()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Public Class PrimaryKeyArgumentMissing
+    Inherits Model(Of PrimaryKeyArgumentMissing.PK)
+
+    Public NotInheritable Class PK
+        Inherits PrimaryKey
+        Public Sub New(id As _Int32)
+            MyBase.New(id)
+        End Sub
+    End Class
+
+    Protected NotOverridable Overrides Function CreatePrimaryKey() As PK
+        Return New PK(ID)
+    End Function
+
+    Public Shared ReadOnly _ID As Mounter(Of _Int32) = RegisterColumn(Function(x As PrimaryKeyArgumentMissing) x.ID)
+
+    Private m_ID As _Int32
+    Public Property ID As _Int32
+        Get
+            Return m_ID
+        End Get
+        Private Set
+            m_ID = Value
+        End Set
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PkColumnAttributeMissing,
+                Message = string.Format(Resources.PkColumnAttributeMissing_Message, 0),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 15, 23) }
             };

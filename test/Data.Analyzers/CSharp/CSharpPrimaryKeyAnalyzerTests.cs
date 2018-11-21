@@ -302,6 +302,7 @@ public class PrimaryKeyInvalidArgument : Model<PrimaryKeyInvalidArgument.PK>
         {
             var test = @"
 using DevZest.Data;
+using DevZest.Data.Annotations;
 
 public class PrimaryKeyArgumentNaming : Model<PrimaryKeyArgumentNaming.PK>
 {
@@ -320,6 +321,7 @@ public class PrimaryKeyArgumentNaming : Model<PrimaryKeyArgumentNaming.PK>
 
     public static readonly Mounter<_Int32> _ID = RegisterColumn((PrimaryKeyArgumentNaming _) => _.ID);
 
+    [PkColumn]
     public _Int32 ID { get; private set; }
 }";
 
@@ -328,7 +330,45 @@ public class PrimaryKeyArgumentNaming : Model<PrimaryKeyArgumentNaming.PK>
                 Id = DiagnosticIds.PrimaryKeyArgumentNaming,
                 Message = string.Format(Resources.PrimaryKeyArgumentNaming_Message, "ID", "id2"),
                 Severity = DiagnosticSeverity.Warning,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 16, 23) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 17, 23) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
+        public void PkColumnAttributeMissing()
+        {
+            var test = 
+@"namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
+{
+    public class PkColumnAttributeMissing : Model<PkColumnAttributeMissing.PK>
+    {
+        public sealed class PK : PrimaryKey
+        {
+            public PK(_Int32 id)
+                : base(id)
+            {
+            }
+        }
+
+        protected sealed override PK CreatePrimaryKey()
+        {
+            return new PK(ID);
+        }
+
+        public static readonly Mounter<_Int32> _ID = RegisterColumn((PkColumnAttributeMissing _) => _.ID);
+
+        public _Int32 ID { get; private set; }
+    }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.PkColumnAttributeMissing,
+                Message = string.Format(Resources.PkColumnAttributeMissing_Message, 0),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 15, 27) }
             };
 
             VerifyCSharpDiagnostic(test, expected);
