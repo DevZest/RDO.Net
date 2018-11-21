@@ -112,6 +112,24 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.PrimaryKeyArgumentNaming_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+        public static readonly DiagnosticDescriptor PkColumnAttributeMissing = new DiagnosticDescriptor(
+            DiagnosticIds.PkColumnAttributeMissing,
+            new LocalizableResourceString(nameof(Resources.PkColumnAttributeMissing_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.PkColumnAttributeMissing_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor PkColumnAttributeIndexOutOfRange = new DiagnosticDescriptor(
+            DiagnosticIds.PkColumnAttributeIndexOutOfRange,
+            new LocalizableResourceString(nameof(Resources.PkColumnAttributeIndexOutOfRange_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.PkColumnAttributeIndexOutOfRange_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor PkColumnAttributeDuplicate = new DiagnosticDescriptor(
+            DiagnosticIds.PkColumnAttributeDuplicate,
+            new LocalizableResourceString(nameof(Resources.PkColumnAttributeDuplicate_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.PkColumnAttributeDuplicate_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
         public static readonly DiagnosticDescriptor InvalidImplementationAttribute = new DiagnosticDescriptor(
             DiagnosticIds.InvalidImplementationAttribute,
             new LocalizableResourceString(nameof(Resources.InvalidImplementationAttribute_Title), Resources.ResourceManager, typeof(Resources)),

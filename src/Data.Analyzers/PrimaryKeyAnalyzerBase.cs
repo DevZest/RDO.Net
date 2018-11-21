@@ -1,6 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.FindSymbols;
 using System;
 using System.Collections.Immutable;
 
@@ -10,18 +9,24 @@ namespace DevZest.Data.CodeAnalysis
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get { return ImmutableArray.Create(
-                Rules.PrimaryKeyNotSealed,
-                Rules.PrimaryKeyInvalidConstructors,
-                Rules.PrimaryKeyParameterlessConstructor,
-                Rules.PrimaryKeyInvalidConstructorParam,
-                Rules.PrimaryKeyMissingBaseConstructor,
-                Rules.PrimaryKeySortAttributeConflict,
-                Rules.PrimaryKeyMismatchBaseConstructor,
-                Rules.PrimaryKeyMismatchBaseConstructorArgument,
-                Rules.PrimaryKeyMismatchSortAttribute,
-                Rules.PrimaryKeyInvalidArgument,
-                Rules.PrimaryKeyArgumentNaming); }
+            get
+            {
+                return ImmutableArray.Create(
+                    Rules.PrimaryKeyNotSealed,
+                    Rules.PrimaryKeyInvalidConstructors,
+                    Rules.PrimaryKeyParameterlessConstructor,
+                    Rules.PrimaryKeyInvalidConstructorParam,
+                    Rules.PrimaryKeyMissingBaseConstructor,
+                    Rules.PrimaryKeySortAttributeConflict,
+                    Rules.PrimaryKeyMismatchBaseConstructor,
+                    Rules.PrimaryKeyMismatchBaseConstructorArgument,
+                    Rules.PrimaryKeyMismatchSortAttribute,
+                    Rules.PrimaryKeyInvalidArgument,
+                    Rules.PrimaryKeyArgumentNaming,
+                    Rules.PkColumnAttributeMissing,
+                    Rules.PkColumnAttributeIndexOutOfRange,
+                    Rules.PkColumnAttributeDuplicate);
+            }
         }
 
         protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
