@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
+    [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
     public class DisplayAttribute : ColumnAttribute
     {
         private Type _resourceType;

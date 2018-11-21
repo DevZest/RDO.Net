@@ -30,7 +30,7 @@
         public const string CrossReferenceAttribute = Namespaces.Data_Annotations_Primitives + nameof(CrossReferenceAttribute);
         public const string ModelDeclarationSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDeclarationSpecAttribute);
 
-        public const string ModelMemberAttributeSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelMemberAttributeSpecAttribute);
+        public const string ModelDesignerSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDesignerSpecAttribute);
         public const string AddonAttribute = Namespaces.Data_Addons + nameof(AddonAttribute);
     }
 }

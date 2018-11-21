@@ -1,7 +1,7 @@
 Imports DevZest.Data.Annotations.Primitives
 Imports DevZest.Data.Addons
 
-<ModelMemberAttributeSpec(New Type() {GetType(ColumnNotNull)}, New Type() {GetType(_Boolean)})>
+<ModelDesignerSpec(New Type() {GetType(ColumnNotNull)}, New Type() {GetType(_Boolean)})>
 Public NotInheritable Class UdtNameStyleAttribute
     Inherits ColumnAttribute
 

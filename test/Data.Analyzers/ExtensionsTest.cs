@@ -17,7 +17,7 @@ namespace DevZest.Data.CodeAnalysis
         }
 
         [TestMethod]
-        public void GetModelMemberAttributeSpec()
+        public void GetModelDesignerSpec()
         {
             var project = string.Empty.CreateProject();
             var compilation = project.GetCompilationAsync().Result;
@@ -25,7 +25,7 @@ namespace DevZest.Data.CodeAnalysis
             var identityAttribute = compilation.GetTypeByMetadataName("DevZest.Data.Annotations.IdentityAttribute");
             Assert.IsNotNull(identityAttribute);
 
-            var result = identityAttribute.GetModelMemberAttributeSpec(compilation).Value;
+            var result = identityAttribute.GetModelDesignerSpec(compilation).Value;
 
             {
                 var addonTypes = result.AddonTypes;

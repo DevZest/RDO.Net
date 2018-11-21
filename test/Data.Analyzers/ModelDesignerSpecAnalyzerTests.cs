@@ -6,16 +6,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DevZest.Data.CodeAnalysis
 {
     [TestClass]
-    public class ModelMemberAttributeAnalyzerTests : DiagnosticVerifier
+    public class ModelDesignerSpecAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new ModelMemberAttributeAnalyzer();
+            return new ModelDesignerSpecAnalyzer();
         }
 
         protected override DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {
-            return new ModelMemberAttributeAnalyzer();
+            return new ModelDesignerSpecAnalyzer();
         }
 
         [TestMethod]

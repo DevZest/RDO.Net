@@ -6,7 +6,7 @@ using System.ComponentModel;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelMemberAttributeSpec(addonTypes: new Type[] { typeof(ColumnDefault) }, validOnTypes: new Type[] { typeof(Column) })]
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(ColumnDefault) }, validOnTypes: new Type[] { typeof(Column) })]
     public sealed class DefaultValueAttribute : ColumnAttribute
     {
         public DefaultValueAttribute(Type type, string value)

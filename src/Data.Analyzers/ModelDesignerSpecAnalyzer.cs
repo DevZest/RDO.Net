@@ -8,11 +8,11 @@ using System.Linq;
 namespace DevZest.Data.CodeAnalysis
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
-    public sealed class ModelMemberAttributeAnalyzer : DiagnosticAnalyzer
+    public sealed class ModelDesignerSpecAnalyzer : DiagnosticAnalyzer
     {
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSymbolAction(AnalyzeModelMemberAttribute, SymbolKind.NamedType);
+            context.RegisterSymbolAction(AnalyzeModelDesignerSpec, SymbolKind.NamedType);
         }
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
@@ -20,7 +20,7 @@ namespace DevZest.Data.CodeAnalysis
             get { return ImmutableArray.Create(Rules.InvalidModelMemberAttribute, Rules.ModelMemberAttributeRequiresArgument); }
         }
 
-        private static void AnalyzeModelMemberAttribute(SymbolAnalysisContext context)
+        private static void AnalyzeModelDesignerSpec(SymbolAnalysisContext context)
         {
             var modelType = (INamedTypeSymbol)context.Symbol;
             if (!modelType.IsDerivedFrom(KnownTypes.Model, context.Compilation))
@@ -31,23 +31,23 @@ namespace DevZest.Data.CodeAnalysis
             {
                 var member = members[i];
                 if (member is IPropertySymbol property)
-                    AnalyzeModelMemberAttribute(context, property, property.Type);
+                    AnalyzeModelDesignerSpec(context, property, property.Type);
                 else if (member is INamedTypeSymbol innerClass)
-                    AnalyzeModelMemberAttribute(context, innerClass, innerClass);
+                    AnalyzeModelDesignerSpec(context, innerClass, innerClass);
             }
         }
 
-        private static void AnalyzeModelMemberAttribute(SymbolAnalysisContext context, ISymbol symbol, ITypeSymbol type)
+        private static void AnalyzeModelDesignerSpec(SymbolAnalysisContext context, ISymbol symbol, ITypeSymbol type)
         {
             var attributes = symbol.GetAttributes();
             for (int i = 0; i < attributes.Length; i++)
-                AnalyzeModelMemberAttribute(context, symbol, type, attributes[i]);
+                AnalyzeModelDesignerSpec(context, symbol, type, attributes[i]);
 
         }
 
-        private static void AnalyzeModelMemberAttribute(SymbolAnalysisContext context, ISymbol symbol, ITypeSymbol type, AttributeData attribute)
+        private static void AnalyzeModelDesignerSpec(SymbolAnalysisContext context, ISymbol symbol, ITypeSymbol type, AttributeData attribute)
         {
-            var spec = attribute.GetModelMemberAttributeSpec(context.Compilation);
+            var spec = attribute.GetModelDesignerSpec(context.Compilation);
             if (!spec.HasValue)
                 return;
 

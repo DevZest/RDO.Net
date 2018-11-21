@@ -5,7 +5,7 @@ using System.Globalization;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelMemberAttributeSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
+    [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class StringLengthAttribute : ValidationColumnAttribute
     {
         /// <summary>Initializes a new instance of the <see cref="StringLengthAttribute" /> class by using a specified maximum length.</summary>
