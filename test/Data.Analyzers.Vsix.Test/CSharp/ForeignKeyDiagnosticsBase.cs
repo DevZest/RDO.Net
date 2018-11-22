@@ -46,10 +46,10 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             public _Int32 CustomerId { get; private set; }
             public _Int32 AddressId { get; private set; }
 
-            private Address.PK _fk_Customer_Address;
-            public Address.PK FK_Customer_Address
+            private Address.PK _fk_Address;
+            public Address.PK FK_Address
             {
-                get { return _fk_Customer_Address ?? (_fk_Customer_Address = new Address.PK(AddressId)); }
+                get { return _fk_Address ?? (_fk_Address = new Address.PK(AddressId)); }
             }
         }
 

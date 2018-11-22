@@ -26,7 +26,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         [_ForeignKey]
         private KeyMapping FK_Customer_Address(Customer _)
         {
-            return _.FK_Customer_Address.Join(Addresses._);
+            return _.FK_Address.Join(Addresses._);
         }
     }
 }

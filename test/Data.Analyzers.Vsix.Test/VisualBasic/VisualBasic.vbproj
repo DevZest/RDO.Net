@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
     <ProjectReference Include="..\..\..\src\Data\Data.csproj" />
   </ItemGroup>
 
