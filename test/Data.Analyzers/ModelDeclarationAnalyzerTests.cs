@@ -20,6 +20,36 @@ namespace DevZest.Data.CodeAnalysis
         }
 
         [TestMethod]
+        public void InvalidImplementationAttribute_CS()
+        {
+            var test =
+@"using DevZest.Data.Annotations;
+
+namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
+{
+    public class InvalidImplementationAttribute : Model
+    {
+        [_DbIndex]
+        public _Boolean CK_AlwaysTrue
+        {
+            get { return _Boolean.Const(true); }
+        }
+    }
+}
+";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.InvalidImplementationAttribute,
+                Message = string.Format(Resources.InvalidImplementationAttribute_Message, typeof(_DbIndexAttribute), Resources.StringFormatArg_Property, typeof(ColumnSort[]), null),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 7, 10) }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+        }
+
+        [TestMethod]
         public void MissingDeclarationAttribute_CS()
         {
             var test =
@@ -138,7 +168,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         [TestMethod]
-        public void MissingDeclarationAttribute_VB()
+        public void InvalidImplementationAttribute_VB()
         {
             var test =
 @"Imports DevZest.Data
@@ -147,7 +177,7 @@ Imports DevZest.Data.Annotations
 Public Class InvalidImplementationAttribute
     Inherits Model
 
-    <_CheckConstraint>
+    <_DbIndex>
     Private ReadOnly Property CK_AlwaysTrue As _Boolean
         Get
             Return _Boolean.Const(True)
@@ -157,8 +187,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.MissingDeclarationAttribute,
-                Message = string.Format(Resources.MissingDeclarationAttribute_Message, typeof(CheckConstraintAttribute), "CK_AlwaysTrue"),
+                Id = DiagnosticIds.InvalidImplementationAttribute,
+                Message = string.Format(Resources.InvalidImplementationAttribute_Message, typeof(_DbIndexAttribute), Resources.StringFormatArg_Property, "DevZest.Data.ColumnSort()", null),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 6) }
             };
@@ -167,5 +197,5 @@ End Class";
         }
     }
 
-    // Not necessary to repeat other VB diagnostic tests because ModelDeclarationAnalyzer is language agnostic.
+    // Not necessary to repeat other VB diagnostic tests because ModelAttributeAnalyzer is language agnostic.
 }

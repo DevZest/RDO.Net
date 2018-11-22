@@ -112,6 +112,12 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.PrimaryKeyArgumentNaming_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+        public static readonly DiagnosticDescriptor InvalidImplementationAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.InvalidImplementationAttribute,
+            new LocalizableResourceString(nameof(Resources.InvalidImplementationAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.InvalidImplementationAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
         public static readonly DiagnosticDescriptor MissingDeclarationAttribute = new DiagnosticDescriptor(
             DiagnosticIds.MissingDeclarationAttribute,
             new LocalizableResourceString(nameof(Resources.MissingDeclarationAttribute_Title), Resources.ResourceManager, typeof(Resources)),

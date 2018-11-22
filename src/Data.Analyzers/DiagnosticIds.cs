@@ -20,6 +20,7 @@
         public const string PrimaryKeyMismatchSortAttribute = "RDO018";
         public const string PrimaryKeyInvalidArgument = "RDO019";
         public const string PrimaryKeyArgumentNaming = "RDO020";
+        public const string InvalidImplementationAttribute = "RDO030";
         public const string MissingDeclarationAttribute = "RDO031";
         public const string DuplicateDeclarationAttribute = "RDO032";
         public const string MissingImplementation = "RDO033";

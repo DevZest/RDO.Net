@@ -129,6 +129,12 @@
   <data name="DuplicateRegistration_Title" xml:space="preserve">
     <value>Duplicate property registration.</value>
   </data>
+  <data name="InvalidImplementationAttribute_Message" xml:space="preserve">
+    <value>Attribute {0} should be applied for {1} that returns {2}, with parameters ({3}).</value>
+  </data>
+  <data name="InvalidImplementationAttribute_Title" xml:space="preserve">
+    <value>Invalid implementation attribute.</value>
+  </data>
   <data name="InvalidLocalColumnRegistration_Message" xml:space="preserve">
     <value>Local column '{0}' is invalid for RegisterColumn, use RegisterLocalColumn instead.</value>
   </data>
