@@ -76,6 +76,11 @@ namespace DevZest.Data.CodeAnalysis
             VerifyDiagnostics(sources, LanguageNames.VisualBasic, GetBasicDiagnosticAnalyzer(), expected);
         }
 
+        protected virtual IEnumerable<MetadataReference> AdditionalReferences
+        {
+            get { return null; }
+        }
+
         /// <summary>
         /// General method that gets a collection of actual diagnostics found in the source after the analyzer is run, 
         /// then verifies each of them.
@@ -86,7 +91,7 @@ namespace DevZest.Data.CodeAnalysis
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         private void VerifyDiagnostics(string[] sources, string language, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expected)
         {
-            var diagnostics = GetSortedDiagnostics(sources, language, analyzer);
+            var diagnostics = GetSortedDiagnostics(sources, AdditionalReferences, language, analyzer);
             VerifyDiagnosticResults(diagnostics, analyzer, expected);
         }
 

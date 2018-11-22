@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.Analyzers\Data.Analyzers.csproj" />
+    <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\Data\Data.csproj" />
   </ItemGroup>
 
