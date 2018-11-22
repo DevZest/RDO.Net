@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -74,11 +73,11 @@ namespace DevZest.Data.CodeAnalysis
             if (!IsImplementation(symbol, isProperty, specValue.ReturnType, specValue.ParameterTypes))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidImplementationAttribute, attribute.GetLocation(), attribute.AttributeClass,
-                    isProperty ? Resources.StringFormatArg_Property : Resources.StringFormatArg_Method, returnType, FormatString(parameterTypes)));
+                    isProperty ? Resources.StringFormatArg_Property : Resources.StringFormatArg_Method, returnType, parameterTypes.FormatString()));
                 return;
             }
 
-            var modelAttribute = modelType.GetAttributes().Where(x => x.AttributeClass.Equals(modelAttributeType) && GetName(x) == name).FirstOrDefault();
+            var modelAttribute = modelType.GetAttributes().Where(x => x.AttributeClass.Equals(modelAttributeType) && x.GetStringArgument() == name).FirstOrDefault();
             if (modelAttribute == null)
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingDeclarationAttribute, attribute.GetLocation(), modelAttributeType, name));
         }
@@ -94,11 +93,11 @@ namespace DevZest.Data.CodeAnalysis
                 return false;
 
             var current = attributes[index];
-            var name = GetName(current);
+            var name = current.GetStringArgument();
             for (int i = 0; i < index; i++)
             {
                 var prevAttribute = attributes[i];
-                if (prevAttribute.AttributeClass.Equals(current.AttributeClass) && GetName(prevAttribute) == name)
+                if (prevAttribute.AttributeClass.Equals(current.AttributeClass) && prevAttribute.GetStringArgument() == name)
                 {
                     context.ReportDiagnostic(Diagnostic.Create(Rules.DuplicateDeclarationAttribute, current.GetLocation(), current.AttributeClass, name));
                     return true;
@@ -117,7 +116,7 @@ namespace DevZest.Data.CodeAnalysis
                 return;
 
             var specValue = spec.Value;
-            var name = GetName(attribute);
+            var name = attribute.GetStringArgument();
             if (name == null)
                 return;
 
@@ -128,7 +127,7 @@ namespace DevZest.Data.CodeAnalysis
                 var parameterTypes = specValue.ParameterTypes;
                 var returnType = specValue.ReturnType;
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementation, attribute.GetLocation(),
-                    (isProperty ? Resources.StringFormatArg_Property : Resources.StringFormatArg_Method), name, returnType, FormatString(parameterTypes)));
+                    (isProperty ? Resources.StringFormatArg_Property : Resources.StringFormatArg_Method), name, returnType, parameterTypes.FormatString()));
                 return;
             }
 
@@ -137,16 +136,6 @@ namespace DevZest.Data.CodeAnalysis
                 return;
             if (!implementation.HasAttribute(crossRefAttributeType))
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementationAttribute, implementation.Locations[0], crossRefAttributeType));
-        }
-
-        private static string FormatString(ITypeSymbol[] parameterTypes)
-        {
-            return string.Join(", ", (object[])parameterTypes);
-        }
-
-        private static string GetName(AttributeData namedModelAttribute)
-        {
-            return namedModelAttribute.GetStringArgument();
         }
 
         private static ISymbol GetImplementation(INamedTypeSymbol modelType, string name, (bool IsProperty, ITypeSymbol ReturnType, ITypeSymbol[] ParameterTypes) spec)

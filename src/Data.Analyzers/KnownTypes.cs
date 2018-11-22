@@ -8,6 +8,7 @@
             public const string System = "System.";
             public const string Data_Addons = Data + "Addons.";
             public const string Data = "DevZest.Data.";
+            public const string Data_Primitives = Data + "Primitives.";
             public const string Data_Annotations = Data + "Annotations.";
             public const string Data_Annotations_Primitives = Data_Annotations + "Primitives.";
         }
@@ -32,5 +33,11 @@
 
         public const string ModelDesignerSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDesignerSpecAttribute);
         public const string AddonAttribute = Namespaces.Data_Addons + nameof(AddonAttribute);
+
+        public const string DbSession = Namespaces.Data_Primitives + nameof(DbSession);
+        public const string DbTable = Namespaces.Data + nameof(DbTable) + "`1";
+        public const string ForeignKeyAttribute = Namespaces.Data_Annotations + nameof(ForeignKeyAttribute);
+        public const string _ForeignKeyAttribute = Namespaces.Data_Annotations + nameof(_ForeignKeyAttribute);
+        public const string KeyMapping = Namespaces.Data + nameof(KeyMapping);
     }
 }
