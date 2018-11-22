@@ -36,6 +36,8 @@ namespace DevZest.Data.CodeAnalysis
             var members = dbType.GetMembers().OfType<IMethodSymbol>().ToImmutableArray();
             for (int i = 0; i < members.Length; i++)
                 AnalyzeImplementation(context, dbType, members[i]);
+
+            AnalyzeDeclaration(context, dbType);
         }
 
         private static void AnalyzeImplementation(SymbolAnalysisContext context, INamedTypeSymbol dbType, IMethodSymbol method)
@@ -113,7 +115,65 @@ namespace DevZest.Data.CodeAnalysis
         private static bool HasDeclaration(IPropertySymbol dbTable, INamedTypeSymbol foreignKeyAttribute, string name)
         {
             var attributes = dbTable.GetAttributes().Where(x => foreignKeyAttribute.Equals(x.AttributeClass) && x.GetStringArgument() == name).ToImmutableArray();
-            return attributes.Length == 1;
+            return attributes.Length > 0;
+        }
+
+        private static void AnalyzeDeclaration(SymbolAnalysisContext context, INamedTypeSymbol dbType)
+        {
+            var dbTables = dbType.GetDbTables(context.Compilation);
+            if (dbTables.Length == 0)
+                return;
+
+            var names = new HashSet<string>();
+            for (int i = 0; i < dbTables.Length; i++)
+                AnalyzeDeclaration(context, dbType, dbTables[i], names);
+        }
+
+        private static void AnalyzeDeclaration(SymbolAnalysisContext context, INamedTypeSymbol dbType, IPropertySymbol dbTable, HashSet<string> names)
+        {
+            var compilation = context.Compilation;
+            var foreignKeyAttribute = compilation.GetKnownType(KnownTypes.ForeignKeyAttribute);
+            var attributes = dbTable.GetAttributes().Where(x => foreignKeyAttribute.Equals(x.AttributeClass)).ToImmutableArray();
+            for (int i = 0; i < attributes.Length; i++)
+                AnalyzeDeclaration(context, dbType, dbTable, attributes[i], names);
+        }
+
+        private static void AnalyzeDeclaration(SymbolAnalysisContext context, INamedTypeSymbol dbType, IPropertySymbol dbTable, AttributeData attribute, HashSet<string> names)
+        {
+            var name = attribute.GetStringArgument();
+            if (name == null)
+                return;
+
+            if (names.Contains(name))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Rules.DuplicateDeclarationAttribute, attribute.GetLocation(), attribute.AttributeClass, name));
+                return;
+            }
+
+            names.Add(name);
+
+            var modelType = GetModelType(dbTable);
+            if (modelType == null)
+                return;
+
+            var compilation = context.Compilation;
+            var implementation = GetImplementation(dbType, name, modelType, compilation);
+            if (implementation == null)
+            {
+                var keyMappingType = compilation.GetKnownType(KnownTypes.KeyMapping);
+                context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementation, attribute.GetLocation(),
+                    Resources.StringFormatArg_Method, name, keyMappingType, modelType));
+                return;
+            }
+
+            var implementationAttribute = compilation.GetKnownType(KnownTypes._ForeignKeyAttribute);
+            if (!implementation.HasAttribute(implementationAttribute))
+                context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementationAttribute, implementation.Locations[0], implementationAttribute));
+        }
+
+        private static ISymbol GetImplementation(INamedTypeSymbol dbType, string name, INamedTypeSymbol modelType, Compilation compilation)
+        {
+            return dbType.GetMembers(name).OfType<IMethodSymbol>().Where(x => IsImplementation(x, modelType, compilation)).FirstOrDefault();
         }
     }
 }
