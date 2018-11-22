@@ -17,11 +17,10 @@ namespace DevZest.Data.CodeAnalysis
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
             get { return ImmutableArray.Create(
-                      Rules.DuplicateDeclarationAttribute,
-                      Rules.MissingImplementation,
-                      Rules.MissingImplementationAttribute,
-                      Rules.InvalidImplementationAttribute,
-                      Rules.MissingDeclarationAttribute); }
+                    Rules.MissingDeclarationAttribute,
+                    Rules.DuplicateDeclarationAttribute,
+                    Rules.MissingImplementation,
+                    Rules.MissingImplementationAttribute); }
         }
 
         private static void AnalyzeModelDeclartion(SymbolAnalysisContext context)
@@ -62,20 +61,6 @@ namespace DevZest.Data.CodeAnalysis
             var modelAttributeType = attribute.GetCrossReferenceAttributeType(compilation);
             if (modelAttributeType == null)
                 return;
-
-            var spec = modelAttributeType.GetModelDeclarationSpec(compilation);
-            if (!spec.HasValue)
-                return;
-            var specValue = spec.Value;
-            var isProperty = specValue.IsProperty;
-            var returnType = specValue.ReturnType;
-            var parameterTypes = specValue.ParameterTypes;
-            if (!IsImplementation(symbol, isProperty, specValue.ReturnType, specValue.ParameterTypes))
-            {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidImplementationAttribute, attribute.GetLocation(), attribute.AttributeClass,
-                    isProperty ? Resources.StringFormatArg_Property : Resources.StringFormatArg_Method, returnType, parameterTypes.FormatString()));
-                return;
-            }
 
             var modelAttribute = modelType.GetAttributes().Where(x => x.AttributeClass.Equals(modelAttributeType) && x.GetStringArgument() == name).FirstOrDefault();
             if (modelAttribute == null)

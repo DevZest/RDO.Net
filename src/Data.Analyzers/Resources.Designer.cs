@@ -97,24 +97,6 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attribute {0} should be applied for {1} that returns {2}, with parameters ({3})..
-        /// </summary>
-        internal static string InvalidImplementationAttribute_Message {
-            get {
-                return ResourceManager.GetString("InvalidImplementationAttribute_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid implementation attribute..
-        /// </summary>
-        internal static string InvalidImplementationAttribute_Title {
-            get {
-                return ResourceManager.GetString("InvalidImplementationAttribute_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Local column &apos;{0}&apos; is invalid for RegisterColumn, use RegisterLocalColumn instead..
         /// </summary>
         internal static string InvalidLocalColumnRegistration_Message {

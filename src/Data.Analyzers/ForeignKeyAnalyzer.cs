@@ -19,11 +19,10 @@ namespace DevZest.Data.CodeAnalysis
             get
             {
                 return ImmutableArray.Create(
+                    Rules.MissingDeclarationAttribute,
                     Rules.DuplicateDeclarationAttribute,
                     Rules.MissingImplementation,
-                    Rules.MissingImplementationAttribute,
-                    Rules.InvalidImplementationAttribute,
-                    Rules.MissingDeclarationAttribute);
+                    Rules.MissingImplementationAttribute);
             }
         }
 
@@ -57,13 +56,6 @@ namespace DevZest.Data.CodeAnalysis
             if (declarationModelTypes.IsDefaultOrEmpty)
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingDeclarationAttribute, attribute.GetLocation(),
                     compilation.GetKnownType(KnownTypes.ForeignKeyAttribute), name));
-            else if (declarationModelTypes.Length == 1)
-            {
-                var modelType = declarationModelTypes[0];
-                if (!IsImplementation(implementation, modelType, compilation))
-                    context.ReportDiagnostic(Diagnostic.Create(Rules.InvalidImplementationAttribute, attribute.GetLocation(), attribute.AttributeClass,
-                        Resources.StringFormatArg_Method, compilation.GetKnownType(KnownTypes.KeyMapping), modelType));
-            }
         }
 
         private static ImmutableArray<INamedTypeSymbol> GetDeclarationModelTypes(INamedTypeSymbol dbType, string name, Compilation compilation)
