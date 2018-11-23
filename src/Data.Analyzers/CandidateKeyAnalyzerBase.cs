@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DevZest.Data.CodeAnalysis
 {
-    public abstract class PrimaryKeyAnalyzerBase : DiagnosticAnalyzer
+    public abstract class CandidateKeyAnalyzerBase : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {

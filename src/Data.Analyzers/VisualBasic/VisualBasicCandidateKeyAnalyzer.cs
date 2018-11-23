@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     [DiagnosticAnalyzer(LanguageNames.VisualBasic)]
-    public class VisualBasicPrimaryKeyAnalyzer : PrimaryKeyAnalyzerBase
+    public class VisualBasicCandidateKeyAnalyzer : CandidateKeyAnalyzerBase
     {
         public override void Initialize(AnalysisContext context)
         {

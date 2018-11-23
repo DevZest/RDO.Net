@@ -6,11 +6,11 @@ using System;
 namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [TestClass]
-    public class CSharpPrimaryKeyAnalyzerTests : DiagnosticVerifier
+    public class CSharpCandidateKeyAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new CSharpPrimaryKeyAnalyzer();
+            return new CSharpCandidateKeyAnalyzer();
         }
 
         //No diagnostics expected to show up

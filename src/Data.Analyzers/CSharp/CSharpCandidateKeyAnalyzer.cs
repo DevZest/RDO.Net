@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 namespace DevZest.Data.CodeAnalysis.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class CSharpPrimaryKeyAnalyzer : PrimaryKeyAnalyzerBase
+    public class CSharpCandidateKeyAnalyzer : CandidateKeyAnalyzerBase
     {
         public override void Initialize(AnalysisContext context)
         {

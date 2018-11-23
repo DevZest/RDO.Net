@@ -5,11 +5,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DevZest.Data.CodeAnalysis.VisualBasic
 {
     [TestClass]
-    public class VisualBasicPrimaryKeyAnalyzerTests : DiagnosticVerifier
+    public class VisualBasicCandidateKeyAnalyzerTests : DiagnosticVerifier
     {
         protected override DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {
-            return new VisualBasicPrimaryKeyAnalyzer();
+            return new VisualBasicCandidateKeyAnalyzer();
         }
 
         //No diagnostics expected to show up
