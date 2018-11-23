@@ -6,6 +6,7 @@ namespace DevZest.Samples.AdventureWorksLT
     [Validator(nameof(ValidateLineCount))]
     [Computation(nameof(ComputeLineCount), ComputationMode.Aggregate)]
     [Computation(nameof(ComputeSubTotal), ComputationMode.Aggregate)]
+    [InvisibleToDbDesigner]
     public class SalesOrder : SalesOrderHeader
     {
         static SalesOrder()

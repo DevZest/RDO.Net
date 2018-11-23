@@ -3,6 +3,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
+    [InvisibleToDbDesigner]
     public class SalesOrderInfo : SalesOrder
     {
         static SalesOrderInfo()

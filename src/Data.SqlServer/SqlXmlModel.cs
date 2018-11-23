@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Primitives;
+﻿using DevZest.Data.Annotations;
+using DevZest.Data.Primitives;
 using System;
 using System.Collections.Concurrent;
 using System.Data.SqlTypes;
@@ -6,6 +7,7 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data.SqlServer
 {
+    [InvisibleToDbDesigner]
     public sealed class SqlXmlModel : Model
     {
         static SqlXmlModel()

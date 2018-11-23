@@ -4,6 +4,7 @@ using DevZest.Data.Annotations;
 namespace DevZest.Samples.AdventureWorksLT
 {
     [Validator(nameof(ValidateProduct))]
+    [InvisibleToDbDesigner]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
         static SalesOrderInfoDetail()
