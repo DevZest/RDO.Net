@@ -7,11 +7,11 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace DevZest.Data.CodeAnalysis
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
-    public sealed class ForeignKeyAnalyzer : DiagnosticAnalyzer
+    public sealed class RelationshipAnalyzer : DiagnosticAnalyzer
     {
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSymbolAction(AnalyzeForeignKey, SymbolKind.NamedType);
+            context.RegisterSymbolAction(AnalyzeRelationship, SymbolKind.NamedType);
         }
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
@@ -27,7 +27,7 @@ namespace DevZest.Data.CodeAnalysis
             }
         }
 
-        private static void AnalyzeForeignKey(SymbolAnalysisContext context)
+        private static void AnalyzeRelationship(SymbolAnalysisContext context)
         {
             var dbType = (INamedTypeSymbol)context.Symbol;
             if (!dbType.IsDerivedFrom(KnownTypes.DbSession, context.Compilation))

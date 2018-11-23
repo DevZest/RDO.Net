@@ -7,18 +7,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DevZest.Data.CodeAnalysis
 {
     [TestClass]
-    public class ForeignKeyAnalyzerTests : DiagnosticVerifier
+    public class RelationshipAnalyzerTests : DiagnosticVerifier
     {
         private static readonly MetadataReference SqlServerReference = MetadataReference.CreateFromFile(typeof(DevZest.Data.SqlServer.SqlSession).Assembly.Location);
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new ForeignKeyAnalyzer();
+            return new RelationshipAnalyzer();
         }
 
         protected override DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {
-            return new ForeignKeyAnalyzer();
+            return new RelationshipAnalyzer();
         }
 
         protected override IEnumerable<MetadataReference> AdditionalReferences
