@@ -46,70 +46,70 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.MissingRegistration_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyNotSealed = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyNotSealed,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyNotSealed_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyNotSealed_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyNotSealed = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyNotSealed,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyNotSealed_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyNotSealed_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyInvalidConstructors = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyInvalidConstructors,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidConstructors_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidConstructors_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyInvalidConstructors = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyInvalidConstructors,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyInvalidConstructors_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyInvalidConstructors_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyParameterlessConstructor = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyParameterlessConstructor,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyParameterlessConstructor_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyParameterlessConstructor_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyParameterlessConstructor = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyParameterlessConstructor,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyParameterlessConstructor_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyParameterlessConstructor_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyInvalidConstructorParam = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyInvalidConstructorParam,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidConstructorParam_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidConstructorParam_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyInvalidConstructorParam = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyInvalidConstructorParam,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyInvalidConstructorParam_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyInvalidConstructorParam_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyMissingBaseConstructor = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyMissingBaseConstructor,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyMissingBaseConstructor_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyMissingBaseConstructor_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyMissingBaseConstructor = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyMissingBaseConstructor,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyMissingBaseConstructor_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyMissingBaseConstructor_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeySortAttributeConflict = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeySortAttributeConflict,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeySortAttributeConflict_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeySortAttributeConflict_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeySortAttributeConflict = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeySortAttributeConflict,
+            new LocalizableResourceString(nameof(Resources.CandidateKeySortAttributeConflict_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeySortAttributeConflict_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyMismatchBaseConstructor = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyMismatchBaseConstructor,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchBaseConstructor_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchBaseConstructor_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyMismatchBaseConstructor = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyMismatchBaseConstructor,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyMismatchBaseConstructor_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyMismatchBaseConstructor_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyMismatchBaseConstructorArgument = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyMismatchBaseConstructorArgument,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchBaseConstructorArgument_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchBaseConstructorArgument_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyMismatchBaseConstructorArgument = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyMismatchBaseConstructorArgument,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyMismatchBaseConstructorArgument_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyMismatchBaseConstructorArgument_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyMismatchSortAttribute = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyMismatchSortAttribute,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchSortAttribute_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyMismatchSortAttribute_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyMismatchSortAttribute = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyMismatchSortAttribute,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyMismatchSortAttribute_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyMismatchSortAttribute_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyInvalidArgument = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyInvalidArgument,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidArgument_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyInvalidArgument_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyInvalidArgument = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyInvalidArgument,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyInvalidArgument_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyInvalidArgument_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-        public static readonly DiagnosticDescriptor PrimaryKeyArgumentNaming = new DiagnosticDescriptor(
-            DiagnosticIds.PrimaryKeyArgumentNaming,
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyArgumentNaming_Title), Resources.ResourceManager, typeof(Resources)),
-            new LocalizableResourceString(nameof(Resources.PrimaryKeyArgumentNaming_Message), Resources.ResourceManager, typeof(Resources)),
+        public static readonly DiagnosticDescriptor CandidateKeyArgumentNaming = new DiagnosticDescriptor(
+            DiagnosticIds.CandidateKeyArgumentNaming,
+            new LocalizableResourceString(nameof(Resources.CandidateKeyArgumentNaming_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.CandidateKeyArgumentNaming_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Naming, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
         public static readonly DiagnosticDescriptor InvalidImplementationAttribute = new DiagnosticDescriptor(

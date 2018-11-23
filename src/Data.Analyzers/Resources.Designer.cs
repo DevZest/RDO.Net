@@ -61,6 +61,204 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; passed to CandidateKey constructor does not match the parameter name &apos;{1}&apos;..
+        /// </summary>
+        internal static string CandidateKeyArgumentNaming_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyArgumentNaming_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CandidateKey argument naming rule violation..
+        /// </summary>
+        internal static string CandidateKeyArgumentNaming_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyArgumentNaming_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument passed to CandidateKey constructor must be a column of current Model..
+        /// </summary>
+        internal static string CandidateKeyInvalidArgument_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyInvalidArgument_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid CandidateKey argument..
+        /// </summary>
+        internal static string CandidateKeyInvalidArgument_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyInvalidArgument_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The CandidateKey constructor parameter &apos;{0}&apos; must be Column..
+        /// </summary>
+        internal static string CandidateKeyInvalidConstructorParam_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyInvalidConstructorParam_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid CandidateKey constructor parameter..
+        /// </summary>
+        internal static string CandidateKeyInvalidConstructorParam_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyInvalidConstructorParam_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CandidateKey must have one constructor only..
+        /// </summary>
+        internal static string CandidateKeyInvalidConstructors_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyInvalidConstructors_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid CondidateKey constructors..
+        /// </summary>
+        internal static string CandidateKeyInvalidConstructors_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyInvalidConstructors_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mismatch in number of arguments passed to CandidateKey base constructor, {0} argument(s) expected..
+        /// </summary>
+        internal static string CandidateKeyMismatchBaseConstructor_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyMismatchBaseConstructor_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mismatch in number of arguments passed to CandidateKey base constructor..
+        /// </summary>
+        internal static string CandidateKeyMismatchBaseConstructor_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyMismatchBaseConstructor_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument mismatch in CandidateKey base constructor, {0}, {0}.Asc() or {0}.Desc() expected..
+        /// </summary>
+        internal static string CandidateKeyMismatchBaseConstructorArgument_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyMismatchBaseConstructorArgument_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument mismatch in CandidateKey base constructor..
+        /// </summary>
+        internal static string CandidateKeyMismatchBaseConstructorArgument_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyMismatchBaseConstructorArgument_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CandidateKey SortAttribute mismatch: constructor - {0}, base - {1}..
+        /// </summary>
+        internal static string CandidateKeyMismatchSortAttribute_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyMismatchSortAttribute_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CandidateKey SortAttribute mismatch..
+        /// </summary>
+        internal static string CandidateKeyMismatchSortAttribute_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyMismatchSortAttribute_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invocation to CandidateKey base constructor is missing..
+        /// </summary>
+        internal static string CandidateKeyMissingBaseConstructor_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyMissingBaseConstructor_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing CandidateKey base initializer..
+        /// </summary>
+        internal static string CandidateKeyMissingBaseConstructor_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyMissingBaseConstructor_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class derived from CondidateKey should be sealed..
+        /// </summary>
+        internal static string CandidateKeyNotSealed_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyNotSealed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CandidateKey should be sealed..
+        /// </summary>
+        internal static string CandidateKeyNotSealed_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyNotSealed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameterless constructor is not valid for CandidateKey..
+        /// </summary>
+        internal static string CandidateKeyParameterlessConstructor_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeyParameterlessConstructor_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameterless CandidateKey constructor..
+        /// </summary>
+        internal static string CandidateKeyParameterlessConstructor_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeyParameterlessConstructor_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asc and Desc attributes are mutually exclusive..
+        /// </summary>
+        internal static string CandidateKeySortAttributeConflict_Message {
+            get {
+                return ResourceManager.GetString("CandidateKeySortAttributeConflict_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CandidateKey SortAttribute conflict..
+        /// </summary>
+        internal static string CandidateKeySortAttributeConflict_Title {
+            get {
+                return ResourceManager.GetString("CandidateKeySortAttributeConflict_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duplicate declaration attribute {0} with name {1}..
         /// </summary>
         internal static string DuplicateDeclarationAttribute_Message {
@@ -291,204 +489,6 @@ namespace DevZest.Data.CodeAnalysis {
         internal static string MounterNaming_Title {
             get {
                 return ResourceManager.GetString("MounterNaming_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Property &apos;{0}&apos; passed to PrimaryKey constructor does not match the parameter name &apos;{1}&apos;..
-        /// </summary>
-        internal static string PrimaryKeyArgumentNaming_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyArgumentNaming_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PrimaryKey argument naming rule violation..
-        /// </summary>
-        internal static string PrimaryKeyArgumentNaming_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyArgumentNaming_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Argument passed to PrimaryKey constructor must be a column of current Model..
-        /// </summary>
-        internal static string PrimaryKeyInvalidArgument_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyInvalidArgument_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid PrimaryKey argument..
-        /// </summary>
-        internal static string PrimaryKeyInvalidArgument_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyInvalidArgument_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The PrimaryKey constructor parameter &apos;{0}&apos; must be Column..
-        /// </summary>
-        internal static string PrimaryKeyInvalidConstructorParam_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyInvalidConstructorParam_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid PrimaryKey constructor parameter..
-        /// </summary>
-        internal static string PrimaryKeyInvalidConstructorParam_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyInvalidConstructorParam_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PrimaryKey must have one constructor only..
-        /// </summary>
-        internal static string PrimaryKeyInvalidConstructors_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyInvalidConstructors_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid PrimaryKey constructors..
-        /// </summary>
-        internal static string PrimaryKeyInvalidConstructors_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyInvalidConstructors_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mismatch in number of arguments passed to PrimaryKey base constructor, {0} argument(s) expected..
-        /// </summary>
-        internal static string PrimaryKeyMismatchBaseConstructor_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyMismatchBaseConstructor_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mismatch in number of arguments passed to PrimaryKey base constructor..
-        /// </summary>
-        internal static string PrimaryKeyMismatchBaseConstructor_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyMismatchBaseConstructor_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Argument mismatch in PrimaryKey base constructor, {0}, {0}.Asc() or {0}.Desc() expected..
-        /// </summary>
-        internal static string PrimaryKeyMismatchBaseConstructorArgument_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyMismatchBaseConstructorArgument_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Argument mismatch in PrimaryKey base constructor..
-        /// </summary>
-        internal static string PrimaryKeyMismatchBaseConstructorArgument_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyMismatchBaseConstructorArgument_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PrimaryKey SortAttribute mismatch: constructor - {0}, base - {1}..
-        /// </summary>
-        internal static string PrimaryKeyMismatchSortAttribute_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyMismatchSortAttribute_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PrimaryKey SortAttribute mismatch..
-        /// </summary>
-        internal static string PrimaryKeyMismatchSortAttribute_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyMismatchSortAttribute_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invocation to PrimaryKey base constructor is missing..
-        /// </summary>
-        internal static string PrimaryKeyMissingBaseConstructor_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyMissingBaseConstructor_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Missing PrimaryKey base initializer..
-        /// </summary>
-        internal static string PrimaryKeyMissingBaseConstructor_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyMissingBaseConstructor_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Class derived from PrimaryKey should be sealed..
-        /// </summary>
-        internal static string PrimaryKeyNotSealed_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyNotSealed_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PrimaryKey should be sealed..
-        /// </summary>
-        internal static string PrimaryKeyNotSealed_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyNotSealed_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameterless constructor is not valid for PrimaryKey..
-        /// </summary>
-        internal static string PrimaryKeyParameterlessConstructor_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeyParameterlessConstructor_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameterless PrimaryKey constructor..
-        /// </summary>
-        internal static string PrimaryKeyParameterlessConstructor_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeyParameterlessConstructor_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Asc and Desc attributes are mutually exclusive..
-        /// </summary>
-        internal static string PrimaryKeySortAttributeConflict_Message {
-            get {
-                return ResourceManager.GetString("PrimaryKeySortAttributeConflict_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PrimaryKey SortAttribute conflict..
-        /// </summary>
-        internal static string PrimaryKeySortAttributeConflict_Title {
-            get {
-                return ResourceManager.GetString("PrimaryKeySortAttributeConflict_Title", resourceCulture);
             }
         }
         

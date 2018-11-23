@@ -15,21 +15,21 @@ namespace DevZest.Data.CodeAnalysis
             get
             {
                 return ImmutableArray.Create(
-                    Rules.PrimaryKeyNotSealed,
-                    Rules.PrimaryKeyInvalidConstructors,
-                    Rules.PrimaryKeyParameterlessConstructor,
-                    Rules.PrimaryKeyInvalidConstructorParam,
-                    Rules.PrimaryKeyMissingBaseConstructor,
-                    Rules.PrimaryKeySortAttributeConflict,
-                    Rules.PrimaryKeyMismatchBaseConstructor,
-                    Rules.PrimaryKeyMismatchBaseConstructorArgument,
-                    Rules.PrimaryKeyMismatchSortAttribute,
-                    Rules.PrimaryKeyInvalidArgument,
-                    Rules.PrimaryKeyArgumentNaming);
+                    Rules.CandidateKeyNotSealed,
+                    Rules.CandidateKeyInvalidConstructors,
+                    Rules.CandidateKeyParameterlessConstructor,
+                    Rules.CandidateKeyInvalidConstructorParam,
+                    Rules.CandidateKeyMissingBaseConstructor,
+                    Rules.CandidateKeySortAttributeConflict,
+                    Rules.CandidateKeyMismatchBaseConstructor,
+                    Rules.CandidateKeyMismatchBaseConstructorArgument,
+                    Rules.CandidateKeyMismatchSortAttribute,
+                    Rules.CandidateKeyInvalidArgument,
+                    Rules.CandidateKeyArgumentNaming);
             }
         }
 
-        protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
+        protected static bool IsCandidateKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
         {
             return classSymbol != null && classSymbol.BaseTypeEqualsTo(KnownTypes.CandidateKey, context.Compilation);
         }
@@ -37,7 +37,7 @@ namespace DevZest.Data.CodeAnalysis
         private static void VerifySealed(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
         {
             if (!classSymbol.IsSealed)
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyNotSealed, classSymbol.Locations[0]));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyNotSealed, classSymbol.Locations[0]));
         }
 
         protected static ImmutableArray<IParameterSymbol> VerifyConstructor(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol, out IMethodSymbol constructorSymbol)
@@ -47,14 +47,14 @@ namespace DevZest.Data.CodeAnalysis
             constructorSymbol = classSymbol.GetSingleConstructor();
             if (constructorSymbol == null)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidConstructors, classSymbol.Locations[0]));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyInvalidConstructors, classSymbol.Locations[0]));
                 return ImmutableArray<IParameterSymbol>.Empty;
             }
 
             var parameters = constructorSymbol.Parameters;
             if (parameters.IsEmpty)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyParameterlessConstructor, constructorSymbol.Locations[0]));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyParameterlessConstructor, constructorSymbol.Locations[0]));
                 return parameters;
             }
 
@@ -64,7 +64,7 @@ namespace DevZest.Data.CodeAnalysis
                 var parameter = parameters[i];
                 if (!parameter.Type.IsDerivedFrom(KnownTypes.Column, context.Compilation))
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidConstructorParam, parameter.Locations[0], parameter.Name));
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyInvalidConstructorParam, parameter.Locations[0], parameter.Name));
                     areParametersValid = false;
                 }
                 VerifyParameterAttributes(context, parameter);
@@ -90,7 +90,7 @@ namespace DevZest.Data.CodeAnalysis
             if (ascAttributeIndex >= 0 && descAttributeIndex >= 0)
             {
                 var attribute = attributes[Math.Max(ascAttributeIndex, descAttributeIndex)];
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeySortAttributeConflict, attribute.ApplicationSyntaxReference.GetSyntax().GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeySortAttributeConflict, attribute.ApplicationSyntaxReference.GetSyntax().GetLocation()));
             }
         }
 
@@ -99,7 +99,7 @@ namespace DevZest.Data.CodeAnalysis
             var paramSortDirection = parameter.GetSortDirection(context.Compilation);
             var isMismatched = paramSortDirection.HasValue ? sortDirection != paramSortDirection.Value : false;
             if (isMismatched)
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchSortAttribute, parameter.Locations[0], paramSortDirection.Value, sortDirection));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyMismatchSortAttribute, parameter.Locations[0], paramSortDirection.Value, sortDirection));
         }
 
         protected static SortDirection? GetSortDirection(ISymbol expressionSymbol, string methodName, IParameterSymbol constructorParam)

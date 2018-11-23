@@ -11,20 +11,20 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
     {
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(AnalyzePrimaryKey, SyntaxKind.ClassBlock);
+            context.RegisterSyntaxNodeAction(AnalyzeCandidateKey, SyntaxKind.ClassBlock);
             context.RegisterSyntaxNodeAction(AnalyzePrimaryKeyCreation, SyntaxKind.FunctionBlock);
         }
 
-        private static void AnalyzePrimaryKey(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeCandidateKey(SyntaxNodeAnalysisContext context)
         {
-            AnalyzePrimaryKey(context, (ClassBlockSyntax)context.Node);
+            AnalyzeCandidateKey(context, (ClassBlockSyntax)context.Node);
         }
 
-        private static void AnalyzePrimaryKey(SyntaxNodeAnalysisContext context, ClassBlockSyntax classBlock)
+        private static void AnalyzeCandidateKey(SyntaxNodeAnalysisContext context, ClassBlockSyntax classBlock)
         {
             var semanticModel = context.SemanticModel;
             var classSymbol = semanticModel.GetDeclaredSymbol(classBlock);
-            if (!IsPrimaryKey(context, classSymbol))
+            if (!IsCandidateKey(context, classSymbol))
                 return;
 
             var constructorParams = VerifyConstructor(context, classSymbol, out var constructorSymbol);
@@ -42,14 +42,14 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
             var initializer = GetInitializer(constructorBlock);
             if (initializer == null)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMissingBaseConstructor, constructorBlock.SubNewStatement.NewKeyword.GetLocation()));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyMissingBaseConstructor, constructorBlock.SubNewStatement.NewKeyword.GetLocation()));
                 return;
             }
 
             var arguments = initializer.ArgumentList.Arguments;
             if (arguments.Count != constructorParams.Length)
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchBaseConstructor, initializer.GetLocation(), constructorParams.Length));
+                context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyMismatchBaseConstructor, initializer.GetLocation(), constructorParams.Length));
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
                 var constructorParam = constructorParams[i];
                 var sortDirection = GetSortDirection(argumentExpression, constructorParam, context.SemanticModel);
                 if (!sortDirection.HasValue)
-                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyMismatchBaseConstructorArgument, argumentExpression.GetLocation(), constructorParam.Name));
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyMismatchBaseConstructorArgument, argumentExpression.GetLocation(), constructorParam.Name));
                 else
                     VerifyMismatchSortAttribute(context, constructorParam, sortDirection.Value);
             }
@@ -129,9 +129,9 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
                 var argument = arguments[i];
                 if (!(semanticModel.GetSymbolInfo(argument.GetExpression()).Symbol is IPropertySymbol propertySymbol) ||
                     propertySymbol.ContainingType != methodSymbol.ContainingType)
-                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyInvalidArgument, argument.GetLocation()));
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyInvalidArgument, argument.GetLocation()));
                 else if (propertySymbol.Name.ToLower() != parameters[i].Name.ToLower())
-                    context.ReportDiagnostic(Diagnostic.Create(Rules.PrimaryKeyArgumentNaming, argument.GetLocation(), propertySymbol.Name, parameters[i].Name));
+                    context.ReportDiagnostic(Diagnostic.Create(Rules.CandidateKeyArgumentNaming, argument.GetLocation(), propertySymbol.Name, parameters[i].Name));
             }
         }
     }

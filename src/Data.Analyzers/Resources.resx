@@ -117,6 +117,72 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CandidateKeyArgumentNaming_Message" xml:space="preserve">
+    <value>Property '{0}' passed to CandidateKey constructor does not match the parameter name '{1}'.</value>
+  </data>
+  <data name="CandidateKeyArgumentNaming_Title" xml:space="preserve">
+    <value>CandidateKey argument naming rule violation.</value>
+  </data>
+  <data name="CandidateKeyInvalidArgument_Message" xml:space="preserve">
+    <value>Argument passed to CandidateKey constructor must be a column of current Model.</value>
+  </data>
+  <data name="CandidateKeyInvalidArgument_Title" xml:space="preserve">
+    <value>Invalid CandidateKey argument.</value>
+  </data>
+  <data name="CandidateKeyInvalidConstructorParam_Message" xml:space="preserve">
+    <value>The CandidateKey constructor parameter '{0}' must be Column.</value>
+  </data>
+  <data name="CandidateKeyInvalidConstructorParam_Title" xml:space="preserve">
+    <value>Invalid CandidateKey constructor parameter.</value>
+  </data>
+  <data name="CandidateKeyInvalidConstructors_Message" xml:space="preserve">
+    <value>CandidateKey must have one constructor only.</value>
+  </data>
+  <data name="CandidateKeyInvalidConstructors_Title" xml:space="preserve">
+    <value>Invalid CondidateKey constructors.</value>
+  </data>
+  <data name="CandidateKeyMismatchBaseConstructorArgument_Message" xml:space="preserve">
+    <value>Argument mismatch in CandidateKey base constructor, {0}, {0}.Asc() or {0}.Desc() expected.</value>
+  </data>
+  <data name="CandidateKeyMismatchBaseConstructorArgument_Title" xml:space="preserve">
+    <value>Argument mismatch in CandidateKey base constructor.</value>
+  </data>
+  <data name="CandidateKeyMismatchBaseConstructor_Message" xml:space="preserve">
+    <value>Mismatch in number of arguments passed to CandidateKey base constructor, {0} argument(s) expected.</value>
+  </data>
+  <data name="CandidateKeyMismatchBaseConstructor_Title" xml:space="preserve">
+    <value>Mismatch in number of arguments passed to CandidateKey base constructor.</value>
+  </data>
+  <data name="CandidateKeyMismatchSortAttribute_Message" xml:space="preserve">
+    <value>CandidateKey SortAttribute mismatch: constructor - {0}, base - {1}.</value>
+  </data>
+  <data name="CandidateKeyMismatchSortAttribute_Title" xml:space="preserve">
+    <value>CandidateKey SortAttribute mismatch.</value>
+  </data>
+  <data name="CandidateKeyMissingBaseConstructor_Message" xml:space="preserve">
+    <value>Invocation to CandidateKey base constructor is missing.</value>
+  </data>
+  <data name="CandidateKeyMissingBaseConstructor_Title" xml:space="preserve">
+    <value>Missing CandidateKey base initializer.</value>
+  </data>
+  <data name="CandidateKeyNotSealed_Message" xml:space="preserve">
+    <value>Class derived from CondidateKey should be sealed.</value>
+  </data>
+  <data name="CandidateKeyNotSealed_Title" xml:space="preserve">
+    <value>CandidateKey should be sealed.</value>
+  </data>
+  <data name="CandidateKeyParameterlessConstructor_Message" xml:space="preserve">
+    <value>Parameterless constructor is not valid for CandidateKey.</value>
+  </data>
+  <data name="CandidateKeyParameterlessConstructor_Title" xml:space="preserve">
+    <value>Parameterless CandidateKey constructor.</value>
+  </data>
+  <data name="CandidateKeySortAttributeConflict_Message" xml:space="preserve">
+    <value>Asc and Desc attributes are mutually exclusive.</value>
+  </data>
+  <data name="CandidateKeySortAttributeConflict_Title" xml:space="preserve">
+    <value>CandidateKey SortAttribute conflict.</value>
+  </data>
   <data name="DuplicateDeclarationAttribute_Message" xml:space="preserve">
     <value>Duplicate declaration attribute {0} with name {1}.</value>
   </data>
@@ -194,72 +260,6 @@
   </data>
   <data name="MounterNaming_Title" xml:space="preserve">
     <value>Mounter naming convention violation.</value>
-  </data>
-  <data name="PrimaryKeyArgumentNaming_Message" xml:space="preserve">
-    <value>Property '{0}' passed to PrimaryKey constructor does not match the parameter name '{1}'.</value>
-  </data>
-  <data name="PrimaryKeyArgumentNaming_Title" xml:space="preserve">
-    <value>PrimaryKey argument naming rule violation.</value>
-  </data>
-  <data name="PrimaryKeyInvalidArgument_Message" xml:space="preserve">
-    <value>Argument passed to PrimaryKey constructor must be a column of current Model.</value>
-  </data>
-  <data name="PrimaryKeyInvalidArgument_Title" xml:space="preserve">
-    <value>Invalid PrimaryKey argument.</value>
-  </data>
-  <data name="PrimaryKeyInvalidConstructorParam_Message" xml:space="preserve">
-    <value>The PrimaryKey constructor parameter '{0}' must be Column.</value>
-  </data>
-  <data name="PrimaryKeyInvalidConstructorParam_Title" xml:space="preserve">
-    <value>Invalid PrimaryKey constructor parameter.</value>
-  </data>
-  <data name="PrimaryKeyInvalidConstructors_Message" xml:space="preserve">
-    <value>PrimaryKey must have one constructor only.</value>
-  </data>
-  <data name="PrimaryKeyInvalidConstructors_Title" xml:space="preserve">
-    <value>Invalid PrimaryKey constructors.</value>
-  </data>
-  <data name="PrimaryKeyMismatchBaseConstructorArgument_Message" xml:space="preserve">
-    <value>Argument mismatch in PrimaryKey base constructor, {0}, {0}.Asc() or {0}.Desc() expected.</value>
-  </data>
-  <data name="PrimaryKeyMismatchBaseConstructorArgument_Title" xml:space="preserve">
-    <value>Argument mismatch in PrimaryKey base constructor.</value>
-  </data>
-  <data name="PrimaryKeyMismatchBaseConstructor_Message" xml:space="preserve">
-    <value>Mismatch in number of arguments passed to PrimaryKey base constructor, {0} argument(s) expected.</value>
-  </data>
-  <data name="PrimaryKeyMismatchBaseConstructor_Title" xml:space="preserve">
-    <value>Mismatch in number of arguments passed to PrimaryKey base constructor.</value>
-  </data>
-  <data name="PrimaryKeyMismatchSortAttribute_Message" xml:space="preserve">
-    <value>PrimaryKey SortAttribute mismatch: constructor - {0}, base - {1}.</value>
-  </data>
-  <data name="PrimaryKeyMismatchSortAttribute_Title" xml:space="preserve">
-    <value>PrimaryKey SortAttribute mismatch.</value>
-  </data>
-  <data name="PrimaryKeyMissingBaseConstructor_Message" xml:space="preserve">
-    <value>Invocation to PrimaryKey base constructor is missing.</value>
-  </data>
-  <data name="PrimaryKeyMissingBaseConstructor_Title" xml:space="preserve">
-    <value>Missing PrimaryKey base initializer.</value>
-  </data>
-  <data name="PrimaryKeyNotSealed_Message" xml:space="preserve">
-    <value>Class derived from PrimaryKey should be sealed.</value>
-  </data>
-  <data name="PrimaryKeyNotSealed_Title" xml:space="preserve">
-    <value>PrimaryKey should be sealed.</value>
-  </data>
-  <data name="PrimaryKeyParameterlessConstructor_Message" xml:space="preserve">
-    <value>Parameterless constructor is not valid for PrimaryKey.</value>
-  </data>
-  <data name="PrimaryKeyParameterlessConstructor_Title" xml:space="preserve">
-    <value>Parameterless PrimaryKey constructor.</value>
-  </data>
-  <data name="PrimaryKeySortAttributeConflict_Message" xml:space="preserve">
-    <value>Asc and Desc attributes are mutually exclusive.</value>
-  </data>
-  <data name="PrimaryKeySortAttributeConflict_Title" xml:space="preserve">
-    <value>PrimaryKey SortAttribute conflict.</value>
   </data>
   <data name="ProjectionColumnNaming_Message" xml:space="preserve">
     <value>Projection column '{0}' from Mounter '{1}' violates naming convention.</value>

@@ -54,8 +54,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyNotSealed,
-                Message = Resources.PrimaryKeyNotSealed_Message,
+                Id = DiagnosticIds.CandidateKeyNotSealed,
+                Message = Resources.CandidateKeyNotSealed_Message,
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 4, 14) }
             };
@@ -75,8 +75,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyInvalidConstructors,
-                Message = Resources.PrimaryKeyInvalidConstructors_Message,
+                Id = DiagnosticIds.CandidateKeyInvalidConstructors,
+                Message = Resources.CandidateKeyInvalidConstructors_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 4, 29) }
             };
@@ -100,8 +100,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyParameterlessConstructor,
-                Message = Resources.PrimaryKeyParameterlessConstructor_Message,
+                Id = DiagnosticIds.CandidateKeyParameterlessConstructor,
+                Message = Resources.CandidateKeyParameterlessConstructor_Message,
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 16) }
             };
@@ -125,8 +125,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyInvalidConstructorParam,
-                Message = string.Format(Resources.PrimaryKeyInvalidConstructorParam_Message, "id"),
+                Id = DiagnosticIds.CandidateKeyInvalidConstructorParam,
+                Message = string.Format(Resources.CandidateKeyInvalidConstructorParam_Message, "id"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 20) }
             };
@@ -151,8 +151,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeySortAttributeConflict,
-                Message = string.Format(Resources.PrimaryKeySortAttributeConflict_Message),
+                Id = DiagnosticIds.CandidateKeySortAttributeConflict,
+                Message = string.Format(Resources.CandidateKeySortAttributeConflict_Message),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 28) }
             };
@@ -175,8 +175,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyMissingBaseConstructor,
-                Message = string.Format(Resources.PrimaryKeyMissingBaseConstructor_Message),
+                Id = DiagnosticIds.CandidateKeyMissingBaseConstructor,
+                Message = string.Format(Resources.CandidateKeyMissingBaseConstructor_Message),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 16) }
             };
@@ -200,8 +200,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyMismatchBaseConstructor,
-                Message = string.Format(Resources.PrimaryKeyMismatchBaseConstructor_Message, 1),
+                Id = DiagnosticIds.CandidateKeyMismatchBaseConstructor,
+                Message = string.Format(Resources.CandidateKeyMismatchBaseConstructor_Message, 1),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 9) }
             };
@@ -225,8 +225,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyMismatchBaseConstructorArgument,
-                Message = string.Format(Resources.PrimaryKeyMismatchBaseConstructorArgument_Message, "id2"),
+                Id = DiagnosticIds.CandidateKeyMismatchBaseConstructorArgument,
+                Message = string.Format(Resources.CandidateKeyMismatchBaseConstructorArgument_Message, "id2"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 8, 25) }
             };
@@ -250,8 +250,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyMismatchSortAttribute,
-                Message = string.Format(Resources.PrimaryKeyMismatchSortAttribute_Message, "Unspecified", "Ascending"),
+                Id = DiagnosticIds.CandidateKeyMismatchSortAttribute,
+                Message = string.Format(Resources.CandidateKeyMismatchSortAttribute_Message, "Unspecified", "Ascending"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 7, 20) }
             };
@@ -294,8 +294,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyInvalidArgument,
-                Message = string.Format(Resources.PrimaryKeyInvalidArgument_Message),
+                Id = DiagnosticIds.CandidateKeyInvalidArgument,
+                Message = string.Format(Resources.CandidateKeyInvalidArgument_Message),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 15, 23) }
             };
@@ -340,8 +340,8 @@ End Class";
 
             var expected = new DiagnosticResult
             {
-                Id = DiagnosticIds.PrimaryKeyArgumentNaming,
-                Message = string.Format(Resources.PrimaryKeyArgumentNaming_Message, "ID", "id2"),
+                Id = DiagnosticIds.CandidateKeyArgumentNaming,
+                Message = string.Format(Resources.CandidateKeyArgumentNaming_Message, "ID", "id2"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 16, 23) }
             };
