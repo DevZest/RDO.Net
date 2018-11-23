@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public abstract class ForeignKeyDiagnosticsBase : SqlSession
+    public abstract class RelationshipDiagnosticsBase : SqlSession
     {
         public sealed class Address : Model<Address.PK>
         {
@@ -53,7 +53,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             }
         }
 
-        protected ForeignKeyDiagnosticsBase(SqlConnection sqlConnection)
+        protected RelationshipDiagnosticsBase(SqlConnection sqlConnection)
             : base(sqlConnection)
         {
         }

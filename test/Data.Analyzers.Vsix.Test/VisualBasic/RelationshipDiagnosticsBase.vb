@@ -1,7 +1,7 @@
 ﻿Imports System.Data.SqlClient
 Imports DevZest.Data.SqlServer
 
-Public MustInherit Class ForeignKeyDiagnosticsBase
+Public MustInherit Class RelationshipDiagnosticsBase
     Inherits SqlSession
 
     Protected Sub New(sqlConnection As SqlConnection)

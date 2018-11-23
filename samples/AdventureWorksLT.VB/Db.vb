@@ -41,34 +41,34 @@ Public Class Db
 
     Private m_CustomerAddress As DbTable(Of CustomerAddress)
     <DbTable("[SalesLT].[CustomerAddress]", Description:="Cross-reference table mapping customers to their address(es).")>
-    <ForeignKey(NameOf(FK_CustomerAddress_Customer_CustomerID), Description:="Foreign key constraint referencing Customer.CustomerID.")>
-    <ForeignKey(NameOf(FK_CustomerAddress_Address_AddressID), Description:="Foreign key constraint referencing Address.AddressID.")>
+    <Relationship(NameOf(FK_CustomerAddress_Customer_CustomerID), Description:="Foreign key constraint referencing Customer.CustomerID.")>
+    <Relationship(NameOf(FK_CustomerAddress_Address_AddressID), Description:="Foreign key constraint referencing Address.AddressID.")>
     Public ReadOnly Property CustomerAddress As DbTable(Of CustomerAddress)
         Get
             Return GetTable(m_CustomerAddress)
         End Get
     End Property
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_CustomerAddress_Customer_CustomerID(x As CustomerAddress) As KeyMapping
         Return x.FK_Customer.Join(ModelOf(Customer))
     End Function
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_CustomerAddress_Address_AddressID(x As CustomerAddress) As KeyMapping
         Return x.FK_Address.Join(ModelOf(Address))
     End Function
 
     Private m_ProductCategory As DbTable(Of ProductCategory)
     <DbTable("[SalesLT].[ProductCategory]", Description:="High-level product categorization.")>
-    <ForeignKey(NameOf(FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID), Description:="Foreign key constraint referencing ProductCategory.ProductCategoryID.")>
+    <Relationship(NameOf(FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID), Description:="Foreign key constraint referencing ProductCategory.ProductCategoryID.")>
     Public ReadOnly Property ProductCategory As DbTable(Of ProductCategory)
         Get
             Return GetTable(m_ProductCategory)
         End Get
     End Property
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID(x As ProductCategory) As KeyMapping
         Return x.FK_ParentProductCategory.Join(x)
     End Function
@@ -91,86 +91,86 @@ Public Class Db
 
     Private m_ProductModelProductDescription As DbTable(Of ProductModelProductDescription)
     <DbTable("[SalesLT].[ProductModelProductDescription]", Description:="Cross-reference table mapping product descriptions and the language the description is written in.")>
-    <ForeignKey(NameOf(FK_ProductModelProductDescription_ProductModel_ProductModelID), Description:="Foreign key constraint referencing ProductModel.ProductModelID.")>
-    <ForeignKey(NameOf(FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID), Description:="Foreign key constraint referencing ProductDescription.ProductDescriptionID.")>
+    <Relationship(NameOf(FK_ProductModelProductDescription_ProductModel_ProductModelID), Description:="Foreign key constraint referencing ProductModel.ProductModelID.")>
+    <Relationship(NameOf(FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID), Description:="Foreign key constraint referencing ProductDescription.ProductDescriptionID.")>
     Public ReadOnly Property ProductModelProductDescription As DbTable(Of ProductModelProductDescription)
         Get
             Return GetTable(m_ProductModelProductDescription)
         End Get
     End Property
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_ProductModelProductDescription_ProductModel_ProductModelID(x As ProductModelProductDescription) As KeyMapping
         Return x.FK_ProductModel.Join(ModelOf(ProductModel))
     End Function
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID(x As ProductModelProductDescription) As KeyMapping
         Return x.FK_ProductDescription.Join(ModelOf(ProductDescription))
     End Function
 
     Private m_Product As DbTable(Of Product)
     <DbTable("[SalesLT].[Product]", Description:="Products sold or used in the manfacturing of sold products.")>
-    <ForeignKey(NameOf(FK_Product_ProductModel_ProductModelID))>
-    <ForeignKey(NameOf(FK_Product_ProductCategory_ProductCategoryID))>
+    <Relationship(NameOf(FK_Product_ProductModel_ProductModelID))>
+    <Relationship(NameOf(FK_Product_ProductCategory_ProductCategoryID))>
     Public ReadOnly Property Product As DbTable(Of Product)
         Get
             Return GetTable(m_Product)
         End Get
     End Property
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_Product_ProductModel_ProductModelID(x As Product) As KeyMapping
         Return x.FK_ProductModel.Join(ModelOf(ProductModel))
     End Function
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_Product_ProductCategory_ProductCategoryID(x As Product) As KeyMapping
         Return x.FK_ProductCategory.Join(ModelOf(ProductCategory))
     End Function
 
     Private m_SalesOrderHeader As DbTable(Of SalesOrderHeader)
     <DbTable("[SalesLT].[SalesOrderHeader]", Description:="General sales order information.")>
-    <ForeignKey(NameOf(FK_SalesOrderHeader_Customer_CustomerID))>
-    <ForeignKey(NameOf(FK_SalesOrderHeader_Address_BillTo_AddressID))>
-    <ForeignKey(NameOf(FK_SalesOrderHeader_Address_ShipTo_AddressID))>
+    <Relationship(NameOf(FK_SalesOrderHeader_Customer_CustomerID))>
+    <Relationship(NameOf(FK_SalesOrderHeader_Address_BillTo_AddressID))>
+    <Relationship(NameOf(FK_SalesOrderHeader_Address_ShipTo_AddressID))>
     Public ReadOnly Property SalesOrderHeader As DbTable(Of SalesOrderHeader)
         Get
             Return GetTable(m_SalesOrderHeader)
         End Get
     End Property
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_SalesOrderHeader_Customer_CustomerID(x As SalesOrderHeader) As KeyMapping
         Return x.FK_Customer.Join(ModelOf(Customer))
     End Function
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_SalesOrderHeader_Address_BillTo_AddressID(x As SalesOrderHeader) As KeyMapping
         Return x.FK_BillToCustomerAddress.Join(ModelOf(CustomerAddress))
     End Function
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_SalesOrderHeader_Address_ShipTo_AddressID(x As SalesOrderHeader) As KeyMapping
         Return x.FK_ShipToCustomerAddress.Join(ModelOf(CustomerAddress))
     End Function
 
     Private m_SalesOrderDetails As DbTable(Of SalesOrderDetail)
     <DbTable("[SalesLT].[SalesOrderDetail]", Description:="Individual products associated with a specific sales order. See SalesOrderHeader.")>
-    <ForeignKey(NameOf(FK_SalesOrderDetail_SalesOrderHeader))>
-    <ForeignKey(NameOf(FK_SalesOrderDetail_Product))>
+    <Relationship(NameOf(FK_SalesOrderDetail_SalesOrderHeader))>
+    <Relationship(NameOf(FK_SalesOrderDetail_Product))>
     Public ReadOnly Property SalesOrderDetails As DbTable(Of SalesOrderDetail)
         Get
             Return GetTable(m_SalesOrderDetails)
         End Get
     End Property
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_SalesOrderDetail_SalesOrderHeader(x As SalesOrderDetail) As KeyMapping
         Return x.FK_SalesOrderHeader.Join(ModelOf(SalesOrderHeader))
     End Function
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_SalesOrderDetail_Product(x As SalesOrderDetail) As KeyMapping
         Return x.FK_Product.Join(ModelOf(Product))
     End Function

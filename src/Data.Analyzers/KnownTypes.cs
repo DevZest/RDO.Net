@@ -36,8 +36,8 @@
 
         public const string DbSession = Namespaces.Data_Primitives + nameof(DbSession);
         public const string DbTable = Namespaces.Data + nameof(DbTable) + "`1";
-        public const string ForeignKeyAttribute = Namespaces.Data_Annotations + nameof(ForeignKeyAttribute);
-        public const string _ForeignKeyAttribute = Namespaces.Data_Annotations + nameof(_ForeignKeyAttribute);
+        public const string RelationshipAttribute = Namespaces.Data_Annotations + nameof(RelationshipAttribute);
+        public const string _RelationshipAttribute = Namespaces.Data_Annotations + nameof(_RelationshipAttribute);
         public const string KeyMapping = Namespaces.Data + nameof(KeyMapping);
     }
 }

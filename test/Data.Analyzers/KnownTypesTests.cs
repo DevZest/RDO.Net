@@ -34,8 +34,8 @@ namespace DevZest.Data.CodeAnalysis
 
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbSession));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbTable));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ForeignKeyAttribute));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes._ForeignKeyAttribute));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.RelationshipAttribute));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes._RelationshipAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.KeyMapping));
         }
     }

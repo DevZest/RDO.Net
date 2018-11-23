@@ -3,8 +3,8 @@ using System;
 
 namespace DevZest.Data.Annotations
 {
-    [CrossReference(typeof(ForeignKeyAttribute))]
-    public sealed class _ForeignKeyAttribute : Attribute
+    [CrossReference(typeof(RelationshipAttribute))]
+    public sealed class _RelationshipAttribute : Attribute
     {
     }
 }

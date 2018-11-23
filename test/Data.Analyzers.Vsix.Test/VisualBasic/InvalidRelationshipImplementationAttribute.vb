@@ -1,8 +1,8 @@
 ﻿Imports System.Data.SqlClient
 Imports DevZest.Data.Annotations
 
-Public Class MissingForeignKeyDeclaration
-    Inherits ForeignKeyDiagnosticsBase
+Public Class InvalidRelationshipImplementationAttribute
+    Inherits RelationshipDiagnosticsBase
 
     Protected Sub New(sqlConnection As SqlConnection)
         MyBase.New(sqlConnection)
@@ -16,15 +16,20 @@ Public Class MissingForeignKeyDeclaration
     End Property
 
     Private m_Customers As DbTable(Of Customer)
-    '<ForeignKey(NameOf(FK_Customer_Address))>
+    <Relationship(NameOf(FK_Customer_Address))>
     Public ReadOnly Property Customers As DbTable(Of Customer)
         Get
             Return GetTable(m_Customers)
         End Get
     End Property
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_Customer_Address(x As Customer) As KeyMapping
         Return x.FK_Address.Join(ModelOf(Addresses))
     End Function
+
+    <_Relationship>
+    Private Sub FK_Customer_Address()
+
+    End Sub
 End Class

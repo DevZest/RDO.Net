@@ -73,13 +73,13 @@ namespace DevZest.Data.Annotations
 
             private DbTable<Customer> _customer;
             [DbTable("dbo.Customer", Description = "Description of Customer table.")]
-            [ForeignKey(nameof(FK_Customer_Address), Description = "Description of foreign key.")]
+            [Relationship(nameof(FK_Customer_Address), Description = "Description of foreign key.")]
             public DbTable<Customer> Customer
             {
                 get { return GetTable(ref _customer); }
             }
 
-            [_ForeignKey]
+            [_Relationship]
             private KeyMapping FK_Customer_Address(Customer _)
             {
                 return _.FK_Customer_Address.Join(Address._);

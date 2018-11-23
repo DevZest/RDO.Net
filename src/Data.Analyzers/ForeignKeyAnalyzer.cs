@@ -44,7 +44,7 @@ namespace DevZest.Data.CodeAnalysis
         {
             var compilation = context.Compilation;
 
-            var attributes = method.GetAttributes().Where(x => compilation.GetKnownType(KnownTypes._ForeignKeyAttribute).Equals(x.AttributeClass)).ToImmutableArray();
+            var attributes = method.GetAttributes().Where(x => compilation.GetKnownType(KnownTypes._RelationshipAttribute).Equals(x.AttributeClass)).ToImmutableArray();
             if (attributes.Length != 1)
                 return;
 
@@ -58,7 +58,7 @@ namespace DevZest.Data.CodeAnalysis
             var declarationModelTypes = GetDeclarationModelTypes(dbType, name, compilation);
             if (declarationModelTypes.IsDefaultOrEmpty)
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingDeclarationAttribute, attribute.GetLocation(),
-                    compilation.GetKnownType(KnownTypes.ForeignKeyAttribute), name));
+                    compilation.GetKnownType(KnownTypes.RelationshipAttribute), name));
             else if (declarationModelTypes.Length == 1)
             {
                 var modelType = declarationModelTypes[0];
@@ -96,7 +96,7 @@ namespace DevZest.Data.CodeAnalysis
 
         private static IEnumerable<IPropertySymbol> GetDbTablesWithFkDeclaration(INamedTypeSymbol dbType, string name, Compilation compilation)
         {
-            var foreignKeyAttribute = compilation.GetKnownType(KnownTypes.ForeignKeyAttribute);
+            var foreignKeyAttribute = compilation.GetKnownType(KnownTypes.RelationshipAttribute);
 
             var dbTables = dbType.GetDbTables(compilation);
             for (int i = 0; i < dbTables.Length; i++)
@@ -127,7 +127,7 @@ namespace DevZest.Data.CodeAnalysis
         private static void AnalyzeDeclaration(SymbolAnalysisContext context, INamedTypeSymbol dbType, IPropertySymbol dbTable, HashSet<string> names)
         {
             var compilation = context.Compilation;
-            var foreignKeyAttribute = compilation.GetKnownType(KnownTypes.ForeignKeyAttribute);
+            var foreignKeyAttribute = compilation.GetKnownType(KnownTypes.RelationshipAttribute);
             var attributes = dbTable.GetAttributes().Where(x => foreignKeyAttribute.Equals(x.AttributeClass)).ToImmutableArray();
             for (int i = 0; i < attributes.Length; i++)
                 AnalyzeDeclaration(context, dbType, dbTable, attributes[i], names);
@@ -161,7 +161,7 @@ namespace DevZest.Data.CodeAnalysis
                 return;
             }
 
-            var implementationAttribute = compilation.GetKnownType(KnownTypes._ForeignKeyAttribute);
+            var implementationAttribute = compilation.GetKnownType(KnownTypes._RelationshipAttribute);
             if (!implementation.HasAttribute(implementationAttribute))
                 context.ReportDiagnostic(Diagnostic.Create(Rules.MissingImplementationAttribute, implementation.Locations[0], implementationAttribute));
         }

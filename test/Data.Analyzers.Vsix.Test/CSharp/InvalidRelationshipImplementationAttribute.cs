@@ -3,9 +3,9 @@ using System.Data.SqlClient;
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class InvalidForeignKeyImplementationAttribute : ForeignKeyDiagnosticsBase
+    public class InvalidRelationshipImplementationAttribute : RelationshipDiagnosticsBase
     {
-        public InvalidForeignKeyImplementationAttribute(SqlConnection sqlConnection)
+        public InvalidRelationshipImplementationAttribute(SqlConnection sqlConnection)
             : base(sqlConnection)
         {
         }
@@ -17,19 +17,19 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         private DbTable<Customer> _customers;
-        [ForeignKey(nameof(FK_Customer_Address))]
+        [Relationship(nameof(FK_Customer_Address))]
         public DbTable<Customer> Customers
         {
             get { return GetTable(ref _customers); }
         }
 
-        [_ForeignKey]
+        [_Relationship]
         private KeyMapping FK_Customer_Address(Customer _)
         {
             return _.FK_Address.Join(Addresses._);
         }
 
-        [_ForeignKey]
+        [_Relationship]
         private void FK_Customer_Address()
         {
         }

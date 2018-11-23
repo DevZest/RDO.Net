@@ -7,11 +7,11 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    [CrossReference(typeof(_ForeignKeyAttribute))]
+    [CrossReference(typeof(_RelationshipAttribute))]
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class ForeignKeyAttribute : DbTablePropertyAttribute
+    public sealed class RelationshipAttribute : DbTablePropertyAttribute
     {
-        public ForeignKeyAttribute(string name)
+        public RelationshipAttribute(string name)
         {
             Name = name;
         }

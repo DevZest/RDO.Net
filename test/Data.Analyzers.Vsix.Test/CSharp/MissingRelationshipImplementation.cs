@@ -3,9 +3,9 @@ using System.Data.SqlClient;
 
 namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public class DuplicateForeignKeyDeclaration : ForeignKeyDiagnosticsBase
+    public class MissingRelationshipImplementation : RelationshipDiagnosticsBase
     {
-        public DuplicateForeignKeyDeclaration(SqlConnection sqlConnection)
+        public MissingRelationshipImplementation(SqlConnection sqlConnection)
             : base(sqlConnection)
         {
         }
@@ -17,17 +17,10 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         private DbTable<Customer> _customers;
-        [ForeignKey(nameof(FK_Customer_Address))]
-        [ForeignKey(nameof(FK_Customer_Address))]
+        [Relationship("FK_Customer_Address")]
         public DbTable<Customer> Customers
         {
             get { return GetTable(ref _customers); }
-        }
-
-        [_ForeignKey]
-        private KeyMapping FK_Customer_Address(Customer _)
-        {
-            return _.FK_Address.Join(Addresses._);
         }
     }
 }

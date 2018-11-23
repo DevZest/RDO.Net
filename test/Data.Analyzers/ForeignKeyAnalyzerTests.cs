@@ -103,7 +103,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             get { return GetTable(ref _customers); }
         }
 
-        [_ForeignKey]
+        [_Relationship]
         private KeyMapping FK_Customer_Address(Customer _)
         {
             return _.FK_Customer_Address.Join(Addresses._);
@@ -115,7 +115,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.MissingDeclarationAttribute,
-                Message = string.Format(Resources.MissingDeclarationAttribute_Message, typeof(ForeignKeyAttribute), "FK_Customer_Address"),
+                Message = string.Format(Resources.MissingDeclarationAttribute_Message, typeof(RelationshipAttribute), "FK_Customer_Address"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 74, 10) }
             };
@@ -195,19 +195,19 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         private DbTable<Customer> _customers;
-        [ForeignKey(nameof(FK_Customer_Address))]
+        [Relationship(nameof(FK_Customer_Address))]
         public DbTable<Customer> Customers
         {
             get { return GetTable(ref _customers); }
         }
 
-        [_ForeignKey]
+        [_Relationship]
         private KeyMapping FK_Customer_Address(Customer _)
         {
             return _.FK_Customer_Address.Join(Addresses._);
         }
 
-        [_ForeignKey]
+        [_Relationship]
         private void FK_Customer_Address()
         {
         }
@@ -218,7 +218,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.InvalidImplementationAttribute,
-                Message = string.Format(Resources.InvalidImplementationAttribute_Message, typeof(_ForeignKeyAttribute), Resources.StringFormatArg_Method, typeof(KeyMapping), "DevZest.Data.Analyzers.Vsix.Test.CSharp.Db.Customer"),
+                Message = string.Format(Resources.InvalidImplementationAttribute_Message, typeof(_RelationshipAttribute), Resources.StringFormatArg_Method, typeof(KeyMapping), "DevZest.Data.Analyzers.Vsix.Test.CSharp.Db.Customer"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 81, 10) }
             };
@@ -298,14 +298,14 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         private DbTable<Customer> _customers;
-        [ForeignKey(nameof(FK_Customer_Address))]
-        [ForeignKey(nameof(FK_Customer_Address))]
+        [Relationship(nameof(FK_Customer_Address))]
+        [Relationship(nameof(FK_Customer_Address))]
         public DbTable<Customer> Customers
         {
             get { return GetTable(ref _customers); }
         }
 
-        [_ForeignKey]
+        [_Relationship]
         private KeyMapping FK_Customer_Address(Customer _)
         {
             return _.FK_Customer_Address.Join(Addresses._);
@@ -317,7 +317,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.DuplicateDeclarationAttribute,
-                Message = string.Format(Resources.DuplicateDeclarationAttribute_Message, typeof(ForeignKeyAttribute), "FK_Customer_Address"),
+                Message = string.Format(Resources.DuplicateDeclarationAttribute_Message, typeof(RelationshipAttribute), "FK_Customer_Address"),
                 Severity = DiagnosticSeverity.Error,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 70, 10) }
             };
@@ -397,7 +397,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         private DbTable<Customer> _customers;
-        [ForeignKey(""FK_Customer_Address"")]
+        [Relationship(""FK_Customer_Address"")]
         public DbTable<Customer> Customers
         {
             get { return GetTable(ref _customers); }
@@ -489,7 +489,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
         }
 
         private DbTable<Customer> _customers;
-        [ForeignKey(nameof(FK_Customer_Address))]
+        [Relationship(nameof(FK_Customer_Address))]
         public DbTable<Customer> Customers
         {
             get { return GetTable(ref _customers); }
@@ -506,7 +506,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.MissingImplementationAttribute,
-                Message = string.Format(Resources.MissingImplementationAttribute_Message, typeof(_ForeignKeyAttribute)),
+                Message = string.Format(Resources.MissingImplementationAttribute_Message, typeof(_RelationshipAttribute)),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.cs", 75, 28) }
             };
@@ -621,7 +621,7 @@ Public Class Db
         End Get
     End Property
 
-    <_ForeignKey>
+    <_Relationship>
     Private Function FK_Customer_Address(x As Customer) As KeyMapping
         Return x.FK_Address.Join(ModelOf(Addresses))
     End Function
@@ -632,7 +632,7 @@ End Class
             var expected = new DiagnosticResult
             {
                 Id = DiagnosticIds.MissingDeclarationAttribute,
-                Message = string.Format(Resources.MissingDeclarationAttribute_Message, typeof(ForeignKeyAttribute), "FK_Customer_Address"),
+                Message = string.Format(Resources.MissingDeclarationAttribute_Message, typeof(RelationshipAttribute), "FK_Customer_Address"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations = new[] { new DiagnosticResultLocation("Test0.vb", 104, 6) }
             };
