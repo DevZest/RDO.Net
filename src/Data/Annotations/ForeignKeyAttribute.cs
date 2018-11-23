@@ -59,7 +59,7 @@ namespace DevZest.Data.Annotations
         {
             var model = dbTable.Model;
             var keyMapping = _keyMappingGetter(dbTable.DbSession, model);
-            var fkConstraint = new DbForeignKey(Name, Description, keyMapping.SourceKey, keyMapping.TargetKey, DeleteRule, UpdateRule);
+            var fkConstraint = new DbForeignKeyConstraint(Name, Description, keyMapping.SourceKey, keyMapping.TargetKey, DeleteRule, UpdateRule);
             model.AddDbTableConstraint(fkConstraint, false);
         }
     }

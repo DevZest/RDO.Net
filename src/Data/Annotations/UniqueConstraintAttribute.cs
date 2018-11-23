@@ -104,7 +104,7 @@ namespace DevZest.Data.Annotations
 
         protected override void Wireup(Model model, string dbName, ColumnSort[] sortOrder)
         {
-            model.DbUnique(dbName, Description, IsCluster, sortOrder);
+            model.AddDbUniqueConstraint(dbName, Description, IsCluster, sortOrder);
             model.Validators.Add(new Validator(this, sortOrder));
         }
     }

@@ -53,11 +53,11 @@ namespace DevZest.Data.Primitives
             foreach (var table in _mockTables)
             {
                 var model = table.Model;
-                var foreignKeys = model.GetAddons<DbForeignKey>();
-                foreach (var item in foreignKeys)
+                var fkConstraints = model.GetAddons<DbForeignKeyConstraint>();
+                foreach (var fkConstraint in fkConstraints)
                 {
-                    if (!tableNames.Contains(item.ReferencedTableName))
-                        model.BrutalRemoveAddon(((IAddon)item).Key);
+                    if (!tableNames.Contains(fkConstraint.ReferencedTableName))
+                        model.BrutalRemoveAddon(((IAddon)fkConstraint).Key);
                 }
             }
         }

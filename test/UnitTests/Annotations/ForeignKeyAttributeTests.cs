@@ -92,9 +92,9 @@ namespace DevZest.Data.Annotations
             using (var db = new Db())
             {
                 var _ = db.Customer._;
-                var dbForeignKey = _.GetAddon<DbForeignKey>();
-                Assert.AreEqual(_.FK_Customer_Address, dbForeignKey.ForeignKey);
-                Assert.AreEqual(db.Address._.PrimaryKey, dbForeignKey.ReferencedKey);
+                var fkConstraint = _.GetAddon<DbForeignKeyConstraint>();
+                Assert.AreEqual(_.FK_Customer_Address, fkConstraint.ForeignKey);
+                Assert.AreEqual(db.Address._.PrimaryKey, fkConstraint.ReferencedKey);
             }
         }
     }

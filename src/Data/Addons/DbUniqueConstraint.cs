@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Addons
 {
-    public sealed class DbUnique : DbTableConstraint, IIndexConstraint
+    public sealed class DbUniqueConstraint : DbTableConstraint, IIndexConstraint
     {
-        internal DbUnique(string name, string description, bool isClustered, IList<ColumnSort> columns)
+        internal DbUniqueConstraint(string name, string description, bool isClustered, IList<ColumnSort> columns)
             : base(name, description)
         {
             IsClustered = isClustered;

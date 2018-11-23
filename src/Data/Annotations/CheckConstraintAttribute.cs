@@ -90,7 +90,7 @@ namespace DevZest.Data.Annotations
         protected override void Wireup(Model model)
         {
             var condition = GetCondition(model);
-            model.DbCheck(Name, Description, condition);
+            model.AddDbCheckConstraint(Name, Description, condition);
             model.Validators.Add(new Validator(this, condition));
         }
 

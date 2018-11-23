@@ -130,17 +130,6 @@ namespace DevZest.Data.Primitives
             return model.Depth;
         }
 
-        internal static T ApplyForeignKey<T>(this T model, Func<T, DbForeignKey>[] foreignKeys)
-            where T : Model, new()
-        {
-            if (foreignKeys != null && foreignKeys.Length > 0)
-            {
-                foreach (var foreignKey in foreignKeys)
-                    model.AddDbTableConstraint(foreignKey(model), false);
-            }
-            return model;
-        }
-
         internal static void Initialize<T>(this T _, Action<T> initializer)
             where T : class, IModelReference, new()
         {

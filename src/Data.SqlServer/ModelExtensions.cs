@@ -71,12 +71,12 @@ namespace DevZest.Data.SqlServer
                 sqlBuilder.GenerateConstraintName(constraint.Name, tableName, isTempTable);
                 if (constraint is DbPrimaryKey)
                     GeneratePrimaryKeyConstraint(sqlBuilder, (DbPrimaryKey)constraint);
-                else if (constraint is DbUnique)
-                    GenerateUniqueConstraint(sqlBuilder, (DbUnique)constraint);
-                else if (constraint is DbCheck)
-                    GenerateCheckConstraint(sqlBuilder, sqlVersion, (DbCheck)constraint);
-                else if (constraint is DbForeignKey)
-                    GenerateForeignKeyConstraint(sqlBuilder, (DbForeignKey)constraint);
+                else if (constraint is DbUniqueConstraint)
+                    GenerateUniqueConstraint(sqlBuilder, (DbUniqueConstraint)constraint);
+                else if (constraint is DbCheckConstraint)
+                    GenerateCheckConstraint(sqlBuilder, sqlVersion, (DbCheckConstraint)constraint);
+                else if (constraint is DbForeignKeyConstraint)
+                    GenerateForeignKeyConstraint(sqlBuilder, (DbForeignKeyConstraint)constraint);
                 else
                     throw new NotSupportedException(DiagnosticMessages.ConstraintTypeNotSupported(constraint.GetType().FullName));
             }
@@ -120,7 +120,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append(")");
         }
 
-        private static void GenerateUniqueConstraint(IndentedStringBuilder sqlBuilder, DbUnique constraint)
+        private static void GenerateUniqueConstraint(IndentedStringBuilder sqlBuilder, DbUniqueConstraint constraint)
         {
             Debug.Assert(constraint != null);
 
@@ -133,7 +133,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append(")");
         }
 
-        private static void GenerateForeignKeyConstraint(IndentedStringBuilder sqlBuilder, DbForeignKey constraint)
+        private static void GenerateForeignKeyConstraint(IndentedStringBuilder sqlBuilder, DbForeignKeyConstraint constraint)
         {
             Debug.Assert(constraint != null);
 
@@ -176,7 +176,7 @@ namespace DevZest.Data.SqlServer
                 sqlBuilder.Append(" SET DEFAULT");
         }
 
-        private static void GenerateCheckConstraint(IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, DbCheck constraint)
+        private static void GenerateCheckConstraint(IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, DbCheckConstraint constraint)
         {
             Debug.Assert(constraint != null);
             

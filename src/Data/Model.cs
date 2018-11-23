@@ -761,7 +761,7 @@ namespace DevZest.Data
             else
             {
                 ChangeClusteredIndexAsNonClustered();
-                AddDbTableConstraint(new DbUnique(null, null, true, GetIdentityOrderByList(identity)), false);
+                AddDbTableConstraint(new DbUniqueConstraint(null, null, true, GetIdentityOrderByList(identity)), false);
             }
         }
 
@@ -858,7 +858,7 @@ namespace DevZest.Data
             AddIndex(new DbIndex(name, description, isUnique, isClustered, isValidOnTable, isValidOnTempTable, orderByList));
         }
 
-        protected internal void DbUnique(string name, string description, bool isClustered, params ColumnSort[] orderByList)
+        protected internal void AddDbUniqueConstraint(string name, string description, bool isClustered, params ColumnSort[] orderByList)
         {
             orderByList.VerifyNotNull(nameof(orderByList));
             if (orderByList.Length == 0)
@@ -871,14 +871,14 @@ namespace DevZest.Data
                     throw new ArgumentException(DiagnosticMessages.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
-            AddDbTableConstraint(new DbUnique(name, description, isClustered, orderByList), false);
+            AddDbTableConstraint(new DbUniqueConstraint(name, description, isClustered, orderByList), false);
         }
 
-        protected internal void DbCheck(string name, string description, _Boolean condition)
+        protected internal void AddDbCheckConstraint(string name, string description, _Boolean condition)
         {
             condition.VerifyNotNull(nameof(condition));
 
-            AddDbTableConstraint(new DbCheck(name, description, condition.DbExpression), false);
+            AddDbTableConstraint(new DbCheckConstraint(name, description, condition.DbExpression), false);
         }
 
         private int _suspendIdentityCount;

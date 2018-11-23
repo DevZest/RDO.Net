@@ -231,9 +231,9 @@ namespace DevZest.Data
             {
                 FkRef = new PK(Unique1);
                 Name.SetDefaultValue("DEFAULT NAME", null, null);
-                DbUnique("UQ_Temp", null, false, Unique1, Unique2.Desc());
-                DbCheck("CK_Temp", null, Name.IsNotNull());
-                this.AddDbTableConstraint(DbSession.DbForeignKey(null, null, FkRef, this, Rule.None, Rule.None), false);
+                AddDbUniqueConstraint("UQ_Temp", null, false, Unique1, Unique2.Desc());
+                AddDbCheckConstraint("CK_Temp", null, Name.IsNotNull());
+                this.AddDbTableConstraint(DbSession.CreateForeignKeyConstraint(null, null, FkRef, this, Rule.None, Rule.None), false);
             }
 
             protected sealed override PK CreatePrimaryKey()

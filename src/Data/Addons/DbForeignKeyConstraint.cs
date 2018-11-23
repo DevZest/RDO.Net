@@ -2,9 +2,9 @@
 
 namespace DevZest.Data.Addons
 {
-    public sealed class DbForeignKey : DbTableConstraint
+    public sealed class DbForeignKeyConstraint : DbTableConstraint
     {
-        internal DbForeignKey(string name, string description, PrimaryKey foreignKey, PrimaryKey referencedKey, Rule deleteRule, Rule updateRule)
+        internal DbForeignKeyConstraint(string name, string description, PrimaryKey foreignKey, PrimaryKey referencedKey, Rule deleteRule, Rule updateRule)
             : base(name, description)
         {
             Debug.Assert(foreignKey != null);
