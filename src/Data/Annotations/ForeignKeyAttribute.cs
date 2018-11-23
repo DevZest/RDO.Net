@@ -20,9 +20,9 @@ namespace DevZest.Data.Annotations
 
         public string Description { get; set; }
 
-        public ForeignKeyAction DeleteAction { get; set; } = ForeignKeyAction.NoAction;
+        public Rule DeleteRule { get; set; } = Rule.None;
 
-        public ForeignKeyAction UpdateAction { get; set; } = ForeignKeyAction.NoAction;
+        public Rule UpdateRule { get; set; } = Rule.None;
 
         private Func<DbSession, Model, KeyMapping> _keyMappingGetter;
 
@@ -59,7 +59,7 @@ namespace DevZest.Data.Annotations
         {
             var model = dbTable.Model;
             var keyMapping = _keyMappingGetter(dbTable.DbSession, model);
-            var fkConstraint = new DbForeignKey(Name, Description, keyMapping.SourceKey, keyMapping.TargetKey, DeleteAction, UpdateAction);
+            var fkConstraint = new DbForeignKey(Name, Description, keyMapping.SourceKey, keyMapping.TargetKey, DeleteRule, UpdateRule);
             model.AddDbTableConstraint(fkConstraint, false);
         }
     }

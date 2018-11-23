@@ -143,9 +143,9 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append("REFERENCES ");
             sqlBuilder.Append(constraint.ReferencedTableName.ToQuotedIdentifier());
             constraint.ReferencedKey.GenerateColumnList(sqlBuilder);
-            constraint.OnDelete.GenerateForeignKeyAction(sqlBuilder, "DELETE");
+            constraint.DeleteRule.GenerateForeignKeyRule(sqlBuilder, "DELETE");
             sqlBuilder.AppendLine();
-            constraint.OnUpdate.GenerateForeignKeyAction(sqlBuilder, "UPDATE");
+            constraint.UpdateRule.GenerateForeignKeyRule(sqlBuilder, "UPDATE");
             sqlBuilder.Indent--;
         }
 
@@ -161,16 +161,16 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.AppendLine(")");
         }
 
-        private static void GenerateForeignKeyAction(this ForeignKeyAction action, IndentedStringBuilder sqlBuilder, string changeType)
+        private static void GenerateForeignKeyRule(this Rule rule, IndentedStringBuilder sqlBuilder, string changeType)
         {
             Debug.Assert(changeType == "DELETE" || changeType == "UPDATE");
             sqlBuilder.Append("ON ");
             sqlBuilder.Append(changeType);
-            if (action == ForeignKeyAction.NoAction)
+            if (rule == Rule.None)
                 sqlBuilder.Append(" NO ACTION");
-            else if (action == ForeignKeyAction.Cascade)
+            else if (rule == Rule.Cascade)
                 sqlBuilder.Append(" CASCADE");
-            else if (action == ForeignKeyAction.SetNull)
+            else if (rule == Rule.SetNull)
                 sqlBuilder.Append(" SET NULL");
             else
                 sqlBuilder.Append(" SET DEFAULT");

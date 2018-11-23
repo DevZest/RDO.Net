@@ -1,11 +1,10 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace DevZest.Data.Addons
 {
     public sealed class DbForeignKey : DbTableConstraint
     {
-        internal DbForeignKey(string name, string description, PrimaryKey foreignKey, PrimaryKey referencedKey, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
+        internal DbForeignKey(string name, string description, PrimaryKey foreignKey, PrimaryKey referencedKey, Rule deleteRule, Rule updateRule)
             : base(name, description)
         {
             Debug.Assert(foreignKey != null);
@@ -14,8 +13,8 @@ namespace DevZest.Data.Addons
 
             ForeignKey = foreignKey;
             ReferencedKey = referencedKey;
-            OnDelete = onDelete;
-            OnUpdate = onUpdate;
+            DeleteRule = deleteRule;
+            UpdateRule = updateRule;
         }
 
         public PrimaryKey ForeignKey { get; private set; }
@@ -31,9 +30,9 @@ namespace DevZest.Data.Addons
 
         public PrimaryKey ReferencedKey { get; private set; }
 
-        public ForeignKeyAction OnDelete { get; private set; }
+        public Rule DeleteRule { get; private set; }
 
-        public ForeignKeyAction OnUpdate { get; private set; }
+        public Rule UpdateRule { get; private set; }
 
         public override bool IsValidOnTable
         {

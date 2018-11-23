@@ -1,17 +1,15 @@
-﻿using System;
-
-namespace DevZest.Data
+﻿namespace DevZest.Data
 {
     /// <summary>
     /// Specifies what action happens to rows have a referential relationship and the referenced row is deleted or updated from the parent table.
     /// The default is NoAction.
     /// </summary>
-    public enum ForeignKeyAction
+    public enum Rule
     {
         /// <summary>
         /// The Database Engine raises an error and the delete or update action on the row in the parent table is rejected.
         /// </summary>
-        NoAction = 0,
+        None = 0,
 
         /// <summary>
         /// Corresponding rows are deleted or updated from the referencing table if that row is deleted or updated from the parent table.
