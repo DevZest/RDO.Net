@@ -7,7 +7,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
     {
         public sealed class Address : Model<Address.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 addressId)
                     : base(addressId)
@@ -27,7 +27,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
         public sealed class Customer : Model<Customer.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 customerId)
                     : base(customerId)

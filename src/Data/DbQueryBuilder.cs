@@ -86,20 +86,20 @@ namespace DevZest.Data
 
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
             where T : Model<TKey>, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             return InnerJoin(dbSet, left, GetPrimaryKey, out model);
         }
 
         private static T GetPrimaryKey<T>(Model<T> _)
-            where T : PrimaryKey
+            where T : CandidateKey
         {
             return _.PrimaryKey;
         }
 
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
             where T : class, IModelReference, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.InnerJoin, out _);
             return this;
@@ -107,7 +107,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
             where T : Model<TKey>, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             return LeftJoin(dbSet, left, GetPrimaryKey, out model);
         }
@@ -115,7 +115,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : class, IModelReference, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.LeftJoin, out model);
             return this;
@@ -123,7 +123,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
             where T : Model<TKey>, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             return RightJoin(dbSet, left, GetPrimaryKey, out model);
         }
@@ -131,7 +131,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : class, IModelReference, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.RightJoin, out model);
             return this;
@@ -139,7 +139,7 @@ namespace DevZest.Data
 
         private void Join<T, TKey>(DbSet<T> dbSet, TKey left, TKey right, DbJoinKind kind, out T _)
             where T : class, IModelReference, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             dbSet.VerifyNotNull(nameof(dbSet));
             left.VerifyNotNull(nameof(left));

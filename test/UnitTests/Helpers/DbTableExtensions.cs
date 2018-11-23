@@ -117,7 +117,7 @@ namespace DevZest.Data.Helpers
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            PrimaryKey joinTo = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
+            CandidateKey joinTo = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
             var result = new List<SqlCommand>();
             var sqlSession = dbTable.SqlSession();
 

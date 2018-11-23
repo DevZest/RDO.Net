@@ -8,7 +8,7 @@ Public Class SalesOrderDetail
 
     <DbPrimaryKey("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID", Description:="Clustered index created by a primary key constraint.")>
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
 
         Public Sub New(salesOrderID As _Int32, salesOrderDetailID As _Int32)
             MyBase.New(salesOrderID, salesOrderDetailID)

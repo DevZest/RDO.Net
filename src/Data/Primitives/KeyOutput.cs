@@ -5,14 +5,14 @@ namespace DevZest.Data.Primitives
 {
     public sealed class KeyOutput : Model
     {
-        private sealed class PK : PrimaryKey
+        private sealed class PK : CandidateKey
         {
-            public PK(KeyOutput keyOutput, PrimaryKey primaryKey)
+            public PK(KeyOutput keyOutput, CandidateKey primaryKey)
                 : base(GetColumns(keyOutput, primaryKey))
             {
             }
 
-            private static ColumnSort[] GetColumns(KeyOutput _, PrimaryKey primaryKey)
+            private static ColumnSort[] GetColumns(KeyOutput _, CandidateKey primaryKey)
             {
                 var result = new ColumnSort[primaryKey.Count];
                 for (int i = 0; i < primaryKey.Count; i++)
@@ -46,8 +46,8 @@ namespace DevZest.Data.Primitives
         }
 
 
-        private readonly PrimaryKey _primaryKey;
-        internal override PrimaryKey GetPrimaryKeyCore()
+        private readonly CandidateKey _primaryKey;
+        internal override CandidateKey GetPrimaryKeyCore()
         {
             return _primaryKey;
         }

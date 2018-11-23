@@ -5,7 +5,7 @@ using System.Threading;
 namespace DevZest.Data
 {
     public abstract class Key<T> : Projection, IKey<T>
-        where T : PrimaryKey
+        where T : CandidateKey
     {
         private sealed class ContainerModel : Model<T>
         {

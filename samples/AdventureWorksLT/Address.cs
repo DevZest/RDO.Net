@@ -9,7 +9,7 @@ namespace DevZest.Samples.AdventureWorksLT
     public class Address : BaseModel<Address.PK>
     {
         [DbPrimaryKey("PK_Address_AddressID", Description = "Primary key (clustered) constraint")]
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int32 addressID)
                 : base(addressID)

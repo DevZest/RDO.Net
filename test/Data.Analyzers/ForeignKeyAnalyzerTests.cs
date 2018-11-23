@@ -40,7 +40,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
     {
         public sealed class Address : Model<Address.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 addressId)
                     : base(addressId)
@@ -60,7 +60,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
         public sealed class Customer : Model<Customer.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 customerId)
                     : base(customerId)
@@ -137,7 +137,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
     {
         public sealed class Address : Model<Address.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 addressId)
                     : base(addressId)
@@ -157,7 +157,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
         public sealed class Customer : Model<Customer.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 customerId)
                     : base(customerId)
@@ -240,7 +240,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
     {
         public sealed class Address : Model<Address.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 addressId)
                     : base(addressId)
@@ -260,7 +260,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
         public sealed class Customer : Model<Customer.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 customerId)
                     : base(customerId)
@@ -339,7 +339,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
     {
         public sealed class Address : Model<Address.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 addressId)
                     : base(addressId)
@@ -359,7 +359,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
         public sealed class Customer : Model<Customer.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 customerId)
                     : base(customerId)
@@ -431,7 +431,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
     {
         public sealed class Address : Model<Address.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 addressId)
                     : base(addressId)
@@ -451,7 +451,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
         public sealed class Customer : Model<Customer.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 customerId)
                     : base(customerId)
@@ -530,7 +530,7 @@ Public Class Db
         Inherits Model(Of PK)
 
         Public NotInheritable Class PK
-            Inherits PrimaryKey
+            Inherits CandidateKey
 
             Public Sub New(addressId As _Int32)
                 MyBase.New(addressId)
@@ -558,7 +558,7 @@ Public Class Db
         Inherits Model(Of PK)
 
         Public NotInheritable Class PK
-            Inherits PrimaryKey
+            Inherits CandidateKey
 
             Public Sub New(customerId As _Int32)
                 MyBase.New(customerId)

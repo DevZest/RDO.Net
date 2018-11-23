@@ -7,7 +7,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     [UniqueConstraint(nameof(AK_RowGuid), DbName = "AK_%_rowguid", Description = "Unique nonclustered constraint. Used to support replication samples.")]
     public abstract class BaseModel<T> : Model<T>
-        where T : PrimaryKey
+        where T : CandidateKey
     {
         static BaseModel()
         {

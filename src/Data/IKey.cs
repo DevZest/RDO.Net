@@ -3,7 +3,7 @@
 namespace DevZest.Data
 {
     public interface IKey<T> : IModelReference
-        where T : PrimaryKey
+        where T : CandidateKey
     {
         T PrimaryKey { get; }
     }

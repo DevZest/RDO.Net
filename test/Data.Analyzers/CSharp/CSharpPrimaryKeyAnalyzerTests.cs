@@ -28,7 +28,7 @@ namespace DevZest.Data.CodeAnalysis.CSharp
             var test = @"
 using DevZest.Data;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
     public PK(_Int32 id)
         : base(id)
@@ -45,7 +45,7 @@ public sealed class PK : PrimaryKey
             var test = @"
 using DevZest.Data;
 
-public class PK : PrimaryKey
+public class PK : CandidateKey
 {
     public PK(_Int32 id)
         : base(id)
@@ -70,7 +70,7 @@ public class PK : PrimaryKey
             var test = @"
 using DevZest.Data;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
 }";
 
@@ -91,7 +91,7 @@ public sealed class PK : PrimaryKey
             var test = @"
 using DevZest.Data;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
     public PK()
         : base()
@@ -116,7 +116,7 @@ public sealed class PK : PrimaryKey
             var test = @"
 using DevZest.Data;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
     public PK(int id)
         : base()
@@ -142,7 +142,7 @@ public sealed class PK : PrimaryKey
 using DevZest.Data;
 using DevZest.Data.Annotations;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
     public PK([Asc] [Desc]_Int32 id)
         : base(id)
@@ -167,7 +167,7 @@ public sealed class PK : PrimaryKey
             var test = @"
 using DevZest.Data;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
     public PK(_Int32 id)
     {
@@ -191,7 +191,7 @@ public sealed class PK : PrimaryKey
             var test = @"
 using DevZest.Data;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
     public PK(_Int32 id)
         : base()
@@ -216,7 +216,7 @@ public sealed class PK : PrimaryKey
             var test = @"
 using DevZest.Data;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
     public PK(_Int32 id1, _Int32 id2)
         : base(id1, id1)
@@ -241,7 +241,7 @@ public sealed class PK : PrimaryKey
             var test = @"
 using DevZest.Data;
 
-public sealed class PK : PrimaryKey
+public sealed class PK : CandidateKey
 {
     public PK(_Int32 id)
         : base(id.Asc())
@@ -268,7 +268,7 @@ using DevZest.Data;
 
 public class PrimaryKeyInvalidArgument : Model<PrimaryKeyInvalidArgument.PK>
 {
-    public sealed class PK : PrimaryKey
+    public sealed class PK : CandidateKey
     {
         public PK(_Int32 id)
             : base(id)
@@ -306,7 +306,7 @@ using DevZest.Data.Annotations;
 
 public class PrimaryKeyArgumentNaming : Model<PrimaryKeyArgumentNaming.PK>
 {
-    public sealed class PK : PrimaryKey
+    public sealed class PK : CandidateKey
     {
         public PK(_Int32 id2)
             : base(id2)

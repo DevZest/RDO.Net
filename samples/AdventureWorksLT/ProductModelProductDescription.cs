@@ -8,7 +8,7 @@ namespace DevZest.Samples.AdventureWorksLT
     public class ProductModelProductDescription : BaseModel<ProductModelProductDescription.PK>
     {
         [DbPrimaryKey("PK_ProductModelProductDescription_ProductModelID_ProductDescriptionID_Culture", Description = "Primary key (clustered) constraint")]
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int32 productModelID, _Int32 productDescriptionID, _String culture)
                 : base(productModelID, productDescriptionID, culture)

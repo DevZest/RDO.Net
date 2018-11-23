@@ -209,7 +209,7 @@ namespace DevZest.Data.Primitives
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
 
         protected internal virtual async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken cancellationToken)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
@@ -218,14 +218,14 @@ namespace DevZest.Data.Primitives
         }
 
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken cancellationToken)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new();
 
         internal abstract Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
         protected internal virtual async Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
@@ -236,7 +236,7 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo, CancellationToken ct)
+        protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
@@ -255,7 +255,7 @@ namespace DevZest.Data.Primitives
         protected internal abstract string GetMockTableName(string tableName, object tag);
 
         protected internal static DbForeignKeyConstraint CreateForeignKeyConstraint<TKey>(string name, string description, TKey foreignKey, Model<TKey> refTableModel, Rule deleteRule, Rule updateRule)
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             foreignKey.VerifyNotNull(nameof(foreignKey));
             refTableModel.VerifyNotNull(nameof(refTableModel));

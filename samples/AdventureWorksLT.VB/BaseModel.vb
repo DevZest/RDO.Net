@@ -1,5 +1,5 @@
-<UniqueConstraint(BaseModel(Of PrimaryKey)._AK_RowGuid, DbName:="AK_%_rowguid", Description:="Unique nonclustered constraint. Used to support replication samples.")>
-Public MustInherit Class BaseModel(Of T As PrimaryKey)
+<UniqueConstraint(BaseModel(Of CandidateKey)._AK_RowGuid, DbName:="AK_%_rowguid", Description:="Unique nonclustered constraint. Used to support replication samples.")>
+Public MustInherit Class BaseModel(Of T As CandidateKey)
     Inherits Model(Of T)
 
     Shared Sub New()

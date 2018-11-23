@@ -28,7 +28,7 @@ namespace DevZest.Data.CodeAnalysis.VisualBasic
 Imports DevZest.Data
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id As _Int32)
         MyBase.New(id)
@@ -45,7 +45,7 @@ End Class";
 Imports DevZest.Data
 
 Public Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id As _Int32)
         MyBase.New(id)
@@ -70,7 +70,7 @@ End Class";
 Imports DevZest.Data
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 End Class";
 
             var expected = new DiagnosticResult
@@ -91,7 +91,7 @@ End Class";
 Imports DevZest.Data
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New()
         MyBase.New()
@@ -116,7 +116,7 @@ End Class";
 Imports DevZest.Data
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id As Int32)
         MyBase.New()
@@ -142,7 +142,7 @@ Imports DevZest.Data
 Imports DevZest.Data.Annotations
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(<Asc(), Desc()>id As _Int32)
         MyBase.New(id)
@@ -167,7 +167,7 @@ End Class";
 Imports DevZest.Data
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id As _Int32)
     End Sub
@@ -191,7 +191,7 @@ End Class";
 Imports DevZest.Data
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id As _Int32)
         MyBase.New()
@@ -216,7 +216,7 @@ End Class";
 Imports DevZest.Data
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id1 As _Int32, id2 As _Int32)
         MyBase.New(id1, id1)
@@ -241,7 +241,7 @@ End Class";
 Imports DevZest.Data
 
 Public NotInheritable Class PK
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id As _Int32)
         MyBase.New(id.Asc())
@@ -269,7 +269,7 @@ Public Class PrimaryKeyInvalidArgument
     Inherits Model(Of PrimaryKeyInvalidArgument.PK)
 
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
         Public Sub New(id As _Int32)
             MyBase.New(id)
         End Sub
@@ -314,7 +314,7 @@ Public Class PrimaryKeyArgumentNaming
     Inherits Model(Of PrimaryKeyArgumentNaming.PK)
 
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
         Public Sub New(id2 As _Int32)
             MyBase.New(id2)
         End Sub

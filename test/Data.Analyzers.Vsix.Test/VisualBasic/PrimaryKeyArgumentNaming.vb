@@ -2,7 +2,7 @@
     Inherits Model(Of PrimaryKeyArgumentNaming.PK)
 
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
         Public Sub New(id2 As _Int32)
             MyBase.New(id2)
         End Sub

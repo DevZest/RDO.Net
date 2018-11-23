@@ -40,7 +40,7 @@ namespace DevZest.Data
             public readonly IDbTable IdentityMappings;
         }
 
-        private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken ct)
+        private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
             var identityMappings = await CreateIdentityMappingsAsync(source.Model, updateIdentity, ct);
@@ -48,7 +48,7 @@ namespace DevZest.Data
             return new InsertTableResult(rowCount, identityMappings);
         }
 
-        private async Task<InsertTableResult> InsertDataSetAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity, CancellationToken ct)
+        private async Task<InsertTableResult> InsertDataSetAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
             var identityMappings = await CreateIdentityMappingsAsync(source.Model, updateIdentity, ct);
@@ -207,7 +207,7 @@ namespace DevZest.Data
             }
         }
 
-        internal static DbTableInsert<T> Create<TSource>(DbTable<T> into, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
+        internal static DbTableInsert<T> Create<TSource>(DbTable<T> into, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity)
             where TSource : class, IModelReference, new()
         {
             return new InsertFromDbTable<TSource>(into, source, columnMapper, joinTo, updateIdentity);
@@ -216,7 +216,7 @@ namespace DevZest.Data
         private sealed class InsertFromDbTable<TSource> : DbTableInsert<T>
             where TSource : class, IModelReference, new()
         {
-            public InsertFromDbTable(DbTable<T> into, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
+            public InsertFromDbTable(DbTable<T> into, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity)
                 : base(into)
             {
                 _source = source;
@@ -227,7 +227,7 @@ namespace DevZest.Data
 
             private readonly DbTable<TSource> _source;
             private readonly Action<ColumnMapper, TSource, T> _columnMapper;
-            private readonly PrimaryKey _joinTo;
+            private readonly CandidateKey _joinTo;
             private readonly bool _updateIdentity;
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
@@ -279,7 +279,7 @@ namespace DevZest.Data
             }
         }
 
-        internal static DbTableInsert<T> Create<TSource>(DbTable<T> into, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
+        internal static DbTableInsert<T> Create<TSource>(DbTable<T> into, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity)
             where TSource : class, IModelReference, new()
         {
             return new InsertFromDataSet<TSource>(into, source, columnMapper, joinTo, updateIdentity);
@@ -288,7 +288,7 @@ namespace DevZest.Data
         private sealed class InsertFromDataSet<TSource> : DbTableInsert<T>
             where TSource : class, IModelReference, new()
         {
-            public InsertFromDataSet(DbTable<T> into, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo, bool updateIdentity)
+            public InsertFromDataSet(DbTable<T> into, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity)
                 : base(into)
             {
                 _source = source;
@@ -299,7 +299,7 @@ namespace DevZest.Data
 
             private readonly DataSet<TSource> _source;
             private readonly Action<ColumnMapper, TSource, T> _columnMapper;
-            private readonly PrimaryKey _joinTo;
+            private readonly CandidateKey _joinTo;
             private readonly bool _updateIdentity;
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)

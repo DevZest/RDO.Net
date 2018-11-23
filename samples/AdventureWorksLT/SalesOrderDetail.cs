@@ -12,7 +12,7 @@ namespace DevZest.Samples.AdventureWorksLT
     public class SalesOrderDetail : BaseModel<SalesOrderDetail.PK>
     {
         [DbPrimaryKey("PK_SalesOrderDetail_SalesOrderID_SalesOrderDetailID", Description = "Clustered index created by a primary key constraint.")]
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int32 salesOrderID, _Int32 salesOrderDetailID)
                 : base(salesOrderID, salesOrderDetailID)

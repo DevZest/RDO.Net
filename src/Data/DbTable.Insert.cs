@@ -42,7 +42,7 @@ namespace DevZest.Data
         {
             Verify(source, nameof(source));
             Verify(columnMapper, nameof(columnMapper));
-            PrimaryKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
+            CandidateKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
             return DbTableInsert<T>.Create(this, source, columnMapper, joinTo, updateIdentity);
         }
@@ -98,7 +98,7 @@ namespace DevZest.Data
                 return Insert(source, 0, columnMapper, joinMapper, updateIdentity);
 
             Verify(columnMapper, nameof(columnMapper));
-            PrimaryKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
+            CandidateKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             return DbTableInsert<T>.Create(this, source, columnMapper, joinTo, updateIdentity);

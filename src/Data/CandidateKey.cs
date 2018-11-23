@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 
 namespace DevZest.Data
 {
-    public abstract class PrimaryKey : ReadOnlyCollection<ColumnSort>, IReadOnlyList<Column>
+    public abstract class CandidateKey : ReadOnlyCollection<ColumnSort>, IReadOnlyList<Column>
     {
-        protected PrimaryKey(params ColumnSort[] columns)
+        protected CandidateKey(params ColumnSort[] columns)
             : base(columns)
         {
             _parentModel = Verify(columns, nameof(columns));
@@ -55,7 +55,7 @@ namespace DevZest.Data
             get { return this[index].Column; }
         }
 
-        public IReadOnlyList<ColumnMapping> UnsafeJoin(PrimaryKey target)
+        public IReadOnlyList<ColumnMapping> UnsafeJoin(CandidateKey target)
         {
             target.VerifyNotNull(nameof(target));
             if (Count != target.Count)

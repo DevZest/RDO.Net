@@ -49,7 +49,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T _)
             where T : Model<TKey>, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             base.InnerJoin(dbSet, left, out _);
             return this;
@@ -57,7 +57,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
             where T : class, IModelReference, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             base.InnerJoin(dbSet, left, right, out _);
             return this;
@@ -65,7 +65,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
             where T : Model<TKey>, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             base.LeftJoin(dbSet, left, out model);
             return this;
@@ -74,7 +74,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : class, IModelReference, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             base.LeftJoin(dbSet, left, right, out model);
             return this;
@@ -82,7 +82,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
             where T : Model<TKey>, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             base.RightJoin(dbSet, left, out model);
             return this;
@@ -91,7 +91,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : class, IModelReference, new()
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
         {
             base.RightJoin(dbSet, left, right, out model);
             return this;

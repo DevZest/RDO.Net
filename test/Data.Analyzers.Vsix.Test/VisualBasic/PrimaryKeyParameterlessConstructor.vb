@@ -1,5 +1,5 @@
 ﻿Public NotInheritable Class PrimaryKeyParameterlessConstructor
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New()
         MyBase.New()

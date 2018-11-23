@@ -27,7 +27,7 @@ namespace DevZest.Data
             return new DeleteFromDataRow<TSource>(from, source, rowIndex, columnMappings);
         }
 
-        internal static DbTableDelete<T> Create<TSource>(DbTable<T> from, DataSet<TSource> source, PrimaryKey joinTo)
+        internal static DbTableDelete<T> Create<TSource>(DbTable<T> from, DataSet<TSource> source, CandidateKey joinTo)
             where TSource : class, IModelReference, new()
         {
             return new DeleteFromDataSet<TSource>(from, source, joinTo);
@@ -128,7 +128,7 @@ namespace DevZest.Data
         private sealed class DeleteFromDataSet<TSource> : DbTableDelete<T>
             where TSource : class, IModelReference, new()
         {
-            public DeleteFromDataSet(DbTable<T> from, DataSet<TSource> source, PrimaryKey joinTo)
+            public DeleteFromDataSet(DbTable<T> from, DataSet<TSource> source, CandidateKey joinTo)
                 : base(from)
             {
                 Debug.Assert(source.Count != 1);
@@ -137,7 +137,7 @@ namespace DevZest.Data
             }
 
             private readonly DataSet<TSource> _source;
-            private readonly PrimaryKey _joinTo;
+            private readonly CandidateKey _joinTo;
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {

@@ -2,7 +2,7 @@
 {
     public class PrimaryKeyArgumentNaming : Model<PrimaryKeyArgumentNaming.PK>
     {
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int32 id2)
                 : base(id2)

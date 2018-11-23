@@ -2,7 +2,7 @@
 {
     public class RecursiveModel : Model<RecursiveModel.PK>
     {
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int32 id)
                 : base(id)

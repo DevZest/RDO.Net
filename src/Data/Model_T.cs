@@ -10,7 +10,7 @@ using System.Threading;
 namespace DevZest.Data
 {
     public abstract class Model<T> : Model, IKey<T>
-        where T : PrimaryKey
+        where T : CandidateKey
     {
         protected Model()
         {
@@ -26,7 +26,7 @@ namespace DevZest.Data
         [CreateKey]
         protected abstract T CreatePrimaryKey();
 
-        internal sealed override PrimaryKey GetPrimaryKeyCore()
+        internal sealed override CandidateKey GetPrimaryKeyCore()
         {
             return this.PrimaryKey;
         }

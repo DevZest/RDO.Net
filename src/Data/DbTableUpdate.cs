@@ -124,7 +124,7 @@ namespace DevZest.Data
             }
         }
 
-        internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
+        internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo)
             where TSource : class, IModelReference, new()
         {
             return new UpdateFromDataSet<TSource>(target, source, columnMapper, joinTo);
@@ -133,7 +133,7 @@ namespace DevZest.Data
         private sealed class UpdateFromDataSet<TSource> : DbTableUpdate<T>
             where TSource : class, IModelReference, new()
         {
-            public UpdateFromDataSet(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, PrimaryKey joinTo)
+            public UpdateFromDataSet(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo)
                 : base(target)
             {
                 Debug.Assert(source.Count != 1);
@@ -144,7 +144,7 @@ namespace DevZest.Data
 
             private readonly DataSet<TSource> _source;
             private readonly Action<ColumnMapper, TSource, T> _columnMapper;
-            private readonly PrimaryKey _joinTo;
+            private readonly CandidateKey _joinTo;
 
             protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
             {

@@ -1,5 +1,5 @@
 ﻿Public NotInheritable Class PrimaryKeyInvalidConstructorParam
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id1 As Int32, id2 As _Int32, id3 As Int32)
         MyBase.New(id2)

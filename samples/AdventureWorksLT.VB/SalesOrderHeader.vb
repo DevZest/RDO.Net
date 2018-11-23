@@ -13,7 +13,7 @@ Public Class SalesOrderHeader
 
     <DbPrimaryKey("PK_SalesOrderHeader_SalesOrderID", Description:="Clustered index created by a primary key constraint.")>
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
 
         Public Sub New(ByVal salesOrderID As _Int32)
             MyBase.New(salesOrderID)

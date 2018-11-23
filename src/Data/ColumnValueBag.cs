@@ -63,7 +63,7 @@ namespace DevZest.Data
             return _columnValues.ContainsKey(key);
         }
 
-        public bool ContainsKey(PrimaryKey key)
+        public bool ContainsKey(CandidateKey key)
         {
             for (int i = 0; i < key.Count; i++)
             {
@@ -102,7 +102,7 @@ namespace DevZest.Data
             _columnValues[column] = column.GetValue(dataRow);
         }
 
-        public int AutoSelect(PrimaryKey key, DataRow dataRow)
+        public int AutoSelect(CandidateKey key, DataRow dataRow)
         {
             key.VerifyNotNull(nameof(key));
             dataRow.VerifyNotNull(nameof(dataRow));

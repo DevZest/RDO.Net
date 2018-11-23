@@ -508,12 +508,12 @@ namespace DevZest.Data
             return result;
         }
 
-        public PrimaryKey PrimaryKey
+        public CandidateKey PrimaryKey
         {
             get { return GetPrimaryKeyCore(); }
         }
 
-        internal virtual PrimaryKey GetPrimaryKeyCore()
+        internal virtual CandidateKey GetPrimaryKeyCore()
         {
             return null;
         }

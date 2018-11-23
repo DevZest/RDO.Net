@@ -14,7 +14,7 @@ namespace DevZest.Data
             return new KeyMapping(source.Model.PrimaryKey, target.Model.PrimaryKey);
         }
 
-        internal KeyMapping(PrimaryKey sourceKey, PrimaryKey targetKey)
+        internal KeyMapping(CandidateKey sourceKey, CandidateKey targetKey)
         {
             sourceKey.VerifyNotNull(nameof(sourceKey));
             targetKey.VerifyNotNull(nameof(targetKey));
@@ -25,14 +25,14 @@ namespace DevZest.Data
             _targetKey = targetKey;
         }
 
-        private readonly PrimaryKey _sourceKey;
-        public PrimaryKey SourceKey
+        private readonly CandidateKey _sourceKey;
+        public CandidateKey SourceKey
         {
             get { return _sourceKey; }
         }
 
-        private readonly PrimaryKey _targetKey;
-        public PrimaryKey TargetKey
+        private readonly CandidateKey _targetKey;
+        public CandidateKey TargetKey
         {
             get { return _targetKey; }
         }

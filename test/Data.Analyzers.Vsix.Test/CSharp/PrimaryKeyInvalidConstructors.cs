@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
-    public sealed class PrimaryKeyInvalidConstructors : PrimaryKey
+    public sealed class PrimaryKeyInvalidConstructors : CandidateKey
     {
     }
 }

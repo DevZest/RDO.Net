@@ -12,7 +12,7 @@ Public MustInherit Class ForeignKeyDiagnosticsBase
         Inherits Model(Of PK)
 
         Public NotInheritable Class PK
-            Inherits PrimaryKey
+            Inherits CandidateKey
 
             Public Sub New(addressId As _Int32)
                 MyBase.New(addressId)
@@ -40,7 +40,7 @@ Public MustInherit Class ForeignKeyDiagnosticsBase
         Inherits Model(Of PK)
 
         Public NotInheritable Class PK
-            Inherits PrimaryKey
+            Inherits CandidateKey
 
             Public Sub New(customerId As _Int32)
                 MyBase.New(customerId)

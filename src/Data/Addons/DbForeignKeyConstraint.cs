@@ -4,7 +4,7 @@ namespace DevZest.Data.Addons
 {
     public sealed class DbForeignKeyConstraint : DbTableConstraint
     {
-        internal DbForeignKeyConstraint(string name, string description, PrimaryKey foreignKey, PrimaryKey referencedKey, Rule deleteRule, Rule updateRule)
+        internal DbForeignKeyConstraint(string name, string description, CandidateKey foreignKey, CandidateKey referencedKey, Rule deleteRule, Rule updateRule)
             : base(name, description)
         {
             Debug.Assert(foreignKey != null);
@@ -17,7 +17,7 @@ namespace DevZest.Data.Addons
             UpdateRule = updateRule;
         }
 
-        public PrimaryKey ForeignKey { get; private set; }
+        public CandidateKey ForeignKey { get; private set; }
 
         public string ReferencedTableName
         {
@@ -28,7 +28,7 @@ namespace DevZest.Data.Addons
             }
         }
 
-        public PrimaryKey ReferencedKey { get; private set; }
+        public CandidateKey ReferencedKey { get; private set; }
 
         public Rule DeleteRule { get; private set; }
 

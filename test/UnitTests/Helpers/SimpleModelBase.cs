@@ -6,7 +6,7 @@ namespace DevZest.Data.Helpers
 {
     public abstract class SimpleModelBase : Model<SimpleModelBase.PK>
     {
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int32 id)
                 : base(id)

@@ -1,7 +1,7 @@
 ﻿Imports DevZest.Data.Annotations
 
 Public NotInheritable Class PrimaryKeySortAttributeConflict
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(<Asc(), Desc()> id As _Int32)
         MyBase.New(id)

@@ -31,7 +31,7 @@ namespace DevZest.Data.CodeAnalysis
 
         protected static bool IsPrimaryKey(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)
         {
-            return classSymbol != null && classSymbol.BaseTypeEqualsTo(KnownTypes.PrimaryKey, context.Compilation);
+            return classSymbol != null && classSymbol.BaseTypeEqualsTo(KnownTypes.CandidateKey, context.Compilation);
         }
 
         private static void VerifySealed(SyntaxNodeAnalysisContext context, INamedTypeSymbol classSymbol)

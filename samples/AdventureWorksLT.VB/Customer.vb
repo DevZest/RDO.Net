@@ -5,7 +5,7 @@ Public Class Customer
 
     <DbPrimaryKey("PK_Customer_CustomerID", Description:="Primary key (clustered) constraint")>
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
 
         Public Sub New(customerID As _Int32)
             MyBase.New(customerID)

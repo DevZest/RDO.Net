@@ -10,7 +10,7 @@ namespace DevZest.Data.Annotations
     {
         private sealed class Address : Model<Address.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 addressId)
                     : base(addressId)
@@ -30,7 +30,7 @@ namespace DevZest.Data.Annotations
 
         private sealed class Customer : Model<Customer.PK>
         {
-            public sealed class PK : PrimaryKey
+            public sealed class PK : CandidateKey
             {
                 public PK(_Int32 customerId)
                     : base(customerId)

@@ -1,5 +1,5 @@
 ﻿Public NotInheritable Class PrimaryKeyMissingBaseConstructor
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
     Public Sub New(id As _Int32)
     End Sub

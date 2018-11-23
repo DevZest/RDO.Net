@@ -3,7 +3,7 @@ Public Class ProductModel
 
     <DbPrimaryKey("PK_ProductModel_ProductModelID", Description:="Clustered index created by a primary key constraint.")>
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
 
         Public Sub New(ByVal productModelID As _Int32)
             MyBase.New(productModelID)

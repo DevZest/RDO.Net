@@ -4,7 +4,7 @@ using System.Threading;
 namespace DevZest.Data
 {
     public abstract class Ref<T> : Projection
-        where T : PrimaryKey
+        where T : CandidateKey
     {
         [CreateKey]
         protected abstract T CreateForeignKey();

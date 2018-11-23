@@ -4,7 +4,7 @@ Public Class ProductCategory
 
     <DbPrimaryKey("PK_ProductCategory_ProductCategoryID", Description:="Primary key (clustered) constraint")>
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
 
         Public Sub New(ByVal productCategoryID As _Int32)
             MyBase.New(productCategoryID)

@@ -3,7 +3,7 @@ Public Class CustomerAddress
 
     <DbPrimaryKey("PK_CustomerAddress_CustomerID_AddressID", Description:="Primary key (clustered) constraint")>
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
 
         Public Sub New(customerID As _Int32, addressID As _Int32)
             MyBase.New(customerID, addressID)

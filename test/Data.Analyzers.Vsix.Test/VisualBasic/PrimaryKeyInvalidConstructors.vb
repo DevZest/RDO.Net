@@ -1,4 +1,4 @@
 ﻿Public NotInheritable Class PrimaryKeyInvalidConstructors
-    Inherits PrimaryKey
+    Inherits CandidateKey
 
 End Class

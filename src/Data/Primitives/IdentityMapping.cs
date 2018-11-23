@@ -10,7 +10,7 @@ namespace DevZest.Data.Primitives
     }
 
     public abstract class IdentityMapping<T> : Model<T>, IIdentityMapping
-        where T : PrimaryKey
+        where T : CandidateKey
     {
         static IdentityMapping()
         {
@@ -41,7 +41,7 @@ namespace DevZest.Data.Primitives
 
     public sealed class Int16IdentityMapping : IdentityMapping<Int16IdentityMapping.PK>
     {
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int16 oldValue)
                 : base(oldValue)
@@ -75,7 +75,7 @@ namespace DevZest.Data.Primitives
 
     public sealed class Int32IdentityMapping : IdentityMapping<Int32IdentityMapping.PK>
     {
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int32 oldValue)
                 : base(oldValue)
@@ -109,7 +109,7 @@ namespace DevZest.Data.Primitives
 
     public sealed class Int64IdentityMapping : IdentityMapping<Int64IdentityMapping.PK>
     {
-        public sealed class PK : PrimaryKey
+        public sealed class PK : CandidateKey
         {
             public PK(_Int64 oldValue)
                 : base(oldValue)

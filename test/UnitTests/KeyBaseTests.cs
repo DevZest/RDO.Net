@@ -7,7 +7,7 @@ namespace DevZest.Data
     [TestClass]
     public class KeyBaseTests
     {
-        private sealed class SimpleKey : PrimaryKey
+        private sealed class SimpleKey : CandidateKey
         {
             public SimpleKey(_Int32 column1, [Desc]_Int32 column2)
                 : base(column1, column2.Desc())

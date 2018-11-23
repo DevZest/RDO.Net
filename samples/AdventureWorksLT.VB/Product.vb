@@ -9,7 +9,7 @@ Public Class Product
 
     <DbPrimaryKey("PK_Product_ProductID", Description:="Primary key (clustered) constraint")>
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
 
         Public Sub New(productID As _Int32)
             MyBase.New(productID)

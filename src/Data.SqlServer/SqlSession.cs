@@ -212,7 +212,7 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
         {
             if (identityMappings == null)
             {
@@ -224,7 +224,7 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo = null)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo = null)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
 
@@ -236,7 +236,7 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, IDbTable identityMappings, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
         {
             IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source.Model.PrimaryKey.UnsafeJoin(joinTo);
             var statement = target.BuildInsertStatement(source, columnMapper, join);
@@ -344,13 +344,13 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
         {
             var command = BuildUpdateCommand(source, target, columnMapper, joinTo);
             return ExecuteNonQueryAsync(command, ct);
         }
 
-        internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, PrimaryKey joinTo)
+        internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
@@ -365,13 +365,13 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Delete(this, statement).CreateCommand(Connection);
         }
 
-        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo, CancellationToken cancellationToken)
+        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo, CancellationToken cancellationToken)
         {
             var command = BuildDeleteCommand(source, target, joinTo);
             return ExecuteNonQueryAsync(command, cancellationToken);
         }
 
-        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, PrimaryKey joinTo)
+        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {

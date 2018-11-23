@@ -5,7 +5,7 @@ Public Class Address
 
     <DbPrimaryKey("PK_Address_AddressID", Description:="Primary key (clustered) constraint")>
     Public NotInheritable Class PK
-        Inherits PrimaryKey
+        Inherits CandidateKey
 
         Public Sub New(addressID As _Int32)
             MyBase.New(addressID)
