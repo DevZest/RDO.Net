@@ -1,3 +1,4 @@
+<InvisibleToDbDesigner>
 Public Class SalesOrderInfo
     Inherits SalesOrder
 

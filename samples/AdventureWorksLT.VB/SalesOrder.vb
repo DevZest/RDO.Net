@@ -1,6 +1,7 @@
 <Validator(SalesOrder._ValidateLineCount)>
 <Computation(SalesOrder._ComputeLineCount, ComputationMode.Aggregate)>
 <Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
+<InvisibleToDbDesigner>
 Public Class SalesOrder
     Inherits SalesOrderHeader
 

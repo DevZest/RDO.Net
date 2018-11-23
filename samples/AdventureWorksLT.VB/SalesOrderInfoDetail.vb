@@ -1,4 +1,5 @@
 <Validator(SalesOrderInfoDetail._ValidateProduct)>
+<InvisibleToDbDesigner>
 Public Class SalesOrderInfoDetail
     Inherits SalesOrderDetail
 
