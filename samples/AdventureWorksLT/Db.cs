@@ -67,6 +67,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return _.FK_Customer.Join(Customer._);
         }
 
+        [_ForeignKey]
         private KeyMapping FK_CustomerAddress_Address_AddressID(CustomerAddress _)
         {
             return _.FK_Address.Join(Address._);
