@@ -71,9 +71,9 @@ namespace DevZest.Data.CodeAnalysis
         private static ImmutableArray<INamedTypeSymbol> GetDeclarationModelTypes(INamedTypeSymbol dbType, string name, Compilation compilation)
         {
             HashSet<INamedTypeSymbol> result = null;
-            foreach (var declaration in GetDeclarations(dbType, name, compilation))
+            foreach (var dbTable in GetDbTablesWithFkDeclaration(dbType, name, compilation))
             {
-                var modelType = GetModelType(declaration);
+                var modelType = dbTable.GetModelType();
                 if (modelType != null)
                 {
                     if (result == null)
@@ -85,11 +85,6 @@ namespace DevZest.Data.CodeAnalysis
             return result == null ? default(ImmutableArray<INamedTypeSymbol>) : result.ToImmutableArray();
         }
 
-        private static INamedTypeSymbol GetModelType(IPropertySymbol dbTable)
-        {
-            return (dbTable.Type is INamedTypeSymbol dbTableType) ? dbTableType.TypeArguments[0] as INamedTypeSymbol : null;
-        }
-
         private static bool IsImplementation(IMethodSymbol implementation, INamedTypeSymbol modelType, Compilation compilation)
         {
             var parameters = implementation.Parameters;
@@ -99,7 +94,7 @@ namespace DevZest.Data.CodeAnalysis
             return compilation.GetKnownType(KnownTypes.KeyMapping).Equals(implementation.ReturnType) && modelType.Equals(parameters[0].Type);
         }
 
-        private static IEnumerable<IPropertySymbol> GetDeclarations(INamedTypeSymbol dbType, string name, Compilation compilation)
+        private static IEnumerable<IPropertySymbol> GetDbTablesWithFkDeclaration(INamedTypeSymbol dbType, string name, Compilation compilation)
         {
             var foreignKeyAttribute = compilation.GetKnownType(KnownTypes.ForeignKeyAttribute);
 
@@ -152,7 +147,7 @@ namespace DevZest.Data.CodeAnalysis
 
             names.Add(name);
 
-            var modelType = GetModelType(dbTable);
+            var modelType = dbTable.GetModelType();
             if (modelType == null)
                 return;
 
