@@ -54,7 +54,7 @@ namespace AdventureWorks.SalesOrders
                 return valueBag.GetValue(productLookup.ProductNumber);
             }
 
-            bool ForeignKeyBox.ILookupService.CanLookup(PrimaryKey foreignKey)
+            bool ForeignKeyBox.ILookupService.CanLookup(CandidateKey foreignKey)
             {
                 if (foreignKey == _.FK_Product)
                     return true;

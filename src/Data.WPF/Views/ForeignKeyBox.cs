@@ -12,7 +12,7 @@ namespace DevZest.Data.Views
     {
         public interface ILookupService : IService
         {
-            bool CanLookup(PrimaryKey foreignKey);
+            bool CanLookup(CandidateKey foreignKey);
             void BeginLookup(ForeignKeyBox foreignKeyBox);
         }
 
@@ -114,7 +114,7 @@ namespace DevZest.Data.Views
             EndLookup(valueBag);
         }
 
-        public PrimaryKey ForeignKey { get; internal set; }
+        public CandidateKey ForeignKey { get; internal set; }
 
         public Projection Lookup { get; internal set; }
 

@@ -47,7 +47,7 @@ namespace AdventureWorks.SalesOrders
                 get { return (DetailPresenter)_subFormBinding[CurrentRow].DataPresenter; }
             }
 
-            bool ForeignKeyBox.ILookupService.CanLookup(PrimaryKey foreignKey)
+            bool ForeignKeyBox.ILookupService.CanLookup(CandidateKey foreignKey)
             {
                 if (foreignKey == _.FK_Customer)
                     return true;

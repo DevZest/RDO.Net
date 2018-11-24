@@ -8,7 +8,7 @@ namespace DevZest.Data.Presenters
     partial class BindingFactory
     {
         public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup>(this TKey key, TLookup lookup, Func<ColumnValueBag, TKey, string> toString)
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
             where TLookup : Projection
         {
             if (toString == null)
@@ -21,7 +21,7 @@ namespace DevZest.Data.Presenters
         }
 
         public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup>(this TKey key, TLookup lookup, Func<ColumnValueBag, TKey, TLookup, string> toString)
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
             where TLookup : Projection
         {
             if (toString == null)
@@ -34,7 +34,7 @@ namespace DevZest.Data.Presenters
         }
 
         public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup, TView>(this TKey key, TLookup lookup, Action<TView, ColumnValueBag, TLookup> refreshAction)
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
             where TLookup : Projection
             where TView : UIElement, new()
         {
@@ -62,7 +62,7 @@ namespace DevZest.Data.Presenters
         }
 
         public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup, TView>(this TKey key, TLookup lookup, Action<TView, ColumnValueBag, TKey, TLookup> refreshAction)
-            where TKey : PrimaryKey
+            where TKey : CandidateKey
             where TLookup : Projection
             where TView : UIElement, new()
         {
@@ -88,7 +88,7 @@ namespace DevZest.Data.Presenters
                 }).WithInput(key, lookup);
         }
 
-        private static RowBinding<ForeignKeyBox> WithInput(this RowBinding<ForeignKeyBox> rowBinding, PrimaryKey foreignKey, Projection lookup)
+        private static RowBinding<ForeignKeyBox> WithInput(this RowBinding<ForeignKeyBox> rowBinding, CandidateKey foreignKey, Projection lookup)
         {
             var rowInput = rowBinding.BeginInput(ForeignKeyBox.ValueBagProperty);
             foreach (var columnSort in foreignKey)
