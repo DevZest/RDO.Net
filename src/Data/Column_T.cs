@@ -684,7 +684,7 @@ namespace DevZest.Data
         internal sealed override Column CreateBackup(Model model)
         {
             var result = new LocalColumn<T>();
-            result.Construct(model, model.GetType(), "Column" + (model.LocalColumns.Count + 1).ToString(CultureInfo.InvariantCulture), ColumnKind.ModelProperty, null, null);
+            result.Construct(model, model.GetType(), "Column" + (model.LocalColumns.Count + 1).ToString(CultureInfo.InvariantCulture), ColumnKind.Local, null, null);
             return result;
         }
 

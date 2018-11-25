@@ -19,7 +19,7 @@ namespace DevZest.Data
             var result = new TColumn();
             if (initializer != null)
                 initializer(result);
-            result.Initialize(_model, typeof(_Model), name, ColumnKind.ModelProperty, null);
+            result.Initialize(_model, typeof(_Model), name, ColumnKind.General, null);
             return result;
         }
 

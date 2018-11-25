@@ -45,7 +45,7 @@ namespace DevZest.Data
             where T : Column, new()
         {
             var result = Column.Create<T>(mounter.DeclaringType, mounter.Name);
-            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.ModelProperty, null, initializer);
+            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.General, null, initializer);
             return result;
         }
 
@@ -78,7 +78,7 @@ namespace DevZest.Data
             where TColumn : Column, new()
         {
             var result = Column.Create<TColumn>(fromMounter.OriginalDeclaringType, fromMounter.OriginalName);
-            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.ModelProperty, fromMounter.Initializer, initializer);
+            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.General, fromMounter.Initializer, initializer);
             return result;
         }
 
@@ -236,7 +236,7 @@ namespace DevZest.Data
             where TModel : Model
         {
             var result = new LocalColumn<T>();
-            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.Local | ColumnKind.ModelProperty, null, initializer);
+            result.Construct(mounter.Parent, mounter.DeclaringType, mounter.Name, ColumnKind.Local, null, initializer);
             return result;
         }
 

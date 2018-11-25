@@ -115,7 +115,7 @@ namespace DevZest.Data
         /// <value><see langword="true"/> if this is a system column, otherwise <see langword="false"/>.</value>
         public bool IsSystem
         {
-            get { return (Kind & ColumnKind.System) == Kind; }
+            get { return Kind == ColumnKind.SystemRowId || Kind == ColumnKind.SystemParentRowId || Kind == ColumnKind.SystemCustom; }
         }
 
         /// <summary>Gets the <see cref="DbExpression"/> of this column for SQL generation.</summary>
