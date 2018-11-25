@@ -7,16 +7,13 @@ namespace DevZest.Data
 {
     public abstract class JsonFilter
     {
-        public static JsonFilter NoExtraColumns { get { return NoProjectionJsonFilter.Singleton; } }
+        public static JsonFilter NoProjection { get { return NoProjectionJsonFilter.Singleton; } }
         public static JsonFilter NoChildDataSet { get { return NoChildDataSetJsonFilter.Singleton; } }
         public static JsonFilter PrimaryKeyOnly { get { return PrimaryKeyOnlyJsonFilter.Singleton; } }
+
         public static JsonFilter Explicit(params ModelMember[] members)
         {
             return new ExplicitMembersJsonFilter(Verify(members, nameof(members)));
-        }
-        public static JsonFilter Explicit(params Projection[] projections)
-        {
-            return new ExplicitProjectionsJsonFilter(Verify(projections, nameof(projections)));
         }
 
         public static JsonFilter Join(params JsonFilter[] filters)
@@ -48,8 +45,6 @@ namespace DevZest.Data
 
         protected internal abstract bool ShouldSerialize(ModelMember member);
 
-        protected internal abstract bool ShouldSerialize(Projection projection);
-
         private sealed class NoProjectionJsonFilter : JsonFilter
         {
             public static readonly NoProjectionJsonFilter Singleton = new NoProjectionJsonFilter();
@@ -58,14 +53,9 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(Projection projection)
-            {
-                return false;
-            }
-
             protected internal override bool ShouldSerialize(ModelMember member)
             {
-                return true;
+                return !(member is Projection);
             }
         }
 
@@ -75,11 +65,6 @@ namespace DevZest.Data
 
             private NoChildDataSetJsonFilter()
             {
-            }
-
-            protected internal override bool ShouldSerialize(Projection projection)
-            {
-                return true;
             }
 
             protected internal override bool ShouldSerialize(ModelMember member)
@@ -97,15 +82,9 @@ namespace DevZest.Data
             {
             }
 
-            protected internal override bool ShouldSerialize(Projection projection)
-            {
-                return false;
-            }
-
             protected internal override bool ShouldSerialize(ModelMember member)
             {
-                var column = member as Column;
-                return column != null && column.IsPrimaryKey;
+                return member is Column column && column.IsPrimaryKey;
             }
         }
 
@@ -122,32 +101,6 @@ namespace DevZest.Data
             protected internal override bool ShouldSerialize(ModelMember member)
             {
                 return _members.Contains(member);
-            }
-
-            protected internal override bool ShouldSerialize(Projection projection)
-            {
-                return true;
-            }
-        }
-
-        private sealed class ExplicitProjectionsJsonFilter : JsonFilter
-        {
-            public ExplicitProjectionsJsonFilter(HashSet<Projection> projections)
-            {
-                Debug.Assert(projections != null);
-                _projections = projections;
-            }
-
-            private readonly HashSet<Projection> _projections;
-
-            protected internal override bool ShouldSerialize(ModelMember member)
-            {
-                return true;
-            }
-
-            protected internal override bool ShouldSerialize(Projection projection)
-            {
-                return _projections.Contains(projection);
             }
         }
 
@@ -166,16 +119,6 @@ namespace DevZest.Data
                 for (int i = 0; i < _filters.Length; i++)
                 {
                     if (!_filters[i].ShouldSerialize(member))
-                        return false;
-                }
-                return true;
-            }
-
-            protected internal override bool ShouldSerialize(Projection projection)
-            {
-                for (int i = 0; i < _filters.Length; i++)
-                {
-                    if (!_filters[i].ShouldSerialize(projection))
                         return false;
                 }
                 return true;

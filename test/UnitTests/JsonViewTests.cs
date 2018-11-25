@@ -12,7 +12,7 @@ namespace DevZest.Data
         {
             var salesOrderInfo = DataSet<SalesOrderInfo>.ParseJson(Json.SalesOrderInfo_71774);
             var details = salesOrderInfo.Children(x => x.SalesOrderDetails);
-            var jsonView = salesOrderInfo.Filter(JsonFilter.NoExtraColumns).FilterChildren(details.Filter(JsonFilter.NoExtraColumns));
+            var jsonView = salesOrderInfo.Filter(JsonFilter.NoProjection).FilterChildren(details.Filter(JsonFilter.NoProjection));
             Assert.AreEqual(Json.SalesOrder_71774, jsonView.ToJsonString(true));
 
             jsonView = salesOrderInfo.Filter(JsonFilter.PrimaryKeyOnly);

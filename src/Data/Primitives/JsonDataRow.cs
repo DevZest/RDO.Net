@@ -55,15 +55,15 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
-            var columnGroups = dataRow.Model.Projections;
-            for (int i = 0; i < columnGroups.Count; i++)
+            var projections = dataRow.Model.Projections;
+            for (int i = 0; i < projections.Count; i++)
             {
-                var columnGroup = columnGroups[i];
-                if (jsonFilter == null || jsonFilter.ShouldSerialize(columnGroup))
+                var projection = projections[i];
+                if (jsonFilter == null || jsonFilter.ShouldSerialize(projection))
                 {
                     if (count > 0)
                         jsonWriter.WriteComma();
-                    jsonWriter.Write(dataRow, columnGroup, jsonFilter);
+                    jsonWriter.Write(dataRow, projection, jsonFilter);
                     count++;
                 }
             }
