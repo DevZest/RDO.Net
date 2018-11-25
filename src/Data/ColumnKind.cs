@@ -5,7 +5,9 @@ namespace DevZest.Data
     /// <summary>Specifies the kind of <see cref="Column"/>.</summary>
     public enum ColumnKind
     {
-        /// <summary>The column is a property of <see cref="Model"/>.</summary>
+        /// <summary>The column is none of the defined <see cref="ColumnKind"/>.</summary>
+        None = 0,
+        /// <summary>The column is a general column.</summary>
         General = 1,
         /// <summary>The column is local column.</summary>
         Local,
