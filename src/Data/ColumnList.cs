@@ -66,6 +66,13 @@ namespace DevZest.Data
             get { return _columns[index]; }
         }
 
+        public TColumn Add(Func<TColumn> createColumn, Action<TColumn> initializer = null)
+        {
+            createColumn.VerifyNotNull(nameof(createColumn));
+            VerifyDesignMode();
+            return Add(x => CreateColumn<TColumn>(createColumn, x, null, null, null, initializer));
+        }
+
         /// <summary>Add a new column into this column list.</summary>
         /// <typeparam name="T">The type of the column.</typeparam>
         /// <param name="initializer">The column initializer.</param>
@@ -117,15 +124,21 @@ namespace DevZest.Data
         private static T CreateColumn<T>(ColumnList<TColumn> columnList, Type originalDeclaringType, string originalName, Action<T> baseInitializer, Action<T> initializer)
             where T : TColumn, new()
         {
+            return CreateColumn(() => new T(), columnList, originalDeclaringType, originalName, baseInitializer, initializer);
+        }
+
+        private static T CreateColumn<T>(Func<T> create, ColumnList<TColumn> columnList, Type originalDeclaringType, string originalName, Action<T> baseInitializer, Action<T> initializer)
+            where T : TColumn
+        {
             var name = columnList.GetNewColumnName();
             if (originalDeclaringType == null)
             {
                 originalDeclaringType = columnList.DeclaringType;
                 originalName = name;
             }
-            var result = Column.Create<T>(originalDeclaringType, originalName);
-
-            result.Construct(columnList.ParentModel, columnList.DeclaringType, name, ColumnKind.ColumnListItem, baseInitializer, initializer);
+            var result = Column.Create(create, originalDeclaringType, originalName);
+            if (result != null)
+                result.Construct(columnList.ParentModel, columnList.DeclaringType, name, ColumnKind.ColumnListItem, baseInitializer, initializer);
             return result;
         }
 

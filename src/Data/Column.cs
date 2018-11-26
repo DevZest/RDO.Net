@@ -83,11 +83,19 @@ namespace DevZest.Data
         internal static T Create<T>(Type originalDeclaringType, string originalName)
             where T : Column, new()
         {
-            return new T()
+            return Create(() => new T(), originalDeclaringType, originalName);
+        }
+
+        internal static T Create<T>(Func<T> create, Type originalDeclaringType, string originalName)
+            where T : Column
+        {
+            var result = create();
+            if (result != null)
             {
-                OriginalDeclaringType = originalDeclaringType,
-                OriginalName = originalName
-            };
+                result.OriginalDeclaringType = originalDeclaringType;
+                result.OriginalName = originalName;
+            }
+            return result;
         }
 
         private Action<Column> _initializer;
