@@ -6,6 +6,10 @@
     <RootNamespace>DevZest.Data.SqlServer</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs" Link="Utilities\Argument.VerifyNotNull.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\NameSuffixes.GetUniqueName.cs" Link="Utilities\NameSuffixes.GetUniqueName.cs" />

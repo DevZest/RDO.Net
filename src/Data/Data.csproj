@@ -14,6 +14,10 @@
     <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Compile Include="..\..\external\Utilities\src\Utilities\Argument.IReadOnlyList.VerifyNotEmpty.cs" Link="Utilities\Argument.IReadOnlyList.VerifyNotEmpty.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\Argument.IReadOnlyListItem.VerifyNotNull.cs" Link="Utilities\Argument.IReadOnlyListItem.VerifyNotNull.cs" />
