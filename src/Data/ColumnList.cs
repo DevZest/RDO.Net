@@ -149,7 +149,8 @@ namespace DevZest.Data
 
             _constructors.Add(constructor);
             var result = constructor(this);
-            Debug.Assert(result != null);
+            if (result == null)
+                return null;
             _columns.Add(result);
             return result;
         }
