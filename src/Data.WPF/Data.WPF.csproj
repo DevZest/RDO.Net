@@ -37,6 +37,9 @@
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\external\Utilities\src\Utilities\Argument.IReadOnlyList.VerifyNoNullItem.cs">
       <Link>Utilities\Argument.IReadOnlyList.VerifyNoNullItem.cs</Link>
