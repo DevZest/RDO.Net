@@ -1123,6 +1123,22 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("NamedModelAttribute_FailedToResolvePropertyGetter", "model", "property", "returnType"), model, property, returnType);
         }
 
+        /// <summary>
+        /// Cannot add LocalColumn into ColumnList.
+        /// </summary>
+        public static string ColumnList_AddLocalColumn
+        {
+            get { return GetString("ColumnList_AddLocalColumn"); }
+        }
+
+        /// <summary>
+        /// The column is intiailized already.
+        /// </summary>
+        public static string Column_AlreadyInitialized
+        {
+            get { return GetString("Column_AlreadyInitialized"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

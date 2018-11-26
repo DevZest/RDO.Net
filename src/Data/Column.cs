@@ -102,6 +102,9 @@ namespace DevZest.Data
 
         internal void Initialize(Model parentModel, Type declaringType, string name, ColumnKind kind, Action<Column> initializer)
         {
+            if (Kind != ColumnKind.None)
+                throw new InvalidOperationException(DiagnosticMessages.Column_AlreadyInitialized);
+
             Debug.Assert(parentModel != null);
             ConstructModelMember(parentModel, declaringType, name);
             Kind = kind;

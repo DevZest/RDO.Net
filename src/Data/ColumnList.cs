@@ -151,6 +151,8 @@ namespace DevZest.Data
             var result = constructor(this);
             if (result == null)
                 return null;
+            if (result.IsLocal)
+                throw new InvalidOperationException(DiagnosticMessages.ColumnList_AddLocalColumn);
             _columns.Add(result);
             return result;
         }

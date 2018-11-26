@@ -534,4 +534,10 @@
   <data name="NamedModelAttribute_FailedToResolvePropertyGetter" xml:space="preserve">
     <value>Failed to resolve instance property getter {model}.{property} of type {returnType}.</value>
   </data>
+  <data name="ColumnList_AddLocalColumn" xml:space="preserve">
+    <value>Cannot add LocalColumn into ColumnList.</value>
+  </data>
+  <data name="Column_AlreadyInitialized" xml:space="preserve">
+    <value>The column is intiailized already.</value>
+  </data>
 </root>
