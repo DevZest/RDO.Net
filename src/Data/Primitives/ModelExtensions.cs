@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Addons;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -7,29 +6,9 @@ namespace DevZest.Data.Primitives
 {
     public static class ModelExtensions
     {
-        public static ColumnCollection GetColumns(this Model model)
-        {
-            return model.Columns;
-        }
-
-        public static IReadOnlyList<Column> GetLocalColumns(this Model model)
-        {
-            return model.LocalColumns;
-        }
-
-        public static IReadOnlyList<ColumnList> GetColumnLists(this Model model)
-        {
-            return model.ColumnLists;
-        }
-
         public static string GetDbAlias(this Model model)
         {
             return model.DbAlias;
-        }
-
-        public static Identity GetIdentity(this Model model, bool isTempTable)
-        {
-            return model.GetIdentity(isTempTable);
         }
 
         public static void AddSystemColumn(this Model model, Column column, string name, Action<Column> initializer = null)
@@ -98,36 +77,6 @@ namespace DevZest.Data.Primitives
                 if (!parentRelationship.ContainsSource(column))
                     yield return column;
             }
-        }
-
-        public static ModelCollection GetChildModels(this Model model)
-        {
-            model.VerifyNotNull(nameof(model));
-            return model.ChildModels;
-        }
-
-        public static int GetOrdinal(this Model model)
-        {
-            model.VerifyNotNull(nameof(model));
-            return model.Ordinal;
-        }
-
-        public static DataSource GetDataSource(this Model model)
-        {
-            model.VerifyNotNull(nameof(model));
-            return model.DataSource;
-        }
-
-        public static DataSet GetDataSet(this Model model)
-        {
-            model.VerifyNotNull(nameof(model));
-            return model.DataSet;
-        }
-
-        public static int GetDepth(this Model model)
-        {
-            model.VerifyNotNull(nameof(model));
-            return model.Depth;
         }
 
         internal static void Initialize<T>(this T _, Action<T> initializer)

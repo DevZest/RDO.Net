@@ -37,6 +37,11 @@ namespace DevZest.Data
         }
 
         internal abstract void Initialize(ColumnList sourceColumnList);
+
+        public new string Name
+        {
+            get { return base.Name; }
+        }
     }
 
     /// <summary>Represents a list of columns.</summary>

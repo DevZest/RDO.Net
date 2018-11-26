@@ -22,13 +22,15 @@ namespace DevZest.Data
             get { return string.IsNullOrEmpty(Name); }
         }
 
-        public Model Model
+        public Model GetModel()
         {
-            get
-            {
-                EnsureConstructed();
-                return ParentModel;
-            }
+            EnsureConstructed();
+            return ParentModel;
+        }
+
+        public string GetName()
+        {
+            return Name;
         }
 
         private sealed class ContainerModel : Model
@@ -151,6 +153,8 @@ namespace DevZest.Data
                     return _columns;
             }
         }
+
+        Model IModelReference.Model => GetModel();
 
         private void Add(Column column)
         {

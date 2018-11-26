@@ -1145,5 +1145,50 @@ namespace DevZest.Data
         {
             get { return false; }
         }
+
+        public string GetName()
+        {
+            return Name;
+        }
+
+        public ColumnCollection GetColumns()
+        {
+            return Columns;
+        }
+
+        public IReadOnlyList<Column> GetLocalColumns()
+        {
+            return LocalColumns;
+        }
+
+        public IReadOnlyList<ColumnList> GetColumnLists()
+        {
+            return ColumnLists;
+        }
+
+        public ModelCollection GetChildModels()
+        {
+            return ChildModels;
+        }
+
+        public int GetOrdinal()
+        {
+            return Ordinal;
+        }
+
+        public DataSource GetDataSource()
+        {
+            return DataSource;
+        }
+
+        public DataSet GetDataSet()
+        {
+            return DataSet;
+        }
+
+        public int GetDepth()
+        {
+            return Depth;
+        }
     }
 }

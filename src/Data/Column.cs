@@ -23,6 +23,11 @@ namespace DevZest.Data
         /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
         public Type OriginalDeclaringType { get; internal set; }
 
+        public new string Name
+        {
+            get { return base.Name; }
+        }
+
         /// <summary>
         /// Gets the original name of this <see cref="Column"/>.
         /// </summary>
