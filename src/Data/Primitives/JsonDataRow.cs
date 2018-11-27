@@ -51,7 +51,7 @@ namespace DevZest.Data.Primitives
                 if (count > 0)
                     jsonWriter.WriteComma();
 
-                jsonWriter.Write(dataRow, columnList);
+                jsonWriter.Write(dataRow, columnList, jsonFilter);
                 count++;
             }
 
@@ -85,15 +85,20 @@ namespace DevZest.Data.Primitives
             return jsonWriter.WriteEndObject();
         }
 
-        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnList columnList)
+        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnList columnList, JsonFilter jsonFilter)
         {
             jsonWriter.WriteObjectName(columnList.Name);
             jsonWriter.WriteStartArray();
+            var count = 0;
             for (int i = 0; i < columnList.Count; i++)
             {
-                if (i > 0)
+                var column = columnList[i];
+                if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))
+                    continue;
+                if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.Write(dataRow, columnList[i]);
+                jsonWriter.Write(dataRow, column);
+                count++;
             }
             jsonWriter.WriteEndArray();
         }
