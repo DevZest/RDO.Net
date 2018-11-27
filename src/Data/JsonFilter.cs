@@ -32,7 +32,7 @@ namespace DevZest.Data
         {
             items.VerifyNotNull(paramName);
             var result = new HashSet<T>();
-            for (int i = 0; i < paramName.Length; i++)
+            for (int i = 0; i < items.Length; i++)
             {
                 var item = items[i];
                 if (item == null)
