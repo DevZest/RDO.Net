@@ -26,7 +26,7 @@ namespace DevZest.Data.Primitives
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                if (!column.ShouldSerialize)
+                if (!column.IsSerializable)
                     continue;
 
                 if (column.Kind == ColumnKind.ColumnListItem || column.Kind == ColumnKind.ProjectionMember)
@@ -188,8 +188,10 @@ namespace DevZest.Data.Primitives
                 jsonParser.Parse(columnList, dataRow.Ordinal);
             else if (member is Projection projection)
                 jsonParser.Parse(projection, dataRow);
+            else if (member is Model childModel)
+                jsonParser.Parse(dataRow[childModel], isTopLevel:false);
             else
-                jsonParser.Parse(dataRow[(Model)member], isTopLevel:false);
+                throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
         }
 
         private static void Parse(this JsonParser jsonParser, Projection projection, DataRow dataRow)
@@ -224,17 +226,16 @@ namespace DevZest.Data.Primitives
         {
             Debug.Assert(column != null);
 
-            var dataSetColumn = column as IDataSetColumn;
-            if (dataSetColumn != null)
+            if (column is IDataSetColumn dataSetColumn)
             {
                 var dataSet = jsonParser.Parse(() => dataSetColumn.NewValue(ordinal), false);
-                if (column.ShouldSerialize)
+                if (column.IsSerializable)
                     dataSetColumn.Deserialize(ordinal, dataSet);
                 return;
             }
 
             var token = jsonParser.ExpectToken(JsonTokenKind.ColumnValues);
-            if (column.ShouldSerialize)
+            if (column.IsSerializable)
                 column.Deserialize(ordinal, token.JsonValue);
         }
 

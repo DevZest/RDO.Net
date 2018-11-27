@@ -18,7 +18,7 @@ namespace DevZest.Data
         private interface IValueManager
         {
             bool IsPrimaryKey { get; }
-            bool ShouldSerialize { get; }
+            bool IsSerializable { get; }
             T this[int ordinal] { get; set; }
             void Insert(int ordinal, T value);
             void RemoveAt(int ordinal);
@@ -60,7 +60,7 @@ namespace DevZest.Data
                     get { return _isPrimaryKey; }
                 }
 
-                public override bool ShouldSerialize
+                public override bool IsSerializable
                 {
                     get { return true; }
                 }
@@ -78,7 +78,7 @@ namespace DevZest.Data
                     get { return false; }
                 }
 
-                public override bool ShouldSerialize
+                public override bool IsSerializable
                 {
                     get { return false; }
                 }
@@ -99,7 +99,7 @@ namespace DevZest.Data
 
             public abstract bool IsPrimaryKey { get; }
 
-            public abstract bool ShouldSerialize { get; }
+            public abstract bool IsSerializable { get; }
         }
 
         /// <summary>
@@ -429,9 +429,9 @@ namespace DevZest.Data
         /// <returns>The column of constant expression.</returns>
         protected internal abstract Column<T> CreateConst(T value);
 
-        internal sealed override bool ShouldSerializeOverride
+        internal sealed override bool IsSerializableOverride
         {
-            get { return _valueManager == null ? false : _valueManager.ShouldSerialize; }
+            get { return _valueManager == null ? false : _valueManager.IsSerializable; }
         }
         
         /// <inheritdoc/>

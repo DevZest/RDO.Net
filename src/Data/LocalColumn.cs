@@ -26,6 +26,11 @@ namespace DevZest.Data
             get { return true; }
         }
 
+        public override bool IsSerializable
+        {
+            get { return false; }
+        }
+
         void ILocalColumn.OnDataRowInserting(DataRow dataRow)
         {
             InsertRow(dataRow);
