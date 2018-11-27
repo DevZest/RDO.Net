@@ -23,6 +23,16 @@ namespace DevZest.Data
    }
 ]";
             Assert.AreEqual(expectedJson, jsonView.ToJsonString(true));
+
+            jsonView = salesOrderInfo.Filter(JsonFilter.Explicit(salesOrderInfo._.SalesOrderID, salesOrderInfo._.RevisionNumber));
+            expectedJson =
+@"[
+   {
+      ""SalesOrderID"" : 71774,
+      ""RevisionNumber"" : 2
+   }
+]";
+            Assert.AreEqual(expectedJson, jsonView.ToJsonString(true));
         }
     }
 }
