@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -12,6 +11,30 @@ namespace DevZest.Data.Primitives
     {
         private sealed class TableCreator : MockDb
         {
+            public TableCreator(string[] names)
+            {
+                _names = ToHashSet(names);
+            }
+
+            private HashSet<string> ToHashSet(string[] names)
+            {
+                if (names == null || names.Length == 0)
+                    return null;
+
+                HashSet<string> result = null;
+                foreach (var name in names)
+                {
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        if (result == null)
+                            result = new HashSet<string>();
+                        result.Add(name);
+                    }
+                }
+
+                return result;
+            }
+
             internal override void CreateMockDb()
             {
             }
@@ -21,12 +44,15 @@ namespace DevZest.Data.Primitives
                 return name;
             }
 
+            private readonly HashSet<string> _names;
+
             protected override void Initialize()
             {
                 foreach (var property in GetTableProperties(Db))
                 {
                     var dbTable = (IDbTable)property.GetValue(Db);
-                    AddMockTable(dbTable, null);
+                    if (_names == null || _names.Contains(dbTable.Name))
+                        AddMockTable(dbTable, null);
                 }
             }
         }
@@ -62,10 +88,15 @@ namespace DevZest.Data.Primitives
                 throw new InvalidOperationException(DiagnosticMessages.DbSession_VerifyNotMocked);
         }
 
-        public static async Task CreateTablesAsync(this DbSession dbSession, IProgress<string> progress, CancellationToken ct = default(CancellationToken))
+        public static Task CreateTablesAsync(this DbSession dbSession, IProgress<string> progress, CancellationToken ct = default(CancellationToken))
+        {
+            return CreateTablesAsync(dbSession, progress, null, ct);
+        }
+
+        public static async Task CreateTablesAsync(this DbSession dbSession, IProgress<string> progress, string[] names, CancellationToken ct = default(CancellationToken))
         {
             dbSession.VerifyNotMocked();
-            await new TableCreator().InternalInitializeAsync(dbSession, progress, ct);
+            await new TableCreator(names).InternalInitializeAsync(dbSession, progress, ct);
             dbSession.Mock = null;
         }
     }
