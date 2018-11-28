@@ -62,11 +62,6 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        internal virtual string GetTableDescription(IDbTable table)
-        {
-            return null;
-        }
-
         private async Task CreateMockTablesAsync(IProgress<string> progress, CancellationToken ct)
         {
             foreach (var table in _mockTables)
