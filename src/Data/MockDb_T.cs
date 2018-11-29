@@ -33,14 +33,20 @@ namespace DevZest.Data
             AddMockTable(dbTable, action);
         }
 
-        protected void Mock<TModel>(DbTable<TModel> dbTable, params DataSet<TModel>[] dataSets)
+        protected void Mock<TModel>(DbTable<TModel> dbTable, params Func<DataSet<TModel>>[] getDataSets)
             where TModel : Model, new()
         {
+            getDataSets.VerifyNotNull(nameof(getDataSets));
+
             AddMockTable(dbTable, () => {
-                foreach (var dataSet in dataSets)
+                foreach (var getDataSet in getDataSets)
                 {
-                    if (dataSet != null)
-                        dbTable.Insert(dataSet).ExecuteAsync().Wait();
+                    if (getDataSet != null)
+                    {
+                        var dataSet = getDataSet();
+                        if (dataSet != null)
+                            dbTable.Insert(dataSet).ExecuteAsync().Wait();
+                    }
                 }
             });
         }

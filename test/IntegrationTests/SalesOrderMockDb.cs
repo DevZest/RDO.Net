@@ -7,28 +7,21 @@ namespace DevZest.Data
     /// parent-child relationship.</remarks>
     internal sealed class SalesOrderMockDb : MockDb<Db>
     {
-        private static DataSet<SalesOrderHeader> s_salesOrderHeader = DataSet<SalesOrderHeader>.ParseJson(Strings.Mock_SalesOrderHeader);
-        private static DataSet<SalesOrderDetail> s_salesOrderDetail = DataSet<SalesOrderDetail>.ParseJson(Strings.Mock_SalesOrderDetail);
-
-        public SalesOrderMockDb()
-            : this(s_salesOrderHeader, s_salesOrderDetail)
+        private static DataSet<SalesOrderHeader> Headers()
         {
+            return DataSet<SalesOrderHeader>.ParseJson(Strings.Mock_SalesOrderHeader);
         }
 
-        public SalesOrderMockDb(DataSet<SalesOrderHeader> salesOrderHeader, DataSet<SalesOrderDetail> salesOrderDetail)
+        private static DataSet<SalesOrderDetail> Details()
         {
-            _salesOrderHeader = salesOrderHeader;
-            _salesOrderDetail = salesOrderDetail;
+            return DataSet<SalesOrderDetail>.ParseJson(Strings.Mock_SalesOrderDetail);
         }
-
-        private DataSet<SalesOrderHeader> _salesOrderHeader;
-        private DataSet<SalesOrderDetail> _salesOrderDetail;
 
         protected override void Initialize()
         {
             // The order of mocking table does not matter, the dependencies will be sorted out automatically.
-            Mock(Db.SalesOrderDetail, _salesOrderDetail);
-            Mock(Db.SalesOrderHeader, _salesOrderHeader);
+            Mock(Db.SalesOrderDetail, Details);
+            Mock(Db.SalesOrderHeader, Headers);
         }
     }
 }

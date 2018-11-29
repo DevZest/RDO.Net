@@ -23,7 +23,7 @@ namespace DevZest.Data
         public void MockDb_SalesOrder()
         {
             var log = new StringBuilder();
-            using (var db = new SalesOrderMockDb(null, null).InitializeAsync(OpenDbAsync(log).Result).Result)
+            using (var db = new EmptySalesOrderMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
                 Assert.AreEqual(0, db.SalesOrderHeader.CountAsync().Result);
                 Assert.AreEqual(0, db.SalesOrderDetail.CountAsync().Result);

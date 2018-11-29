@@ -4,27 +4,24 @@ namespace DevZest.Data
 {
     internal sealed class ProductCategoryMockDb : MockDb<Db>
     {
-        private static DataSet<ProductCategory>[] s_productCategories = new DataSet<ProductCategory>[] {
-            DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level1),
-            DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level2),
-            DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level3),
-        };
-
-        public ProductCategoryMockDb()
-            : this(s_productCategories)
+        private static DataSet<ProductCategory> Level1()
         {
+            return DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level1);
         }
 
-        public ProductCategoryMockDb(DataSet<ProductCategory>[] productCategories)
+        private static DataSet<ProductCategory> Level2()
         {
-            _productCategories = productCategories;
+            return DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level2);
         }
 
-        DataSet<ProductCategory>[] _productCategories;
+        private static DataSet<ProductCategory> Level3()
+        {
+            return DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level3);
+        }
 
         protected override void Initialize()
         {
-            Mock(Db.ProductCategory, _productCategories);
+            Mock(Db.ProductCategory, Level1, Level2, Level3);
         }
     }
 }
