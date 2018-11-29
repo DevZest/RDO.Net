@@ -9,7 +9,7 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class MockDb : IMockDb
+    public abstract class MockDb
     {
         internal async Task InternalInitializeAsync(DbSession db, IProgress<string> progress, CancellationToken ct)
         {
@@ -108,7 +108,8 @@ namespace DevZest.Data.Primitives
 
         internal abstract string GetMockTableName(string name);
 
-        DbTable<T> IMockDb.GetMockTable<T>(string propertyName)
+        internal DbTable<T> GetMockTable<T>(string propertyName)
+            where T : Model, new()
         {
             if (_mockTables.Contains(propertyName))
             {

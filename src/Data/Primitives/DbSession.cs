@@ -248,7 +248,7 @@ namespace DevZest.Data.Primitives
         internal abstract Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
             where T : class, IModelReference, new();
 
-        internal IMockDb Mock { get; set; }
+        internal MockDb Mock { get; set; }
 
         protected internal abstract object CreateMockDb();
 
