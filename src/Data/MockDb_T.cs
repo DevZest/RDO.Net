@@ -13,17 +13,29 @@ namespace DevZest.Data
             get { return (T)base.Db; }
         }
 
-        public object Tag { get; private set; }
+        public async Task<T> GenerateAsync(T db, CancellationToken ct = default(CancellationToken))
+        {
+            Verify(db, nameof(db));
+
+            _isDbGenerator = true;
+            await InternalInitializeAsync(db, null, ct);
+            return db;
+        }
 
         public async Task<T> InitializeAsync(T db, CancellationToken ct = default(CancellationToken))
         {
-            db.VerifyNotNull(nameof(db));
-            db.VerifyNotMocked();
-            if (Db != null)
-                throw new InvalidOperationException(DiagnosticMessages.MockDb_InitializeTwice);
+            Verify(db, nameof(db));
 
             await InternalInitializeAsync(db, null, ct);
             return db;
+        }
+
+        private void Verify(T db, string paramName)
+        {
+            db.VerifyNotNull(paramName);
+            db.VerifyNotMocked();
+            if (Db != null)
+                throw new InvalidOperationException(DiagnosticMessages.MockDb_InitializeTwice);
         }
 
         protected void Mock<TModel>(DbTable<TModel> dbTable)
@@ -44,14 +56,18 @@ namespace DevZest.Data
             });
         }
 
+        private object _tag;
+        private bool _isDbGenerator;
+
         internal sealed override void CreateMockDb()
         {
-            Tag = Db.CreateMockDb();
+            if (!_isDbGenerator)
+                _tag = Db.CreateMockDb();
         }
 
         internal sealed override string GetMockTableName(string name)
         {
-            return Db.GetMockTableName(name, Tag);
+            return _isDbGenerator ? name : Db.GetMockTableName(name, _tag);
         }
     }
 }
