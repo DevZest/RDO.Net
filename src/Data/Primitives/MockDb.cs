@@ -11,11 +11,9 @@ namespace DevZest.Data.Primitives
 {
     public abstract class MockDb
     {
-        internal async Task InternalInitializeAsync(DbSession db, IProgress<MockDbProgress> progress, CancellationToken ct)
+        internal async Task InternalInitializeAsync(DbSession db, string paramName, IProgress<MockDbProgress> progress, CancellationToken ct)
         {
-            Debug.Assert(db != null);
-            Debug.Assert(db.Mock == null);
-            Debug.Assert(Db == null);
+            Verify(db, paramName);
             Db = db;
             db.Mock = this;
 
@@ -27,6 +25,14 @@ namespace DevZest.Data.Primitives
             await CreateMockTablesAsync(progress, ct);
             _pendingMockTables.Clear();
             _isInitializing = false;
+        }
+
+        private void Verify(DbSession db, string paramName)
+        {
+            db.VerifyNotNull(paramName);
+            db.VerifyNotMocked();
+            if (Db != null)
+                throw new InvalidOperationException(DiagnosticMessages.MockDb_InitializeTwice);
         }
 
         public DbSession Db { get; private set; }

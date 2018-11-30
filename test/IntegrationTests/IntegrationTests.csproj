@@ -44,4 +44,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Primitives\" />
+  </ItemGroup>
+
 </Project>

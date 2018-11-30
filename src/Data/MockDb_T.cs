@@ -15,27 +15,15 @@ namespace DevZest.Data
 
         public async Task<T> GenerateAsync(T db, IProgress<MockDbProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
-            Verify(db, nameof(db));
-
             _isDbGenerator = true;
-            await InternalInitializeAsync(db, progress, ct);
+            await InternalInitializeAsync(db, nameof(db), progress, ct);
             return db;
         }
 
         public async Task<T> InitializeAsync(T db, IProgress<MockDbProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
-            Verify(db, nameof(db));
-
-            await InternalInitializeAsync(db, progress, ct);
+            await InternalInitializeAsync(db, nameof(db), progress, ct);
             return db;
-        }
-
-        private void Verify(T db, string paramName)
-        {
-            db.VerifyNotNull(paramName);
-            db.VerifyNotMocked();
-            if (Db != null)
-                throw new InvalidOperationException(DiagnosticMessages.MockDb_InitializeTwice);
         }
 
         protected void Mock<TModel>(DbTable<TModel> dbTable)

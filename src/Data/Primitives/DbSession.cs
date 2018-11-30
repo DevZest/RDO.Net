@@ -250,6 +250,17 @@ namespace DevZest.Data.Primitives
 
         internal MockDb Mock { get; set; }
 
+        public bool IsMocked
+        {
+            get { return Mock != null; }
+        }
+
+        internal void VerifyNotMocked()
+        {
+            if (IsMocked)
+                throw new InvalidOperationException(DiagnosticMessages.DbSession_VerifyNotMocked);
+        }
+
         protected internal abstract object CreateMockDb();
 
         protected internal abstract string GetMockTableName(string tableName, object tag);

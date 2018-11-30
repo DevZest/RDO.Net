@@ -7,7 +7,7 @@ using System.Reflection;
 namespace DevZest.Data.Primitives
 {
     [TestClass]
-    public class DbSessionCreateTablesTests
+    public class DbGeneratorTests
     {
         private static string GetEmptyDbConnectionString()
         {
@@ -17,18 +17,31 @@ namespace DevZest.Data.Primitives
             return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
         }
 
+        private sealed class DbGenerator : DbGenerator<Db>
+        {
+        }
+
         [TestMethod]
         public void DbSession_CreateTables()
         {
             using (var db = new Db(GetEmptyDbConnectionString()))
             {
                 int count = 0;
-                db.CreateTablesAsync(new Progress<MockDbProgress>(x =>
+                int index = 0;
+                new DbGenerator().GenerateAsync(db, new Progress<MockDbProgress>(x =>
                 {
-                    count++;
+                    Assert.AreEqual(index, x.Index);
+                    if (x.Index == 0)
+                    {
+                        Assert.AreEqual(0, count);
+                        count = x.Count;
+                    }
+                    else
+                        Assert.AreEqual(count, x.Count);
+                    index++;
                 })).Wait();
                 Assert.IsTrue(count > 0);
-                Assert.AreEqual(db.GetTotalNumberOfTables(), count);
+                Assert.AreEqual(index, count);
             }
         }
     }
