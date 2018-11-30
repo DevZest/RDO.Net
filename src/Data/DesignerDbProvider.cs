@@ -2,7 +2,7 @@
 
 namespace DevZest.Data
 {
-    public abstract class DbProvider<T>
+    public abstract class DesignerDbProvider<T>
         where T : DbSession
     {
         public abstract T Create(string projectPath);
