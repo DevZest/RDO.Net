@@ -137,12 +137,7 @@ namespace DevZest.Data.Primitives
             get { return this.GetAddon<Logger>(); }
         }
 
-        public void SetLog(Action<string> value)
-        {
-            SetLog(value, LogCategory.All);
-        }
-
-        public void SetLog(Action<string> value, LogCategory logCategory)
+        public sealed override void SetLog(Action<string> value, LogCategory logCategory)
         {
             var currentLogger = CurrentLogger;
             if (value == null)

@@ -277,5 +277,12 @@ namespace DevZest.Data.Primitives
                 throw new ArgumentException(DiagnosticMessages.Model_InvalidRefTableModel, nameof(refTableModel));
             return foreignKeyConstraint;
         }
+
+        public void SetLog(Action<string> value)
+        {
+            SetLog(value, LogCategory.All);
+        }
+
+        public abstract void SetLog(Action<string> value, LogCategory logCategory);
     }
 }
