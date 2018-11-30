@@ -30,8 +30,35 @@ namespace DevZest.Data
             foreach (var property in GetTableProperties(Db))
             {
                 var dbTable = (IDbTable)property.GetValue(Db);
-                AddMockTable(dbTable, null);
+                AddMockTable(dbTable, GetAction(dbTable));
             }
+        }
+
+        private Func<CancellationToken, Task> GetAction(IDbTable dbTable)
+        {
+            if (_actions == null)
+                return null;
+            return _actions.TryGetValue(dbTable, out var result) ? result : null;
+        }
+
+        private Dictionary<IDbTable, Func<CancellationToken, Task>> _actions;
+        protected void SetData<TModel>(DbTable<TModel> dbTable, Func<DataSet<TModel>> getDataSet)
+            where TModel : Model, new()
+        {
+            dbTable.VerifyNotNull(nameof(dbTable));
+            getDataSet.VerifyNotNull(nameof(getDataSet));
+
+            if (_actions == null)
+                _actions = new Dictionary<IDbTable, Func<CancellationToken, Task>>();
+            _actions.Add(dbTable, async (ct) => {
+                var dataSet = getDataSet();
+                if (dataSet != null)
+                    await dbTable.Insert(dataSet).ExecuteAsync(ct);
+            });
+        }
+
+        protected virtual void InitializeData()
+        {
         }
 
         private static IEnumerable<PropertyInfo> GetTableProperties(DbSession dbSession)
