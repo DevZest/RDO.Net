@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data
 {
     [TestClass]
     public class DbGeneratorTests
