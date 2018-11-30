@@ -11,7 +11,7 @@ namespace DevZest.Data.Primitives
 {
     public abstract class MockDb
     {
-        internal async Task InternalInitializeAsync(DbSession db, IProgress<string> progress, CancellationToken ct)
+        internal async Task InternalInitializeAsync(DbSession db, IProgress<MockDbProgress> progress, CancellationToken ct)
         {
             Debug.Assert(db != null);
             Debug.Assert(db.Mock == null);
@@ -62,13 +62,14 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private async Task CreateMockTablesAsync(IProgress<string> progress, CancellationToken ct)
+        private async Task CreateMockTablesAsync(IProgress<MockDbProgress> progress, CancellationToken ct)
         {
-            foreach (var table in _mockTables)
+            for (int i = 0; i < _mockTables.Count; i++)
             {
                 ct.ThrowIfCancellationRequested();
+                var table = _mockTables[i];
                 if (progress != null)
-                    progress.Report(table.Name);
+                    progress.Report(new MockDbProgress(table, i, _mockTables.Count));
                 await Db.CreateTableAsync(table.Model, false, ct);
                 var action = _pendingMockTables[table];
                 if (action != null)

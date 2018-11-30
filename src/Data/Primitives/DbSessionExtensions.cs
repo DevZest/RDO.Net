@@ -88,12 +88,12 @@ namespace DevZest.Data.Primitives
                 throw new InvalidOperationException(DiagnosticMessages.DbSession_VerifyNotMocked);
         }
 
-        public static Task CreateTablesAsync(this DbSession dbSession, IProgress<string> progress, CancellationToken ct = default(CancellationToken))
+        public static Task CreateTablesAsync(this DbSession dbSession, IProgress<MockDbProgress> progress, CancellationToken ct = default(CancellationToken))
         {
             return CreateTablesAsync(dbSession, progress, null, ct);
         }
 
-        public static async Task CreateTablesAsync(this DbSession dbSession, IProgress<string> progress, string[] names, CancellationToken ct = default(CancellationToken))
+        public static async Task CreateTablesAsync(this DbSession dbSession, IProgress<MockDbProgress> progress, string[] names, CancellationToken ct = default(CancellationToken))
         {
             dbSession.VerifyNotMocked();
             await new TableCreator(names).InternalInitializeAsync(dbSession, progress, ct);

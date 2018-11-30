@@ -23,7 +23,7 @@ namespace DevZest.Data.Primitives
             using (var db = new Db(GetEmptyDbConnectionString()))
             {
                 int count = 0;
-                db.CreateTablesAsync(new Progress<string>(x =>
+                db.CreateTablesAsync(new Progress<MockDbProgress>(x =>
                 {
                     count++;
                 })).Wait();
