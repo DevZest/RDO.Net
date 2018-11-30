@@ -16,11 +16,11 @@ namespace DevZest.Data
             return db;
         }
 
-        internal override void CreateMockDb()
+        internal sealed override void CreateMockDb()
         {
         }
 
-        internal override string GetMockTableName(string name)
+        internal sealed override string GetMockTableName(string name)
         {
             return name;
         }
