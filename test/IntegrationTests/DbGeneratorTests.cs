@@ -17,10 +17,6 @@ namespace DevZest.Data.Primitives
             return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
         }
 
-        private sealed class DbGenerator : DbGenerator<Db>
-        {
-        }
-
         [TestMethod]
         public void DbSession_CreateTables()
         {
@@ -28,7 +24,7 @@ namespace DevZest.Data.Primitives
             {
                 int count = 0;
                 int index = 0;
-                new DbGenerator().GenerateAsync(db, new Progress<MockDbProgress>(x =>
+                new DbGenerator<Db>().GenerateAsync(db, new Progress<MockDbProgress>(x =>
                 {
                     Assert.AreEqual(index, x.Index);
                     if (x.Index == 0)
