@@ -212,64 +212,13 @@ namespace DevZest.Data {
         ///      &quot;RowGuid&quot; : &quot;09e91437-ba4f-4b1a-8215-74184fd95db8&quot;,
         ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
         ///      &quot;SubCategories&quot; : []
-        ///   }
-        ///].
+        ///   },
+        ///   {
+        ///      [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Mock_ProductCategories_Level1 {
+        internal static string Mock_ProdcutCategory {
             get {
-                return ResourceManager.GetString("Mock_ProductCategories_Level1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [
-        ///   {
-        ///      &quot;ProductCategoryID&quot; : 3,
-        ///      &quot;ParentProductCategoryID&quot; : 1,
-        ///      &quot;Name&quot; : &quot;Mountain Bikes&quot;,
-        ///      &quot;RowGuid&quot; : &quot;2d364ade-264a-433c-b092-4fcbf3804e01&quot;,
-        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
-        ///      &quot;SubCategories&quot; : []
-        ///   },
-        ///   {
-        ///      &quot;ProductCategoryID&quot; : 4,
-        ///      &quot;ParentProductCategoryID&quot; : 1,
-        ///      &quot;Name&quot; : &quot;Road Bikes&quot;,
-        ///      &quot;RowGuid&quot; : &quot;000310c0-bcc8-42c4-b0c3-45ae611af06b&quot;,
-        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
-        ///      &quot;SubCategories&quot; : []
-        ///   },
-        ///    [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Mock_ProductCategories_Level2 {
-            get {
-                return ResourceManager.GetString("Mock_ProductCategories_Level2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [
-        ///   {
-        ///      &quot;ProductCategoryID&quot; : 8,
-        ///      &quot;ParentProductCategoryID&quot; : 6,
-        ///      &quot;Name&quot; : &quot;Handlebars&quot;,
-        ///      &quot;RowGuid&quot; : &quot;3ef2c725-7135-4c85-9ae6-ae9a3bdd9283&quot;,
-        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
-        ///      &quot;SubCategories&quot; : []
-        ///   },
-        ///   {
-        ///      &quot;ProductCategoryID&quot; : 9,
-        ///      &quot;ParentProductCategoryID&quot; : 6,
-        ///      &quot;Name&quot; : &quot;Bottom Brackets&quot;,
-        ///      &quot;RowGuid&quot; : &quot;a9e54089-8a1e-4cf5-8646-e3801f685934&quot;,
-        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
-        ///      &quot;SubCategories&quot; : []
-        ///   },
-        ///   [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Mock_ProductCategories_Level3 {
-            get {
-                return ResourceManager.GetString("Mock_ProductCategories_Level3", resourceCulture);
+                return ResourceManager.GetString("Mock_ProdcutCategory", resourceCulture);
             }
         }
         

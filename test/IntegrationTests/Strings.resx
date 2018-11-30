@@ -584,7 +584,7 @@
    }
 ]</value>
   </data>
-  <data name="Mock_ProductCategories_Level1" xml:space="preserve">
+  <data name="Mock_ProdcutCategory" xml:space="preserve">
     <value>[
    {
       "ProductCategoryID" : 1,
@@ -601,11 +601,7 @@
       "RowGuid" : "09e91437-ba4f-4b1a-8215-74184fd95db8",
       "ModifiedDate" : "2002-06-01T00:00:00.000",
       "SubCategories" : []
-   }
-]</value>
-  </data>
-  <data name="Mock_ProductCategories_Level2" xml:space="preserve">
-    <value>[
+   },
    {
       "ProductCategoryID" : 3,
       "ParentProductCategoryID" : 1,
@@ -645,11 +641,7 @@
       "RowGuid" : "10a7c342-ca82-48d4-8a38-46a2eb089b74",
       "ModifiedDate" : "2002-06-01T00:00:00.000",
       "SubCategories" : []
-   }
-]</value>
-  </data>
-  <data name="Mock_ProductCategories_Level3" xml:space="preserve">
-    <value>[
+   },
    {
       "ProductCategoryID" : 8,
       "ParentProductCategoryID" : 6,
