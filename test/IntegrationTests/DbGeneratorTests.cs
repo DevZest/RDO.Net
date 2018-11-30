@@ -9,18 +9,20 @@ namespace DevZest.Data
     [TestClass]
     public class DbGeneratorTests
     {
-        private static string GetEmptyDbConnectionString()
+        private static Db CreateDb()
         {
-            string mdfFilename = "EmptyDb.mdf";
             string outputFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string attachDbFilename = Path.Combine(outputFolder, mdfFilename);
-            return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
+            string attachDbFilename = Path.Combine(outputFolder, "DbGenAdventureWorksLT.mdf");
+            File.Copy(Path.Combine(outputFolder, "EmptyDb.mdf"), attachDbFilename, true);
+            File.Copy(Path.Combine(outputFolder, "EmptyDb_log.ldf"), Path.Combine(outputFolder, "DbGenAdventureWorksLT_log.ldf"), true);
+            var connectionString = string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
+            return new Db(connectionString);
         }
 
         [TestMethod]
-        public void DbSession_CreateTables()
+        public void DbGenerator_Generate()
         {
-            using (var db = new Db(GetEmptyDbConnectionString()))
+            using (var db = CreateDb())
             {
                 int count = 0;
                 int index = 0;
