@@ -16,6 +16,15 @@
     <Description>AdventureWorksLT RDO.Net Model Sample</Description>
     <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\AdventureWorksLT.DbGen\LocalDb\AdventureWorksLT.mdf" Link="AdventureWorksLT.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\AdventureWorksLT.DbGen\LocalDb\AdventureWorksLT_log.ldf" Link="AdventureWorksLT_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
@@ -37,9 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="AdventureWorksLT.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="AdventureWorksLT_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

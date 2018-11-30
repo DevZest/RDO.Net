@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>DevZest.Samples.AdventureWorksLT.DbGen</AssemblyName>
+    <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Weifen Luo | DevZest</Authors>
+    <Company>DevZest</Company>
+    <Product>AdventureWorksLT RDO.Net Model Sample</Product>
+    <Description>AdventureWorksLT RDO.Net Model Sample</Description>
+    <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Data\Data.csproj" />
+    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LocalDb\AdventureWorksLT.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="LocalDb\AdventureWorksLT_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="LocalDb\EmptyDb.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="LocalDb\EmptyDb_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

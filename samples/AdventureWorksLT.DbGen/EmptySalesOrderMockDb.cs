@@ -1,10 +1,10 @@
-﻿using DevZest.Samples.AdventureWorksLT;
+﻿using DevZest.Data;
 
-namespace DevZest.Data
+namespace DevZest.Samples.AdventureWorksLT
 {
     /// <remarks><see cref="SalesOrder"/> and <see cref="SalesOrderDetail"/> are chosen for having foreing key to non-existing table(s) and
     /// parent-child relationship.</remarks>
-    internal sealed class EmptySalesOrderMockDb : MockDb<Db>
+    public sealed class EmptySalesOrderMockDb : MockDb<Db>
     {
         protected override void Initialize()
         {
