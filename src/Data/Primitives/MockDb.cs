@@ -70,15 +70,17 @@ namespace DevZest.Data.Primitives
                 if (progress != null)
                     progress.Report(table.Name);
                 await Db.CreateTableAsync(table.Model, false, ct);
-                _pendingMockTables[table]?.Invoke();
+                var action = _pendingMockTables[table];
+                if (action != null)
+                    await action.Invoke(ct);
             }
         }
 
         protected abstract void Initialize();
 
-        private Dictionary<IDbTable, Action> _pendingMockTables = new Dictionary<IDbTable, Action>();
+        private Dictionary<IDbTable, Func<CancellationToken, Task>> _pendingMockTables = new Dictionary<IDbTable, Func<CancellationToken, Task>>();
 
-        internal void AddMockTable(IDbTable dbTable, Action action)
+        internal void AddMockTable(IDbTable dbTable, Func<CancellationToken, Task> action)
         {
             dbTable.VerifyNotNull(nameof(dbTable));
             if (dbTable.DbSession != Db)

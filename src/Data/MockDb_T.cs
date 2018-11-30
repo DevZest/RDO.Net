@@ -29,7 +29,7 @@ namespace DevZest.Data
         protected void Mock<TModel>(DbTable<TModel> dbTable)
             where TModel : Model, new()
         {
-            Action action = null;
+            Func<CancellationToken, Task> action = null;
             AddMockTable(dbTable, action);
         }
 
@@ -38,14 +38,14 @@ namespace DevZest.Data
         {
             getDataSets.VerifyNotNull(nameof(getDataSets));
 
-            AddMockTable(dbTable, () => {
+            AddMockTable(dbTable, async (ct) => {
                 foreach (var getDataSet in getDataSets)
                 {
                     if (getDataSet != null)
                     {
                         var dataSet = getDataSet();
                         if (dataSet != null)
-                            dbTable.Insert(dataSet).ExecuteAsync().Wait();
+                            await dbTable.Insert(dataSet).ExecuteAsync(ct);
                     }
                 }
             });
