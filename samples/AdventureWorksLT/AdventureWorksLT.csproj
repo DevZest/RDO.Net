@@ -18,10 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\AdventureWorksLT.DbGen\LocalDb\AdventureWorksLT.mdf" Link="AdventureWorksLT.mdf">
+    <None Include="..\AdventureWorksLT.DbDesign\LocalDb\AdventureWorksLT.mdf" Link="AdventureWorksLT.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\AdventureWorksLT.DbGen\LocalDb\AdventureWorksLT_log.ldf" Link="AdventureWorksLT_log.ldf">
+    <None Include="..\AdventureWorksLT.DbDesign\LocalDb\AdventureWorksLT_log.ldf" Link="AdventureWorksLT_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
