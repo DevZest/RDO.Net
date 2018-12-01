@@ -42,6 +42,7 @@
     <EmbeddedResource Update="UserMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UserMessages.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
 

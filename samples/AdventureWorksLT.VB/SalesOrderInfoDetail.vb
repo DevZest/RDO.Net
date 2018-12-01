@@ -23,8 +23,8 @@ Public Class SalesOrderInfoDetail
         If ProductID(dataRow) Is Nothing Then Return Nothing
         Dim productNumber = Product.ProductNumber
         Dim productName = Product.Name
-        If String.IsNullOrEmpty(productNumber(dataRow)) Then Return New DataValidationError(String.Format(UserMessages.Validation_ValueIsRequired, productNumber.DisplayName), productNumber)
-        If String.IsNullOrEmpty(productName(dataRow)) Then Return New DataValidationError(String.Format(UserMessages.Validation_ValueIsRequired, productName.DisplayName), productName)
+        If String.IsNullOrEmpty(productNumber(dataRow)) Then Return New DataValidationError(String.Format(My.UserMessages.Validation_ValueIsRequired, productNumber.DisplayName), productNumber)
+        If String.IsNullOrEmpty(productName(dataRow)) Then Return New DataValidationError(String.Format(My.UserMessages.Validation_ValueIsRequired, productName.DisplayName), productName)
         Return Nothing
     End Function
 End Class

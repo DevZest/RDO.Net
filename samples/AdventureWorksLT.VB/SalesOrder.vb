@@ -23,7 +23,7 @@ Public Class SalesOrder
     Friend Const _ValidateLineCount = NameOf(ValidateLineCount)
     <_Validator>
     Private Function ValidateLineCount(ByVal dataRow As DataRow) As DataValidationError
-        Return If(LineCount(dataRow) > 0, Nothing, New DataValidationError(UserMessages.Validation_SalesOrder_LineCount, LineCount))
+        Return If(LineCount(dataRow) > 0, Nothing, New DataValidationError(My.UserMessages.Validation_SalesOrder_LineCount, LineCount))
     End Function
 
     Friend Const _ComputeLineCount = NameOf(ComputeLineCount)

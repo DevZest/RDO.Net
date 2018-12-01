@@ -1,7 +1,7 @@
-<CheckConstraint(Product._CK_Product_ListPrice, GetType(UserMessages), NameOf(UserMessages.CK_Product_ListPrice), Description:="Check constraint [ListPrice] >= (0.00)")>
-<CheckConstraint(Product._CK_Product_SellEndDate, GetType(UserMessages), NameOf(UserMessages.CK_Product_SellEndDate), Description:="Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")>
-<CheckConstraint(Product._CK_Product_StandardCost, GetType(UserMessages), NameOf(UserMessages.CK_Product_StandardCost), Description:="Check constraint [StandardCost] >= (0.00)")>
-<CheckConstraint(Product._CK_Product_Weight, GetType(UserMessages), NameOf(UserMessages.CK_Product_Weight), Description:="Check constraint [Weight] >= (0.00)")>
+<CheckConstraint(Product._CK_Product_ListPrice, GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_ListPrice), Description:="Check constraint [ListPrice] >= (0.00)")>
+<CheckConstraint(Product._CK_Product_SellEndDate, GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_SellEndDate), Description:="Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")>
+<CheckConstraint(Product._CK_Product_StandardCost, GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_StandardCost), Description:="Check constraint [StandardCost] >= (0.00)")>
+<CheckConstraint(Product._CK_Product_Weight, GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_Weight), Description:="Check constraint [Weight] >= (0.00)")>
 <UniqueConstraint(Product._AK_Product_Name, Description:="Unique nonclustered constraint.")>
 <UniqueConstraint(Product._AK_Product_ProductNumber, Description:="Unique nonclustered constraint.")>
 Public Class Product

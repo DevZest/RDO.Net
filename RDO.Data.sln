@@ -51,6 +51,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevZest.Samples.AdventureWo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbDesign", "samples\AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.csproj", "{EFCF5624-554D-487F-A3A6-F6320D7688F1}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "AdventureWorksLT.DbDesign.VB", "samples\AdventureWorksLT.DbDesign.VB\AdventureWorksLT.DbDesign.VB.vbproj", "{BC7B1149-FD2A-41BB-867F-800E09F55777}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{EFCF5624-554D-487F-A3A6-F6320D7688F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFCF5624-554D-487F-A3A6-F6320D7688F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFCF5624-554D-487F-A3A6-F6320D7688F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC7B1149-FD2A-41BB-867F-800E09F55777}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC7B1149-FD2A-41BB-867F-800E09F55777}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC7B1149-FD2A-41BB-867F-800E09F55777}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC7B1149-FD2A-41BB-867F-800E09F55777}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{DE357412-D23F-47AD-BA4E-72315DB79167} = {D18D68DC-8D94-4F4C-BFEE-8225544FE15E}
 		{227706D3-888B-46DE-9B88-8D3E8DE3CF3E} = {D18D68DC-8D94-4F4C-BFEE-8225544FE15E}
 		{EFCF5624-554D-487F-A3A6-F6320D7688F1} = {61BAF81D-3EA2-4493-8474-CC067C4557A0}
+		{BC7B1149-FD2A-41BB-867F-800E09F55777} = {61BAF81D-3EA2-4493-8474-CC067C4557A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {715F4075-E102-42F7-B727-98B6383A6556}

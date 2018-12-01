@@ -5,5 +5,5 @@ Imports System.Reflection
 <Assembly: AssemblyCulture("")>
 <Assembly: NeutralResourcesLanguage("en")>
 
-<Assembly: MessageResource(GetType(UserMessages))>
+<Assembly: MessageResource(GetType(My.UserMessages))>
 

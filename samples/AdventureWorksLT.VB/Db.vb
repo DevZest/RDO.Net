@@ -155,13 +155,13 @@ Public Class Db
         Return x.FK_ShipToCustomerAddress.Join(ModelOf(CustomerAddress))
     End Function
 
-    Private m_SalesOrderDetails As DbTable(Of SalesOrderDetail)
+    Private m_SalesOrderDetail As DbTable(Of SalesOrderDetail)
     <DbTable("[SalesLT].[SalesOrderDetail]", Description:="Individual products associated with a specific sales order. See SalesOrderHeader.")>
     <Relationship(NameOf(FK_SalesOrderDetail_SalesOrderHeader))>
     <Relationship(NameOf(FK_SalesOrderDetail_Product))>
-    Public ReadOnly Property SalesOrderDetails As DbTable(Of SalesOrderDetail)
+    Public ReadOnly Property SalesOrderDetail As DbTable(Of SalesOrderDetail)
         Get
-            Return GetTable(m_SalesOrderDetails)
+            Return GetTable(m_SalesOrderDetail)
         End Get
     End Property
 
@@ -217,7 +217,7 @@ Public Class Db
         Await result.CreateChildAsync(Function(x) x.SalesOrderDetails,
                                       Sub(builder As DbQueryBuilder, x As SalesOrderInfoDetail)
                                           Dim d As SalesOrderDetail = Nothing, p As Product = Nothing
-                                          builder.From(SalesOrderDetails, d).LeftJoin(Product, d.FK_Product, p).AutoSelect().AutoSelect(p, x.Product)
+                                          builder.From(SalesOrderDetail, d).LeftJoin(Product, d.FK_Product, p).AutoSelect().AutoSelect(p, x.Product)
                                       End Sub, ct)
         Return result
     End Function
@@ -230,10 +230,10 @@ Public Class Db
         Dim salesOrder As SalesOrder = ModelOf(salesOrders)
         ModelOf(salesOrders).ResetRowIdentifiers()
         Await SalesOrderHeader.Update(salesOrders).ExecuteAsync(ct)
-        Await Me.SalesOrderDetails.Delete(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader)).ExecuteAsync(ct)
+        Await Me.SalesOrderDetail.Delete(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader)).ExecuteAsync(ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
         ModelOf(salesOrderDetails).ResetRowIdentifiers()
-        Await Me.SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct)
+        Await Me.SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct)
     End Function
 
     Public Overloads Function InsertAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
@@ -245,7 +245,7 @@ Public Class Db
         Await SalesOrderHeader.Insert(salesOrders, updateIdentity:=True).ExecuteAsync(ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
         ModelOf(salesOrderDetails).ResetRowIdentifiers()
-        Await Me.SalesOrderDetails.Insert(salesOrderDetails).ExecuteAsync(ct)
+        Await Me.SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct)
     End Function
 
     Public Async Function LookupAsync(refs As DataSet(Of Product.Ref), Optional ct As CancellationToken = Nothing) As Task(Of DataSet(Of Product.Lookup))

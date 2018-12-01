@@ -1,7 +1,7 @@
 <Computation(SalesOrderDetail._ComputeLineTotal)>
-<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_OrderQty, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_OrderQty), Description:="Check constraint [OrderQty] > (0)")>
-<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_UnitPrice, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPrice), Description:="heck constraint [UnitPrice] >= (0.00)")>
-<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_UnitPriceDiscount, GetType(UserMessages), NameOf(UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Description:="Check constraint [UnitPriceDiscount] >= (0.00)")>
+<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_OrderQty, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_OrderQty), Description:="Check constraint [OrderQty] > (0)")>
+<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_UnitPrice, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_UnitPrice), Description:="heck constraint [UnitPrice] >= (0.00)")>
+<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_UnitPriceDiscount, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Description:="Check constraint [UnitPriceDiscount] >= (0.00)")>
 <DbIndex(SalesOrderDetail._IX_SalesOrderDetail_ProductID, Description:="Nonclustered index.")>
 Public Class SalesOrderDetail
     Inherits BaseModel(Of PK)
