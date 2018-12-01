@@ -5,12 +5,12 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "AdventureWorksLT\AdventureWorksLT.csproj", "{78A8EE9B-2014-49C9-B330-BA754470E860}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.VB", "AdventureWorksLT.VB\AdventureWorksLT.VB.vbproj", "{A9771415-DB57-438A-98D2-6339C8A6AFFD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FC6DEE1D-315B-4BA7-94FA-0474F4A173CD}"
 	ProjectSection(SolutionItems) = preProject
 		RDO.Data.Samples.props = RDO.Data.Samples.props
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbDesign", "AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.csproj", "{2F9B46A5-0689-4471-A425-F7BA93C4E4B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,10 +22,10 @@ Global
 		{78A8EE9B-2014-49C9-B330-BA754470E860}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78A8EE9B-2014-49C9-B330-BA754470E860}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78A8EE9B-2014-49C9-B330-BA754470E860}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9771415-DB57-438A-98D2-6339C8A6AFFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9771415-DB57-438A-98D2-6339C8A6AFFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9771415-DB57-438A-98D2-6339C8A6AFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9771415-DB57-438A-98D2-6339C8A6AFFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F9B46A5-0689-4471-A425-F7BA93C4E4B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F9B46A5-0689-4471-A425-F7BA93C4E4B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F9B46A5-0689-4471-A425-F7BA93C4E4B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F9B46A5-0689-4471-A425-F7BA93C4E4B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

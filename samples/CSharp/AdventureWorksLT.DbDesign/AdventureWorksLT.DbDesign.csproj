@@ -18,12 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Data\Data.csproj" />
-    <ProjectReference Include="..\AdventureWorksLT.VB\AdventureWorksLT.VB.vbproj" />
+    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Strings.Designer.vb">
+    <Compile Update="Strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
@@ -33,8 +32,7 @@
   <ItemGroup>
     <EmbeddedResource Update="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
