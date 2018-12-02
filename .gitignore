@@ -9,3 +9,5 @@ sync_src/
 *.lock.json
 
 
+/samples/CSharp/AdventureWorksLT.DbDesign/LocalDb/AdventureWorksLT.Design_log.ldf
+/samples/CSharp/AdventureWorksLT.DbDesign/LocalDb/AdventureWorksLT.Design.mdf
