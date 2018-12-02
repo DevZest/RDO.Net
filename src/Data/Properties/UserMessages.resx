@@ -123,6 +123,9 @@
   <data name="EmailAddressAttribute" xml:space="preserve">
     <value>The '{0}' field is not a valid e-mail address.</value>
   </data>
+  <data name="MockDb_ReportProgress" xml:space="preserve">
+    <value>Creating table {tableName}...</value>
+  </data>
   <data name="PhoneAttribute" xml:space="preserve">
     <value>The '{0}' field is not a valid phone number.</value>
   </data>

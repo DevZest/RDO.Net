@@ -28,6 +28,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Creating table {tableName}...
+        /// </summary>
+        public static string MockDb_ReportProgress(object tableName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_ReportProgress", "tableName"), tableName);
+        }
+
+        /// <summary>
         /// The '{0}' field is not a valid phone number.
         /// </summary>
         public static string PhoneAttribute

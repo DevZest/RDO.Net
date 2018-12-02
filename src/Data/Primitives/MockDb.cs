@@ -9,7 +9,7 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class MockDb
+    public abstract class MockDb : IProgress<MockDbProgress>
     {
         internal async Task InternalInitializeAsync(DbSession db, string paramName, IProgress<MockDbProgress> progress, CancellationToken ct)
         {
@@ -148,6 +148,16 @@ namespace DevZest.Data.Primitives
         {
             DbTablePropertyAttribute.WireupAttributes(dbTable);
             dbTable.Name = GetMockTableName(dbTable.Name);
+        }
+
+        protected virtual void Report(MockDbProgress progress)
+        {
+            Console.WriteLine(UserMessages.MockDb_ReportProgress(progress.DbTable.Name));
+        }
+
+        void IProgress<MockDbProgress>.Report(MockDbProgress value)
+        {
+            Report(value);
         }
     }
 }
