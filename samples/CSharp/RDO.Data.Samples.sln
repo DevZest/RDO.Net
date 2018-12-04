@@ -7,7 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "Adventu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FC6DEE1D-315B-4BA7-94FA-0474F4A173CD}"
 	ProjectSection(SolutionItems) = preProject
-		RDO.Data.Samples.props = RDO.Data.Samples.props
+		DevZest.Samples.AdventureWorksLT.DbDesign.props = DevZest.Samples.AdventureWorksLT.DbDesign.props
+		DevZest.Samples.AdventureWorksLT.props = DevZest.Samples.AdventureWorksLT.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbDesign", "AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.csproj", "{2F9B46A5-0689-4471-A425-F7BA93C4E4B1}"

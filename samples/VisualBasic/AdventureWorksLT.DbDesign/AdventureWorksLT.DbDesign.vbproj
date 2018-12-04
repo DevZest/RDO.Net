@@ -52,4 +52,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
 </Project>

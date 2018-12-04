@@ -52,5 +52,5 @@
     <ProjectReference Include="..\..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
   </ItemGroup>
 
-  <Import Project="..\RDO.Data.Samples.props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
 </Project>

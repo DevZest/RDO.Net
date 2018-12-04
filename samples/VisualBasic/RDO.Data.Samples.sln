@@ -5,7 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FC6DEE1D-315B-4BA7-94FA-0474F4A173CD}"
 	ProjectSection(SolutionItems) = preProject
-		RDO.Data.Samples.props = RDO.Data.Samples.props
+		DevZest.Samples.AdventureWorksLT.DbDesign.props = DevZest.Samples.AdventureWorksLT.DbDesign.props
+		DevZest.Samples.AdventureWorksLT.props = DevZest.Samples.AdventureWorksLT.props
 	EndProjectSection
 EndProject
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT", "AdventureWorksLT\AdventureWorksLT.vbproj", "{454E82BB-D3BD-4B7D-A1A9-6E8A77F0D32F}"
