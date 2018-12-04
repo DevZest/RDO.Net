@@ -1,4 +1,6 @@
-﻿Imports System.IO
+﻿#If DbDesign Then
+
+Imports System.IO
 Imports DevZest.Data
 Imports DevZest.Data.Annotations
 
@@ -12,3 +14,5 @@ Public Class DesignTimeDb
         Return New Db(connectionString)
     End Function
 End Class
+
+#End If

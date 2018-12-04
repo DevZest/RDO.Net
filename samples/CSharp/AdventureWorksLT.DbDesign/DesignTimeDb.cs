@@ -1,4 +1,5 @@
-﻿using DevZest.Data;
+﻿#if DbDesign
+using DevZest.Data;
 using System.IO;
 
 namespace DevZest.Samples.AdventureWorksLT
@@ -14,3 +15,4 @@ namespace DevZest.Samples.AdventureWorksLT
         }
     }
 }
+#endif
