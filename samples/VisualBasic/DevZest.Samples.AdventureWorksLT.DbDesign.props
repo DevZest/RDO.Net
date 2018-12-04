@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);DbDesign</DefineConstants>
+    <DefineConstants>DbDesign</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
