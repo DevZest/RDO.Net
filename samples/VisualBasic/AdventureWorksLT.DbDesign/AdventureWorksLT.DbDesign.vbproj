@@ -15,6 +15,7 @@
     <Product>AdventureWorksLT RDO.Net Model Sample</Product>
     <Description>AdventureWorksLT RDO.Net Model Sample</Description>
     <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

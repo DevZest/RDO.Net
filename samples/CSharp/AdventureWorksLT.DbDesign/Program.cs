@@ -2,8 +2,13 @@
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
+#if DbDesign
+            return DevZest.Data.DbDesign.Run(args);
+#else
+            return 0;
+#endif
         }
     }
 }
