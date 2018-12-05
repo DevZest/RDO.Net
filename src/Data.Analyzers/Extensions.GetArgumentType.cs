@@ -7,7 +7,11 @@ namespace DevZest.Data.CodeAnalysis
         public static INamedTypeSymbol GetArgumentType(this INamedTypeSymbol type, string baseGenericKnownType, Compilation compilation)
         {
             var baseGenericType = compilation.GetKnownType(baseGenericKnownType);
+            return type.GetArgumentType(baseGenericKnownType, compilation);
+        }
 
+        public static INamedTypeSymbol GetArgumentType(this INamedTypeSymbol type, INamedTypeSymbol baseGenericType, Compilation compilation)
+        {
             INamedTypeSymbol resolvedBaseGenericType = null;
             for (var currentType = type.BaseType; currentType != null; currentType = currentType.BaseType)
             {
