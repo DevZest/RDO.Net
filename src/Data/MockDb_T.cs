@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace DevZest.Data
 {
-    public abstract class MockDb<T> : MockDb
+    public abstract class MockDb<T> : MockDb, IDbGenerator<T>
         where T : DbSession
     {
         public new T Db

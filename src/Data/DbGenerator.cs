@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
-    public class DbGenerator<T> : MockDb
+    public class DbGenerator<T> : MockDb, IDbGenerator<T>
         where T : DbSession
     {
         public async Task<T> GenerateAsync(T db, IProgress<MockDbProgress> progress = null, CancellationToken ct = default(CancellationToken))
