@@ -53,7 +53,17 @@ namespace DevZest.Data
             _actions.Add(dbTable, async (ct) => {
                 var dataSet = getDataSet();
                 if (dataSet != null)
-                    await dbTable.Insert(dataSet).ExecuteAsync(ct);
+                {
+                    dbTable._.SuspendIdentity();
+                    try
+                    {
+                        await dbTable.Insert(dataSet).ExecuteAsync(ct);
+                    }
+                    finally
+                    {
+                        dbTable._.ResumeIdentity();
+                    }
+                }
             });
         }
 
