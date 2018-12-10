@@ -110,12 +110,14 @@ namespace DevZest.Data
             using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, ct))
             {
                 int ordinal = 0;
+                dataSet.Model.SuspendIdentity();
                 while (await reader.ReadAsync(ct))
                 {
                     var dataRow = dataSet[ordinal++];
                     identityColumn[dataRow] = identityOutput._.NewValue[reader];
                     dataRow.IsPrimaryKeySealed = true;
                 }
+                dataSet.Model.ResumeIdentity();
             }
         }
 
@@ -160,8 +162,10 @@ namespace DevZest.Data
         private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, long? value)
             where TSource : class, IModelReference, new()
         {
+            var model = dataSet._.Model;
+            model.SuspendIdentity();
             dataRow.IsPrimaryKeySealed = false;
-            var identityColumn = dataSet._.Model.GetIdentity(false).Column;
+            var identityColumn = model.GetIdentity(false).Column;
             if (identityColumn is _Int32 int32Column)
                 int32Column[dataRow] = (int?)value;
             else if (identityColumn is _Int64 int64Column)
@@ -170,6 +174,7 @@ namespace DevZest.Data
                 int16Column[dataRow] = (short?)value;
             else
                 Debug.Fail("Identity column must be _Int32, _Int64 or _Int16.");
+            model.ResumeIdentity();
             dataRow.IsPrimaryKeySealed = true;
         }
 

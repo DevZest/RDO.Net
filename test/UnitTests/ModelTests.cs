@@ -343,10 +343,12 @@ namespace DevZest.Data
             _.AfterDataRowInserted += delegate { dataRowInsertedCount++; };
             var dataRowUpdatedCount = 0;
             _.ValueChanged += delegate { dataRowUpdatedCount++; };
+            salesOrders._.SuspendIdentity();
             salesOrders.Add(new DataRow(), x =>
             {
                 _.SalesOrderID[x] = 12345;
             });
+            salesOrders._.ResumeIdentity();
 
             Assert.AreEqual("SO12345", _.SalesOrderNumber[0]);
             Assert.AreEqual(1, dataRowInsertedCount);
@@ -367,7 +369,9 @@ namespace DevZest.Data
                     changedColumns = changedColumns.Add(column);
             };
             salesOrders.Add(new DataRow());
+            salesOrders._.SuspendIdentity();
             _.SalesOrderID[0] = 12345;
+            salesOrders._.ResumeIdentity();
 
             Assert.AreEqual("SO12345", _.SalesOrderNumber[0]);
             Assert.AreEqual(2, dataRowUpdatedCount);

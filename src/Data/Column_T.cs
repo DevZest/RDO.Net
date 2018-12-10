@@ -294,7 +294,11 @@ namespace DevZest.Data
         {
             if (IsExpression)
                 return true;
-            return IsPrimaryKey ? dataRow.IsPrimaryKeySealed : false;
+            if (IsIdentity && !ParentModel.IsIdentitySuspended)
+                return true;
+            if (IsPrimaryKey && dataRow.IsPrimaryKeySealed)
+                return true;
+            return false;
         }
 
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> ordinal.</summary>
