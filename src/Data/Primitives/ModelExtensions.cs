@@ -52,7 +52,7 @@ namespace DevZest.Data.Primitives
 
             foreach (var column in model.Columns)
             {
-                if (column == identityColumn)
+                if (column == identityColumn && !model.IsIdentitySuspended)
                     continue;
 
                 if (isTable && column.IsDbComputed)
@@ -65,17 +65,28 @@ namespace DevZest.Data.Primitives
         public static IEnumerable<Column> GetUpdatableColumns(this Model model)
         {
             model.VerifyNotNull(nameof(model));
-            if (model.DataSource == null || model.DataSource.Kind != DataSourceKind.DbTempTable || model.ParentModel == null)
-                return model.GetInsertableColumns();
             return model.GetUpdatableColumns(model.ParentRelationship);
         }
 
         private static IEnumerable<Column> GetUpdatableColumns(this Model model, IReadOnlyList<ColumnMapping> parentRelationship)
         {
-            foreach (var column in model.GetInsertableColumns())
+            IDbTable dbTable = model.DataSource as IDbTable;
+            bool isTempTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTempTable;
+            bool isTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTable;
+            var identity = dbTable == null ? null : model.GetIdentity(isTempTable);
+            Column identityColumn = identity == null ? null : identity.Column;
+            foreach (var column in model.Columns)
             {
-                if (!parentRelationship.ContainsSource(column))
-                    yield return column;
+                if (column == identityColumn)
+                    continue;
+
+                if (isTable && column.IsDbComputed)
+                    continue;
+
+                if (parentRelationship != null && parentRelationship.ContainsSource(column))
+                    continue;
+
+                yield return column;
             }
         }
 
