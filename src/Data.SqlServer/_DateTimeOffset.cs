@@ -57,7 +57,7 @@ namespace DevZest.Data.SqlServer
                 return JsonValue.Null;
 
             var x = value.GetValueOrDefault();
-            return JsonValue.FastString(x.ToString("o"));
+            return JsonValue.String(x.ToString("o", CultureInfo.InvariantCulture));
         }
 
         protected override DateTimeOffset? DeserializeValue(JsonValue value)

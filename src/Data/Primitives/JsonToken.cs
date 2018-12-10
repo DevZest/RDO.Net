@@ -36,11 +36,7 @@ namespace DevZest.Data.Primitives
 
         public JsonValue JsonValue
         {
-            get
-            {
-                Debug.Assert((Kind & JsonTokenKind.ColumnValues) == Kind);
-                return new JsonValue(Text, false, (JsonValueType)Kind);
-            }
+            get { return ((Kind & JsonTokenKind.ColumnValues) == Kind) ? new JsonValue(Text, (JsonValueType)Kind) : default(JsonValue); }
         }
     }
 }

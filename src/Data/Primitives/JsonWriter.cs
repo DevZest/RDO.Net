@@ -71,7 +71,7 @@ namespace DevZest.Data.Primitives
 
         public JsonWriter WriteObjectName(string name)
         {
-            JsonValue.FastString(name).Write(RequireStringBuilder());
+            JsonValue.String(name).Write(RequireStringBuilder());
             RequireStringBuilder().Append(":");
             return this;
         }

@@ -17,7 +17,7 @@ namespace DevZest.Data.SqlServer
 
             protected override string Cast(SqlXml value)
             {
-                return value == null ? null : value.Value;
+                return value?.Value;
             }
         }
 
@@ -82,7 +82,7 @@ namespace DevZest.Data.SqlServer
             if (value == null || value.IsNull)
                 return JsonValue.Null;
 
-            return new JsonValue(value.Value, false, JsonValueType.String);
+            return JsonValue.String(value.Value);
         }
 
         public static SqlXml CreateSqlXml(string s)

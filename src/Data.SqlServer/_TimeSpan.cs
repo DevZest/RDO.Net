@@ -57,7 +57,7 @@ namespace DevZest.Data.SqlServer
                 return JsonValue.Null;
 
             var x = value.GetValueOrDefault();
-            return JsonValue.FastString(x.ToString("c"));
+            return JsonValue.String(x.ToString("c", CultureInfo.InvariantCulture));
         }
 
         protected override TimeSpan? DeserializeValue(JsonValue value)

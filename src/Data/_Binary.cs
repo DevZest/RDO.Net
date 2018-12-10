@@ -84,7 +84,7 @@ namespace DevZest.Data
             if (value == null)
                 return JsonValue.Null;
             var bytes = value.ToArray();
-            return new JsonValue(Convert.ToBase64String(bytes), true, JsonValueType.String);
+            return JsonValue.String(Convert.ToBase64String(bytes));
         }
 
         /// <inheritdoc/>

@@ -6,8 +6,8 @@ namespace DevZest.Data
 {
     public struct JsonValue
     {
-        internal static readonly JsonValue True = new JsonValue("true", JsonValueType.True);
-        internal static readonly JsonValue False = new JsonValue("false", JsonValueType.False);
+        public static readonly JsonValue True = new JsonValue("true", JsonValueType.True);
+        public static readonly JsonValue False = new JsonValue("false", JsonValueType.False);
         public static readonly JsonValue Null = new JsonValue("null", JsonValueType.Null);
 
         internal static JsonValue Char(char? x)
@@ -24,7 +24,7 @@ namespace DevZest.Data
             var isUtc = value.Kind == DateTimeKind.Utc;
             var length = "YYYY-MM-DDTHH:MM:SS.000".Length;
             if (isUtc)
-                length ++;
+                length++;
             var result = new StringBuilder(length);
             result.Append(value.Year.ToString("0000", NumberFormatInfo.InvariantInfo));
             result.Append('-');
@@ -41,78 +41,105 @@ namespace DevZest.Data
             result.Append(value.Millisecond.ToString("000", NumberFormatInfo.InvariantInfo));
             if (isUtc)
                 result.Append('Z');
-            return FastString(result.ToString());
+            return String(result.ToString());
         }
 
         internal static JsonValue Guid(Guid? x)
         {
-            return x.HasValue ? FastString(x.GetValueOrDefault().ToString()) : Null;
+            return x.HasValue ? String(x.GetValueOrDefault().ToString()) : Null;
         }
 
         internal static JsonValue Number(byte? x)
         {
-            return x.HasValue ? new JsonValue(x.GetValueOrDefault().ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number) : JsonValue.Null;
+            return x.HasValue ? Number(x.Value) : Null;
+        }
+
+        public static JsonValue Number(byte x)
+        {
+            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
         }
 
         internal static JsonValue Number(short? x)
         {
-            return x.HasValue ? new JsonValue(x.GetValueOrDefault().ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number) : JsonValue.Null;
+            return x.HasValue ? Number(x.Value) : Null;
+        }
+
+        public static JsonValue Number(short x)
+        {
+            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
         }
 
         internal static JsonValue Number(int? x)
         {
-            return x.HasValue ? new JsonValue(x.GetValueOrDefault().ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number) : JsonValue.Null;
+            return x.HasValue ? Number(x.Value) : Null;
+        }
+
+        public static JsonValue Number(int x)
+        {
+            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
         }
 
         internal static JsonValue Number(long? x)
         {
-            return x.HasValue ? new JsonValue(x.GetValueOrDefault().ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number) : JsonValue.Null;
+            return x.HasValue ? Number(x.Value) : Null;
+        }
+
+        public static JsonValue Number(long x)
+        {
+            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
         }
 
         internal static JsonValue Number(float? x)
         {
-            return x.HasValue ? new JsonValue(x.GetValueOrDefault().ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number) : JsonValue.Null;
+            return x.HasValue ? Number(x.Value) : Null;
+        }
+
+        public static JsonValue Number(float x)
+        {
+            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
         }
 
         internal static JsonValue Number(double? x)
         {
-            return x.HasValue ? new JsonValue(x.GetValueOrDefault().ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number) : JsonValue.Null;
+            return x.HasValue ? Number(x.Value) : Null;
+        }
+
+        public static JsonValue Number(double x)
+        {
+            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
         }
 
         internal static JsonValue Number(decimal? x)
         {
-            return x.HasValue ? new JsonValue(x.GetValueOrDefault().ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number) : JsonValue.Null;
+            return x.HasValue ? Number(x.Value) : Null;
         }
 
-        public static JsonValue FastString(string x)
+        public static JsonValue Number(decimal x)
         {
-            return new JsonValue(x, JsonValueType.String);
+            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
         }
 
-        internal static JsonValue String(string x)
+        public static JsonValue String(string x)
         {
-            return x == null ? Null : new JsonValue(x, false, JsonValueType.String);
+            return x == null ? Null : new JsonValue(x, JsonValueType.String);
         }
 
-        private JsonValue(string text, JsonValueType type)
-            : this(text, true, type)
-        {
-        }
-
-        public JsonValue(string text, bool isTextEscaped, JsonValueType type)
+        internal JsonValue(string text, JsonValueType type)
         {
             text.VerifyNotNull(nameof(text));
 
             Text = text;
-            _isTextEscaped = isTextEscaped;
             Type = type;
         }
 
         public readonly string Text;
 
-        private readonly bool _isTextEscaped;
-
         public readonly JsonValueType Type;
+
+        public bool IsDefault
+        {
+            get { return Type == 0 && Text == null; }
+        }
 
         public override string ToString()
         {
@@ -124,7 +151,7 @@ namespace DevZest.Data
             if (Type == JsonValueType.String)
                 stringBuilder.Append('"');
 
-            if (_isTextEscaped)
+            if (Type != JsonValueType.String)
                 stringBuilder.Append(Text);
             else
                 WriteEscapedText(Text, stringBuilder);
