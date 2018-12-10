@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Globalization;
@@ -48,10 +47,8 @@ namespace DevZest.Data.SqlServer
                 statement.Accept(result);
 
             if (model.IsIdentitySuspended())
-            {
-                sqlBuilder.AppendLine(";");
                 SetIdentityInsert(sqlBuilder, model, false);
-            }
+
             return result;
         }
 
@@ -98,16 +95,13 @@ namespace DevZest.Data.SqlServer
 
             statement.Accept(result);
 
+            if (model.IsIdentitySuspended())
+                SetIdentityInsert(sqlBuilder, model, false);
+
             if (outputIdentity)
             {
-                sqlBuilder.AppendLine(";");
+                sqlBuilder.AppendLine();
                 sqlBuilder.Append("SELECT CAST(SCOPE_IDENTITY() AS BIGINT)");
-            }
-
-            if (model.IsIdentitySuspended())
-            {
-                sqlBuilder.AppendLine(";");
-                SetIdentityInsert(sqlBuilder, model, false);
             }
 
             return result;
