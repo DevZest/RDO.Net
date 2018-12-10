@@ -114,5 +114,20 @@ namespace DevZest.Data.Primitives
         {
             return (model.DataSource as IDbTable)?.Description;
         }
+
+        public static bool IsIdentitySuspended(this Model model)
+        {
+            return model.IsIdentitySuspended;
+        }
+
+        public static void SuspendIdentity(this Model model)
+        {
+            model.SuspendIdentity();
+        }
+
+        public static void ResumeIdentity(this Model model)
+        {
+            model.ResumeIdentity();
+        }
     }
 }
