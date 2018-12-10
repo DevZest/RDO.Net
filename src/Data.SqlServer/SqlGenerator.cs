@@ -27,6 +27,9 @@ namespace DevZest.Data.SqlServer
             var model = statement.Model;
             var sqlBuilder = result.SqlBuilder;
 
+            if (model.IsIdentitySuspended())
+                SetIdentityInsert(sqlBuilder, model, true);
+
             BuildInsertIntoClause(sqlBuilder, statement.Model, statement.Select);
 
             if (identityOutput != null)
@@ -43,7 +46,18 @@ namespace DevZest.Data.SqlServer
                 statement.From.Accept(result);
             else
                 statement.Accept(result);
+
+            if (model.IsIdentitySuspended())
+            {
+                sqlBuilder.AppendLine(";");
+                SetIdentityInsert(sqlBuilder, model, false);
+            }
             return result;
+        }
+
+        private static void SetIdentityInsert(IndentedStringBuilder sqlBuilder, Model model, bool on)
+        {
+            sqlBuilder.AppendLine(string.Format("SET IDENTITY_INSERT {0} {1};", model.GetDbTableClause().Name.ToQuotedIdentifier(), on ? "ON" : "OFF"));
         }
 
         private static void BuildInsertIntoClause(IndentedStringBuilder sqlBuilder, Model model, IReadOnlyList<ColumnMapping> select)
@@ -77,15 +91,25 @@ namespace DevZest.Data.SqlServer
             var model = statement.Model;
             var sqlBuilder = result.SqlBuilder;
 
-            BuildInsertIntoClause(sqlBuilder, statement.Model, statement.Select);
+            if (model.IsIdentitySuspended())
+                SetIdentityInsert(sqlBuilder, model, true);
+
+            BuildInsertIntoClause(sqlBuilder, model, statement.Select);
 
             statement.Accept(result);
 
             if (outputIdentity)
             {
-                sqlBuilder.AppendLine();
-                sqlBuilder.AppendLine("SELECT CAST(SCOPE_IDENTITY() AS BIGINT);");
+                sqlBuilder.AppendLine(";");
+                sqlBuilder.Append("SELECT CAST(SCOPE_IDENTITY() AS BIGINT)");
             }
+
+            if (model.IsIdentitySuspended())
+            {
+                sqlBuilder.AppendLine(";");
+                SetIdentityInsert(sqlBuilder, model, false);
+            }
+
             return result;
         }
 
