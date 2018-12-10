@@ -814,5 +814,14 @@ namespace DevZest.Data
                 _isIdentityInitialized = true;
             }
         }
+
+        public override bool IsIdentity
+        {
+            get
+            {
+                EnsureIdentityInitialized();
+                return _identity != null;
+            }
+        }
     }
 }

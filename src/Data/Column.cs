@@ -49,6 +49,11 @@ namespace DevZest.Data
         /// </summary>
         public abstract bool IsPrimaryKey { get; }
 
+        public virtual bool IsIdentity
+        {
+            get { return false; }
+        }
+
         /// <summary>Gets the zero-based position of the column in the <see cref="Model.Columns"/> collection.</summary>
         /// <remarks>If the column is not added to any <see cref="Model"/>, -1 is returned.</remarks>
         public int Ordinal { get; internal set; } = -1;
