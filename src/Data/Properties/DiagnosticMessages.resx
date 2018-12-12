@@ -540,4 +540,7 @@
   <data name="Column_AlreadyInitialized" xml:space="preserve">
     <value>The column is intiailized already.</value>
   </data>
+  <data name="Column_NotSerailizable" xml:space="preserve">
+    <value>Column is not serializable.</value>
+  </data>
 </root>

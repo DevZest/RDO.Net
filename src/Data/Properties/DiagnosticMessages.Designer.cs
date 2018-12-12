@@ -1139,6 +1139,14 @@ namespace DevZest.Data
             get { return GetString("Column_AlreadyInitialized"); }
         }
 
+        /// <summary>
+        /// Column is not serializable.
+        /// </summary>
+        public static string Column_NotSerailizable
+        {
+            get { return GetString("Column_NotSerailizable"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

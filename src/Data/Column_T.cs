@@ -475,8 +475,10 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc/>
-        internal sealed override JsonValue Serialize(int rowOrdinal)
+        public sealed override JsonValue Serialize(int rowOrdinal)
         {
+            if (!IsSerializable)
+                throw new InvalidOperationException(DiagnosticMessages.Column_NotSerailizable);
             return SerializeValue(_valueManager[rowOrdinal]);
         }
 
@@ -486,8 +488,10 @@ namespace DevZest.Data
         protected internal abstract JsonValue SerializeValue(T value);
 
         /// <inheritdoc/>
-        internal sealed override void Deserialize(int ordinal, JsonValue value)
+        public sealed override void Deserialize(int ordinal, JsonValue value)
         {
+            if (!IsSerializable)
+                throw new InvalidOperationException(DiagnosticMessages.Column_NotSerailizable);
             _valueManager[ordinal] = DeserializeValue(value);
         }
 
