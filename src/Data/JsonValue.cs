@@ -56,7 +56,7 @@ namespace DevZest.Data
 
         public static JsonValue Number(byte x)
         {
-            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
+            return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
         internal static JsonValue Number(short? x)
@@ -66,7 +66,7 @@ namespace DevZest.Data
 
         public static JsonValue Number(short x)
         {
-            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
+            return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
         internal static JsonValue Number(int? x)
@@ -76,7 +76,7 @@ namespace DevZest.Data
 
         public static JsonValue Number(int x)
         {
-            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
+            return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
         internal static JsonValue Number(long? x)
@@ -86,7 +86,7 @@ namespace DevZest.Data
 
         public static JsonValue Number(long x)
         {
-            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
+            return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
         internal static JsonValue Number(float? x)
@@ -96,7 +96,7 @@ namespace DevZest.Data
 
         public static JsonValue Number(float x)
         {
-            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
+            return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
         internal static JsonValue Number(double? x)
@@ -106,7 +106,7 @@ namespace DevZest.Data
 
         public static JsonValue Number(double x)
         {
-            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
+            return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
         internal static JsonValue Number(decimal? x)
@@ -116,7 +116,12 @@ namespace DevZest.Data
 
         public static JsonValue Number(decimal x)
         {
-            return new JsonValue(x.ToString(NumberFormatInfo.InvariantInfo), JsonValueType.Number);
+            return Number(x.ToString(NumberFormatInfo.InvariantInfo));
+        }
+
+        public static JsonValue Number(string x)
+        {
+            return new JsonValue(x, JsonValueType.Number);
         }
 
         public static JsonValue String(string x)
