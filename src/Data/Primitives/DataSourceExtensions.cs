@@ -11,13 +11,13 @@
         }
 
         public static T GetModel<T>(this DataSet<T> dataSet)
-            where T : Model, new()
+            where T : class, IModelReference, new()
         {
             return dataSet._;
         }
 
         public static T GetModel<T>(this DbSet<T> dbSet)
-            where T : Model, new()
+            where T : class, IModelReference, new()
         {
             return dbSet._;
         }
