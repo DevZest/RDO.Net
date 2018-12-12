@@ -83,7 +83,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void ComputationAttribute_data_set()
         {
-            var dataSet = DataSet<Header>.New();
+            var dataSet = DataSet<Header>.Create();
             var dataRow = dataSet.AddRow((_, row) =>
             {
                 _.Id[row] = 1;

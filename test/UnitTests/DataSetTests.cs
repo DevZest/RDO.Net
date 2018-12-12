@@ -225,7 +225,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSet_Revision()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
 
             {
                 var revision0 = dataSet.Revision;
@@ -359,7 +359,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSet_BeginAdd_EndAdd()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
             var dataRow = dataSet.BeginAdd();
             Assert.AreEqual(dataRow, dataSet.EditingRow);
             dataSet._.Id[dataRow] = 5;
@@ -373,7 +373,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSet_BeginAdd_CancelAdd()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
             var dataRow = dataSet.BeginAdd();
             Assert.AreEqual(dataRow, dataSet.EditingRow);
             dataSet._.Id[dataRow] = 5;
@@ -435,7 +435,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSet_AddingRow_computed_and_auto_updated_columns()
         {
-            var dataSet = DataSet<TestModel>.New();
+            var dataSet = DataSet<TestModel>.Create();
             var addingRow = dataSet.BeginAdd();
             dataSet._.Num1[addingRow] = 5;
             Assert.AreEqual(10, dataSet._.Num2[addingRow]);

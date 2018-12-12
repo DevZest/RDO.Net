@@ -21,14 +21,14 @@ namespace DevZest.Data.Annotations
         public void UrlAttribute()
         {
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.Url[row] = "http://devzest.com");
                 var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.Url[row] = "devzest.com");
                 var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);

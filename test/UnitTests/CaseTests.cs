@@ -18,7 +18,7 @@ namespace DevZest.Data
         [TestMethod]
         public void CaseOn_Test()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
 
             var column1 = dataSet._.Column1;
             _Int32 c1 = 1;
@@ -44,7 +44,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Case_Test()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
             var dataRow = dataSet.AddRow();
 
             var column1 = dataSet._.Column1;

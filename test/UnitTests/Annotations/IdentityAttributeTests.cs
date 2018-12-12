@@ -51,7 +51,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void IdentityAttribute_data_set()
         {
-            var dataSet = DataSet<TestModel>.New();
+            var dataSet = DataSet<TestModel>.Create();
             var dataRow = dataSet.AddRow();
             Assert.AreEqual(0, dataSet._.Id[dataRow]);
         }

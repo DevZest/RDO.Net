@@ -136,7 +136,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
-                var dataSet = DataSet<ProductCategory>.New();
+                var dataSet = DataSet<ProductCategory>.Create();
                 var dataRow = dataSet.AddRow();
                 dataSet._.Name[dataRow] = "Name";
                 dataSet._.ParentProductCategoryID[dataRow] = null;
@@ -169,7 +169,7 @@ SELECT
             using (var db = new Db(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
-                var dataSet = DataSet<ProductCategory>.New();
+                var dataSet = DataSet<ProductCategory>.Create();
                 var dataRow = dataSet.AddRow();
                 dataSet._.Name[dataRow] = "Name";
                 dataSet._.ParentProductCategoryID[dataRow] = null;

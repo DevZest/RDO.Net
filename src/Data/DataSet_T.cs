@@ -170,7 +170,7 @@ namespace DevZest.Data
             }
         }
 
-        public static DataSet<T> New(Action<T> initializer = null)
+        public static DataSet<T> Create(Action<T> initializer = null)
         {
             var modelRef = new T();
             modelRef.Initialize(initializer);
@@ -215,7 +215,7 @@ namespace DevZest.Data
         {
             json.VerifyNotEmpty(nameof(json));
 
-            return (DataSet<T>)(new JsonParser(json).Parse(() => New(initializer), true));
+            return (DataSet<T>)(new JsonParser(json).Parse(() => Create(initializer), true));
         }
 
         private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, IReadOnlyList<ColumnMapping> parentRelationship, Action<TChild> initializer)

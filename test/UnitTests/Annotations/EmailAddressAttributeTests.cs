@@ -21,14 +21,14 @@ namespace DevZest.Data.Annotations
         public void EmailAddressAttribute()
         {
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.EmailAddress[row] = "example@example.com");
                 var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.EmailAddress[row] = "example");
                 var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);

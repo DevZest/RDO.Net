@@ -9,7 +9,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [TestMethod]
         public void Customer_ContactPerson()
         {
-            var dataSet = DataSet<Customer>.New();
+            var dataSet = DataSet<Customer>.Create();
             {
                 var _ = dataSet._;
                 Assert.IsNotNull(_.ContactPerson);

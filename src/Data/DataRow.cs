@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
             public static DataSet<BackupModel> Backup(Model origin)
             {
-                var result = DataSet<BackupModel>.New();
+                var result = DataSet<BackupModel>.Create();
                 result._.Initialize(origin);
                 return result;
             }

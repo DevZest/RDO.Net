@@ -21,14 +21,14 @@ namespace DevZest.Data.Annotations
         public void PhoneAttribute()
         {
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.Phone[row] = "(555)-1234567 ext. 1203");
                 var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.Phone[row] = "(555)-123456A");
                 var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);

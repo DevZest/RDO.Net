@@ -952,7 +952,7 @@ namespace DevZest.Data
         protected internal virtual DataSet<T> NewDataSetValue<T>(_DataSet<T> dataSetColumn, int rowOrdinal)
             where T : Model, new()
         {
-            return DataSet<T>.New();
+            return DataSet<T>.Create();
         }
 
         internal DataRow EditingRow { get; private set; }

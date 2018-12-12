@@ -59,13 +59,13 @@ namespace DevZest.Data.Annotations
         public void CheckAttribute_data_set()
         {
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.Id[row] = 1);
                 Assert.AreEqual(0, dataSet._.Validate(dataRow).Count);
             }
 
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.Id[row] = 0);
                 var messages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, messages.Count);

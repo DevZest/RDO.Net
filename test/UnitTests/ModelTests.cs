@@ -142,7 +142,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Model_RegisterChildMolde_local()
         {
-            var dataSet = DataSet<LocalModel>.New();
+            var dataSet = DataSet<LocalModel>.Create();
             var _ = dataSet._;
             dataSet.AddRow();
             _.Column[0] = 3;
@@ -337,7 +337,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Model_DataRowInserted()
         {
-            var salesOrders = DataSet<SalesOrder>.New();
+            var salesOrders = DataSet<SalesOrder>.Create();
             var _ = salesOrders._;
             var dataRowInsertedCount = 0;
             _.AfterDataRowInserted += delegate { dataRowInsertedCount++; };
@@ -358,7 +358,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Model_ValueChanged()
         {
-            var salesOrders = DataSet<SalesOrder>.New();
+            var salesOrders = DataSet<SalesOrder>.Create();
             var _ = salesOrders._;
             var dataRowUpdatedCount = 0;
             var changedColumns = Columns.Empty;
@@ -381,7 +381,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Model_DataRowRemoved()
         {
-            var salesOrders = DataSet<SalesOrder>.New();
+            var salesOrders = DataSet<SalesOrder>.Create();
             var _ = salesOrders._;
             var dataRowRemovedCount = 0;
             _.DataRowRemoved += delegate { dataRowRemovedCount++; };

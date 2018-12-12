@@ -89,7 +89,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var dataSet = DataSet<ProductCategory>.New();
+                var dataSet = DataSet<ProductCategory>.Create();
                 var index = dataSet.AddRow().Ordinal;
                 dataSet._.Name[index] = "Name";
                 dataSet._.RowGuid[index] = new Guid("EC359D7D-AE3A-4A9D-BDCB-03F0A7799514");

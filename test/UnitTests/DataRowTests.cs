@@ -305,7 +305,7 @@ AfterDataRowInserted: DataSet-0[0].
         {
             {
                 var comparer = DataRow.OrderBy(new OrderByModel().Column, SortDirection.Descending);
-                var dataSet = DataSet<OrderByModel>.New();
+                var dataSet = DataSet<OrderByModel>.Create();
                 dataSet.AddRow((_, x) => _.Column[x] = 1);
                 dataSet.AddRow((_, x) => _.Column[x] = 2);
                 Assert.AreEqual(typeof(OrderByModel), comparer.ModelType);
@@ -316,7 +316,7 @@ AfterDataRowInserted: DataSet-0[0].
                 var simpleModel = new OrderByModel();
                 var condition = (simpleModel.Column == 1);
                 var comparer = DataRow.OrderBy(condition, SortDirection.Descending);
-                var dataSet = DataSet<OrderByModel>.New();
+                var dataSet = DataSet<OrderByModel>.Create();
                 dataSet.AddRow((_, x) => _.Column[x] = 1);
                 dataSet.AddRow((_, x) => _.Column[x] = 2);
                 Assert.AreEqual(typeof(OrderByModel), comparer.ModelType);
@@ -324,7 +324,7 @@ AfterDataRowInserted: DataSet-0[0].
             }
 
             {
-                var dataSet = DataSet<OrderByModel>.New();
+                var dataSet = DataSet<OrderByModel>.Create();
                 dataSet.AddRow((_, x) => _.LocalColumn[x] = 1);
                 dataSet.AddRow((_, x) => _.LocalColumn[x] = 2);
                 var comparer = DataRow.OrderBy(dataSet._.LocalColumn, SortDirection.Descending);
@@ -333,7 +333,7 @@ AfterDataRowInserted: DataSet-0[0].
             }
 
             {
-                var dataSet = DataSet<OrderByModel>.New();
+                var dataSet = DataSet<OrderByModel>.Create();
                 var _ = dataSet._;
                 dataSet.AddRow();
                 dataSet.AddRow();

@@ -79,7 +79,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void DefaultValueAttribute_data_set()
         {
-            var dataSet = DataSet<TestModel>.New();
+            var dataSet = DataSet<TestModel>.Create();
             var dataRow = dataSet.AddRow();
             var _ = dataSet._;
             Assert.AreEqual(5, _.Int[dataRow]);

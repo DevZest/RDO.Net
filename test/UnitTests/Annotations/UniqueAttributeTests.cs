@@ -56,7 +56,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void UniqueAttribute_data_set()
         {
-            var dataSet = DataSet<TestModel>.New();
+            var dataSet = DataSet<TestModel>.Create();
             var dataRow1 = dataSet.AddRow((_, row) => _.Id[row] = 1);
             Assert.AreEqual(0, dataSet._.Validate(dataRow1).Count);
             var dataRow2 = dataSet.AddRow((_, row) => _.Id[row] = 1);

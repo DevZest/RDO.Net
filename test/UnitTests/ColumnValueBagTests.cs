@@ -9,7 +9,7 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag_SetValue()
         {
-            var salesOrders = DataSet<SalesOrderInfo>.New();
+            var salesOrders = DataSet<SalesOrderInfo>.Create();
             var _ = salesOrders._;
             var customer = _.Customer;
 
@@ -25,7 +25,7 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag_SetValue_with_DataRow()
         {
-            var salesOrders = DataSet<SalesOrderInfo>.New();
+            var salesOrders = DataSet<SalesOrderInfo>.Create();
             var _ = salesOrders._;
             var customer = _.Customer;
             salesOrders.Add(new DataRow(), (dataRow) =>
@@ -51,7 +51,7 @@ namespace DevZest.Data
             }
 
             {
-                var salesOrder = DataSet<SalesOrderInfo>.New().EnsureInitialized()._;
+                var salesOrder = DataSet<SalesOrderInfo>.Create().EnsureInitialized()._;
                 var customerKey = salesOrder.FK_Customer;
                 var customerLookup = salesOrder.Customer;
                 var valueBag = new ColumnValueBag();
@@ -79,7 +79,7 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag_Clone()
         {
-            var salesOrders = DataSet<SalesOrderInfo>.New();
+            var salesOrders = DataSet<SalesOrderInfo>.Create();
             var _ = salesOrders._;
             var customer = _.Customer;
 
@@ -97,7 +97,7 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnValueBag_ClearValues()
         {
-            var salesOrders = DataSet<SalesOrderInfo>.New();
+            var salesOrders = DataSet<SalesOrderInfo>.Create();
             var _ = salesOrders._;
             var customer = _.Customer;
 

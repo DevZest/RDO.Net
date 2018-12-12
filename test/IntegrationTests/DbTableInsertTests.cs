@@ -11,7 +11,7 @@ namespace DevZest.Data
     {
         private static DataSet<SalesOrder> NewSalesOrdersTestData(int count = 2)
         {
-            var result = DataSet<SalesOrder>.New();
+            var result = DataSet<SalesOrder>.Create();
             result.AddTestDataRows(count);
             return result;
         }

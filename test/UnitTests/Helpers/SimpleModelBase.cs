@@ -38,7 +38,7 @@ namespace DevZest.Data.Helpers
         public static DataSet<T> GetDataSet<T>(int count, Func<T, T> childGetter, Action<DataSet<T>, int> addRows, bool createChildren = true)
             where T : SimpleModelBase, new()
         {
-            var dataSet = DataSet<T>.New();
+            var dataSet = DataSet<T>.Create();
             var model = dataSet._;
             Assert.AreEqual(true, dataSet._.DesignMode);
 

@@ -25,7 +25,7 @@ namespace DevZest.Data.Annotations
         public void StringLengthAttribute()
         {
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) =>
                 {
                     _.Text1[row] = "123456";
@@ -36,7 +36,7 @@ namespace DevZest.Data.Annotations
             }
 
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) =>
                 {
                     _.Text1[row] = "12345678901";
@@ -49,7 +49,7 @@ namespace DevZest.Data.Annotations
             }
 
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) =>
                 {
                     _.Text1[row] = "123456";

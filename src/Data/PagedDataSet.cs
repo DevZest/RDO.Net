@@ -23,7 +23,7 @@ namespace DevZest.Data
 
         public PagedDataSet()
         {
-            _dataSet = DataSet<_Model>.New();
+            _dataSet = DataSet<_Model>.Create();
             _dataSet.AddRow();
             Page = PageSize = TotalCount = 0;
         }

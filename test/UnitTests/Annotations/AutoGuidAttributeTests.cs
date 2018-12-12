@@ -52,7 +52,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void AutoGuidAttribute_default_value()
         {
-            var dataSet = DataSet<TestModel>.New();
+            var dataSet = DataSet<TestModel>.Create();
             var dataRow = dataSet.AddRow();
             var dateTime = dataSet._.Guid[dataRow];
             Assert.IsTrue(dateTime.HasValue);

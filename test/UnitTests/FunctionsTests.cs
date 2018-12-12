@@ -22,7 +22,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Functions_IsNull()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
             var model = dataSet._;
             
             var column1 = model.Column1;
@@ -41,7 +41,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Functions_IsNotNull()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
 
             var column1 = dataSet._.Column1;
             var isNotNullExpr = column1.IsNotNull();
@@ -59,7 +59,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Functions_IfNull()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
 
             var column1 = dataSet._.Column1;
             var replace = _Int32.Const(10);
@@ -110,7 +110,7 @@ namespace DevZest.Data
         [TestMethod]
         public void Functions_Contains()
         {
-            var dataSet = DataSet<SimpleModel>.New();
+            var dataSet = DataSet<SimpleModel>.Create();
             var model = dataSet._;
 
             var column = model.Column2;

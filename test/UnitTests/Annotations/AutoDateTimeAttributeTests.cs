@@ -54,7 +54,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void AutoDateTimeAttribute_default_value()
         {
-            var dataSet = DataSet<TestModel>.New();
+            var dataSet = DataSet<TestModel>.Create();
             var startDateTime = DateTime.Now;
             var dataRow = dataSet.AddRow();
             var endDateTime = DateTime.Now;

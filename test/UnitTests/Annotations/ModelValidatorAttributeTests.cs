@@ -30,7 +30,7 @@ namespace DevZest.Data.Annotations
         public void ModelValidatorAttribute()
         {
             {
-                var dataSet = DataSet<User>.New();
+                var dataSet = DataSet<User>.Create();
                 var dataRow = dataSet.AddRow((_, row) =>
                 {
                     _.Password[row] = "password";
@@ -41,7 +41,7 @@ namespace DevZest.Data.Annotations
             }
 
             {
-                var dataSet = DataSet<User>.New();
+                var dataSet = DataSet<User>.Create();
                 var dataRow = dataSet.AddRow((_, row) =>
                 {
                     _.Password[row] = "password";

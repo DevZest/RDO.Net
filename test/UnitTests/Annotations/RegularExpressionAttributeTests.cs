@@ -22,14 +22,14 @@ namespace DevZest.Data.Annotations
         public void RegularExpressionAttribute()
         {
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.Name[row] = "John Doe O'Dell");
                 var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(0, validationMessages.Count);
             }
 
             {
-                var dataSet = DataSet<TestModel>.New();
+                var dataSet = DataSet<TestModel>.Create();
                 var dataRow = dataSet.AddRow((_, row) => _.Name[row] = "John Doe O'Dell John Doe O'Dell John Doe O'Dell John Doe O'Dell");
                 var validationMessages = dataSet._.Validate(dataRow);
                 Assert.AreEqual(1, validationMessages.Count);
