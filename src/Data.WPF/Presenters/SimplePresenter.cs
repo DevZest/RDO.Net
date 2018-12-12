@@ -27,7 +27,7 @@ namespace DevZest.Data.Presenters
             if (view.Presenter != null && view.Presenter != this)
                 throw new ArgumentException(DiagnosticMessages.DataPresenter_InvalidDataView, nameof(view));
 
-            var dataSet = DataSet<DummyModel>.New();
+            var dataSet = DataSet<DummyModel>.Create();
             AttachView(view);
             Mount(dataSet);
             OnViewChanged();

@@ -49,7 +49,7 @@ namespace AdventureWorks.SalesOrders
 
         private void New(object sender, ExecutedRoutedEventArgs e)
         {
-            var salesOrderInfo = DataSet<SalesOrderInfo>.New();
+            var salesOrderInfo = DataSet<SalesOrderInfo>.Create();
             salesOrderInfo.AddRow();
             new SalesOrderWindow().Show(salesOrderInfo, this, Refresh);
         }

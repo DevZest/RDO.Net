@@ -127,7 +127,7 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void InputManager_Validate_Progress()
         {
-            var dataSet = DataSet<ProductCategory>.New();
+            var dataSet = DataSet<ProductCategory>.Create();
             var _ = dataSet._;
             dataSet.Add(new DataRow());
 
@@ -171,7 +171,7 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void InputManager_Validate_Implicit()
         {
-            var dataSet = DataSet<ProductCategory>.New();
+            var dataSet = DataSet<ProductCategory>.Create();
             var _ = dataSet._;
             dataSet.Add(new DataRow());
 
@@ -208,7 +208,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private async Task InputManager_AsyncValidators_input_error_to_invalid_to_valid_Async()
         {
-            var dataSet = DataSet<ProductCategory>.New();
+            var dataSet = DataSet<ProductCategory>.Create();
             var _ = dataSet._;
             dataSet.Add(new DataRow());
 
@@ -255,7 +255,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private async Task InputManager_AsyncValidators_faulted_Async()
         {
-            var dataSet = DataSet<ProductCategory>.New();
+            var dataSet = DataSet<ProductCategory>.Create();
             var _ = dataSet._;
             dataSet.Add(new DataRow());
 
@@ -290,7 +290,7 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void InputManager_AsyncValidators_Reset()
         {
-            var dataSet = DataSet<ProductCategory>.New();
+            var dataSet = DataSet<ProductCategory>.Create();
             var _ = dataSet._;
             dataSet.Add(new DataRow());
 
@@ -320,7 +320,7 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void InputManager_SetAsyncErrors()
         {
-            var dataSet = DataSet<ProductCategory>.New();
+            var dataSet = DataSet<ProductCategory>.Create();
             var _ = dataSet._;
             dataSet.Add(new DataRow());
 

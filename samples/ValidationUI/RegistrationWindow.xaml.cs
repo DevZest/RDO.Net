@@ -123,7 +123,7 @@ namespace ValidationUI
 
         public void Show(Window ownerWindow)
         {
-            var dataSet = DataSet<Registration>.New();
+            var dataSet = DataSet<Registration>.Create();
             dataSet.Add(new DataRow());
             var presenter = new Presenter();
             _presenter = presenter;

@@ -297,7 +297,7 @@ namespace DevZest.Data.Presenters
                     try
                     {
                         if (dataSet == null)
-                            dataSet = DataSet<T>.New();
+                            dataSet = DataSet<T>.Create();
                         Predicate<DataRow> where = _getWhere == null ? null : _getWhere(dataSet._);
                         IComparer<DataRow> orderBy = _getOrderBy == null ? null : _getOrderBy(dataSet._);
                         _dataPresenter.Mount(DataView, dataSet, where, orderBy, LayoutManager != null ? MountMode.Refresh : MountMode.Show);

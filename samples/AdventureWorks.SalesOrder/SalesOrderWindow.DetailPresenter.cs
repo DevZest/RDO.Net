@@ -80,7 +80,7 @@ namespace AdventureWorks.SalesOrders
 
             bool DataView.IPasteAppendService.Verify(IReadOnlyList<ColumnValueBag> data)
             {
-                var foreignKeys = DataSet<Product.Ref>.New();
+                var foreignKeys = DataSet<Product.Ref>.Create();
                 for (int i = 0; i < data.Count; i++)
                 {
                     var valueBag = data[i];

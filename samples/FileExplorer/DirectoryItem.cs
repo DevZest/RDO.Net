@@ -81,7 +81,7 @@ namespace FileExplorer
         private static DataSet<T> GetDirectoryItems<T>(string path, CancellationToken ct)
             where T : DirectoryItem, new()
         {
-            var result = DataSet<T>.New();
+            var result = DataSet<T>.Create();
             if (string.IsNullOrEmpty(path))
                 return result;
 

@@ -8,7 +8,7 @@ namespace DevZest.Data.Presenters
     {
         public static DataSet<ProductCategory> ProductCategories(int count, bool multiLevel = true)
         {
-            var dataSet = DataSet<ProductCategory>.New();
+            var dataSet = DataSet<ProductCategory>.Create();
 
             string namePrefix = "Name";
             AddRows(dataSet, namePrefix, count);

@@ -14,7 +14,7 @@ namespace DevZest.Data.Views.Primitives
         {
             model.VerifyNotNull(nameof(model));
 
-            var result = DataSet<Sorting>.New();
+            var result = DataSet<Sorting>.Create();
             if (orderBy == null || orderBy.Count == 0)
                 return result;
 

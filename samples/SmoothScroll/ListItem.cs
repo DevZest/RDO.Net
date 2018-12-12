@@ -49,7 +49,7 @@ namespace SmoothScroll
 
         public static DataSet<ListItem> Mock(int count)
         {
-            var result = DataSet<ListItem>.New();
+            var result = DataSet<ListItem>.Create();
 
             const string LoremIpsumText =
 @"Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,

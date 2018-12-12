@@ -56,7 +56,7 @@ namespace ValidationUI
 
         public void Show(Window ownerWindow)
         {
-            var dataSet = DataSet<Login>.New();
+            var dataSet = DataSet<Login>.Create();
             dataSet.Add(new DataRow());
             var presenter = new Presenter();
             _presenter = presenter;

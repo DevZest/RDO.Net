@@ -18,7 +18,7 @@ namespace FileExplorer
 
         public static DataSet<DirectoryTreeItem> GetLogicalDrives()
         {
-            var result = DataSet<DirectoryTreeItem>.New();
+            var result = DataSet<DirectoryTreeItem>.Create();
             foreach (string s in Directory.GetLogicalDrives())
                 AddRow(result, s);
             return result;

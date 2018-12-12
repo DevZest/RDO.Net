@@ -105,7 +105,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private static DataSet<TabularText> ToDataSet(List<List<string>> rows, int maxColumnsCount)
         {
-            var result = DataSet<TabularText>.New();
+            var result = DataSet<TabularText>.Create();
             result._.InitializeTextColumns(maxColumnsCount);
 
             for (int i = 0; i < rows.Count; i++)

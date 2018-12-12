@@ -23,7 +23,7 @@ namespace FileExplorer
             _currentDirectory = NewScalar<string>(null, StringComparer.OrdinalIgnoreCase).AddValidator(ValidateDirectory);
             CurrentDirectory = DirectoryTreePresenter.CurrentPath;
 
-            var dataSet = DataSet<Item>.New();
+            var dataSet = DataSet<Item>.Create();
             Show(dataView, dataSet);
         }
 

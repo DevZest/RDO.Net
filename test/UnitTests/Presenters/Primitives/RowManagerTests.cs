@@ -19,8 +19,10 @@ namespace DevZest.Data.Presenters.Primitives
         private static RowManager CreateRowManager<T>(DataSet<T> dataSet, VirtualRowPlacement virtualRowPlacement)
             where T : Model, new()
         {
-            var template = new Template();
-            template.VirtualRowPlacement = virtualRowPlacement;
+            var template = new Template
+            {
+                VirtualRowPlacement = virtualRowPlacement
+            };
             RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }
@@ -28,8 +30,10 @@ namespace DevZest.Data.Presenters.Primitives
         private static RowManager CreateRowManager<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0)
             where T : Model, new()
         {
-            var template = new Template();
-            template.RecursiveModelOrdinal = hierarchicalModelOrdinal;
+            var template = new Template
+            {
+                RecursiveModelOrdinal = hierarchicalModelOrdinal
+            };
             RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }
@@ -37,7 +41,7 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void RowManager_VirtualRowPlacement_Explicit()
         {
-            var dataSet = DataSet<Adhoc>.New();
+            var dataSet = DataSet<Adhoc>.Create();
             var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Explicit);
 
             Assert.AreEqual(0, rowManager.Rows.Count);
@@ -52,7 +56,7 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void RowManager_VirtualRowPlacement_Tail()
         {
-            var dataSet = DataSet<Adhoc>.New();
+            var dataSet = DataSet<Adhoc>.Create();
             var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
@@ -69,7 +73,7 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void RowManager_VirtualRowPlacement_Exclusive()
         {
-            var dataSet = DataSet<Adhoc>.New();
+            var dataSet = DataSet<Adhoc>.Create();
             var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Exclusive);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
@@ -142,7 +146,7 @@ namespace DevZest.Data.Presenters.Primitives
         [TestMethod]
         public void RowManager_CancelEdit_TailVirtualRowPlacement()
         {
-            var dataSet = DataSet<SalesOrder>.New();
+            var dataSet = DataSet<SalesOrder>.Create();
             var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
 
             var rows = rowManager.Rows;
