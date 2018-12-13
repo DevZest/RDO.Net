@@ -23,22 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Strings.Designer.vb">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My</CustomToolNamespace>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="LocalDb\AdventureWorksLT.mdf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
