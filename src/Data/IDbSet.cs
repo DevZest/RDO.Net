@@ -1,4 +1,6 @@
 ﻿using DevZest.Data.Primitives;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
@@ -15,5 +17,7 @@ namespace DevZest.Data
         DbFromClause FromClause { get; }
 
         DbQueryStatement SequentialQueryStatement { get; }
+
+        Task<DataSet> ToDataSetAsync(CancellationToken ct);
     }
 }

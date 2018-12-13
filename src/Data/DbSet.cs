@@ -259,5 +259,11 @@ namespace DevZest.Data
                     .AutoSelect();
             });
         }
+
+        async Task<DataSet> IDbSet.ToDataSetAsync(CancellationToken ct)
+        {
+            var result = await ToDataSetAsync(ct);
+            return result;
+        }
     }
 }
