@@ -1,3 +1,6 @@
+Prerequisites:
+Chocolatey packages installed: `vswhere`, `nuget.commandline`.
+
 To build NuGet package `DevZest.Data.WPF`:
 
 - Make sure current directory is `DevZest.Data.WPF`, then run `Build.bat`:

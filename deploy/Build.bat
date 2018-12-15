@@ -12,7 +12,7 @@ SET PARAM_ADDTIONAL_LABEL="-additionalLabel %2"
 if "%2"=="" (SET PARAM_ADDTIONAL_LABEL=)
 CALL "%~dp0VerGen.%currentFolder%.bat"
 
-for /f "usebackq tokens=*" %%i in (`"%~dp0vswhere" -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`) do (
+for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`) do (
   set InstallDir=%%i
 )
 
@@ -24,6 +24,6 @@ echo.
 echo msBuildExe=%msBuildExe%
 echo.
 
-call "%~dp0nuget" restore "%~dp0Deploy.%currentFolder%.sln"
+call nuget restore "%~dp0Deploy.%currentFolder%.sln"
 call %msBuildExe% "%~dp0Deploy.%currentFolder%.sln" /t:build /p:Configuration=Release /verbosity:m
 @IF %ERRORLEVEL% NEQ 0 PAUSE
