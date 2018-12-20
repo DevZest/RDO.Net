@@ -774,7 +774,7 @@ namespace DevZest.Data
             return base.GetHashCode();
         }
 
-        internal Identity SetIdentity(int seed, int increment)
+        internal Identity SetIdentity(short seed, short increment)
         {
             VerifyDesignMode();
 

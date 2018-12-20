@@ -543,4 +543,7 @@
   <data name="Column_NotSerailizable" xml:space="preserve">
     <value>Column is not serializable.</value>
   </data>
+  <data name="DataSetReader_Closed" xml:space="preserve">
+    <value>The DataSetReader is closed.</value>
+  </data>
 </root>

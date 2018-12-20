@@ -3,7 +3,7 @@
     [Addon(typeof(Identity))]
     public class Identity : IAddon
     {
-        internal static Identity FromInt16Column(_Int16 column, int seed, int increment)
+        internal static Identity FromInt16Column(_Int16 column, short seed, short increment)
         {
             return new Identity(column, seed, increment);
         }
@@ -13,12 +13,12 @@
             return new Identity(column, seed, increment);
         }
 
-        internal static Identity FromInt64Column(_Int64 column, int seed, int increment)
+        internal static Identity FromInt64Column(_Int64 column, long seed, long increment)
         {
             return new Identity(column, seed, increment);
         }
 
-        internal Identity(Column column, int seed, int increment)
+        internal Identity(Column column, long seed, long increment)
         {
             Column = column;
             Seed = seed;
@@ -47,8 +47,8 @@
             get { return Column as _Int64; }
         }
 
-        public int Seed { get; private set; }
+        public long Seed { get; private set; }
 
-        public int Increment { get; private set; }
+        public long Increment { get; private set; }
     }
 }

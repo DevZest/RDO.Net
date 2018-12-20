@@ -805,7 +805,7 @@ namespace DevZest.Data
 
                 EnsureIdentityInitialized();
                 if (_identity != null)
-                    return _currentIdentityValue -= _identity.Increment;
+                    return _currentIdentityValue -= (int)_identity.Increment;
                 return base.DefaultValue;
             }
         }
@@ -818,7 +818,7 @@ namespace DevZest.Data
                 if (identity != null && object.ReferenceEquals(identity.Column, this))
                 {
                     _identity = identity;
-                    _currentIdentityValue = _identity.Seed;
+                    _currentIdentityValue = (int)_identity.Seed;
                 }
                 _isIdentityInitialized = true;
             }

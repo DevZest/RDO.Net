@@ -525,5 +525,31 @@ namespace DevZest.Data
                 throw new InvalidOperationException(DiagnosticMessages.Model_MultipleIdentityColumn);
             model.Add(identity);
         }
+
+        public bool IsUnique
+        {
+            get
+            {
+                var model = ParentModel;
+                if (model == null)
+                    return false;
+
+                if (IsIdentity)
+                    return true;
+
+                IReadOnlyList<Column> primaryKey = model.PrimaryKey;
+                if (primaryKey.Count == 1 && primaryKey[0] == this)
+                    return true;
+
+                var dbUniqueConstraints = model.GetAddons<DbUniqueConstraint>();
+                foreach (var dbUniqueConstraint in dbUniqueConstraints)
+                {
+                    if (dbUniqueConstraint.Columns.Count == 1 && dbUniqueConstraint.Columns[0].Column == this)
+                        return true;
+                }
+
+                return false;
+            }
+        }
     }
 }

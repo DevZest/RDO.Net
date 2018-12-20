@@ -1147,6 +1147,14 @@ namespace DevZest.Data
             get { return GetString("Column_NotSerailizable"); }
         }
 
+        /// <summary>
+        /// The DataSetReader is closed.
+        /// </summary>
+        public static string DataSetReader_Closed
+        {
+            get { return GetString("DataSetReader_Closed"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

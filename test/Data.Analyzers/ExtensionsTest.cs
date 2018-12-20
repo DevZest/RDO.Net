@@ -36,13 +36,9 @@ namespace DevZest.Data.CodeAnalysis
 
             {
                 var validOnTypes = result.ValidOnTypes;
-                Assert.AreEqual(3, validOnTypes.Length);
+                Assert.AreEqual(1, validOnTypes.Length);
                 Assert.IsNotNull(validOnTypes[0]);
                 Assert.AreEqual(compilation.GetTypeByMetadataName("DevZest.Data._Int32"), validOnTypes[0]);
-                Assert.IsNotNull(validOnTypes[1]);
-                Assert.AreEqual(compilation.GetTypeByMetadataName("DevZest.Data._Int64"), validOnTypes[1]);
-                Assert.IsNotNull(validOnTypes[2]);
-                Assert.AreEqual(compilation.GetTypeByMetadataName("DevZest.Data._Int16"), validOnTypes[2]);
             }
         }
 
