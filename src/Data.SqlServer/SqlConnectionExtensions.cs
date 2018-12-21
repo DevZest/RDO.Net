@@ -19,7 +19,11 @@ namespace DevZest.Data.SqlServer
                 serverVersion = serverVersion.Substring(0, indexOfFirstDot);
             var majorVersion = Int32.Parse(serverVersion, CultureInfo.InvariantCulture);
 
-            if (majorVersion >= 12)
+            if (majorVersion >= 14)
+                return SqlVersion.Sql14;
+            else if (majorVersion == 13)
+                return SqlVersion.Sql13;
+            else if (majorVersion == 12)
                 return SqlVersion.Sql12;
             else if (majorVersion == 11)
                 return SqlVersion.Sql11;
