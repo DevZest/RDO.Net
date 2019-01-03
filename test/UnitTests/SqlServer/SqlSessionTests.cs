@@ -40,9 +40,9 @@ namespace DevZest.Data.SqlServer
   </row>
 </root>';
 
-SELECT [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'NVARCHAR(50)') AS [Name]
-FROM @p1.nodes('/root/row') [SqlXmlModel]([Xml])
-ORDER BY [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') ASC;
+SELECT [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'NVARCHAR(50)') AS [Name]
+FROM @p1.nodes('/root/row') [SqlXmlNode]([Xml])
+ORDER BY [SqlXmlNode].[Xml].value('col_1[1]/text()[1]', 'INT') ASC;
 ";
                 Assert.AreEqual(expectedSql, query.ToString());
             }
@@ -93,13 +93,13 @@ ORDER BY [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') ASC;
 </root>';
 
 SELECT
-    [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') AS [ProductCategoryID],
-    [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') AS [ParentProductCategoryID],
-    [SqlXmlModel].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)') AS [Name],
-    [SqlXmlModel].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
-    [SqlXmlModel].[Xml].value('col_4[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
-FROM @p1.nodes('/root/row') [SqlXmlModel]([Xml])
-ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
+    [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'INT') AS [ProductCategoryID],
+    [SqlXmlNode].[Xml].value('col_1[1]/text()[1]', 'INT') AS [ParentProductCategoryID],
+    [SqlXmlNode].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)') AS [Name],
+    [SqlXmlNode].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
+    [SqlXmlNode].[Xml].value('col_4[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
+FROM @p1.nodes('/root/row') [SqlXmlNode]([Xml])
+ORDER BY [SqlXmlNode].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
 ";
                 Assert.AreEqual(expectedSql, query.ToString());
             }
@@ -133,9 +133,9 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
   </row>
 </root>';
 
-SELECT [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') AS [ProductCategoryID]
-FROM @p1.nodes('/root/row') [SqlXmlModel]([Xml])
-ORDER BY [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') ASC;
+SELECT [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'INT') AS [ProductCategoryID]
+FROM @p1.nodes('/root/row') [SqlXmlNode]([Xml])
+ORDER BY [SqlXmlNode].[Xml].value('col_1[1]/text()[1]', 'INT') ASC;
 ";
                 Assert.AreEqual(expectedSql, query.ToString());
             }

@@ -134,10 +134,10 @@ FROM
 
 DELETE [SalesOrderDetail]
 FROM
-    (@p1.nodes('/root/row') [SqlXmlModel]([Xml])
+    (@p1.nodes('/root/row') [SqlXmlNode]([Xml])
     INNER JOIN
     [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-    ON [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderID] AND [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderDetailID]);
+    ON [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderID] AND [SqlXmlNode].[Xml].value('col_1[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderDetailID]);
 ";
                 command.Verify(expectedSql);
             }

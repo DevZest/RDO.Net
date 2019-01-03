@@ -331,13 +331,13 @@ FROM
 INSERT INTO [#ProductCategory]
 ([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
 SELECT
-    [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') AS [ProductCategoryID],
-    [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') AS [ParentProductCategoryID],
-    [SqlXmlModel].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)') AS [Name],
-    [SqlXmlModel].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
-    [SqlXmlModel].[Xml].value('col_4[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
-FROM @p1.nodes('/root/row') [SqlXmlModel]([Xml])
-ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
+    [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'INT') AS [ProductCategoryID],
+    [SqlXmlNode].[Xml].value('col_1[1]/text()[1]', 'INT') AS [ParentProductCategoryID],
+    [SqlXmlNode].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)') AS [Name],
+    [SqlXmlNode].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
+    [SqlXmlNode].[Xml].value('col_4[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
+FROM @p1.nodes('/root/row') [SqlXmlNode]([Xml])
+ORDER BY [SqlXmlNode].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
 ";
 
                 commands.Verify(expectedSql);
@@ -387,17 +387,17 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
 INSERT INTO [#SalesOrderDetail]
 ([SalesOrderID], [SalesOrderDetailID], [OrderQty], [ProductID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [RowGuid], [ModifiedDate])
 SELECT
-    [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') AS [SalesOrderID],
-    [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') AS [SalesOrderDetailID],
-    [SqlXmlModel].[Xml].value('col_2[1]/text()[1]', 'SMALLINT') AS [OrderQty],
-    [SqlXmlModel].[Xml].value('col_3[1]/text()[1]', 'INT') AS [ProductID],
-    [SqlXmlModel].[Xml].value('col_4[1]/text()[1]', 'MONEY') AS [UnitPrice],
-    [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'MONEY') AS [UnitPriceDiscount],
-    [SqlXmlModel].[Xml].value('col_6[1]/text()[1]', 'MONEY') AS [LineTotal],
-    [SqlXmlModel].[Xml].value('col_7[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
-    [SqlXmlModel].[Xml].value('col_8[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
-FROM @p1.nodes('/root/row') [SqlXmlModel]([Xml])
-ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
+    [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'INT') AS [SalesOrderID],
+    [SqlXmlNode].[Xml].value('col_1[1]/text()[1]', 'INT') AS [SalesOrderDetailID],
+    [SqlXmlNode].[Xml].value('col_2[1]/text()[1]', 'SMALLINT') AS [OrderQty],
+    [SqlXmlNode].[Xml].value('col_3[1]/text()[1]', 'INT') AS [ProductID],
+    [SqlXmlNode].[Xml].value('col_4[1]/text()[1]', 'MONEY') AS [UnitPrice],
+    [SqlXmlNode].[Xml].value('col_5[1]/text()[1]', 'MONEY') AS [UnitPriceDiscount],
+    [SqlXmlNode].[Xml].value('col_6[1]/text()[1]', 'MONEY') AS [LineTotal],
+    [SqlXmlNode].[Xml].value('col_7[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
+    [SqlXmlNode].[Xml].value('col_8[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
+FROM @p1.nodes('/root/row') [SqlXmlNode]([Xml])
+ORDER BY [SqlXmlNode].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
 ";
                 command.Verify(expectedSql);
             }
@@ -447,21 +447,21 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
 INSERT INTO [#SalesOrderDetail]
 ([SalesOrderID], [SalesOrderDetailID], [OrderQty], [ProductID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [RowGuid], [ModifiedDate])
 SELECT
-    [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') AS [SalesOrderID],
-    [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') AS [SalesOrderDetailID],
-    [SqlXmlModel].[Xml].value('col_2[1]/text()[1]', 'SMALLINT') AS [OrderQty],
-    [SqlXmlModel].[Xml].value('col_3[1]/text()[1]', 'INT') AS [ProductID],
-    [SqlXmlModel].[Xml].value('col_4[1]/text()[1]', 'MONEY') AS [UnitPrice],
-    [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'MONEY') AS [UnitPriceDiscount],
-    [SqlXmlModel].[Xml].value('col_6[1]/text()[1]', 'MONEY') AS [LineTotal],
-    [SqlXmlModel].[Xml].value('col_7[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
-    [SqlXmlModel].[Xml].value('col_8[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
+    [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'INT') AS [SalesOrderID],
+    [SqlXmlNode].[Xml].value('col_1[1]/text()[1]', 'INT') AS [SalesOrderDetailID],
+    [SqlXmlNode].[Xml].value('col_2[1]/text()[1]', 'SMALLINT') AS [OrderQty],
+    [SqlXmlNode].[Xml].value('col_3[1]/text()[1]', 'INT') AS [ProductID],
+    [SqlXmlNode].[Xml].value('col_4[1]/text()[1]', 'MONEY') AS [UnitPrice],
+    [SqlXmlNode].[Xml].value('col_5[1]/text()[1]', 'MONEY') AS [UnitPriceDiscount],
+    [SqlXmlNode].[Xml].value('col_6[1]/text()[1]', 'MONEY') AS [LineTotal],
+    [SqlXmlNode].[Xml].value('col_7[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
+    [SqlXmlNode].[Xml].value('col_8[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
 FROM
-    (@p1.nodes('/root/row') [SqlXmlModel]([Xml])
+    (@p1.nodes('/root/row') [SqlXmlNode]([Xml])
     INNER JOIN
     [#SalesOrder] [SalesOrder]
-    ON [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') = [SalesOrder].[SalesOrderID])
-ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
+    ON [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'INT') = [SalesOrder].[SalesOrderID])
+ORDER BY [SqlXmlNode].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
 ";
                 command.Verify(expectedSql);
             }

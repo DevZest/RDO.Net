@@ -81,9 +81,9 @@ namespace DevZest.Data.SqlServer
             return sqlBuilder.ToString().CreateSqlCommand(Connection);
         }
 
-        public DbTable<SqlXmlModel> GetTable(SqlXml xml, string xPath)
+        public DbTable<SqlXmlNode> GetTable(SqlXml xml, string xPath)
         {
-            var model = new SqlXmlModel();
+            var model = new SqlXmlNode();
             model.Initialize(xml, xPath);
             return model.CreateDbTable(this, "sys_xml_nodes");
         }

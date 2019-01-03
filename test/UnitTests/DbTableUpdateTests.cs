@@ -159,15 +159,15 @@ FROM
 </root>';
 
 UPDATE [ProductCategory] SET
-    [ParentProductCategoryID] = [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT'),
-    [Name] = [SqlXmlModel].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)'),
-    [RowGuid] = [SqlXmlModel].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER'),
-    [ModifiedDate] = [SqlXmlModel].[Xml].value('col_4[1]/text()[1]', 'DATETIME')
+    [ParentProductCategoryID] = [SqlXmlNode].[Xml].value('col_1[1]/text()[1]', 'INT'),
+    [Name] = [SqlXmlNode].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)'),
+    [RowGuid] = [SqlXmlNode].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER'),
+    [ModifiedDate] = [SqlXmlNode].[Xml].value('col_4[1]/text()[1]', 'DATETIME')
 FROM
-    (@p1.nodes('/root/row') [SqlXmlModel]([Xml])
+    (@p1.nodes('/root/row') [SqlXmlNode]([Xml])
     INNER JOIN
     [SalesLT].[ProductCategory] [ProductCategory]
-    ON [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') = [ProductCategory].[ProductCategoryID]);
+    ON [SqlXmlNode].[Xml].value('col_0[1]/text()[1]', 'INT') = [ProductCategory].[ProductCategoryID]);
 ";
                 var command = db.ProductCategory.MockUpdate(dataSet.Count, dataSet);
                 command.Verify(expectedSql);

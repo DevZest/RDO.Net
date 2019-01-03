@@ -184,13 +184,12 @@ namespace DevZest.Data.SqlServer
         public override void Visit(DbTableClause table)
         {
             var model = table.Model;
-            var xmlModel = model as SqlXmlModel;
-            if (xmlModel != null)
+            if (model is SqlXmlNode xmlModel)
             {
                 xmlModel.SourceData.Accept(_expressionGenerator);
                 SqlBuilder.Append(".nodes(").AppendSingleQuoted(xmlModel.XPath).Append(')');
                 var alias = ModelAliasManager[model].ToQuotedIdentifier();
-                SqlBuilder.Append(' ').Append(alias).Append('(').Append(nameof(SqlXmlModel.Xml).ToQuotedIdentifier()).Append(')');
+                SqlBuilder.Append(' ').Append(alias).Append('(').Append(nameof(SqlXmlNode.Xml).ToQuotedIdentifier()).Append(')');
             }
             else
             {
