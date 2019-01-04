@@ -81,12 +81,12 @@ namespace DevZest.Data.SqlServer
             return sqlBuilder.ToString().CreateSqlCommand(Connection);
         }
 
-        public DbTable<SqlXmlNode> GetXmlNodes(string tableName, SqlXml xml, string xPath)
+        public DbSet<SqlXmlNode> OpenXml(string dbSetName, SqlXml xml, string xPath)
         {
-            tableName = "@" + tableName;
+            dbSetName = "@" + dbSetName;
             var model = new SqlXmlNode();
-            model.Initialize(tableName, xml, xPath);
-            return model.CreateDbTable(this, tableName);
+            model.Initialize(dbSetName, xml, xPath);
+            return model.CreateDbTable(this, dbSetName);
         }
 
         private const string XML_ROOT_TAG_NAME = "root";
@@ -165,7 +165,7 @@ namespace DevZest.Data.SqlServer
 
                 var xml = GetSqlXml(dataSet, columnMappings.Select(x => ((DbColumnExpression)x.SourceExpression).Column).ToList());
 
-                var sourceTable = GetXmlNodes(dataSet.Model.GetDbAlias(), xml, XML_ROW_XPATH);
+                var sourceTable = OpenXml(dataSet.Model.GetDbAlias(), xml, XML_ROW_XPATH);
                 builder.From(sourceTable, out var xmlModel);
                 for (int i = 0; i < columnMappings.Count; i++)
                 {

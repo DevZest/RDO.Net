@@ -19,9 +19,9 @@ namespace DevZest.Data.SqlServer
         {
         }
 
-        internal void Initialize(string tableName, SqlXml sourceData, string xPath)
+        internal void Initialize(string dbSetName, SqlXml sourceData, string xPath)
         {
-            _tableName = tableName;
+            this.dbSetName = dbSetName;
             SourceData = _SqlXml.Param(sourceData).DbExpression;
             XPath = xPath;
         }
@@ -113,10 +113,10 @@ namespace DevZest.Data.SqlServer
             return Expression.Lambda<Func<_SqlXml, string, Column, Column>>(call, param0, param1, param2).Compile();
         }
 
-        private string _tableName;
+        private string dbSetName;
         protected override string DbAlias
         {
-            get { return _tableName; }
+            get { return dbSetName; }
         }
     }
 }
