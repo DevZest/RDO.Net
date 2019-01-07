@@ -302,5 +302,48 @@ namespace DevZest.Data
         {
             get { return Model.DataSetContainer; }
         }
+
+        public string ForJson(string ordinalColumnName, bool isPretty)
+        {
+            var jsonWriter = JsonWriter.New();
+            jsonWriter.WriteStartArray();
+            var columns = Model.GetColumns();
+            for (int i = 0; i < Count; i++)
+            {
+                if (i > 0)
+                    jsonWriter.WriteComma();
+                WriteJson(jsonWriter, columns, this[i], ordinalColumnName);
+            }
+            jsonWriter.WriteEndArray();
+            return jsonWriter.ToString(isPretty);
+        }
+
+        private static void WriteJson(JsonWriter jsonWriter, IReadOnlyList<Column> columns, DataRow dataRow, string ordinalColumnName)
+        {
+            jsonWriter.WriteStartObject();
+
+            int count = 0;
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                if (typeof(DataSet).IsAssignableFrom(column.DataType))
+                    continue;
+                if (count > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.WriteObjectName(column.Name);
+                jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
+                count++;
+            }
+
+            if (!string.IsNullOrEmpty(ordinalColumnName))
+            {
+                if (count > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.WriteObjectName(ordinalColumnName);
+                jsonWriter.WriteValue(JsonValue.Number(dataRow.Ordinal));
+            }
+
+            jsonWriter.WriteEndObject();
+        }
     }
 }
