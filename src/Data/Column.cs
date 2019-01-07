@@ -202,12 +202,12 @@ namespace DevZest.Data
             _jsonIgnore = true;
         }
 
-        public virtual bool IsSerializable
+        public virtual bool ShouldSerialize
         {
-            get { return _jsonIgnore ? false : IsSerializableOverride; }
+            get { return _jsonIgnore ? false : IsDeserializable; }
         }
 
-        internal abstract bool IsSerializableOverride { get; }
+        internal abstract bool IsDeserializable { get; }
 
         /// <summary>Serializes the value at given <see cref="DataRow"/> oridinal as JSON.</summary>
         /// <param name="rowOrdinal">The <see cref="DataRow"/> ordinal.</param>

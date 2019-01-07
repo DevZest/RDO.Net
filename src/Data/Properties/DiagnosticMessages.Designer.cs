@@ -1140,11 +1140,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Column is not serializable.
+        /// Column is not deserializable.
         /// </summary>
-        public static string Column_NotSerailizable
+        public static string Column_NotDeserializable
         {
-            get { return GetString("Column_NotSerailizable"); }
+            get { return GetString("Column_NotDeserializable"); }
         }
 
         /// <summary>

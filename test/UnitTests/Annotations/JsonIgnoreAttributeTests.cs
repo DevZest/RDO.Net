@@ -17,7 +17,7 @@ namespace DevZest.Data.Annotations
         public void JsonIgnoreAttribute_Test()
         {
             var model = new MyModel();
-            Assert.AreEqual(false, model.Column.IsSerializable);
+            Assert.AreEqual(false, model.Column.ShouldSerialize);
         }
     }
 }

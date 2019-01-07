@@ -30,14 +30,14 @@ namespace DevZest.Data.Primitives
             return model.Columns[new ColumnId(model.GetType(), Model.SYS_ROW_ID_COL_NAME)] as _Int32;
         }
 
-        public static DbTable<T> CreateDbTable<T>(this T model, DbSession dbSession, string name)
-            where T : Model, new()
+        public static DbTable<T> CreateDbTable<T>(this T modelRef, DbSession dbSession, string name)
+            where T : class, IModelReference, new()
         {
-            model.VerifyNotNull(nameof(model));
+            modelRef.VerifyNotNull(nameof(modelRef));
             dbSession.VerifyNotNull(nameof(dbSession));
             name.VerifyNotNull(nameof(name));
-            var result = model.DataSource as DbTable<T>;
-            return result ?? DbTable<T>.Create(model, dbSession, name);
+            var result = modelRef.Model.DataSource as DbTable<T>;
+            return result ?? DbTable<T>.Create(modelRef, dbSession, name);
         }
 
         public static IEnumerable<Column> GetInsertableColumns(this Model model)

@@ -42,8 +42,15 @@ namespace DevZest.Data.SqlServer
             private void AddAliase(Model model)
             {
                 Debug.Assert(!_aliases.ContainsKey(model));
-                _aliases.Add(model, _suffixes.GetUniqueName(model.GetDbAlias()));
+                _aliases.Add(model, _suffixes.GetUniqueName(GetDbAlias(model)));
             }
+        }
+
+        internal static string GetDbAlias(Model model)
+        {
+            var result = model.GetDbAlias();
+            var sourceJsonParam = model.GetSourceJsonParam();
+            return ReferenceEquals(sourceJsonParam, null) ? result : "@" + result;
         }
     }
 }

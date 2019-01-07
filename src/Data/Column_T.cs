@@ -18,7 +18,7 @@ namespace DevZest.Data
         private interface IValueManager
         {
             bool IsPrimaryKey { get; }
-            bool IsSerializable { get; }
+            bool IsDeserializable { get; }
             T this[int ordinal] { get; set; }
             void Insert(int ordinal, T value);
             void RemoveAt(int ordinal);
@@ -60,7 +60,7 @@ namespace DevZest.Data
                     get { return _isPrimaryKey; }
                 }
 
-                public override bool IsSerializable
+                public override bool IsDeserializable
                 {
                     get { return true; }
                 }
@@ -78,7 +78,7 @@ namespace DevZest.Data
                     get { return false; }
                 }
 
-                public override bool IsSerializable
+                public override bool IsDeserializable
                 {
                     get { return false; }
                 }
@@ -99,7 +99,7 @@ namespace DevZest.Data
 
             public abstract bool IsPrimaryKey { get; }
 
-            public abstract bool IsSerializable { get; }
+            public abstract bool IsDeserializable { get; }
         }
 
         /// <summary>
@@ -433,9 +433,9 @@ namespace DevZest.Data
         /// <returns>The column of constant expression.</returns>
         protected internal abstract Column<T> CreateConst(T value);
 
-        internal sealed override bool IsSerializableOverride
+        internal sealed override bool IsDeserializable
         {
-            get { return _valueManager == null ? false : _valueManager.IsSerializable; }
+            get { return _valueManager == null ? false : _valueManager.IsDeserializable; }
         }
         
         /// <inheritdoc/>
@@ -477,9 +477,7 @@ namespace DevZest.Data
         /// <inheritdoc/>
         public sealed override JsonValue Serialize(int rowOrdinal)
         {
-            if (!IsSerializable)
-                throw new InvalidOperationException(DiagnosticMessages.Column_NotSerailizable);
-            return SerializeValue(_valueManager[rowOrdinal]);
+            return SerializeValue(this[rowOrdinal]);
         }
 
         /// <summary>Serializes value into JSON.</summary>
@@ -490,8 +488,8 @@ namespace DevZest.Data
         /// <inheritdoc/>
         public sealed override void Deserialize(int ordinal, JsonValue value)
         {
-            if (!IsSerializable)
-                throw new InvalidOperationException(DiagnosticMessages.Column_NotSerailizable);
+            if (!IsDeserializable)
+                throw new InvalidOperationException(DiagnosticMessages.Column_NotDeserializable);
             _valueManager[ordinal] = DeserializeValue(value);
         }
 

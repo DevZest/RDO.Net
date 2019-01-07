@@ -183,6 +183,9 @@ namespace DevZest.Data.SqlServer
 
         public override void Visit(DbTableClause table)
         {
+            if (TryGenerateJsonRowSet(table))
+                return;
+
             var model = table.Model;
             if (model is SqlXmlNode xmlModel)
             {
@@ -197,6 +200,32 @@ namespace DevZest.Data.SqlServer
                 var alias = ModelAliasManager[model].ToQuotedIdentifier();
                 SqlBuilder.Append(tableName).Append(' ').Append(alias);
             }
+        }
+
+        private bool TryGenerateJsonRowSet(DbTableClause table)
+        {
+            var model = table.Model;
+            var jsonParam = model.GetSourceJsonParam();
+            if (ReferenceEquals(jsonParam, null))
+                return false;
+
+            SqlBuilder.Append("OPENJSON(");
+            jsonParam.DbExpression.Accept(_expressionGenerator);
+            SqlBuilder.AppendLine(") WITH (");
+            SqlBuilder.Indent++;
+            var columns = model.GetColumns();
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                var columnName = column.DbColumnName.ToQuotedIdentifier();
+                SqlBuilder.Append(columnName).Append(' ').Append(column.GetSqlType().GetDataTypeSql(SqlVersion));
+                if (i < columns.Count - 1)
+                    SqlBuilder.Append(',').AppendLine();
+            }
+            var alias = ModelAliasManager[model].ToQuotedIdentifier();
+            SqlBuilder.Append(") AS ").Append(alias);
+            SqlBuilder.Indent--;
+            return true;
         }
 
         public override void Visit(DbJoinClause join)

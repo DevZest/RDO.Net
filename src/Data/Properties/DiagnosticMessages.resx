@@ -540,8 +540,8 @@
   <data name="Column_AlreadyInitialized" xml:space="preserve">
     <value>The column is intiailized already.</value>
   </data>
-  <data name="Column_NotSerailizable" xml:space="preserve">
-    <value>Column is not serializable.</value>
+  <data name="Column_NotDeserializable" xml:space="preserve">
+    <value>Column is not deserializable.</value>
   </data>
   <data name="DataSetReader_Closed" xml:space="preserve">
     <value>The DataSetReader is closed.</value>

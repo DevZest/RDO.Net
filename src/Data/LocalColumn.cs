@@ -26,7 +26,7 @@ namespace DevZest.Data
             get { return true; }
         }
 
-        public override bool IsSerializable
+        public override bool ShouldSerialize
         {
             get { return false; }
         }

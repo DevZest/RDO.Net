@@ -156,6 +156,17 @@ namespace DevZest.Data.SqlServer
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
+            if (SqlVersion >= SqlVersion.Sql13)
+                return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder);
+            else
+                return BuildXmlQuery(dataSet, targetModel, columnMappingsBuilder);
+        }
+
+
+        private DbQuery<TTarget> BuildXmlQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
+        {
             var result = CreateQuery<TTarget>(targetModel, (builder, _) =>
             {
                 var dataSetOrdinalColumn = new _Int32();
@@ -165,14 +176,14 @@ namespace DevZest.Data.SqlServer
 
                 var xml = GetSqlXml(dataSet, columnMappings.Select(x => ((DbColumnExpression)x.SourceExpression).Column).ToList());
 
-                var sourceTable = OpenXml(dataSet.Model.GetDbAlias(), xml, XML_ROW_XPATH);
-                builder.From(sourceTable, out var xmlModel);
+                var source = OpenXml(dataSet.Model.GetDbAlias(), xml, XML_ROW_XPATH);
+                builder.From(source, out var xmlNode);
                 for (int i = 0; i < columnMappings.Count; i++)
                 {
                     var targetColumn = columnMappings[i].Target;
-                    builder.SelectColumn(xmlModel[GetColumnTagXPath(i), targetColumn], targetColumn);
+                    builder.SelectColumn(xmlNode[GetColumnTagXPath(i), targetColumn], targetColumn);
                 }
-                builder.OrderBy(xmlModel[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
+                builder.OrderBy(xmlNode[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
             });
             result.UpdateOriginalDataSource(dataSet, true);
             return result;
@@ -400,6 +411,82 @@ select @mockschema;
         {
             var quotedTableName = string.Join(".", tableName.ParseIdentifier()).ToQuotedIdentifier();
             return string.Format(CultureInfo.InvariantCulture, "[tempdb].[{0}].{1}", tag, quotedTableName);
+        }
+
+        private const string SYS_DATASET_ORDINAL = "sys_dataset_ordinal";
+
+        private DbQuery<TTarget> BuildJsonQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
+        {
+            var result = CreateQuery<TTarget>(targetModel, (builder, _) =>
+            {
+
+                var columnMappings = ColumnMapping.Map(dataSet._, _, columnMappingsBuilder, true);
+
+                var json = ToJson(dataSet);
+
+                var source = OpenJson<TSource>(json, SYS_DATASET_ORDINAL);
+                var sourceColumns = source.Model.GetColumns();
+                var dataSetOrdinalColumn = sourceColumns[SYS_DATASET_ORDINAL];
+                builder.From(source, out var _);
+                for (int i = 0; i < columnMappings.Count; i++)
+                {
+                    var sourceColumn = sourceColumns[columnMappings[i].Source.Ordinal];
+                    var targetColumn = columnMappings[i].Target;
+                    builder.SelectColumn(sourceColumn, targetColumn);
+                }
+                builder.OrderBy(dataSetOrdinalColumn.Asc());
+            });
+            result.UpdateOriginalDataSource(dataSet, true);
+            return result;
+        }
+
+        private static string ToJson<T>(DataSet<T> dataSet)
+            where T : class, IModelReference, new()
+        {
+            var jsonWriter = JsonWriter.New();
+            jsonWriter.WriteStartArray();
+            var columns = dataSet.Model.GetColumns();
+            for (int i = 0; i < dataSet.Count; i++)
+            {
+                if (i > 0)
+                    jsonWriter.WriteComma();
+                WriteJson(jsonWriter, columns, dataSet[i]);
+            }
+            jsonWriter.WriteEndArray();
+            return jsonWriter.ToString(false);
+        }
+
+        private static void WriteJson(JsonWriter jsonWriter, IReadOnlyList<Column> columns, DataRow dataRow)
+        {
+            jsonWriter.WriteStartObject();
+            int count = 0;
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                if (typeof(DataSet).IsAssignableFrom(column.DataType))
+                    continue;
+                if (count > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.WriteObjectName(column.Name);
+                jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
+                count++;
+            }
+
+            if (count > 0)
+                jsonWriter.WriteComma();
+            jsonWriter.WriteObjectName(SYS_DATASET_ORDINAL);
+            jsonWriter.WriteValue(JsonValue.Number(dataRow.Ordinal));
+            jsonWriter.WriteEndObject();
+        }
+
+        public DbSet<T> OpenJson<T>(string json, string ordinalColumnName = null)
+            where T : class, IModelReference, new()
+        {
+            if (json == null)
+                throw new ArgumentNullException(nameof(json));
+            return this.CreateJsonRowSet<T>(json, ordinalColumnName);
         }
     }
 }
