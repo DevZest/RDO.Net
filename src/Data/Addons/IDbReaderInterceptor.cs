@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using DevZest.Data.Primitives;
+using System.Data.Common;
 
 namespace DevZest.Data.Addons
 {

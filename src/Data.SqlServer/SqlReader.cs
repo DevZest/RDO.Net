@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;

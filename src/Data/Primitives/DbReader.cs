@@ -1,10 +1,9 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevZest.Data
+namespace DevZest.Data.Primitives
 {
     public abstract class DbReader : IDisposable
     {
