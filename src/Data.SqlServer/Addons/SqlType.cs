@@ -508,16 +508,6 @@ namespace DevZest.Data.SqlServer.Addons
             }
         }
 
-        private static void GenerateBinaryConst(IndentedStringBuilder sqlBuilder, Binary value)
-        {
-            if (value != null)
-            {
-            }
-            else
-                sqlBuilder.Append(NULL);
-        }
-
-
         internal static SqlType Binary(Column<Binary> binaryColumn, int size)
         {
             return new BinaryType(binaryColumn, size);
