@@ -384,10 +384,5 @@ namespace DevZest.Data.SqlServer
         {
             return column.GetSqlType().GetSqlParameterInfo(sqlVersion).SqlDbType;
         }
-
-        internal static bool IsUnicode(this Column column, SqlVersion sqlVersion)
-        {
-            return column.GetSqlDbType(sqlVersion).IsUnicode();
-        }
     }
 }
