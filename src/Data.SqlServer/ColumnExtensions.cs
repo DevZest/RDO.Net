@@ -51,7 +51,7 @@ namespace DevZest.Data.SqlServer
             column.VerifyNotNull(nameof(column));
 
             if (size < MIN_BINARY_SIZE || size > MAX_BINARY_SIZE)
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             column.SetSqlType(SqlType.Binary(column, size));
             return column;
         }
@@ -67,7 +67,7 @@ namespace DevZest.Data.SqlServer
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_VARBINARY_SIZE || size > MAX_VARBINARY_SIZE)
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             column.SetSqlType(SqlType.VarBinary(column, size));
             return column;
         }
@@ -90,9 +90,9 @@ namespace DevZest.Data.SqlServer
         {
             column.VerifyNotNull(nameof(column));
             if (precision < MIN_DECIMAL_PRECISION || precision > MAX_DECIMAL_PRECISION)
-                throw new ArgumentOutOfRangeException("precision");
+                throw new ArgumentOutOfRangeException(nameof(precision));
             if (scale < 0 || scale > precision)
-                throw new ArgumentOutOfRangeException("scale");
+                throw new ArgumentOutOfRangeException(nameof(scale));
             column.SetSqlType(SqlType.Decimal(column, precision, scale));
             return column;
         }
@@ -143,7 +143,7 @@ namespace DevZest.Data.SqlServer
         {
             column.VerifyNotNull(nameof(column));
             if (precision < MIN_DATETIME2_PRECISION || precision > MAX_DATETIME2_PRECISION)
-                throw new ArgumentOutOfRangeException("precision");
+                throw new ArgumentOutOfRangeException(nameof(precision));
             column.SetSqlType(SqlType.DateTime2(column, precision));
             return column;
         }
@@ -152,7 +152,7 @@ namespace DevZest.Data.SqlServer
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             column.SetSqlType(SqlType.NChar(column, size));
             return column;
         }
@@ -168,7 +168,7 @@ namespace DevZest.Data.SqlServer
         {
             column.VerifyNotNull(nameof(column));
             if ((size < MIN_NVARCHAR_SIZE || size > MAX_NVARCHAR_SIZE) && size != -1)
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             column.SetSqlType(SqlType.NVarChar(column, size));
             return column;
         }
@@ -192,7 +192,7 @@ namespace DevZest.Data.SqlServer
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             column.SetSqlType(SqlType.Char(column, size));
             return column;
         }
@@ -209,7 +209,7 @@ namespace DevZest.Data.SqlServer
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_VARCHAR_SIZE || size > MAX_VARCHAR_SIZE)
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             column.SetSqlType(SqlType.VarChar(column, size));
             return column;
         }
