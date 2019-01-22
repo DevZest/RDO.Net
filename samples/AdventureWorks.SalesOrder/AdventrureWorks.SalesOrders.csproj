@@ -240,14 +240,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\packages\DevZest.Samples.AdventureWorksLT.SqlServer2014.1.0.0\content\AdventureWorksLT.mdf">
-      <Link>AdventureWorksLT.mdf</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\packages\DevZest.Samples.AdventureWorksLT.SqlServer2014.1.0.0\content\AdventureWorksLT_log.ldf">
-      <Link>AdventureWorksLT_log.ldf</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Images\search_glyph.png" />
     <Resource Include="Images\search_clear.png" />
     <Resource Include="Images\Checkmark.png" />
