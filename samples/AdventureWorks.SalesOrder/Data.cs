@@ -21,7 +21,7 @@ namespace AdventureWorks.SalesOrders
         {
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
-                await db.SalesOrderHeader.Delete(dataSet, (s, _) => s.Match(_)).ExecuteAsync(ct);
+                await db.SalesOrderHeader.DeleteAsync(dataSet, (s, _) => s.Match(_), ct);
             }
         }
 
@@ -89,11 +89,11 @@ namespace AdventureWorks.SalesOrders
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
                 salesOrders._.ResetRowIdentifiers();
-                await db.SalesOrderHeader.Update(salesOrders).ExecuteAsync(ct);
-                await db.SalesOrderDetail.Delete(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader)).ExecuteAsync(ct);
+                await db.SalesOrderHeader.UpdateAsync(salesOrders, ct);
+                await db.SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
                 var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
                 salesOrderDetails._.ResetRowIdentifiers();
-                await db.SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct);
+                await db.SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
             }
         }
 
@@ -102,10 +102,10 @@ namespace AdventureWorks.SalesOrders
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
                 salesOrders._.ResetRowIdentifiers();
-                await db.SalesOrderHeader.Insert(salesOrders, updateIdentity: true).ExecuteAsync(ct);
+                await db.SalesOrderHeader.InsertAsync(salesOrders, DbTableInsertOptions.UpdateIdentity, ct);
                 var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
                 salesOrderDetails._.ResetRowIdentifiers();
-                await db.SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct);
+                await db.SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
                 return salesOrders.Count > 0 ? salesOrders._.SalesOrderID[0] : null;
             }
         }
