@@ -3,15 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public DbTableDelete<T> Delete(Func<T, _Boolean> where = null)
+        public Task<int> DeleteAsync(CancellationToken ct = default(CancellationToken))
+        {
+            return DeleteAsync(null, ct);
+        }
+
+        public Task<int> DeleteAsync(Func<T, _Boolean> where, CancellationToken ct = default(CancellationToken))
         {
             VerifyDeletable();
-            return DbTableDelete<T>.Create(this, where);
+            return DbTableDelete<T>.ExecuteAsync(this, where, ct);
         }
 
         internal DbSelectStatement BuildDeleteStatement(Func<T, _Boolean> where)
@@ -20,52 +27,52 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, null, null, whereExpr, null, -1, -1);
         }
 
-        public DbTableDelete<T> Delete<TSource>(DbSet<TSource> source)
+        public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Delete(source, KeyMapping.Match);
+            return DeleteAsync(source, KeyMapping.Match, ct);
         }
 
-        public DbTableDelete<T> Delete<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
+        public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source));
             var columnMappings = Verify(keyMapper, nameof(keyMapper), source._).GetColumnMappings();
-            return DbTableDelete<T>.Create(this, source, columnMappings);
+            return DbTableDelete<T>.ExecuteAsync(this, source, columnMappings, ct);
         }
 
-        public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex)
+        public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, int rowIndex, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Delete(source, rowIndex, KeyMapping.Match);
+            return DeleteAsync(source, rowIndex, KeyMapping.Match, ct);
         }
 
-        public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper)
+        public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
             var columnMappings = Verify(keyMapper, nameof(keyMapper), source._).GetColumnMappings();
-            return DbTableDelete<T>.Create(this, source, rowIndex, columnMappings);
+            return DbTableDelete<T>.ExecuteAsync(this, source, rowIndex, columnMappings, ct);
         }
 
-        public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source)
+        public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, CancellationToken ct)
             where TSource : class, T, new()
         {
-            return Delete(source, KeyMapping.Match);
+            return DeleteAsync(source, KeyMapping.Match, ct);
         }
 
-        public DbTableDelete<T> Delete<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper)
+        public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
-                return Delete(source, 0, keyMapper);
+                return DeleteAsync(source, 0, keyMapper, ct);
 
             VerifyDeletable();
             var keyMappingTarget = Verify(keyMapper, nameof(keyMapper), source._).TargetKey;
-            return DbTableDelete<T>.Create(this, source, keyMappingTarget);
+            return DbTableDelete<T>.ExecuteAsync(this, source, keyMappingTarget, ct);
         }
 
         internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> join)

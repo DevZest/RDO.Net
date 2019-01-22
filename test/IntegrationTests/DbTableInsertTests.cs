@@ -23,7 +23,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = await new EmptySalesOrderMockDb().InitializeAsync(await OpenDbAsync(log)))
             {
-                await db.SalesOrderHeader.Insert(salesOrder, updateIdentity: true).ExecuteAsync();
+                await db.SalesOrderHeader.InsertAsync(salesOrder, DbTableInsertOptions.UpdateIdentity);
             }
             Assert.AreEqual(1, salesOrder._.SalesOrderID[0]);
         }
@@ -35,7 +35,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = await new EmptySalesOrderMockDb().InitializeAsync(await OpenDbAsync(log, LogCategory.All)))
             {
-                var result = await db.SalesOrderHeader.Insert(salesOrders, updateIdentity: true).ExecuteAsync();
+                var result = await db.SalesOrderHeader.InsertAsync(salesOrders, DbTableInsertOptions.UpdateIdentity);
                 Assert.AreEqual(2, result);
             }
             Assert.AreEqual(1, salesOrders._.SalesOrderID[0]);
@@ -50,10 +50,10 @@ namespace DevZest.Data
             using (var db = await new EmptySalesOrderMockDb().InitializeAsync(await OpenDbAsync(log, LogCategory.All)))
             {
                 var tempSalesOrders = await db.CreateTempTableAsync<SalesOrder>();
-                await tempSalesOrders.Insert(salesOrders).ExecuteAsync();
+                await tempSalesOrders.InsertAsync(salesOrders);
                 tempSalesOrders.GetSalesOrderIds().Verify(0, -1);
 
-                var result = await db.SalesOrderHeader.Insert(tempSalesOrders, updateIdentity: true).ExecuteAsync();
+                var result = await db.SalesOrderHeader.InsertAsync(tempSalesOrders, DbTableInsertOptions.UpdateIdentity);
                 Assert.AreEqual(2, result);
                 db.SalesOrderHeader.ToDbQuery<SalesOrder>().GetSalesOrderIds().Verify(1, 2);
                 tempSalesOrders.GetSalesOrderIds().Verify(1, 2);

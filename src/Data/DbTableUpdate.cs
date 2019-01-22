@@ -1,157 +1,43 @@
 ﻿using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
-    public abstract class DbTableUpdate<T> : Executable<int>
+    internal static class DbTableUpdate<T>
         where T : class, IModelReference, new()
     {
-        protected DbTableUpdate(DbTable<T> target)
+        public static async Task<int> ExecuteAsync(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where, CancellationToken ct)
         {
-            Debug.Assert(target != null);
-            _target = target;
+            var statement = target.BuildUpdateStatement(columnMappings, where);
+            return target.UpdateOrigin(null, await target.DbSession.UpdateAsync(statement, ct));
         }
 
-        private readonly DbTable<T> _target;
-        protected DbTable<T> Target
-        {
-            get { return _target; }
-        }
-
-        protected DbSession DbSession
-        {
-            get { return Target.DbSession; }
-        }
-
-        internal static DbTableUpdate<T> Create(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
-        {
-            return new UpdateWhere(target, columnMappings, where);
-        }
-
-        private sealed class UpdateWhere : DbTableUpdate<T>
-        {
-            public UpdateWhere(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
-                : base(target)
-            {
-                _columnMappings = columnMappings;
-                _where = where;
-            }
-
-            private readonly IReadOnlyList<ColumnMapping> _columnMappings;
-            private readonly Func<T, _Boolean> _where;
-
-            private DbSelectStatement BuildUpdateStatement()
-            {
-                return Target.BuildUpdateStatement(_columnMappings, _where);
-            }
-
-            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
-            {
-                var statement = BuildUpdateStatement();
-                return Target.UpdateOrigin(null, await DbSession.UpdateAsync(statement, ct));
-            }
-        }
-
-        internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join,
+            CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            return new UpdateFromDbSet<TSource>(target, source, columnMappings, join);
+            var statement = target.BuildUpdateStatement(source, columnMappings, join);
+            return target.UpdateOrigin(null, await target.DbSession.UpdateAsync(statement, ct));
         }
 
-        private sealed class UpdateFromDbSet<TSource> : DbTableUpdate<T>
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings,
+            IReadOnlyList<ColumnMapping> join, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            public UpdateFromDbSet(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-                : base(target)
-            {
-                _source = source;
-                _columnMappings = columnMappings;
-                _join = join;
-            }
-
-            private readonly DbSet<TSource> _source;
-            private readonly IReadOnlyList<ColumnMapping> _columnMappings;
-            private readonly IReadOnlyList<ColumnMapping> _join;
-
-            private DbSelectStatement BuildUpdateStatement()
-            {
-                return Target.BuildUpdateStatement(_source, _columnMappings, _join);
-            }
-
-            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
-            {
-                var statement = BuildUpdateStatement();
-                return Target.UpdateOrigin(null, await DbSession.UpdateAsync(statement, ct));
-            }
+            var statement = target.BuildUpdateScalarStatement(source, rowIndex, columnMappings, join);
+            return target.UpdateOrigin<TSource>(null, await target.DbSession.UpdateAsync(statement, ct) > 0) ? 1 : 0;
         }
 
-        internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo,
+            CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            return new UpdateFromDataRow<TSource>(target, source, rowIndex, columnMappings, join);
-        }
-
-        private sealed class UpdateFromDataRow<TSource> : DbTableUpdate<T>
-            where TSource : class, IModelReference, new()
-        {
-            public UpdateFromDataRow(DbTable<T> target, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-                : base(target)
-            {
-                _source = source;
-                _rowIndex = rowIndex;
-                _columnMappings = columnMappings;
-                _join = join;
-            }
-
-            private readonly DataSet<TSource> _source;
-            private readonly int _rowIndex;
-            private readonly IReadOnlyList<ColumnMapping> _columnMappings;
-            private readonly IReadOnlyList<ColumnMapping> _join;
-
-            private DbSelectStatement BuildUpdateStatement()
-            {
-                return Target.BuildUpdateScalarStatement(_source, _rowIndex, _columnMappings, _join);
-            }
-
-            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
-            {
-                var statement = BuildUpdateStatement();
-                return Target.UpdateOrigin<TSource>(null, await DbSession.UpdateAsync(statement, ct) > 0) ? 1 : 0;
-            }
-        }
-
-        internal static DbTableUpdate<T> Create<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo)
-            where TSource : class, IModelReference, new()
-        {
-            return new UpdateFromDataSet<TSource>(target, source, columnMapper, joinTo);
-        }
-
-        private sealed class UpdateFromDataSet<TSource> : DbTableUpdate<T>
-            where TSource : class, IModelReference, new()
-        {
-            public UpdateFromDataSet(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo)
-                : base(target)
-            {
-                Debug.Assert(source.Count != 1);
-                _source = source;
-                _columnMapper = columnMapper;
-                _joinTo = joinTo;
-            }
-
-            private readonly DataSet<TSource> _source;
-            private readonly Action<ColumnMapper, TSource, T> _columnMapper;
-            private readonly CandidateKey _joinTo;
-
-            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
-            {
-                if (_source.Count == 0)
-                    return 0;
-                return await DbSession.UpdateAsync(_source, Target, _columnMapper, _joinTo, ct);
-            }
+            if (source.Count == 0)
+                return 0;
+            return await target.DbSession.UpdateAsync(source, target, columnMapper, joinTo, ct);
         }
     }
 }

@@ -229,11 +229,11 @@ Public Class Db
     Private Async Function PerformUpdateAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
         Dim salesOrder As SalesOrder = ModelOf(salesOrders)
         ModelOf(salesOrders).ResetRowIdentifiers()
-        Await SalesOrderHeader.Update(salesOrders).ExecuteAsync(ct)
-        Await Me.SalesOrderDetail.Delete(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader)).ExecuteAsync(ct)
+        Await SalesOrderHeader.UpdateAsync(salesOrders, ct)
+        Await Me.SalesOrderDetail.DeleteAsync(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader), ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
         ModelOf(salesOrderDetails).ResetRowIdentifiers()
-        Await Me.SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct)
+        Await Me.SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
     End Function
 
     Public Overloads Function InsertAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
@@ -242,15 +242,15 @@ Public Class Db
 
     Private Async Function PerformInsertAsync(salesOrders As DataSet(Of SalesOrder), ByVal ct As CancellationToken) As Task
         ModelOf(salesOrders).ResetRowIdentifiers()
-        Await SalesOrderHeader.Insert(salesOrders, updateIdentity:=True).ExecuteAsync(ct)
+        Await SalesOrderHeader.InsertAsync(salesOrders, DbTableInsertOptions.UpdateIdentity, ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
         ModelOf(salesOrderDetails).ResetRowIdentifiers()
-        Await Me.SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct)
+        Await Me.SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
     End Function
 
     Public Async Function LookupAsync(refs As DataSet(Of Product.Ref), Optional ct As CancellationToken = Nothing) As Task(Of DataSet(Of Product.Lookup))
         Dim tempTable = Await CreateTempTableAsync(Of Product.Ref)(ct)
-        Await tempTable.Insert(refs).ExecuteAsync(ct)
+        Await tempTable.InsertAsync(refs, ct)
         Return Await CreateQuery(Sub(builder As DbQueryBuilder, x As Product.Lookup)
                                      Dim t As Product.Ref = Nothing
                                      builder.From(tempTable, t)

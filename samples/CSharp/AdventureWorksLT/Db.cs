@@ -253,11 +253,11 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.Update(salesOrders).ExecuteAsync(ct);
-            await SalesOrderDetail.Delete(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader)).ExecuteAsync(ct);
+            await SalesOrderHeader.UpdateAsync(salesOrders, ct);
+            await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct);
+            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
         }
 
         public Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
@@ -268,16 +268,16 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.Insert(salesOrders, updateIdentity: true).ExecuteAsync(ct);
+            await SalesOrderHeader.InsertAsync(salesOrders, DbTableInsertOptions.UpdateIdentity, ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetail.Insert(salesOrderDetails).ExecuteAsync(ct);
+            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
         }
 
         public async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> refs, CancellationToken ct = default(CancellationToken))
         {
             var tempTable = await CreateTempTableAsync<Product.Ref>(ct);
-            await tempTable.Insert(refs).ExecuteAsync(ct);
+            await tempTable.InsertAsync(refs, ct);
             return await CreateQuery((DbQueryBuilder builder, Product.Lookup _) =>
             {
                 builder.From(tempTable, out var t);

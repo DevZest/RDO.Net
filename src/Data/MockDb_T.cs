@@ -44,7 +44,7 @@ namespace DevZest.Data
                     dbTable._.SuspendIdentity();
                     try
                     {
-                        await dbTable.Insert(dataSet).ExecuteAsync(ct);
+                        await dbTable.InsertAsync(dataSet, ct);
                     }
                     finally
                     {

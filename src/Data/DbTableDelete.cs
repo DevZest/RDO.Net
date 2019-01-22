@@ -1,150 +1,40 @@
 ﻿using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
-    public abstract class DbTableDelete<T> : Executable<int>
+    internal static class DbTableDelete<T>
         where T : class, IModelReference, new()
     {
-        internal static DbTableDelete<T> Create(DbTable<T> from, Func<T, _Boolean> where)
+        public static async Task<int> ExecuteAsync(DbTable<T> from, Func<T, _Boolean> where, CancellationToken ct)
         {
-            return new DeleteWhere(from, where);
+            var statement = from.BuildDeleteStatement(where);
+            return from.UpdateOrigin(null, await from.DbSession.DeleteAsync(statement, ct));
         }
 
-        internal static DbTableDelete<T> Create<TSource>(DbTable<T> from, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> from, DbSet<TSource> source, IReadOnlyList<ColumnMapping> join, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            return new DeleteFromDbSet<TSource>(from, source, columnMappings);
+            var statement = from.BuildDeleteStatement(source, join);
+            return from.UpdateOrigin(null, await from.DbSession.DeleteAsync(statement, ct));
         }
 
-        internal static DbTableDelete<T> Create<TSource>(DbTable<T> from, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings)
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> from, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> join, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            return new DeleteFromDataRow<TSource>(from, source, rowIndex, columnMappings);
+            var statement = from.BuildDeleteScalarStatement(source, rowIndex, join);
+            return from.UpdateOrigin<TSource>(null, await from.DbSession.DeleteAsync(statement, ct) > 0) ? 1 : 0;
         }
 
-        internal static DbTableDelete<T> Create<TSource>(DbTable<T> from, DataSet<TSource> source, CandidateKey joinTo)
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> from, DataSet<TSource> source, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            return new DeleteFromDataSet<TSource>(from, source, joinTo);
-        }
-
-        protected DbTableDelete(DbTable<T> from)
-        {
-            Debug.Assert(from != null);
-            _from = from;
-        }
-
-        private readonly DbTable<T> _from;
-        protected DbTable<T> From
-        {
-            get { return _from; }
-        }
-
-        protected DbSession DbSession
-        {
-            get { return From.DbSession; }
-        }
-
-        private sealed class DeleteWhere : DbTableDelete<T>
-        {
-            public DeleteWhere(DbTable<T> from, Func<T, _Boolean> where)
-                : base(from)
-            {
-                _where = where;
-            }
-
-            private readonly Func<T, _Boolean> _where;
-
-            private DbSelectStatement BuildDeleteStatement()
-            {
-                return From.BuildDeleteStatement(_where);
-            }
-
-            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
-            {
-                var statement = BuildDeleteStatement();
-                return From.UpdateOrigin(null, await DbSession.DeleteAsync(statement, ct));
-            }
-        }
-            
-
-        private sealed class DeleteFromDbSet<TSource> : DbTableDelete<T>
-            where TSource : class, IModelReference, new()
-        {
-            public DeleteFromDbSet(DbTable<T> from, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)
-                : base(from)
-            {
-                _source = source;
-                _columnMappings = columnMappings;
-            }
-
-            private readonly DbSet<TSource> _source;
-            private readonly IReadOnlyList<ColumnMapping> _columnMappings;
-
-            private DbSelectStatement BuildDeleteStatement()
-            {
-                return From.BuildDeleteStatement(_source, _columnMappings);
-            }
-
-            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
-            {
-                var statement = BuildDeleteStatement();
-                return From.UpdateOrigin(null, await DbSession.DeleteAsync(statement, ct));
-            }
-        }
-
-        private sealed class DeleteFromDataRow<TSource> : DbTableDelete<T>
-            where TSource : class, IModelReference, new()
-        {
-            public DeleteFromDataRow(DbTable<T> from, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> columnMappings)
-                : base(from)
-            {
-                _source = source;
-                _rowIndex = rowIndex;
-                _columnMappings = columnMappings;
-            }
-
-            private readonly DataSet<TSource> _source;
-            private readonly int _rowIndex;
-            private readonly IReadOnlyList<ColumnMapping> _columnMappings;
-
-            private DbSelectStatement BuildDeleteStatement()
-            {
-                return From.BuildDeleteScalarStatement(_source, _rowIndex, _columnMappings);
-            }
-
-            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
-            {
-                var statement = BuildDeleteStatement();
-                return From.UpdateOrigin<TSource>(null, await DbSession.DeleteAsync(statement, ct) > 0) ? 1 : 0;
-            }
-        }
-
-        private sealed class DeleteFromDataSet<TSource> : DbTableDelete<T>
-            where TSource : class, IModelReference, new()
-        {
-            public DeleteFromDataSet(DbTable<T> from, DataSet<TSource> source, CandidateKey joinTo)
-                : base(from)
-            {
-                Debug.Assert(source.Count != 1);
-                _source = source;
-                _joinTo = joinTo;
-            }
-
-            private readonly DataSet<TSource> _source;
-            private readonly CandidateKey _joinTo;
-
-            protected override async Task<int> PerformExecuteAsync(CancellationToken ct)
-            {
-                if (_source.Count == 0)
-                    return 0;
-                return await DbSession.DeleteAsync(_source, From, _joinTo, ct);
-            }
+            if (source.Count == 0)
+                return 0;
+            return await from.DbSession.DeleteAsync(source, from, joinTo, ct);
         }
     }
 }

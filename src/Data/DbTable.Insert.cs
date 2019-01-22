@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
@@ -16,35 +18,73 @@ namespace DevZest.Data
                 return null;
         }
 
-        public DbTableInsert<T> Insert<TSource>(DbQuery<TSource> source, bool skipExisting = false)
+        public Task<int> InsertAsync<TSource>(DbQuery<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Insert(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting));
+            return InsertAsync(source, false, ct);
         }
 
-        public DbTableInsert<T> Insert<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper = null)
+        public Task<int> InsertAsync<TSource>(DbQuery<TSource> source, bool skipExisting, CancellationToken ct = default(CancellationToken))
+            where TSource : class, T, new()
+        {
+            return InsertAsync(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, columnMapper, null, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
             IReadOnlyList<ColumnMapping> join = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
-            return DbTableInsert<T>.Create(this, source, columnMappings, join);
+            return DbTableInsert<T>.ExecuteAsync(this, source, columnMappings, join, ct);
         }
 
-        public DbTableInsert<T> Insert<TSource>(DbTable<TSource> source, bool skipExisting = false, bool updateIdentity = false)
+        public Task<int> InsertAsync<TSource>(DbTable<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Insert(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity);
+            return InsertAsync(source, DbTableInsertOptions.None, ct);
         }
 
-        public DbTableInsert<T> Insert<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper = null, bool updateIdentity = false)
+        public Task<int> InsertAsync<TSource>(DbTable<TSource> source, DbTableInsertOptions insertOptions, CancellationToken ct = default(CancellationToken))
+            where TSource : class, T, new()
+        {
+            var skipExisting = (insertOptions & DbTableInsertOptions.SkipExisting) == DbTableInsertOptions.SkipExisting;
+            var updateIdentity = (insertOptions & DbTableInsertOptions.UpdateIdentity) == DbTableInsertOptions.UpdateIdentity;
+            return InsertAsync(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, columnMapper, null, false, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, columnMapper, null, updateIdentity, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, columnMapper, joinMapper, false, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             Verify(columnMapper, nameof(columnMapper));
             CandidateKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-            return DbTableInsert<T>.Create(this, source, columnMapper, joinTo, updateIdentity);
+            return DbTableInsert<T>.ExecuteAsync(this, source, columnMapper, joinTo, updateIdentity, ct);
         }
 
         internal void VerifyUpdateIdentity(bool updateIdentity, string paramName)
@@ -84,34 +124,89 @@ namespace DevZest.Data
             return parentModel.DataSource.UltimateOriginalDataSource != parentDataSource.UltimateOriginalDataSource;
         }
 
-        public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, bool skipExisting = false, bool updateIdentity = false)
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Insert(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity);
+            return InsertAsync(source, DbTableInsertOptions.None, ct);
         }
 
-        public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity = false)
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, DbTableInsertOptions insertOptions, CancellationToken ct = default(CancellationToken))
+            where TSource : class, T, new()
+        {
+            var skipExisting = (insertOptions & DbTableInsertOptions.SkipExisting) == DbTableInsertOptions.SkipExisting;
+            var updateIdentity = (insertOptions & DbTableInsertOptions.UpdateIdentity) == DbTableInsertOptions.UpdateIdentity;
+            return InsertAsync(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, columnMapper, null, false, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, columnMapper, null, updateIdentity, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, columnMapper, joinMapper, false, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
-                return Insert(source, 0, columnMapper, joinMapper, updateIdentity);
+                return InsertAsync(source, 0, columnMapper, joinMapper, updateIdentity, ct);
 
             Verify(columnMapper, nameof(columnMapper));
             CandidateKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            return DbTableInsert<T>.Create(this, source, columnMapper, joinTo, updateIdentity);
+            return DbTableInsert<T>.ExecuteAsync(this, source, columnMapper, joinTo, updateIdentity, ct);
         }
 
-        public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, int ordinal, bool skipExisting = false, bool updateIdentity = false)
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Insert(source, ordinal, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity);
+            return InsertAsync(source, ordinal, DbTableInsertOptions.None, ct);
         }
 
-        public DbTableInsert<T> Insert<TSource>(DataSet<TSource> source, int ordinal,
-            Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity = false)
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, DbTableInsertOptions insertOptions, CancellationToken ct = default(CancellationToken))
+            where TSource : class, T, new()
+        {
+            var skipExisting = (insertOptions & DbTableInsertOptions.SkipExisting) == DbTableInsertOptions.SkipExisting;
+            var updateIdentity = (insertOptions & DbTableInsertOptions.UpdateIdentity) == DbTableInsertOptions.UpdateIdentity;
+            return InsertAsync(source, ordinal, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), GetJoinMapper<TSource>(skipExisting), updateIdentity, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal,
+            Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, ordinal, columnMapper, null, false, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal,
+            Action<ColumnMapper, TSource, T> columnMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, ordinal, columnMapper, null, updateIdentity, ct);
+        }
+            
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal,
+            Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
+            return InsertAsync(source, ordinal, columnMapper, joinMapper, false, ct);
+        }
+
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal,
+            Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source), ordinal, nameof(ordinal));
@@ -119,7 +214,7 @@ namespace DevZest.Data
             IReadOnlyList<ColumnMapping> join = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            return DbTableInsert<T>.Create(this, source, ordinal, columnMappings, join, updateIdentity);
+            return DbTableInsert<T>.ExecuteAsync(this, source, ordinal, columnMappings, join, updateIdentity, ct);
         }
 
         internal DbSelectStatement BuildInsertScalarStatement<TSource>(DataSet<TSource> dataSet, int rowOrdinal,

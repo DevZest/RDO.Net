@@ -9,10 +9,15 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public DbTableUpdate<T> Update(Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
+        public Task<int> UpdateAsync(Action<ColumnMapper, T> columnMapper, CancellationToken ct = default(CancellationToken))
+        {
+            return UpdateAsync(columnMapper, null, ct);
+        }
+
+        public Task<int> UpdateAsync(Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where, CancellationToken ct = default(CancellationToken))
         {
             var columnMappings = Verify(columnMapper, nameof(columnMapper));
-            return DbTableUpdate<T>.Create(this, columnMappings, where);
+            return DbTableUpdate<T>.ExecuteAsync(this, columnMappings, where, ct);
         }
 
         internal DbSelectStatement BuildUpdateStatement(IReadOnlyList<ColumnMapping> columnMappings, Func<T, _Boolean> where)
@@ -22,19 +27,19 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, columnMappings, null, whereExpr, null, -1, -1);
         }
 
-        public DbTableUpdate<T> Update<TSource>(DbSet<TSource> source)
+        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Update(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
+            return UpdateAsync(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
         }
 
-        public DbTableUpdate<T> Update<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join)
+        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
             var keyMapping = Verify(join, nameof(join), source._);
-            return DbTableUpdate<T>.Create(this, source, columnMappings, keyMapping.GetColumnMappings());
+            return DbTableUpdate<T>.ExecuteAsync(this, source, columnMappings, keyMapping.GetColumnMappings(), ct);
         }
 
         internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
@@ -53,38 +58,38 @@ namespace DevZest.Data
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, join);
         }
 
-        public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex)
+        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, int rowIndex, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Update(source, rowIndex, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
+            return UpdateAsync(source, rowIndex, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match, ct);
         }
 
-        public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, int rowIndex, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
+        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, int rowIndex, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
             var join = Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
 
-            return DbTableUpdate<T>.Create(this, source, rowIndex, columnMappings, join);
+            return DbTableUpdate<T>.ExecuteAsync(this, source, rowIndex, columnMappings, join, ct);
         }
 
-        public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source)
+        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return Update(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
+            return UpdateAsync(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match, ct);
         }
 
-        public DbTableUpdate<T> Update<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper)
+        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
-                return Update(source, 0, columnMapper, joinMapper);
+                return UpdateAsync(source, 0, columnMapper, joinMapper, ct);
 
             Verify(columnMapper, nameof(columnMapper));
             var joinTo = Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
-            return DbTableUpdate<T>.Create(this, source, columnMapper, joinTo);
+            return DbTableUpdate<T>.ExecuteAsync(this, source, columnMapper, joinTo, ct);
         }
 
         internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
