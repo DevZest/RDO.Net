@@ -405,8 +405,11 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void RefreshView()
         {
-            if (Presenter == null && (Elements == null || Elements.Count == 0))
+            if (Elements == null || Elements.Count == 0)
+            {
+                _isDirty = false;
                 return;
+            }
 
             Presenter?.OnViewRefreshing();
 
