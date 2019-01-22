@@ -119,7 +119,6 @@
         {
             RegisterColumn((Int64IdentityMapping x) => x.OldValue);
             RegisterColumn((Int64IdentityMapping x) => x.NewValue);
-            RegisterColumn((Int64IdentityMapping x) => x.OriginalSysRowId);
         }
 
         public Int64IdentityMapping()
