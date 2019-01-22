@@ -220,16 +220,19 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement, null);
         }
 
-        protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
+        internal async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             if (identityMappings == null)
             {
                 var command = BuildInsertCommand(source, target, columnMapper, joinTo);
-                return ExecuteNonQueryAsync(command, ct);
+                return await ExecuteNonQueryAsync(command, ct);
             }
 
-            return base.InsertAsync(source, target, columnMapper, joinTo, identityMappings, ct);
+            var tempTable = await ImportAsync(source, ct);
+            return await InsertAsync(tempTable, target, columnMapper, joinTo, identityMappings, ct);
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
@@ -244,8 +247,10 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement);
         }
 
-        protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
+        internal async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
+            where TSource : class, IModelReference, new()
+            where TTarget : class, IModelReference, new()
         {
             IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source.Model.PrimaryKey.UnsafeJoin(joinTo);
             var statement = target.BuildInsertStatement(source, columnMapper, join);
@@ -270,6 +275,16 @@ namespace DevZest.Data.SqlServer
                 Debug.Assert(identityMappings is DbTable<Int16IdentityMapping>);
                 return await CreateTempTableAsync<Int16IdentityOutput>(ct);
             }
+        }
+
+        protected sealed override Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
+        {
+            return DbTableInsert<TTarget>.ExecuteAsync(targetTable, sourceData, columnMapper, joinTo, updateIdentity, ct);
+        }
+
+        protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
+        {
+            return DbTableInsert<TTarget>.ExecuteAsync(targetTable, sourceData, columnMapper, joinTo, updateIdentity, ct);
         }
 
         internal SqlCommand GetInsertCommand(DbSelectStatement statement, IDbTable identityOutput = null)

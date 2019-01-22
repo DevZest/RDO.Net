@@ -19,6 +19,12 @@ namespace DevZest.Data
             return new ColumnMapping(source, target);
         }
 
+        public static ColumnMapping UnsafeMap(Column source, Column target)
+        {
+            target.VerifyNotNull(nameof(target));
+            return new ColumnMapping(source, target);
+        }
+
         public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource source, TTarget target, Action<ColumnMapper, TSource, TTarget> columnMapper, bool isInsertable)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()

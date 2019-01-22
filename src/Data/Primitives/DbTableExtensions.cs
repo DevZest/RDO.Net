@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
@@ -66,6 +68,17 @@ namespace DevZest.Data.Primitives
                 throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidTarget(targetColumn), string.Format("{0}[{1}].{2}", paramName, index, nameof(ColumnMapping.Target)));
         }
 
+        public static DbSelectStatement BuildUpdateStatement(this IDbTable target, IDbTable source,
+            IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+        {
+            target.VerifyNotNull(nameof(target));
+            source.VerifyNotNull(nameof(source));
+            Verify(columnMappings, nameof(columnMappings), source.Model, target.Model);
+            Verify(join, nameof(join), source.Model, target.Model);
+
+            return source.QueryStatement.BuildUpdateStatement(target.Model, columnMappings, join);
+        }
+
         public static DbSelectStatement BuildUpdateStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
             where TSource : class, IModelReference, new()
@@ -101,6 +114,11 @@ namespace DevZest.Data.Primitives
             Verify(join, nameof(join), source.Model, target.Model);
 
             return target.BuildDeleteStatement(source, join);
+        }
+
+        public static Task<int> UpdateAsync(this IDbTable dbTable, DbSelectStatement statement, CancellationToken ct)
+        {
+            return dbTable.DbSession.UpdateAsync(statement, ct);
         }
     }
 }

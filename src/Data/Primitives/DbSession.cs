@@ -83,7 +83,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        private async Task<DbTable<T>> ImportAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
+        protected async Task<DbTable<T>> ImportAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
             where T : class, IModelReference, new()
         {
             var result = await CreateTempTableAsync(source._, null, cancellationToken);
@@ -208,17 +208,13 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
 
-        protected internal virtual async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken cancellationToken)
+        protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
-        {
-            var tempTable = await ImportAsync(sourceData, cancellationToken);
-            return await InsertAsync(tempTable, targetTable, columnMapper, joinTo, identityMappings, cancellationToken);
-        }
+            where TTarget : class, IModelReference, new();
 
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new();
 

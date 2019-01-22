@@ -140,5 +140,15 @@ namespace DevZest.Data.Primitives
         {
             model.ResumeIdentity();
         }
+
+        public static IReadOnlyList<ColumnMapping> GetParentRelationship(this Model model)
+        {
+            return model.ParentRelationship;
+        }
+
+        public static DataSource GetDataSource(this Model model)
+        {
+            return model.DataSource;
+        }
     }
 }

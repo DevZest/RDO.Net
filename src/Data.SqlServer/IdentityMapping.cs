@@ -1,15 +1,13 @@
-﻿using DevZest.Data.Annotations;
-
-namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data.SqlServer
 {
-    public interface IIdentityMapping
+    internal interface IIdentityMapping
     {
         _Int32 OriginalSysRowId { get; }
         Column OldValue { get; }
         Column NewValue { get; }
     }
 
-    public abstract class IdentityMapping<T> : Model<T>, IIdentityMapping
+    internal abstract class IdentityMapping<T> : Model<T>, IIdentityMapping
         where T : CandidateKey
     {
         static IdentityMapping()
@@ -19,7 +17,7 @@ namespace DevZest.Data.Primitives
 
         public _Int32 OriginalSysRowId { get; private set; }
 
-        protected internal sealed override string DbAlias
+        protected sealed override string DbAlias
         {
             get { return "sys_identity_mapping"; }
         }
@@ -39,7 +37,7 @@ namespace DevZest.Data.Primitives
         protected abstract Column NewValueColumn { get; }
     }
 
-    public sealed class Int16IdentityMapping : IdentityMapping<Int16IdentityMapping.PK>
+    internal sealed class Int16IdentityMapping : IdentityMapping<Int16IdentityMapping.PK>
     {
         public sealed class PK : CandidateKey
         {
@@ -73,7 +71,7 @@ namespace DevZest.Data.Primitives
         protected override Column NewValueColumn => NewValue;
     }
 
-    public sealed class Int32IdentityMapping : IdentityMapping<Int32IdentityMapping.PK>
+    internal sealed class Int32IdentityMapping : IdentityMapping<Int32IdentityMapping.PK>
     {
         public sealed class PK : CandidateKey
         {
@@ -107,7 +105,7 @@ namespace DevZest.Data.Primitives
         protected override Column NewValueColumn => NewValue;
     }
 
-    public sealed class Int64IdentityMapping : IdentityMapping<Int64IdentityMapping.PK>
+    internal sealed class Int64IdentityMapping : IdentityMapping<Int64IdentityMapping.PK>
     {
         public sealed class PK : CandidateKey
         {
