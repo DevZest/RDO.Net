@@ -13,4 +13,30 @@
     <Description>DevZest RDO.NET MySQL Implementation</Description>
     <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs" Link="Utilities\Argument.VerifyNotNull.cs" />
+    <Compile Include="..\external\Utilities\src\Utilities\NameSuffixes.GetUniqueName.cs" Link="Utilities\NameSuffixes.GetUniqueName.cs" />
+    <Compile Include="..\external\Utilities\src\Utilities\Type.GetStaticMethodInfo.cs" Link="Utilities\Type.GetStaticMethodInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevZest.Data" Version="1.0.0-*" />
+    <PackageReference Include="MySql.Data" Version="8.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DiagnosticMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DiagnosticMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="DiagnosticMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DiagnosticMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
