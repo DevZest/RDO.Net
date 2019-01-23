@@ -49,7 +49,7 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class SqlDateTimeAttribute : ColumnAttribute
+    public sealed class MySqlDateTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
@@ -59,9 +59,9 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
-    public sealed class SqlDecimalAttribute : ColumnAttribute
+    public sealed class MySqlDecimalAttribute : ColumnAttribute
     {
-        public SqlDecimalAttribute(byte precision, byte scale)
+        public MySqlDecimalAttribute(byte precision, byte scale)
         {
             Precision = precision;
             Scale = scale;
@@ -78,10 +78,20 @@ namespace DevZest.Data.MySql
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
-    public sealed class SqlNCharAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
+    public sealed class MySqlMoneyAttribute : ColumnAttribute
     {
-        public SqlNCharAttribute(int size)
+        protected override void Wireup(Column column)
+        {
+            if (column is _Decimal decimalColumn)
+                decimalColumn.AsMySqlMoney();
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    public sealed class MySqlNCharAttribute : ColumnAttribute
+    {
+        public MySqlNCharAttribute(int size)
         {
             Size = size;
         }
@@ -96,9 +106,9 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
-    public sealed class SqlNVarCharAttribute : ColumnAttribute
+    public sealed class MySqlNVarCharAttribute : ColumnAttribute
     {
-        public SqlNVarCharAttribute(int size)
+        public MySqlNVarCharAttribute(int size)
         {
             Size = size;
         }
@@ -113,7 +123,7 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class SqlTimeAttribute : ColumnAttribute
+    public sealed class MySqlTimeAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
@@ -123,7 +133,7 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
-    public sealed class SqlTimeStampAttribute : ColumnAttribute
+    public sealed class MySqlTimeStampAttribute : ColumnAttribute
     {
         protected override void Wireup(Column column)
         {
@@ -133,9 +143,9 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
-    public sealed class SqlVarBinaryAttribute : ColumnAttribute
+    public sealed class MySqlVarBinaryAttribute : ColumnAttribute
     {
-        public SqlVarBinaryAttribute(int size)
+        public MySqlVarBinaryAttribute(int size)
         {
             Size = size;
         }
@@ -150,9 +160,9 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
-    public sealed class SqlVarCharAttribute : ColumnAttribute
+    public sealed class MySqlVarCharAttribute : ColumnAttribute
     {
-        public SqlVarCharAttribute(int size)
+        public MySqlVarCharAttribute(int size)
         {
             Size = size;
         }

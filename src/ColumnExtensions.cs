@@ -86,6 +86,11 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        public static _Decimal AsMySqlMoney(this _Decimal column)
+        {
+            return column.AsMySqlDecimal(15, 2);
+        }
+
         public static _DateTime AsMySqlDate(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));

@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.MySql", "src\Data.MySq
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{251AF15A-A78B-435A-83B8-68ADDD239D6C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{AF91D4AB-BD9E-484C-8CA3-1D73FE8A421B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\AdventureWorksLT\AdventureWorksLT.csproj", "{77D12775-3ECF-4B56-80AB-BC9F29F20F55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +21,17 @@ Global
 		{CCC14A2D-CD2B-4288-B407-5A9CD94B7C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCC14A2D-CD2B-4288-B407-5A9CD94B7C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCC14A2D-CD2B-4288-B407-5A9CD94B7C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77D12775-3ECF-4B56-80AB-BC9F29F20F55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77D12775-3ECF-4B56-80AB-BC9F29F20F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77D12775-3ECF-4B56-80AB-BC9F29F20F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77D12775-3ECF-4B56-80AB-BC9F29F20F55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CCC14A2D-CD2B-4288-B407-5A9CD94B7C6C} = {251AF15A-A78B-435A-83B8-68ADDD239D6C}
+		{77D12775-3ECF-4B56-80AB-BC9F29F20F55} = {AF91D4AB-BD9E-484C-8CA3-1D73FE8A421B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B387593-5AA5-4B91-84C9-4AD8E032AD0A}

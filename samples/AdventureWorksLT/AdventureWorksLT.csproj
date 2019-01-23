@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>DevZest.Samples.AdventureWorksLT</AssemblyName>
+    <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Weifen Luo | DevZest</Authors>
+    <Company>DevZest</Company>
+    <Product>AdventureWorksLT RDO.Net Model Sample</Product>
+    <Description>AdventureWorksLT RDO.Net Model Sample</Description>
+    <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Data.MySql.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="UserMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="UserMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
