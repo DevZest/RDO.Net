@@ -1,0 +1,3 @@
+[submodule "external/Utilities"]
+	path = external/Utilities
+	url = https://github.com/DevZest/Utilities.git
