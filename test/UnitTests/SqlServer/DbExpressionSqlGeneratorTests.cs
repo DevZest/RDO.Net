@@ -33,7 +33,7 @@ namespace DevZest.Data.SqlServer
                 VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
                 expr = CreateDbConstantExpression<_Char, Char?>('A');
                 VerifyDbExpression(SqlVersion.Sql11, expr, "'A'");
-                expr = CreateDbConstantExpression<_Char, Char?>('A', x => x.IsUnicode(true));
+                expr = CreateDbConstantExpression<_Char, Char?>('A', x => x.AsSqlChar(true));
                 VerifyDbExpression(SqlVersion.Sql11, expr, "N'A'");
             }
 

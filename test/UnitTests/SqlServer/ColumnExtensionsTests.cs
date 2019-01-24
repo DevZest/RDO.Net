@@ -210,9 +210,9 @@ namespace DevZest.Data.SqlServer
             }
 
             {
-                var singleChar = new _Char().IsUnicode(true);
+                var singleChar = new _Char().AsSqlChar(true);
                 VerifySqlType(SqlVersion.Sql11, singleChar, SqlDbType.NChar, 1, "NCHAR(1)");
-                singleChar = new _Char().IsUnicode(false);
+                singleChar = new _Char().AsSqlChar(false);
                 VerifySqlType(SqlVersion.Sql11, singleChar, SqlDbType.Char, 1, "CHAR(1)");
             }
         }

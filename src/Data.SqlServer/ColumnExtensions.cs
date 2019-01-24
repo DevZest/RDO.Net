@@ -180,7 +180,7 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
-        public static T IsUnicode<T>(this T column, bool isUnicode)
+        public static T AsSqlChar<T>(this T column, bool isUnicode)
             where T: Column<Char?>
         {
             column.VerifyNotNull(nameof(column));
