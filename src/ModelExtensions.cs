@@ -88,7 +88,7 @@ namespace DevZest.Data.MySql
                 else if (constraint is DbForeignKeyConstraint)
                     GenerateForeignKeyConstraint(sqlBuilder, (DbForeignKeyConstraint)constraint);
                 else
-                    throw new NotSupportedException(string.Format(DiagnosticMessages.ConstraintTypeNotSupported, constraint.GetType().FullName));
+                    throw new NotSupportedException(DiagnosticMessages.ConstraintTypeNotSupported(constraint.GetType()));
 
                 sqlBuilder.GenerateComment(constraint.Description);
             }

@@ -36,7 +36,7 @@ namespace DevZest.Data.MySql
             set
             {
                 if (!value.IsAtLeast(8, 0, 4))
-                    throw new NotSupportedException(string.Format(DiagnosticMessages.VersionNotSupported, value));
+                    throw new NotSupportedException(DiagnosticMessages.VersionNotSupported(value, MySqlVersion.LowestSupported));
                 _mySqlVersion = value;
             }
         }

@@ -163,7 +163,7 @@ namespace DevZest.Data.MySql
             }
             catch (KeyNotFoundException)
             {
-                throw new NotSupportedException(string.Format(DiagnosticMessages.FunctionNotSupported, e.FunctionKey));
+                throw new NotSupportedException(DiagnosticMessages.FunctionNotSupported(e.FunctionKey));
             }
             handler(this, e);
         }

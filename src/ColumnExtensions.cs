@@ -273,7 +273,7 @@ namespace DevZest.Data.MySql
                 return s_defaultMySqlTypeProviders.GetOrAdd(columnType, BuildSqlTypeProviderFactory(methodInfo, enumType));
             }
 
-            throw new NotSupportedException(string.Format(DiagnosticMessages.ColumnTypeNotSupported, column.GetType()));
+            throw new NotSupportedException(DiagnosticMessages.ColumnTypeNotSupported(column.GetType()));
         }
 
         private static bool IsDerivedFromGeneric(this Type type, Type genericTypeDefinition)

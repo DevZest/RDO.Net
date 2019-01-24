@@ -26,17 +26,38 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DiagnosticMessages.Designer.cs">
+    <Compile Update="Properties\DiagnosticMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>DiagnosticMessages.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\Resources.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="DiagnosticMessages.resx">
+    <EmbeddedResource Update="Properties\DiagnosticMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DiagnosticMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Resources.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DeployProps Condition="Exists('..\Deploy.$(AssemblyName).props')">..\Deploy.$(AssemblyName).props</DeployProps>
+  </PropertyGroup>
+  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' " />
 </Project>

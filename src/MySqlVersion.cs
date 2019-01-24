@@ -6,6 +6,11 @@ namespace DevZest.Data.MySql
     {
         private readonly string _srcString;
 
+        public static MySqlVersion LowestSupported
+        {
+            get { return new MySqlVersion("8.0.4", 8, 0, 4); }
+        }
+
         public MySqlVersion(string s, int major, int minor, int build)
         {
             Major = major;

@@ -121,15 +121,15 @@
     <value>Bad version format.</value>
   </data>
   <data name="ColumnTypeNotSupported" xml:space="preserve">
-    <value>The column type {0} is not supported.</value>
+    <value>The column type {columnType} is not supported.</value>
   </data>
   <data name="ConstraintTypeNotSupported" xml:space="preserve">
-    <value>The constraint type "{0}" is not supported.</value>
+    <value>The constraint type "{constraintType}" is not supported.</value>
   </data>
   <data name="FunctionNotSupported" xml:space="preserve">
-    <value>The function {0} is not supported.</value>
+    <value>The function {function} is not supported.</value>
   </data>
   <data name="VersionNotSupported" xml:space="preserve">
-    <value>Version {0} is not supported. Only version 8.0.4 onwards are supported.</value>
+    <value>Version {version} is not supported. Only version {lowestSupported} onwards are supported.</value>
   </data>
 </root>
