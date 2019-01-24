@@ -166,6 +166,7 @@ namespace DevZest.Data.SqlServer
             UdtTypeName = null;
         }
 
+#if DEBUG
         // For unit test
         internal SqlParameterInfo(SqlDbType sqlDbType, int? size, byte? precision, byte? scale, string udtTypeName)
         {
@@ -175,6 +176,7 @@ namespace DevZest.Data.SqlServer
             Scale = scale;
             UdtTypeName = udtTypeName;
         }
+#endif
 
         public readonly SqlDbType SqlDbType;
 
