@@ -88,7 +88,7 @@ namespace DevZest.Data.MySql
 
         public static _Decimal AsMySqlMoney(this _Decimal column)
         {
-            return column.AsMySqlDecimal(15, 2);
+            return column.AsMySqlDecimal(15, 4);
         }
 
         public static _DateTime AsMySqlDate(this _DateTime column)
@@ -130,7 +130,7 @@ namespace DevZest.Data.MySql
             return column;
         }
 
-        public static T AsMySqlSingleChar<T>(this T column, bool isUnicode)
+        public static T AsMySqlChar<T>(this T column, bool isUnicode)
             where T : Column<Char?>
         {
             column.VerifyNotNull(nameof(column));

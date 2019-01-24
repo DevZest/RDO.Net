@@ -612,12 +612,12 @@ namespace DevZest.Data.MySql.Addons
 
             internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
             {
-                return MySqlParameterInfo.Single();
+                return MySqlParameterInfo.Float();
             }
 
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
-                return "FLOAT(24)";
+                return "FLOAT";
             }
 
             protected override string GetValue(float value, MySqlVersion mySqlVersion)
@@ -645,7 +645,7 @@ namespace DevZest.Data.MySql.Addons
 
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
-                return "FLOAT(53)";
+                return "DOUBLE";
             }
 
             protected override string GetValue(double value, MySqlVersion sqlVersion)

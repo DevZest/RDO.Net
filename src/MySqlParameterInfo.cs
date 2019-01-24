@@ -64,14 +64,14 @@ namespace DevZest.Data.MySql
             return new MySqlParameterInfo(MySqlDbType.DateTime);
         }
 
-        public static MySqlParameterInfo Single()
+        public static MySqlParameterInfo Float()
         {
-            return new MySqlParameterInfo(MySqlDbType.Float, (byte)24);
+            return new MySqlParameterInfo(MySqlDbType.Float);
         }
 
         public static MySqlParameterInfo Double()
         {
-            return new MySqlParameterInfo(MySqlDbType.Float, (byte)53);
+            return new MySqlParameterInfo(MySqlDbType.Double);
         }
 
         public static MySqlParameterInfo Decimal(byte precision, byte scale)
@@ -125,6 +125,17 @@ namespace DevZest.Data.MySql
             Scale = scale;
             Size = null;
         }
+
+#if DEBUG
+        // For unit test
+        internal MySqlParameterInfo(MySqlDbType mySqlDbType, int? size, byte? precision, byte? scale)
+        {
+            MySqlDbType = mySqlDbType;
+            Size = size;
+            Precision = precision;
+            Scale = scale;
+        }
+#endif
 
         public readonly MySqlDbType MySqlDbType;
 
