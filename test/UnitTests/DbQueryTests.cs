@@ -80,20 +80,20 @@ ORDER BY `ProductDescription`.`ProductDescriptionID`;
             }
         }
 
-        //        [TestMethod]
-        //        [ExpectedException(typeof(ArgumentException))]
-        //        public void DbQuery_select_aggregate_function_throws_exception()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
-        //                {
-        //                    ProductDescription d;
-        //                    builder.From(db.ProductDescription, out d)
-        //                        .Select(d.ProductDescriptionID.Count(), adhoc);
-        //                });
-        //            }
-        //        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void DbQuery_select_aggregate_function_throws_exception()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
+                {
+                    ProductDescription d;
+                    builder.From(db.ProductDescription, out d)
+                        .Select(d.ProductDescriptionID.Count(), adhoc);
+                });
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_auto_group_by()
