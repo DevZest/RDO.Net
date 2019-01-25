@@ -127,45 +127,45 @@ ORDER BY COUNT(`SalesOrderDetail`.`SalesOrderID`) DESC, `SalesOrderHeader`.`Sale
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_inner_join()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
-        //                {
-        //                    builder.From(db.SalesOrderDetail, out var d)
-        //                        .InnerJoin(db.SalesOrderHeader, d.FK_SalesOrderHeader, out var h)
-        //                        .InnerJoin(db.Product, d.FK_Product, out var p)
-        //                        .Select(d.SalesOrderID, adhoc)
-        //                        .Select(d.SalesOrderDetailID, adhoc)
-        //                        .Select(p.Name, adhoc)
-        //                        .Select(h.OrderDate, adhoc)
-        //                        .Select(h.Status, adhoc)
-        //                        .Select(h.TotalDue, adhoc)
-        //                        .OrderBy(d.SalesOrderID, d.SalesOrderDetailID);
-        //                });
-        //                var expectedSql =
-        //@"SELECT
-        //    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-        //    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID],
-        //    [Product].[Name] AS [Name],
-        //    [SalesOrderHeader].[OrderDate] AS [OrderDate],
-        //    [SalesOrderHeader].[Status] AS [Status],
-        //    [SalesOrderHeader].[TotalDue] AS [TotalDue]
-        //FROM
-        //    (([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-        //    INNER JOIN
-        //    [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
-        //    ON [SalesOrderDetail].[SalesOrderID] = [SalesOrderHeader].[SalesOrderID])
-        //    INNER JOIN
-        //    [SalesLT].[Product] [Product]
-        //    ON [SalesOrderDetail].[ProductID] = [Product].[ProductID])
-        //ORDER BY [SalesOrderDetail].[SalesOrderID], [SalesOrderDetail].[SalesOrderDetailID];
-        //";
-        //                query.Verify(expectedSql);
-        //            }
-        //        }
+        [TestMethod]
+        public void DbQuery_inner_join()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
+                {
+                    builder.From(db.SalesOrderDetail, out var d)
+                        .InnerJoin(db.SalesOrderHeader, d.FK_SalesOrderHeader, out var h)
+                        .InnerJoin(db.Product, d.FK_Product, out var p)
+                        .Select(d.SalesOrderID, adhoc)
+                        .Select(d.SalesOrderDetailID, adhoc)
+                        .Select(p.Name, adhoc)
+                        .Select(h.OrderDate, adhoc)
+                        .Select(h.Status, adhoc)
+                        .Select(h.TotalDue, adhoc)
+                        .OrderBy(d.SalesOrderID, d.SalesOrderDetailID);
+                });
+                var expectedSql =
+@"SELECT
+    `SalesOrderDetail`.`SalesOrderID` AS `SalesOrderID`,
+    `SalesOrderDetail`.`SalesOrderDetailID` AS `SalesOrderDetailID`,
+    `Product`.`Name` AS `Name`,
+    `SalesOrderHeader`.`OrderDate` AS `OrderDate`,
+    `SalesOrderHeader`.`Status` AS `Status`,
+    `SalesOrderHeader`.`TotalDue` AS `TotalDue`
+FROM
+    ((`SalesOrderDetail`
+    INNER JOIN
+    `SalesOrderHeader`
+    ON `SalesOrderDetail`.`SalesOrderID` = `SalesOrderHeader`.`SalesOrderID`)
+    INNER JOIN
+    `Product`
+    ON `SalesOrderDetail`.`ProductID` = `Product`.`ProductID`)
+ORDER BY `SalesOrderDetail`.`SalesOrderID`, `SalesOrderDetail`.`SalesOrderDetailID`;
+";
+                query.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_derived_query_simplified()
