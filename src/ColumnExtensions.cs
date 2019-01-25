@@ -222,8 +222,7 @@ namespace DevZest.Data.MySql
                 new MySqlTypeProvider<Int32?>(x => MySqlType.Int(x)),
                 new MySqlTypeProvider<Int64?>(x => MySqlType.BigInt(x)),
                 new MySqlTypeProvider<Single?>(x => MySqlType.Single(x)),
-                new MySqlTypeProvider<String>(x => MySqlType.VarChar(x, DEFAULT_VARCHAR_SIZE, null, null)),
-                new MySqlTypeProvider<TimeSpan?>(x => MySqlType.TimeSpan(x))
+                new MySqlTypeProvider<String>(x => MySqlType.VarChar(x, DEFAULT_VARCHAR_SIZE, null, null))
             });
 
         private static MySqlType GetDefaultMySqlType(this Column column)

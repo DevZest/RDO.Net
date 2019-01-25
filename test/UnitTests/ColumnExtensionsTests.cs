@@ -24,7 +24,6 @@ namespace DevZest.Data.MySql
             VerifyDefaultMySqlType<_Int64>(MySqlVersion.LowestSupported, MySqlDbType.Int64, "BIGINT");
             VerifyDefaultMySqlType<_Single>(MySqlVersion.LowestSupported, MySqlDbType.Float, "FLOAT");
             VerifyDefaultMySqlType<_String>(MySqlVersion.LowestSupported, MySqlDbType.VarString, ColumnExtensions.DEFAULT_VARCHAR_SIZE, string.Format("VARCHAR({0})", ColumnExtensions.DEFAULT_VARCHAR_SIZE));
-            VerifyDefaultMySqlType<_TimeSpan>(MySqlVersion.LowestSupported, MySqlDbType.Time, "TIME");
             VerifyDefaultMySqlType<_ByteEnum<SalesOrderStatus>>(MySqlVersion.LowestSupported, MySqlDbType.Byte, "TINYINT");
             VerifyDefaultMySqlType<_CharEnum<SalesOrderStatus>>(MySqlVersion.LowestSupported, MySqlDbType.String, 1, "CHAR(1)");
             VerifyDefaultMySqlType<_Int16Enum<SalesOrderStatus>>(MySqlVersion.LowestSupported, MySqlDbType.Int16, "SMALLINT");

@@ -526,7 +526,7 @@ namespace DevZest.Data.MySql.Addons
                 return MySqlParameterInfo.Time();
             }
 
-            private static readonly string[] s_dataTypes = new string[]
+            internal static readonly string[] s_dataTypes = new string[]
             {
                 "TIME",
                 "TIME(1)",
@@ -542,7 +542,7 @@ namespace DevZest.Data.MySql.Addons
                 return s_dataTypes[Precision];
             }
 
-            private static readonly string[] s_formats = new string[]
+            internal static readonly string[] s_formats = new string[]
             {
                 "HH:mm:ss",
                 "HH:mm:ss.f",
@@ -886,34 +886,6 @@ namespace DevZest.Data.MySql.Addons
         internal static MySqlType SingleChar(Column<Char?> column, string charSetName, string collationName)
         {
             return new SingleCharType(column, charSetName, collationName);
-        }
-
-        private sealed class TimeSpanType : StructSqlType<TimeSpan>
-        {
-            public TimeSpanType(Column<TimeSpan?> column)
-                : base(column)
-            {
-            }
-
-            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
-            {
-                return MySqlParameterInfo.Time();
-            }
-
-            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
-            {
-                return "TIME";
-            }
-
-            protected override string GetValue(TimeSpan value, MySqlVersion mySqlVersion)
-            {
-                return value.ToString(@"hh\:mm\:ss\.fffffff", CultureInfo.InvariantCulture).ToSingleQuoted();
-            }
-        }
-
-        internal static MySqlType TimeSpan(Column<TimeSpan?> column)
-        {
-            return new TimeSpanType(column);
         }
 
         private abstract class EnumType<TEnum, TValue> : MySqlType

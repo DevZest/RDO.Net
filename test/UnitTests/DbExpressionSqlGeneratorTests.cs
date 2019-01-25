@@ -49,83 +49,66 @@ namespace DevZest.Data.MySql
                 VerifyDbExpression(MySqlVersion.LowestSupported, expr, "(TIMESTAMP '2015-05-14 17:14:20.888')");
             }
 
-            //{   // DateTimeOffset
-            //    var expr = CreateDbConstantExpression<_DateTimeOffset, DateTimeOffset?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    var dateTime = new DateTime(2015, 5, 14, 17, 14, 20, 888);
-            //    expr = CreateDbConstantExpression<_DateTimeOffset, DateTimeOffset?>(new DateTimeOffset(dateTime));
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, string.Format("'{0}'", dateTime.ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz")));
-            //}
+            {   // Decimal
+                var expr = CreateDbConstantExpression<_Decimal, Decimal?>(null);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
+                expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "3.1415926");
+                expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M, x => x.AsMySqlMoney());
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "3.1415926");
+            }
 
-            //{   // Decimal
-            //    var expr = CreateDbConstantExpression<_Decimal, Decimal?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "3.1415926");
-            //    expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M, x => x.AsSqlMoney());
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "3.1415926");
-            //    expr = CreateDbConstantExpression<_Decimal, Decimal?>(3.1415926M, x => x.AsSqlSmallMoney());
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "3.1415926");
-            //}
+            {   // Double
+                var expr = CreateDbConstantExpression<_Double, Double?>(null);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
+                expr = CreateDbConstantExpression<_Double, Double?>(123457.2);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "123457.2");
+            }
 
-            //{   // Double
-            //    var expr = CreateDbConstantExpression<_Double, Double?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    expr = CreateDbConstantExpression<_Double, Double?>(123457.2);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "123457.2");
-            //}
+            {   // Guid
+                var expr = CreateDbConstantExpression<_Guid, Guid?>(null);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
+                var guid = Guid.NewGuid();
+                expr = CreateDbConstantExpression<_Guid, Guid?>(guid);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, string.Format("'{0}'", guid.ToString()));
+            }
 
-            //{   // Guid
-            //    var expr = CreateDbConstantExpression<_Guid, Guid?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    var guid = Guid.NewGuid();
-            //    expr = CreateDbConstantExpression<_Guid, Guid?>(guid);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, string.Format("'{0}'", guid.ToString()));
-            //}
+            {   // Int16
+                var expr = CreateDbConstantExpression<_Int16, Int16?>(null);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
+                expr = CreateDbConstantExpression<_Int16, Int16?>(112);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "112");
+            }
 
-            //{   // Int16
-            //    var expr = CreateDbConstantExpression<_Int16, Int16?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    expr = CreateDbConstantExpression<_Int16, Int16?>(112);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "112");
-            //}
+            {   // Int32
+                var expr = CreateDbConstantExpression<_Int32, Int32?>(null);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
+                expr = CreateDbConstantExpression<_Int32, Int32?>(345);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "345");
+            }
 
-            //{   // Int32
-            //    var expr = CreateDbConstantExpression<_Int32, Int32?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    expr = CreateDbConstantExpression<_Int32, Int32?>(345);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "345");
-            //}
+            {   // Int64
+                var expr = CreateDbConstantExpression<_Int64, Int64?>(null);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
+                expr = CreateDbConstantExpression<_Int64, Int64?>(456);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "456");
+            }
 
-            //{   // Int64
-            //    var expr = CreateDbConstantExpression<_Int64, Int64?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    expr = CreateDbConstantExpression<_Int64, Int64?>(456);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "456");
-            //}
+            {   // Single
+                var expr = CreateDbConstantExpression<_Single, Single?>(null);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
+                expr = CreateDbConstantExpression<_Single, Single?>(12.5f);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "12.5");
+            }
 
-            //{   // Single
-            //    var expr = CreateDbConstantExpression<_Single, Single?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    expr = CreateDbConstantExpression<_Single, Single?>(12.5f);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "12.5");
-            //}
-
-            //{   // string
-            //    var expr = CreateDbConstantExpression<_String, String>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    expr = CreateDbConstantExpression<_String, String>("ABCD'EFG");
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "N'ABCD''EFG'");
-            //    expr = CreateDbConstantExpression<_String, String>("ABCD'EFG", x => x.AsSqlVarChar(100));
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "'ABCD''EFG'");
-            //}
-
-            //{   // TimeSpan
-            //    var expr = CreateDbConstantExpression<_TimeSpan, TimeSpan?>(null);
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "NULL");
-            //    expr = CreateDbConstantExpression<_TimeSpan, TimeSpan?>(TimeSpan.FromHours(5));
-            //    VerifyDbExpression(SqlVersion.Sql11, expr, "'05:00:00.0000000'");
-            //}
+            {   // string
+                var expr = CreateDbConstantExpression<_String, String>(null);
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
+                expr = CreateDbConstantExpression<_String, String>("ABCD'EFG");
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "'ABCD''EFG'");
+                expr = CreateDbConstantExpression<_String, String>("ABCD'EFG", x => x.AsMySqlVarChar(100));
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "'ABCD''EFG'");
+            }
         }
 
         private static DbConstantExpression CreateDbConstantExpression<TColumn, TData>(TData value, Action<TColumn> columnInitializer = null)
