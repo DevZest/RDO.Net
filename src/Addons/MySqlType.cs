@@ -454,43 +454,6 @@ namespace DevZest.Data.MySql.Addons
             return new VarBinaryType(binaryColumn, size);
         }
 
-        private sealed class TimestampType : GenericSqlType<Binary>
-        {
-            public TimestampType(Column<Binary> column)
-                : base(column)
-            {
-            }
-
-            internal override object ConvertParameterValue(object value)
-            {
-                var result = (Binary)value;
-                if (result == null)
-                    return DBNull.Value;
-                else
-                    return result.ToArray();
-            }
-
-            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
-            {
-                return MySqlParameterInfo.Timestamp();
-            }
-
-            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
-            {
-                return "TIMESTAMP";
-            }
-
-            protected override string GetValueLiteral(Binary value, MySqlVersion mySqlVersion)
-            {
-                return value.ToHexLitera();
-            }
-        }
-
-        internal static MySqlType Timestamp(Column<Binary> binaryColumn)
-        {
-            return new TimestampType(binaryColumn);
-        }
-
         private sealed class UniqueIdentifierType : StructSqlType<Guid>
         {
             public UniqueIdentifierType(Column<Guid?> column)
@@ -601,7 +564,7 @@ namespace DevZest.Data.MySql.Addons
             return new TimeType(column, precision);
         }
 
-        private sealed class DateTimeType : StructSqlType<DateTime>
+        private class DateTimeType : StructSqlType<DateTime>
         {
             public DateTimeType(Column<DateTime?> column, int precision)
                 : base(column)
@@ -653,6 +616,40 @@ namespace DevZest.Data.MySql.Addons
         internal static MySqlType DateTime(Column<DateTime?> column, int precision)
         {
             return new DateTimeType(column, precision);
+        }
+
+        private sealed class TimestampType : DateTimeType
+        {
+            public TimestampType(Column<DateTime?> column, int precision)
+                : base(column, precision)
+            {
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.Timestamp();
+            }
+
+            private static readonly string[] s_dataTypes = new string[]
+            {
+                "TIMESTAMP",
+                "TIMESTAMP(1)",
+                "TIMESTAMP(2)",
+                "TIMESTAMP(3)",
+                "TIMESTAMP(4)",
+                "TIMESTAMP(5)",
+                "TIMESTAMP(6)"
+            };
+
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            {
+                return s_dataTypes[Precision];
+            }
+        }
+
+        internal static MySqlType Timestamp(Column<DateTime?> dateTimeColumn, int precision)
+        {
+            return new TimestampType(dateTimeColumn, precision);
         }
 
         private sealed class SingleType : StructSqlType<Single>

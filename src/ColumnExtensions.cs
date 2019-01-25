@@ -70,13 +70,6 @@ namespace DevZest.Data.MySql
             return column;
         }
 
-        public static _Binary AsMySqlTimestamp(this _Binary column)
-        {
-            column.VerifyNotNull(nameof(column));
-            column.SetMySqlType(MySqlType.Timestamp(column));
-            return column;
-        }
-
         public static _Decimal AsMySqlDecimal(this _Decimal column, byte precision = DEFAULT_DECIMAL_PRECISION, byte scale = DEFAULT_DECIMAL_SCALE)
         {
             column.VerifyNotNull(nameof(column));
@@ -103,8 +96,7 @@ namespace DevZest.Data.MySql
         public static _DateTime AsMySqlTime(this _DateTime column, int precision = 0)
         {
             column.VerifyNotNull(nameof(column));
-            if (precision < 0 || precision > MAX_TIME_PRECISION)
-                throw new ArgumentOutOfRangeException(nameof(precision));
+            VerifyTimePrecision(precision, nameof(precision));
             column.SetMySqlType(MySqlType.Time(column, precision));
             return column;
         }
@@ -112,10 +104,23 @@ namespace DevZest.Data.MySql
         public static _DateTime AsMySqlDateTime(this _DateTime column, int precision = 0)
         {
             column.VerifyNotNull(nameof(column));
-            if (precision < 0 || precision > MAX_TIME_PRECISION)
-                throw new ArgumentOutOfRangeException(nameof(precision));
+            VerifyTimePrecision(precision, nameof(precision));
             column.SetMySqlType(MySqlType.DateTime(column, precision));
             return column;
+        }
+
+        public static _DateTime AsMySqlTimestamp(this _DateTime column, int precision = 0)
+        {
+            column.VerifyNotNull(nameof(column));
+            VerifyTimePrecision(precision, nameof(precision));
+            column.SetMySqlType(MySqlType.Timestamp(column, precision));
+            return column;
+        }
+
+        internal static void VerifyTimePrecision(int precision, string paramName)
+        {
+            if (precision < 0 || precision > MAX_TIME_PRECISION)
+                throw new ArgumentOutOfRangeException(paramName);
         }
 
         public static _String AsMySqlNChar(this _String column, int size)

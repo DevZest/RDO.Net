@@ -51,10 +51,18 @@ namespace DevZest.Data.MySql
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class MySqlDateTimeAttribute : ColumnAttribute
     {
+        public MySqlDateTimeAttribute(int precision = 0)
+        {
+            ColumnExtensions.VerifyTimePrecision(precision, nameof(precision));
+            Precision = precision;
+        }
+
+        public int Precision { get; }
+
         protected override void Wireup(Column column)
         {
             if (column is _DateTime dateTime)
-                dateTime.AsMySqlDateTime();
+                dateTime.AsMySqlDateTime(Precision);
         }
     }
 
@@ -125,20 +133,36 @@ namespace DevZest.Data.MySql
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class MySqlTimeAttribute : ColumnAttribute
     {
+        public MySqlTimeAttribute(int precision = 0)
+        {
+            ColumnExtensions.VerifyTimePrecision(precision, nameof(precision));
+            Precision = precision;
+        }
+
+        public int Precision { get; }
+
         protected override void Wireup(Column column)
         {
             if (column is _DateTime dateTime)
-                dateTime.AsMySqlTime();
+                dateTime.AsMySqlTime(Precision);
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class MySqlTimeStampAttribute : ColumnAttribute
     {
+        public MySqlTimeStampAttribute(int precision = 0)
+        {
+            ColumnExtensions.VerifyTimePrecision(precision, nameof(precision));
+            Precision = precision;
+        }
+
+        public int Precision { get; }
+
         protected override void Wireup(Column column)
         {
-            if (column is _Binary binary)
-                binary.AsMySqlTimestamp();
+            if (column is _DateTime dateTime)
+                dateTime.AsMySqlTimestamp(Precision);
         }
     }
 

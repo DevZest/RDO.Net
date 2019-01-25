@@ -110,7 +110,7 @@ namespace DevZest.Data.MySql
             }
 
             {
-                var timestamp = new _Binary().AsMySqlTimestamp();
+                var timestamp = new _DateTime().AsMySqlTimestamp();
                 VerifyMySqlType(MySqlVersion.LowestSupported, timestamp, MySqlDbType.Timestamp, "TIMESTAMP");
             }
 
