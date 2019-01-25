@@ -102,7 +102,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "0 = The data in FirstName and LastName are stored in western style (first name, last name) order.  1 = Eastern style (last name, first name) order.")]
         public _Boolean NameStyle { get; private set; }
 
-        [MySqlNVarChar(8)]
+        [MySqlVarChar(8)]
         [DbColumn(Description = "A courtesy title. For example, Mr. or Ms.")]
         public _String Title { get; private set; }
 
@@ -118,19 +118,19 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Last name of the person.")]
         public _String LastName { get; private set; }
 
-        [MySqlNVarChar(10)]
+        [MySqlVarChar(10)]
         [DbColumn(Description = "Surname suffix. For example, Sr. or Jr.")]
         public _String Suffix { get; private set; }
 
-        [MySqlNVarChar(128)]
+        [MySqlVarChar(128)]
         [DbColumn(Description = "The customer's organization.")]
         public _String CompanyName { get; private set; }
 
-        [MySqlNVarChar(255)]
+        [MySqlVarChar(255)]
         [DbColumn(Description = "The customer's sales person, an employee of AdventureWorks Cycles.")]
         public _String SalesPerson { get; private set; }
 
-        [MySqlNVarChar(255)]
+        [MySqlVarChar(255)]
         [EmailAddress]
         [DbColumn(Description = "E-mail address for the person.")]
         public _String EmailAddress { get; private set; }

@@ -68,7 +68,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 ProductDescriptionID { get; private set; }
 
         [Required]
-        [MySqlNVarChar(400)]
+        [MySqlVarChar(400)]
         [DbColumn(Description = "Description of the product.")]
         public _String Description { get; private set; }
     }

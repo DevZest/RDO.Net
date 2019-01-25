@@ -153,11 +153,11 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 BillToAddressID { get; private set; }
 
         [Required]
-        [MySqlNVarChar(50)]
+        [MySqlVarChar(50)]
         [DbColumn(Description = "Shipping method. Foreign key to ShipMethod.ShipMethodID.")]
         public _String ShipMethod { get; private set; }
 
-        [MySqlNVarChar(15)]
+        [MySqlVarChar(15)]
         [DbColumn(Description = "Approval code provided by the credit card company.")]
         public _String CreditCardApprovalCode { get; private set; }
 
@@ -184,14 +184,14 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Total due from customer. Computed as Subtotal + TaxAmt + Freight.")]
         public _Decimal TotalDue { get; private set; }
 
-        [MySqlNVarChar(65535)]
+        [MySqlVarChar(65535)]
         [DbColumn(Description = "Sales representative comments.")]
         public _String Comment { get; private set; }
 
         [_Computation]
         private void ComputeSalesOrderNumber()
         {
-            SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsMySqlNVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
+            SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsMySqlVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
         }
 
         [_Computation]

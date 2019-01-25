@@ -23,7 +23,7 @@ namespace DevZest.Data.MySql
             VerifyDefaultMySqlType<_Int32>(MySqlVersion.LowestSupported, MySqlDbType.Int32, "INT");
             VerifyDefaultMySqlType<_Int64>(MySqlVersion.LowestSupported, MySqlDbType.Int64, "BIGINT");
             VerifyDefaultMySqlType<_Single>(MySqlVersion.LowestSupported, MySqlDbType.Float, "FLOAT");
-            VerifyDefaultMySqlType<_String>(MySqlVersion.LowestSupported, MySqlDbType.VarString, ColumnExtensions.MAX_NVARCHAR_SIZE, string.Format("NVARCHAR({0})", ColumnExtensions.MAX_NVARCHAR_SIZE));
+            VerifyDefaultMySqlType<_String>(MySqlVersion.LowestSupported, MySqlDbType.VarString, ColumnExtensions.DEFAULT_VARCHAR_SIZE, string.Format("VARCHAR({0})", ColumnExtensions.DEFAULT_VARCHAR_SIZE));
             VerifyDefaultMySqlType<_TimeSpan>(MySqlVersion.LowestSupported, MySqlDbType.Time, "TIME");
             VerifyDefaultMySqlType<_ByteEnum<SalesOrderStatus>>(MySqlVersion.LowestSupported, MySqlDbType.Byte, "TINYINT");
             VerifyDefaultMySqlType<_CharEnum<SalesOrderStatus>>(MySqlVersion.LowestSupported, MySqlDbType.String, 1, "CHAR(1)");
@@ -140,30 +140,20 @@ namespace DevZest.Data.MySql
             }
 
             {
-                var charColumn = new _String().AsMySqlChar(255);
-                VerifyMySqlType(MySqlVersion.LowestSupported, charColumn, MySqlDbType.String, 255, "CHAR(255)");
+                var charColumn = new _String().AsMySqlChar(255, "utf8mb4");
+                VerifyMySqlType(MySqlVersion.LowestSupported, charColumn, MySqlDbType.String, 255, "CHAR(255) CHARACTER SET utf8mb4");
             }
 
             {
-                var nchar = new _String().AsMySqlNChar(255);
-                VerifyMySqlType(MySqlVersion.LowestSupported, nchar, MySqlDbType.String, 255, "NCHAR(255)");
+                var varchar = new _String().AsMySqlVarChar(512, "utf8mb4");
+                VerifyMySqlType(MySqlVersion.LowestSupported, varchar, MySqlDbType.VarString, 512, "VARCHAR(512) CHARACTER SET utf8mb4");
             }
 
             {
-                var varchar = new _String().AsMySqlVarChar(512);
-                VerifyMySqlType(MySqlVersion.LowestSupported, varchar, MySqlDbType.VarString, 512, "VARCHAR(512)");
-            }
-
-            {
-                var nvarchar = new _String().AsMySqlNVarChar(1024);
-                VerifyMySqlType(MySqlVersion.LowestSupported, nvarchar, MySqlDbType.VarString, 1024, "NVARCHAR(1024)");
-            }
-
-            {
-                var singleChar = new _Char().AsMySqlChar(true);
-                VerifyMySqlType(MySqlVersion.LowestSupported, singleChar, MySqlDbType.String, 1, "NCHAR(1)");
-                singleChar = new _Char().AsMySqlChar(false);
+                var singleChar = new _Char().AsMySqlChar();
                 VerifyMySqlType(MySqlVersion.LowestSupported, singleChar, MySqlDbType.String, 1, "CHAR(1)");
+                singleChar = new _Char().AsMySqlChar("utf8mb4");
+                VerifyMySqlType(MySqlVersion.LowestSupported, singleChar, MySqlDbType.String, 1, "CHAR(1) CHARACTER SET utf8mb4");
             }
         }
     }

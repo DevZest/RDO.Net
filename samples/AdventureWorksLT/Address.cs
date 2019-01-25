@@ -85,16 +85,16 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 AddressID { get; private set; }
 
         [Required]
-        [MySqlNVarChar(60)]
+        [MySqlVarChar(60)]
         [DbColumn(Description = "First street address line.")]
         public _String AddressLine1 { get; private set; }
 
-        [MySqlNVarChar(60)]
+        [MySqlVarChar(60)]
         [DbColumn(Description = "Second street address line.")]
         public _String AddressLine2 { get; private set; }
 
         [Required]
-        [MySqlNVarChar(30)]
+        [MySqlVarChar(30)]
         [DbColumn(Description = "Name of the city.")]
         public _String City { get; private set; }
 
@@ -106,7 +106,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _String CountryRegion { get; private set; }
 
         [Required]
-        [MySqlNVarChar(15)]
+        [MySqlVarChar(15)]
         [DbColumn(Description = "Postal code for the street address.")]
         public _String PostalCode { get; private set; }
 

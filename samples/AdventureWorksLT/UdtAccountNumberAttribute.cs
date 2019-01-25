@@ -15,7 +15,7 @@ namespace DevZest.Samples.AdventureWorksLT
             if (column is _String stringColumn)
             {
                 stringColumn.Nullable(true);
-                stringColumn.AsMySqlNVarChar(15);
+                stringColumn.AsMySqlVarChar(15);
             }
         }
     }

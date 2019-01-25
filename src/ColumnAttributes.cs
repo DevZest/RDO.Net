@@ -24,17 +24,23 @@ namespace DevZest.Data.MySql
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class MySqlCharAttribute : ColumnAttribute
     {
-        public MySqlCharAttribute(int size)
+        public MySqlCharAttribute(int size, string charSetName = null, string collationName = null)
         {
             Size = size;
+            CharSetName = charSetName;
+            CollationName = collationName;
         }
 
-        public int Size { get; private set; }
+        public int Size { get; }
+
+        public string CharSetName { get; }
+
+        public string CollationName { get; }
 
         protected override void Wireup(Column column)
         {
             if (column is _String stringColumn)
-                stringColumn.AsMySqlChar(Size);
+                stringColumn.AsMySqlChar(Size, CharSetName, CollationName);
         }
     }
 
@@ -96,40 +102,6 @@ namespace DevZest.Data.MySql
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
-    public sealed class MySqlNCharAttribute : ColumnAttribute
-    {
-        public MySqlNCharAttribute(int size)
-        {
-            Size = size;
-        }
-
-        public int Size { get; private set; }
-
-        protected override void Wireup(Column column)
-        {
-            if (column is _String stringColumn)
-                stringColumn.AsMySqlNChar(Size);
-        }
-    }
-
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
-    public sealed class MySqlNVarCharAttribute : ColumnAttribute
-    {
-        public MySqlNVarCharAttribute(int size)
-        {
-            Size = size;
-        }
-
-        public int Size { get; private set; }
-
-        protected override void Wireup(Column column)
-        {
-            if (column is _String stringColumn)
-                stringColumn.AsMySqlNVarChar(Size);
-        }
-    }
-
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
     public sealed class MySqlTimeAttribute : ColumnAttribute
     {
@@ -186,17 +158,46 @@ namespace DevZest.Data.MySql
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
     public sealed class MySqlVarCharAttribute : ColumnAttribute
     {
-        public MySqlVarCharAttribute(int size)
+        public MySqlVarCharAttribute(int size, string charSetName = null, string collationName = null)
         {
             Size = size;
+            CharSetName = charSetName;
+            CollcationName = collationName;
         }
 
-        public int Size { get; private set; }
+        public int Size { get; }
+
+        public string CharSetName { get; }
+
+        public string CollcationName { get; }
 
         protected override void Wireup(Column column)
         {
             if (column is _String stringColumn)
-                stringColumn.AsMySqlVarChar(Size);
+                stringColumn.AsMySqlVarChar(Size, CharSetName, CollcationName);
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    public sealed class MySqlTextAttribute : ColumnAttribute
+    {
+        public MySqlTextAttribute(int size, string charSetName = null, string collationName = null)
+        {
+            Size = size;
+            CharSetName = charSetName;
+            CollcationName = collationName;
+        }
+
+        public int Size { get; }
+
+        public string CharSetName { get; }
+
+        public string CollcationName { get; }
+
+        protected override void Wireup(Column column)
+        {
+            if (column is _String stringColumn)
+                stringColumn.AsMySqlText(Size, CharSetName, CollcationName);
         }
     }
 }

@@ -88,7 +88,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         [DbColumn(Description = "Category description.")]
         [Required]
-        [MySqlNVarChar(50)]
+        [MySqlVarChar(50)]
         public _String Name { get; private set; }
 
         [_UniqueConstraint]

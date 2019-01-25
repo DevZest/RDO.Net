@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using DevZest.Data.Primitives;
-using System.Data.SqlTypes;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Linq.Expressions;
@@ -18,10 +15,8 @@ namespace DevZest.Data.MySql
         private const int MIN_VARBINARY_SIZE = 1;
         internal const int MAX_VARBINARY_SIZE = 65535;
 
-        private const int MIN_NVARCHAR_SIZE = 1;
-        internal const int MAX_NVARCHAR_SIZE = 21845;
-
         private const int MIN_VARCHAR_SIZE = 1;
+        internal const int DEFAULT_VARCHAR_SIZE = 4000;
         internal const int MAX_VARCHAR_SIZE = 65535;
 
         private const int MIN_CHAR_SIZE = 0;
@@ -123,49 +118,41 @@ namespace DevZest.Data.MySql
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
-        public static _String AsMySqlNChar(this _String column, int size)
-        {
-            column.VerifyNotNull(nameof(column));
-            if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
-                throw new ArgumentOutOfRangeException(nameof(size));
-            column.SetMySqlType(MySqlType.NChar(column, size));
-            return column;
-        }
-
-        public static _String AsMySqlNVarChar(this _String column, int size = MAX_NVARCHAR_SIZE)
-        {
-            column.VerifyNotNull(nameof(column));
-            if ((size < MIN_NVARCHAR_SIZE || size > MAX_NVARCHAR_SIZE))
-                throw new ArgumentOutOfRangeException(nameof(size));
-            column.SetMySqlType(MySqlType.NVarChar(column, size));
-            return column;
-        }
-
-        public static T AsMySqlChar<T>(this T column, bool isUnicode)
+        public static T AsMySqlChar<T>(this T column, string charSetName = null, string collationName = null)
             where T : Column<Char?>
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMySqlType(MySqlType.SingleChar(column, isUnicode));
+            column.SetMySqlType(MySqlType.SingleChar(column, charSetName, collationName));
             return column;
         }
 
-        public static T AsMySqlChar<T>(this T column, int size)
+        public static T AsMySqlChar<T>(this T column, int size, string charSetName = null, string collationName = null)
             where T : Column<string>
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_CHAR_SIZE || size > MAX_CHAR_SIZE)
                 throw new ArgumentOutOfRangeException(nameof(size));
-            column.SetMySqlType(MySqlType.Char(column, size));
+            column.SetMySqlType(MySqlType.Char(column, size, charSetName, collationName));
             return column;
         }
 
-        public static T AsMySqlVarChar<T>(this T column, int size)
+        public static T AsMySqlVarChar<T>(this T column, int size, string charSetName = null, string collationName = null)
             where T : Column<String>
         {
             column.VerifyNotNull(nameof(column));
             if (size < MIN_VARCHAR_SIZE || size > MAX_VARCHAR_SIZE)
                 throw new ArgumentOutOfRangeException(nameof(size));
-            column.SetMySqlType(MySqlType.VarChar(column, size));
+            column.SetMySqlType(MySqlType.VarChar(column, size, charSetName, collationName));
+            return column;
+        }
+
+        public static T AsMySqlText<T>(this T column, int size, string charSetName = null, string collationName = null)
+            where T : Column<String>
+        {
+            column.VerifyNotNull(nameof(column));
+            if (size < MIN_VARCHAR_SIZE || size > MAX_VARCHAR_SIZE)
+                throw new ArgumentOutOfRangeException(nameof(size));
+            column.SetMySqlType(MySqlType.Text(column, size, charSetName, collationName));
             return column;
         }
 
@@ -226,7 +213,7 @@ namespace DevZest.Data.MySql
                 new MySqlTypeProvider<Binary>(x => MySqlType.VarBinary(x, MAX_VARBINARY_SIZE)),
                 new MySqlTypeProvider<Boolean?>(x => MySqlType.Bit(x)),
                 new MySqlTypeProvider<Byte?>(x => MySqlType.TinyInt(x)),
-                new MySqlTypeProvider<Char?>(x => MySqlType.SingleChar(x, false)),
+                new MySqlTypeProvider<Char?>(x => MySqlType.SingleChar(x, null, null)),
                 new MySqlTypeProvider<DateTime?>(x => MySqlType.DateTime(x, 0)),
                 new MySqlTypeProvider<Decimal?>(x => MySqlType.Decimal(x, DEFAULT_DECIMAL_PRECISION, DEFAULT_DECIMAL_SCALE)),
                 new MySqlTypeProvider<Double?>(x => MySqlType.Double(x)),
@@ -235,7 +222,7 @@ namespace DevZest.Data.MySql
                 new MySqlTypeProvider<Int32?>(x => MySqlType.Int(x)),
                 new MySqlTypeProvider<Int64?>(x => MySqlType.BigInt(x)),
                 new MySqlTypeProvider<Single?>(x => MySqlType.Single(x)),
-                new MySqlTypeProvider<String>(x => MySqlType.NVarChar(x, MAX_NVARCHAR_SIZE)),
+                new MySqlTypeProvider<String>(x => MySqlType.VarChar(x, DEFAULT_VARCHAR_SIZE, null, null)),
                 new MySqlTypeProvider<TimeSpan?>(x => MySqlType.TimeSpan(x))
             });
 

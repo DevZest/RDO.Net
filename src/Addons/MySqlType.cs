@@ -377,7 +377,7 @@ namespace DevZest.Data.MySql.Addons
                 return GetSqlParameterInfo(Size);
             }
 
-            internal sealed override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 MySqlParameterInfo paramInfo = GetSqlParameterInfo(mySqlVersion);
                 Debug.Assert(paramInfo.Size.HasValue);
@@ -735,16 +735,22 @@ namespace DevZest.Data.MySql.Addons
 
             protected override string GetValueLiteral(string value, MySqlVersion mySqlVersion)
             {
-                return value.ToLiteral(true);
+                return value.ToLiteral();
             }
         }
 
         private abstract class StringTypeBase : SizedSqlType<String>
         {
-            protected StringTypeBase(Column<String> column, int size)
+            protected StringTypeBase(Column<String> column, int size, string charSetName, string collationName)
                 : base(column, size)
             {
+                CharSetName = charSetName;
+                CollationName = collationName;
             }
+
+            private string CharSetName { get; }
+
+            private string CollationName { get; }
 
             internal sealed override object ConvertParameterValue(object value)
             {
@@ -754,11 +760,23 @@ namespace DevZest.Data.MySql.Addons
                     return value;
             }
 
-            protected abstract bool IsUnicode { get; }
-
             protected sealed override string GetValueLiteral(string value, MySqlVersion mySqlVersion)
             {
-                return value.ToLiteral(IsUnicode);
+                return value.ToLiteral();
+            }
+
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            {
+                return AppendCharSetAndCollation(base.GetDataTypeSql(mySqlVersion), CharSetName, CollationName);
+            }
+
+            internal static string AppendCharSetAndCollation(string dataType, string charSetName, string collationName)
+            {
+                if (!string.IsNullOrEmpty(charSetName))
+                    dataType = dataType + " CHARACTER SET " + charSetName;
+                if (!string.IsNullOrEmpty(collationName))
+                    dataType = dataType + " COLLATE " + collationName;
+                return dataType;
             }
         }
 
@@ -767,66 +785,33 @@ namespace DevZest.Data.MySql.Addons
             return new JsonType(column);
         }
 
-        private sealed class NVarCharType : StringTypeBase
+        private sealed class TextType : StringTypeBase
         {
-            public NVarCharType(Column<String> column, int size)
-                : base(column, size)
+            public TextType(Column<String> column, int size, string charSetName, string collationName)
+                : base(column, size, charSetName, collationName)
             {
             }
 
             protected override string GetSqlDataType()
             {
-                return "NVARCHAR";
+                return "TEXT";
             }
 
             protected override MySqlParameterInfo GetSqlParameterInfo(int size)
             {
                 return MySqlParameterInfo.VarString(size);
             }
-
-            protected override bool IsUnicode
-            {
-                get { return true; }
-            }
         }
 
-        internal static MySqlType NVarChar(Column<String> column, int size)
+        internal static MySqlType Text(Column<String> column, int size, string charSetName, string collationName)
         {
-            return new NVarCharType(column, size);
-        }
-
-        private sealed class NCharType : StringTypeBase
-        {
-            public NCharType(Column<String> column, int size)
-                : base(column, size)
-            {
-            }
-
-            protected override string GetSqlDataType()
-            {
-                return "NCHAR";
-            }
-
-            protected override MySqlParameterInfo GetSqlParameterInfo(int size)
-            {
-                return MySqlParameterInfo.String(size);
-            }
-
-            protected override bool IsUnicode
-            {
-                get { return true; }
-            }
-        }
-
-        internal static MySqlType NChar(Column<String> column, int size)
-        {
-            return new NCharType(column, size);
+            return new TextType(column, size, charSetName, collationName);
         }
 
         private sealed class VarCharType : StringTypeBase
         {
-            public VarCharType(Column<String> column, int size)
-                : base(column, size)
+            public VarCharType(Column<String> column, int size, string charSetName, string collationName)
+                : base(column, size, charSetName, collationName)
             {
             }
 
@@ -839,22 +824,17 @@ namespace DevZest.Data.MySql.Addons
             {
                 return MySqlParameterInfo.VarString(size);
             }
-
-            protected override bool IsUnicode
-            {
-                get { return false; }
-            }
         }
 
-        internal static MySqlType VarChar(Column<String> column, int size)
+        internal static MySqlType VarChar(Column<String> column, int size, string charSetName, string collationName)
         {
-            return new VarCharType(column, size);
+            return new VarCharType(column, size, charSetName, collationName);
         }
 
         private sealed class CharType : StringTypeBase
         {
-            public CharType(Column<String> column, int size)
-                : base(column, size)
+            public CharType(Column<String> column, int size, string charsetName, string collationName)
+                : base(column, size, charsetName, collationName)
             {
             }
 
@@ -867,27 +847,25 @@ namespace DevZest.Data.MySql.Addons
             {
                 return MySqlParameterInfo.String(size);
             }
-
-            protected override bool IsUnicode
-            {
-                get { return false; }
-            }
         }
 
-        internal static MySqlType Char(Column<String> column, int size)
+        internal static MySqlType Char(Column<String> column, int size, string charSetName, string collationName)
         {
-            return new CharType(column, size);
+            return new CharType(column, size, charSetName, collationName);
         }
 
         private sealed class SingleCharType : StructSqlType<Char>
         {
-            public SingleCharType(Column<Char?> column, bool isUnicode)
+            public SingleCharType(Column<Char?> column, string charSetName, string collationName)
                 : base(column)
             {
-                IsUnicode = isUnicode;
+                CharSetName = charSetName;
+                CollationName = collationName;
             }
 
-            public bool IsUnicode { get; private set; }
+            private string CharSetName { get; }
+
+            private string CollationName { get; }
 
             internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
             {
@@ -896,18 +874,18 @@ namespace DevZest.Data.MySql.Addons
 
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
-                return IsUnicode ? "NCHAR(1)" : "CHAR(1)";
+                return StringTypeBase.AppendCharSetAndCollation("CHAR(1)", CharSetName, CollationName);
             }
 
             protected override string GetValue(char value, MySqlVersion mySqlVersion)
             {
-                return value.ToString().ToLiteral(IsUnicode);
+                return value.ToString().ToLiteral();
             }
         }
 
-        internal static MySqlType SingleChar(Column<Char?> column, bool isUnicode)
+        internal static MySqlType SingleChar(Column<Char?> column, string charSetName, string collationName)
         {
-            return new SingleCharType(column, isUnicode);
+            return new SingleCharType(column, charSetName, collationName);
         }
 
         private sealed class TimeSpanType : StructSqlType<TimeSpan>

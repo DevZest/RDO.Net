@@ -105,11 +105,11 @@ namespace DevZest.Samples.AdventureWorksLT
         public _String Name { get; private set; }
 
         [Required]
-        [MySqlNVarChar(25)]
+        [MySqlVarChar(25)]
         [DbColumn(Description = "Unique product identification number.")]
         public _String ProductNumber { get; private set; }
 
-        [MySqlNVarChar(15)]
+        [MySqlVarChar(15)]
         [DbColumn(Description = "Product color.")]
         public _String Color { get; private set; }
 
@@ -123,7 +123,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Selling price.")]
         public _Decimal ListPrice { get; private set; }
 
-        [MySqlNVarChar(5)]
+        [MySqlVarChar(5)]
         [DbColumn(Description = "Product size.")]
         public _String Size { get; private set; }
 
@@ -154,7 +154,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Small image of the product.")]
         public _Binary ThumbNailPhoto { get; private set; }
 
-        [MySqlNVarChar(50)]
+        [MySqlVarChar(50)]
         [DbColumn(Description = "Small image file name.")]
         public _String ThumbnailPhotoFileName { get; private set; }
 

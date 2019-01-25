@@ -14,12 +14,9 @@ namespace DevZest.Data.MySql
             return string.Format(CultureInfo.InvariantCulture, "'{0}'", s);
         }
 
-        internal static string ToLiteral(this string s, bool isUnicode)
+        internal static string ToLiteral(this string s)
         {
-            if (s == null)
-                return "NULL";
-            var format = isUnicode ? "N'{0}'" : "'{0}'";
-            return string.Format(CultureInfo.InvariantCulture, format, s.Replace("'", "''"));
+            return s == null ? "NULL" : s.Replace("'", "''").ToSingleQuoted();
         }
 
         public static string ToQuotedIdentifier(this string identifier)

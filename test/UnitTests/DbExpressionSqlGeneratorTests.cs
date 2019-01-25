@@ -33,8 +33,6 @@ namespace DevZest.Data.MySql
                 VerifyDbExpression(MySqlVersion.LowestSupported, expr, "NULL");
                 expr = CreateDbConstantExpression<_Char, Char?>('A');
                 VerifyDbExpression(MySqlVersion.LowestSupported, expr, "'A'");
-                expr = CreateDbConstantExpression<_Char, Char?>('A', x => x.AsMySqlChar(true));
-                VerifyDbExpression(MySqlVersion.LowestSupported, expr, "N'A'");
             }
 
             {   // DateTime

@@ -47,7 +47,7 @@ namespace DevZest.Data.MySql
         internal static IndentedStringBuilder GenerateComment(this IndentedStringBuilder sqlBuilder, string comment)
         {
             if (!string.IsNullOrEmpty(comment))
-                sqlBuilder.Append(" COMMENT ").Append(comment.ToLiteral(true));
+                sqlBuilder.Append(" COMMENT ").Append(comment.ToLiteral());
 
             return sqlBuilder;
         }
