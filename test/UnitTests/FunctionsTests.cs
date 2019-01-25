@@ -76,16 +76,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Functions_NewGuid()
-        {
-            var newGuidExpr = Functions.NewGuid();
-            ((DbFunctionExpression)newGuidExpr.DbExpression).Verify(FunctionKeys.NewGuid);
-
-            var newGuid = newGuidExpr.Eval();
-            Assert.IsTrue(newGuid.HasValue);
-        }
-
-        [TestMethod]
         public void Functions_Contains()
         {
             var dataSet = DataSet<SimpleModel>.Create();

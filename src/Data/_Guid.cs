@@ -339,5 +339,23 @@ namespace DevZest.Data
             // override to eliminate compile warning
             return base.GetHashCode();
         }
+
+        private class NewGuidFunction : ScalarFunctionExpression<Guid?>
+        {
+            public override Guid? this[DataRow dataRow]
+            {
+                get { return Guid.NewGuid(); }
+            }
+
+            protected override FunctionKey FunctionKey
+            {
+                get { return FunctionKeys.NewGuid; }
+            }
+        }
+
+        public static _Guid NewGuid()
+        {
+            return new NewGuidFunction().MakeColumn<_Guid>();
+        }
     }
 }

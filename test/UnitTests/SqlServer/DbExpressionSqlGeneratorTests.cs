@@ -318,6 +318,7 @@ END";
         {
             VerifyDbExpression(SqlVersion.Sql11, _DateTime.Now().DbExpression, "GETDATE()");
             VerifyDbExpression(SqlVersion.Sql11, _DateTime.UtcNow().DbExpression, "GETUTCDATE()");
+            VerifyDbExpression(SqlVersion.Sql11, _Guid.NewGuid().DbExpression, "NEWID()");
 
             var model = new TestModel();
             var intColumn = CreateColumn<_Int32>(model, "Column1");

@@ -214,5 +214,15 @@ namespace DevZest.Data
             dbExpr.Verify(column1, typeof(Guid?), typeof(String));
             expr.VerifyEval(expectedValue);
         }
+
+        [TestMethod]
+        public void _Guid_NewGuid()
+        {
+            var newGuidExpr = _Guid.NewGuid();
+            ((DbFunctionExpression)newGuidExpr.DbExpression).Verify(FunctionKeys.NewGuid);
+
+            var newGuid = newGuidExpr.Eval();
+            Assert.IsTrue(newGuid.HasValue);
+        }
     }
 }

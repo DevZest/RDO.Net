@@ -12,7 +12,7 @@ namespace DevZest.Data.Annotations
         protected override void Wireup(Column column)
         {
             if (column is _Guid guidColumn)
-                guidColumn.SetDefault(Functions.NewGuid(), Name, Description);
+                guidColumn.SetDefault(_Guid.NewGuid(), Name, Description);
         }
 
         public string Name { get; set; }
