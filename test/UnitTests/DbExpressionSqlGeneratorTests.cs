@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Annotations;
 using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Data.SqlTypes;
@@ -259,19 +260,19 @@ END CASE";
             VerifyDbExpression(MySqlVersion.LowestSupported, ((_Int64)int32Column).DbExpression, "CAST(`TestModel`.`Column1` AS BIGINT)");
         }
 
-        //        [TestMethod]
-        //        public void DbExpressionSqlGenerator_DbParamExpression()
-        //        {
-        //            var param = _Int32.Param(5);
-        //            ExpressionGenerator generator;
-        //            VerifyDbExpression(SqlVersion.Sql11, param.DbExpression, "@p1", out generator);
-        //            Assert.AreEqual(1, generator.ParametersCount);
-        //            var sqlParameter = generator.CreateSqlParameter(0);
-        //            Assert.AreEqual("@p1", sqlParameter.ParameterName);
-        //            Assert.AreEqual(SqlDbType.Int, sqlParameter.SqlDbType);
-        //            Assert.AreEqual(ParameterDirection.Input, sqlParameter.Direction);
-        //            Assert.AreEqual(5, sqlParameter.Value);
-        //        }
+        [TestMethod]
+        public void DbExpressionSqlGenerator_DbParamExpression()
+        {
+            var param = _Int32.Param(5);
+            ExpressionGenerator generator;
+            VerifyDbExpression(MySqlVersion.LowestSupported, param.DbExpression, "@p1", out generator);
+            Assert.AreEqual(1, generator.ParametersCount);
+            var mySqlParameter = generator.CreateMySqlParameter(0);
+            Assert.AreEqual("@p1", mySqlParameter.ParameterName);
+            Assert.AreEqual(MySqlDbType.Int32, mySqlParameter.MySqlDbType);
+            Assert.AreEqual(ParameterDirection.Input, mySqlParameter.Direction);
+            Assert.AreEqual(5, mySqlParameter.Value);
+        }
 
         //        [TestMethod]
         //        public void DbExpressionSqlGenerator_DbUnaryExpression()
