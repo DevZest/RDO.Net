@@ -198,7 +198,9 @@ namespace DevZest.Data.SqlServer
             {
                 var tableName = table.Name.ToQuotedIdentifier();
                 var alias = ModelAliasManager[model].ToQuotedIdentifier();
-                SqlBuilder.Append(tableName).Append(' ').Append(alias);
+                SqlBuilder.Append(tableName);
+                if (alias != tableName)
+                    SqlBuilder.Append(' ').Append(alias);
             }
         }
 
