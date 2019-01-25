@@ -5,7 +5,7 @@ namespace DevZest.Data
     internal static class BinaryExtensions
     {
         private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-        internal static string ToBase64String(this Binary value)
+        internal static string ToHexLitera(this Binary value)
         {
             Debug.Assert(value != null);
             if (value.Length == 0)

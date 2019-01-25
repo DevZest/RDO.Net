@@ -44,6 +44,8 @@ namespace DevZest.Data.MySql
         private const int MIN_BINARY_SIZE = 0;
         internal const int MAX_BINARY_SIZE = 255;
 
+        internal const int MAX_TIME_PRECISION = 6;
+
         private static void SetMySqlType(this Column column, MySqlType mySqlType)
         {
             column.AddOrUpdate(mySqlType);
@@ -98,17 +100,21 @@ namespace DevZest.Data.MySql
             return column;
         }
 
-        public static _DateTime AsMySqlTime(this _DateTime column)
+        public static _DateTime AsMySqlTime(this _DateTime column, int precision = 0)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMySqlType(MySqlType.Time(column));
+            if (precision < 0 || precision > MAX_TIME_PRECISION)
+                throw new ArgumentOutOfRangeException(nameof(precision));
+            column.SetMySqlType(MySqlType.Time(column, precision));
             return column;
         }
 
-        public static _DateTime AsMySqlDateTime(this _DateTime column)
+        public static _DateTime AsMySqlDateTime(this _DateTime column, int precision = 0)
         {
             column.VerifyNotNull(nameof(column));
-            column.SetMySqlType(MySqlType.DateTime(column));
+            if (precision < 0 || precision > MAX_TIME_PRECISION)
+                throw new ArgumentOutOfRangeException(nameof(precision));
+            column.SetMySqlType(MySqlType.DateTime(column, precision));
             return column;
         }
 
@@ -216,7 +222,7 @@ namespace DevZest.Data.MySql
                 new MySqlTypeProvider<Boolean?>(x => MySqlType.Bit(x)),
                 new MySqlTypeProvider<Byte?>(x => MySqlType.TinyInt(x)),
                 new MySqlTypeProvider<Char?>(x => MySqlType.SingleChar(x, false)),
-                new MySqlTypeProvider<DateTime?>(x => MySqlType.DateTime(x)),
+                new MySqlTypeProvider<DateTime?>(x => MySqlType.DateTime(x, 0)),
                 new MySqlTypeProvider<Decimal?>(x => MySqlType.Decimal(x, DEFAULT_DECIMAL_PRECISION, DEFAULT_DECIMAL_SCALE)),
                 new MySqlTypeProvider<Double?>(x => MySqlType.Double(x)),
                 new MySqlTypeProvider<Guid?>(x => MySqlType.UniqueIdentifier(x)),

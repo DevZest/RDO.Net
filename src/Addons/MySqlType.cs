@@ -404,7 +404,7 @@ namespace DevZest.Data.MySql.Addons
 
             protected sealed override string GetValueLiteral(Binary value, MySqlVersion mySqlVersion)
             {
-                return value.ToBase64String().ToSingleQuoted();
+                return value.ToHexLitera();
             }
         }
 
@@ -482,7 +482,7 @@ namespace DevZest.Data.MySql.Addons
 
             protected override string GetValueLiteral(Binary value, MySqlVersion mySqlVersion)
             {
-                return value.ToBase64String().ToSingleQuoted();
+                return value.ToHexLitera();
             }
         }
 
@@ -538,7 +538,7 @@ namespace DevZest.Data.MySql.Addons
 
             protected override string GetValue(DateTime value, MySqlVersion mySqlVersion)
             {
-                return value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture).ToSingleQuoted();
+                return string.Format(CultureInfo.InvariantCulture, "(DATE '{0}')", value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
         }
 
@@ -549,58 +549,110 @@ namespace DevZest.Data.MySql.Addons
 
         private sealed class TimeType : StructSqlType<DateTime>
         {
-            public TimeType(Column<DateTime?> column)
+            public TimeType(Column<DateTime?> column, int precision)
                 : base(column)
             {
+                Debug.Assert(precision >= 0 && precision <= ColumnExtensions.MAX_TIME_PRECISION);
+                Precision = precision;
             }
+
+            public int Precision { get; }
 
             internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
             {
                 return MySqlParameterInfo.Time();
             }
 
+            private static readonly string[] s_dataTypes = new string[]
+            {
+                "TIME",
+                "TIME(1)",
+                "TIME(2)",
+                "TIME(3)",
+                "TIME(4)",
+                "TIME(5)",
+                "TIME(6)"
+            };
+
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
-                return "TIME";
+                return s_dataTypes[Precision];
             }
+
+            private static readonly string[] s_formats = new string[]
+            {
+                "HH:mm:ss",
+                "HH:mm:ss.f",
+                "HH:mm:ss.ff",
+                "HH:mm:ss.fff",
+                "HH:mm:ss.ffff",
+                "HH:mm:ss.fffff",
+                "HH:mm:ss.ffffff"
+            };
 
             protected override string GetValue(DateTime value, MySqlVersion mySqlVersion)
             {
-                return value.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture).ToSingleQuoted();
+                return string.Format(CultureInfo.InvariantCulture, "(TIME '{0}')", value.ToString(s_formats[Precision], CultureInfo.InvariantCulture));
             }
         }
 
-        internal static MySqlType Time(Column<DateTime?> column)
+        internal static MySqlType Time(Column<DateTime?> column, int precision)
         {
-            return new TimeType(column);
+            return new TimeType(column, precision);
         }
 
         private sealed class DateTimeType : StructSqlType<DateTime>
         {
-            public DateTimeType(Column<DateTime?> column)
+            public DateTimeType(Column<DateTime?> column, int precision)
                 : base(column)
             {
+                Debug.Assert(precision >= 0 && precision <= ColumnExtensions.MAX_TIME_PRECISION);
+                Precision = precision;
             }
+
+            public int Precision { get; }
 
             internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
             {
                 return MySqlParameterInfo.DateTime();
             }
 
+            private static readonly string[] s_dataTypes = new string[]
+            {
+                "DATETIME",
+                "DATETIME(1)",
+                "DATETIME(2)",
+                "DATETIME(3)",
+                "DATETIME(4)",
+                "DATETIME(5)",
+                "DATETIME(6)"
+            };
+
             internal override string GetDataTypeSql(MySqlVersion sqlVersion)
             {
-                return "DATETIME";
+                return s_dataTypes[Precision];
             }
+
+            private static readonly string[] s_formats = new string[]
+            {
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss.f",
+                "yyyy-MM-dd HH:mm:ss.ff",
+                "yyyy-MM-dd HH:mm:ss.fff",
+                "yyyy-MM-dd HH:mm:ss.ffff",
+                "yyyy-MM-dd HH:mm:ss.fffff",
+                "yyyy-MM-dd HH:mm:ss.ffffff",
+            };
 
             protected override string GetValue(DateTime value, MySqlVersion mySqlVersion)
             {
-                return value.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture).ToSingleQuoted();
+                return string.Format(CultureInfo.InvariantCulture, "(TIMESTAMP '{0}')", value.ToString(s_formats[Precision], CultureInfo.InvariantCulture));
             }
         }
 
-        internal static MySqlType DateTime(Column<DateTime?> column)
+        internal static MySqlType DateTime(Column<DateTime?> column, int precision)
         {
-            return new DateTimeType(column);
+            return new DateTimeType(column, precision);
         }
 
         private sealed class SingleType : StructSqlType<Single>
