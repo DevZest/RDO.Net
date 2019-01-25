@@ -95,37 +95,37 @@ ORDER BY `ProductDescription`.`ProductDescriptionID`;
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_auto_group_by()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.CreateAggregateQuery<Adhoc>((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
-        //                {
-        //                    _Int32 count;
-        //                    builder.From(db.SalesOrderHeader, out var h)
-        //                        .InnerJoin(db.SalesOrderDetail, h.PrimaryKey, x => x.FK_SalesOrderHeader, out var d)
-        //                        .Select(h.SalesOrderID, adhoc)
-        //                        .Select(count = d.SalesOrderID.Count(), adhoc, "LineCount")
-        //                        .Having(count > _Int32.Const(1))
-        //                        .OrderBy(count.Desc(), h.SalesOrderID);
-        //                });
-        //                var expectedSql =
-        //@"SELECT
-        //    [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID],
-        //    COUNT([SalesOrderDetail].[SalesOrderID]) AS [LineCount]
-        //FROM
-        //    ([SalesLT].[SalesOrderHeader] [SalesOrderHeader]
-        //    INNER JOIN
-        //    [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-        //    ON [SalesOrderHeader].[SalesOrderID] = [SalesOrderDetail].[SalesOrderID])
-        //GROUP BY [SalesOrderHeader].[SalesOrderID]
-        //HAVING (COUNT([SalesOrderDetail].[SalesOrderID]) > 1)
-        //ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrderHeader].[SalesOrderID];
-        //";
-        //                query.Verify(expectedSql);
-        //            }
-        //        }
+        [TestMethod]
+        public void DbQuery_auto_group_by()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.CreateAggregateQuery<Adhoc>((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
+                {
+                    _Int32 count;
+                    builder.From(db.SalesOrderHeader, out var h)
+                        .InnerJoin(db.SalesOrderDetail, h.PrimaryKey, x => x.FK_SalesOrderHeader, out var d)
+                        .Select(h.SalesOrderID, adhoc)
+                        .Select(count = d.SalesOrderID.Count(), adhoc, "LineCount")
+                        .Having(count > _Int32.Const(1))
+                        .OrderBy(count.Desc(), h.SalesOrderID);
+                });
+                var expectedSql =
+@"SELECT
+    `SalesOrderHeader`.`SalesOrderID` AS `SalesOrderID`,
+    COUNT(`SalesOrderDetail`.`SalesOrderID`) AS `LineCount`
+FROM
+    (`SalesOrderHeader`
+    INNER JOIN
+    `SalesOrderDetail`
+    ON `SalesOrderHeader`.`SalesOrderID` = `SalesOrderDetail`.`SalesOrderID`)
+GROUP BY `SalesOrderHeader`.`SalesOrderID`
+HAVING (COUNT(`SalesOrderDetail`.`SalesOrderID`) > 1)
+ORDER BY COUNT(`SalesOrderDetail`.`SalesOrderID`) DESC, `SalesOrderHeader`.`SalesOrderID`;
+";
+                query.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_inner_join()
