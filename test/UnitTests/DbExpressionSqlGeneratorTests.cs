@@ -274,18 +274,22 @@ END CASE";
             Assert.AreEqual(5, mySqlParameter.Value);
         }
 
-        //        [TestMethod]
-        //        public void DbExpressionSqlGenerator_DbUnaryExpression()
-        //        {
-        //            var model = new TestModel();
-        //            var int32Column = CreateColumn<_Int32>(model, "Column1");
-        //            VerifyDbExpression(SqlVersion.Sql11, (-int32Column).DbExpression, "(-[TestModel].[Column1])");
-        //            VerifyDbExpression(SqlVersion.Sql11, (~int32Column).DbExpression, "(~[TestModel].[Column1])");
+        [TestMethod]
+        public void DbExpressionSqlGenerator_DbUnaryExpression()
+        {
+            {
+                var _ = new TestModel();
+                var int32Column = _.Column1;
+                VerifyDbExpression(MySqlVersion.LowestSupported, (-int32Column).DbExpression, "(-`TestModel`.`Column1`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (~int32Column).DbExpression, "(~`TestModel`.`Column1`)");
+            }
 
-        //            model = new TestModel();
-        //            var boolColumn = CreateColumn<_Boolean>(model, "Column1");
-        //            VerifyDbExpression(SqlVersion.Sql11, (!boolColumn).DbExpression, "(NOT [TestModel].[Column1])");
-        //        }
+            {
+                var _ = new TestModel2();
+                var boolColumn = _.Column1;
+                VerifyDbExpression(MySqlVersion.LowestSupported, (!boolColumn).DbExpression, "(NOT `TestModel2`.`Column1`)");
+            }
+        }
 
         //        [TestMethod]
         //        public void DbExpressionSqlGenerator_DbFunctionExpression()
