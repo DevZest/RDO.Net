@@ -169,7 +169,9 @@ namespace DevZest.Data.MySql
             var model = table.Model;
             var tableName = table.Name.ToQuotedIdentifier();
             var alias = ModelAliasManager[model].ToQuotedIdentifier();
-            SqlBuilder.Append(tableName).Append(' ').Append(alias);
+            SqlBuilder.Append(tableName);
+            if (alias != tableName)
+                SqlBuilder.Append(' ').Append(alias);
         }
 
         private bool TryGenerateJsonTable(DbTableClause table)

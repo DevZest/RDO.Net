@@ -29,7 +29,7 @@ SELECT
     `ProductDescription`.`Description` AS `Description`,
     `ProductDescription`.`RowGuid` AS `RowGuid`,
     `ProductDescription`.`ModifiedDate` AS `ModifiedDate`
-FROM `ProductDescription` `ProductDescription`
+FROM `ProductDescription`
 WHERE (`ProductDescription`.`ProductDescriptionID` > @p1)
 ORDER BY `ProductDescription`.`ProductDescriptionID` DESC;
 ";
@@ -50,7 +50,7 @@ ORDER BY `ProductDescription`.`ProductDescriptionID` DESC;
                 });
                 var expectedSql =
 @"SELECT `ProductDescription`.`ProductDescriptionID` AS `Id`
-FROM `ProductDescription` `ProductDescription`;
+FROM `ProductDescription`;
 ";
                 query.Verify(expectedSql);
             }
@@ -73,7 +73,7 @@ FROM `ProductDescription` `ProductDescription`;
 @"SELECT
     `ProductDescription`.`ProductDescriptionID` AS `Id`,
     `ProductDescription`.`Description` AS `Description`
-FROM `ProductDescription` `ProductDescription`
+FROM `ProductDescription`
 ORDER BY `ProductDescription`.`ProductDescriptionID`;
 ";
                 query.Verify(expectedSql);
