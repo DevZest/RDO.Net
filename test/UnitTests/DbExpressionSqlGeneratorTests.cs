@@ -251,13 +251,13 @@ END CASE";
             }
         }
 
-        //        [TestMethod]
-        //        public void DbExpressionSqlGenerator_DbCastExpression()
-        //        {
-        //            var model = new TestModel();
-        //            var int32Column = CreateColumn<_Int32>(model, "Column1");
-        //            VerifyDbExpression(SqlVersion.Sql11, ((_Int64)int32Column).DbExpression, "CAST([TestModel].[Column1] AS BIGINT)");
-        //        }
+        [TestMethod]
+        public void DbExpressionSqlGenerator_DbCastExpression()
+        {
+            var _ = new TestModel();
+            var int32Column = _.Column1;
+            VerifyDbExpression(MySqlVersion.LowestSupported, ((_Int64)int32Column).DbExpression, "CAST(`TestModel`.`Column1` AS BIGINT)");
+        }
 
         //        [TestMethod]
         //        public void DbExpressionSqlGenerator_DbParamExpression()
