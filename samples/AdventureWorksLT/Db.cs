@@ -39,21 +39,21 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<Address> _address;
-        [DbTable("[SalesLT].[Address]", Description = "Street address information for customers.")]
+        [DbTable(Description = "Street address information for customers.")]
         public DbTable<Address> Address
         {
             get { return GetTable(ref _address); }
         }
 
         private DbTable<Customer> _customer;
-        [DbTable("[SalesLT].[Customer]", Description = "Customer information.")]
+        [DbTable(Description = "Customer information.")]
         public DbTable<Customer> Customer
         {
             get { return GetTable(ref _customer); }
         }
 
         private DbTable<CustomerAddress> _customerAddress;
-        [DbTable("[SalesLT].[CustomerAddress]", Description = "Cross-reference table mapping customers to their address(es).")]
+        [DbTable(Description = "Cross-reference table mapping customers to their address(es).")]
         [Relationship(nameof(FK_CustomerAddress_Customer_CustomerID), Description = "Foreign key constraint referencing Customer.CustomerID.")]
         [Relationship(nameof(FK_CustomerAddress_Address_AddressID), Description = "Foreign key constraint referencing Address.AddressID.")]
         public DbTable<CustomerAddress> CustomerAddress
@@ -74,7 +74,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<ProductCategory> _productCategory;
-        [DbTable("[SalesLT].[ProductCategory]", Description = "High-level product categorization.")]
+        [DbTable(Description = "High-level product categorization.")]
         [Relationship(nameof(FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID), Description = "Foreign key constraint referencing ProductCategory.ProductCategoryID.")]
         public DbTable<ProductCategory> ProductCategory
         {
@@ -88,21 +88,20 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<ProductModel> _productModel;
-        [DbTable("[SalesLT].[ProductModel]")]
         public DbTable<ProductModel> ProductModel
         {
             get { return GetTable(ref _productModel); }
         }
 
         private DbTable<ProductDescription> _productDescription;
-        [DbTable("[SalesLT].[ProductDescription]", Description = "Product descriptions in several languages.")]
+        [DbTable(Description = "Product descriptions in several languages.")]
         public DbTable<ProductDescription> ProductDescription
         {
             get { return GetTable(ref _productDescription); }
         }
 
         private DbTable<ProductModelProductDescription> _productModelProductDescription;
-        [DbTable("[SalesLT].[ProductModelProductDescription]", Description = "Cross-reference table mapping product descriptions and the language the description is written in.")]
+        [DbTable(Description = "Cross-reference table mapping product descriptions and the language the description is written in.")]
         [Relationship(nameof(FK_ProductModelProductDescription_ProductModel_ProductModelID), Description = "Foreign key constraint referencing ProductModel.ProductModelID.")]
         [Relationship(nameof(FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID), Description = "Foreign key constraint referencing ProductDescription.ProductDescriptionID.")]
         public DbTable<ProductModelProductDescription> ProductModelProductDescription
@@ -123,7 +122,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<Product> _product;
-        [DbTable("[SalesLT].[Product]", Description = "Products sold or used in the manfacturing of sold products.")]
+        [DbTable(Description = "Products sold or used in the manfacturing of sold products.")]
         [Relationship(nameof(FK_Product_ProductModel_ProductModelID))]
         [Relationship(nameof(FK_Product_ProductCategory_ProductCategoryID))]
         public DbTable<Product> Product
@@ -144,7 +143,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<SalesOrderHeader> _salesOrderHeader;
-        [DbTable("[SalesLT].[SalesOrderHeader]", Description = "General sales order information.")]
+        [DbTable(Description = "General sales order information.")]
         [Relationship(nameof(FK_SalesOrderHeader_Customer_CustomerID))]
         [Relationship(nameof(FK_SalesOrderHeader_Address_BillTo_AddressID))]
         [Relationship(nameof(FK_SalesOrderHeader_Address_ShipTo_AddressID))]
@@ -172,7 +171,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         private DbTable<SalesOrderDetail> _salesOrderDetail;
-        [DbTable("[SalesLT].[SalesOrderDetail]", Description = "Individual products associated with a specific sales order. See SalesOrderHeader.")]
+        [DbTable(Description = "Individual products associated with a specific sales order. See SalesOrderHeader.")]
         [Relationship(nameof(FK_SalesOrderDetail_SalesOrderHeader))]
         [Relationship(nameof(FK_SalesOrderDetail_Product))]
         public DbTable<SalesOrderDetail> SalesOrderDetail

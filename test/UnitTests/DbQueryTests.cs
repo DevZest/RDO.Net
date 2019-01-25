@@ -1,41 +1,41 @@
-﻿//using DevZest.Samples.AdventureWorksLT;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using DevZest.Data.Helpers;
-//using System;
+﻿using DevZest.Samples.AdventureWorksLT;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DevZest.Data.Helpers;
+using System;
 
-//namespace DevZest.Data.MySql
-//{
-//    [TestClass]
-//    public class DbQueryTests
-//    {
-//        [TestMethod]
-//        public void DbQuery_auto_select_all()
-//        {
-//            using (var db = new Db(SqlVersion.Sql11))
-//            {
-//                var query = db.CreateQuery((DbQueryBuilder builder, ProductDescription model) =>
-//                {
-//                    ProductDescription d;
-//                    builder.From(db.ProductDescription, out d)
-//                    .AutoSelect()
-//                    .Where(d.ProductDescriptionID > 5)
-//                    .OrderBy(d.ProductDescriptionID.Desc());
-//                });
-//                var expectedSql =
-//@"DECLARE @p1 INT = 5;
+namespace DevZest.Data.MySql
+{
+    [TestClass]
+    public class DbQueryTests
+    {
+        [TestMethod]
+        public void DbQuery_auto_select_all()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.CreateQuery((DbQueryBuilder builder, ProductDescription model) =>
+                {
+                    ProductDescription d;
+                    builder.From(db.ProductDescription, out d)
+                    .AutoSelect()
+                    .Where(d.ProductDescriptionID > 5)
+                    .OrderBy(d.ProductDescriptionID.Desc());
+                });
+                var expectedSql =
+@"SET @p1 = 5;
 
-//SELECT
-//    [ProductDescription].[ProductDescriptionID] AS [ProductDescriptionID],
-//    [ProductDescription].[Description] AS [Description],
-//    [ProductDescription].[RowGuid] AS [RowGuid],
-//    [ProductDescription].[ModifiedDate] AS [ModifiedDate]
-//FROM [SalesLT].[ProductDescription] [ProductDescription]
-//WHERE ([ProductDescription].[ProductDescriptionID] > @p1)
-//ORDER BY [ProductDescription].[ProductDescriptionID] DESC;
-//";
-//                query.Verify(expectedSql);
-//            }
-//        }
+SELECT
+    `ProductDescription`.`ProductDescriptionID` AS `ProductDescriptionID`,
+    `ProductDescription`.`Description` AS `Description`,
+    `ProductDescription`.`RowGuid` AS `RowGuid`,
+    `ProductDescription`.`ModifiedDate` AS `ModifiedDate`
+FROM `ProductDescription` `ProductDescription`
+WHERE (`ProductDescription`.`ProductDescriptionID` > @p1)
+ORDER BY `ProductDescription`.`ProductDescriptionID` DESC;
+";
+                query.Verify(expectedSql);
+            }
+        }
 
 //        [TestMethod]
 //        public void DbQuery_select_single_column()
@@ -597,5 +597,5 @@
 //                commands.Verify(expectedSql);
 //            }
 //        }
-//    }
-//}
+    }
+}

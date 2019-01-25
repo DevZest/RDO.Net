@@ -31,19 +31,15 @@ namespace DevZest.Data.MySql
 
         internal static void GenerateDebugSql(this MySqlParameter mySqlParameter, IndentedStringBuilder sqlBuilder)
         {
-            mySqlParameter.GetDebugInfo(out var sqlType, out var value, out var sqlVersion);
-            var dataTypeSql = sqlType.GetDataTypeSql(sqlVersion);
-
-            sqlBuilder.Append("DECLARE ")
-                .Append(mySqlParameter.ParameterName)
-                .Append(" ")
-                .Append(dataTypeSql);
             if (mySqlParameter.Direction == ParameterDirection.Input || mySqlParameter.Direction == ParameterDirection.InputOutput)
             {
-                sqlBuilder.Append(" = ");
-                ExpressionGenerator.GenerateConst(sqlBuilder, sqlVersion, sqlType.GetColumn(), value);
+                mySqlParameter.GetDebugInfo(out var mySqlType, out var value, out var mySqlVersion);
+                sqlBuilder.Append("SET ")
+                    .Append(mySqlParameter.ParameterName)
+                    .Append(" = ");
+                ExpressionGenerator.GenerateConst(sqlBuilder, mySqlVersion, mySqlType.GetColumn(), value);
+                sqlBuilder.AppendLine(";");
             }
-            sqlBuilder.AppendLine(";");
         }
     }
 }
