@@ -56,29 +56,29 @@ FROM `ProductDescription` `ProductDescription`;
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_select_multi_column()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
-        //                {
-        //                    ProductDescription d;
-        //                    builder.From(db.ProductDescription, out d)
-        //                        .Select(d.ProductDescriptionID, adhoc, "Id")
-        //                        .Select(d.Description, adhoc)
-        //                        .OrderBy(d.ProductDescriptionID);
-        //                });
-        //                var expectedSql =
-        //@"SELECT
-        //    [ProductDescription].[ProductDescriptionID] AS [Id],
-        //    [ProductDescription].[Description] AS [Description]
-        //FROM [SalesLT].[ProductDescription] [ProductDescription]
-        //ORDER BY [ProductDescription].[ProductDescriptionID];
-        //";
-        //                query.Verify(expectedSql);
-        //            }
-        //        }
+        [TestMethod]
+        public void DbQuery_select_multi_column()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
+                {
+                    ProductDescription d;
+                    builder.From(db.ProductDescription, out d)
+                        .Select(d.ProductDescriptionID, adhoc, "Id")
+                        .Select(d.Description, adhoc)
+                        .OrderBy(d.ProductDescriptionID);
+                });
+                var expectedSql =
+@"SELECT
+    `ProductDescription`.`ProductDescriptionID` AS `Id`,
+    `ProductDescription`.`Description` AS `Description`
+FROM `ProductDescription` `ProductDescription`
+ORDER BY `ProductDescription`.`ProductDescriptionID`;
+";
+                query.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        [ExpectedException(typeof(ArgumentException))]
