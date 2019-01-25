@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Primitives;
+﻿using DevZest.Data.Annotations;
+using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Data;
@@ -145,155 +146,167 @@ namespace DevZest.Data.MySql
             Assert.AreEqual(expectedSql, generator.SqlBuilder.ToString());
         }
 
-        //[TestMethod]
-        //public void DbExpressionSqlGenerator_DbColumnExpression()
-        //{
-        //    var model = new TestModel();
-        //    var expr = CreateDbColumnExpression<_Int32>(model, "Column1");
-        //    VerifyDbExpression(SqlVersion.Sql11, expr, "[TestModel].[Column1]");
-        //    expr = CreateDbColumnExpression<_Int32>(model, "[Column2]");
-        //    VerifyDbExpression(SqlVersion.Sql11, expr, "[TestModel].[Column2]");
-        //}
+        [TestMethod]
+        public void DbExpressionSqlGenerator_DbColumnExpression()
+        {
+            var _ = new TestModel();
+            var expr = _.Column1.DbExpression;
+            VerifyDbExpression(MySqlVersion.LowestSupported, expr, "`TestModel`.`Column1`");
+            expr = _.Column2.DbExpression;
+            VerifyDbExpression(MySqlVersion.LowestSupported, expr, "`TestModel`.`Column2`");
+        }
 
         private class TestModel : Model
         {
+            static TestModel()
+            {
+                RegisterColumn((TestModel _) => _.Column1);
+                RegisterColumn((TestModel _) => _.Column2);
+            }
+
+            public _Int32 Column1 { get; private set; }
+
+            [DbColumn("`Column2`")]
+            public _Int32 Column2 { get; private set; }
         }
 
-        //private static T CreateColumn<T>(TestModel parentModel, string columnName)
-        //    where T : Column, new()
-        //{
-        //    var column = new T();
-        //    column.ConstructModelMember(parentModel, typeof(TestModel), columnName);
-        //    column.DbColumnName = columnName;
-        //    return column;
-        //}
+        private class TestModel2 : Model
+        {
+            static TestModel2()
+            {
+                RegisterColumn((TestModel2 _) => _.Column1);
+                RegisterColumn((TestModel2 _) => _.Column2);
+            }
 
-        //private static DbColumnExpression CreateDbColumnExpression<T>(TestModel parentModel, string columnName)
-        //    where T : Column, new()
-        //{
-        //    return new DbColumnExpression(CreateColumn<T>(parentModel, columnName));
-        //}
+            public _Boolean Column1 { get; private set; }
 
-//        [TestMethod]
-//        public void DbExpressionSqlGenerator_DbBinaryExpression()
-//        {
-//            var model = new TestModel();
-//            var column1 = CreateColumn<_Int32>(model, "Column1");
-//            var column2 = CreateColumn<_Int32>(model, "Column2");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 + column2).DbExpression, "([TestModel].[Column1] + [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 - column2).DbExpression, "([TestModel].[Column1] - [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 * column2).DbExpression, "([TestModel].[Column1] * [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 / column2).DbExpression, "([TestModel].[Column1] / [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 % column2).DbExpression, "([TestModel].[Column1] % [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 == column2).DbExpression, "([TestModel].[Column1] = [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 != column2).DbExpression, "([TestModel].[Column1] <> [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 > column2).DbExpression, "([TestModel].[Column1] > [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 >= column2).DbExpression, "([TestModel].[Column1] >= [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 < column2).DbExpression, "([TestModel].[Column1] < [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 <= column2).DbExpression, "([TestModel].[Column1] <= [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 & column2).DbExpression, "([TestModel].[Column1] & [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 | column2).DbExpression, "([TestModel].[Column1] | [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (column1 ^ column2).DbExpression, "([TestModel].[Column1] ^ [TestModel].[Column2])");
+            public _Boolean Column2 { get; private set; }
+        }
 
-//            model = new TestModel();
-//            var boolColumn1 = CreateColumn<_Boolean>(model, "Column1");
-//            var boolColumn2 = CreateColumn<_Boolean>(model, "Column2");
-//            VerifyDbExpression(SqlVersion.Sql11, (boolColumn1 & boolColumn2).DbExpression, "([TestModel].[Column1] AND [TestModel].[Column2])");
-//            VerifyDbExpression(SqlVersion.Sql11, (boolColumn1 | boolColumn2).DbExpression, "([TestModel].[Column1] OR [TestModel].[Column2])");
-//        }
+        [TestMethod]
+        public void DbExpressionSqlGenerator_DbBinaryExpression()
+        {
+            {
+                var _ = new TestModel();
+                var column1 = _.Column1;
+                var column2 = _.Column2;
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 + column2).DbExpression, "(`TestModel`.`Column1` + `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 - column2).DbExpression, "(`TestModel`.`Column1` - `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 * column2).DbExpression, "(`TestModel`.`Column1` * `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 / column2).DbExpression, "(`TestModel`.`Column1` / `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 % column2).DbExpression, "(`TestModel`.`Column1` % `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 == column2).DbExpression, "(`TestModel`.`Column1` = `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 != column2).DbExpression, "(`TestModel`.`Column1` <> `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 > column2).DbExpression, "(`TestModel`.`Column1` > `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 >= column2).DbExpression, "(`TestModel`.`Column1` >= `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 < column2).DbExpression, "(`TestModel`.`Column1` < `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 <= column2).DbExpression, "(`TestModel`.`Column1` <= `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 & column2).DbExpression, "(`TestModel`.`Column1` & `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 | column2).DbExpression, "(`TestModel`.`Column1` | `TestModel`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (column1 ^ column2).DbExpression, "(`TestModel`.`Column1` ^ `TestModel`.`Column2`)");
+            }
 
-//        [TestMethod]
-//        public void DbExpressionSqlGenerator_DbCaseExpression()
-//        {
-//            var model = new TestModel();
-//            var column1 = CreateColumn<_Int32>(model, "Column1");
-//            _Int32 c1 = _Int32.Const(1);
-//            _Int32 c0 = _Int32.Const(0);
+            {
+                var _ = new TestModel2();
+                var boolColumn1 = _.Column1;
+                var boolColumn2 = _.Column2;
+                VerifyDbExpression(MySqlVersion.LowestSupported, (boolColumn1 & boolColumn2).DbExpression, "(`TestModel2`.`Column1` AND `TestModel2`.`Column2`)");
+                VerifyDbExpression(MySqlVersion.LowestSupported, (boolColumn1 | boolColumn2).DbExpression, "(`TestModel2`.`Column1` OR `TestModel2`.`Column2`)");
+            }
+        }
 
-//            {
-//                var expr = Case.On(column1)
-//                    .When(c1).Then(_Boolean.True)
-//                    .When(c0).Then(_Boolean.False)
-//                    .Else(_Boolean.Null);
-//                var expectedSql =
-//@"CASE [TestModel].[Column1]
-//    WHEN 1 THEN 1
-//    WHEN 0 THEN 0
-//    ELSE NULL
-//END";
-//                VerifyDbExpression(SqlVersion.Sql11, expr.DbExpression, expectedSql);
-//            }
+        //        [TestMethod]
+        //        public void DbExpressionSqlGenerator_DbCaseExpression()
+        //        {
+        //            var model = new TestModel();
+        //            var column1 = CreateColumn<_Int32>(model, "Column1");
+        //            _Int32 c1 = _Int32.Const(1);
+        //            _Int32 c0 = _Int32.Const(0);
 
-//            {
-//                var expr = Case.When(column1 == c1).Then(_Boolean.True)
-//                    .When(column1 == c0).Then(_Boolean.False)
-//                    .Else(_Boolean.Null);
-//                var expectedSql =
-//@"CASE
-//    WHEN ([TestModel].[Column1] = 1) THEN 1
-//    WHEN ([TestModel].[Column1] = 0) THEN 0
-//    ELSE NULL
-//END";
-//                VerifyDbExpression(SqlVersion.Sql11, expr.DbExpression, expectedSql);
-//            }
-//        }
+        //            {
+        //                var expr = Case.On(column1)
+        //                    .When(c1).Then(_Boolean.True)
+        //                    .When(c0).Then(_Boolean.False)
+        //                    .Else(_Boolean.Null);
+        //                var expectedSql =
+        //@"CASE [TestModel].[Column1]
+        //    WHEN 1 THEN 1
+        //    WHEN 0 THEN 0
+        //    ELSE NULL
+        //END";
+        //                VerifyDbExpression(SqlVersion.Sql11, expr.DbExpression, expectedSql);
+        //            }
 
-//        [TestMethod]
-//        public void DbExpressionSqlGenerator_DbCastExpression()
-//        {
-//            var model = new TestModel();
-//            var int32Column = CreateColumn<_Int32>(model, "Column1");
-//            VerifyDbExpression(SqlVersion.Sql11, ((_Int64)int32Column).DbExpression, "CAST([TestModel].[Column1] AS BIGINT)");
-//        }
+        //            {
+        //                var expr = Case.When(column1 == c1).Then(_Boolean.True)
+        //                    .When(column1 == c0).Then(_Boolean.False)
+        //                    .Else(_Boolean.Null);
+        //                var expectedSql =
+        //@"CASE
+        //    WHEN ([TestModel].[Column1] = 1) THEN 1
+        //    WHEN ([TestModel].[Column1] = 0) THEN 0
+        //    ELSE NULL
+        //END";
+        //                VerifyDbExpression(SqlVersion.Sql11, expr.DbExpression, expectedSql);
+        //            }
+        //        }
 
-//        [TestMethod]
-//        public void DbExpressionSqlGenerator_DbParamExpression()
-//        {
-//            var param = _Int32.Param(5);
-//            ExpressionGenerator generator;
-//            VerifyDbExpression(SqlVersion.Sql11, param.DbExpression, "@p1", out generator);
-//            Assert.AreEqual(1, generator.ParametersCount);
-//            var sqlParameter = generator.CreateSqlParameter(0);
-//            Assert.AreEqual("@p1", sqlParameter.ParameterName);
-//            Assert.AreEqual(SqlDbType.Int, sqlParameter.SqlDbType);
-//            Assert.AreEqual(ParameterDirection.Input, sqlParameter.Direction);
-//            Assert.AreEqual(5, sqlParameter.Value);
-//        }
+        //        [TestMethod]
+        //        public void DbExpressionSqlGenerator_DbCastExpression()
+        //        {
+        //            var model = new TestModel();
+        //            var int32Column = CreateColumn<_Int32>(model, "Column1");
+        //            VerifyDbExpression(SqlVersion.Sql11, ((_Int64)int32Column).DbExpression, "CAST([TestModel].[Column1] AS BIGINT)");
+        //        }
 
-//        [TestMethod]
-//        public void DbExpressionSqlGenerator_DbUnaryExpression()
-//        {
-//            var model = new TestModel();
-//            var int32Column = CreateColumn<_Int32>(model, "Column1");
-//            VerifyDbExpression(SqlVersion.Sql11, (-int32Column).DbExpression, "(-[TestModel].[Column1])");
-//            VerifyDbExpression(SqlVersion.Sql11, (~int32Column).DbExpression, "(~[TestModel].[Column1])");
+        //        [TestMethod]
+        //        public void DbExpressionSqlGenerator_DbParamExpression()
+        //        {
+        //            var param = _Int32.Param(5);
+        //            ExpressionGenerator generator;
+        //            VerifyDbExpression(SqlVersion.Sql11, param.DbExpression, "@p1", out generator);
+        //            Assert.AreEqual(1, generator.ParametersCount);
+        //            var sqlParameter = generator.CreateSqlParameter(0);
+        //            Assert.AreEqual("@p1", sqlParameter.ParameterName);
+        //            Assert.AreEqual(SqlDbType.Int, sqlParameter.SqlDbType);
+        //            Assert.AreEqual(ParameterDirection.Input, sqlParameter.Direction);
+        //            Assert.AreEqual(5, sqlParameter.Value);
+        //        }
 
-//            model = new TestModel();
-//            var boolColumn = CreateColumn<_Boolean>(model, "Column1");
-//            VerifyDbExpression(SqlVersion.Sql11, (!boolColumn).DbExpression, "(NOT [TestModel].[Column1])");
-//        }
+        //        [TestMethod]
+        //        public void DbExpressionSqlGenerator_DbUnaryExpression()
+        //        {
+        //            var model = new TestModel();
+        //            var int32Column = CreateColumn<_Int32>(model, "Column1");
+        //            VerifyDbExpression(SqlVersion.Sql11, (-int32Column).DbExpression, "(-[TestModel].[Column1])");
+        //            VerifyDbExpression(SqlVersion.Sql11, (~int32Column).DbExpression, "(~[TestModel].[Column1])");
 
-//        [TestMethod]
-//        public void DbExpressionSqlGenerator_DbFunctionExpression()
-//        {
-//            VerifyDbExpression(SqlVersion.Sql11, Data.Functions.GetDate().DbExpression, "GETDATE()");
-//            VerifyDbExpression(SqlVersion.Sql11, Data.Functions.GetUtcDate().DbExpression, "GETUTCDATE()");
+        //            model = new TestModel();
+        //            var boolColumn = CreateColumn<_Boolean>(model, "Column1");
+        //            VerifyDbExpression(SqlVersion.Sql11, (!boolColumn).DbExpression, "(NOT [TestModel].[Column1])");
+        //        }
 
-//            var model = new TestModel();
-//            var intColumn = CreateColumn<_Int32>(model, "Column1");
+        //        [TestMethod]
+        //        public void DbExpressionSqlGenerator_DbFunctionExpression()
+        //        {
+        //            VerifyDbExpression(SqlVersion.Sql11, Data.Functions.GetDate().DbExpression, "GETDATE()");
+        //            VerifyDbExpression(SqlVersion.Sql11, Data.Functions.GetUtcDate().DbExpression, "GETUTCDATE()");
 
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.IsNull().DbExpression, "([TestModel].[Column1] IS NULL)");
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.IsNotNull().DbExpression, "([TestModel].[Column1] IS NOT NULL)");
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.Average().DbExpression, "AVG([TestModel].[Column1])");
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.Count().DbExpression, "COUNT([TestModel].[Column1])");
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.First().DbExpression, "FIRST([TestModel].[Column1])");
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.Last().DbExpression, "LAST([TestModel].[Column1])");
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.Max().DbExpression, "MAX([TestModel].[Column1])");
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.Min().DbExpression, "MIN([TestModel].[Column1])");
-//            VerifyDbExpression(SqlVersion.Sql11, intColumn.Sum().DbExpression, "SUM([TestModel].[Column1])");
+        //            var model = new TestModel();
+        //            var intColumn = CreateColumn<_Int32>(model, "Column1");
 
-//            var stringColumn = CreateColumn<_String>(model, "Column2");
-//            VerifyDbExpression(SqlVersion.Sql11, stringColumn.Contains(_String.Const("abc")).DbExpression, "(CHARINDEX(N'abc', [TestModel].[Column2]) > 0)");
-//        }
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.IsNull().DbExpression, "([TestModel].[Column1] IS NULL)");
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.IsNotNull().DbExpression, "([TestModel].[Column1] IS NOT NULL)");
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Average().DbExpression, "AVG([TestModel].[Column1])");
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Count().DbExpression, "COUNT([TestModel].[Column1])");
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.First().DbExpression, "FIRST([TestModel].[Column1])");
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Last().DbExpression, "LAST([TestModel].[Column1])");
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Max().DbExpression, "MAX([TestModel].[Column1])");
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Min().DbExpression, "MIN([TestModel].[Column1])");
+        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Sum().DbExpression, "SUM([TestModel].[Column1])");
+
+        //            var stringColumn = CreateColumn<_String>(model, "Column2");
+        //            VerifyDbExpression(SqlVersion.Sql11, stringColumn.Contains(_String.Const("abc")).DbExpression, "(CHARINDEX(N'abc', [TestModel].[Column2]) > 0)");
+        //        }
     }
 }
