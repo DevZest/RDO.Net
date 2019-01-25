@@ -167,43 +167,43 @@ ORDER BY `SalesOrderDetail`.`SalesOrderID`, `SalesOrderDetail`.`SalesOrderDetail
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_derived_query_simplified()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.Product.Where(x => x.ProductID > _Int32.Const(500));
-        //                var query2 = db.CreateQuery((DbQueryBuilder builder, Product model) =>
-        //                {
-        //                    Product p;
-        //                    builder.From(query, out p)
-        //                        .Select(p.ProductID, model.ProductID);
-        //                });
-        //                var expectedSql =
-        //@"SELECT
-        //    [Product].[ProductID] AS [ProductID],
-        //    NULL AS [Name],
-        //    NULL AS [ProductNumber],
-        //    NULL AS [Color],
-        //    NULL AS [StandardCost],
-        //    NULL AS [ListPrice],
-        //    NULL AS [Size],
-        //    NULL AS [Weight],
-        //    NULL AS [ProductCategoryID],
-        //    NULL AS [ProductModelID],
-        //    NULL AS [SellStartDate],
-        //    NULL AS [SellEndDate],
-        //    NULL AS [DiscontinuedDate],
-        //    NULL AS [ThumbNailPhoto],
-        //    NULL AS [ThumbnailPhotoFileName],
-        //    NULL AS [RowGuid],
-        //    NULL AS [ModifiedDate]
-        //FROM [SalesLT].[Product] [Product]
-        //WHERE ([Product].[ProductID] > 500);
-        //";
-        //                query2.Verify(expectedSql);
-        //            }
-        //        }
+        [TestMethod]
+        public void DbQuery_derived_query_simplified()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.Product.Where(x => x.ProductID > _Int32.Const(500));
+                var query2 = db.CreateQuery((DbQueryBuilder builder, Product model) =>
+                {
+                    Product p;
+                    builder.From(query, out p)
+                        .Select(p.ProductID, model.ProductID);
+                });
+                var expectedSql =
+@"SELECT
+    `Product`.`ProductID` AS `ProductID`,
+    NULL AS `Name`,
+    NULL AS `ProductNumber`,
+    NULL AS `Color`,
+    NULL AS `StandardCost`,
+    NULL AS `ListPrice`,
+    NULL AS `Size`,
+    NULL AS `Weight`,
+    NULL AS `ProductCategoryID`,
+    NULL AS `ProductModelID`,
+    NULL AS `SellStartDate`,
+    NULL AS `SellEndDate`,
+    NULL AS `DiscontinuedDate`,
+    NULL AS `ThumbNailPhoto`,
+    NULL AS `ThumbnailPhotoFileName`,
+    NULL AS `RowGuid`,
+    NULL AS `ModifiedDate`
+FROM `Product`
+WHERE (`Product`.`ProductID` > 500);
+";
+                query2.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_CreateChild()
