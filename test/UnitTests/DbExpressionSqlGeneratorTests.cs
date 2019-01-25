@@ -163,12 +163,15 @@ namespace DevZest.Data.MySql
             {
                 RegisterColumn((TestModel _) => _.Column1);
                 RegisterColumn((TestModel _) => _.Column2);
+                RegisterColumn((TestModel _) => _.StringColumn);
             }
 
             public _Int32 Column1 { get; private set; }
 
             [DbColumn("`Column2`")]
             public _Int32 Column2 { get; private set; }
+
+            public _String StringColumn { get; private set; }
         }
 
         private class TestModel2 : Model
@@ -291,27 +294,28 @@ END CASE";
             }
         }
 
-        //        [TestMethod]
-        //        public void DbExpressionSqlGenerator_DbFunctionExpression()
-        //        {
-        //            VerifyDbExpression(SqlVersion.Sql11, Data.Functions.GetDate().DbExpression, "GETDATE()");
-        //            VerifyDbExpression(SqlVersion.Sql11, Data.Functions.GetUtcDate().DbExpression, "GETUTCDATE()");
+        [TestMethod]
+        public void DbExpressionSqlGenerator_DbFunctionExpression()
+        {
+            VerifyDbExpression(MySqlVersion.LowestSupported, _DateTime.Now().DbExpression, "NOW()");
+            VerifyDbExpression(MySqlVersion.LowestSupported, _DateTime.UtcNow().DbExpression, "UTC_TIMESTAMP()");
+            VerifyDbExpression(MySqlVersion.LowestSupported, _Guid.NewGuid().DbExpression, "UUID()");
 
-        //            var model = new TestModel();
-        //            var intColumn = CreateColumn<_Int32>(model, "Column1");
+            var _ = new TestModel();
+            var intColumn = _.Column1;
 
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.IsNull().DbExpression, "([TestModel].[Column1] IS NULL)");
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.IsNotNull().DbExpression, "([TestModel].[Column1] IS NOT NULL)");
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Average().DbExpression, "AVG([TestModel].[Column1])");
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Count().DbExpression, "COUNT([TestModel].[Column1])");
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.First().DbExpression, "FIRST([TestModel].[Column1])");
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Last().DbExpression, "LAST([TestModel].[Column1])");
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Max().DbExpression, "MAX([TestModel].[Column1])");
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Min().DbExpression, "MIN([TestModel].[Column1])");
-        //            VerifyDbExpression(SqlVersion.Sql11, intColumn.Sum().DbExpression, "SUM([TestModel].[Column1])");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.IsNull().DbExpression, "(`TestModel`.`Column1` IS NULL)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.IsNotNull().DbExpression, "(`TestModel`.`Column1` IS NOT NULL)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.Average().DbExpression, "AVG(`TestModel`.`Column1`)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.Count().DbExpression, "COUNT(`TestModel`.`Column1`)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.First().DbExpression, "FIRST(`TestModel`.`Column1`)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.Last().DbExpression, "LAST(`TestModel`.`Column1`)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.Max().DbExpression, "MAX(`TestModel`.`Column1`)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.Min().DbExpression, "MIN(`TestModel`.`Column1`)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, intColumn.Sum().DbExpression, "SUM(`TestModel`.`Column1`)");
 
-        //            var stringColumn = CreateColumn<_String>(model, "Column2");
-        //            VerifyDbExpression(SqlVersion.Sql11, stringColumn.Contains(_String.Const("abc")).DbExpression, "(CHARINDEX(N'abc', [TestModel].[Column2]) > 0)");
-        //        }
+            var stringColumn = _.StringColumn;
+            VerifyDbExpression(MySqlVersion.LowestSupported, stringColumn.Contains(_String.Const("abc")).DbExpression, "(INSTR(`TestModel`.`StringColumn`, 'abc') > 0)");
+        }
     }
 }

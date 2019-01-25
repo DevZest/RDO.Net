@@ -132,8 +132,8 @@ namespace DevZest.Data.MySql
             { FunctionKeys.IsNull, (g, e) => g.VisitFunction_IsNull(e) },
             { FunctionKeys.IsNotNull, (g, e) => g.VisitFunction_IsNotNull(e) },
             { FunctionKeys.IfNull, (g, e) => g.VisitFunction_IfNull(e) },
-            { FunctionKeys.GetDate, (g, e) => g.VisitFunction_GetDate(e) },
-            { FunctionKeys.GetUtcDate, (g, e) => g.VisitFunction_GetUtcDate(e) },
+            { FunctionKeys.Now, (g, e) => g.VisitFunction_Now(e) },
+            { FunctionKeys.UtcNow, (g, e) => g.VisitFunction_UtcNow(e) },
             { FunctionKeys.NewGuid, (g, e) => g.VisitFunction_NewGuid(e) },
             { FunctionKeys.Average, (g, e) => g.VisitFunction_Average(e) },
             { FunctionKeys.Count, (g, e) => g.VisitFunction_Count(e) },
@@ -194,16 +194,16 @@ namespace DevZest.Data.MySql
             SqlBuilder.Append(')');
         }
 
-        private void VisitFunction_GetDate(DbFunctionExpression e)
+        private void VisitFunction_Now(DbFunctionExpression e)
         {
             Debug.Assert(e.ParamList.Count == 0);
-            SqlBuilder.Append("GETDATE()");
+            SqlBuilder.Append("NOW()");
         }
 
-        private void VisitFunction_GetUtcDate(DbFunctionExpression e)
+        private void VisitFunction_UtcNow(DbFunctionExpression e)
         {
             Debug.Assert(e.ParamList.Count == 0);
-            SqlBuilder.Append("GETUTCDATE()");
+            SqlBuilder.Append("UTC_TIMESTAMP()");
         }
 
         private void VisitFunction_NewGuid(DbFunctionExpression e)
@@ -279,9 +279,9 @@ namespace DevZest.Data.MySql
         {
             Debug.Assert(e.ParamList.Count == 2);
             SqlBuilder.Append("(INSTR(");
-            e.ParamList[1].Accept(this);
-            SqlBuilder.Append(", ");
             e.ParamList[0].Accept(this);
+            SqlBuilder.Append(", ");
+            e.ParamList[1].Accept(this);
             SqlBuilder.Append(") > 0)");
         }
 
