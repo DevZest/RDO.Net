@@ -11,9 +11,9 @@ namespace DevZest.Data
 
         public static readonly FunctionKey IfNull = new FunctionKey(typeof(Functions), nameof(IfNull));
 
-        public static readonly FunctionKey GetDate = new FunctionKey(typeof(Functions), nameof(GetDate));
+        public static readonly FunctionKey Now = new FunctionKey(typeof(Functions), nameof(Now));
 
-        public static readonly FunctionKey GetUtcDate = new FunctionKey(typeof(Functions), nameof(GetUtcDate));
+        public static readonly FunctionKey UtcNow = new FunctionKey(typeof(Functions), nameof(UtcNow));
 
         public static readonly FunctionKey NewGuid = new FunctionKey(typeof(Functions), nameof(NewGuid));
 

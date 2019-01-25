@@ -215,5 +215,27 @@ namespace DevZest.Data
             dbExpr.Verify(column1, typeof(DateTime?), typeof(String));
             expr.VerifyEval(expectedValue);
         }
+
+        [TestMethod]
+        public void _DateTime_Now()
+        {
+            var getDateExpr = _DateTime.Now();
+            ((DbFunctionExpression)getDateExpr.DbExpression).Verify(FunctionKeys.Now);
+
+            var currentDate = getDateExpr.Eval();
+            var span = DateTime.Now - currentDate;
+            Assert.AreEqual(true, span.Value.Seconds < 1);
+        }
+
+        [TestMethod]
+        public void _DateTime_UtcNow()
+        {
+            var getUtcDateExpr = _DateTime.UtcNow();
+            ((DbFunctionExpression)getUtcDateExpr.DbExpression).Verify(FunctionKeys.UtcNow);
+
+            var currentDate = getUtcDateExpr.Eval();
+            var span = DateTime.UtcNow - currentDate;
+            Assert.AreEqual(true, span.Value.Seconds < 1);
+        }
     }
 }

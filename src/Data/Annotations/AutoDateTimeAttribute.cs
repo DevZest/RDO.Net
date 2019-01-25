@@ -12,7 +12,7 @@ namespace DevZest.Data.Annotations
         protected override void Wireup(Column column)
         {
             if (column is _DateTime dateTime)
-                dateTime.SetDefault(Functions.GetDate(), Name, Description);
+                dateTime.SetDefault(_DateTime.Now(), Name, Description);
         }
 
         public string Name { get; set; }

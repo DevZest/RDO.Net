@@ -33,7 +33,7 @@ namespace DevZest.Data
         public void Column_Default_function()
         {
             var dateTime = new _DateTime();
-            dateTime.SetDefault(Functions.GetDate(), null, null);
+            dateTime.SetDefault(_DateTime.Now(), null, null);
             var defaultValue = dateTime.GetDefault().Value;
             var span = DateTime.Now - defaultValue;
             Assert.IsTrue(span.Value.Seconds < 1);

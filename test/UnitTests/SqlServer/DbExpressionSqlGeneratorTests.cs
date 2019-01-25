@@ -316,8 +316,8 @@ END";
         [TestMethod]
         public void DbExpressionSqlGenerator_DbFunctionExpression()
         {
-            VerifyDbExpression(SqlVersion.Sql11, Data.Functions.GetDate().DbExpression, "GETDATE()");
-            VerifyDbExpression(SqlVersion.Sql11, Data.Functions.GetUtcDate().DbExpression, "GETUTCDATE()");
+            VerifyDbExpression(SqlVersion.Sql11, _DateTime.Now().DbExpression, "GETDATE()");
+            VerifyDbExpression(SqlVersion.Sql11, _DateTime.UtcNow().DbExpression, "GETUTCDATE()");
 
             var model = new TestModel();
             var intColumn = CreateColumn<_Int32>(model, "Column1");

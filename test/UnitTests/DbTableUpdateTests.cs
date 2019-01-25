@@ -15,7 +15,7 @@ namespace DevZest.Data
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
-                var command = db.ProductCategory.MockUpdate(0, (builder, x) => builder.Select(Functions.GetDate(), x.ModifiedDate),
+                var command = db.ProductCategory.MockUpdate(0, (builder, x) => builder.Select(_DateTime.Now(), x.ModifiedDate),
                     x => x.ModifiedDate.IsNull());
                 var expectedSql =
 @"UPDATE [ProductCategory] SET

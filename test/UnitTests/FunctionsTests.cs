@@ -76,28 +76,6 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Functions_GetDate()
-        {
-            var getDateExpr = Functions.GetDate();
-            ((DbFunctionExpression)getDateExpr.DbExpression).Verify(FunctionKeys.GetDate);
-
-            var currentDate = getDateExpr.Eval();
-            var span = DateTime.Now - currentDate;
-            Assert.AreEqual(true, span.Value.Seconds < 1);
-        }
-
-        [TestMethod]
-        public void Functions_GetUtcDate()
-        {
-            var getUtcDateExpr = Functions.GetUtcDate();
-            ((DbFunctionExpression)getUtcDateExpr.DbExpression).Verify(FunctionKeys.GetUtcDate);
-
-            var currentDate = getUtcDateExpr.Eval();
-            var span = DateTime.UtcNow - currentDate;
-            Assert.AreEqual(true, span.Value.Seconds < 1);
-        }
-
-        [TestMethod]
         public void Functions_NewGuid()
         {
             var newGuidExpr = Functions.NewGuid();

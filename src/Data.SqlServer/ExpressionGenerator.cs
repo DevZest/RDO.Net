@@ -133,8 +133,8 @@ namespace DevZest.Data.SqlServer
             { Data.FunctionKeys.IsNull, (g, e) => g.VisitFunction_IsNull(e) },
             { Data.FunctionKeys.IsNotNull, (g, e) => g.VisitFunction_IsNotNull(e) },
             { Data.FunctionKeys.IfNull, (g, e) => g.VisitFunction_IfNull(e) },
-            { Data.FunctionKeys.GetDate, (g, e) => g.VisitFunction_GetDate(e) },
-            { Data.FunctionKeys.GetUtcDate, (g, e) => g.VisitFunction_GetUtcDate(e) },
+            { Data.FunctionKeys.Now, (g, e) => g.VisitFunction_Now(e) },
+            { Data.FunctionKeys.UtcNow, (g, e) => g.VisitFunction_UtcNow(e) },
             { Data.FunctionKeys.NewGuid, (g, e) => g.VisitFunction_NewGuid(e) },
             { Data.FunctionKeys.Average, (g, e) => g.VisitFunction_Average(e) },
             { Data.FunctionKeys.Count, (g, e) => g.VisitFunction_Count(e) },
@@ -196,13 +196,13 @@ namespace DevZest.Data.SqlServer
             SqlBuilder.Append(')');
         }
 
-        private void VisitFunction_GetDate(DbFunctionExpression e)
+        private void VisitFunction_Now(DbFunctionExpression e)
         {
             Debug.Assert(e.ParamList.Count == 0);
             SqlBuilder.Append("GETDATE()");
         }
 
-        private void VisitFunction_GetUtcDate(DbFunctionExpression e)
+        private void VisitFunction_UtcNow(DbFunctionExpression e)
         {
             Debug.Assert(e.ParamList.Count == 0);
             SqlBuilder.Append("GETUTCDATE()");

@@ -331,5 +331,41 @@ namespace DevZest.Data
             // override to eliminate compile warning
             return base.GetHashCode();
         }
+
+        private class UtcNowFunction : ScalarFunctionExpression<DateTime?>
+        {
+            public override DateTime? this[DataRow dataRow]
+            {
+                get { return DateTime.UtcNow; }
+            }
+
+            protected override FunctionKey FunctionKey
+            {
+                get { return FunctionKeys.UtcNow; }
+            }
+        }
+
+        public static _DateTime UtcNow()
+        {
+            return new UtcNowFunction().MakeColumn<_DateTime>();
+        }
+
+        private sealed class NowFunction : ScalarFunctionExpression<DateTime?>
+        {
+            public override DateTime? this[DataRow dataRow]
+            {
+                get { return DateTime.Now; }
+            }
+
+            protected override FunctionKey FunctionKey
+            {
+                get { return FunctionKeys.Now; }
+            }
+        }
+
+        public static _DateTime Now()
+        {
+            return new NowFunction().MakeColumn<_DateTime>();
+        }
     }
 }
