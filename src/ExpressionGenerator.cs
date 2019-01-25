@@ -75,7 +75,7 @@ namespace DevZest.Data.MySql
             SqlBuilder.AppendLine();
             SqlBuilder.Indent--;
 
-            SqlBuilder.Append("END");
+            SqlBuilder.Append("END CASE");
         }
 
         public override void Visit(DbCastExpression e)

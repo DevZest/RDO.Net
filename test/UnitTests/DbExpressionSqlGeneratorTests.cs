@@ -215,41 +215,41 @@ namespace DevZest.Data.MySql
             }
         }
 
-        //        [TestMethod]
-        //        public void DbExpressionSqlGenerator_DbCaseExpression()
-        //        {
-        //            var model = new TestModel();
-        //            var column1 = CreateColumn<_Int32>(model, "Column1");
-        //            _Int32 c1 = _Int32.Const(1);
-        //            _Int32 c0 = _Int32.Const(0);
+        [TestMethod]
+        public void DbExpressionSqlGenerator_DbCaseExpression()
+        {
+            var _ = new TestModel();
+            var column1 = _.Column1;
+            _Int32 c1 = _Int32.Const(1);
+            _Int32 c0 = _Int32.Const(0);
 
-        //            {
-        //                var expr = Case.On(column1)
-        //                    .When(c1).Then(_Boolean.True)
-        //                    .When(c0).Then(_Boolean.False)
-        //                    .Else(_Boolean.Null);
-        //                var expectedSql =
-        //@"CASE [TestModel].[Column1]
-        //    WHEN 1 THEN 1
-        //    WHEN 0 THEN 0
-        //    ELSE NULL
-        //END";
-        //                VerifyDbExpression(SqlVersion.Sql11, expr.DbExpression, expectedSql);
-        //            }
+            {
+                var expr = Case.On(column1)
+                    .When(c1).Then(_Boolean.True)
+                    .When(c0).Then(_Boolean.False)
+                    .Else(_Boolean.Null);
+                var expectedSql =
+@"CASE `TestModel`.`Column1`
+    WHEN 1 THEN 1
+    WHEN 0 THEN 0
+    ELSE NULL
+END CASE";
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr.DbExpression, expectedSql);
+            }
 
-        //            {
-        //                var expr = Case.When(column1 == c1).Then(_Boolean.True)
-        //                    .When(column1 == c0).Then(_Boolean.False)
-        //                    .Else(_Boolean.Null);
-        //                var expectedSql =
-        //@"CASE
-        //    WHEN ([TestModel].[Column1] = 1) THEN 1
-        //    WHEN ([TestModel].[Column1] = 0) THEN 0
-        //    ELSE NULL
-        //END";
-        //                VerifyDbExpression(SqlVersion.Sql11, expr.DbExpression, expectedSql);
-        //            }
-        //        }
+            {
+                var expr = Case.When(column1 == c1).Then(_Boolean.True)
+                    .When(column1 == c0).Then(_Boolean.False)
+                    .Else(_Boolean.Null);
+                var expectedSql =
+@"CASE
+    WHEN (`TestModel`.`Column1` = 1) THEN 1
+    WHEN (`TestModel`.`Column1` = 0) THEN 0
+    ELSE NULL
+END CASE";
+                VerifyDbExpression(MySqlVersion.LowestSupported, expr.DbExpression, expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbExpressionSqlGenerator_DbCastExpression()
