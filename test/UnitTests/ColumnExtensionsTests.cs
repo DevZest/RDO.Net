@@ -121,7 +121,7 @@ namespace DevZest.Data.MySql
 
             {
                 var money = new _Decimal().AsMySqlMoney();
-                VerifyMySqlType(MySqlVersion.LowestSupported, money, MySqlDbType.Decimal, "DECIMAL(15, 4)", 15, 4);
+                VerifyMySqlType(MySqlVersion.LowestSupported, money, MySqlDbType.Decimal, "DECIMAL(19, 4)", 19, 4);
             }
 
             {

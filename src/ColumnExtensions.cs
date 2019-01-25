@@ -83,7 +83,7 @@ namespace DevZest.Data.MySql
 
         public static _Decimal AsMySqlMoney(this _Decimal column)
         {
-            return column.AsMySqlDecimal(15, 4);
+            return column.AsMySqlDecimal(19, 4);
         }
 
         public static _DateTime AsMySqlDate(this _DateTime column)
