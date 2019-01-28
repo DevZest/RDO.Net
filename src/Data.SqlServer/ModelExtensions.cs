@@ -100,23 +100,7 @@ namespace DevZest.Data.SqlServer
             Debug.Assert(constraint != null);
 
             sqlBuilder.Append("PRIMARY KEY ");
-            if (constraint.IsClustered)
-                sqlBuilder.Append("CLUSTERED (");
-            else
-                sqlBuilder.Append("NONCLUSTERED (");
-            var primaryKey = constraint.PrimaryKey;
-            for (int i = 0; i < primaryKey.Count; i++)
-            {
-                var column = primaryKey[i].Column;
-                var sort = primaryKey[i].Direction;
-                sqlBuilder.Append(column.DbColumnName.ToQuotedIdentifier());
-                if (sort == SortDirection.Ascending)
-                    sqlBuilder.Append(" ASC");
-                else if (sort == SortDirection.Descending)
-                    sqlBuilder.Append(" DESC");
-                if (i != primaryKey.Count - 1)
-                    sqlBuilder.Append(", ");
-            }
+            GenerateColumnSortList(sqlBuilder, constraint.IsClustered, constraint.PrimaryKey);
             sqlBuilder.Append(")");
         }
 
@@ -125,11 +109,7 @@ namespace DevZest.Data.SqlServer
             Debug.Assert(constraint != null);
 
             sqlBuilder.Append("UNIQUE ");
-            if (constraint.IsClustered)
-                sqlBuilder.Append("CLUSTERED (");
-            else
-                sqlBuilder.Append("NONCLUSTERED (");
-            GenerateColumnSortList(sqlBuilder, constraint.Columns);
+            GenerateColumnSortList(sqlBuilder, constraint.IsClustered, constraint.Columns);
             sqlBuilder.Append(")");
         }
 
@@ -207,18 +187,19 @@ namespace DevZest.Data.SqlServer
 
                 if (index.IsUnique)
                     sqlBuilder.Append("UNIQUE ");
-                if (index.IsClustered)
-                    sqlBuilder.Append("CLUSTERED (");
-                else
-                    sqlBuilder.Append("NONCLUSTERED (");
-                GenerateColumnSortList(sqlBuilder, index.Columns);
+                GenerateColumnSortList(sqlBuilder, index.IsClustered, index.Columns);
                 sqlBuilder.Append(")");
             }
             return indexes.Count;
         }
 
-        private static void GenerateColumnSortList(IndentedStringBuilder sqlBuilder, IReadOnlyList<ColumnSort> columns)
+        private static void GenerateColumnSortList(IndentedStringBuilder sqlBuilder, bool isClustered, IReadOnlyList<ColumnSort> columns)
         {
+            if (isClustered)
+                sqlBuilder.Append("CLUSTERED (");
+            else
+                sqlBuilder.Append("NONCLUSTERED (");
+
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i].Column;
