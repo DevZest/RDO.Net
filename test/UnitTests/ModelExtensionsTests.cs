@@ -108,11 +108,11 @@ namespace DevZest.Data.MySql
 //        [TestMethod]
 //        public void Model_GenerateCreateTableSql_temp_table()
 //        {
-//            var temp = new TempModel();
+//            var temp = new SampleModel();
 //            temp.AddTempTableIdentity();
 //            var sqlBuilder = new IndentedStringBuilder();
 
-//            temp.GenerateCreateTableSql("#Temp", null, sqlBuilder, SqlVersion.Sql11, true);
+//            temp.GenerateCreateTableSql("#Temp", null, sqlBuilder, MySqlVersion.LowestSupported, true);
 //            var expectedSql =
 //@"CREATE TABLE [#Temp] (
 //    [Id] INT NOT NULL,

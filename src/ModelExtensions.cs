@@ -18,12 +18,17 @@ namespace DevZest.Data.MySql
         {
             tableName = tableName.ToQuotedIdentifier();
 
+            if (isTempTable)    // Temp table may already exist when connection is reused with connection pooling, drop it if exists.
+            {
+                sqlBuilder.AppendLine("SET @@sql_notes = 0;");  // workaround: DROP TABLE IF EXISTS causes warning if table does not exist (https://bugs.mysql.com/bug.php?id=2839)
+                sqlBuilder.Append("DROP TEMPORARY TABLE IF EXISTS ").Append(tableName).AppendLine(";").AppendLine();
+                sqlBuilder.AppendLine("SET @@sql_notes = 1;");
+            }
+
             sqlBuilder.Append("CREATE ");
             if (isTempTable)
                 sqlBuilder.Append(" TEMPORARY ");
-            sqlBuilder.Append("TABLE ");
-            sqlBuilder.Append(tableName);
-            sqlBuilder.AppendLine(" (");
+            sqlBuilder.Append("TABLE ").Append(tableName).AppendLine(" (");
             sqlBuilder.Indent++;
 
             var columns = model.GetColumns();
@@ -132,19 +137,7 @@ namespace DevZest.Data.MySql
             Debug.Assert(constraint != null);
 
             sqlBuilder.Append("PRIMARY KEY (");
-            var primaryKey = constraint.PrimaryKey;
-            for (int i = 0; i < primaryKey.Count; i++)
-            {
-                var column = primaryKey[i].Column;
-                var sort = primaryKey[i].Direction;
-                sqlBuilder.Append(column.DbColumnName.ToQuotedIdentifier());
-                if (sort == SortDirection.Ascending)
-                    sqlBuilder.Append(" ASC");
-                else if (sort == SortDirection.Descending)
-                    sqlBuilder.Append(" DESC");
-                if (i != primaryKey.Count - 1)
-                    sqlBuilder.Append(", ");
-            }
+            GenerateColumnSortList(sqlBuilder, constraint.PrimaryKey);
             sqlBuilder.Append(")");
         }
 
