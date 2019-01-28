@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Data.Helpers;
 using System;
+using DevZest.Data.Primitives;
 
 namespace DevZest.Data.MySql
 {
@@ -205,35 +206,35 @@ WHERE (`Product`.`ProductID` > 500);
             }
         }
 
-//        [TestMethod]
-//        public void DbQuery_CreateChild()
-//        {
-//            using (var db = new Db(MySqlVersion.LowestSupported))
-//            {
-//                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
-//                salesOrders.MockSequentialKeyTempTable();
-//                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
-//                var expectedSql =
-//@"SELECT
-//    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-//    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID],
-//    [SalesOrderDetail].[OrderQty] AS [OrderQty],
-//    [SalesOrderDetail].[ProductID] AS [ProductID],
-//    [SalesOrderDetail].[UnitPrice] AS [UnitPrice],
-//    [SalesOrderDetail].[UnitPriceDiscount] AS [UnitPriceDiscount],
-//    [SalesOrderDetail].[LineTotal] AS [LineTotal],
-//    [SalesOrderDetail].[RowGuid] AS [RowGuid],
-//    [SalesOrderDetail].[ModifiedDate] AS [ModifiedDate]
-//FROM
-//    ([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-//    INNER JOIN
-//    [#sys_sequential_SalesOrder] [sys_sequential_SalesOrder]
-//    ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
-//ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[SalesOrderDetailID];
-//";
-//                Assert.AreEqual(expectedSql, childQuery.ToString());
-//            }
-//        }
+        [TestMethod]
+        public void DbQuery_CreateChild()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                salesOrders.MockSequentialKeyTempTable();
+                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
+                var expectedSql =
+@"SELECT
+    `SalesOrderDetail`.`SalesOrderID` AS `SalesOrderID`,
+    `SalesOrderDetail`.`SalesOrderDetailID` AS `SalesOrderDetailID`,
+    `SalesOrderDetail`.`OrderQty` AS `OrderQty`,
+    `SalesOrderDetail`.`ProductID` AS `ProductID`,
+    `SalesOrderDetail`.`UnitPrice` AS `UnitPrice`,
+    `SalesOrderDetail`.`UnitPriceDiscount` AS `UnitPriceDiscount`,
+    `SalesOrderDetail`.`LineTotal` AS `LineTotal`,
+    `SalesOrderDetail`.`RowGuid` AS `RowGuid`,
+    `SalesOrderDetail`.`ModifiedDate` AS `ModifiedDate`
+FROM
+    (`SalesOrderDetail`
+    INNER JOIN
+    `#sys_sequential_SalesOrder` `sys_sequential_SalesOrder`
+    ON `SalesOrderDetail`.`SalesOrderID` = `sys_sequential_SalesOrder`.`SalesOrderID`)
+ORDER BY `sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`SalesOrderDetailID`;
+";
+                Assert.AreEqual(expectedSql, childQuery.ToString());
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_CreateChild_aggregate()
