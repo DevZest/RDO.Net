@@ -136,8 +136,16 @@ namespace DevZest.Data.MySql
         {
             Debug.Assert(constraint != null);
 
+            if (constraint.IsClustered)
+                GeneratePrimaryKeyConstraint(sqlBuilder, constraint.PrimaryKey);
+            else
+                GenerateUniqueConstraint(sqlBuilder, constraint.PrimaryKey);
+        }
+
+        private static void GeneratePrimaryKeyConstraint(IndentedStringBuilder sqlBuilder, IReadOnlyList<ColumnSort> columns)
+        {
             sqlBuilder.Append("PRIMARY KEY (");
-            GenerateColumnSortList(sqlBuilder, constraint.PrimaryKey);
+            GenerateColumnSortList(sqlBuilder, columns);
             sqlBuilder.Append(")");
         }
 
@@ -145,8 +153,16 @@ namespace DevZest.Data.MySql
         {
             Debug.Assert(constraint != null);
 
+            if (constraint.IsClustered)
+                GeneratePrimaryKeyConstraint(sqlBuilder, constraint.Columns);
+            else
+                GenerateUniqueConstraint(sqlBuilder, constraint.Columns);
+        }
+
+        private static void GenerateUniqueConstraint(IndentedStringBuilder sqlBuilder, IReadOnlyList<ColumnSort> columns)
+        {
             sqlBuilder.Append("UNIQUE (");
-            GenerateColumnSortList(sqlBuilder, constraint.Columns);
+            GenerateColumnSortList(sqlBuilder, columns);
             sqlBuilder.Append(")");
         }
 
@@ -218,15 +234,23 @@ namespace DevZest.Data.MySql
                 else
                     sqlBuilder.AppendLine();
                 var index = indexes[i];
-                sqlBuilder.Append("INDEX ");
-                sqlBuilder.Append(index.Name.FormatName(tableName));
-                sqlBuilder.Append(' ');
 
-                if (index.IsUnique)
-                    sqlBuilder.Append("UNIQUE ");
-                sqlBuilder.Append('(');
-                GenerateColumnSortList(sqlBuilder, index.Columns);
-                sqlBuilder.Append(')');
+                if (index.IsClustered)
+                {
+                    sqlBuilder.GenerateConstraintName(index.Name, tableName, isTempTable);
+                    GeneratePrimaryKeyConstraint(sqlBuilder, index.Columns);
+                }
+                else if (index.IsUnique)
+                {
+                    sqlBuilder.GenerateConstraintName(index.Name, tableName, isTempTable);
+                    GenerateUniqueConstraint(sqlBuilder, index.Columns);
+                }
+                else
+                {
+                    sqlBuilder.Append("INDEX ").Append(index.Name.FormatName(tableName)).Append(" (");
+                    GenerateColumnSortList(sqlBuilder, index.Columns);
+                    sqlBuilder.Append(')');
+                }
             }
             return indexes.Count;
         }
