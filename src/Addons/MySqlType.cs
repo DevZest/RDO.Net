@@ -17,15 +17,18 @@ namespace DevZest.Data.MySql.Addons
 
         internal void GenerateColumnDefinitionSql(IndentedStringBuilder sqlBuilder, string tableName, bool isTempTable, MySqlVersion mySqlVersion)
         {
-            GenerateDataTypeSql(sqlBuilder, isTempTable, mySqlVersion);
+            var isComputed = GenerateDataTypeSql(sqlBuilder, isTempTable, mySqlVersion);
 
             var column = GetColumn();
-            GenerateDefaultDefinition(column, sqlBuilder, tableName, isTempTable, mySqlVersion);
+            if (!isComputed)
+            {
+                GenerateDefaultDefinition(column, sqlBuilder, tableName, isTempTable, mySqlVersion);
 
-            // AUTO_INCREMENT
-            var identity = column.GetIdentity(isTempTable);
-            if (identity != null)
-                sqlBuilder.Append(" AUTO_INCREMENT");
+                // AUTO_INCREMENT
+                var identity = column.GetIdentity(isTempTable);
+                if (identity != null)
+                    sqlBuilder.Append(" AUTO_INCREMENT");
+            }
 
             sqlBuilder.GenerateComment(column.DbColumnDescription);
         }
@@ -42,7 +45,7 @@ namespace DevZest.Data.MySql.Addons
             sqlBuilder.Append(")");
         }
 
-        private void GenerateDataTypeSql(IndentedStringBuilder sqlBuilder, bool isTempTable, MySqlVersion mySqlVersion)
+        private bool GenerateDataTypeSql(IndentedStringBuilder sqlBuilder, bool isTempTable, MySqlVersion mySqlVersion)
         {
             sqlBuilder.Append(GetDataTypeSql(mySqlVersion));
 
@@ -57,12 +60,13 @@ namespace DevZest.Data.MySql.Addons
                 };
                 column.DbComputedExpression.Accept(generator);
                 sqlBuilder.Append(")");
-                return;
+                return true;
             }
 
             // NULL | NOT NULL
             bool isNullable = IsNullable;
             sqlBuilder.Append(isNullable ? " NULL" : " NOT NULL");
+            return false;
         }
 
         private bool IsNullable
