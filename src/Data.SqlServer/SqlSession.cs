@@ -142,8 +142,8 @@ namespace DevZest.Data.SqlServer
         internal DbQuery<KeyOutput> BuildImportKeyQuery<T>(DataSet<T> dataSet)
             where T : class, IModelReference, new()
         {
-            var targetModel = new KeyOutput(dataSet.Model, false);
-            return BuildQuery(dataSet, targetModel, (m, s, t) => KeyOutput.BuildKeyMappings(m, s.Model, t));
+            var keyOutput = new KeyOutput(dataSet.Model);
+            return BuildQuery(dataSet, keyOutput, (m, s, t) => KeyOutput.BuildKeyMappings(m, s.Model, t));
         }
 
         internal DbQuery<T> BuildImportQuery<T>(DataSet<T> dataSet)

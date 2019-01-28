@@ -7,10 +7,10 @@
         {
             // Create DbTable object for SequentialKeyTempTable without actually creating the temp table in the database.
             var select = dbQuery.QueryStatement;
-            var sequentialKeyModel = new KeyOutput(select.Model, true);
-            var sequentialSelect = select.GetSequentialKeySelectStatement(sequentialKeyModel);
-            var tempTableName = dbQuery.DbSession.AssignTempTableName(sequentialKeyModel);
-            select.SequentialKeyTempTable = DbTable<KeyOutput>.CreateTemp(sequentialKeyModel, dbQuery.DbSession, tempTableName);
+            var sequentialKey = new SequentialKey(select.Model);
+            var sequentialSelect = select.GetSequentialKeySelectStatement(sequentialKey);
+            var tempTableName = dbQuery.DbSession.AssignTempTableName(sequentialKey);
+            select.SequentialKeyTempTable = DbTable<SequentialKey>.CreateTemp(sequentialKey, dbQuery.DbSession, tempTableName);
             select.SequentialKeyTempTable.InitialRowCount = initialRowCount;  // this value (zero or non-zero) determines whether child query should be created.
 
             return dbQuery;

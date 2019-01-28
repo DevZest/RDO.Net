@@ -3,7 +3,7 @@ using System;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class KeyOutput : Model
+    public class KeyOutput : Model
     {
         private sealed class PK : CandidateKey
         {
@@ -28,7 +28,7 @@ namespace DevZest.Data.Primitives
         {
         }
 
-        public KeyOutput(Model model, bool addTempTableIdentity)
+        public KeyOutput(Model model)
         {
             model.VerifyNotNull(nameof(model));
             var primaryKey = model.PrimaryKey;
@@ -41,8 +41,6 @@ namespace DevZest.Data.Primitives
             for (int i = 0; i < sortKeys.Length; i++)
                 sortKeys[i] = primaryKey[i];
             AddDbTableConstraint(new DbPrimaryKey(this, null, null, false, () => { return sortKeys; }), true);
-            if (addTempTableIdentity)
-                this.AddTempTableIdentity();
         }
 
 
@@ -54,9 +52,14 @@ namespace DevZest.Data.Primitives
 
         private readonly string _sourceDbAlias;
 
+        protected virtual string DbAliasPrefix
+        {
+            get { return "sys_key_"; }
+        }
+
         protected internal override string DbAlias
         {
-            get { return (GetIdentity(true) == null ? "sys_key_" : "sys_sequential_") + _sourceDbAlias; }
+            get { return DbAliasPrefix  + _sourceDbAlias; }
         }
 
         public static void BuildKeyMappings(ColumnMapper mapper, Model source, KeyOutput target)

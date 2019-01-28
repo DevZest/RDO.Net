@@ -64,7 +64,7 @@ namespace DevZest.Data
             return QueryStatement.EnsureSequentialTempTableCreatedAsync(dbSession, cancellationToken);
         }
 
-        private DbTable<KeyOutput> SequentialKeyTempTable
+        private DbTable<SequentialKey> SequentialKeyTempTable
         {
             get { return QueryStatement.SequentialKeyTempTable; }
         }

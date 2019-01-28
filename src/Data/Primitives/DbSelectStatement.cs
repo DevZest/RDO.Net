@@ -64,19 +64,19 @@ namespace DevZest.Data.Primitives
             return visitor.Visit(this);
         }
 
-        public override DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel)
+        public override DbSelectStatement GetSequentialKeySelectStatement(SequentialKey sequentialKey)
         {
             var primaryKey = Model.PrimaryKey;
             Debug.Assert(primaryKey != null);
 
             var selectItems = new ColumnMapping[primaryKey.Count];
             for (int i = 0; i < selectItems.Length; i++)
-                selectItems[i] = new ColumnMapping(Select[primaryKey[i].Column.Ordinal].SourceExpression, sequentialKeyModel.Columns[i]);
+                selectItems[i] = new ColumnMapping(Select[primaryKey[i].Column.Ordinal].SourceExpression, sequentialKey.Columns[i]);
 
-            return new DbSelectStatement(sequentialKeyModel, selectItems, From, Where, GroupBy, Having, OrderBy, Offset, Fetch);
+            return new DbSelectStatement(sequentialKey, selectItems, From, Where, GroupBy, Having, OrderBy, Offset, Fetch);
         }
 
-        internal override DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
+        internal override DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKey> sequentialKeys)
         {
             var queryBuilder = IsAggregate ? new DbAggregateQueryBuilder(model) : new DbQueryBuilder(model);
             return queryBuilder.BuildQueryStatement(this, action, sequentialKeys);

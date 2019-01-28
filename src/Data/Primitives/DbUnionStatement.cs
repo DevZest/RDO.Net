@@ -32,16 +32,16 @@ namespace DevZest.Data.Primitives
             return visitor.Visit(this);
         }
 
-        public override DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel)
+        public override DbSelectStatement GetSequentialKeySelectStatement(SequentialKey sequentialKey)
         {
             var primaryKey = Model.PrimaryKey;
             Debug.Assert(primaryKey != null);
 
             var select = new ColumnMapping[primaryKey.Count];
             for (int i = 0; i < select.Length; i++)
-                select[i] = new ColumnMapping(primaryKey[i].Column, sequentialKeyModel.Columns[i]);
+                select[i] = new ColumnMapping(primaryKey[i].Column, sequentialKey.Columns[i]);
 
-            return new DbSelectStatement(sequentialKeyModel, select, this, null, null, null, null, -1, -1);
+            return new DbSelectStatement(sequentialKey, select, this, null, null, null, null, -1, -1);
         }
 
         public override DbSelectStatement BuildToTempTableStatement()

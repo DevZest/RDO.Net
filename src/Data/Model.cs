@@ -892,7 +892,7 @@ namespace DevZest.Data
             _suspendIdentityCount--;
         }
 
-        internal DbTable<KeyOutput> SequentialKeyTempTable { get; set; }
+        internal DbTable<SequentialKey> SequentialKeyTempTable { get; set; }
 
         public override string ToString()
         {

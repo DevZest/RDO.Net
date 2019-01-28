@@ -16,7 +16,7 @@ namespace DevZest.Data.Primitives
 
         public Model Model { get; private set; }
 
-        internal DbTable<KeyOutput> SequentialKeyTempTable
+        internal DbTable<SequentialKey> SequentialKeyTempTable
         {
             get { return Model.SequentialKeyTempTable; }
             set { Model.SequentialKeyTempTable = value; }
@@ -28,16 +28,16 @@ namespace DevZest.Data.Primitives
                 SequentialKeyTempTable = await CreateSequentialKeyTempTableAsync(dbSession, cancellationToken);
         }
 
-        private async Task<DbTable<KeyOutput>> CreateSequentialKeyTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
+        private async Task<DbTable<SequentialKey>> CreateSequentialKeyTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
         {
-            var sequentialKeyModel = new KeyOutput(Model, true);
-            var selectStatement = GetSequentialKeySelectStatement(sequentialKeyModel);
-            return await selectStatement.ToTempTableAsync(sequentialKeyModel, dbSession, cancellationToken);
+            var sequentialKey = new SequentialKey(Model);
+            var selectStatement = GetSequentialKeySelectStatement(sequentialKey);
+            return await selectStatement.ToTempTableAsync(sequentialKey, dbSession, cancellationToken);
         }
 
-        public abstract DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel);
+        public abstract DbSelectStatement GetSequentialKeySelectStatement(SequentialKey sequentialKey);
 
-        internal virtual DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
+        internal virtual DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKey> sequentialKeys)
         {
             return new DbQueryBuilder(model).BuildQueryStatement(this.Model, action, sequentialKeys);
         }

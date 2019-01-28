@@ -193,8 +193,8 @@ namespace DevZest.Data.Primitives
 
         internal DbTable<KeyOutput> CreateKeyOutputInstance(Model sourceModel)
         {
-            var model = new KeyOutput(sourceModel, false);
-            return CreateTempTableInstance(model);
+            var keyOutput = new KeyOutput(sourceModel);
+            return CreateTempTableInstance(keyOutput);
         }
 
         private async Task<DbTable<KeyOutput>> CreateKeyOutputAsync(Model sourceModel, CancellationToken cancellationToken)

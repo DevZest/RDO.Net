@@ -9,7 +9,7 @@ namespace DevZest.Data
 {
     partial class DbQueryBuilder
     {
-        internal virtual DbQueryStatement BuildQueryStatement(DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
+        internal virtual DbQueryStatement BuildQueryStatement(DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<SequentialKey> sequentialKeys)
         {
 
             Initialize(query);
@@ -38,7 +38,7 @@ namespace DevZest.Data
             return BuildQueryStatement(sequentialKeys);
         }
 
-        internal DbQueryStatement BuildQueryStatement(Model sourceModel, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
+        internal DbQueryStatement BuildQueryStatement(Model sourceModel, Action<DbQueryBuilder> action, DbTable<SequentialKey> sequentialKeys)
         {
             From(sourceModel);
             var sourceColumns = sourceModel.Columns;
@@ -65,7 +65,7 @@ namespace DevZest.Data
             return null;
         }
 
-        internal DbQueryStatement BuildQueryStatement(DbTable<KeyOutput> sequentialKeys)
+        internal DbQueryStatement BuildQueryStatement(DbTable<SequentialKey> sequentialKeys)
         {
             var parentRowIdIdentity = SelectSysParentRowId();
             var rowIdIdentity = SelectSysRowId(sequentialKeys);
@@ -128,7 +128,7 @@ namespace DevZest.Data
             return result;
         }
 
-        private Identity SelectSysRowId(DbTable<KeyOutput> sequentialKeys)
+        private Identity SelectSysRowId(DbTable<SequentialKey> sequentialKeys)
         {
             if (sequentialKeys == null)
                 return null;
