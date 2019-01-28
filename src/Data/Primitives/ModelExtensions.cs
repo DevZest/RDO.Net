@@ -150,5 +150,10 @@ namespace DevZest.Data.Primitives
         {
             return model.DataSource;
         }
+
+        public static void AddTemporaryTableIdentity(this Model model)
+        {
+            model.AddTempTableIdentity();
+        }
     }
 }
