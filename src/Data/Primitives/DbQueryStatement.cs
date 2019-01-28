@@ -30,19 +30,19 @@ namespace DevZest.Data.Primitives
 
         private async Task<DbTable<KeyOutput>> CreateSequentialKeyTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
         {
-            var sequentialKeyModel = Model.CreateSequentialKey();
+            var sequentialKeyModel = new KeyOutput(Model, true);
             var selectStatement = GetSequentialKeySelectStatement(sequentialKeyModel);
             return await selectStatement.ToTempTableAsync(sequentialKeyModel, dbSession, cancellationToken);
         }
 
-        internal abstract DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel);
+        public abstract DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel);
 
         internal virtual DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
         {
             return new DbQueryBuilder(model).BuildQueryStatement(this.Model, action, sequentialKeys);
         }
 
-        internal abstract DbSelectStatement BuildToTempTableStatement();
+        public abstract DbSelectStatement BuildToTempTableStatement();
 
         private async Task<DbTable<T>> ToTempTableAsync<T>(T model, DbSession dbSession, CancellationToken cancellationToken)
             where T : Model, new()

@@ -22,7 +22,7 @@ namespace DevZest.Data.Helpers
             var result = new SqlCommand[2];
 
             var select = dbQuery.QueryStatement;
-            var query = select.GetSequentialKeySelectStatement(select.Model.CreateSequentialKey());
+            var query = select.GetSequentialKeySelectStatement(new KeyOutput(select.Model, true));
             var model = (KeyOutput)query.Model;
             var tempTable = DbTable<KeyOutput>.CreateTemp(model, sqlSession, tempTableName);
             result[0] = sqlSession.GetCreateTableCommand(tempTable._, true);

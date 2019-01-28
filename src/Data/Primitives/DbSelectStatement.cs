@@ -64,7 +64,7 @@ namespace DevZest.Data.Primitives
             return visitor.Visit(this);
         }
 
-        internal override DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel)
+        public override DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel)
         {
             var primaryKey = Model.PrimaryKey;
             Debug.Assert(primaryKey != null);
@@ -100,7 +100,7 @@ namespace DevZest.Data.Primitives
                 : base.BuildDeleteStatement(model, keyMappings);
         }
 
-        internal override DbSelectStatement BuildToTempTableStatement()
+        public override DbSelectStatement BuildToTempTableStatement()
         {
             return this;
         }

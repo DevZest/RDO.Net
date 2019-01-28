@@ -706,11 +706,6 @@ namespace DevZest.Data
             this.AddOrUpdate(index);
         }
 
-        internal KeyOutput CreateSequentialKey()
-        {
-            return new KeyOutput(this, true);
-        }
-
         protected internal virtual string DbAlias
         {
             get { return this.GetType().Name; }
