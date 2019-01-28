@@ -13,6 +13,13 @@ namespace DevZest.Data.Helpers
             Assert.AreEqual(expectedSql, dbQuery.ToString());
         }
 
+        internal static void MockSequentialKeyTempTable<T>(this DbQuery<T> dbQuery)
+            where T : class, IModelReference, new()
+        {
+            // Create DbTable object for SequentialKeyTempTable without actually creating the temp table in the database.
+            dbQuery.GetQueryStatement().MockSequentialKeyTempTable(dbQuery.DbSession);
+        }
+
         internal static SqlCommand[] GetCreateSequentialKeyTempTableCommands<T>(this DbQuery<T> dbQuery)
             where T : Model, new()
         {

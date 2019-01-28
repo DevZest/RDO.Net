@@ -16,10 +16,18 @@ namespace DevZest.Data.Primitives
 
         public Model Model { get; private set; }
 
-        internal DbTable<SequentialKey> SequentialKeyTempTable
+        public DbTable<SequentialKey> SequentialKeyTempTable
         {
             get { return Model.SequentialKeyTempTable; }
-            set { Model.SequentialKeyTempTable = value; }
+            private set { Model.SequentialKeyTempTable = value; }
+        }
+
+        public void MockSequentialKeyTempTable(DbSession dbSession, bool hasRow = true)
+        {
+            var sequentialKey = new SequentialKey(Model);
+            var tempTableName = dbSession.AssignTempTableName(sequentialKey);
+            SequentialKeyTempTable = DbTable<SequentialKey>.CreateTemp(sequentialKey, dbSession, tempTableName);
+            SequentialKeyTempTable.InitialRowCount = hasRow ? 1 : 0;  // this value (zero or non-zero) determines whether child query should be created.
         }
 
         internal async Task EnsureSequentialTempTableCreatedAsync(DbSession dbSession, CancellationToken cancellationToken)
