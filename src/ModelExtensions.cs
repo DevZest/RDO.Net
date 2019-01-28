@@ -21,8 +21,8 @@ namespace DevZest.Data.MySql
             if (isTempTable)    // Temp table may already exist when connection is reused with connection pooling, drop it if exists.
             {
                 sqlBuilder.AppendLine("SET @@sql_notes = 0;");  // workaround: DROP TABLE IF EXISTS causes warning if table does not exist (https://bugs.mysql.com/bug.php?id=2839)
-                sqlBuilder.Append("DROP TEMPORARY TABLE IF EXISTS ").Append(tableName).AppendLine(";").AppendLine();
-                sqlBuilder.AppendLine("SET @@sql_notes = 1;");
+                sqlBuilder.Append("DROP TEMPORARY TABLE IF EXISTS ").Append(tableName).AppendLine(";");
+                sqlBuilder.AppendLine("SET @@sql_notes = 1;").AppendLine();
             }
 
             sqlBuilder.Append("CREATE ");

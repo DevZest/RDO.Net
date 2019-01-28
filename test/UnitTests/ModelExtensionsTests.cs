@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Annotations;
+using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
@@ -105,29 +106,33 @@ namespace DevZest.Data.MySql
             Assert.AreEqual(expectedSql, sqlBuilder.ToString());
         }
 
-//        [TestMethod]
-//        public void Model_GenerateCreateTableSql_temp_table()
-//        {
-//            var temp = new SampleModel();
-//            temp.AddTempTableIdentity();
-//            var sqlBuilder = new IndentedStringBuilder();
+        [TestMethod]
+        public void Model_GenerateCreateTableSql_temp_table()
+        {
+            var temp = new SampleModel();
+            temp.AddTemporaryTableIdentity();
+            var sqlBuilder = new IndentedStringBuilder();
 
-//            temp.GenerateCreateTableSql("#Temp", null, sqlBuilder, MySqlVersion.LowestSupported, true);
-//            var expectedSql =
-//@"CREATE TABLE [#Temp] (
-//    [Id] INT NOT NULL,
-//    [Name] NVARCHAR(4000) NULL DEFAULT(N'DEFAULT NAME'),
-//    [Unique1] INT NULL,
-//    [Unique2] INT NULL,
-//    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
+            temp.GenerateCreateTableSql("#Temp", null, sqlBuilder, MySqlVersion.LowestSupported, true);
+            var expectedSql =
+@"SET @@sql_notes = 0;
+DROP TEMPORARY TABLE IF EXISTS `#Temp`;
+SET @@sql_notes = 1;
 
-//    CONSTRAINT [PK_Temp_] PRIMARY KEY NONCLUSTERED ([Id]),
-//    CONSTRAINT [UQ_Temp_] UNIQUE NONCLUSTERED ([Unique1], [Unique2] DESC),
-//    CONSTRAINT [CK_Temp_] CHECK ([Name] IS NOT NULL),
-//    UNIQUE CLUSTERED ([sys_row_id] ASC)
-//);
-//";
-//            Assert.AreEqual(expectedSql, sqlBuilder.ToString().RemoveGuids());
-//        }
+CREATE  TEMPORARY TABLE `#Temp` (
+    `Id` INT NOT NULL COMMENT 'Id Description',
+    `Name` VARCHAR(500) NULL DEFAULT('DEFAULT NAME') COMMENT 'Name Description',
+    `Unique1` INT NULL COMMENT 'Unique1 Description',
+    `Unique2` INT NULL COMMENT 'Unique2 Description',
+    `sys_row_id` INT NOT NULL AUTO_INCREMENT,
+
+    CONSTRAINT `PK_Temp_` UNIQUE (`Id`),
+    CONSTRAINT `UQ_Temp_` UNIQUE (`Unique1`, `Unique2` DESC),
+    CONSTRAINT `CK_Temp_` CHECK (`Name` IS NOT NULL),
+    PRIMARY KEY (`sys_row_id` ASC)
+);
+";
+            Assert.AreEqual(expectedSql, sqlBuilder.ToString().RemoveGuids());
+        }
     }
 }
