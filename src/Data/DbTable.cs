@@ -27,12 +27,17 @@ namespace DevZest.Data
             return result;
         }
 
-        private DbTable(T modelRef, DbSession dbSession, string propertyName, DataSourceKind kind)
+        public static DbTable<T> MockTemp(T modelRef, DbSession dbSession, string identifier, Action<DbTable<T>> initializer = null)
+        {
+            return CreateTemp(modelRef, dbSession, identifier, initializer);
+        }
+
+        private DbTable(T modelRef, DbSession dbSession, string identifier, DataSourceKind kind)
             : base(modelRef, dbSession)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName));
+            Debug.Assert(!string.IsNullOrEmpty(identifier));
 
-            Identifier = propertyName;
+            Identifier = identifier;
             _kind = kind;
             modelRef.Model.SetDataSource(this);
         }

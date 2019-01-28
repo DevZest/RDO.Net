@@ -28,10 +28,10 @@ namespace DevZest.Data.Helpers
 
             var result = new SqlCommand[2];
 
-            var select = dbQuery.QueryStatement;
+            var select = dbQuery.GetQueryStatement();
             var sequentialKey = new SequentialKey(select.Model);
             var query = select.GetSequentialKeySelectStatement(sequentialKey);
-            var tempTable = DbTable<KeyOutput>.CreateTemp(sequentialKey, sqlSession, tempTableName);
+            var tempTable = DbTable<KeyOutput>.MockTemp(sequentialKey, sqlSession, tempTableName);
             result[0] = sqlSession.GetCreateTableCommand(tempTable._, true);
             result[1] = sqlSession.GetInsertCommand(query.BuildToTempTableStatement());
             return result;
