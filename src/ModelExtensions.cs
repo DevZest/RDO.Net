@@ -18,7 +18,10 @@ namespace DevZest.Data.MySql
         {
             tableName = tableName.ToQuotedIdentifier();
 
-            sqlBuilder.Append("CREATE TABLE ");
+            sqlBuilder.Append("CREATE ");
+            if (isTempTable)
+                sqlBuilder.Append(" TEMPORARY ");
+            sqlBuilder.Append("TABLE ");
             sqlBuilder.Append(tableName);
             sqlBuilder.AppendLine(" (");
             sqlBuilder.Indent++;
@@ -27,7 +30,7 @@ namespace DevZest.Data.MySql
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                column.GenerateColumnDefinitionSql(sqlBuilder, mySqlVersion, tableName, isTempTable, i == columns.Count - 1);
+                column.GenerateColumnDefinitionSql(sqlBuilder, mySqlVersion, tableName, isTempTable, i < columns.Count - 1 || model.HasConstraintOrIndex(isTempTable));
             }
 
             int countConstraints = model.GenerateConstraints(sqlBuilder, mySqlVersion, tableName, isTempTable);
@@ -44,6 +47,25 @@ namespace DevZest.Data.MySql
             sqlBuilder.AppendLine(";");
         }
 
+        private static bool HasConstraintOrIndex(this Model model, bool isTempTable)
+        {
+            IReadOnlyList<DbTableConstraint> constraints = model.GetAddons<DbTableConstraint>();
+            bool result;
+            if (isTempTable)
+                result = constraints.Where(x => x.IsValidOnTempTable).Any();
+            else
+                result = constraints.Where(x => x.IsValidOnTable).Any();
+
+            if (result)
+                return true;
+
+            IReadOnlyList<DbIndex> indexes = model.GetAddons<DbIndex>();
+            if (isTempTable)
+                return indexes.Where(x => x.IsValidOnTempTable).Any();
+            else
+                return indexes.Where(x => x.IsValidOnTable).Any();
+        }
+
         internal static IndentedStringBuilder GenerateComment(this IndentedStringBuilder sqlBuilder, string comment)
         {
             if (!string.IsNullOrEmpty(comment))
@@ -52,12 +74,12 @@ namespace DevZest.Data.MySql
             return sqlBuilder;
         }
 
-        private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, MySqlVersion mySqlVersion, string tableName, bool isTempTable, bool isLastColumn)
+        private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, MySqlVersion mySqlVersion, string tableName, bool isTempTable, bool addComma)
         {
             var columnName = column.DbColumnName.ToQuotedIdentifier();
             sqlBuilder.Append(columnName).Append(' ');
             column.GetMySqlType().GenerateColumnDefinitionSql(sqlBuilder, tableName, isTempTable, mySqlVersion);
-            if (!isLastColumn)
+            if (addComma)
                 sqlBuilder.Append(",");
             sqlBuilder.AppendLine();
         }
@@ -89,8 +111,6 @@ namespace DevZest.Data.MySql
                     GenerateForeignKeyConstraint(sqlBuilder, (DbForeignKeyConstraint)constraint);
                 else
                     throw new NotSupportedException(DiagnosticMessages.ConstraintTypeNotSupported(constraint.GetType()));
-
-                sqlBuilder.GenerateComment(constraint.Description);
             }
             return constraints.Count;
         }

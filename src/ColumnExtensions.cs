@@ -16,7 +16,7 @@ namespace DevZest.Data.MySql
         internal const int MAX_VARBINARY_SIZE = 65535;
 
         private const int MIN_VARCHAR_SIZE = 1;
-        internal const int DEFAULT_VARCHAR_SIZE = 4000;
+        internal const int DEFAULT_VARCHAR_SIZE = 500;
         internal const int MAX_VARCHAR_SIZE = 65535;
 
         private const int MIN_CHAR_SIZE = 0;

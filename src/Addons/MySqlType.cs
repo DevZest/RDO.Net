@@ -20,7 +20,7 @@ namespace DevZest.Data.MySql.Addons
             GenerateDataTypeSql(sqlBuilder, isTempTable, mySqlVersion);
 
             var column = GetColumn();
-            GenerateDefaultConstraint(column, sqlBuilder, tableName, isTempTable, mySqlVersion);
+            GenerateDefaultDefinition(column, sqlBuilder, tableName, isTempTable, mySqlVersion);
 
             // AUTO_INCREMENT
             var identity = column.GetIdentity(isTempTable);
@@ -30,43 +30,35 @@ namespace DevZest.Data.MySql.Addons
             sqlBuilder.GenerateComment(column.DbColumnDescription);
         }
 
-        private static void GenerateDefaultConstraint(Column column, IndentedStringBuilder sqlBuilder, string tableName, bool isTempTable, MySqlVersion mySqlVersion)
+        private static void GenerateDefaultDefinition(Column column, IndentedStringBuilder sqlBuilder, string tableName, bool isTempTable, MySqlVersion mySqlVersion)
         {
             // DEFAULT
-            var defaultConstraint = column.GetDefault();
-            if (defaultConstraint == null || (!isTempTable && column.IsDbComputed))
+            var defaultDefinition = column.GetDefault();
+            if (defaultDefinition == null || (!isTempTable && column.IsDbComputed))
                 return;
 
-            if (!isTempTable && !string.IsNullOrEmpty(defaultConstraint.Name))
-            {
-                sqlBuilder.Append(" CONSTRAINT ");
-                sqlBuilder.Append(defaultConstraint.Name.FormatName(tableName));
-            }
             sqlBuilder.Append(" DEFAULT(");
-            defaultConstraint.DbExpression.GenerateSql(sqlBuilder, mySqlVersion);
+            defaultDefinition.DbExpression.GenerateSql(sqlBuilder, mySqlVersion);
             sqlBuilder.Append(")");
         }
 
         private void GenerateDataTypeSql(IndentedStringBuilder sqlBuilder, bool isTempTable, MySqlVersion mySqlVersion)
         {
-            var column = GetColumn();
-            if (!isTempTable)
-            {
-                if (column.IsDbComputed)
-                {
-                    sqlBuilder.Append("AS (");
-                    var generator = new ExpressionGenerator()
-                    {
-                        SqlBuilder = sqlBuilder,
-                        MySqlVersion = mySqlVersion
-                    };
-                    column.DbComputedExpression.Accept(generator);
-                    sqlBuilder.Append(")");
-                    return;
-                }
-            }
-
             sqlBuilder.Append(GetDataTypeSql(mySqlVersion));
+
+            var column = GetColumn();
+            if (!isTempTable && column.IsDbComputed)
+            {
+                sqlBuilder.Append("AS (");
+                var generator = new ExpressionGenerator()
+                {
+                    SqlBuilder = sqlBuilder,
+                    MySqlVersion = mySqlVersion
+                };
+                column.DbComputedExpression.Accept(generator);
+                sqlBuilder.Append(")");
+                return;
+            }
 
             // NULL | NOT NULL
             bool isNullable = IsNullable;
