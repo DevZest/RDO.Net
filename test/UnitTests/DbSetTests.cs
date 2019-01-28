@@ -183,29 +183,29 @@ ORDER BY `Product`.`Name` ASC;
             }
         }
 
-        //        [TestMethod]
-        //        public void DbSet_offset_fetch()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.SalesOrderDetail.OrderBy(10, 20, x => x.SalesOrderDetailID);
-        //                var expectedSql =
-        //@"SELECT
-        //    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-        //    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID],
-        //    [SalesOrderDetail].[OrderQty] AS [OrderQty],
-        //    [SalesOrderDetail].[ProductID] AS [ProductID],
-        //    [SalesOrderDetail].[UnitPrice] AS [UnitPrice],
-        //    [SalesOrderDetail].[UnitPriceDiscount] AS [UnitPriceDiscount],
-        //    [SalesOrderDetail].[LineTotal] AS [LineTotal],
-        //    [SalesOrderDetail].[RowGuid] AS [RowGuid],
-        //    [SalesOrderDetail].[ModifiedDate] AS [ModifiedDate]
-        //FROM [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-        //ORDER BY [SalesOrderDetail].[SalesOrderDetailID]
-        //OFFSET 10 ROWS FETCH NEXT 20 ROWS ONLY;
-        //";
-        //                Assert.AreEqual(expectedSql, query.ToString());
-        //            }
-        //        }
+        [TestMethod]
+        public void DbSet_offset_fetch()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.SalesOrderDetail.OrderBy(10, 20, x => x.SalesOrderDetailID);
+                var expectedSql =
+@"SELECT
+    `SalesOrderDetail`.`SalesOrderID` AS `SalesOrderID`,
+    `SalesOrderDetail`.`SalesOrderDetailID` AS `SalesOrderDetailID`,
+    `SalesOrderDetail`.`OrderQty` AS `OrderQty`,
+    `SalesOrderDetail`.`ProductID` AS `ProductID`,
+    `SalesOrderDetail`.`UnitPrice` AS `UnitPrice`,
+    `SalesOrderDetail`.`UnitPriceDiscount` AS `UnitPriceDiscount`,
+    `SalesOrderDetail`.`LineTotal` AS `LineTotal`,
+    `SalesOrderDetail`.`RowGuid` AS `RowGuid`,
+    `SalesOrderDetail`.`ModifiedDate` AS `ModifiedDate`
+FROM `SalesOrderDetail`
+ORDER BY `SalesOrderDetail`.`SalesOrderDetailID`
+LIMIT 10, 20;
+";
+                Assert.AreEqual(expectedSql, query.ToString());
+            }
+        }
     }
 }
