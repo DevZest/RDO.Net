@@ -44,168 +44,168 @@ ORDER BY `SalesOrderHeader`.`SalesOrderID`;
             }
         }
 
-//        [TestMethod]
-//        public void DbSet_Where_multi_level()
-//        {
-//            using (var db = new Db(SqlVersion.Sql11))
-//            {
-//                var query = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).Where(x => x.Name.IsNotNull());
-//                var expectedSql =
-//@"SELECT
-//    [ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
-//    [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
-//    [ProductCategory].[Name] AS [Name],
-//    [ProductCategory].[RowGuid] AS [RowGuid],
-//    [ProductCategory].[ModifiedDate] AS [ModifiedDate]
-//FROM [SalesLT].[ProductCategory] [ProductCategory]
-//WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCategory].[Name] IS NOT NULL));
-//";
-//                Assert.AreEqual(expectedSql, query.ToString());
-//            }
-//        }
+        [TestMethod]
+        public void DbSet_Where_multi_level()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).Where(x => x.Name.IsNotNull());
+                var expectedSql =
+@"SELECT
+    `ProductCategory`.`ProductCategoryID` AS `ProductCategoryID`,
+    `ProductCategory`.`ParentProductCategoryID` AS `ParentProductCategoryID`,
+    `ProductCategory`.`Name` AS `Name`,
+    `ProductCategory`.`RowGuid` AS `RowGuid`,
+    `ProductCategory`.`ModifiedDate` AS `ModifiedDate`
+FROM `ProductCategory`
+WHERE ((`ProductCategory`.`ParentProductCategoryID` IS NULL) AND (`ProductCategory`.`Name` IS NOT NULL));
+";
+                Assert.AreEqual(expectedSql, query.ToString());
+            }
+        }
 
-//        [TestMethod]
-//        public void DbSet_Union()
-//        {
-//            using (var db = new Db(SqlVersion.Sql11))
-//            {
-//                var query = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
-//                var expectedSql =
-//@"(SELECT
-//    [Product].[ProductID] AS [ProductID],
-//    [Product].[Name] AS [Name],
-//    [Product].[ProductNumber] AS [ProductNumber],
-//    [Product].[Color] AS [Color],
-//    [Product].[StandardCost] AS [StandardCost],
-//    [Product].[ListPrice] AS [ListPrice],
-//    [Product].[Size] AS [Size],
-//    [Product].[Weight] AS [Weight],
-//    [Product].[ProductCategoryID] AS [ProductCategoryID],
-//    [Product].[ProductModelID] AS [ProductModelID],
-//    [Product].[SellStartDate] AS [SellStartDate],
-//    [Product].[SellEndDate] AS [SellEndDate],
-//    [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-//    [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-//    [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-//    [Product].[RowGuid] AS [RowGuid],
-//    [Product].[ModifiedDate] AS [ModifiedDate]
-//FROM [SalesLT].[Product] [Product]
-//WHERE ([Product].[ProductID] < 720))
-//UNION ALL
-//(SELECT
-//    [Product].[ProductID] AS [ProductID],
-//    [Product].[Name] AS [Name],
-//    [Product].[ProductNumber] AS [ProductNumber],
-//    [Product].[Color] AS [Color],
-//    [Product].[StandardCost] AS [StandardCost],
-//    [Product].[ListPrice] AS [ListPrice],
-//    [Product].[Size] AS [Size],
-//    [Product].[Weight] AS [Weight],
-//    [Product].[ProductCategoryID] AS [ProductCategoryID],
-//    [Product].[ProductModelID] AS [ProductModelID],
-//    [Product].[SellStartDate] AS [SellStartDate],
-//    [Product].[SellEndDate] AS [SellEndDate],
-//    [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-//    [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-//    [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-//    [Product].[RowGuid] AS [RowGuid],
-//    [Product].[ModifiedDate] AS [ModifiedDate]
-//FROM [SalesLT].[Product] [Product]
-//WHERE ([Product].[ProductID] > 800));
-//";
-//                Assert.AreEqual(expectedSql, query.ToString());
+        //        [TestMethod]
+        //        public void DbSet_Union()
+        //        {
+        //            using (var db = new Db(SqlVersion.Sql11))
+        //            {
+        //                var query = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
+        //                var expectedSql =
+        //@"(SELECT
+        //    [Product].[ProductID] AS [ProductID],
+        //    [Product].[Name] AS [Name],
+        //    [Product].[ProductNumber] AS [ProductNumber],
+        //    [Product].[Color] AS [Color],
+        //    [Product].[StandardCost] AS [StandardCost],
+        //    [Product].[ListPrice] AS [ListPrice],
+        //    [Product].[Size] AS [Size],
+        //    [Product].[Weight] AS [Weight],
+        //    [Product].[ProductCategoryID] AS [ProductCategoryID],
+        //    [Product].[ProductModelID] AS [ProductModelID],
+        //    [Product].[SellStartDate] AS [SellStartDate],
+        //    [Product].[SellEndDate] AS [SellEndDate],
+        //    [Product].[DiscontinuedDate] AS [DiscontinuedDate],
+        //    [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
+        //    [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
+        //    [Product].[RowGuid] AS [RowGuid],
+        //    [Product].[ModifiedDate] AS [ModifiedDate]
+        //FROM [SalesLT].[Product] [Product]
+        //WHERE ([Product].[ProductID] < 720))
+        //UNION ALL
+        //(SELECT
+        //    [Product].[ProductID] AS [ProductID],
+        //    [Product].[Name] AS [Name],
+        //    [Product].[ProductNumber] AS [ProductNumber],
+        //    [Product].[Color] AS [Color],
+        //    [Product].[StandardCost] AS [StandardCost],
+        //    [Product].[ListPrice] AS [ListPrice],
+        //    [Product].[Size] AS [Size],
+        //    [Product].[Weight] AS [Weight],
+        //    [Product].[ProductCategoryID] AS [ProductCategoryID],
+        //    [Product].[ProductModelID] AS [ProductModelID],
+        //    [Product].[SellStartDate] AS [SellStartDate],
+        //    [Product].[SellEndDate] AS [SellEndDate],
+        //    [Product].[DiscontinuedDate] AS [DiscontinuedDate],
+        //    [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
+        //    [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
+        //    [Product].[RowGuid] AS [RowGuid],
+        //    [Product].[ModifiedDate] AS [ModifiedDate]
+        //FROM [SalesLT].[Product] [Product]
+        //WHERE ([Product].[ProductID] > 800));
+        //";
+        //                Assert.AreEqual(expectedSql, query.ToString());
 
-//                var query2 = query.OrderBy(x => x.Name.Asc());
-//                expectedSql =
-//@"SELECT
-//    [Product].[ProductID] AS [ProductID],
-//    [Product].[Name] AS [Name],
-//    [Product].[ProductNumber] AS [ProductNumber],
-//    [Product].[Color] AS [Color],
-//    [Product].[StandardCost] AS [StandardCost],
-//    [Product].[ListPrice] AS [ListPrice],
-//    [Product].[Size] AS [Size],
-//    [Product].[Weight] AS [Weight],
-//    [Product].[ProductCategoryID] AS [ProductCategoryID],
-//    [Product].[ProductModelID] AS [ProductModelID],
-//    [Product].[SellStartDate] AS [SellStartDate],
-//    [Product].[SellEndDate] AS [SellEndDate],
-//    [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-//    [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-//    [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-//    [Product].[RowGuid] AS [RowGuid],
-//    [Product].[ModifiedDate] AS [ModifiedDate]
-//FROM
-//    ((SELECT
-//        [Product].[ProductID] AS [ProductID],
-//        [Product].[Name] AS [Name],
-//        [Product].[ProductNumber] AS [ProductNumber],
-//        [Product].[Color] AS [Color],
-//        [Product].[StandardCost] AS [StandardCost],
-//        [Product].[ListPrice] AS [ListPrice],
-//        [Product].[Size] AS [Size],
-//        [Product].[Weight] AS [Weight],
-//        [Product].[ProductCategoryID] AS [ProductCategoryID],
-//        [Product].[ProductModelID] AS [ProductModelID],
-//        [Product].[SellStartDate] AS [SellStartDate],
-//        [Product].[SellEndDate] AS [SellEndDate],
-//        [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-//        [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-//        [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-//        [Product].[RowGuid] AS [RowGuid],
-//        [Product].[ModifiedDate] AS [ModifiedDate]
-//    FROM [SalesLT].[Product] [Product]
-//    WHERE ([Product].[ProductID] < 720))
-//    UNION ALL
-//    (SELECT
-//        [Product].[ProductID] AS [ProductID],
-//        [Product].[Name] AS [Name],
-//        [Product].[ProductNumber] AS [ProductNumber],
-//        [Product].[Color] AS [Color],
-//        [Product].[StandardCost] AS [StandardCost],
-//        [Product].[ListPrice] AS [ListPrice],
-//        [Product].[Size] AS [Size],
-//        [Product].[Weight] AS [Weight],
-//        [Product].[ProductCategoryID] AS [ProductCategoryID],
-//        [Product].[ProductModelID] AS [ProductModelID],
-//        [Product].[SellStartDate] AS [SellStartDate],
-//        [Product].[SellEndDate] AS [SellEndDate],
-//        [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-//        [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-//        [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-//        [Product].[RowGuid] AS [RowGuid],
-//        [Product].[ModifiedDate] AS [ModifiedDate]
-//    FROM [SalesLT].[Product] [Product]
-//    WHERE ([Product].[ProductID] > 800))) [Product]
-//ORDER BY [Product].[Name] ASC;
-//";
-//                Assert.AreEqual(expectedSql, query2.ToString());
-//            }
-//        }
+        //                var query2 = query.OrderBy(x => x.Name.Asc());
+        //                expectedSql =
+        //@"SELECT
+        //    [Product].[ProductID] AS [ProductID],
+        //    [Product].[Name] AS [Name],
+        //    [Product].[ProductNumber] AS [ProductNumber],
+        //    [Product].[Color] AS [Color],
+        //    [Product].[StandardCost] AS [StandardCost],
+        //    [Product].[ListPrice] AS [ListPrice],
+        //    [Product].[Size] AS [Size],
+        //    [Product].[Weight] AS [Weight],
+        //    [Product].[ProductCategoryID] AS [ProductCategoryID],
+        //    [Product].[ProductModelID] AS [ProductModelID],
+        //    [Product].[SellStartDate] AS [SellStartDate],
+        //    [Product].[SellEndDate] AS [SellEndDate],
+        //    [Product].[DiscontinuedDate] AS [DiscontinuedDate],
+        //    [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
+        //    [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
+        //    [Product].[RowGuid] AS [RowGuid],
+        //    [Product].[ModifiedDate] AS [ModifiedDate]
+        //FROM
+        //    ((SELECT
+        //        [Product].[ProductID] AS [ProductID],
+        //        [Product].[Name] AS [Name],
+        //        [Product].[ProductNumber] AS [ProductNumber],
+        //        [Product].[Color] AS [Color],
+        //        [Product].[StandardCost] AS [StandardCost],
+        //        [Product].[ListPrice] AS [ListPrice],
+        //        [Product].[Size] AS [Size],
+        //        [Product].[Weight] AS [Weight],
+        //        [Product].[ProductCategoryID] AS [ProductCategoryID],
+        //        [Product].[ProductModelID] AS [ProductModelID],
+        //        [Product].[SellStartDate] AS [SellStartDate],
+        //        [Product].[SellEndDate] AS [SellEndDate],
+        //        [Product].[DiscontinuedDate] AS [DiscontinuedDate],
+        //        [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
+        //        [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
+        //        [Product].[RowGuid] AS [RowGuid],
+        //        [Product].[ModifiedDate] AS [ModifiedDate]
+        //    FROM [SalesLT].[Product] [Product]
+        //    WHERE ([Product].[ProductID] < 720))
+        //    UNION ALL
+        //    (SELECT
+        //        [Product].[ProductID] AS [ProductID],
+        //        [Product].[Name] AS [Name],
+        //        [Product].[ProductNumber] AS [ProductNumber],
+        //        [Product].[Color] AS [Color],
+        //        [Product].[StandardCost] AS [StandardCost],
+        //        [Product].[ListPrice] AS [ListPrice],
+        //        [Product].[Size] AS [Size],
+        //        [Product].[Weight] AS [Weight],
+        //        [Product].[ProductCategoryID] AS [ProductCategoryID],
+        //        [Product].[ProductModelID] AS [ProductModelID],
+        //        [Product].[SellStartDate] AS [SellStartDate],
+        //        [Product].[SellEndDate] AS [SellEndDate],
+        //        [Product].[DiscontinuedDate] AS [DiscontinuedDate],
+        //        [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
+        //        [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
+        //        [Product].[RowGuid] AS [RowGuid],
+        //        [Product].[ModifiedDate] AS [ModifiedDate]
+        //    FROM [SalesLT].[Product] [Product]
+        //    WHERE ([Product].[ProductID] > 800))) [Product]
+        //ORDER BY [Product].[Name] ASC;
+        //";
+        //                Assert.AreEqual(expectedSql, query2.ToString());
+        //            }
+        //        }
 
-//        [TestMethod]
-//        public void DbSet_offset_fetch()
-//        {
-//            using (var db = new Db(SqlVersion.Sql11))
-//            {
-//                var query = db.SalesOrderDetail.OrderBy(10, 20, x => x.SalesOrderDetailID);
-//                var expectedSql =
-//@"SELECT
-//    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-//    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID],
-//    [SalesOrderDetail].[OrderQty] AS [OrderQty],
-//    [SalesOrderDetail].[ProductID] AS [ProductID],
-//    [SalesOrderDetail].[UnitPrice] AS [UnitPrice],
-//    [SalesOrderDetail].[UnitPriceDiscount] AS [UnitPriceDiscount],
-//    [SalesOrderDetail].[LineTotal] AS [LineTotal],
-//    [SalesOrderDetail].[RowGuid] AS [RowGuid],
-//    [SalesOrderDetail].[ModifiedDate] AS [ModifiedDate]
-//FROM [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-//ORDER BY [SalesOrderDetail].[SalesOrderDetailID]
-//OFFSET 10 ROWS FETCH NEXT 20 ROWS ONLY;
-//";
-//                Assert.AreEqual(expectedSql, query.ToString());
-//            }
-//        }
+        //        [TestMethod]
+        //        public void DbSet_offset_fetch()
+        //        {
+        //            using (var db = new Db(SqlVersion.Sql11))
+        //            {
+        //                var query = db.SalesOrderDetail.OrderBy(10, 20, x => x.SalesOrderDetailID);
+        //                var expectedSql =
+        //@"SELECT
+        //    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
+        //    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID],
+        //    [SalesOrderDetail].[OrderQty] AS [OrderQty],
+        //    [SalesOrderDetail].[ProductID] AS [ProductID],
+        //    [SalesOrderDetail].[UnitPrice] AS [UnitPrice],
+        //    [SalesOrderDetail].[UnitPriceDiscount] AS [UnitPriceDiscount],
+        //    [SalesOrderDetail].[LineTotal] AS [LineTotal],
+        //    [SalesOrderDetail].[RowGuid] AS [RowGuid],
+        //    [SalesOrderDetail].[ModifiedDate] AS [ModifiedDate]
+        //FROM [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
+        //ORDER BY [SalesOrderDetail].[SalesOrderDetailID]
+        //OFFSET 10 ROWS FETCH NEXT 20 ROWS ONLY;
+        //";
+        //                Assert.AreEqual(expectedSql, query.ToString());
+        //            }
+        //        }
     }
 }
