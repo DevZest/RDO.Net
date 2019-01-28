@@ -56,6 +56,14 @@ namespace DevZest.Data.MySql
             return SqlGenerator.Select(this, query).CreateCommand(null).ToTraceString();
         }
 
+#if DEBUG
+        // for unit test
+        internal string InternalGetSqlString(DbQueryStatement query)
+        {
+            return GetSqlString(query);
+        }
+#endif
+
         protected sealed override TransactionInvoker CreateTransactionInvoker(IsolationLevel? isolationLevel)
         {
             return new MySqlTransactionInterceptorInvoker(this, Connection, isolationLevel);

@@ -1,51 +1,48 @@
-﻿//using DevZest.Samples.AdventureWorksLT;
-//using DevZest.Data.Helpers;
-//using DevZest.Data.SqlServer;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using System;
+﻿using DevZest.Samples.AdventureWorksLT;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-//namespace DevZest.Data
-//{
-//    [TestClass]
-//    public class DbSetTests
-//    {
-//        [TestMethod]
-//        public void DbSet_where_order_by()
-//        {
-//            using (var db = new Db(SqlVersion.Sql11))
-//            {
-//                var query = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
-//                var expectedSql =
-//@"SELECT
-//    [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID],
-//    [SalesOrderHeader].[RevisionNumber] AS [RevisionNumber],
-//    [SalesOrderHeader].[OrderDate] AS [OrderDate],
-//    [SalesOrderHeader].[DueDate] AS [DueDate],
-//    [SalesOrderHeader].[ShipDate] AS [ShipDate],
-//    [SalesOrderHeader].[Status] AS [Status],
-//    [SalesOrderHeader].[OnlineOrderFlag] AS [OnlineOrderFlag],
-//    [SalesOrderHeader].[SalesOrderNumber] AS [SalesOrderNumber],
-//    [SalesOrderHeader].[PurchaseOrderNumber] AS [PurchaseOrderNumber],
-//    [SalesOrderHeader].[AccountNumber] AS [AccountNumber],
-//    [SalesOrderHeader].[CustomerID] AS [CustomerID],
-//    [SalesOrderHeader].[ShipToAddressID] AS [ShipToAddressID],
-//    [SalesOrderHeader].[BillToAddressID] AS [BillToAddressID],
-//    [SalesOrderHeader].[ShipMethod] AS [ShipMethod],
-//    [SalesOrderHeader].[CreditCardApprovalCode] AS [CreditCardApprovalCode],
-//    [SalesOrderHeader].[SubTotal] AS [SubTotal],
-//    [SalesOrderHeader].[TaxAmt] AS [TaxAmt],
-//    [SalesOrderHeader].[Freight] AS [Freight],
-//    [SalesOrderHeader].[TotalDue] AS [TotalDue],
-//    [SalesOrderHeader].[Comment] AS [Comment],
-//    [SalesOrderHeader].[RowGuid] AS [RowGuid],
-//    [SalesOrderHeader].[ModifiedDate] AS [ModifiedDate]
-//FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
-//WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
-//ORDER BY [SalesOrderHeader].[SalesOrderID];
-//";
-//                Assert.AreEqual(expectedSql, query.ToString());
-//            }
-//        }
+namespace DevZest.Data.MySql
+{
+    [TestClass]
+    public class DbSetTests
+    {
+        [TestMethod]
+        public void DbSet_where_order_by()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                var expectedSql =
+@"SELECT
+    `SalesOrderHeader`.`SalesOrderID` AS `SalesOrderID`,
+    `SalesOrderHeader`.`RevisionNumber` AS `RevisionNumber`,
+    `SalesOrderHeader`.`OrderDate` AS `OrderDate`,
+    `SalesOrderHeader`.`DueDate` AS `DueDate`,
+    `SalesOrderHeader`.`ShipDate` AS `ShipDate`,
+    `SalesOrderHeader`.`Status` AS `Status`,
+    `SalesOrderHeader`.`OnlineOrderFlag` AS `OnlineOrderFlag`,
+    `SalesOrderHeader`.`SalesOrderNumber` AS `SalesOrderNumber`,
+    `SalesOrderHeader`.`PurchaseOrderNumber` AS `PurchaseOrderNumber`,
+    `SalesOrderHeader`.`AccountNumber` AS `AccountNumber`,
+    `SalesOrderHeader`.`CustomerID` AS `CustomerID`,
+    `SalesOrderHeader`.`ShipToAddressID` AS `ShipToAddressID`,
+    `SalesOrderHeader`.`BillToAddressID` AS `BillToAddressID`,
+    `SalesOrderHeader`.`ShipMethod` AS `ShipMethod`,
+    `SalesOrderHeader`.`CreditCardApprovalCode` AS `CreditCardApprovalCode`,
+    `SalesOrderHeader`.`SubTotal` AS `SubTotal`,
+    `SalesOrderHeader`.`TaxAmt` AS `TaxAmt`,
+    `SalesOrderHeader`.`Freight` AS `Freight`,
+    `SalesOrderHeader`.`TotalDue` AS `TotalDue`,
+    `SalesOrderHeader`.`Comment` AS `Comment`,
+    `SalesOrderHeader`.`RowGuid` AS `RowGuid`,
+    `SalesOrderHeader`.`ModifiedDate` AS `ModifiedDate`
+FROM `SalesOrderHeader`
+WHERE ((`SalesOrderHeader`.`SalesOrderID` = 71774) OR (`SalesOrderHeader`.`SalesOrderID` = 71776))
+ORDER BY `SalesOrderHeader`.`SalesOrderID`;
+";
+                Assert.AreEqual(expectedSql, query.ToString());
+            }
+        }
 
 //        [TestMethod]
 //        public void DbSet_Where_multi_level()
@@ -210,5 +207,5 @@
 //                Assert.AreEqual(expectedSql, query.ToString());
 //            }
 //        }
-//    }
-//}
+    }
+}
