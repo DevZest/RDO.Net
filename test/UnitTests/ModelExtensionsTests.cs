@@ -65,7 +65,7 @@ namespace DevZest.Data.MySql
             public _Int32 Id { get; private set; }
 
             [DbColumn(Description = "Name Description")]
-            public _String Name { get; private set; }
+            public new _String Name { get; private set; }
 
             [DbColumn(Description = "Unique1 Description")]
             public _Int32 Unique1 { get; private set; }

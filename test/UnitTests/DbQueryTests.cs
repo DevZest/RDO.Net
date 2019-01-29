@@ -228,9 +228,9 @@ WHERE (`Product`.`ProductID` > 500);
 FROM
     (`SalesOrderDetail`
     INNER JOIN
-    `#sys_sequential_SalesOrder` `sys_sequential_SalesOrder`
-    ON `SalesOrderDetail`.`SalesOrderID` = `sys_sequential_SalesOrder`.`SalesOrderID`)
-ORDER BY `sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`SalesOrderDetailID`;
+    `#sys_sequential_SalesOrder`
+    ON `SalesOrderDetail`.`SalesOrderID` = `#sys_sequential_SalesOrder`.`SalesOrderID`)
+ORDER BY `#sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`SalesOrderDetailID`;
 ";
                 Assert.AreEqual(expectedSql, childQuery.ToString());
             }
@@ -261,12 +261,12 @@ ORDER BY `sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`Sales
     `SalesOrderDetail`.`LineTotal` AS `LineTotal`,
     `SalesOrderDetail`.`RowGuid` AS `RowGuid`,
     `SalesOrderDetail`.`ModifiedDate` AS `ModifiedDate`,
-    `sys_sequential_SalesOrder`.`sys_row_id` AS `sys_parent_row_id`
+    `#sys_sequential_SalesOrder`.`sys_row_id` AS `sys_parent_row_id`
 FROM
     (`SalesOrderDetail`
     INNER JOIN
-    `#sys_sequential_SalesOrder` `sys_sequential_SalesOrder`
-    ON `SalesOrderDetail`.`SalesOrderID` = `sys_sequential_SalesOrder`.`SalesOrderID`)
+    `#sys_sequential_SalesOrder`
+    ON `SalesOrderDetail`.`SalesOrderID` = `#sys_sequential_SalesOrder`.`SalesOrderID`)
 GROUP BY
     `SalesOrderDetail`.`SalesOrderID`,
     `SalesOrderDetail`.`SalesOrderDetailID`,
@@ -277,8 +277,8 @@ GROUP BY
     `SalesOrderDetail`.`LineTotal`,
     `SalesOrderDetail`.`RowGuid`,
     `SalesOrderDetail`.`ModifiedDate`,
-    `sys_sequential_SalesOrder`.`sys_row_id`
-ORDER BY `sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`SalesOrderDetailID`;
+    `#sys_sequential_SalesOrder`.`sys_row_id`
+ORDER BY `#sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`SalesOrderDetailID`;
 ";
                 Assert.AreEqual(expectedSql, salesOrderDetails.ToString());
             }
@@ -310,7 +310,7 @@ ORDER BY `sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`Sales
     `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
     `Product`.`RowGuid` AS `RowGuid`,
     `Product`.`ModifiedDate` AS `ModifiedDate`,
-    `sys_sequential_Product`.`sys_row_id` AS `sys_row_id`
+    `#sys_sequential_Product`.`sys_row_id` AS `sys_row_id`
 FROM
     (((SELECT
         `Product`.`ProductID` AS `ProductID`,
@@ -354,9 +354,9 @@ FROM
     FROM `Product`
     WHERE (`Product`.`ProductID` > 800))) `Product`
     INNER JOIN
-    `#sys_sequential_Product` `sys_sequential_Product`
-    ON `Product`.`ProductID` = `sys_sequential_Product`.`ProductID`)
-ORDER BY `sys_sequential_Product`.`sys_row_id` ASC;
+    `#sys_sequential_Product`
+    ON `Product`.`ProductID` = `#sys_sequential_Product`.`ProductID`)
+ORDER BY `#sys_sequential_Product`.`sys_row_id` ASC;
 ";
                 Assert.AreEqual(expectedSql, db.InternalGetSqlString(unionQuery.SequentialQueryStatement));
             }
@@ -393,14 +393,14 @@ ORDER BY `sys_sequential_Product`.`sys_row_id` ASC;
     `SalesOrderHeader`.`Comment` AS `Comment`,
     `SalesOrderHeader`.`RowGuid` AS `RowGuid`,
     `SalesOrderHeader`.`ModifiedDate` AS `ModifiedDate`,
-    `sys_sequential_SalesOrderHeader`.`sys_row_id` AS `sys_row_id`
+    `#sys_sequential_SalesOrderHeader`.`sys_row_id` AS `sys_row_id`
 FROM
     (`SalesOrderHeader`
     INNER JOIN
-    `#sys_sequential_SalesOrderHeader` `sys_sequential_SalesOrderHeader`
-    ON `SalesOrderHeader`.`SalesOrderID` = `sys_sequential_SalesOrderHeader`.`SalesOrderID`)
+    `#sys_sequential_SalesOrderHeader`
+    ON `SalesOrderHeader`.`SalesOrderID` = `#sys_sequential_SalesOrderHeader`.`SalesOrderID`)
 WHERE ((`SalesOrderHeader`.`SalesOrderID` = 71774) OR (`SalesOrderHeader`.`SalesOrderID` = 71776))
-ORDER BY `sys_sequential_SalesOrderHeader`.`sys_row_id` ASC;
+ORDER BY `#sys_sequential_SalesOrderHeader`.`sys_row_id` ASC;
 ";
                 Assert.AreEqual(expectedSql, db.InternalGetSqlString(salesOrderHeaders.SequentialQueryStatement));
             }
@@ -426,17 +426,17 @@ ORDER BY `sys_sequential_SalesOrderHeader`.`sys_row_id` ASC;
     `SalesOrderDetail`.`LineTotal` AS `LineTotal`,
     `SalesOrderDetail`.`RowGuid` AS `RowGuid`,
     `SalesOrderDetail`.`ModifiedDate` AS `ModifiedDate`,
-    `sys_sequential_SalesOrder`.`sys_row_id` AS `sys_parent_row_id`,
-    `sys_sequential_SalesOrderDetail`.`sys_row_id` AS `sys_row_id`
+    `#sys_sequential_SalesOrder`.`sys_row_id` AS `sys_parent_row_id`,
+    `#sys_sequential_SalesOrderDetail`.`sys_row_id` AS `sys_row_id`
 FROM
     ((`SalesOrderDetail`
     INNER JOIN
-    `#sys_sequential_SalesOrder` `sys_sequential_SalesOrder`
-    ON `SalesOrderDetail`.`SalesOrderID` = `sys_sequential_SalesOrder`.`SalesOrderID`)
+    `#sys_sequential_SalesOrder`
+    ON `SalesOrderDetail`.`SalesOrderID` = `#sys_sequential_SalesOrder`.`SalesOrderID`)
     INNER JOIN
-    `#sys_sequential_SalesOrderDetail` `sys_sequential_SalesOrderDetail`
-    ON `SalesOrderDetail`.`SalesOrderID` = `sys_sequential_SalesOrderDetail`.`SalesOrderID` AND `SalesOrderDetail`.`SalesOrderDetailID` = `sys_sequential_SalesOrderDetail`.`SalesOrderDetailID`)
-ORDER BY `sys_sequential_SalesOrderDetail`.`sys_row_id` ASC;
+    `#sys_sequential_SalesOrderDetail`
+    ON `SalesOrderDetail`.`SalesOrderID` = `#sys_sequential_SalesOrderDetail`.`SalesOrderID` AND `SalesOrderDetail`.`SalesOrderDetailID` = `#sys_sequential_SalesOrderDetail`.`SalesOrderDetailID`)
+ORDER BY `#sys_sequential_SalesOrderDetail`.`sys_row_id` ASC;
 ";
                 Assert.AreEqual(expectedSql, db.InternalGetSqlString(salesOrderDetails.SequentialQueryStatement));
             }
