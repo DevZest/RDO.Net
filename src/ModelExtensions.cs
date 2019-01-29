@@ -27,7 +27,7 @@ namespace DevZest.Data.MySql
 
             sqlBuilder.Append("CREATE ");
             if (isTempTable)
-                sqlBuilder.Append(" TEMPORARY ");
+                sqlBuilder.Append("TEMPORARY ");
             sqlBuilder.Append("TABLE ").Append(tableName).AppendLine(" (");
             sqlBuilder.Indent++;
 

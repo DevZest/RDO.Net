@@ -1,7 +1,7 @@
 ﻿//using Microsoft.VisualStudio.TestTools.UnitTesting;
 //using System;
 
-//namespace DevZest.Data.Helpers
+//namespace DevZest.Data.MySql.Helpers
 //{
 //    internal static class ModelCollectionExtensions
 //    {

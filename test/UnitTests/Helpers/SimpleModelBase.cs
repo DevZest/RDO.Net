@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace DevZest.Data.Helpers
+namespace DevZest.Data.MySql.Helpers
 {
     public abstract class SimpleModelBase : Model<SimpleModelBase.PK>
     {

@@ -3,7 +3,7 @@ using MySql.Data.MySqlClient;
 
 namespace DevZest.Data.MySql
 {
-    internal static class SqlCommandExtensions
+    internal static class MySqlCommandExtensions
     {
         internal static string ToTraceString(this MySqlCommand mySqlCommand)
         {

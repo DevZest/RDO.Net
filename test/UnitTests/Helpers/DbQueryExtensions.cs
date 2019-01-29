@@ -3,7 +3,7 @@ using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 
-namespace DevZest.Data.Helpers
+namespace DevZest.Data.MySql.Helpers
 {
     internal static class DbQueryExtensions
     {

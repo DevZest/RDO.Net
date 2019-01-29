@@ -1,6 +1,6 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DevZest.Data.Helpers;
+using DevZest.Data.MySql.Helpers;
 using System;
 using DevZest.Data.Primitives;
 
@@ -442,33 +442,37 @@ ORDER BY `sys_sequential_SalesOrderDetail`.`sys_row_id` ASC;
             }
         }
 
-        //[TestMethod]
-        //public void DbQuery_SequentialKeyTempTable()
-        //{
-        //    using (var db = new Db(SqlVersion.Sql11))
-        //    {
-        //        var salesOrders = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
-        //        var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
-        //        var expectedSql = new string[]
-        //        {
-        //@"CREATE TABLE [#sys_sequential_SalesOrderHeader] (
-        //    [SalesOrderID] INT NOT NULL,
-        //    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
+        [TestMethod]
+        public void DbQuery_SequentialKeyTempTable()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var salesOrders = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
+                var expectedSql = new string[]
+                {
+@"SET @@sql_notes = 0;
+DROP TEMPORARY TABLE IF EXISTS `#sys_sequential_SalesOrderHeader`;
+SET @@sql_notes = 1;
 
-        //    PRIMARY KEY NONCLUSTERED ([SalesOrderID]),
-        //    UNIQUE CLUSTERED ([sys_row_id] ASC)
-        //);",
+CREATE TEMPORARY TABLE `#sys_sequential_SalesOrderHeader` (
+    `SalesOrderID` INT NOT NULL COMMENT 'Primary key.',
+    `sys_row_id` INT NOT NULL AUTO_INCREMENT,
 
-        //@"INSERT INTO [#sys_sequential_SalesOrderHeader]
-        //([SalesOrderID])
-        //SELECT [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID]
-        //FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
-        //WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
-        //ORDER BY [SalesOrderHeader].[SalesOrderID];"
-        //        };
-        //        commands.Verify(expectedSql);
-        //    }
-        //}
+    UNIQUE (`SalesOrderID`),
+    PRIMARY KEY (`sys_row_id` ASC)
+);",
+
+@"INSERT INTO `#sys_sequential_SalesOrderHeader`
+(`SalesOrderID`)
+SELECT `SalesOrderHeader`.`SalesOrderID` AS `SalesOrderID`
+FROM `SalesOrderHeader`
+WHERE ((`SalesOrderHeader`.`SalesOrderID` = 71774) OR (`SalesOrderHeader`.`SalesOrderID` = 71776))
+ORDER BY `SalesOrderHeader`.`SalesOrderID`;"
+                };
+                commands.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_SequentialKeyTempTable_aggregate_query()

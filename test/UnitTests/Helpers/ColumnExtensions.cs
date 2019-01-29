@@ -3,7 +3,7 @@
 //using DevZest.Data.Primitives;
 
 
-//namespace DevZest.Data.Helpers
+//namespace DevZest.Data.MySql.Helpers
 //{
 //    internal static class ColumnExtensions
 //    {

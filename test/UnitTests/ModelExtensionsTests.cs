@@ -1,5 +1,5 @@
 ﻿using DevZest.Data.Annotations;
-using DevZest.Data.Helpers;
+using DevZest.Data.MySql.Helpers;
 using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
@@ -119,7 +119,7 @@ namespace DevZest.Data.MySql
 DROP TEMPORARY TABLE IF EXISTS `#Temp`;
 SET @@sql_notes = 1;
 
-CREATE  TEMPORARY TABLE `#Temp` (
+CREATE TEMPORARY TABLE `#Temp` (
     `Id` INT NOT NULL COMMENT 'Id Description',
     `Name` VARCHAR(500) NULL DEFAULT('DEFAULT NAME') COMMENT 'Name Description',
     `Unique1` INT NULL COMMENT 'Unique1 Description',

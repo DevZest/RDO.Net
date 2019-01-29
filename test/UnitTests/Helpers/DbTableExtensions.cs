@@ -1,5 +1,4 @@
-﻿
-//using DevZest.Data.Primitives;
+﻿//using DevZest.Data.Primitives;
 //using DevZest.Data.SqlServer;
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
 //using System;
@@ -7,7 +6,7 @@
 //using System.Data.SqlClient;
 //using System.Diagnostics;
 
-//namespace DevZest.Data.Helpers
+//namespace DevZest.Data.MySql.Helpers
 //{
 //    internal static class DbTableExtensions
 //    {

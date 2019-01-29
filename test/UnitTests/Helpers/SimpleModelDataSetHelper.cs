@@ -2,7 +2,7 @@
 //using System;
 //using System.Text;
 
-//namespace DevZest.Data.Helpers
+//namespace DevZest.Data.MySql.Helpers
 //{
 //    public abstract class SimpleModelDataSetHelper
 //    {

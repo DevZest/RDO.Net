@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace DevZest.Data.Helpers
+namespace DevZest.Data.MySql.Helpers
 {
     internal static class StringExtensions
     {

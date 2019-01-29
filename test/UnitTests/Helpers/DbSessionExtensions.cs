@@ -1,11 +1,10 @@
-﻿
-//using DevZest.Data.Primitives;
+﻿//using DevZest.Data.Primitives;
 //using DevZest.Data.SqlServer;
 //using System;
 //using System.Collections.Generic;
 //using System.Data.SqlClient;
 
-//namespace DevZest.Data.Helpers
+//namespace DevZest.Data.MySql.Helpers
 //{
 //    internal static class DbSessionExtensions
 //    {
