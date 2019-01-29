@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
-using System.Data.SqlTypes;
 
 namespace DevZest.Data.MySql
 {
