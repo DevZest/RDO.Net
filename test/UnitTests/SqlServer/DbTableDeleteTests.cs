@@ -97,12 +97,12 @@ WHERE ([#ProductCategory].[ModifiedDate] IS NULL);
                 var expectedSql =
 @"DECLARE @p1 INT = 0;
 
-DELETE [ProductCategory1]
+DELETE [ProductCategory]
 FROM
-    ((SELECT @p1 AS [ProductCategoryID]) [ProductCategory]
+    ((SELECT @p1 AS [ProductCategoryID]) [@ProductCategory]
     INNER JOIN
-    [SalesLT].[ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
+    [SalesLT].[ProductCategory] [ProductCategory]
+    ON [@ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID]);
 ";
                 command.Verify(expectedSql);
             }

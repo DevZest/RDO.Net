@@ -192,10 +192,10 @@ SELECT
     @p4 AS [RowGuid],
     @p5 AS [ModifiedDate]
 FROM
-    ((SELECT @p1 AS [ProductCategoryID]) [ProductCategory]
+    ((SELECT @p1 AS [ProductCategoryID]) [@ProductCategory]
     LEFT JOIN
     [#ProductCategory]
-    ON [ProductCategory].[ProductCategoryID] = [#ProductCategory].[ProductCategoryID])
+    ON [@ProductCategory].[ProductCategoryID] = [#ProductCategory].[ProductCategoryID])
 WHERE ([#ProductCategory].[ProductCategoryID] IS NULL);
 ";
                 command.Verify(expectedSql);

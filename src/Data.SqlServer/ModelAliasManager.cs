@@ -52,8 +52,12 @@ namespace DevZest.Data.SqlServer
                 return ((IDbTable)model.GetDataSource()).Name;
 
             var result = model.GetDbAlias();
-            var sourceJsonParam = model.GetSourceJsonParam();
-            return ReferenceEquals(sourceJsonParam, null) ? result : "@" + result;
+            return IsDataSet(model) || !ReferenceEquals(model.GetSourceJsonParam(), null) ? "@" + result : result;
+        }
+
+        private static bool IsDataSet(Model model)
+        {
+            return model.GetDataSource()?.Kind == DataSourceKind.DataSet;
         }
 
         private static bool IsTempTable(Model model)

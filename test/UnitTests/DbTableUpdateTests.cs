@@ -116,16 +116,16 @@ DECLARE @p3 UNIQUEIDENTIFIER = 'ec359d7d-ae3a-4a9d-bdcb-03f0a7799514';
 DECLARE @p4 DATETIME = '2015-09-23 00:00:00.000';
 DECLARE @p5 INT = 0;
 
-UPDATE [ProductCategory1] SET
+UPDATE [ProductCategory] SET
     [ParentProductCategoryID] = @p1,
     [Name] = @p2,
     [RowGuid] = @p3,
     [ModifiedDate] = @p4
 FROM
-    ((SELECT @p5 AS [ProductCategoryID]) [ProductCategory]
+    ((SELECT @p5 AS [ProductCategoryID]) [@ProductCategory]
     INNER JOIN
-    [SalesLT].[ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
+    [SalesLT].[ProductCategory] [ProductCategory]
+    ON [@ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID]);
 ";
                 command.Verify(expectedSql);
             }
