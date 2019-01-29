@@ -21,8 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevZest.Data" Version="1.0.0-*" />
     <PackageReference Include="MySql.Data" Version="8.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\external\RDO.Data\src\Data\Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
