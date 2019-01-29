@@ -290,12 +290,12 @@ namespace DevZest.Data.MySql.Helpers
         //            return dbTable.SqlSession().BuildUpdateCommand(source, dbTable, columnMapper, joinTo);
         //        }
 
-        //internal static MySqlCommand MockDelete<T>(this DbTable<T> dbTable, Func<T, _Boolean> where)
-        //    where T : Model, new()
-        //{
-        //    var statement = dbTable.BuildDeleteStatement(where);
-        //    return dbTable.MySqlSession().GetDeleteCommand(statement);
-        //}
+        internal static MySqlCommand MockDelete<T>(this DbTable<T> dbTable, Func<T, _Boolean> where)
+            where T : Model, new()
+        {
+            var statement = dbTable.BuildDeleteStatement(where);
+            return dbTable.MySqlSession().GetDeleteCommand(statement);
+        }
 
         //        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
         //            where TSource : Model, new()

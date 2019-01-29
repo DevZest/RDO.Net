@@ -1,4 +1,5 @@
-﻿using DevZest.Samples.AdventureWorksLT;
+﻿using DevZest.Data.MySql.Helpers;
+using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DevZest.Data.MySql
@@ -6,20 +7,20 @@ namespace DevZest.Data.MySql
     [TestClass]
     public class DbTableDeleteTests
     {
-//        [TestMethod]
-//        public void DbTable_Delete_without_from()
-//        {
-//            using (var db = new Db(MySqlVersion.LowestSupported))
-//            {
-//                var command = db.ProductCategory.MockDelete(0, x => x.ModifiedDate.IsNull());
-//                var expectedSql =
-//@"DELETE [ProductCategory]
-//FROM [SalesLT].[ProductCategory] [ProductCategory]
-//WHERE ([ProductCategory].[ModifiedDate] IS NULL);
-//";
-//                command.Verify(expectedSql);
-//            }
-//        }
+        [TestMethod]
+        public void DbTable_Delete_without_from()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var command = db.ProductCategory.MockDelete(x => x.ModifiedDate.IsNull());
+                var expectedSql =
+@"DELETE `ProductCategory`
+FROM `ProductCategory`
+WHERE (`ProductCategory`.`ModifiedDate` IS NULL);
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Delete_from_temp_table()
