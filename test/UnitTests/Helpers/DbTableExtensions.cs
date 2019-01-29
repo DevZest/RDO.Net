@@ -297,15 +297,14 @@ namespace DevZest.Data.MySql.Helpers
             return dbTable.MySqlSession().GetDeleteCommand(statement);
         }
 
-        //        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
-        //            where TSource : Model, new()
-        //            where TTarget : Model, new()
-        //        {
-        //            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
-        //            dbTable.UpdateOrigin(null, rowsAffected);
-        //            var statement = dbTable.BuildDeleteStatement(source, keyMapping.GetColumnMappings());
-        //            return dbTable.SqlSession().GetDeleteCommand(statement);
-        //        }
+        internal static MySqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
+            var statement = dbTable.BuildDeleteStatement(source, keyMapping.GetColumnMappings());
+            return dbTable.MySqlSession().GetDeleteCommand(statement);
+        }
 
         //        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal, Func<TSource, TTarget, KeyMapping> keyMapper)
         //            where TSource : Model, new()

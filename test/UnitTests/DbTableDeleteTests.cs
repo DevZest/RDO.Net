@@ -22,24 +22,24 @@ WHERE (`ProductCategory`.`ModifiedDate` IS NULL);
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Delete_from_temp_table()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var tempTable = db.MockTempTable<ProductCategory>();
-        //                var command = db.ProductCategory.MockDelete(0, tempTable, (s, _) => s.Match(_));
-        //                var expectedSql =
-        //@"DELETE [ProductCategory1]
-        //FROM
-        //    ([#ProductCategory] [ProductCategory]
-        //    INNER JOIN
-        //    [SalesLT].[ProductCategory] [ProductCategory1]
-        //    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+        [TestMethod]
+        public void DbTable_Delete_from_temp_table()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var tempTable = db.MockTempTable<ProductCategory>();
+                var command = db.ProductCategory.MockDelete(tempTable, (s, _) => s.Match(_));
+                var expectedSql =
+@"DELETE `ProductCategory`
+FROM
+    (`#ProductCategory`
+    INNER JOIN
+    `ProductCategory`
+    ON `#ProductCategory`.`ProductCategoryID` = `ProductCategory`.`ProductCategoryID`);
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Delete_from_query()
