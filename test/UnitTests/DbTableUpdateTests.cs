@@ -35,16 +35,16 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
                 var tempTable = db.MockTempTable<ProductCategory>();
                 var command = db.ProductCategory.MockUpdate(0, tempTable);
                 var expectedSql =
-@"UPDATE [ProductCategory1] SET
-    [ParentProductCategoryID] = [ProductCategory].[ParentProductCategoryID],
-    [Name] = [ProductCategory].[Name],
-    [RowGuid] = [ProductCategory].[RowGuid],
-    [ModifiedDate] = [ProductCategory].[ModifiedDate]
+@"UPDATE [ProductCategory] SET
+    [ParentProductCategoryID] = [#ProductCategory].[ParentProductCategoryID],
+    [Name] = [#ProductCategory].[Name],
+    [RowGuid] = [#ProductCategory].[RowGuid],
+    [ModifiedDate] = [#ProductCategory].[ModifiedDate]
 FROM
-    ([#ProductCategory] [ProductCategory]
+    ([#ProductCategory]
     INNER JOIN
-    [SalesLT].[ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
+    [SalesLT].[ProductCategory] [ProductCategory]
+    ON [#ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID]);
 ";
                 command.Verify(expectedSql);
             }
@@ -82,17 +82,17 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategory.MockUpdate(0, query);
                 var expectedSql =
-@"UPDATE [ProductCategory1] SET
-    [ParentProductCategoryID] = [ProductCategory].[ParentProductCategoryID],
-    [Name] = [ProductCategory].[Name],
-    [RowGuid] = [ProductCategory].[RowGuid],
-    [ModifiedDate] = [ProductCategory].[ModifiedDate]
+@"UPDATE [ProductCategory] SET
+    [ParentProductCategoryID] = [#ProductCategory].[ParentProductCategoryID],
+    [Name] = [#ProductCategory].[Name],
+    [RowGuid] = [#ProductCategory].[RowGuid],
+    [ModifiedDate] = [#ProductCategory].[ModifiedDate]
 FROM
-    ([#ProductCategory] [ProductCategory]
+    ([#ProductCategory]
     INNER JOIN
-    [SalesLT].[ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-WHERE ([ProductCategory].[ModifiedDate] IS NULL);
+    [SalesLT].[ProductCategory] [ProductCategory]
+    ON [#ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID])
+WHERE ([#ProductCategory].[ModifiedDate] IS NULL);
 ";
                 command.Verify(expectedSql);
             }
@@ -186,20 +186,20 @@ FROM
 
                 var command = salesOrderDetails.MockUpdate(0, source);
                 var expectedSql =
-@"UPDATE [SalesOrderDetail1] SET
-    [SalesOrderDetailID] = [SalesOrderDetail].[SalesOrderDetailID],
-    [OrderQty] = [SalesOrderDetail].[OrderQty],
-    [ProductID] = [SalesOrderDetail].[ProductID],
-    [UnitPrice] = [SalesOrderDetail].[UnitPrice],
-    [UnitPriceDiscount] = [SalesOrderDetail].[UnitPriceDiscount],
-    [LineTotal] = [SalesOrderDetail].[LineTotal],
-    [RowGuid] = [SalesOrderDetail].[RowGuid],
-    [ModifiedDate] = [SalesOrderDetail].[ModifiedDate]
+@"UPDATE [#SalesOrderDetail] SET
+    [SalesOrderDetailID] = [#SalesOrderDetail1].[SalesOrderDetailID],
+    [OrderQty] = [#SalesOrderDetail1].[OrderQty],
+    [ProductID] = [#SalesOrderDetail1].[ProductID],
+    [UnitPrice] = [#SalesOrderDetail1].[UnitPrice],
+    [UnitPriceDiscount] = [#SalesOrderDetail1].[UnitPriceDiscount],
+    [LineTotal] = [#SalesOrderDetail1].[LineTotal],
+    [RowGuid] = [#SalesOrderDetail1].[RowGuid],
+    [ModifiedDate] = [#SalesOrderDetail1].[ModifiedDate]
 FROM
-    ([#SalesOrderDetail1] [SalesOrderDetail]
+    ([#SalesOrderDetail1]
     INNER JOIN
-    [#SalesOrderDetail] [SalesOrderDetail1]
-    ON [SalesOrderDetail].[SalesOrderID] = [SalesOrderDetail1].[SalesOrderID] AND [SalesOrderDetail].[SalesOrderDetailID] = [SalesOrderDetail1].[SalesOrderDetailID]);
+    [#SalesOrderDetail]
+    ON [#SalesOrderDetail1].[SalesOrderID] = [#SalesOrderDetail].[SalesOrderID] AND [#SalesOrderDetail1].[SalesOrderDetailID] = [#SalesOrderDetail].[SalesOrderDetailID]);
 ";
                 command.Verify(expectedSql);
             }

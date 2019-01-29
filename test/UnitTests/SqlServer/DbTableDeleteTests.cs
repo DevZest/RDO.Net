@@ -32,12 +32,12 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
                 var tempTable = db.MockTempTable<ProductCategory>();
                 var command = db.ProductCategory.MockDelete(tempTable, (s, _) => s.Match(_));
                 var expectedSql =
-@"DELETE [ProductCategory1]
+@"DELETE [ProductCategory]
 FROM
-    ([#ProductCategory] [ProductCategory]
+    ([#ProductCategory]
     INNER JOIN
-    [SalesLT].[ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
+    [SalesLT].[ProductCategory] [ProductCategory]
+    ON [#ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID]);
 ";
                 command.Verify(expectedSql);
             }
@@ -71,13 +71,13 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategory.MockDelete(query, (s, _) => s.Match(_));
                 var expectedSql =
-@"DELETE [ProductCategory1]
+@"DELETE [ProductCategory]
 FROM
-    ([#ProductCategory] [ProductCategory]
+    ([#ProductCategory]
     INNER JOIN
-    [SalesLT].[ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-WHERE ([ProductCategory].[ModifiedDate] IS NULL);
+    [SalesLT].[ProductCategory] [ProductCategory]
+    ON [#ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID])
+WHERE ([#ProductCategory].[ModifiedDate] IS NULL);
 ";
                 command.Verify(expectedSql);
             }

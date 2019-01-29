@@ -87,9 +87,9 @@ SELECT
 FROM
     ([SalesLT].[ProductCategory] [ProductCategory]
     LEFT JOIN
-    [#ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCategory1].[ProductCategoryID] IS NULL));
+    [#ProductCategory]
+    ON [ProductCategory].[ProductCategoryID] = [#ProductCategory].[ProductCategoryID])
+WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([#ProductCategory].[ProductCategoryID] IS NULL));
 ";
                 command.Verify(expectedSql);
             }
@@ -122,9 +122,9 @@ SELECT
 FROM
     ([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
     INNER JOIN
-    [#sys_sequential_SalesOrder] [sys_sequential_SalesOrder]
-    ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
-ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[SalesOrderDetailID];
+    [#sys_sequential_SalesOrder]
+    ON [SalesOrderDetail].[SalesOrderID] = [#sys_sequential_SalesOrder].[SalesOrderID])
+ORDER BY [#sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[SalesOrderDetailID];
 ";
                 command.Verify(expectedSql);
             }
@@ -194,9 +194,9 @@ SELECT
 FROM
     ((SELECT @p1 AS [ProductCategoryID]) [ProductCategory]
     LEFT JOIN
-    [#ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-WHERE ([ProductCategory1].[ProductCategoryID] IS NULL);
+    [#ProductCategory]
+    ON [ProductCategory].[ProductCategoryID] = [#ProductCategory].[ProductCategoryID])
+WHERE ([#ProductCategory].[ProductCategoryID] IS NULL);
 ";
                 command.Verify(expectedSql);
             }
@@ -270,13 +270,13 @@ WHERE ([Product].[ProductID] > 800));
                 Assert.AreEqual(1, statements.Count);
                 var command = db.GetUpdateCommand(statements[0]);
                 var expectedSql =
-@"UPDATE [SalesOrder] SET
-    [SalesOrderID] = [sys_identity_mapping].[NewValue]
+@"UPDATE [#SalesOrder] SET
+    [SalesOrderID] = [#sys_identity_mapping].[NewValue]
 FROM
-    ([#sys_identity_mapping] [sys_identity_mapping]
+    ([#sys_identity_mapping]
     INNER JOIN
-    [#SalesOrder] [SalesOrder]
-    ON [sys_identity_mapping].[OldValue] = [SalesOrder].[SalesOrderID]);
+    [#SalesOrder]
+    ON [#sys_identity_mapping].[OldValue] = [#SalesOrder].[SalesOrderID]);
 ";
                 command.Verify(expectedSql);
             }
@@ -459,8 +459,8 @@ SELECT
 FROM
     (@p1.nodes('/root/row') [@SalesOrderDetail]([Xml])
     INNER JOIN
-    [#SalesOrder] [SalesOrder]
-    ON [@SalesOrderDetail].[Xml].value('col_0[1]/text()[1]', 'INT') = [SalesOrder].[SalesOrderID])
+    [#SalesOrder]
+    ON [@SalesOrderDetail].[Xml].value('col_0[1]/text()[1]', 'INT') = [#SalesOrder].[SalesOrderID])
 ORDER BY [@SalesOrderDetail].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
 ";
                 command.Verify(expectedSql);
@@ -500,44 +500,44 @@ ORDER BY [@SalesOrderDetail].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
 ([ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
 OUTPUT INSERTED.[ProductCategoryID] INTO [#IdentityOutput] ([NewValue])
 SELECT
-    [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
-    [ProductCategory].[Name] AS [Name],
-    [ProductCategory].[RowGuid] AS [RowGuid],
-    [ProductCategory].[ModifiedDate] AS [ModifiedDate]
-FROM [#ProductCategory] [ProductCategory]
-ORDER BY [ProductCategory].[sys_row_id] ASC;",
+    [#ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
+    [#ProductCategory].[Name] AS [Name],
+    [#ProductCategory].[RowGuid] AS [RowGuid],
+    [#ProductCategory].[ModifiedDate] AS [ModifiedDate]
+FROM [#ProductCategory]
+ORDER BY [#ProductCategory].[sys_row_id] ASC;",
 
 @"INSERT INTO [#sys_identity_mapping]
 ([OldValue], [OriginalSysRowId])
 SELECT
-    [ProductCategory].[ProductCategoryID] AS [OldValue],
-    [ProductCategory].[sys_row_id] AS [OriginalSysRowId]
-FROM [#ProductCategory] [ProductCategory]
-ORDER BY [ProductCategory].[sys_row_id] ASC;",
+    [#ProductCategory].[ProductCategoryID] AS [OldValue],
+    [#ProductCategory].[sys_row_id] AS [OriginalSysRowId]
+FROM [#ProductCategory]
+ORDER BY [#ProductCategory].[sys_row_id] ASC;",
 
-@"UPDATE [sys_identity_mapping] SET
-    [NewValue] = [IdentityOutput].[NewValue]
+@"UPDATE [#sys_identity_mapping] SET
+    [NewValue] = [#IdentityOutput].[NewValue]
 FROM
-    ([#sys_identity_mapping] [sys_identity_mapping]
+    ([#sys_identity_mapping]
     INNER JOIN
-    [#IdentityOutput] [IdentityOutput]
-    ON [sys_identity_mapping].[sys_row_id] = [IdentityOutput].[sys_row_id]);",
+    [#IdentityOutput]
+    ON [#sys_identity_mapping].[sys_row_id] = [#IdentityOutput].[sys_row_id]);",
 
-@"UPDATE [ProductCategory] SET
-    [ProductCategoryID] = [sys_identity_mapping].[NewValue]
+@"UPDATE [#ProductCategory] SET
+    [ProductCategoryID] = [#sys_identity_mapping].[NewValue]
 FROM
-    ([#sys_identity_mapping] [sys_identity_mapping]
+    ([#sys_identity_mapping]
     INNER JOIN
-    [#ProductCategory] [ProductCategory]
-    ON [sys_identity_mapping].[OldValue] = [ProductCategory].[ProductCategoryID]);",
+    [#ProductCategory]
+    ON [#sys_identity_mapping].[OldValue] = [#ProductCategory].[ProductCategoryID]);",
 
-@"UPDATE [ProductCategory] SET
-    [ParentProductCategoryID] = [sys_identity_mapping].[NewValue]
+@"UPDATE [#ProductCategory1] SET
+    [ParentProductCategoryID] = [#sys_identity_mapping].[NewValue]
 FROM
-    ([#sys_identity_mapping] [sys_identity_mapping]
+    ([#sys_identity_mapping]
     INNER JOIN
-    [#ProductCategory1] [ProductCategory]
-    ON [sys_identity_mapping].[OldValue] = [ProductCategory].[ParentProductCategoryID]);"
+    [#ProductCategory1]
+    ON [#sys_identity_mapping].[OldValue] = [#ProductCategory1].[ParentProductCategoryID]);"
             };
 
                 commands.Verify(true, expectedSql);
