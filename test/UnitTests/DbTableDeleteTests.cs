@@ -41,45 +41,25 @@ FROM
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Delete_from_query()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.ProductCategory.Where(x => x.ModifiedDate.IsNull());
-        //                var command = db.ProductCategory.MockDelete(0, query, (s, _) => s.Match(_));
-        //                var expectedSql =
-        //@"DELETE [ProductCategory]
-        //FROM
-        //    ([SalesLT].[ProductCategory] [ProductCategory]
-        //    INNER JOIN
-        //    [SalesLT].[ProductCategory] [ProductCategory1]
-        //    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-        //WHERE ([ProductCategory].[ModifiedDate] IS NULL);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
-
-        //        [TestMethod]
-        //        public void DbTable_Delete_from_simple_query()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
-        //                var command = db.ProductCategory.MockDelete(0, query, (s, _) => s.Match(_));
-        //                var expectedSql =
-        //@"DELETE [ProductCategory1]
-        //FROM
-        //    ([#ProductCategory] [ProductCategory]
-        //    INNER JOIN
-        //    [SalesLT].[ProductCategory] [ProductCategory1]
-        //    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-        //WHERE ([ProductCategory].[ModifiedDate] IS NULL);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+        [TestMethod]
+        public void DbTable_Delete_from_simple_query()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
+                var command = db.ProductCategory.MockDelete(query, (s, _) => s.Match(_));
+                var expectedSql =
+@"DELETE `ProductCategory`
+FROM
+    (`#ProductCategory`
+    INNER JOIN
+    `ProductCategory`
+    ON `#ProductCategory`.`ProductCategoryID` = `ProductCategory`.`ProductCategoryID`)
+WHERE (`#ProductCategory`.`ModifiedDate` IS NULL);
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Delete_scalar()
