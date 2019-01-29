@@ -110,7 +110,7 @@ namespace DevZest.Data.MySql
         public void Model_GenerateCreateTableSql_temp_table()
         {
             var temp = new SampleModel();
-            temp.AddTemporaryTableIdentity();
+            temp.AddTempTableIdentity();
             var sqlBuilder = new IndentedStringBuilder();
 
             temp.GenerateCreateTableSql("#Temp", null, sqlBuilder, MySqlVersion.LowestSupported, true);
