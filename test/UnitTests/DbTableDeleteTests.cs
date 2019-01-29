@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.MySql.Helpers;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace DevZest.Data.MySql
 {
@@ -61,30 +62,30 @@ WHERE (`#ProductCategory`.`ModifiedDate` IS NULL);
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Delete_scalar()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var dataSet = DataSet<ProductCategory>.Create();
-        //                var index = dataSet.AddRow().Ordinal;
-        //                dataSet._.Name[index] = "Name";
-        //                dataSet._.RowGuid[index] = new Guid("EC359D7D-AE3A-4A9D-BDCB-03F0A7799514");
-        //                dataSet._.ModifiedDate[index] = new DateTime(2015, 9, 23);
-        //                var command = db.ProductCategory.MockDelete(false, dataSet, 0, (s, _) => s.Match(_));
-        //                var expectedSql =
-        //@"DECLARE @p1 INT = 0;
+        [TestMethod]
+        public void DbTable_Delete_scalar()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var dataSet = DataSet<ProductCategory>.Create();
+                var index = dataSet.AddRow().Ordinal;
+                dataSet._.Name[index] = "Name";
+                dataSet._.RowGuid[index] = new Guid("EC359D7D-AE3A-4A9D-BDCB-03F0A7799514");
+                dataSet._.ModifiedDate[index] = new DateTime(2015, 9, 23);
+                var command = db.ProductCategory.MockDelete(dataSet, (s, _) => s.Match(_));
+                var expectedSql =
+@"SET @p1 = 0;
 
-        //DELETE [ProductCategory1]
-        //FROM
-        //    ((SELECT @p1 AS [ProductCategoryID]) [ProductCategory]
-        //    INNER JOIN
-        //    [SalesLT].[ProductCategory] [ProductCategory1]
-        //    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+DELETE `ProductCategory`
+FROM
+    ((SELECT @p1 AS `ProductCategoryID`) `@ProductCategory`
+    INNER JOIN
+    `ProductCategory`
+    ON `@ProductCategory`.`ProductCategoryID` = `ProductCategory`.`ProductCategoryID`);
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Delete_from_DataSet()

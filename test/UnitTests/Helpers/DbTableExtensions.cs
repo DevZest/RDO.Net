@@ -306,34 +306,29 @@ namespace DevZest.Data.MySql.Helpers
             return dbTable.MySqlSession().GetDeleteCommand(statement);
         }
 
-        //        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal, Func<TSource, TTarget, KeyMapping> keyMapper)
-        //            where TSource : Model, new()
-        //            where TTarget : Model, new()
-        //        {
-        //            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
-        //            dbTable.UpdateOrigin<TSource>(null, success);
-        //            var statement = dbTable.BuildDeleteScalarStatement(source, ordinal, keyMapping.GetColumnMappings());
-        //            return dbTable.SqlSession().GetDeleteCommand(statement);
-        //        }
+        internal static MySqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> source, int ordinal, Func<TSource, TTarget, KeyMapping> keyMapper)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
+            var statement = dbTable.BuildDeleteScalarStatement(source, ordinal, keyMapping.GetColumnMappings());
+            return dbTable.MySqlSession().GetDeleteCommand(statement);
+        }
 
-        //        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
-        //            where TSource : Model, new()
-        //            where TTarget : Model, new()
-        //        {
-        //            dbTable.Verify(source, nameof(source));
+        internal static MySqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            dbTable.Verify(source, nameof(source));
 
-        //            if (source.Count == 0)
-        //                return null;
+            if (source.Count == 0)
+                return null;
 
-        //            if (source.Count == 1)
-        //            {
-        //                Debug.Assert(rowsAffected == 1 || rowsAffected == 0);
-        //                return dbTable.MockDelete(rowsAffected != 0, source, 0, keyMapper);
-        //            }
+            if (source.Count == 1)
+                return dbTable.MockDelete(source, 0, keyMapper);
 
-        //            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
-        //            dbTable.UpdateOrigin(null, rowsAffected);
-        //            return dbTable.SqlSession().BuildDeleteCommand(source, dbTable, keyMapping.TargetKey);
-        //        }
+            var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
+            return dbTable.MySqlSession().BuildDeleteCommand(source, dbTable, keyMapping.TargetKey);
+        }
     }
 }
