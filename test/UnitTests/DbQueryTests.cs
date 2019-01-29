@@ -406,41 +406,41 @@ ORDER BY `sys_sequential_SalesOrderHeader`.`sys_row_id` ASC;
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_SequentialSelectStatement_child_model()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
-        //                salesOrders.MockSequentialKeyTempTable();
-        //                var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
-        //                salesOrderDetails.MockSequentialKeyTempTable();
-        //                var expectedSql =
-        //@"SELECT
-        //    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-        //    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID],
-        //    [SalesOrderDetail].[OrderQty] AS [OrderQty],
-        //    [SalesOrderDetail].[ProductID] AS [ProductID],
-        //    [SalesOrderDetail].[UnitPrice] AS [UnitPrice],
-        //    [SalesOrderDetail].[UnitPriceDiscount] AS [UnitPriceDiscount],
-        //    [SalesOrderDetail].[LineTotal] AS [LineTotal],
-        //    [SalesOrderDetail].[RowGuid] AS [RowGuid],
-        //    [SalesOrderDetail].[ModifiedDate] AS [ModifiedDate],
-        //    [sys_sequential_SalesOrder].[sys_row_id] AS [sys_parent_row_id],
-        //    [sys_sequential_SalesOrderDetail].[sys_row_id] AS [sys_row_id]
-        //FROM
-        //    (([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-        //    INNER JOIN
-        //    [#sys_sequential_SalesOrder] [sys_sequential_SalesOrder]
-        //    ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
-        //    INNER JOIN
-        //    [#sys_sequential_SalesOrderDetail] [sys_sequential_SalesOrderDetail]
-        //    ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrderDetail].[SalesOrderID] AND [SalesOrderDetail].[SalesOrderDetailID] = [sys_sequential_SalesOrderDetail].[SalesOrderDetailID])
-        //ORDER BY [sys_sequential_SalesOrderDetail].[sys_row_id] ASC;
-        //";
-        //                Assert.AreEqual(expectedSql, db.GetSqlString(salesOrderDetails.SequentialQueryStatement));
-        //            }
-        //        }
+        [TestMethod]
+        public void DbQuery_SequentialSelectStatement_child_model()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                salesOrders.MockSequentialKeyTempTable();
+                var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
+                salesOrderDetails.MockSequentialKeyTempTable();
+                var expectedSql =
+@"SELECT
+    `SalesOrderDetail`.`SalesOrderID` AS `SalesOrderID`,
+    `SalesOrderDetail`.`SalesOrderDetailID` AS `SalesOrderDetailID`,
+    `SalesOrderDetail`.`OrderQty` AS `OrderQty`,
+    `SalesOrderDetail`.`ProductID` AS `ProductID`,
+    `SalesOrderDetail`.`UnitPrice` AS `UnitPrice`,
+    `SalesOrderDetail`.`UnitPriceDiscount` AS `UnitPriceDiscount`,
+    `SalesOrderDetail`.`LineTotal` AS `LineTotal`,
+    `SalesOrderDetail`.`RowGuid` AS `RowGuid`,
+    `SalesOrderDetail`.`ModifiedDate` AS `ModifiedDate`,
+    `sys_sequential_SalesOrder`.`sys_row_id` AS `sys_parent_row_id`,
+    `sys_sequential_SalesOrderDetail`.`sys_row_id` AS `sys_row_id`
+FROM
+    ((`SalesOrderDetail`
+    INNER JOIN
+    `#sys_sequential_SalesOrder` `sys_sequential_SalesOrder`
+    ON `SalesOrderDetail`.`SalesOrderID` = `sys_sequential_SalesOrder`.`SalesOrderID`)
+    INNER JOIN
+    `#sys_sequential_SalesOrderDetail` `sys_sequential_SalesOrderDetail`
+    ON `SalesOrderDetail`.`SalesOrderID` = `sys_sequential_SalesOrderDetail`.`SalesOrderID` AND `SalesOrderDetail`.`SalesOrderDetailID` = `sys_sequential_SalesOrderDetail`.`SalesOrderDetailID`)
+ORDER BY `sys_sequential_SalesOrderDetail`.`sys_row_id` ASC;
+";
+                Assert.AreEqual(expectedSql, db.InternalGetSqlString(salesOrderDetails.GetSequentialQueryStatement()));
+            }
+        }
 
         //[TestMethod]
         //public void DbQuery_SequentialKeyTempTable()
