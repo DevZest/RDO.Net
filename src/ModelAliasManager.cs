@@ -48,14 +48,17 @@ namespace DevZest.Data.MySql
 
         internal static string GetDbAlias(Model model)
         {
+            if (IsTempTable(model))
+                return ((IDbTable)model.GetDataSource()).Name;
+
             var result = model.GetDbAlias();
             var sourceJsonParam = model.GetSourceJsonParam();
-            return ReferenceEquals(sourceJsonParam, null) ? (IsTempTable(model) ? "#" + result : result) : "@" + result;
+            return ReferenceEquals(sourceJsonParam, null) ? result : "@" + result;
         }
 
         private static bool IsTempTable(Model model)
         {
-            return model.GetDataSource().Kind == DataSourceKind.DbTempTable;
+            return model.GetDataSource()?.Kind == DataSourceKind.DbTempTable;
         }
     }
 }
