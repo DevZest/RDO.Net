@@ -102,11 +102,19 @@ namespace DevZest.Data.MySql
             return sqlBuilder.ToString().CreateSqlCommand(Connection);
         }
 
+#if DEBUG
+        // for unit test
+        internal MySqlCommand InternalGetCreateTableCommand(Model model, bool isTempTable)
+        {
+            return GetCreateTableCommand(model, isTempTable);
+        }
+#endif
+
         internal DbQuery<KeyOutput> BuildImportKeyQuery<T>(DataSet<T> dataSet)
             where T : class, IModelReference, new()
         {
-            var targetModel = new KeyOutput(dataSet.Model, false);
-            return BuildQuery(dataSet, targetModel, (m, s, t) => KeyOutput.BuildKeyMappings(m, s.Model, t));
+            var keyOutput = new KeyOutput(dataSet.Model);
+            return BuildQuery(dataSet, keyOutput, (m, s, t) => KeyOutput.BuildKeyMappings(m, s.Model, t));
         }
 
         internal DbQuery<T> BuildImportQuery<T>(DataSet<T> dataSet)

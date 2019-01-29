@@ -284,83 +284,83 @@ ORDER BY `sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`Sales
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_SequentialSelectStatement_union_query()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var unionQuery = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
-        //                unionQuery.MockSequentialKeyTempTable();
-        //                var expectedSql =
-        //@"SELECT
-        //    [Product].[ProductID] AS [ProductID],
-        //    [Product].[Name] AS [Name],
-        //    [Product].[ProductNumber] AS [ProductNumber],
-        //    [Product].[Color] AS [Color],
-        //    [Product].[StandardCost] AS [StandardCost],
-        //    [Product].[ListPrice] AS [ListPrice],
-        //    [Product].[Size] AS [Size],
-        //    [Product].[Weight] AS [Weight],
-        //    [Product].[ProductCategoryID] AS [ProductCategoryID],
-        //    [Product].[ProductModelID] AS [ProductModelID],
-        //    [Product].[SellStartDate] AS [SellStartDate],
-        //    [Product].[SellEndDate] AS [SellEndDate],
-        //    [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-        //    [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-        //    [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-        //    [Product].[RowGuid] AS [RowGuid],
-        //    [Product].[ModifiedDate] AS [ModifiedDate],
-        //    [sys_sequential_Product].[sys_row_id] AS [sys_row_id]
-        //FROM
-        //    (((SELECT
-        //        [Product].[ProductID] AS [ProductID],
-        //        [Product].[Name] AS [Name],
-        //        [Product].[ProductNumber] AS [ProductNumber],
-        //        [Product].[Color] AS [Color],
-        //        [Product].[StandardCost] AS [StandardCost],
-        //        [Product].[ListPrice] AS [ListPrice],
-        //        [Product].[Size] AS [Size],
-        //        [Product].[Weight] AS [Weight],
-        //        [Product].[ProductCategoryID] AS [ProductCategoryID],
-        //        [Product].[ProductModelID] AS [ProductModelID],
-        //        [Product].[SellStartDate] AS [SellStartDate],
-        //        [Product].[SellEndDate] AS [SellEndDate],
-        //        [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-        //        [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-        //        [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-        //        [Product].[RowGuid] AS [RowGuid],
-        //        [Product].[ModifiedDate] AS [ModifiedDate]
-        //    FROM [SalesLT].[Product] [Product]
-        //    WHERE ([Product].[ProductID] < 720))
-        //    UNION ALL
-        //    (SELECT
-        //        [Product].[ProductID] AS [ProductID],
-        //        [Product].[Name] AS [Name],
-        //        [Product].[ProductNumber] AS [ProductNumber],
-        //        [Product].[Color] AS [Color],
-        //        [Product].[StandardCost] AS [StandardCost],
-        //        [Product].[ListPrice] AS [ListPrice],
-        //        [Product].[Size] AS [Size],
-        //        [Product].[Weight] AS [Weight],
-        //        [Product].[ProductCategoryID] AS [ProductCategoryID],
-        //        [Product].[ProductModelID] AS [ProductModelID],
-        //        [Product].[SellStartDate] AS [SellStartDate],
-        //        [Product].[SellEndDate] AS [SellEndDate],
-        //        [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-        //        [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-        //        [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-        //        [Product].[RowGuid] AS [RowGuid],
-        //        [Product].[ModifiedDate] AS [ModifiedDate]
-        //    FROM [SalesLT].[Product] [Product]
-        //    WHERE ([Product].[ProductID] > 800))) [Product]
-        //    INNER JOIN
-        //    [#sys_sequential_Product] [sys_sequential_Product]
-        //    ON [Product].[ProductID] = [sys_sequential_Product].[ProductID])
-        //ORDER BY [sys_sequential_Product].[sys_row_id] ASC;
-        //";
-        //                Assert.AreEqual(expectedSql, db.GetSqlString(unionQuery.SequentialQueryStatement));
-        //            }
-        //        }
+        [TestMethod]
+        public void DbQuery_SequentialSelectStatement_union_query()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var unionQuery = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
+                unionQuery.MockSequentialKeyTempTable();
+                var expectedSql =
+@"SELECT
+    `Product`.`ProductID` AS `ProductID`,
+    `Product`.`Name` AS `Name`,
+    `Product`.`ProductNumber` AS `ProductNumber`,
+    `Product`.`Color` AS `Color`,
+    `Product`.`StandardCost` AS `StandardCost`,
+    `Product`.`ListPrice` AS `ListPrice`,
+    `Product`.`Size` AS `Size`,
+    `Product`.`Weight` AS `Weight`,
+    `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+    `Product`.`ProductModelID` AS `ProductModelID`,
+    `Product`.`SellStartDate` AS `SellStartDate`,
+    `Product`.`SellEndDate` AS `SellEndDate`,
+    `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+    `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+    `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+    `Product`.`RowGuid` AS `RowGuid`,
+    `Product`.`ModifiedDate` AS `ModifiedDate`,
+    `sys_sequential_Product`.`sys_row_id` AS `sys_row_id`
+FROM
+    (((SELECT
+        `Product`.`ProductID` AS `ProductID`,
+        `Product`.`Name` AS `Name`,
+        `Product`.`ProductNumber` AS `ProductNumber`,
+        `Product`.`Color` AS `Color`,
+        `Product`.`StandardCost` AS `StandardCost`,
+        `Product`.`ListPrice` AS `ListPrice`,
+        `Product`.`Size` AS `Size`,
+        `Product`.`Weight` AS `Weight`,
+        `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+        `Product`.`ProductModelID` AS `ProductModelID`,
+        `Product`.`SellStartDate` AS `SellStartDate`,
+        `Product`.`SellEndDate` AS `SellEndDate`,
+        `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+        `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+        `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+        `Product`.`RowGuid` AS `RowGuid`,
+        `Product`.`ModifiedDate` AS `ModifiedDate`
+    FROM `Product`
+    WHERE (`Product`.`ProductID` < 720))
+    UNION ALL
+    (SELECT
+        `Product`.`ProductID` AS `ProductID`,
+        `Product`.`Name` AS `Name`,
+        `Product`.`ProductNumber` AS `ProductNumber`,
+        `Product`.`Color` AS `Color`,
+        `Product`.`StandardCost` AS `StandardCost`,
+        `Product`.`ListPrice` AS `ListPrice`,
+        `Product`.`Size` AS `Size`,
+        `Product`.`Weight` AS `Weight`,
+        `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+        `Product`.`ProductModelID` AS `ProductModelID`,
+        `Product`.`SellStartDate` AS `SellStartDate`,
+        `Product`.`SellEndDate` AS `SellEndDate`,
+        `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+        `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+        `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+        `Product`.`RowGuid` AS `RowGuid`,
+        `Product`.`ModifiedDate` AS `ModifiedDate`
+    FROM `Product`
+    WHERE (`Product`.`ProductID` > 800))) `Product`
+    INNER JOIN
+    `#sys_sequential_Product` `sys_sequential_Product`
+    ON `Product`.`ProductID` = `sys_sequential_Product`.`ProductID`)
+ORDER BY `sys_sequential_Product`.`sys_row_id` ASC;
+";
+                Assert.AreEqual(expectedSql, db.InternalGetSqlString(unionQuery.GetSequentialQueryStatement()));
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_SequentialSelectStatement()
@@ -442,15 +442,15 @@ ORDER BY `sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`Sales
         //            }
         //        }
 
-        //        [TestMethod]
-        //        public void DbQuery_SequentialKeyTempTable()
+        //[TestMethod]
+        //public void DbQuery_SequentialKeyTempTable()
+        //{
+        //    using (var db = new Db(SqlVersion.Sql11))
+        //    {
+        //        var salesOrders = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+        //        var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
+        //        var expectedSql = new string[]
         //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var salesOrders = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
-        //                var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
-        //                var expectedSql = new string[]
-        //                {
         //@"CREATE TABLE [#sys_sequential_SalesOrderHeader] (
         //    [SalesOrderID] INT NOT NULL,
         //    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
@@ -465,10 +465,10 @@ ORDER BY `sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`Sales
         //FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
         //WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
         //ORDER BY [SalesOrderHeader].[SalesOrderID];"
-        //                };
-        //                commands.Verify(expectedSql);
-        //            }
-        //        }
+        //        };
+        //        commands.Verify(expectedSql);
+        //    }
+        //}
 
         //        [TestMethod]
         //        public void DbQuery_SequentialKeyTempTable_aggregate_query()

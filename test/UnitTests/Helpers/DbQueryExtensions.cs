@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DevZest.Data.MySql;
+using DevZest.Data.Primitives;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
 
 namespace DevZest.Data.Helpers
 {
@@ -10,21 +13,28 @@ namespace DevZest.Data.Helpers
             Assert.AreEqual(expectedSql, dbQuery.ToString());
         }
 
-        //internal static SqlCommand[] GetCreateSequentialKeyTempTableCommands<T>(this DbQuery<T> dbQuery)
-        //    where T : Model, new()
-        //{
-        //    var sqlSession = (SqlSession)dbQuery.DbSession;
-        //    var tempTableName = "#sys_sequential_" + typeof(T).Name;
+        internal static void MockSequentialKeyTempTable<T>(this DbQuery<T> dbQuery)
+            where T : class, IModelReference, new()
+        {
+            // Create DbTable object for SequentialKeyTempTable without actually creating the temp table in the database.
+            dbQuery.GetQueryStatement().MockSequentialKeyTempTable(dbQuery.DbSession);
+        }
 
-        //    var result = new SqlCommand[2];
+        internal static MySqlCommand[] GetCreateSequentialKeyTempTableCommands<T>(this DbQuery<T> dbQuery)
+            where T : Model, new()
+        {
+            var mySqlSession = (MySqlSession)dbQuery.DbSession;
+            var tempTableName = "#sys_sequential_" + typeof(T).Name;
 
-        //    var select = dbQuery.QueryStatement;
-        //    var query = select.GetSequentialKeySelectStatement(select.Model.CreateSequentialKey());
-        //    var model = (KeyOutput)query.Model;
-        //    var tempTable = DbTable<KeyOutput>.CreateTemp(model, sqlSession, tempTableName);
-        //    result[0] = sqlSession.GetCreateTableCommand(tempTable._, true);
-        //    result[1] = sqlSession.GetInsertCommand(query.BuildToTempTableStatement());
-        //    return result;
-        //}
+            var result = new MySqlCommand[2];
+
+            var select = dbQuery.GetQueryStatement();
+            var sequentialKey = new SequentialKey(select.Model);
+            var query = select.GetSequentialKeySelectStatement(sequentialKey);
+            var tempTable = DbTable<KeyOutput>.MockTemp(sequentialKey, mySqlSession, tempTableName);
+            result[0] = mySqlSession.InternalGetCreateTableCommand(tempTable._, true);
+            result[1] = mySqlSession.GetInsertCommand(query.BuildToTempTableStatement(), false);
+            return result;
+        }
     }
 }
