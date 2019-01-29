@@ -358,7 +358,7 @@ FROM
     ON `Product`.`ProductID` = `sys_sequential_Product`.`ProductID`)
 ORDER BY `sys_sequential_Product`.`sys_row_id` ASC;
 ";
-                Assert.AreEqual(expectedSql, db.InternalGetSqlString(unionQuery.GetSequentialQueryStatement()));
+                Assert.AreEqual(expectedSql, db.InternalGetSqlString(unionQuery.SequentialQueryStatement));
             }
         }
 
@@ -402,7 +402,7 @@ FROM
 WHERE ((`SalesOrderHeader`.`SalesOrderID` = 71774) OR (`SalesOrderHeader`.`SalesOrderID` = 71776))
 ORDER BY `sys_sequential_SalesOrderHeader`.`sys_row_id` ASC;
 ";
-                Assert.AreEqual(expectedSql, db.InternalGetSqlString(salesOrderHeaders.GetSequentialQueryStatement()));
+                Assert.AreEqual(expectedSql, db.InternalGetSqlString(salesOrderHeaders.SequentialQueryStatement));
             }
         }
 
@@ -438,7 +438,7 @@ FROM
     ON `SalesOrderDetail`.`SalesOrderID` = `sys_sequential_SalesOrderDetail`.`SalesOrderID` AND `SalesOrderDetail`.`SalesOrderDetailID` = `sys_sequential_SalesOrderDetail`.`SalesOrderDetailID`)
 ORDER BY `sys_sequential_SalesOrderDetail`.`sys_row_id` ASC;
 ";
-                Assert.AreEqual(expectedSql, db.InternalGetSqlString(salesOrderDetails.GetSequentialQueryStatement()));
+                Assert.AreEqual(expectedSql, db.InternalGetSqlString(salesOrderDetails.SequentialQueryStatement));
             }
         }
 

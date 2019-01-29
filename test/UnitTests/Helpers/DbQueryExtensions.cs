@@ -1,5 +1,4 @@
-﻿using DevZest.Data.MySql;
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 
@@ -16,8 +15,12 @@ namespace DevZest.Data.MySql.Helpers
         internal static void MockSequentialKeyTempTable<T>(this DbQuery<T> dbQuery)
             where T : class, IModelReference, new()
         {
-            // Create DbTable object for SequentialKeyTempTable without actually creating the temp table in the database.
-            dbQuery.GetQueryStatement().MockSequentialKeyTempTable(dbQuery.DbSession);
+            var sequentialKey = new SequentialKey(dbQuery.Model);
+            var dbSession = dbQuery.DbSession;
+            var tempTableName = dbSession.AssignTempTableName(sequentialKey);
+            var queryStatement = dbQuery.QueryStatement;
+            queryStatement.SequentialKeyTempTable = DbTable<SequentialKey>.CreateTemp(sequentialKey, dbQuery.DbSession, tempTableName);
+            queryStatement.SequentialKeyTempTable.InitialRowCount = 1;  // this value (zero or non-zero) determines whether child query should be created.
         }
 
         internal static MySqlCommand[] GetCreateSequentialKeyTempTableCommands<T>(this DbQuery<T> dbQuery)
@@ -28,7 +31,7 @@ namespace DevZest.Data.MySql.Helpers
 
             var result = new MySqlCommand[2];
 
-            var select = dbQuery.GetQueryStatement();
+            var select = dbQuery.QueryStatement;
             var sequentialKey = new SequentialKey(select.Model);
             var query = select.GetSequentialKeySelectStatement(sequentialKey);
             var tempTable = DbTable<KeyOutput>.MockTemp(sequentialKey, mySqlSession, tempTableName);
