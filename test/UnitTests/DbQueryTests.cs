@@ -362,49 +362,49 @@ ORDER BY `sys_sequential_Product`.`sys_row_id` ASC;
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_SequentialSelectStatement()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var salesOrderHeaders = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
-        //                salesOrderHeaders.MockSequentialKeyTempTable();
-        //                var expectedSql =
-        //@"SELECT
-        //    [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID],
-        //    [SalesOrderHeader].[RevisionNumber] AS [RevisionNumber],
-        //    [SalesOrderHeader].[OrderDate] AS [OrderDate],
-        //    [SalesOrderHeader].[DueDate] AS [DueDate],
-        //    [SalesOrderHeader].[ShipDate] AS [ShipDate],
-        //    [SalesOrderHeader].[Status] AS [Status],
-        //    [SalesOrderHeader].[OnlineOrderFlag] AS [OnlineOrderFlag],
-        //    [SalesOrderHeader].[SalesOrderNumber] AS [SalesOrderNumber],
-        //    [SalesOrderHeader].[PurchaseOrderNumber] AS [PurchaseOrderNumber],
-        //    [SalesOrderHeader].[AccountNumber] AS [AccountNumber],
-        //    [SalesOrderHeader].[CustomerID] AS [CustomerID],
-        //    [SalesOrderHeader].[ShipToAddressID] AS [ShipToAddressID],
-        //    [SalesOrderHeader].[BillToAddressID] AS [BillToAddressID],
-        //    [SalesOrderHeader].[ShipMethod] AS [ShipMethod],
-        //    [SalesOrderHeader].[CreditCardApprovalCode] AS [CreditCardApprovalCode],
-        //    [SalesOrderHeader].[SubTotal] AS [SubTotal],
-        //    [SalesOrderHeader].[TaxAmt] AS [TaxAmt],
-        //    [SalesOrderHeader].[Freight] AS [Freight],
-        //    [SalesOrderHeader].[TotalDue] AS [TotalDue],
-        //    [SalesOrderHeader].[Comment] AS [Comment],
-        //    [SalesOrderHeader].[RowGuid] AS [RowGuid],
-        //    [SalesOrderHeader].[ModifiedDate] AS [ModifiedDate],
-        //    [sys_sequential_SalesOrderHeader].[sys_row_id] AS [sys_row_id]
-        //FROM
-        //    ([SalesLT].[SalesOrderHeader] [SalesOrderHeader]
-        //    INNER JOIN
-        //    [#sys_sequential_SalesOrderHeader] [sys_sequential_SalesOrderHeader]
-        //    ON [SalesOrderHeader].[SalesOrderID] = [sys_sequential_SalesOrderHeader].[SalesOrderID])
-        //WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
-        //ORDER BY [sys_sequential_SalesOrderHeader].[sys_row_id] ASC;
-        //";
-        //                Assert.AreEqual(expectedSql, db.GetSqlString(salesOrderHeaders.SequentialQueryStatement));
-        //            }
-        //        }
+        [TestMethod]
+        public void DbQuery_SequentialSelectStatement()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var salesOrderHeaders = db.SalesOrderHeader.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
+                salesOrderHeaders.MockSequentialKeyTempTable();
+                var expectedSql =
+@"SELECT
+    `SalesOrderHeader`.`SalesOrderID` AS `SalesOrderID`,
+    `SalesOrderHeader`.`RevisionNumber` AS `RevisionNumber`,
+    `SalesOrderHeader`.`OrderDate` AS `OrderDate`,
+    `SalesOrderHeader`.`DueDate` AS `DueDate`,
+    `SalesOrderHeader`.`ShipDate` AS `ShipDate`,
+    `SalesOrderHeader`.`Status` AS `Status`,
+    `SalesOrderHeader`.`OnlineOrderFlag` AS `OnlineOrderFlag`,
+    `SalesOrderHeader`.`SalesOrderNumber` AS `SalesOrderNumber`,
+    `SalesOrderHeader`.`PurchaseOrderNumber` AS `PurchaseOrderNumber`,
+    `SalesOrderHeader`.`AccountNumber` AS `AccountNumber`,
+    `SalesOrderHeader`.`CustomerID` AS `CustomerID`,
+    `SalesOrderHeader`.`ShipToAddressID` AS `ShipToAddressID`,
+    `SalesOrderHeader`.`BillToAddressID` AS `BillToAddressID`,
+    `SalesOrderHeader`.`ShipMethod` AS `ShipMethod`,
+    `SalesOrderHeader`.`CreditCardApprovalCode` AS `CreditCardApprovalCode`,
+    `SalesOrderHeader`.`SubTotal` AS `SubTotal`,
+    `SalesOrderHeader`.`TaxAmt` AS `TaxAmt`,
+    `SalesOrderHeader`.`Freight` AS `Freight`,
+    `SalesOrderHeader`.`TotalDue` AS `TotalDue`,
+    `SalesOrderHeader`.`Comment` AS `Comment`,
+    `SalesOrderHeader`.`RowGuid` AS `RowGuid`,
+    `SalesOrderHeader`.`ModifiedDate` AS `ModifiedDate`,
+    `sys_sequential_SalesOrderHeader`.`sys_row_id` AS `sys_row_id`
+FROM
+    (`SalesOrderHeader`
+    INNER JOIN
+    `#sys_sequential_SalesOrderHeader` `sys_sequential_SalesOrderHeader`
+    ON `SalesOrderHeader`.`SalesOrderID` = `sys_sequential_SalesOrderHeader`.`SalesOrderID`)
+WHERE ((`SalesOrderHeader`.`SalesOrderID` = 71774) OR (`SalesOrderHeader`.`SalesOrderID` = 71776))
+ORDER BY `sys_sequential_SalesOrderHeader`.`sys_row_id` ASC;
+";
+                Assert.AreEqual(expectedSql, db.InternalGetSqlString(salesOrderHeaders.GetSequentialQueryStatement()));
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_SequentialSelectStatement_child_model()
