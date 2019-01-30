@@ -181,21 +181,24 @@ namespace DevZest.Data.MySql
             if (ReferenceEquals(jsonParam, null))
                 return false;
 
-            SqlBuilder.Append("OPENJSON(");
+            SqlBuilder.Append("JSON_TABLE(");
             jsonParam.DbExpression.Accept(_expressionGenerator);
-            SqlBuilder.AppendLine(") WITH (");
+            SqlBuilder.AppendLine(", '$[*]' COLUMNS (");
             SqlBuilder.Indent++;
             var columns = model.GetColumns();
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
                 var columnName = column.DbColumnName.ToQuotedIdentifier();
-                SqlBuilder.Append(columnName).Append(' ').Append(column.GetMySqlType().GetDataTypeSql(MySqlVersion));
+                var mySqlType = column.GetMySqlType();
+                SqlBuilder.Append(columnName).Append(' ').Append(mySqlType.GetDataTypeSql(MySqlVersion));
+                if (!mySqlType.IsJsonOrdinalityType)
+                    SqlBuilder.Append(" PATH ").Append(("$." + column.Name).ToLiteral());
                 if (i < columns.Count - 1)
                     SqlBuilder.Append(',').AppendLine();
             }
             var alias = ModelAliasManager[model].ToQuotedIdentifier();
-            SqlBuilder.Append(") AS ").Append(alias);
+            SqlBuilder.Append(")) AS ").Append(alias);
             SqlBuilder.Indent--;
             return true;
         }

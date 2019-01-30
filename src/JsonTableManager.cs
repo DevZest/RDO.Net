@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace DevZest.Data.MySql
 {
-    internal static class JsonRowSetManager
+    internal static class JsonTableManager
     {
         private static readonly ConditionalWeakTable<Model, _String> s_jsonRowSets = new ConditionalWeakTable<Model, _String>();
 
@@ -12,14 +12,14 @@ namespace DevZest.Data.MySql
             return s_jsonRowSets.TryGetValue(model, out var result) ? result : null;
         }
 
-        public static DbSet<T> CreateJsonRowSet<T>(this MySqlSession mySqlSession, string json, string ordinalColumnName)
+        public static DbSet<T> CreateJsonTable<T>(this MySqlSession mySqlSession, string json, string ordinalColumnName)
             where T : class, IModelReference, new()
         {
             var _ = new T();
             var model = _.Model;
             if (!string.IsNullOrEmpty(ordinalColumnName))
             {
-                var dataSetOrdinalColumn = new _Int32();
+                var dataSetOrdinalColumn = new _Int32().AsJsonOrdinality();
                 model.AddSystemColumn(dataSetOrdinalColumn, ordinalColumnName);
             }
             var sourceJsonParam = _String.Param(json).AsMySqlJson();

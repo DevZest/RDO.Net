@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DevZest.Data.Resources {
+namespace DevZest.Data.MySql.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DevZest.Data.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevZest.Data.Resources.Json", typeof(Json).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevZest.Data.MySql.Resources.Json", typeof(Json).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

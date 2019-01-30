@@ -324,5 +324,11 @@ namespace DevZest.Data.MySql
         {
             return column.GetMySqlType().GetSqlParameterInfo(mySqlVersion).MySqlDbType;
         }
+
+        internal static _Int32 AsJsonOrdinality(this _Int32 column)
+        {
+            column.SetMySqlType(MySqlType.JsonOrdinality(column));
+            return column;
+        }
     }
 }

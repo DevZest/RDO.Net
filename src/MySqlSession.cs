@@ -294,9 +294,9 @@ select @mockschema;
 
                 var columnMappings = ColumnMapping.Map(dataSet._, _, columnMappingsBuilder, true);
 
-                var json = dataSet.ForJson(SYS_DATASET_ORDINAL, isPretty: false);
+                var json = dataSet.ForJson(null, isPretty: false);
 
-                var source = OpenJson<TSource>(json, SYS_DATASET_ORDINAL);
+                var source = JsonTable<TSource>(json, SYS_DATASET_ORDINAL);
                 var sourceColumns = source.Model.GetColumns();
                 var dataSetOrdinalColumn = sourceColumns[SYS_DATASET_ORDINAL];
                 builder.From(source, out var _);
@@ -312,12 +312,12 @@ select @mockschema;
             return result;
         }
 
-        public DbSet<T> OpenJson<T>(string json, string ordinalColumnName = null)
+        public DbSet<T> JsonTable<T>(string json, string ordinalColumnName = null)
             where T : class, IModelReference, new()
         {
             if (json == null)
                 throw new ArgumentNullException(nameof(json));
-            return this.CreateJsonRowSet<T>(json, ordinalColumnName);
+            return this.CreateJsonTable<T>(json, ordinalColumnName);
         }
     }
 }

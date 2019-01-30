@@ -324,7 +324,7 @@ namespace DevZest.Data.MySql.Addons
             return new SmallIntType(int16Column);
         }
 
-        private sealed class IntType : StructSqlType<Int32>
+        private class IntType : StructSqlType<Int32>
         {
             public IntType(Column<Int32?> column)
                 : base(column)
@@ -1128,6 +1128,34 @@ namespace DevZest.Data.MySql.Addons
             where T : struct, IConvertible
         {
             return new Int64EnumType<T>(column);
+        }
+
+        private sealed class JsonOrdinalityType : IntType
+        {
+            public JsonOrdinalityType(_Int32 column)
+                : base(column)
+            {
+            }
+
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            {
+                return "FOR ORDINALITY";
+            }
+
+            internal override bool IsJsonOrdinalityType
+            {
+                get { return true; }
+            }
+        }
+
+        internal virtual bool IsJsonOrdinalityType
+        {
+            get { return false; }
+        }
+
+        internal static MySqlType JsonOrdinality(_Int32 column)
+        {
+            return new JsonOrdinalityType(column);
         }
     }
 }

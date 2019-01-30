@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.MySql.Helpers;
+using DevZest.Data.MySql.Resources;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -87,38 +88,36 @@ FROM
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Delete_from_DataSet()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var salesOrder = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
-        //                var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);
-        //                var command = db.SalesOrderDetail.MockDelete(0, salesOrderDetails, (s, _) => s.Match(_));
-        //                var expectedSql =
-        //@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
-        //<root>
-        //  <row>
-        //    <col_0>71774</col_0>
-        //    <col_1>110562</col_1>
-        //    <col_2>1</col_2>
-        //  </row>
-        //  <row>
-        //    <col_0>71774</col_0>
-        //    <col_1>110563</col_1>
-        //    <col_2>2</col_2>
-        //  </row>
-        //</root>';
+        [TestMethod]
+        public void DbTable_Delete_from_DataSet()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var salesOrder = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
+                var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);
+                var command = db.SalesOrderDetail.MockDelete(salesOrderDetails, (s, _) => s.Match(_));
+                var expectedSql =
+@"SET @p1 = '[{""SalesOrderID"":71774,""SalesOrderDetailID"":110562,""OrderQty"":1,""ProductID"":836,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"",""ModifiedDate"":""2008-06-01T00:00:00.000""},{""SalesOrderID"":71774,""SalesOrderDetailID"":110563,""OrderQty"":1,""ProductID"":822,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""5c77f557-fdb6-43ba-90b9-9a7aec55ca32"",""ModifiedDate"":""2008-06-01T00:00:00.000""}]';
 
-        //DELETE [SalesOrderDetail]
-        //FROM
-        //    (@p1.nodes('/root/row') [@SalesOrderDetail]([Xml])
-        //    INNER JOIN
-        //    [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-        //    ON [@SalesOrderDetail].[Xml].value('col_0[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderID] AND [@SalesOrderDetail].[Xml].value('col_1[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderDetailID]);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+DELETE `SalesOrderDetail`
+FROM
+    (JSON_TABLE(@p1, '$[*]' COLUMNS (
+        `SalesOrderID` INT PATH '$.SalesOrderID',
+        `SalesOrderDetailID` INT PATH '$.SalesOrderDetailID',
+        `OrderQty` SMALLINT PATH '$.OrderQty',
+        `ProductID` INT PATH '$.ProductID',
+        `UnitPrice` DECIMAL(19, 4) PATH '$.UnitPrice',
+        `UnitPriceDiscount` DECIMAL(19, 4) PATH '$.UnitPriceDiscount',
+        `LineTotal` DECIMAL(19, 4) PATH '$.LineTotal',
+        `RowGuid` CHAR(36) PATH '$.RowGuid',
+        `ModifiedDate` DATETIME PATH '$.ModifiedDate',
+        `sys_dataset_ordinal` FOR ORDINALITY)) AS `@SalesOrderDetail`
+    INNER JOIN
+    `SalesOrderDetail`
+    ON `@SalesOrderDetail`.`SalesOrderID` = `SalesOrderDetail`.`SalesOrderID` AND `@SalesOrderDetail`.`SalesOrderDetailID` = `SalesOrderDetail`.`SalesOrderDetailID`);
+";
+                command.Verify(expectedSql);
+            }
+        }
     }
 }
