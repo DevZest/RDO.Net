@@ -303,7 +303,7 @@ namespace DevZest.Data
             get { return Model.DataSetContainer; }
         }
 
-        public string ForJson(string ordinalColumnName, bool isPretty)
+        public string ForJson(string ordinalColumnName, bool isPretty, bool omitNullValues = false)
         {
             var jsonWriter = JsonWriter.New();
             jsonWriter.WriteStartArray();
@@ -312,13 +312,13 @@ namespace DevZest.Data
             {
                 if (i > 0)
                     jsonWriter.WriteComma();
-                WriteJson(jsonWriter, columns, this[i], ordinalColumnName);
+                WriteJson(jsonWriter, columns, this[i], ordinalColumnName, omitNullValues);
             }
             jsonWriter.WriteEndArray();
             return jsonWriter.ToString(isPretty);
         }
 
-        private static void WriteJson(JsonWriter jsonWriter, IReadOnlyList<Column> columns, DataRow dataRow, string ordinalColumnName)
+        private static void WriteJson(JsonWriter jsonWriter, IReadOnlyList<Column> columns, DataRow dataRow, string ordinalColumnName, bool omitNullValues)
         {
             jsonWriter.WriteStartObject();
 
@@ -327,6 +327,8 @@ namespace DevZest.Data
             {
                 var column = columns[i];
                 if (typeof(DataSet).IsAssignableFrom(column.DataType))
+                    continue;
+                if (omitNullValues && column.IsNull(dataRow))
                     continue;
                 if (count > 0)
                     jsonWriter.WriteComma();
