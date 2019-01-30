@@ -44,28 +44,28 @@ FROM `Product`;
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Insert_from_DbQuery()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var table = db.MockTempTable<ProductCategory>();
-        //                var command = table.MockInsert(0, db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()));
-        //                var expectedSql =
-        //@"INSERT INTO [#ProductCategory]
-        //([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
-        //SELECT
-        //    [ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
-        //    [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
-        //    [ProductCategory].[Name] AS [Name],
-        //    [ProductCategory].[RowGuid] AS [RowGuid],
-        //    [ProductCategory].[ModifiedDate] AS [ModifiedDate]
-        //FROM [SalesLT].[ProductCategory] [ProductCategory]
-        //WHERE ([ProductCategory].[ParentProductCategoryID] IS NULL);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+        [TestMethod]
+        public void DbTable_Insert_from_DbQuery()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var table = db.MockTempTable<ProductCategory>();
+                var command = table.MockInsert(0, db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()));
+                var expectedSql =
+@"INSERT INTO `#ProductCategory`
+(`ProductCategoryID`, `ParentProductCategoryID`, `Name`, `RowGuid`, `ModifiedDate`)
+SELECT
+    `ProductCategory`.`ProductCategoryID` AS `ProductCategoryID`,
+    `ProductCategory`.`ParentProductCategoryID` AS `ParentProductCategoryID`,
+    `ProductCategory`.`Name` AS `Name`,
+    `ProductCategory`.`RowGuid` AS `RowGuid`,
+    `ProductCategory`.`ModifiedDate` AS `ModifiedDate`
+FROM `ProductCategory`
+WHERE (`ProductCategory`.`ParentProductCategoryID` IS NULL);
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Insert_from_DbQuery_auto_join()
