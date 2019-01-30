@@ -67,32 +67,32 @@ WHERE (`ProductCategory`.`ParentProductCategoryID` IS NULL);
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Insert_from_DbQuery_auto_join()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var table = db.MockTempTable<ProductCategory>();
-        //                var command = table.MockInsert(0, db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()), skipExisting: true);
-        //                var expectedSql =
-        //@"INSERT INTO [#ProductCategory]
-        //([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
-        //SELECT
-        //    [ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
-        //    [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
-        //    [ProductCategory].[Name] AS [Name],
-        //    [ProductCategory].[RowGuid] AS [RowGuid],
-        //    [ProductCategory].[ModifiedDate] AS [ModifiedDate]
-        //FROM
-        //    ([SalesLT].[ProductCategory] [ProductCategory]
-        //    LEFT JOIN
-        //    [#ProductCategory] [ProductCategory1]
-        //    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-        //WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCategory1].[ProductCategoryID] IS NULL));
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+        [TestMethod]
+        public void DbTable_Insert_from_DbQuery_skipExisting()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var table = db.MockTempTable<ProductCategory>();
+                var command = table.MockInsert(0, db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()), skipExisting: true);
+                var expectedSql =
+@"INSERT INTO `#ProductCategory`
+(`ProductCategoryID`, `ParentProductCategoryID`, `Name`, `RowGuid`, `ModifiedDate`)
+SELECT
+    `ProductCategory`.`ProductCategoryID` AS `ProductCategoryID`,
+    `ProductCategory`.`ParentProductCategoryID` AS `ParentProductCategoryID`,
+    `ProductCategory`.`Name` AS `Name`,
+    `ProductCategory`.`RowGuid` AS `RowGuid`,
+    `ProductCategory`.`ModifiedDate` AS `ModifiedDate`
+FROM
+    (`ProductCategory`
+    LEFT JOIN
+    `#ProductCategory`
+    ON `ProductCategory`.`ProductCategoryID` = `#ProductCategory`.`ProductCategoryID`)
+WHERE ((`ProductCategory`.`ParentProductCategoryID` IS NULL) AND (`#ProductCategory`.`ProductCategoryID` IS NULL));
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Insert_from_child_DbQuery()
