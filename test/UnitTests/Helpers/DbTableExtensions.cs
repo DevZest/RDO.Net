@@ -1,7 +1,5 @@
-﻿
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Primitives;
 using DevZest.Data.SqlServer;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
