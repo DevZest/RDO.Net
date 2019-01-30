@@ -362,6 +362,14 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.InsertScalar(this, statement, outputIdentity).CreateCommand(Connection);
         }
 
+#if DEBUG
+        // for unit test
+        internal SqlCommand InternalGetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)
+        {
+            return GetInsertScalarCommand(statement, outputIdentity);
+        }
+#endif
+
         protected sealed override SqlCommand GetUpdateCommand(DbSelectStatement statement)
         {
             return SqlGenerator.Update(this, statement).CreateCommand(Connection);

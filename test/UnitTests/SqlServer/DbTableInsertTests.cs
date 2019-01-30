@@ -162,6 +162,39 @@ SELECT
         }
 
         [TestMethod]
+        public void DbTable_Insert_Scalar_updateIdentity()
+        {
+            using (var db = new Db(SqlVersion.Sql11))
+            {
+                var table = db.ProductCategory;
+                var dataSet = DataSet<ProductCategory>.Create();
+                var dataRow = dataSet.AddRow();
+                dataSet._.Name[dataRow] = "Name";
+                dataSet._.ParentProductCategoryID[dataRow] = null;
+                dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
+                dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
+                var command = table.MockInsert(true, dataSet, 0, updateIdentity: true);
+                var expectedSql =
+@"DECLARE @p1 INT = NULL;
+DECLARE @p2 NVARCHAR(50) = N'Name';
+DECLARE @p3 UNIQUEIDENTIFIER = '040d9b64-05fd-4464-b398-74679c427980';
+DECLARE @p4 DATETIME = '2015-09-08 00:00:00.000';
+
+INSERT INTO [SalesLT].[ProductCategory]
+([ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
+SELECT
+    @p1 AS [ParentProductCategoryID],
+    @p2 AS [Name],
+    @p3 AS [RowGuid],
+    @p4 AS [ModifiedDate];
+
+SELECT CAST(SCOPE_IDENTITY() AS BIGINT);
+";
+                command.Verify(expectedSql);
+            }
+        }
+
+        [TestMethod]
         public void DbTable_Insert_Scalar_auto_join()
         {
             using (var db = new Db(SqlVersion.Sql11))

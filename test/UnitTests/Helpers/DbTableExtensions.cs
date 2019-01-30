@@ -65,10 +65,16 @@ namespace DevZest.Data.Helpers
             var join = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var result = dbTable.GetInsertCommand(dbTable.BuildInsertScalarStatement(source, ordinal, columnMappings, join));
+            var result = dbTable.GetInsertScalarCommand(dbTable.BuildInsertScalarStatement(source, ordinal, columnMappings, join), updateIdentity);
             dbTable.UpdateOrigin(source, success);
 
             return result;
+        }
+
+        private static SqlCommand GetInsertScalarCommand<T>(this DbTable<T> dbTable, DbSelectStatement statement, bool updateIdentity)
+            where T : Model, new()
+        {
+            return dbTable.SqlSession().InternalGetInsertScalarCommand(statement, updateIdentity);
         }
 
         public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbQuery<T> source, bool skipExisting = false)
