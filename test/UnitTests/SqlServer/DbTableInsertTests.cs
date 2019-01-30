@@ -67,7 +67,7 @@ WHERE ([ProductCategory].[ParentProductCategoryID] IS NULL);
         }
 
         [TestMethod]
-        public void DbTable_Insert_from_DbQuery_auto_join()
+        public void DbTable_Insert_from_DbQuery_skipExisting()
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
@@ -195,7 +195,7 @@ SELECT CAST(SCOPE_IDENTITY() AS BIGINT);
         }
 
         [TestMethod]
-        public void DbTable_Insert_Scalar_auto_join()
+        public void DbTable_Insert_Scalar_skipExisting()
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
