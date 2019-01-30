@@ -101,7 +101,7 @@ namespace DevZest.Data.SqlServer
             if (outputIdentity)
             {
                 sqlBuilder.AppendLine();
-                sqlBuilder.Append("SELECT CAST(SCOPE_IDENTITY() AS BIGINT)");
+                sqlBuilder.Append("SELECT CAST(SCOPE_IDENTITY() AS BIGINT);");
             }
 
             return result;
