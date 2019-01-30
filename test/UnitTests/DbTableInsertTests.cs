@@ -162,44 +162,44 @@ SELECT
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Insert_Scalar_auto_join()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var table = db.MockTempTable<ProductCategory>();
-        //                var dataSet = DataSet<ProductCategory>.Create();
-        //                var dataRow = dataSet.AddRow();
-        //                dataSet._.Name[dataRow] = "Name";
-        //                dataSet._.ParentProductCategoryID[dataRow] = null;
-        //                dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
-        //                dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
-        //                var command = table.MockInsert(true, dataSet, 0, skipExisting: true);
-        //                var expectedSql =
-        //@"DECLARE @p1 INT = 0;
-        //DECLARE @p2 INT = NULL;
-        //DECLARE @p3 NVARCHAR(50) = N'Name';
-        //DECLARE @p4 UNIQUEIDENTIFIER = '040d9b64-05fd-4464-b398-74679c427980';
-        //DECLARE @p5 DATETIME = '2015-09-08 00:00:00.000';
+        [TestMethod]
+        public void DbTable_Insert_Scalar_skipExisting()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var table = db.MockTempTable<ProductCategory>();
+                var dataSet = DataSet<ProductCategory>.Create();
+                var dataRow = dataSet.AddRow();
+                dataSet._.Name[dataRow] = "Name";
+                dataSet._.ParentProductCategoryID[dataRow] = null;
+                dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
+                dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
+                var command = table.MockInsert(true, dataSet, 0, skipExisting: true);
+                var expectedSql =
+@"SET @p1 = 0;
+SET @p2 = NULL;
+SET @p3 = 'Name';
+SET @p4 = '040d9b64-05fd-4464-b398-74679c427980';
+SET @p5 = (TIMESTAMP '2015-09-08 00:00:00');
 
-        //INSERT INTO [#ProductCategory]
-        //([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
-        //SELECT
-        //    @p1 AS [ProductCategoryID],
-        //    @p2 AS [ParentProductCategoryID],
-        //    @p3 AS [Name],
-        //    @p4 AS [RowGuid],
-        //    @p5 AS [ModifiedDate]
-        //FROM
-        //    ((SELECT @p1 AS [ProductCategoryID]) [ProductCategory]
-        //    LEFT JOIN
-        //    [#ProductCategory] [ProductCategory1]
-        //    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-        //WHERE ([ProductCategory1].[ProductCategoryID] IS NULL);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+INSERT INTO `#ProductCategory`
+(`ProductCategoryID`, `ParentProductCategoryID`, `Name`, `RowGuid`, `ModifiedDate`)
+SELECT
+    @p1 AS `ProductCategoryID`,
+    @p2 AS `ParentProductCategoryID`,
+    @p3 AS `Name`,
+    @p4 AS `RowGuid`,
+    @p5 AS `ModifiedDate`
+FROM
+    ((SELECT @p1 AS `ProductCategoryID`) `@ProductCategory`
+    LEFT JOIN
+    `#ProductCategory`
+    ON `@ProductCategory`.`ProductCategoryID` = `#ProductCategory`.`ProductCategoryID`)
+WHERE (`#ProductCategory`.`ProductCategoryID` IS NULL);
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Insert_union_query()
