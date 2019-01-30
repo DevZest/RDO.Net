@@ -348,64 +348,48 @@ ORDER BY `@ProductCategory`.`sys_dataset_ordinal` ASC;
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Insert_into_child_temp_table_optimized()
-        //        {
-        //            var salesOrders = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var tempSalesOrders = db.MockTempTable<SalesOrder>();
-        //                var tempSalesOrderDetails = tempSalesOrders.MockCreateChild(x => x.SalesOrderDetails);
-        //                tempSalesOrders.MockInsert(true, salesOrders, 0);
-        //                var salesOrderDetails = salesOrders.Children(x => x.SalesOrderDetails, 0);
-        //                var command = tempSalesOrderDetails.MockInsert(salesOrderDetails.Count, salesOrderDetails);
-        //                var expectedSql =
-        //@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
-        //<root>
-        //  <row>
-        //    <col_0>71774</col_0>
-        //    <col_1>110562</col_1>
-        //    <col_2>1</col_2>
-        //    <col_3>836</col_3>
-        //    <col_4>356.8980</col_4>
-        //    <col_5>0</col_5>
-        //    <col_6>356.8980</col_6>
-        //    <col_7>e3a1994c-7a68-4ce8-96a3-77fdd3bbd730</col_7>
-        //    <col_8>2008-06-01 00:00:00.000</col_8>
-        //    <col_9>1</col_9>
-        //  </row>
-        //  <row>
-        //    <col_0>71774</col_0>
-        //    <col_1>110563</col_1>
-        //    <col_2>1</col_2>
-        //    <col_3>822</col_3>
-        //    <col_4>356.8980</col_4>
-        //    <col_5>0</col_5>
-        //    <col_6>356.8980</col_6>
-        //    <col_7>5c77f557-fdb6-43ba-90b9-9a7aec55ca32</col_7>
-        //    <col_8>2008-06-01 00:00:00.000</col_8>
-        //    <col_9>2</col_9>
-        //  </row>
-        //</root>';
+        [TestMethod]
+        public void DbTable_Insert_into_child_temp_table_optimized()
+        {
+            var salesOrders = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var tempSalesOrders = db.MockTempTable<SalesOrder>();
+                var tempSalesOrderDetails = tempSalesOrders.MockCreateChild(x => x.SalesOrderDetails);
+                tempSalesOrders.MockInsert(true, salesOrders, 0);
+                var salesOrderDetails = salesOrders.Children(x => x.SalesOrderDetails, 0);
+                var command = tempSalesOrderDetails.MockInsert(salesOrderDetails.Count, salesOrderDetails);
+                var expectedSql =
+@"SET @p1 = '[{""SalesOrderID"":71774,""SalesOrderDetailID"":110562,""OrderQty"":1,""ProductID"":836,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"",""ModifiedDate"":""2008-06-01T00:00:00.000""},{""SalesOrderID"":71774,""SalesOrderDetailID"":110563,""OrderQty"":1,""ProductID"":822,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""5c77f557-fdb6-43ba-90b9-9a7aec55ca32"",""ModifiedDate"":""2008-06-01T00:00:00.000""}]';
 
-        //INSERT INTO [#SalesOrderDetail]
-        //([SalesOrderID], [SalesOrderDetailID], [OrderQty], [ProductID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [RowGuid], [ModifiedDate])
-        //SELECT
-        //    [@SalesOrderDetail].[Xml].value('col_0[1]/text()[1]', 'INT') AS [SalesOrderID],
-        //    [@SalesOrderDetail].[Xml].value('col_1[1]/text()[1]', 'INT') AS [SalesOrderDetailID],
-        //    [@SalesOrderDetail].[Xml].value('col_2[1]/text()[1]', 'SMALLINT') AS [OrderQty],
-        //    [@SalesOrderDetail].[Xml].value('col_3[1]/text()[1]', 'INT') AS [ProductID],
-        //    [@SalesOrderDetail].[Xml].value('col_4[1]/text()[1]', 'MONEY') AS [UnitPrice],
-        //    [@SalesOrderDetail].[Xml].value('col_5[1]/text()[1]', 'MONEY') AS [UnitPriceDiscount],
-        //    [@SalesOrderDetail].[Xml].value('col_6[1]/text()[1]', 'MONEY') AS [LineTotal],
-        //    [@SalesOrderDetail].[Xml].value('col_7[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
-        //    [@SalesOrderDetail].[Xml].value('col_8[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
-        //FROM @p1.nodes('/root/row') [@SalesOrderDetail]([Xml])
-        //ORDER BY [@SalesOrderDetail].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+INSERT INTO `#SalesOrderDetail`
+(`SalesOrderID`, `SalesOrderDetailID`, `OrderQty`, `ProductID`, `UnitPrice`, `UnitPriceDiscount`, `LineTotal`, `RowGuid`, `ModifiedDate`)
+SELECT
+    `@SalesOrderDetail`.`SalesOrderID` AS `SalesOrderID`,
+    `@SalesOrderDetail`.`SalesOrderDetailID` AS `SalesOrderDetailID`,
+    `@SalesOrderDetail`.`OrderQty` AS `OrderQty`,
+    `@SalesOrderDetail`.`ProductID` AS `ProductID`,
+    `@SalesOrderDetail`.`UnitPrice` AS `UnitPrice`,
+    `@SalesOrderDetail`.`UnitPriceDiscount` AS `UnitPriceDiscount`,
+    `@SalesOrderDetail`.`LineTotal` AS `LineTotal`,
+    `@SalesOrderDetail`.`RowGuid` AS `RowGuid`,
+    `@SalesOrderDetail`.`ModifiedDate` AS `ModifiedDate`
+FROM JSON_TABLE(@p1, '$[*]' COLUMNS (
+    `SalesOrderID` INT PATH '$.SalesOrderID',
+    `SalesOrderDetailID` INT PATH '$.SalesOrderDetailID',
+    `OrderQty` SMALLINT PATH '$.OrderQty',
+    `ProductID` INT PATH '$.ProductID',
+    `UnitPrice` DECIMAL(19, 4) PATH '$.UnitPrice',
+    `UnitPriceDiscount` DECIMAL(19, 4) PATH '$.UnitPriceDiscount',
+    `LineTotal` DECIMAL(19, 4) PATH '$.LineTotal',
+    `RowGuid` CHAR(36) PATH '$.RowGuid',
+    `ModifiedDate` DATETIME PATH '$.ModifiedDate',
+    `sys_dataset_ordinal` FOR ORDINALITY)) AS `@SalesOrderDetail`
+ORDER BY `@SalesOrderDetail`.`sys_dataset_ordinal` ASC;
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Insert_into_child_temp_table_do_not_optimize()

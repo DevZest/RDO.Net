@@ -7,24 +7,24 @@ namespace DevZest.Data.MySql.Helpers
 {
     internal static class DbTableExtensions
     {
-        //        internal static DbTable<TChild> MockCreateChild<T, TChild>(this DbTable<T> dbTable, Func<T, TChild> getChildModel)
-        //            where T : Model, new()
-        //            where TChild : Model, new()
-        //        {
-        //            return dbTable.MockCreateChild(null, getChildModel);
-        //        }
+        internal static DbTable<TChild> MockCreateChild<T, TChild>(this DbTable<T> dbTable, Func<T, TChild> getChildModel)
+            where T : Model, new()
+            where TChild : Model, new()
+        {
+            return dbTable.MockCreateChild(null, getChildModel);
+        }
 
-        //        internal static DbTable<TChild> MockCreateChild<T, TChild>(this DbTable<T> dbTable, Action<TChild> initializer, Func<T, TChild> getChildModel)
-        //            where T : Model, new()
-        //            where TChild : Model, new()
-        //        {
-        //            var model = dbTable.VerifyCreateChild(initializer, getChildModel);
+        internal static DbTable<TChild> MockCreateChild<T, TChild>(this DbTable<T> dbTable, Action<TChild> initializer, Func<T, TChild> getChildModel)
+            where T : Model, new()
+            where TChild : Model, new()
+        {
+            var model = dbTable.VerifyCreateChild(initializer, getChildModel);
 
-        //            var dbSession = dbTable.DbSession;
-        //            var name = dbSession.AssignTempTableName(model);
-        //            var result = DbTable<TChild>.CreateTemp(model, dbSession, name);
-        //            return result;
-        //        }
+            var dbSession = dbTable.DbSession;
+            var name = dbSession.AssignTempTableName(model);
+            var result = DbTable<TChild>.CreateTemp(model, dbSession, name);
+            return result;
+        }
 
         private static MySqlSession MySqlSession<T>(this DbTable<T> dbTable)
             where T : Model, new()
