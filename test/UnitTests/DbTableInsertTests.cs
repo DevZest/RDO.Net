@@ -94,40 +94,40 @@ WHERE ((`ProductCategory`.`ParentProductCategoryID` IS NULL) AND (`#ProductCateg
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Insert_from_child_DbQuery()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
-        //                salesOrders.MockSequentialKeyTempTable();
-        //                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
-        //                var tempTable = db.MockTempTable<SalesOrderDetail>();
-        //                var command = tempTable.MockInsert(0, childQuery);
+        [TestMethod]
+        public void DbTable_Insert_from_child_DbQuery()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var salesOrders = db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
+                salesOrders.MockSequentialKeyTempTable();
+                var childQuery = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, db.SalesOrderDetail.OrderBy(x => x.SalesOrderDetailID)).Result;
+                var tempTable = db.MockTempTable<SalesOrderDetail>();
+                var command = tempTable.MockInsert(0, childQuery);
 
-        //                var expectedSql =
-        //@"INSERT INTO [#SalesOrderDetail]
-        //([SalesOrderID], [SalesOrderDetailID], [OrderQty], [ProductID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [RowGuid], [ModifiedDate])
-        //SELECT
-        //    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-        //    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID],
-        //    [SalesOrderDetail].[OrderQty] AS [OrderQty],
-        //    [SalesOrderDetail].[ProductID] AS [ProductID],
-        //    [SalesOrderDetail].[UnitPrice] AS [UnitPrice],
-        //    [SalesOrderDetail].[UnitPriceDiscount] AS [UnitPriceDiscount],
-        //    [SalesOrderDetail].[LineTotal] AS [LineTotal],
-        //    [SalesOrderDetail].[RowGuid] AS [RowGuid],
-        //    [SalesOrderDetail].[ModifiedDate] AS [ModifiedDate]
-        //FROM
-        //    ([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-        //    INNER JOIN
-        //    [#sys_sequential_SalesOrder] [sys_sequential_SalesOrder]
-        //    ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
-        //ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[SalesOrderDetailID];
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+                var expectedSql =
+@"INSERT INTO `#SalesOrderDetail`
+(`SalesOrderID`, `SalesOrderDetailID`, `OrderQty`, `ProductID`, `UnitPrice`, `UnitPriceDiscount`, `LineTotal`, `RowGuid`, `ModifiedDate`)
+SELECT
+    `SalesOrderDetail`.`SalesOrderID` AS `SalesOrderID`,
+    `SalesOrderDetail`.`SalesOrderDetailID` AS `SalesOrderDetailID`,
+    `SalesOrderDetail`.`OrderQty` AS `OrderQty`,
+    `SalesOrderDetail`.`ProductID` AS `ProductID`,
+    `SalesOrderDetail`.`UnitPrice` AS `UnitPrice`,
+    `SalesOrderDetail`.`UnitPriceDiscount` AS `UnitPriceDiscount`,
+    `SalesOrderDetail`.`LineTotal` AS `LineTotal`,
+    `SalesOrderDetail`.`RowGuid` AS `RowGuid`,
+    `SalesOrderDetail`.`ModifiedDate` AS `ModifiedDate`
+FROM
+    (`SalesOrderDetail`
+    INNER JOIN
+    `#sys_sequential_SalesOrder`
+    ON `SalesOrderDetail`.`SalesOrderID` = `#sys_sequential_SalesOrder`.`SalesOrderID`)
+ORDER BY `#sys_sequential_SalesOrder`.`sys_row_id` ASC, `SalesOrderDetail`.`SalesOrderDetailID`;
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Insert_Scalar()
