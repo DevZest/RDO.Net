@@ -163,6 +163,39 @@ SELECT
         }
 
         [TestMethod]
+        public void DbTable_Insert_Scalar_updateIdentity()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var table = db.ProductCategory;
+                var dataSet = DataSet<ProductCategory>.Create();
+                var dataRow = dataSet.AddRow();
+                dataSet._.Name[dataRow] = "Name";
+                dataSet._.ParentProductCategoryID[dataRow] = null;
+                dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
+                dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
+                var command = table.MockInsert(true, dataSet, 0, updateIdentity: true);
+                var expectedSql =
+@"SET @p1 = NULL;
+SET @p2 = 'Name';
+SET @p3 = '040d9b64-05fd-4464-b398-74679c427980';
+SET @p4 = (TIMESTAMP '2015-09-08 00:00:00');
+
+INSERT INTO `ProductCategory`
+(`ParentProductCategoryID`, `Name`, `RowGuid`, `ModifiedDate`)
+SELECT
+    @p1 AS `ParentProductCategoryID`,
+    @p2 AS `Name`,
+    @p3 AS `RowGuid`,
+    @p4 AS `ModifiedDate`;
+
+SELECT LAST_INSERT_ID();
+";
+                command.Verify(expectedSql);
+            }
+        }
+
+        [TestMethod]
         public void DbTable_Insert_Scalar_skipExisting()
         {
             using (var db = new Db(MySqlVersion.LowestSupported))
