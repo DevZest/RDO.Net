@@ -83,7 +83,7 @@ namespace DevZest.Data.MySql
             if (outputIdentity)
             {
                 sqlBuilder.AppendLine();
-                sqlBuilder.Append("SELECT LAST_INSERT_ID()");
+                sqlBuilder.Append("SELECT LAST_INSERT_ID();");
             }
         }
 
