@@ -314,7 +314,7 @@ FROM
         }
 
         [TestMethod]
-        public void DbTable_Insert_from_DataSet()
+        public void DbTable_Insert_from_DataSet_Sql11()
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
@@ -369,6 +369,40 @@ SELECT
     [@ProductCategory].[Xml].value('col_4[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
 FROM @p1.nodes('/root/row') [@ProductCategory]([Xml])
 ORDER BY [@ProductCategory].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
+";
+
+                commands.Verify(expectedSql);
+            }
+        }
+
+        [TestMethod]
+        public void DbTable_Insert_from_DataSet_Sql13()
+        {
+            using (var db = new Db(SqlVersion.Sql13))
+            {
+                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
+                var tempTable = db.MockTempTable<ProductCategory>();
+                var commands = tempTable.MockInsert(4, dataSet);
+
+                var expectedSql =
+@"DECLARE @p1 NVARCHAR(MAX) = N'[{""ProductCategoryID"":1,""ParentProductCategoryID"":null,""Name"":""Bikes"",""RowGuid"":""cfbda25c-df71-47a7-b81b-64ee161aa37c"",""ModifiedDate"":""2002-06-01T00:00:00.000"",""sys_dataset_ordinal"":0},{""ProductCategoryID"":2,""ParentProductCategoryID"":null,""Name"":""Components"",""RowGuid"":""c657828d-d808-4aba-91a3-af2ce02300e9"",""ModifiedDate"":""2002-06-01T00:00:00.000"",""sys_dataset_ordinal"":1},{""ProductCategoryID"":3,""ParentProductCategoryID"":null,""Name"":""Clothing"",""RowGuid"":""10a7c342-ca82-48d4-8a38-46a2eb089b74"",""ModifiedDate"":""2002-06-01T00:00:00.000"",""sys_dataset_ordinal"":2},{""ProductCategoryID"":4,""ParentProductCategoryID"":null,""Name"":""Accessories"",""RowGuid"":""2be3be36-d9a2-4eee-b593-ed895d97c2a6"",""ModifiedDate"":""2002-06-01T00:00:00.000"",""sys_dataset_ordinal"":3}]';
+
+INSERT INTO [#ProductCategory]
+([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
+SELECT
+    [@ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
+    [@ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
+    [@ProductCategory].[Name] AS [Name],
+    [@ProductCategory].[RowGuid] AS [RowGuid],
+    [@ProductCategory].[ModifiedDate] AS [ModifiedDate]
+FROM OPENJSON(@p1) WITH (
+    [ProductCategoryID] INT,
+    [ParentProductCategoryID] INT,
+    [Name] NVARCHAR(50),
+    [RowGuid] UNIQUEIDENTIFIER,
+    [ModifiedDate] DATETIME,
+    [sys_dataset_ordinal] INT) AS [@ProductCategory]
+ORDER BY [@ProductCategory].[sys_dataset_ordinal] ASC;
 ";
 
                 commands.Verify(expectedSql);
