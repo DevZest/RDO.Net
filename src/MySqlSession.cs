@@ -185,14 +185,9 @@ namespace DevZest.Data.MySql
             return GetInsertCommand(statement);
         }
 
-        protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
+        protected sealed override Task<int> InsertWithUpdateIdentityAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
         {
-            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source.Model.PrimaryKey.UnsafeJoin(joinTo);
-            var statement = target.BuildInsertStatement(source, columnMapper, join);
-            if (!updateIdentity)
-                return await ExecuteNonQueryAsync(GetInsertCommand(statement), ct);
-
             throw new NotImplementedException();
         }
 
