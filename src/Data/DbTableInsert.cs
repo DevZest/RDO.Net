@@ -29,7 +29,7 @@ namespace DevZest.Data
             dataRow.IsPrimaryKeySealed = true;
         }
 
-        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbQuery<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join, CancellationToken ct)
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
             var statement = target.BuildInsertStatement(source, columnMappings, join);
