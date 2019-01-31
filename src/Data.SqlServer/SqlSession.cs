@@ -236,7 +236,7 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo = null)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
 
