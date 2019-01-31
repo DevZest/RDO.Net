@@ -221,22 +221,16 @@ namespace DevZest.Data.SqlServer
         }
 
         internal async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityOutput, CancellationToken ct)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            if (identityMappings == null)
-            {
-                var command = BuildInsertCommand(source, target, columnMapper, joinTo);
-                return await ExecuteNonQueryAsync(command, ct);
-            }
-
-            var tempTable = await ImportAsync(source, ct);
-            return await InsertAsync(tempTable, target, columnMapper, joinTo, identityMappings, ct);
+            var command = BuildInsertCommand(source, target, columnMapper, joinTo, identityOutput);
+            return await ExecuteNonQueryAsync(command, ct);
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityOutput)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
 
@@ -244,7 +238,7 @@ namespace DevZest.Data.SqlServer
             var import = BuildImportQuery(source);
             IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import.Model.PrimaryKey.UnsafeJoin(joinTo);
             var statement = target.BuildInsertStatement(import, columnMapper, join);
-            return GetInsertCommand(statement);
+            return GetInsertCommand(statement, identityOutput);
         }
 
         internal async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,

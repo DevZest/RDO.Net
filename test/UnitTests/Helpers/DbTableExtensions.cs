@@ -207,17 +207,28 @@ namespace DevZest.Data.Helpers
             dbTable.UpdateOrigin(source, rowsAffected);
             var sqlSession = dbTable.SqlSession();
 
-            if (!updateIdentity)
-            {
-                var joinTo = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
-                result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, joinTo));
-                return result;
-            }
-
-            var tempTable = sqlSession.MockTempTable<TSource>(result);
-            result.Add(sqlSession.BuildImportCommand(source, tempTable));
-            result.AddRange(dbTable.MockInsertTable(rowsAffected, tempTable, columnMapper, joinMapper, updateIdentity));
+            var identityOutput = updateIdentity ? MockIdentityOutputTable(source.Model, sqlSession, result) : null;
+            var joinTo = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
+            result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, joinTo, identityOutput));
             return result;
+        }
+
+        private static IDbTable MockIdentityOutputTable(Model model, SqlSession sqlSession, IList<SqlCommand> commands)
+        {
+            var identity = model.GetIdentity(false);
+            if (identity == null)
+                return null;
+
+            var column = identity.Column;
+            if (column is _Int32)
+                return sqlSession.MockTempTable<Int32IdentityOutput>(commands);
+            else if (column is _Int64)
+                return sqlSession.MockTempTable<Int64IdentityOutput>(commands);
+            else if (column is _Int16)
+                return sqlSession.MockTempTable<Int16IdentityOutput>(commands);
+            else
+                return null;
+
         }
 
         internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
