@@ -277,9 +277,9 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        protected sealed override Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
+        protected sealed override Task<int> InsertWithUpdateIdentityAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
         {
-            return DbTableInsert<TTarget>.ExecuteAsync(targetTable, sourceData, columnMapper, joinTo, updateIdentity, ct);
+            return DbTableInsert<TTarget>.ExecuteWithUpdateIdentityAsync(targetTable, sourceData, columnMapper, joinTo, ct);
         }
 
         protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)

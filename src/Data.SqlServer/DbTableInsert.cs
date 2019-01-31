@@ -23,10 +23,10 @@ namespace DevZest.Data.SqlServer
             public readonly IDbTable IdentityMappings;
         }
 
-        private static async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
+        private static async Task<InsertTableResult> InsertTableWithUpdateIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            var identityMappings = await CreateIdentityMappingsAsync(target, source.Model, updateIdentity, ct);
+            var identityMappings = await CreateIdentityMappingsAsync(target, source.Model, ct);
             var sqlSession = (SqlSession)target.DbSession;
             var rowCount = await sqlSession.InsertAsync(source, target, columnMapper, joinTo, identityMappings, ct);
             return new InsertTableResult(rowCount, identityMappings);
@@ -35,17 +35,15 @@ namespace DevZest.Data.SqlServer
         private static async Task<InsertTableResult> InsertDataSetAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            var identityMappings = await CreateIdentityMappingsAsync(target, source.Model, updateIdentity, ct);
+            var identityMappings = updateIdentity ? await CreateIdentityMappingsAsync(target, source.Model, ct) : null;
             var sqlSession = (SqlSession)target.DbSession;
             var rowCount = await sqlSession.InsertAsync(source, target, columnMapper, joinTo, identityMappings, ct);
             return new InsertTableResult(rowCount, identityMappings);
         }
 
-        private static async Task<IDbTable> CreateIdentityMappingsAsync(DbTable<T> target, Model model, bool updateIdentity, CancellationToken ct)
-        {
-            if (!updateIdentity)
-                return null;
 
+        private static async Task<IDbTable> CreateIdentityMappingsAsync(DbTable<T> target, Model model, CancellationToken ct)
+        {
             var identity = model.GetIdentity(false);
             if (identity == null)
                 return null;
@@ -166,10 +164,10 @@ namespace DevZest.Data.SqlServer
             dataRow.IsPrimaryKeySealed = true;
         }
 
-        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
+        public static async Task<int> ExecuteWithUpdateIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            var result = await InsertTableAsync(target, source, columnMapper, joinTo, updateIdentity, ct);
+            var result = await InsertTableWithUpdateIdentityAsync(target, source, columnMapper, joinTo, ct);
             await UpdateIdentityAsync(source, result, ct);
             return result.RowCount;
         }

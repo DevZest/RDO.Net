@@ -39,6 +39,12 @@ namespace DevZest.Data
         public Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
+            return PerformInsertAsync(source, columnMapper, joinMapper, ct);
+        }
+
+        private Task<int> PerformInsertAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IModelReference, new()
+        {
             Verify(source, nameof(source));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
             IReadOnlyList<ColumnMapping> join = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
@@ -74,17 +80,20 @@ namespace DevZest.Data
         public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
-            return InsertAsync(source, columnMapper, joinMapper, false, ct);
+            return PerformInsertAsync(source, columnMapper, joinMapper, ct);
         }
 
         public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
             where TSource : class, IModelReference, new()
         {
+            if (!updateIdentity)
+                return PerformInsertAsync(source, columnMapper, joinMapper, ct);
+
             Verify(source, nameof(source));
             Verify(columnMapper, nameof(columnMapper));
             CandidateKey joinTo = joinMapper == null ? null : Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-            return DbTableInsert<T>.ExecuteAsync(this, source, columnMapper, joinTo, updateIdentity, ct);
+            return DbTableInsert<T>.ExecuteWithUpdateIdentityAsync(this, source, columnMapper, joinTo, ct);
         }
 
         internal void VerifyUpdateIdentity(bool updateIdentity, string paramName)

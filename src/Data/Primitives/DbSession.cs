@@ -208,8 +208,8 @@ namespace DevZest.Data.Primitives
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new();
 
-        protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
+        protected internal abstract Task<int> InsertWithUpdateIdentityAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken cancellationToken)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new();
 

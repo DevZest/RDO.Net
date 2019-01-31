@@ -36,10 +36,10 @@ namespace DevZest.Data
             return target.UpdateOrigin(source, await target.DbSession.InsertAsync(statement, ct));
         }
 
-        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
+        public static async Task<int> ExecuteWithUpdateIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            var result = await target.DbSession.InsertAsync(source, target, columnMapper, joinTo, updateIdentity, ct);
+            var result = await target.DbSession.InsertWithUpdateIdentityAsync(source, target, columnMapper, joinTo, ct);
             return target.UpdateOrigin(source, result);
         }
 
