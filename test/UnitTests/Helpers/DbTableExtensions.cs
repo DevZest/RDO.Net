@@ -200,13 +200,19 @@ namespace DevZest.Data.Helpers
             var sqlSession = dbTable.SqlSession();
 
             if (joinTo != null && updateIdentity)
-                throw new NotImplementedException();
+            {
+                var tempTable = sqlSession.MockTempTable(source._);
+                result.Add(sqlSession.GetCreateTableCommand(tempTable._, true));
+                result.Add(sqlSession.BuildImportCommand(source, tempTable));
+                result.AddRange(dbTable.MockInsert(rowsAffected, tempTable, columnMapper, joinMapper, updateIdentity));
+            }
             else
             {
                 var identityOutput = updateIdentity ? MockIdentityOutputTable(source.Model, sqlSession, result) : null;
                 result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, joinTo, identityOutput));
-                return result;
             }
+
+            return result;
         }
 
         private static IDbTable MockIdentityOutputTable(Model model, SqlSession sqlSession, IList<SqlCommand> commands)
