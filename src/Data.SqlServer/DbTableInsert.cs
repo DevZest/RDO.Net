@@ -45,12 +45,13 @@ namespace DevZest.Data.SqlServer
             return new IdentityMappingsInsertResult(rowCount, identityMappings);
         }
 
-        private static async Task<IdentityOutputInsertResult> InsertDataSetAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, bool updateIdentity, CancellationToken ct)
+        private static async Task<IdentityOutputInsertResult> InsertDataSetWithIdentityOutputAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
+            Debug.Assert(joinTo == null || !updateIdentity);
             var identityOutput = updateIdentity ? await CreateIdentityOutputAsync(target, source.Model, ct) : null;
             var sqlSession = (SqlSession)target.DbSession;
-            var rowCount = await sqlSession.InsertAsync(source, target, columnMapper, identityOutput, ct);
+            var rowCount = await sqlSession.InsertWithIdentityOutputAsync(source, target, columnMapper, joinTo, identityOutput, ct);
             return new IdentityOutputInsertResult(rowCount, identityOutput);
         }
 
@@ -71,12 +72,12 @@ namespace DevZest.Data.SqlServer
                 return null;
         }
 
-        private static async Task<IdentityMappingsInsertResult> InsertDataSetAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
+        private static async Task<IdentityMappingsInsertResult> InsertDataSetWithIdentityMappingsAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
             var identityMappings = await CreateIdentityMappingsAsync(target, source.Model, ct);
             var sqlSession = (SqlSession)target.DbSession;
-            var rowCount = await sqlSession.InsertAsync(source, target, columnMapper, joinTo, identityMappings, ct);
+            var rowCount = await sqlSession.InsertWithIdentityMappingsAsync(source, target, columnMapper, joinTo, identityMappings, ct);
             return new IdentityMappingsInsertResult(rowCount, identityMappings);
         }
 
@@ -225,14 +226,14 @@ namespace DevZest.Data.SqlServer
             if (joinTo != null && updateIdentity)
             {
                 // We need a result of DbTable<IdentityMapping>
-                var result = await InsertDataSetAsync(target, source, columnMapper, joinTo, ct);
+                var result = await InsertDataSetWithIdentityMappingsAsync(target, source, columnMapper, joinTo, ct);
                 await UpdateIdentityAsync(target, source, result, ct);
                 return result.RowCount;
             }
             else
             {
                 // otherwise we only need a result of DbTable<IdentityOutput> if updateIdentity is true.
-                var result = await InsertDataSetAsync(target, source, columnMapper, updateIdentity, ct);
+                var result = await InsertDataSetWithIdentityOutputAsync(target, source, columnMapper, joinTo, updateIdentity, ct);
                 await UpdateIdentityAsync(target, source, result, ct);
                 return result.RowCount;
             }

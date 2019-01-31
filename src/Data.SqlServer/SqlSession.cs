@@ -220,31 +220,35 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement, null);
         }
 
-        internal async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, IDbTable identityOutput, CancellationToken ct)
+        internal async Task<int> InsertWithIdentityOutputAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityOutput, CancellationToken ct)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            var command = BuildInsertCommand(source, target, columnMapper, identityOutput);
+            Debug.Assert(joinTo == null || identityOutput == null);
+            var command = BuildInsertCommand(source, target, columnMapper, joinTo, identityOutput);
             return await ExecuteNonQueryAsync(command, ct);
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, IDbTable identityOutput)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityOutput)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
 
         {
+            Debug.Assert(joinTo == null || identityOutput == null);
             var import = BuildImportQuery(source);
-            var statement = target.BuildInsertStatement(import, columnMapper, null);
+            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import.Model.PrimaryKey.UnsafeJoin(joinTo);
+            var statement = target.BuildInsertStatement(import, columnMapper, join);
             return GetInsertCommand(statement, identityOutput);
         }
 
-        internal async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
+        internal async Task<int> InsertWithIdentityMappingsAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
+            Debug.Assert(joinTo != null);
             Debug.Assert(identityMappings != null);
             var tempTable = await ImportAsync(source, ct);
             return await InsertAsync(tempTable, target, columnMapper, joinTo, identityMappings, ct);

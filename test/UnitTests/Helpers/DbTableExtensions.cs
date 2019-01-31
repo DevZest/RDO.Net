@@ -204,7 +204,7 @@ namespace DevZest.Data.Helpers
             else
             {
                 var identityOutput = updateIdentity ? MockIdentityOutputTable(source.Model, sqlSession, result) : null;
-                result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, identityOutput));
+                result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, joinTo, identityOutput));
                 return result;
             }
         }
