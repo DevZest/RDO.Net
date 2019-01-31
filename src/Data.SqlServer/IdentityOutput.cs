@@ -7,6 +7,12 @@ namespace DevZest.Data.SqlServer
         Column NewValue { get; }
     }
 
+    internal interface IIdentityOutput<T>
+        where T : Column
+    {
+        void Update(T identityColumn, DataRow dataRow, SqlReader sqlReader);
+    }
+
     internal abstract class IdentityOutput : Model, IIdentityOutput
     {
         protected override string DbAlias => nameof(IdentityOutput);
@@ -16,7 +22,7 @@ namespace DevZest.Data.SqlServer
         Column IIdentityOutput.NewValue => GetNewValueColumn();
     }
 
-    internal sealed class Int16IdentityOutput : IdentityOutput
+    internal sealed class Int16IdentityOutput : IdentityOutput, IIdentityOutput<_Int16>
     {
         static Int16IdentityOutput()
         {
@@ -30,10 +36,15 @@ namespace DevZest.Data.SqlServer
         {
             return NewValue;
         }
+
+        public void Update(_Int16 identityColumn, DataRow dataRow, SqlReader sqlReader)
+        {
+            identityColumn[dataRow] = NewValue[sqlReader];
+        }
     }
 
 
-    internal sealed class Int32IdentityOutput : IdentityOutput
+    internal sealed class Int32IdentityOutput : IdentityOutput, IIdentityOutput<_Int32>
     {
         static Int32IdentityOutput()
         {
@@ -47,9 +58,14 @@ namespace DevZest.Data.SqlServer
         {
             return NewValue;
         }
+
+        public void Update(_Int32 identityColumn, DataRow dataRow, SqlReader sqlReader)
+        {
+            identityColumn[dataRow] = NewValue[sqlReader];
+        }
     }
 
-    internal sealed class Int64IdentityOutput : IdentityOutput
+    internal sealed class Int64IdentityOutput : IdentityOutput, IIdentityOutput<_Int64>
     {
         static Int64IdentityOutput()
         {
@@ -62,6 +78,11 @@ namespace DevZest.Data.SqlServer
         protected override Column GetNewValueColumn()
         {
             return NewValue;
+        }
+
+        public void Update(_Int64 identityColumn, DataRow dataRow, SqlReader sqlReader)
+        {
+            identityColumn[dataRow] = NewValue[sqlReader];
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data.SqlServer
+﻿using DevZest.Data.Primitives;
+
+namespace DevZest.Data.SqlServer
 {
     internal interface IIdentityMapping
     {
@@ -37,7 +39,7 @@
         protected abstract Column NewValueColumn { get; }
     }
 
-    internal sealed class Int16IdentityMapping : IdentityMapping<Int16IdentityMapping.PK>
+    internal sealed class Int16IdentityMapping : IdentityMapping<Int16IdentityMapping.PK>, IIdentityOutput<_Int16>
     {
         public sealed class PK : CandidateKey
         {
@@ -69,9 +71,14 @@
         public _Int16 NewValue { get; private set; }
 
         protected override Column NewValueColumn => NewValue;
+
+        public void Update(_Int16 identityColumn, DataRow dataRow, SqlReader sqlReader)
+        {
+            identityColumn[dataRow] = NewValue[sqlReader];
+        }
     }
 
-    internal sealed class Int32IdentityMapping : IdentityMapping<Int32IdentityMapping.PK>
+    internal sealed class Int32IdentityMapping : IdentityMapping<Int32IdentityMapping.PK>, IIdentityOutput<_Int32>
     {
         public sealed class PK : CandidateKey
         {
@@ -103,9 +110,14 @@
         public _Int32 NewValue { get; private set; }
 
         protected override Column NewValueColumn => NewValue;
+
+        public void Update(_Int32 identityColumn, DataRow dataRow, SqlReader sqlReader)
+        {
+            identityColumn[dataRow] = NewValue[sqlReader];
+        }
     }
 
-    internal sealed class Int64IdentityMapping : IdentityMapping<Int64IdentityMapping.PK>
+    internal sealed class Int64IdentityMapping : IdentityMapping<Int64IdentityMapping.PK>, IIdentityOutput<_Int64>
     {
         public sealed class PK : CandidateKey
         {
@@ -137,5 +149,10 @@
         public _Int64 NewValue { get; private set; }
 
         protected override Column NewValueColumn => NewValue;
+
+        public void Update(_Int64 identityColumn, DataRow dataRow, SqlReader sqlReader)
+        {
+            identityColumn[dataRow] = NewValue[sqlReader];
+        }
     }
 }

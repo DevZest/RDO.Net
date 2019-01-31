@@ -192,25 +192,21 @@ namespace DevZest.Data.Helpers
         {
             dbTable.Verify(source, nameof(source));
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
+            var joinTo = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
 
             var result = new List<SqlCommand>();
-
-            if (source.Count == 0)
-                return result;
-
-            if (source.Count == 1)
-            {
-                result.Add(dbTable.MockInsert(rowsAffected > 0, source, 0, columnMapper, joinMapper, updateIdentity));
-                return result;
-            }
 
             dbTable.UpdateOrigin(source, rowsAffected);
             var sqlSession = dbTable.SqlSession();
 
-            var identityOutput = updateIdentity ? MockIdentityOutputTable(source.Model, sqlSession, result) : null;
-            var joinTo = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
-            result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, joinTo, identityOutput));
-            return result;
+            if (joinTo != null && updateIdentity)
+                throw new NotImplementedException();
+            else
+            {
+                var identityOutput = updateIdentity ? MockIdentityOutputTable(source.Model, sqlSession, result) : null;
+                result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, identityOutput));
+                return result;
+            }
         }
 
         private static IDbTable MockIdentityOutputTable(Model model, SqlSession sqlSession, IList<SqlCommand> commands)
