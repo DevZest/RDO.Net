@@ -68,33 +68,6 @@ WHERE (`ProductCategory`.`ParentProductCategoryID` IS NULL);
         }
 
         [TestMethod]
-        public void DbTable_Insert_from_DbQuery_skipExisting()
-        {
-            using (var db = new Db(MySqlVersion.LowestSupported))
-            {
-                var table = db.MockTempTable<ProductCategory>();
-                var command = table.MockInsert(0, db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()), skipExisting: true);
-                var expectedSql =
-@"INSERT INTO `#ProductCategory`
-(`ProductCategoryID`, `ParentProductCategoryID`, `Name`, `RowGuid`, `ModifiedDate`)
-SELECT
-    `ProductCategory`.`ProductCategoryID` AS `ProductCategoryID`,
-    `ProductCategory`.`ParentProductCategoryID` AS `ParentProductCategoryID`,
-    `ProductCategory`.`Name` AS `Name`,
-    `ProductCategory`.`RowGuid` AS `RowGuid`,
-    `ProductCategory`.`ModifiedDate` AS `ModifiedDate`
-FROM
-    (`ProductCategory`
-    LEFT JOIN
-    `#ProductCategory`
-    ON `ProductCategory`.`ProductCategoryID` = `#ProductCategory`.`ProductCategoryID`)
-WHERE ((`ProductCategory`.`ParentProductCategoryID` IS NULL) AND (`#ProductCategory`.`ProductCategoryID` IS NULL));
-";
-                command.Verify(expectedSql);
-            }
-        }
-
-        [TestMethod]
         public void DbTable_Insert_from_child_DbQuery()
         {
             using (var db = new Db(MySqlVersion.LowestSupported))
@@ -190,45 +163,6 @@ SELECT
     @p4 AS `ModifiedDate`;
 
 SELECT LAST_INSERT_ID();
-";
-                command.Verify(expectedSql);
-            }
-        }
-
-        [TestMethod]
-        public void DbTable_Insert_Scalar_skipExisting()
-        {
-            using (var db = new Db(MySqlVersion.LowestSupported))
-            {
-                var table = db.MockTempTable<ProductCategory>();
-                var dataSet = DataSet<ProductCategory>.Create();
-                var dataRow = dataSet.AddRow();
-                dataSet._.Name[dataRow] = "Name";
-                dataSet._.ParentProductCategoryID[dataRow] = null;
-                dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
-                dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
-                var command = table.MockInsert(true, dataSet, 0, skipExisting: true);
-                var expectedSql =
-@"SET @p1 = 0;
-SET @p2 = NULL;
-SET @p3 = 'Name';
-SET @p4 = '040d9b64-05fd-4464-b398-74679c427980';
-SET @p5 = (TIMESTAMP '2015-09-08 00:00:00');
-
-INSERT INTO `#ProductCategory`
-(`ProductCategoryID`, `ParentProductCategoryID`, `Name`, `RowGuid`, `ModifiedDate`)
-SELECT
-    @p1 AS `ProductCategoryID`,
-    @p2 AS `ParentProductCategoryID`,
-    @p3 AS `Name`,
-    @p4 AS `RowGuid`,
-    @p5 AS `ModifiedDate`
-FROM
-    ((SELECT @p1 AS `ProductCategoryID`) `@ProductCategory`
-    LEFT JOIN
-    `#ProductCategory`
-    ON `@ProductCategory`.`ProductCategoryID` = `#ProductCategory`.`ProductCategoryID`)
-WHERE (`#ProductCategory`.`ProductCategoryID` IS NULL);
 ";
                 command.Verify(expectedSql);
             }

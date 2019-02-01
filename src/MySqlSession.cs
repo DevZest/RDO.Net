@@ -162,33 +162,25 @@ namespace DevZest.Data.MySql
         }
 
         protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity, CancellationToken ct)
         {
             if (!updateIdentity)
             {
-                var command = BuildInsertCommand(source, target, columnMapper, joinTo);
+                var command = BuildInsertCommand(source, target, columnMapper);
                 return ExecuteNonQueryAsync(command, ct);
             }
 
             throw new NotImplementedException();
         }
 
-        internal MySqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo = null)
+        internal MySqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
 
         {
             var import = BuildImportQuery(source);
-            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import.Model.PrimaryKey.UnsafeJoin(joinTo);
-            var statement = target.BuildInsertStatement(import, columnMapper, join);
+            var statement = target.BuildInsertStatement(import, columnMapper);
             return GetInsertCommand(statement);
-        }
-
-        protected sealed override Task<int> InsertForIdentityAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
-        {
-            throw new NotImplementedException();
         }
 
         internal MySqlCommand GetInsertCommand(DbSelectStatement statement, bool outputIdentity)
