@@ -601,7 +601,6 @@ namespace DevZest.Data
         internal sealed override void RefreshComputation(DataRow dataRow)
         {
             Debug.Assert(Expression != null);
-            Debug.Assert(dataRow != ParentModel.EditingRow);
             if (_valueManager == null)
             {
                 dataRow.OnValueChanged(this);
