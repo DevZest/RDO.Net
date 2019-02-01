@@ -102,7 +102,7 @@ namespace AdventureWorks.SalesOrders
             using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
             {
                 salesOrders._.ResetRowIdentifiers();
-                await db.SalesOrderHeader.InsertAsync(salesOrders, DbTableInsertOptions.UpdateIdentity, ct);
+                await db.SalesOrderHeader.InsertAsync(salesOrders, true, ct);
                 var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
                 salesOrderDetails._.ResetRowIdentifiers();
                 await db.SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
