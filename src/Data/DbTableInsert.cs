@@ -39,7 +39,7 @@ namespace DevZest.Data
         public static async Task<int> ExecuteWithUpdateIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            var result = await target.DbSession.InsertWithUpdateIdentityAsync(source, target, columnMapper, joinTo, ct);
+            var result = await target.DbSession.InsertForIdentityAsync(source, target, columnMapper, joinTo, ct);
             return target.UpdateOrigin(source, result);
         }
 

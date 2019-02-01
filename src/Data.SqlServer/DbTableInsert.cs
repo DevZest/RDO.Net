@@ -36,7 +36,7 @@ namespace DevZest.Data.SqlServer
             public readonly IDbTable IdentityOutput;
         }
 
-        private static async Task<IdentityMappingsInsertResult> InsertTableWithUpdateIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
+        private static async Task<IdentityMappingsInsertResult> InsertTableForIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
             var identityMappings = await CreateIdentityMappingsAsync(target, source.Model, ct);
@@ -211,10 +211,10 @@ namespace DevZest.Data.SqlServer
             dataRow.IsPrimaryKeySealed = true;
         }
 
-        public static async Task<int> ExecuteWithUpdateIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
+        public static async Task<int> ExecuteForIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            var result = await InsertTableWithUpdateIdentityAsync(target, source, columnMapper, joinTo, ct);
+            var result = await InsertTableForIdentityAsync(target, source, columnMapper, joinTo, ct);
             await UpdateIdentityAsync(source, result, ct);
             return result.RowCount;
         }
