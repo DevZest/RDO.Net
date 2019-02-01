@@ -106,7 +106,7 @@ namespace DevZest.Data.Primitives
 
         protected abstract TCommand GetQueryCommand(DbQueryStatement queryStatement);
 
-        private ReaderInvoker PrepareReaderInvoker(Model model, TCommand command)
+        protected ReaderInvoker PrepareReaderInvoker(Model model, TCommand command)
         {
             command.Transaction = CurrentTransaction;
             return CreateReaderInvoker(model, command);
@@ -259,57 +259,6 @@ namespace DevZest.Data.Primitives
 
             await FillChildrenDataSetAsync(dbSet, dataSet.Model, cancellationToken);
         }
-
-        private sealed class ScalarIdentityOutput : Model
-        {
-            // This will NOT work. Static field is initialized before static constructor!
-            //public static readonly ScalarIdentityOutput Singleton = new ScalarIdentityOutput();
-
-            private static ScalarIdentityOutput s_singleton;
-            public static ScalarIdentityOutput Singleton
-            {
-                get
-                {
-                    if (s_singleton == null)
-                        s_singleton = new ScalarIdentityOutput();
-                    return s_singleton;
-                }
-            }
-
-            static ScalarIdentityOutput()
-            {
-                RegisterColumn((ScalarIdentityOutput x) => x.IdentityValue);
-            }
-
-            private ScalarIdentityOutput()
-            {
-            }
-
-            public _Int64 IdentityValue { get; private set; }
-        }
-
-        internal sealed override async Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken)
-        {
-            var command = GetInsertScalarCommand(statement, outputIdentity);
-            if (!outputIdentity)
-            {
-                var rowCount = await PrepareNonQueryCommandInvoker(command).ExecuteAsync(cancellationToken);
-                return new InsertScalarResult(rowCount > 0, null);
-            }
-
-            var model = ScalarIdentityOutput.Singleton;
-            long? identityValue = null;
-            using (var reader = await PrepareReaderInvoker(model, command).ExecuteAsync(cancellationToken))
-            {
-                if (await reader.ReadAsync(cancellationToken))
-                    identityValue = model.IdentityValue[reader];
-            }
-
-            var sucess = identityValue.HasValue;
-            return new InsertScalarResult(sucess, identityValue);
-        }
-
-        protected abstract TCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity);
 
         private async Task<int> ExecuteTableEditAsync(DbSelectStatement statement, Func<DbSelectStatement, TCommand> getCommand, CancellationToken cancellationToken)
         {

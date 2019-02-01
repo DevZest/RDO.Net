@@ -261,18 +261,59 @@ namespace DevZest.Data.SqlServer
             return new DbJoinClause(DbJoinKind.LeftJoin, source.GetFromClause(), target.GetFromClause(), new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
-        protected sealed override SqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)
+        private sealed class ScalarIdentityOutput : Model
+        {
+            // This will NOT work. Static field is initialized before static constructor!
+            //public static readonly ScalarIdentityOutput Singleton = new ScalarIdentityOutput();
+
+            private static ScalarIdentityOutput s_singleton;
+            public static ScalarIdentityOutput Singleton
+            {
+                get
+                {
+                    if (s_singleton == null)
+                        s_singleton = new ScalarIdentityOutput();
+                    return s_singleton;
+                }
+            }
+
+            static ScalarIdentityOutput()
+            {
+                RegisterColumn((ScalarIdentityOutput x) => x.IdentityValue);
+            }
+
+            private ScalarIdentityOutput()
+            {
+            }
+
+            public _Int64 IdentityValue { get; private set; }
+        }
+
+        protected sealed override async Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken ct)
+        {
+            var command = GetInsertScalarCommand(statement, outputIdentity);
+            if (!outputIdentity)
+            {
+                var rowCount = await ExecuteNonQueryAsync(command, ct);
+                return new InsertScalarResult(rowCount > 0, null);
+            }
+
+            var model = ScalarIdentityOutput.Singleton;
+            long? identityValue = null;
+            using (var reader = await PrepareReaderInvoker(model, command).ExecuteAsync(ct))
+            {
+                if (await reader.ReadAsync(ct))
+                    identityValue = model.IdentityValue[reader];
+            }
+
+            var sucess = identityValue.HasValue;
+            return new InsertScalarResult(sucess, identityValue);
+        }
+
+        internal SqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)
         {
             return SqlGenerator.InsertScalar(this, statement, outputIdentity).CreateCommand(Connection);
         }
-
-#if DEBUG
-        // for unit test
-        internal SqlCommand InternalGetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)
-        {
-            return GetInsertScalarCommand(statement, outputIdentity);
-        }
-#endif
 
         protected sealed override SqlCommand GetUpdateCommand(DbSelectStatement statement)
         {

@@ -33,7 +33,7 @@ namespace DevZest.Data.Primitives
                 return Result;
             }
 
-            internal async Task<TReader> ExecuteAsync(CancellationToken cancellationToken)
+            public async Task<TReader> ExecuteAsync(CancellationToken cancellationToken)
             {
                 await InvokeAsync(GetAsyncOperation(cancellationToken),
                     x => x.OnExecuting(Model, Command, this),
