@@ -220,13 +220,13 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement, null);
         }
 
-        internal async Task<int> InsertWithIdentityOutputAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityOutput, CancellationToken ct)
+        internal async Task<int> InsertWithIdentityOutputsAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityOutputs, CancellationToken ct)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            Debug.Assert(joinTo == null || identityOutput == null);
-            var command = BuildInsertCommand(source, target, columnMapper, joinTo, identityOutput);
+            Debug.Assert(joinTo == null || identityOutputs == null);
+            var command = BuildInsertCommand(source, target, columnMapper, joinTo, identityOutputs);
             return await ExecuteNonQueryAsync(command, ct);
         }
 
@@ -251,10 +251,10 @@ namespace DevZest.Data.SqlServer
             Debug.Assert(joinTo != null);
             Debug.Assert(identityMappings != null);
             var tempTable = await ImportAsync(source, ct);
-            return await InsertAsync(tempTable, target, columnMapper, joinTo, identityMappings, ct);
+            return await InsertWithIdentityMappingsAsync(tempTable, target, columnMapper, joinTo, identityMappings, ct);
         }
 
-        internal async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
+        internal async Task<int> InsertWithIdentityMappingsAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
@@ -341,9 +341,9 @@ namespace DevZest.Data.SqlServer
             return new DbJoinClause(DbJoinKind.LeftJoin, source.GetFromClause(), target.GetFromClause(), new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
-        internal SqlCommand GetUpdateIdentityMappingsCommand(IDbTable identityMappings, IDbTable identityOutput)
+        internal SqlCommand GetUpdateIdentityMappingsCommand(IDbTable identityMappings, IDbTable identityOutputs)
         {
-            var statement = BuildUpdateIdentityMappingsStatement(identityMappings, identityOutput);
+            var statement = BuildUpdateIdentityMappingsStatement(identityMappings, identityOutputs);
             return GetUpdateCommand(statement);
         }
 
