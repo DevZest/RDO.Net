@@ -20,7 +20,7 @@ namespace DevZest.Data.MySql
             });
         }
 
-        internal static SqlGenerator Insert(MySqlSession mySqlSession, DbSelectStatement statement, bool outputIdentity)
+        internal static SqlGenerator Insert(MySqlSession mySqlSession, DbSelectStatement statement)
         {
             var result = new SqlGenerator(mySqlSession.MySqlVersion);
             var model = statement.Model;
@@ -32,8 +32,6 @@ namespace DevZest.Data.MySql
                 statement.From.Accept(result);
             else
                 statement.Accept(result);
-
-            GenerateOutputIdentity(sqlBuilder, outputIdentity);
 
             return result;
         }
@@ -63,28 +61,16 @@ namespace DevZest.Data.MySql
                 return model.GetInsertableColumns().ToList();
         }
 
-        internal static SqlGenerator InsertScalar(MySqlSession mySqlSession, DbSelectStatement statement, bool outputIdentity)
+        internal static SqlGenerator InsertScalar(MySqlSession mySqlSession, DbSelectStatement statement)
         {
             var result = new SqlGenerator(mySqlSession.MySqlVersion);
             var model = statement.Model;
             var sqlBuilder = result.SqlBuilder;
 
             BuildInsertIntoClause(sqlBuilder, model, statement.Select);
-
             statement.Accept(result);
 
-            GenerateOutputIdentity(sqlBuilder, outputIdentity);
-
             return result;
-        }
-
-        private static void GenerateOutputIdentity(IndentedStringBuilder sqlBuilder, bool outputIdentity)
-        {
-            if (outputIdentity)
-            {
-                sqlBuilder.AppendLine();
-                sqlBuilder.Append("SELECT LAST_INSERT_ID();");
-            }
         }
 
         internal static SqlGenerator Update(MySqlSession mySqlSession, DbSelectStatement statement)

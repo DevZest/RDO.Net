@@ -32,10 +32,10 @@ namespace DevZest.Data.MySql.Helpers
             return (MySqlSession)dbTable.DbSession;
         }
 
-        private static MySqlCommand GetInsertCommand<T>(this DbTable<T> dbTable, DbSelectStatement statement, bool outputIdentity)
+        private static MySqlCommand GetInsertCommand<T>(this DbTable<T> dbTable, DbSelectStatement statement)
             where T : Model, new()
         {
-            return dbTable.MySqlSession().GetInsertCommand(statement, outputIdentity);
+            return dbTable.MySqlSession().InternalGetInsertCommand(statement);
         }
 
         public static MySqlCommand MockInsert<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int ordinal, bool updateIdentity = false)
@@ -53,16 +53,16 @@ namespace DevZest.Data.MySql.Helpers
             var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), source._);
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var result = dbTable.GetInsertScalarCommand(dbTable.BuildInsertScalarStatement(source, ordinal, columnMappings), updateIdentity);
+            var result = dbTable.GetInsertScalarCommand(dbTable.BuildInsertScalarStatement(source, ordinal, columnMappings));
             dbTable.UpdateOrigin(source, success);
 
             return result;
         }
 
-        private static MySqlCommand GetInsertScalarCommand<T>(this DbTable<T> dbTable, DbSelectStatement statement, bool updateIdentity)
+        private static MySqlCommand GetInsertScalarCommand<T>(this DbTable<T> dbTable, DbSelectStatement statement)
             where T : Model, new()
         {
-            return dbTable.MySqlSession().InternalGetInsertScalarCommand(statement, updateIdentity);
+            return dbTable.MySqlSession().GetInsertScalarCommand(statement);
         }
 
         public static MySqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> source)
@@ -79,7 +79,7 @@ namespace DevZest.Data.MySql.Helpers
             dbTable.Verify(source, nameof(source));
             var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), source._);
 
-            var result = dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMappings), false);
+            var result = dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMappings));
             dbTable.UpdateOrigin(source, rowsAffected);
             return result;
         }

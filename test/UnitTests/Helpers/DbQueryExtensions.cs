@@ -36,7 +36,7 @@ namespace DevZest.Data.MySql.Helpers
             var query = select.GetSequentialKeySelectStatement(sequentialKey);
             var tempTable = DbTable<KeyOutput>.MockTemp(sequentialKey, mySqlSession, tempTableName);
             result[0] = mySqlSession.InternalGetCreateTableCommand(tempTable._, true);
-            result[1] = mySqlSession.GetInsertCommand(query.BuildToTempTableStatement(), false);
+            result[1] = mySqlSession.InternalGetInsertCommand(query.BuildToTempTableStatement());
             return result;
         }
     }

@@ -158,17 +158,31 @@ namespace DevZest.Data.MySql
 
         protected sealed override MySqlCommand GetInsertCommand(DbSelectStatement statement)
         {
-            return GetInsertCommand(statement, false);
+            return SqlGenerator.Insert(this, statement).CreateCommand(Connection);
         }
 
-        protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
+#if DEBUG
+        // for unit test.
+        internal MySqlCommand InternalGetInsertCommand(DbSelectStatement statement)
+        {
+            return GetInsertCommand(statement);
+        }
+#endif
+
+        protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity, CancellationToken ct)
         {
-            if (!updateIdentity)
-            {
-                var command = BuildInsertCommand(source, target, columnMapper);
-                return ExecuteNonQueryAsync(command, ct);
-            }
+            var command = BuildInsertCommand(source, target, columnMapper);
+            var result = await ExecuteNonQueryAsync(command, ct);
+            if (updateIdentity)
+                UpdateIdentity(source, command.LastInsertedId);
+            return result;
+        }
+
+        private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, long lastInsertId)
+            where TSource : class, IModelReference, new()
+        {
+            var identityColumn = dataSet.Model.GetColumns()[dataSet.Model.GetIdentity(false).Column.Ordinal];
 
             throw new NotImplementedException();
         }
@@ -183,11 +197,6 @@ namespace DevZest.Data.MySql
             return GetInsertCommand(statement);
         }
 
-        internal MySqlCommand GetInsertCommand(DbSelectStatement statement, bool outputIdentity)
-        {
-            return SqlGenerator.Insert(this, statement, outputIdentity).CreateCommand(Connection);
-        }
-
         private static DbFromClause GetAutoJoinFromClause<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
@@ -199,18 +208,17 @@ namespace DevZest.Data.MySql
             return new DbJoinClause(DbJoinKind.LeftJoin, source.GetFromClause(), target.GetFromClause(), new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
-        protected sealed override MySqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)
+        protected sealed override async Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken ct)
         {
-            return SqlGenerator.InsertScalar(this, statement, outputIdentity).CreateCommand(Connection);
+            var command = GetInsertScalarCommand(statement);
+            var rowCount = await ExecuteNonQueryAsync(command, ct);
+            return rowCount > 0 ? new InsertScalarResult(true, command.LastInsertedId) : default(InsertScalarResult);
         }
 
-#if DEBUG
-        // for unit test.
-        internal MySqlCommand InternalGetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)
+        internal MySqlCommand GetInsertScalarCommand(DbSelectStatement statement)
         {
-            return GetInsertScalarCommand(statement, outputIdentity);
+            return SqlGenerator.InsertScalar(this, statement).CreateCommand(Connection);
         }
-#endif
 
         protected sealed override MySqlCommand GetUpdateCommand(DbSelectStatement statement)
         {
