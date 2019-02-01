@@ -185,7 +185,7 @@ namespace DevZest.Data.MySql
             return GetInsertCommand(statement);
         }
 
-        protected sealed override Task<int> InsertWithUpdateIdentityAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
+        protected sealed override Task<int> InsertForIdentityAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
         {
             throw new NotImplementedException();
