@@ -40,32 +40,22 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetInsertCommand(statement);
         }
 
-        private static Func<T, T, KeyMapping> GetJoinMapper<T>(bool skipExisting)
+        public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int ordinal, bool updateIdentity = false)
             where T : Model, new()
         {
-            if (skipExisting)
-                return KeyMapping.Match;
-            else
-                return null;
-        }
-
-        public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int ordinal, bool skipExisting = false, bool updateIdentity = false)
-            where T : Model, new()
-        {
-            return MockInsert(dbTable, success, source, ordinal, ColumnMapper.AutoSelectInsertable, GetJoinMapper<T>(skipExisting), updateIdentity);
+            return MockInsert(dbTable, success, source, ordinal, ColumnMapper.AutoSelectInsertable, updateIdentity);
         }
 
         public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper, bool updateIdentity = false)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             dbTable.Verify(source, nameof(source), ordinal, nameof(ordinal));
             var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), source._);
-            var join = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var result = dbTable.GetInsertScalarCommand(dbTable.BuildInsertScalarStatement(source, ordinal, columnMappings, join), updateIdentity);
+            var result = dbTable.GetInsertScalarCommand(dbTable.BuildInsertScalarStatement(source, ordinal, columnMappings), updateIdentity);
             dbTable.UpdateOrigin(source, success);
 
             return result;
@@ -77,140 +67,45 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().InternalGetInsertScalarCommand(statement, updateIdentity);
         }
 
-        public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbQuery<T> source, bool skipExisting = false)
+        public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> source)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<T>(skipExisting));
+            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable);
         }
 
-        public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbQuery<TSource> source,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper = null)
+        public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Action<ColumnMapper, TSource, TTarget> columnMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             dbTable.Verify(source, nameof(source));
             var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), source._);
-            var join = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
 
-            var result = dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMappings, join));
+            var result = dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMappings));
             dbTable.UpdateOrigin(source, rowsAffected);
             return result;
         }
 
-        public static IList<SqlCommand> MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbTable<T> source, bool skipExisting = false, bool updateIdentity = false)
+        public static IList<SqlCommand> MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DataSet<T> source, bool updateIdentity = false)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<T>(skipExisting), updateIdentity);
-        }
-
-        public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
-            DbTable<TSource> source, Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper = null, bool updateIdentity = false)
-            where TSource : Model, new()
-            where TTarget : Model, new()
-        {
-            dbTable.Verify(source, nameof(source));
-            dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-
-            var result = dbTable.MockInsertTable(rowsAffected, source, columnMapper, joinMapper, updateIdentity);
-            dbTable.UpdateOrigin(source, rowsAffected);
-            return result;
-        }
-
-        private static IList<SqlCommand> MockInsertTable<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbTable<TSource> source,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper = null, bool updateIdentity = false)
-            where TSource : Model, new()
-            where TTarget : Model, new()
-        {
-            CandidateKey joinTo = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
-            var result = new List<SqlCommand>();
-            var sqlSession = dbTable.SqlSession();
-
-            var identityMappings = updateIdentity ? MockIdentityMappings(dbTable, source, result) : null;
-            if (identityMappings == null)
-                result.Add(dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.UnsafeJoin(joinTo))));
-            else
-            {
-                var identityOutput = MockIdentityOutputTable(identityMappings, sqlSession, result);
-                var statement = dbTable.BuildInsertStatement(source, columnMapper, joinTo == null ? null : source._.PrimaryKey.UnsafeJoin(joinTo));
-                result.Add(sqlSession.GetInsertCommand(statement, identityOutput));
-                result.Add(sqlSession.GetInsertIntoIdentityMappingsCommand(source, identityMappings, joinTo == null ? null : dbTable));
-                result.Add(sqlSession.GetUpdateIdentityMappingsCommand(identityMappings, identityOutput));
-            }
-
-            if (identityMappings == null || rowsAffected == 0)
-                return result;
-
-            var statements = source.BuildUpdateIdentityStatement(identityMappings);
-            foreach (var statement in statements)
-                result.Add(sqlSession.GetUpdateCommand(statement));
-
-            return result;
-        }
-
-        private static IDbTable MockIdentityOutputTable(IDbTable identityMappings, SqlSession sqlSession, IList<SqlCommand> commands)
-        {
-            if (identityMappings is DbTable<Int32IdentityMapping>)
-                return sqlSession.MockTempTable<Int32IdentityOutput>(commands);
-            else if (identityMappings is DbTable<Int64IdentityMapping>)
-                return sqlSession.MockTempTable<Int64IdentityOutput>(commands);
-            else
-            {
-                Debug.Assert(identityMappings is DbTable<Int16IdentityMapping>);
-                return sqlSession.MockTempTable<Int16IdentityOutput>(commands);
-            }
-        }
-
-        private static IDbTable MockIdentityMappings<TSource, TTarget>(DbTable<TTarget> dbTable, DbTable<TSource> source, IList<SqlCommand> commands)
-            where TSource : Model, new()
-            where TTarget : Model, new()
-        {
-            var identity = source.Model.GetIdentity(false);
-            if (identity == null)
-                return null;
-
-            var identityColumn = identity.Column;
-            if (identityColumn is _Int32 int32IdentityColumn)
-                return dbTable.SqlSession().MockTempTable<Int32IdentityMapping>(commands);
-            else if (identityColumn is _Int64 int64IdentityColumn)
-                return dbTable.SqlSession().MockTempTable<Int64IdentityMapping>(commands);
-            else if (identityColumn is _Int16 int16IdentityColumn)
-                return dbTable.SqlSession().MockTempTable<Int16IdentityMapping>(commands);
-            else
-                return null;
-        }
-
-        public static IList<SqlCommand> MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DataSet<T> source, bool skipExisting = false, bool updateIdentity = false)
-            where T : Model, new()
-        {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, GetJoinMapper<T>(skipExisting), updateIdentity);
+            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, updateIdentity);
         }
 
         public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper = null, bool updateIdentity = false)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             dbTable.Verify(source, nameof(source));
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-            var joinTo = joinMapper == null ? null : dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
 
             var result = new List<SqlCommand>();
 
             dbTable.UpdateOrigin(source, rowsAffected);
             var sqlSession = dbTable.SqlSession();
 
-            if (joinTo != null && updateIdentity)
-            {
-                var tempTable = sqlSession.MockTempTable(source._);
-                result.Add(sqlSession.GetCreateTableCommand(tempTable._, true));
-                result.Add(sqlSession.BuildImportCommand(source, tempTable));
-                result.AddRange(dbTable.MockInsert(rowsAffected, tempTable, columnMapper, joinMapper, updateIdentity));
-            }
-            else
-            {
-                var identityOutput = updateIdentity ? MockIdentityOutputTable(source.Model, sqlSession, result) : null;
-                result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, joinTo, identityOutput));
-            }
+            var identityOutput = updateIdentity ? MockIdentityOutputTable(source.Model, sqlSession, result) : null;
+            result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMapper, identityOutput));
 
             return result;
         }
@@ -230,7 +125,6 @@ namespace DevZest.Data.Helpers
                 return sqlSession.MockTempTable<Int16IdentityOutput>(commands);
             else
                 return null;
-
         }
 
         internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)

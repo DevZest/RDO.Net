@@ -195,19 +195,12 @@ namespace DevZest.Data
             return result;
         }
 
-        private static DbSelectStatement GetScalarDataSource(ScalarParamManager paramManager, IReadOnlyList<ColumnMapping> keyMappings, IReadOnlyList<ColumnMapping> parentMappings = null)
+        private static DbSelectStatement GetScalarDataSource(ScalarParamManager paramManager, IReadOnlyList<ColumnMapping> parentMappings = null)
         {
-            if (keyMappings == null && parentMappings == null)
+            if (parentMappings == null)
                 return null;
 
-            IReadOnlyList<ColumnMapping> mappings;
-            if (parentMappings == null)
-                mappings = keyMappings;
-            else if (keyMappings == null)
-                mappings = parentMappings;
-            else
-                mappings = keyMappings.Concat(parentMappings).ToList();
-            var select = GetScalarMapping(paramManager, mappings, true);
+            var select = GetScalarMapping(paramManager, parentMappings, true);
             return new DbSelectStatement(paramManager.Model, select, null, null, null, -1, -1);
         }
 

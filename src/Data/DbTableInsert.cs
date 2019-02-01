@@ -29,39 +29,32 @@ namespace DevZest.Data
             dataRow.IsPrimaryKeySealed = true;
         }
 
-        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join, CancellationToken ct)
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            var statement = target.BuildInsertStatement(source, columnMappings, join);
+            var statement = target.BuildInsertStatement(source, columnMappings);
             return target.UpdateOrigin(source, await target.DbSession.InsertAsync(statement, ct));
         }
 
-        public static async Task<int> ExecuteWithUpdateIdentityAsync<TSource>(DbTable<T> target, DbTable<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo, CancellationToken ct)
-            where TSource : class, IModelReference, new()
-        {
-            var result = await target.DbSession.InsertForIdentityAsync(source, target, columnMapper, joinTo, ct);
-            return target.UpdateOrigin(source, result);
-        }
-
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex,
-            IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join, bool updateIdentity, CancellationToken ct)
+            IReadOnlyList<ColumnMapping> columnMappings, bool updateIdentity, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
-            var statement = target.BuildInsertScalarStatement(source, rowIndex, columnMappings, join);
+            var statement = target.BuildInsertScalarStatement(source, rowIndex, columnMappings);
             var result = await target.DbSession.InsertScalarAsync(statement, updateIdentity, ct);
             if (updateIdentity)
                 UpdateIdentity(source, source[rowIndex], result.IdentityValue);
             return target.UpdateOrigin(source, result.Success) ? 1 : 0;
         }
 
-        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo,
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper,
             bool updateIdentity, CancellationToken ct)
             where TSource : class, IModelReference, new()
         {
             if (source.Count == 0)
                 return 0;
 
-            var result = await target.DbSession.InsertAsync(source, target, columnMapper, joinTo, updateIdentity, ct);
+            var result = await target.DbSession.InsertAsync(source, target, columnMapper, updateIdentity, ct);
             return target.UpdateOrigin(source, result);
         }
     }

@@ -204,12 +204,7 @@ namespace DevZest.Data.Primitives
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
 
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new();
-
-        protected internal abstract Task<int> InsertForIdentityAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken cancellationToken)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new();
 

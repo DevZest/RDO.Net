@@ -220,114 +220,34 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement, null);
         }
 
-        internal async Task<int> InsertWithIdentityOutputsAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityOutputs, CancellationToken ct)
+        internal async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, IDbTable identityOutputs, CancellationToken ct)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            Debug.Assert(joinTo == null || identityOutputs == null);
-            var command = BuildInsertCommand(source, target, columnMapper, joinTo, identityOutputs);
+            var command = BuildInsertCommand(source, target, columnMapper, identityOutputs);
             return await ExecuteNonQueryAsync(command, ct);
         }
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityOutput)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, IDbTable identityOutput)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
 
         {
-            Debug.Assert(joinTo == null || identityOutput == null);
             var import = BuildImportQuery(source);
-            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : import.Model.PrimaryKey.UnsafeJoin(joinTo);
-            var statement = target.BuildInsertStatement(import, columnMapper, join);
+            var statement = target.BuildInsertStatement(import, columnMapper);
             return GetInsertCommand(statement, identityOutput);
         }
 
-        internal async Task<int> InsertWithIdentityMappingsAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+        protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity, CancellationToken ct)
         {
-            Debug.Assert(joinTo != null);
-            Debug.Assert(identityMappings != null);
-            var tempTable = await ImportAsync(source, ct);
-            return await InsertWithIdentityMappingsAsync(tempTable, target, columnMapper, joinTo, identityMappings, ct);
-        }
-
-        internal async Task<int> InsertWithIdentityMappingsAsync<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, IDbTable identityMappings, CancellationToken ct)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
-        {
-            IReadOnlyList<ColumnMapping> join = joinTo == null ? null : source.Model.PrimaryKey.UnsafeJoin(joinTo);
-            var statement = target.BuildInsertStatement(source, columnMapper, join);
-            if (identityMappings == null)
-                return await ExecuteNonQueryAsync(GetInsertCommand(statement), ct);
-
-            var identityOutput = await CreateIdentityOutputTable(identityMappings, ct);
-            var result = await ExecuteNonQueryAsync(GetInsertCommand(statement, identityOutput), ct);
-            await ExecuteNonQueryAsync(GetInsertIntoIdentityMappingsCommand(source, identityMappings, joinTo != null ? target : null), ct);
-            await ExecuteNonQueryAsync(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput), ct);
-            return result;
-        }
-
-        private async Task<IDbTable> CreateIdentityOutputTable(IDbTable identityMappings, CancellationToken ct)
-        {
-            if (identityMappings is DbTable<Int32IdentityMapping>)
-                return await CreateTempTableAsync<Int32IdentityOutput>(ct);
-            else if (identityMappings is DbTable<Int64IdentityMapping>)
-                return await CreateTempTableAsync<Int64IdentityOutput>(ct);
-            else
-            {
-                Debug.Assert(identityMappings is DbTable<Int16IdentityMapping>);
-                return await CreateTempTableAsync<Int16IdentityOutput>(ct);
-            }
-        }
-
-        protected sealed override Task<int> InsertForIdentityAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
-        {
-            return DbTableInsert<TTarget>.ExecuteForIdentityAsync(targetTable, sourceData, columnMapper, joinTo, ct);
-        }
-
-        protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, bool updateIdentity, CancellationToken ct)
-        {
-            return DbTableInsert<TTarget>.ExecuteAsync(targetTable, sourceData, columnMapper, joinTo, updateIdentity, ct);
+            return DbTableInsert<TTarget>.ExecuteAsync(targetTable, sourceData, columnMapper, updateIdentity, ct);
         }
 
         internal SqlCommand GetInsertCommand(DbSelectStatement statement, IDbTable identityOutput = null)
         {
             return SqlGenerator.Insert(this, statement, identityOutput).CreateCommand(Connection);
-        }
-
-        internal SqlCommand GetInsertIntoIdentityMappingsCommand<T, TSource>(DbTable<TSource> sourceData, IDbTable identityMappings, DbTable<T> targetTable)
-            where T : class, IModelReference, new()
-            where TSource : class, IModelReference, new()
-        {
-            var statement = BuildInsertIntoIdentityMappingsStatement(sourceData, identityMappings, targetTable);
-            return GetInsertCommand(statement);
-        }
-
-        private DbSelectStatement BuildInsertIntoIdentityMappingsStatement<T, TSource>(DbTable<TSource> sourceData, IDbTable identityMappings, DbTable<T> targetTable)
-            where T : class, IModelReference, new()
-            where TSource : class, IModelReference, new()
-        {
-            var identityMappingModel = identityMappings.Model;
-            var identityMapping = (IIdentityMapping)identityMappingModel;
-            var source = sourceData.Model;
-            var sourceSysRowId = source.GetIdentity(true).Int32Column;
-
-            var select = new ColumnMapping[]
-            {
-                source.GetIdentity(false).Column.UnsafeMap(identityMapping.OldValue),
-                ColumnMapping.Map(sourceSysRowId, identityMapping.OriginalSysRowId)
-            };
-
-            var from = GetAutoJoinFromClause(sourceData, targetTable);
-            DbExpression where = targetTable == null ? null : targetTable.Model.PrimaryKey[0].Column.IsNull().DbExpression;
-
-            var orderBy = new DbExpressionSort[] { new DbExpressionSort(sourceSysRowId.DbExpression, SortDirection.Ascending) };
-
-            return new DbSelectStatement(identityMappingModel, select, from, where, orderBy, -1, -1);
         }
 
         private static DbFromClause GetAutoJoinFromClause<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target)
@@ -339,29 +259,6 @@ namespace DevZest.Data.SqlServer
 
             var mappings = new ColumnMapping[] { source.Model.GetIdentity(false).Column.UnsafeMap(target.Model.GetIdentity(false).Column) };
             return new DbJoinClause(DbJoinKind.LeftJoin, source.GetFromClause(), target.GetFromClause(), new ReadOnlyCollection<ColumnMapping>(mappings));
-        }
-
-        internal SqlCommand GetUpdateIdentityMappingsCommand(IDbTable identityMappings, IDbTable identityOutputs)
-        {
-            var statement = BuildUpdateIdentityMappingsStatement(identityMappings, identityOutputs);
-            return GetUpdateCommand(statement);
-        }
-
-        private static DbSelectStatement BuildUpdateIdentityMappingsStatement(IDbTable identityMappings, IDbTable identityOutputs)
-        {
-            var identityMappingModel = identityMappings.Model;
-            var identityMapping = (IIdentityMapping)identityMappingModel;
-            var identityOutputModel = identityOutputs.Model;
-            var identityOutput = (IIdentityOutput)identityOutputModel;
-            var select = new ColumnMapping[]
-            {
-                identityOutput.NewValue.UnsafeMap(identityMapping.NewValue)
-            };
-
-            var mappings = new ColumnMapping[] { identityMappingModel.GetIdentity(true).Column.UnsafeMap(identityOutputModel.GetIdentity(true).Column) };
-            var from = new DbJoinClause(DbJoinKind.InnerJoin, identityMappings.GetFromClause(), identityOutputs.GetFromClause(),
-                new ReadOnlyCollection<ColumnMapping>(mappings));
-            return new DbSelectStatement(identityMappingModel, select, from, null, null, -1, -1);
         }
 
         protected sealed override SqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)

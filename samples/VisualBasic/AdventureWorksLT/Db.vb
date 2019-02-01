@@ -242,7 +242,7 @@ Public Class Db
 
     Private Async Function PerformInsertAsync(salesOrders As DataSet(Of SalesOrder), ByVal ct As CancellationToken) As Task
         ModelOf(salesOrders).ResetRowIdentifiers()
-        Await SalesOrderHeader.InsertAsync(salesOrders, DbTableInsertOptions.UpdateIdentity, ct)
+        Await SalesOrderHeader.InsertAsync(salesOrders, True, ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
         ModelOf(salesOrderDetails).ResetRowIdentifiers()
         Await Me.SalesOrderDetail.InsertAsync(salesOrderDetails, ct)

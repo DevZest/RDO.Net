@@ -67,33 +67,6 @@ WHERE ([ProductCategory].[ParentProductCategoryID] IS NULL);
         }
 
         [TestMethod]
-        public void DbTable_Insert_from_DbQuery_skipExisting()
-        {
-            using (var db = new Db(SqlVersion.Sql11))
-            {
-                var table = db.MockTempTable<ProductCategory>();
-                var command = table.MockInsert(0, db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()), skipExisting: true);
-                var expectedSql =
-@"INSERT INTO [#ProductCategory]
-([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
-SELECT
-    [ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
-    [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
-    [ProductCategory].[Name] AS [Name],
-    [ProductCategory].[RowGuid] AS [RowGuid],
-    [ProductCategory].[ModifiedDate] AS [ModifiedDate]
-FROM
-    ([SalesLT].[ProductCategory] [ProductCategory]
-    LEFT JOIN
-    [#ProductCategory]
-    ON [ProductCategory].[ProductCategoryID] = [#ProductCategory].[ProductCategoryID])
-WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([#ProductCategory].[ProductCategoryID] IS NULL));
-";
-                command.Verify(expectedSql);
-            }
-        }
-
-        [TestMethod]
         public void DbTable_Insert_from_child_DbQuery()
         {
             using (var db = new Db(SqlVersion.Sql11))
@@ -195,45 +168,6 @@ SELECT CAST(SCOPE_IDENTITY() AS BIGINT);
         }
 
         [TestMethod]
-        public void DbTable_Insert_Scalar_skipExisting()
-        {
-            using (var db = new Db(SqlVersion.Sql11))
-            {
-                var table = db.MockTempTable<ProductCategory>();
-                var dataSet = DataSet<ProductCategory>.Create();
-                var dataRow = dataSet.AddRow();
-                dataSet._.Name[dataRow] = "Name";
-                dataSet._.ParentProductCategoryID[dataRow] = null;
-                dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
-                dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
-                var command = table.MockInsert(true, dataSet, 0, skipExisting: true);
-                var expectedSql =
-@"DECLARE @p1 INT = 0;
-DECLARE @p2 INT = NULL;
-DECLARE @p3 NVARCHAR(50) = N'Name';
-DECLARE @p4 UNIQUEIDENTIFIER = '040d9b64-05fd-4464-b398-74679c427980';
-DECLARE @p5 DATETIME = '2015-09-08 00:00:00.000';
-
-INSERT INTO [#ProductCategory]
-([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
-SELECT
-    @p1 AS [ProductCategoryID],
-    @p2 AS [ParentProductCategoryID],
-    @p3 AS [Name],
-    @p4 AS [RowGuid],
-    @p5 AS [ModifiedDate]
-FROM
-    ((SELECT @p1 AS [ProductCategoryID]) [@ProductCategory]
-    LEFT JOIN
-    [#ProductCategory]
-    ON [@ProductCategory].[ProductCategoryID] = [#ProductCategory].[ProductCategoryID])
-WHERE ([#ProductCategory].[ProductCategoryID] IS NULL);
-";
-                command.Verify(expectedSql);
-            }
-        }
-
-        [TestMethod]
         public void DbTable_Insert_union_query()
         {
             using (var db = new Db(SqlVersion.Sql11))
@@ -285,29 +219,6 @@ UNION ALL
     [Product].[ModifiedDate] AS [ModifiedDate]
 FROM [SalesLT].[Product] [Product]
 WHERE ([Product].[ProductID] > 800));
-";
-                command.Verify(expectedSql);
-            }
-        }
-
-        [TestMethod]
-        public void DbTable_BuildUpdateIdentityStatement()
-        {
-            using (var db = new Db(SqlVersion.Sql11))
-            {
-                var tempSalesOrders = db.MockTempTable<SalesOrder>();
-                var identityOutput = db.MockTempTable<Int32IdentityMapping>();
-                var statements = tempSalesOrders.BuildUpdateIdentityStatement(identityOutput);
-                Assert.AreEqual(1, statements.Count);
-                var command = db.GetUpdateCommand(statements[0]);
-                var expectedSql =
-@"UPDATE [#SalesOrder] SET
-    [SalesOrderID] = [#sys_identity_mapping].[NewValue]
-FROM
-    ([#sys_identity_mapping]
-    INNER JOIN
-    [#SalesOrder]
-    ON [#sys_identity_mapping].[OldValue] = [#SalesOrder].[SalesOrderID]);
 ";
                 command.Verify(expectedSql);
             }
@@ -570,83 +481,6 @@ FROM
 ORDER BY [@SalesOrderDetail].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
 ";
                 command.Verify(expectedSql);
-            }
-        }
-
-        [TestMethod]
-        public void DbTable_Insert_from_temp_table_updateIdentity()
-        {
-            using (var db = new Db(SqlVersion.Sql11))
-            {
-                var sourceData = db.MockTempTable<ProductCategory>();
-                var children = sourceData.MockCreateChild(x => x.SubCategories);
-                var grandChildren = children.MockCreateChild(x => x.SubCategories);
-                var commands = db.ProductCategory.MockInsert(10, sourceData, updateIdentity: true);
-
-                var expectedSql = new string[]
-                {
-@"CREATE TABLE [#sys_identity_mapping] (
-    [OldValue] INT NOT NULL,
-    [NewValue] INT NULL,
-    [OriginalSysRowId] INT NULL,
-    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
-
-    CONSTRAINT [PK_sys_identity_mapping_] PRIMARY KEY NONCLUSTERED ([OldValue]),
-    UNIQUE CLUSTERED ([sys_row_id] ASC)
-);",
-
-@"CREATE TABLE [#IdentityOutput] (
-    [NewValue] INT NOT NULL,
-    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
-
-    PRIMARY KEY CLUSTERED ([sys_row_id] ASC)
-);",
-
-@"INSERT INTO [SalesLT].[ProductCategory]
-([ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
-OUTPUT INSERTED.[ProductCategoryID] INTO [#IdentityOutput] ([NewValue])
-SELECT
-    [#ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
-    [#ProductCategory].[Name] AS [Name],
-    [#ProductCategory].[RowGuid] AS [RowGuid],
-    [#ProductCategory].[ModifiedDate] AS [ModifiedDate]
-FROM [#ProductCategory]
-ORDER BY [#ProductCategory].[sys_row_id] ASC;",
-
-@"INSERT INTO [#sys_identity_mapping]
-([OldValue], [OriginalSysRowId])
-SELECT
-    [#ProductCategory].[ProductCategoryID] AS [OldValue],
-    [#ProductCategory].[sys_row_id] AS [OriginalSysRowId]
-FROM [#ProductCategory]
-ORDER BY [#ProductCategory].[sys_row_id] ASC;",
-
-@"UPDATE [#sys_identity_mapping] SET
-    [NewValue] = [#IdentityOutput].[NewValue]
-FROM
-    ([#sys_identity_mapping]
-    INNER JOIN
-    [#IdentityOutput]
-    ON [#sys_identity_mapping].[sys_row_id] = [#IdentityOutput].[sys_row_id]);",
-
-@"UPDATE [#ProductCategory] SET
-    [ProductCategoryID] = [#sys_identity_mapping].[NewValue]
-FROM
-    ([#sys_identity_mapping]
-    INNER JOIN
-    [#ProductCategory]
-    ON [#sys_identity_mapping].[OldValue] = [#ProductCategory].[ProductCategoryID]);",
-
-@"UPDATE [#ProductCategory1] SET
-    [ParentProductCategoryID] = [#sys_identity_mapping].[NewValue]
-FROM
-    ([#sys_identity_mapping]
-    INNER JOIN
-    [#ProductCategory1]
-    ON [#sys_identity_mapping].[OldValue] = [#ProductCategory1].[ParentProductCategoryID]);"
-            };
-
-                commands.Verify(true, expectedSql);
             }
         }
     }

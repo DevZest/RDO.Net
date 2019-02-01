@@ -268,7 +268,7 @@ namespace DevZest.Samples.AdventureWorksLT
         private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
             salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.InsertAsync(salesOrders, DbTableInsertOptions.UpdateIdentity, ct);
+            await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
             var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);

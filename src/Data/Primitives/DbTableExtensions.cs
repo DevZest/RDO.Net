@@ -8,31 +8,27 @@ namespace DevZest.Data.Primitives
     public static class DbTableExtensions
     {
         public static DbSelectStatement BuildInsertStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, IReadOnlyList<ColumnMapping> join = null)
+            Action<ColumnMapper, TSource, TTarget> columnMapper)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));
             var columnMappings = target.Verify(columnMapper, nameof(columnMapper), source._);
-            if (join != null)
-                Verify(join, nameof(join), source.Model, target.Model);
 
-            return target.BuildInsertStatement(source, columnMappings, join);
+            return target.BuildInsertStatement(source, columnMappings);
         }
 
         public static DbSelectStatement BuildInsertStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
-            IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
+            IReadOnlyList<ColumnMapping> columnMappings)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));
             Verify(columnMappings, nameof(columnMappings), source.Model, target.Model);
-            if (join != null)
-                Verify(join, nameof(join), source.Model, target.Model);
 
-            return target.BuildInsertStatement(source, columnMappings, join);
+            return target.BuildInsertStatement(source, columnMappings);
         }
 
         private static void Verify(IReadOnlyList<ColumnMapping> columnMappings, string paramName, Model source, Model target)
