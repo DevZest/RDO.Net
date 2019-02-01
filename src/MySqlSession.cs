@@ -175,16 +175,8 @@ namespace DevZest.Data.MySql
             var command = BuildInsertCommand(source, target, columnMapper);
             var result = await ExecuteNonQueryAsync(command, ct);
             if (updateIdentity)
-                UpdateIdentity(source, command.LastInsertedId);
+                IdentityUpdater.Execute(source, command.LastInsertedId);
             return result;
-        }
-
-        private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, long lastInsertId)
-            where TSource : class, IModelReference, new()
-        {
-            var identityColumn = dataSet.Model.GetColumns()[dataSet.Model.GetIdentity(false).Column.Ordinal];
-
-            throw new NotImplementedException();
         }
 
         internal MySqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper)
