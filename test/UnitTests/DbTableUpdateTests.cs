@@ -73,38 +73,38 @@ WHERE (`#ProductCategory`.`ModifiedDate` IS NULL);
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Update_scalar()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var dataSet = DataSet<ProductCategory>.Create();
-        //                var index = dataSet.AddRow().Ordinal;
-        //                dataSet._.Name[index] = "Name";
-        //                dataSet._.RowGuid[index] = new Guid("EC359D7D-AE3A-4A9D-BDCB-03F0A7799514");
-        //                dataSet._.ModifiedDate[index] = new DateTime(2015, 9, 23);
-        //                var command = db.ProductCategory.MockUpdate(true, dataSet, 0);
-        //                var expectedSql =
-        //@"DECLARE @p1 INT = NULL;
-        //DECLARE @p2 NVARCHAR(50) = N'Name';
-        //DECLARE @p3 UNIQUEIDENTIFIER = 'ec359d7d-ae3a-4a9d-bdcb-03f0a7799514';
-        //DECLARE @p4 DATETIME = '2015-09-23 00:00:00.000';
-        //DECLARE @p5 INT = 0;
+        [TestMethod]
+        public void DbTable_Update_scalar()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var dataSet = DataSet<ProductCategory>.Create();
+                var index = dataSet.AddRow().Ordinal;
+                dataSet._.Name[index] = "Name";
+                dataSet._.RowGuid[index] = new Guid("EC359D7D-AE3A-4A9D-BDCB-03F0A7799514");
+                dataSet._.ModifiedDate[index] = new DateTime(2015, 9, 23);
+                var command = db.ProductCategory.MockUpdate(true, dataSet, 0);
+                var expectedSql =
+@"SET @p1 = 0;
+SET @p2 = NULL;
+SET @p3 = 'Name';
+SET @p4 = 'ec359d7d-ae3a-4a9d-bdcb-03f0a7799514';
+SET @p5 = (TIMESTAMP '2015-09-23 00:00:00');
 
-        //UPDATE [ProductCategory1] SET
-        //    [ParentProductCategoryID] = @p1,
-        //    [Name] = @p2,
-        //    [RowGuid] = @p3,
-        //    [ModifiedDate] = @p4
-        //FROM
-        //    ((SELECT @p5 AS [ProductCategoryID]) [ProductCategory]
-        //    INNER JOIN
-        //    [SalesLT].[ProductCategory] [ProductCategory1]
-        //    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+UPDATE
+    ((SELECT @p1 AS `ProductCategoryID`) `@ProductCategory`
+    INNER JOIN
+    `ProductCategory`
+    ON `@ProductCategory`.`ProductCategoryID` = `ProductCategory`.`ProductCategoryID`)
+SET
+    `ProductCategory`.`ParentProductCategoryID` = @p2,
+    `ProductCategory`.`Name` = @p3,
+    `ProductCategory`.`RowGuid` = @p4,
+    `ProductCategory`.`ModifiedDate` = @p5;
+";
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Update_from_DataSet()
