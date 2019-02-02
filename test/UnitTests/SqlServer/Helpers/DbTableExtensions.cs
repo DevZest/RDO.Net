@@ -218,7 +218,7 @@ namespace DevZest.Data.SqlServer.Helpers
             where TTarget : Model, new()
         {
             var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
-            dbTable.UpdateOrigin(null, rowsAffected);
+            dbTable.UpdateOrigin(source, rowsAffected);
             var statement = dbTable.BuildDeleteStatement(source, keyMapping.GetColumnMappings());
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
@@ -228,7 +228,7 @@ namespace DevZest.Data.SqlServer.Helpers
             where TTarget : Model, new()
         {
             var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
-            dbTable.UpdateOrigin<TSource>(null, success);
+            dbTable.UpdateOrigin<TSource>(source, success);
             var statement = dbTable.BuildDeleteScalarStatement(source, ordinal, keyMapping.GetColumnMappings());
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
@@ -249,7 +249,7 @@ namespace DevZest.Data.SqlServer.Helpers
             }
 
             var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
-            dbTable.UpdateOrigin(null, rowsAffected);
+            dbTable.UpdateOrigin(source, rowsAffected);
             return dbTable.SqlSession().BuildDeleteCommand(source, dbTable, keyMapping.TargetKey);
         }
     }
