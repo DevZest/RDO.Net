@@ -106,48 +106,36 @@ SET
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_Update_from_DataSet()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategoriesLevel1);
-        //                var expectedSql =
-        //@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
-        //<root>
-        //  <row>
-        //    <col_0>1</col_0>
-        //    <col_1></col_1>
-        //    <col_2>Bikes</col_2>
-        //    <col_3>cfbda25c-df71-47a7-b81b-64ee161aa37c</col_3>
-        //    <col_4>2002-06-01 00:00:00.000</col_4>
-        //    <col_5>1</col_5>
-        //  </row>
-        //  <row>
-        //    <col_0>2</col_0>
-        //    <col_1></col_1>
-        //    <col_2>Other</col_2>
-        //    <col_3>c657828d-d808-4aba-91a3-af2ce02300e9</col_3>
-        //    <col_4>2002-06-01 00:00:00.000</col_4>
-        //    <col_5>2</col_5>
-        //  </row>
-        //</root>';
+        [TestMethod]
+        public void DbTable_Update_from_DataSet()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategoriesLevel1);
+                var expectedSql =
+@"SET @p1 = '[{""ProductCategoryID"":1,""Name"":""Bikes"",""RowGuid"":""cfbda25c-df71-47a7-b81b-64ee161aa37c"",""ModifiedDate"":""2002-06-01T00:00:00.000""},{""ProductCategoryID"":2,""Name"":""Other"",""RowGuid"":""c657828d-d808-4aba-91a3-af2ce02300e9"",""ModifiedDate"":""2002-06-01T00:00:00.000""}]';
 
-        //UPDATE [ProductCategory] SET
-        //    [ParentProductCategoryID] = [@ProductCategory].[Xml].value('col_1[1]/text()[1]', 'INT'),
-        //    [Name] = [@ProductCategory].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)'),
-        //    [RowGuid] = [@ProductCategory].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER'),
-        //    [ModifiedDate] = [@ProductCategory].[Xml].value('col_4[1]/text()[1]', 'DATETIME')
-        //FROM
-        //    (@p1.nodes('/root/row') [@ProductCategory]([Xml])
-        //    INNER JOIN
-        //    [SalesLT].[ProductCategory] [ProductCategory]
-        //    ON [@ProductCategory].[Xml].value('col_0[1]/text()[1]', 'INT') = [ProductCategory].[ProductCategoryID]);
-        //";
-        //                var command = db.ProductCategory.MockUpdate(dataSet.Count, dataSet);
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
+UPDATE
+    (JSON_TABLE(@p1, '$[*]' COLUMNS (
+        `ProductCategoryID` INT PATH '$.ProductCategoryID',
+        `ParentProductCategoryID` INT PATH '$.ParentProductCategoryID',
+        `Name` VARCHAR(50) PATH '$.Name',
+        `RowGuid` CHAR(36) PATH '$.RowGuid',
+        `ModifiedDate` DATETIME PATH '$.ModifiedDate',
+        `sys_dataset_ordinal` FOR ORDINALITY)) AS `@ProductCategory`
+    INNER JOIN
+    `ProductCategory`
+    ON `@ProductCategory`.`ProductCategoryID` = `ProductCategory`.`ProductCategoryID`)
+SET
+    `ProductCategory`.`ParentProductCategoryID` = `@ProductCategory`.`ParentProductCategoryID`,
+    `ProductCategory`.`Name` = `@ProductCategory`.`Name`,
+    `ProductCategory`.`RowGuid` = `@ProductCategory`.`RowGuid`,
+    `ProductCategory`.`ModifiedDate` = `@ProductCategory`.`ModifiedDate`;
+";
+                var command = db.ProductCategory.MockUpdate(dataSet.Count, dataSet);
+                command.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbTable_Update_child_temp_table()
