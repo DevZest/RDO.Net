@@ -8,10 +8,10 @@ using System.Data;
 namespace DevZest.Data.MySql
 {
     [TestClass]
-    public class DbExpressionSqlGeneratorTests
+    public class ExpressionGeneratorTests
     {
         [TestMethod]
-        public void DbExpressionSqlGenerator_DbConstantExpression()
+        public void ExpressionGenerator_DbConstantExpression()
         {
             {   //Binary
                 var expr = CreateDbConstantExpression<_Binary, Binary>(null);
@@ -147,7 +147,7 @@ namespace DevZest.Data.MySql
         }
 
         [TestMethod]
-        public void DbExpressionSqlGenerator_DbColumnExpression()
+        public void ExpressionGenerator_DbColumnExpression()
         {
             var _ = new TestModel();
             var expr = _.Column1.DbExpression;
@@ -187,7 +187,7 @@ namespace DevZest.Data.MySql
         }
 
         [TestMethod]
-        public void DbExpressionSqlGenerator_DbBinaryExpression()
+        public void ExpressionGenerator_DbBinaryExpression()
         {
             {
                 var _ = new TestModel();
@@ -219,7 +219,7 @@ namespace DevZest.Data.MySql
         }
 
         [TestMethod]
-        public void DbExpressionSqlGenerator_DbCaseExpression()
+        public void ExpressionGenerator_DbCaseExpression()
         {
             var _ = new TestModel();
             var column1 = _.Column1;
@@ -255,7 +255,7 @@ END CASE";
         }
 
         [TestMethod]
-        public void DbExpressionSqlGenerator_DbCastExpression()
+        public void ExpressionGenerator_DbCastExpression()
         {
             var _ = new TestModel();
             var int32Column = _.Column1;
@@ -263,7 +263,7 @@ END CASE";
         }
 
         [TestMethod]
-        public void DbExpressionSqlGenerator_DbParamExpression()
+        public void ExpressionGenerator_DbParamExpression()
         {
             var param = _Int32.Param(5);
             ExpressionGenerator generator;
@@ -277,7 +277,7 @@ END CASE";
         }
 
         [TestMethod]
-        public void DbExpressionSqlGenerator_DbUnaryExpression()
+        public void ExpressionGenerator_DbUnaryExpression()
         {
             {
                 var _ = new TestModel();
@@ -294,7 +294,7 @@ END CASE";
         }
 
         [TestMethod]
-        public void DbExpressionSqlGenerator_DbFunctionExpression()
+        public void ExpressionGenerator_DbFunctionExpression()
         {
             VerifyDbExpression(MySqlVersion.LowestSupported, _DateTime.Now().DbExpression, "NOW()");
             VerifyDbExpression(MySqlVersion.LowestSupported, _DateTime.UtcNow().DbExpression, "UTC_TIMESTAMP()");
