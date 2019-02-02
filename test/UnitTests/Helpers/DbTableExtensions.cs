@@ -84,32 +84,22 @@ namespace DevZest.Data.MySql.Helpers
             return result;
         }
 
-        public static IList<MySqlCommand> MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DataSet<T> source, bool updateIdentity = false)
+        public static MySqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DataSet<T> source)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, updateIdentity);
+            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable);
         }
 
-        public static IList<MySqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity = false)
+        public static MySqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
+            Action<ColumnMapper, TSource, TTarget> columnMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             dbTable.Verify(source, nameof(source));
-            dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-
-            var result = new List<MySqlCommand>();
 
             dbTable.UpdateOrigin(source, rowsAffected);
             var mySqlSession = dbTable.MySqlSession();
-
-            if (!updateIdentity)
-            {
-                result.Add(mySqlSession.BuildInsertCommand(source, dbTable, columnMapper));
-                return result;
-            }
-
-            throw new NotImplementedException();
+            return mySqlSession.BuildInsertCommand(source, dbTable, columnMapper);
         }
 
         //        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
