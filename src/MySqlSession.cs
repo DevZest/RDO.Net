@@ -130,32 +130,6 @@ namespace DevZest.Data.MySql
             return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder);
         }
 
-        protected sealed override Task<int> ImportAsync<T>(DataSet<T> source, DbTable<T> target, CancellationToken cancellationToken)
-        {
-            var command = BuildImportCommand(source, target);
-            return ExecuteNonQueryAsync(command, cancellationToken);
-        }
-
-        internal MySqlCommand BuildImportCommand<T>(DataSet<T> source, DbTable<T> target)
-            where T : class, IModelReference, new()
-        {
-            var statement = target.BuildInsertStatement(BuildImportQuery(source), ColumnMapper.AutoSelectInsertable);
-            return GetInsertCommand(statement);
-        }
-
-        protected sealed override Task<int> ImportKeyAsync<T>(DataSet<T> source, DbTable<KeyOutput> target, CancellationToken cancellationToken)
-        {
-            var command = BuildImportKeyCommand(source, target);
-            return ExecuteNonQueryAsync(command, cancellationToken);
-        }
-
-        internal MySqlCommand BuildImportKeyCommand<T>(DataSet<T> source, DbTable<KeyOutput> target)
-            where T : class, IModelReference, new()
-        {
-            var statement = target.BuildInsertStatement(BuildImportKeyQuery(source), ColumnMapper.AutoSelectInsertable);
-            return GetInsertCommand(statement);
-        }
-
         protected sealed override MySqlCommand GetInsertCommand(DbSelectStatement statement)
         {
             return SqlGenerator.Insert(this, statement).CreateCommand(Connection);
