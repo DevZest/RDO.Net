@@ -189,32 +189,6 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        protected sealed override Task<int> ImportAsync<T>(DataSet<T> source, DbTable<T> target, CancellationToken cancellationToken)
-        {
-            var command = BuildImportCommand(source, target);
-            return ExecuteNonQueryAsync(command, cancellationToken);
-        }
-
-        internal SqlCommand BuildImportCommand<T>(DataSet<T> source, DbTable<T> target)
-            where T : class, IModelReference, new()
-        {
-            var statement = target.BuildInsertStatement(BuildImportQuery(source), ColumnMapper.AutoSelectInsertable);
-            return GetInsertCommand(statement);
-        }
-
-        protected sealed override Task<int> ImportKeyAsync<T>(DataSet<T> source, DbTable<KeyOutput> target, CancellationToken cancellationToken)
-        {
-            var command = BuildImportKeyCommand(source, target);
-            return ExecuteNonQueryAsync(command, cancellationToken);
-        }
-
-        internal SqlCommand BuildImportKeyCommand<T>(DataSet<T> source, DbTable<KeyOutput> target)
-            where T : class, IModelReference, new()
-        {
-            var statement = target.BuildInsertStatement(BuildImportKeyQuery(source), ColumnMapper.AutoSelectInsertable);
-            return GetInsertCommand(statement);
-        }
-
         protected sealed override SqlCommand GetInsertCommand(DbSelectStatement statement)
         {
             return GetInsertCommand(statement, null);

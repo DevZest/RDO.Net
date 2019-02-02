@@ -83,28 +83,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        protected async Task<DbTable<T>> ImportAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
-            where T : class, IModelReference, new()
-        {
-            var result = await CreateTempTableAsync(source._, null, cancellationToken);
-            await ImportAsync(source, result, cancellationToken);
-            return result;
-        }
-
-        protected abstract Task<int> ImportAsync<T>(DataSet<T> source, DbTable<T> target, CancellationToken cancellationToken)
-            where T : class, IModelReference, new();
-
-        private async Task<DbTable<KeyOutput>> ImportKeyAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
-            where T : class, IModelReference, new()
-        {
-            var result = await CreateKeyOutputAsync(source.Model, cancellationToken);
-            await ImportKeyAsync(source, result, cancellationToken);
-            return result;
-        }
-
-        protected abstract Task<int> ImportKeyAsync<T>(DataSet<T> source, DbTable<KeyOutput> target, CancellationToken cancellationToken)
-            where T : class, IModelReference, new();
-
         internal DbQuery<T> PerformCreateQuery<T>(T _, DbQueryStatement queryStatement)
             where T : class, IModelReference, new()
         {
@@ -210,26 +188,16 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        protected internal virtual async Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
+        protected internal abstract Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
-        {
-            var import = await ImportAsync(source, ct);
-            var join = import._.Model.PrimaryKey.UnsafeJoin(joinTo);
-            return await UpdateAsync(target.BuildUpdateStatement(import, columnMapper, join), ct);
-        }
+            where TTarget : class, IModelReference, new();
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo, CancellationToken ct)
+        protected internal abstract Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo, CancellationToken ct)
             where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
-        {
-            var keys = await ImportKeyAsync(source, ct);
-            var columnMappings = keys._.PrimaryKey.UnsafeJoin(joinTo);
-            return await DeleteAsync(target.BuildDeleteStatement(keys, columnMappings), ct);
-        }
+            where TTarget : class, IModelReference, new();
 
         internal abstract Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
             where T : class, IModelReference, new();
