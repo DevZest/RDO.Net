@@ -50,52 +50,28 @@ SET
         }
 
         [TestMethod]
-        public void DbTable_Update_from_query()
+        public void DbTable_Update_from_simple_query()
         {
             using (var db = new Db(MySqlVersion.LowestSupported))
             {
-                var query = db.ProductCategory.Where(x => x.ModifiedDate.IsNull());
+                var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategory.MockUpdate(0, query);
                 var expectedSql =
 @"UPDATE
-    (`ProductCategory`
+    (`#ProductCategory`
     INNER JOIN
-    `ProductCategory` `ProductCategory1`
-    ON `ProductCategory`.`ProductCategoryID` = `ProductCategory1`.`ProductCategoryID`)
+    `ProductCategory`
+    ON `#ProductCategory`.`ProductCategoryID` = `ProductCategory`.`ProductCategoryID`)
 SET
-    `ProductCategory`.`ParentProductCategoryID` = `ProductCategory`.`ParentProductCategoryID`,
-    `ProductCategory`.`Name` = `ProductCategory`.`Name`,
-    `ProductCategory`.`RowGuid` = `ProductCategory`.`RowGuid`,
-    `ProductCategory`.`ModifiedDate` = `ProductCategory`.`ModifiedDate`
-WHERE (`ProductCategory`.`ModifiedDate` IS NULL);
+    `ProductCategory`.`ParentProductCategoryID` = `#ProductCategory`.`ParentProductCategoryID`,
+    `ProductCategory`.`Name` = `#ProductCategory`.`Name`,
+    `ProductCategory`.`RowGuid` = `#ProductCategory`.`RowGuid`,
+    `ProductCategory`.`ModifiedDate` = `#ProductCategory`.`ModifiedDate`
+WHERE (`#ProductCategory`.`ModifiedDate` IS NULL);
 ";
                 command.Verify(expectedSql);
             }
         }
-
-        //        [TestMethod]
-        //        public void DbTable_Update_from_simple_query()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
-        //                var command = db.ProductCategory.MockUpdate(0, query);
-        //                var expectedSql =
-        //@"UPDATE [ProductCategory1] SET
-        //    [ParentProductCategoryID] = [ProductCategory].[ParentProductCategoryID],
-        //    [Name] = [ProductCategory].[Name],
-        //    [RowGuid] = [ProductCategory].[RowGuid],
-        //    [ModifiedDate] = [ProductCategory].[ModifiedDate]
-        //FROM
-        //    ([#ProductCategory] [ProductCategory]
-        //    INNER JOIN
-        //    [SalesLT].[ProductCategory] [ProductCategory1]
-        //    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
-        //WHERE ([ProductCategory].[ModifiedDate] IS NULL);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
 
         //        [TestMethod]
         //        public void DbTable_Update_scalar()
