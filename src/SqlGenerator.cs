@@ -82,30 +82,32 @@ namespace DevZest.Data.MySql
             var from = statement.From == null ? model.GetDbTableClause() : statement.From;
             var where = statement.Where;
 
+            result.VisitingQueryStatement();
+
             result.ModelAliasManager = MySql.ModelAliasManager.Create(from);
 
-            sqlBuilder.Append("UPDATE ");
-            sqlBuilder.Append(result.ModelAliasManager[model].ToQuotedIdentifier());
-            sqlBuilder.AppendLine(" SET");
+            sqlBuilder.Append("UPDATE");
+            result.GenerateFromStatement(from);
+            sqlBuilder.AppendLine().AppendLine("SET");
             sqlBuilder.Indent++;
+            var targetTable = result.ModelAliasManager[model].ToQuotedIdentifier();
             for (int i = 0; i < selectList.Count; i++)
             {
+                if (i > 0)
+                    sqlBuilder.AppendLine();
                 var select = selectList[i];
-                sqlBuilder.Append(select.Target.DbColumnName.ToQuotedIdentifier());
+                sqlBuilder.Append(targetTable).Append('.').Append(select.Target.DbColumnName.ToQuotedIdentifier());
                 sqlBuilder.Append(" = ");
                 select.SourceExpression.Accept(result._expressionGenerator);
                 if (i != selectList.Count - 1)
                     sqlBuilder.Append(',');
-                sqlBuilder.AppendLine();
             }
             sqlBuilder.Indent--;
 
-            result.VisitingQueryStatement();
-            result.GenerateFromClause(from);
             if (where != null)
                 result.GenerateWhereClause(where);
-            result.VisitedQueryStatement(statement);
 
+            result.VisitedQueryStatement(statement);
             return result;
         }
 
@@ -344,9 +346,14 @@ namespace DevZest.Data.MySql
 
         private void GenerateFromClause(DbFromClause from)
         {
+            SqlBuilder.Append("FROM");
+            GenerateFromStatement(from);
+        }
+
+        private void GenerateFromStatement(DbFromClause from)
+        {
             bool isDbTable = from.GetType() == typeof(DbTableClause);
 
-            SqlBuilder.Append("FROM");
             if (isDbTable)
                 SqlBuilder.Append(" ");
             else

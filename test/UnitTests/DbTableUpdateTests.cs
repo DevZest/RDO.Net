@@ -1,30 +1,30 @@
-﻿//using DevZest.Samples.AdventureWorksLT;
-//using DevZest.Data.Helpers;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using System;
-//using DevZest.Data.Resources;
+﻿using DevZest.Samples.AdventureWorksLT;
+using DevZest.Data.MySql.Helpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using DevZest.Data.MySql.Resources;
 
-//namespace DevZest.Data.MySql
-//{
-//    [TestClass]
-//    public class DbTableUpdateTests
-//    {
-//        [TestMethod]
-//        public void DbTable_Update_without_source()
-//        {
-//            using (var db = new Db(SqlVersion.Sql11))
-//            {
-//                var command = db.ProductCategory.MockUpdate(0, (builder, x) => builder.Select(Functions.GetDate(), x.ModifiedDate),
-//                    x => x.ModifiedDate.IsNull());
-//                var expectedSql =
-//@"UPDATE [ProductCategory] SET
-//    [ModifiedDate] = GETDATE()
-//FROM [SalesLT].[ProductCategory] [ProductCategory]
-//WHERE ([ProductCategory].[ModifiedDate] IS NULL);
-//";
-//                command.Verify(expectedSql);
-//            }
-//        }
+namespace DevZest.Data.MySql
+{
+    [TestClass]
+    public class DbTableUpdateTests
+    {
+        [TestMethod]
+        public void DbTable_Update_without_source()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var command = db.ProductCategory.MockUpdate(0, (builder, x) => builder.Select(_DateTime.Now(), x.ModifiedDate),
+                    x => x.ModifiedDate.IsNull());
+                var expectedSql =
+@"UPDATE `ProductCategory`
+SET
+    `ProductCategory`.`ModifiedDate` = NOW()
+WHERE (`ProductCategory`.`ModifiedDate` IS NULL);
+";
+                command.Verify(expectedSql);
+            }
+        }
 
 //        [TestMethod]
 //        public void DbTable_Update_from_temp_table()
@@ -203,5 +203,5 @@
 //                command.Verify(expectedSql);
 //            }
 //        }
-//    }
-//}
+    }
+}
