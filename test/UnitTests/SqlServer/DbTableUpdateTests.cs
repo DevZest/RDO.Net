@@ -131,7 +131,7 @@ FROM
         }
 
         [TestMethod]
-        public void DbTable_Update_from_DataSet()
+        public void DbTable_Update_from_DataSet_Sql11()
         {
             using (var db = new Db(SqlVersion.Sql11))
             {
@@ -167,6 +167,37 @@ FROM
     INNER JOIN
     [SalesLT].[ProductCategory] [ProductCategory]
     ON [@ProductCategory].[Xml].value('col_0[1]/text()[1]', 'INT') = [ProductCategory].[ProductCategoryID]);
+";
+                var command = db.ProductCategory.MockUpdate(dataSet.Count, dataSet);
+                command.Verify(expectedSql);
+            }
+        }
+
+        [TestMethod]
+        public void DbTable_Update_from_DataSet_Sql13()
+        {
+            using (var db = new Db(SqlVersion.Sql13))
+            {
+                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategoriesLevel1);
+                var expectedSql =
+@"DECLARE @p1 NVARCHAR(MAX) = N'[{""ProductCategoryID"":1,""ParentProductCategoryID"":null,""Name"":""Bikes"",""RowGuid"":""cfbda25c-df71-47a7-b81b-64ee161aa37c"",""ModifiedDate"":""2002-06-01T00:00:00.000"",""sys_dataset_ordinal"":0},{""ProductCategoryID"":2,""ParentProductCategoryID"":null,""Name"":""Other"",""RowGuid"":""c657828d-d808-4aba-91a3-af2ce02300e9"",""ModifiedDate"":""2002-06-01T00:00:00.000"",""sys_dataset_ordinal"":1}]';
+
+UPDATE [ProductCategory] SET
+    [ParentProductCategoryID] = [@ProductCategory].[ParentProductCategoryID],
+    [Name] = [@ProductCategory].[Name],
+    [RowGuid] = [@ProductCategory].[RowGuid],
+    [ModifiedDate] = [@ProductCategory].[ModifiedDate]
+FROM
+    (OPENJSON(@p1) WITH (
+        [ProductCategoryID] INT,
+        [ParentProductCategoryID] INT,
+        [Name] NVARCHAR(50),
+        [RowGuid] UNIQUEIDENTIFIER,
+        [ModifiedDate] DATETIME,
+        [sys_dataset_ordinal] INT) AS [@ProductCategory]
+    INNER JOIN
+    [SalesLT].[ProductCategory] [ProductCategory]
+    ON [@ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID]);
 ";
                 var command = db.ProductCategory.MockUpdate(dataSet.Count, dataSet);
                 command.Verify(expectedSql);
