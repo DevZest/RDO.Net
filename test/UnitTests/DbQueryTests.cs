@@ -474,65 +474,70 @@ ORDER BY `SalesOrderHeader`.`SalesOrderID`;"
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_SequentialKeyTempTable_aggregate_query()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var salesOrders = db.CreateAggregateQuery((DbAggregateQueryBuilder queryBuilder, SalesOrder model) =>
-        //                {
-        //                    queryBuilder.From(db.SalesOrderHeader, out var h)
-        //                        .AutoSelect()
-        //                        .Where(h.SalesOrderID == _Int32.Const(71774) | h.SalesOrderID == _Int32.Const(71776))
-        //                        .OrderBy(h.SalesOrderNumber.Desc());
-        //                });
+        [TestMethod]
+        public void DbQuery_SequentialKeyTempTable_aggregate_query()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var salesOrders = db.CreateAggregateQuery((DbAggregateQueryBuilder queryBuilder, SalesOrder model) =>
+                {
+                    queryBuilder.From(db.SalesOrderHeader, out var h)
+                        .AutoSelect()
+                        .Where(h.SalesOrderID == _Int32.Const(71774) | h.SalesOrderID == _Int32.Const(71776))
+                        .OrderBy(h.SalesOrderNumber.Desc());
+                });
 
-        //                var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
+                var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
 
-        //                var expectedSql = new string[]
-        //                {
-        //@"CREATE TABLE [#sys_sequential_SalesOrder] (
-        //    [SalesOrderID] INT NOT NULL,
-        //    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
+                var expectedSql = new string[]
+                {
+@"SET @@sql_notes = 0;
+DROP TEMPORARY TABLE IF EXISTS `#sys_sequential_SalesOrder`;
+SET @@sql_notes = 1;
 
-        //    PRIMARY KEY NONCLUSTERED ([SalesOrderID]),
-        //    UNIQUE CLUSTERED ([sys_row_id] ASC)
-        //);",
+CREATE TEMPORARY TABLE `#sys_sequential_SalesOrder` (
+    `SalesOrderID` INT NOT NULL COMMENT 'Primary key.',
+    `sys_row_id` INT NOT NULL AUTO_INCREMENT,
 
-        //@"INSERT INTO [#sys_sequential_SalesOrder]
-        //([SalesOrderID])
-        //SELECT [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID]
-        //FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
-        //WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
-        //GROUP BY
-        //    [SalesOrderHeader].[SalesOrderID],
-        //    [SalesOrderHeader].[RevisionNumber],
-        //    [SalesOrderHeader].[OrderDate],
-        //    [SalesOrderHeader].[DueDate],
-        //    [SalesOrderHeader].[ShipDate],
-        //    [SalesOrderHeader].[Status],
-        //    [SalesOrderHeader].[OnlineOrderFlag],
-        //    [SalesOrderHeader].[SalesOrderNumber],
-        //    [SalesOrderHeader].[PurchaseOrderNumber],
-        //    [SalesOrderHeader].[AccountNumber],
-        //    [SalesOrderHeader].[CustomerID],
-        //    [SalesOrderHeader].[ShipToAddressID],
-        //    [SalesOrderHeader].[BillToAddressID],
-        //    [SalesOrderHeader].[ShipMethod],
-        //    [SalesOrderHeader].[CreditCardApprovalCode],
-        //    [SalesOrderHeader].[SubTotal],
-        //    [SalesOrderHeader].[TaxAmt],
-        //    [SalesOrderHeader].[Freight],
-        //    [SalesOrderHeader].[TotalDue],
-        //    [SalesOrderHeader].[Comment],
-        //    [SalesOrderHeader].[RowGuid],
-        //    [SalesOrderHeader].[ModifiedDate]
-        //ORDER BY [SalesOrderHeader].[SalesOrderNumber] DESC;"
-        //                };
+    UNIQUE (`SalesOrderID`),
+    PRIMARY KEY (`sys_row_id` ASC)
+);",
 
-        //                commands.Verify(expectedSql);
-        //            }
-        //        }
+@"INSERT INTO `#sys_sequential_SalesOrder`
+(`SalesOrderID`)
+SELECT `SalesOrderHeader`.`SalesOrderID` AS `SalesOrderID`
+FROM `SalesOrderHeader`
+WHERE ((`SalesOrderHeader`.`SalesOrderID` = 71774) OR (`SalesOrderHeader`.`SalesOrderID` = 71776))
+GROUP BY
+    `SalesOrderHeader`.`SalesOrderID`,
+    `SalesOrderHeader`.`RevisionNumber`,
+    `SalesOrderHeader`.`OrderDate`,
+    `SalesOrderHeader`.`DueDate`,
+    `SalesOrderHeader`.`ShipDate`,
+    `SalesOrderHeader`.`Status`,
+    `SalesOrderHeader`.`OnlineOrderFlag`,
+    `SalesOrderHeader`.`SalesOrderNumber`,
+    `SalesOrderHeader`.`PurchaseOrderNumber`,
+    `SalesOrderHeader`.`AccountNumber`,
+    `SalesOrderHeader`.`CustomerID`,
+    `SalesOrderHeader`.`ShipToAddressID`,
+    `SalesOrderHeader`.`BillToAddressID`,
+    `SalesOrderHeader`.`ShipMethod`,
+    `SalesOrderHeader`.`CreditCardApprovalCode`,
+    `SalesOrderHeader`.`SubTotal`,
+    `SalesOrderHeader`.`TaxAmt`,
+    `SalesOrderHeader`.`Freight`,
+    `SalesOrderHeader`.`TotalDue`,
+    `SalesOrderHeader`.`Comment`,
+    `SalesOrderHeader`.`RowGuid`,
+    `SalesOrderHeader`.`ModifiedDate`
+ORDER BY `SalesOrderHeader`.`SalesOrderNumber` DESC;
+"
+                };
+
+                commands.Verify(expectedSql);
+            }
+        }
 
         //        [TestMethod]
         //        public void DbQuery_SequentialKeyTempTable_union_query()
