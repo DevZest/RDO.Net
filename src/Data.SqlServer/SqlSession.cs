@@ -291,28 +291,20 @@ namespace DevZest.Data.SqlServer
 
         protected sealed override async Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken ct)
         {
-            var command = GetInsertScalarCommand(statement, outputIdentity);
-            if (!outputIdentity)
-            {
-                var rowCount = await ExecuteNonQueryAsync(command, ct);
+            var command = GetInsertScalarCommand(statement, outputIdentity, out var scopeIdentityParam);
+            var rowCount = await ExecuteNonQueryAsync(command, ct);
+            if (scopeIdentityParam == null)
                 return new InsertScalarResult(rowCount > 0, null);
-            }
-
-            var model = ScalarIdentityOutput.Singleton;
-            long? identityValue = null;
-            using (var reader = await PrepareReaderInvoker(model, command).ExecuteAsync(ct))
+            else
             {
-                if (await reader.ReadAsync(ct))
-                    identityValue = model.IdentityValue[reader];
+                var returnValue = scopeIdentityParam.Value;
+                return returnValue == DBNull.Value ? new InsertScalarResult(false, null) : new InsertScalarResult(true, (long)scopeIdentityParam.Value);
             }
-
-            var sucess = identityValue.HasValue;
-            return new InsertScalarResult(sucess, identityValue);
         }
 
-        internal SqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)
+        internal SqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity, out SqlParameter scopeIdentityParam)
         {
-            return SqlGenerator.InsertScalar(this, statement, outputIdentity).CreateCommand(Connection);
+            return SqlGenerator.InsertScalar(this, statement, outputIdentity, out scopeIdentityParam).CreateCommand(Connection, scopeIdentityParam);
         }
 
         protected sealed override SqlCommand GetUpdateCommand(DbSelectStatement statement)

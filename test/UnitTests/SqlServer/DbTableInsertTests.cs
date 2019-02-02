@@ -152,6 +152,7 @@ SELECT
 DECLARE @p2 NVARCHAR(50) = N'Name';
 DECLARE @p3 UNIQUEIDENTIFIER = '040d9b64-05fd-4464-b398-74679c427980';
 DECLARE @p4 DATETIME = '2015-09-08 00:00:00.000';
+DECLARE @scopeIdentity BIGINT;
 
 INSERT INTO [SalesLT].[ProductCategory]
 ([ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
@@ -161,7 +162,7 @@ SELECT
     @p3 AS [RowGuid],
     @p4 AS [ModifiedDate];
 
-SELECT CAST(SCOPE_IDENTITY() AS BIGINT);
+SET @scopeIdentity = CAST(SCOPE_IDENTITY() AS BIGINT);
 ";
                 command.Verify(expectedSql);
             }

@@ -64,7 +64,7 @@ namespace DevZest.Data.Helpers
         private static SqlCommand GetInsertScalarCommand<T>(this DbTable<T> dbTable, DbSelectStatement statement, bool updateIdentity)
             where T : Model, new()
         {
-            return dbTable.SqlSession().GetInsertScalarCommand(statement, updateIdentity);
+            return dbTable.SqlSession().GetInsertScalarCommand(statement, updateIdentity, out _);
         }
 
         public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> source)

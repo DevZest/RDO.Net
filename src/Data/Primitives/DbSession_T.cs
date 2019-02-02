@@ -106,7 +106,7 @@ namespace DevZest.Data.Primitives
 
         protected abstract TCommand GetQueryCommand(DbQueryStatement queryStatement);
 
-        protected ReaderInvoker PrepareReaderInvoker(Model model, TCommand command)
+        private ReaderInvoker PrepareReaderInvoker(Model model, TCommand command)
         {
             command.Transaction = CurrentTransaction;
             return CreateReaderInvoker(model, command);

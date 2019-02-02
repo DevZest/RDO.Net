@@ -1,6 +1,8 @@
 ﻿using DevZest.Data.Primitives;
+using DevZest.Data.SqlServer.Addons;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Globalization;
@@ -82,7 +84,7 @@ namespace DevZest.Data.SqlServer
                 return model.GetInsertableColumns().ToList();
         }
 
-        internal static SqlGenerator InsertScalar(SqlSession sqlSession, DbSelectStatement statement, bool outputIdentity)
+        internal static SqlGenerator InsertScalar(SqlSession sqlSession, DbSelectStatement statement, bool outputIdentity, out SqlParameter scopeIdentityParam)
         {
             var result = new SqlGenerator(sqlSession.SqlVersion);
             var model = statement.Model;
@@ -100,9 +102,14 @@ namespace DevZest.Data.SqlServer
 
             if (outputIdentity)
             {
+                var sqlType = SqlType.BigInt(new _Int64());
+                scopeIdentityParam = sqlType.CreateSqlParameter("@scopeIdentity", ParameterDirection.Output, null, sqlSession.SqlVersion);
+
                 sqlBuilder.AppendLine();
-                sqlBuilder.Append("SELECT CAST(SCOPE_IDENTITY() AS BIGINT);");
+                sqlBuilder.Append("SET @scopeIdentity = CAST(SCOPE_IDENTITY() AS BIGINT);");
             }
+            else
+                scopeIdentityParam = null;
 
             return result;
         }
@@ -467,7 +474,7 @@ namespace DevZest.Data.SqlServer
             get { return _expressionGenerator.ParametersCount; }
         }
 
-        public IEnumerable<SqlParameter> ComandParameters
+        public IEnumerable<SqlParameter> CommandParameters
         {
             get
             {
@@ -481,9 +488,10 @@ namespace DevZest.Data.SqlServer
             get { return SqlBuilder.ToString(); }
         }
 
-        public SqlCommand CreateCommand(SqlConnection sqlConnection)
+        public SqlCommand CreateCommand(SqlConnection sqlConnection, params SqlParameter[] extraParameters)
         {
-            return CommandText.CreateSqlCommand(sqlConnection, ComandParameters);
+            var commandParameters = extraParameters == null ? CommandParameters : CommandParameters.Concat(extraParameters.Where(x => x != null));
+            return CommandText.CreateSqlCommand(sqlConnection, commandParameters);
         }
     }
 }
