@@ -2,7 +2,6 @@
 using DevZest.Data.MySql.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using DevZest.Data.Primitives;
 using DevZest.Data.MySql.Resources;
 
 namespace DevZest.Data.MySql
@@ -192,29 +191,6 @@ WHERE (`Product`.`ProductID` > 800));
             }
         }
 
-        //        [TestMethod]
-        //        public void DbTable_BuildUpdateIdentityStatement()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var tempSalesOrders = db.MockTempTable<SalesOrder>();
-        //                var identityOutput = db.MockTempTable<Int32IdentityMapping>();
-        //                var statements = tempSalesOrders.BuildUpdateIdentityStatement(identityOutput);
-        //                Assert.AreEqual(1, statements.Count);
-        //                var command = db.GetUpdateCommand(statements[0]);
-        //                var expectedSql =
-        //@"UPDATE [SalesOrder] SET
-        //    [SalesOrderID] = [sys_identity_mapping].[NewValue]
-        //FROM
-        //    ([#sys_identity_mapping] [sys_identity_mapping]
-        //    INNER JOIN
-        //    [#SalesOrder] [SalesOrder]
-        //    ON [sys_identity_mapping].[OldValue] = [SalesOrder].[SalesOrderID]);
-        //";
-        //                command.Verify(expectedSql);
-        //            }
-        //        }
-
         [TestMethod]
         public void DbTable_Insert_from_DataSet()
         {
@@ -339,82 +315,5 @@ ORDER BY `@SalesOrderDetail`.`sys_dataset_ordinal` ASC;
                 command.Verify(expectedSql);
             }
         }
-
-//        [TestMethod]
-//        public void DbTable_Insert_from_temp_table_updateIdentity()
-//        {
-//            using (var db = new Db(MySqlVersion.LowestSupported))
-//            {
-//                var sourceData = db.MockTempTable<ProductCategory>();
-//                var children = sourceData.MockCreateChild(x => x.SubCategories);
-//                var grandChildren = children.MockCreateChild(x => x.SubCategories);
-//                var commands = db.ProductCategory.MockInsert(10, sourceData, updateIdentity: true);
-
-//                var expectedSql = new string[]
-//                {
-//@"CREATE TEMPORARY TABLE `#sys_identity_mapping` (
-//    `OldValue` INT NOT NULL,
-//    `NewValue` INT NULL,
-//    `OriginalSysRowId` INT NULL,
-//    `sys_row_id` INT NOT NULL IDENTITY(1, 1)
-
-//    CONSTRAINT `PK_sys_identity_mapping_` PRIMARY KEY (`OldValue`),
-//    UNIQUE CLUSTERED (`sys_row_id` ASC)
-//);",
-
-//@"CREATE TEMPORARY TABLE `#IdentityOutput` (
-//    `NewValue` INT NOT NULL,
-//    `sys_row_id` INT NOT NULL IDENTITY(1, 1)
-
-//    PRIMARY KEY CLUSTERED (`sys_row_id` ASC)
-//);",
-
-//@"INSERT INTO `SalesLT`.`ProductCategory`
-//(`ParentProductCategoryID`, `Name`, `RowGuid`, `ModifiedDate`)
-//OUTPUT INSERTED.`ProductCategoryID` INTO `#IdentityOutput` (`NewValue`)
-//SELECT
-//    `ProductCategory`.`ParentProductCategoryID` AS `ParentProductCategoryID`,
-//    `ProductCategory`.`Name` AS `Name`,
-//    `ProductCategory`.`RowGuid` AS `RowGuid`,
-//    `ProductCategory`.`ModifiedDate` AS `ModifiedDate`
-//FROM `#ProductCategory` `ProductCategory`
-//ORDER BY `ProductCategory`.`sys_row_id` ASC;",
-
-//@"INSERT INTO `#sys_identity_mapping`
-//(`OldValue`, `OriginalSysRowId`)
-//SELECT
-//    `ProductCategory`.`ProductCategoryID` AS `OldValue`,
-//    `ProductCategory`.`sys_row_id` AS `OriginalSysRowId`
-//FROM `#ProductCategory` `ProductCategory`
-//ORDER BY `ProductCategory`.`sys_row_id` ASC;",
-
-//@"UPDATE `sys_identity_mapping` SET
-//    `NewValue` = `IdentityOutput`.`NewValue`
-//FROM
-//    (`#sys_identity_mapping` `sys_identity_mapping`
-//    INNER JOIN
-//    `#IdentityOutput` `IdentityOutput`
-//    ON `sys_identity_mapping`.`sys_row_id` = `IdentityOutput`.`sys_row_id`);",
-
-//@"UPDATE `ProductCategory` SET
-//    `ProductCategoryID` = `sys_identity_mapping`.`NewValue`
-//FROM
-//    (`#sys_identity_mapping` `sys_identity_mapping`
-//    INNER JOIN
-//    `#ProductCategory` `ProductCategory`
-//    ON `sys_identity_mapping`.`OldValue` = `ProductCategory`.`ProductCategoryID`);",
-
-//@"UPDATE `ProductCategory` SET
-//    `ParentProductCategoryID` = `sys_identity_mapping`.`NewValue`
-//FROM
-//    (`#sys_identity_mapping` `sys_identity_mapping`
-//    INNER JOIN
-//    `#ProductCategory1` `ProductCategory`
-//    ON `sys_identity_mapping`.`OldValue` = `ProductCategory`.`ParentProductCategoryID`);"
-//            };
-
-//                commands.Verify(true, expectedSql);
-//            }
-//        }
     }
 }
