@@ -204,36 +204,5 @@ FROM
                 command.Verify(expectedSql);
             }
         }
-
-        [TestMethod]
-        public void DbTable_Update_child_temp_table()
-        {
-            using (var db = new Db(SqlVersion.Sql11))
-            {
-                var salesOrders = db.MockTempTable<SalesOrder>();
-                var salesOrderDetails = salesOrders.MockCreateChild(x => x.SalesOrderDetails);
-
-                var source = db.MockTempTable<SalesOrderDetail>();
-
-                var command = salesOrderDetails.MockUpdate(0, source);
-                var expectedSql =
-@"UPDATE [#SalesOrderDetail] SET
-    [SalesOrderDetailID] = [#SalesOrderDetail1].[SalesOrderDetailID],
-    [OrderQty] = [#SalesOrderDetail1].[OrderQty],
-    [ProductID] = [#SalesOrderDetail1].[ProductID],
-    [UnitPrice] = [#SalesOrderDetail1].[UnitPrice],
-    [UnitPriceDiscount] = [#SalesOrderDetail1].[UnitPriceDiscount],
-    [LineTotal] = [#SalesOrderDetail1].[LineTotal],
-    [RowGuid] = [#SalesOrderDetail1].[RowGuid],
-    [ModifiedDate] = [#SalesOrderDetail1].[ModifiedDate]
-FROM
-    ([#SalesOrderDetail1]
-    INNER JOIN
-    [#SalesOrderDetail]
-    ON [#SalesOrderDetail1].[SalesOrderID] = [#SalesOrderDetail].[SalesOrderID] AND [#SalesOrderDetail1].[SalesOrderDetailID] = [#SalesOrderDetail].[SalesOrderDetailID]);
-";
-                command.Verify(expectedSql);
-            }
-        }
     }
 }
