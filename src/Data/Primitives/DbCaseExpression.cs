@@ -8,10 +8,11 @@ namespace DevZest.Data.Primitives
 {
     public sealed class DbCaseExpression : DbExpression
     {
-        internal DbCaseExpression(DbExpression onExpr,
+        internal DbCaseExpression(Type dataType, DbExpression onExpr,
             IEnumerable<DbExpression> whens,
             IEnumerable<DbExpression> thens,
             DbExpression elseExpr)
+            : base(dataType)
         {
             On = onExpr;
             When = new ReadOnlyCollection<DbExpression>(whens.ToList());

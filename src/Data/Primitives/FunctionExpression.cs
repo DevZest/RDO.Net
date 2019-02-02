@@ -38,7 +38,7 @@ namespace DevZest.Data.Primitives
         private DbExpression CreateDbExpression()
         {
             if (Parameters == null)
-                return new DbFunctionExpression(FunctionKey);
+                return new DbFunctionExpression(typeof(T), FunctionKey);
 
             var paramList = new DbExpression[Parameters.Count];
             for (int i = 0; i < Parameters.Count; i++)
@@ -47,7 +47,7 @@ namespace DevZest.Data.Primitives
                 paramList[i] = parameter == null ? null : parameter.DbExpression;
             }
 
-            return new DbFunctionExpression(FunctionKey, paramList);
+            return new DbFunctionExpression(typeof(T), FunctionKey, paramList);
         }
 
         protected sealed internal override ColumnExpression PerformTranslateTo(Model model)

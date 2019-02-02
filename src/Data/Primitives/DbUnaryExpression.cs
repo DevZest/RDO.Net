@@ -4,7 +4,8 @@ namespace DevZest.Data.Primitives
 {
     public sealed class DbUnaryExpression : DbExpression
     {
-        public DbUnaryExpression(DbUnaryExpressionKind kind, DbExpression operand)
+        public DbUnaryExpression(Type dataType, DbUnaryExpressionKind kind, DbExpression operand)
+            : base(dataType)
         {
             Kind = kind;
             Operand = operand;

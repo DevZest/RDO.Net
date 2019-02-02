@@ -8,6 +8,8 @@ namespace DevZest.Data.Primitives
     {
         internal abstract void SetOwner(Column column);
 
+        public abstract Column GetOwner();
+
         private IColumns _baseColumns;
         public IColumns BaseColumns
         {
@@ -101,6 +103,11 @@ namespace DevZest.Data.Primitives
         internal sealed override void SetOwner(Column column)
         {
             Owner = (Column<T>)column;
+        }
+
+        public sealed override Column GetOwner()
+        {
+            return Owner;
         }
     }
 }

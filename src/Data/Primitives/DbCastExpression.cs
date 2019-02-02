@@ -5,6 +5,7 @@ namespace DevZest.Data.Primitives
     public sealed class DbCastExpression : DbExpression
     {
         internal DbCastExpression(DbExpression operand, Column sourceColumn, Column targetColumn)
+            : base(targetColumn.DataType)
         {
             Operand = operand;
             SourceColumn = sourceColumn;
@@ -21,11 +22,6 @@ namespace DevZest.Data.Primitives
         public Column SourceColumn { get; private set; }
 
         public Column TargetColumn { get; private set; }
-
-        public Type TargetDataType
-        {
-            get { return TargetColumn.DataType; }
-        }
 
         public override void Accept(DbExpressionVisitor visitor)
         {

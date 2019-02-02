@@ -40,7 +40,7 @@ namespace DevZest.Data.Primitives
         /// <inheritdoc/>
         public override DbExpression GetDbExpression()
         {
-            return new DbUnaryExpression(ExpressionKind, Operand.DbExpression);
+            return new DbUnaryExpression(typeof(T), ExpressionKind, Operand.DbExpression);
         }
 
         /// <inheritdoc/>

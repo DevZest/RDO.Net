@@ -6,6 +6,7 @@ namespace DevZest.Data.Primitives
     public sealed class DbParamExpression : DbExpression
     {
         internal DbParamExpression(Column column, Column sourceColumn, object value)
+            : base(column.DataType)
         {
             Debug.Assert(column != null);
             Debug.Assert(sourceColumn == null || sourceColumn.GetType() == column.GetType());

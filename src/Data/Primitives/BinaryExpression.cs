@@ -59,7 +59,7 @@ namespace DevZest.Data.Primitives
         /// <inheritdoc/>
         public sealed override DbExpression GetDbExpression()
         {
-            return new DbBinaryExpression(Kind, Left.DbExpression, Right.DbExpression);
+            return new DbBinaryExpression(typeof(TResult), Kind, Left.DbExpression, Right.DbExpression);
         }
 
         /// <inheritdoc/>

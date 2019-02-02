@@ -86,7 +86,7 @@ namespace DevZest.Data.Primitives
         /// <inheritdoc/>
         public override DbExpression GetDbExpression()
         {
-            return new DbCaseExpression(_on.DbExpression,
+            return new DbCaseExpression(typeof(TResult), _on.DbExpression,
                 _when.Select(x => x.DbExpression),
                 _then.Select(x => x.DbExpression),
                 _else.DbExpression);

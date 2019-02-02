@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Primitives
@@ -7,17 +8,18 @@ namespace DevZest.Data.Primitives
     {
         private static readonly DbExpression[] s_emptyParamList = new DbExpression[0];
 
-        public DbFunctionExpression(FunctionKey functionKey)
-            : this(functionKey, s_emptyParamList)
+        public DbFunctionExpression(Type dataType, FunctionKey functionKey)
+            : this(dataType, functionKey, s_emptyParamList)
         {
         }
 
-        public DbFunctionExpression(FunctionKey functionKey, params DbExpression[] paramList)
-            : this(functionKey, (IList<DbExpression>)paramList)
+        public DbFunctionExpression(Type dataType, FunctionKey functionKey, params DbExpression[] paramList)
+            : this(dataType, functionKey, (IList<DbExpression>)paramList)
         {
         }
 
-        public DbFunctionExpression(FunctionKey functionKey, IList<DbExpression> paramList)
+        public DbFunctionExpression(Type dataType, FunctionKey functionKey, IList<DbExpression> paramList)
+            : base(dataType)
         {
             functionKey.VerifyNotNull(nameof(functionKey));
             paramList.VerifyNotNull(nameof(paramList));

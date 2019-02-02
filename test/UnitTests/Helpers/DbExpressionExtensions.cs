@@ -36,7 +36,7 @@ namespace DevZest.Data.Helpers
         {
             Assert.AreEqual(operand.DbExpression, expression.Operand);
             Assert.AreEqual(sourceDataType, expression.SourceDataType);
-            Assert.AreEqual(targetDataType, expression.TargetDataType);
+            Assert.AreEqual(targetDataType, expression.DataType);
         }
 
         public static void Verify(this DbFunctionExpression expression, FunctionKey functionKey)

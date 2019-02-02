@@ -228,7 +228,7 @@ namespace DevZest.Data
             if (where2 == null)
                 return where1;
 
-            return new DbBinaryExpression(BinaryExpressionKind.And, where1, where2);
+            return new DbBinaryExpression(typeof(bool?), BinaryExpressionKind.And, where1, where2);
         }
 
         #endregion

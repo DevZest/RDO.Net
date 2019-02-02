@@ -34,7 +34,7 @@ namespace DevZest.Data.Primitives
             var left = expression.Left.Accept(this);
             var right = expression.Right.Accept(this);
             if (expression.Left != left || expression.Right != right)
-                return new DbBinaryExpression(expression.Kind, left, right);
+                return new DbBinaryExpression(expression.DataType, expression.Kind, left, right);
             return expression;
         }
 
@@ -72,7 +72,7 @@ namespace DevZest.Data.Primitives
             var replacedElse = @else.Accept(this);
 
             if (on != replacedOn || when != replacedWhen || then != replacedThen || @else != replacedElse)
-                return new DbCaseExpression(expression.On.Accept(this), Replace(expression.When), Replace(expression.Then), expression.Else.Accept(this));
+                return new DbCaseExpression(expression.DataType, expression.On.Accept(this), Replace(expression.When), Replace(expression.Then), expression.Else.Accept(this));
             else
                 return expression;
         }
@@ -106,7 +106,7 @@ namespace DevZest.Data.Primitives
             var paramList = expression.ParamList;
             var replacedParamList = Replace(paramList);
             if (paramList != replacedParamList)
-                return new DbFunctionExpression(expression.FunctionKey, Replace(expression.ParamList));
+                return new DbFunctionExpression(expression.DataType, expression.FunctionKey, Replace(expression.ParamList));
             else
                 return expression;
         }
@@ -121,7 +121,7 @@ namespace DevZest.Data.Primitives
             var operand = expression.Operand;
             var replacedOperand = operand.Accept(this);
             if (operand != replacedOperand)
-                return new DbUnaryExpression(expression.Kind, expression.Operand.Accept(this));
+                return new DbUnaryExpression(expression.DataType, expression.Kind, expression.Operand.Accept(this));
             else
                 return expression;
         }

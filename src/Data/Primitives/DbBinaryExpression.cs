@@ -1,8 +1,11 @@
-﻿namespace DevZest.Data.Primitives
+﻿using System;
+
+namespace DevZest.Data.Primitives
 {
     public sealed class DbBinaryExpression : DbExpression
     {
-        public DbBinaryExpression(BinaryExpressionKind kind, DbExpression left, DbExpression right)
+        public DbBinaryExpression(Type dataType, BinaryExpressionKind kind, DbExpression left, DbExpression right)
+            : base(dataType)
         {
             left.VerifyNotNull(nameof(left));
             right.VerifyNotNull(nameof(right));

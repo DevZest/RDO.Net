@@ -6,6 +6,7 @@ namespace DevZest.Data.Primitives
     public sealed class DbColumnExpression : DbExpression
     {
         internal DbColumnExpression(Column column)
+            : base(column.DataType)
         {
             Debug.Assert(column != null);
             Column = column;

@@ -212,8 +212,8 @@ namespace DevZest.Data
                 var param = column.CreateParam(parentRow).DbExpression;
                 var sourceColumnOrdinal = parentRelationship.Where(x => x.Target.Ordinal == column.Ordinal).Single().Source.Ordinal;
                 var sourceExpression = SelectList[sourceColumnOrdinal].SourceExpression;
-                var equalCondition = new DbBinaryExpression(BinaryExpressionKind.Equal, sourceExpression, param);
-                WhereExpression = WhereExpression == null ? equalCondition : new DbBinaryExpression(BinaryExpressionKind.And, equalCondition, WhereExpression);
+                var equalCondition = new DbBinaryExpression(typeof(bool?), BinaryExpressionKind.Equal, sourceExpression, param);
+                WhereExpression = WhereExpression == null ? equalCondition : new DbBinaryExpression(typeof(bool?), BinaryExpressionKind.And, equalCondition, WhereExpression);
             }
         }
     }
