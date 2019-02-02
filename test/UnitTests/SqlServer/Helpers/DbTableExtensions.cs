@@ -205,32 +205,35 @@ namespace DevZest.Data.SqlServer.Helpers
             return dbTable.SqlSession().BuildUpdateCommand(source, dbTable, columnMapper, joinTo);
         }
 
-        internal static SqlCommand MockDelete<T>(this DbTable<T> dbTable, Func<T, _Boolean> where)
+        internal static SqlCommand MockDelete<T>(this DbTable<T> dbTable, int rowsAffected, Func<T, _Boolean> where)
             where T : Model, new()
         {
+            dbTable.UpdateOrigin(null, rowsAffected);
             var statement = dbTable.BuildDeleteStatement(where);
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
+            dbTable.UpdateOrigin(null, rowsAffected);
             var statement = dbTable.BuildDeleteStatement(source, keyMapping.GetColumnMappings());
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> source, int ordinal, Func<TSource, TTarget, KeyMapping> keyMapper)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal, Func<TSource, TTarget, KeyMapping> keyMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
+            dbTable.UpdateOrigin<TSource>(null, success);
             var statement = dbTable.BuildDeleteScalarStatement(source, ordinal, keyMapping.GetColumnMappings());
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source, Func<TSource, TTarget, KeyMapping> keyMapper)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -240,9 +243,13 @@ namespace DevZest.Data.SqlServer.Helpers
                 return null;
 
             if (source.Count == 1)
-                return dbTable.MockDelete(source, 0, keyMapper);
+            {
+                Debug.Assert(rowsAffected == 1 || rowsAffected == 0);
+                return dbTable.MockDelete(rowsAffected != 0, source, 0, keyMapper);
+            }
 
             var keyMapping = dbTable.Verify(keyMapper, nameof(keyMapper), source._);
+            dbTable.UpdateOrigin(null, rowsAffected);
             return dbTable.SqlSession().BuildDeleteCommand(source, dbTable, keyMapping.TargetKey);
         }
     }
