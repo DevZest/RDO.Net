@@ -102,84 +102,75 @@ namespace DevZest.Data.MySql.Helpers
             return mySqlSession.BuildInsertCommand(source, dbTable, columnMapper);
         }
 
-        //        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
-        //            where T : Model, new()
-        //        {
-        //            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper));
-        //            var statement = dbTable.BuildUpdateStatement(columnMappings, where);
-        //            var result = dbTable.SqlSession().GetUpdateCommand(statement);
-        //            dbTable.UpdateOrigin(null, rowsAffected);
-        //            return result;
-        //        }
+        internal static MySqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMapper, T> columnMapper, Func<T, _Boolean> where = null)
+            where T : Model, new()
+        {
+            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper));
+            var statement = dbTable.BuildUpdateStatement(columnMappings, where);
+            var result = dbTable.MySqlSession().GetUpdateCommand(statement);
+            dbTable.UpdateOrigin(null, rowsAffected);
+            return result;
+        }
 
-        //        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> dbSet)
-        //            where T : Model, new()
-        //        {
-        //            return MockUpdate(dbTable, rowsAffected, dbSet, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
-        //        }
+        internal static MySqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> dbSet)
+            where T : Model, new()
+        {
+            return MockUpdate(dbTable, rowsAffected, dbSet, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+        }
 
-        //        internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> dbSet,
-        //            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> join)
-        //            where TSource : Model, new()
-        //            where TTarget : Model, new()
-        //        {
-        //            dbTable.Verify(dbSet, nameof(dbSet));
-        //            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), dbSet._);
-        //            var keyMapping = dbTable.Verify(join, nameof(join), dbSet._).GetColumnMappings();
-        //            var statement = dbTable.BuildUpdateStatement(dbSet, columnMappings, keyMapping);
-        //            var result = dbTable.SqlSession().GetUpdateCommand(statement);
-        //            dbTable.UpdateOrigin(null, rowsAffected);
-        //            return result;
-        //        }
+        internal static MySqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> dbSet,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> join)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            dbTable.Verify(dbSet, nameof(dbSet));
+            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), dbSet._);
+            var keyMapping = dbTable.Verify(join, nameof(join), dbSet._).GetColumnMappings();
+            var statement = dbTable.BuildUpdateStatement(dbSet, columnMappings, keyMapping);
+            var result = dbTable.MySqlSession().GetUpdateCommand(statement);
+            dbTable.UpdateOrigin(null, rowsAffected);
+            return result;
+        }
 
-        //        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int rowIndex)
-        //            where T : Model, new()
-        //        {
-        //            return MockUpdate(dbTable, success, source, rowIndex, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
-        //        }
+        internal static MySqlCommand MockUpdate<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int rowIndex)
+            where T : Model, new()
+        {
+            return MockUpdate(dbTable, success, source, rowIndex, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+        }
 
-        //        internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int rowIndex,
-        //            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper)
-        //            where TSource : Model, new()
-        //            where TTarget : Model, new()
-        //        {
-        //            dbTable.Verify(source, nameof(source), rowIndex, nameof(rowIndex));
-        //            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), source._);
-        //            var join = dbTable.Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
+        internal static MySqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int rowIndex,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            dbTable.Verify(source, nameof(source), rowIndex, nameof(rowIndex));
+            var columnMappings = dbTable.Verify(columnMapper, nameof(columnMapper), source._);
+            var join = dbTable.Verify(joinMapper, nameof(joinMapper), source._).GetColumnMappings();
 
-        //            var statement = dbTable.BuildUpdateScalarStatement(source, rowIndex, columnMappings, join);
-        //            var result = dbTable.SqlSession().GetUpdateCommand(statement);
-        //            dbTable.UpdateOrigin<TSource>(null, success);
-        //            return result;
-        //        }
+            var statement = dbTable.BuildUpdateScalarStatement(source, rowIndex, columnMappings, join);
+            var result = dbTable.MySqlSession().GetUpdateCommand(statement);
+            dbTable.UpdateOrigin<TSource>(null, success);
+            return result;
+        }
 
-        //        internal static SqlCommand MockUpdate<TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TTarget> source)
-        //            where TTarget : Model, new()
-        //        {
-        //            return MockUpdate(dbTable, rowsAffected, source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
-        //        }
+        internal static MySqlCommand MockUpdate<TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TTarget> source)
+            where TTarget : Model, new()
+        {
+            return MockUpdate(dbTable, rowsAffected, source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+        }
 
-        //        internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
-        //            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper)
-        //            where TSource : Model, new()
-        //            where TTarget : Model, new()
-        //        {
-        //            if (source == null)
-        //                throw new ArgumentNullException(nameof(source));
+        internal static MySqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
+            Action<ColumnMapper, TSource, TTarget> columnMapper, Func<TSource, TTarget, KeyMapping> joinMapper)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
-        //            if (source.Count == 0)
-        //                return null;
-
-        //            if (source.Count == 1)
-        //            {
-        //                Debug.Assert(rowsAffected == 1 || rowsAffected == 0);
-        //                MockUpdate(dbTable, rowsAffected > 0, source, 0, columnMapper, joinMapper);
-        //            }
-
-        //            dbTable.UpdateOrigin(null, rowsAffected);
-        //            var joinTo = dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
-        //            return dbTable.SqlSession().BuildUpdateCommand(source, dbTable, columnMapper, joinTo);
-        //        }
+            dbTable.UpdateOrigin(null, rowsAffected);
+            var joinTo = dbTable.Verify(joinMapper, nameof(joinMapper), source._).TargetKey;
+            return dbTable.MySqlSession().BuildUpdateCommand(source, dbTable, columnMapper, joinTo);
+        }
 
         internal static MySqlCommand MockDelete<T>(this DbTable<T> dbTable, Func<T, _Boolean> where)
             where T : Model, new()
