@@ -539,73 +539,77 @@ ORDER BY `SalesOrderHeader`.`SalesOrderNumber` DESC;
             }
         }
 
-        //        [TestMethod]
-        //        public void DbQuery_SequentialKeyTempTable_union_query()
-        //        {
-        //            using (var db = new Db(SqlVersion.Sql11))
-        //            {
-        //                var unionQuery = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
-        //                var commands = unionQuery.GetCreateSequentialKeyTempTableCommands();
+        [TestMethod]
+        public void DbQuery_SequentialKeyTempTable_union_query()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var unionQuery = db.Product.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800)));
+                var commands = unionQuery.GetCreateSequentialKeyTempTableCommands();
 
-        //                var expectedSql = new string[]
-        //                {
-        //@"CREATE TABLE [#sys_sequential_Product] (
-        //    [ProductID] INT NOT NULL,
-        //    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
+                var expectedSql = new string[]
+                {
+@"SET @@sql_notes = 0;
+DROP TEMPORARY TABLE IF EXISTS `#sys_sequential_Product`;
+SET @@sql_notes = 1;
 
-        //    PRIMARY KEY NONCLUSTERED ([ProductID]),
-        //    UNIQUE CLUSTERED ([sys_row_id] ASC)
-        //);",
+CREATE TEMPORARY TABLE `#sys_sequential_Product` (
+    `ProductID` INT NOT NULL COMMENT 'Primary key for Product records.',
+    `sys_row_id` INT NOT NULL AUTO_INCREMENT,
 
-        //@"INSERT INTO [#sys_sequential_Product]
-        //([ProductID])
-        //SELECT [Product].[ProductID] AS [ProductID]
-        //FROM
-        //    ((SELECT
-        //        [Product].[ProductID] AS [ProductID],
-        //        [Product].[Name] AS [Name],
-        //        [Product].[ProductNumber] AS [ProductNumber],
-        //        [Product].[Color] AS [Color],
-        //        [Product].[StandardCost] AS [StandardCost],
-        //        [Product].[ListPrice] AS [ListPrice],
-        //        [Product].[Size] AS [Size],
-        //        [Product].[Weight] AS [Weight],
-        //        [Product].[ProductCategoryID] AS [ProductCategoryID],
-        //        [Product].[ProductModelID] AS [ProductModelID],
-        //        [Product].[SellStartDate] AS [SellStartDate],
-        //        [Product].[SellEndDate] AS [SellEndDate],
-        //        [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-        //        [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-        //        [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-        //        [Product].[RowGuid] AS [RowGuid],
-        //        [Product].[ModifiedDate] AS [ModifiedDate]
-        //    FROM [SalesLT].[Product] [Product]
-        //    WHERE ([Product].[ProductID] < 720))
-        //    UNION ALL
-        //    (SELECT
-        //        [Product].[ProductID] AS [ProductID],
-        //        [Product].[Name] AS [Name],
-        //        [Product].[ProductNumber] AS [ProductNumber],
-        //        [Product].[Color] AS [Color],
-        //        [Product].[StandardCost] AS [StandardCost],
-        //        [Product].[ListPrice] AS [ListPrice],
-        //        [Product].[Size] AS [Size],
-        //        [Product].[Weight] AS [Weight],
-        //        [Product].[ProductCategoryID] AS [ProductCategoryID],
-        //        [Product].[ProductModelID] AS [ProductModelID],
-        //        [Product].[SellStartDate] AS [SellStartDate],
-        //        [Product].[SellEndDate] AS [SellEndDate],
-        //        [Product].[DiscontinuedDate] AS [DiscontinuedDate],
-        //        [Product].[ThumbNailPhoto] AS [ThumbNailPhoto],
-        //        [Product].[ThumbnailPhotoFileName] AS [ThumbnailPhotoFileName],
-        //        [Product].[RowGuid] AS [RowGuid],
-        //        [Product].[ModifiedDate] AS [ModifiedDate]
-        //    FROM [SalesLT].[Product] [Product]
-        //    WHERE ([Product].[ProductID] > 800))) [Product];"
-        //                };
+    UNIQUE (`ProductID`),
+    PRIMARY KEY (`sys_row_id` ASC)
+);",
 
-        //                commands.Verify(expectedSql);
-        //            }
-        //        }
+@"INSERT INTO `#sys_sequential_Product`
+(`ProductID`)
+SELECT `Product`.`ProductID` AS `ProductID`
+FROM
+    ((SELECT
+        `Product`.`ProductID` AS `ProductID`,
+        `Product`.`Name` AS `Name`,
+        `Product`.`ProductNumber` AS `ProductNumber`,
+        `Product`.`Color` AS `Color`,
+        `Product`.`StandardCost` AS `StandardCost`,
+        `Product`.`ListPrice` AS `ListPrice`,
+        `Product`.`Size` AS `Size`,
+        `Product`.`Weight` AS `Weight`,
+        `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+        `Product`.`ProductModelID` AS `ProductModelID`,
+        `Product`.`SellStartDate` AS `SellStartDate`,
+        `Product`.`SellEndDate` AS `SellEndDate`,
+        `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+        `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+        `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+        `Product`.`RowGuid` AS `RowGuid`,
+        `Product`.`ModifiedDate` AS `ModifiedDate`
+    FROM `Product`
+    WHERE (`Product`.`ProductID` < 720))
+    UNION ALL
+    (SELECT
+        `Product`.`ProductID` AS `ProductID`,
+        `Product`.`Name` AS `Name`,
+        `Product`.`ProductNumber` AS `ProductNumber`,
+        `Product`.`Color` AS `Color`,
+        `Product`.`StandardCost` AS `StandardCost`,
+        `Product`.`ListPrice` AS `ListPrice`,
+        `Product`.`Size` AS `Size`,
+        `Product`.`Weight` AS `Weight`,
+        `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+        `Product`.`ProductModelID` AS `ProductModelID`,
+        `Product`.`SellStartDate` AS `SellStartDate`,
+        `Product`.`SellEndDate` AS `SellEndDate`,
+        `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+        `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+        `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+        `Product`.`RowGuid` AS `RowGuid`,
+        `Product`.`ModifiedDate` AS `ModifiedDate`
+    FROM `Product`
+    WHERE (`Product`.`ProductID` > 800))) `Product`;"
+                };
+
+                commands.Verify(expectedSql);
+            }
+        }
     }
 }
