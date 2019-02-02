@@ -227,14 +227,13 @@ namespace DevZest.Data.MySql
         protected sealed override object CreateMockDb()
         {
             var commandText =
-@"declare @id int
-
-set @id = (select max(cast(right(name, len(name) - 4) AS int)) from tempdb.sys.schemas where name like 'Mock%');
-set @id = isnull(@id, 0) + 1;
-
-declare @mockschema nvarchar(24) = N'Mock' + cast(@id as nvarchar(20));
-declare @sql nvarchar(50) = N'create schema ' + @mockschema;
-exec tempdb..sp_executesql @sql;
+@"set @id = (select max(cast(right(SCHEMA_NAME, char_length(SCHEMA_NAME) - 4) as unsigned)) from INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME like 'Mock%');
+set @id = IFNULL(@id, 0) + 1;
+set @mockschema = concat('Mock', @id);
+set @sqlText = concat('create schema ', @mockschema, ';');
+prepare stmt from @sqlText;
+execute stmt;
+deallocate prepare stmt;
 select @mockschema;
 ";
             var command = new MySqlCommand(commandText, Connection);
@@ -243,8 +242,7 @@ select @mockschema;
 
         protected sealed override string GetMockTableName(string tableName, object tag)
         {
-            var quotedTableName = string.Join(".", tableName.ParseIdentifier()).ToQuotedIdentifier();
-            return string.Format(CultureInfo.InvariantCulture, "[tempdb].[{0}].{1}", tag, quotedTableName);
+            return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", ((string)tag).ToQuotedIdentifier(), tableName.ToQuotedIdentifier());
         }
 
         private const string SYS_DATASET_ORDINAL = "sys_dataset_ordinal";
