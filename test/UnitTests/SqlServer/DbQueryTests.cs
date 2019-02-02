@@ -3,6 +3,7 @@ using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Data.Helpers;
 using System;
+using DevZest.Data.SqlServer.Helpers;
 
 namespace DevZest.Data.SqlServer
 {
