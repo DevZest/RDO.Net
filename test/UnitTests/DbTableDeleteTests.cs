@@ -14,7 +14,7 @@ namespace DevZest.Data.MySql
         {
             using (var db = new Db(MySqlVersion.LowestSupported))
             {
-                var command = db.ProductCategory.MockDelete(x => x.ModifiedDate.IsNull());
+                var command = db.ProductCategory.MockDelete(0, x => x.ModifiedDate.IsNull());
                 var expectedSql =
 @"DELETE `ProductCategory`
 FROM `ProductCategory`
@@ -30,7 +30,7 @@ WHERE (`ProductCategory`.`ModifiedDate` IS NULL);
             using (var db = new Db(MySqlVersion.LowestSupported))
             {
                 var tempTable = db.MockTempTable<ProductCategory>();
-                var command = db.ProductCategory.MockDelete(tempTable, (s, _) => s.Match(_));
+                var command = db.ProductCategory.MockDelete(0, tempTable, (s, _) => s.Match(_));
                 var expectedSql =
 @"DELETE `ProductCategory`
 FROM
@@ -49,7 +49,7 @@ FROM
             using (var db = new Db(MySqlVersion.LowestSupported))
             {
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
-                var command = db.ProductCategory.MockDelete(query, (s, _) => s.Match(_));
+                var command = db.ProductCategory.MockDelete(0, query, (s, _) => s.Match(_));
                 var expectedSql =
 @"DELETE `ProductCategory`
 FROM
@@ -73,7 +73,7 @@ WHERE (`#ProductCategory`.`ModifiedDate` IS NULL);
                 dataSet._.Name[index] = "Name";
                 dataSet._.RowGuid[index] = new Guid("EC359D7D-AE3A-4A9D-BDCB-03F0A7799514");
                 dataSet._.ModifiedDate[index] = new DateTime(2015, 9, 23);
-                var command = db.ProductCategory.MockDelete(dataSet, (s, _) => s.Match(_));
+                var command = db.ProductCategory.MockDelete(false, dataSet, 0, (s, _) => s.Match(_));
                 var expectedSql =
 @"SET @p1 = 0;
 
@@ -95,7 +95,7 @@ FROM
             {
                 var salesOrder = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
                 var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);
-                var command = db.SalesOrderDetail.MockDelete(salesOrderDetails, (s, _) => s.Match(_));
+                var command = db.SalesOrderDetail.MockDelete(0, salesOrderDetails, (s, _) => s.Match(_));
                 var expectedSql =
 @"SET @p1 = '[{""SalesOrderID"":71774,""SalesOrderDetailID"":110562,""OrderQty"":1,""ProductID"":836,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"",""ModifiedDate"":""2008-06-01T00:00:00.000""},{""SalesOrderID"":71774,""SalesOrderDetailID"":110563,""OrderQty"":1,""ProductID"":822,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""5c77f557-fdb6-43ba-90b9-9a7aec55ca32"",""ModifiedDate"":""2008-06-01T00:00:00.000""}]';
 
