@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Primitives;
 using MySql.Data.MySqlClient;
-using System;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Threading;
@@ -10,12 +9,6 @@ namespace DevZest.Data.MySql
 {
     public sealed class MySqlReader : DbReader
     {
-        internal static MySqlReader Execute(MySqlCommand mySqlCommand, Model model)
-        {
-            var mySqlDataReader = mySqlCommand.ExecuteReader();
-            return new MySqlReader(mySqlDataReader, model);
-        }
-
         internal static async Task<MySqlReader> ExecuteAsync(MySqlCommand mySqlCommand, Model model, CancellationToken cancellationToken)
         {
             var mySqlDataReader = (MySqlDataReader)(await mySqlCommand.ExecuteReaderAsync(cancellationToken));

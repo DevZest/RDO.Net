@@ -13,11 +13,6 @@ namespace DevZest.Data.MySql
             {
             }
 
-            protected override MySqlReader ExecuteCore()
-            {
-                return MySqlReader.Execute(Command, Model);
-            }
-
             protected override Task<MySqlReader> ExecuteCoreAsync(CancellationToken cancellationToken)
             {
                 return MySqlReader.ExecuteAsync(Command, Model, cancellationToken);
