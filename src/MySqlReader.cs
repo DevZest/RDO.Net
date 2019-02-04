@@ -35,11 +35,5 @@ namespace DevZest.Data.MySql
         }
 
         public MySqlDataReader MySqlDataReader { get; private set; }
-
-        public TimeSpan? GetTimeSpan(int ordinal)
-        {
-            var reader = MySqlDataReader;
-            return reader.IsDBNull(ordinal) ? null : new TimeSpan?(reader.GetTimeSpan(ordinal));
-        }
     }
 }
