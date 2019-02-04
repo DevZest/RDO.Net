@@ -39,20 +39,24 @@ namespace DevZest.Data.MySql
                 var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model)).Result;
             }
             var expectedSql =
-@"CREATE TABLE [#sys_sequential_SalesOrder] (
-    [SalesOrderID] INT NOT NULL,
-    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
+@"SET @@sql_notes = 0;
+DROP TEMPORARY TABLE IF EXISTS `#sys_sequential_SalesOrder`;
+SET @@sql_notes = 1;
 
-    PRIMARY KEY NONCLUSTERED ([SalesOrderID]),
-    UNIQUE CLUSTERED ([sys_row_id] ASC)
+CREATE TEMPORARY TABLE `#sys_sequential_SalesOrder` (
+    `SalesOrderID` INT NOT NULL COMMENT 'Primary key.',
+    `sys_row_id` INT NOT NULL AUTO_INCREMENT,
+
+    UNIQUE (`SalesOrderID`),
+    PRIMARY KEY (`sys_row_id` ASC)
 );
 
-INSERT INTO [#sys_sequential_SalesOrder]
-([SalesOrderID])
-SELECT [SalesOrderHeader].[SalesOrderID] AS [SalesOrderID]
-FROM [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
-WHERE (([SalesOrderHeader].[SalesOrderID] = 71774) OR ([SalesOrderHeader].[SalesOrderID] = 71776))
-ORDER BY [SalesOrderHeader].[SalesOrderID];
+INSERT INTO `#sys_sequential_SalesOrder`
+(`SalesOrderID`)
+SELECT `SalesOrderHeader`.`SalesOrderID` AS `SalesOrderID`
+FROM `SalesOrderHeader`
+WHERE ((`SalesOrderHeader`.`SalesOrderID` = 71774) OR (`SalesOrderHeader`.`SalesOrderID` = 71776))
+ORDER BY `SalesOrderHeader`.`SalesOrderID`;
 ";
             Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
         }

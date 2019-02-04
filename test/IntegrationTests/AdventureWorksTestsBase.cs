@@ -23,10 +23,7 @@ namespace DevZest.Data.MySql
 
         private static string GetConnectionString()
         {
-            string mdfFilename = "AdventureWorksLT.mdf";
-            string outputFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string attachDbFilename = Path.Combine(outputFolder, mdfFilename);
-            return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
+            return "Server=127.0.0.1;Port=3306;Database=AdventureWorksLT;Uid=root;Allow User Variables=True";
         }
 
         protected DataSet<SalesOrderInfo> GetSalesOrderInfo(int salesOrderID)
