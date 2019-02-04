@@ -13,11 +13,6 @@ namespace DevZest.Data.SqlServer
             {
             }
 
-            protected override SqlReader ExecuteCore()
-            {
-                return SqlReader.Execute(Command, Model);
-            }
-
             protected override Task<SqlReader> ExecuteCoreAsync(CancellationToken cancellationToken)
             {
                 return SqlReader.ExecuteAsync(Command, Model, cancellationToken);

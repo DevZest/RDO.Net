@@ -21,17 +21,7 @@ namespace DevZest.Data.Primitives
 
             public TReader Result { get; private set; }
 
-            protected abstract TReader ExecuteCore();
-
             protected abstract Task<TReader> ExecuteCoreAsync(CancellationToken cancellationToken);
-
-            internal TReader Execute()
-            {
-                base.Invoke(() => { Result = ExecuteCore(); },
-                    x => x.OnExecuting(Model, Command, this),
-                    x => x.OnExecuted(Model, Command, Result, this));
-                return Result;
-            }
 
             internal async Task<TReader> ExecuteAsync(CancellationToken cancellationToken)
             {

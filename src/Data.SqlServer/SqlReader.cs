@@ -11,11 +11,6 @@ namespace DevZest.Data.SqlServer
 {
     public sealed class SqlReader : DbReader
     {
-        internal static SqlReader Execute(SqlCommand sqlCommand, Model model)
-        {
-            return new SqlReader(sqlCommand.ExecuteReader(), model);
-        }
-
         internal static async Task<SqlReader> ExecuteAsync(SqlCommand sqlCommand, Model model, CancellationToken cancellationToken)
         {
             var sqlDataReader = await sqlCommand.ExecuteReaderAsync(cancellationToken);
