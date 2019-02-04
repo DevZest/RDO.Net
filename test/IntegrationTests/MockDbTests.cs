@@ -2,7 +2,7 @@
 using DevZest.Samples.AdventureWorksLT;
 using System.Text;
 
-namespace DevZest.Data
+namespace DevZest.Data.MySql
 {
     [TestClass]
     public class MockDbTests : AdventureWorksTestsBase

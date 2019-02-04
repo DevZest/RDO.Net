@@ -4,7 +4,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevZest.Data
+namespace DevZest.Data.MySql
 {
     [TestClass]
     public class DbTableUpdateTests : AdventureWorksTestsBase

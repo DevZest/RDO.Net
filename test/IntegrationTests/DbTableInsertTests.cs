@@ -4,7 +4,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevZest.Data
+namespace DevZest.Data.MySql
 {
     [TestClass]
     public class DbTableInsertTests : AdventureWorksTestsBase
@@ -23,7 +23,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = await new EmptySalesOrderMockDb().InitializeAsync(await OpenDbAsync(log)))
             {
-                await db.SalesOrderHeader.InsertAsync(salesOrder, DbTableInsertOptions.UpdateIdentity);
+                await db.SalesOrderHeader.InsertAsync(salesOrder, updateIdentity: true);
             }
             Assert.AreEqual(1, salesOrder._.SalesOrderID[0]);
         }
@@ -35,29 +35,11 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = await new EmptySalesOrderMockDb().InitializeAsync(await OpenDbAsync(log, LogCategory.All)))
             {
-                var result = await db.SalesOrderHeader.InsertAsync(salesOrders, DbTableInsertOptions.UpdateIdentity);
+                var result = await db.SalesOrderHeader.InsertAsync(salesOrders, updateIdentity: true);
                 Assert.AreEqual(2, result);
             }
             Assert.AreEqual(1, salesOrders._.SalesOrderID[0]);
             Assert.AreEqual(2, salesOrders._.SalesOrderID[1]);
-        }
-
-        [TestMethod]
-        public async Task DbTable_InsertAsync_temp_table_update_identity()
-        {
-            var salesOrders = NewSalesOrdersTestData();
-            var log = new StringBuilder();
-            using (var db = await new EmptySalesOrderMockDb().InitializeAsync(await OpenDbAsync(log, LogCategory.All)))
-            {
-                var tempSalesOrders = await db.CreateTempTableAsync<SalesOrder>();
-                await tempSalesOrders.InsertAsync(salesOrders);
-                tempSalesOrders.GetSalesOrderIds().Verify(0, -1);
-
-                var result = await db.SalesOrderHeader.InsertAsync(tempSalesOrders, DbTableInsertOptions.UpdateIdentity);
-                Assert.AreEqual(2, result);
-                db.SalesOrderHeader.ToDbQuery<SalesOrder>().GetSalesOrderIds().Verify(1, 2);
-                tempSalesOrders.GetSalesOrderIds().Verify(1, 2);
-            }
         }
     }
 }

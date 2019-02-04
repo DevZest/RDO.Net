@@ -1,10 +1,9 @@
-﻿using DevZest.Data.SqlServer;
-using DevZest.Samples.AdventureWorksLT;
+﻿using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
-namespace DevZest.Data
+namespace DevZest.Data.MySql
 {
     internal static class Helper
     {
@@ -12,7 +11,7 @@ namespace DevZest.Data
         {
             var result = new List<int>();
 
-            using (var reader = ((SqlSession)salesOrders.DbSession).ExecuteReaderAsync(salesOrders).Result)
+            using (var reader = ((MySqlSession)salesOrders.DbSession).ExecuteReaderAsync(salesOrders).Result)
             {
                 while (reader.Read())
                 {

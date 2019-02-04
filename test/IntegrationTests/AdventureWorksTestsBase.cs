@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevZest.Data
+namespace DevZest.Data.MySql
 {
     public abstract class AdventureWorksTestsBase
     {

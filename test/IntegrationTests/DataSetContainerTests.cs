@@ -1,8 +1,6 @@
-﻿using DevZest.Samples.AdventureWorksLT;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DevZest.Data
+namespace DevZest.Data.MySql
 {
     [TestClass]
     public class DataSetContainerTests : AdventureWorksTestsBase
