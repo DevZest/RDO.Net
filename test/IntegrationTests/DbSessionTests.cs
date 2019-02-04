@@ -103,44 +103,6 @@ ORDER BY `SalesOrderHeader`.`SalesOrderID`;
         }
 
         [TestMethod]
-        public void DbSession_ExecuteReader()
-        {
-            var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
-            {
-                var customers = db.Customer.OrderBy(x => x.CustomerID);
-                var c = customers._;
-                using (var reader = db.ExecuteReaderAsync(customers).Result)
-                {
-                    reader.Read();
-                    var id = c.CustomerID[reader];
-                    Assert.AreEqual(1, id);
-                }
-            }
-            var expectedSql =
-@"SELECT
-    [Customer].[CustomerID] AS [CustomerID],
-    [Customer].[NameStyle] AS [NameStyle],
-    [Customer].[Title] AS [Title],
-    [Customer].[FirstName] AS [FirstName],
-    [Customer].[MiddleName] AS [MiddleName],
-    [Customer].[LastName] AS [LastName],
-    [Customer].[Suffix] AS [Suffix],
-    [Customer].[CompanyName] AS [CompanyName],
-    [Customer].[SalesPerson] AS [SalesPerson],
-    [Customer].[EmailAddress] AS [EmailAddress],
-    [Customer].[Phone] AS [Phone],
-    [Customer].[PasswordHash] AS [PasswordHash],
-    [Customer].[PasswordSalt] AS [PasswordSalt],
-    [Customer].[RowGuid] AS [RowGuid],
-    [Customer].[ModifiedDate] AS [ModifiedDate]
-FROM [SalesLT].[Customer] [Customer]
-ORDER BY [Customer].[CustomerID];
-";
-            Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
-        }
-
-        [TestMethod]
         public async Task DbSession_ExecuteReaderAsync()
         {
             var log = new StringBuilder();
@@ -157,23 +119,23 @@ ORDER BY [Customer].[CustomerID];
             }
             var expectedSql =
 @"SELECT
-    [Customer].[CustomerID] AS [CustomerID],
-    [Customer].[NameStyle] AS [NameStyle],
-    [Customer].[Title] AS [Title],
-    [Customer].[FirstName] AS [FirstName],
-    [Customer].[MiddleName] AS [MiddleName],
-    [Customer].[LastName] AS [LastName],
-    [Customer].[Suffix] AS [Suffix],
-    [Customer].[CompanyName] AS [CompanyName],
-    [Customer].[SalesPerson] AS [SalesPerson],
-    [Customer].[EmailAddress] AS [EmailAddress],
-    [Customer].[Phone] AS [Phone],
-    [Customer].[PasswordHash] AS [PasswordHash],
-    [Customer].[PasswordSalt] AS [PasswordSalt],
-    [Customer].[RowGuid] AS [RowGuid],
-    [Customer].[ModifiedDate] AS [ModifiedDate]
-FROM [SalesLT].[Customer] [Customer]
-ORDER BY [Customer].[CustomerID];
+    `Customer`.`CustomerID` AS `CustomerID`,
+    `Customer`.`NameStyle` AS `NameStyle`,
+    `Customer`.`Title` AS `Title`,
+    `Customer`.`FirstName` AS `FirstName`,
+    `Customer`.`MiddleName` AS `MiddleName`,
+    `Customer`.`LastName` AS `LastName`,
+    `Customer`.`Suffix` AS `Suffix`,
+    `Customer`.`CompanyName` AS `CompanyName`,
+    `Customer`.`SalesPerson` AS `SalesPerson`,
+    `Customer`.`EmailAddress` AS `EmailAddress`,
+    `Customer`.`Phone` AS `Phone`,
+    `Customer`.`PasswordHash` AS `PasswordHash`,
+    `Customer`.`PasswordSalt` AS `PasswordSalt`,
+    `Customer`.`RowGuid` AS `RowGuid`,
+    `Customer`.`ModifiedDate` AS `ModifiedDate`
+FROM `Customer`
+ORDER BY `Customer`.`CustomerID`;
 ";
             Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
         }

@@ -12,15 +12,13 @@ namespace DevZest.Data.MySql
     {
         internal static MySqlReader Execute(MySqlCommand mySqlCommand, Model model)
         {
-            return new MySqlReader(mySqlCommand.ExecuteReader(), model);
+            var mySqlDataReader = mySqlCommand.ExecuteReader();
+            return new MySqlReader(mySqlDataReader, model);
         }
 
         internal static async Task<MySqlReader> ExecuteAsync(MySqlCommand mySqlCommand, Model model, CancellationToken cancellationToken)
         {
-            // MySQL client only provides IAsyncResult implementation and does not include specific code allowing for cancellation,
-            // the CancellationToken param will be ignored.
-            var asyncResult = mySqlCommand.BeginExecuteReader();
-            var mySqlDataReader = await Task<MySqlDataReader>.Factory.FromAsync(asyncResult, mySqlCommand.EndExecuteReader);
+            var mySqlDataReader = (MySqlDataReader)(await mySqlCommand.ExecuteReaderAsync(cancellationToken));
             return new MySqlReader(mySqlDataReader, model);
         }
 
