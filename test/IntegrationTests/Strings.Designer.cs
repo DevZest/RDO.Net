@@ -157,7 +157,7 @@ namespace DevZest.Data.MySql {
         ///   {
         ///      &quot;SalesOrderID&quot; : 71774,
         ///      &quot;RevisionNumber&quot; : 2,
-        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
+        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00.000Z&quot;,
         ///      &quot;DueDate&quot; : &quot;2008-06-13T00:00:00.000&quot;,
         ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00.000&quot;,
         ///      &quot;Status&quot; : 5,
@@ -168,7 +168,7 @@ namespace DevZest.Data.MySql {
         ///      &quot;ShipToAddressID&quot; : 1092,
         ///      &quot;BillToAddressID&quot; : 1092,
         ///      &quot;ShipMethod&quot; : &quot;CARGO TRANSPORT 5&quot;,
-        ///      &quot;CreditCardApp [rest of string was truncated]&quot;;.
+        ///      &quot;CreditCardAp [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_SalesOrderInfo_71774 {
             get {

@@ -256,7 +256,7 @@ select @mockschema;
 
                 var columnMappings = ColumnMapping.Map(dataSet._, _, columnMappingsBuilder, true);
 
-                var json = dataSet.ForJson(null, isPretty: false, omitNullValues: true);
+                var json = dataSet.ForJson(null, isPretty: false);
 
                 var source = JsonTable<TSource>(json, SYS_DATASET_ORDINAL);
                 var sourceColumns = source.Model.GetColumns();
