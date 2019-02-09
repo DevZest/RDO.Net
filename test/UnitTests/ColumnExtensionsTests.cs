@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Samples.AdventureWorksLT;
 using MySql.Data.MySqlClient;
-using DevZest.Data.MySql.Addons;
 
 namespace DevZest.Data.MySql
 {

@@ -3,7 +3,6 @@ using DevZest.Data.MySql;
 using DevZest.Data.Annotations.Primitives;
 using System;
 using DevZest.Data.Addons;
-using DevZest.Data.MySql.Addons;
 
 namespace DevZest.Samples.AdventureWorksLT
 {

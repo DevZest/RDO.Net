@@ -6,7 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace DevZest.Data.MySql.Addons
+namespace DevZest.Data.MySql
 {
     [Addon(typeof(MySqlType))]
     public abstract class MySqlType : IAddon

@@ -1,5 +1,4 @@
-﻿using DevZest.Data.MySql.Addons;
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Primitives;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;

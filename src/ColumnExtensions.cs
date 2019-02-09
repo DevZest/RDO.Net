@@ -5,7 +5,6 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Linq.Expressions;
 using DevZest.Data.Addons;
-using DevZest.Data.MySql.Addons;
 using MySql.Data.MySqlClient;
 
 namespace DevZest.Data.MySql
