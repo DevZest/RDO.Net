@@ -1,5 +1,6 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
 using System;
 using System.IO;
 using System.Reflection;
@@ -11,12 +12,25 @@ namespace DevZest.Data.MySql
     {
         private static Db CreateDb()
         {
-            string outputFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string attachDbFilename = Path.Combine(outputFolder, "DbGenAdventureWorksLT.mdf");
-            File.Copy(Path.Combine(outputFolder, "EmptyDb.mdf"), attachDbFilename, true);
-            File.Copy(Path.Combine(outputFolder, "EmptyDb_log.ldf"), Path.Combine(outputFolder, "DbGenAdventureWorksLT_log.ldf"), true);
-            var connectionString = string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
-            return new Db(connectionString);
+            CreateEmptyDb();
+            return new Db("Server=127.0.0.1;Port=3306;Database=EmptyDb;Uid=root;Allow User Variables=True");
+        }
+
+        private static void CreateEmptyDb()
+        {
+            using (var connection = new MySqlConnection("Server=127.0.0.1;Port=3306;Uid=root"))
+            {
+                connection.Open();
+                var sqlText =
+@"set @@sql_notes = 0;
+drop database if exists EmptyDb;
+set @@sql_notes = 1;
+
+create database EmptyDb;
+";
+                var command = new MySqlCommand(sqlText, connection);
+                command.ExecuteNonQuery();
+            }
         }
 
         [TestMethod]
