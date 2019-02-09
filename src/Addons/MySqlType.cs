@@ -538,15 +538,15 @@ namespace DevZest.Data.MySql.Addons
                 return s_dataTypes[Precision];
             }
 
-            internal static readonly string[] s_formats = new string[]
+            private static readonly string[] s_formats = new string[]
             {
                 "HH:mm:ss",
-                "HH:mm:ss.f",
-                "HH:mm:ss.ff",
-                "HH:mm:ss.fff",
-                "HH:mm:ss.ffff",
-                "HH:mm:ss.fffff",
-                "HH:mm:ss.ffffff"
+                "HH:mm:ss.F",
+                "HH:mm:ss.FF",
+                "HH:mm:ss.FFF",
+                "HH:mm:ss.FFFF",
+                "HH:mm:ss.FFFFF",
+                "HH:mm:ss.FFFFFF"
             };
 
             protected override string GetValue(DateTime value, MySqlVersion mySqlVersion)

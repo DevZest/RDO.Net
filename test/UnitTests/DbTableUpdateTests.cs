@@ -121,7 +121,7 @@ UPDATE
         `ParentProductCategoryID` INT PATH '$.ParentProductCategoryID',
         `Name` VARCHAR(50) PATH '$.Name',
         `RowGuid` CHAR(36) PATH '$.RowGuid',
-        `ModifiedDate` DATETIME PATH '$.ModifiedDate',
+        `ModifiedDate` TIMESTAMP PATH '$.ModifiedDate',
         `sys_dataset_ordinal` FOR ORDINALITY)) AS `@ProductCategory`
     INNER JOIN
     `ProductCategory`

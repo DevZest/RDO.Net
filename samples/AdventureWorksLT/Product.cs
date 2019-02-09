@@ -138,15 +138,15 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Int32 ProductModelID { get; private set; }
 
         [Required]
-        [MySqlDateTime]
+        [MySqlDate]
         [DbColumn(Description = "Date the product was available for sale.")]
         public _DateTime SellStartDate { get; private set; }
 
-        [MySqlDateTime]
+        [MySqlDate]
         [DbColumn(Description = "Date the product was no longer available for sale.")]
         public _DateTime SellEndDate { get; private set; }
 
-        [MySqlDateTime]
+        [MySqlDate]
         [DbColumn(Description = "Date the product was discontinued.")]
         public _DateTime DiscontinuedDate { get; private set; }
 

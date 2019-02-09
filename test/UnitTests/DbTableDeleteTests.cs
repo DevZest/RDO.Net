@@ -110,7 +110,7 @@ FROM
         `UnitPriceDiscount` DECIMAL(19, 4) PATH '$.UnitPriceDiscount',
         `LineTotal` DECIMAL(19, 4) PATH '$.LineTotal',
         `RowGuid` CHAR(36) PATH '$.RowGuid',
-        `ModifiedDate` DATETIME PATH '$.ModifiedDate',
+        `ModifiedDate` TIMESTAMP PATH '$.ModifiedDate',
         `sys_dataset_ordinal` FOR ORDINALITY)) AS `@SalesOrderDetail`
     INNER JOIN
     `SalesOrderDetail`

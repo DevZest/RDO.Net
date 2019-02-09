@@ -216,7 +216,7 @@ FROM JSON_TABLE(@p1, '$[*]' COLUMNS (
     `ParentProductCategoryID` INT PATH '$.ParentProductCategoryID',
     `Name` VARCHAR(50) PATH '$.Name',
     `RowGuid` CHAR(36) PATH '$.RowGuid',
-    `ModifiedDate` DATETIME PATH '$.ModifiedDate',
+    `ModifiedDate` TIMESTAMP PATH '$.ModifiedDate',
     `sys_dataset_ordinal` FOR ORDINALITY)) AS `@ProductCategory`
 ORDER BY `@ProductCategory`.`sys_dataset_ordinal` ASC;
 ";
@@ -260,7 +260,7 @@ FROM JSON_TABLE(@p1, '$[*]' COLUMNS (
     `UnitPriceDiscount` DECIMAL(19, 4) PATH '$.UnitPriceDiscount',
     `LineTotal` DECIMAL(19, 4) PATH '$.LineTotal',
     `RowGuid` CHAR(36) PATH '$.RowGuid',
-    `ModifiedDate` DATETIME PATH '$.ModifiedDate',
+    `ModifiedDate` TIMESTAMP PATH '$.ModifiedDate',
     `sys_dataset_ordinal` FOR ORDINALITY)) AS `@SalesOrderDetail`
 ORDER BY `@SalesOrderDetail`.`sys_dataset_ordinal` ASC;
 ";
@@ -305,7 +305,7 @@ FROM
         `UnitPriceDiscount` DECIMAL(19, 4) PATH '$.UnitPriceDiscount',
         `LineTotal` DECIMAL(19, 4) PATH '$.LineTotal',
         `RowGuid` CHAR(36) PATH '$.RowGuid',
-        `ModifiedDate` DATETIME PATH '$.ModifiedDate',
+        `ModifiedDate` TIMESTAMP PATH '$.ModifiedDate',
         `sys_dataset_ordinal` FOR ORDINALITY)) AS `@SalesOrderDetail`
     INNER JOIN
     `#SalesOrder`

@@ -106,17 +106,17 @@ namespace DevZest.Samples.AdventureWorksLT
         public _Byte RevisionNumber { get; private set; }
 
         [Required]
-        [MySqlDateTime]
+        [MySqlDate]
         [AutoDateTime(Name = "DF_SalesOrderHeader_OrderDate")]
         [DbColumn(Description = "Dates the sales order was created.")]
         public _DateTime OrderDate { get; private set; }
 
         [Required]
-        [MySqlDateTime]
+        [MySqlDate]
         [DbColumn(Description = "Date the order is due to the customer.")]
         public _DateTime DueDate { get; private set; }
 
-        [MySqlDateTime]
+        [MySqlDate]
         [DbColumn(Description = "Date the order was shipped to the customer.")]
         public _DateTime ShipDate { get; private set; }
 
