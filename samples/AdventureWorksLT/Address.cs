@@ -5,7 +5,7 @@ using DevZest.Data.MySql;
 namespace DevZest.Samples.AdventureWorksLT
 {
     [DbIndex(nameof(IX_Address_StateProvince), Description = "Nonclustered index.")]
-    [DbIndex(nameof(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion), Description = "Nonclustered index.")]
+    [DbIndex(nameof(IX_Address_All_Attributes), Description = "Nonclustered index.")]
     public class Address : BaseModel<Address.PK>
     {
         [DbPrimaryKey("PK_Address_AddressID", Description = "Primary key (clustered) constraint")]
@@ -117,7 +117,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [_DbIndex]
-        private ColumnSort[] IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion
+        private ColumnSort[] IX_Address_All_Attributes
         {
             get { return new ColumnSort[] { AddressLine1, AddressLine2, City, StateProvince, CountryRegion }; }
         }

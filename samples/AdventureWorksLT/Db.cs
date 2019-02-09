@@ -75,14 +75,14 @@ namespace DevZest.Samples.AdventureWorksLT
 
         private DbTable<ProductCategory> _productCategory;
         [DbTable(Description = "High-level product categorization.")]
-        [Relationship(nameof(FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID), Description = "Foreign key constraint referencing ProductCategory.ProductCategoryID.")]
+        [Relationship(nameof(FK_ProductCategory_Parent), Description = "Foreign key constraint referencing ProductCategory.ProductCategoryID.")]
         public DbTable<ProductCategory> ProductCategory
         {
             get { return GetTable(ref _productCategory); }
         }
 
         [_Relationship]
-        private KeyMapping FK_ProductCategory_ProductCategory_ParentProductCategoryID_ProductCategoryID(ProductCategory _)
+        private KeyMapping FK_ProductCategory_Parent(ProductCategory _)
         {
             return _.FK_ParentProductCategory.Join(_);
         }
@@ -103,7 +103,7 @@ namespace DevZest.Samples.AdventureWorksLT
         private DbTable<ProductModelProductDescription> _productModelProductDescription;
         [DbTable(Description = "Cross-reference table mapping product descriptions and the language the description is written in.")]
         [Relationship(nameof(FK_ProductModelProductDescription_ProductModel_ProductModelID), Description = "Foreign key constraint referencing ProductModel.ProductModelID.")]
-        [Relationship(nameof(FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID), Description = "Foreign key constraint referencing ProductDescription.ProductDescriptionID.")]
+        [Relationship(nameof(FK_ProductModelProductDescription_ProductDescription), Description = "Foreign key constraint referencing ProductDescription.ProductDescriptionID.")]
         public DbTable<ProductModelProductDescription> ProductModelProductDescription
         {
             get { return GetTable(ref _productModelProductDescription); }
@@ -116,7 +116,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         [_Relationship]
-        private KeyMapping FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID(ProductModelProductDescription _)
+        private KeyMapping FK_ProductModelProductDescription_ProductDescription(ProductModelProductDescription _)
         {
             return _.FK_ProductDescription.Join(ProductDescription._);
         }
