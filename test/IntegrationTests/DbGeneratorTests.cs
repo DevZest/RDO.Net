@@ -2,22 +2,25 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using System;
-using System.IO;
-using System.Reflection;
+using System.Text;
 
 namespace DevZest.Data.MySql
 {
     [TestClass]
     public class DbGeneratorTests
     {
-        private static Db CreateDb()
+        private static Db CreateDb(StringBuilder log, LogCategory logCategory)
         {
             CreateEmptyDb();
-            return new Db("Server=127.0.0.1;Port=3306;Database=EmptyDb;Uid=root;Allow User Variables=True");
+            return new Db("Server=127.0.0.1;Port=3306;Database=EmptyDb;Uid=root;Allow User Variables=True", db =>
+            {
+                db.SetLog(s => log.Append(s), logCategory);
+            });
         }
 
         private static void CreateEmptyDb()
         {
+            var log = new StringBuilder();
             using (var connection = new MySqlConnection("Server=127.0.0.1;Port=3306;Uid=root"))
             {
                 connection.Open();
@@ -36,7 +39,8 @@ create database EmptyDb;
         [TestMethod]
         public void DbGenerator_Generate()
         {
-            using (var db = CreateDb())
+            var log = new StringBuilder();
+            using (var db = CreateDb(log, LogCategory.All))
             {
                 int count = 0;
                 int index = 0;
