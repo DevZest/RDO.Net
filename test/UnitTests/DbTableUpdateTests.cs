@@ -113,7 +113,7 @@ SET
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategoriesLevel1);
                 var expectedSql =
-@"SET @p1 = '[{""ProductCategoryID"":1,""Name"":""Bikes"",""RowGuid"":""cfbda25c-df71-47a7-b81b-64ee161aa37c"",""ModifiedDate"":""2002-06-01T00:00:00.000""},{""ProductCategoryID"":2,""Name"":""Other"",""RowGuid"":""c657828d-d808-4aba-91a3-af2ce02300e9"",""ModifiedDate"":""2002-06-01T00:00:00.000""}]';
+@"SET @p1 = '[{""ProductCategoryID"":1,""Name"":""Bikes"",""RowGuid"":""cfbda25c-df71-47a7-b81b-64ee161aa37c"",""ModifiedDate"":""2002-06-01T00:00:00""},{""ProductCategoryID"":2,""Name"":""Other"",""RowGuid"":""c657828d-d808-4aba-91a3-af2ce02300e9"",""ModifiedDate"":""2002-06-01T00:00:00""}]';
 
 UPDATE
     (JSON_TABLE(@p1, '$[*]' COLUMNS (
