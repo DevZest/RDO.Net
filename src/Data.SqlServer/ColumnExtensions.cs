@@ -8,7 +8,6 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Linq.Expressions;
 using DevZest.Data.Addons;
-using DevZest.Data.SqlServer.Addons;
 
 namespace DevZest.Data.SqlServer
 {

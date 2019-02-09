@@ -4,7 +4,6 @@ using System.Data;
 using DevZest.Data.SqlServer;
 using DevZest.Samples.AdventureWorksLT;
 using Moq;
-using DevZest.Data.SqlServer.Addons;
 
 namespace DevZest.Data.SqlServer
 {

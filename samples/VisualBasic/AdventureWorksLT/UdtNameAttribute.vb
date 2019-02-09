@@ -1,6 +1,5 @@
 Imports DevZest.Data.Annotations.Primitives
 Imports DevZest.Data.Addons
-Imports DevZest.Data.SqlServer.Addons
 
 <ModelDesignerSpec(New Type() {GetType(ColumnNotNull), GetType(SqlType)}, New Type() {GetType(_String)})>
 Public NotInheritable Class UdtNameAttribute
