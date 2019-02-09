@@ -10,26 +10,33 @@ namespace DevZest.Data
         public static readonly JsonValue False = new JsonValue("false", JsonValueType.False);
         public static readonly JsonValue Null = new JsonValue("null", JsonValueType.Null);
 
-        internal static JsonValue Char(char? x)
+        public static JsonValue Char(char? x)
         {
             return x.HasValue ? String(new string(x.GetValueOrDefault(), 1)) : Null;
         }
 
-        internal static JsonValue DateTime(DateTime? x)
+        private const string IsoDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
+
+        public static JsonValue DateTime(DateTime? x)
+        {
+            return DateTime(x, IsoDateTimeFormat);
+        }
+
+        public static JsonValue DateTime(DateTime? x, string format)
         {
             if (!x.HasValue)
                 return Null;
 
             var value = x.GetValueOrDefault();
-            return String(value.ToString("yyyy-MM-ddTHH:mm:ss.FFFFFFFK", CultureInfo.InvariantCulture));
+            return String(value.ToString(format, CultureInfo.InvariantCulture));
         }
 
-        internal static JsonValue Guid(Guid? x)
+        public static JsonValue Guid(Guid? x)
         {
             return x.HasValue ? String(x.GetValueOrDefault().ToString()) : Null;
         }
 
-        internal static JsonValue Number(byte? x)
+        public static JsonValue Number(byte? x)
         {
             return x.HasValue ? Number(x.Value) : Null;
         }
@@ -39,7 +46,7 @@ namespace DevZest.Data
             return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
-        internal static JsonValue Number(short? x)
+        public static JsonValue Number(short? x)
         {
             return x.HasValue ? Number(x.Value) : Null;
         }
@@ -49,7 +56,7 @@ namespace DevZest.Data
             return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
-        internal static JsonValue Number(int? x)
+        public static JsonValue Number(int? x)
         {
             return x.HasValue ? Number(x.Value) : Null;
         }
@@ -59,7 +66,7 @@ namespace DevZest.Data
             return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
-        internal static JsonValue Number(long? x)
+        public static JsonValue Number(long? x)
         {
             return x.HasValue ? Number(x.Value) : Null;
         }
@@ -69,7 +76,7 @@ namespace DevZest.Data
             return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
-        internal static JsonValue Number(float? x)
+        public static JsonValue Number(float? x)
         {
             return x.HasValue ? Number(x.Value) : Null;
         }
@@ -79,7 +86,7 @@ namespace DevZest.Data
             return Number(x.ToString(NumberFormatInfo.InvariantInfo));
         }
 
-        internal static JsonValue Number(double? x)
+        public static JsonValue Number(double? x)
         {
             return x.HasValue ? Number(x.Value) : Null;
         }

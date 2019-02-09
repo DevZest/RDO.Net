@@ -37,13 +37,7 @@ namespace DevZest.Data.SqlServer
                     jsonWriter.WriteComma();
                 jsonWriter.WriteObjectName(column.Name);
                 if (column is _DateTime dateTimeColumn)
-                {
-                    var value = dateTimeColumn[dataRow];
-                    if (value == null)
-                        jsonWriter.WriteValue(JsonValue.Null);
-                    else
-                        jsonWriter.WriteValue(JsonValue.String(value.Value.ToString("yyyy-MM-ddTHH:mm:ss.FFF", CultureInfo.InvariantCulture)));
-                }
+                    jsonWriter.WriteValue(JsonValue.DateTime(dateTimeColumn[dataRow], "yyyy-MM-ddTHH:mm:ss.FFF"));
                 else
                     jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
                 count++;
