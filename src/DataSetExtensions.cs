@@ -35,7 +35,10 @@ namespace DevZest.Data.MySql
                 if (count > 0)
                     jsonWriter.WriteComma();
                 jsonWriter.WriteObjectName(column.Name);
-                jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
+                if (column is _DateTime dateTimeColumn)
+                    jsonWriter.WriteValue(JsonValue.DateTime(dateTimeColumn[dataRow], "yyyy-MM-ddTHH:mm:ss.FFFFFF"));
+                else
+                    jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
                 count++;
             }
 
