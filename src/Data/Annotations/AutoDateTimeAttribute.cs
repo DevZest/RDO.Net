@@ -12,8 +12,10 @@ namespace DevZest.Data.Annotations
         protected override void Wireup(Column column)
         {
             if (column is _DateTime dateTime)
-                dateTime.SetDefault(_DateTime.Now(), Name, Description);
+                dateTime.SetDefault(IsUtc ? _DateTime.UtcNow() : _DateTime.Now(), Name, Description);
         }
+
+        public bool IsUtc { get; set; }
 
         public string Name { get; set; }
 
