@@ -9,29 +9,6 @@ namespace DevZest.Data
     public class DataSetTests : AdventureWorksTestsBase
     {
         [TestMethod]
-        public void DataSet_recursive_fill_and_serialize()
-        {
-            var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
-            {
-                var productCategories = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
-                var children = productCategories;
-                while (children != null)
-                    children = children.CreateChildAsync(x => x.SubCategories, db.ProductCategory.OrderBy(x => x.ProductCategoryID)).Result;
-
-                var result = productCategories.ToDataSetAsync().Result;
-                var childModel = result._.SubCategories;
-                Assert.AreEqual(4, result.Count);
-                Assert.AreEqual(3, result[0].Children(childModel).Count);
-                Assert.AreEqual(14, result[1].Children(childModel).Count);
-                Assert.AreEqual(8, result[2].Children(childModel).Count);
-                Assert.AreEqual(12, result[3].Children(childModel).Count);
-
-                Assert.AreEqual(Strings.ExpectedJSON_ProductCategories.Trim(), result.ToString().Trim());
-            }
-        }
-
-        [TestMethod]
         public async Task DataSet_recursive_fill_and_serialize_async()
         {
             var log = new StringBuilder();

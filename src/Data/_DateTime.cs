@@ -53,7 +53,7 @@ namespace DevZest.Data
         /// <inheritdoc/>
         protected internal override DateTime? DeserializeValue(JsonValue value)
         {
-            return value.Type == JsonValueType.Null ? null : new DateTime?(Convert.ToDateTime(value.Text));
+            return value.Type == JsonValueType.Null ? null : new DateTime?(DateTime.Parse(value.Text, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind));
         }
 
         /// <inheritdoc cref="P:DevZest.Data._Binary.Item(DevZest.Data.DbReader)"/>

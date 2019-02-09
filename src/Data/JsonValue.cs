@@ -21,27 +21,7 @@ namespace DevZest.Data
                 return Null;
 
             var value = x.GetValueOrDefault();
-            var isUtc = value.Kind == DateTimeKind.Utc;
-            var length = "YYYY-MM-DDTHH:MM:SS.000".Length;
-            if (isUtc)
-                length++;
-            var result = new StringBuilder(length);
-            result.Append(value.Year.ToString("0000", NumberFormatInfo.InvariantInfo));
-            result.Append('-');
-            result.Append(value.Month.ToString("00", NumberFormatInfo.InvariantInfo));
-            result.Append('-');
-            result.Append(value.Day.ToString("00", NumberFormatInfo.InvariantInfo));
-            result.Append('T');
-            result.Append(value.Hour.ToString("00", NumberFormatInfo.InvariantInfo));
-            result.Append(':');
-            result.Append(value.Minute.ToString("00", NumberFormatInfo.InvariantInfo));
-            result.Append(':');
-            result.Append(value.Second.ToString("00", NumberFormatInfo.InvariantInfo));
-            result.Append('.');
-            result.Append(value.Millisecond.ToString("000", NumberFormatInfo.InvariantInfo));
-            if (isUtc)
-                result.Append('Z');
-            return String(result.ToString());
+            return String(value.ToString("yyyy-MM-ddTHH:mm:ss.FFFFFFFK", CultureInfo.InvariantCulture));
         }
 
         internal static JsonValue Guid(Guid? x)

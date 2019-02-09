@@ -61,9 +61,9 @@ namespace DevZest.Data
          {
             ""SalesOrderID"" : 71774,
             ""RevisionNumber"" : 2,
-            ""OrderDate"" : ""2008-06-01T00:00:00.000"",
-            ""DueDate"" : ""2008-06-13T00:00:00.000"",
-            ""ShipDate"" : ""2008-06-08T00:00:00.000"",
+            ""OrderDate"" : ""2008-06-01T00:00:00"",
+            ""DueDate"" : ""2008-06-13T00:00:00"",
+            ""ShipDate"" : ""2008-06-08T00:00:00"",
             ""Status"" : 5,
             ""OnlineOrderFlag"" : false,
             ""PurchaseOrderNumber"" : ""PO348186287"",
@@ -77,7 +77,7 @@ namespace DevZest.Data
             ""Freight"" : 22.0087,
             ""Comment"" : null,
             ""RowGuid"" : ""89e42cdc-8506-48a2-b89b-eb3e64e3554e"",
-            ""ModifiedDate"" : ""2008-06-08T00:00:00.000"",
+            ""ModifiedDate"" : ""2008-06-08T00:00:00"",
             ""SalesOrderDetails"" : [
                {
                   ""SalesOrderDetailID"" : 110562,
@@ -86,7 +86,7 @@ namespace DevZest.Data
                   ""UnitPrice"" : 356.8980,
                   ""UnitPriceDiscount"" : 0,
                   ""RowGuid"" : ""e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"",
-                  ""ModifiedDate"" : ""2008-06-01T00:00:00.000""
+                  ""ModifiedDate"" : ""2008-06-01T00:00:00""
                },
                {
                   ""SalesOrderDetailID"" : 110563,
@@ -95,7 +95,7 @@ namespace DevZest.Data
                   ""UnitPrice"" : 356.8980,
                   ""UnitPriceDiscount"" : 0,
                   ""RowGuid"" : ""5c77f557-fdb6-43ba-90b9-9a7aec55ca32"",
-                  ""ModifiedDate"" : ""2008-06-01T00:00:00.000""
+                  ""ModifiedDate"" : ""2008-06-01T00:00:00""
                }
             ]
          }

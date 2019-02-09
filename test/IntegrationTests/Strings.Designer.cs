@@ -89,16 +89,17 @@ namespace DevZest.Data {
         ///      &quot;ParentProductCategoryID&quot; : null,
         ///      &quot;Name&quot; : &quot;Bikes&quot;,
         ///      &quot;RowGuid&quot; : &quot;cfbda25c-df71-47a7-b81b-64ee161aa37c&quot;,
-        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
+        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00&quot;,
         ///      &quot;SubCategories&quot; : [
         ///         {
         ///            &quot;ProductCategoryID&quot; : 5,
         ///            &quot;Name&quot; : &quot;Mountain Bikes&quot;,
         ///            &quot;RowGuid&quot; : &quot;2d364ade-264a-433c-b092-4fcbf3804e01&quot;,
-        ///            &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
+        ///            &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00&quot;,
         ///            &quot;SubCategories&quot; : []
         ///         },
-        ///          [rest of string was truncated]&quot;;.
+        ///         {
+        ///      [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_ProductCategories {
             get {
@@ -111,9 +112,9 @@ namespace DevZest.Data {
         ///   {
         ///      &quot;SalesOrderID&quot; : 71774,
         ///      &quot;RevisionNumber&quot; : 2,
-        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
-        ///      &quot;DueDate&quot; : &quot;2008-06-13T00:00:00.000&quot;,
-        ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00.000&quot;,
+        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00&quot;,
+        ///      &quot;DueDate&quot; : &quot;2008-06-13T00:00:00&quot;,
+        ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00&quot;,
         ///      &quot;Status&quot; : 5,
         ///      &quot;OnlineOrderFlag&quot; : false,
         ///      &quot;PurchaseOrderNumber&quot; : &quot;PO348186287&quot;,
@@ -122,7 +123,7 @@ namespace DevZest.Data {
         ///      &quot;ShipToAddressID&quot; : 1092,
         ///      &quot;BillToAddressID&quot; : 1092,
         ///      &quot;ShipMethod&quot; : &quot;CARGO TRANSPORT 5&quot;,
-        ///      &quot;CreditCardApp [rest of string was truncated]&quot;;.
+        ///      &quot;CreditCardApprovalCode&quot; : [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_SalesOrder_71774 {
             get {
@@ -157,9 +158,9 @@ namespace DevZest.Data {
         ///   {
         ///      &quot;SalesOrderID&quot; : 71774,
         ///      &quot;RevisionNumber&quot; : 2,
-        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
-        ///      &quot;DueDate&quot; : &quot;2008-06-13T00:00:00.000&quot;,
-        ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00.000&quot;,
+        ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00&quot;,
+        ///      &quot;DueDate&quot; : &quot;2008-06-13T00:00:00&quot;,
+        ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00&quot;,
         ///      &quot;Status&quot; : 5,
         ///      &quot;OnlineOrderFlag&quot; : false,
         ///      &quot;PurchaseOrderNumber&quot; : &quot;PO348186287&quot;,
@@ -168,7 +169,7 @@ namespace DevZest.Data {
         ///      &quot;ShipToAddressID&quot; : 1092,
         ///      &quot;BillToAddressID&quot; : 1092,
         ///      &quot;ShipMethod&quot; : &quot;CARGO TRANSPORT 5&quot;,
-        ///      &quot;CreditCardApp [rest of string was truncated]&quot;;.
+        ///      &quot;CreditCardApprovalCode&quot; : [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_SalesOrderInfo_71774 {
             get {
