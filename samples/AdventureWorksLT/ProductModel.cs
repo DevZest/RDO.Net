@@ -1,5 +1,6 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
+using DevZest.Data.MySql;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -69,6 +70,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         public _String Name { get; private set; }
 
+        [MySqlLongText]
         public _String CatalogDescription { get; private set; }
     }
 }
