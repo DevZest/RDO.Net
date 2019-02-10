@@ -150,7 +150,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Date the product was discontinued.")]
         public _DateTime DiscontinuedDate { get; private set; }
 
-        [MySqlVarBinary(65535)]
+        [MySqlLongBlob]
         [DbColumn(Description = "Small image of the product.")]
         public _Binary ThumbNailPhoto { get; private set; }
 
