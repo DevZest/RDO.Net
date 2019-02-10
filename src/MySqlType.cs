@@ -781,29 +781,6 @@ namespace DevZest.Data.MySql
             return new JsonType(column);
         }
 
-        private sealed class TextType : StringTypeBase
-        {
-            public TextType(Column<String> column, int size, string charSetName, string collationName)
-                : base(column, size, charSetName, collationName)
-            {
-            }
-
-            protected override string GetSqlDataType()
-            {
-                return "TEXT";
-            }
-
-            protected override MySqlParameterInfo GetSqlParameterInfo(int size)
-            {
-                return MySqlParameterInfo.VarString(size);
-            }
-        }
-
-        internal static MySqlType Text(Column<String> column, int size, string charSetName, string collationName)
-        {
-            return new TextType(column, size, charSetName, collationName);
-        }
-
         private sealed class VarCharType : StringTypeBase
         {
             public VarCharType(Column<String> column, int size, string charSetName, string collationName)
@@ -1156,6 +1133,246 @@ namespace DevZest.Data.MySql
         internal static MySqlType JsonOrdinality(_Int32 column)
         {
             return new JsonOrdinalityType(column);
+        }
+
+        private abstract class BlobTypeBase : GenericMySqlType<Binary>
+        {
+            protected BlobTypeBase(_Binary column)
+                : base(column)
+            {
+            }
+
+            internal sealed override object ConvertParameterValue(object value)
+            {
+                var result = (Binary)value;
+                if (result == null)
+                    return DBNull.Value;
+                else
+                    return result.ToArray();
+            }
+
+            protected sealed override string GetValueLiteral(Binary value, MySqlVersion mySqlVersion)
+            {
+                return value.ToHexLitera();
+            }
+        }
+
+        private sealed class TinyBlobType : BlobTypeBase
+        {
+            public TinyBlobType(_Binary column)
+                : base(column)
+            {
+            }
+
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            {
+                return "TINYBLOB";
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.TinyBlob();
+            }
+        }
+
+        internal static MySqlType TinyBlob(_Binary column)
+        {
+            return new TinyBlobType(column);
+        }
+
+        private sealed class BlobType : BlobTypeBase
+        {
+            public BlobType(_Binary column)
+                : base(column)
+            {
+            }
+
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            {
+                return "BLOB";
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.Blob();
+            }
+        }
+
+        internal static MySqlType Blob(_Binary column)
+        {
+            return new BlobType(column);
+        }
+
+        private sealed class MediumBlobType : BlobTypeBase
+        {
+            public MediumBlobType(_Binary column)
+                : base(column)
+            {
+            }
+
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            {
+                return "MEDIUMBLOB";
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.MediumBlob();
+            }
+        }
+
+        internal static MySqlType MediumBlob(_Binary column)
+        {
+            return new MediumBlobType(column);
+        }
+
+        private sealed class LongBlobType : BlobTypeBase
+        {
+            public LongBlobType(_Binary column)
+                : base(column)
+            {
+            }
+
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            {
+                return "LONGBLOB";
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.LongBlob();
+            }
+        }
+
+        internal static MySqlType LongBlob(_Binary column)
+        {
+            return new LongBlobType(column);
+        }
+
+        private abstract class TextTypeBase : GenericMySqlType<String>
+        {
+            protected TextTypeBase(_String column, string charSetName, string collationName)
+                : base(column)
+            {
+                CharSetName = charSetName;
+                CollationName = collationName;
+            }
+
+            private string CharSetName { get; }
+
+            private string CollationName { get; }
+
+            internal sealed override object ConvertParameterValue(object value)
+            {
+                if (value == null)
+                    return DBNull.Value;
+                else
+                    return value;
+            }
+
+            protected sealed override string GetValueLiteral(string value, MySqlVersion mySqlVersion)
+            {
+                return value.ToLiteral();
+            }
+
+            internal sealed override string GetDataTypeSql(MySqlVersion mySqlVersion)
+            {
+                return StringTypeBase.AppendCharSetAndCollation(GetDataTypeSqlCore(mySqlVersion), CharSetName, CollationName);
+            }
+
+            protected abstract string GetDataTypeSqlCore(MySqlVersion mySqlVersion);
+        }
+
+        private sealed class TinyTextType : TextTypeBase
+        {
+            public TinyTextType(_String column, string charSetName, string collationName)
+                : base(column, charSetName, collationName)
+            {
+            }
+
+            protected override string GetDataTypeSqlCore(MySqlVersion mySqlVersion)
+            {
+                return "TINYTEXT";
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.TinyText();
+            }
+        }
+
+        internal static MySqlType TinyText(_String column, string charSetName, string collationName)
+        {
+            return new TinyTextType(column, charSetName, collationName);
+        }
+
+        private sealed class TextType : TextTypeBase
+        {
+            public TextType(_String column, string charSetName, string collationName)
+                : base(column, charSetName, collationName)
+            {
+            }
+
+            protected override string GetDataTypeSqlCore(MySqlVersion mySqlVersion)
+            {
+                return "Text";
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.Text();
+            }
+        }
+
+        internal static MySqlType Text(_String column, string charSetName, string collationName)
+        {
+            return new TextType(column, charSetName, collationName);
+        }
+
+        private sealed class MediumTextType : TextTypeBase
+        {
+            public MediumTextType(_String column, string charSetName, string collationName)
+                : base(column, charSetName, collationName)
+            {
+            }
+
+            protected override string GetDataTypeSqlCore(MySqlVersion mySqlVersion)
+            {
+                return "MEDIUMTEXT";
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.MediumText();
+            }
+        }
+
+        internal static MySqlType MediumText(_String column, string charSetName, string collationName)
+        {
+            return new MediumTextType(column, charSetName, collationName);
+        }
+
+        private sealed class LongTextType : TextTypeBase
+        {
+            public LongTextType(_String column, string charSetName, string collationName)
+                : base(column, charSetName, collationName)
+            {
+            }
+
+            protected override string GetDataTypeSqlCore(MySqlVersion mySqlVersion)
+            {
+                return "LONGTEXT";
+            }
+
+            internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
+            {
+                return MySqlParameterInfo.LongText();
+            }
+        }
+
+        internal static MySqlType LongText(_String column, string charSetName, string collationName)
+        {
+            return new LongTextType(column, charSetName, collationName);
         }
     }
 }

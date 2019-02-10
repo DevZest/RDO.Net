@@ -14,6 +14,46 @@ namespace DevZest.Data.MySql
             return new MySqlParameterInfo(MySqlDbType.VarBinary, size);
         }
 
+        public static MySqlParameterInfo TinyBlob()
+        {
+            return new MySqlParameterInfo(MySqlDbType.TinyBlob);
+        }
+
+        public static MySqlParameterInfo Blob()
+        {
+            return new MySqlParameterInfo(MySqlDbType.Blob);
+        }
+
+        public static MySqlParameterInfo MediumBlob()
+        {
+            return new MySqlParameterInfo(MySqlDbType.MediumBlob);
+        }
+
+        public static MySqlParameterInfo LongBlob()
+        {
+            return new MySqlParameterInfo(MySqlDbType.LongBlob);
+        }
+
+        public static MySqlParameterInfo TinyText()
+        {
+            return new MySqlParameterInfo(MySqlDbType.TinyText);
+        }
+
+        public static MySqlParameterInfo Text()
+        {
+            return new MySqlParameterInfo(MySqlDbType.Text);
+        }
+
+        public static MySqlParameterInfo MediumText()
+        {
+            return new MySqlParameterInfo(MySqlDbType.MediumText);
+        }
+
+        public static MySqlParameterInfo LongText()
+        {
+            return new MySqlParameterInfo(MySqlDbType.LongText);
+        }
+
         public static MySqlParameterInfo Timestamp()
         {
             return new MySqlParameterInfo(MySqlDbType.Timestamp);

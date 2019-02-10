@@ -145,16 +145,6 @@ namespace DevZest.Data.MySql
             return column;
         }
 
-        public static T AsMySqlText<T>(this T column, int size, string charSetName = null, string collationName = null)
-            where T : Column<String>
-        {
-            column.VerifyNotNull(nameof(column));
-            if (size < MIN_VARCHAR_SIZE || size > MAX_VARCHAR_SIZE)
-                throw new ArgumentOutOfRangeException(nameof(size));
-            column.SetMySqlType(MySqlType.Text(column, size, charSetName, collationName));
-            return column;
-        }
-
         public static T AsMySqlJson<T>(this T column)
             where T : Column<string>
         {
@@ -327,6 +317,62 @@ namespace DevZest.Data.MySql
         internal static _Int32 AsJsonOrdinality(this _Int32 column)
         {
             column.SetMySqlType(MySqlType.JsonOrdinality(column));
+            return column;
+        }
+
+        public static _Binary AsMySqlTinyBlob(this _Binary column)
+        {
+            column.VerifyNotNull(nameof(column));
+            column.SetMySqlType(MySqlType.TinyBlob(column));
+            return column;
+        }
+
+        public static _Binary AsMySqlBlob(this _Binary column)
+        {
+            column.VerifyNotNull(nameof(column));
+            column.SetMySqlType(MySqlType.Blob(column));
+            return column;
+        }
+
+        public static _Binary AsMySqlMediumBlob(this _Binary column)
+        {
+            column.VerifyNotNull(nameof(column));
+            column.SetMySqlType(MySqlType.MediumBlob(column));
+            return column;
+        }
+
+        public static _Binary AsMySqlLongBlob(this _Binary column)
+        {
+            column.VerifyNotNull(nameof(column));
+            column.SetMySqlType(MySqlType.LongBlob(column));
+            return column;
+        }
+
+        public static _String AsMySqlTinyText(this _String column, string charSetName = null, string collationName = null)
+        {
+            column.VerifyNotNull(nameof(column));
+            column.SetMySqlType(MySqlType.TinyText(column, charSetName, collationName));
+            return column;
+        }
+
+        public static _String AsMySqlText(this _String column, string charSetName = null, string collationName = null)
+        {
+            column.VerifyNotNull(nameof(column));
+            column.SetMySqlType(MySqlType.Text(column, charSetName, collationName));
+            return column;
+        }
+
+        public static _String AsMySqlMediumText(this _String column, string charSetName = null, string collationName = null)
+        {
+            column.VerifyNotNull(nameof(column));
+            column.SetMySqlType(MySqlType.MediumText(column, charSetName, collationName));
+            return column;
+        }
+
+        public static _String AsMySqlLongText(this _String column, string charSetName = null, string collationName = null)
+        {
+            column.VerifyNotNull(nameof(column));
+            column.SetMySqlType(MySqlType.LongText(column, charSetName, collationName));
             return column;
         }
     }

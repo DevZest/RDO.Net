@@ -178,16 +178,13 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
-    public sealed class MySqlTextAttribute : ColumnAttribute
+    public sealed class MySqlTinyTextAttribute : ColumnAttribute
     {
-        public MySqlTextAttribute(int size, string charSetName = null, string collationName = null)
+        public MySqlTinyTextAttribute(string charSetName = null, string collationName = null)
         {
-            Size = size;
             CharSetName = charSetName;
             CollcationName = collationName;
         }
-
-        public int Size { get; }
 
         public string CharSetName { get; }
 
@@ -196,7 +193,107 @@ namespace DevZest.Data.MySql
         protected override void Wireup(Column column)
         {
             if (column is _String stringColumn)
-                stringColumn.AsMySqlText(Size, CharSetName, CollcationName);
+                stringColumn.AsMySqlTinyText(CharSetName, CollcationName);
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    public sealed class MySqlTextAttribute : ColumnAttribute
+    {
+        public MySqlTextAttribute(string charSetName = null, string collationName = null)
+        {
+            CharSetName = charSetName;
+            CollcationName = collationName;
+        }
+
+        public string CharSetName { get; }
+
+        public string CollcationName { get; }
+
+        protected override void Wireup(Column column)
+        {
+            if (column is _String stringColumn)
+                stringColumn.AsMySqlText(CharSetName, CollcationName);
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    public sealed class MySqlMediumTextAttribute : ColumnAttribute
+    {
+        public MySqlMediumTextAttribute(string charSetName = null, string collationName = null)
+        {
+            CharSetName = charSetName;
+            CollcationName = collationName;
+        }
+
+        public string CharSetName { get; }
+
+        public string CollcationName { get; }
+
+        protected override void Wireup(Column column)
+        {
+            if (column is _String stringColumn)
+                stringColumn.AsMySqlMediumText(CharSetName, CollcationName);
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_String) })]
+    public sealed class MySqlLongTextAttribute : ColumnAttribute
+    {
+        public MySqlLongTextAttribute(string charSetName = null, string collationName = null)
+        {
+            CharSetName = charSetName;
+            CollcationName = collationName;
+        }
+
+        public string CharSetName { get; }
+
+        public string CollcationName { get; }
+
+        protected override void Wireup(Column column)
+        {
+            if (column is _String stringColumn)
+                stringColumn.AsMySqlLongText(CharSetName, CollcationName);
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    public sealed class MySqlTinyBlobAttribute : ColumnAttribute
+    {
+        protected override void Wireup(Column column)
+        {
+            if (column is _Binary binaryColumn)
+                binaryColumn.AsMySqlTinyBlob();
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    public sealed class MySqlBlobAttribute : ColumnAttribute
+    {
+        protected override void Wireup(Column column)
+        {
+            if (column is _Binary binaryColumn)
+                binaryColumn.AsMySqlBlob();
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    public sealed class MySqlMediumBlobAttribute : ColumnAttribute
+    {
+        protected override void Wireup(Column column)
+        {
+            if (column is _Binary binaryColumn)
+                binaryColumn.AsMySqlMediumBlob();
+        }
+    }
+
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Binary) })]
+    public sealed class MySqlLongBlobAttribute : ColumnAttribute
+    {
+        protected override void Wireup(Column column)
+        {
+            if (column is _Binary binaryColumn)
+                binaryColumn.AsMySqlLongBlob();
         }
     }
 }
