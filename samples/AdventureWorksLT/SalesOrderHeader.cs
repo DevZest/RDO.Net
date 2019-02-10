@@ -191,7 +191,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [_Computation]
         private void ComputeSalesOrderNumber()
         {
-            SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsMySqlVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
+            SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsMySqlVarChar(23)).IfNull(_String.Const("*** ERROR ***")), isDbComputed: false);
         }
 
         [_Computation]
