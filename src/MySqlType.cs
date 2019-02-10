@@ -46,7 +46,7 @@ namespace DevZest.Data.MySql
 
             public static string DECIMAL(int m, int d)
             {
-                return string.Format(CultureInfo.InvariantCulture, "DECIMAL({0},{1})", m, d);
+                return string.Format(CultureInfo.InvariantCulture, "DECIMAL({0}, {1})", m, d);
             }
 
             public static string JSON

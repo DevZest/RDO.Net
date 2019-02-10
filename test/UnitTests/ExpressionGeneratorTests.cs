@@ -259,7 +259,7 @@ END CASE";
         {
             var _ = new TestModel();
             var int32Column = _.Column1;
-            VerifyDbExpression(MySqlVersion.LowestSupported, ((_Int64)int32Column).DbExpression, "CAST(`TestModel`.`Column1` AS BIGINT)");
+            VerifyDbExpression(MySqlVersion.LowestSupported, ((_Int64)int32Column).DbExpression, "CAST(`TestModel`.`Column1` AS SIGNED)");
         }
 
         [TestMethod]

@@ -186,7 +186,7 @@ namespace DevZest.Data.MySql
         private void VisitFunction_IfNull(DbFunctionExpression e)
         {
             Debug.Assert(e.ParamList.Count == 2);
-            SqlBuilder.Append("ISNULL(");
+            SqlBuilder.Append("IFNULL(");
             e.ParamList[0].Accept(this);
             SqlBuilder.Append(", ");
             e.ParamList[1].Accept(this);
