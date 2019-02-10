@@ -184,7 +184,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Total due from customer. Computed as Subtotal + TaxAmt + Freight.")]
         public _Decimal TotalDue { get; private set; }
 
-        [MySqlVarChar(65535)]
+        [MySqlVarChar(1000)]
         [DbColumn(Description = "Sales representative comments.")]
         public _String Comment { get; private set; }
 

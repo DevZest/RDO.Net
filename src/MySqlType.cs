@@ -117,7 +117,7 @@ namespace DevZest.Data.MySql
             var column = GetColumn();
             if (!isTempTable && column.IsDbComputed)
             {
-                sqlBuilder.Append("AS (");
+                sqlBuilder.Append(" AS (");
                 var generator = new ExpressionGenerator()
                 {
                     SqlBuilder = sqlBuilder,
