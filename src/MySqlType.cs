@@ -11,6 +11,71 @@ namespace DevZest.Data.MySql
     [Addon(typeof(MySqlType))]
     public abstract class MySqlType : IAddon
     {
+        private static class CastAsType
+        {
+            public static string BINARY(int n = 0)
+            {
+                return n == 0 ? "BINARY" : string.Format(CultureInfo.InvariantCulture, "BINARY({0}", n);
+            }
+
+            public static string CHAR(int n = 0, string charSetName = null)
+            {
+                var result = n == 0 ? "CHAR" : string.Format(CultureInfo.InvariantCulture, "CHAR({0})", n);
+                return StringTypeBase.AppendCharSetAndCollation(result, charSetName, null);
+            }
+
+            public static string DATE
+            {
+                get { return nameof(DATE); }
+            }
+
+            public static string DATETIME
+            {
+                get { return nameof(DATETIME); }
+            }
+
+            public static string DECIMAL()
+            {
+                return nameof(DECIMAL);
+            }
+
+            public static string DECIMAL(int m)
+            {
+                return string.Format(CultureInfo.InvariantCulture, "DECIMAL({0})", m);
+            }
+
+            public static string DECIMAL(int m, int d)
+            {
+                return string.Format(CultureInfo.InvariantCulture, "DECIMAL({0},{1})", m, d);
+            }
+
+            public static string JSON
+            {
+                get { return nameof(JSON); }
+            }
+
+            public static string NCHAR(int n = 0, string charSetName = null)
+            {
+                var result = n == 0 ? "NCHAR" : string.Format(CultureInfo.InvariantCulture, "NCHAR({0})", n);
+                return StringTypeBase.AppendCharSetAndCollation(result, charSetName, null);
+            }
+
+            public static string SIGNED
+            {
+                get { return nameof(SIGNED); }
+            }
+
+            public static string TIME
+            {
+                get { return nameof(TIME); }
+            }
+
+            public static string UNSIGNED
+            {
+                get { return nameof(UNSIGNED); }
+            }
+        }
+
         private const string NULL = "NULL";
 
         internal abstract MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion);
@@ -81,6 +146,8 @@ namespace DevZest.Data.MySql
         internal abstract Column GetColumn();
 
         internal abstract object ConvertParameterValue(object value);
+
+        internal abstract string GetCastAsType(MySqlVersion mySqlVersion);
 
         internal MySqlParameter CreateSqlParameter(string name, ParameterDirection direction, object value, MySqlVersion version)
         {
@@ -195,6 +262,11 @@ namespace DevZest.Data.MySql
                 return "BIGINT";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.SIGNED;
+            }
+
             protected override string GetValue(long value, MySqlVersion mySqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
@@ -226,7 +298,12 @@ namespace DevZest.Data.MySql
 
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
-                return string.Format("DECIMAL({0}, {1})", Precision, Scale);
+                return GetCastAsType(mySqlVersion);
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.DECIMAL(Precision, Scale);
             }
 
             protected override string GetValue(decimal value, MySqlVersion mySqlVersion)
@@ -252,9 +329,14 @@ namespace DevZest.Data.MySql
                 return MySqlParameterInfo.Bit();
             }
 
-            internal override string GetDataTypeSql(MySqlVersion sqlVersion)
+            internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 return "BIT";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.UNSIGNED;
             }
 
             protected override string GetValue(bool value, MySqlVersion mySqlVersion)
@@ -285,6 +367,11 @@ namespace DevZest.Data.MySql
                 return "TINYINT";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.SIGNED;
+            }
+
             protected override string GetValue(byte value, MySqlVersion mySqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
@@ -313,6 +400,11 @@ namespace DevZest.Data.MySql
                 return "SMALLINT";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.SIGNED;
+            }
+
             protected override string GetValue(short value, MySqlVersion mySqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
@@ -339,6 +431,11 @@ namespace DevZest.Data.MySql
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 return "INT";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.SIGNED;
             }
 
             protected override string GetValue(int value, MySqlVersion mySqlVersion)
@@ -420,6 +517,11 @@ namespace DevZest.Data.MySql
             {
                 return "BINARY";
             }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.BINARY();
+            }
         }
 
         internal static MySqlType Binary(Column<Binary> binaryColumn, int size)
@@ -437,6 +539,11 @@ namespace DevZest.Data.MySql
             protected override string GetSqlDataType()
             {
                 return "VARBINARY";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.BINARY(Size);
             }
 
             protected override MySqlParameterInfo GetSqlParameterInfo(int size)
@@ -467,6 +574,11 @@ namespace DevZest.Data.MySql
                 return "CHAR(36)";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.CHAR(36);
+            }
+
             protected override string GetValue(Guid value, MySqlVersion mySqlVersion)
             {
                 return value.ToString().ToSingleQuoted();
@@ -493,6 +605,11 @@ namespace DevZest.Data.MySql
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 return "DATE";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.DATE;
             }
 
             protected override string GetValue(DateTime value, MySqlVersion mySqlVersion)
@@ -532,6 +649,11 @@ namespace DevZest.Data.MySql
                 "TIME(5)",
                 "TIME(6)"
             };
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.TIME;
+            }
 
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
@@ -590,6 +712,11 @@ namespace DevZest.Data.MySql
             internal override string GetDataTypeSql(MySqlVersion sqlVersion)
             {
                 return s_dataTypes[Precision];
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.DATETIME;
             }
 
             private static readonly string[] s_formats = new string[]
@@ -665,6 +792,11 @@ namespace DevZest.Data.MySql
                 return "FLOAT";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.DECIMAL();
+            }
+
             protected override string GetValue(float value, MySqlVersion mySqlVersion)
             {
                 return value.ToString("R", CultureInfo.InvariantCulture);
@@ -691,6 +823,11 @@ namespace DevZest.Data.MySql
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 return "DOUBLE";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.DECIMAL();
             }
 
             protected override string GetValue(double value, MySqlVersion sqlVersion)
@@ -721,6 +858,11 @@ namespace DevZest.Data.MySql
                 return "JSON";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.JSON;
+            }
+
             internal override object ConvertParameterValue(object value)
             {
                 if (value == null)
@@ -744,7 +886,7 @@ namespace DevZest.Data.MySql
                 CollationName = collationName;
             }
 
-            private string CharSetName { get; }
+            protected string CharSetName { get; }
 
             private string CollationName { get; }
 
@@ -793,6 +935,11 @@ namespace DevZest.Data.MySql
                 return "VARCHAR";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.CHAR(Size, CharSetName);
+            }
+
             protected override MySqlParameterInfo GetSqlParameterInfo(int size)
             {
                 return MySqlParameterInfo.VarString(size);
@@ -814,6 +961,11 @@ namespace DevZest.Data.MySql
             protected override string GetSqlDataType()
             {
                 return "CHAR";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.CHAR(Size, CharSetName);
             }
 
             protected override MySqlParameterInfo GetSqlParameterInfo(int size)
@@ -848,6 +1000,11 @@ namespace DevZest.Data.MySql
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 return StringTypeBase.AppendCharSetAndCollation("CHAR(1)", CharSetName, CollationName);
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.CHAR(1, CharSetName);
             }
 
             protected override string GetValue(char value, MySqlVersion mySqlVersion)
@@ -922,6 +1079,11 @@ namespace DevZest.Data.MySql
                 return "CHAR(1)";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.CHAR(1);
+            }
+
             protected override char? GetDbValue(T? enumValue)
             {
                 return Column.ConvertToDbValue(enumValue);
@@ -957,6 +1119,11 @@ namespace DevZest.Data.MySql
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 return "TINYINT";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.SIGNED;
             }
 
             protected override byte? GetDbValue(T? value)
@@ -1001,6 +1168,11 @@ namespace DevZest.Data.MySql
                 return "SMALLINT";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.SIGNED;
+            }
+
             protected override Int16? GetDbValue(T? value)
             {
                 return Column.ConvertToDbValue(value);
@@ -1041,6 +1213,11 @@ namespace DevZest.Data.MySql
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 return "INT";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.SIGNED;
             }
 
             protected override Int32? GetDbValue(T? value)
@@ -1085,6 +1262,11 @@ namespace DevZest.Data.MySql
                 return "BIGINT";
             }
 
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.SIGNED;
+            }
+
             protected override Int64? GetDbValue(T? value)
             {
                 return Column.ConvertToDbValue(value);
@@ -1117,6 +1299,11 @@ namespace DevZest.Data.MySql
             internal override string GetDataTypeSql(MySqlVersion mySqlVersion)
             {
                 return "FOR ORDINALITY";
+            }
+
+            internal override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                throw new NotSupportedException();
             }
 
             internal override bool IsJsonOrdinalityType
@@ -1154,6 +1341,11 @@ namespace DevZest.Data.MySql
             protected sealed override string GetValueLiteral(Binary value, MySqlVersion mySqlVersion)
             {
                 return value.ToHexLitera();
+            }
+
+            internal sealed override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.BINARY();
             }
         }
 
@@ -1281,6 +1473,11 @@ namespace DevZest.Data.MySql
             }
 
             protected abstract string GetDataTypeSqlCore(MySqlVersion mySqlVersion);
+
+            internal sealed override string GetCastAsType(MySqlVersion mySqlVersion)
+            {
+                return CastAsType.CHAR(charSetName: CharSetName);
+            }
         }
 
         private sealed class TinyTextType : TextTypeBase

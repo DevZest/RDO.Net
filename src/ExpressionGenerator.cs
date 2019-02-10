@@ -88,7 +88,7 @@ namespace DevZest.Data.MySql
                 SqlBuilder.Append("CAST(");
                 e.Operand.Accept(this);
                 SqlBuilder.Append(" AS ");
-                SqlBuilder.Append(targetSqlType.GetDataTypeSql(MySqlVersion));
+                SqlBuilder.Append(targetSqlType.GetCastAsType(MySqlVersion));
                 SqlBuilder.Append(")");
             }
         }
