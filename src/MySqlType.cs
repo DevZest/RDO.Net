@@ -131,9 +131,9 @@ namespace DevZest.Data.MySql
             get { return typeof(MySqlType); }
         }
 
-        private abstract class GenericSqlType<T> : MySqlType
+        private abstract class GenericMySqlType<T> : MySqlType
         {
-            protected GenericSqlType(Column<T> column)
+            protected GenericMySqlType(Column<T> column)
             {
                 Column = column;
             }
@@ -153,10 +153,10 @@ namespace DevZest.Data.MySql
             }
         }
 
-        private abstract class StructSqlType<T> : GenericSqlType<Nullable<T>>
+        private abstract class StructMySqlType<T> : GenericMySqlType<Nullable<T>>
             where T : struct
         {
-            protected StructSqlType(Column<Nullable<T>> column)
+            protected StructMySqlType(Column<Nullable<T>> column)
                 : base(column)
             {
             }
@@ -178,7 +178,7 @@ namespace DevZest.Data.MySql
             protected abstract string GetValue(T value, MySqlVersion mySqlVersion);
         }
 
-        private sealed class BigIntType : StructSqlType<Int64>
+        private sealed class BigIntType : StructMySqlType<Int64>
         {
             public BigIntType(Column<Int64?> column)
                 : base(column)
@@ -206,7 +206,7 @@ namespace DevZest.Data.MySql
             return new BigIntType(int64Column);
         }
 
-        private sealed class DecimalType : StructSqlType<Decimal>
+        private sealed class DecimalType : StructMySqlType<Decimal>
         {
             public DecimalType(Column<Decimal?> column, Byte precision, Byte scale)
                 : base(column)
@@ -240,7 +240,7 @@ namespace DevZest.Data.MySql
             return new DecimalType(decimalColumn, precision, scale);
         }
 
-        private sealed class BitType : StructSqlType<Boolean>
+        private sealed class BitType : StructMySqlType<Boolean>
         {
             public BitType(Column<Boolean?> column)
                 : base(column)
@@ -268,7 +268,7 @@ namespace DevZest.Data.MySql
             return new BitType(booleanColumn);
         }
 
-        private sealed class TinyIntType : StructSqlType<Byte>
+        private sealed class TinyIntType : StructMySqlType<Byte>
         {
             public TinyIntType(Column<Byte?> column)
                 : base(column)
@@ -296,7 +296,7 @@ namespace DevZest.Data.MySql
             return new TinyIntType(byteColumn);
         }
 
-        private sealed class SmallIntType : StructSqlType<Int16>
+        private sealed class SmallIntType : StructMySqlType<Int16>
         {
             public SmallIntType(Column<Int16?> column)
                 : base(column)
@@ -324,7 +324,7 @@ namespace DevZest.Data.MySql
             return new SmallIntType(int16Column);
         }
 
-        private class IntType : StructSqlType<Int32>
+        private class IntType : StructMySqlType<Int32>
         {
             public IntType(Column<Int32?> column)
                 : base(column)
@@ -352,10 +352,10 @@ namespace DevZest.Data.MySql
             return new IntType(int32Column);
         }
 
-        private abstract class SizedSqlType<T> : GenericSqlType<T>
+        private abstract class SizedMySqlType<T> : GenericMySqlType<T>
             where T : class
         {
-            protected SizedSqlType(Column<T> column, int size)
+            protected SizedMySqlType(Column<T> column, int size)
                 : base(column)
             {
                 Debug.Assert(size > 0);
@@ -382,7 +382,7 @@ namespace DevZest.Data.MySql
             }
         }
 
-        private abstract class BinaryTypeBase : SizedSqlType<Binary>
+        private abstract class BinaryTypeBase : SizedMySqlType<Binary>
         {
             protected BinaryTypeBase(Column<Binary> column, int size)
                 : base(column, size)
@@ -450,7 +450,7 @@ namespace DevZest.Data.MySql
             return new VarBinaryType(binaryColumn, size);
         }
 
-        private sealed class UniqueIdentifierType : StructSqlType<Guid>
+        private sealed class UniqueIdentifierType : StructMySqlType<Guid>
         {
             public UniqueIdentifierType(Column<Guid?> column)
                 : base(column)
@@ -478,7 +478,7 @@ namespace DevZest.Data.MySql
             return new UniqueIdentifierType(column);
         }
 
-        private sealed class DateType : StructSqlType<DateTime>
+        private sealed class DateType : StructMySqlType<DateTime>
         {
             public DateType(Column<DateTime?> column)
                 : base(column)
@@ -506,7 +506,7 @@ namespace DevZest.Data.MySql
             return new DateType(dateTimeColumn);
         }
 
-        private sealed class TimeType : StructSqlType<DateTime>
+        private sealed class TimeType : StructMySqlType<DateTime>
         {
             public TimeType(Column<DateTime?> column, int precision)
                 : base(column)
@@ -560,7 +560,7 @@ namespace DevZest.Data.MySql
             return new TimeType(column, precision);
         }
 
-        private class DateTimeType : StructSqlType<DateTime>
+        private class DateTimeType : StructMySqlType<DateTime>
         {
             public DateTimeType(Column<DateTime?> column, int precision)
                 : base(column)
@@ -595,12 +595,12 @@ namespace DevZest.Data.MySql
             private static readonly string[] s_formats = new string[]
             {
                 "yyyy-MM-dd HH:mm:ss",
-                "yyyy-MM-dd HH:mm:ss.f",
-                "yyyy-MM-dd HH:mm:ss.ff",
-                "yyyy-MM-dd HH:mm:ss.fff",
-                "yyyy-MM-dd HH:mm:ss.ffff",
-                "yyyy-MM-dd HH:mm:ss.fffff",
-                "yyyy-MM-dd HH:mm:ss.ffffff",
+                "yyyy-MM-dd HH:mm:ss.F",
+                "yyyy-MM-dd HH:mm:ss.FF",
+                "yyyy-MM-dd HH:mm:ss.FFF",
+                "yyyy-MM-dd HH:mm:ss.FFFF",
+                "yyyy-MM-dd HH:mm:ss.FFFFF",
+                "yyyy-MM-dd HH:mm:ss.FFFFFF",
             };
 
             protected override string GetValue(DateTime value, MySqlVersion mySqlVersion)
@@ -648,7 +648,7 @@ namespace DevZest.Data.MySql
             return new TimestampType(dateTimeColumn, precision);
         }
 
-        private sealed class SingleType : StructSqlType<Single>
+        private sealed class SingleType : StructMySqlType<Single>
         {
             public SingleType(Column<Single?> column)
                 : base(column)
@@ -676,7 +676,7 @@ namespace DevZest.Data.MySql
             return new SingleType(column);
         }
 
-        private sealed class DoubleType : StructSqlType<Double>
+        private sealed class DoubleType : StructMySqlType<Double>
         {
             public DoubleType(Column<Double?> column)
                 : base(column)
@@ -704,7 +704,7 @@ namespace DevZest.Data.MySql
             return new DoubleType(column);
         }
 
-        private sealed class JsonType : GenericSqlType<string>
+        private sealed class JsonType : GenericMySqlType<string>
         {
             public JsonType(Column<string> column)
                 : base(column)
@@ -735,7 +735,7 @@ namespace DevZest.Data.MySql
             }
         }
 
-        private abstract class StringTypeBase : SizedSqlType<String>
+        private abstract class StringTypeBase : SizedMySqlType<String>
         {
             protected StringTypeBase(Column<String> column, int size, string charSetName, string collationName)
                 : base(column, size)
@@ -850,7 +850,7 @@ namespace DevZest.Data.MySql
             return new CharType(column, size, charSetName, collationName);
         }
 
-        private sealed class SingleCharType : StructSqlType<Char>
+        private sealed class SingleCharType : StructMySqlType<Char>
         {
             public SingleCharType(Column<Char?> column, string charSetName, string collationName)
                 : base(column)
