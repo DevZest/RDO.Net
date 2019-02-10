@@ -199,7 +199,7 @@ namespace DevZest.Data.MySql
         private static readonly ConcurrentDictionary<Type, MySqlTypeProvider> s_defaultMySqlTypeProviders = new ConcurrentDictionary<Type, MySqlTypeProvider>(
             new MySqlTypeProviderCollection()
             {
-                new MySqlTypeProvider<Binary>(x => MySqlType.VarBinary(x, MAX_VARBINARY_SIZE)),
+                new MySqlTypeProvider<Binary>(x => MySqlType.LongBlob(x)),
                 new MySqlTypeProvider<Boolean?>(x => MySqlType.Bit(x)),
                 new MySqlTypeProvider<Byte?>(x => MySqlType.TinyInt(x)),
                 new MySqlTypeProvider<Char?>(x => MySqlType.SingleChar(x, null, null)),

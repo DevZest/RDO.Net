@@ -10,7 +10,7 @@ namespace DevZest.Data.MySql
         [TestMethod]
         public void Column_default_MySqlType()
         {
-            VerifyDefaultMySqlType<_Binary>(MySqlVersion.LowestSupported, MySqlDbType.VarBinary, ColumnExtensions.MAX_VARBINARY_SIZE, string.Format("VARBINARY({0})", ColumnExtensions.MAX_VARBINARY_SIZE));
+            VerifyDefaultMySqlType<_Binary>(MySqlVersion.LowestSupported, MySqlDbType.LongBlob, "LONGBLOB");
             VerifyDefaultMySqlType<_Boolean>(MySqlVersion.LowestSupported, MySqlDbType.Bit, "BIT");
             VerifyDefaultMySqlType<_Byte>(MySqlVersion.LowestSupported, MySqlDbType.Byte, "TINYINT");
             VerifyDefaultMySqlType<_Char>(MySqlVersion.LowestSupported, MySqlDbType.String, 1, "CHAR(1)");
@@ -108,6 +108,26 @@ namespace DevZest.Data.MySql
             }
 
             {
+                var binary = new _Binary().AsMySqlTinyBlob();
+                VerifyMySqlType(MySqlVersion.LowestSupported, binary, MySqlDbType.TinyBlob, "TINYBLOB");
+            }
+
+            {
+                var binary = new _Binary().AsMySqlBlob();
+                VerifyMySqlType(MySqlVersion.LowestSupported, binary, MySqlDbType.Blob, "BLOB");
+            }
+
+            {
+                var binary = new _Binary().AsMySqlMediumBlob();
+                VerifyMySqlType(MySqlVersion.LowestSupported, binary, MySqlDbType.MediumBlob, "MEDIUMBLOB");
+            }
+
+            {
+                var binary = new _Binary().AsMySqlLongBlob();
+                VerifyMySqlType(MySqlVersion.LowestSupported, binary, MySqlDbType.LongBlob, "LONGBLOB");
+            }
+
+            {
                 var timestamp = new _DateTime().AsMySqlTimestamp();
                 VerifyMySqlType(MySqlVersion.LowestSupported, timestamp, MySqlDbType.Timestamp, "TIMESTAMP");
             }
@@ -152,6 +172,26 @@ namespace DevZest.Data.MySql
                 VerifyMySqlType(MySqlVersion.LowestSupported, singleChar, MySqlDbType.String, 1, "CHAR(1)");
                 singleChar = new _Char().AsMySqlChar("utf8mb4");
                 VerifyMySqlType(MySqlVersion.LowestSupported, singleChar, MySqlDbType.String, 1, "CHAR(1) CHARACTER SET utf8mb4");
+            }
+
+            {
+                var text = new _String().AsMySqlTinyText("utf8mb4");
+                VerifyMySqlType(MySqlVersion.LowestSupported, text, MySqlDbType.TinyText, "TINYTEXT CHARACTER SET utf8mb4");
+            }
+
+            {
+                var text = new _String().AsMySqlText("utf8mb4");
+                VerifyMySqlType(MySqlVersion.LowestSupported, text, MySqlDbType.Text, "TEXT CHARACTER SET utf8mb4");
+            }
+
+            {
+                var text = new _String().AsMySqlMediumText("utf8mb4");
+                VerifyMySqlType(MySqlVersion.LowestSupported, text, MySqlDbType.MediumText, "MEDIUMTEXT CHARACTER SET utf8mb4");
+            }
+
+            {
+                var text = new _String().AsMySqlLongText("utf8mb4");
+                VerifyMySqlType(MySqlVersion.LowestSupported, text, MySqlDbType.LongText, "LONGTEXT CHARACTER SET utf8mb4");
             }
         }
     }

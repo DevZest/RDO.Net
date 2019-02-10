@@ -1137,7 +1137,7 @@ namespace DevZest.Data.MySql
 
         private abstract class BlobTypeBase : GenericMySqlType<Binary>
         {
-            protected BlobTypeBase(_Binary column)
+            protected BlobTypeBase(Column<Binary> column)
                 : base(column)
             {
             }
@@ -1159,7 +1159,7 @@ namespace DevZest.Data.MySql
 
         private sealed class TinyBlobType : BlobTypeBase
         {
-            public TinyBlobType(_Binary column)
+            public TinyBlobType(Column<Binary> column)
                 : base(column)
             {
             }
@@ -1175,14 +1175,14 @@ namespace DevZest.Data.MySql
             }
         }
 
-        internal static MySqlType TinyBlob(_Binary column)
+        internal static MySqlType TinyBlob(Column<Binary> column)
         {
             return new TinyBlobType(column);
         }
 
         private sealed class BlobType : BlobTypeBase
         {
-            public BlobType(_Binary column)
+            public BlobType(Column<Binary> column)
                 : base(column)
             {
             }
@@ -1205,7 +1205,7 @@ namespace DevZest.Data.MySql
 
         private sealed class MediumBlobType : BlobTypeBase
         {
-            public MediumBlobType(_Binary column)
+            public MediumBlobType(Column<Binary> column)
                 : base(column)
             {
             }
@@ -1221,14 +1221,14 @@ namespace DevZest.Data.MySql
             }
         }
 
-        internal static MySqlType MediumBlob(_Binary column)
+        internal static MySqlType MediumBlob(Column<Binary> column)
         {
             return new MediumBlobType(column);
         }
 
         private sealed class LongBlobType : BlobTypeBase
         {
-            public LongBlobType(_Binary column)
+            public LongBlobType(Column<Binary> column)
                 : base(column)
             {
             }
@@ -1244,7 +1244,7 @@ namespace DevZest.Data.MySql
             }
         }
 
-        internal static MySqlType LongBlob(_Binary column)
+        internal static MySqlType LongBlob(Column<Binary> column)
         {
             return new LongBlobType(column);
         }
@@ -1315,7 +1315,7 @@ namespace DevZest.Data.MySql
 
             protected override string GetDataTypeSqlCore(MySqlVersion mySqlVersion)
             {
-                return "Text";
+                return "TEXT";
             }
 
             internal override MySqlParameterInfo GetSqlParameterInfo(MySqlVersion mySqlVersion)
