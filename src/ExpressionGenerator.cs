@@ -40,6 +40,16 @@ namespace DevZest.Data.MySql
         };
         public override void Visit(DbBinaryExpression e)
         {
+            if (e.Left.DataType == typeof(string) && e.Right.DataType == typeof(string))
+            {
+                SqlBuilder.Append("CONCAT(");
+                e.Left.Accept(this);
+                SqlBuilder.Append(", ");
+                e.Right.Accept(this);
+                SqlBuilder.Append(")");
+                return;
+            }
+
             SqlBuilder.Append("(");
             e.Left.Accept(this);
             SqlBuilder.Append(BinaryExpressionMappers[e.Kind]);
