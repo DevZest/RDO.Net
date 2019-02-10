@@ -89,16 +89,17 @@ namespace DevZest.Data.MySql {
         ///      &quot;ParentProductCategoryID&quot; : null,
         ///      &quot;Name&quot; : &quot;Bikes&quot;,
         ///      &quot;RowGuid&quot; : &quot;cfbda25c-df71-47a7-b81b-64ee161aa37c&quot;,
-        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
+        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00Z&quot;,
         ///      &quot;SubCategories&quot; : [
         ///         {
         ///            &quot;ProductCategoryID&quot; : 5,
         ///            &quot;Name&quot; : &quot;Mountain Bikes&quot;,
         ///            &quot;RowGuid&quot; : &quot;2d364ade-264a-433c-b092-4fcbf3804e01&quot;,
-        ///            &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
+        ///            &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00Z&quot;,
         ///            &quot;SubCategories&quot; : []
         ///         },
-        ///          [rest of string was truncated]&quot;;.
+        ///         {
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_ProductCategories {
             get {
