@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 
 namespace DevZest.Data.MySql
 {
@@ -16,7 +17,10 @@ namespace DevZest.Data.MySql
                 updater = new Int16IdentityUpdater(dataSet, int16IdentityColumn, (Int16)lastInsertId);
             else
                 updater = null;
+            var model = dataSet.Model;
+            model.SuspendIdentity();
             updater.Update();
+            model.ResumeIdentity();
         }
 
         protected abstract void Update();
@@ -44,7 +48,10 @@ namespace DevZest.Data.MySql
                 var insertId = LastInsertId;
                 for (int i = 0; i < DataSet.Count; i++)
                 {
+                    var dataRow = DataSet[i];
+                    dataRow.IsPrimaryKeySealed = false;
                     IdentityColumn[i] = insertId;
+                    dataRow.IsPrimaryKeySealed = true;
                     insertId = Next(insertId);
                 }
             }
@@ -59,7 +66,7 @@ namespace DevZest.Data.MySql
 
             protected override int Next(Int32 insertId)
             {
-                return insertId++;
+                return insertId + 1;
             }
         }
 
@@ -72,7 +79,7 @@ namespace DevZest.Data.MySql
 
             protected override Int64 Next(Int64 insertId)
             {
-                return insertId++;
+                return insertId + 1;
             }
         }
 
@@ -85,7 +92,8 @@ namespace DevZest.Data.MySql
 
             protected override Int16 Next(Int16 insertId)
             {
-                return insertId++;
+                insertId++;
+                return insertId;
             }
         }
     }
