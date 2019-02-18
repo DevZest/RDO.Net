@@ -12,7 +12,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public override Db Create(string projectPath)
         {
             CreateEmptyDb();
-            return new Db("Server=127.0.0.1;Port=3306;Database=EmptyDb;Uid=root;Allow User Variables=True");
+            return new Db("Server=127.0.0.1;Port=3306;Database=AdventureWorksLT_Design;Uid=root;Allow User Variables=True");
         }
 
         private static void CreateEmptyDb()
@@ -23,10 +23,10 @@ namespace DevZest.Samples.AdventureWorksLT
                 connection.Open();
                 var sqlText =
 @"set @@sql_notes = 0;
-drop database if exists EmptyDb;
+drop database if exists AdventureWorksLT_Design;
 set @@sql_notes = 1;
 
-create database EmptyDb;
+create database AdventureWorksLT_Design;
 ";
                 var command = new MySqlCommand(sqlText, connection);
                 command.ExecuteNonQuery();
