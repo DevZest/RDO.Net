@@ -8,9 +8,7 @@ namespace DevZest.Samples.AdventureWorksLT
     {
         public override Db Create(string projectPath)
         {
-            var dbFolder = Path.Combine(projectPath, @"LocalDb");
-            string attachDbFilename = Path.Combine(dbFolder, "AdventureWorksLT.Design.mdf");
-            var connectionString = string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
+            var connectionString = "Server=127.0.0.1;Port=3306;Database=AdventureWorksLT;Uid=root;Allow User Variables=True";
             return new Db(connectionString);
         }
     }

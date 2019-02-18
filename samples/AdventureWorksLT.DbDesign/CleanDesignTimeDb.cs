@@ -1,7 +1,8 @@
 ﻿#if DbDesign
 using DevZest.Data;
 using DevZest.Data.Annotations;
-using System.IO;
+using MySql.Data.MySqlClient;
+using System.Text;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -10,13 +11,28 @@ namespace DevZest.Samples.AdventureWorksLT
     {
         public override Db Create(string projectPath)
         {
-            var dbFolder = Path.Combine(projectPath, @"LocalDb");
-            string attachDbFilename = Path.Combine(dbFolder, "AdventureWorksLT.Design.mdf");
-            File.Copy(Path.Combine(dbFolder, "EmptyDb.mdf"), attachDbFilename, true);
-            File.Copy(Path.Combine(dbFolder, "EmptyDb_log.ldf"), Path.Combine(dbFolder, "AdventureWorksLT.Design_log.ldf"), true);
-            var connectionString = string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
-            return new Db(connectionString);
+            CreateEmptyDb();
+            return new Db("Server=127.0.0.1;Port=3306;Database=EmptyDb;Uid=root;Allow User Variables=True");
         }
+
+        private static void CreateEmptyDb()
+        {
+            var log = new StringBuilder();
+            using (var connection = new MySqlConnection("Server=127.0.0.1;Port=3306;Uid=root"))
+            {
+                connection.Open();
+                var sqlText =
+@"set @@sql_notes = 0;
+drop database if exists EmptyDb;
+set @@sql_notes = 1;
+
+create database EmptyDb;
+";
+                var command = new MySqlCommand(sqlText, connection);
+                command.ExecuteNonQuery();
+            }
+        }
+
     }
 }
 #endif
