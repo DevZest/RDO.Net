@@ -1,0 +1,1 @@
+ROBOCOPY %~dp0..\src\Data.MySql %~dp0DevZest.Data.MySql /MIR /XD .vs obj bin
