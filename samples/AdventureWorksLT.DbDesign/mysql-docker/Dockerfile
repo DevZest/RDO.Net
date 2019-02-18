@@ -1,6 +1,6 @@
 FROM mysql/mysql-server:8.0
 
-MAINTAINER weifen.luo@devzest.com
+MAINTAINER Weifen Luo | DevZest
 
 ENV MYSQL_DATABASE=AdventureWorksLT \
     MYSQL_ALLOW_EMPTY_PASSWORD=1 \
