@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>DevZest.Data.AspNetCore</RootNamespace>
+    <AssemblyName>DevZest.Data.AspNetCore</AssemblyName>
   </PropertyGroup>
 
 </Project>
