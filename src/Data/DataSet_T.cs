@@ -269,7 +269,7 @@ namespace DevZest.Data
             var childModel = getChild(_);
             if (childModel == null || childModel.ParentModel != this.Model)
                 throw new ArgumentException(DiagnosticMessages.DataSet_InvalidChildModelGetter, nameof(getChild));
-            return dataRow == null ? childModel.DataSet as DataSet<TChild> : dataRow.Children(childModel);
+            return dataRow == null ? childModel.DataSet as DataSet<TChild> : dataRow.GetChildDataSet(childModel);
         }
 
         private Action<DataRow> GetUpdateAction(Action<T, DataRow> updateAction)

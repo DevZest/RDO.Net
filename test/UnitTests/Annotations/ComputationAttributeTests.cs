@@ -91,7 +91,7 @@ namespace DevZest.Data.Annotations
 
             Assert.AreEqual(2, dataSet._.IdPlusOne[dataRow]);
 
-            var details = dataRow.Children(dataSet._.Details);
+            var details = dataRow.GetChildDataSet(dataSet._.Details);
             details.AddRow((_, row) => { _.Value[row] = 1; });
             details.AddRow((_, row) => { _.Value[row] = 2; });
             details.AddRow((_, row) => { _.Value[row] = 3; });

@@ -47,11 +47,11 @@ namespace DevZest.Data.Helpers
             {
                 for (int i = 0; i < dataSet.Count; i++)
                 {
-                    var children = dataSet[i].Children(childGetter(model));
+                    var children = dataSet[i].GetChildDataSet(childGetter(model));
                     addRows(children, count);
                     for (int j = 0; j < children.Count; j++)
                     {
-                        var grandChildren = children[j].Children(childGetter(children._));
+                        var grandChildren = children[j].GetChildDataSet(childGetter(children._));
                         addRows(grandChildren, count);
                     }
                 }

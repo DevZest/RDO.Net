@@ -93,7 +93,7 @@ namespace DevZest.Data
         }
 
         private DataSet[] _childDataSets;
-        internal IReadOnlyList<DataSet> ChildDataSets
+        public IReadOnlyList<DataSet> ChildDataSets
         {
             get { return _childDataSets; }
         }
@@ -231,7 +231,7 @@ namespace DevZest.Data
         /// <typeparam name="T">The type of child model.</typeparam>
         /// <param name="childModel">The child model.</param>
         /// <returns>The children data set.</returns>
-        public DataSet<T> Children<T>(T childModel)
+        public DataSet<T> GetChildDataSet<T>(T childModel)
             where T : Model, new()
         {
             childModel.VerifyNotNull(nameof(childModel));

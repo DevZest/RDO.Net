@@ -22,10 +22,10 @@ namespace DevZest.Data
                 var result = await productCategories.ToDataSetAsync();
                 var childModel = result._.SubCategories;
                 Assert.AreEqual(4, result.Count);
-                Assert.AreEqual(3, result[0].Children(childModel).Count);
-                Assert.AreEqual(14, result[1].Children(childModel).Count);
-                Assert.AreEqual(8, result[2].Children(childModel).Count);
-                Assert.AreEqual(12, result[3].Children(childModel).Count);
+                Assert.AreEqual(3, result[0].GetChildDataSet(childModel).Count);
+                Assert.AreEqual(14, result[1].GetChildDataSet(childModel).Count);
+                Assert.AreEqual(8, result[2].GetChildDataSet(childModel).Count);
+                Assert.AreEqual(12, result[3].GetChildDataSet(childModel).Count);
 
                 Assert.AreEqual(Strings.ExpectedJSON_ProductCategories.Trim(), result.ToString().Trim());
             }
