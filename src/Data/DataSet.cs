@@ -24,8 +24,13 @@ namespace DevZest.Data
 
         public DataRow AddRow(Action<DataRow> updateAction = null)
         {
+            return InsertRow(Count, updateAction);
+        }
+
+        public DataRow InsertRow(int index, Action<DataRow> updateAction = null)
+        {
             var result = new DataRow();
-            Insert(Count, result, updateAction);
+            Insert(index, result, updateAction);
             return result;
         }
 
