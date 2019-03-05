@@ -22,7 +22,7 @@ namespace DevZest.Data
 
         internal abstract DataSet CreateChildDataSet(DataRow parentRow);
 
-        internal DataRow AddRow(Action<DataRow> updateAction = null)
+        public DataRow AddRow(Action<DataRow> updateAction = null)
         {
             var result = new DataRow();
             Insert(Count, result, updateAction);
