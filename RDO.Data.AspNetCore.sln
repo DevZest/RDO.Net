@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDO.Data.AspNetCore", "src\RDO.Data.AspNetCore.csproj", "{546F0429-C52D-477F-B048-52D88B3C1584}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{4DA9F901-C1F9-4DB9-AACE-5F0F79795D1E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorPagesMovie", "samples\RazorPagesMovie\RazorPagesMovie.csproj", "{CB0430C3-7D59-4062-8575-20BAF84C9AA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +19,16 @@ Global
 		{546F0429-C52D-477F-B048-52D88B3C1584}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{546F0429-C52D-477F-B048-52D88B3C1584}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{546F0429-C52D-477F-B048-52D88B3C1584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB0430C3-7D59-4062-8575-20BAF84C9AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB0430C3-7D59-4062-8575-20BAF84C9AA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB0430C3-7D59-4062-8575-20BAF84C9AA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB0430C3-7D59-4062-8575-20BAF84C9AA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CB0430C3-7D59-4062-8575-20BAF84C9AA7} = {4DA9F901-C1F9-4DB9-AACE-5F0F79795D1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8B5DC54-50E5-41EF-906B-63895F404413}
