@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
 
             return new RowBinding<DataView>(onSetup: (v, p) =>
                 {
-                    var dataSet = p.DataRow.Children(_);
+                    var dataSet = p.DataRow.GetChildDataSet(_);
                     var dataPresenter = dataPresenterCreator();
                     dataPresenter.Show(v, dataSet);
                 },
