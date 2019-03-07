@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevZest.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Models;
 
 namespace RazorPagesMovie.Pages.Movies
 {
     public class IndexModel : PageModel
     {
-        private readonly RazorPagesMovie.Models.RazorPagesMovieContext _context;
+        private readonly Db _db;
 
-        public IndexModel(RazorPagesMovie.Models.RazorPagesMovieContext context)
+        public IndexModel(Db db)
         {
-            _context = context;
+            _db = db;
         }
 
-        public IList<Movie> Movie { get;set; }
+        public DataSet<Movie> Movie { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
@@ -31,11 +31,17 @@ namespace RazorPagesMovie.Pages.Movies
 
         public async Task OnGetAsync()
         {
-            IQueryable<string> genreQuery = from m in _context.Movie
-                                            orderby m.Genre
-                                            select m.Genre;
+            var genres = await _db.CreateAggregateQuery((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
+            {
+                builder.From(_db.Movie, out var m)
+                    .Select(m.Genre, adhoc, nameof(Models.Movie.Genre))
+                    .GroupBy(m.Genre)
+                    .OrderBy(m.Genre);
+            }).ToDataSetAsync();
 
-            var movies = from m in _context.Movie select m;
+            Genres = new SelectList(GetGenres(genres));
+
+            DbSet<Movie> movies = _db.Movie;
 
             if (!string.IsNullOrEmpty(SearchString))
                 movies = movies.Where(s => s.Title.Contains(SearchString));
@@ -43,9 +49,17 @@ namespace RazorPagesMovie.Pages.Movies
             if (!string.IsNullOrEmpty(MovieGenre))
                 movies = movies.Where(x => x.Genre == MovieGenre);
 
-            Genres = new SelectList(await genreQuery.Distinct().ToListAsync());
+            Movie = await movies.ToDataSetAsync();
+        }
 
-            Movie = await movies.ToListAsync();
+        private IEnumerable<string> GetGenres(DataSet<Adhoc> genres)
+        {
+            var genre = (_String)genres._[0];
+
+            foreach (var dataRow in genres)
+            {
+                yield return genre[dataRow];
+            }
         }
     }
 }

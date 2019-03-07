@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var _ = Model.Movie._;
 }
 
 <h1>Index</h1>
@@ -25,39 +26,39 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Title)
+                @_.Title.DisplayName
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Movie[0].ReleaseDate)
+                @_.ReleaseDate.DisplayName
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Genre)
+                @_.Genre.DisplayName
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Price)
+                @_.Price.DisplayName
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Movie) {
+@foreach (var dataRow in Model.Movie) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                @_.Title[dataRow]
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
+                @_.ReleaseDate[dataRow]
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Genre)
+                @_.Genre[dataRow]
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @_.Price[dataRow]
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-page="./Edit" asp-route-id="@_.ID[dataRow]">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@_.ID[dataRow]">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@_.ID[dataRow]">Delete</a>
             </td>
         </tr>
 }

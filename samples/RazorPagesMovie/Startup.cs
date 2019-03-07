@@ -9,13 +9,15 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using RazorPagesMovie.Models;
 
 namespace RazorPagesMovie
 {
     public class Startup
     {
+        private readonly static string CONTENT_ROOT_PATH = "%CONTENTROOTPATH%";
+        private string _connectionString;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,8 +38,7 @@ namespace RazorPagesMovie
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddDbContext<RazorPagesMovieContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("RazorPagesMovieContext")));
+            services.AddScoped(serviceProvider => new Db(_connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +60,10 @@ namespace RazorPagesMovie
             app.UseCookiePolicy();
 
             app.UseMvc();
+
+            _connectionString = Configuration.GetConnectionString("RazorPagesMovie");
+            if (_connectionString.Contains(CONTENT_ROOT_PATH))
+                _connectionString = _connectionString.Replace(CONTENT_ROOT_PATH, env.ContentRootPath);
         }
     }
 }
