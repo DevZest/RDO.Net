@@ -22,7 +22,7 @@
             @_.ReleaseDate.DisplayName
         </dt>
         <dd class="col-sm-10">
-            @_.ReleaseDate[0]
+            @_.ReleaseDate[0]?.ToString("yyyy-MM-dd")
         </dd>
         <dt class="col-sm-2">
             @_.Genre.DisplayName
@@ -34,7 +34,7 @@
             @_.Price.DisplayName
         </dt>
         <dd class="col-sm-10">
-            @_.Price[0]
+            @_.Price[0]?.ToString("C")
         </dd>
     </dl>
 </div>

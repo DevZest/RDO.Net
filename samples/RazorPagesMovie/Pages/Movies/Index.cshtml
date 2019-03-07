@@ -47,13 +47,13 @@
                 @_.Title[dataRow]
             </td>
             <td>
-                @_.ReleaseDate[dataRow]
+                @_.ReleaseDate[dataRow]?.ToString("yyyy-MM-dd")
             </td>
             <td>
                 @_.Genre[dataRow]
             </td>
             <td>
-                @_.Price[dataRow]
+                @_.Price[dataRow]?.ToString("C")
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@_.ID[dataRow]">Edit</a> |
