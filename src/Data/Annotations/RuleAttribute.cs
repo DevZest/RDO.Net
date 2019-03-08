@@ -18,7 +18,7 @@ namespace DevZest.Data.Annotations
                 Model = model;
                 var rule = ruleAttribute._ruleGetter(model);
                 _validate = rule.Validate;
-                SourceColumns = rule.GetSourceColumns();
+                SourceColumns = rule.GetSourceColumns()?.Seal();
             }
 
             private readonly RuleAttribute _ruleAttribute;
