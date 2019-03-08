@@ -6,7 +6,7 @@ namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_UniqueConstraintAttribute))]
     [ModelDeclarationSpec(true, typeof(ColumnSort[]))]
-    public sealed class UniqueConstraintAttribute : DbIndexBaseAttribute
+    public sealed class UniqueConstraintAttribute : DbIndexBaseAttribute, IValidatorAttribute
     {
         private sealed class Validator : IValidator
         {
@@ -21,6 +21,8 @@ namespace DevZest.Data.Annotations
 
             private readonly UniqueConstraintAttribute _uniqueAttribute;
             private readonly IColumns _columns;
+
+            public IValidatorAttribute Attribute => _uniqueAttribute;
 
             public DataValidationError Validate(DataRow dataRow)
             {

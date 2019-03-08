@@ -1,8 +1,11 @@
-﻿namespace DevZest.Data
+﻿using DevZest.Data.Annotations.Primitives;
+
+namespace DevZest.Data
 {
     /// <summary></summary>
-    internal interface IValidator
+    public interface IValidator
     {
+        IValidatorAttribute Attribute { get; }
         DataValidationError Validate(DataRow dataRow);
     }
 }

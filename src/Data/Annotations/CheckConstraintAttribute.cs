@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_CheckConstraintAttribute))]
     [ModelDeclarationSpec(true, typeof(_Boolean))]
-    public sealed class CheckConstraintAttribute : ModelDeclarationAttribute
+    public sealed class CheckConstraintAttribute : ModelDeclarationAttribute, IValidatorAttribute
     {
         private sealed class Validator : IValidator
         {
@@ -19,6 +19,8 @@ namespace DevZest.Data.Annotations
 
             private readonly CheckConstraintAttribute _checkAttribute;
             private readonly _Boolean _condition;
+
+            public IValidatorAttribute Attribute => _checkAttribute;
 
             DataValidationError IValidator.Validate(DataRow dataRow)
             {

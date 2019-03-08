@@ -485,7 +485,7 @@ namespace DevZest.Data
         protected internal ModelCollection ChildModels { get; private set; }
 
         private List<IValidator> _validators = new List<IValidator>();
-        internal List<IValidator> Validators
+        public List<IValidator> Validators
         {
             get { return _validators; }
         }

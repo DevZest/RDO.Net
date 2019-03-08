@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_ValidatorAttribute))]
     [ModelDeclarationSpec(false, typeof(DataValidationError), typeof(DataRow))]
-    public sealed class ValidatorAttribute : ModelDeclarationAttribute, IValidator
+    public sealed class ValidatorAttribute : ModelDeclarationAttribute, IValidator, IValidatorAttribute
     {
         public ValidatorAttribute(string name)
             : base(name)
@@ -35,6 +35,8 @@ namespace DevZest.Data.Annotations
         {
             get { return ModelWireupEvent.Initialized; }
         }
+
+        IValidatorAttribute IValidator.Attribute => this;
 
         protected override void Wireup(Model model)
         {

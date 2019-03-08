@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace DevZest.Data.Annotations.Primitives
 {
-    public abstract class ValidationColumnAttribute : ColumnAttribute
+    public abstract class ValidationColumnAttribute : ColumnAttribute, IValidatorAttribute
     {
         private sealed class Validator : IValidator
         {
@@ -19,6 +19,8 @@ namespace DevZest.Data.Annotations.Primitives
 
             private readonly ValidationColumnAttribute _owner;
             private readonly Column _column;
+
+            public IValidatorAttribute Attribute => _owner;
 
             public DataValidationError Validate(DataRow dataRow)
             {
