@@ -22,6 +22,8 @@ namespace DevZest.Data.Annotations.Primitives
 
             public IValidatorAttribute Attribute => _owner;
 
+            public Model Model => _column.ParentModel;
+
             public DataValidationError Validate(DataRow dataRow)
             {
                 return _owner.Validate(_column, dataRow);

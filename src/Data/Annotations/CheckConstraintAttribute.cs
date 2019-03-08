@@ -11,16 +11,20 @@ namespace DevZest.Data.Annotations
     {
         private sealed class Validator : IValidator
         {
-            public Validator(CheckConstraintAttribute checkAttribute, _Boolean condition)
+            public Validator(CheckConstraintAttribute checkAttribute, Model model, _Boolean condition)
             {
                 _checkAttribute = checkAttribute;
+                _model = model;
                 _condition = condition;
             }
 
             private readonly CheckConstraintAttribute _checkAttribute;
+            private readonly Model _model;
             private readonly _Boolean _condition;
 
             public IValidatorAttribute Attribute => _checkAttribute;
+
+            public Model Model { get; }
 
             DataValidationError IValidator.Validate(DataRow dataRow)
             {
@@ -93,7 +97,7 @@ namespace DevZest.Data.Annotations
         {
             var condition = GetCondition(model);
             model.AddDbCheckConstraint(Name, Description, condition);
-            model.Validators.Add(new Validator(this, condition));
+            model.Validators.Add(new Validator(this, model, condition));
         }
 
     }

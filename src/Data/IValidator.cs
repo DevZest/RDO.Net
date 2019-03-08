@@ -6,6 +6,7 @@ namespace DevZest.Data
     public interface IValidator
     {
         IValidatorAttribute Attribute { get; }
+        Model Model { get; }
         DataValidationError Validate(DataRow dataRow);
     }
 }

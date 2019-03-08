@@ -10,9 +10,10 @@ namespace DevZest.Data.Annotations
     {
         private sealed class Validator : IValidator
         {
-            public Validator(UniqueConstraintAttribute uniqueAttribute, ColumnSort[] sortOrder)
+            public Validator(UniqueConstraintAttribute uniqueAttribute, Model model, ColumnSort[] sortOrder)
             {
                 _uniqueAttribute = uniqueAttribute;
+                Model = model;
                 _columns = Columns.Empty;
                 for (int i = 0; i < sortOrder.Length; i++)
                     _columns = _columns.Add(sortOrder[i].Column);
@@ -23,6 +24,8 @@ namespace DevZest.Data.Annotations
             private readonly IColumns _columns;
 
             public IValidatorAttribute Attribute => _uniqueAttribute;
+
+            public Model Model { get; }
 
             public DataValidationError Validate(DataRow dataRow)
             {
@@ -107,7 +110,7 @@ namespace DevZest.Data.Annotations
         protected override void Wireup(Model model, string dbName, ColumnSort[] sortOrder)
         {
             model.AddDbUniqueConstraint(dbName, Description, IsCluster, sortOrder);
-            model.Validators.Add(new Validator(this, sortOrder));
+            model.Validators.Add(new Validator(this, model, sortOrder));
         }
     }
 }

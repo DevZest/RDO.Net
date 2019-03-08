@@ -7,8 +7,28 @@ namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_ValidatorAttribute))]
     [ModelDeclarationSpec(false, typeof(DataValidationError), typeof(DataRow))]
-    public sealed class ValidatorAttribute : ModelDeclarationAttribute, IValidator, IValidatorAttribute
+    public sealed class ValidatorAttribute : ModelDeclarationAttribute, IValidatorAttribute
     {
+        private sealed class Validator : IValidator
+        {
+            public Validator(ValidatorAttribute validatorAttribute, Model model)
+            {
+                _validatorAttribute = validatorAttribute;
+                Model = model;
+            }
+
+            private readonly ValidatorAttribute _validatorAttribute;
+
+            public Model Model { get; }
+
+            public IValidatorAttribute Attribute => _validatorAttribute;
+
+            public DataValidationError Validate(DataRow dataRow)
+            {
+                return _validatorAttribute._validatorFunc(Model, dataRow);
+            }
+        }
+
         public ValidatorAttribute(string name)
             : base(name)
         {
@@ -36,17 +56,9 @@ namespace DevZest.Data.Annotations
             get { return ModelWireupEvent.Initialized; }
         }
 
-        IValidatorAttribute IValidator.Attribute => this;
-
         protected override void Wireup(Model model)
         {
-            model.Validators.Add(this);
-        }
-
-        DataValidationError IValidator.Validate(DataRow dataRow)
-        {
-            var model = dataRow.Model;
-            return _validatorFunc(model, dataRow);
+            model.Validators.Add(new Validator(this, model));
         }
     }
 }
