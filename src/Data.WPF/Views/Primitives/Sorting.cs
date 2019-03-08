@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Views.Primitives
 {
-    [Validator(nameof(ValidateRequiredColumn))]
-    [Validator(nameof(ValidateDuplicateColumn))]
-    [Validator(nameof(ValidateDirection))]
+    [Rule(nameof(Rule_ColumnRequired))]
+    [Rule(nameof(Rule_DuplicateColumn))]
+    [Rule(nameof(Rule_Direction))]
     public class Sorting : Model
     {
         public static DataSet<Sorting> Convert(Model model, IReadOnlyList<IColumnComparer> orderBy)
@@ -66,34 +66,69 @@ namespace DevZest.Data.Views.Primitives
         [Display(Name = nameof(UserMessages.Sorting_Order), ResourceType = typeof(UserMessages))]
         public LocalColumn<SortDirection> Direction { get; private set; }
 
-        [_Validator]
-        private DataValidationError ValidateRequiredColumn(DataRow dataRow)
+        [_Rule]
+        private Rule Rule_ColumnRequired
         {
-            return Column[dataRow] == null
-                ? new DataValidationError(UserMessages.Sorting_InputRequired(Column.DisplayName), Column)
-                : null;
-        }
-
-        [_Validator]
-        private DataValidationError ValidateDuplicateColumn(DataRow dataRow)
-        {
-            var dataSet = DataSet;
-            foreach (var other in dataSet)
+            get
             {
-                if (other == dataRow)
-                    continue;
-                if (Column[dataRow] == Column[other])
-                    return new DataValidationError(UserMessages.Sorting_DuplicateSortBy, Column);
+                string Validate(DataRow dataRow)
+                {
+                    return Column[dataRow] == null ? UserMessages.Sorting_InputRequired(Column.DisplayName) : null;
+                }
+
+                IColumns GetSourceColumns()
+                {
+                    return Column;
+                }
+
+                return new Rule(Validate, GetSourceColumns);
             }
-            return null;
         }
 
-        [_Validator]
-        private DataValidationError ValidateDirection(DataRow dataRow)
+        [_Rule]
+        private Rule Rule_DuplicateColumn
         {
-            return Direction[dataRow] == SortDirection.Unspecified
-                ? new DataValidationError(UserMessages.Sorting_InputRequired(Direction.DisplayName), Direction)
-                : null;
+            get
+            {
+                string Validate(DataRow dataRow)
+                {
+                    var dataSet = DataSet;
+                    foreach (var other in dataSet)
+                    {
+                        if (other == dataRow)
+                            continue;
+                        if (Column[dataRow] == Column[other])
+                            return UserMessages.Sorting_DuplicateSortBy;
+                    }
+                    return null;
+                }
+
+                IColumns GetSourceColumns()
+                {
+                    return Column;
+                }
+
+                return new Rule(Validate, GetSourceColumns);
+            }
+        }
+
+        [_Rule]
+        private Rule Rule_Direction
+        {
+            get
+            {
+                string Validate(DataRow dataRow)
+                {
+                    return Direction[dataRow] == SortDirection.Unspecified ? UserMessages.Sorting_InputRequired(Direction.DisplayName) : null;
+                }
+
+                IColumns GetSourceColumns()
+                {
+                    return Direction;
+                }
+
+                return new Rule(Validate, GetSourceColumns);
+            }
         }
     }
 }

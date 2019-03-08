@@ -1,11 +1,10 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Annotations;
-using DevZest.Data.Presenters;
 
 namespace ValidationUI
 {
-    [Validator(nameof(ValidatePasswordConfirmation))]
-    [Validator(nameof(ValidateInterests))]
+    [Rule(nameof(Rule_PasswordConfirmation))]
+    [Rule(nameof(Rule_Interests))]
     public class Registration : Login
     {
         static Registration()
@@ -29,18 +28,25 @@ namespace ValidationUI
         [DefaultValue("")]
         public _String PasswordConfirmation { get; private set; }
 
-        private IColumns _passwordMismatchErrorSource;
-        public IColumns PasswordMismatchErrorSource
-        {
-            get { return _passwordMismatchErrorSource ?? (_passwordMismatchErrorSource = Password.Union(PasswordConfirmation).Seal()); }
-        }
-
         private const string ERR_PASSWORD_MISMATCH = "Passwords do not match";
 
-        [_Validator]
-        private DataValidationError ValidateInterests(DataRow dataRow)
+        [_Rule]
+        private Rule Rule_Interests
         {
-            return IsValidInterests(Interests, dataRow) ? null : new DataValidationError("At least 3 interests must be selected.", Interests);
+            get
+            {
+                string Validate(DataRow dataRow)
+                {
+                    return IsValidInterests(Interests, dataRow) ? null : "At least 3 interests must be selected.";
+                }
+
+                IColumns GetSourceColumns()
+                {
+                    return Interests;
+                }
+
+                return new Rule(Validate, GetSourceColumns);
+            }
         }
 
         private static bool IsValidInterests(_ByteEnum<Interests> column, DataRow dataRow)
@@ -58,11 +64,24 @@ namespace ValidationUI
             }
             return count >= 3;
         }
-
-        [_Validator]
-        private DataValidationError ValidatePasswordConfirmation(DataRow dataRow)
+        
+        [_Rule]
+        private Rule Rule_PasswordConfirmation
         {
-            return PasswordConfirmation[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_PASSWORD_MISMATCH, PasswordMismatchErrorSource);
+            get
+            {
+                string Validate(DataRow dataRow)
+                {
+                    return PasswordConfirmation[dataRow] == Password[dataRow] ? null : ERR_PASSWORD_MISMATCH;
+                }
+
+                IColumns GetSourceColumns()
+                {
+                    return Password.Union(PasswordConfirmation);
+                }
+
+                return new Rule(Validate, GetSourceColumns);
+            }
         }
     }
 }

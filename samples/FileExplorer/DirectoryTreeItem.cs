@@ -27,7 +27,7 @@ namespace FileExplorer
         public static void Expand(DataRow dataRow)
         {
             var folders = (DataSet<DirectoryTreeItem>)dataRow.DataSet;
-            var children = dataRow.Children(folders._.SubFolders);
+            var children = dataRow.GetChildDataSet(folders._.SubFolders);
             if (children.Count == 1 && children._.Path[0] == null)
             {
                 var path = folders._.Path[dataRow];
@@ -52,7 +52,7 @@ namespace FileExplorer
         private static void AddRow(DataSet<DirectoryTreeItem> folders, string path)
         {
             var dataRow = folders.AddRow((_, x) => _.Path[x] = path);
-            dataRow.Children(folders._.SubFolders).AddRow();
+            dataRow.GetChildDataSet(folders._.SubFolders).AddRow();
         }
     }
 }
