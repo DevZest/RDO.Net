@@ -3,7 +3,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Validator(nameof(ValidateLineCount))]
+    [Rule(nameof(Rule_LineCount))]
     [Computation(nameof(ComputeLineCount), ComputationMode.Aggregate)]
     [Computation(nameof(ComputeSubTotal), ComputationMode.Aggregate)]
     [InvisibleToDbDesigner]
@@ -17,10 +17,23 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public _Int32 LineCount { get; private set; }
 
-        [_Validator]
-        private DataValidationError ValidateLineCount(DataRow dataRow)
+        [_Rule]
+        private Rule Rule_LineCount
         {
-            return LineCount[dataRow] > 0 ? null : new DataValidationError(UserMessages.Validation_SalesOrder_LineCount, LineCount);
+            get
+            {
+                string Validate(DataRow dataRow)
+                {
+                    return LineCount[dataRow] > 0 ? null : UserMessages.Validation_SalesOrder_LineCount;
+                }
+
+                IColumns GetSourceColumns()
+                {
+                    return LineCount;
+                }
+
+                return new Rule(Validate, GetSourceColumns);
+            }
         }
 
         [_Computation]

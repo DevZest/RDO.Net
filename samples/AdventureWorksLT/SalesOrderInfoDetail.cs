@@ -3,7 +3,8 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Validator(nameof(ValidateProduct))]
+    [Rule(nameof(Rule_ProductNumber))]
+    [Rule(nameof(Rule_ProductName))]
     [InvisibleToDbDesigner]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
@@ -14,21 +15,56 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public Product.Lookup Product { get; private set; }
 
-        [_Validator]
-        private DataValidationError ValidateProduct(DataRow dataRow)
+        [_Rule]
+        private Rule Rule_ProductNumber
         {
-            if (ProductID[dataRow] == null)
-                return null;
-            var productNumber = Product.ProductNumber;
-            var productName = Product.Name;
+            get
+            {
+                string Validate(DataRow dataRow)
+                {
+                    if (ProductID[dataRow] == null)
+                        return null;
+                    var productNumber = Product.ProductNumber;
 
-            if (string.IsNullOrEmpty(productNumber[dataRow]))
-                return new DataValidationError(string.Format(UserMessages.Validation_ValueIsRequired, productNumber.DisplayName), productNumber);
+                    if (string.IsNullOrEmpty(productNumber[dataRow]))
+                        return string.Format(UserMessages.Validation_ValueIsRequired, productNumber.DisplayName);
 
-            if (string.IsNullOrEmpty(productName[dataRow]))
-                return new DataValidationError(string.Format(UserMessages.Validation_ValueIsRequired, productName.DisplayName), productName);
+                    return null;
+                }
 
-            return null;
+                IColumns GetSourceColumns()
+                {
+                    return Product.ProductNumber;
+                }
+
+                return new Rule(Validate, GetSourceColumns);
+            }
+        }
+
+        [_Rule]
+        private Rule Rule_ProductName
+        {
+            get
+            {
+                string Validate(DataRow dataRow)
+                {
+                    if (ProductID[dataRow] == null)
+                        return null;
+                    var productName = Product.Name;
+
+                    if (string.IsNullOrEmpty(productName[dataRow]))
+                        return string.Format(UserMessages.Validation_ValueIsRequired, productName.DisplayName);
+
+                    return null;
+                }
+
+                IColumns GetSourceColumns()
+                {
+                    return Product.Name;
+                }
+
+                return new Rule(Validate, GetSourceColumns);
+            }
         }
     }
 }
