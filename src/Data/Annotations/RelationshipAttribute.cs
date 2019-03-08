@@ -20,9 +20,9 @@ namespace DevZest.Data.Annotations
 
         public string Description { get; set; }
 
-        public Rule DeleteRule { get; set; } = Rule.None;
+        public ForeignKeyRule DeleteRule { get; set; } = ForeignKeyRule.None;
 
-        public Rule UpdateRule { get; set; } = Rule.None;
+        public ForeignKeyRule UpdateRule { get; set; } = ForeignKeyRule.None;
 
         private Func<DbSession, Model, KeyMapping> _keyMappingGetter;
 

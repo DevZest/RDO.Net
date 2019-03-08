@@ -4,7 +4,7 @@ namespace DevZest.Data.Addons
 {
     public sealed class DbForeignKeyConstraint : DbTableConstraint
     {
-        internal DbForeignKeyConstraint(string name, string description, CandidateKey foreignKey, CandidateKey referencedKey, Rule deleteRule, Rule updateRule)
+        internal DbForeignKeyConstraint(string name, string description, CandidateKey foreignKey, CandidateKey referencedKey, ForeignKeyRule deleteRule, ForeignKeyRule updateRule)
             : base(name, description)
         {
             Debug.Assert(foreignKey != null);
@@ -30,9 +30,9 @@ namespace DevZest.Data.Addons
 
         public CandidateKey ReferencedKey { get; private set; }
 
-        public Rule DeleteRule { get; private set; }
+        public ForeignKeyRule DeleteRule { get; private set; }
 
-        public Rule UpdateRule { get; private set; }
+        public ForeignKeyRule UpdateRule { get; private set; }
 
         public override bool IsValidOnTable
         {

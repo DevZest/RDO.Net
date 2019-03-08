@@ -7,21 +7,25 @@ using System.Reflection;
 namespace DevZest.Data.Annotations
 {
     [CrossReference(typeof(_RuleAttribute))]
-    [ModelDeclarationSpec(false, typeof(DataValidationError), typeof(DataRow))]
+    [ModelDeclarationSpec(true, typeof(Rule))]
     public sealed class RuleAttribute : ModelDeclarationAttribute, IValidatorAttribute
     {
         private sealed class Validator : IValidator
         {
-            public Validator(RuleAttribute ruleAttribute, Model model, IColumns sourceColumns)
+            public Validator(RuleAttribute ruleAttribute, Model model)
             {
                 _ruleAttribute = ruleAttribute;
                 Model = model;
-                SourceColumns = sourceColumns ?? Columns.Empty;
+                var rule = ruleAttribute._ruleGetter(model);
+                _validate = rule.Validate;
+                SourceColumns = rule.GetSourceColumns();
             }
 
             private readonly RuleAttribute _ruleAttribute;
 
             public Model Model { get; }
+
+            private readonly Func<DataRow, string> _validate;
 
             public IColumns SourceColumns { get; }
 
@@ -29,7 +33,8 @@ namespace DevZest.Data.Annotations
 
             public DataValidationError Validate(DataRow dataRow)
             {
-                return _ruleAttribute._validatorFunc(Model, dataRow);
+                var message = _validate(dataRow);
+                return string.IsNullOrEmpty(message) ? null : new DataValidationError(message, SourceColumns);
             }
         }
 
@@ -38,23 +43,19 @@ namespace DevZest.Data.Annotations
         {
         }
 
-        public string[] SourceColumns { get; set; }
-
-        private Func<Model, DataRow, DataValidationError> _validatorFunc;
+        private Func<Model, Rule> _ruleGetter;
         protected override void Initialize()
         {
-            var methodInfo = GetMethodInfo(new Type[] { typeof(DataRow) }, typeof(DataValidationError));
-            _validatorFunc = BuildValidatorFunc(methodInfo);
+            var getMethod = GetPropertyGetter(typeof(Rule));
+            _ruleGetter = BuildRuleGetter(ModelType, getMethod);
         }
 
-        private Func<Model, DataRow, DataValidationError> BuildValidatorFunc(MethodInfo methodInfo)
+        private static Func<Model, Rule> BuildRuleGetter(Type modelType, MethodInfo getMethod)
         {
             var paramModel = Expression.Parameter(typeof(Model));
-            var paramDataRow = Expression.Parameter(typeof(DataRow));
-            var model = Expression.Convert(paramModel, ModelType);
-            var call = Expression.Call(model, methodInfo, paramDataRow);
-
-            return Expression.Lambda<Func<Model, DataRow, DataValidationError>>(call, paramModel, paramDataRow).Compile();
+            var model = Expression.Convert(paramModel, modelType);
+            var call = Expression.Call(model, getMethod);
+            return Expression.Lambda<Func<Model, Rule>>(call, paramModel).Compile();
         }
 
         protected override ModelWireupEvent WireupEvent
@@ -64,24 +65,7 @@ namespace DevZest.Data.Annotations
 
         protected override void Wireup(Model model)
         {
-            model.Validators.Add(new Validator(this, model, GetSourceColumns(model)));
-        }
-
-        private IColumns GetSourceColumns(Model model)
-        {
-            var result = Columns.Empty;
-
-            if (SourceColumns == null || SourceColumns.Length == 0)
-                return result;
-
-            var columns = model.Columns;
-            for (int i = 0; i < SourceColumns.Length; i++)
-            {
-                var sourceColumn = columns[SourceColumns[i]];
-                result = result.Add(sourceColumn);
-            }
-
-            return result;
+            model.Validators.Add(new Validator(this, model));
         }
     }
 }

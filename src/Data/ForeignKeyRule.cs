@@ -4,7 +4,7 @@
     /// Specifies what action happens to rows have a referential relationship and the referenced row is deleted or updated from the parent table.
     /// The default is NoAction.
     /// </summary>
-    public enum Rule
+    public enum ForeignKeyRule
     {
         /// <summary>
         /// The Database Engine raises an error and the delete or update action on the row in the parent table is rejected.

@@ -6,7 +6,7 @@ namespace DevZest.Data.Helpers
 {
     public abstract class SimpleModelDataSetHelper
     {
-        [Rule(nameof(ValidateId))]
+        [Rule(nameof(Rule_Id))]
         [Computation(nameof(ComputeInheritedValue), ComputationMode.Inherit)]
         protected class SimpleModel : SimpleModelBase
         {
@@ -23,9 +23,23 @@ namespace DevZest.Data.Helpers
 
             private const string ERR_MESSAGE = "The Id must be even.";
 
-            private DataValidationError ValidateId(DataRow dataRow)
+            [_Rule]
+            private Rule Rule_Id
             {
-                return (Id[dataRow] % 2) == 0 ? null : new DataValidationError(ERR_MESSAGE, Id);
+                get
+                {
+                    string Validate(DataRow dataRow)
+                    {
+                        return (Id[dataRow] % 2) == 0 ? null : ERR_MESSAGE;
+                    }
+
+                    IColumns GetSourceColumns()
+                    {
+                        return Id;
+                    }
+
+                    return new Rule(Validate, GetSourceColumns);
+                }
             }
 
             protected override void OnChildDataSetsCreated()

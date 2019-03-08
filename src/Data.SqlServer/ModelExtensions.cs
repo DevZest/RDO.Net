@@ -141,16 +141,16 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.AppendLine(")");
         }
 
-        private static void GenerateForeignKeyRule(this Rule rule, IndentedStringBuilder sqlBuilder, string changeType)
+        private static void GenerateForeignKeyRule(this ForeignKeyRule rule, IndentedStringBuilder sqlBuilder, string changeType)
         {
             Debug.Assert(changeType == "DELETE" || changeType == "UPDATE");
             sqlBuilder.Append("ON ");
             sqlBuilder.Append(changeType);
-            if (rule == Rule.None)
+            if (rule == ForeignKeyRule.None)
                 sqlBuilder.Append(" NO ACTION");
-            else if (rule == Rule.Cascade)
+            else if (rule == ForeignKeyRule.Cascade)
                 sqlBuilder.Append(" CASCADE");
-            else if (rule == Rule.SetNull)
+            else if (rule == ForeignKeyRule.SetNull)
                 sqlBuilder.Append(" SET NULL");
             else
                 sqlBuilder.Append(" SET DEFAULT");

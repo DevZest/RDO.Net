@@ -1,5 +1,5 @@
-<Rule(SalesOrderInfoDetail._ValidateProductNumber, SourceColumns:={NameOf(SalesOrderDetail.ProductID), NameOf(SalesOrderInfoDetail.Product) + "." + NameOf(Product.ProductNumber)})>
-<Rule(SalesOrderInfoDetail._ValidateProductName, SourceColumns:={NameOf(SalesOrderDetail.ProductID), NameOf(SalesOrderInfoDetail.Product) + "." + NameOf(Product.Name)})>
+<Rule(SalesOrderInfoDetail._Rule_ProductNumber)>
+<Rule(SalesOrderInfoDetail._Rule_ProductName)>
 <InvisibleToDbDesigner>
 Public Class SalesOrderInfoDetail
     Inherits SalesOrderDetail
@@ -18,21 +18,45 @@ Public Class SalesOrderInfoDetail
         End Set
     End Property
 
-    Friend Const _ValidateProductNumber = NameOf(ValidateProductNumber)
+    Friend Const _Rule_ProductNumber = NameOf(Rule_ProductNumber)
     <_Rule>
-    Private Function ValidateProductNumber(ByVal dataRow As DataRow) As DataValidationError
-        If ProductID(dataRow) Is Nothing Then Return Nothing
-        Dim productNumber = Product.ProductNumber
-        If String.IsNullOrEmpty(productNumber(dataRow)) Then Return New DataValidationError(String.Format(My.UserMessages.Validation_ValueIsRequired, productNumber.DisplayName), productNumber)
-        Return Nothing
-    End Function
+    Private ReadOnly Property Rule_ProductNumber As Rule
+        Get
+            Dim validate =
+                Function(dataRow As DataRow) As String
+                    If ProductID(dataRow) Is Nothing Then Return Nothing
+                    Dim productNumber = Product.ProductNumber
+                    If String.IsNullOrEmpty(productNumber(dataRow)) Then Return String.Format(My.UserMessages.Validation_ValueIsRequired, productNumber.DisplayName)
+                    Return Nothing
+                End Function
 
-    Friend Const _ValidateProductName = NameOf(ValidateProductName)
+            Dim getSourceColumns =
+                Function() As IColumns
+                    Return Product.ProductNumber
+                End Function
+
+            Return New Rule(validate, getSourceColumns)
+        End Get
+    End Property
+
+    Friend Const _Rule_ProductName = NameOf(Rule_ProductName)
     <_Rule>
-    Private Function ValidateProductName(ByVal dataRow As DataRow) As DataValidationError
-        If ProductID(dataRow) Is Nothing Then Return Nothing
-        Dim productName = Product.Name
-        If String.IsNullOrEmpty(productName(dataRow)) Then Return New DataValidationError(String.Format(My.UserMessages.Validation_ValueIsRequired, productName.DisplayName), productName)
-        Return Nothing
-    End Function
+    Private ReadOnly Property Rule_ProductName As Rule
+        Get
+            Dim validate =
+                Function(dataRow As DataRow) As String
+                    If ProductID(dataRow) Is Nothing Then Return Nothing
+                    Dim productName = Product.Name
+                    If String.IsNullOrEmpty(productName(dataRow)) Then Return String.Format(My.UserMessages.Validation_ValueIsRequired, productName.DisplayName)
+                    Return Nothing
+                End Function
+
+            Dim getSourceColumns =
+                Function() As IColumns
+                    Return Product.Name
+                End Function
+
+            Return New Rule(validate, getSourceColumns)
+        End Get
+    End Property
 End Class

@@ -1,7 +1,7 @@
-<Rule(SalesOrder._ValidateLineCount, SourceColumns:={NameOf(SalesOrder.LineCount)})>
+<Rule(SalesOrder._Rule_LineCount)>
 <Computation(SalesOrder._ComputeLineCount, ComputationMode.Aggregate)>
-    <Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
-        <InvisibleToDbDesigner>
+<Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
+<InvisibleToDbDesigner>
 Public Class SalesOrder
     Inherits SalesOrderHeader
 
@@ -20,11 +20,23 @@ Public Class SalesOrder
         End Set
     End Property
 
-    Friend Const _ValidateLineCount = NameOf(ValidateLineCount)
+    Friend Const _Rule_LineCount = NameOf(Rule_LineCount)
     <_Rule>
-    Private Function ValidateLineCount(ByVal dataRow As DataRow) As DataValidationError
-        Return If(LineCount(dataRow) > 0, Nothing, New DataValidationError(My.UserMessages.Validation_SalesOrder_LineCount, LineCount))
-    End Function
+    Private ReadOnly Property Rule_LineCount As Rule
+        Get
+            Dim validate =
+                Function(dataRow As DataRow) As String
+                    Return If(LineCount(dataRow) > 0, Nothing, My.UserMessages.Validation_SalesOrder_LineCount)
+                End Function
+
+            Dim getSourceColumns =
+                Function() As IColumns
+                    Return LineCount
+                End Function
+
+            Return New Rule(validate, getSourceColumns)
+        End Get
+    End Property
 
     Friend Const _ComputeLineCount = NameOf(ComputeLineCount)
     <_Computation>

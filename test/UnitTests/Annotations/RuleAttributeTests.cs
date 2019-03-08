@@ -7,7 +7,7 @@ namespace DevZest.Data.Annotations
     {
         private const string ERR_MESSAGE = "Confirm password different from password";
 
-        [Rule(nameof(ValidateConfirmPassword))]
+        [Rule(nameof(Rule_ConfirmPassword))]
         private class User : Model
         {
             static User()
@@ -20,9 +20,23 @@ namespace DevZest.Data.Annotations
 
             public _String ConfirmPassword { get; private set; }
 
-            private DataValidationError ValidateConfirmPassword(DataRow dataRow)
+            [_Rule]
+            private Rule Rule_ConfirmPassword
             {
-                return ConfirmPassword[dataRow] == Password[dataRow] ? null : new DataValidationError(ERR_MESSAGE, ConfirmPassword);
+                get
+                {
+                    string Validate(DataRow dataRow)
+                    {
+                        return ConfirmPassword[dataRow] == Password[dataRow] ? null : ERR_MESSAGE;
+                    }
+
+                    IColumns GetSourceColumns()
+                    {
+                        return ConfirmPassword;
+                    }
+
+                    return new Rule(Validate, GetSourceColumns);
+                }
             }
         }
 

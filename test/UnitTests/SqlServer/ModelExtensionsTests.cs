@@ -29,7 +29,7 @@ namespace DevZest.Data.SqlServer
                 Name.SetDefaultValue("DEFAULT NAME", null, null);
                 AddDbUniqueConstraint("UQ_Temp", null, false, Unique1, Unique2.Desc());
                 AddDbCheckConstraint("CK_Temp", null, Name.IsNotNull());
-                this.AddDbTableConstraint(DbSession.CreateForeignKeyConstraint(null, null, FkRef, this, Rule.None, Rule.None), false);
+                this.AddDbTableConstraint(DbSession.CreateForeignKeyConstraint(null, null, FkRef, this, ForeignKeyRule.None, ForeignKeyRule.None), false);
             }
 
             protected sealed override PK CreatePrimaryKey()
