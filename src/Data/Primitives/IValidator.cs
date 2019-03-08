@@ -7,6 +7,7 @@ namespace DevZest.Data.Primitives
     {
         IValidatorAttribute Attribute { get; }
         Model Model { get; }
+        IColumns SourceColumns { get; }
         DataValidationError Validate(DataRow dataRow);
     }
 }

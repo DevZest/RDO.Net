@@ -25,6 +25,8 @@ namespace DevZest.Data.Annotations.Primitives
 
             public Model Model => _column.ParentModel;
 
+            public IColumns SourceColumns => _column;
+
             public DataValidationError Validate(DataRow dataRow)
             {
                 return _owner.Validate(_column, dataRow);

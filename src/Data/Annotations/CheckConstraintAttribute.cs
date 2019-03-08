@@ -15,32 +15,34 @@ namespace DevZest.Data.Annotations
             public Validator(CheckConstraintAttribute checkAttribute, Model model, _Boolean condition)
             {
                 _checkAttribute = checkAttribute;
-                _model = model;
+                Model = model;
+                SourceColumns = GetSourceColumns(condition);
                 _condition = condition;
             }
 
+            private static IColumns GetSourceColumns(_Boolean condition)
+            {
+                var expression = condition.Expression;
+                return expression == null ? Columns.Empty : expression.BaseColumns;
+            }
+
             private readonly CheckConstraintAttribute _checkAttribute;
-            private readonly Model _model;
             private readonly _Boolean _condition;
 
             public IValidatorAttribute Attribute => _checkAttribute;
 
             public Model Model { get; }
 
+            public IColumns SourceColumns { get; }
+
             DataValidationError IValidator.Validate(DataRow dataRow)
             {
-                return IsValid(dataRow) ? null : new DataValidationError(_checkAttribute.GetMessage(), GetValidationSource());
+                return IsValid(dataRow) ? null : new DataValidationError(_checkAttribute.GetMessage(), SourceColumns);
             }
 
             private bool IsValid(DataRow dataRow)
             {
                 return _condition[dataRow] != false;
-            }
-
-            private IColumns GetValidationSource()
-            {
-                var expression = _condition.Expression;
-                return expression == null ? Columns.Empty : expression.BaseColumns;
             }
         }
 
@@ -100,6 +102,5 @@ namespace DevZest.Data.Annotations
             model.AddDbCheckConstraint(Name, Description, condition);
             model.Validators.Add(new Validator(this, model, condition));
         }
-
     }
 }

@@ -3,7 +3,8 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Validator(nameof(ValidateProduct))]
+    [Validator(nameof(ValidateProductNumber), SourceColumns = new string[] { nameof(ProductID), nameof(Product) + "." + nameof(SalesOrderInfoDetail.Product.ProductNumber) })]
+    [Validator(nameof(ValidateProductName), SourceColumns = new string[] { nameof(ProductID), nameof(Product) + "." + nameof(SalesOrderInfoDetail.Product.Name) })]
     [InvisibleToDbDesigner]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
@@ -15,16 +16,25 @@ namespace DevZest.Samples.AdventureWorksLT
         public Product.Lookup Product { get; private set; }
 
         [_Validator]
-        private DataValidationError ValidateProduct(DataRow dataRow)
+        private DataValidationError ValidateProductNumber(DataRow dataRow)
         {
             if (ProductID[dataRow] == null)
                 return null;
             var productNumber = Product.ProductNumber;
-            var productName = Product.Name;
 
             if (string.IsNullOrEmpty(productNumber[dataRow]))
                 return new DataValidationError(string.Format(UserMessages.Validation_ValueIsRequired, productNumber.DisplayName), productNumber);
 
+            return null;
+        }
+
+        [_Validator]
+        private DataValidationError ValidateProductName(DataRow dataRow)
+        {
+            if (ProductID[dataRow] == null)
+                return null;
+
+            var productName = Product.Name;
             if (string.IsNullOrEmpty(productName[dataRow]))
                 return new DataValidationError(string.Format(UserMessages.Validation_ValueIsRequired, productName.DisplayName), productName);
 

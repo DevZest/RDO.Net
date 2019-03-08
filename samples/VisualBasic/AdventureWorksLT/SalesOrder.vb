@@ -1,7 +1,7 @@
-<Validator(SalesOrder._ValidateLineCount)>
+<Validator(SalesOrder._ValidateLineCount, SourceColumns:={NameOf(SalesOrder.LineCount)})>
 <Computation(SalesOrder._ComputeLineCount, ComputationMode.Aggregate)>
-<Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
-<InvisibleToDbDesigner>
+    <Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
+        <InvisibleToDbDesigner>
 Public Class SalesOrder
     Inherits SalesOrderHeader
 

@@ -3,7 +3,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Validator(nameof(ValidateLineCount))]
+    [Validator(nameof(ValidateLineCount), SourceColumns = new string[] { nameof(LineCount) })]
     [Computation(nameof(ComputeLineCount), ComputationMode.Aggregate)]
     [Computation(nameof(ComputeSubTotal), ComputationMode.Aggregate)]
     [InvisibleToDbDesigner]

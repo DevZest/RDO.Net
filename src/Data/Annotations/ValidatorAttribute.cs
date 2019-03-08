@@ -12,19 +12,18 @@ namespace DevZest.Data.Annotations
     {
         private sealed class Validator : IValidator
         {
-            public Validator(ValidatorAttribute validatorAttribute, Model model)
+            public Validator(ValidatorAttribute validatorAttribute, Model model, IColumns sourceColumns)
             {
                 _validatorAttribute = validatorAttribute;
                 Model = model;
-            }
-
-            public Validator()
-            {
+                SourceColumns = sourceColumns ?? Columns.Empty;
             }
 
             private readonly ValidatorAttribute _validatorAttribute;
 
             public Model Model { get; }
+
+            public IColumns SourceColumns { get; }
 
             public IValidatorAttribute Attribute => _validatorAttribute;
 
@@ -38,6 +37,8 @@ namespace DevZest.Data.Annotations
             : base(name)
         {
         }
+
+        public string[] SourceColumns { get; set; }
 
         private Func<Model, DataRow, DataValidationError> _validatorFunc;
         protected override void Initialize()
@@ -63,7 +64,24 @@ namespace DevZest.Data.Annotations
 
         protected override void Wireup(Model model)
         {
-            model.Validators.Add(new Validator(this, model));
+            model.Validators.Add(new Validator(this, model, GetSourceColumns(model)));
+        }
+
+        private IColumns GetSourceColumns(Model model)
+        {
+            var result = Columns.Empty;
+
+            if (SourceColumns == null || SourceColumns.Length == 0)
+                return result;
+
+            var columns = model.Columns;
+            for (int i = 0; i < SourceColumns.Length; i++)
+            {
+                var sourceColumn = columns[SourceColumns[i]];
+                result = result.Add(sourceColumn);
+            }
+
+            return result;
         }
     }
 }

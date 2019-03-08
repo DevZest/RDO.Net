@@ -15,22 +15,28 @@ namespace DevZest.Data.Annotations
             {
                 _uniqueAttribute = uniqueAttribute;
                 Model = model;
-                _columns = Columns.Empty;
+                SourceColumns = GetSourceColumns(sortOrder);
+            }
+
+            private static IColumns GetSourceColumns(ColumnSort[] sortOrder)
+            {
+                var result = Columns.Empty;
                 for (int i = 0; i < sortOrder.Length; i++)
-                    _columns = _columns.Add(sortOrder[i].Column);
-                _columns.Seal();
+                    result = result.Add(sortOrder[i].Column);
+                return result.Seal();
             }
 
             private readonly UniqueConstraintAttribute _uniqueAttribute;
-            private readonly IColumns _columns;
 
             public IValidatorAttribute Attribute => _uniqueAttribute;
 
             public Model Model { get; }
 
+            public IColumns SourceColumns { get; }
+
             public DataValidationError Validate(DataRow dataRow)
             {
-                return IsValid(dataRow) ? null : new DataValidationError(_uniqueAttribute.GetMessage(_columns), _columns);
+                return IsValid(dataRow) ? null : new DataValidationError(_uniqueAttribute.GetMessage(SourceColumns), SourceColumns);
             }
 
             private bool IsValid(DataRow dataRow)
@@ -49,7 +55,7 @@ namespace DevZest.Data.Annotations
 
             private bool AreEqual(DataRow x, DataRow y)
             {
-                foreach (var column in _columns)
+                foreach (var column in SourceColumns)
                 {
                     if (column.Compare(x, y) != 0)
                         return false;
