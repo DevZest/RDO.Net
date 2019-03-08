@@ -3,8 +3,8 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Validator(nameof(ValidateProductNumber), SourceColumns = new string[] { nameof(ProductID), nameof(Product) + "." + nameof(SalesOrderInfoDetail.Product.ProductNumber) })]
-    [Validator(nameof(ValidateProductName), SourceColumns = new string[] { nameof(ProductID), nameof(Product) + "." + nameof(SalesOrderInfoDetail.Product.Name) })]
+    [Rule(nameof(ValidateProductNumber), SourceColumns = new string[] { nameof(ProductID), nameof(Product) + "." + nameof(SalesOrderInfoDetail.Product.ProductNumber) })]
+    [Rule(nameof(ValidateProductName), SourceColumns = new string[] { nameof(ProductID), nameof(Product) + "." + nameof(SalesOrderInfoDetail.Product.Name) })]
     [InvisibleToDbDesigner]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
@@ -15,7 +15,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public Product.Lookup Product { get; private set; }
 
-        [_Validator]
+        [_Rule]
         private DataValidationError ValidateProductNumber(DataRow dataRow)
         {
             if (ProductID[dataRow] == null)
@@ -28,7 +28,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return null;
         }
 
-        [_Validator]
+        [_Rule]
         private DataValidationError ValidateProductName(DataRow dataRow)
         {
             if (ProductID[dataRow] == null)

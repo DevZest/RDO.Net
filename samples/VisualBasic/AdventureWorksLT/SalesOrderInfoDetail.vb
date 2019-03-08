@@ -1,5 +1,5 @@
-<Validator(SalesOrderInfoDetail._ValidateProductNumber, SourceColumns:={NameOf(SalesOrderDetail.ProductID), NameOf(SalesOrderInfoDetail.Product) + "." + NameOf(Product.ProductNumber)})>
-<Validator(SalesOrderInfoDetail._ValidateProductName, SourceColumns:={NameOf(SalesOrderDetail.ProductID), NameOf(SalesOrderInfoDetail.Product) + "." + NameOf(Product.Name)})>
+<Rule(SalesOrderInfoDetail._ValidateProductNumber, SourceColumns:={NameOf(SalesOrderDetail.ProductID), NameOf(SalesOrderInfoDetail.Product) + "." + NameOf(Product.ProductNumber)})>
+<Rule(SalesOrderInfoDetail._ValidateProductName, SourceColumns:={NameOf(SalesOrderDetail.ProductID), NameOf(SalesOrderInfoDetail.Product) + "." + NameOf(Product.Name)})>
 <InvisibleToDbDesigner>
 Public Class SalesOrderInfoDetail
     Inherits SalesOrderDetail
@@ -19,7 +19,7 @@ Public Class SalesOrderInfoDetail
     End Property
 
     Friend Const _ValidateProductNumber = NameOf(ValidateProductNumber)
-    <_Validator>
+    <_Rule>
     Private Function ValidateProductNumber(ByVal dataRow As DataRow) As DataValidationError
         If ProductID(dataRow) Is Nothing Then Return Nothing
         Dim productNumber = Product.ProductNumber
@@ -28,7 +28,7 @@ Public Class SalesOrderInfoDetail
     End Function
 
     Friend Const _ValidateProductName = NameOf(ValidateProductName)
-    <_Validator>
+    <_Rule>
     Private Function ValidateProductName(ByVal dataRow As DataRow) As DataValidationError
         If ProductID(dataRow) Is Nothing Then Return Nothing
         Dim productName = Product.Name

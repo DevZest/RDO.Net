@@ -3,11 +3,11 @@
 namespace DevZest.Data.Annotations
 {
     [TestClass]
-    public class ModelValidatorAttributeTests
+    public class RuleAttributeTests
     {
         private const string ERR_MESSAGE = "Confirm password different from password";
 
-        [Validator(nameof(ValidateConfirmPassword))]
+        [Rule(nameof(ValidateConfirmPassword))]
         private class User : Model
         {
             static User()
@@ -27,7 +27,7 @@ namespace DevZest.Data.Annotations
         }
 
         [TestMethod]
-        public void ModelValidatorAttribute()
+        public void RuleAttribute()
         {
             {
                 var dataSet = DataSet<User>.Create();

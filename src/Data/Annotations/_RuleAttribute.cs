@@ -4,8 +4,8 @@ using System;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    [CrossReference(typeof(ValidatorAttribute))]
-    public sealed class _ValidatorAttribute : ModelImplementationAttribute
+    [CrossReference(typeof(RuleAttribute))]
+    public sealed class _RuleAttribute : ModelImplementationAttribute
     {
     }
 }

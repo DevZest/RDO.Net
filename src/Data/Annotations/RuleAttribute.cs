@@ -6,34 +6,34 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    [CrossReference(typeof(_ValidatorAttribute))]
+    [CrossReference(typeof(_RuleAttribute))]
     [ModelDeclarationSpec(false, typeof(DataValidationError), typeof(DataRow))]
-    public sealed class ValidatorAttribute : ModelDeclarationAttribute, IValidatorAttribute
+    public sealed class RuleAttribute : ModelDeclarationAttribute, IValidatorAttribute
     {
         private sealed class Validator : IValidator
         {
-            public Validator(ValidatorAttribute validatorAttribute, Model model, IColumns sourceColumns)
+            public Validator(RuleAttribute ruleAttribute, Model model, IColumns sourceColumns)
             {
-                _validatorAttribute = validatorAttribute;
+                _ruleAttribute = ruleAttribute;
                 Model = model;
                 SourceColumns = sourceColumns ?? Columns.Empty;
             }
 
-            private readonly ValidatorAttribute _validatorAttribute;
+            private readonly RuleAttribute _ruleAttribute;
 
             public Model Model { get; }
 
             public IColumns SourceColumns { get; }
 
-            public IValidatorAttribute Attribute => _validatorAttribute;
+            public IValidatorAttribute Attribute => _ruleAttribute;
 
             public DataValidationError Validate(DataRow dataRow)
             {
-                return _validatorAttribute._validatorFunc(Model, dataRow);
+                return _ruleAttribute._validatorFunc(Model, dataRow);
             }
         }
 
-        public ValidatorAttribute(string name)
+        public RuleAttribute(string name)
             : base(name)
         {
         }

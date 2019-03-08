@@ -1,4 +1,4 @@
-<Validator(SalesOrder._ValidateLineCount, SourceColumns:={NameOf(SalesOrder.LineCount)})>
+<Rule(SalesOrder._ValidateLineCount, SourceColumns:={NameOf(SalesOrder.LineCount)})>
 <Computation(SalesOrder._ComputeLineCount, ComputationMode.Aggregate)>
     <Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
         <InvisibleToDbDesigner>
@@ -21,7 +21,7 @@ Public Class SalesOrder
     End Property
 
     Friend Const _ValidateLineCount = NameOf(ValidateLineCount)
-    <_Validator>
+    <_Rule>
     Private Function ValidateLineCount(ByVal dataRow As DataRow) As DataValidationError
         Return If(LineCount(dataRow) > 0, Nothing, New DataValidationError(My.UserMessages.Validation_SalesOrder_LineCount, LineCount))
     End Function
