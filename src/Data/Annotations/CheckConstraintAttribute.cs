@@ -96,10 +96,13 @@ namespace DevZest.Data.Annotations
             return _conditionGetter(model);
         }
 
+        public bool DataSetOnly { get; set; }
+
         protected override void Wireup(Model model)
         {
             var condition = GetCondition(model);
-            model.AddDbCheckConstraint(Name, Description, condition);
+            if (!DataSetOnly)
+                model.AddDbCheckConstraint(Name, Description, condition);
             model.Validators.Add(new Validator(this, model, condition));
         }
     }
