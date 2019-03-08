@@ -1,6 +1,6 @@
 ﻿using DevZest.Data.Annotations.Primitives;
 
-namespace DevZest.Data
+namespace DevZest.Data.Primitives
 {
     /// <summary></summary>
     public interface IValidator

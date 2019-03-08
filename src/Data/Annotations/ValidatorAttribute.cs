@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Annotations.Primitives;
+using DevZest.Data.Primitives;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -15,6 +16,10 @@ namespace DevZest.Data.Annotations
             {
                 _validatorAttribute = validatorAttribute;
                 Model = model;
+            }
+
+            public Validator()
+            {
             }
 
             private readonly ValidatorAttribute _validatorAttribute;
