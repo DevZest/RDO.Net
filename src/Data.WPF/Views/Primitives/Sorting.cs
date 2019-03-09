@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Views.Primitives
 {
-    [Rule(nameof(Rule_ColumnRequired))]
-    [Rule(nameof(Rule_DuplicateColumn))]
-    [Rule(nameof(Rule_Direction))]
+    [CustomValidator(nameof(VAL_ColumnRequired))]
+    [CustomValidator(nameof(VAL_DuplicateColumn))]
+    [CustomValidator(nameof(VAL_Direction))]
     public class Sorting : Model
     {
         public static DataSet<Sorting> Convert(Model model, IReadOnlyList<IColumnComparer> orderBy)
@@ -66,8 +66,8 @@ namespace DevZest.Data.Views.Primitives
         [Display(Name = nameof(UserMessages.Sorting_Order), ResourceType = typeof(UserMessages))]
         public LocalColumn<SortDirection> Direction { get; private set; }
 
-        [_Rule]
-        private Rule Rule_ColumnRequired
+        [_CustomValidator]
+        private CustomValidatorEntry VAL_ColumnRequired
         {
             get
             {
@@ -81,12 +81,12 @@ namespace DevZest.Data.Views.Primitives
                     return Column;
                 }
 
-                return new Rule(Validate, GetSourceColumns);
+                return new CustomValidatorEntry(Validate, GetSourceColumns);
             }
         }
 
-        [_Rule]
-        private Rule Rule_DuplicateColumn
+        [_CustomValidator]
+        private CustomValidatorEntry VAL_DuplicateColumn
         {
             get
             {
@@ -108,12 +108,12 @@ namespace DevZest.Data.Views.Primitives
                     return Column;
                 }
 
-                return new Rule(Validate, GetSourceColumns);
+                return new CustomValidatorEntry(Validate, GetSourceColumns);
             }
         }
 
-        [_Rule]
-        private Rule Rule_Direction
+        [_CustomValidator]
+        private CustomValidatorEntry VAL_Direction
         {
             get
             {
@@ -127,7 +127,7 @@ namespace DevZest.Data.Views.Primitives
                     return Direction;
                 }
 
-                return new Rule(Validate, GetSourceColumns);
+                return new CustomValidatorEntry(Validate, GetSourceColumns);
             }
         }
     }

@@ -3,8 +3,8 @@ using DevZest.Data.Annotations;
 
 namespace ValidationUI
 {
-    [Rule(nameof(Rule_PasswordConfirmation))]
-    [Rule(nameof(Rule_Interests))]
+    [CustomValidator(nameof(VAL_PasswordConfirmation))]
+    [CustomValidator(nameof(VAL_Interests))]
     public class Registration : Login
     {
         static Registration()
@@ -30,8 +30,8 @@ namespace ValidationUI
 
         private const string ERR_PASSWORD_MISMATCH = "Passwords do not match";
 
-        [_Rule]
-        private Rule Rule_Interests
+        [_CustomValidator]
+        private CustomValidatorEntry VAL_Interests
         {
             get
             {
@@ -45,7 +45,7 @@ namespace ValidationUI
                     return Interests;
                 }
 
-                return new Rule(Validate, GetSourceColumns);
+                return new CustomValidatorEntry(Validate, GetSourceColumns);
             }
         }
 
@@ -65,8 +65,8 @@ namespace ValidationUI
             return count >= 3;
         }
         
-        [_Rule]
-        private Rule Rule_PasswordConfirmation
+        [_CustomValidator]
+        private CustomValidatorEntry VAL_PasswordConfirmation
         {
             get
             {
@@ -80,7 +80,7 @@ namespace ValidationUI
                     return Password.Union(PasswordConfirmation);
                 }
 
-                return new Rule(Validate, GetSourceColumns);
+                return new CustomValidatorEntry(Validate, GetSourceColumns);
             }
         }
     }
