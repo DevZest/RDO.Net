@@ -2,9 +2,9 @@
 
 namespace DevZest.Data.Annotations
 {
-    public struct Rule
+    public struct CustomValidatorEntry
     {
-        public Rule(Func<DataRow, string> validate, Func<IColumns> getSourceColumns)
+        public CustomValidatorEntry(Func<DataRow, string> validate, Func<IColumns> getSourceColumns)
         {
             validate.VerifyNotNull(nameof(validate));
             getSourceColumns.VerifyNotNull(nameof(getSourceColumns));

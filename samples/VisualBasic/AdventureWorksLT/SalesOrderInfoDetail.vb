@@ -1,5 +1,5 @@
-<Rule(SalesOrderInfoDetail._Rule_ProductNumber)>
-<Rule(SalesOrderInfoDetail._Rule_ProductName)>
+<CustomValidator(SalesOrderInfoDetail._VAL_ProductNumber)>
+<CustomValidator(SalesOrderInfoDetail._VAL_ProductName)>
 <InvisibleToDbDesigner>
 Public Class SalesOrderInfoDetail
     Inherits SalesOrderDetail
@@ -18,9 +18,9 @@ Public Class SalesOrderInfoDetail
         End Set
     End Property
 
-    Friend Const _Rule_ProductNumber = NameOf(Rule_ProductNumber)
-    <_Rule>
-    Private ReadOnly Property Rule_ProductNumber As Rule
+    Friend Const _VAL_ProductNumber = NameOf(VAL_ProductNumber)
+    <_CustomValidator>
+    Private ReadOnly Property VAL_ProductNumber As CustomValidatorEntry
         Get
             Dim validate =
                 Function(dataRow As DataRow) As String
@@ -35,13 +35,13 @@ Public Class SalesOrderInfoDetail
                     Return Product.ProductNumber
                 End Function
 
-            Return New Rule(validate, getSourceColumns)
+            Return New CustomValidatorEntry(validate, getSourceColumns)
         End Get
     End Property
 
-    Friend Const _Rule_ProductName = NameOf(Rule_ProductName)
-    <_Rule>
-    Private ReadOnly Property Rule_ProductName As Rule
+    Friend Const _VAL_ProductName = NameOf(VAL_ProductName)
+    <_CustomValidator>
+    Private ReadOnly Property VAL_ProductName As CustomValidatorEntry
         Get
             Dim validate =
                 Function(dataRow As DataRow) As String
@@ -56,7 +56,7 @@ Public Class SalesOrderInfoDetail
                     Return Product.Name
                 End Function
 
-            Return New Rule(validate, getSourceColumns)
+            Return New CustomValidatorEntry(validate, getSourceColumns)
         End Get
     End Property
 End Class

@@ -6,22 +6,22 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
-    [CrossReference(typeof(_RuleAttribute))]
-    [ModelDeclarationSpec(true, typeof(Rule))]
-    public sealed class RuleAttribute : ModelDeclarationAttribute, IValidatorAttribute
+    [CrossReference(typeof(_CustomValidatorAttribute))]
+    [ModelDeclarationSpec(true, typeof(CustomValidatorEntry))]
+    public sealed class CustomValidatorAttribute : ModelDeclarationAttribute, IValidatorAttribute
     {
         private sealed class Validator : IValidator
         {
-            public Validator(RuleAttribute ruleAttribute, Model model)
+            public Validator(CustomValidatorAttribute customValidatorAttribute, Model model)
             {
-                _ruleAttribute = ruleAttribute;
+                _customValidatorAttribute = customValidatorAttribute;
                 Model = model;
-                var rule = ruleAttribute._ruleGetter(model);
-                _validate = rule.Validate;
-                SourceColumns = rule.GetSourceColumns()?.Seal();
+                var entry = customValidatorAttribute._entryGetter(model);
+                _validate = entry.Validate;
+                SourceColumns = entry.GetSourceColumns()?.Seal();
             }
 
-            private readonly RuleAttribute _ruleAttribute;
+            private readonly CustomValidatorAttribute _customValidatorAttribute;
 
             public Model Model { get; }
 
@@ -29,7 +29,7 @@ namespace DevZest.Data.Annotations
 
             public IColumns SourceColumns { get; }
 
-            public IValidatorAttribute Attribute => _ruleAttribute;
+            public IValidatorAttribute Attribute => _customValidatorAttribute;
 
             public DataValidationError Validate(DataRow dataRow)
             {
@@ -38,24 +38,24 @@ namespace DevZest.Data.Annotations
             }
         }
 
-        public RuleAttribute(string name)
+        public CustomValidatorAttribute(string name)
             : base(name)
         {
         }
 
-        private Func<Model, Rule> _ruleGetter;
+        private Func<Model, CustomValidatorEntry> _entryGetter;
         protected override void Initialize()
         {
-            var getMethod = GetPropertyGetter(typeof(Rule));
-            _ruleGetter = BuildRuleGetter(ModelType, getMethod);
+            var getMethod = GetPropertyGetter(typeof(CustomValidatorEntry));
+            _entryGetter = BuildEntryGetter(ModelType, getMethod);
         }
 
-        private static Func<Model, Rule> BuildRuleGetter(Type modelType, MethodInfo getMethod)
+        private static Func<Model, CustomValidatorEntry> BuildEntryGetter(Type modelType, MethodInfo getMethod)
         {
             var paramModel = Expression.Parameter(typeof(Model));
             var model = Expression.Convert(paramModel, modelType);
             var call = Expression.Call(model, getMethod);
-            return Expression.Lambda<Func<Model, Rule>>(call, paramModel).Compile();
+            return Expression.Lambda<Func<Model, CustomValidatorEntry>>(call, paramModel).Compile();
         }
 
         protected override ModelWireupEvent WireupEvent

@@ -1,4 +1,4 @@
-<Rule(SalesOrder._Rule_LineCount)>
+<CustomValidator(SalesOrder._VAL_LineCount)>
 <Computation(SalesOrder._ComputeLineCount, ComputationMode.Aggregate)>
 <Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
 <InvisibleToDbDesigner>
@@ -20,9 +20,9 @@ Public Class SalesOrder
         End Set
     End Property
 
-    Friend Const _Rule_LineCount = NameOf(Rule_LineCount)
-    <_Rule>
-    Private ReadOnly Property Rule_LineCount As Rule
+    Friend Const _VAL_LineCount = NameOf(VAL_LineCount)
+    <_CustomValidator>
+    Private ReadOnly Property VAL_LineCount As CustomValidatorEntry
         Get
             Dim validate =
                 Function(dataRow As DataRow) As String
@@ -34,7 +34,7 @@ Public Class SalesOrder
                     Return LineCount
                 End Function
 
-            Return New Rule(validate, getSourceColumns)
+            Return New CustomValidatorEntry(validate, getSourceColumns)
         End Get
     End Property
 

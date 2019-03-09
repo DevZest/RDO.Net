@@ -6,7 +6,7 @@ namespace DevZest.Data.Helpers
 {
     public abstract class SimpleModelDataSetHelper
     {
-        [Rule(nameof(Rule_Id))]
+        [CustomValidator(nameof(VAL_Id))]
         [Computation(nameof(ComputeInheritedValue), ComputationMode.Inherit)]
         protected class SimpleModel : SimpleModelBase
         {
@@ -23,8 +23,8 @@ namespace DevZest.Data.Helpers
 
             private const string ERR_MESSAGE = "The Id must be even.";
 
-            [_Rule]
-            private Rule Rule_Id
+            [_CustomValidator]
+            private CustomValidatorEntry VAL_Id
             {
                 get
                 {
@@ -38,7 +38,7 @@ namespace DevZest.Data.Helpers
                         return Id;
                     }
 
-                    return new Rule(Validate, GetSourceColumns);
+                    return new CustomValidatorEntry(Validate, GetSourceColumns);
                 }
             }
 

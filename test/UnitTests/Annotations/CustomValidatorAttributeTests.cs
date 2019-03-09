@@ -3,11 +3,11 @@
 namespace DevZest.Data.Annotations
 {
     [TestClass]
-    public class RuleAttributeTests
+    public class CustomValidatorAttributeTests
     {
         private const string ERR_MESSAGE = "Confirm password different from password";
 
-        [Rule(nameof(Rule_ConfirmPassword))]
+        [CustomValidator(nameof(VAL_ConfirmPassword))]
         private class User : Model
         {
             static User()
@@ -20,8 +20,8 @@ namespace DevZest.Data.Annotations
 
             public _String ConfirmPassword { get; private set; }
 
-            [_Rule]
-            private Rule Rule_ConfirmPassword
+            [_CustomValidator]
+            private CustomValidatorEntry VAL_ConfirmPassword
             {
                 get
                 {
@@ -35,13 +35,13 @@ namespace DevZest.Data.Annotations
                         return ConfirmPassword;
                     }
 
-                    return new Rule(Validate, GetSourceColumns);
+                    return new CustomValidatorEntry(Validate, GetSourceColumns);
                 }
             }
         }
 
         [TestMethod]
-        public void RuleAttribute()
+        public void CustomValidatorAttribute()
         {
             {
                 var dataSet = DataSet<User>.Create();
