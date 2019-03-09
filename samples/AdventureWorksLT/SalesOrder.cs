@@ -3,7 +3,7 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Rule(nameof(Rule_LineCount))]
+    [CustomValidator(nameof(VAL_LineCount))]
     [Computation(nameof(ComputeLineCount), ComputationMode.Aggregate)]
     [Computation(nameof(ComputeSubTotal), ComputationMode.Aggregate)]
     [InvisibleToDbDesigner]
@@ -17,8 +17,8 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public _Int32 LineCount { get; private set; }
 
-        [_Rule]
-        private Rule Rule_LineCount
+        [_CustomValidator]
+        private CustomValidatorEntry VAL_LineCount
         {
             get
             {
@@ -32,7 +32,7 @@ namespace DevZest.Samples.AdventureWorksLT
                     return LineCount;
                 }
 
-                return new Rule(Validate, GetSourceColumns);
+                return new CustomValidatorEntry(Validate, GetSourceColumns);
             }
         }
 

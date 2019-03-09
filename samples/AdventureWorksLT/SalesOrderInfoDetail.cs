@@ -3,8 +3,8 @@ using DevZest.Data.Annotations;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [Rule(nameof(Rule_ProductNumber))]
-    [Rule(nameof(Rule_ProductName))]
+    [CustomValidator(nameof(VAL_ProductNumber))]
+    [CustomValidator(nameof(VAL_ProductName))]
     [InvisibleToDbDesigner]
     public class SalesOrderInfoDetail : SalesOrderDetail
     {
@@ -15,8 +15,8 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public Product.Lookup Product { get; private set; }
 
-        [_Rule]
-        private Rule Rule_ProductNumber
+        [_CustomValidator]
+        private CustomValidatorEntry VAL_ProductNumber
         {
             get
             {
@@ -37,12 +37,12 @@ namespace DevZest.Samples.AdventureWorksLT
                     return Product.ProductNumber;
                 }
 
-                return new Rule(Validate, GetSourceColumns);
+                return new CustomValidatorEntry(Validate, GetSourceColumns);
             }
         }
 
-        [_Rule]
-        private Rule Rule_ProductName
+        [_CustomValidator]
+        private CustomValidatorEntry VAL_ProductName
         {
             get
             {
@@ -63,7 +63,7 @@ namespace DevZest.Samples.AdventureWorksLT
                     return Product.Name;
                 }
 
-                return new Rule(Validate, GetSourceColumns);
+                return new CustomValidatorEntry(Validate, GetSourceColumns);
             }
         }
     }
