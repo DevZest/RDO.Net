@@ -1,0 +1,6 @@
+<Project>
+
+  <PropertyGroup>
+    <RoslynPackageVersion>2.3.2</RoslynPackageVersion>
+  </PropertyGroup>
+</Project>
