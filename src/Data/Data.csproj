@@ -72,7 +72,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <DeployProps Condition="Exists('..\Deploy.$(AssemblyName).props')">..\Deploy.$(AssemblyName).props</DeployProps>
+    <AdditionalProps Condition="Exists('..\$(AssemblyName).props')">..\$(AssemblyName).props</AdditionalProps>
   </PropertyGroup>
-  <Import Project="$(DeployProps)" Condition=" '$(DeployProps)' != '' " />
+  <Import Project="$(AdditionalProps)" Condition=" '$(AdditionalProps)' != '' " />
 </Project>
