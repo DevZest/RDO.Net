@@ -12,4 +12,23 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Properties\Resources.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>
