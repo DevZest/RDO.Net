@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
+    [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class RegularExpressionAttribute : ValidationColumnAttribute
     {
         public RegularExpressionAttribute(string pattern)
@@ -18,15 +18,15 @@ namespace DevZest.Data.Annotations
 
         protected override bool IsValid(Column column, DataRow dataRow)
         {
-            return IsValid(column.GetValue(dataRow));
+            var stringColumn = column as Column<string>;
+            return stringColumn == null ? false : IsValid(stringColumn[dataRow]);
         }
 
         private Regex Regex { get; set; }
 
-        private bool IsValid(object value)
+        private bool IsValid(string text)
         {
             SetupRegex();
-            string text = Convert.ToString(value, CultureInfo.CurrentCulture);
             if (text == null)
                 return true;
             Match match = Regex.Match(text);
