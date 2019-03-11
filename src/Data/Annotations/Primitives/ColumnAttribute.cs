@@ -10,7 +10,11 @@ namespace DevZest.Data.Annotations.Primitives
         internal void TryWireup(Column column)
         {
             if (VerifyDeclaringType(column))
+            {
+                if (this is ILogicalDataTypeAttribute logicalDataTypeAttribute)
+                    column.LogicalDataType = logicalDataTypeAttribute.LogicalDataType;
                 Wireup(column);
+            }
         }
 
         /// <summary>Initializes the provided <see cref="Column"/> object.</summary>

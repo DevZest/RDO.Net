@@ -551,5 +551,16 @@ namespace DevZest.Data
                 return false;
             }
         }
+
+        private LogicalDataType _logicalDataType = LogicalDataType.Custom;
+        public LogicalDataType LogicalDataType
+        {
+            get { return _logicalDataType; }
+            set
+            {
+                VerifyDesignMode();
+                _logicalDataType = value;
+            }
+        }
     }
 }

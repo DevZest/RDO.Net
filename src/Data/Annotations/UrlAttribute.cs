@@ -5,9 +5,11 @@ using System.Text.RegularExpressions;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
-    public sealed class UrlAttribute : ValidationColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(Column<string>) })]
+    public sealed class UrlAttribute : ValidationColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.Url;
+
         private static Regex s_regex = CreateRegEx();
 
         protected override bool IsValid(Column column, DataRow dataRow)

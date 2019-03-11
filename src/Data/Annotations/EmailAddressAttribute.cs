@@ -4,9 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace DevZest.Data.Annotations
 {
-    [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
-    public sealed class EmailAddressAttribute : ValidationColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(Column<string>) })]
+    public sealed class EmailAddressAttribute : ValidationColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.EmailAddress;
+
         private static Regex s_regex = CreateRegEx();
 
         protected override bool IsValid(Column column, DataRow dataRow)

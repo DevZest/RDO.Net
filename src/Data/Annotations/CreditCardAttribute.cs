@@ -5,9 +5,11 @@ using System.Linq;
 namespace DevZest.Data.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
-    public sealed class CreditCardAttribute : ValidationColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(Column<string>) })]
+    public sealed class CreditCardAttribute : ValidationColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.CreditCard;
+
         protected override bool IsValid(Column column, DataRow dataRow)
         {
             var stringColumn = column as Column<string>;

@@ -57,9 +57,11 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class SqlDateAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    public sealed class SqlDateAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.Date;
+
         protected override void Wireup(Column column)
         {
             if (column is _DateTime dateTime)
@@ -67,9 +69,11 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class SqlDateTimeAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    public sealed class SqlDateTimeAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.DateTime;
+
         protected override void Wireup(Column column)
         {
             if (column is _DateTime dateTime)
@@ -77,13 +81,15 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class SqlDateTime2Attribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    public sealed class SqlDateTime2Attribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
         public SqlDateTime2Attribute(byte precision)
         {
             Precision = precision;
         }
+
+        public LogicalDataType LogicalDataType => LogicalDataType.DateTime;
 
         public byte Precision { get; private set; }
 
@@ -114,9 +120,11 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
-    public sealed class SqlMoneyAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
+    public sealed class SqlMoneyAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.Currency;
+
         protected override void Wireup(Column column)
         {
             if (column is _Decimal decimalColumn)
@@ -188,9 +196,11 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
-    public sealed class SqlSmallMoneyAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
+    public sealed class SqlSmallMoneyAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.Currency;
+
         protected override void Wireup(Column column)
         {
             if (column is _Decimal decimalColumn)
