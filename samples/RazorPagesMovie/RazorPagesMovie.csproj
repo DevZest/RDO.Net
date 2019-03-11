@@ -15,7 +15,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\RDO.Data.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\Data.AspNetCore\Data.AspNetCore.csproj" />
   </ItemGroup>
 
 
