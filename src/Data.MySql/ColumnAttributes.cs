@@ -43,9 +43,11 @@ namespace DevZest.Data.MySql
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class MySqlDateAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    public sealed class MySqlDateAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.Date;
+
         protected override void Wireup(Column column)
         {
             if (column is _DateTime dateTime)
@@ -53,14 +55,16 @@ namespace DevZest.Data.MySql
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class MySqlDateTimeAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    public sealed class MySqlDateTimeAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
         public MySqlDateTimeAttribute(int precision = 0)
         {
             ColumnExtensions.VerifyTimePrecision(precision, nameof(precision));
             Precision = precision;
         }
+
+        public LogicalDataType LogicalDataType => LogicalDataType.DateTime;
 
         public int Precision { get; }
 
@@ -91,9 +95,11 @@ namespace DevZest.Data.MySql
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
-    public sealed class MySqlMoneyAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_Decimal) })]
+    public sealed class MySqlMoneyAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.Currency;
+
         protected override void Wireup(Column column)
         {
             if (column is _Decimal decimalColumn)
@@ -102,8 +108,10 @@ namespace DevZest.Data.MySql
     }
 
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(MySqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class MySqlTimeAttribute : ColumnAttribute
+    public sealed class MySqlTimeAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.Time;
+
         public MySqlTimeAttribute(int precision = 0)
         {
             ColumnExtensions.VerifyTimePrecision(precision, nameof(precision));
