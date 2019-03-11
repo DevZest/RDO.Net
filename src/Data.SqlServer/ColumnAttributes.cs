@@ -208,9 +208,11 @@ namespace DevZest.Data.SqlServer
         }
     }
 
-    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
-    public sealed class SqlTimeAttribute : ColumnAttribute
+    [ModelDesignerSpec(addonTypes: new Type[] { typeof(SqlType), typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(_DateTime) })]
+    public sealed class SqlTimeAttribute : ColumnAttribute, ILogicalDataTypeAttribute
     {
+        public LogicalDataType LogicalDataType => LogicalDataType.Time;
+
         protected override void Wireup(Column column)
         {
             if (column is _DateTime dateTime)
