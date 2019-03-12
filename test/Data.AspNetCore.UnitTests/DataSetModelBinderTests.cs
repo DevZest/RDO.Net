@@ -107,53 +107,42 @@ namespace DevZest.Data.AspNetCore
             Assert.Equal(0, bindingContext.ModelState.ErrorCount);
         }
 
-        //[Fact]
-        //public async Task BindModelAsync_CreatesModelAndAddsError_IfIsTopLevelObject_WithNoData()
-        //{
-        //    // Arrange
-        //    var parameter = typeof(DataSetModelBinderTest)
-        //        .GetMethod(nameof(ActionWithComplexParameter), BindingFlags.Instance | BindingFlags.NonPublic)
-        //        .GetParameters()[0];
-        //    var metadataProvider = new TestModelMetadataProvider();
-        //    metadataProvider
-        //        .ForParameter(parameter)
-        //        .BindingDetails(b => b.IsBindingRequired = true);
-        //    var metadata = metadataProvider.GetMetadataForParameter(parameter);
-        //    var bindingContext = new DefaultModelBindingContext
-        //    {
-        //        IsTopLevelObject = true,
-        //        FieldName = "fieldName",
-        //        ModelMetadata = metadata,
-        //        ModelName = string.Empty,
-        //        ValueProvider = new TestValueProvider(new Dictionary<string, object>()),
-        //        ModelState = new ModelStateDictionary(),
-        //    };
+        [Fact]
+        public async Task BindModelAsync_CreatesModelAndAddsError_IfIsTopLevelObject_WithNoData()
+        {
+            // Arrange
+            var parameter = typeof(DataSetModelBinderTest)
+                .GetMethod(nameof(ActionWithComplexParameter), BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetParameters()[0];
+            var metadataProvider = new TestModelMetadataProvider();
+            metadataProvider
+                .ForParameter(parameter)
+                .BindingDetails(b => b.IsBindingRequired = true);
+            var metadata = metadataProvider.GetMetadataForParameter(parameter);
+            var bindingContext = new DefaultModelBindingContext
+            {
+                IsTopLevelObject = true,
+                FieldName = "fieldName",
+                ModelMetadata = metadata,
+                ModelName = string.Empty,
+                ValueProvider = new TestValueProvider(new Dictionary<string, object>()),
+                ModelState = new ModelStateDictionary(),
+            };
 
-        //    // Mock binder fails to bind all properties.
-        //    var innerBinder = new StubModelBinder();
-        //    var binders = new Dictionary<ModelMetadata, IModelBinder>();
-        //    foreach (var property in metadataProvider.GetMetadataForProperties(typeof(Person)))
-        //    {
-        //        binders.Add(property, innerBinder);
-        //    }
+            var binder = new DataSetModelBinder<Person>(NullLoggerFactory.Instance);
 
-        //    var binder = new ComplexTypeModelBinder(
-        //        binders,
-        //        NullLoggerFactory.Instance,
-        //        allowValidatingTopLevelNodes: true);
+            // Act
+            await binder.BindModelAsync(bindingContext);
 
-        //    // Act
-        //    await binder.BindModelAsync(bindingContext);
+            // Assert
+            Assert.True(bindingContext.Result.IsModelSet);
+            Assert.IsAssignableFrom<DataSet<Person>>(bindingContext.Result.Model);
 
-        //    // Assert
-        //    Assert.True(bindingContext.Result.IsModelSet);
-        //    Assert.IsType<Person>(bindingContext.Result.Model);
-
-        //    var keyValuePair = Assert.Single(bindingContext.ModelState);
-        //    Assert.Equal(string.Empty, keyValuePair.Key);
-        //    var error = Assert.Single(keyValuePair.Value.Errors);
-        //    Assert.Equal("A value for the 'fieldName' parameter or property was not provided.", error.ErrorMessage);
-        //}
+            var keyValuePair = Assert.Single(bindingContext.ModelState);
+            Assert.Equal(string.Empty, keyValuePair.Key);
+            var error = Assert.Single(keyValuePair.Value.Errors);
+            Assert.Equal("A value for the 'fieldName' parameter or property was not provided.", error.ErrorMessage);
+        }
 
         //private IActionResult ActionWithNoSettablePropertiesParameter(PersonWithNoProperties parameter) => null;
 

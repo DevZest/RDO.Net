@@ -27,12 +27,20 @@ namespace DevZest.Data.AspNetCore
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var valueProvider = bindingContext.ValueProvider;
-            var modelName = bindingContext.ModelName ?? string.Empty;
 
             _logger.AttemptingToBindDataSetModel<T>(bindingContext);
 
             var result = bindingContext.Model as DataSet<T> ?? CreateDataSet(bindingContext);
-            Bind(bindingContext.ModelState, valueProvider, modelName, result);
+            var modelValueKey = ModelNames.CreatePropertyModelName(bindingContext.ModelName, bindingContext.FieldName);
+            if (modelValueKey.Length > 0 && !valueProvider.ContainsPrefix(modelValueKey))
+            {
+                _logger.FoundNoDataSetValueInRequest<T>(bindingContext);
+                var messageProvider = bindingContext.ModelMetadata.ModelBindingMessageProvider;
+                var message = messageProvider.MissingBindRequiredValueAccessor(bindingContext.FieldName);
+                bindingContext.ModelState.AddModelError(bindingContext.ModelName, message);
+            }
+            else
+                Bind(bindingContext.ModelState, valueProvider, modelValueKey, result);
             bindingContext.Result = ModelBindingResult.Success(result);
 
             _logger.DoneAttemptingToBindDataSetModel<T>(bindingContext);
