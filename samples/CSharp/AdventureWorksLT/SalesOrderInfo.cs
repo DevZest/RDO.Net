@@ -3,14 +3,14 @@
 namespace DevZest.Samples.AdventureWorksLT
 {
     [InvisibleToDbDesigner]
-    public class SalesOrderInfo : SalesOrderHeader
+    public class SalesOrderInfo : SalesOrderBase
     {
         static SalesOrderInfo()
         {
             RegisterProjection((SalesOrderInfo _) => _.Customer);
             RegisterProjection((SalesOrderInfo _) => _.ShipToAddress);
             RegisterProjection((SalesOrderInfo _) => _.BillToAddress);
-            RegisterChildModel((SalesOrderInfo _) => _.SalesOrderDetails);
+            RegisterChildModel((SalesOrderInfo _) => _.SalesOrderDetails, (SalesOrderInfoDetail _) => _.FK_SalesOrderHeader);
         }
 
         public Customer.Lookup Customer { get; private set; }
@@ -18,5 +18,10 @@ namespace DevZest.Samples.AdventureWorksLT
         public Address.Lookup BillToAddress { get; private set; }
 
         public SalesOrderInfoDetail SalesOrderDetails { get; private set; }
+
+        protected override SalesOrderDetail GetSalesOrderDetails()
+        {
+            return SalesOrderDetails;
+        }
     }
 }

@@ -1,11 +1,14 @@
+Imports DevZest.Samples.AdventureWorksLT
+
 <InvisibleToDbDesigner>
 Public Class SalesOrderInfo
-    Inherits SalesOrder
+    Inherits SalesOrderBase
 
     Shared Sub New()
         RegisterProjection(Function(x As SalesOrderInfo) x.Customer)
         RegisterProjection(Function(x As SalesOrderInfo) x.ShipToAddress)
         RegisterProjection(Function(x As SalesOrderInfo) x.BillToAddress)
+        RegisterChildModel(Function(x As SalesOrderInfo) x.SalesOrderDetails, Function(x As SalesOrderInfoDetail) x.FK_SalesOrderHeader)
     End Sub
 
     Private m_Customer As Customer.Lookup
@@ -38,9 +41,17 @@ Public Class SalesOrderInfo
         End Set
     End Property
 
-    Public Overloads ReadOnly Property SalesOrderDetails As SalesOrderInfoDetail
+    Private m_SalesOrderDetails As SalesOrderInfoDetail
+    Public Property SalesOrderDetails As SalesOrderInfoDetail
         Get
-            Return CType(MyBase.SalesOrderDetails, SalesOrderInfoDetail)
+            Return m_SalesOrderDetails
         End Get
+        Private Set
+            m_SalesOrderDetails = Value
+        End Set
     End Property
+
+    Protected Overrides Function GetSalesOrderDetails() As SalesOrderDetail
+        Return SalesOrderDetails
+    End Function
 End Class
