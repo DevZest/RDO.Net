@@ -4,32 +4,25 @@ using DevZest.Data.Annotations;
 namespace DevZest.Samples.AdventureWorksLT
 {
     [InvisibleToDbDesigner]
-    public class SalesOrderInfo : SalesOrder
+    public class SalesOrderInfo : SalesOrderBase
     {
         static SalesOrderInfo()
         {
             RegisterProjection((SalesOrderInfo _) => _.Customer);
             RegisterProjection((SalesOrderInfo _) => _.ShipToAddress);
             RegisterProjection((SalesOrderInfo _) => _.BillToAddress);
+            RegisterChildModel((SalesOrderInfo _) => _.SalesOrderDetails, (SalesOrderInfoDetail _) => _.FK_SalesOrderHeader);
         }
 
         public Customer.Lookup Customer { get; private set; }
         public Address.Lookup ShipToAddress { get; private set; }
         public Address.Lookup BillToAddress { get; private set; }
 
-        public new SalesOrderInfoDetail SalesOrderDetails
-        {
-            get { return (SalesOrderInfoDetail)base.SalesOrderDetails; }
-        }
+        public SalesOrderInfoDetail SalesOrderDetails { get; private set; }
 
-        protected sealed override SalesOrderDetail CreateSalesOrderDetail()
+        protected sealed override SalesOrderDetail GetSalesOrderDetails()
         {
-            return CreateSalesOrderDetailInfo();
-        }
-
-        protected virtual SalesOrderInfoDetail CreateSalesOrderDetailInfo()
-        {
-            return new SalesOrderInfoDetail();
+            return SalesOrderDetails;
         }
     }
 }
