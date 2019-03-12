@@ -7,7 +7,7 @@ Public Class SalesOrder
 
     Shared Sub New()
         RegisterColumn(Function(x As SalesOrder) x.LineCount)
-        RegisterChildModel(Function(x As SalesOrder) x.SalesOrderDetails, Function(x As SalesOrderDetail) x.FK_SalesOrderHeader, Function(x) x.CreateSalesOrderDetail())
+        RegisterChildModel(Function(x As SalesOrder) x.SalesOrderDetails, Function(x As SalesOrderDetail) x.FK_SalesOrderHeader)
     End Sub
 
     Private m_LineCount As _Int32
@@ -53,10 +53,6 @@ Public Class SalesOrder
             m_SalesOrderDetails = Value
         End Set
     End Property
-
-    Protected Overridable Function CreateSalesOrderDetail() As SalesOrderDetail
-        Return New SalesOrderDetail()
-    End Function
 
     Friend Const _ComputeSubTotal = NameOf(ComputeSubTotal)
     <_Computation>

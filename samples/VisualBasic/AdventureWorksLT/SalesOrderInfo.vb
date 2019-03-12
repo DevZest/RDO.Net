@@ -43,12 +43,4 @@ Public Class SalesOrderInfo
             Return CType(MyBase.SalesOrderDetails, SalesOrderInfoDetail)
         End Get
     End Property
-
-    Protected NotOverridable Overrides Function CreateSalesOrderDetail() As SalesOrderDetail
-        Return CreateSalesOrderDetailInfo()
-    End Function
-
-    Protected Overridable Function CreateSalesOrderDetailInfo() As SalesOrderInfoDetail
-        Return New SalesOrderInfoDetail()
-    End Function
 End Class

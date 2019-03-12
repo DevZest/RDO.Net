@@ -12,7 +12,7 @@ namespace DevZest.Samples.AdventureWorksLT
         static SalesOrder()
         {
             RegisterColumn((SalesOrder _) => _.LineCount);
-            RegisterChildModel((SalesOrder _) => _.SalesOrderDetails, (SalesOrderDetail _) => _.FK_SalesOrderHeader, _ => _.CreateSalesOrderDetail());
+            RegisterChildModel((SalesOrder _) => _.SalesOrderDetails, (SalesOrderDetail _) => _.FK_SalesOrderHeader);
         }
 
         public _Int32 LineCount { get; private set; }
@@ -43,11 +43,6 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         public SalesOrderDetail SalesOrderDetails { get; private set; }
-
-        protected virtual SalesOrderDetail CreateSalesOrderDetail()
-        {
-            return new SalesOrderDetail();
-        }
 
         [_Computation]
         private void ComputeSubTotal()

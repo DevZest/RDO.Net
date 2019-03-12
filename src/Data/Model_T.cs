@@ -74,14 +74,13 @@ namespace DevZest.Data
         /// <exception cref="ArgumentNullException"><paramref name="relationshipGetter"/> is <see langword="null"/>.</exception>
         [PropertyRegistration]
         protected static Mounter<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
-            Func<TChildModel, T> relationshipGetter, Func<TModel, TChildModel> constructor = null)
+            Func<TChildModel, T> relationshipGetter)
             where TModel : Model<T>
             where TChildModel : Model, new()
         {
             getter.VerifyNotNull(nameof(getter));
             relationshipGetter.VerifyNotNull(nameof(relationshipGetter));
-            if (constructor == null)
-                constructor = _ => new TChildModel();
+            Func<TModel, TChildModel> constructor = _ => new TChildModel();
             return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TChildModel>(a, relationshipGetter, constructor), null);
         }
 
