@@ -31,9 +31,9 @@ namespace DevZest.Data.AspNetCore
 
             _logger.AttemptingToBindDataSetModel<T>(bindingContext);
 
-            var dataSet = CreateDataSet(bindingContext);
-            Bind(bindingContext.ModelState, valueProvider, modelName, dataSet);
-            bindingContext.Result = ModelBindingResult.Success(dataSet);
+            var result = bindingContext.Model as DataSet<T> ?? CreateDataSet(bindingContext);
+            Bind(bindingContext.ModelState, valueProvider, modelName, result);
+            bindingContext.Result = ModelBindingResult.Success(result);
 
             _logger.DoneAttemptingToBindDataSetModel<T>(bindingContext);
             return Task.CompletedTask;
@@ -52,21 +52,31 @@ namespace DevZest.Data.AspNetCore
 
             _.SuspendIdentity();
 
+            var existingDataRowCount = dataSet.Count;
+
             for (int i = 0; ; i++)
             {
                 var dataRowModelName = ModelNames.CreateIndexModelName(modelValueKey, i);
                 if (!valueProvider.ContainsPrefix(dataRowModelName))
-                    break;
+                {
+                    if (i < existingDataRowCount)
+                        continue;
+                    else
+                        break;
+                }
 
-                BindNewRow(modelState, valueProvider, dataRowModelName, dataSet);
+                if (i >= existingDataRowCount)
+                    dataSet.AddRow();
+
+                BindDataRow(modelState, valueProvider, dataRowModelName, dataSet, i);
             }
 
             _.ResumeIdentity();
         }
 
-        private void BindNewRow(ModelStateDictionary modelState, IValueProvider valueProvider, string dataRowModelName, DataSet dataSet)
+        private void BindDataRow(ModelStateDictionary modelState, IValueProvider valueProvider, string dataRowModelName, DataSet dataSet, int index)
         {
-            DataRow dataRow = dataSet.AddRow();
+            var dataRow = dataSet[index];
 
             modelState.SetModelValue(dataRowModelName, dataRow, string.Empty);
 
