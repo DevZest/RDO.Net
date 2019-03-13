@@ -29,7 +29,8 @@ namespace AdventureWorks.SalesOrders
             return result;
         }
 
-        public static RowCompositeBinding<SalesOrderFooterBox> BindToSalesOrderFooterBox(this SalesOrderBase _)
+        public static RowCompositeBinding<SalesOrderFooterBox> BindToSalesOrderFooterBox<T>(this SalesOrderBase<T> _)
+            where T : SalesOrderDetail, new()
         {
             return new RowCompositeBinding<SalesOrderFooterBox>()
                 .AddChild(_.SubTotal.BindToTextBlock("{0:C}"), v => v._subTotal)
