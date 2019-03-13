@@ -6,11 +6,13 @@ namespace DevZest.Samples.AdventureWorksLT
     [CustomValidator(nameof(VAL_LineCount))]
     [Computation(nameof(ComputeLineCount), ComputationMode.Aggregate)]
     [Computation(nameof(ComputeSubTotal), ComputationMode.Aggregate)]
-    public abstract class SalesOrderBase : SalesOrderHeader
+    public abstract class SalesOrderBase<T> : SalesOrderHeader
+        where T : SalesOrderDetail, new()
     {
         static SalesOrderBase()
         {
-            RegisterColumn((SalesOrderBase _) => _.LineCount);
+            RegisterColumn((SalesOrderBase<T> _) => _.LineCount);
+            RegisterChildModel((SalesOrderBase<T> _) => _.SalesOrderDetails, (T _) => _.FK_SalesOrderHeader);
         }
 
         public _Int32 LineCount { get; private set; }
@@ -34,12 +36,12 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        protected abstract SalesOrderDetail GetSalesOrderDetails();
+        public T SalesOrderDetails { get; private set; }
 
         [_Computation]
         private void ComputeLineCount()
         {
-            LineCount.ComputedAs(GetSalesOrderDetails().SalesOrderDetailID.CountRows());
+            LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows());
         }
 
         protected virtual SalesOrderDetail CreateSalesOrderDetail()
@@ -50,7 +52,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [_Computation]
         private void ComputeSubTotal()
         {
-            SubTotal.ComputedAs(GetSalesOrderDetails().LineTotal.Sum().IfNull(0), false);
+            SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), false);
         }
     }
 }
