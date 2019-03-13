@@ -1,5 +1,5 @@
-<CustomValidator(SalesOrderInfoDetail._VAL_ProductNumber)>
-<CustomValidator(SalesOrderInfoDetail._VAL_ProductName)>
+<CustomValidator("VAL_ProductNumber")>
+<CustomValidator("VAL_ProductName")>
 <InvisibleToDbDesigner>
 Public Class SalesOrderInfoDetail
     Inherits SalesOrderDetail
@@ -18,7 +18,6 @@ Public Class SalesOrderInfoDetail
         End Set
     End Property
 
-    Friend Const _VAL_ProductNumber = NameOf(VAL_ProductNumber)
     <_CustomValidator>
     Private ReadOnly Property VAL_ProductNumber As CustomValidatorEntry
         Get
@@ -39,7 +38,6 @@ Public Class SalesOrderInfoDetail
         End Get
     End Property
 
-    Friend Const _VAL_ProductName = NameOf(VAL_ProductName)
     <_CustomValidator>
     Private ReadOnly Property VAL_ProductName As CustomValidatorEntry
         Get

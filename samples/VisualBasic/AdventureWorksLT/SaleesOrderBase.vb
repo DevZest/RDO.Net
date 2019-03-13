@@ -1,12 +1,13 @@
-﻿<CustomValidator(SalesOrder._VAL_LineCount)>
-<Computation(SalesOrder._ComputeLineCount, ComputationMode.Aggregate)>
-<Computation(SalesOrder._ComputeSubTotal, ComputationMode.Aggregate)>
+﻿<CustomValidator("VAL_LineCount")>
+<Computation("ComputeLineCount", ComputationMode.Aggregate)>
+<Computation("ComputeSubTota", ComputationMode.Aggregate)>
 <InvisibleToDbDesigner>
-Public MustInherit Class SalesOrderBase
+Public MustInherit Class SalesOrderBase(Of T As {SalesOrderDetail, New})
     Inherits SalesOrderHeader
 
     Shared Sub New()
-        RegisterColumn(Function(x As SalesOrder) x.LineCount)
+        RegisterColumn(Function(x As SalesOrderBase(Of T)) x.LineCount)
+        RegisterChildModel(Function(x As SalesOrderBase(Of T)) x.SalesOrderDetails, Function(x As T) x.FK_SalesOrderHeader)
     End Sub
 
     Private m_LineCount As _Int32
@@ -19,7 +20,6 @@ Public MustInherit Class SalesOrderBase
         End Set
     End Property
 
-    Friend Const _VAL_LineCount = NameOf(VAL_LineCount)
     <_CustomValidator>
     Private ReadOnly Property VAL_LineCount As CustomValidatorEntry
         Get
@@ -37,17 +37,23 @@ Public MustInherit Class SalesOrderBase
         End Get
     End Property
 
-    Protected MustOverride Function GetSalesOrderDetails() As SalesOrderDetail
+    Private m_SalesOrderDetails As T
+    Public Property SalesOrderDetails As T
+        Get
+            Return m_SalesOrderDetails
+        End Get
+        Private Set
+            m_SalesOrderDetails = Value
+        End Set
+    End Property
 
-    Friend Const _ComputeLineCount = NameOf(ComputeLineCount)
     <_Computation>
     Private Sub ComputeLineCount()
-        LineCount.ComputedAs(GetSalesOrderDetails().SalesOrderDetailID.CountRows())
+        LineCount.ComputedAs(SalesOrderDetails.SalesOrderDetailID.CountRows())
     End Sub
 
-    Friend Const _ComputeSubTotal = NameOf(ComputeSubTotal)
     <_Computation>
     Private Sub ComputeSubTotal()
-        SubTotal.ComputedAs(GetSalesOrderDetails().LineTotal.Sum().IfNull(0), False)
+        SubTotal.ComputedAs(SalesOrderDetails.LineTotal.Sum().IfNull(0), False)
     End Sub
 End Class

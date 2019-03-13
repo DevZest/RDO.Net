@@ -1,9 +1,9 @@
-<CheckConstraint(Product._CK_Product_ListPrice, GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_ListPrice), Description:="Check constraint [ListPrice] >= (0.00)")>
-<CheckConstraint(Product._CK_Product_SellEndDate, GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_SellEndDate), Description:="Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")>
-<CheckConstraint(Product._CK_Product_StandardCost, GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_StandardCost), Description:="Check constraint [StandardCost] >= (0.00)")>
-<CheckConstraint(Product._CK_Product_Weight, GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_Weight), Description:="Check constraint [Weight] >= (0.00)")>
-<UniqueConstraint(Product._AK_Product_Name, Description:="Unique nonclustered constraint.")>
-<UniqueConstraint(Product._AK_Product_ProductNumber, Description:="Unique nonclustered constraint.")>
+<CheckConstraint("CK_Product_ListPrice", GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_ListPrice), Description:="Check constraint [ListPrice] >= (0.00)")>
+<CheckConstraint("CK_Product_SellEndDate", GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_SellEndDate), Description:="Check constraint [SellEndDate] >= [SellStartDate] OR [SellEndDate] IS NULL")>
+<CheckConstraint("CK_Product_StandardCost", GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_StandardCost), Description:="Check constraint [StandardCost] >= (0.00)")>
+<CheckConstraint("CK_Product_Weight", GetType(My.UserMessages), NameOf(My.UserMessages.CK_Product_Weight), Description:="Check constraint [Weight] >= (0.00)")>
+<UniqueConstraint("AK_Product_Name", Description:="Unique nonclustered constraint.")>
+<UniqueConstraint("AK_Product_ProductNumber", Description:="Unique nonclustered constraint.")>
 Public Class Product
     Inherits BaseModel(Of Product.PK)
 
@@ -311,7 +311,6 @@ Public Class Product
         End Set
     End Property
 
-    Friend Const _CK_Product_ListPrice = NameOf(CK_Product_ListPrice)
     <_CheckConstraint>
     Private ReadOnly Property CK_Product_ListPrice As _Boolean
         Get
@@ -319,7 +318,6 @@ Public Class Product
         End Get
     End Property
 
-    Friend Const _CK_Product_SellEndDate = NameOf(CK_Product_SellEndDate)
     <_CheckConstraint>
     Private ReadOnly Property CK_Product_SellEndDate As _Boolean
         Get
@@ -327,7 +325,6 @@ Public Class Product
         End Get
     End Property
 
-    Friend Const _CK_Product_StandardCost = NameOf(CK_Product_StandardCost)
     <_CheckConstraint>
     ReadOnly Property CK_Product_StandardCost As _Boolean
         Get
@@ -335,7 +332,6 @@ Public Class Product
         End Get
     End Property
 
-    Friend Const _CK_Product_Weight = NameOf(CK_Product_Weight)
     <_CheckConstraint>
     Private ReadOnly Property CK_Product_Weight As _Boolean
         Get
@@ -343,7 +339,6 @@ Public Class Product
         End Get
     End Property
 
-    Friend Const _AK_Product_Name = NameOf(AK_Product_Name)
     <_UniqueConstraint>
     Private ReadOnly Property AK_Product_Name As ColumnSort()
         Get
@@ -351,7 +346,6 @@ Public Class Product
         End Get
     End Property
 
-    Friend Const _AK_Product_ProductNumber = NameOf(AK_Product_ProductNumber)
     <_UniqueConstraint>
     Private ReadOnly Property AK_Product_ProductNumber As ColumnSort()
         Get

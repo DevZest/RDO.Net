@@ -1,5 +1,5 @@
-<DbIndex(Address._IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion, Description:="Nonclustered index.")>
-<DbIndex(Address._IX_Address_StateProvince, Description:="Nonclustered index.")>
+<DbIndex("IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion", Description:="Nonclustered index.")>
+<DbIndex("IX_Address_StateProvince", Description:="Nonclustered index.")>
 Public Class Address
     Inherits BaseModel(Of Address.PK)
 
@@ -229,7 +229,6 @@ Public Class Address
         End Set
     End Property
 
-    Friend Const _IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion = NameOf(IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion)
     <_DbIndex>
     Private ReadOnly Property IX_Address_AddressLine1_AddressLine2_City_StateProvince_PostalCode_CountryRegion As ColumnSort()
         Get
@@ -237,7 +236,6 @@ Public Class Address
         End Get
     End Property
 
-    Friend Const _IX_Address_StateProvince = NameOf(IX_Address_StateProvince)
     <_DbIndex>
     Private ReadOnly Property IX_Address_StateProvince As ColumnSort()
         Get

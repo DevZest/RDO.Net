@@ -1,4 +1,4 @@
-<UniqueConstraint(ProductCategory._AK_ProductCategory_Name, Description:="Unique nonclustered constraint.")>
+<UniqueConstraint("AK_ProductCategory_Name", Description:="Unique nonclustered constraint.")>
 Public Class ProductCategory
     Inherits BaseModel(Of ProductCategory.PK)
 
@@ -142,7 +142,6 @@ Public Class ProductCategory
         End Set
     End Property
 
-    Friend Const _AK_ProductCategory_Name = NameOf(AK_ProductCategory_Name)
     <_UniqueConstraint>
     Private ReadOnly Property AK_ProductCategory_Name As ColumnSort()
         Get

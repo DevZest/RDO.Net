@@ -1,13 +1,13 @@
-<Computation(SalesOrderHeader._ComputeSalesOrderNumber)>
-<Computation(SalesOrderHeader._ComputeTotalDue)>
-<CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_DueDate, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_DueDate), Description:="Check constraint [DueDate] >= [OrderDate]")>
-<CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_Freight, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_Freight), Description:="Check constraint [Freight] >= (0.00)")>
-<CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_ShipDate, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_ShipDate), Description:="Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")>
-<CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_SubTotal, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_SubTotal), Description:="Check constraint [SubTotal] >= (0.00)")>
-<CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_TaxAmt, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_TaxAmt), Description:="Check constraint [TaxAmt] >= (0.00)")>
-<CheckConstraint(SalesOrderHeader._CK_SalesOrderHeader_Status, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_Status), Description:="Check constraint [Status] BETWEEN (1) AND (6)")>
-<UniqueConstraint(SalesOrderHeader._AK_SalesOrderHeader_SalesOrderNumber, Description:="Unique nonclustered constraint.")>
-<DbIndex(SalesOrderHeader._IX_SalesOrderHeader_CustomerID, Description:="Nonclustered index.")>
+<Computation("ComputeSalesOrderNumber")>
+<Computation("ComputeTotalDue")>
+<CheckConstraint("CK_SalesOrderHeader_DueDate", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_DueDate), Description:="Check constraint [DueDate] >= [OrderDate]")>
+<CheckConstraint("CK_SalesOrderHeader_Freight", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_Freight), Description:="Check constraint [Freight] >= (0.00)")>
+<CheckConstraint("CK_SalesOrderHeader_ShipDate", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_ShipDate), Description:="Check constraint [ShipDate] >= [OrderDate] OR [ShipDate] IS NULL")>
+<CheckConstraint("CK_SalesOrderHeader_SubTotal", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_SubTotal), Description:="Check constraint [SubTotal] >= (0.00)")>
+<CheckConstraint("CK_SalesOrderHeader_TaxAmt", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_TaxAmt), Description:="Check constraint [TaxAmt] >= (0.00)")>
+<CheckConstraint("CK_SalesOrderHeader_Status", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderHeader_Status), Description:="Check constraint [Status] BETWEEN (1) AND (6)")>
+<UniqueConstraint("AK_SalesOrderHeader_SalesOrderNumber", Description:="Unique nonclustered constraint.")>
+<DbIndex("IX_SalesOrderHeader_CustomerID", Description:="Nonclustered index.")>
 Public Class SalesOrderHeader
     Inherits BaseModel(Of PK)
 
@@ -369,19 +369,16 @@ Public Class SalesOrderHeader
         End Set
     End Property
 
-    Friend Const _ComputeSalesOrderNumber = NameOf(ComputeSalesOrderNumber)
     <_Computation>
     Private Sub ComputeSalesOrderNumber()
         SalesOrderNumber.ComputedAs((_String.[Const]("SO") + (CType(SalesOrderID, _String)).AsSqlNVarChar(23)).IfNull(_String.[Const]("*** ERROR ***")))
     End Sub
 
-    Friend Const _ComputeTotalDue = NameOf(ComputeTotalDue)
     <_Computation>
     Private Sub ComputeTotalDue()
         TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.[Const](0)))
     End Sub
 
-    Friend Const _CK_SalesOrderHeader_DueDate = NameOf(CK_SalesOrderHeader_DueDate)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderHeader_DueDate As _Boolean
         Get
@@ -389,7 +386,6 @@ Public Class SalesOrderHeader
         End Get
     End Property
 
-    Friend Const _CK_SalesOrderHeader_Freight = NameOf(CK_SalesOrderHeader_Freight)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderHeader_Freight As _Boolean
         Get
@@ -397,7 +393,6 @@ Public Class SalesOrderHeader
         End Get
     End Property
 
-    Friend Const _CK_SalesOrderHeader_ShipDate = NameOf(CK_SalesOrderHeader_ShipDate)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderHeader_ShipDate As _Boolean
         Get
@@ -405,7 +400,6 @@ Public Class SalesOrderHeader
         End Get
     End Property
 
-    Friend Const _CK_SalesOrderHeader_SubTotal = NameOf(CK_SalesOrderHeader_SubTotal)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderHeader_SubTotal As _Boolean
         Get
@@ -413,7 +407,6 @@ Public Class SalesOrderHeader
         End Get
     End Property
 
-    Friend Const _CK_SalesOrderHeader_TaxAmt = NameOf(CK_SalesOrderHeader_TaxAmt)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderHeader_TaxAmt As _Boolean
         Get
@@ -421,7 +414,6 @@ Public Class SalesOrderHeader
         End Get
     End Property
 
-    Friend Const _CK_SalesOrderHeader_Status = NameOf(CK_SalesOrderHeader_Status)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderHeader_Status As _Boolean
         Get
@@ -434,7 +426,6 @@ Public Class SalesOrderHeader
         Return byteExpr >= _Byte.[Const](1) And byteExpr <= _Byte.[Const](6)
     End Function
 
-    Friend Const _AK_SalesOrderHeader_SalesOrderNumber = NameOf(AK_SalesOrderHeader_SalesOrderNumber)
     <_UniqueConstraint>
     Private ReadOnly Property AK_SalesOrderHeader_SalesOrderNumber As ColumnSort()
         Get
@@ -442,7 +433,6 @@ Public Class SalesOrderHeader
         End Get
     End Property
 
-    Friend Const _IX_SalesOrderHeader_CustomerID = NameOf(IX_SalesOrderHeader_CustomerID)
     <_DbIndex>
     Private ReadOnly Property IX_SalesOrderHeader_CustomerID As ColumnSort()
         Get

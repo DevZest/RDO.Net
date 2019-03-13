@@ -1,8 +1,8 @@
-<Computation(SalesOrderDetail._ComputeLineTotal)>
-<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_OrderQty, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_OrderQty), Description:="Check constraint [OrderQty] > (0)")>
-<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_UnitPrice, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_UnitPrice), Description:="heck constraint [UnitPrice] >= (0.00)")>
-<CheckConstraint(SalesOrderDetail._CK_SalesOrderDetail_UnitPriceDiscount, GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Description:="Check constraint [UnitPriceDiscount] >= (0.00)")>
-<DbIndex(SalesOrderDetail._IX_SalesOrderDetail_ProductID, Description:="Nonclustered index.")>
+<Computation("ComputeLineTotal")>
+<CheckConstraint("CK_SalesOrderDetail_OrderQty", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_OrderQty), Description:="Check constraint [OrderQty] > (0)")>
+<CheckConstraint("CK_SalesOrderDetail_UnitPrice", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_UnitPrice), Description:="heck constraint [UnitPrice] >= (0.00)")>
+<CheckConstraint("CK_SalesOrderDetail_UnitPriceDiscount", GetType(My.UserMessages), NameOf(My.UserMessages.CK_SalesOrderDetail_UnitPriceDiscount), Description:="Check constraint [UnitPriceDiscount] >= (0.00)")>
+<DbIndex("IX_SalesOrderDetail_ProductID", Description:="Nonclustered index.")>
 Public Class SalesOrderDetail
     Inherits BaseModel(Of PK)
 
@@ -167,13 +167,11 @@ Public Class SalesOrderDetail
         End Set
     End Property
 
-    Friend Const _ComputeLineTotal = NameOf(ComputeLineTotal)
     <_Computation>
     Private Sub ComputeLineTotal()
         LineTotal.ComputedAs((UnitPrice * (_Decimal.[Const](1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.[Const](0)))
     End Sub
 
-    Friend Const _CK_SalesOrderDetail_OrderQty = NameOf(CK_SalesOrderDetail_OrderQty)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderDetail_OrderQty As _Boolean
         Get
@@ -181,7 +179,6 @@ Public Class SalesOrderDetail
         End Get
     End Property
 
-    Friend Const _CK_SalesOrderDetail_UnitPrice = NameOf(CK_SalesOrderDetail_UnitPrice)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderDetail_UnitPrice As _Boolean
         Get
@@ -189,7 +186,6 @@ Public Class SalesOrderDetail
         End Get
     End Property
 
-    Friend Const _CK_SalesOrderDetail_UnitPriceDiscount = NameOf(CK_SalesOrderDetail_UnitPriceDiscount)
     <_CheckConstraint>
     Private ReadOnly Property CK_SalesOrderDetail_UnitPriceDiscount As _Boolean
         Get
@@ -197,7 +193,6 @@ Public Class SalesOrderDetail
         End Get
     End Property
 
-    Friend Const _IX_SalesOrderDetail_ProductID = NameOf(IX_SalesOrderDetail_ProductID)
     <_DbIndex>
     Private ReadOnly Property IX_SalesOrderDetail_ProductID As ColumnSort()
         Get

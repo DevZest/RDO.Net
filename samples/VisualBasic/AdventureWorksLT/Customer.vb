@@ -1,5 +1,5 @@
-<Computation(Customer._ComputeContacPerson)>
-<DbIndex(Customer._IX_Customer_EmailAddress, Description:="Nonclustered index.")>
+<Computation("ComputeContacPerson")>
+<DbIndex("IX_Customer_EmailAddress", Description:="Nonclustered index.")>
 Public Class Customer
     Inherits BaseModel(Of PK)
 
@@ -332,7 +332,6 @@ Public Class Customer
         End Set
     End Property
 
-    Friend Const _ComputeContacPerson = NameOf(ComputeContactPerson)
     <_Computation>
     Private Sub ComputeContactPerson()
         ContactPerson.ComputedAs(LastName, FirstName, Title, AddressOf GetContactPerson, False)
@@ -359,7 +358,6 @@ Public Class Customer
         Return result
     End Function
 
-    Friend Const _IX_Customer_EmailAddress = NameOf(IX_Customer_EmailAddress)
     <_DbIndex>
     Private ReadOnly Property IX_Customer_EmailAddress As ColumnSort()
         Get
