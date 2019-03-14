@@ -31,6 +31,8 @@ namespace DevZest.Data.AspNetCore
             _logger.AttemptingToBindDataSetModel<T>(bindingContext);
 
             var result = bindingContext.Model as DataSet<T> ?? CreateDataSet(bindingContext);
+            bindingContext.Model = result;
+
             var modelValueKey = ModelNames.CreatePropertyModelName(bindingContext.ModelName, bindingContext.FieldName);
             if (modelValueKey.Length > 0 && !valueProvider.ContainsPrefix(modelValueKey))
             {

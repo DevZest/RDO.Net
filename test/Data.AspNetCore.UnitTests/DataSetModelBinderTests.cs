@@ -64,6 +64,43 @@ namespace DevZest.Data.AspNetCore
             return _metadataProvider.GetMetadataForProperty(type, propertyName);
         }
 
+        private static DefaultModelBindingContext CreateContext(ModelMetadata metadata, object model = null)
+        {
+            var valueProvider = new TestValueProvider(new Dictionary<string, object>());
+            return new DefaultModelBindingContext()
+            {
+                BinderModelName = metadata.BinderModelName,
+                BindingSource = metadata.BindingSource,
+                IsTopLevelObject = true,
+                Model = model,
+                ModelMetadata = metadata,
+                ModelName = "theModel",
+                ModelState = new ModelStateDictionary(),
+                ValueProvider = valueProvider,
+            };
+        }
+
+        // Provides the ability to easily mock + call each of these APIs
+        public class TestableDataSetModelBinder<T> : DataSetModelBinder<T>
+            where T : class, IModelReference, new()
+        {
+            public TestableDataSetModelBinder()
+                : base(NullLoggerFactory.Instance)
+            {
+            }
+
+            public Dictionary<ModelMetadata, ModelBindingResult> Results { get; } = new Dictionary<ModelMetadata, ModelBindingResult>();
+
+            public virtual DataSet<T> CreateDataSetPublic(ModelBindingContext bindingContext)
+            {
+                return base.CreateDataSet(bindingContext);
+            }
+
+            protected override DataSet<T> CreateDataSet(ModelBindingContext bindingContext)
+            {
+                return CreateDataSetPublic(bindingContext);
+            }
+        }
 
         private IActionResult ActionWithComplexParameter(DataSet<Person> parameter) => null;
 
@@ -144,256 +181,46 @@ namespace DevZest.Data.AspNetCore
             Assert.Equal("A value for the 'fieldName' parameter or property was not provided.", error.ErrorMessage);
         }
 
-        //private IActionResult ActionWithNoSettablePropertiesParameter(PersonWithNoProperties parameter) => null;
+        [Fact]
+        public async Task BindModelAsync_ModelIsNotNull_DoesNotCallCreateDataSet()
+        {
+            // Arrange
+            var bindingContext = CreateContext(GetMetadataForType(typeof(DataSet<Person>)), DataSet<Person>.Create());
+            var originalModel = bindingContext.Model;
 
-        //[Fact]
-        //public async Task BindModelAsync_CreatesModelAndAddsError_IfIsTopLevelObject_WithNoSettableProperties()
-        //{
-        //    // Arrange
-        //    var parameter = typeof(DataSetModelBinderTest)
-        //        .GetMethod(
-        //            nameof(ActionWithNoSettablePropertiesParameter),
-        //            BindingFlags.Instance | BindingFlags.NonPublic)
-        //        .GetParameters()[0];
-        //    var metadataProvider = new TestModelMetadataProvider();
-        //    metadataProvider
-        //        .ForParameter(parameter)
-        //        .BindingDetails(b => b.IsBindingRequired = true);
-        //    var metadata = metadataProvider.GetMetadataForParameter(parameter);
-        //    var bindingContext = new DefaultModelBindingContext
-        //    {
-        //        IsTopLevelObject = true,
-        //        FieldName = "fieldName",
-        //        ModelMetadata = metadata,
-        //        ModelName = string.Empty,
-        //        ValueProvider = new TestValueProvider(new Dictionary<string, object>()),
-        //        ModelState = new ModelStateDictionary(),
-        //    };
+            var binder = new Mock<TestableDataSetModelBinder<Person>>() { CallBase = true };
+            binder
+                .Setup(b => b.CreateDataSetPublic(It.IsAny<ModelBindingContext>()))
+                .Verifiable();
 
-        //    var binder = new ComplexTypeModelBinder(
-        //        new Dictionary<ModelMetadata, IModelBinder>(),
-        //        NullLoggerFactory.Instance,
-        //        allowValidatingTopLevelNodes: true);
+            // Act
+            await binder.Object.BindModelAsync(bindingContext);
 
-        //    // Act
-        //    await binder.BindModelAsync(bindingContext);
+            // Assert
+            Assert.Same(originalModel, bindingContext.Model);
+            binder.Verify(o => o.CreateDataSetPublic(bindingContext), Times.Never());
+        }
 
-        //    // Assert
-        //    Assert.True(bindingContext.Result.IsModelSet);
-        //    Assert.IsType<PersonWithNoProperties>(bindingContext.Result.Model);
+        [Fact]
+        public async Task BindModelAsync_ModelIsNull_CallsCreateDataSet()
+        {
+            // Arrange
+            var bindingContext = CreateContext(GetMetadataForType(typeof(DataSet<Person>)), model: null);
 
-        //    var keyValuePair = Assert.Single(bindingContext.ModelState);
-        //    Assert.Equal(string.Empty, keyValuePair.Key);
-        //    var error = Assert.Single(keyValuePair.Value.Errors);
-        //    Assert.Equal("A value for the 'fieldName' parameter or property was not provided.", error.ErrorMessage);
-        //}
+            var testableBinder = new Mock<TestableDataSetModelBinder<Person>> { CallBase = true };
+            testableBinder
+                .Setup(o => o.CreateDataSetPublic(bindingContext))
+                .Returns(DataSet<Person>.Create())
+                .Verifiable();
 
-        //private IActionResult ActionWithAllPropertiesExcludedParameter(PersonWithAllPropertiesExcluded parameter) => null;
+            // Act
+            await testableBinder.Object.BindModelAsync(bindingContext);
 
-        //[Fact]
-        //public async Task BindModelAsync_CreatesModelAndAddsError_IfIsTopLevelObject_WithAllPropertiesExcluded()
-        //{
-        //    // Arrange
-        //    var parameter = typeof(DataSetModelBinderTest)
-        //        .GetMethod(
-        //            nameof(ActionWithAllPropertiesExcludedParameter),
-        //            BindingFlags.Instance | BindingFlags.NonPublic)
-        //        .GetParameters()[0];
-        //    var metadataProvider = new TestModelMetadataProvider();
-        //    metadataProvider
-        //        .ForParameter(parameter)
-        //        .BindingDetails(b => b.IsBindingRequired = true);
-        //    var metadata = metadataProvider.GetMetadataForParameter(parameter);
-        //    var bindingContext = new DefaultModelBindingContext
-        //    {
-        //        IsTopLevelObject = true,
-        //        FieldName = "fieldName",
-        //        ModelMetadata = metadata,
-        //        ModelName = string.Empty,
-        //        ValueProvider = new TestValueProvider(new Dictionary<string, object>()),
-        //        ModelState = new ModelStateDictionary(),
-        //    };
-
-        //    var binder = new ComplexTypeModelBinder(
-        //        new Dictionary<ModelMetadata, IModelBinder>(),
-        //        NullLoggerFactory.Instance,
-        //        allowValidatingTopLevelNodes: true);
-
-        //    // Act
-        //    await binder.BindModelAsync(bindingContext);
-
-        //    // Assert
-        //    Assert.True(bindingContext.Result.IsModelSet);
-        //    Assert.IsType<PersonWithAllPropertiesExcluded>(bindingContext.Result.Model);
-
-        //    var keyValuePair = Assert.Single(bindingContext.ModelState);
-        //    Assert.Equal(string.Empty, keyValuePair.Key);
-        //    var error = Assert.Single(keyValuePair.Value.Errors);
-        //    Assert.Equal("A value for the 'fieldName' parameter or property was not provided.", error.ErrorMessage);
-        //}
-
-        //[Theory]
-        //[InlineData(nameof(MyModelTestingCanUpdateProperty.ReadOnlyInt), false)]    // read-only value type
-        //[InlineData(nameof(MyModelTestingCanUpdateProperty.ReadOnlyObject), true)]
-        //[InlineData(nameof(MyModelTestingCanUpdateProperty.ReadOnlySimple), true)]
-        //[InlineData(nameof(MyModelTestingCanUpdateProperty.ReadOnlyString), false)]
-        //[InlineData(nameof(MyModelTestingCanUpdateProperty.ReadWriteString), true)]
-        //public void CanUpdateProperty_ReturnsExpectedValue(string propertyName, bool expected)
-        //{
-        //    // Arrange
-
-        //    var propertyMetadata = GetMetadataForProperty(typeof(MyModelTestingCanUpdateProperty), propertyName);
-
-        //    // Act
-        //    var canUpdate = ComplexTypeModelBinder.CanUpdatePropertyInternal(propertyMetadata);
-
-        //    // Assert
-        //    Assert.Equal(expected, canUpdate);
-        //}
-
-        //[Theory]
-        //[InlineData(nameof(CollectionContainer.ReadOnlyArray), false)]
-        //[InlineData(nameof(CollectionContainer.ReadOnlyDictionary), true)]
-        //[InlineData(nameof(CollectionContainer.ReadOnlyList), true)]
-        //[InlineData(nameof(CollectionContainer.SettableArray), true)]
-        //[InlineData(nameof(CollectionContainer.SettableDictionary), true)]
-        //[InlineData(nameof(CollectionContainer.SettableList), true)]
-        //public void CanUpdateProperty_CollectionProperty_FalseOnlyForArray(string propertyName, bool expected)
-        //{
-        //    // Arrange
-        //    var metadataProvider = _metadataProvider;
-        //    var metadata = metadataProvider.GetMetadataForProperty(typeof(CollectionContainer), propertyName);
-
-        //    // Act
-        //    var canUpdate = ComplexTypeModelBinder.CanUpdatePropertyInternal(metadata);
-
-        //    // Assert
-        //    Assert.Equal(expected, canUpdate);
-        //}
-
-        //[Fact]
-        //public void CreateModel_InstantiatesInstanceOfMetadataType()
-        //{
-        //    // Arrange
-        //    var bindingContext = new DefaultModelBindingContext
-        //    {
-        //        ModelMetadata = GetMetadataForType(typeof(Person))
-        //    };
-
-        //    var binder = CreateBinder(bindingContext.ModelMetadata);
-
-        //    // Act
-        //    var model = binder.CreateModelPublic(bindingContext);
-
-        //    // Assert
-        //    Assert.IsType<Person>(model);
-        //}
-
-        //[Fact]
-        //public void CreateModel_ForStructModelType_AsTopLevelObject_ThrowsException()
-        //{
-        //    // Arrange
-        //    var bindingContext = new DefaultModelBindingContext
-        //    {
-        //        ModelMetadata = GetMetadataForType(typeof(PointStruct)),
-        //        IsTopLevelObject = true
-        //    };
-        //    var binder = CreateBinder(bindingContext.ModelMetadata);
-
-        //    // Act & Assert
-        //    var exception = Assert.Throws<InvalidOperationException>(() => binder.CreateModelPublic(bindingContext));
-        //    Assert.Equal(
-        //        string.Format(
-        //            "Could not create an instance of type '{0}'. Model bound complex types must not be abstract or " +
-        //            "value types and must have a parameterless constructor.",
-        //            typeof(PointStruct).FullName),
-        //        exception.Message);
-        //}
-
-        //[Fact]
-        //public void CreateModel_ForClassWithNoParameterlessConstructor_AsElement_ThrowsException()
-        //{
-        //    // Arrange
-        //    var expectedMessage = "Could not create an instance of type " +
-        //        $"'{typeof(ClassWithNoParameterlessConstructor)}'. Model bound complex types must not be abstract " +
-        //        "or value types and must have a parameterless constructor.";
-        //    var metadata = GetMetadataForType(typeof(ClassWithNoParameterlessConstructor));
-        //    var bindingContext = new DefaultModelBindingContext
-        //    {
-        //        ModelMetadata = metadata,
-        //    };
-        //    var binder = CreateBinder(metadata);
-
-        //    // Act & Assert
-        //    var exception = Assert.Throws<InvalidOperationException>(() => binder.CreateModelPublic(bindingContext));
-        //    Assert.Equal(expectedMessage, exception.Message);
-        //}
-
-        //[Fact]
-        //public void CreateModel_ForStructModelType_AsProperty_ThrowsException()
-        //{
-        //    // Arrange
-        //    var bindingContext = new DefaultModelBindingContext
-        //    {
-        //        ModelMetadata = GetMetadataForProperty(typeof(Location), nameof(Location.Point)),
-        //        ModelName = nameof(Location.Point),
-        //        IsTopLevelObject = false
-        //    };
-        //    var binder = CreateBinder(bindingContext.ModelMetadata);
-
-        //    // Act & Assert
-        //    var exception = Assert.Throws<InvalidOperationException>(() => binder.CreateModelPublic(bindingContext));
-        //    Assert.Equal(
-        //        string.Format(
-        //            "Could not create an instance of type '{0}'. Model bound complex types must not be abstract or " +
-        //            "value types and must have a parameterless constructor. Alternatively, set the '{1}' property to" +
-        //            " a non-null value in the '{2}' constructor.",
-        //            typeof(PointStruct).FullName,
-        //            nameof(Location.Point),
-        //            typeof(Location).FullName),
-        //        exception.Message);
-        //}
-
-        //[Fact]
-        //public async Task BindModelAsync_ModelIsNotNull_DoesNotCallCreateModel()
-        //{
-        //    // Arrange
-        //    var bindingContext = CreateContext(GetMetadataForType(typeof(Person)), new Person());
-        //    var originalModel = bindingContext.Model;
-
-        //    var binder = new Mock<TestableDataSetModelBinder>() { CallBase = true };
-        //    binder
-        //        .Setup(b => b.CreateModelPublic(It.IsAny<ModelBindingContext>()))
-        //        .Verifiable();
-
-        //    // Act
-        //    await binder.Object.BindModelAsync(bindingContext);
-
-        //    // Assert
-        //    Assert.Same(originalModel, bindingContext.Model);
-        //    binder.Verify(o => o.CreateModelPublic(bindingContext), Times.Never());
-        //}
-
-        //[Fact]
-        //public async Task BindModelAsync_ModelIsNull_CallsCreateModel()
-        //{
-        //    // Arrange
-        //    var bindingContext = CreateContext(GetMetadataForType(typeof(Person)), model: null);
-
-        //    var testableBinder = new Mock<TestableDataSetModelBinder> { CallBase = true };
-        //    testableBinder
-        //        .Setup(o => o.CreateModelPublic(bindingContext))
-        //        .Returns(new Person())
-        //        .Verifiable();
-
-        //    // Act
-        //    await testableBinder.Object.BindModelAsync(bindingContext);
-
-        //    // Assert
-        //    Assert.NotNull(bindingContext.Model);
-        //    Assert.IsType<Person>(bindingContext.Model);
-        //    testableBinder.Verify();
-        //}
+            // Assert
+            Assert.NotNull(bindingContext.Model);
+            Assert.IsAssignableFrom<DataSet<Person>>(bindingContext.Model);
+            testableBinder.Verify();
+        }
 
         //[Theory]
         //[InlineData(nameof(PersonWithBindExclusion.FirstName))]
@@ -1012,21 +839,6 @@ namespace DevZest.Data.AspNetCore
         //    });
         //}
 
-        //private static DefaultModelBindingContext CreateContext(ModelMetadata metadata, object model = null)
-        //{
-        //    var valueProvider = new TestValueProvider(new Dictionary<string, object>());
-        //    return new DefaultModelBindingContext()
-        //    {
-        //        BinderModelName = metadata.BinderModelName,
-        //        BindingSource = metadata.BindingSource,
-        //        IsTopLevelObject = true,
-        //        Model = model,
-        //        ModelMetadata = metadata,
-        //        ModelName = "theModel",
-        //        ModelState = new ModelStateDictionary(),
-        //        ValueProvider = valueProvider,
-        //    };
-        //}
 
         //private class Location
         //{
@@ -1279,28 +1091,6 @@ namespace DevZest.Data.AspNetCore
         //        }
 
         //        return null;
-        //    }
-        //}
-
-        // Provides the ability to easily mock + call each of these APIs
-        //public class TestableDataSetModelBinder<T> : DataSetModelBinder<T>
-        //    where T : class, IModelReference, new()
-        //{
-        //    public TestableDataSetModelBinder()
-        //        : base(NullLoggerFactory.Instance)
-        //    {
-        //    }
-
-        //    public Dictionary<ModelMetadata, ModelBindingResult> Results { get; } = new Dictionary<ModelMetadata, ModelBindingResult>();
-
-        //    public virtual DataSet<T> CreateDataSetPublic(ModelBindingContext bindingContext)
-        //    {
-        //        return base.CreateDataSet(bindingContext);
-        //    }
-
-        //    protected override DataSet<T> CreateDataSet(ModelBindingContext bindingContext)
-        //    {
-        //        return CreateDataSetPublic(bindingContext);
         //    }
         //}
     }
