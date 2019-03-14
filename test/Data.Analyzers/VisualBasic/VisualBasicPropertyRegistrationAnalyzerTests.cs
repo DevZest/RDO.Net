@@ -435,5 +435,39 @@ End Class";
             };
             VerifyBasicDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MissingRegistration_generics_property()
+        {
+            var test = @"
+Imports DevZest.Data
+
+Class ChildModel
+    Inherits Model
+End Class
+
+Class SimpleModel(Of T As {ChildModel, New})
+    Inherits Model
+
+    Private m_Children As T
+    Public Property Children As T
+        Get
+            Return m_Children
+        End Get
+        Private Set
+            m_Children = Value
+        End Set
+    End Property
+End Class";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MissingRegistration,
+                Message = string.Format(Resources.MissingRegistration_Message, "Children"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.vb", 12, 21) }
+            };
+            VerifyBasicDiagnostic(test, expected);
+        }
     }
 }

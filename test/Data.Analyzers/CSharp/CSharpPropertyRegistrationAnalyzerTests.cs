@@ -319,5 +319,31 @@ class SimpleModel : Model
             };
             VerifyCSharpDiagnostic(test, expected);
         }
+
+        [TestMethod]
+        public void MissingRegistration_generics_property()
+        {
+            var test = @"
+using DevZest.Data;
+
+class ChildModel : Model
+{
+}
+
+class SimpleModel<T> : Model
+    where T : ChildModel, new()
+{
+    public T Children { get; private set; }
+}";
+
+            var expected = new DiagnosticResult
+            {
+                Id = DiagnosticIds.MissingRegistration,
+                Message = string.Format(Resources.MissingRegistration_Message, "Children"),
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 11, 14) }
+            };
+            VerifyCSharpDiagnostic(test, expected);
+        }
     }
 }
