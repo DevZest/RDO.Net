@@ -41,11 +41,11 @@ namespace DevZest.Data.CodeAnalysis
             if (!parent.HasValue)
                 return null;
 
-            var parentValue = parent.Value;
             var typeParameter = (ITypeParameterSymbol)property.Type;
             if (typeParameter.TypeParameterKind != TypeParameterKind.Type || !typeParameter.HasConstructorConstraint)
                 return null;
 
+            var parentValue = parent.Value;
             var constraintTypes = typeParameter.ConstraintTypes;
 
             for (int i = 0; i < constraintTypes.Length; i++)
