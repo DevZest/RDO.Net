@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using DevZest.Data.Addons;
@@ -33,16 +35,9 @@ namespace DevZest.Data.AspNetCore
             var result = bindingContext.Model as DataSet<T> ?? CreateDataSet(bindingContext);
             bindingContext.Model = result;
 
-            var modelValueKey = ModelNames.CreatePropertyModelName(bindingContext.ModelName, bindingContext.FieldName);
-            if (modelValueKey.Length > 0 && !valueProvider.ContainsPrefix(modelValueKey))
-            {
-                _logger.FoundNoDataSetValueInRequest<T>(bindingContext);
-                var messageProvider = bindingContext.ModelMetadata.ModelBindingMessageProvider;
-                var message = messageProvider.MissingBindRequiredValueAccessor(bindingContext.FieldName);
-                bindingContext.ModelState.AddModelError(bindingContext.ModelName, message);
-            }
-            else
-                Bind(bindingContext.ModelState, valueProvider, modelValueKey, result);
+            var isScalar = bindingContext.ModelMetadata.IsScalar();
+
+            Bind(bindingContext.ModelState, valueProvider, bindingContext.ModelName, result, isScalar);
             bindingContext.Result = ModelBindingResult.Success(result);
 
             _logger.DoneAttemptingToBindDataSetModel<T>(bindingContext);
@@ -54,52 +49,103 @@ namespace DevZest.Data.AspNetCore
             return DataSet<T>.Create();
         }
 
-        private void Bind(ModelStateDictionary modelState, IValueProvider valueProvider, string modelValueKey, DataSet dataSet)
+        private void Bind(ModelStateDictionary modelState, IValueProvider valueProvider, string modelName, DataSet dataSet, bool isScalar)
         {
-            modelState.SetModelValue(modelValueKey, dataSet, string.Empty);
+            modelState.SetModelValue(modelName, dataSet, string.Empty);
+
+            if (!string.IsNullOrEmpty(modelName) && !valueProvider.ContainsPrefix(modelName))
+                return;
 
             var _ = dataSet.Model;
 
             _.SuspendIdentity();
 
-            var existingDataRowCount = dataSet.Count;
-
-            for (int i = 0; ; i++)
-            {
-                var dataRowModelName = ModelNames.CreateIndexModelName(modelValueKey, i);
-                if (!valueProvider.ContainsPrefix(dataRowModelName))
-                {
-                    if (i < existingDataRowCount)
-                        continue;
-                    else
-                        break;
-                }
-
-                if (i >= existingDataRowCount)
-                    dataSet.AddRow();
-
-                BindDataRow(modelState, valueProvider, dataRowModelName, dataSet, i);
-            }
+            if (isScalar)
+                BindScalar(modelState, valueProvider, modelName, dataSet);
+            else
+                BindCollection(modelState, valueProvider, modelName, dataSet);
 
             _.ResumeIdentity();
         }
 
-        private void BindDataRow(ModelStateDictionary modelState, IValueProvider valueProvider, string dataRowModelName, DataSet dataSet, int index)
+        private void BindScalar(ModelStateDictionary modelState, IValueProvider valueProvider, string modelName, DataSet dataSet)
         {
-            var dataRow = dataSet[index];
+            if (dataSet.Count == 0)
+                dataSet.AddRow();
 
-            modelState.SetModelValue(dataRowModelName, dataRow, string.Empty);
+            Bind(modelState, valueProvider, modelName, dataSet[0]);
+        }
+
+        private void BindCollection(ModelStateDictionary modelState, IValueProvider valueProvider, string modelName, DataSet dataSet)
+        {
+            var indexNames = GetIndexNames(valueProvider, modelName);
+
+            bool indexNamesIsFinite;
+            if (indexNames != null)
+                indexNamesIsFinite = true;
+            else
+            {
+                indexNamesIsFinite = false;
+                indexNames = Enumerable.Range(0, int.MaxValue).Select(i => i.ToString(CultureInfo.InvariantCulture));
+            }
+
+            var currentIndex = 0;
+            foreach (var indexName in indexNames)
+            {
+                var dataRowModelName = ModelNames.CreateIndexModelName(modelName, indexName);
+                if (!valueProvider.ContainsPrefix(dataRowModelName) && !indexNamesIsFinite)
+                    break;
+
+                if (currentIndex >= dataSet.Count)
+                    dataSet.AddRow();
+                Bind(modelState, valueProvider, dataRowModelName, dataSet[currentIndex++]);
+            }
+        }
+
+        private static readonly IValueProvider EmptyValueProvider = new CompositeValueProvider();
+
+        private static IEnumerable<string> GetIndexNames(IValueProvider valueProvider, string modelName)
+        {
+            var indexPropertyName = ModelNames.CreatePropertyModelName(modelName, "index");
+
+            // Remove any value provider that may not use indexPropertyName as-is. Don't match e.g. Model[index].
+            if (valueProvider is IKeyRewriterValueProvider keyRewriterValueProvider)
+                valueProvider = keyRewriterValueProvider.Filter() ?? EmptyValueProvider;
+
+            var valueProviderResultIndex = valueProvider.GetValue(indexPropertyName);
+            return GetIndexNames(valueProviderResultIndex);
+        }
+
+        private static IEnumerable<string> GetIndexNames(ValueProviderResult valueProviderResult)
+        {
+            if (valueProviderResult != null)
+            {
+                var indexes = (string[])valueProviderResult;
+                if (indexes != null && indexes.Length > 0)
+                    return indexes;
+            }
+
+            return null;
+        }
+
+        private void Bind(ModelStateDictionary modelState, IValueProvider valueProvider, string modelName, DataRow dataRow)
+        {
+            modelState.SetModelValue(modelName, dataRow, string.Empty);
 
             dataRow.SuspendValueChangedNotification();
 
-            var model = dataSet.Model;
+            var model = dataRow.Model;
             var columns = model.GetColumns();
             foreach (var column in columns)
-                Bind(modelState, valueProvider, dataRowModelName, column, dataRow);
+            {
+                if (column.IsReadOnly(dataRow))
+                    continue;
+                Bind(modelState, valueProvider, modelName, column, dataRow);
+            }
 
             IReadOnlyList<DataSet> childDataSets = dataRow.ChildDataSets;
             foreach (var childDataSet in childDataSets)
-                Bind(modelState, valueProvider, ModelNames.CreatePropertyModelName(dataRowModelName, childDataSet.Model.GetName()), childDataSet);
+                Bind(modelState, valueProvider, ModelNames.CreatePropertyModelName(modelName, childDataSet.Model.GetName()), childDataSet, isScalar: false);
 
             dataRow.ResumeValueChangedNotification();
         }

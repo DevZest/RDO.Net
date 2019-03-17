@@ -133,41 +133,6 @@ namespace DevZest.Data.AspNetCore
             }
         }
 
-        public static void FoundNoDataSetValueInRequest<T>(this ILogger logger, ModelBindingContext bindingContext)
-        {
-            if (!logger.IsEnabled(LogLevel.Debug))
-                return;
-
-            var modelMetadata = bindingContext.ModelMetadata;
-            switch (modelMetadata.MetadataKind)
-            {
-                case ModelMetadataKind.Parameter:
-                    _foundNoDataSetValueForParameterInRequest(
-                        logger,
-                        bindingContext.ModelName,
-                        modelMetadata.ParameterName,
-                        typeof(T),
-                        null);
-                    break;
-                case ModelMetadataKind.Property:
-                    _foundNoDataSetValueForPropertyInRequest(
-                        logger,
-                        bindingContext.ModelName,
-                        modelMetadata.ContainerType,
-                        modelMetadata.PropertyName,
-                        typeof(T),
-                        null);
-                    break;
-                case ModelMetadataKind.Type:
-                    _foundNoDataSetValueInRequest(
-                        logger,
-                        bindingContext.ModelName,
-                        typeof(T),
-                        null);
-                    break;
-            }
-        }
-
         public static void FoundNoColumnValueInRequest(this ILogger logger, string dataRowModelName, Column column)
         {
             if (!logger.IsEnabled(LogLevel.Debug))

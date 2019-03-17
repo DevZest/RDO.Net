@@ -177,8 +177,7 @@ namespace DevZest.Data.AspNetCore
 
             var keyValuePair = Assert.Single(bindingContext.ModelState);
             Assert.Equal(string.Empty, keyValuePair.Key);
-            var error = Assert.Single(keyValuePair.Value.Errors);
-            Assert.Equal("A value for the 'fieldName' parameter or property was not provided.", error.ErrorMessage);
+            Assert.Empty(keyValuePair.Value.Errors);
         }
 
         [Fact]

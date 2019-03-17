@@ -11,6 +11,14 @@ namespace DevZest.Data.AspNetCore
         private static readonly ResourceManager _resourceManager
             = new ResourceManager("DevZest.Data.AspNetCore.UserMessages", typeof(UserMessages).GetTypeInfo().Assembly);
 
+        /// <summary>
+        /// The DataSet field {0} is declared as scalar.
+        /// </summary>
+        public static string ScalarAttribute_ValidationError
+        {
+            get { return GetString("ScalarAttribute_ValidationError"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
