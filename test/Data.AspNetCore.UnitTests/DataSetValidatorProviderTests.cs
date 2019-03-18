@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Moq;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -40,7 +41,8 @@ namespace DevZest.Data.AspNetCore
         {
             // Arrange
             var provider = new DataSetValidatorProvider();
-            var metadata = _metadataProvider.GetMetadataForType(typeof(DataSet<Person>));
+            var dataSet = DataSet<Person>.Create();
+            var metadata = _metadataProvider.GetMetadataForType(dataSet.GetType());
 
             var providerContext = new ModelValidatorProviderContext(metadata, GetValidatorItems(metadata));
 
@@ -52,5 +54,18 @@ namespace DevZest.Data.AspNetCore
             Assert.IsType<DataSetValidatorProvider.DataSetValidator>(validatorItem.Validator);
         }
 
+        [Fact]
+        public void HasValidators_ReturnsTrue_IfModelIsDataSet()
+        {
+            // Arrange
+            var provider = new DataSetValidatorProvider();
+            var dataSet = DataSet<Person>.Create();
+
+            // Act
+            var result = provider.HasValidators(dataSet.GetType(), Array.Empty<object>());
+
+            // Assert
+            Assert.True(result);
+        }
     }
 }

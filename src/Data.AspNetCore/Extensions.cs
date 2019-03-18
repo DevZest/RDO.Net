@@ -14,7 +14,11 @@ namespace DevZest.Data.AspNetCore
 
         public static bool IsDataSet(this Type type)
         {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(DataSet<>);
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(DataSet<>))
+                return true;
+
+            var baseType = type.BaseType;
+            return baseType == null ? false : IsDataSet(baseType);
         }
     }
 }

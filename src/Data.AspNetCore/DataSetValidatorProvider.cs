@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DevZest.Data.AspNetCore
 {
-    public class DataSetValidatorProvider : IModelValidatorProvider
+    public class DataSetValidatorProvider : IMetadataBasedModelValidatorProvider
     {
         internal sealed class DataSetValidator : IModelValidator
         {
@@ -75,6 +76,11 @@ namespace DevZest.Data.AspNetCore
                     });
                 }
             }
+        }
+
+        public bool HasValidators(Type modelType, IList<object> validatorMetadata)
+        {
+            return modelType.IsDataSet();
         }
     }
 }
