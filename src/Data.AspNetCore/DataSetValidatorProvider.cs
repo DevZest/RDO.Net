@@ -64,7 +64,7 @@ namespace DevZest.Data.AspNetCore
         {
             var modelMetadata = context.ModelMetadata;
             var modelType = modelMetadata.ModelType;
-            if (modelType.IsGenericType && modelType.GetGenericTypeDefinition() == typeof(DataSet<>))
+            if (modelType.IsDataSet())
             {
                 if (!context.Results.Any(x => x.Validator.GetType() == typeof(DataSetValidator)))
                 {

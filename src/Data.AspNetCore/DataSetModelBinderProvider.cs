@@ -13,7 +13,7 @@ namespace DevZest.Data.AspNetCore
                 throw new ArgumentNullException(nameof(context));
 
             var modelType = context.Metadata.ModelType;
-            if (modelType.IsGenericType && modelType.GetGenericTypeDefinition() == typeof(DataSet<>))
+            if (modelType.IsDataSet())
             {
                 var loggerFactory = context.Services.GetRequiredService<ILoggerFactory>();
                 return (IModelBinder)Activator.CreateInstance(

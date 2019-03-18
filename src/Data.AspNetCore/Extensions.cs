@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Linq;
 
 namespace DevZest.Data.AspNetCore
@@ -9,6 +10,11 @@ namespace DevZest.Data.AspNetCore
         {
             var validatorMetadata = modelMetadata.ValidatorMetadata;
             return validatorMetadata.OfType<ScalarAttribute>().Any();
+        }
+
+        public static bool IsDataSet(this Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(DataSet<>);
         }
     }
 }
