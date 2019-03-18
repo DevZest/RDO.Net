@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
 using DevZest.Data.Primitives;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using Xunit;
 
@@ -214,6 +217,82 @@ namespace DevZest.Data.AspNetCore
                 ModelName = paramName,
                 FieldName = paramName,
                 ValueProvider = new TestValueProvider(values),
+                ModelState = new ModelStateDictionary()
+            };
+
+            var binder = new DataSetModelBinder<Student>(NullLoggerFactory.Instance);
+
+            // Act
+            await binder.BindModelAsync(bindingContext);
+
+            // Assert
+            var result = (DataSet<Student>)bindingContext.Model;
+            var expectedJson =
+@"[
+   {
+      ""StudentId"" : 1,
+      ""Name"" : ""John"",
+      ""Courses"" : [
+         {
+            ""CourseId"" : 1,
+            ""Name"" : ""Math""
+         },
+         {
+            ""CourseId"" : 2,
+            ""Name"" : ""History""
+         }
+      ]
+   },
+   {
+      ""StudentId"" : 2,
+      ""Name"" : ""Tony"",
+      ""Courses"" : [
+         {
+            ""CourseId"" : 2,
+            ""Name"" : ""History""
+         },
+         {
+            ""CourseId"" : 2,
+            ""Name"" : ""Math""
+         }
+      ]
+   }
+]";
+            Assert.Equal(expectedJson, result.ToJsonString(true));
+        }
+
+        [Fact]
+        public async Task BindModelAsync_CollectionDataSetParam_ExplicitIndex()
+        {
+            // Arrange
+            var metadata = GetMetadataForParameter(typeof(DataSetModelBinderTest), nameof(ActionWithDataSetParameter));
+            var paramName = "parameter";
+
+            var formCollection = new FormCollection(
+                new Dictionary<string, StringValues>()
+                {
+                    { "parameter.index", new string[] { "0", "2" } },
+                    { "parameter[0].StudentId", "1" },
+                    { "parameter[0].Name", "John" },
+                    { "parameter[0].Courses[0].CourseId", "1" },
+                    { "parameter[0].Courses[0].Name", "Math" },
+                    { "parameter[0].Courses[1].CourseId", "2" },
+                    { "parameter[0].Courses[1].Name", "History" },
+                    { "parameter[2].StudentId", "2" },
+                    { "parameter[2].Name", "Tony" },
+                    { "parameter[2].Courses[0].CourseId", "2" },
+                    { "parameter[2].Courses[0].Name", "History" },
+                    { "parameter[2].Courses[1].CourseId", "2" },
+                    { "parameter[2].Courses[1].Name", "Math" },
+                });
+            var vp = new FormValueProvider(BindingSource.Form, formCollection, CultureInfo.CurrentCulture);
+            var bindingContext = new DefaultModelBindingContext
+            {
+                IsTopLevelObject = true,
+                ModelMetadata = metadata,
+                ModelName = paramName,
+                FieldName = paramName,
+                ValueProvider = vp,
                 ModelState = new ModelStateDictionary()
             };
 
