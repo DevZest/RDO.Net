@@ -51,7 +51,7 @@ namespace DevZest.Data.AspNetCore
 
             // Assert
             var validatorItem = Assert.Single(providerContext.Results);
-            Assert.IsType<DataSetValidatorProvider.DataSetValidator>(validatorItem.Validator);
+            Assert.IsType<DataSetValidator>(validatorItem.Validator);
         }
 
         [Fact]
