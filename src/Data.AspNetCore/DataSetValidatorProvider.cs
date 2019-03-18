@@ -7,7 +7,7 @@ namespace DevZest.Data.AspNetCore
 {
     public class DataSetValidatorProvider : IModelValidatorProvider
     {
-        private sealed class DataSetValidator : IModelValidator
+        internal sealed class DataSetValidator : IModelValidator
         {
             public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context)
             {
