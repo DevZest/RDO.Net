@@ -307,5 +307,30 @@ namespace DevZest.Data.AspNetCore
 ]";
             Assert.Equal(expectedJson, result.ToJsonString(true));
         }
+
+        [Fact]
+        public async Task BindModelAsync_ScalarDataSetParam_NoData()
+        {
+            // Arrange
+            var metadata = GetMetadataForParameter(typeof(DataSetModelBinderTest), nameof(ActionWithScalarDataSetParameter));
+            var values = new Dictionary<string, object>();
+            var bindingContext = new DefaultModelBindingContext
+            {
+                IsTopLevelObject = true,
+                ModelMetadata = metadata,
+                ModelName = string.Empty,
+                ValueProvider = new TestValueProvider(values),
+                ModelState = new ModelStateDictionary()
+            };
+
+            var binder = new DataSetModelBinder<Student>(NullLoggerFactory.Instance);
+
+            // Act
+            await binder.BindModelAsync(bindingContext);
+
+            // Assert
+            var result = (DataSet<Student>)bindingContext.Model;
+            Assert.Single(result);
+        }
     }
 }
