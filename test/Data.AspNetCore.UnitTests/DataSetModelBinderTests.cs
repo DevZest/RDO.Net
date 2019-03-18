@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using DevZest.Data.Primitives;
@@ -183,6 +184,128 @@ namespace DevZest.Data.AspNetCore
             Assert.NotNull(bindingContext.Model);
             Assert.IsAssignableFrom<DataSet<Student>>(bindingContext.Model);
             testableBinder.Verify();
+        }
+
+        [Fact]
+        public async Task BindModelAsync_CollectionDataSetParam()
+        {
+            // Arrange
+            var metadata = GetMetadataForParameter(typeof(DataSetModelBinderTest), nameof(ActionWithDataSetParameter));
+            var paramName = "parameter";
+            var values = new Dictionary<string, object>()
+            {
+                { "parameter[0].StudentId", "1" },
+                { "parameter[0].Name", "John" },
+                { "parameter[0].Courses[0].CourseId", "1" },
+                { "parameter[0].Courses[0].Name", "Math" },
+                { "parameter[0].Courses[1].CourseId", "2" },
+                { "parameter[0].Courses[1].Name", "History" },
+                { "parameter[1].StudentId", "2" },
+                { "parameter[1].Name", "Tony" },
+                { "parameter[1].Courses[0].CourseId", "2" },
+                { "parameter[1].Courses[0].Name", "History" },
+                { "parameter[1].Courses[1].CourseId", "2" },
+                { "parameter[1].Courses[1].Name", "Math" },
+            };
+            var bindingContext = new DefaultModelBindingContext
+            {
+                IsTopLevelObject = true,
+                ModelMetadata = metadata,
+                ModelName = paramName,
+                FieldName = paramName,
+                ValueProvider = new TestValueProvider(values),
+                ModelState = new ModelStateDictionary()
+            };
+
+            var binder = new DataSetModelBinder<Student>(NullLoggerFactory.Instance);
+
+            // Act
+            await binder.BindModelAsync(bindingContext);
+
+            // Assert
+            var result = (DataSet<Student>)bindingContext.Model;
+            var expectedJson =
+@"[
+   {
+      ""StudentId"" : 1,
+      ""Name"" : ""John"",
+      ""Courses"" : [
+         {
+            ""CourseId"" : 1,
+            ""Name"" : ""Math""
+         },
+         {
+            ""CourseId"" : 2,
+            ""Name"" : ""History""
+         }
+      ]
+   },
+   {
+      ""StudentId"" : 2,
+      ""Name"" : ""Tony"",
+      ""Courses"" : [
+         {
+            ""CourseId"" : 2,
+            ""Name"" : ""History""
+         },
+         {
+            ""CourseId"" : 2,
+            ""Name"" : ""Math""
+         }
+      ]
+   }
+]";
+            Assert.Equal(expectedJson, result.ToJsonString(true));
+        }
+
+        [Fact]
+        public async Task BindModelAsync_ScalarDataSetParam()
+        {
+            // Arrange
+            var metadata = GetMetadataForParameter(typeof(DataSetModelBinderTest), nameof(ActionWithScalarDataSetParameter));
+            var values = new Dictionary<string, object>()
+            {
+                { "StudentId", "1" },
+                { "Name", "John" },
+                { "Courses[0].CourseId", "1" },
+                { "Courses[0].Name", "Math" },
+                { "Courses[1].CourseId", "2" },
+                { "Courses[1].Name", "History" }
+            };
+            var bindingContext = new DefaultModelBindingContext
+            {
+                IsTopLevelObject = true,
+                ModelMetadata = metadata,
+                ModelName = string.Empty,
+                ValueProvider = new TestValueProvider(values),
+                ModelState = new ModelStateDictionary()
+            };
+
+            var binder = new DataSetModelBinder<Student>(NullLoggerFactory.Instance);
+
+            // Act
+            await binder.BindModelAsync(bindingContext);
+
+            // Assert
+            var result = (DataSet<Student>)bindingContext.Model;
+            var expectedJson =
+@"[
+   {
+      ""StudentId"" : 1,
+      ""Name"" : ""John"",
+      ""Courses"" : [
+         {
+            ""CourseId"" : 1,
+            ""Name"" : ""Math""
+         },
+         {
+            ""CourseId"" : 2,
+            ""Name"" : ""History""
+         }
+      ]
+   }
+]";
+            Assert.Equal(expectedJson, result.ToJsonString(true));
         }
     }
 }
