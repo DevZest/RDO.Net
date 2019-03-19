@@ -11,6 +11,22 @@ namespace DevZest.Data.AspNetCore
         private static readonly ResourceManager _resourceManager
             = new ResourceManager("DevZest.Data.AspNetCore.DiagnosticMessages", typeof(DiagnosticMessages).GetTypeInfo().Assembly);
 
+        /// <summary>
+        /// DataRow is invalid for Column.
+        /// </summary>
+        public static string InvalidDataRowForColumn
+        {
+            get { return GetString("InvalidDataRowForColumn"); }
+        }
+
+        /// <summary>
+        /// DataRow is invalid for DataSet.
+        /// </summary>
+        public static string InvalidDataRowForDataSet
+        {
+            get { return GetString("InvalidDataRowForDataSet"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
