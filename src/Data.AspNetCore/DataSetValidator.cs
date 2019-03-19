@@ -9,19 +9,18 @@ namespace DevZest.Data.AspNetCore
     {
         public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context)
         {
-            var prefix = context.ModelMetadata.Name;
             var dataSet = (DataSet)context.Model;
             var isScalar = context.ModelMetadata.IsScalar();
 
             if (isScalar)
-                return ValidateScalar(prefix, dataSet);
+                return ValidateScalar(dataSet);
             else
-                return ValidateCollection(prefix, dataSet);
+                return ValidateCollection(string.Empty, dataSet);
         }
 
-        private static IEnumerable<ModelValidationResult> ValidateScalar(string prefix, DataSet dataSet)
+        private static IEnumerable<ModelValidationResult> ValidateScalar(DataSet dataSet)
         {
-            return dataSet.Count > 0 ? Validate(prefix, dataSet[0]) : Enumerable.Empty<ModelValidationResult>();
+            return dataSet.Count > 0 ? Validate(string.Empty, dataSet[0]) : Enumerable.Empty<ModelValidationResult>();
         }
 
         private static IEnumerable<ModelValidationResult> ValidateCollection(string prefix, DataSet dataSet)
