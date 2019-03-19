@@ -37,8 +37,12 @@ namespace DevZest.Data.AspNetCore
         private static IEnumerable<ModelValidationResult> Validate(string prefix, DataRow dataRow)
         {
             var errors = dataRow.Validate();
-            foreach (var error in errors)
-                yield return ToModelValidationResult(prefix, error);
+            for (int i = 0; i < errors.Count; i++)
+            {
+                var error = errors[i];
+                foreach (var result in ToModelValidationResults(prefix, error))
+                    yield return result;
+            }
 
             IReadOnlyList<DataSet> childDataSets = dataRow.ChildDataSets;
             foreach (var childDataSet in childDataSets)
@@ -49,12 +53,22 @@ namespace DevZest.Data.AspNetCore
             }
         }
 
-        private static ModelValidationResult ToModelValidationResult(string prefix, DataValidationError error)
+        private static IEnumerable<ModelValidationResult> ToModelValidationResults(string prefix, DataValidationError error)
         {
             var columns = error.Source;
-            var columnName = columns.Count > 0 ? string.Empty : columns.Single().Name;
-            var memberName = ModelNames.CreatePropertyModelName(prefix, columnName);
-            return new ModelValidationResult(memberName, error.Message);
+
+            if (columns == null || columns.Count == 0)
+            {
+                yield return new ModelValidationResult(prefix, error.Message);
+                yield break;
+            }
+
+            foreach (var column in columns)
+            {
+                var columnName = column.Name;
+                var memberName = ModelNames.CreatePropertyModelName(prefix, columnName);
+                yield return new ModelValidationResult(memberName, error.Message);
+            }
         }
     }
 }
