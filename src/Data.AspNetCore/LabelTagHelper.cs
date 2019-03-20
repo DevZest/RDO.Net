@@ -24,9 +24,6 @@ namespace DevZest.Data.AspNetCore
         }
 
         /// <inheritdoc />
-        public override int Order => -2000;
-
-        /// <inheritdoc />
         /// <remarks>Does nothing if <see cref="ForDataSet"/> is <c>null</c>.</remarks>
         protected override async Task ProcessOverrideAsync(TagHelperContext context, TagHelperOutput output)
         {

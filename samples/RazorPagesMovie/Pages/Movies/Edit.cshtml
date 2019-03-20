@@ -1,8 +1,9 @@
-﻿@*@page "{id:int}"
+﻿@page "{id:int}"
 @model RazorPagesMovie.Pages.Movies.EditModel
 
 @{
     ViewData["Title"] = "Edit";
+    var _ = Model.Movie._;
 }
 
 <h1>Edit</h1>
@@ -13,26 +14,26 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Movie.ID" />
+            <input type="hidden" dataset-for="Movie" dataset-column="@_.ID" />
             <div class="form-group">
-                <label asp-for="Movie.Title" class="control-label"></label>
-                <input asp-for="Movie.Title" class="form-control" />
-                <span asp-validation-for="Movie.Title" class="text-danger"></span>
+                <label dataset-for="Movie" dataset-column="@_.Title" class="control-label"></label>
+                <input dataset-for="Movie" dataset-column="@_.Title" class="form-control" />
+                @*<span asp-validation-for="Movie.Title" class="text-danger"></span>*@
             </div>
             <div class="form-group">
-                <label asp-for="Movie.ReleaseDate" class="control-label"></label>
-                <input asp-for="Movie.ReleaseDate" class="form-control" />
-                <span asp-validation-for="Movie.ReleaseDate" class="text-danger"></span>
+                <label dataset-for="Movie" dataset-column="@_.ReleaseDate" class="control-label"></label>
+                <input dataset-for="Movie" dataset-column="@_.ReleaseDate" class="form-control" />
+                @*<span asp-validation-for="Movie.ReleaseDate" class="text-danger"></span>*@
             </div>
             <div class="form-group">
-                <label asp-for="Movie.Genre" class="control-label"></label>
-                <input asp-for="Movie.Genre" class="form-control" />
-                <span asp-validation-for="Movie.Genre" class="text-danger"></span>
+                <label dataset-for="Movie" dataset-column="@_.Genre" class="control-label"></label>
+                <input dataset-for="Movie" dataset-column="@_.Genre" class="form-control" />
+                @*<span asp-validation-for="Movie.Genre" class="text-danger"></span>*@
             </div>
             <div class="form-group">
-                <label asp-for="Movie.Price" class="control-label"></label>
-                <input asp-for="Movie.Price" class="form-control" />
-                <span asp-validation-for="Movie.Price" class="text-danger"></span>
+                <label dataset-for="Movie" dataset-column="@_.Price" class="control-label"></label>
+                <input dataset-for="Movie" dataset-column="@_.Price" class="form-control" />
+                @*<span asp-validation-for="Movie.Price" class="text-danger"></span>*@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -47,4 +48,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@
+}
