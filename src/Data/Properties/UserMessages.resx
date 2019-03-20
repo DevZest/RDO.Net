@@ -127,7 +127,7 @@
     <value>The field {0} must have a maxium length of {1}.</value>
   </data>
   <data name="MaxLengthAttribute_InvalidMaxLength" xml:space="preserve">
-    <value>MaxLengthAttribute must have a length value greater than zero. Use MaxLengthAttribute() without parameter to indicate the binary can have max allowable length</value>
+    <value>MaxLengthAttribute must have a length value greater than zero. Remove this MaxLengthAttribute to indicate the binary can have max allowable length.</value>
   </data>
   <data name="MockDb_ReportProgress" xml:space="preserve">
     <value>Creating table {tableName}...</value>

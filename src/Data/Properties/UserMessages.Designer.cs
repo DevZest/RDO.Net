@@ -36,7 +36,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// MaxLengthAttribute must have a length value greater than zero. Use MaxLengthAttribute() without parameter to indicate the binary can have max allowable length
+        /// MaxLengthAttribute must have a length value greater than zero. Remove this MaxLengthAttribute to indicate the binary can have max allowable length.
         /// </summary>
         public static string MaxLengthAttribute_InvalidMaxLength
         {

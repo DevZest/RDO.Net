@@ -8,9 +8,7 @@ namespace DevZest.Data.Annotations
     [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<Binary>) })]
     public sealed class MaxLengthAttribute : ValidationColumnAttribute
     {
-        private const int MaxAllowableLength = -1;
-
-        public int Length { get; private set; }
+        public int Length { get; }
 
         protected override string DefaultMessageString => UserMessages.MaxLengthAttribute;
 
@@ -19,11 +17,6 @@ namespace DevZest.Data.Annotations
             if (length <= 0)
                 throw new ArgumentException(UserMessages.MaxLengthAttribute_InvalidMaxLength, nameof(length));
             Length = length;
-        }
-
-        public MaxLengthAttribute()
-        {
-            Length = MaxAllowableLength;
         }
 
         protected override bool IsValid(Column column, DataRow dataRow)
@@ -36,7 +29,7 @@ namespace DevZest.Data.Annotations
 
         private bool IsValid(Binary value)
         {
-            return value == null || Length == MaxAllowableLength || value.Length <= Length;
+            return value == null || value.Length <= Length;
         }
 
         protected override string FormatMessage(string columnDisplayName)
