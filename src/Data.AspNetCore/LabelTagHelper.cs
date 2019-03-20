@@ -28,9 +28,9 @@ namespace DevZest.Data.AspNetCore
 
         /// <inheritdoc />
         /// <remarks>Does nothing if <see cref="ForDataSet"/> is <c>null</c>.</remarks>
-        protected override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output, string fullHtmlFieldName, Column column)
+        protected override async Task ProcessOverrideAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var tagBuilder = Generator.GenerateLabel(ViewContext, fullHtmlFieldName, column, labelText: null, htmlAttributes: null);
+            var tagBuilder = Generator.GenerateLabel(ViewContext, FullHtmlFieldName, Column, labelText: null, htmlAttributes: null);
 
             if (tagBuilder != null)
             {

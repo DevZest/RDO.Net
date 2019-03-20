@@ -12,6 +12,30 @@ namespace DevZest.Data.AspNetCore
             = new ResourceManager("DevZest.Data.AspNetCore.DiagnosticMessages", typeof(DiagnosticMessages).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// Unexpected '{fieldName}' expression result type '{columnDataType}' for {tag}. '{fieldName}' must be of type '{expectedType}' or '{expectedTypeCanBeParsed}' that can be parsed as a '{expectedType}' if '{tagAttribute}' is '{tagAttributeValue}'.
+        /// </summary>
+        public static string FormatInputTagHelper_InvalidExpressionResult(object fieldName, object columnDataType, object tag, object expectedType, object expectedTypeCanBeParsed, object tagAttribute, object tagAttributeValue)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("FormatInputTagHelper_InvalidExpressionResult", "fieldName", "columnDataType", "tag", "expectedType", "expectedTypeCanBeParsed", "tagAttribute", "tagAttributeValue"), fieldName, columnDataType, tag, expectedType, expectedTypeCanBeParsed, tagAttribute, tagAttributeValue);
+        }
+
+        /// <summary>
+        /// Unexpected expression result value '{value}' for {fieldName}. '{value}' cannot be parsed as a '{type}'.
+        /// </summary>
+        public static string FormatInputTagHelper_InvalidStringResult(object value, object fieldName, object type)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("FormatInputTagHelper_InvalidStringResult", "value", "fieldName", "type"), value, fieldName, type);
+        }
+
+        /// <summary>
+        /// '{attribute}' must not be null for {tag} if '{ifAttribute}' is '{ifAttributeValue}'.
+        /// </summary>
+        public static string FormatInputTagHelper_ValueRequired(object attribute, object tag, object ifAttribute, object ifAttributeValue)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("FormatInputTagHelper_ValueRequired", "attribute", "tag", "ifAttribute", "ifAttributeValue"), attribute, tag, ifAttribute, ifAttributeValue);
+        }
+
+        /// <summary>
         /// DataRow is invalid for Column.
         /// </summary>
         public static string InvalidDataRowForColumn

@@ -34,11 +34,35 @@ namespace DevZest.Data.AspNetCore.Primitives
         [HtmlAttributeName(DataSetForAttributeName)]
         public ModelExpression DataSetFor { get; set; }
 
+
         [HtmlAttributeName(ColumnAttributeName)]
         public Column Column { get; set; }
 
+
+        private DataRow _dataRow;
         [HtmlAttributeName(DataRowAttributeName)]
-        public DataRow DataRow { get; set; }
+        public DataRow DataRow
+        {
+            get { return _dataRow ?? (IsScalar && DataSet.Count > 0 ? DataSet[0] : null); }
+            set { _dataRow = value; }
+        }
+
+        protected DataSet DataSet
+        {
+            get { return DataSetFor.Model as DataSet; }
+        }
+
+        protected bool IsScalar
+        {
+            get { return DataSetFor.IsScalar(); }
+        }
+
+        protected object DataValue
+        {
+            get { return DataRow == null ? null : Column.GetValue(DataRow); }
+        }
+
+        protected string FullHtmlFieldName { get; private set; }
 
         public sealed override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
@@ -48,77 +72,11 @@ namespace DevZest.Data.AspNetCore.Primitives
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
 
-            if (DataSetFor == null)
-                throw new ArgumentNullException(nameof(DataSetFor));
+            FullHtmlFieldName = ViewContext.GetFullHtmlFieldName(DataSetFor, Column, DataRow);
 
-            var dataSet = DataSetFor.Model as DataSet;
-            var isScalar = DataSetFor.Metadata.IsScalar();
-
-            var fullHtmlFieldName = GetFullHtmlFieldName(ViewContext, DataSetFor.Name, dataSet, isScalar, Column, DataRow);
-
-            return ProcessAsync(context, output, fullHtmlFieldName, Column);
+            return ProcessOverrideAsync(context, output);
         }
 
-        private static string GetFullHtmlFieldName(ViewContext viewContext, string expression, DataSet dataSet, bool isScalar, Column column, DataRow dataRow)
-        {
-            if (dataSet == null)
-                throw new ArgumentNullException(nameof(dataSet));
-
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-
-            VerifyDataRow(dataRow, column, dataSet, isScalar);
-
-            var memberName = ResolveMemberName(dataSet, isScalar, column, dataRow);
-            var fullDataSetName = NameAndIdProvider.GetFullHtmlFieldName(viewContext, expression);
-            return ModelNames.CreatePropertyModelName(fullDataSetName, memberName);
-        }
-
-        private static void VerifyDataRow(DataRow dataRow, Column column, DataSet dataSet, bool isScalar)
-        {
-            if (dataRow == null)
-            {
-                if (!isScalar)
-                    throw new ArgumentNullException(nameof(dataRow));
-
-                return;
-            }
-
-            if (dataRow.Model != column.GetParent())
-                throw new ArgumentException(DiagnosticMessages.InvalidDataRowForColumn, nameof(dataRow));
-
-            if (!IsValidDataRow(dataRow, dataSet))
-                throw new ArgumentException(DiagnosticMessages.InvalidDataRowForDataSet, nameof(dataRow));
-        }
-
-        private static bool IsValidDataRow(DataRow dataRow, DataSet dataSet)
-        {
-            if (dataRow.Model == dataSet.Model)
-                return true;
-
-            var parentDataRow = dataRow.ParentDataRow;
-            return parentDataRow == null ? false : IsValidDataRow(parentDataRow, dataSet);
-        }
-
-        private static string ResolveMemberName(DataSet dataSet, bool isScalar, Column column, DataRow dataRow)
-        {
-            if (column.GetParent() == dataSet.Model)
-                return isScalar ? column.Name : ModelNames.CreatePropertyModelName(ModelNames.CreateIndexModelName(string.Empty, dataRow.Index), column.Name);
-
-            Debug.Assert(dataRow != null);
-            return ResolveMemberName(dataSet, isScalar, dataRow, column.Name);
-        }
-
-        private static string ResolveMemberName(DataSet dataSet, bool isScalar, DataRow dataRow, string memberName)
-        {
-            if (dataRow.Model == dataSet.Model)
-                return isScalar ? memberName : ModelNames.CreatePropertyModelName(ModelNames.CreateIndexModelName(string.Empty, dataRow.Index), memberName);
-
-            memberName = ModelNames.CreatePropertyModelName(ModelNames.CreateIndexModelName(dataRow.Model.GetName(), dataRow.Index), memberName);
-            Debug.Assert(dataRow.ParentDataRow != null);
-            return ResolveMemberName(dataSet, isScalar, dataRow.ParentDataRow, memberName);
-        }
-
-        protected abstract Task ProcessAsync(TagHelperContext context, TagHelperOutput output, string fullHtmlFieldName, Column column);
+        protected abstract Task ProcessOverrideAsync(TagHelperContext context, TagHelperOutput output);
     }
 }
