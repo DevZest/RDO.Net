@@ -37,7 +37,10 @@ namespace DevZest.Data.Annotations
 
         protected override bool IsValid(Column column, DataRow dataRow)
         {
-            return IsValid(((Column<string>)column)[dataRow]);
+            if (column is Column<string> stringColumn)
+                return IsValid(stringColumn[dataRow]);
+
+            return true;
         }
 
         private bool IsValid(string value)

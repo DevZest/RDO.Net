@@ -28,6 +28,22 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The field {0} must have a maxium length of {1}.
+        /// </summary>
+        public static string MaxLengthAttribute
+        {
+            get { return GetString("MaxLengthAttribute"); }
+        }
+
+        /// <summary>
+        /// MaxLengthAttribute must have a length value greater than zero. Use MaxLengthAttribute() without parameter to indicate the binary can have max allowable length
+        /// </summary>
+        public static string MaxLengthAttribute_InvalidMaxLength
+        {
+            get { return GetString("MaxLengthAttribute_InvalidMaxLength"); }
+        }
+
+        /// <summary>
         /// Creating table {tableName}...
         /// </summary>
         public static string MockDb_ReportProgress(object tableName)
