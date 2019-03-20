@@ -48,6 +48,7 @@ namespace RazorPagesMovie.Models
         public _String Title { get; private set; }
 
         [Display(Name = "Release Date")]
+        [SqlDate]
         public _DateTime ReleaseDate { get; private set; }
 
         [RegularExpression(@"^[A-Z]+[a-zA-Z""'\s-]*$")]
