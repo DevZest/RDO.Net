@@ -58,6 +58,7 @@ namespace RazorPagesMovie.Models
         public _String Genre { get; private set; }
 
         [SqlMoney]
+        [Required]
         public _Decimal Price { get; private set; }
     }
 }

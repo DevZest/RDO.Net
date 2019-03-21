@@ -1,42 +1,39 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Mvc.RazorPages;
-//using Microsoft.AspNetCore.Mvc.Rendering;
-//using RazorPagesMovie.Models;
+﻿using System.Threading.Tasks;
+using DevZest.Data;
+using DevZest.Data.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using RazorPagesMovie.Models;
 
-//namespace RazorPagesMovie.Pages.Movies
-//{
-//    public class CreateModel : PageModel
-//    {
-//        private readonly RazorPagesMovie.Models.RazorPagesMovieContext _context;
+namespace RazorPagesMovie.Pages.Movies
+{
+    public class CreateModel : PageModel
+    {
+        private readonly Db _db;
 
-//        public CreateModel(RazorPagesMovie.Models.RazorPagesMovieContext context)
-//        {
-//            _context = context;
-//        }
+        public CreateModel(Db db)
+        {
+            _db = db;
+            Movie = DataSet<Movie>.Create();
+        }
 
-//        public IActionResult OnGet()
-//        {
-//            return Page();
-//        }
+        public IActionResult OnGet()
+        {
+            return Page();
+        }
 
-//        [BindProperty]
-//        public Movie Movie { get; set; }
+        [BindProperty]
+        [Scalar]
+        public DataSet<Movie> Movie { get; set; }
 
-//        public async Task<IActionResult> OnPostAsync()
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                return Page();
-//            }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+                return Page();
 
-//            _context.Movie.Add(Movie);
-//            await _context.SaveChangesAsync();
+            await _db.Movie.InsertAsync(Movie);
 
-//            return RedirectToPage("./Index");
-//        }
-//    }
-//}
+            return RedirectToPage("./Index");
+        }
+    }
+}
