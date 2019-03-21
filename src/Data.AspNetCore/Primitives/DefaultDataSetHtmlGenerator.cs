@@ -285,9 +285,11 @@ namespace DevZest.Data.AspNetCore.Primitives
                     // the [SqlDate] attribute of Movie.ReleaseDate property, then Movies/Edit page
                     // will not display ReleaseDate correctly.
                     // Not sure the side effect of bypassing GetModelStateValue though.
-                    //var attributeValue = (string)GetModelStateValue(viewContext, fullHtmlFieldName, typeof(string));
-                    //if (attributeValue == null)
-                    //    attributeValue = valueParameter;
+                    /*
+                    var attributeValue = (string)GetModelStateValue(viewContext, fullHtmlFieldName, typeof(string));
+                    if (attributeValue == null)
+                        attributeValue = valueParameter;
+                    */
                     var attributeValue = valueParameter;
 
                     var addValue = true;
