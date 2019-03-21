@@ -32,10 +32,7 @@ namespace RazorPagesMovie
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc(options =>
-            {
-                options.UseDataSet();
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().AddDataSetMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IDataSetHtmlGenerator, DefaultDataSetHtmlGenerator>();
             services.AddScoped(serviceProvider => new Db(_connectionString));

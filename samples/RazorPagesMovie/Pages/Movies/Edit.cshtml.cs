@@ -36,8 +36,8 @@ namespace RazorPagesMovie.Pages.Movies
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //if (!ModelState.IsValid)
-            //    return Page();
+            if (!ModelState.IsValid)
+                return Page();
 
             await _db.Movie.UpdateAsync(Movie);
 
