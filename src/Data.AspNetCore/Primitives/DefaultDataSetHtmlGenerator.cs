@@ -105,8 +105,8 @@ namespace DevZest.Data.AspNetCore.Primitives
                 var attribute = validator.Attribute;
                 if (attribute is StringLengthAttribute stringLengthAttribute && (!maxLengthValue.HasValue || maxLengthValue.Value > stringLengthAttribute.MaximumLength))
                     maxLengthValue = stringLengthAttribute.MaximumLength;
-                //else if (attribute is MaxLengthAttribute maxLengthAttribute && (!maxLengthValue.HasValue || maxLengthValue.Value > maxLengthAttribute.Length))
-                //    maxLengthValue = maxLengthAttribute.Length;
+                else if (attribute is MaxLengthAttribute maxLengthAttribute && (!maxLengthValue.HasValue || maxLengthValue.Value > maxLengthAttribute.Length))
+                    maxLengthValue = maxLengthAttribute.Length;
             }
 
             if (maxLengthValue.HasValue)
