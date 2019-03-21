@@ -9,6 +9,10 @@ namespace DevZest.Data.AspNetCore
     {
         public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context)
         {
+            var modelState = context.ActionContext.ModelState;
+            var modelName = context.ModelMetadata.Name ?? string.Empty;
+            ResetValidationState(modelState, modelName);
+
             var dataSet = (DataSet)context.Model;
             var isScalar = context.ModelMetadata.IsScalar();
 
@@ -16,6 +20,16 @@ namespace DevZest.Data.AspNetCore
                 return ValidateScalar(dataSet);
             else
                 return ValidateCollection(string.Empty, dataSet);
+        }
+
+        private static void ResetValidationState(ModelStateDictionary modelState, string key)
+        {
+            var entries = modelState.FindKeysWithPrefix(key);
+            foreach (var item in entries)
+            {
+                if (item.Value.ValidationState == ModelValidationState.Unvalidated)
+                    item.Value.ValidationState = ModelValidationState.Valid;
+            }
         }
 
         private static IEnumerable<ModelValidationResult> ValidateScalar(DataSet dataSet)
