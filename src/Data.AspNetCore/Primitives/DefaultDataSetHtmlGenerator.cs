@@ -280,9 +280,15 @@ namespace DevZest.Data.AspNetCore.Primitives
 
                 case InputType.Text:
                 default:
-                    var attributeValue = (string)GetModelStateValue(viewContext, fullHtmlFieldName, typeof(string));
-                    if (attributeValue == null)
-                        attributeValue = valueParameter;
+                    // The following lines causes problem when valueParameter is a formatted datetime
+                    // It can be different from the value get from ModelState. To reproduce, remove
+                    // the [SqlDate] attribute of Movie.ReleaseDate property, then Movies/Edit page
+                    // will not display ReleaseDate correctly.
+                    // Not sure the side effect of bypassing GetModelStateValue though.
+                    //var attributeValue = (string)GetModelStateValue(viewContext, fullHtmlFieldName, typeof(string));
+                    //if (attributeValue == null)
+                    //    attributeValue = valueParameter;
+                    var attributeValue = valueParameter;
 
                     var addValue = true;
                     object typeAttributeValue;
