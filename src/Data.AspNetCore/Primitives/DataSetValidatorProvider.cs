@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DevZest.Data.AspNetCore
+namespace DevZest.Data.AspNetCore.Primitives
 {
     public class DataSetValidatorProvider : IMetadataBasedModelValidatorProvider
     {

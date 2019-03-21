@@ -13,7 +13,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using Xunit;
 
-namespace DevZest.Data.AspNetCore
+namespace DevZest.Data.AspNetCore.Primitives
 {
     public class DataSetModelBinderTest
     {

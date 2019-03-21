@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DevZest.Data.AspNetCore
+namespace DevZest.Data.AspNetCore.Primitives
 {
     internal sealed class DataSetValidator : IModelValidator
     {

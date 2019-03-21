@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.Linq;
 using Xunit;
 
-namespace DevZest.Data.AspNetCore
+namespace DevZest.Data.AspNetCore.Primitives
 {
     public class DataSetValidatorTests
     {

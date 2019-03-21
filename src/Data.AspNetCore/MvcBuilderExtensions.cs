@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DevZest.Data.AspNetCore.Primitives;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DevZest.Data.AspNetCore
 {

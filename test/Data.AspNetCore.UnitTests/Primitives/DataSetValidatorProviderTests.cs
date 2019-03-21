@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace DevZest.Data.AspNetCore
+namespace DevZest.Data.AspNetCore.Primitives
 {
     public class DataSetValidatorProviderTests
     {

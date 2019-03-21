@@ -12,6 +12,14 @@ namespace DevZest.Data.AspNetCore
             = new ResourceManager("DevZest.Data.AspNetCore.DiagnosticMessages", typeof(DiagnosticMessages).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// The name of an HTML field cannot be null or empty.
+        /// </summary>
+        public static string DataSetHtmlGenerator_FieldNameCannotBeNullOrEmpty
+        {
+            get { return GetString("DataSetHtmlGenerator_FieldNameCannotBeNullOrEmpty"); }
+        }
+
+        /// <summary>
         /// Unexpected '{fieldName}' expression result type '{columnDataType}' for {tag}. '{fieldName}' must be of type '{expectedType}' or '{expectedTypeCanBeParsed}' that can be parsed as a '{expectedType}' if '{tagAttribute}' is '{tagAttributeValue}'.
         /// </summary>
         public static string FormatInputTagHelper_InvalidExpressionResult(object fieldName, object columnDataType, object tag, object expectedType, object expectedTypeCanBeParsed, object tagAttribute, object tagAttributeValue)

@@ -13,8 +13,8 @@ namespace DevZest.Data.AspNetCore.Primitives
     {
         protected const string DataSetAttributes = DataSetForAttributeName + "," + ColumnAttributeName;
 
-        private const string DataSetForAttributeName = "dataset-for";
-        private const string ColumnAttributeName = "dataset-column";
+        protected const string DataSetForAttributeName = "dataset-for";
+        protected const string ColumnAttributeName = "dataset-column";
         private const string DataRowAttributeName = "dataset-row";
 
         protected DataSetTagHelperBase(IDataSetHtmlGenerator generator)
@@ -32,7 +32,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         /// An <see cref="DataSet"/> expression to be evaluated against the current model.
         /// </summary>
         [HtmlAttributeName(DataSetForAttributeName)]
-        public ModelExpression DataSetFor { get; set; }
+        public virtual ModelExpression DataSetFor { get; set; }
 
 
         [HtmlAttributeName(ColumnAttributeName)]

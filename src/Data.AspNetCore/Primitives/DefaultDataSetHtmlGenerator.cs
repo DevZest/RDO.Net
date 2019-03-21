@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Annotations;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Internal;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace DevZest.Data.AspNetCore.Primitives
@@ -140,6 +142,25 @@ namespace DevZest.Data.AspNetCore.Primitives
                 return ModelBindingHelper.ConvertTo(entry.RawValue, destinationType, culture: null);
 
             return null;
+        }
+
+        private static bool IsFullNameValid(string fullName, IDictionary<string, object> htmlAttributeDictionary, string fallbackAttributeName)
+        {
+            if (string.IsNullOrEmpty(fullName))
+            {
+                // fullName==null is normally an error because name="" is not valid in HTML 5.
+                if (htmlAttributeDictionary == null)
+                    return false;
+
+                // Check if user has provided an explicit name attribute.
+                // Generalized a bit because other attributes e.g. data-valmsg-for refer to element names.
+                htmlAttributeDictionary.TryGetValue(fallbackAttributeName, out var attributeObject);
+                var attributeString = Convert.ToString(attributeObject, CultureInfo.InvariantCulture);
+                if (string.IsNullOrEmpty(attributeString))
+                    return false;
+            }
+
+            return true;
         }
 
         /// <inheritdoc />
@@ -376,6 +397,63 @@ namespace DevZest.Data.AspNetCore.Primitives
                 isExplicitValue: true,
                 format: null,
                 htmlAttributes: htmlAttributeDictionary);
+        }
+
+        /// <inheritdoc />
+        public virtual TagBuilder GenerateValidationMessage(ViewContext viewContext, string fullHtmlFieldName, Column column, string message, string tag, object htmlAttributes)
+        {
+            if (viewContext == null)
+                throw new ArgumentNullException(nameof(viewContext));
+
+            var htmlAttributeDictionary = GetHtmlAttributeDictionaryOrNull(htmlAttributes);
+            if (!IsFullNameValid(fullHtmlFieldName, htmlAttributeDictionary, fallbackAttributeName: "data-valmsg-for"))
+                throw new ArgumentException(DiagnosticMessages.DataSetHtmlGenerator_FieldNameCannotBeNullOrEmpty, nameof(fullHtmlFieldName));
+
+            var formContext = viewContext.ClientValidationEnabled ? viewContext.FormContext : null;
+            if (!viewContext.ViewData.ModelState.ContainsKey(fullHtmlFieldName) && formContext == null)
+                return null;
+
+            var tryGetModelStateResult = viewContext.ViewData.ModelState.TryGetValue(fullHtmlFieldName, out var entry);
+            var modelErrors = tryGetModelStateResult ? entry.Errors : null;
+
+            ModelError modelError = null;
+            if (modelErrors != null && modelErrors.Count != 0)
+                modelError = modelErrors.FirstOrDefault(m => !string.IsNullOrEmpty(m.ErrorMessage)) ?? modelErrors[0];
+
+            if (modelError == null && formContext == null)
+                return null;
+
+            // Even if there are no model errors, we generate the span and add the validation message
+            // if formContext is not null.
+            if (string.IsNullOrEmpty(tag))
+                tag = viewContext.ValidationMessageElement;
+
+            var tagBuilder = new TagBuilder(tag);
+            tagBuilder.MergeAttributes(htmlAttributeDictionary);
+
+            // Only the style of the span is changed according to the errors if message is null or empty.
+            // Otherwise the content and style is handled by the client-side validation.
+            var className = (modelError != null) ?
+                HtmlHelper.ValidationMessageCssClassName :
+                HtmlHelper.ValidationMessageValidCssClassName;
+            tagBuilder.AddCssClass(className);
+
+            if (!string.IsNullOrEmpty(message))
+                tagBuilder.InnerHtml.SetContent(message);
+            else if (modelError != null)
+                tagBuilder.InnerHtml.SetContent(modelError.ErrorMessage);
+
+            if (formContext != null)
+            {
+                if (!string.IsNullOrEmpty(fullHtmlFieldName))
+                    tagBuilder.MergeAttribute("data-valmsg-for", fullHtmlFieldName);
+
+                var replaceValidationMessageContents = string.IsNullOrEmpty(message);
+                tagBuilder.MergeAttribute("data-valmsg-replace",
+                    replaceValidationMessageContents.ToString().ToLowerInvariant());
+            }
+
+            return tagBuilder;
         }
     }
 }

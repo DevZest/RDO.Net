@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DataSetHtmlGenerator_FieldNameCannotBeNullOrEmpty" xml:space="preserve">
+    <value>The name of an HTML field cannot be null or empty.</value>
+  </data>
   <data name="FormatInputTagHelper_InvalidExpressionResult" xml:space="preserve">
     <value>Unexpected '{fieldName}' expression result type '{columnDataType}' for {tag}. '{fieldName}' must be of type '{expectedType}' or '{expectedTypeCanBeParsed}' that can be parsed as a '{expectedType}' if '{tagAttribute}' is '{tagAttributeValue}'.</value>
   </data>
