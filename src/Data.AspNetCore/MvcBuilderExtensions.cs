@@ -22,7 +22,8 @@ namespace DevZest.Data.AspNetCore
                     new MaxLengthClientValidator(),
                     new NumericClientValidator(options.ModelBindingMessageProvider),
                     new RegularExpressionClientValidator(),
-                    new RequiredClientValidator());
+                    new RequiredClientValidator(),
+                    new StringLengthClientValidator());
 
                 expr(config);
             });
