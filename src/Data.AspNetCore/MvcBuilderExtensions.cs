@@ -21,6 +21,7 @@ namespace DevZest.Data.AspNetCore
                 AddClientValidators(config,
                     new MaxLengthClientValidator(),
                     new NumericClientValidator(options.ModelBindingMessageProvider),
+                    new RegularExpressionClientValidator(),
                     new RequiredClientValidator());
 
                 expr(config);
