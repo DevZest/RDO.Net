@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevZest.Data.AspNetCore.ClientValidation
 {
-    public class MaxLengthClientValidator : DataSetClientValidator<MaxLengthAttribute>
+    public class MaxLengthClientValidator : DataSetClientValidatorBase<MaxLengthAttribute>
     {
         protected override void AddValidation(MaxLengthAttribute validatorAttribute, ActionContext actionContext, Column column, IDictionary<string, string> attributes)
         {

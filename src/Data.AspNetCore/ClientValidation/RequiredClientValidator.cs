@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.AspNetCore.ClientValidation
 {
-    public class RequiredClientValidator : DataSetClientValidator<RequiredAttribute>
+    public class RequiredClientValidator : DataSetClientValidatorBase<RequiredAttribute>
     {
         protected override void AddValidation(RequiredAttribute validatorAttribute, ActionContext actionContext, Column column, IDictionary<string, string> attributes)
         {

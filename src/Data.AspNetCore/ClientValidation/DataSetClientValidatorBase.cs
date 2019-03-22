@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using DevZest.Data.Primitives;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevZest.Data.AspNetCore.Primitives
+namespace DevZest.Data.AspNetCore.ClientValidation
 {
-    public abstract class DataSetClientValidator<T> : IDataSetClientValidator
+    public abstract class DataSetClientValidatorBase<T> : IDataSetClientValidator
         where T : Attribute
     {
-        public void AddValidation(IValidator validator, ActionContext actionContext, Column column, IDictionary<string, string> attributes)
+        public void AddValidation(ActionContext actionContext, Column column, IDictionary<string, string> attributes)
+        {
+            var validators = column.GetParent().Validators;
+            for (int i = 0; i < validators.Count; i++)
+                AddValidation(validators[i], actionContext, column, attributes);
+        }
+
+        private void AddValidation(IValidator validator, ActionContext actionContext, Column column, IDictionary<string, string> attributes)
         {
             if (validator.Attribute is T validatorAttribute && Check(validatorAttribute) && Check(validator.SourceColumns, column))
                 AddValidation(validatorAttribute, actionContext, column, attributes);
