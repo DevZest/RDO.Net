@@ -59,6 +59,12 @@ namespace DevZest.Data.Annotations.Primitives
             }
         }
 
+        public string FormatMessage(Column column)
+        {
+            column.VerifyNotNull(nameof(column));
+            return FormatMessage(column.DisplayName);
+        }
+
         protected virtual string FormatMessage(string columnDisplayName)
         {
             return string.Format(CultureInfo.CurrentCulture, MessageString, columnDisplayName);
