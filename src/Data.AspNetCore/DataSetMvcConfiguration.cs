@@ -10,6 +10,7 @@ namespace DevZest.Data.AspNetCore
         {
             DataSetClientValidators = new List<IDataSetClientValidator>();
 
+            DataSetClientValidators.Add(new MaxLengthClientValidator());
             DataSetClientValidators.Add(new RequiredClientValidator());
         }
 
