@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.AspNetCore.Primitives;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DevZest.Data.AspNetCore
 {
@@ -11,6 +12,8 @@ namespace DevZest.Data.AspNetCore
                 options.ModelValidatorProviders.Add(new DataSetValidatorProvider());
                 options.ModelBinderProviders.Insert(0, new DataSetModelBinderProvider());
             });
+
+            mvcBuilder.Services.TryAddSingleton<DataSetValidationHtmlAttributeProvider, DefaultDataSetValidationHtmlAttributeProvider>();
 
             return mvcBuilder;
         }

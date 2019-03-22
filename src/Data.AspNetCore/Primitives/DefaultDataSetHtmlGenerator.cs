@@ -59,10 +59,14 @@ namespace DevZest.Data.AspNetCore.Primitives
             }
         }
 
-        public DefaultDataSetHtmlGenerator(IOptions<MvcViewOptions> optionsAccessor)
+        private readonly DataSetValidationHtmlAttributeProvider _validationAttributeProvider;
+
+        public DefaultDataSetHtmlGenerator(IOptions<MvcViewOptions> optionsAccessor, DataSetValidationHtmlAttributeProvider validationAttributeProvider)
         {
             if (optionsAccessor == null)
                 throw new ArgumentNullException(nameof(optionsAccessor));
+
+            _validationAttributeProvider = validationAttributeProvider ?? throw new ArgumentNullException(nameof(validationAttributeProvider));
 
             // Underscores are fine characters in id's.
             IdAttributeDotReplacement = optionsAccessor.Value.HtmlHelperOptions.IdAttributeDotReplacement;
@@ -88,9 +92,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         {
             var placeholder = column.DisplayPrompt;
             if (!string.IsNullOrEmpty(placeholder))
-            {
                 tagBuilder.MergeAttribute("placeholder", placeholder);
-            }
         }
 
         /// <summary>
@@ -121,14 +123,9 @@ namespace DevZest.Data.AspNetCore.Primitives
         /// <param name="tagBuilder">A <see cref="TagBuilder"/> instance.</param>
         /// <param name="modelExplorer">The <see cref="ModelExplorer"/> for the <paramref name="expression"/>.</param>
         /// <param name="expression">Expression name, relative to the current model.</param>
-        protected virtual void AddValidationAttributes(ViewContext viewContext, TagBuilder tagBuilder, Column column)
+        protected virtual void AddValidationAttributes(ViewContext viewContext, TagBuilder tagBuilder, string fullHtmlFieldName, Column column)
         {
-            //_validationAttributeProvider.AddAndTrackValidationAttributes(
-            //    viewContext,
-            //    modelExplorer,
-            //    expression,
-            //    tagBuilder.Attributes);
-            throw new NotImplementedException();
+            _validationAttributeProvider.AddAndTrackValidationAttributes(viewContext, fullHtmlFieldName, column, tagBuilder.Attributes);
         }
 
         private string FormatValue(object value, string format)
@@ -315,7 +312,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             if (viewContext.ViewData.ModelState.TryGetValue(fullHtmlFieldName, out var entry) && entry.Errors.Count > 0)
                 tagBuilder.AddCssClass(HtmlHelper.ValidationInputCssClassName);
 
-            //AddValidationAttributes(viewContext, tagBuilder, column);
+            AddValidationAttributes(viewContext, tagBuilder, fullHtmlFieldName, column);
 
             return tagBuilder;
         }
