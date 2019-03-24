@@ -460,5 +460,20 @@ namespace DevZest.Data.AspNetCore.Primitives
 
             return tagBuilder;
         }
+
+        /// <inheritdoc />
+        public virtual TagBuilder GenerateHidden(ViewContext viewContext, string fullHtmlFieldName, Column column, object value, object htmlAttributes)
+        {
+            if (viewContext == null)
+                throw new ArgumentNullException(nameof(viewContext));
+
+            // Special-case opaque values and arbitrary binary data.
+            if (value is byte[] byteArrayValue)
+                value = Convert.ToBase64String(byteArrayValue);
+
+            var htmlAttributeDictionary = GetHtmlAttributeDictionaryOrNull(htmlAttributes);
+            return GenerateInput(viewContext, InputType.Hidden, fullHtmlFieldName, column, value,
+                isChecked: false, setId: true, isExplicitValue: true, format: null, htmlAttributes: htmlAttributeDictionary);
+        }
     }
 }

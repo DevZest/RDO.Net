@@ -15,6 +15,8 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         TagBuilder GenerateCheckBox(ViewContext viewContext, string fullFieldName, Column column, bool? isChecked, object htmlAttributes);
 
+        TagBuilder GenerateHidden(ViewContext viewContext, string fullHtmlFieldName, Column column, object value, object htmlAttributes);
+
         TagBuilder GeneratePassword(ViewContext viewContext, string fullHtmlFieldName, Column column, object value, object htmlAttributes);
 
         TagBuilder GenerateRadioButton(ViewContext viewContext, string fullHtmlFieldName, Column column, object value, bool? isChecked, object htmlAttributes);
