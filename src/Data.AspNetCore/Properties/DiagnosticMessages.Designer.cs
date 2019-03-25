@@ -20,6 +20,14 @@ namespace DevZest.Data.AspNetCore
         }
 
         /// <summary>
+        /// The raw value must be an IEnumerable when multiple selection is allowed.
+        /// </summary>
+        public static string DataSetHtmlGenerator_RawValueNotEnumerable
+        {
+            get { return GetString("DataSetHtmlGenerator_RawValueNotEnumerable"); }
+        }
+
+        /// <summary>
         /// Unexpected '{fieldName}' expression result type '{columnDataType}' for {tag}. '{fieldName}' must be of type '{expectedType}' or '{expectedTypeCanBeParsed}' that can be parsed as a '{expectedType}' if '{tagAttribute}' is '{tagAttributeValue}'.
         /// </summary>
         public static string FormatInputTagHelper_InvalidExpressionResult(object fieldName, object columnDataType, object tag, object expectedType, object expectedTypeCanBeParsed, object tagAttribute, object tagAttributeValue)

@@ -120,6 +120,9 @@
   <data name="DataSetHtmlGenerator_FieldNameCannotBeNullOrEmpty" xml:space="preserve">
     <value>The name of an HTML field cannot be null or empty.</value>
   </data>
+  <data name="DataSetHtmlGenerator_RawValueNotEnumerable" xml:space="preserve">
+    <value>The raw value must be an IEnumerable when multiple selection is allowed.</value>
+  </data>
   <data name="FormatInputTagHelper_InvalidExpressionResult" xml:space="preserve">
     <value>Unexpected '{fieldName}' expression result type '{columnDataType}' for {tag}. '{fieldName}' must be of type '{expectedType}' or '{expectedTypeCanBeParsed}' that can be parsed as a '{expectedType}' if '{tagAttribute}' is '{tagAttributeValue}'.</value>
   </data>

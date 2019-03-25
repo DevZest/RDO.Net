@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -229,6 +230,133 @@ namespace DevZest.Data.AspNetCore
             }
 
             return null;
+        }
+
+        public static bool IsEnum(this Column column)
+        {
+            return column.DataType.IsEnum();
+        }
+
+        public static bool IsEnum(this Type type)
+        {
+            return type.UnderlyingOrDataType().GetTypeInfo().IsEnum;
+        }
+
+        public static bool IsFlagsEnum(this Type type)
+        {
+            return type.IsEnum && type.UnderlyingOrDataType().GetTypeInfo().IsDefined(typeof(FlagsAttribute), inherit: false);
+        }
+
+        public static IReadOnlyDictionary<string, string> GetEnumNamesAndValues(this Column column)
+        {
+            return column.DataType.GetEnumNamesAndValues();
+        }
+
+        public static IReadOnlyDictionary<string, string> GetEnumNamesAndValues(this Type type)
+        {
+            var isEnum = type.IsEnum();
+            if (!isEnum)
+                return null;
+
+            var result = new Dictionary<string, string>();
+
+            var underlyingType = type.UnderlyingOrDataType();
+            var enumFields = Enum.GetNames(underlyingType)
+                .Select(name => underlyingType.GetField(name))
+                .OrderBy(field => field.GetCustomAttribute<DisplayAttribute>(inherit: false)?.GetOrder() ?? 1000);
+
+            foreach (var field in enumFields)
+            {
+                var value = ((Enum)field.GetValue(obj: null)).ToString("d");
+                result.Add(field.Name, value);
+            }
+
+            return result;
+        }
+
+        public static Type GetEnumerableElementType(this Type type)
+        {
+            if (type == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(type))
+                return null;
+
+            if (type.IsArray)
+                return type.GetElementType();
+
+            var enumerableType = type.ExtractGenericInterface(typeof(IEnumerable<>));
+            var result = enumerableType?.GenericTypeArguments[0];
+
+            return result ?? typeof(object);
+        }
+
+        private static Type ExtractGenericInterface(this Type queryType, Type interfaceType)
+        {
+            if (queryType == null)
+                throw new ArgumentNullException(nameof(queryType));
+
+            if (interfaceType == null)
+                throw new ArgumentNullException(nameof(interfaceType));
+
+            if (IsGenericInstantiation(queryType, interfaceType))
+            {
+                // queryType matches (i.e. is a closed generic type created from) the open generic type.
+                return queryType;
+            }
+
+            // Otherwise check all interfaces the type implements for a match.
+            // - If multiple different generic instantiations exists, we want the most derived one.
+            // - If that doesn't break the tie, then we sort alphabetically so that it's deterministic.
+            //
+            // We do this by looking at interfaces on the type, and recursing to the base type 
+            // if we don't find any matches.
+            return GetGenericInstantiation(queryType, interfaceType);
+        }
+
+        private static bool IsGenericInstantiation(Type candidate, Type interfaceType)
+        {
+            return
+                candidate.GetTypeInfo().IsGenericType &&
+                candidate.GetGenericTypeDefinition() == interfaceType;
+        }
+
+        private static Type GetGenericInstantiation(Type queryType, Type interfaceType)
+        {
+            Type bestMatch = null;
+            var interfaces = queryType.GetInterfaces();
+            foreach (var @interface in interfaces)
+            {
+                if (IsGenericInstantiation(@interface, interfaceType))
+                {
+                    if (bestMatch == null)
+                    {
+                        bestMatch = @interface;
+                    }
+                    else if (StringComparer.Ordinal.Compare(@interface.FullName, bestMatch.FullName) < 0)
+                    {
+                        bestMatch = @interface;
+                    }
+                    else
+                    {
+                        // There are two matches at this level of the class hierarchy, but @interface is after
+                        // bestMatch in the sort order.
+                    }
+                }
+            }
+
+            if (bestMatch != null)
+            {
+                return bestMatch;
+            }
+
+            // BaseType will be null for object and interfaces, which means we've reached 'bottom'.
+            var baseType = queryType?.GetTypeInfo().BaseType;
+            if (baseType == null)
+            {
+                return null;
+            }
+            else
+            {
+                return GetGenericInstantiation(baseType, interfaceType);
+            }
         }
     }
 }

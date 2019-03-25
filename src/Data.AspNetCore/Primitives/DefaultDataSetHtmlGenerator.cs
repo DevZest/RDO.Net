@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace DevZest.Data.AspNetCore.Primitives
 {
@@ -474,6 +477,306 @@ namespace DevZest.Data.AspNetCore.Primitives
             var htmlAttributeDictionary = GetHtmlAttributeDictionaryOrNull(htmlAttributes);
             return GenerateInput(viewContext, InputType.Hidden, fullHtmlFieldName, column, value,
                 isChecked: false, setId: true, isExplicitValue: true, format: null, htmlAttributes: htmlAttributeDictionary);
+        }
+
+        /// <inheritdoc />
+        public TagBuilder GenerateSelect(
+            ViewContext viewContext,
+            string fullHtmlFieldName,
+            Column column,
+            object dataValue,
+            string optionLabel,
+            IEnumerable<SelectListItem> selectList,
+            bool allowMultiple,
+            object htmlAttributes)
+        {
+            if (viewContext == null)
+                throw new ArgumentNullException(nameof(viewContext));
+
+            var currentValues = GetCurrentValues(viewContext, fullHtmlFieldName, column, dataValue, allowMultiple);
+            return GenerateSelect(
+                viewContext,
+                fullHtmlFieldName,
+                column,
+                optionLabel,
+                selectList,
+                currentValues,
+                allowMultiple,
+                htmlAttributes);
+        }
+
+        /// <inheritdoc />
+        public virtual TagBuilder GenerateSelect(
+            ViewContext viewContext,
+            string fullHtmlFieldName,
+            Column column,
+            string optionLabel,
+            IEnumerable<SelectListItem> selectList,
+            ICollection<string> currentValues,
+            bool allowMultiple,
+            object htmlAttributes)
+        {
+            if (viewContext == null)
+                throw new ArgumentNullException(nameof(viewContext));
+
+            if (string.IsNullOrEmpty(fullHtmlFieldName))
+                throw new ArgumentNullException(nameof(fullHtmlFieldName));
+
+            if (selectList == null)
+                throw new ArgumentNullException(nameof(selectList));
+
+            var htmlAttributeDictionary = GetHtmlAttributeDictionaryOrNull(htmlAttributes);
+
+            // Convert each ListItem to an <option> tag and wrap them with <optgroup> if requested.
+            var listItemBuilder = GenerateGroupsAndOptions(optionLabel, selectList, currentValues);
+
+            var tagBuilder = new TagBuilder("select");
+            tagBuilder.InnerHtml.SetHtmlContent(listItemBuilder);
+            tagBuilder.MergeAttributes(htmlAttributeDictionary);
+            NameAndIdProvider.GenerateId(viewContext, tagBuilder, fullHtmlFieldName, IdAttributeDotReplacement);
+            tagBuilder.MergeAttribute("name", fullHtmlFieldName, replaceExisting: true);
+
+            if (allowMultiple)
+                tagBuilder.MergeAttribute("multiple", "multiple");
+
+            // If there are any errors for a named field, we add the css attribute.
+            if (viewContext.ViewData.ModelState.TryGetValue(fullHtmlFieldName, out var entry))
+            {
+                if (entry.Errors.Count > 0)
+                    tagBuilder.AddCssClass(HtmlHelper.ValidationInputCssClassName);
+            }
+
+            AddValidationAttributes(viewContext, tagBuilder, fullHtmlFieldName, column);
+
+            return tagBuilder;
+        }
+
+        private IHtmlContent GenerateGroupsAndOptions(string optionLabel, IEnumerable<SelectListItem> selectList, ICollection<string> currentValues)
+        {
+            var itemsList = selectList as IList<SelectListItem>;
+            if (itemsList == null)
+                itemsList = selectList.ToList();
+
+            var count = itemsList.Count;
+            if (optionLabel != null)
+                count++;
+
+            // Short-circuit work below if there's nothing to add.
+            if (count == 0)
+                return HtmlString.Empty;
+
+            var listItemBuilder = new HtmlContentBuilder(count);
+
+            // Make optionLabel the first item that gets rendered.
+            if (optionLabel != null)
+            {
+                listItemBuilder.AppendLine(GenerateOption(
+                    new SelectListItem()
+                    {
+                        Text = optionLabel,
+                        Value = string.Empty,
+                        Selected = false,
+                    },
+                    currentValues: null));
+            }
+
+            // Group items in the SelectList if requested.
+            // The worst case complexity of this algorithm is O(number of groups*n).
+            // If there aren't any groups, it is O(n) where n is number of items in the list.
+            var optionGenerated = new bool[itemsList.Count];
+            for (var i = 0; i < itemsList.Count; i++)
+            {
+                if (!optionGenerated[i])
+                {
+                    var item = itemsList[i];
+                    var optGroup = item.Group;
+                    if (optGroup != null)
+                    {
+                        var groupBuilder = new TagBuilder("optgroup");
+                        if (optGroup.Name != null)
+                        {
+                            groupBuilder.MergeAttribute("label", optGroup.Name);
+                        }
+
+                        if (optGroup.Disabled)
+                        {
+                            groupBuilder.MergeAttribute("disabled", "disabled");
+                        }
+
+                        groupBuilder.InnerHtml.AppendLine();
+
+                        for (var j = i; j < itemsList.Count; j++)
+                        {
+                            var groupItem = itemsList[j];
+
+                            if (!optionGenerated[j] &&
+                                object.ReferenceEquals(optGroup, groupItem.Group))
+                            {
+                                groupBuilder.InnerHtml.AppendLine(GenerateOption(groupItem, currentValues));
+                                optionGenerated[j] = true;
+                            }
+                        }
+
+                        listItemBuilder.AppendLine(groupBuilder);
+                    }
+                    else
+                    {
+                        listItemBuilder.AppendLine(GenerateOption(item, currentValues));
+                        optionGenerated[i] = true;
+                    }
+                }
+            }
+
+            return listItemBuilder;
+        }
+
+        private IHtmlContent GenerateOption(SelectListItem item, ICollection<string> currentValues)
+        {
+            var selected = item.Selected;
+            if (currentValues != null)
+            {
+                var value = item.Value ?? item.Text;
+                selected = currentValues.Contains(value);
+            }
+
+            var tagBuilder = GenerateOption(item, item.Text, selected);
+            return tagBuilder;
+        }
+
+        private static TagBuilder GenerateOption(SelectListItem item, string text, bool selected)
+        {
+            var tagBuilder = new TagBuilder("option");
+            tagBuilder.InnerHtml.SetContent(text);
+
+            if (item.Value != null)
+                tagBuilder.Attributes["value"] = item.Value;
+
+            if (selected)
+                tagBuilder.Attributes["selected"] = "selected";
+
+            if (item.Disabled)
+                tagBuilder.Attributes["disabled"] = "disabled";
+
+            return tagBuilder;
+        }
+
+        /// <inheritdoc />
+        public virtual ICollection<string> GetCurrentValues(ViewContext viewContext, string fullHtmlFieldName, Column column, object rawValue, bool allowMultiple)
+        {
+            if (viewContext == null)
+                throw new ArgumentNullException(nameof(viewContext));
+
+            if (rawValue == null)
+                return null;
+
+            // Convert raw value to a collection.
+            IEnumerable rawValues;
+            if (allowMultiple)
+            {
+                rawValues = rawValue as IEnumerable;
+                if (rawValues == null || rawValues is string)
+                    throw new ArgumentNullException(DiagnosticMessages.DataSetHtmlGenerator_RawValueNotEnumerable, nameof(rawValue));
+            }
+            else
+                rawValues = new[] { rawValue };
+
+            var dataType = column.DataType;
+
+            if (allowMultiple)
+            {
+                var enumerableElementType = dataType.GetEnumerableElementType();
+                if (enumerableElementType != null)
+                    dataType = enumerableElementType;
+            }
+
+            var enumNames = dataType.GetEnumNamesAndValues();
+            var isTargetEnum = dataType.IsEnum();
+
+            // Logic below assumes isTargetEnum and enumNames are consistent. Confirm that expectation is met.
+            Debug.Assert(isTargetEnum ^ enumNames == null);
+
+            var innerType = dataType.UnderlyingOrDataType();
+
+            // Convert raw value collection to strings.
+            var currentValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var value in rawValues)
+            {
+                // Add original or converted string.
+                var stringValue = (value as string) ?? Convert.ToString(value, CultureInfo.CurrentCulture);
+
+                // Do not add simple names of enum properties here because whitespace isn't relevant for their binding.
+                // Will add matching names just below.
+                if (enumNames == null || !enumNames.ContainsKey(stringValue.Trim()))
+                    currentValues.Add(stringValue);
+
+                // Remainder handles isEnum cases. Convert.ToString() returns field names for enum values but select
+                // list may (well, should) contain integer values.
+                var enumValue = value as Enum;
+                if (isTargetEnum && enumValue == null && value != null)
+                {
+                    var valueType = value.GetType();
+                    if (typeof(long).IsAssignableFrom(valueType) || typeof(ulong).IsAssignableFrom(valueType))
+                    {
+                        // E.g. user added an int to a ViewData entry and called a string-based HTML helper.
+                        enumValue = ConvertEnumFromInteger(value, innerType);
+                    }
+                    else if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        // E.g. got a string from ModelState.
+                        var methodInfo = ConvertEnumFromStringMethod.MakeGenericMethod(innerType);
+                        enumValue = (Enum)methodInfo.Invoke(obj: null, parameters: new[] { stringValue });
+                    }
+                }
+
+                if (enumValue != null)
+                {
+                    // Add integer value.
+                    var integerString = enumValue.ToString("d");
+                    currentValues.Add(integerString);
+
+                    // isTargetEnum may be false when raw value has a different type than the target e.g. ViewData
+                    // contains enum values and property has type int or string.
+                    if (isTargetEnum)
+                    {
+                        // Add all simple names for this value.
+                        var matchingNames = enumNames
+                            .Where(kvp => string.Equals(integerString, kvp.Value, StringComparison.Ordinal))
+                            .Select(kvp => kvp.Key);
+                        foreach (var name in matchingNames)
+                        {
+                            currentValues.Add(name);
+                        }
+                    }
+                }
+            }
+
+            return currentValues;
+        }
+
+        private static Enum ConvertEnumFromInteger(object value, Type targetType)
+        {
+            try
+            {
+                return (Enum)Enum.ToObject(targetType, value);
+            }
+            catch (Exception exception)
+            when (exception is FormatException || exception.InnerException is FormatException)
+            {
+                // The integer was too large for this enum type.
+                return null;
+            }
+        }
+
+        private static readonly MethodInfo ConvertEnumFromStringMethod =
+            typeof(DefaultDataSetHtmlGenerator).GetTypeInfo().GetDeclaredMethod(nameof(ConvertEnumFromString));
+
+        private static object ConvertEnumFromString<TEnum>(string value) where TEnum : struct
+        {
+            if (Enum.TryParse(value, out TEnum enumValue))
+                return enumValue;
+
+            // Do not return default(TEnum) when parse was unsuccessful.
+            return null;
         }
     }
 }
