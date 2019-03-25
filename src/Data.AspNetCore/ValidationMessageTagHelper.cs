@@ -30,7 +30,7 @@ namespace DevZest.Data.AspNetCore
         [HtmlAttributeName(ValidationForAttributeName)]
         public override ModelExpression DataSetFor { get => base.DataSetFor; set => base.DataSetFor = value; }
 
-        protected override async Task ProcessOverrideAsync(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             // Ensure Generator does not throw due to empty "fullName" if user provided data-valmsg-for attribute.
             // Assume data-valmsg-for value is non-empty if attribute is present at all. Should align with name of

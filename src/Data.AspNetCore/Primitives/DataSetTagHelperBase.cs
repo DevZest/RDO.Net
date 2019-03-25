@@ -64,19 +64,12 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         protected string FullHtmlFieldName { get; private set; }
 
-        public sealed override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override void Init(TagHelperContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
-
             FullHtmlFieldName = ViewContext.GetFullHtmlFieldName(DataSetFor, Column, DataRow);
-
-            return ProcessOverrideAsync(context, output);
         }
-
-        protected abstract Task ProcessOverrideAsync(TagHelperContext context, TagHelperOutput output);
     }
 }

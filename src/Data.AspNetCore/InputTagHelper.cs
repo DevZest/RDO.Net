@@ -187,7 +187,7 @@ namespace DevZest.Data.AspNetCore
             return format;
         }
 
-        protected override Task ProcessOverrideAsync(TagHelperContext context, TagHelperOutput output)
+        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             // Pass through attributes that are also well-known HTML attributes. Must be done prior to any copying
             // from a TagBuilder.
