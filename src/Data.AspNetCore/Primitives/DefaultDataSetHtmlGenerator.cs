@@ -778,5 +778,65 @@ namespace DevZest.Data.AspNetCore.Primitives
             // Do not return default(TEnum) when parse was unsuccessful.
             return null;
         }
+
+        /// <inheritdoc />
+        public virtual TagBuilder GenerateTextArea(
+            ViewContext viewContext,
+            string fullHtmlFieldName,
+            Column column,
+            object dataValue,
+            int rows,
+            int columns,
+            object htmlAttributes)
+        {
+            if (viewContext == null)
+                throw new ArgumentNullException(nameof(viewContext));
+
+            if (string.IsNullOrEmpty(fullHtmlFieldName))
+                throw new ArgumentNullException(nameof(fullHtmlFieldName));
+
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            if (rows < 0)
+                throw new ArgumentOutOfRangeException(nameof(rows));
+
+            if (columns < 0)
+                throw new ArgumentOutOfRangeException(nameof(columns));
+
+            var value = string.Empty;
+            if (dataValue != null)
+                value = dataValue.ToString();
+
+            var tagBuilder = new TagBuilder("textarea");
+            NameAndIdProvider.GenerateId(viewContext, tagBuilder, fullHtmlFieldName, IdAttributeDotReplacement);
+            var htmlAttributeDictionary = GetHtmlAttributeDictionaryOrNull(htmlAttributes);
+            tagBuilder.MergeAttributes(htmlAttributeDictionary, replaceExisting: true);
+            if (rows > 0)
+                tagBuilder.MergeAttribute("rows", rows.ToString(CultureInfo.InvariantCulture), replaceExisting: true);
+
+            if (columns > 0)
+                tagBuilder.MergeAttribute("cols", columns.ToString(CultureInfo.InvariantCulture), replaceExisting: true);
+
+            tagBuilder.MergeAttribute("name", fullHtmlFieldName, replaceExisting: true);
+
+            AddPlaceholderAttribute(tagBuilder, column);
+            if (AllowRenderingMaxLengthAttribute)
+                AddMaxLengthAttribute(tagBuilder, column);
+
+            AddValidationAttributes(viewContext, tagBuilder, fullHtmlFieldName, column);
+
+            viewContext.ViewData.ModelState.TryGetValue(fullHtmlFieldName, out var entry);
+            // If there are any errors for a named field, we add this CSS attribute.
+            if (entry != null && entry.Errors.Count > 0)
+                tagBuilder.AddCssClass(HtmlHelper.ValidationInputCssClassName);
+
+            // The first newline is always trimmed when a TextArea is rendered, so we add an extra one
+            // in case the value being rendered is something like "\r\nHello"
+            tagBuilder.InnerHtml.AppendLine();
+            tagBuilder.InnerHtml.Append(value);
+
+            return tagBuilder;
+        }
     }
 }

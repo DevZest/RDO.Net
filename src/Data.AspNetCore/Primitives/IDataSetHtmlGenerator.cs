@@ -40,6 +40,15 @@ namespace DevZest.Data.AspNetCore.Primitives
             bool allowMultiple,
             object htmlAttributes);
 
+        TagBuilder GenerateTextArea(
+            ViewContext viewContext,
+            string fullHtmlFieldName,
+            Column column,
+            object dataValue,
+            int rows,
+            int columns,
+            object htmlAttributes);
+
         TagBuilder GenerateValidationMessage(ViewContext viewContext, string fullHtmlFieldName, Column column, string message, string tag, object htmlAttributes);
 
         ICollection<string> GetCurrentValues(ViewContext viewContext, string fullHtmlFieldName, Column column, object dataValue, bool allowMultiple);
