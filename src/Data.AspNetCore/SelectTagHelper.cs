@@ -47,7 +47,7 @@ namespace DevZest.Data.AspNetCore
             // Metadata.IsEnumerableType is similar but does not take runtime type into account.
             var dataType = Column.DataType;
             _allowMultiple = typeof(string) != dataType && typeof(IEnumerable).IsAssignableFrom(dataType);
-            _currentValues = Generator.GetCurrentValues(ViewContext, FullHtmlFieldName, Column, DataValue, _allowMultiple);
+            _currentValues = Generator.GetCurrentValues(ViewContext, Column, DataValue, _allowMultiple);
 
             // Whether or not (not being highly unlikely) we generate anything, could update contained <option/>
             // elements. Provide selected values for <option/> tag helpers.

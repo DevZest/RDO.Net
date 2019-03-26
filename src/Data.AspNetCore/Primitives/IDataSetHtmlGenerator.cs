@@ -52,6 +52,6 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         TagBuilder GenerateValidationMessage(ViewContext viewContext, string fullHtmlFieldName, Column column, string message, string tag, object htmlAttributes);
 
-        ICollection<string> GetCurrentValues(ViewContext viewContext, string fullHtmlFieldName, Column column, object dataValue, bool allowMultiple);
+        ICollection<string> GetCurrentValues(ViewContext viewContext, Column column, object dataValue, bool allowMultiple);
     }
 }

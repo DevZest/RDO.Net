@@ -103,7 +103,6 @@ namespace DevZest.Data.AspNetCore.Primitives
             // Act
             var result = htmlGenerator.GetCurrentValues(
                 viewContext,
-                nameof(dataSet),
                 dataSet._.Name,
                 null,
                 allowMultiple: allowMultiple);

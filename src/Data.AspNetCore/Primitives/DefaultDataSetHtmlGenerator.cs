@@ -493,7 +493,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             if (viewContext == null)
                 throw new ArgumentNullException(nameof(viewContext));
 
-            var currentValues = GetCurrentValues(viewContext, fullHtmlFieldName, column, dataValue, allowMultiple);
+            var currentValues = GetCurrentValues(viewContext, column, dataValue, allowMultiple);
             return GenerateSelect(
                 viewContext,
                 fullHtmlFieldName,
@@ -660,7 +660,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         }
 
         /// <inheritdoc />
-        public virtual ICollection<string> GetCurrentValues(ViewContext viewContext, string fullHtmlFieldName, Column column, object rawValue, bool allowMultiple)
+        public virtual ICollection<string> GetCurrentValues(ViewContext viewContext, Column column, object rawValue, bool allowMultiple)
         {
             if (rawValue == null)
                 return null;
