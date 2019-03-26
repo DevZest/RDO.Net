@@ -191,5 +191,22 @@ namespace DevZest.Data.AspNetCore.Primitives
             var attribute = Assert.Single(tagBuilder.Attributes, a => a.Key == "maxlength");
             Assert.Equal(expectedValue, Int32.Parse(attribute.Value));
         }
+
+        [Fact]
+        public void GenerateTextBox_DoesNotRenderMaxLength_WhenNoAttributesPresent()
+        {
+            // Arrange
+            var dataSet = DataSet<ModelWithMaxLength>.Create();
+            var generator = GetGenerator();
+            var viewContext = GetViewContext(dataSet);
+            var column = dataSet._.ColumnWithoutAttributes;
+
+            // Act
+            var tagBuilder = generator.GenerateTextBox(viewContext, nameof(dataSet), column, value: null, format: null, htmlAttributes: null);
+
+            // Assert
+            Assert.DoesNotContain(tagBuilder.Attributes, a => a.Key == "maxlength");
+        }
+
     }
 }
