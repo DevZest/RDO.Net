@@ -14,7 +14,7 @@ namespace DevZest.Data.AspNetCore
     /// <see cref="ITagHelper"/> implementation targeting &lt;select&gt; elements with <c>asp-for</c> and/or
     /// <c>asp-items</c> attribute(s).
     /// </summary>
-    [HtmlTargetElement("select", Attributes = ItemsAttributeName)]
+    [HtmlTargetElement("select", Attributes = DataSetAttributes + "," + ItemsAttributeName)]
     public class SelectTagHelper : DataSetTagHelperBase
     {
         private const string ItemsAttributeName = "dataset-items";
