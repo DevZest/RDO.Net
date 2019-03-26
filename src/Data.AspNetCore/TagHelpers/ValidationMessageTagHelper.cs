@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DevZest.Data.AspNetCore
+namespace DevZest.Data.AspNetCore.TagHelpers
 {
     /// <summary>
     /// <see cref="ITagHelper"/> implementation targeting any HTML element with an <c>asp-validation-for</c>

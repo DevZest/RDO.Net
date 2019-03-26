@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace DevZest.Data.AspNetCore
+namespace DevZest.Data.AspNetCore.TagHelpers
 {
     [HtmlTargetElement("input", Attributes = DataSetAttributes, TagStructure = TagStructure.WithoutEndTag)]
     public class InputTagHelper : DataSetTagHelperBase

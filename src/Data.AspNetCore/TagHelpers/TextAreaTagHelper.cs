@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 
-namespace DevZest.Data.AspNetCore
+namespace DevZest.Data.AspNetCore.TagHelpers
 {
     [HtmlTargetElement("textarea", Attributes = DataSetAttributes)]
     public class TextAreaTagHelper : DataSetTagHelperBase

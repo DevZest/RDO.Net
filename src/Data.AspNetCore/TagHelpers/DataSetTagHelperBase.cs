@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using DevZest.Data.AspNetCore.Primitives;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace DevZest.Data.AspNetCore.Primitives
+namespace DevZest.Data.AspNetCore.TagHelpers
 {
     public abstract class DataSetTagHelperBase : TagHelper
     {
