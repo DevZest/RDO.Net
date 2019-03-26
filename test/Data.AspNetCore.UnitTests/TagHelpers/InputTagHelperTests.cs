@@ -181,5 +181,48 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             Assert.Equal(originalContent, HtmlContentUtilities.HtmlContentToString(output.Content));
             Assert.Equal(expectedContent, HtmlContentUtilities.HtmlContentToString(output));
         }
+
+        [Theory]
+        [InlineData("hidden")]
+        [InlineData("number")]
+        [InlineData("text")]
+        public void Process_WithInputTypeName(string inputTypeName)
+        {
+            // Arrange
+            var expectedTagName = "input";
+            var attributes = new TagHelperAttributeList
+            {
+                { "type", inputTypeName }
+            };
+
+            var context = new TagHelperContext(attributes, new Dictionary<object, object>(), "test");
+            var output = new TagHelperOutput(
+                expectedTagName,
+                new TagHelperAttributeList(),
+                getChildContentAsync: (useCachedResult, encoder) => Task.FromResult<TagHelperContent>(result: null))
+            {
+                TagMode = TagMode.SelfClosing,
+            };
+
+            var dataSet = DataSet<TestModel>.Create();
+            var tagHelper = GetTagHelper(dataSet._.IsACar);
+            tagHelper.ViewContext.ClientValidationEnabled = false;
+            tagHelper.InputTypeName = inputTypeName;
+
+            // Act
+            tagHelper.Process(context, output);
+
+            // Assert
+            var expectedAttributes = new TagHelperAttributeList
+            {
+                { "type", inputTypeName },
+                { "id", "DataSet_IsACar" },
+                { "name", "DataSet.IsACar" },
+                { "value", "" }
+            };
+
+            Assert.Equal(expectedAttributes, output.Attributes);
+            Assert.Equal(expectedTagName, output.TagName);
+        }
     }
 }

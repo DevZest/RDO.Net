@@ -187,7 +187,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             return format;
         }
 
-        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             // Pass through attributes that are also well-known HTML attributes. Must be done prior to any copying
             // from a TagBuilder.
@@ -249,8 +249,6 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                     output.Content.AppendHtml(tagBuilder.InnerHtml);
                 }
             }
-
-            return Task.CompletedTask;
         }
 
         // Imitate Generator.GenerateHidden() using Generator.GenerateTextBox(). This adds support for asp-format that
