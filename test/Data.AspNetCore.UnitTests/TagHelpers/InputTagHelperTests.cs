@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
 
             public _String Text { get; private set; }
 
-            public NestedModel NestedModel { get; set; }
+            public NestedModel NestedModel { get; private set; }
 
             [Required]
             [DefaultValue(false)]
@@ -39,7 +40,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
 
             public _DateTime Date { get; private set; }
 
-            public _DateTime DateTime { get; set; }
+            public _DateTime DateTime { get; private set; }
         }
 
         private class NestedModel : Model
@@ -222,6 +223,53 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             };
 
             Assert.Equal(expectedAttributes, output.Attributes);
+            Assert.Equal(expectedTagName, output.TagName);
+        }
+
+        [Theory]
+        [InlineData("datetime", "datetime")]
+        [InlineData(null, "datetime-local")]
+        [InlineData("hidden", "hidden")]
+        public void Process_GeneratesFormattedOutput_ForDateTime(string specifiedType, string expectedType)
+        {
+            // Arrange
+            var expectedTagName = "not-input";
+
+            var allAttributes = new TagHelperAttributeList
+            {
+                { "type", specifiedType },
+            };
+            var context = new TagHelperContext(allAttributes, new Dictionary<object, object>(), "test");
+            var output = new TagHelperOutput(
+                expectedTagName,
+                new TagHelperAttributeList(),
+                getChildContentAsync: (useCachedResult, encoder) => Task.FromResult<TagHelperContent>(result: null))
+            {
+                TagMode = TagMode.SelfClosing,
+            };
+
+            var dataSet = DataSet<TestModel>.Create();
+            dataSet.AddRow();
+            dataSet._.DateTime[0] = new DateTime(2011, 8, 31, hour: 5, minute: 30, second: 45, kind: DateTimeKind.Utc);
+            var tagHelper = GetTagHelper(dataSet._.DateTime);
+            tagHelper.Format = "datetime: {0:o}";
+            tagHelper.InputTypeName = specifiedType;
+
+            // Act
+            tagHelper.Process(context, output);
+
+            // Assert
+            var expectedAttributes = new TagHelperAttributeList
+            {
+                { "type", expectedType },
+                { "id", "DataSet_DateTime" },
+                { "name", "DataSet.DateTime" },
+                { "value", "datetime: 2011-08-31T05:30:45.0000000Z" },
+            };
+            Assert.Equal(expectedAttributes, output.Attributes);
+            Assert.Empty(output.PreContent.GetContent());
+            Assert.Empty(output.Content.GetContent());
+            Assert.Empty(output.PostContent.GetContent());
             Assert.Equal(expectedTagName, output.TagName);
         }
     }
