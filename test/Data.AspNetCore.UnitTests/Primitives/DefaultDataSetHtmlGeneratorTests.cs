@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.IO;
+using Xunit;
 
 namespace DevZest.Data.AspNetCore.Primitives
 {
@@ -49,6 +50,66 @@ namespace DevZest.Data.AspNetCore.Primitives
                 Mock.Of<ITempDataDictionary>(),
                 TextWriter.Null,
                 new HtmlHelperOptions());
+        }
+
+        public enum RegularEnum
+        {
+            Zero,
+            One,
+            Two,
+            Three,
+        }
+
+        [Flags]
+        public enum FlagsEnum
+        {
+            None = 0,
+            One = 1,
+            Two = 2,
+            Four = 4,
+            FortyTwo = 42,
+            All = -1,
+        }
+
+        private class TestModel : Model
+        {
+            static TestModel()
+            {
+                RegisterColumn((TestModel _) => _.Id);
+                RegisterColumn((TestModel _) => _.Name);
+                RegisterColumn((TestModel _) => _.RegularEnum);
+                RegisterColumn((TestModel _) => _.FlagsEnum);
+            }
+
+            public _Int32 Id { get; private set; }
+
+            public _String Name { get; private set; }
+
+            public _ByteEnum<RegularEnum> RegularEnum { get; private set; }
+
+            public _ByteEnum<FlagsEnum> FlagsEnum { get; private set; }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void GetCurrentValues_WithNullDataValue_ReturnsNull(bool allowMultiple)
+        {
+            // Arrange
+            var htmlGenerator = GetGenerator();
+            var viewContext = GetViewContext<Model>(model: null);
+            var dataSet = DataSet<TestModel>.Create();
+
+            // Act
+            var result = htmlGenerator.GetCurrentValues(
+                viewContext,
+                nameof(dataSet),
+                dataSet._.Name,
+                null,
+                allowMultiple: allowMultiple);
+
+            // Assert
+            Assert.Null(result);
         }
     }
 }
