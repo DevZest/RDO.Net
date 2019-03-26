@@ -285,7 +285,7 @@ namespace DevZest.Data.AspNetCore
             }
 
             // hiddenForCheckboxTag always rendered after the returned element
-            var hiddenForCheckboxTag = Generator.GenerateHiddenForCheckbox(FullHtmlFieldName);
+            var hiddenForCheckboxTag = Generator.GenerateHiddenForCheckbox(ViewContext, FullHtmlFieldName);
             if (hiddenForCheckboxTag != null)
             {
                 var renderingMode = output.TagMode == TagMode.SelfClosing ? TagRenderMode.SelfClosing : TagRenderMode.StartTag;

@@ -321,7 +321,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         }
 
         /// <inheritdoc />
-        public virtual TagBuilder GenerateHiddenForCheckbox(string fullHtmlFieldName)
+        public virtual TagBuilder GenerateHiddenForCheckbox(ViewContext viewContext, string fullHtmlFieldName)
         {
             var tagBuilder = new TagBuilder("input");
             tagBuilder.MergeAttribute("type", GetInputTypeString(InputType.Hidden));
@@ -663,9 +663,6 @@ namespace DevZest.Data.AspNetCore.Primitives
         /// <inheritdoc />
         public virtual ICollection<string> GetCurrentValues(ViewContext viewContext, string fullHtmlFieldName, Column column, object rawValue, bool allowMultiple)
         {
-            if (viewContext == null)
-                throw new ArgumentNullException(nameof(viewContext));
-
             if (rawValue == null)
                 return null;
 

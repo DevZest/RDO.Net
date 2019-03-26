@@ -9,7 +9,7 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         TagBuilder GenerateTextBox(ViewContext viewContext, string fullHtmlFieldName, Column column, object value, string format, object htmlAttributes);
 
-        TagBuilder GenerateHiddenForCheckbox(string fullHtmlFieldName);
+        TagBuilder GenerateHiddenForCheckbox(ViewContext viewContext, string fullHtmlFieldName);
 
         TagBuilder GenerateCheckBox(ViewContext viewContext, string fullHtmlFieldName, Column column, bool? isChecked, object htmlAttributes);
 
@@ -21,7 +21,8 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         TagBuilder GenerateRadioButton(ViewContext viewContext, string fullHtmlFieldName, Column column, object value, bool? isChecked, object htmlAttributes);
 
-        TagBuilder GenerateSelect(ViewContext viewContext,
+        TagBuilder GenerateSelect(
+            ViewContext viewContext,
             string fullHtmlFieldName,
             Column column,
             object dataValue,
