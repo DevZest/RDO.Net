@@ -126,11 +126,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             if (column.LogicalDataType != LogicalDataType.Custom)
                 yield return column.LogicalDataType.ToString();
 
-            // In most cases, we don't want to search for Nullable<T>. We want to search for T, which should handle
-            // both T and Nullable<T>. However we special-case bool? to avoid turning an <input/> into a <select/>.
-            var dataType = column.DataType;
-            if (typeof(bool?) != dataType)
-                dataType = dataType.UnderlyingOrDataType();
+            var dataType = column.UnderlyingOrDataType();
 
             foreach (var typeName in column.GetTypeNames(dataType))
             {
