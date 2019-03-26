@@ -208,5 +208,27 @@ namespace DevZest.Data.AspNetCore.Primitives
             Assert.DoesNotContain(tagBuilder.Attributes, a => a.Key == "maxlength");
         }
 
+        [Theory]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithMaxLength), ModelWithMaxLength.MaxLengthAttributeValue)]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithStringLength), ModelWithMaxLength.StringLengthAttributeValue)]
+        public void GenerateTextBox_SearchType_RendersMaxLength(string columnName, int expectedValue)
+        {
+            // Arrange
+            var dataSet = DataSet<ModelWithMaxLength>.Create();
+            var generator = GetGenerator();
+            var viewContext = GetViewContext(dataSet);
+            var column = dataSet._.GetColumns()[columnName];
+            var htmlAttributes = new Dictionary<string, object>
+            {
+                { "type", "search"}
+            };
+
+            // Act
+            var tagBuilder = generator.GenerateTextBox(viewContext, nameof(dataSet), column, value: null, format: null, htmlAttributes);
+
+            // Assert
+            var attribute = Assert.Single(tagBuilder.Attributes, a => a.Key == "maxlength");
+            Assert.Equal(expectedValue, Int32.Parse(attribute.Value));
+        }
     }
 }
