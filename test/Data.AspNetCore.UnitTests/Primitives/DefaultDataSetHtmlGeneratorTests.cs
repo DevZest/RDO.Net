@@ -303,5 +303,95 @@ namespace DevZest.Data.AspNetCore.Primitives
             // Assert
             Assert.Equal<string>(expected, result);
         }
+
+        // property name, rawValue -> expected current values
+        public static TheoryData<string, object, string[]> GetCurrentValues_ValueToConvertData
+        {
+            get
+            {
+                return new TheoryData<string, object, string[]>
+                {
+                    { nameof(TestModel.FlagsEnum), FlagsEnum.All, new [] { "-1", "All" } },
+                    { nameof(TestModel.FlagsEnum), FlagsEnum.FortyTwo, new [] { "42", "FortyTwo" } },
+                    { nameof(TestModel.FlagsEnum), FlagsEnum.None, new [] { "0", "None" } },
+                    { nameof(TestModel.FlagsEnum), FlagsEnum.Two, new [] { "2", "Two" } },
+                    { nameof(TestModel.FlagsEnum), string.Empty, new [] { string.Empty } },
+                    { nameof(TestModel.FlagsEnum), "All", new [] { "-1", "All" } },
+                    { nameof(TestModel.FlagsEnum), "FortyTwo", new [] { "42", "FortyTwo" } },
+                    { nameof(TestModel.FlagsEnum), "None", new [] { "0", "None" } },
+                    { nameof(TestModel.FlagsEnum), "Two", new [] { "2", "Two" } },
+                    { nameof(TestModel.FlagsEnum), "Two, Four", new [] { "Two, Four", "6" } },
+                    { nameof(TestModel.FlagsEnum), "garbage", new [] { "garbage" } },
+                    { nameof(TestModel.FlagsEnum), "0", new [] { "0", "None" } },
+                    { nameof(TestModel.FlagsEnum), "   43", new [] { "   43", "43" } },
+                    { nameof(TestModel.FlagsEnum), "-5   ", new [] { "-5   ", "-5" } },
+                    { nameof(TestModel.FlagsEnum), 0, new [] { "0", "None" } },
+                    { nameof(TestModel.FlagsEnum), 1, new [] { "1", "One" } },
+                    { nameof(TestModel.FlagsEnum), 43, new [] { "43" } },
+                    { nameof(TestModel.FlagsEnum), -5, new [] { "-5" } },
+                    { nameof(TestModel.FlagsEnum), int.MaxValue, new [] { "2147483647" } },
+                    { nameof(TestModel.FlagsEnum), (uint)int.MaxValue + 1, new [] { "2147483648" } },
+                    { nameof(TestModel.FlagsEnum), uint.MaxValue, new [] { "4294967295" } },  // converted to string & used
+
+                    { nameof(TestModel.Id), string.Empty, new [] { string.Empty } },
+                    { nameof(TestModel.Id), "garbage", new [] { "garbage" } },                  // no compatibility checks
+                    { nameof(TestModel.Id), "0", new [] { "0" } },
+                    { nameof(TestModel.Id), "  43", new [] { "  43" } },
+                    { nameof(TestModel.Id), "-5  ", new [] { "-5  " } },
+                    { nameof(TestModel.Id), 0, new [] { "0" } },
+                    { nameof(TestModel.Id), 1, new [] { "1" } },
+                    { nameof(TestModel.Id), 43, new [] { "43" } },
+                    { nameof(TestModel.Id), -5, new [] { "-5" } },
+                    { nameof(TestModel.Id), int.MaxValue, new [] { "2147483647" } },
+                    { nameof(TestModel.Id), (uint)int.MaxValue + 1, new [] { "2147483648" } },  // no limit checks
+                    { nameof(TestModel.Id), uint.MaxValue, new [] { "4294967295" } },           // no limit checks
+
+                    { nameof(TestModel.RegularEnum), RegularEnum.Zero, new [] { "0", "Zero" } },
+                    { nameof(TestModel.RegularEnum), RegularEnum.One, new [] { "1", "One" } },
+                    { nameof(TestModel.RegularEnum), RegularEnum.Two, new [] { "2", "Two" } },
+                    { nameof(TestModel.RegularEnum), RegularEnum.Three, new [] { "3", "Three" } },
+                    { nameof(TestModel.RegularEnum), string.Empty, new [] { string.Empty } },
+                    { nameof(TestModel.RegularEnum), "Zero", new [] { "0", "Zero" } },
+                    { nameof(TestModel.RegularEnum), "Two", new [] { "2", "Two" } },
+                    { nameof(TestModel.RegularEnum), "One, Two", new [] { "One, Two", "3", "Three" } },
+                    { nameof(TestModel.RegularEnum), "garbage", new [] { "garbage" } },
+                    { nameof(TestModel.RegularEnum), "0", new [] { "0", "Zero" } },
+                    { nameof(TestModel.RegularEnum), "   43", new [] { "   43", "43" } },
+                    { nameof(TestModel.RegularEnum), "-5   ", new [] { "-5   ", "-5" } },
+                    { nameof(TestModel.RegularEnum), 0, new [] { "0", "Zero" } },
+                    { nameof(TestModel.RegularEnum), 1, new [] { "1", "One" } },
+                    { nameof(TestModel.RegularEnum), 43, new [] { "43" } },
+                    { nameof(TestModel.RegularEnum), -5, new [] { "-5" } },
+                    { nameof(TestModel.RegularEnum), int.MaxValue, new [] { "2147483647" } },
+                    { nameof(TestModel.RegularEnum), (uint)int.MaxValue + 1, new [] { "2147483648" } },
+                    { nameof(TestModel.RegularEnum), uint.MaxValue, new [] { "4294967295" } },
+                };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(GetCurrentValues_ValueToConvertData))]
+        public void GetCurrentValues_ValueConvertedAsExpected(
+            string columnName,
+            object rawValue,
+            IReadOnlyCollection<string> expected)
+        {
+            // Arrange
+            var generator = GetGenerator();
+            var dataSet = DataSet<TestModel>.Create();
+            var column = dataSet._.GetColumns()[columnName];
+            var viewContext = GetViewContext(dataSet);
+
+            // Act
+            var result = generator.GetCurrentValues(
+                viewContext,
+                column,
+                rawValue,
+                allowMultiple: false);
+
+            // Assert
+            Assert.Equal<string>(expected, result);
+        }
+
     }
 }
