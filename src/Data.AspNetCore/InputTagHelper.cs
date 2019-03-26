@@ -261,12 +261,14 @@ namespace DevZest.Data.AspNetCore
             if (value is byte[] byteArrayValue)
                 value = Convert.ToBase64String(byteArrayValue);
 
-            var htmlAttributes = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            var htmlAttributes = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+            {
 
-            // In DefaultHtmlGenerator(), GenerateTextBox() calls GenerateInput() _almost_ identically to how
-            // GenerateHidden() does and the main switch inside GenerateInput() handles InputType.Text and
-            // InputType.Hidden identically. No behavior differences at all when a type HTML attribute already exists.
-            htmlAttributes["type"] = "hidden";
+                // In DefaultHtmlGenerator(), GenerateTextBox() calls GenerateInput() _almost_ identically to how
+                // GenerateHidden() does and the main switch inside GenerateInput() handles InputType.Text and
+                // InputType.Hidden identically. No behavior differences at all when a type HTML attribute already exists.
+                ["type"] = "hidden"
+            };
 
             return Generator.GenerateTextBox(ViewContext, FullHtmlFieldName, Column, value, Format, htmlAttributes);
         }
@@ -331,9 +333,10 @@ namespace DevZest.Data.AspNetCore
                     format = GetFormat(inputTypeHint, inputType);
             }
 
-            var htmlAttributes = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
-            htmlAttributes["type"] = inputType;
+            var htmlAttributes = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["type"] = inputType
+            };
             if (string.Equals(inputType, "file") &&
                 string.Equals(
                     inputTypeHint,

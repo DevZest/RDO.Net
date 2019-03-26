@@ -18,13 +18,7 @@ namespace DevZest.Data.AspNetCore
                 options.ModelValidatorProviders.Add(new DataSetValidatorProvider());
                 options.ModelBinderProviders.Insert(0, new DataSetModelBinderProvider());
 
-                AddClientValidators(config,
-                    new MaxLengthClientValidator(),
-                    new NumericClientValidator(options.ModelBindingMessageProvider),
-                    new RegularExpressionClientValidator(),
-                    new RequiredClientValidator(),
-                    new StringLengthClientValidator());
-
+                config.AddClientValidators(options.ModelBindingMessageProvider);
                 expr(config);
             });
 
@@ -33,6 +27,16 @@ namespace DevZest.Data.AspNetCore
             services.TryAddSingleton<DataSetValidationHtmlAttributeProvider, DefaultDataSetValidationHtmlAttributeProvider>();
 
             return mvcBuilder;
+        }
+
+        internal static void AddClientValidators(this DataSetMvcConfiguration config, ModelBindingMessageProvider messageProvider)
+        {
+            AddClientValidators(config,
+                new MaxLengthClientValidator(),
+                new NumericClientValidator(messageProvider),
+                new RegularExpressionClientValidator(),
+                new RequiredClientValidator(),
+                new StringLengthClientValidator());
         }
 
         private static void AddClientValidators(DataSetMvcConfiguration config, params IDataSetClientValidator[] clientValidators)

@@ -553,8 +553,7 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         private IHtmlContent GenerateGroupsAndOptions(string optionLabel, IEnumerable<SelectListItem> selectList, ICollection<string> currentValues)
         {
-            var itemsList = selectList as IList<SelectListItem>;
-            if (itemsList == null)
+            if (!(selectList is IList<SelectListItem> itemsList))
                 itemsList = selectList.ToList();
 
             var count = itemsList.Count;
