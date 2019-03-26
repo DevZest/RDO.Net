@@ -147,11 +147,31 @@ namespace DevZest.Data.AspNetCore.Primitives
             var column = dataSet._.GetColumns()[columnName];
 
             // Act
-            var tagBuilder = generator.GenerateTextArea(viewContext, nameof(dataSet),  column, dataValue: null, rows: 1, columns: 1, htmlAttributes: null);
+            var tagBuilder = generator.GenerateTextArea(viewContext, nameof(dataSet), column, dataValue: null, rows: 1, columns: 1, htmlAttributes: null);
 
             // Assert
             var attribute = Assert.Single(tagBuilder.Attributes, a => a.Key == "maxlength");
             Assert.Equal(expectedValue, Int32.Parse(attribute.Value));
         }
+
+        [Theory]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithMaxLength), ModelWithMaxLength.MaxLengthAttributeValue)]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithStringLength), ModelWithMaxLength.StringLengthAttributeValue)]
+        public void GeneratePassword_RendersMaxLength(string columnName, int expectedValue)
+        {
+            // Arrange
+            var dataSet = DataSet<ModelWithMaxLength>.Create();
+            var generator = GetGenerator();
+            var viewContext = GetViewContext(dataSet);
+            var column = dataSet._.GetColumns()[columnName];
+
+            // Act
+            var tagBuilder = generator.GeneratePassword(viewContext, nameof(dataSet), column, value: null, htmlAttributes: null);
+
+            // Assert
+            var attribute = Assert.Single(tagBuilder.Attributes, a => a.Key == "maxlength");
+            Assert.Equal(expectedValue, Int32.Parse(attribute.Value));
+        }
+
     }
 }
