@@ -230,5 +230,23 @@ namespace DevZest.Data.AspNetCore.Primitives
             var attribute = Assert.Single(tagBuilder.Attributes, a => a.Key == "maxlength");
             Assert.Equal(expectedValue, Int32.Parse(attribute.Value));
         }
+
+        [Theory]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithMaxLength))]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithStringLength))]
+        public void GenerateHidden_DoesNotRenderMaxLength(string columnName)
+        {
+            // Arrange
+            var dataSet = DataSet<ModelWithMaxLength>.Create();
+            var generator = GetGenerator();
+            var viewContext = GetViewContext(dataSet);
+            var column = dataSet._.GetColumns()[columnName];
+
+            // Act
+            var tagBuilder = generator.GenerateHidden(viewContext, nameof(dataSet), column, value: null, htmlAttributes: null);
+
+            // Assert
+            Assert.DoesNotContain(tagBuilder.Attributes, a => a.Key == "maxlength");
+        }
     }
 }
