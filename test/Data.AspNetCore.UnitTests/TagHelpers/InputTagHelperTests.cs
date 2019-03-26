@@ -1,4 +1,5 @@
-﻿using DevZest.Data.AspNetCore.Primitives;
+﻿using DevZest.Data.Annotations;
+using DevZest.Data.AspNetCore.Primitives;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -32,6 +33,8 @@ namespace DevZest.Data.AspNetCore.TagHelpers
 
             public NestedModel NestedModel { get; set; }
 
+            [Required]
+            [DefaultValue(false)]
             public _Boolean IsACar { get; private set; }
 
             public _DateTime Date { get; private set; }
@@ -147,7 +150,8 @@ namespace DevZest.Data.AspNetCore.TagHelpers
         {
             // Arrange
             var originalContent = "original content";
-            var expectedContent = $"<input {expectedAttributeString} type=\"HtmlEncode[[checkbox]]\" id=\"HtmlEncode[[DataSet_IsACar]]\" " +
+            var expectedContent = $"<input {expectedAttributeString} type=\"HtmlEncode[[checkbox]]\" data-val=\"HtmlEncode[[true]]\" " +
+                "data-val-required=\"HtmlEncode[[Value is required for field 'IsACar'.]]\" id=\"HtmlEncode[[DataSet_IsACar]]\" " +
                 $"name=\"HtmlEncode[[DataSet.IsACar]]\" value=\"HtmlEncode[[true]]\" />" +
                 "<input name=\"HtmlEncode[[DataSet.IsACar]]\" type=\"HtmlEncode[[hidden]]\" value=\"HtmlEncode[[false]]\" />";
 
