@@ -173,5 +173,23 @@ namespace DevZest.Data.AspNetCore.Primitives
             Assert.Equal(expectedValue, Int32.Parse(attribute.Value));
         }
 
+        [Theory]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithMaxLength), ModelWithMaxLength.MaxLengthAttributeValue)]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithStringLength), ModelWithMaxLength.StringLengthAttributeValue)]
+        public void GenerateTextBox_RendersMaxLength(string columnName, int expectedValue)
+        {
+            // Arrange
+            var dataSet = DataSet<ModelWithMaxLength>.Create();
+            var generator = GetGenerator();
+            var viewContext = GetViewContext(dataSet);
+            var column = dataSet._.GetColumns()[columnName];
+
+            // Act
+            var tagBuilder = generator.GenerateTextBox(viewContext, nameof(dataSet), column, value: null, format: null, htmlAttributes: null);
+
+            // Assert
+            var attribute = Assert.Single(tagBuilder.Attributes, a => a.Key == "maxlength");
+            Assert.Equal(expectedValue, Int32.Parse(attribute.Value));
+        }
     }
 }

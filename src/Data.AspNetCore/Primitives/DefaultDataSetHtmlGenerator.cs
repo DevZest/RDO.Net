@@ -204,9 +204,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             object htmlAttributes)
         {
             if (viewContext == null)
-            {
                 throw new ArgumentNullException(nameof(viewContext));
-            }
 
             var htmlAttributeDictionary = GetHtmlAttributeDictionaryOrNull(htmlAttributes);
             return GenerateInput(
@@ -254,7 +252,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             if (AllowRenderingMaxLengthAttribute && _maxLengthInputTypes.Contains(suppliedTypeString))
                 AddMaxLengthAttribute(tagBuilder, column);
 
-            var valueParameter = FormatValue(value, format);
+            var valueParameter = FormatValue(value, format ?? string.Empty);
             var usedModelState = false;
             switch (inputType)
             {
