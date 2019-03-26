@@ -104,18 +104,30 @@ namespace DevZest.Data.AspNetCore.Primitives
         /// <param name="tagBuilder">A <see cref="TagBuilder"/> instance.</param>
         protected virtual void AddMaxLengthAttribute(TagBuilder tagBuilder, Column column)
         {
-            int? maxLengthValue = null;
-            foreach (var validator in column.GetParent().Validators)
-            {
-                var attribute = validator.Attribute;
-                if (attribute is StringLengthAttribute stringLengthAttribute && (!maxLengthValue.HasValue || maxLengthValue.Value > stringLengthAttribute.MaximumLength))
-                    maxLengthValue = stringLengthAttribute.MaximumLength;
-                else if (attribute is MaxLengthAttribute maxLengthAttribute && (!maxLengthValue.HasValue || maxLengthValue.Value > maxLengthAttribute.Length))
-                    maxLengthValue = maxLengthAttribute.Length;
-            }
+            int? maxLengthValue = GetMaxLengthValue(column);
 
             if (maxLengthValue.HasValue)
                 tagBuilder.MergeAttribute("maxlength", maxLengthValue.Value.ToString());
+        }
+
+        private static int? GetMaxLengthValue(Column column)
+        {
+            var validators = column.GetParent().Validators;
+
+            for (int i = 0; i < validators.Count; i++)
+            {
+                var validator = validators[i];
+                if (validator.SourceColumns != column)
+                    continue;
+
+                var attribute = validator.Attribute;
+                if (attribute is StringLengthAttribute stringLengthAttribute)
+                    return stringLengthAttribute.MaximumLength;
+                else if (attribute is MaxLengthAttribute maxLengthAttribute)
+                    return maxLengthAttribute.Length;
+            }
+
+            return null;
         }
 
         /// <summary>

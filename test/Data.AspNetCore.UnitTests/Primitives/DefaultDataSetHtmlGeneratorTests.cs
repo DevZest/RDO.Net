@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DevZest.Data.Annotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
@@ -90,6 +92,28 @@ namespace DevZest.Data.AspNetCore.Primitives
             public _ByteEnum<FlagsEnum> FlagsEnum { get; private set; }
         }
 
+        private class ModelWithMaxLength : Model
+        {
+            static ModelWithMaxLength()
+            {
+                RegisterColumn((ModelWithMaxLength _) => _.ColumnWithMaxLength);
+                RegisterColumn((ModelWithMaxLength _) => _.ColumnWithStringLength);
+                RegisterColumn((ModelWithMaxLength _) => _.ColumnWithoutAttributes);
+            }
+
+            internal const int MaxLengthAttributeValue = 77;
+            internal const int StringLengthAttributeValue = 7;
+
+            [MaxLength(MaxLengthAttributeValue)]
+            public _Binary ColumnWithMaxLength { get; private set; }
+
+            [StringLength(StringLengthAttributeValue)]
+            public _String ColumnWithStringLength { get; set; }
+
+            public _String ColumnWithoutAttributes { get; set; }
+        }
+
+
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
@@ -109,6 +133,25 @@ namespace DevZest.Data.AspNetCore.Primitives
 
             // Assert
             Assert.Null(result);
+        }
+
+        [Theory]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithMaxLength), ModelWithMaxLength.MaxLengthAttributeValue)]
+        [InlineData(nameof(ModelWithMaxLength.ColumnWithStringLength), ModelWithMaxLength.StringLengthAttributeValue)]
+        public void GenerateTextArea_RendersMaxLength(string columnName, int expectedValue)
+        {
+            // Arrange
+            var dataSet = DataSet<ModelWithMaxLength>.Create();
+            var generator = GetGenerator();
+            var viewContext = GetViewContext(dataSet);
+            var column = dataSet._.GetColumns()[columnName];
+
+            // Act
+            var tagBuilder = generator.GenerateTextArea(viewContext, nameof(dataSet),  column, dataValue: null, rows: 1, columns: 1, htmlAttributes: null);
+
+            // Assert
+            var attribute = Assert.Single(tagBuilder.Attributes, a => a.Key == "maxlength");
+            Assert.Equal(expectedValue, Int32.Parse(attribute.Value));
         }
     }
 }

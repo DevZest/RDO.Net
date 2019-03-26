@@ -8,6 +8,8 @@
     <AssemblyName>DevZest.Data.AspNetCore.UnitTests</AssemblyName>
 
     <RootNamespace>DevZest.Data.AspNetCore</RootNamespace>
+
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
