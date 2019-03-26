@@ -81,6 +81,7 @@ namespace DevZest.Data.AspNetCore.Primitives
                 RegisterColumn((TestModel _) => _.Name);
                 RegisterColumn((TestModel _) => _.RegularEnum);
                 RegisterColumn((TestModel _) => _.FlagsEnum);
+                RegisterLocalColumn((TestModel _) => _.Collection);
             }
 
             public _Int32 Id { get; private set; }
@@ -90,6 +91,8 @@ namespace DevZest.Data.AspNetCore.Primitives
             public _ByteEnum<RegularEnum> RegularEnum { get; private set; }
 
             public _ByteEnum<FlagsEnum> FlagsEnum { get; private set; }
+
+            public LocalColumn<List<string>> Collection { get; private set; }
         }
 
         private class ModelWithMaxLength : Model
@@ -247,6 +250,58 @@ namespace DevZest.Data.AspNetCore.Primitives
 
             // Assert
             Assert.DoesNotContain(tagBuilder.Attributes, a => a.Key == "maxlength");
+        }
+
+        // rawValue -> expected current values
+        public static TheoryData<string[], string[]> GetCurrentValues_StringCollectionData
+        {
+            get
+            {
+                return new TheoryData<string[], string[]>
+                {
+                    { new string[] { null }, new [] { string.Empty } },
+                    { new [] { string.Empty }, new [] { string.Empty } },
+                    { new [] { "some string" }, new [] { "some string" } },
+                    { new [] { "some string", "some other string" }, new [] { "some string", "some other string" } },
+                    {
+                        new [] { null, "some string", "some other string" },
+                        new [] { string.Empty, "some string", "some other string" }
+                    },
+                    // ignores duplicates
+                    {
+                        new [] { null, "some string", null, "some other string", null, "some string", null },
+                        new [] { string.Empty, "some string", "some other string" }
+                    },
+                    // ignores case of duplicates
+                    {
+                        new [] { "some string", "SoMe StriNg", "Some String", "soME STRing", "SOME STRING" },
+                        new [] { "some string" }
+                    },
+                };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(GetCurrentValues_StringCollectionData))]
+        public void GetCurrentValues_CollectionWithModel_ReturnsModel(
+            string[] rawValue,
+            IReadOnlyCollection<string> expected)
+        {
+            // Arrange
+            var generator = GetGenerator();
+            var dataSet = DataSet<TestModel>.Create();
+            var column = dataSet._.Collection;
+            var viewContext = GetViewContext(dataSet);
+
+            // Act
+            var result = generator.GetCurrentValues(
+                viewContext,
+                column,
+                rawValue,
+                allowMultiple: true);
+
+            // Assert
+            Assert.Equal<string>(expected, result);
         }
     }
 }
