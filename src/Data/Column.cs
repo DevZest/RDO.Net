@@ -562,5 +562,10 @@ namespace DevZest.Data
                 _logicalDataType = value;
             }
         }
+
+        public Model Model
+        {
+            get { return GetParent(); }
+        }
     }
 }
