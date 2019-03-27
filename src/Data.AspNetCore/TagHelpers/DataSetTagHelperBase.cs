@@ -59,7 +59,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             get { return DataRow == null ? null : Column.GetValue(DataRow); }
         }
 
-        protected string FullHtmlFieldName { get; private set; }
+        protected internal string FullHtmlFieldName { get; private set; }
 
         public override void Init(TagHelperContext context)
         {

@@ -2,8 +2,10 @@
 using DevZest.Data.AspNetCore.Primitives;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -271,6 +273,84 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             Assert.Empty(output.Content.GetContent());
             Assert.Empty(output.PostContent.GetContent());
             Assert.Equal(expectedTagName, output.TagName);
+        }
+
+        [Fact]
+        public async Task ProcessAsync_CallsGenerateCheckBox_WithExpectedParameters()
+        {
+            // Arrange
+            var originalContent = "original content";
+            var expectedPreContent = "original pre-content";
+            var expectedContent = "<input class=\"HtmlEncode[[form-control]]\" type=\"HtmlEncode[[checkbox]]\" /><hidden />";
+            var expectedPostContent = "original post-content";
+            var expectedPostElement = "<hidden />";
+
+            var context = new TagHelperContext(
+                tagName: "input",
+                allAttributes: new TagHelperAttributeList(
+                    Enumerable.Empty<TagHelperAttribute>()),
+                items: new Dictionary<object, object>(),
+                uniqueId: "test");
+            var originalAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control" },
+            };
+            var output = new TagHelperOutput(
+                "input",
+                originalAttributes,
+                getChildContentAsync: (useCachedResult, encoder) =>
+                {
+                    var tagHelperContent = new DefaultTagHelperContent();
+                    tagHelperContent.SetContent("Something");
+                    return Task.FromResult<TagHelperContent>(tagHelperContent);
+                })
+            {
+                TagMode = TagMode.SelfClosing,
+            };
+            output.PreContent.AppendHtml(expectedPreContent);
+            output.Content.AppendHtml(originalContent);
+            output.PostContent.AppendHtml(expectedPostContent);
+
+            var generator = new Mock<IDataSetHtmlGenerator>(MockBehavior.Strict);
+            var dataSet = DataSet<TestModel>.Create();
+            dataSet.AddRow();
+            dataSet._.IsACar[0] = false;
+            var tagHelper = GetTagHelper(dataSet._.IsACar, generator: generator.Object);
+            tagHelper.Format = "somewhat-less-null"; // ignored
+
+            var tagBuilder = new TagBuilder("input")
+            {
+                TagRenderMode = TagRenderMode.SelfClosing
+            };
+            generator
+                .Setup(mock => mock.GenerateCheckBox(
+                    tagHelper.ViewContext,
+                    tagHelper.FullHtmlFieldName,
+                    tagHelper.Column,
+                    false,                   // isChecked
+                    It.IsAny<object>()))    // htmlAttributes
+                .Returns(tagBuilder)
+                .Verifiable();
+            generator
+                .Setup(mock => mock.GenerateHiddenForCheckbox(
+                    tagHelper.ViewContext,
+                    tagHelper.FullHtmlFieldName))
+                .Returns(new TagBuilder("hidden") { TagRenderMode = TagRenderMode.SelfClosing })
+                .Verifiable();
+
+            // Act
+            await tagHelper.ProcessAsync(context, output);
+
+            // Assert
+            generator.Verify();
+
+            Assert.NotEmpty(output.Attributes);
+            Assert.Equal(expectedPreContent, output.PreContent.GetContent());
+            Assert.Equal(originalContent, HtmlContentUtilities.HtmlContentToString(output.Content));
+            Assert.Equal(expectedContent, HtmlContentUtilities.HtmlContentToString(output));
+            Assert.Equal(expectedPostContent, output.PostContent.GetContent());
+            Assert.Equal(expectedPostElement, output.PostElement.GetContent());
+            Assert.Equal(TagMode.SelfClosing, output.TagMode);
         }
     }
 }
