@@ -184,7 +184,11 @@ namespace DevZest.Data.AspNetCore.Primitives
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            var resolvedLabelText = labelText ?? column.DisplayName;
+            var resolvedLabelText = labelText;
+            if (string.IsNullOrEmpty(resolvedLabelText))
+                resolvedLabelText = column.DisplayName;
+            if (string.IsNullOrEmpty(resolvedLabelText))
+                resolvedLabelText = column.Name;
 
             var tagBuilder = new TagBuilder("label");
             var idString = NameAndIdProvider.CreateSanitizedId(viewContext, fullName, IdAttributeDotReplacement);

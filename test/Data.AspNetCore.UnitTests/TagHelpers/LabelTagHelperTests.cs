@@ -195,5 +195,64 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             Assert.Equal(TagMode.StartTagAndEndTag, output.TagMode);
             Assert.Equal(expectedTagName, output.TagName);
         }
+
+        // Display name, original child content, expected child content, and expected ID.
+        // Uses TagHelperOutputContent.OriginalContent to pass HtmlFieldPrefix values.
+        public static TheoryData<string, string, string, string> DisplayNameDataSet
+        {
+            get
+            {
+                return new TheoryData<string, string, string, string>
+                {
+                    { null, string.Empty, $"HtmlEncode[[Text]]", "DataSet_Text" },
+                    { string.Empty, string.Empty, $"HtmlEncode[[Text]]", "DataSet_Text" },
+                    { "a label", string.Empty, $"HtmlEncode[[a label]]", "DataSet_Text" },
+                    { null, "original label", "original label", "DataSet_Text" },
+                    { string.Empty, "original label", "original label", "DataSet_Text" },
+                    { "a label", "original label", "original label", "DataSet_Text" }
+                };
+            }
+        }
+
+        // Prior to aspnet/Mvc#6638 fix, helpers generated nothing in this test when displayName was empty.
+        [Theory]
+        [MemberData(nameof(DisplayNameDataSet))]
+        public async Task ProcessAsync_GeneratesExpectedOutput_WithDisplayName(
+            string displayName,
+            string originalChildContent,
+            string expectedContent,
+            string expectedId)
+        {
+            // Arrange
+            var expectedAttributes = new TagHelperAttributeList
+            {
+                { "for", expectedId }
+            };
+
+            var dataSet = DataSet<TestModel>.Create(_ => _.Text.DisplayName = displayName);
+            var tagHelper = GetTagHelper(dataSet._.Text);
+
+            var tagHelperContext = new TagHelperContext(
+                tagName: "label",
+                allAttributes: new TagHelperAttributeList(),
+                items: new Dictionary<object, object>(),
+                uniqueId: "test");
+            var output = new TagHelperOutput(
+                "label",
+                new TagHelperAttributeList(),
+                getChildContentAsync: (useCachedResult, encoder) =>
+                {
+                    var tagHelperContent = new DefaultTagHelperContent();
+                    tagHelperContent.AppendHtml(originalChildContent);
+                    return Task.FromResult<TagHelperContent>(tagHelperContent);
+                });
+
+            // Act
+            await tagHelper.ProcessAsync(tagHelperContext, output);
+
+            // Assert
+            Assert.Equal(expectedAttributes, output.Attributes);
+            Assert.Equal(expectedContent, HtmlContentUtilities.HtmlContentToString(output.Content));
+        }
     }
 }
