@@ -741,5 +741,70 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             Assert.Equal(expectedPostContent, output.PostContent.GetContent());
             Assert.Equal(expectedTagName, output.TagName);
         }
+
+        [Fact]
+        public async Task ProcessAsync_CallsGenerateTextBox_InputTypeDateTime_RendersAsDateTime()
+        {
+            // Arrange
+            var expectedAttributes = new TagHelperAttributeList
+            {
+                { "type", "datetime" },                   // Calculated; not passed to HtmlGenerator.
+            };
+            var expectedTagName = "not-input";
+
+            var context = new TagHelperContext(
+                tagName: "input",
+                allAttributes: new TagHelperAttributeList()
+                {
+                    {"type", "datetime" }
+                },
+                items: new Dictionary<object, object>(),
+                uniqueId: "test");
+
+            var output = new TagHelperOutput(
+                expectedTagName,
+                attributes: new TagHelperAttributeList(),
+                getChildContentAsync: (useCachedResult, encoder) => Task.FromResult<TagHelperContent>(
+                    new DefaultTagHelperContent()))
+            {
+                TagMode = TagMode.SelfClosing,
+            };
+
+            var htmlAttributes = new Dictionary<string, object>
+            {
+                { "type", "datetime" }
+            };
+
+            var generator = new Mock<IDataSetHtmlGenerator>(MockBehavior.Strict);
+            var dataSet = DataSet<TestModel>.Create();
+            dataSet.AddRow();
+            var tagHelper = GetTagHelper(dataSet._.DateTime, generator: generator.Object);
+            tagHelper.ViewContext.Html5DateRenderingMode = Html5DateRenderingMode.Rfc3339;
+            tagHelper.InputTypeName = "datetime";
+            var tagBuilder = new TagBuilder("input");
+            generator
+                .Setup(mock => mock.GenerateTextBox(
+                    tagHelper.ViewContext,
+                    tagHelper.FullHtmlFieldName,
+                    tagHelper.Column,
+                    null,                                   // value
+                    @"{0:yyyy-MM-ddTHH\:mm\:ss.fffK}",
+                    htmlAttributes))                    // htmlAttributes
+                .Returns(tagBuilder)
+                .Verifiable();
+
+            // Act
+            await tagHelper.ProcessAsync(context, output);
+
+            // Assert
+            generator.Verify();
+
+            Assert.Equal(TagMode.SelfClosing, output.TagMode);
+            Assert.Equal(expectedAttributes, output.Attributes);
+            Assert.Empty(output.PreContent.GetContent());
+            Assert.Equal(string.Empty, output.Content.GetContent());
+            Assert.Empty(output.PostContent.GetContent());
+            Assert.Equal(expectedTagName, output.TagName);
+        }
     }
 }
