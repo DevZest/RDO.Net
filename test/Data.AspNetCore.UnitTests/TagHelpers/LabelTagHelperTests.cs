@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.AspNetCore.Primitives;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
@@ -79,27 +78,13 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                 }
 
                 var dataSetWithText = DataSet<TestModel>.Create();
-                dataSetWithNull.AddRow();
-                dataSetWithNull._.Text[0] = "outer text";
+                dataSetWithText.AddRow();
+                dataSetWithText._.Text[0] = "outer text";
                 {
-                    var nested = dataSetWithNull[0].GetChildDataSet(dataSetWithNull._.NestedModel);
+                    var nested = dataSetWithText[0].GetChildDataSet(dataSetWithText._.NestedModel);
                     nested.AddRow();
                     nested._.Text[0] = "inner text";
                 }
-
-                //var modelWithText = new Model
-                //{
-                //    NestedModel = new NestedModel
-                //    {
-                //        Text = "inner text",
-                //    },
-                //    Text = "outer text",
-                //};
-                //var models = new List<Model>
-                //{
-                //    modelWithNull,
-                //    modelWithText,
-                //};
 
                 return new TheoryData<Column, DataRow, TagHelperOutputContent>
                 {
