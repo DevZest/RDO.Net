@@ -541,5 +541,103 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             Assert.Equal(expectedPostContent, output.PostContent.GetContent());
             Assert.Equal(expectedTagName, output.TagName);
         }
+
+        [Theory]
+        [InlineData("radio", null)]
+        [InlineData("Radio", "not-null")]
+        [InlineData("RADio", null)]
+        [InlineData("RADIO", "not-null")]
+        public async Task ProcessAsync_CallsGenerateRadioButton_WithExpectedParameters(
+            string inputTypeName,
+            string model)
+        {
+            // Arrange
+            var value = "match";            // Real generator would use this for comparison with For.Metadata.Model.
+            var contextAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control" },
+                { "value", value },
+            };
+            if (!string.IsNullOrEmpty(inputTypeName))
+            {
+                contextAttributes.SetAttribute("type", inputTypeName);  // Support restoration of type attribute, if any.
+            }
+
+            var expectedAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control radio-control" },
+                { "value", value },
+                { "type", inputTypeName ?? "radio" },       // Generator restores type attribute; adds "radio" if none.
+            };
+            var expectedPreContent = "original pre-content";
+            var expectedContent = "original content";
+            var expectedPostContent = "original post-content";
+            var expectedTagName = "not-input";
+
+            var context = new TagHelperContext(
+                tagName: "input",
+                allAttributes: contextAttributes,
+                items: new Dictionary<object, object>(),
+                uniqueId: "test");
+            var originalAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control" },
+            };
+            var output = new TagHelperOutput(
+                expectedTagName,
+                originalAttributes,
+                getChildContentAsync: (useCachedResult, encoder) =>
+                {
+                    var tagHelperContent = new DefaultTagHelperContent();
+                    tagHelperContent.SetContent("Something");
+                    return Task.FromResult<TagHelperContent>(tagHelperContent);
+                })
+            {
+                TagMode = TagMode.StartTagOnly,
+            };
+            output.PreContent.SetContent(expectedPreContent);
+            output.Content.SetContent(expectedContent);
+            output.PostContent.SetContent(expectedPostContent);
+
+            var generator = new Mock<IDataSetHtmlGenerator>(MockBehavior.Strict);
+            var dataSet = DataSet<TestModel>.Create();
+            dataSet.AddRow();
+            dataSet._.Text[0] = model;
+            var tagHelper = GetTagHelper(dataSet._.Text, generator: generator.Object);
+            tagHelper.Format = "somewhat-less-null"; // ignored
+            tagHelper.InputTypeName = inputTypeName;
+            tagHelper.Value = value;
+
+            var tagBuilder = new TagBuilder("input")
+            {
+                Attributes =
+                {
+                    { "class", "radio-control" },
+                },
+            };
+            generator
+                .Setup(mock => mock.GenerateRadioButton(
+                    tagHelper.ViewContext,
+                    tagHelper.FullHtmlFieldName,
+                    tagHelper.Column,
+                    value,
+                    false,       // isChecked
+                    null))      // htmlAttributes
+                .Returns(tagBuilder)
+                .Verifiable();
+
+            // Act
+            await tagHelper.ProcessAsync(context, output);
+
+            // Assert
+            generator.Verify();
+
+            Assert.Equal(TagMode.StartTagOnly, output.TagMode);
+            Assert.Equal(expectedAttributes, output.Attributes, CaseSensitiveTagHelperAttributeComparer.Default);
+            Assert.Equal(expectedPreContent, output.PreContent.GetContent());
+            Assert.Equal(expectedContent, output.Content.GetContent());
+            Assert.Equal(expectedPostContent, output.PostContent.GetContent());
+            Assert.Equal(expectedTagName, output.TagName);
+        }
     }
 }
