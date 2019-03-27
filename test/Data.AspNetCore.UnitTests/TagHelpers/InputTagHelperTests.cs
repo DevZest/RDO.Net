@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers.Testing;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -441,12 +442,104 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             generator.Verify();
 
             Assert.Equal(TagMode.StartTagOnly, output.TagMode);
-            //Assert.Equal(expectedAttributes, output.Attributes, CaseSensitiveTagHelperAttributeComparer.Default);
+            Assert.Equal(expectedAttributes, output.Attributes, CaseSensitiveTagHelperAttributeComparer.Default);
             Assert.Equal(expectedPreContent, output.PreContent.GetContent());
             Assert.Equal(expectedContent, output.Content.GetContent());
             Assert.Equal(expectedPostContent, output.PostContent.GetContent());
             Assert.Equal(expectedTagName, output.TagName);
         }
 
+        [Theory]
+        [InlineData("password", null)]
+        [InlineData("Password", "not-null")]
+        [InlineData("PASSword", null)]
+        [InlineData("PASSWORD", "not-null")]
+        public async Task ProcessAsync_CallsGeneratePassword_WithExpectedParameters(
+            string inputTypeName,
+            string value)
+        {
+            // Arrange
+            var contextAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control" },
+            };
+            if (!string.IsNullOrEmpty(inputTypeName))
+            {
+                contextAttributes.SetAttribute("type", inputTypeName);  // Support restoration of type attribute, if any.
+            }
+
+            var expectedAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control password-control" },
+                { "type", inputTypeName ?? "password" },    // Generator restores type attribute; adds "password" if none.
+            };
+            var expectedPreContent = "original pre-content";
+            var expectedContent = "original content";
+            var expectedPostContent = "original post-content";
+            var expectedTagName = "not-input";
+
+            var context = new TagHelperContext(
+                tagName: "input",
+                allAttributes: contextAttributes,
+                items: new Dictionary<object, object>(),
+                uniqueId: "test");
+            var originalAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control" },
+            };
+            var output = new TagHelperOutput(
+                expectedTagName,
+                originalAttributes,
+                getChildContentAsync: (useCachedResult, encoder) =>
+                {
+                    var tagHelperContent = new DefaultTagHelperContent();
+                    tagHelperContent.SetContent("Something");
+                    return Task.FromResult<TagHelperContent>(tagHelperContent);
+                })
+            {
+                TagMode = TagMode.StartTagOnly,
+            };
+            output.PreContent.SetContent(expectedPreContent);
+            output.Content.SetContent(expectedContent);
+            output.PostContent.SetContent(expectedPostContent);
+
+            var generator = new Mock<IDataSetHtmlGenerator>(MockBehavior.Strict);
+            var dataSet = DataSet<TestModel>.Create();
+            dataSet.AddRow();
+            dataSet._.Text[0] = value;
+            var tagHelper = GetTagHelper(dataSet._.Text, generator: generator.Object);
+            tagHelper.Format = "somewhat-less-null"; // ignored
+            tagHelper.InputTypeName = inputTypeName;
+
+            var tagBuilder = new TagBuilder("input")
+            {
+                Attributes =
+                {
+                    { "class", "password-control" },
+                },
+            };
+            generator
+                .Setup(mock => mock.GeneratePassword(
+                    tagHelper.ViewContext,
+                    tagHelper.FullHtmlFieldName,
+                    tagHelper.Column,
+                    null,       // value
+                    null))      // htmlAttributes
+                .Returns(tagBuilder)
+                .Verifiable();
+
+            // Act
+            await tagHelper.ProcessAsync(context, output);
+
+            // Assert
+            generator.Verify();
+
+            Assert.Equal(TagMode.StartTagOnly, output.TagMode);
+            Assert.Equal(expectedAttributes, output.Attributes, CaseSensitiveTagHelperAttributeComparer.Default);
+            Assert.Equal(expectedPreContent, output.PreContent.GetContent());
+            Assert.Equal(expectedContent, output.Content.GetContent());
+            Assert.Equal(expectedPostContent, output.PostContent.GetContent());
+            Assert.Equal(expectedTagName, output.TagName);
+        }
     }
 }
