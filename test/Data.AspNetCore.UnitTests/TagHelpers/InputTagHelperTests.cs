@@ -352,5 +352,101 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             Assert.Equal(expectedPostElement, output.PostElement.GetContent());
             Assert.Equal(TagMode.SelfClosing, output.TagMode);
         }
+
+        [Theory]
+        [InlineData("hidden", null, null)]
+        [InlineData("Hidden", "not-null", "somewhat-less-null")]
+        [InlineData("HIDden", null, "somewhat-less-null")]
+        [InlineData("HIDDEN", "not-null", null)]
+        public async Task ProcessAsync_CallsGenerateTextBox_WithExpectedParametersForHidden(
+            string inputTypeName,
+            string value,
+            string format)
+        {
+            // Arrange
+            var contextAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control" },
+            };
+            if (!string.IsNullOrEmpty(inputTypeName))
+            {
+                contextAttributes.SetAttribute("type", inputTypeName);  // Support restoration of type attribute, if any.
+            }
+
+            var expectedAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control hidden-control" },
+                { "type", inputTypeName ?? "hidden" },      // Generator restores type attribute; adds "hidden" if none.
+            };
+            var expectedPreContent = "original pre-content";
+            var expectedContent = "original content";
+            var expectedPostContent = "original post-content";
+            var expectedTagName = "not-input";
+
+            var context = new TagHelperContext(
+                tagName: "input",
+                allAttributes: contextAttributes,
+                items: new Dictionary<object, object>(),
+                uniqueId: "test");
+            var originalAttributes = new TagHelperAttributeList
+            {
+                { "class", "form-control" },
+            };
+            var output = new TagHelperOutput(
+                expectedTagName,
+                originalAttributes,
+                getChildContentAsync: (useCachedResult, encoder) =>
+                {
+                    var tagHelperContent = new DefaultTagHelperContent();
+                    tagHelperContent.SetContent("Something");
+                    return Task.FromResult<TagHelperContent>(tagHelperContent);
+                })
+            {
+                TagMode = TagMode.StartTagOnly,
+            };
+            output.PreContent.SetContent(expectedPreContent);
+            output.Content.SetContent(expectedContent);
+            output.PostContent.SetContent(expectedPostContent);
+
+            var generator = new Mock<IDataSetHtmlGenerator>(MockBehavior.Strict);
+            var dataSet = DataSet<TestModel>.Create();
+            dataSet.AddRow();
+            dataSet._.Text[0] = value;
+            var tagHelper = GetTagHelper(dataSet._.Text, generator: generator.Object);
+            tagHelper.Format = format;
+            tagHelper.InputTypeName = inputTypeName;
+
+            var tagBuilder = new TagBuilder("input")
+            {
+                Attributes =
+                {
+                    { "class", "hidden-control" },
+                },
+            };
+            generator
+                .Setup(mock => mock.GenerateTextBox(
+                    tagHelper.ViewContext,
+                    tagHelper.FullHtmlFieldName,
+                    tagHelper.Column,
+                    value,  // value
+                    format,
+                    new Dictionary<string, object> { { "type", "hidden" } }))   // htmlAttributes
+                .Returns(tagBuilder)
+                .Verifiable();
+
+            // Act
+            await tagHelper.ProcessAsync(context, output);
+
+            // Assert
+            generator.Verify();
+
+            Assert.Equal(TagMode.StartTagOnly, output.TagMode);
+            //Assert.Equal(expectedAttributes, output.Attributes, CaseSensitiveTagHelperAttributeComparer.Default);
+            Assert.Equal(expectedPreContent, output.PreContent.GetContent());
+            Assert.Equal(expectedContent, output.Content.GetContent());
+            Assert.Equal(expectedPostContent, output.PostContent.GetContent());
+            Assert.Equal(expectedTagName, output.TagName);
+        }
+
     }
 }
