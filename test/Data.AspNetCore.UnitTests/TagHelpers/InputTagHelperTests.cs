@@ -59,38 +59,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
 
         private static InputTagHelper GetTagHelper(Column column, bool isScalar = true, DataRow dataRow = null, IDataSetHtmlGenerator generator = null, IModelMetadataProvider metadataProvider = null)
         {
-            if (generator == null)
-                generator = Factory.GetDataSetHtmlGenerator();
-
-            if (metadataProvider == null)
-                metadataProvider = new TestModelMetadataProvider();
-
-            var dataSet = column.GetParent().DataSet;
-            DataSetContainer container;
-            if (isScalar)
-                container = new ScalarDataSetContainer(dataSet);
-            else
-                container = new DataSetContainer(dataSet);
-            var containerType = container.GetType();
-            var containerMetadata = metadataProvider.GetMetadataForType(containerType);
-            var containerExplorer = metadataProvider.GetModelExplorerForType(containerType, container);
-
-            var propertyMetadata = metadataProvider.GetMetadataForProperty(containerType, nameof(container.DataSet));
-            var modelExplorer = containerExplorer.GetExplorerForExpression(propertyMetadata, container.DataSet);
-
-            var modelExpression = new ModelExpression(nameof(container.DataSet), modelExplorer);
-            var viewContext = Factory.GetViewContext(container);
-            var inputTagHelper = new InputTagHelper(generator)
-            {
-                DataSetFor = modelExpression,
-                Column = column,
-                DataRow = dataRow,
-                ViewContext = viewContext,
-            };
-
-            inputTagHelper.Init(new TagHelperContext(allAttributes: new TagHelperAttributeList(), items: new Dictionary<object, object>(), uniqueId: string.Empty));
-
-            return inputTagHelper;
+            return Factory.GetTagHelper(column, isScalar, dataRow, generator, metadataProvider, g => new InputTagHelper(g));
         }
 
         public static TheoryData<TagHelperAttributeList, string> MultiAttributeCheckBoxData
