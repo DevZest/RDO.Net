@@ -77,7 +77,7 @@ namespace DevZest.Data
             var dataSet = result._dataSet;
             if (dataSet != null)
                 dataSet.RemoveAt(0);
-            JsonReader.Create(json, customizer).Parse(result._dataSet, true);
+            JsonReader.Create(json, customizer).Read(result._dataSet, true);
             return dataSet.Count == 1 ? result : null;
         }
     }

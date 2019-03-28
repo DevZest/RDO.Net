@@ -36,7 +36,7 @@ namespace DevZest.Data.Primitives
 
         public static DataSet Parse(this JsonReader jsonReader, Func<DataSet> dataSetCreator)
         {
-            return jsonReader.Parse(dataSetCreator, false);
+            return jsonReader.Parse(dataSetCreator, isTopLevel: true);
         }
 
         internal static DataSet Parse(this JsonReader jsonReader, Func<DataSet> dataSetCreator, bool isTopLevel)
@@ -50,12 +50,14 @@ namespace DevZest.Data.Primitives
             }
 
             var result = dataSetCreator();
-            jsonReader.Parse(result, isTopLevel);
+            jsonReader.Read(result, isTopLevel);
             return result;
         }
 
-        internal static void Parse(this JsonReader jsonReader, DataSet dataSet, bool isTopLevel)
+        public static void Read(this JsonReader jsonReader, DataSet dataSet, bool isTopLevel)
         {
+            dataSet.VerifyNotNull(nameof(dataSet));
+
             jsonReader.ExpectToken(JsonTokenKind.SquaredOpen);
 
             if (jsonReader.PeekToken().Kind == JsonTokenKind.CurlyOpen)
@@ -65,7 +67,7 @@ namespace DevZest.Data.Primitives
 
                 dataSet.AddRow(x =>
                 {
-                    jsonReader.Parse(x);
+                    jsonReader.Read(x);
                     x.IsPrimaryKeySealed = true;
                 });
 
@@ -74,7 +76,7 @@ namespace DevZest.Data.Primitives
                     jsonReader.ConsumeToken();
                     dataSet.AddRow(x =>
                     {
-                        jsonReader.Parse(x);
+                        jsonReader.Read(x);
                         x.IsPrimaryKeySealed = true;
                     });
                 }
