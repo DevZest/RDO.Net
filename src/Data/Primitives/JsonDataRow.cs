@@ -186,7 +186,7 @@ namespace DevZest.Data.Primitives
 
             var member = model[memberName];
             if (member == null)
-                throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
+                throw new FormatException(DiagnosticMessages.JsonReader_InvalidModelMember(memberName, model.GetType().FullName));
             if (member is Column column)
                 jsonReader.Parse(column, dataRow.Ordinal);
             else if (member is ColumnList columnList)
@@ -196,7 +196,7 @@ namespace DevZest.Data.Primitives
             else if (member is Model childModel)
                 jsonReader.Parse(dataRow[childModel], isTopLevel:false);
             else
-                throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
+                throw new FormatException(DiagnosticMessages.JsonReader_InvalidModelMember(memberName, model.GetType().FullName));
         }
 
         private static void Parse(this JsonReader jsonReader, Projection projection, DataRow dataRow)
@@ -224,7 +224,7 @@ namespace DevZest.Data.Primitives
             if (projection.ColumnsByRelativeName.ContainsKey(memberName))
                 jsonReader.Parse(projection.ColumnsByRelativeName[memberName], dataRow.Ordinal);
             else
-                throw new FormatException(DiagnosticMessages.JsonParser_InvalidColumnGroupMember(memberName, projection.Name));
+                throw new FormatException(DiagnosticMessages.JsonReader_InvalidColumnGroupMember(memberName, projection.Name));
         }
 
         private static void Parse(this JsonReader jsonReader, Column column, int ordinal)

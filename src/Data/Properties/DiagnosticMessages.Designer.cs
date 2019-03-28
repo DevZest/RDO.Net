@@ -406,49 +406,49 @@ namespace DevZest.Data
         /// <summary>
         /// Reached EOF unexpectedly.
         /// </summary>
-        public static string JsonParser_UnexpectedEof
+        public static string StringJsonReader_UnexpectedEof
         {
-            get { return GetString("JsonParser_UnexpectedEof"); }
+            get { return GetString("StringJsonReader_UnexpectedEof"); }
         }
 
         /// <summary>
         /// Invalid char '{ch}' at index {index}.
         /// </summary>
-        public static string JsonParser_InvalidChar(object ch, object index)
+        public static string StringJsonReader_InvalidChar(object ch, object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidChar", "ch", "index"), ch, index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("StringJsonReader_InvalidChar", "ch", "index"), ch, index);
         }
 
         /// <summary>
         /// Char '{ch}' at index {index} is not a valid hex number.
         /// </summary>
-        public static string JsonParser_InvalidHexChar(object ch, object index)
+        public static string StringJsonReader_InvalidHexChar(object ch, object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidHexChar", "ch", "index"), ch, index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("StringJsonReader_InvalidHexChar", "ch", "index"), ch, index);
         }
 
         /// <summary>
         /// '{ch}' expected at index {index}.
         /// </summary>
-        public static string JsonParser_InvalidLiteral(object ch, object index)
+        public static string StringJsonReader_InvalidLiteral(object ch, object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidLiteral", "ch", "index"), ch, index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("StringJsonReader_InvalidLiteral", "ch", "index"), ch, index);
         }
 
         /// <summary>
         /// Invalid string escape '{stringEscape}' at index {index}.
         /// </summary>
-        public static string JsonParser_InvalidStringEscape(object stringEscape, object index)
+        public static string StringJsonReader_InvalidStringEscape(object stringEscape, object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidStringEscape", "stringEscape", "index"), stringEscape, index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("StringJsonReader_InvalidStringEscape", "stringEscape", "index"), stringEscape, index);
         }
 
         /// <summary>
         /// Invalid member name "{memberName}" for Model "{model}".
         /// </summary>
-        public static string JsonParser_InvalidModelMember(object memberName, object model)
+        public static string JsonReader_InvalidModelMember(object memberName, object model)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidModelMember", "memberName", "model"), memberName, model);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonReader_InvalidModelMember", "memberName", "model"), memberName, model);
         }
 
         /// <summary>
@@ -462,9 +462,9 @@ namespace DevZest.Data
         /// <summary>
         /// Current token kind "{tokenKind}" is invalid. Expected token kind: {expectedTokenKind}.
         /// </summary>
-        public static string JsonParser_InvalidTokenKind(object tokenKind, object expectedTokenKind)
+        public static string JsonReader_InvalidTokenKind(object tokenKind, object expectedTokenKind)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidTokenKind", "tokenKind", "expectedTokenKind"), tokenKind, expectedTokenKind);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonReader_InvalidTokenKind", "tokenKind", "expectedTokenKind"), tokenKind, expectedTokenKind);
         }
 
         /// <summary>
@@ -678,33 +678,9 @@ namespace DevZest.Data
         /// <summary>
         /// The object name "{objectName}" is invalid, "{expectedObjectName}" expected.
         /// </summary>
-        public static string JsonParser_InvalidObjectName(object objectName, object expectedObjectName)
+        public static string JsonReader_InvalidObjectName(object objectName, object expectedObjectName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidObjectName", "objectName", "expectedObjectName"), objectName, expectedObjectName);
-        }
-
-        /// <summary>
-        /// Invalid object name "{objName}". "{expected1}" or "{expected2}" expected.
-        /// </summary>
-        public static string ColumnJsonParser_InvalidObjectName(object objName, object expected1, object expected2)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidObjectName", "objName", "expected1", "expected2"), objName, expected1, expected2);
-        }
-
-        /// <summary>
-        /// Invalid Model["{name}"]: Type "{expectedType}" expected.
-        /// </summary>
-        public static string ColumnJsonParser_InvalidColumnType(object name, object expectedType)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidColumnType", "name", "expectedType"), name, expectedType);
-        }
-
-        /// <summary>
-        /// The TypeId "{typeId}" is invalid, null ColumnConverter resolved.
-        /// </summary>
-        public static string ColumnJsonParser_InvalidTypeId(object typeId)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidTypeId", "typeId"), typeId);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonReader_InvalidObjectName", "objectName", "expectedObjectName"), objectName, expectedObjectName);
         }
 
         /// <summary>
@@ -729,14 +705,6 @@ namespace DevZest.Data
         public static string Case_WhenThenNotMatch
         {
             get { return GetString("Case_WhenThenNotMatch"); }
-        }
-
-        /// <summary>
-        /// The JsonWriter is empty. Use JsonWriter.New to create a non empty JsonWriter.
-        /// </summary>
-        public static string JsonWriter_Empty
-        {
-            get { return GetString("JsonWriter_Empty"); }
         }
 
         /// <summary>
@@ -950,9 +918,9 @@ namespace DevZest.Data
         /// <summary>
         /// Invalid member name "{memberName}" for ColumnGroup "{columnGroupName}".
         /// </summary>
-        public static string JsonParser_InvalidColumnGroupMember(object memberName, object columnGroupName)
+        public static string JsonReader_InvalidColumnGroupMember(object memberName, object columnGroupName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidColumnGroupMember", "memberName", "columnGroupName"), memberName, columnGroupName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonReader_InvalidColumnGroupMember", "memberName", "columnGroupName"), memberName, columnGroupName);
         }
 
         /// <summary>

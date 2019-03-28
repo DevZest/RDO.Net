@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace DevZest.Data
+﻿namespace DevZest.Data
 {
     public enum JsonValueType
     {
-        // These values are used by JsonParser.TokenKind, which has a FlagsAttribute
+        // These values are used by JsonTokenKind, which has a FlagsAttribute
         Number = 0x1,
         String = 0x2,
         True = 0x4,

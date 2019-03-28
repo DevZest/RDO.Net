@@ -264,28 +264,28 @@
   <data name="DbSession_ColumnNotSupported" xml:space="preserve">
     <value>The column[{columnIndex}] '{column}' is not supported by this DbSession.</value>
   </data>
-  <data name="JsonParser_UnexpectedEof" xml:space="preserve">
+  <data name="StringJsonReader_UnexpectedEof" xml:space="preserve">
     <value>Reached EOF unexpectedly.</value>
   </data>
-  <data name="JsonParser_InvalidChar" xml:space="preserve">
+  <data name="StringJsonReader_InvalidChar" xml:space="preserve">
     <value>Invalid char '{ch}' at index {index}.</value>
   </data>
-  <data name="JsonParser_InvalidHexChar" xml:space="preserve">
+  <data name="StringJsonReader_InvalidHexChar" xml:space="preserve">
     <value>Char '{ch}' at index {index} is not a valid hex number.</value>
   </data>
-  <data name="JsonParser_InvalidLiteral" xml:space="preserve">
+  <data name="StringJsonReader_InvalidLiteral" xml:space="preserve">
     <value>'{ch}' expected at index {index}.</value>
   </data>
-  <data name="JsonParser_InvalidStringEscape" xml:space="preserve">
+  <data name="StringJsonReader_InvalidStringEscape" xml:space="preserve">
     <value>Invalid string escape '{stringEscape}' at index {index}.</value>
   </data>
-  <data name="JsonParser_InvalidModelMember" xml:space="preserve">
+  <data name="JsonReader_InvalidModelMember" xml:space="preserve">
     <value>Invalid member name "{memberName}" for Model "{model}".</value>
   </data>
   <data name="BooleanColumn_CannotDeserialize" xml:space="preserve">
     <value>Cannot deserialize from JSON value. Provided JSON value must be 'true', 'false' or 'null'.</value>
   </data>
-  <data name="JsonParser_InvalidTokenKind" xml:space="preserve">
+  <data name="JsonReader_InvalidTokenKind" xml:space="preserve">
     <value>Current token kind "{tokenKind}" is invalid. Expected token kind: {expectedTokenKind}.</value>
   </data>
   <data name="ColumnMapper_InvalidSourceParentModelSet" xml:space="preserve">
@@ -366,17 +366,8 @@
   <data name="DataRow_MismatchWithSavedDataRow" xml:space="preserve">
     <value>Mismatch with Model.SavedDataRow. The DataRow must be previously saved by calling DataRow.Save.</value>
   </data>
-  <data name="JsonParser_InvalidObjectName" xml:space="preserve">
+  <data name="JsonReader_InvalidObjectName" xml:space="preserve">
     <value>The object name "{objectName}" is invalid, "{expectedObjectName}" expected.</value>
-  </data>
-  <data name="ColumnJsonParser_InvalidObjectName" xml:space="preserve">
-    <value>Invalid object name "{objName}". "{expected1}" or "{expected2}" expected.</value>
-  </data>
-  <data name="ColumnJsonParser_InvalidColumnType" xml:space="preserve">
-    <value>Invalid Model["{name}"]: Type "{expectedType}" expected.</value>
-  </data>
-  <data name="ColumnJsonParser_InvalidTypeId" xml:space="preserve">
-    <value>The TypeId "{typeId}" is invalid, null ColumnConverter resolved.</value>
   </data>
   <data name="ColumnConverter_NotDefined" xml:space="preserve">
     <value>There is no ColumnConverterAttribute defined for type "{columnType}".</value>
@@ -386,9 +377,6 @@
   </data>
   <data name="Case_WhenThenNotMatch" xml:space="preserve">
     <value>Cannot match When and Then columns. They cannot be empty and must have identical size.</value>
-  </data>
-  <data name="JsonWriter_Empty" xml:space="preserve">
-    <value>The JsonWriter is empty. Use JsonWriter.New to create a non empty JsonWriter.</value>
   </data>
   <data name="ValidationError_EmptySourceColumns" xml:space="preserve">
     <value>The source colums cannot be empty.</value>
@@ -468,7 +456,7 @@
   <data name="Model_ExtraColumnsAlreadyExists" xml:space="preserve">
     <value>Extra columns already exists.</value>
   </data>
-  <data name="JsonParser_InvalidColumnGroupMember" xml:space="preserve">
+  <data name="JsonReader_InvalidColumnGroupMember" xml:space="preserve">
     <value>Invalid member name "{memberName}" for ColumnGroup "{columnGroupName}".</value>
   </data>
   <data name="DbQueryBuilder_EmptyFrom" xml:space="preserve">
