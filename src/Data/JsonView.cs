@@ -43,7 +43,7 @@ namespace DevZest.Data
         public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty)
         {
             dataRows.VerifyNotNull(nameof(dataRows));
-            return JsonWriter.New().Write(this, dataRows).ToString(isPretty);
+            return JsonWriter.Create().Write(this, dataRows).ToString(isPretty);
         }
 
         public override string ToString()

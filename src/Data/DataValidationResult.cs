@@ -26,7 +26,7 @@ namespace DevZest.Data
 
         public string ToJsonString(bool isPretty)
         {
-            return JsonWriter.New().Write(this).ToString(isPretty);
+            return JsonWriter.Create().Write(this).ToString(isPretty);
         }
 
         public static DataValidationResult ParseJson(DataSet dataSet, string json)

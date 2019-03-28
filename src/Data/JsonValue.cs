@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Globalization;
 using System.Text;
 
@@ -138,21 +139,21 @@ namespace DevZest.Data
             return Text;
         }
 
-        internal void Write(StringBuilder stringBuilder)
+        internal void Write(JsonWriter jsonWriter)
         {
             if (Type == JsonValueType.String)
-                stringBuilder.Append('"');
+                jsonWriter.Write('"');
 
             if (Type != JsonValueType.String)
-                stringBuilder.Append(Text);
+                jsonWriter.Write(Text);
             else
-                WriteEscapedText(Text, stringBuilder);
+                WriteEscapedText(Text, jsonWriter);
 
             if (Type == JsonValueType.String)
-                stringBuilder.Append('"');
+                jsonWriter.Write('"');
         }
 
-        private static void WriteEscapedText(string value, StringBuilder stringBuilder)
+        private static void WriteEscapedText(string value, JsonWriter jsonWriter)
         {
             if (string.IsNullOrEmpty(value))
                 return;
@@ -170,15 +171,15 @@ namespace DevZest.Data
                 }
 
                 if (num > 0)
-                    stringBuilder.Append(value, startIndex, num);
+                    jsonWriter.Write(value, startIndex, num);
 
                 startIndex = i + 1;
                 num = 0;
-                WriteEscape(c, stringBuilder);
+                WriteEscape(c, jsonWriter);
             }
 
             if (num > 0)
-                stringBuilder.Append(value, startIndex, num);
+                jsonWriter.Write(value, startIndex, num);
         }
 
         private static bool RequiresEscape(char c)
@@ -186,35 +187,35 @@ namespace DevZest.Data
             return c < ' ' || c == '"' || c == '\\' || c == '\u0085' || c == '\u2028' || c == '\u2029';
         }
 
-        private static void WriteEscape(char c, StringBuilder stringBuilder)
+        private static void WriteEscape(char c, JsonWriter jsonWriter)
         {
             switch (c)
             {
                 case '"':
-                    stringBuilder.Append("\\\"");
+                    jsonWriter.Write("\\\"");
                     break;
                 case '\\':
-                    stringBuilder.Append("\\\\");
+                    jsonWriter.Write("\\\\");
                     break;
                 case '\b':
-                    stringBuilder.Append("\\b");
+                    jsonWriter.Write("\\b");
                     break;
                 case '\f':
-                    stringBuilder.Append("\\f");
+                    jsonWriter.Write("\\f");
                     break;
                 case '\n':
-                    stringBuilder.Append("\\n");
+                    jsonWriter.Write("\\n");
                     break;
                 case '\r':
-                    stringBuilder.Append("\\r");
+                    jsonWriter.Write("\\r");
                     break;
                 case '\t':
-                    stringBuilder.Append("\\t");
+                    jsonWriter.Write("\\t");
                     break;
                 default:
-                    stringBuilder.Append("\\u");
+                    jsonWriter.Write("\\u");
                     int num = (int)c;
-                    stringBuilder.Append(num.ToString("x4", CultureInfo.InvariantCulture));
+                    jsonWriter.Write(num.ToString("x4", CultureInfo.InvariantCulture));
                     break;
             }
         }

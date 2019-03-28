@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Primitives;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace DevZest.Data.SqlServer
 {
@@ -8,7 +7,7 @@ namespace DevZest.Data.SqlServer
     {
         public static string ForJson(this DataSet dataSet, string ordinalColumnName, bool isPretty, bool omitNullValues = false)
         {
-            var jsonWriter = JsonWriter.New();
+            var jsonWriter = JsonWriter.Create();
             jsonWriter.WriteStartArray();
             var columns = dataSet.Model.GetColumns();
             for (int i = 0; i < dataSet.Count; i++)

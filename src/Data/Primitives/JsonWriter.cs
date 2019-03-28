@@ -4,52 +4,89 @@ using System.Text;
 
 namespace DevZest.Data.Primitives
 {
-    public struct JsonWriter
+    public abstract class JsonWriter
     {
-        public static JsonWriter New()
+        private sealed class StringJsonWriter : JsonWriter
         {
-            return new JsonWriter(new StringBuilder());
+            public StringJsonWriter(StringBuilder stringBuilder)
+            {
+                _stringBuilder = stringBuilder;
+            }
+
+            private readonly StringBuilder _stringBuilder;
+
+            protected internal override void Write(char value)
+            {
+                _stringBuilder.Append(value);
+            }
+
+            protected internal override void Write(string value)
+            {
+                _stringBuilder.Append(value);
+            }
+
+            protected internal override void Write(string value, int startIndex, int num)
+            {
+                _stringBuilder.Append(value, startIndex, num);
+            }
+
+            public override string ToString(bool isPretty)
+            {
+                var result = _stringBuilder.ToString();
+                if (isPretty)
+                    result = PrettyPrint(result);
+                return result;
+            }
         }
 
-        private JsonWriter(StringBuilder stringBuilder)
+        public static JsonWriter Create()
         {
-            _stringBuilder = stringBuilder;
+            return Create(new StringBuilder());
         }
 
-        private StringBuilder _stringBuilder;
-        public StringBuilder StringBuilder
+        public static JsonWriter Create(StringBuilder stringBuilder)
         {
-            get { return _stringBuilder; }
+            return new StringJsonWriter(stringBuilder);
         }
 
-        private StringBuilder RequireStringBuilder()
+        protected internal abstract void Write(char value);
+
+        protected internal virtual void Write(string value)
         {
-            if (_stringBuilder == null)
-                throw new InvalidOperationException(DiagnosticMessages.JsonWriter_Empty);
-            return _stringBuilder;
+            if (value == null)
+                return;
+
+            for (int i = 0; i < value.Length; i++)
+                Write(value[i]);
+        }
+
+        protected internal virtual void Write(string value, int startIndex, int num)
+        {
+            for (int i = 0; i < num; i++)
+                Write(value[startIndex + i]);
         }
 
         public JsonWriter WriteStartObject()
         {
-            RequireStringBuilder().Append('{');
+            Write('{');
             return this;
         }
 
         public JsonWriter WriteEndObject()
         {
-            RequireStringBuilder().Append('}');
+            Write('}');
             return this;
         }
 
         public JsonWriter WriteStartArray()
         {
-            RequireStringBuilder().Append('[');
+            Write('[');
             return this;
         }
 
         public JsonWriter WriteEndArray()
         {
-            RequireStringBuilder().Append(']');
+            Write(']');
             return this;
         }
 
@@ -65,20 +102,20 @@ namespace DevZest.Data.Primitives
 
         public JsonWriter WriteComma()
         {
-            RequireStringBuilder().Append(',');
+            Write(',');
             return this;
         }
 
         public JsonWriter WriteObjectName(string name)
         {
-            JsonValue.String(name).Write(RequireStringBuilder());
-            RequireStringBuilder().Append(":");
+            JsonValue.String(name).Write(this);
+            Write(':');
             return this;
         }
 
         public JsonWriter WriteValue(JsonValue value)
         {
-            value.Write(RequireStringBuilder());
+            value.Write(this);
             return this;
         }
 
@@ -181,15 +218,6 @@ namespace DevZest.Data.Primitives
             return ToString(true);
         }
 
-        public string ToString(bool isPretty)
-        {
-            if (_stringBuilder == null)
-                return null;
-
-            var result = _stringBuilder.ToString();
-            if (isPretty)
-                result = PrettyPrint(result);
-            return result;
-        }
+        public abstract string ToString(bool isPretty);
     }
 }

@@ -187,13 +187,13 @@ namespace DevZest.Data
 
         public string ToJsonString(bool isPretty)
         {
-            return JsonWriter.New().Write(this).ToString(isPretty);
+            return JsonWriter.Create().Write(this).ToString(isPretty);
         }
 
         public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty)
         {
             dataRows.VerifyNotNull(nameof(dataRows));
-            return JsonWriter.New().Write(this, dataRows).ToString(isPretty);
+            return JsonWriter.Create().Write(this, dataRows).ToString(isPretty);
         }
 
         public IDataValidationResults Validate(bool recursive = true, int maxErrorRows = 100)

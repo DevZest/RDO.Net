@@ -147,7 +147,7 @@ namespace DevZest.Data
 
         public static string ToJsonString(this IDataValidationResults validationResults, bool isPretty)
         {
-            return JsonWriter.New().Write(validationResults).ToString(isPretty);
+            return JsonWriter.Create().Write(validationResults).ToString(isPretty);
         }
     }
 }
