@@ -8,7 +8,8 @@ namespace DevZest.Data.Primitives
     {
         private sealed class StringJsonWriter : JsonWriter
         {
-            public StringJsonWriter(StringBuilder stringBuilder)
+            public StringJsonWriter(StringBuilder stringBuilder, IJsonCustomizer customizer)
+                : base(customizer)
             {
                 _stringBuilder = stringBuilder;
             }
@@ -39,14 +40,30 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public static JsonWriter Create()
+        public static JsonWriter Create(IJsonCustomizer customizer)
         {
-            return Create(new StringBuilder());
+            return Create(new StringBuilder(), customizer);
         }
 
-        public static JsonWriter Create(StringBuilder stringBuilder)
+        public static JsonWriter Create(StringBuilder stringBuilder, IJsonCustomizer customizer)
         {
-            return new StringJsonWriter(stringBuilder);
+            return new StringJsonWriter(stringBuilder, customizer);
+        }
+
+        protected JsonWriter(IJsonCustomizer customizer)
+        {
+            Customizer = customizer;
+        }
+
+        protected IJsonCustomizer Customizer { get; }
+
+        public JsonValue Serialize(Column column, int rowOrdinal)
+        {
+            var jsonConverter = Customizer?.GetConverter(column);
+            if (jsonConverter != null)
+                return jsonConverter.Serialize(column, rowOrdinal);
+            else
+                return column.Serialize(rowOrdinal);
         }
 
         protected internal abstract void Write(char value);

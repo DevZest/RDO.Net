@@ -180,20 +180,15 @@ namespace DevZest.Data
             return ToJsonString(isPretty: true);
         }
 
-        public static string ToJsonString(DataSet dataSet, bool isPretty)
+        public string ToJsonString(bool isPretty, IJsonCustomizer customizer = null)
         {
-            return dataSet == null ? JsonValue.Null.Text : dataSet.ToJsonString(isPretty);
+            return JsonWriter.Create(customizer).Write(this).ToString(isPretty);
         }
 
-        public string ToJsonString(bool isPretty)
-        {
-            return JsonWriter.Create().Write(this).ToString(isPretty);
-        }
-
-        public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty)
+        public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty, IJsonCustomizer customizer = null)
         {
             dataRows.VerifyNotNull(nameof(dataRows));
-            return JsonWriter.Create().Write(this, dataRows).ToString(isPretty);
+            return JsonWriter.Create(customizer).Write(this, dataRows).ToString(isPretty);
         }
 
         public IDataValidationResults Validate(bool recursive = true, int maxErrorRows = 100)

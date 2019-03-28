@@ -7,7 +7,7 @@ namespace DevZest.Data.SqlServer
     {
         public static string ForJson(this DataSet dataSet, string ordinalColumnName, bool isPretty, bool omitNullValues = false)
         {
-            var jsonWriter = JsonWriter.Create();
+            var jsonWriter = JsonWriter.Create(null);
             jsonWriter.WriteStartArray();
             var columns = dataSet.Model.GetColumns();
             for (int i = 0; i < dataSet.Count; i++)

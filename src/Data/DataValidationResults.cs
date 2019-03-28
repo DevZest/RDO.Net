@@ -137,17 +137,17 @@ namespace DevZest.Data
             get { return EmptyResults.Singleton; }
         }
 
-        public static IDataValidationResults ParseJson(DataSet dataSet, string json)
+        public static IDataValidationResults ParseJson(DataSet dataSet, string json, IJsonCustomizer customizer = null)
         {
-            var jsonReader = JsonReader.Create(json);
+            var jsonReader = JsonReader.Create(json, customizer);
             var result = jsonReader.ParseDataValidationResults(dataSet);
             jsonReader.ExpectToken(JsonTokenKind.Eof);
             return result;
         }
 
-        public static string ToJsonString(this IDataValidationResults validationResults, bool isPretty)
+        public static string ToJsonString(this IDataValidationResults validationResults, bool isPretty, IJsonCustomizer customizer = null)
         {
-            return JsonWriter.Create().Write(validationResults).ToString(isPretty);
+            return JsonWriter.Create(customizer).Write(validationResults).ToString(isPretty);
         }
     }
 }

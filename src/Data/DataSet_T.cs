@@ -211,11 +211,11 @@ namespace DevZest.Data
             return ParseJson(null, json);
         }
 
-        public static DataSet<T> ParseJson(Action<T> initializer, string json)
+        public static DataSet<T> ParseJson(Action<T> initializer, string json, IJsonCustomizer customizer = null)
         {
             json.VerifyNotEmpty(nameof(json));
 
-            return (DataSet<T>)(JsonReader.Create(json).Parse(() => Create(initializer), true));
+            return (DataSet<T>)(JsonReader.Create(json, customizer).Parse(() => Create(initializer), true));
         }
 
         private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, IReadOnlyList<ColumnMapping> parentRelationship, Action<TChild> initializer)

@@ -24,14 +24,14 @@ namespace DevZest.Data
             get { return DataRow == null; }
         }
 
-        public string ToJsonString(bool isPretty)
+        public string ToJsonString(bool isPretty, IJsonCustomizer customizer = null)
         {
-            return JsonWriter.Create().Write(this).ToString(isPretty);
+            return JsonWriter.Create(customizer).Write(this).ToString(isPretty);
         }
 
-        public static DataValidationResult ParseJson(DataSet dataSet, string json)
+        public static DataValidationResult ParseJson(DataSet dataSet, string json, IJsonCustomizer customizer = null)
         {
-            var jsonReader = JsonReader.Create(json);
+            var jsonReader = JsonReader.Create(json, customizer);
             var result = jsonReader.ParseDataValidationResult(dataSet);
             jsonReader.ExpectToken(JsonTokenKind.Eof);
             return result;

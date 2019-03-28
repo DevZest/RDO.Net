@@ -105,11 +105,10 @@ namespace DevZest.Data.Primitives
 
         private static void Write(this JsonWriter jsonWriter, DataRow dataRow, Column column)
         {
-            var dataSetColumn = column as IDataSetColumn;
-            if (dataSetColumn != null)
+            if (column is IDataSetColumn dataSetColumn)
                 dataSetColumn.Serialize(dataRow.Ordinal, jsonWriter);
             else
-                jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
+                jsonWriter.WriteValue(jsonWriter.Serialize(column, dataRow.Ordinal));
         }
 
         private static void Write(this JsonWriter jsonWriter, DataRow dataRow, Projection projection, JsonFilter jsonFilter)
@@ -241,7 +240,7 @@ namespace DevZest.Data.Primitives
 
             var token = jsonReader.ExpectToken(JsonTokenKind.ColumnValues);
             if (column.ShouldSerialize)
-                column.Deserialize(ordinal, token.JsonValue);
+                jsonReader.Deserialize(column, ordinal, token.JsonValue);
         }
 
         private static void Parse(this JsonReader jsonReader, ColumnList columnList, int ordinal)

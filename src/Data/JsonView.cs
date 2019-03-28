@@ -35,15 +35,15 @@ namespace DevZest.Data
                 return childDataSet;
         }
 
-        public string ToJsonString(bool isPretty)
+        public string ToJsonString(bool isPretty, IJsonCustomizer customizer = null)
         {
-            return ToJsonString(Model.DataSet, isPretty);
+            return ToJsonString(Model.DataSet, isPretty, customizer);
         }
 
-        public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty)
+        public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty, IJsonCustomizer customizer = null)
         {
             dataRows.VerifyNotNull(nameof(dataRows));
-            return JsonWriter.Create().Write(this, dataRows).ToString(isPretty);
+            return JsonWriter.Create(customizer).Write(this, dataRows).ToString(isPretty);
         }
 
         public override string ToString()
@@ -68,7 +68,7 @@ namespace DevZest.Data
 
         public override Model Model { get { return _.Model; } }
 
-        private JsonView[] _children;
+        private readonly JsonView[] _children;
         public override IReadOnlyList<JsonView> Children
         {
             get { return _children; }

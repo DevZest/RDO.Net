@@ -6,9 +6,9 @@ namespace DevZest.Data.Primitives
 {
     public abstract class JsonReader
     {
-        public static JsonReader Create(string json)
+        public static JsonReader Create(string json, IJsonCustomizer customizer)
         {
-            return new StringJsonReader(json);
+            return new StringJsonReader(json, customizer);
         }
 
         private sealed class StringJsonReader : JsonReader
@@ -17,7 +17,8 @@ namespace DevZest.Data.Primitives
             int _index;
             readonly StringBuilder _stringBuilder = new StringBuilder();
 
-            public StringJsonReader(string json)
+            public StringJsonReader(string json, IJsonCustomizer customizer)
+                : base(customizer)
             {
                 _json = json.VerifyNotEmpty(nameof(json));
             }
@@ -251,8 +252,20 @@ namespace DevZest.Data.Primitives
 
         JsonToken? _lookAhead;
 
-        protected JsonReader()
+        protected JsonReader(IJsonCustomizer customer)
         {
+            Customizer = Customizer;
+        }
+
+        protected IJsonCustomizer Customizer { get; }
+
+        public void Deserialize(Column column, int rowOrdinal, JsonValue value)
+        {
+            var jsonConverter = Customizer?.GetConverter(column);
+            if (jsonConverter != null)
+                jsonConverter.Deserialize(column, rowOrdinal, value);
+            else
+                column.Deserialize(rowOrdinal, value);
         }
 
         public JsonToken PeekToken()

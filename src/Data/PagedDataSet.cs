@@ -69,7 +69,7 @@ namespace DevZest.Data
             set { _.Data[0] = value; }
         }
 
-        public static PagedDataSet<T> ParseJson(string json)
+        public static PagedDataSet<T> ParseJson(string json, IJsonCustomizer customizer = null)
         {
             json.VerifyNotEmpty(nameof(json));
 
@@ -77,7 +77,7 @@ namespace DevZest.Data
             var dataSet = result._dataSet;
             if (dataSet != null)
                 dataSet.RemoveAt(0);
-            JsonReader.Create(json).Parse(result._dataSet, true);
+            JsonReader.Create(json, customizer).Parse(result._dataSet, true);
             return dataSet.Count == 1 ? result : null;
         }
     }

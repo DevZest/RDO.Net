@@ -16,14 +16,14 @@ namespace DevZest.Data
                 throw new ArgumentException(DiagnosticMessages.ValidationError_EmptySourceColumns, nameof(source));
         }
 
-        public string ToJsonString(bool isPretty)
+        public string ToJsonString(bool isPretty, IJsonCustomizer customizer = null)
         {
-            return JsonWriter.Create().Write(this).ToString(isPretty);
+            return JsonWriter.Create(customizer).Write(this).ToString(isPretty);
         }
 
-        public static DataValidationError ParseJson(DataSet dataSet, string json)
+        public static DataValidationError ParseJson(DataSet dataSet, string json, IJsonCustomizer customizer = null)
         {
-            var jsonReader = JsonReader.Create(json);
+            var jsonReader = JsonReader.Create(json, customizer);
             var result = jsonReader.ParseValidationMessage(dataSet);
             jsonReader.ExpectToken(JsonTokenKind.Eof);
             return result;
