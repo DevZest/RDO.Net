@@ -139,9 +139,9 @@ namespace DevZest.Data
 
         public static IDataValidationResults ParseJson(DataSet dataSet, string json)
         {
-            var jsonParser = new JsonParser(json);
-            var result = jsonParser.ParseDataValidationResults(dataSet);
-            jsonParser.ExpectToken(JsonTokenKind.Eof);
+            var jsonReader = new JsonReader(json);
+            var result = jsonReader.ParseDataValidationResults(dataSet);
+            jsonReader.ExpectToken(JsonTokenKind.Eof);
             return result;
         }
 

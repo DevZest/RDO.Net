@@ -148,39 +148,39 @@ namespace DevZest.Data.Primitives
         }
 
 
-        public static void Parse(this JsonParser jsonParser, DataRow dataRow)
+        public static void Parse(this JsonReader jsonReader, DataRow dataRow)
         {
             var model = dataRow.Model;
             if (model.IsProjectionContainer)
             {
                 Debug.Assert(model.Projections.Count == 1);
                 var projection = model.Projections[0];
-                jsonParser.Parse(projection, dataRow);
+                jsonReader.Parse(projection, dataRow);
                 return;
             }
 
-            jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
+            jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
 
-            var token = jsonParser.PeekToken();
+            var token = jsonReader.PeekToken();
             if (token.Kind == JsonTokenKind.String)
             {
-                jsonParser.ConsumeToken();
-                jsonParser.Parse(dataRow, token.Text);
+                jsonReader.ConsumeToken();
+                jsonReader.Parse(dataRow, token.Text);
 
-                while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
+                while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
-                    jsonParser.ConsumeToken();
-                    token = jsonParser.ExpectToken(JsonTokenKind.String);
-                    jsonParser.Parse(dataRow, token.Text);
+                    jsonReader.ConsumeToken();
+                    token = jsonReader.ExpectToken(JsonTokenKind.String);
+                    jsonReader.Parse(dataRow, token.Text);
                 }
             }
 
-            jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
+            jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Parse(this JsonParser jsonParser, DataRow dataRow, string memberName)
+        private static void Parse(this JsonReader jsonReader, DataRow dataRow, string memberName)
         {
-            jsonParser.ExpectToken(JsonTokenKind.Colon);
+            jsonReader.ExpectToken(JsonTokenKind.Colon);
 
             var model = dataRow.Model;
 
@@ -188,72 +188,72 @@ namespace DevZest.Data.Primitives
             if (member == null)
                 throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
             if (member is Column column)
-                jsonParser.Parse(column, dataRow.Ordinal);
+                jsonReader.Parse(column, dataRow.Ordinal);
             else if (member is ColumnList columnList)
-                jsonParser.Parse(columnList, dataRow.Ordinal);
+                jsonReader.Parse(columnList, dataRow.Ordinal);
             else if (member is Projection projection)
-                jsonParser.Parse(projection, dataRow);
+                jsonReader.Parse(projection, dataRow);
             else if (member is Model childModel)
-                jsonParser.Parse(dataRow[childModel], isTopLevel:false);
+                jsonReader.Parse(dataRow[childModel], isTopLevel:false);
             else
                 throw new FormatException(DiagnosticMessages.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
         }
 
-        private static void Parse(this JsonParser jsonParser, Projection projection, DataRow dataRow)
+        private static void Parse(this JsonReader jsonReader, Projection projection, DataRow dataRow)
         {
-            jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
-            var token = jsonParser.PeekToken();
+            jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
+            var token = jsonReader.PeekToken();
             if (token.Kind == JsonTokenKind.String)
             {
-                jsonParser.ConsumeToken();
-                jsonParser.Parse(projection, token.Text, dataRow);
+                jsonReader.ConsumeToken();
+                jsonReader.Parse(projection, token.Text, dataRow);
 
-                while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
+                while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
-                    jsonParser.ConsumeToken();
-                    token = jsonParser.ExpectToken(JsonTokenKind.String);
-                    jsonParser.Parse(projection, token.Text, dataRow);
+                    jsonReader.ConsumeToken();
+                    token = jsonReader.ExpectToken(JsonTokenKind.String);
+                    jsonReader.Parse(projection, token.Text, dataRow);
                 }
             }
-            jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
+            jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Parse(this JsonParser jsonParser, Projection projection, string memberName, DataRow dataRow)
+        private static void Parse(this JsonReader jsonReader, Projection projection, string memberName, DataRow dataRow)
         {
-            jsonParser.ExpectToken(JsonTokenKind.Colon);
+            jsonReader.ExpectToken(JsonTokenKind.Colon);
             if (projection.ColumnsByRelativeName.ContainsKey(memberName))
-                jsonParser.Parse(projection.ColumnsByRelativeName[memberName], dataRow.Ordinal);
+                jsonReader.Parse(projection.ColumnsByRelativeName[memberName], dataRow.Ordinal);
             else
                 throw new FormatException(DiagnosticMessages.JsonParser_InvalidColumnGroupMember(memberName, projection.Name));
         }
 
-        private static void Parse(this JsonParser jsonParser, Column column, int ordinal)
+        private static void Parse(this JsonReader jsonReader, Column column, int ordinal)
         {
             Debug.Assert(column != null);
 
             if (column is IDataSetColumn dataSetColumn)
             {
-                var dataSet = jsonParser.Parse(() => dataSetColumn.NewValue(ordinal), false);
+                var dataSet = jsonReader.Parse(() => dataSetColumn.NewValue(ordinal), false);
                 if (column.ShouldSerialize)
                     dataSetColumn.Deserialize(ordinal, dataSet);
                 return;
             }
 
-            var token = jsonParser.ExpectToken(JsonTokenKind.ColumnValues);
+            var token = jsonReader.ExpectToken(JsonTokenKind.ColumnValues);
             if (column.ShouldSerialize)
                 column.Deserialize(ordinal, token.JsonValue);
         }
 
-        private static void Parse(this JsonParser jsonParser, ColumnList columnList, int ordinal)
+        private static void Parse(this JsonReader jsonReader, ColumnList columnList, int ordinal)
         {
-            jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
+            jsonReader.ExpectToken(JsonTokenKind.SquaredOpen);
             for (int i = 0; i < columnList.Count; i++)
             {
-                jsonParser.Parse(columnList[i], ordinal);
+                jsonReader.Parse(columnList[i], ordinal);
                 if (i < columnList.Count - 1)
-                    jsonParser.ExpectComma();
+                    jsonReader.ExpectComma();
             }
-            jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
+            jsonReader.ExpectToken(JsonTokenKind.SquaredClose);
         }
     }
 }

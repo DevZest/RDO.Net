@@ -7,24 +7,24 @@
             return jsonWriter.WriteArray(dataValidationResults, (writer, entry) => writer.Write(entry));
         }
 
-        public static IDataValidationResults ParseDataValidationResults(this JsonParser jsonParser, DataSet dataSet)
+        public static IDataValidationResults ParseDataValidationResults(this JsonReader jsonReader, DataSet dataSet)
         {
             IDataValidationResults results = DataValidationResults.Empty;
 
-            jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
+            jsonReader.ExpectToken(JsonTokenKind.SquaredOpen);
 
-            if (jsonParser.PeekToken().Kind == JsonTokenKind.CurlyOpen)
+            if (jsonReader.PeekToken().Kind == JsonTokenKind.CurlyOpen)
             {
-                results = results.Add(jsonParser.ParseDataValidationResult(dataSet));
+                results = results.Add(jsonReader.ParseDataValidationResult(dataSet));
 
-                while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
+                while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
-                    jsonParser.ConsumeToken();
-                    results = results.Add(jsonParser.ParseDataValidationResult(dataSet));
+                    jsonReader.ConsumeToken();
+                    results = results.Add(jsonReader.ParseDataValidationResult(dataSet));
                 }
             }
 
-            jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
+            jsonReader.ExpectToken(JsonTokenKind.SquaredClose);
 
             return results;
         }

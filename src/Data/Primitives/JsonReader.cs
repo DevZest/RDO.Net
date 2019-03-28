@@ -4,14 +4,14 @@ using System.Text;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class JsonParser
+    public sealed class JsonReader
     {
         readonly string _json;
         int _index;
         readonly StringBuilder _stringBuilder = new StringBuilder();
         JsonToken? _lookAhead;
 
-        public JsonParser(string json)
+        public JsonReader(string json)
         {
             _json = json.VerifyNotEmpty(nameof(json));
         }

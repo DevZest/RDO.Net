@@ -16,16 +16,16 @@ namespace DevZest.Data.Primitives
                 .WriteEndObject();
         }
 
-        public static DataValidationResult ParseDataValidationResult(this JsonParser jsonParser, DataSet dataSet)
+        public static DataValidationResult ParseDataValidationResult(this JsonReader jsonReader, DataSet dataSet)
         {
             DataRow dataRow;
             IDataValidationErrors validationErrors;
 
-            jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
-            dataRow = DataRow.FromString(dataSet, jsonParser.ExpectNameStringPair(DATA_ROW, true));
-            jsonParser.ExpectObjectName(ERRORS);
-            validationErrors = jsonParser.ParseDataValidationErrors(dataSet);
-            jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
+            jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
+            dataRow = DataRow.FromString(dataSet, jsonReader.ExpectNameStringPair(DATA_ROW, true));
+            jsonReader.ExpectObjectName(ERRORS);
+            validationErrors = jsonReader.ParseDataValidationErrors(dataSet);
+            jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
 
             return new DataValidationResult(dataRow, validationErrors);
         }

@@ -34,47 +34,47 @@ namespace DevZest.Data.Primitives
             return jsonWriter.WriteEndArray();
         }
 
-        public static DataSet Parse(this JsonParser jsonParser, Func<DataSet> dataSetCreator)
+        public static DataSet Parse(this JsonReader jsonReader, Func<DataSet> dataSetCreator)
         {
-            return jsonParser.Parse(dataSetCreator, false);
+            return jsonReader.Parse(dataSetCreator, false);
         }
 
-        internal static DataSet Parse(this JsonParser jsonParser, Func<DataSet> dataSetCreator, bool isTopLevel)
+        internal static DataSet Parse(this JsonReader jsonReader, Func<DataSet> dataSetCreator, bool isTopLevel)
         {
-            if (jsonParser.PeekToken().Kind == JsonTokenKind.Null)
+            if (jsonReader.PeekToken().Kind == JsonTokenKind.Null)
             {
-                jsonParser.ConsumeToken();
+                jsonReader.ConsumeToken();
                 if (isTopLevel)
-                    jsonParser.ExpectToken(JsonTokenKind.Eof);
+                    jsonReader.ExpectToken(JsonTokenKind.Eof);
                 return null;
             }
 
             var result = dataSetCreator();
-            jsonParser.Parse(result, isTopLevel);
+            jsonReader.Parse(result, isTopLevel);
             return result;
         }
 
-        internal static void Parse(this JsonParser jsonParser, DataSet dataSet, bool isTopLevel)
+        internal static void Parse(this JsonReader jsonReader, DataSet dataSet, bool isTopLevel)
         {
-            jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
+            jsonReader.ExpectToken(JsonTokenKind.SquaredOpen);
 
-            if (jsonParser.PeekToken().Kind == JsonTokenKind.CurlyOpen)
+            if (jsonReader.PeekToken().Kind == JsonTokenKind.CurlyOpen)
             {
                 var model = dataSet.Model;
                 model.SuspendIdentity();
 
                 dataSet.AddRow(x =>
                 {
-                    jsonParser.Parse(x);
+                    jsonReader.Parse(x);
                     x.IsPrimaryKeySealed = true;
                 });
 
-                while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
+                while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
-                    jsonParser.ConsumeToken();
+                    jsonReader.ConsumeToken();
                     dataSet.AddRow(x =>
                     {
-                        jsonParser.Parse(x);
+                        jsonReader.Parse(x);
                         x.IsPrimaryKeySealed = true;
                     });
                 }
@@ -82,9 +82,9 @@ namespace DevZest.Data.Primitives
                 model.ResumeIdentity();
             }
 
-            jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
+            jsonReader.ExpectToken(JsonTokenKind.SquaredClose);
             if (isTopLevel)
-                jsonParser.ExpectToken(JsonTokenKind.Eof);
+                jsonReader.ExpectToken(JsonTokenKind.Eof);
         }
     }
 }

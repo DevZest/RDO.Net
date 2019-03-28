@@ -25,40 +25,40 @@ namespace DevZest.Data.Primitives
             return jsonWriter;
         }
 
-        public static DataValidationError ParseValidationMessage(this JsonParser jsonParser, DataSet dataSet)
+        public static DataValidationError ParseValidationMessage(this JsonReader jsonReader, DataSet dataSet)
         {
-            jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
-            var message = jsonParser.ExpectNameStringPair(DESCRIPTION, true);
-            var source = jsonParser.ParseColumns(dataSet, false);
-            jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
+            jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
+            var message = jsonReader.ExpectNameStringPair(DESCRIPTION, true);
+            var source = jsonReader.ParseColumns(dataSet, false);
+            jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
 
             return new DataValidationError(message, source);
         }
 
-        private static IColumns ParseColumns(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
+        private static IColumns ParseColumns(this JsonReader jsonReader, DataSet dataSet, bool expectComma)
         {
-            var text = jsonParser.ExpectNameNullableStringPair(SOURCE, expectComma);
+            var text = jsonReader.ExpectNameNullableStringPair(SOURCE, expectComma);
             return text == null ? null : Columns.Deserialize(dataSet.Model, text);
         }
 
-        public static IDataValidationErrors ParseDataValidationErrors(this JsonParser jsonParser, DataSet dataSet)
+        public static IDataValidationErrors ParseDataValidationErrors(this JsonReader jsonReader, DataSet dataSet)
         {
             IDataValidationErrors result = DataValidationErrors.Empty;
 
-            jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
+            jsonReader.ExpectToken(JsonTokenKind.SquaredOpen);
 
-            if (jsonParser.PeekToken().Kind == JsonTokenKind.CurlyOpen)
+            if (jsonReader.PeekToken().Kind == JsonTokenKind.CurlyOpen)
             {
-                result = result.Add(jsonParser.ParseValidationMessage(dataSet));
+                result = result.Add(jsonReader.ParseValidationMessage(dataSet));
 
-                while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
+                while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
-                    jsonParser.ConsumeToken();
-                    result.Add(jsonParser.ParseValidationMessage(dataSet));
+                    jsonReader.ConsumeToken();
+                    result.Add(jsonReader.ParseValidationMessage(dataSet));
                 }
             }
 
-            jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
+            jsonReader.ExpectToken(JsonTokenKind.SquaredClose);
 
             return result;
         }
