@@ -306,7 +306,7 @@ namespace DevZest.Data
         public void Deserialize(string jsonString, IJsonCustomizer customizer = null)
         {
             jsonString.VerifyNotEmpty(nameof(jsonString));
-            JsonReader.Create(jsonString, customizer).Read(this, true);
+            JsonReader.Create(jsonString, customizer).Deserialize(this, true);
         }
     }
 }

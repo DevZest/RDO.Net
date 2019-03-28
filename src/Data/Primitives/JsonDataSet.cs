@@ -50,11 +50,11 @@ namespace DevZest.Data.Primitives
             }
 
             var result = dataSetCreator();
-            jsonReader.Read(result, isTopLevel);
+            jsonReader.Deserialize(result, isTopLevel);
             return result;
         }
 
-        public static void Read(this JsonReader jsonReader, DataSet dataSet, bool isTopLevel)
+        public static void Deserialize(this JsonReader jsonReader, DataSet dataSet, bool isTopLevel)
         {
             dataSet.VerifyNotNull(nameof(dataSet));
 
@@ -67,7 +67,7 @@ namespace DevZest.Data.Primitives
 
                 dataSet.AddRow(x =>
                 {
-                    jsonReader.Read(x);
+                    jsonReader.Deserialize(x);
                     x.IsPrimaryKeySealed = true;
                 });
 
@@ -76,7 +76,7 @@ namespace DevZest.Data.Primitives
                     jsonReader.ConsumeToken();
                     dataSet.AddRow(x =>
                     {
-                        jsonReader.Read(x);
+                        jsonReader.Deserialize(x);
                         x.IsPrimaryKeySealed = true;
                     });
                 }

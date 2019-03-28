@@ -146,15 +146,14 @@ namespace DevZest.Data.Primitives
             }
         }
 
-
-        public static void Read(this JsonReader jsonReader, DataRow dataRow)
+        public static void Deserialize(this JsonReader jsonReader, DataRow dataRow)
         {
             var model = dataRow.Model;
             if (model.IsProjectionContainer)
             {
                 Debug.Assert(model.Projections.Count == 1);
                 var projection = model.Projections[0];
-                jsonReader.Read(projection, dataRow);
+                jsonReader.Deserialize(projection, dataRow);
                 return;
             }
 
@@ -164,20 +163,20 @@ namespace DevZest.Data.Primitives
             if (token.Kind == JsonTokenKind.String)
             {
                 jsonReader.ConsumeToken();
-                jsonReader.Read(dataRow, token.Text);
+                jsonReader.Deserialize(dataRow, token.Text);
 
                 while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonReader.ConsumeToken();
                     token = jsonReader.ExpectToken(JsonTokenKind.String);
-                    jsonReader.Read(dataRow, token.Text);
+                    jsonReader.Deserialize(dataRow, token.Text);
                 }
             }
 
             jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Read(this JsonReader jsonReader, DataRow dataRow, string memberName)
+        private static void Deserialize(this JsonReader jsonReader, DataRow dataRow, string memberName)
         {
             jsonReader.ExpectToken(JsonTokenKind.Colon);
 
@@ -187,46 +186,46 @@ namespace DevZest.Data.Primitives
             if (member == null)
                 throw new FormatException(DiagnosticMessages.JsonReader_InvalidModelMember(memberName, model.GetType().FullName));
             if (member is Column column)
-                jsonReader.Read(column, dataRow.Ordinal);
+                jsonReader.Deserialize(column, dataRow.Ordinal);
             else if (member is ColumnList columnList)
-                jsonReader.Read(columnList, dataRow.Ordinal);
+                jsonReader.Deserialize(columnList, dataRow.Ordinal);
             else if (member is Projection projection)
-                jsonReader.Read(projection, dataRow);
+                jsonReader.Deserialize(projection, dataRow);
             else if (member is Model childModel)
-                jsonReader.Read(dataRow[childModel], isTopLevel:false);
+                jsonReader.Deserialize(dataRow[childModel], isTopLevel:false);
             else
                 throw new FormatException(DiagnosticMessages.JsonReader_InvalidModelMember(memberName, model.GetType().FullName));
         }
 
-        private static void Read(this JsonReader jsonReader, Projection projection, DataRow dataRow)
+        private static void Deserialize(this JsonReader jsonReader, Projection projection, DataRow dataRow)
         {
             jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
             var token = jsonReader.PeekToken();
             if (token.Kind == JsonTokenKind.String)
             {
                 jsonReader.ConsumeToken();
-                jsonReader.Read(projection, token.Text, dataRow);
+                jsonReader.Deserialize(projection, token.Text, dataRow);
 
                 while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonReader.ConsumeToken();
                     token = jsonReader.ExpectToken(JsonTokenKind.String);
-                    jsonReader.Read(projection, token.Text, dataRow);
+                    jsonReader.Deserialize(projection, token.Text, dataRow);
                 }
             }
             jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Read(this JsonReader jsonReader, Projection projection, string memberName, DataRow dataRow)
+        private static void Deserialize(this JsonReader jsonReader, Projection projection, string memberName, DataRow dataRow)
         {
             jsonReader.ExpectToken(JsonTokenKind.Colon);
             if (projection.ColumnsByRelativeName.ContainsKey(memberName))
-                jsonReader.Read(projection.ColumnsByRelativeName[memberName], dataRow.Ordinal);
+                jsonReader.Deserialize(projection.ColumnsByRelativeName[memberName], dataRow.Ordinal);
             else
                 throw new FormatException(DiagnosticMessages.JsonReader_InvalidColumnGroupMember(memberName, projection.Name));
         }
 
-        private static void Read(this JsonReader jsonReader, Column column, int ordinal)
+        private static void Deserialize(this JsonReader jsonReader, Column column, int ordinal)
         {
             Debug.Assert(column != null);
 
@@ -243,12 +242,12 @@ namespace DevZest.Data.Primitives
                 jsonReader.Deserialize(column, ordinal, token.JsonValue);
         }
 
-        private static void Read(this JsonReader jsonReader, ColumnList columnList, int ordinal)
+        private static void Deserialize(this JsonReader jsonReader, ColumnList columnList, int ordinal)
         {
             jsonReader.ExpectToken(JsonTokenKind.SquaredOpen);
             for (int i = 0; i < columnList.Count; i++)
             {
-                jsonReader.Read(columnList[i], ordinal);
+                jsonReader.Deserialize(columnList[i], ordinal);
                 if (i < columnList.Count - 1)
                     jsonReader.ExpectComma();
             }
