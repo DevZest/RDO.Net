@@ -259,6 +259,11 @@ namespace DevZest.Data.Primitives
 
         protected IJsonCustomizer Customizer { get; }
 
+        public bool IsDeserializable(Column column)
+        {
+            return Customizer == null ? column.IsDeserializable : Customizer.IsDeserializable(column);
+        }
+
         public void Deserialize(Column column, int rowOrdinal, JsonValue value)
         {
             var jsonConverter = Customizer?.GetConverter(column);

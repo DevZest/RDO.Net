@@ -26,7 +26,7 @@ namespace DevZest.Data.Primitives
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                if (!column.ShouldSerialize)
+                if (!jsonWriter.IsSerializable(column))
                     continue;
 
                 if (column.Kind == ColumnKind.ColumnListItem || column.Kind == ColumnKind.ProjectionMember)
@@ -232,13 +232,13 @@ namespace DevZest.Data.Primitives
             if (column is IDataSetColumn dataSetColumn)
             {
                 var dataSet = jsonReader.Parse(() => dataSetColumn.NewValue(ordinal), false);
-                if (column.ShouldSerialize)
+                if (jsonReader.IsDeserializable(column))
                     dataSetColumn.Deserialize(ordinal, dataSet);
                 return;
             }
 
             var token = jsonReader.ExpectToken(JsonTokenKind.ColumnValues);
-            if (column.ShouldSerialize)
+            if (jsonReader.IsDeserializable(column))
                 jsonReader.Deserialize(column, ordinal, token.JsonValue);
         }
 

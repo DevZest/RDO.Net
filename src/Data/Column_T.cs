@@ -433,7 +433,7 @@ namespace DevZest.Data
         /// <returns>The column of constant expression.</returns>
         protected internal abstract Column<T> CreateConst(T value);
 
-        internal sealed override bool IsDeserializable
+        public override bool IsDeserializable
         {
             get { return _valueManager == null ? false : _valueManager.IsDeserializable; }
         }
