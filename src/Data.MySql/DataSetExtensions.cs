@@ -7,7 +7,7 @@ namespace DevZest.Data.MySql
     {
         public static string ForJson(this DataSet dataSet, string ordinalColumnName, bool isPretty)
         {
-            var jsonWriter = JsonWriter.New();
+            var jsonWriter = JsonWriter.Create(null);
             jsonWriter.WriteStartArray();
             var columns = dataSet.Model.GetColumns();
             for (int i = 0; i < dataSet.Count; i++)
@@ -34,7 +34,7 @@ namespace DevZest.Data.MySql
                     continue;
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.WriteObjectName(column.Name);
+                jsonWriter.WritePropertyName(column.Name);
                 if (column is _DateTime dateTimeColumn)
                     jsonWriter.WriteValue(JsonValue.DateTime(dateTimeColumn[dataRow], "yyyy-MM-ddTHH:mm:ss.FFFFFF"));
                 else
@@ -46,7 +46,7 @@ namespace DevZest.Data.MySql
             {
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.WriteObjectName(ordinalColumnName);
+                jsonWriter.WritePropertyName(ordinalColumnName);
                 jsonWriter.WriteValue(JsonValue.Number(dataRow.Ordinal));
             }
 
