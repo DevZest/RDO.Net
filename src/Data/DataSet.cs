@@ -302,5 +302,11 @@ namespace DevZest.Data
         {
             get { return Model.DataSetContainer; }
         }
+
+        public void Deserialize(string jsonString, IJsonCustomizer customizer = null)
+        {
+            jsonString.VerifyNotEmpty(nameof(jsonString));
+            JsonReader.Create(jsonString, customizer).Read(this, true);
+        }
     }
 }
