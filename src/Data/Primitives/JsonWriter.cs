@@ -144,7 +144,6 @@ namespace DevZest.Data.Primitives
                 }
             }
 
-
             public override string ToString(bool isPretty)
             {
                 var result = _stringBuilder.ToString();
