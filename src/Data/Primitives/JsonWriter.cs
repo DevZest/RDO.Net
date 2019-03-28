@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace DevZest.Data.Primitives
@@ -16,20 +17,133 @@ namespace DevZest.Data.Primitives
 
             private readonly StringBuilder _stringBuilder;
 
-            protected internal override void Write(char value)
+            private void Write(char value)
             {
                 _stringBuilder.Append(value);
             }
 
-            protected internal override void Write(string value)
+            private void Write(string value)
             {
                 _stringBuilder.Append(value);
             }
 
-            protected internal override void Write(string value, int startIndex, int num)
+            private void Write(string value, int startIndex, int num)
             {
                 _stringBuilder.Append(value, startIndex, num);
             }
+
+            protected override void PerformWriteStartObject()
+            {
+                Write('{');
+            }
+
+            protected override void PerformWriteEndObject()
+            {
+                Write('}');
+            }
+
+            protected override void PerformWriteStartArray()
+            {
+                Write('[');
+            }
+
+            protected override void PerformWriteEndArray()
+            {
+                Write(']');
+            }
+
+            protected override void PerformWriteComma()
+            {
+                Write(',');
+            }
+
+            protected override void PerformWritePropertyName(string name)
+            {
+                WriteValue(JsonValue.String(name));
+                Write(':');
+            }
+
+            protected override void PerformWriteValue(JsonValue value)
+            {
+                if (value.Type == JsonValueType.String)
+                    Write('"');
+
+                if (value.Type != JsonValueType.String)
+                    Write(value.Text);
+                else
+                    WriteEscapedText(value.Text);
+
+                if (value.Type == JsonValueType.String)
+                    Write('"');
+            }
+
+            private void WriteEscapedText(string value)
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                int startIndex = 0;
+                int num = 0;
+                int i = 0;
+                for (i = 0; i < value.Length; i++)
+                {
+                    char c = value[i];
+                    if (!RequiresEscape(c))
+                    {
+                        num++;
+                        continue;
+                    }
+
+                    if (num > 0)
+                        Write(value, startIndex, num);
+
+                    startIndex = i + 1;
+                    num = 0;
+                    WriteEscape(c);
+                }
+
+                if (num > 0)
+                    Write(value, startIndex, num);
+            }
+
+            private static bool RequiresEscape(char c)
+            {
+                return c < ' ' || c == '"' || c == '\\' || c == '\u0085' || c == '\u2028' || c == '\u2029';
+            }
+
+            private void WriteEscape(char c)
+            {
+                switch (c)
+                {
+                    case '"':
+                        Write("\\\"");
+                        break;
+                    case '\\':
+                        Write("\\\\");
+                        break;
+                    case '\b':
+                        Write("\\b");
+                        break;
+                    case '\f':
+                        Write("\\f");
+                        break;
+                    case '\n':
+                        Write("\\n");
+                        break;
+                    case '\r':
+                        Write("\\r");
+                        break;
+                    case '\t':
+                        Write("\\t");
+                        break;
+                    default:
+                        Write("\\u");
+                        int num = (int)c;
+                        Write(num.ToString("x4", CultureInfo.InvariantCulture));
+                        break;
+                }
+            }
+
 
             public override string ToString(bool isPretty)
             {
@@ -66,46 +180,37 @@ namespace DevZest.Data.Primitives
                 return column.Serialize(rowOrdinal);
         }
 
-        protected internal abstract void Write(char value);
-
-        protected internal virtual void Write(string value)
-        {
-            if (value == null)
-                return;
-
-            for (int i = 0; i < value.Length; i++)
-                Write(value[i]);
-        }
-
-        protected internal virtual void Write(string value, int startIndex, int num)
-        {
-            for (int i = 0; i < num; i++)
-                Write(value[startIndex + i]);
-        }
-
         public JsonWriter WriteStartObject()
         {
-            Write('{');
+            PerformWriteStartObject();
             return this;
         }
+
+        protected abstract void PerformWriteStartObject();
 
         public JsonWriter WriteEndObject()
         {
-            Write('}');
+            PerformWriteEndObject();
             return this;
         }
+
+        protected abstract void PerformWriteEndObject();
 
         public JsonWriter WriteStartArray()
         {
-            Write('[');
+            PerformWriteStartArray();
             return this;
         }
 
+        protected abstract void PerformWriteStartArray();
+
         public JsonWriter WriteEndArray()
         {
-            Write(']');
+            PerformWriteEndArray();
             return this;
         }
+
+        protected abstract void PerformWriteEndArray();
 
         public JsonWriter WriteNameStringPair(string name, string value)
         {
@@ -114,27 +219,32 @@ namespace DevZest.Data.Primitives
 
         public JsonWriter WriteNameValuePair(string name, JsonValue value)
         {
-            return WriteObjectName(name).WriteValue(value);
+            return WritePropertyName(name).WriteValue(value);
         }
 
         public JsonWriter WriteComma()
         {
-            Write(',');
+            PerformWriteComma();
             return this;
         }
 
-        public JsonWriter WriteObjectName(string name)
+        protected abstract void PerformWriteComma();
+
+        public JsonWriter WritePropertyName(string name)
         {
-            JsonValue.String(name).Write(this);
-            Write(':');
+            PerformWritePropertyName(name);
             return this;
         }
+
+        protected abstract void PerformWritePropertyName(string name);
 
         public JsonWriter WriteValue(JsonValue value)
         {
-            value.Write(this);
+            PerformWriteValue(value);
             return this;
         }
+
+        protected abstract void PerformWriteValue(JsonValue value);
 
         public JsonWriter WriteArray<T>(IEnumerable<T> array, Action<JsonWriter, T> writeItemAction)
         {
@@ -153,7 +263,7 @@ namespace DevZest.Data.Primitives
 
         public JsonWriter WriteNameArrayPair<T>(string name, IEnumerable<T> array, Action<JsonWriter, T> writeItemAction)
         {
-            return WriteObjectName(name).WriteArray<T>(array, writeItemAction);
+            return WritePropertyName(name).WriteArray<T>(array, writeItemAction);
         }
 
         private const string INDENT = "   ";

@@ -37,7 +37,7 @@ namespace DevZest.Data.Primitives
 
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.WriteObjectName(column.Name);
+                jsonWriter.WritePropertyName(column.Name);
                 jsonWriter.Write(dataRow, column);
                 count++;
             }
@@ -78,7 +78,7 @@ namespace DevZest.Data.Primitives
                 if (count > 0)
                     jsonWriter.WriteComma();
                 var childJsonView = jsonView.GetChildView(dataSet);
-                jsonWriter.WriteObjectName(dataSet.Model.Name).InternalWrite(childJsonView, dataSet);
+                jsonWriter.WritePropertyName(dataSet.Model.Name).InternalWrite(childJsonView, dataSet);
                 count++;
             }
 
@@ -87,7 +87,7 @@ namespace DevZest.Data.Primitives
 
         private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnList columnList, JsonFilter jsonFilter)
         {
-            jsonWriter.WriteObjectName(columnList.Name);
+            jsonWriter.WritePropertyName(columnList.Name);
             jsonWriter.WriteStartArray();
             var count = 0;
             for (int i = 0; i < columnList.Count; i++)
@@ -122,7 +122,7 @@ namespace DevZest.Data.Primitives
         private static void WriteObject(this JsonWriter jsonWriter, DataRow dataRow, Projection projection, JsonFilter jsonFilter)
         {
             Debug.Assert(!string.IsNullOrEmpty(projection.Name));
-            jsonWriter.WriteObjectName(projection.Name);
+            jsonWriter.WritePropertyName(projection.Name);
             jsonWriter.WriteStartObject();
             jsonWriter.WriteMembers(dataRow, projection, jsonFilter);
             jsonWriter.WriteEndObject();
@@ -140,7 +140,7 @@ namespace DevZest.Data.Primitives
 
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.WriteObjectName(column.RelativeName);
+                jsonWriter.WritePropertyName(column.RelativeName);
                 jsonWriter.Write(dataRow, column);
                 count++;
             }

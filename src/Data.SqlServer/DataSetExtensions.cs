@@ -34,7 +34,7 @@ namespace DevZest.Data.SqlServer
                     continue;
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.WriteObjectName(column.Name);
+                jsonWriter.WritePropertyName(column.Name);
                 if (column is _DateTime dateTimeColumn)
                     jsonWriter.WriteValue(JsonValue.DateTime(dateTimeColumn[dataRow], "yyyy-MM-ddTHH:mm:ss.FFF"));
                 else
@@ -46,7 +46,7 @@ namespace DevZest.Data.SqlServer
             {
                 if (count > 0)
                     jsonWriter.WriteComma();
-                jsonWriter.WriteObjectName(ordinalColumnName);
+                jsonWriter.WritePropertyName(ordinalColumnName);
                 jsonWriter.WriteValue(JsonValue.Number(dataRow.Ordinal));
             }
 
