@@ -58,7 +58,9 @@ namespace DevZest.Data.Primitives
         {
             dataSet.VerifyNotNull(nameof(dataSet));
 
-            jsonReader.ExpectToken(JsonTokenKind.SquaredOpen);
+            var startWithSquaredOpen = jsonReader.PeekToken().Kind == JsonTokenKind.SquaredOpen;
+            if (startWithSquaredOpen)
+                jsonReader.ConsumeToken();
 
             if (jsonReader.PeekToken().Kind == JsonTokenKind.CurlyOpen)
             {
@@ -71,7 +73,7 @@ namespace DevZest.Data.Primitives
                     x.IsPrimaryKeySealed = true;
                 });
 
-                while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
+                while (startWithSquaredOpen && jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonReader.ConsumeToken();
                     dataSet.AddRow(x =>
@@ -83,8 +85,12 @@ namespace DevZest.Data.Primitives
 
                 model.ResumeIdentity();
             }
+            else if (!startWithSquaredOpen)
+                jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);    // This will throw a FormatException.
 
-            jsonReader.ExpectToken(JsonTokenKind.SquaredClose);
+            if (startWithSquaredOpen)
+                jsonReader.ExpectToken(JsonTokenKind.SquaredClose);
+
             if (isTopLevel)
                 jsonReader.ExpectToken(JsonTokenKind.Eof);
         }
