@@ -1123,6 +1123,14 @@ namespace DevZest.Data
             get { return GetString("DataSetReader_Closed"); }
         }
 
+        /// <summary>
+        /// JsonTokenKind.Eof is invalid for calling ExpectToken method. Call ExpectEof instead.
+        /// </summary>
+        public static string JsonReader_ExpectToken_Eof
+        {
+            get { return GetString("JsonReader_ExpectToken_Eof"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

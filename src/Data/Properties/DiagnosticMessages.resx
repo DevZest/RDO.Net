@@ -534,4 +534,7 @@
   <data name="DataSetReader_Closed" xml:space="preserve">
     <value>The DataSetReader is closed.</value>
   </data>
+  <data name="JsonReader_ExpectToken_Eof" xml:space="preserve">
+    <value>JsonTokenKind.Eof is invalid for calling ExpectToken method. Call ExpectEof instead.</value>
+  </data>
 </root>

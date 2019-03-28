@@ -25,7 +25,7 @@ namespace DevZest.Data
         {
             var jsonReader = JsonReader.Create(json, customizer);
             var result = jsonReader.ParseValidationMessage(dataSet);
-            jsonReader.ExpectToken(JsonTokenKind.Eof);
+            jsonReader.ExpectEof();
             return result;
         }
 

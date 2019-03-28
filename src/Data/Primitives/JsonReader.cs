@@ -287,7 +287,19 @@ namespace DevZest.Data.Primitives
             _lookAhead = null;
         }
 
+        public virtual void ExpectEof()
+        {
+            InternalExpectToken(JsonTokenKind.Eof);
+        }
+
         public JsonToken ExpectToken(JsonTokenKind expectedTokenKind)
+        {
+            if (expectedTokenKind == JsonTokenKind.Eof)
+                throw new ArgumentException(DiagnosticMessages.JsonReader_ExpectToken_Eof, nameof(expectedTokenKind));
+            return InternalExpectToken(expectedTokenKind);
+        }
+
+        private JsonToken InternalExpectToken(JsonTokenKind expectedTokenKind)
         {
             var currentToken = PeekToken();
             ConsumeToken();

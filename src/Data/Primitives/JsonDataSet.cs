@@ -45,7 +45,7 @@ namespace DevZest.Data.Primitives
             {
                 jsonReader.ConsumeToken();
                 if (isTopLevel)
-                    jsonReader.ExpectToken(JsonTokenKind.Eof);
+                    jsonReader.ExpectEof();
                 return null;
             }
 
@@ -92,7 +92,7 @@ namespace DevZest.Data.Primitives
                 jsonReader.ExpectToken(JsonTokenKind.SquaredClose);
 
             if (isTopLevel)
-                jsonReader.ExpectToken(JsonTokenKind.Eof);
+                jsonReader.ExpectEof();
         }
     }
 }
