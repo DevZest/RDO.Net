@@ -7,7 +7,6 @@
 
 
   <ItemGroup>
-    <PackageReference Include="DevZest.Data.SqlServer" Version="1.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
@@ -15,6 +14,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\external\RDO.Data\src\Data.SqlServer\Data.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\Data.AspNetCore\Data.AspNetCore.csproj" />
   </ItemGroup>
 
