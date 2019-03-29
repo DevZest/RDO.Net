@@ -1,0 +1,3 @@
+[submodule "external/RDO.Data"]
+	path = external/RDO.Data
+	url = https://weifenluo@bitbucket.org/weifenluo/rdo.data.git
