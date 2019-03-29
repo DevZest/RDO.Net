@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "external\RDO.Data\s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.SqlServer", "external\RDO.Data\src\Data.SqlServer\Data.SqlServer.csproj", "{45CDB8CD-C70D-491D-A127-D7D391A848D5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "external\RDO.Data\samples\CSharp\AdventureWorksLT\AdventureWorksLT.csproj", "{13F40BFB-D336-4CB8-8D78-A1B5F5110918}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{45CDB8CD-C70D-491D-A127-D7D391A848D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45CDB8CD-C70D-491D-A127-D7D391A848D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45CDB8CD-C70D-491D-A127-D7D391A848D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13F40BFB-D336-4CB8-8D78-A1B5F5110918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13F40BFB-D336-4CB8-8D78-A1B5F5110918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13F40BFB-D336-4CB8-8D78-A1B5F5110918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13F40BFB-D336-4CB8-8D78-A1B5F5110918}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{B1CA7884-873A-49AB-8B01-A3D7D8B8E320} = {EDAD2D65-690A-456C-B96F-12983906FF9C}
 		{A99763D2-E53C-4D26-B554-666C4C511764} = {5968CB57-5284-4E89-855F-C13A940E8C15}
 		{45CDB8CD-C70D-491D-A127-D7D391A848D5} = {5968CB57-5284-4E89-855F-C13A940E8C15}
+		{13F40BFB-D336-4CB8-8D78-A1B5F5110918} = {5968CB57-5284-4E89-855F-C13A940E8C15}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8B5DC54-50E5-41EF-906B-63895F404413}

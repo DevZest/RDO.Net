@@ -30,7 +30,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             var jsonReader = new JsonReaderAdapter(reader, null);
 
             var dataSet = existingValue as DataSet;
-            if (dataSet != null)
+            if (dataSet == null)
                 dataSet = CreateDataSet(objectType);
             jsonReader.Deserialize(dataSet, true);
 
@@ -44,7 +44,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         private static DataSet CreateDataSet(Type dataSetType)
         {
             var createMethod = dataSetType.GetMethod(nameof(DataSet<DummyModel>.Create), BindingFlags.Static | BindingFlags.Public);
-            return (DataSet)createMethod.Invoke(null, Array.Empty<object>());
+            return (DataSet)createMethod.Invoke(null, new object[] { null });
         }
     }
 }

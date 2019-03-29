@@ -24,9 +24,9 @@ namespace DevZest.Data.AspNetCore.Primitives
         }
 
         private readonly JsonReader _jsonReader;
-        private bool _flagPropertyName;
         private Stack<State> _states = new Stack<State>();
         private bool _flagPostValue;
+        private Queue<JsonToken> _tokens = new Queue<JsonToken>(3);
 
         private State? CurrentState
         {
@@ -61,18 +61,44 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         protected override JsonToken NextToken()
         {
-            if (_flagPropertyName)
+            return GetNextToken();
+        }
+
+        private bool _isEof;
+        private JsonToken GetNextToken()
+        {
+            if (_tokens.Count == 0)
             {
-                _flagPropertyName = false;
-                return JsonToken.Colon;
+                EnqueueCurrentJsonTokens();
+                _isEof = !_jsonReader.Read();
             }
 
-            if (!_jsonReader.Read())
-                return JsonToken.Eof;
+            return _tokens.Count > 0 ? _tokens.Dequeue() : JsonToken.Eof;
+        }
+
+        private void EnqueueCurrentJsonTokens()
+        {
+            Debug.Assert(_tokens.Count == 0);
+            if (_isEof)
+                return;
+
+            var tokenType = _jsonReader.TokenType;
 
             if (RestoreEatenComma())
-                return JsonToken.Comma;
+                _tokens.Enqueue(JsonToken.Comma);
 
+            if (tokenType == TokenType.PropertyName)
+            {
+                _tokens.Enqueue(JsonToken.String(_jsonReader.Value.ToString()));
+                _tokens.Enqueue(JsonToken.Colon);
+                return;
+            }
+
+            _tokens.Enqueue(GetSingleToken());
+        }
+
+        private JsonToken GetSingleToken()
+        {
             var tokenType = _jsonReader.TokenType;
 
             if (tokenType == TokenType.StartObject)
@@ -97,12 +123,6 @@ namespace DevZest.Data.AspNetCore.Primitives
             {
                 ExitState(State.Array);
                 return JsonToken.SquaredClose;
-            }
-
-            if (tokenType == TokenType.PropertyName)
-            {
-                _flagPropertyName = true;
-                return JsonToken.String(_jsonReader.Value.ToString());
             }
 
             _flagPostValue = true;
