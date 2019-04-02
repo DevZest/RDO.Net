@@ -67,6 +67,7 @@ if ($projectDir -eq '')
 {
 	$projectDir = (Get-Item -Path ".\" -Verbose).FullName
 }
+$output = Join-Path -Path $projectDir -ChildPath "bin\release\*.nupkg"
 
 $major = $versions[0]
 $minor = $versions[1]
@@ -82,3 +83,4 @@ echo "PACKAGE_VERSION=$packageVersion"
 
 dotnet restore "$projectDir" /p:AssemblyVersion=$assemblyVersion /p:FileVersion=$assemblyFileVersion /p:PackageVersion=$packageVersion
 dotnet pack "$projectDir" --configuration Release /p:AssemblyVersion=$assemblyVersion /p:FileVersion=$assemblyFileVersion /p:PackageVersion=$packageVersion
+dotnet nuget push "$output" -s local
