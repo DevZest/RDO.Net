@@ -27,3 +27,4 @@ echo.
 call nuget restore "%~dp0Deploy.%currentFolder%.sln"
 call %msBuildExe% "%~dp0Deploy.%currentFolder%.sln" /t:build /p:Configuration=Release /verbosity:m
 @IF %ERRORLEVEL% NEQ 0 PAUSE
+call nuget push "%~dp0%currentFolder%\bin\release\*.nupkg" -src local
