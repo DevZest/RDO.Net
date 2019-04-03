@@ -51,5 +51,6 @@
     </None>
   </ItemGroup>
 
-  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' != 'RDO.Data' " />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.WPF.Samples' " />
 </Project>

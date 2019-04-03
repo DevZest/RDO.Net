@@ -3,3 +3,4 @@ DevZest.Data.SqlServer
 DevZest.Data.Analyzers
 Sync.DevZest.Data.WPF
 DevZest.Data.MySql
+DevZest.Data.AspNetCore

@@ -1,0 +1,51 @@
+﻿@page "{id:int}"
+@model RazorPagesMovie.Pages.Movies.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    var _ = Model.Movie._;
+}
+
+<h1>Edit</h1>
+
+<h4>Movie</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" dataset-for="Movie" dataset-column="@_.ID" />
+            <div class="form-group">
+                <label dataset-for="Movie" dataset-column="@_.Title" class="control-label"></label>
+                <input dataset-for="Movie" dataset-column="@_.Title" class="form-control" />
+                <span dataset-validation-for="Movie" dataset-column="@_.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label dataset-for="Movie" dataset-column="@_.ReleaseDate" class="control-label"></label>
+                <input dataset-for="Movie" dataset-column="@_.ReleaseDate" class="form-control" />
+                <span dataset-validation-for="Movie" dataset-column="@_.ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label dataset-for="Movie" dataset-column="@_.Genre" class="control-label"></label>
+                <input dataset-for="Movie" dataset-column="@_.Genre" class="form-control" />
+                <span dataset-validation-for="Movie" dataset-column="@_.Genre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label dataset-for="Movie" dataset-column="@_.Price" class="control-label"></label>
+                <input dataset-for="Movie" dataset-column="@_.Price" class="form-control" />
+                <span dataset-validation-for="Movie" dataset-column="@_.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

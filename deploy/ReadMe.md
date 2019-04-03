@@ -2,6 +2,7 @@ Run `Build.bat` to build NuGet packages:
 - `DevZest.Data`
 - `DevZest.Data.SqlServer`
 - `DevZest.Data.MySql`
+- `DevZest.Data.AspNetCore`
 
 Build.bat must be run under respective sub directory. For example, to build package DevZest.Data, make sure current directory is DevZest.Data, then run the following command:
 ```
