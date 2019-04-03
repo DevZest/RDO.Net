@@ -222,7 +222,7 @@
       <Project>{e0491457-ba40-4f12-bf72-e63a35422b1e}</Project>
       <Name>Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSharp\AdventureWorksLT\AdventureWorksLT.csproj">
+    <ProjectReference Include="..\AdventureWorksLT.CSharp\AdventureWorksLT\AdventureWorksLT.csproj">
       <Project>{b2f5ac6a-f4ca-4418-a486-b3537b89810f}</Project>
       <Name>AdventureWorksLT</Name>
     </ProjectReference>

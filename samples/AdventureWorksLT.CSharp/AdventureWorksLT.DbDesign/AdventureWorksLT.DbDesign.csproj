@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>DevZest.Samples.AdventureWorksLT.DbDesign</AssemblyName>
+    <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Weifen Luo | DevZest</Authors>
+    <Company>DevZest</Company>
+    <Product>AdventureWorksLT RDO.Net Model Sample</Product>
+    <Description>AdventureWorksLT RDO.Net Model Sample</Description>
+    <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LocalDb\AdventureWorksLT.mdf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="LocalDb\AdventureWorksLT_log.ldf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="LocalDb\EmptyDb.mdf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="LocalDb\EmptyDb_log.ldf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
+</Project>

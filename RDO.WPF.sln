@@ -54,7 +54,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "src\Data\Data.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.SqlServer", "src\Data.SqlServer\Data.SqlServer.csproj", "{9F798262-0256-4457-89B0-71F8C8F4B1F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\CSharp\AdventureWorksLT\AdventureWorksLT.csproj", "{B2F5AC6A-F4CA-4418-A486-B3537B89810F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\AdventureWorksLT.CSharp\AdventureWorksLT\AdventureWorksLT.csproj", "{B2F5AC6A-F4CA-4418-A486-B3537B89810F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
