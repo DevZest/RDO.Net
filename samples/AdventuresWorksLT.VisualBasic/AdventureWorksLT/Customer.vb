@@ -1,4 +1,4 @@
-<Computation("ComputeContacPerson")>
+<Computation("ComputeContactPerson")>
 <DbIndex("IX_Customer_EmailAddress", Description:="Nonclustered index.")>
 Public Class Customer
     Inherits BaseModel(Of PK)

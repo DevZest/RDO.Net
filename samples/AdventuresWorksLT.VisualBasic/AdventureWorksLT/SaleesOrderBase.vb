@@ -1,6 +1,6 @@
 ﻿<CustomValidator("VAL_LineCount")>
 <Computation("ComputeLineCount", ComputationMode.Aggregate)>
-<Computation("ComputeSubTota", ComputationMode.Aggregate)>
+<Computation("ComputeSubTotal", ComputationMode.Aggregate)>
 <InvisibleToDbDesigner>
 Public MustInherit Class SalesOrderBase(Of T As {SalesOrderDetail, New})
     Inherits SalesOrderHeader

@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmoothScroll", "SmoothScrol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationUI", "ValidationUI\ValidationUI.csproj", "{BC34673C-0605-4062-A976-11C184D615F5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{47DC2D71-88F5-46DE-A58D-C93A13E8FA5F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "AdventureWorksLT.CSharp\AdventureWorksLT\AdventureWorksLT.csproj", "{69CD5ED2-2E81-4D16-8782-1F3017D2D4A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +43,16 @@ Global
 		{BC34673C-0605-4062-A976-11C184D615F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC34673C-0605-4062-A976-11C184D615F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC34673C-0605-4062-A976-11C184D615F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69CD5ED2-2E81-4D16-8782-1F3017D2D4A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CD5ED2-2E81-4D16-8782-1F3017D2D4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CD5ED2-2E81-4D16-8782-1F3017D2D4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CD5ED2-2E81-4D16-8782-1F3017D2D4A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{69CD5ED2-2E81-4D16-8782-1F3017D2D4A5} = {47DC2D71-88F5-46DE-A58D-C93A13E8FA5F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {58ED37EA-0CF8-4520-BB38-45E348D8222C}
