@@ -21,6 +21,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc />
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
@@ -59,6 +60,7 @@ namespace DevZest.Data
             return new FromStringExpression(x).MakeColumn<_Binary>();
         }
 
+        /// <inheritdoc />
         public override bool AreEqual(Binary x, Binary y)
         {
             if (x == null)
@@ -150,6 +152,5 @@ namespace DevZest.Data
         {
             return Param(x);
         }
-
     }
 }
