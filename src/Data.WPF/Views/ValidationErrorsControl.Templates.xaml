@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:DevZest.Data.Views">
+
+    <ControlTemplate x:Key="{x:Static local:ValidationErrorsControl+TemplateIds.Failed}">
+        <StackPanel Orientation="Vertical">
+            <Border x:Name="_border" BorderBrush="Red" BorderThickness="2" HorizontalAlignment="Left">
+                <AdornedElementPlaceholder />
+            </Border>
+        </StackPanel>
+    </ControlTemplate>
+</ResourceDictionary>

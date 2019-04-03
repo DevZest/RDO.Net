@@ -1,0 +1,1 @@
+ROBOCOPY "%~dp0..\src\Data.WPF" "%~dp0Sync.DevZest.Data.WPF" /MIR /XD .vs obj bin

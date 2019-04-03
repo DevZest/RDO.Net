@@ -1,0 +1,23 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:DevZest.Data.Presenters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/DataView.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/BlockView.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowSelector.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowExpander.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowView.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ColumnHeader.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/InertButton.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ForeignKeyBox.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowHeader.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/GridHeader.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ValidationErrorsControl.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ValidationPlaceholder.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/AsyncValidationFaultControl.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/AsyncValidationFaultControl.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/GridCell.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

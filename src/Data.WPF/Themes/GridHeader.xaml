@@ -1,0 +1,43 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mwt="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+    xmlns:local="clr-namespace:DevZest.Data.Views">
+
+    <Style TargetType="{x:Type local:GridHeader}">
+        <Setter Property="SeparatorBrush" Value="#FFC9CACA" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:GridHeader}">
+                    <Grid>
+                        <mwt:DataGridHeaderBorder x:Name="HeaderBorder" IsHovered="{TemplateBinding IsMouseOver}"
+                                                  IsPressed="{TemplateBinding IsPressed}"
+                                                  Orientation="Vertical"
+                                                  SeparatorBrush="{TemplateBinding SeparatorBrush}"
+                                                  SeparatorVisibility="{TemplateBinding SeparatorVisibility}"
+                                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                                  Padding="{TemplateBinding Control.Padding}"
+                                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                                  Background="{TemplateBinding Background}">
+                        </mwt:DataGridHeaderBorder>
+                        <Polygon x:Name="Arrow" Fill="#FF444444" HorizontalAlignment="Right" Margin="8,8,3,3" Points="0,10 10,10 10,0" Stretch="Uniform" VerticalAlignment="Bottom"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter TargetName="HeaderBorder" Property="IsSelected" Value="True" />
+                            <Setter TargetName="Arrow" Property="Opacity" Value="0.8" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="false">
+                            <Setter TargetName="HeaderBorder" Property="IsSelected" Value="False" />
+                            <Setter TargetName="Arrow" Property="Opacity" Value="0" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="HeaderBorder" Property="IsSelected" Value="True" />
+                            <Setter TargetName="Arrow" Property="Opacity" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

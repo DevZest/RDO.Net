@@ -1,0 +1,440 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{13148E98-0F1A-44D3-8DEF-99392773AF3E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DevZest.Data</RootNamespace>
+    <AssemblyName>DevZest.Data.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.IReadOnlyList.VerifyNoNullItem.cs">
+      <Link>Utilities\Argument.IReadOnlyList.VerifyNoNullItem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.IReadOnlyListItem.VerifyNotNull.cs">
+      <Link>Utilities\Argument.IReadOnlyListItem.VerifyNotNull.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs">
+      <Link>Utilities\Argument.VerifyNotNull.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\BooleanBoxes.cs">
+      <Link>Utilities\BooleanBoxes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Double.IsClose.cs">
+      <Link>Utilities\Double.IsClose.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Windows\DragHandlerBase.cs">
+      <Link>Utilities\Windows\DragHandlerBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Windows\KeyboardManager.cs">
+      <Link>Utilities\Windows\KeyboardManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Windows\Point.IsClose.cs">
+      <Link>Utilities\Windows\Point.IsClose.cs</Link>
+    </Compile>
+    <Compile Include="Presenters\AsyncValidationFault.cs" />
+    <Compile Include="Presenters\AsyncValidator.cs" />
+    <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
+    <Compile Include="Presenters\BindingFactory.cs" />
+    <Compile Include="Presenters\BindingFactory.GridHeader.cs" />
+    <Compile Include="Presenters\BindingFactory.DataView.cs" />
+    <Compile Include="Presenters\BindingFactory.Image.cs" />
+    <Compile Include="Presenters\BindingFactory.GridCell.cs" />
+    <Compile Include="Presenters\BindingFactory.PasswordBox.cs" />
+    <Compile Include="Presenters\BindingFactory.ValidationErrorsControl.cs" />
+    <Compile Include="Presenters\BindingFactory.ValidationPlaceholder.cs" />
+    <Compile Include="Presenters\BindingFactory.RowHeader.cs" />
+    <Compile Include="Presenters\BindingFactory.ComboBox.cs" />
+    <Compile Include="Presenters\BindingFactory.DatePicker.cs" />
+    <Compile Include="Presenters\BindingFactory.ForeignKeyBox.cs" />
+    <Compile Include="Presenters\BindingFactory.ColumnHeader.cs" />
+    <Compile Include="Presenters\BindingFactory.Label.cs" />
+    <Compile Include="Presenters\BindingFactory.TextBlock.cs" />
+    <Compile Include="Presenters\ColumnSerializer.cs" />
+    <Compile Include="Presenters\IDataPresenter.cs" />
+    <Compile Include="Presenters\InitialFocus.cs" />
+    <Compile Include="Presenters\BasePresenter.cs" />
+    <Compile Include="Presenters\TemplateBuilder_T.cs" />
+    <Compile Include="Presenters\Primitives\IContainerElement.cs" />
+    <Compile Include="Presenters\Primitives\AttachedScalarBinding.cs" />
+    <Compile Include="Presenters\SimplePresenter.cs" />
+    <Compile Include="Views\IBaseView.cs" />
+    <Compile Include="Presenters\Primitives\RowMatch.cs" />
+    <Compile Include="Presenters\Primitives\ValueChangedTrigger.cs" />
+    <Compile Include="Presenters\Primitives\SerializableSelection.cs" />
+    <Compile Include="Presenters\Primitives\FlushingErrorCollection.cs" />
+    <Compile Include="Presenters\Primitives\RowSelectionWiper.cs" />
+    <Compile Include="Presenters\Primitives\TextBoxStatus.cs" />
+    <Compile Include="Presenters\Primitives\RoutedEventTrigger.cs" />
+    <Compile Include="Presenters\IScalarAsyncValidators.cs" />
+    <Compile Include="Presenters\IScalars.cs" />
+    <Compile Include="Presenters\IScalarValidationErrors.cs" />
+    <Compile Include="Presenters\BlockViewAlternation.cs" />
+    <Compile Include="Presenters\Primitives\ResourceId.cs" />
+    <Compile Include="Presenters\RowBindingBehavior.cs" />
+    <Compile Include="Presenters\RowViewAlternation.cs" />
+    <Compile Include="Presenters\BlockViewBehavior.cs" />
+    <Compile Include="Presenters\RowViewBehavior.cs" />
+    <Compile Include="Presenters\BlockBindingBehavior.cs" />
+    <Compile Include="Presenters\ScalarBindingBehavior.cs" />
+    <Compile Include="Presenters\Primitives\AsyncValidator_T.cs" />
+    <Compile Include="Presenters\Primitives\BlockBindingBase_T.cs" />
+    <Compile Include="Presenters\Primitives\ElementPresenter.cs" />
+    <Compile Include="Presenters\Primitives\IBlockElement.cs" />
+    <Compile Include="Presenters\Primitives\IRowElement.cs" />
+    <Compile Include="Presenters\Primitives\IScalarElement.cs" />
+    <Compile Include="Presenters\Primitives\RowBindingBase_T.cs" />
+    <Compile Include="Presenters\Primitives\ScalarBindingBase_T.cs" />
+    <Compile Include="Presenters\Scalar.cs" />
+    <Compile Include="Presenters\ScalarAsyncValidator.cs" />
+    <Compile Include="Presenters\ScalarAsyncValidators.cs" />
+    <Compile Include="Presenters\ScalarContainer.cs" />
+    <Compile Include="Presenters\Scalars.cs" />
+    <Compile Include="Presenters\ScalarValidationError.cs" />
+    <Compile Include="Presenters\ScalarValidationErrors.cs" />
+    <Compile Include="Presenters\ScalarValidation.cs" />
+    <Compile Include="Presenters\ServiceManager.cs" />
+    <Compile Include="Presenters\TemplateId.cs" />
+    <Compile Include="Presenters\ValidationInfo.cs" />
+    <Compile Include="Properties\Resources.cs">
+      <DependentUpon>Resources.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Utilities\Windows\IInputElement.ContainsKeyboardFocus.cs" />
+    <Compile Include="Utilities\Object.GetPropertyOrFieldSetter.cs" />
+    <Compile Include="Utilities\Object.GetPropertyOrFieldGetter.cs" />
+    <Compile Include="Utilities\SingleChildEnumerator.cs" />
+    <Compile Include="Views\AsyncValidationFaultControl.cs" />
+    <Compile Include="Views\DataView.Commands.cs" />
+    <Compile Include="Views\GridCell.Commands.cs" />
+    <Compile Include="Views\GridCell.cs" />
+    <Compile Include="Views\GridCell.Presenter.cs" />
+    <Compile Include="Views\GridCellMode.cs" />
+    <Compile Include="Views\GridHeader.cs" />
+    <Compile Include="Views\PasteAppendWindow.Presenter.cs" />
+    <Compile Include="Views\Primitives\InertButton.cs" />
+    <Compile Include="Views\Primitives\Sorting.cs" />
+    <Compile Include="Views\Primitives\Spinner.xaml.cs">
+      <DependentUpon>Spinner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presenters\Primitives\TabularText.cs" />
+    <Compile Include="Views\RowSelector.Commands.cs" />
+    <Compile Include="Views\PasteAppendWindow.xaml.cs">
+      <DependentUpon>PasteAppendWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SimpleView.cs" />
+    <Compile Include="Views\SortWindow.xaml.cs">
+      <DependentUpon>SortWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presenters\ValidationStatus.cs" />
+    <Compile Include="Presenters\DataLoadState.cs" />
+    <Compile Include="Views\ForeignKeyBox.cs" />
+    <Compile Include="Views\InPlaceEditor.cs" />
+    <Compile Include="Views\Primitives\LoadingAnimation.xaml.cs">
+      <DependentUpon>LoadingAnimation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Primitives\LoadingAnimationBlock.xaml.cs">
+      <DependentUpon>LoadingAnimationBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RowSelector.cs" />
+    <Compile Include="Views\RowExpander.cs" />
+    <Compile Include="Views\ValidationErrorsControl.cs" />
+    <Compile Include="Views\ValidationPlaceholder.cs" />
+    <Compile Include="Views\VisualStates.cs" />
+    <Compile Include="Presenters\RowAsyncValidator.cs" />
+    <Compile Include="Presenters\RowAsyncValidators.cs" />
+    <Compile Include="Presenters\AsyncValidatorStatus.cs" />
+    <Compile Include="Presenters\AutoSizeWaiver.cs" />
+    <Compile Include="Presenters\BindingManager.cs" />
+    <Compile Include="Presenters\BindingFactory.InPlaceEditor.cs" />
+    <Compile Include="Presenters\BindingFactory.TextBox.cs" />
+    <Compile Include="Presenters\BlockCompositeBinding_T.cs" />
+    <Compile Include="Presenters\CommandEntry.cs" />
+    <Compile Include="Presenters\DataPresenter_T.cs" />
+    <Compile Include="Presenters\ResourceIdRelativeToAttribute.cs" />
+    <Compile Include="Presenters\Primitives\ExplicitTrigger.cs" />
+    <Compile Include="Presenters\IRowAsyncValidators.cs" />
+    <Compile Include="Presenters\BlockPresenter.cs" />
+    <Compile Include="Presenters\IService.cs" />
+    <Compile Include="Presenters\Primitives\DataRowExtensions.cs" />
+    <Compile Include="Presenters\Primitives\IScrollable.cs" />
+    <Compile Include="Presenters\Primitives\ScrollableManager.LogicalCrossTrack.cs" />
+    <Compile Include="Presenters\ScalarPresenter.cs" />
+    <Compile Include="Presenters\Primitives\ContainerKind.cs" />
+    <Compile Include="Views\Primitives\ContainerView.cs" />
+    <Compile Include="Presenters\Primitives\ScrollableManager.VariantLengthHandler.cs" />
+    <Compile Include="Presenters\Primitives\TwoWayBinding.cs" />
+    <Compile Include="Presenters\RowCompositeBinding_T.cs" />
+    <Compile Include="Presenters\ScalarCompositeBinding_T.cs" />
+    <Compile Include="Presenters\Scalar_T.cs" />
+    <Compile Include="Presenters\StyleId.cs" />
+    <Compile Include="Utilities\Windows\DependencyObject.FindVisualAncestor.cs" />
+    <Compile Include="Utilities\Double.IfZero.cs" />
+    <Compile Include="Utilities\EmptyEnumerator.cs" />
+    <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
+    <Compile Include="Utilities\Object.ToString.cs" />
+    <Compile Include="Presenters\Validation.cs" />
+    <Compile Include="Presenters\Primitives\Input_T.cs" />
+    <Compile Include="Presenters\RowInput_T.cs" />
+    <Compile Include="Presenters\ScalarInput_T.cs" />
+    <Compile Include="Utilities\Singleton.cs" />
+    <Compile Include="Presenters\Primitives\InputManager.cs" />
+    <Compile Include="Presenters\Primitives\PropertyChangedTrigger.cs" />
+    <Compile Include="Presenters\BlockBinding_T.cs" />
+    <Compile Include="Presenters\RowBinding_T.cs" />
+    <Compile Include="Presenters\ScalarBinding_T.cs" />
+    <Compile Include="Presenters\Primitives\Trigger.cs" />
+    <Compile Include="Views\RowHeader.cs" />
+    <Compile Include="Presenters\Primitives\CurrentContainerViewPlacement.cs" />
+    <Compile Include="Presenters\Primitives\GridLine.cs" />
+    <Compile Include="Presenters\GridPlacement.cs" />
+    <Compile Include="Views\Primitives\BlockViewPanel.cs" />
+    <Compile Include="Presenters\BlockBinding.cs" />
+    <Compile Include="Presenters\Primitives\Clip.cs" />
+    <Compile Include="Presenters\Primitives\ElementManager.cs" />
+    <Compile Include="Presenters\Primitives\GridColumnCollection.cs" />
+    <Compile Include="Presenters\GridPoint.cs" />
+    <Compile Include="Presenters\Primitives\GridRowCollection.cs" />
+    <Compile Include="Presenters\Primitives\GridSpan.cs" />
+    <Compile Include="Presenters\Primitives\GridTrackCollection.cs" />
+    <Compile Include="Presenters\Primitives\IElementCollection.cs" />
+    <Compile Include="Presenters\Primitives\IGridTrackCollection.cs" />
+    <Compile Include="Presenters\Primitives\IScrollHandler.cs" />
+    <Compile Include="Presenters\Primitives\LayoutManager.cs" />
+    <Compile Include="Presenters\Primitives\LayoutXManager.cs" />
+    <Compile Include="Presenters\Primitives\ScrollableManager.cs" />
+    <Compile Include="Presenters\Primitives\ScrollableManager.LogicalMainTrack.cs" />
+    <Compile Include="Presenters\Primitives\ScrollableManager.IScrollHandler.cs" />
+    <Compile Include="Presenters\Primitives\ScrollableManager.LogicalExtent.cs" />
+    <Compile Include="Presenters\Primitives\LayoutYManager.cs" />
+    <Compile Include="Presenters\Primitives\LayoutZManager.cs" />
+    <Compile Include="Presenters\Primitives\GridLineFigure.cs" />
+    <Compile Include="Presenters\Primitives\LineFigure.cs" />
+    <Compile Include="Presenters\Primitives\RowBindingCollection.cs" />
+    <Compile Include="Presenters\Primitives\RowManager.cs" />
+    <Compile Include="Presenters\Primitives\RowMapper.cs" />
+    <Compile Include="Presenters\Primitives\RowNormalizer.cs" />
+    <Compile Include="Presenters\Primitives\Span.cs" />
+    <Compile Include="Presenters\Primitives\RecapBindingCollection.cs" />
+    <Compile Include="Presenters\Primitives\BindingCollection.cs" />
+    <Compile Include="Views\BlockView.cs" />
+    <Compile Include="Presenters\Primitives\ContainerViewList.cs" />
+    <Compile Include="Presenters\VirtualRowPlacement.cs" />
+    <Compile Include="Presenters\DataPresenter.TemplateBuilder.cs" />
+    <Compile Include="Presenters\Primitives\LostFocusTrigger.cs" />
+    <Compile Include="Presenters\RowBinding.cs" />
+    <Compile Include="Views\ColumnHeader.cs" />
+    <Compile Include="Views\Primitives\RowViewPanel.cs" />
+    <Compile Include="Views\RowView.cs" />
+    <Compile Include="Presenters\RowPresenter.cs" />
+    <Compile Include="Presenters\Primitives\GridLengthParser.cs" />
+    <Compile Include="Presenters\Primitives\GridRange.cs" />
+    <Compile Include="Presenters\DataPresenter.cs" />
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="Views\DataView.cs" />
+    <Compile Include="Presenters\Primitives\GridColumn.cs" />
+    <Compile Include="Presenters\Primitives\GridTrack.cs" />
+    <Compile Include="Presenters\Primitives\GridRow.cs" />
+    <Compile Include="Views\Primitives\DataViewPanel.cs" />
+    <Compile Include="Presenters\Primitives\Template.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\DiagnosticMessages.Designer.cs">
+      <DependentUpon>DiagnosticMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\UserMessages.Designer.cs">
+      <DependentUpon>UserMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Presenters\ScalarBinding.cs" />
+    <Compile Include="Presenters\Primitives\Binding.cs" />
+    <Compile Include="Utilities\ConcatList.cs" />
+    <Compile Include="Utilities\IEnumerable.ForEach.cs" />
+    <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
+    <Compile Include="Presenters\ValidationMode.cs" />
+    <Compile Include="Presenters\RowValidation.cs" />
+    <Compile Include="Presenters\FlushingError.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\DiagnosticMessages.resx">
+      <LogicalName>DevZest.Data.DiagnosticMessages.resources</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\UserMessages.resx">
+      <LogicalName>DevZest.Data.UserMessages.resources</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ClearData.png" />
+    <Resource Include="Resources\Cancel.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Presenters\Validation.Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\GridCell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\InertButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\GridHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\AsyncValidationFaultControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ValidationErrorsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ValidationPlaceholder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Primitives\Spinner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PasteAppendWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SortWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\ForeignKeyBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RowHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Primitives\LoadingAnimation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Primitives\LoadingAnimationBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RowHeader.Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RowView.Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\BlockView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RowExpander.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ColumnHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RowSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RowView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\DataView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ValidationErrorsControl.Templates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\Resources.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{e0491457-ba40-4f12-bf72-e63a35422b1e}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <AdditionalProps Condition="Exists('..\$(AssemblyName).props')">..\$(AssemblyName).props</AdditionalProps>
+  </PropertyGroup>
+  <Import Project="$(AdditionalProps)" Condition=" '$(AdditionalProps)' != '' " />
+</Project>

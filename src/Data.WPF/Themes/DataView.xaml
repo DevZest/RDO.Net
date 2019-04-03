@@ -1,0 +1,140 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:DevZest.Data.Views"
+    xmlns:primitives="clr-namespace:DevZest.Data.Views.Primitives"
+    xmlns:res="clr-namespace:DevZest.Data">
+    
+    <Style TargetType="{x:Type local:DataView}">
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Local" />
+        <Style.Triggers>
+            <Trigger Property="Scrollable" Value="True">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}"
+                                    Padding="{TemplateBinding Padding}">
+                                <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
+                                          VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+                                          Focusable="False"
+                                          CanContentScroll="True">
+                                    <primitives:DataViewPanel x:Name="PART_Panel" RenderOptions.EdgeMode="Aliased" />
+                                </ScrollViewer>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="Scrollable" Value="False">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                                <primitives:DataViewPanel x:Name="PART_Panel" RenderOptions.EdgeMode="Aliased" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DataLoadState" Value="Loading">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                                <Grid VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                    <primitives:LoadingAnimation />
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock x:Name="_loading" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">Loading...</TextBlock>
+                                        <TextBlock x:Name="_cancel" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
+                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
+                                                   Command="{x:Static local:DataView+Commands.CancelDataLoad}">
+                                            <Run Text="{x:Static res:UserMessages.DataViewCommands_CancelDataLoadCommandText}" />
+                                        </Hyperlink>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="DataLoadCancellable" Value="true">
+                                    <Setter TargetName="_loading" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="_cancel" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DataLoadState" Value="Cancelling">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <Grid VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                    <primitives:LoadingAnimation />
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
+                                        <Run Text="{x:Static res:UserMessages.DataView_DataLoadCancelling}" />
+                                    </TextBlock>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DataLoadState" Value="Cancelled">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                        <TextBlock TextWrapping="Wrap">
+                                        <Run Text="{x:Static res:UserMessages.DataView_DataLoadCancelled}" />
+                                        <LineBreak />
+                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
+                                                   Command="{x:Static local:DataView+Commands.RetryDataLoad}">
+                                            <Run Text="{x:Static res:UserMessages.DataViewCommands_RetryDataLoadCommandText}" />                                            
+                                        </Hyperlink>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DataLoadState" Value="Failed">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                        <Expander>
+                                            <Expander.Header>
+                                                <TextBlock>
+                                                    <Run Text="{x:Static res:UserMessages.DataView_DataLoadFailed}" />
+                                                </TextBlock>
+                                            </Expander.Header>
+                                            <TextBox TextWrapping="Wrap" Text="{TemplateBinding DataLoadError}" />
+                                        </Expander>
+                                        <TextBlock>
+                                            <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}"
+                                                       Command="{x:Static local:DataView+Commands.RetryDataLoad}">
+                                                <Run Text="{x:Static res:UserMessages.DataViewCommands_RetryDataLoadCommandText}" />
+                                            </Hyperlink>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

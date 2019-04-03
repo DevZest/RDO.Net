@@ -7,7 +7,5 @@ sync_src/
 *.suo
 *proj.user
 *.lock.json
-
-
 /samples/CSharp/AdventureWorksLT.DbDesign/LocalDb/AdventureWorksLT.Design_log.ldf
 /samples/CSharp/AdventureWorksLT.DbDesign/LocalDb/AdventureWorksLT.Design.mdf

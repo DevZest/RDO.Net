@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\Sync.DevZest.Data.WPF\NuGet.Props" />
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <PackageId>DevZest.Data.WPF</PackageId>
+    <Authors>Weifen Luo | DevZest</Authors>
+    <PackageLicenseUrl>http://www.devzest.com</PackageLicenseUrl>
+    <PackageProjectUrl>http://www.devzest.com</PackageProjectUrl>
+    <PackageIconUrl>http://www.devzest.com</PackageIconUrl>
+    <RepositoryUrl>http://www.devzest.com</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Description>MVP Framework to build RDO.Data based WPF applications.</Description>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <Copyright>Copyright</Copyright>
+    <PackageTags>RDO.Net WPF MVP</PackageTags>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <AssemblyName>DevZest.Data.WPF.NuGet</AssemblyName>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <Compile Remove="VerGen\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="VerGen\**" />
+    <None Remove="bin\**" />
+    <None Remove="VerGen\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Sync.DevZest.Data.WPF\Data.WPF.csproj">
+      <Private>true</Private>
+      <PrivateAssets>All</PrivateAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\DevZest.Data.WPF.dll" Pack="true" PackagePath="lib/net461" Visible="false" />
+    <None Include="$(OutputPath)\DevZest.Data.WPF.pdb" Pack="true" PackagePath="lib/net461" Visible="false" />
+  </ItemGroup>
+</Project>

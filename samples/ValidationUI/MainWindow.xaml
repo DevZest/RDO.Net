@@ -1,0 +1,40 @@
+﻿<Window x:Class="ValidationUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Validation UI Sample" WindowStartupLocation="CenterScreen" SizeToContent="Height" Width="600" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="10" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.ColumnSpan="3">This sample application demonstrates various options for data validation. Click following button to see different implementations.</TextBlock>
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center">RowValidation</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">ScalarValidation</TextBlock>
+        <Button Grid.Row="2" Click="Login_Click" Height="32" Margin="10,10,10,0" VerticalAlignment="Top">User Login</Button>
+        <Button Grid.Row="2" Grid.Column="1" Click="_Login_Click" >User Login</Button>
+        <TextBlock Grid.Row="2" Grid.Column="2">User Login form to demonstrate Implicit validation mode and custom error template.</TextBlock>
+        <Button Grid.Row="3" Click="Registration_Click">User Registration</Button>
+        <Button Grid.Row="3" Grid.Column="1" Click="_Registration_Click">User Registration</Button>
+        <TextBlock Grid.Row="3" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center">User Registration form to demonstrate default validation behavior including async validation, together with ValidationPlaceholder and ValidationErrorsControl.</TextBlock>
+    </Grid>
+</Window>
