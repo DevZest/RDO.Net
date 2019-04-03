@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Data.MySql\Data.MySql.csproj" />
+    <ProjectReference Include="..\..\..\src\Data.MySql\Data.MySql.csproj" />
   </ItemGroup>
   
   <ItemGroup>
