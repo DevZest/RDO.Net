@@ -32,7 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{13427E
 		deploy\Sync.DevZest.Data.WPF.bat = deploy\Sync.DevZest.Data.WPF.bat
 		deploy\VerGen.DevZest.Data.WPF.bat = deploy\VerGen.DevZest.Data.WPF.bat
 		deploy\VerGen.ps1 = deploy\VerGen.ps1
-		deploy\vswhere.exe = deploy\vswhere.exe
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevZest.Data.WPF", "DevZest.Data.WPF", "{AEE06FA6-7FD3-4C48-88A3-243609A6EFAA}"
