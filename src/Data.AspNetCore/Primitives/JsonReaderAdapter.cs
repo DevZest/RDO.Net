@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using JsonToken = DevZest.Data.Primitives.JsonToken;
 using TokenType = Newtonsoft.Json.JsonToken;
 
@@ -26,7 +24,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         private readonly JsonReader _jsonReader;
         private Stack<State> _states = new Stack<State>();
         private bool _flagPostValue;
-        private Queue<JsonToken> _tokens = new Queue<JsonToken>(3);
+        private Queue<JsonToken> _tokens = new Queue<JsonToken>(2);
 
         private State? CurrentState
         {
@@ -87,13 +85,6 @@ namespace DevZest.Data.AspNetCore.Primitives
             if (RestoreEatenComma())
                 _tokens.Enqueue(JsonToken.Comma);
 
-            if (tokenType == TokenType.PropertyName)
-            {
-                _tokens.Enqueue(JsonToken.String(_jsonReader.Value.ToString()));
-                _tokens.Enqueue(JsonToken.Colon);
-                return;
-            }
-
             _tokens.Enqueue(GetSingleToken());
         }
 
@@ -124,6 +115,9 @@ namespace DevZest.Data.AspNetCore.Primitives
                 ExitState(State.Array);
                 return JsonToken.SquaredClose;
             }
+
+            if (tokenType == TokenType.PropertyName)
+                return JsonToken.PropertyName(_jsonReader.Value.ToString());
 
             _flagPostValue = true;
             return GetValueToken();
