@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
@@ -23,19 +24,64 @@ namespace DevZest.Data.Primitives
                 _json = json.VerifyNotEmpty(nameof(json));
             }
 
-            protected override JsonToken NextToken()
+            private bool ConsumeNextWhitespaceChar(out char result)
             {
-                char c = new char();
+                if (!NextNonWhitespaceChar(out result))
+                    return false;
 
-                while (_index < _json.Length)
+                ConsumeCurrentChar();
+                return true;
+            }
+
+            private void ConsumeCurrentChar()
+            {
+                Debug.Assert(_index < _json.Length);
+                _index++;
+            }
+
+            private bool NextNonWhitespaceChar(out char result)
+            {
+                SkipWhitespace();
+                if (_index == _json.Length)
                 {
-                    c = _json[_index++];
-
-                    if (c > ' ') break;
-                    if (c != ' ' && c != '\t' && c != '\n' && c != '\r') break;
+                    result = default(char);
+                    return false;
                 }
 
-                if (_index == _json.Length)
+                result = _json[_index];
+                return true;
+            }
+
+            private void SkipWhitespace()
+            {
+                while (_index < _json.Length)
+                {
+                    var currentChar = _json[_index];
+                    if (currentChar > ' ')
+                        return;
+
+                    if (currentChar == ' ' || currentChar == '\t' || currentChar == '\n' || currentChar == '\r')
+                        _index++;
+                }
+            }
+
+            private bool ConsumeNextColon()
+            {
+                if (!NextNonWhitespaceChar(out var c))
+                    return false;
+
+                if (c == ':')
+                {
+                    ConsumeCurrentChar();
+                    return true;
+                }
+
+                return false;
+            }
+
+            protected override JsonToken NextToken()
+            {
+                if (!ConsumeNextWhitespaceChar(out var c))
                     return JsonToken.Eof;
 
                 switch (c)
@@ -56,7 +102,9 @@ namespace DevZest.Data.Primitives
                         return JsonToken.Comma;
 
                     case '"':
-                        return JsonToken.String(ParseStringToken());
+                        var stringValue = ParseStringValue();
+                        var hasNextColon = ConsumeNextColon();
+                        return hasNextColon ? JsonToken.PropertyName(stringValue) : JsonToken.String(stringValue);
 
                     case '0':
                     case '1':
@@ -72,9 +120,6 @@ namespace DevZest.Data.Primitives
                     case '+':
                     case '.':
                         return JsonToken.Number(ParseNumberToken());
-
-                    case ':':
-                        return JsonToken.Colon;
 
                     case 'f':
                         ExpectLiteral("false");
@@ -111,7 +156,7 @@ namespace DevZest.Data.Primitives
                 return _json.Substring(startIndex, _index - startIndex);
             }
 
-            private string ParseStringToken()
+            private string ParseStringValue()
             {
                 _stringBuilder.Length = 0;
 
@@ -314,18 +359,17 @@ namespace DevZest.Data.Primitives
             ExpectToken(JsonTokenKind.Comma);
         }
 
-        public void ExpectObjectName(string objectName)
+        public void ExpectPropertyName(string propertyName)
         {
-            var tokenText = ExpectToken(JsonTokenKind.String).Text;
-            if (tokenText != objectName)
-                throw new FormatException(DiagnosticMessages.JsonReader_InvalidObjectName(tokenText, objectName));
-            ExpectToken(JsonTokenKind.Colon);
+            var tokenText = ExpectToken(JsonTokenKind.PropertyName).Text;
+            if (tokenText != propertyName)
+                throw new FormatException(DiagnosticMessages.JsonReader_InvalidObjectName(tokenText, propertyName));
         }
 
-        public string ExpectNameNullableStringPair(string objectName, bool expectComma)
+        public string ExpectNullableStringProperty(string objectName, bool expectComma)
         {
             string result;
-            ExpectObjectName(objectName);
+            ExpectPropertyName(objectName);
             if (PeekToken().Kind == JsonTokenKind.Null)
             {
                 ConsumeToken();
@@ -338,9 +382,9 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        public string ExpectNameStringPair(string objectName, bool expectComma)
+        public string ExpectStringProperty(string objectName, bool expectComma)
         {
-            ExpectObjectName(objectName);
+            ExpectPropertyName(objectName);
             var result = ExpectToken(JsonTokenKind.String).Text;
             if (expectComma)
                 ExpectToken(JsonTokenKind.Comma);

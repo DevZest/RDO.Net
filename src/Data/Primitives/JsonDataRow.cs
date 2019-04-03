@@ -160,7 +160,7 @@ namespace DevZest.Data.Primitives
             jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
 
             var token = jsonReader.PeekToken();
-            if (token.Kind == JsonTokenKind.String)
+            if (token.Kind == JsonTokenKind.PropertyName)
             {
                 jsonReader.ConsumeToken();
                 jsonReader.Deserialize(dataRow, token.Text);
@@ -168,7 +168,7 @@ namespace DevZest.Data.Primitives
                 while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonReader.ConsumeToken();
-                    token = jsonReader.ExpectToken(JsonTokenKind.String);
+                    token = jsonReader.ExpectToken(JsonTokenKind.PropertyName);
                     jsonReader.Deserialize(dataRow, token.Text);
                 }
             }
@@ -178,8 +178,6 @@ namespace DevZest.Data.Primitives
 
         private static void Deserialize(this JsonReader jsonReader, DataRow dataRow, string memberName)
         {
-            jsonReader.ExpectToken(JsonTokenKind.Colon);
-
             var model = dataRow.Model;
 
             var member = model[memberName];
@@ -201,7 +199,7 @@ namespace DevZest.Data.Primitives
         {
             jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
             var token = jsonReader.PeekToken();
-            if (token.Kind == JsonTokenKind.String)
+            if (token.Kind == JsonTokenKind.PropertyName)
             {
                 jsonReader.ConsumeToken();
                 jsonReader.Deserialize(projection, token.Text, dataRow);
@@ -209,7 +207,7 @@ namespace DevZest.Data.Primitives
                 while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonReader.ConsumeToken();
-                    token = jsonReader.ExpectToken(JsonTokenKind.String);
+                    token = jsonReader.ExpectToken(JsonTokenKind.PropertyName);
                     jsonReader.Deserialize(projection, token.Text, dataRow);
                 }
             }
@@ -218,7 +216,6 @@ namespace DevZest.Data.Primitives
 
         private static void Deserialize(this JsonReader jsonReader, Projection projection, string memberName, DataRow dataRow)
         {
-            jsonReader.ExpectToken(JsonTokenKind.Colon);
             if (projection.ColumnsByRelativeName.ContainsKey(memberName))
                 jsonReader.Deserialize(projection.ColumnsByRelativeName[memberName], dataRow.Ordinal);
             else

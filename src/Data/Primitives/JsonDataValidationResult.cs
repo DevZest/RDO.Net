@@ -22,8 +22,8 @@ namespace DevZest.Data.Primitives
             IDataValidationErrors validationErrors;
 
             jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
-            dataRow = DataRow.FromString(dataSet, jsonReader.ExpectNameStringPair(DATA_ROW, true));
-            jsonReader.ExpectObjectName(ERRORS);
+            dataRow = DataRow.FromString(dataSet, jsonReader.ExpectStringProperty(DATA_ROW, true));
+            jsonReader.ExpectPropertyName(ERRORS);
             validationErrors = jsonReader.ParseDataValidationErrors(dataSet);
             jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
 

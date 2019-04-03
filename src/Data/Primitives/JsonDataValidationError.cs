@@ -28,7 +28,7 @@ namespace DevZest.Data.Primitives
         public static DataValidationError ParseValidationMessage(this JsonReader jsonReader, DataSet dataSet)
         {
             jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
-            var message = jsonReader.ExpectNameStringPair(DESCRIPTION, true);
+            var message = jsonReader.ExpectStringProperty(DESCRIPTION, true);
             var source = jsonReader.ParseColumns(dataSet, false);
             jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
 
@@ -37,7 +37,7 @@ namespace DevZest.Data.Primitives
 
         private static IColumns ParseColumns(this JsonReader jsonReader, DataSet dataSet, bool expectComma)
         {
-            var text = jsonReader.ExpectNameNullableStringPair(SOURCE, expectComma);
+            var text = jsonReader.ExpectNullableStringProperty(SOURCE, expectComma);
             return text == null ? null : Columns.Deserialize(dataSet.Model, text);
         }
 

@@ -15,7 +15,7 @@ namespace DevZest.Data.Primitives
         CurlyClose = 0x40,
         SquaredOpen = 0x80,
         SquaredClose = 0x100,
-        Colon = 0x200,
+        PropertyName = 0x200,
         Comma = 0x400,
         ColumnValues = String | Number | True | False | Null
     }
