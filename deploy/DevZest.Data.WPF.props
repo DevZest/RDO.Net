@@ -1,10 +1,16 @@
 <Project>
-  <Import Project="Deploy.props" />
   <Import Project="Sync.DevZest.Data.WPF\PackageReference.props" />
 
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);DEPLOY</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Compile Include="AssemblyVersion.cs" />
-    <ProjectReference Remove="..\..\external\RDO.Data\src\Data\Data.csproj" />
+    <ProjectReference Remove="..\Data\Data.csproj" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>
