@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\CSharp\AdventureWorksLT\AdventureWorksLT.csproj" />
+    <ProjectReference Include="..\..\samples\AdventureWorksLT.CSharp\AdventureWorksLT\AdventureWorksLT.csproj" />
   </ItemGroup>
 
   <ItemGroup>

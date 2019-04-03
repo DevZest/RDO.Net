@@ -43,15 +43,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevZest.Samples.AdventureWo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{BE6B9D9D-B163-41BD-9F91-2C57889A1AB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\CSharp\AdventureWorksLT\AdventureWorksLT.csproj", "{AD15E68A-92DF-4AEA-8A96-40B2C8648F19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\AdventureWorksLT.CSharp\AdventureWorksLT\AdventureWorksLT.csproj", "{AD15E68A-92DF-4AEA-8A96-40B2C8648F19}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VisualBasic", "VisualBasic", "{20265DDF-5B8E-4B7D-BC0A-66C78677DA39}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT", "samples\VisualBasic\AdventureWorksLT\AdventureWorksLT.vbproj", "{311C3F21-D65A-4C4D-A7B4-A17061590E1F}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT", "samples\AdventureWorksLT.VisualBasic\AdventureWorksLT\AdventureWorksLT.vbproj", "{311C3F21-D65A-4C4D-A7B4-A17061590E1F}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.DbDesign", "samples\VisualBasic\AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.vbproj", "{21C50505-6194-49EE-9EF1-D289D45CD90C}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.DbDesign", "samples\AdventureWorksLT.VisualBasic\AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.vbproj", "{21C50505-6194-49EE-9EF1-D289D45CD90C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbDesign", "samples\CSharp\AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.csproj", "{F1F235BB-BAF7-4565-A6DD-3E7CAA00AA12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbDesign", "samples\AdventureWorksLT.CSharp\AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.csproj", "{F1F235BB-BAF7-4565-A6DD-3E7CAA00AA12}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.IntegrationTests", "test\Data.IntegrationTests\Data.IntegrationTests.csproj", "{774B14F7-425F-42BF-A9BE-73200B0F4918}"
 EndProject
