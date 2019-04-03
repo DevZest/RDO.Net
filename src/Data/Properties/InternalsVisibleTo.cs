@@ -3,6 +3,7 @@
 #if !DEPLOY
 
 [assembly: InternalsVisibleTo("Data.UnitTests")]
+[assembly: InternalsVisibleTo("Data.MySql.UnitTests")]
 
 // for Moq
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

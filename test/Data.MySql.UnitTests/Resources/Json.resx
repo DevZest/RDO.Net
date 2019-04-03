@@ -1,0 +1,484 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ProductCategories" xml:space="preserve">
+    <value>[
+   {
+      "ProductCategoryID" : 1,
+      "ParentProductCategoryID" : null,
+      "Name" : "Bikes",
+      "RowGuid" : "cfbda25c-df71-47a7-b81b-64ee161aa37c",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : [
+         {
+            "ProductCategoryID" : 5,
+            "Name" : "Mountain Bikes",
+            "RowGuid" : "2d364ade-264a-433c-b092-4fcbf3804e01",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 6,
+            "Name" : "Road Bikes",
+            "RowGuid" : "000310c0-bcc8-42c4-b0c3-45ae611af06b",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 7,
+            "Name" : "Touring Bikes",
+            "RowGuid" : "02c5061d-ecdc-4274-b5f1-e91d76bc3f37",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         }
+      ]
+   },
+   {
+      "ProductCategoryID" : 2,
+      "ParentProductCategoryID" : null,
+      "Name" : "Components",
+      "RowGuid" : "c657828d-d808-4aba-91a3-af2ce02300e9",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : [
+         {
+            "ProductCategoryID" : 8,
+            "Name" : "Handlebars",
+            "RowGuid" : "3ef2c725-7135-4c85-9ae6-ae9a3bdd9283",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 9,
+            "Name" : "Bottom Brackets",
+            "RowGuid" : "a9e54089-8a1e-4cf5-8646-e3801f685934",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 10,
+            "Name" : "Brakes",
+            "RowGuid" : "d43ba4a3-ef0d-426b-90eb-4be4547dd30c",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 11,
+            "Name" : "Chains",
+            "RowGuid" : "e93a7231-f16c-4b0f-8c41-c73fdec62da0",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 12,
+            "Name" : "Cranksets",
+            "RowGuid" : "4f644521-422b-4f19-974a-e3df6102567e",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 13,
+            "Name" : "Derailleurs",
+            "RowGuid" : "1830d70c-aa2a-40c0-a271-5ba86f38f8bf",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 14,
+            "Name" : "Forks",
+            "RowGuid" : "b5f9ba42-b69b-4fdd-b2ec-57fb7b42e3cf",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 15,
+            "Name" : "Headsets",
+            "RowGuid" : "7c782bbe-5a16-495a-aa50-10afe5a84af2",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 16,
+            "Name" : "Mountain Frames",
+            "RowGuid" : "61b21b65-e16a-4be7-9300-4d8e9db861be",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 17,
+            "Name" : "Pedals",
+            "RowGuid" : "6d24ac07-7a84-4849-864a-865a14125bc9",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 18,
+            "Name" : "Road Frames",
+            "RowGuid" : "5515f857-075b-4f9a-87b7-43b4997077b3",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 19,
+            "Name" : "Saddles",
+            "RowGuid" : "049fffa3-9d30-46df-82f7-f20730ec02b3",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 20,
+            "Name" : "Touring Frames",
+            "RowGuid" : "d2e3f1a8-56c4-4f36-b29d-5659fc0d2789",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 21,
+            "Name" : "Wheels",
+            "RowGuid" : "43521287-4b0b-438e-b80e-d82d9ad7c9f0",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         }
+      ]
+   },
+   {
+      "ProductCategoryID" : 3,
+      "ParentProductCategoryID" : null,
+      "Name" : "Clothing",
+      "RowGuid" : "10a7c342-ca82-48d4-8a38-46a2eb089b74",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : [
+         {
+            "ProductCategoryID" : 22,
+            "Name" : "Bib-Shorts",
+            "RowGuid" : "67b58d2b-5798-4a90-8c6c-5ddacf057171",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 23,
+            "Name" : "Caps",
+            "RowGuid" : "430dd6a8-a755-4b23-bb05-52520107da5f",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 24,
+            "Name" : "Gloves",
+            "RowGuid" : "92d5657b-0032-4e49-bad5-41a441a70942",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 25,
+            "Name" : "Jerseys",
+            "RowGuid" : "09e91437-ba4f-4b1a-8215-74184fd95db8",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 26,
+            "Name" : "Shorts",
+            "RowGuid" : "1a5ba5b3-03c3-457c-b11e-4fa85ede87da",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 27,
+            "Name" : "Socks",
+            "RowGuid" : "701019c3-09fe-4949-8386-c6ce686474e5",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 28,
+            "Name" : "Tights",
+            "RowGuid" : "5deb3e55-9897-4416-b18a-515e970bc2d1",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 29,
+            "Name" : "Vests",
+            "RowGuid" : "9ad7fe93-5ba0-4736-b578-ff80a2071297",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         }
+      ]
+   },
+   {
+      "ProductCategoryID" : 4,
+      "ParentProductCategoryID" : null,
+      "Name" : "Accessories",
+      "RowGuid" : "2be3be36-d9a2-4eee-b593-ed895d97c2a6",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : [
+         {
+            "ProductCategoryID" : 30,
+            "Name" : "Bike Racks",
+            "RowGuid" : "4624b5ce-66d6-496b-9201-c053df3556cc",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 31,
+            "Name" : "Bike Stands",
+            "RowGuid" : "43b445c8-b820-424e-a1d5-90d81da0b46f",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 32,
+            "Name" : "Bottles and Cages",
+            "RowGuid" : "9b7dff41-9fa3-4776-8def-2c9a48c8b779",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 33,
+            "Name" : "Cleaners",
+            "RowGuid" : "9ad3bcf0-244d-4ec4-a6a0-fb701351c6a3",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 34,
+            "Name" : "Fenders",
+            "RowGuid" : "1697f8a2-0a08-4883-b7dd-d19117b4e9a7",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 35,
+            "Name" : "Helmets",
+            "RowGuid" : "f5e07a33-c9e0-439c-b5f3-9f25fb65becc",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 36,
+            "Name" : "Hydration Packs",
+            "RowGuid" : "646a8906-fc87-4267-a443-9c6d791e6693",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 37,
+            "Name" : "Lights",
+            "RowGuid" : "954178ba-624f-42db-95f6-ca035f36d130",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 38,
+            "Name" : "Locks",
+            "RowGuid" : "19646983-3fa0-4773-9a0c-f34c49df9bc8",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 39,
+            "Name" : "Panniers",
+            "RowGuid" : "3002a5d5-fec3-464b-bef3-e0f81d35f431",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 40,
+            "Name" : "Pumps",
+            "RowGuid" : "fe4d46f2-c87c-48c5-a4a1-3f55712d80b1",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : 41,
+            "Name" : "Tires and Tubes",
+            "RowGuid" : "3c17c9ae-e906-48b4-bdd3-60e28d47dcdf",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         }
+      ]
+   }
+]</value>
+  </data>
+  <data name="ProductCategoriesLevel1" xml:space="preserve">
+    <value>[
+   {
+      "ProductCategoryID" : 1,
+      "ParentProductCategoryID" : null,
+      "Name" : "Bikes",
+      "RowGuid" : "CFBDA25C-DF71-47A7-B81B-64EE161AA37C",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : []
+   },
+   {
+      "ProductCategoryID" : 2,
+      "ParentProductCategoryID" : null,
+      "Name" : "Other",
+      "RowGuid" : "C657828D-D808-4ABA-91A3-AF2CE02300E9",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : []
+   }
+]</value>
+  </data>
+  <data name="SalesOrder_71774" xml:space="preserve">
+    <value>[
+   {
+      "SalesOrderID" : 71774,
+      "RevisionNumber" : 2,
+      "OrderDate" : "2008-06-01T00:00:00.000",
+      "DueDate" : "2008-06-13T00:00:00.000",
+      "ShipDate" : "2008-06-08T00:00:00.000",
+      "Status" : 5,
+      "OnlineOrderFlag" : false,
+      "PurchaseOrderNumber" : "PO348186287",
+      "AccountNumber" : "10-4020-000609",
+      "CustomerID" : 29847,
+      "ShipToAddressID" : 1092,
+      "BillToAddressID" : 1092,
+      "ShipMethod" : "CARGO TRANSPORT 5",
+      "CreditCardApprovalCode" : null,
+      "TaxAmt" : 70.4279,
+      "Freight" : 22.0087,
+      "Comment" : null,
+      "RowGuid" : "89e42cdc-8506-48a2-b89b-eb3e64e3554e",
+      "ModifiedDate" : "2008-06-08T00:00:00.000",
+      "SalesOrderDetails" : [
+         {
+            "SalesOrderDetailID" : 110562,
+            "OrderQty" : 1,
+            "ProductID" : 836,
+            "UnitPrice" : 356.8980,
+            "UnitPriceDiscount" : 0,
+            "RowGuid" : "e3a1994c-7a68-4ce8-96a3-77fdd3bbd730",
+            "ModifiedDate" : "2008-06-01T00:00:00.000"
+         },
+         {
+            "SalesOrderDetailID" : 110563,
+            "OrderQty" : 1,
+            "ProductID" : 822,
+            "UnitPrice" : 356.8980,
+            "UnitPriceDiscount" : 0,
+            "RowGuid" : "5c77f557-fdb6-43ba-90b9-9a7aec55ca32",
+            "ModifiedDate" : "2008-06-01T00:00:00.000"
+         }
+      ]
+   }
+]</value>
+  </data>
+</root>

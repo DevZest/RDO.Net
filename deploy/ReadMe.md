@@ -1,6 +1,7 @@
 Run `Build.bat` to build NuGet packages:
 - `DevZest.Data`
 - `DevZest.Data.SqlServer`
+- `DevZest.Data.MySql`
 
 Build.bat must be run under respective sub directory. For example, to build package DevZest.Data, make sure current directory is DevZest.Data, then run the following command:
 ```
@@ -21,7 +22,7 @@ To build NuGet package `DevZest.Data.WPF`:
 Prerequisites:
 Chocolatey packages installed: `vswhere`, `nuget.commandline`.
 
-- Make sure current directory is `DevZest.Data.WPF`, then run `Build.bat`:
+- Make sure current directory is `DevZest.Data.WPF`, then run `BuildWpf.bat`:
  
   ```
   ..\BuildWpf.bat 1.0.0 beta-*

@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <AssemblyName>DevZest.Data.MySql</AssemblyName>
+    <RootNamespace>DevZest.Data.MySql</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Weifen Luo | DevZest</Authors>
+    <Company>DevZest</Company>
+    <Product>DevZest RDO.NET MySQL Implementation</Product>
+    <Description>DevZest RDO.NET MySQL Implementation</Description>
+    <Copyright>Copyright © Weifen Luo | DevZest</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs" Link="Utilities\Argument.VerifyNotNull.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\NameSuffixes.GetUniqueName.cs" Link="Utilities\NameSuffixes.GetUniqueName.cs" />
+    <Compile Include="..\..\external\Utilities\src\Utilities\Type.GetStaticMethodInfo.cs" Link="Utilities\Type.GetStaticMethodInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\DiagnosticMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DiagnosticMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Resources.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\DiagnosticMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DiagnosticMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Resources.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AdditionalProps Condition="Exists('..\..\..\$(AssemblyName).props')">..\..\..\$(AssemblyName).props</AdditionalProps>
+    <AdditionalProps Condition="Exists('..\$(AssemblyName).props')">..\$(AssemblyName).props</AdditionalProps>
+  </PropertyGroup>
+  <Import Project="$(AdditionalProps)" Condition=" '$(AdditionalProps)' != '' " />
+</Project>
