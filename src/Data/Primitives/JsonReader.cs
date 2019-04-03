@@ -71,7 +71,7 @@ namespace DevZest.Data.Primitives
                     case '-':
                     case '+':
                     case '.':
-                        return JsonToken.String(ParseNumberToken());
+                        return JsonToken.Number(ParseNumberToken());
 
                     case ':':
                         return JsonToken.Colon;
