@@ -11,13 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{941CB84E-237D-4BA3-8F14-215C895015A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{5C73DDBC-DC97-41D0-AC31-865E5093C5BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.MySql.UnitTests", "test\Data.MySql.UnitTests\Data.MySql.UnitTests.csproj", "{5C73DDBC-DC97-41D0-AC31-865E5093C5BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{836F5D0D-F6B5-423D-AFDA-FC27208A9E50}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "external\RDO.Data\src\Data\Data.csproj", "{EC12CE42-CEEA-4AEE-8792-C85EC6397FA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "test\IntegrationTests\IntegrationTests.csproj", "{5E5918B5-E9AE-45B5-B089-BD2A4297315C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.MySql.IntegrationTests", "test\Data.MySql.IntegrationTests\Data.MySql.IntegrationTests.csproj", "{5E5918B5-E9AE-45B5-B089-BD2A4297315C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbDesign", "samples\AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.csproj", "{FCB0AE73-BA90-4177-87A2-CF1642DA310E}"
 EndProject
