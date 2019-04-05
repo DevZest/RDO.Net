@@ -5,6 +5,13 @@ using System.Linq;
 
 namespace DevZest.Data
 {
+    /// <summary>Manipulates set of columns.</summary>
+    /// <remarks>
+    /// <para><see cref="Column"/> class implements <see cref="IColumns"/>, so a <see cref="Column"/> instance can represent both
+    /// the column itself and a singleton set of columns. This can improve performance by avoiding unnecessary object creation.</para>
+    /// <para><see cref="IColumns"/> can be sealed as immutable, any change to <see cref="IColumns"/> may or may not
+    /// create a new <see cref="IColumns"/> instance. Consumer of <see cref="IColumns"/> should always assume it's immutable.</para>
+    /// </remarks>
     public static class Columns
     {
         private class EmptyColumns : IColumns
@@ -175,8 +182,7 @@ namespace DevZest.Data
             {
                 if (ReferenceEquals(this, obj))
                     return true;
-                var columns = obj as HashSetColumns;
-                return columns == null ? false : s_setComparer.Equals(_hashSet, columns._hashSet);
+                return !(obj is HashSetColumns columns) ? false : s_setComparer.Equals(_hashSet, columns._hashSet);
             }
 
             public override int GetHashCode()
@@ -200,6 +206,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets an empty columns set.
+        /// </summary>
         public static IColumns Empty
         {
             get { return EmptyColumns.Singleton; }
@@ -211,6 +220,11 @@ namespace DevZest.Data
             return new HashSetColumns(value1, value2);
         }
 
+        /// <summary>
+        /// Creates a new set of columns.
+        /// </summary>
+        /// <param name="values">The value of columns.</param>
+        /// <returns>The column set.</returns>
         public static IColumns New(params Column[] values)
         {
             values.VerifyNotNull(nameof(values));
@@ -245,10 +259,10 @@ namespace DevZest.Data
             return Columns.New(result);
         }
 
-        /// <summary>Removes the columns in the specified collection from the current set.</summary>
-        /// <param name="source">The current set.</param>
-        /// <param name="other">The collection of items to remove from this set.</param>
-        /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
+        /// <summary>Removes specified columns from the current columns.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to be removed.</param>
+        /// <returns>A new set of columns if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IColumns Except(this IColumns source, IColumns other)
         {
             source.VerifyNotNull(nameof(source));
@@ -262,10 +276,10 @@ namespace DevZest.Data
             return source;
         }
 
-        /// <summary>Removes the columns to ensure the set contains only columns both exist in this set and the specified collection.</summary>
-        /// <param name="source">The current set.</param>
-        /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
+        /// <summary>Removes the columns to ensure the set contains only columns both exist in the current columns and the specified columns.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to compare to the current columns.</param>
+        /// <returns>A new set of columns if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IColumns Intersect(this IColumns source, IColumns other)
         {
             source.VerifyNotNull(nameof(source));
@@ -289,10 +303,10 @@ namespace DevZest.Data
             return true;
         }
 
-        /// <summary>Determines whether the current set is a proper (strict) subset of the specified collection.</summary>
-        /// <param name="source">The current set.</param>
-        /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <summary>Determines whether the current columns is a proper (strict) subset of the specified columns.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to compare to the current columns.</param>
+        /// <returns><see langword="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSubsetOf(this IColumns source, IColumns other)
         {
             source.VerifyNotNull(nameof(source));
@@ -301,9 +315,10 @@ namespace DevZest.Data
             return source.Count < other.Count ? other.ContainsAll(source) : false;
         }
 
-        /// <summary>Determines whether the current set is a proper (strict) superset of the specified collection.</summary>
-        /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <summary>Determines whether the current columns is a proper (strict) superset of the specified columns.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to compare to the current columns.</param>
+        /// <returns><see langword="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSupersetOf(this IColumns source, IColumns other)
         {
             source.VerifyNotNull(nameof(source));
@@ -312,10 +327,10 @@ namespace DevZest.Data
             return source.Count > other.Count ? source.ContainsAll(other) : false;
         }
 
-        /// <summary>Determines whether the current set is a subset of a specified collection.</summary>
-        /// <param name="source">The current set.</param>
-        /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <summary>Determines whether the current columns is a subset of a specified columns.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to compare to the current columns.</param>
+        /// <returns><see langword="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSubsetOf(this IColumns source, IColumns other)
         {
             source.VerifyNotNull(nameof(source));
@@ -324,10 +339,10 @@ namespace DevZest.Data
             return source.Count <= other.Count ? other.ContainsAll(source) : false;
         }
 
-        /// <summary>Determines whether the current set is a superset of a specified collection.</summary>
-        /// <param name="source">The current set.</param>
-        /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <summary>Determines whether the current columns is a superset of a specified columns.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to compare to the current columns.</param>
+        /// <returns><see langword="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSupersetOf(this IColumns source, IColumns other)
         {
             source.VerifyNotNull(nameof(source));
@@ -336,10 +351,10 @@ namespace DevZest.Data
             return source.Count >= other.Count ? source.ContainsAll(other) : false;
         }
 
-        /// <summary>Determines whether the current set overlaps with the specified collection.</summary>
-        /// <param name="source">The current set.</param>
-        /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <summary>Determines whether the current columns overlaps with the specified columns.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to compare to the current columns.</param>
+        /// <returns><see langword="true"/> if the current set overlaps with the specified columns; otherwise, <see langword="false" />.</returns>
         public static bool Overlaps(this IColumns source, IColumns other)
         {
             source.VerifyNotNull(nameof(source));
@@ -353,10 +368,10 @@ namespace DevZest.Data
             return false;
         }
 
-        /// <summary>Determines whether the current set and the specified collection contain the same elements.</summary>
-        /// <param name="source">The current set.</param>
-        /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
+        /// <summary>Determines whether the current columns and the specified columns contain the same elements.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to compare to the current columns.</param>
+        /// <returns><see langword="true"/> if the current set and the specified columns contain the same elements; otherwise, <see langword="false" />.</returns>
         public static bool SetEquals(this IColumns source, IColumns other)
         {
             source.VerifyNotNull(nameof(source));
@@ -365,9 +380,9 @@ namespace DevZest.Data
             return source.Count == other.Count ? source.ContainsAll(other) : false;
         }
 
-        /// <summary>Ensures set contain only elements that are present either in the current set or in the specified collection, but not both.</summary>
-        /// <param name="source">The current set.</param>
-        /// <param name="other">The collection to compare to the current set.</param>
+        /// <summary>Ensures set contain only elements that are present either in the current columns or in the specified columns, but not both.</summary>
+        /// <param name="source">The current columns.</param>
+        /// <param name="other">The columns to compare to the current columns.</param>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IColumns SymmetricExcept(this IColumns source, IColumns other)
         {
@@ -393,8 +408,8 @@ namespace DevZest.Data
             return source;
         }
 
-        /// <summary>Ensures set contain all elements that are present in either the current set or in the specified collection.</summary>
-        /// <param name="source">The current set.</param>
+        /// <summary>Ensures set contain all elements that are present in either the current columns or in the specified columns.</summary>
+        /// <param name="source">The current columns.</param>
         /// <param name="other">The collection to add elements from.</param>
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IColumns Union(this IColumns source, IColumns other)
