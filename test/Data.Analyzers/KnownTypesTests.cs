@@ -30,7 +30,6 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ModelDeclarationSpecAttribute));
 
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ModelDesignerSpecAttribute));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.AddonAttribute));
 
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbSession));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbTable));

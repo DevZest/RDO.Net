@@ -2,7 +2,6 @@
 
 namespace DevZest.Data.Addons
 {
-    [Addon(typeof(ColumnSort))]
     public abstract class ColumnDefault : IAddon
     {
         internal ColumnDefault(string name, string description)

@@ -1,6 +1,5 @@
 ﻿namespace DevZest.Data.Addons
 {
-    [Addon(typeof(Identity))]
     public class Identity : IAddon
     {
         internal static Identity FromInt16Column(_Int16 column, short seed, short increment)

@@ -4,7 +4,6 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Addons
 {
-    [Addon]
     public sealed class DbIndex : IIndexConstraint, IAddon
     {
         internal DbIndex(string name, string description, bool isUnique, bool isClustered, bool isValidOnTable, bool isValidOnTempTable, IList<ColumnSort> columns)

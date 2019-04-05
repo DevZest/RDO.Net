@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data
 {
     /// <summary>
-    /// Represents column of variable-length stream of binary data.
+    /// Represents column of binary data.
     /// </summary>
     public sealed class _Binary : Column<Binary>, IColumn<DbReader, Binary>
     {

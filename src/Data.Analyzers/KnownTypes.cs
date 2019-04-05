@@ -32,7 +32,6 @@
         public const string ModelDeclarationSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDeclarationSpecAttribute);
 
         public const string ModelDesignerSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDesignerSpecAttribute);
-        public const string AddonAttribute = Namespaces.Data_Addons + nameof(AddonAttribute);
 
         public const string DbSession = Namespaces.Data_Primitives + nameof(DbSession);
         public const string DbTable = Namespaces.Data + nameof(DbTable) + "`1";

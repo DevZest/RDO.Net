@@ -9,7 +9,6 @@ using System.Globalization;
 
 namespace DevZest.Data.SqlServer
 {
-    [Addon(typeof(SqlType))]
     public abstract class SqlType : IAddon
     {
         private const string NULL = "NULL";
