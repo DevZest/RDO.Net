@@ -5,27 +5,57 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Addons
 {
+    /// <summary>
+    /// Base class to wrap action execution and notify to <see cref="IAddon"/> objects.
+    /// </summary>
     public abstract class AddonInvoker
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddonInvoker"/> class.
+        /// </summary>
+        /// <param name="addonBag">The <see cref="AddonBag"/>.</param>
         protected AddonInvoker(AddonBag addonBag)
         {
             AddonBag = addonBag.VerifyNotNull(nameof(addonBag));
         }
 
+        /// <summary>
+        /// Gets the <see cref="AddonBag"/>.
+        /// </summary>
         public AddonBag AddonBag { get; }
 
+        /// <summary>
+        /// Gets a value indicates whether the executing action is asynchronous.
+        /// </summary>
         public bool IsAsync { get; protected set; }
 
+        /// <summary>
+        /// Gets the <see cref="TaskStatus"/> of executing action.
+        /// </summary>
         public TaskStatus TaskStatus { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the original <see cref="Exception"/> thrown during action execution.
+        /// </summary>
         public Exception OriginalException { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the outmost <see cref="Exception"/> thrown during action execution.
+        /// </summary>
         public Exception Exception { get; protected set; }
     }
 
+    /// <summary>
+    /// Base class to wrap action execution and notify to <see cref="IAddon"/> objects with specified type.
+    /// </summary>
+    /// <typeparam name="T">The implementation type of <see cref="IAddon"/> objects, which receive the notification of the action execution.</typeparam>
     public abstract class AddonInvoker<T> : AddonInvoker
         where T : class, IAddon
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddonInvoker{T}"/> class.
+        /// </summary>
+        /// <param name="addonBag">The <see cref="AddonBag"/>.</param>
         protected AddonInvoker(AddonBag addonBag)
             : base(addonBag)
         {
@@ -37,12 +67,18 @@ namespace DevZest.Data.Addons
             Exception = exception;
         }
 
-        protected void Invoke(Action operation, Action<T> onExecuting, Action<T> onExecuted)
+        /// <summary>
+        /// Executes the action and notifies the addon objects.
+        /// </summary>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="onExecuting">Receives the notification before action executing.</param>
+        /// <param name="onExecuted">Receives the notification after action executed.</param>
+        protected void Invoke(Action action, Action<T> onExecuting, Action<T> onExecuted)
         {
             var addons = BeginExecute(false, onExecuting);
             try
             {
-                operation();
+                action();
             }
             catch (Exception ex)
             {
@@ -80,12 +116,18 @@ namespace DevZest.Data.Addons
             return addons;
         }
 
-        protected Task InvokeAsync(Task operation, Action<T> executing, Action<T> executed)
+        /// <summary>
+        /// Executes the action asynchronously and notifies the addon objects.
+        /// </summary>
+        /// <param name="action">The action to be executed asynchronously.</param>
+        /// <param name="onExecuting">Receives the notification before action executing.</param>
+        /// <param name="onExecuted">Receives the notification after action executed.</param>
+        protected Task InvokeAsync(Task action, Action<T> onExecuting, Action<T> onExecuted)
         {
-            var addons = BeginExecute(true, executing);
+            var addons = BeginExecute(true, onExecuting);
 
             var tcs = new TaskCompletionSource<object>();
-            operation.ContinueWith(
+            action.ContinueWith(
                 t =>
                 {
                     TaskStatus = t.Status;
@@ -96,7 +138,7 @@ namespace DevZest.Data.Addons
                     try
                     {
                         foreach (var addon in addons)
-                            executed(addon);
+                            onExecuted(addon);
                     }
                     catch (Exception ex)
                     {
