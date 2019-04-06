@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Addons
 {
-    public interface IDbConnectionInterceptor<T> : IAddon
+    internal interface IDbConnectionInterceptor<T> : IAddon
         where T : DbConnection
     {
         void OnOpening(T connection, AddonInvoker invoker);
