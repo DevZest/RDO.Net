@@ -265,6 +265,7 @@ namespace DevZest.Data
         }
 
         /// <summary>Determines whether the current set is a proper (strict) superset of the specified collection.</summary>
+        /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns><see langword="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSupersetOf(this IModels source, IModels other)

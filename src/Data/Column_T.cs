@@ -156,6 +156,8 @@ namespace DevZest.Data
 
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> object.</summary>
         /// <param name="dataRow">The provided <see cref="DataRow"/> object.</param>
+        /// <param name="beforeEdit">Indicates value of currently editing, or original value before editing, if specified <see cref="DataRow"/>
+        /// is in editing mode. The default value is <see langword="false"/>, which indicates value of currently editing.</param>
         /// <returns>The value of this column from provided <see cref="DataRow"/> object.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="dataRow"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">This column does not belong to provided <paramref name="dataRow"/>.</exception>
@@ -456,7 +458,7 @@ namespace DevZest.Data
 
         /// <summary>Defines the default constant value for this column.</summary>
         /// <param name="value">The default constant value.</param>
-        /// <remarks>To define default expression value, call <see cref="ColumnExtensions.SetDefault{T}(T, T)"/> method.</remarks>
+        /// <remarks>To define default expression value, call <see cref="ColumnExtensions.SetDefault{T}(T, T, string, string)"/> method.</remarks>
         public void SetDefaultValue(T value, string name, string description)
         {
             AddOrUpdate(new ColumnDefault<T>(CreateConst(value), name, description));

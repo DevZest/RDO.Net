@@ -39,9 +39,7 @@ namespace DevZest.Data.Primitives
             private readonly Stopwatch _stopwatch = new Stopwatch();
             /// <summary>
             /// The stop watch used to time executions. This stop watch is started at the end of
-            /// <see cref="OnNonQueryCommandExecuting" /> and <see cref="OnReaderExecuting" />
-            /// methods and is stopped at the beginning of the <see cref="OnNonQueryExecuted" />
-            /// and <see cref="OnReaderExecuted" /> methods.
+            /// <see cref="OnCommandExecuting" /> and is stopped at the beginning of the <see cref="OnCommandExecuted" />.
             /// </summary>
             protected Stopwatch Stopwatch
             {

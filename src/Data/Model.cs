@@ -207,9 +207,8 @@ namespace DevZest.Data
         /// Registers a new local column.
         /// </summary>
         /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
-        /// <typeparam name="TColumn">The type of the column.</typeparam>
+        /// <typeparam name="T">The data type of the local column.</typeparam>
         /// <param name="getter">The lambda expression of the column getter.</param>
-        /// <param name="constructor">The constructor of the computed local column. If null, a normal local column will be created.</param>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         [PropertyRegistration]

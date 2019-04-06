@@ -11,7 +11,7 @@ namespace DevZest.Data
             Name = name;
         }
 
-        /// <inheritdoc cref="Column.DeclaringType" select="summary"/>
+        /// <inheritdoc cref="Column.OriginalDeclaringType" select="summary"/>
         public readonly Type DeclaringType;
 
         /// <inheritdoc cref="Column.Name" select="summary"/>

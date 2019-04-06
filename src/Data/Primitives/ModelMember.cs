@@ -11,9 +11,11 @@ namespace DevZest.Data.Primitives
         {
         }
 
-        /// <summary>Gets the parent model of this member. </summary>
         internal Model ParentModel { get; set; }
 
+        /// <summary>
+        /// Gets the parent model.
+        /// </summary>
         public Model GetParent()
         {
             return ParentModel;
@@ -24,7 +26,6 @@ namespace DevZest.Data.Primitives
         /// is registered as attached.</remarks>
         internal Type DeclaringType { get; set; }
 
-        /// <summary>Gets the name of the member.</summary>
         internal string Name { get; set; }
 
         internal virtual void ConstructModelMember(Model parentModel, Type declaringType, string name)
@@ -41,7 +42,9 @@ namespace DevZest.Data.Primitives
             get { return false; }
         }
 
-        /// <summary>Gets a value indicates whether this <see cref="ModelMember"/> is in design mode.</summary>
+        /// <summary>
+        /// Gets a value indicates whether this <see cref="ModelMember"/> is in design mode.
+        /// </summary>
         protected internal virtual bool DesignMode
         {
             get
@@ -51,9 +54,13 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        /// <summary>Verifies this<see cref="ModelMember"/> is in design mode. Inheritors should call this method at beginning of 
-        /// any API that writes to data members should be freezed when <see cref="DesignMode"/> is false.
+        /// <summary>
+        /// Verifies this<see cref="ModelMember"/> is in design mode.
         /// </summary>
+        /// <remarks>
+        /// Inheritors should call this method at beginning of 
+        /// any API that writes to data members should be freezed when <see cref="DesignMode"/> is false.
+        /// </remarks>
         /// <exception cref="InvalidOperationException">The <see cref="DesignMode"/> is false and cannot have its members written to.</exception>
         protected void VerifyDesignMode()
         {

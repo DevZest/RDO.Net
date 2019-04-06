@@ -13,6 +13,9 @@ namespace DevZest.Data
     /// </summary>
     public abstract class Column : ModelMember, IColumns, IComparer<DataRow>
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="Column"/>.
+        /// </summary>
         protected Column()
         {
         }
@@ -23,6 +26,9 @@ namespace DevZest.Data
         /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
         public Type OriginalDeclaringType { get; internal set; }
 
+        /// <summary>
+        /// Gets the name of the <see cref="Column"/>.
+        /// </summary>
         public new string Name
         {
             get { return base.Name; }
@@ -49,6 +55,9 @@ namespace DevZest.Data
         /// </summary>
         public abstract bool IsPrimaryKey { get; }
 
+        /// <summary>
+        /// Gets a value indicates whether this column is identity (auto increment).
+        /// </summary>
         public virtual bool IsIdentity
         {
             get { return false; }
@@ -72,6 +81,9 @@ namespace DevZest.Data
         }
 
         private string _dbColumnDescription;
+        /// <summary>
+        /// Gets or sets the column description in database.
+        /// </summary>
         public string DbColumnDescription
         {
             get { return _dbColumnDescription; }

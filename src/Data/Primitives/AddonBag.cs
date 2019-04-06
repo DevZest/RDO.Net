@@ -1,11 +1,27 @@
 ﻿using DevZest.Data.Addons;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Represents a container of <see cref="IAddon"/> objects.
+    /// </summary>
+    /// <remarks>
+    /// <para><see cref="AddonBag"/> is the base class of extensible rich metadata objects, such as
+    /// <see cref="Model"/> and <see cref="Column"/>. <see cref="IAddon"/> object, on the other hand,
+    /// is uniquely identified by <see cref="IAddon.Key"/>, can be added into this metadata object
+    /// and later retrieved either by key or by type. For example: <see cref="DbIndex"/>, which implements
+    /// <see cref="IAddon"/>, can be added into <see cref="Model"/> identified by its <see cref="DbIndex.Name"/>.</para>
+    /// <para>Use extension methods provided in <see cref="AddonBagExtensions"/> class to manipulate <see cref="AddonBag"/> object.
+    /// This is a design decision to separate addon operations into a different namespace.</para>
+    /// </remarks>
     public abstract partial class AddonBag
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddonBag"/> class.
+        /// </summary>
         protected AddonBag()
         {
             _addons = new AddonCollection(this);
@@ -34,14 +50,13 @@ namespace DevZest.Data.Primitives
 
         internal void Add(IAddon addon)
         {
-            addon.VerifyNotNull(nameof(addon));
-
+            Debug.Assert(addon != null);
             _addons.Add(addon);
         }
 
         internal void AddOrUpdate(IAddon addon)
         {
-            addon.VerifyNotNull(nameof(addon));
+            Debug.Assert(addon != null);
 
             var key = addon.Key;
             if (_addons.Contains(key))
@@ -51,8 +66,7 @@ namespace DevZest.Data.Primitives
 
         internal bool ContainsAddon(object key)
         {
-            key.VerifyNotNull(nameof(key));
-
+            Debug.Assert(key != null);
             return _addons.Contains(key);
         }
 

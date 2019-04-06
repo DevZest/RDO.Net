@@ -38,7 +38,9 @@ namespace DevZest.Data.Primitives
         /// <typeparam name="T">Type of the column.</typeparam>
         /// <param name="column">The column.</param>
         /// <param name="expression">The expression.</param>
-        /// <remarks>To define default constant value, call <see cref="Column{T}.SetDefaultValue(T)"/> method.</remarks>
+        /// <param name="name">The name of the default constraint.</param>
+        /// <param name="description">The  description of the default constraint.</param>
+        /// <remarks>To define default constant value, call <see cref="Column{T}.SetDefaultValue(T, string, string)"/> method.</remarks>
         public static void SetDefault<T>(this T column, T expression, string name, string description)
             where T : Column, new()
         {
