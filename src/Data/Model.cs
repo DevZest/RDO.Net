@@ -354,7 +354,7 @@ namespace DevZest.Data
             EnsureInitialized(true);
         }
 
-#if DEBUG
+#if !DEPLOY
         internal
 #else
         private

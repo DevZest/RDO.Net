@@ -24,7 +24,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 throw new ArgumentNullException(nameof(connectionString));
             return new SqlConnection(connectionString);
         }
-#if DEBUG
+#if !DEPLOY
         // For unit tests
         public Db(SqlVersion sqlVersion)
             : base(new SqlConnection())
