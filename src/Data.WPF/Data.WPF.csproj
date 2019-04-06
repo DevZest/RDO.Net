@@ -91,6 +91,9 @@
     <Compile Include="Presenters\Primitives\IContainerElement.cs" />
     <Compile Include="Presenters\Primitives\AttachedScalarBinding.cs" />
     <Compile Include="Presenters\SimplePresenter.cs" />
+    <Compile Include="VB\DataPresenterModule.cs" />
+    <Compile Include="VB\Microsoft.VisualBasic.CompilerServices.StandardModuleAttribute.cs" />
+    <Compile Include="VB\Microsoft.VisualBasic.Embedded.cs" />
     <Compile Include="Views\IBaseView.cs" />
     <Compile Include="Presenters\Primitives\RowMatch.cs" />
     <Compile Include="Presenters\Primitives\ValueChangedTrigger.cs" />
