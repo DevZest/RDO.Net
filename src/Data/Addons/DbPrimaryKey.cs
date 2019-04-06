@@ -5,6 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Addons
 {
+    /// <summary>
+    /// Represents the database primary key constraint.
+    /// </summary>
     public sealed class DbPrimaryKey : DbTableConstraint, IIndexConstraint
     {
         internal DbPrimaryKey(Model model, string name, string description, bool isClustered, Func<IList<ColumnSort>> getPrimaryKey)
@@ -18,8 +21,14 @@ namespace DevZest.Data.Addons
             _getPrimaryKey = getPrimaryKey;
         }
 
+        /// <summary>
+        /// Gets the model of the primary key.
+        /// </summary>
         public Model Model { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicates whether this is a clustered primary key.
+        /// </summary>
         public bool IsClustered { get; private set; }
 
         void IIndexConstraint.AsNonClustered()
@@ -30,6 +39,9 @@ namespace DevZest.Data.Addons
         private Func<IList<ColumnSort>> _getPrimaryKey;
 
         private ReadOnlyCollection<ColumnSort> _primaryKey;
+        /// <summary>
+        /// Gets the columns with sort direction of this primiary key.
+        /// </summary>
         public ReadOnlyCollection<ColumnSort> PrimaryKey
         {
             get
@@ -43,16 +55,19 @@ namespace DevZest.Data.Addons
             }
         }
 
+        /// <inheritdoc />
         public override string SystemName
         {
             get { return string.IsNullOrEmpty(Name) ? "PrimaryKey" : Name; }
         }
 
+        /// <inheritdoc />
         public override bool IsValidOnTable
         {
             get { return true; }
         }
 
+        /// <inheritdoc />
         public override bool IsValidOnTempTable
         {
             get { return true; }
