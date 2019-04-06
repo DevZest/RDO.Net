@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Addons
 {
-    public interface IDbNonQueryInterceptor<TCommand> : IAddon
+    internal interface IDbNonQueryInterceptor<TCommand> : IAddon
         where TCommand : DbCommand
     {
         void OnExecuting(TCommand command, AddonInvoker invoker);
