@@ -71,9 +71,9 @@
     </None>
   </ItemGroup>
 
-  <PropertyGroup>
+  <!--<PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+  </PropertyGroup>-->
   
   <PropertyGroup>
     <AdditionalProps Condition="Exists('..\..\..\$(AssemblyName).props')">..\..\..\$(AssemblyName).props</AdditionalProps>
