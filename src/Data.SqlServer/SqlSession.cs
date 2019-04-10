@@ -324,8 +324,11 @@ namespace DevZest.Data.SqlServer
             return GetDeleteCommand(statement);
         }
 
-        protected sealed override object CreateMockDb()
+        protected sealed override async Task<object> CreateMockDbAsync(CancellationToken ct)
         {
+            if (Connection.State != ConnectionState.Open)
+                await OpenConnectionAsync(ct);
+
             var sqlCommandText =
 @"declare @id int
 
@@ -338,7 +341,7 @@ exec tempdb..sp_executesql @sql;
 select @mockschema;
 ";
             var sqlCommand = new SqlCommand(sqlCommandText, Connection);
-            return sqlCommand.ExecuteScalar();
+            return await sqlCommand.ExecuteScalarAsync(ct);
         }
 
         protected sealed override string GetMockTableName(string tableName, object tag)

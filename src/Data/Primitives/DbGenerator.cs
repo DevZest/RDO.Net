@@ -17,7 +17,7 @@ namespace DevZest.Data.Primitives
             db.Generator = this;
 
             _isInitializing = true;
-            OnInitializing();
+            await OnInitializingAsync(ct);
             Initialize();
             RemoveDependencyTables();
             RemoveDependencyForeignKeys();
@@ -26,8 +26,9 @@ namespace DevZest.Data.Primitives
             _isInitializing = false;
         }
 
-        internal virtual void OnInitializing()
+        internal virtual Task OnInitializingAsync(CancellationToken ct)
         {
+            return Task.CompletedTask;
         }
 
         private void Verify(DbSession db, string paramName)

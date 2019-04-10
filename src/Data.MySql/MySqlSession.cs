@@ -224,8 +224,11 @@ namespace DevZest.Data.MySql
             return GetDeleteCommand(statement);
         }
 
-        protected sealed override object CreateMockDb()
+        protected sealed override async Task<object> CreateMockDbAsync(CancellationToken ct)
         {
+            if (Connection.State != ConnectionState.Open)
+                await OpenConnectionAsync(ct);
+
             var commandText =
 @"set @id = (select max(cast(right(SCHEMA_NAME, char_length(SCHEMA_NAME) - 4) as unsigned)) from INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME like 'Mock%');
 set @id = IFNULL(@id, 0) + 1;
@@ -237,7 +240,7 @@ deallocate prepare stmt;
 select @mockschema;
 ";
             var command = new MySqlCommand(commandText, Connection);
-            return command.ExecuteScalar();
+            return await command.ExecuteScalarAsync(ct);
         }
 
         protected sealed override string GetMockTableName(string tableName, object tag)

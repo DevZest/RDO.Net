@@ -27,8 +27,6 @@ namespace DevZest.Data
         {
             db.VerifyNotNull(nameof(db));
 
-            if (db.GetConnection().State != ConnectionState.Open)
-                await db.OpenConnectionAsync(ct);
             await InitializeAsync(db, nameof(db), progress, ct);
             return db;
         }
@@ -64,10 +62,10 @@ namespace DevZest.Data
         private object _tag;
         private bool _isDbGeneration;
 
-        internal sealed override void OnInitializing()
+        internal sealed override async Task OnInitializingAsync(CancellationToken ct)
         {
             if (!_isDbGeneration)
-                _tag = Db.CreateMockDb();
+                _tag = await Db.CreateMockDbAsync(ct);
         }
 
         internal sealed override string GetTableName(string name)

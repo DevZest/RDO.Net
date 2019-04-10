@@ -220,7 +220,7 @@ namespace DevZest.Data.Primitives
                 throw new InvalidOperationException(DiagnosticMessages.DbSession_VerifyNoGenerator);
         }
 
-        protected internal abstract object CreateMockDb();
+        protected internal abstract Task<object> CreateMockDbAsync(CancellationToken ct);
 
         protected internal abstract string GetMockTableName(string tableName, object tag);
 
