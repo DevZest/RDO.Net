@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 using DevZest.Data.Addons;
@@ -9,54 +8,58 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class MockDb : IProgress<MockDbProgress>
+    public abstract class DbGenerator : IProgress<DbGenerationProgress>
     {
-        internal async Task InternalInitializeAsync(DbSession db, string paramName, IProgress<MockDbProgress> progress, CancellationToken ct)
+        internal async Task InternalInitializeAsync(DbSession db, string paramName, IProgress<DbGenerationProgress> progress, CancellationToken ct)
         {
             Verify(db, paramName);
             Db = db;
-            db.Mock = this;
+            db.Generator = this;
 
             _isInitializing = true;
-            CreateMockDb();
+            OnInitializing();
             Initialize();
-            RemoveDependencyMockTables();
+            RemoveDependencyTables();
             RemoveDependencyForeignKeys();
-            await CreateMockTablesAsync(progress, ct);
-            _pendingMockTables.Clear();
+            await CreateTablesAsync(progress, ct);
+            _pendingTables.Clear();
             _isInitializing = false;
+        }
+
+        internal virtual void OnInitializing()
+        {
         }
 
         private void Verify(DbSession db, string paramName)
         {
             db.VerifyNotNull(paramName);
-            db.VerifyNotMocked();
+            db.VerifyNoGenerator();
             if (Db != null)
-                throw new InvalidOperationException(DiagnosticMessages.MockDb_InitializeTwice);
+                throw new InvalidOperationException(DiagnosticMessages.DbGenerator_InitializeTwice);
         }
 
         public DbSession Db { get; private set; }
 
-        private void RemoveDependencyMockTables()
+        private void RemoveDependencyTables()
         {
             var toRemove = new List<IDbTable>();
-            foreach (var table in _mockTables)
+            foreach (var table in _tables)
             {
-                if (!_pendingMockTables.ContainsKey(table))
+                if (!_pendingTables.ContainsKey(table))
                     toRemove.Add(table);
             }
 
-            foreach (var mockTable in toRemove)
-                _mockTables.Remove(mockTable);
+            foreach (var table in toRemove)
+                _tables.Remove(table);
         }
 
         private void RemoveDependencyForeignKeys()
         {
             var tableNames = new HashSet<string>();
-            foreach (var table in _mockTables)
+            foreach (var table in _tables)
                 tableNames.Add(table.Name);
 
-            foreach (var table in _mockTables)
+            foreach (var table in _tables)
             {
                 var model = table.Model;
                 var fkConstraints = model.GetAddons<DbForeignKeyConstraint>();
@@ -68,16 +71,16 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private async Task CreateMockTablesAsync(IProgress<MockDbProgress> progress, CancellationToken ct)
+        private async Task CreateTablesAsync(IProgress<DbGenerationProgress> progress, CancellationToken ct)
         {
-            for (int i = 0; i < _mockTables.Count; i++)
+            for (int i = 0; i < _tables.Count; i++)
             {
                 ct.ThrowIfCancellationRequested();
-                var table = _mockTables[i];
+                var table = _tables[i];
                 if (progress != null)
-                    progress.Report(new MockDbProgress(table, i, _mockTables.Count));
+                    progress.Report(new DbGenerationProgress(table, i, _tables.Count));
                 await Db.CreateTableAsync(table.Model, false, ct);
-                var action = _pendingMockTables[table];
+                var action = _pendingTables[table];
                 if (action != null)
                     await action.Invoke(ct);
             }
@@ -85,25 +88,25 @@ namespace DevZest.Data.Primitives
 
         protected abstract void Initialize();
 
-        private Dictionary<IDbTable, Func<CancellationToken, Task>> _pendingMockTables = new Dictionary<IDbTable, Func<CancellationToken, Task>>();
+        private Dictionary<IDbTable, Func<CancellationToken, Task>> _pendingTables = new Dictionary<IDbTable, Func<CancellationToken, Task>>();
 
-        internal void AddMockTable(IDbTable dbTable, Func<CancellationToken, Task> action)
+        internal void AddTable(IDbTable dbTable, Func<CancellationToken, Task> action)
         {
             dbTable.VerifyNotNull(nameof(dbTable));
             if (dbTable.DbSession != Db)
-                throw new ArgumentException(DiagnosticMessages.MockDb_InvalidTable, nameof(dbTable));
+                throw new ArgumentException(DiagnosticMessages.DbGenerator_InvalidTable, nameof(dbTable));
             if (!_isInitializing)
-                throw new InvalidOperationException(DiagnosticMessages.MockDb_MockOnlyAllowedDuringInitialization);
-            if (_pendingMockTables.ContainsKey(dbTable))
-                throw new ArgumentException(DiagnosticMessages.MockDb_DuplicateTable(dbTable.Name), nameof(dbTable));
+                throw new InvalidOperationException(DiagnosticMessages.DbGenerator_AddTableOnlyAllowedDuringInitialization);
+            if (_pendingTables.ContainsKey(dbTable))
+                throw new ArgumentException(DiagnosticMessages.DbGenerator_DuplicateTable(dbTable.Name), nameof(dbTable));
 
-            _pendingMockTables.Add(dbTable, action);
+            _pendingTables.Add(dbTable, action);
         }
 
         private bool _isInitializing;
         private HashSet<string> _creatingTableNames = new HashSet<string>();
 
-        private sealed class MockTableCollection : KeyedCollection<string, IDbTable>
+        private sealed class TableCollection : KeyedCollection<string, IDbTable>
         {
             protected override string GetKeyForItem(IDbTable item)
             {
@@ -111,21 +114,17 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private MockTableCollection _mockTables = new MockTableCollection();
+        private TableCollection _tables = new TableCollection();
 
-        internal abstract void CreateMockDb();
-
-        internal abstract string GetMockTableName(string name);
-
-        internal DbTable<T> GetMockTable<T>(string propertyName)
+        internal DbTable<T> GetTable<T>(string propertyName)
             where T : Model, new()
         {
-            if (_mockTables.Contains(propertyName))
+            if (_tables.Contains(propertyName))
             {
-                var result = _mockTables[propertyName];
+                var result = _tables[propertyName];
                 var resultModelType = result.GetType().GenericTypeArguments[0];
                 if (typeof(T) != resultModelType)
-                    throw new InvalidOperationException(DiagnosticMessages.MockDb_ModelTypeMismatch(typeof(T).FullName, resultModelType.FullName, propertyName));
+                    throw new InvalidOperationException(DiagnosticMessages.DbGenerator_ModelTypeMismatch(typeof(T).FullName, resultModelType.FullName, propertyName));
                 return (DbTable<T>)result;
             }
 
@@ -133,12 +132,12 @@ namespace DevZest.Data.Primitives
                 return null;
 
             if (_creatingTableNames.Contains(propertyName))
-                throw new InvalidOperationException(DiagnosticMessages.MockDb_CircularReference(propertyName));
+                throw new InvalidOperationException(DiagnosticMessages.DbGenerator_CircularReference(propertyName));
 
             _creatingTableNames.Add(propertyName);
 
             var table = DbTable<T>.Create(new T(), Db, propertyName, Initialize);
-            _mockTables.Add(table);
+            _tables.Add(table);
             _creatingTableNames.Remove(propertyName);
             return table;
         }
@@ -147,15 +146,20 @@ namespace DevZest.Data.Primitives
             where T : Model, new()
         {
             DbTablePropertyAttribute.WireupAttributes(dbTable);
-            dbTable.Name = GetMockTableName(dbTable.Name);
+            dbTable.Name = GetTableName(dbTable.Name);
         }
 
-        protected virtual void Report(MockDbProgress progress)
+        internal virtual string GetTableName(string name)
         {
-            Console.WriteLine(UserMessages.MockDb_ReportProgress(progress.DbTable.Name));
+            return name;
         }
 
-        void IProgress<MockDbProgress>.Report(MockDbProgress value)
+        protected virtual void Report(DbGenerationProgress progress)
+        {
+            Console.WriteLine(UserMessages.DbGenerator_ReportProgress(progress.DbTable.Name));
+        }
+
+        void IProgress<DbGenerationProgress>.Report(DbGenerationProgress value)
         {
             Report(value);
         }

@@ -7,22 +7,13 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
-    public class DbGenerator<T> : MockDb, IDbGenerator<T>
+    public class DbGenerator<T> : DbGenerator, IDbGenerator<T>
         where T : DbSession
     {
-        public async Task<T> GenerateAsync(T db, IProgress<MockDbProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public async Task<T> GenerateAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             await InternalInitializeAsync(db, nameof(db), progress, ct);
             return db;
-        }
-
-        internal sealed override void CreateMockDb()
-        {
-        }
-
-        internal sealed override string GetMockTableName(string name)
-        {
-            return name;
         }
 
         protected sealed override void Initialize()
@@ -30,7 +21,7 @@ namespace DevZest.Data
             foreach (var property in GetTableProperties(Db))
             {
                 var dbTable = (IDbTable)property.GetValue(Db);
-                AddMockTable(dbTable, GetAction(dbTable));
+                AddTable(dbTable, GetAction(dbTable));
             }
         }
 

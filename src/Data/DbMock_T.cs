@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace DevZest.Data
 {
-    public abstract class MockDb<T> : MockDb, IDbGenerator<T>
+    public abstract class DbMock<T> : DbGenerator, IDbGenerator<T>
         where T : DbSession
     {
         public new T Db
@@ -13,14 +13,14 @@ namespace DevZest.Data
             get { return (T)base.Db; }
         }
 
-        public async Task<T> GenerateAsync(T db, IProgress<MockDbProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public async Task<T> GenerateAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
-            _isDbGenerator = true;
+            _isDbGeneration = true;
             await InternalInitializeAsync(db, nameof(db), progress, ct);
             return db;
         }
 
-        public async Task<T> InitializeAsync(T db, IProgress<MockDbProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public async Task<T> InitializeAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             await InternalInitializeAsync(db, nameof(db), progress, ct);
             return db;
@@ -29,7 +29,7 @@ namespace DevZest.Data
         protected void Mock<TModel>(DbTable<TModel> dbTable)
             where TModel : Model, new()
         {
-            AddMockTable(dbTable, null);
+            AddTable(dbTable, null);
         }
 
         protected void Mock<TModel>(DbTable<TModel> dbTable, Func<DataSet<TModel>> getDataSet)
@@ -37,7 +37,7 @@ namespace DevZest.Data
         {
             getDataSet.VerifyNotNull(nameof(getDataSet));
 
-            AddMockTable(dbTable, async (ct) => {
+            AddTable(dbTable, async (ct) => {
                 var dataSet = getDataSet();
                 if (dataSet != null)
                 {
@@ -55,17 +55,17 @@ namespace DevZest.Data
         }
 
         private object _tag;
-        private bool _isDbGenerator;
+        private bool _isDbGeneration;
 
-        internal sealed override void CreateMockDb()
+        internal sealed override void OnInitializing()
         {
-            if (!_isDbGenerator)
+            if (!_isDbGeneration)
                 _tag = Db.CreateMockDb();
         }
 
-        internal sealed override string GetMockTableName(string name)
+        internal sealed override string GetTableName(string name)
         {
-            return _isDbGenerator ? name : Db.GetMockTableName(name, _tag);
+            return _isDbGeneration ? name : Db.GetMockTableName(name, _tag);
         }
     }
 }

@@ -45,8 +45,8 @@ namespace DevZest.Data.Primitives
         protected DbTable<T> GetTable<T>(ref DbTable<T> result, [CallerMemberName]string name = null)
             where T : Model, new()
         {
-            if (Mock != null)
-                return Mock.GetMockTable<T>(name);
+            if (Generator != null)
+                return Generator.GetTable<T>(name);
 
             if (result == null)
             {
@@ -202,17 +202,17 @@ namespace DevZest.Data.Primitives
         internal abstract Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
             where T : class, IModelReference, new();
 
-        internal MockDb Mock { get; set; }
+        internal DbGenerator Generator { get; set; }
 
-        public bool IsMocked
+        private bool HasGenerator
         {
-            get { return Mock != null; }
+            get { return Generator != null; }
         }
 
-        internal void VerifyNotMocked()
+        internal void VerifyNoGenerator()
         {
-            if (IsMocked)
-                throw new InvalidOperationException(DiagnosticMessages.DbSession_VerifyNotMocked);
+            if (HasGenerator)
+                throw new InvalidOperationException(DiagnosticMessages.DbSession_VerifyNoGenerator);
         }
 
         protected internal abstract object CreateMockDb();

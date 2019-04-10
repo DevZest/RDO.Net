@@ -20,6 +20,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Creating table {tableName}...
+        /// </summary>
+        public static string DbGenerator_ReportProgress(object tableName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbGenerator_ReportProgress", "tableName"), tableName);
+        }
+
+        /// <summary>
         /// The '{0}' field is not a valid e-mail address.
         /// </summary>
         public static string EmailAddressAttribute
@@ -41,14 +49,6 @@ namespace DevZest.Data
         public static string MaxLengthAttribute_InvalidMaxLength
         {
             get { return GetString("MaxLengthAttribute_InvalidMaxLength"); }
-        }
-
-        /// <summary>
-        /// Creating table {tableName}...
-        /// </summary>
-        public static string MockDb_ReportProgress(object tableName)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_ReportProgress", "tableName"), tableName);
         }
 
         /// <summary>

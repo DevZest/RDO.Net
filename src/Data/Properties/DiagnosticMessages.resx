@@ -300,22 +300,22 @@
   <data name="DataSet_VerifyNotReadOnly" xml:space="preserve">
     <value>The operation is not supported by readonly DataSet.</value>
   </data>
-  <data name="MockDb_CircularReference" xml:space="preserve">
+  <data name="DbGenerator_CircularReference" xml:space="preserve">
     <value>Circular reference detected for table "{tableName}".</value>
   </data>
-  <data name="MockDb_DuplicateTable" xml:space="preserve">
-    <value>The table "{tableName}" cannot be mocked twice.</value>
+  <data name="DbGenerator_DuplicateTable" xml:space="preserve">
+    <value>The table "{tableName}" cannot be added twice.</value>
   </data>
-  <data name="MockDb_InitializeTwice" xml:space="preserve">
-    <value>MockDb object cannot be initialized twice.</value>
+  <data name="DbGenerator_InitializeTwice" xml:space="preserve">
+    <value>DbGenerator object cannot be initialized twice.</value>
   </data>
-  <data name="MockDb_InvalidTable" xml:space="preserve">
-    <value>The mocking table is invalid. It must belong to the given DbSession.</value>
+  <data name="DbGenerator_InvalidTable" xml:space="preserve">
+    <value>The table is invalid. It must belong to the given DbSession.</value>
   </data>
-  <data name="MockDb_MockOnlyAllowedDuringInitialization" xml:space="preserve">
-    <value>Mock can only be called during initialization.</value>
+  <data name="DbGenerator_AddTableOnlyAllowedDuringInitialization" xml:space="preserve">
+    <value>Adding table is only allowed during initialization.</value>
   </data>
-  <data name="MockDb_ModelTypeMismatch" xml:space="preserve">
+  <data name="DbGenerator_ModelTypeMismatch" xml:space="preserve">
     <value>The type argument "{typeArgument}" does not match with type argument "{expectedTypeArgument}" used for for table "{tableName}".</value>
   </data>
   <data name="DbTable_VerifyWhere" xml:space="preserve">
@@ -486,8 +486,8 @@
   <data name="Model_DuplicateIndexName" xml:space="preserve">
     <value>The index name '{indexName}' already exists.</value>
   </data>
-  <data name="DbSession_VerifyNotMocked" xml:space="preserve">
-    <value>The DbSession is mocked.</value>
+  <data name="DbSession_VerifyNoGenerator" xml:space="preserve">
+    <value>The DbSession already has generator.</value>
   </data>
   <data name="Model_EnsureInitializedNullDataSource" xml:space="preserve">
     <value>Calling EnsureInitialized() is not allowed when Model.DataSource is null.</value>

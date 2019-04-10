@@ -2,7 +2,7 @@
 Imports DevZest.Data.Primitives
 
 Public Class SalesOrderMockDb
-    Inherits MockDb(Of Db)
+    Inherits DbMock(Of Db)
 
     Private Shared Function Headers() As DataSet(Of SalesOrderHeader)
         Dim result As DataSet(Of SalesOrderHeader) = DataSet(Of SalesOrderHeader).Create().AddRows(4)

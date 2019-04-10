@@ -502,49 +502,49 @@ namespace DevZest.Data
         /// <summary>
         /// Circular reference detected for table "{tableName}".
         /// </summary>
-        public static string MockDb_CircularReference(object tableName)
+        public static string DbGenerator_CircularReference(object tableName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_CircularReference", "tableName"), tableName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbGenerator_CircularReference", "tableName"), tableName);
         }
 
         /// <summary>
-        /// The table "{tableName}" cannot be mocked twice.
+        /// The table "{tableName}" cannot be added twice.
         /// </summary>
-        public static string MockDb_DuplicateTable(object tableName)
+        public static string DbGenerator_DuplicateTable(object tableName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_DuplicateTable", "tableName"), tableName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbGenerator_DuplicateTable", "tableName"), tableName);
         }
 
         /// <summary>
-        /// MockDb object cannot be initialized twice.
+        /// DbGenerator object cannot be initialized twice.
         /// </summary>
-        public static string MockDb_InitializeTwice
+        public static string DbGenerator_InitializeTwice
         {
-            get { return GetString("MockDb_InitializeTwice"); }
+            get { return GetString("DbGenerator_InitializeTwice"); }
         }
 
         /// <summary>
-        /// The mocking table is invalid. It must belong to the given DbSession.
+        /// The table is invalid. It must belong to the given DbSession.
         /// </summary>
-        public static string MockDb_InvalidTable
+        public static string DbGenerator_InvalidTable
         {
-            get { return GetString("MockDb_InvalidTable"); }
+            get { return GetString("DbGenerator_InvalidTable"); }
         }
 
         /// <summary>
-        /// Mock can only be called during initialization.
+        /// Adding table is only allowed during initialization.
         /// </summary>
-        public static string MockDb_MockOnlyAllowedDuringInitialization
+        public static string DbGenerator_AddTableOnlyAllowedDuringInitialization
         {
-            get { return GetString("MockDb_MockOnlyAllowedDuringInitialization"); }
+            get { return GetString("DbGenerator_AddTableOnlyAllowedDuringInitialization"); }
         }
 
         /// <summary>
         /// The type argument "{typeArgument}" does not match with type argument "{expectedTypeArgument}" used for for table "{tableName}".
         /// </summary>
-        public static string MockDb_ModelTypeMismatch(object typeArgument, object expectedTypeArgument, object tableName)
+        public static string DbGenerator_ModelTypeMismatch(object typeArgument, object expectedTypeArgument, object tableName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_ModelTypeMismatch", "typeArgument", "expectedTypeArgument", "tableName"), typeArgument, expectedTypeArgument, tableName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbGenerator_ModelTypeMismatch", "typeArgument", "expectedTypeArgument", "tableName"), typeArgument, expectedTypeArgument, tableName);
         }
 
         /// <summary>
@@ -996,11 +996,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The DbSession is mocked.
+        /// The DbSession already has generator.
         /// </summary>
-        public static string DbSession_VerifyNotMocked
+        public static string DbSession_VerifyNoGenerator
         {
-            get { return GetString("DbSession_VerifyNotMocked"); }
+            get { return GetString("DbSession_VerifyNoGenerator"); }
         }
 
         /// <summary>

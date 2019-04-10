@@ -2,7 +2,7 @@
 Imports DevZest.Data.Primitives
 
 Public Class ProductCategoryMockDb
-    Inherits MockDb(Of Db)
+    Inherits DbMock(Of Db)
 
     Private Shared Function MockData() As DataSet(Of ProductCategory)
         Dim result As DataSet(Of ProductCategory) = DataSet(Of ProductCategory).Create().AddRows(13)
