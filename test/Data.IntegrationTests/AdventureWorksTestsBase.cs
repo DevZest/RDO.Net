@@ -8,17 +8,17 @@ namespace DevZest.Data
 {
     public abstract class AdventureWorksTestsBase
     {
-        protected Task<Db> OpenDbAsync()
+        protected Db CreateDb()
         {
-            return new Db(GetConnectionString()).OpenAsync();
+            return new Db(GetConnectionString());
         }
 
-        protected Task<Db> OpenDbAsync(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
+        protected Db CreateDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
         {
             return new Db(GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
-            }).OpenAsync();
+            });
         }
 
         private static string GetConnectionString()
@@ -31,7 +31,7 @@ namespace DevZest.Data
 
         protected DataSet<SalesOrderInfo> GetSalesOrderInfo(int salesOrderID)
         {
-            using (var db = OpenDbAsync().Result)
+            using (var db = CreateDb())
             {
                 return db.GetSalesOrderInfoAsync(salesOrderID).Result.ToDataSetAsync().Result;
             }

@@ -33,7 +33,7 @@ namespace DevZest.Data
         public void DbSession_CreateQuery()
         {
             var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
+            using (var db = CreateDb(log))
             {
                 var salesOrders = CreateSalesOrdersQuery(db);
                 var salesOrderDetails = salesOrders.CreateChildAsync(x => x.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model)).Result;
@@ -61,7 +61,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderID];
         public async Task DbSession_CreateQuery_async_child()
         {
             var log = new StringBuilder();
-            using (var db = await OpenDbAsync(log))
+            using (var db = CreateDb(log))
             {
                 var salesOrders = CreateSalesOrdersQuery(db);
                 var salesOrderDetails = await salesOrders.CreateChildAsync(x => x.SalesOrderDetails,
@@ -98,7 +98,7 @@ ORDER BY [SalesOrderHeader].[SalesOrderID];
         public void DbSession_ExecuteReader()
         {
             var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
+            using (var db = CreateDb(log))
             {
                 var customers = db.Customer.OrderBy(x => x.CustomerID);
                 var c = customers._;
@@ -136,7 +136,7 @@ ORDER BY [Customer].[CustomerID];
         public async Task DbSession_ExecuteReaderAsync()
         {
             var log = new StringBuilder();
-            using (var db = await OpenDbAsync(log))
+            using (var db = CreateDb(log))
             {
                 var customers = db.Customer.OrderBy(x => x.CustomerID);
                 var c = customers._;
@@ -174,7 +174,7 @@ ORDER BY [Customer].[CustomerID];
         public async Task DbSession_ExecuteTransactionAsync_update_sales_order()
         {
             var log = new StringBuilder();
-            using (var db = new MockSalesOrder().MockAsync(OpenDbAsync(log).Result).Result)
+            using (var db = await MockSalesOrder.CreateAsync(CreateDb(log)))
             {
                 var salesOrder = await db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
                 await salesOrder.FillAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetail);
@@ -189,7 +189,7 @@ ORDER BY [Customer].[CustomerID];
         public async Task DbSession_ExecuteTransactionAsync_insert_sales_order()
         {
             var log = new StringBuilder();
-            using (var db = new MockSalesOrder().MockAsync(OpenDbAsync(log).Result).Result)
+            using (var db = await MockSalesOrder.CreateAsync(CreateDb(log)))
             {
                 var salesOrder = DataSet<SalesOrder>.ParseJson(Strings.ExpectedJSON_SalesOrder_71774);
                 await db.InsertAsync(salesOrder, CancellationToken.None);
@@ -206,7 +206,7 @@ ORDER BY [Customer].[CustomerID];
         {
             var productIds = DataSet<Product.Ref>.ParseJson(Strings.JSON_ProductIds);
             var log = new StringBuilder();
-            using (var db = await OpenDbAsync(log))
+            using (var db = CreateDb(log))
             {
                 var lookup = await db.LookupAsync(productIds, CancellationToken.None);
                 Assert.AreEqual(Strings.ExpectedJSON_Product_Lookup, lookup.ToJsonString(true));

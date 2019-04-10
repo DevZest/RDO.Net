@@ -4,6 +4,7 @@ using System.Threading;
 using DevZest.Data.Addons;
 using System.Runtime.CompilerServices;
 using DevZest.Data.Annotations.Primitives;
+using System.Data.Common;
 
 namespace DevZest.Data.Primitives
 {
@@ -29,6 +30,8 @@ namespace DevZest.Data.Primitives
         }
 
         #endregion
+
+        public abstract DbConnection GetConnection();
 
         public abstract Task OpenConnectionAsync(CancellationToken cancellationToken = default(CancellationToken));
 

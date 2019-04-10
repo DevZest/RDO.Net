@@ -23,6 +23,11 @@ namespace DevZest.Data.Primitives
 
         public TConnection Connection { get; }
 
+        public sealed override DbConnection GetConnection()
+        {
+            return Connection;
+        }
+
         public sealed override Task OpenConnectionAsync(CancellationToken cancellationToken)
         {
             return CreateConnectionInterceptorInvoker().OpenAsync(cancellationToken);

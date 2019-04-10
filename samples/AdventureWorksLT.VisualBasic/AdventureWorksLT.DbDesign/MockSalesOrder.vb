@@ -1,8 +1,13 @@
-﻿Imports DevZest.Data
+﻿Imports System.Threading
+Imports DevZest.Data
 Imports DevZest.Data.Primitives
 
 Public Class MockSalesOrder
     Inherits DbMock(Of Db)
+
+    Public Shared Function CreateAsync(db As Db, Optional progress As IProgress(Of DbGenerationProgress) = Nothing, Optional ct As CancellationToken = Nothing)
+        Return New MockSalesOrder().MockAsync(db, progress, ct)
+    End Function
 
     Private Shared Function Headers() As DataSet(Of SalesOrderHeader)
         Dim result As DataSet(Of SalesOrderHeader) = DataSet(Of SalesOrderHeader).Create().AddRows(4)

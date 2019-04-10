@@ -12,7 +12,7 @@ namespace DevZest.Data
         public async Task DataSet_recursive_fill_and_serialize_async()
         {
             var log = new StringBuilder();
-            using (var db = await OpenDbAsync(log))
+            using (var db = CreateDb(log))
             {
                 var productCategories = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
                 var children = productCategories;
@@ -48,7 +48,7 @@ namespace DevZest.Data
         public void DataSet_DynamicModel_serialize_deserialize()
         {
             var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
+            using (var db = CreateDb(log))
             {
                 var json = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
@@ -75,7 +75,7 @@ namespace DevZest.Data
         public async Task DataSet_CreateChildAsync()
         {
             var log = new StringBuilder();
-            using (var db = await OpenDbAsync(log))
+            using (var db = CreateDb(log))
             {
                 var salesOrders = await db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
                 Assert.IsTrue(salesOrders.Count == 1);

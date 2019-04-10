@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Data;
 
 namespace DevZest.Data
 {
@@ -15,13 +16,19 @@ namespace DevZest.Data
 
         public async Task<T> GenerateAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
+            db.VerifyNotNull(nameof(db));
+
             _isDbGeneration = true;
             await InitializeAsync(db, nameof(db), progress, ct);
             return db;
         }
 
-        public async Task<T> MockAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        protected async Task<T> MockAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
+            db.VerifyNotNull(nameof(db));
+
+            if (db.GetConnection().State != ConnectionState.Open)
+                await db.OpenConnectionAsync(ct);
             await InitializeAsync(db, nameof(db), progress, ct);
             return db;
         }

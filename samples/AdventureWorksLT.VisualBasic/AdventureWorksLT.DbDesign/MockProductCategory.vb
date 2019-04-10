@@ -1,8 +1,13 @@
-﻿Imports DevZest.Data
+﻿Imports System.Threading
+Imports DevZest.Data
 Imports DevZest.Data.Primitives
 
 Public Class MockProductCategory
     Inherits DbMock(Of Db)
+
+    Public Shared Function CreateAsync(db As Db, Optional progress As IProgress(Of DbGenerationProgress) = Nothing, Optional ct As CancellationToken = Nothing)
+        Return New MockProductCategory().MockAsync(db, progress, ct)
+    End Function
 
     Private Shared Function MockData() As DataSet(Of ProductCategory)
         Dim result As DataSet(Of ProductCategory) = DataSet(Of ProductCategory).Create().AddRows(13)

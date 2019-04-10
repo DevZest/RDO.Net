@@ -1,4 +1,7 @@
 ﻿using DevZest.Data;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -6,6 +9,11 @@ namespace DevZest.Samples.AdventureWorksLT
     /// parent-child relationship.</remarks>
     public sealed class MockEmptySalesOrder : DbMock<Db>
     {
+        public static Task<Db> CreateAsync(Db db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        {
+            return new MockEmptySalesOrder().MockAsync(db, progress, ct);
+        }
+
         protected override void Initialize()
         {
             // The order of mocking table does not matter, the dependencies will be sorted out automatically.
