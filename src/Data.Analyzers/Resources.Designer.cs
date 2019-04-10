@@ -368,6 +368,24 @@ namespace DevZest.Data.CodeAnalysis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DbMock implementation should expose a static factory method to wrap a call to DbMock&lt;T&gt;.MockAsync method..
+        /// </summary>
+        internal static string MissingDbMockFactoryMethod_Message {
+            get {
+                return ResourceManager.GetString("MissingDbMockFactoryMethod_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing factory method for DbMock implementation..
+        /// </summary>
+        internal static string MissingDbMockFactoryMethod_Title {
+            get {
+                return ResourceManager.GetString("MissingDbMockFactoryMethod_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing declaration attribute {0} with name {1}..
         /// </summary>
         internal static string MissingDeclarationAttribute_Message {

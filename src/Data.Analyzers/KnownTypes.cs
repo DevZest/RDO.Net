@@ -6,6 +6,8 @@
         {
             // Must end with "."
             public const string System = "System.";
+            public const string System_Threading = "System.Threading.";
+            public const string System_Threading_Tasks = "System.Threading.Tasks.";
             public const string Data_Addons = Data + "Addons.";
             public const string Data = "DevZest.Data.";
             public const string Data_Primitives = Data + "Primitives.";
@@ -16,7 +18,7 @@
         public const string AttributeUsageAttribute = Namespaces.System + nameof(AttributeUsageAttribute);
 
         public const string Model = Namespaces.Data + nameof(Model);
-        public const string GenericModel = Namespaces.Data + "Model`1";
+        public const string ModelOf = Namespaces.Data + "Model`1";
         public const string Column = Namespaces.Data + nameof(Column);
         public const string LocalColumn = Namespaces.Data + nameof(LocalColumn) + "`1";
         public const string ColumnList = Namespaces.Data + nameof(ColumnList);
@@ -38,5 +40,11 @@
         public const string RelationshipAttribute = Namespaces.Data_Annotations + nameof(RelationshipAttribute);
         public const string _RelationshipAttribute = Namespaces.Data_Annotations + nameof(_RelationshipAttribute);
         public const string KeyMapping = Namespaces.Data + nameof(KeyMapping);
+
+        public const string DbMock = Namespaces.Data + nameof(DbMock) + "`1";
+        public const string TaskOf = Namespaces.System_Threading_Tasks + "Task`1";
+        public const string IProgress = Namespaces.System + nameof(IProgress) + "`1";
+        public const string DbGenerationProgress = Namespaces.Data + nameof(DbGenerationProgress);
+        public const string CancellationToken = Namespaces.System_Threading + nameof(CancellationToken);
     }
 }

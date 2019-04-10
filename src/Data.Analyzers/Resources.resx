@@ -219,6 +219,12 @@
   <data name="InvalidRegistrationInvocation_Title" xml:space="preserve">
     <value>Invalid invocation of property registration.</value>
   </data>
+  <data name="MissingDbMockFactoryMethod_Message" xml:space="preserve">
+    <value>DbMock implementation should expose a static factory method to wrap a call to DbMock&lt;T&gt;.MockAsync method.</value>
+  </data>
+  <data name="MissingDbMockFactoryMethod_Title" xml:space="preserve">
+    <value>Missing factory method for DbMock implementation.</value>
+  </data>
   <data name="MissingDeclarationAttribute_Message" xml:space="preserve">
     <value>Missing declaration attribute {0} with name {1}.</value>
   </data>

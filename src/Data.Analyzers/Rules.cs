@@ -153,5 +153,11 @@ namespace DevZest.Data.CodeAnalysis
             new LocalizableResourceString(nameof(Resources.ModelDesignerSpecRequiresArgument_Title), Resources.ResourceManager, typeof(Resources)),
             new LocalizableResourceString(nameof(Resources.ModelDesignerSpecRequiresArgument_Message), Resources.ResourceManager, typeof(Resources)),
             DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor MissingDbMockFactoryMethod = new DiagnosticDescriptor(
+            DiagnosticIds.MissingDbMockFactoryMethod,
+            new LocalizableResourceString(nameof(Resources.MissingDbMockFactoryMethod_Title), Resources.ResourceManager, typeof(Resources)),
+            new LocalizableResourceString(nameof(Resources.MissingDbMockFactoryMethod_Message), Resources.ResourceManager, typeof(Resources)),
+            DiagnosticCategories.Usage, DiagnosticSeverity.Warning, isEnabledByDefault: true);
     }
 }

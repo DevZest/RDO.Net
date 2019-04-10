@@ -27,5 +27,6 @@
         public const string MissingImplementationAttribute = "RDO034";
         public const string ModelDesignerSpecInvalidType = "RDO040";
         public const string ModelDesignerSpecRequiresArgument = "RDO041";
+        public const string MissingDbMockFactoryMethod = "RDO050";
     }
 }
