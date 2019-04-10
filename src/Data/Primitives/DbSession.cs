@@ -31,7 +31,9 @@ namespace DevZest.Data.Primitives
 
         #endregion
 
-        public abstract DbConnection GetConnection();
+        public DbConnection Connection => GetConnection();
+
+        internal abstract DbConnection GetConnection();
 
         public abstract Task OpenConnectionAsync(CancellationToken cancellationToken = default(CancellationToken));
 

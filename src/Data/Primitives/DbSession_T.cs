@@ -21,9 +21,9 @@ namespace DevZest.Data.Primitives
             Connection = connection;
         }
 
-        public TConnection Connection { get; }
+        public new TConnection Connection { get; }
 
-        public sealed override DbConnection GetConnection()
+        internal sealed override DbConnection GetConnection()
         {
             return Connection;
         }
