@@ -5,7 +5,7 @@ Imports DevZest.Data.Primitives
 Public Class MockSalesOrder
     Inherits DbMock(Of Db)
 
-    Public Shared Function CreateAsync(db As Db, Optional progress As IProgress(Of DbGenerationProgress) = Nothing, Optional ct As CancellationToken = Nothing)
+    Public Shared Function CreateAsync(db As Db, Optional progress As IProgress(Of DbGenerationProgress) = Nothing, Optional ct As CancellationToken = Nothing) As Task(Of Db)
         Return New MockSalesOrder().MockAsync(db, progress, ct)
     End Function
 
