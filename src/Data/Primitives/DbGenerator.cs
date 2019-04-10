@@ -10,7 +10,7 @@ namespace DevZest.Data.Primitives
 {
     public abstract class DbGenerator : IProgress<DbGenerationProgress>
     {
-        internal async Task InternalInitializeAsync(DbSession db, string paramName, IProgress<DbGenerationProgress> progress, CancellationToken ct)
+        internal async Task InitializeAsync(DbSession db, string paramName, IProgress<DbGenerationProgress> progress, CancellationToken ct)
         {
             Verify(db, paramName);
             Db = db;

@@ -16,13 +16,13 @@ namespace DevZest.Data
         public async Task<T> GenerateAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             _isDbGeneration = true;
-            await InternalInitializeAsync(db, nameof(db), progress, ct);
+            await InitializeAsync(db, nameof(db), progress, ct);
             return db;
         }
 
-        public async Task<T> InitializeAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public async Task<T> MockAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
-            await InternalInitializeAsync(db, nameof(db), progress, ct);
+            await InitializeAsync(db, nameof(db), progress, ct);
             return db;
         }
 

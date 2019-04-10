@@ -12,7 +12,7 @@ namespace DevZest.Data
     {
         public async Task<T> GenerateAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
-            await InternalInitializeAsync(db, nameof(db), progress, ct);
+            await InitializeAsync(db, nameof(db), progress, ct);
             return db;
         }
 
