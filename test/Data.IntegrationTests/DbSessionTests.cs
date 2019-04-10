@@ -174,7 +174,7 @@ ORDER BY [Customer].[CustomerID];
         public async Task DbSession_ExecuteTransactionAsync_update_sales_order()
         {
             var log = new StringBuilder();
-            using (var db = new SalesOrderMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
+            using (var db = new MockSalesOrder().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
                 var salesOrder = await db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
                 await salesOrder.FillAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetail);
@@ -189,7 +189,7 @@ ORDER BY [Customer].[CustomerID];
         public async Task DbSession_ExecuteTransactionAsync_insert_sales_order()
         {
             var log = new StringBuilder();
-            using (var db = new SalesOrderMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
+            using (var db = new MockSalesOrder().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
                 var salesOrder = DataSet<SalesOrder>.ParseJson(Strings.ExpectedJSON_SalesOrder_71774);
                 await db.InsertAsync(salesOrder, CancellationToken.None);

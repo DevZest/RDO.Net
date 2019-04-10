@@ -20,7 +20,7 @@ namespace DevZest.Data
         {
             var salesOrder = NewSalesOrdersTestData(1);
             var log = new StringBuilder();
-            using (var db = await new EmptySalesOrderMockDb().InitializeAsync(await OpenDbAsync(log)))
+            using (var db = await new MockEmptySalesOrder().InitializeAsync(await OpenDbAsync(log)))
             {
                 await db.SalesOrderHeader.InsertAsync(salesOrder, true);
             }
@@ -32,7 +32,7 @@ namespace DevZest.Data
         {
             var salesOrders = NewSalesOrdersTestData();
             var log = new StringBuilder();
-            using (var db = await new EmptySalesOrderMockDb().InitializeAsync(await OpenDbAsync(log, LogCategory.All)))
+            using (var db = await new MockEmptySalesOrder().InitializeAsync(await OpenDbAsync(log, LogCategory.All)))
             {
                 var result = await db.SalesOrderHeader.InsertAsync(salesOrders, true);
                 Assert.AreEqual(2, result);

@@ -13,7 +13,7 @@ namespace DevZest.Data
         public async Task DbTable_UpdateAsync_without_source()
         {
             var log = new StringBuilder();
-            using (var db = new ProductCategoryMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
+            using (var db = new MockProductCategory().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
                 var count = await db.ProductCategory.Where(x => x.ProductCategoryID > 2).CountAsync();
                 Assert.IsTrue(count > 0);
@@ -30,7 +30,7 @@ namespace DevZest.Data
         public async Task DbTable_UpdateAsync_from_Scalar()
         {
             var log = new StringBuilder();
-            using (var db = new ProductCategoryMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
+            using (var db = new MockProductCategory().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
                 var dataSet = await db.ProductCategory.ToDataSetAsync();
                 Assert.IsTrue(dataSet.Count > 1);
@@ -46,7 +46,7 @@ namespace DevZest.Data
         public async Task DbTable_UpdateAsync_from_DataSet()
         {
             var log = new StringBuilder();
-            using (var db = new ProductCategoryMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
+            using (var db = new MockProductCategory().InitializeAsync(OpenDbAsync(log).Result).Result)
             {
                 var dataSet = await db.ProductCategory.ToDataSetAsync();
                 var count = dataSet.Count;

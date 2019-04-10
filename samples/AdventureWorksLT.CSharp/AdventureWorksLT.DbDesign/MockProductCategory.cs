@@ -4,7 +4,7 @@ using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public sealed class ProductCategoryMockDb : DbMock<Db>
+    public sealed class MockProductCategory : DbMock<Db>
     {
         private static DataSet<ProductCategory> MockData()
         {

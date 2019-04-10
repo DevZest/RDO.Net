@@ -1,7 +1,7 @@
 ﻿Imports DevZest.Data
 Imports DevZest.Data.Primitives
 
-Public Class ProductCategoryMockDb
+Public Class MockProductCategory
     Inherits DbMock(Of Db)
 
     Private Shared Function MockData() As DataSet(Of ProductCategory)

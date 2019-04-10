@@ -12,7 +12,7 @@ namespace DevZest.Data
         public async Task DbTable_DeleteAsync_without_source()
         {
             var log = new StringBuilder();
-            using (var db = await new SalesOrderMockDb().InitializeAsync(await OpenDbAsync(log)))
+            using (var db = await new MockSalesOrder().InitializeAsync(await OpenDbAsync(log)))
             {
                 var count = await db.SalesOrderDetail.CountAsync();
                 var countToDelete = await db.SalesOrderDetail.Where(_ => _.SalesOrderDetailID > 2).CountAsync();
@@ -27,7 +27,7 @@ namespace DevZest.Data
         public async Task DbTable_DeleteAsync_from_scalar()
         {
             var log = new StringBuilder();
-            using (var db = await new SalesOrderMockDb().InitializeAsync(await OpenDbAsync(log)))
+            using (var db = await new MockSalesOrder().InitializeAsync(await OpenDbAsync(log)))
             {
                 var count = await db.SalesOrderDetail.CountAsync();
                 var dataSet = await db.SalesOrderDetail.Where(x => x.SalesOrderDetailID == 1).ToDataSetAsync();
@@ -43,7 +43,7 @@ namespace DevZest.Data
         public async Task DbTable_DeleteAsync_from_DataSet()
         {
             var log = new StringBuilder();
-            using (var db = await new SalesOrderMockDb().InitializeAsync(await OpenDbAsync(log)))
+            using (var db = await new MockSalesOrder().InitializeAsync(await OpenDbAsync(log)))
             {
                 var count = await db.SalesOrderDetail.CountAsync();
                 var countToDelete = await db.SalesOrderDetail.Where(_ => _.SalesOrderID == 1 | _.SalesOrderID == 2).CountAsync();

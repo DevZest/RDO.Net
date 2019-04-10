@@ -1,7 +1,7 @@
 ﻿Imports DevZest.Data
 Imports DevZest.Data.Primitives
 
-Public Class SalesOrderMockDb
+Public Class MockSalesOrder
     Inherits DbMock(Of Db)
 
     Private Shared Function Headers() As DataSet(Of SalesOrderHeader)
