@@ -1,24 +1,23 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
-using System.IO;
-using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.MySql
 {
     public abstract class AdventureWorksTestsBase
     {
-        protected Task<Db> OpenDbAsync()
+        protected Db CreateDb()
         {
-            return new Db(GetConnectionString()).OpenAsync();
+            return new Db(GetConnectionString());
         }
 
-        protected Task<Db> OpenDbAsync(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
+        protected Db CreateDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
         {
             return new Db(GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
-            }).OpenAsync();
+            });
         }
 
         private static string GetConnectionString()
@@ -26,11 +25,12 @@ namespace DevZest.Data.MySql
             return "Server=127.0.0.1;Port=3306;Database=AdventureWorksLT;Uid=root;Allow User Variables=True";
         }
 
-        protected DataSet<SalesOrderInfo> GetSalesOrderInfo(int salesOrderID)
+        protected async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct = default(CancellationToken))
         {
-            using (var db = OpenDbAsync().Result)
+            using (var db = CreateDb())
             {
-                return db.GetSalesOrderInfoAsync(salesOrderID).Result.ToDataSetAsync().Result;
+                var result = await db.GetSalesOrderInfoAsync(salesOrderID, ct);
+                return await result.ToDataSetAsync(ct);
             }
         }
     }

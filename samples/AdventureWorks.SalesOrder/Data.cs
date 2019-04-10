@@ -1,7 +1,6 @@
 ﻿using DevZest.Data;
 using DevZest.Samples.AdventureWorksLT;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +10,7 @@ namespace AdventureWorks.SalesOrders
     {
         public static async Task<DataSet<SalesOrderHeader>> GetSalesOrderHeadersAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 return await db.GetSalesOrderHeaders(filterText, orderBy).ToDataSetAsync(ct);
             }
@@ -19,7 +18,7 @@ namespace AdventureWorks.SalesOrders
 
         public static async Task DeleteAsync(DataSet<SalesOrderHeader.Key> dataSet, CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 await db.SalesOrderHeader.DeleteAsync(dataSet, (s, _) => s.Match(_), ct);
             }
@@ -27,7 +26,7 @@ namespace AdventureWorks.SalesOrders
 
         public static async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 var result = db.CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
                 {
@@ -56,7 +55,7 @@ namespace AdventureWorks.SalesOrders
 
         public static async Task<DataSet<Customer>> GetCustomerLookupAsync(CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 return await db.Customer.ToDataSetAsync(ct);
             }
@@ -64,7 +63,7 @@ namespace AdventureWorks.SalesOrders
 
         public static async Task<DataSet<Address>> GetAddressLookupAsync(int customerID, CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 var result = db.CreateQuery<Address>((builder, _) =>
                 {
@@ -78,7 +77,7 @@ namespace AdventureWorks.SalesOrders
 
         public static async Task<DataSet<Product>> GetProductLookupAsync(CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 return await db.Product.ToDataSetAsync(ct);
             }
@@ -86,7 +85,7 @@ namespace AdventureWorks.SalesOrders
 
         public static async Task UpdateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 salesOrders._.ResetRowIdentifiers();
                 await db.SalesOrderHeader.UpdateAsync(salesOrders, ct);
@@ -99,7 +98,7 @@ namespace AdventureWorks.SalesOrders
 
         public static async Task<int?> CreateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 salesOrders._.ResetRowIdentifiers();
                 await db.SalesOrderHeader.InsertAsync(salesOrders, true, ct);
@@ -112,7 +111,7 @@ namespace AdventureWorks.SalesOrders
 
         public static async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> data, CancellationToken ct)
         {
-            using (var db = await new Db(App.ConnectionString).OpenAsync(ct))
+            using (var db = new Db(App.ConnectionString))
             {
                 return await db.LookupAsync(data, ct);
             }

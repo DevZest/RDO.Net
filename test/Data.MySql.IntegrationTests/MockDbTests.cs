@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Samples.AdventureWorksLT;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DevZest.Data.MySql
 {
@@ -9,10 +10,10 @@ namespace DevZest.Data.MySql
     {
         /// <remarks><see cref="ProductCategory"/> is chosen for only having self referencing foreign key.</remarks>
         [TestMethod]
-        public void MockDb_ProductCategory()
+        public async Task MockDb_ProductCategory()
         {
             var log = new StringBuilder();
-            using (var db = new ProductCategoryMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
+            using (var db = await MockProductCategory.CreateAsync(CreateDb(log)))
             {
                 Assert.AreEqual(13, db.ProductCategory.CountAsync().Result);
             }
@@ -20,10 +21,10 @@ namespace DevZest.Data.MySql
 
 
         [TestMethod]
-        public void MockDb_SalesOrder()
+        public async Task MockDb_SalesOrder()
         {
             var log = new StringBuilder();
-            using (var db = new EmptySalesOrderMockDb().InitializeAsync(OpenDbAsync(log).Result).Result)
+            using (var db = await MockEmptySalesOrder.CreateAsync(CreateDb(log)))
             {
                 Assert.AreEqual(0, db.SalesOrderHeader.CountAsync().Result);
                 Assert.AreEqual(0, db.SalesOrderDetail.CountAsync().Result);

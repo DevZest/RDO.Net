@@ -9,17 +9,17 @@ namespace DevZest.Data.MySql
     public class DataSetTests : AdventureWorksTestsBase
     {
         [TestMethod]
-        public void DataSet_recursive_fill_and_serialize()
+        public async Task DataSet_recursive_fill_and_serialize()
         {
             var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
+            using (var db = CreateDb(log))
             {
                 var productCategories = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
                 var children = productCategories;
                 while (children != null)
-                    children = children.CreateChildAsync(x => x.SubCategories, db.ProductCategory.OrderBy(x => x.ProductCategoryID)).Result;
+                    children = await children.CreateChildAsync(x => x.SubCategories, db.ProductCategory.OrderBy(x => x.ProductCategoryID));
 
-                var result = productCategories.ToDataSetAsync().Result;
+                var result = await productCategories.ToDataSetAsync();
                 var childModel = result._.SubCategories;
                 Assert.AreEqual(4, result.Count);
                 Assert.AreEqual(3, result[0].GetChildDataSet(childModel).Count);
@@ -35,7 +35,7 @@ namespace DevZest.Data.MySql
         public async Task DataSet_recursive_fill_and_serialize_async()
         {
             var log = new StringBuilder();
-            using (var db = await OpenDbAsync(log))
+            using (var db = CreateDb(log))
             {
                 var productCategories = db.ProductCategory.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
                 var children = productCategories;
@@ -68,19 +68,19 @@ namespace DevZest.Data.MySql
         }
 
         [TestMethod]
-        public void DataSet_DynamicModel_serialize_deserialize()
+        public async Task DataSet_DynamicModel_serialize_deserialize()
         {
             var log = new StringBuilder();
-            using (var db = OpenDbAsync(log).Result)
+            using (var db = CreateDb(log))
             {
-                var json = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
+                var json = (await db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
                     builder.From(db.SalesOrderHeader, out var o)
                         .Select(o.SalesOrderID, adhoc)
                         .Select(o.SalesOrderNumber, adhoc)
                         .Where(o.SalesOrderID == 71774 | o.SalesOrderID == 71776)
                         .OrderBy(o.SalesOrderID);
-                }).ToDataSetAsync().Result.ToString();
+                }).ToDataSetAsync()).ToString();
 
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrderDynamicModel, json.Trim());
 
@@ -98,7 +98,7 @@ namespace DevZest.Data.MySql
         public async Task DataSet_CreateChildAsync()
         {
             var log = new StringBuilder();
-            using (var db = await OpenDbAsync(log))
+            using (var db = CreateDb(log))
             {
                 var salesOrders = await db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
                 Assert.IsTrue(salesOrders.Count == 1);

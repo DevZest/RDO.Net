@@ -1,11 +1,18 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Primitives;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public sealed class ProductCategoryMockDb : MockDb<Db>
+    public sealed class MockProductCategory : DbMock<Db>
     {
+        public static Task<Db> CreateAsync(Db db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        {
+            return new MockProductCategory().MockAsync(db, progress, ct);
+        }
+
         private static DataSet<ProductCategory> MockData()
         {
             DataSet<ProductCategory> result = DataSet<ProductCategory>.Create().AddRows(13);

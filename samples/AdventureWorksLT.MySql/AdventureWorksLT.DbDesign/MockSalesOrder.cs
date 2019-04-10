@@ -1,13 +1,20 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Primitives;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
     /// <remarks><see cref="SalesOrder"/> and <see cref="SalesOrderDetail"/> are chosen for having foreing key to non-existing table(s) and
     /// parent-child relationship.</remarks>
-    public sealed class SalesOrderMockDb : MockDb<Db>
+    public sealed class MockSalesOrder : DbMock<Db>
     {
+        public static Task<Db> CreateAsync(Db db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        {
+            return new MockSalesOrder().MockAsync(db, progress, ct);
+        }
+
         private static DataSet<SalesOrderHeader> Headers()
         {
             DataSet<SalesOrderHeader> result = DataSet<SalesOrderHeader>.Create().AddRows(4);

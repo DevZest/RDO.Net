@@ -44,7 +44,7 @@ create database EmptyDb;
             {
                 int count = 0;
                 int index = 0;
-                new DbGenerator<Db>().GenerateAsync(db, new Progress<MockDbProgress>(x =>
+                new DbGenerator<Db>().GenerateAsync(db, new Progress<DbGenerationProgress>(x =>
                 {
                     Assert.AreEqual(index, x.Index);
                     if (x.Index == 0)
