@@ -18,6 +18,7 @@ namespace DevZest.Data
 
         protected sealed override void Initialize()
         {
+            InitializeData();
             foreach (var property in GetTableProperties(Db))
             {
                 var dbTable = (IDbTable)property.GetValue(Db);
@@ -75,6 +76,11 @@ namespace DevZest.Data
 
                 yield return property;
             }
+        }
+
+        public new T Db
+        {
+            get { return (T)base.Db; }
         }
     }
 }
