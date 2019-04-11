@@ -5,7 +5,7 @@
         static int Main(string[] args)
         {
 #if DbDesign
-            return DevZest.Data.DbDesign.Run(args);
+            return DevZest.Data.DbDesign.Program.Run(args);
 #else
             return 0;
 #endif

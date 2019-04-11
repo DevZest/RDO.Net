@@ -1,0 +1,9 @@
+<Project>
+  <ItemGroup>
+    <ProjectReference Remove="..\..\..\src\Data.MySql\Data.MySql.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevZest.Data.MySql" Version="1.0.0-*" />
+  </ItemGroup>
+</Project>

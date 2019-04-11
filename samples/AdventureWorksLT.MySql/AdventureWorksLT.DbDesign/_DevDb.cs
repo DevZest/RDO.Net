@@ -1,18 +1,17 @@
 ﻿#if DbDesign
-using DevZest.Data;
-using DevZest.Data.Annotations;
+using DevZest.Data.DbDesign;
 using MySql.Data.MySqlClient;
 using System.Text;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [DesignTimeDb(true)]
-    public sealed class CleanDesignTimeDb : DesignTimeDb<Db>
+    [EmptyDb]
+    public sealed class _DevDb : DbSessionProvider<Db>
     {
         public override Db Create(string projectPath)
         {
             CreateEmptyDb();
-            return new Db("Server=127.0.0.1;Port=3306;Database=AdventureWorksLT_Design;Uid=root;Allow User Variables=True");
+            return new Db("Server=127.0.0.1;Port=3306;Database=AdventureWorksLT_Dev;Uid=root;Allow User Variables=True");
         }
 
         private static void CreateEmptyDb()
@@ -23,10 +22,10 @@ namespace DevZest.Samples.AdventureWorksLT
                 connection.Open();
                 var sqlText =
 @"set @@sql_notes = 0;
-drop database if exists AdventureWorksLT_Design;
+drop database if exists AdventureWorksLT_Dev;
 set @@sql_notes = 1;
 
-create database AdventureWorksLT_Design;
+create database AdventureWorksLT_Dev;
 ";
                 var command = new MySqlCommand(sqlText, connection);
                 command.ExecuteNonQuery();
