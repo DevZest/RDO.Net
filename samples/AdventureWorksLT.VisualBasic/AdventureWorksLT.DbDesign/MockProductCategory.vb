@@ -1,5 +1,6 @@
 ﻿Imports System.Threading
 Imports DevZest.Data
+Imports DevZest.Data.DbDesign
 Imports DevZest.Data.Primitives
 
 Public Class MockProductCategory

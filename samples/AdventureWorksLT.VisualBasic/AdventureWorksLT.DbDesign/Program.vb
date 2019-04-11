@@ -1,7 +1,7 @@
 ﻿Module Program
     Function Main(args As String()) As Integer
 #If DbDesign Then
-        Return DevZest.Data.DbDesign.Run(args)
+        Return DevZest.Data.DbDesign.Program.Run(args)
 #Else
         Return 0
 #End If

@@ -20,9 +20,9 @@
     <StartupObject />
   </PropertyGroup>
 
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.MySql.Samples' " />
+
   <ItemGroup>
     <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj" />
   </ItemGroup>
-
-  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.MySql.Samples' " />
 </Project>

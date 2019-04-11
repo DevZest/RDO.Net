@@ -1,12 +1,11 @@
 ﻿#if DbDesign
-using DevZest.Data;
-using DevZest.Data.Annotations;
+using DevZest.Data.DbDesign;
 using System.IO;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    [DesignTimeDb(true)]
-    public sealed class CleanDesignTimeDb : DesignTimeDb<Db>
+    [EmptyDb]
+    public sealed class _DevDb : DbSessionProvider<Db>
     {
         public override Db Create(string projectPath)
         {

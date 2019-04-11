@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using DevZest.Data.DbDesign;
 using DevZest.Data.Primitives;
 using System;
 using System.Threading;
