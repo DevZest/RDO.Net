@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
-    public class DbGenerator<T> : DbGenerator, IDbGenerator<T>
+    public class DbGenerator<T> : DbInitializer, IDbGenerator<T>
         where T : DbSession
     {
-        public async Task<T> GenerateAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public async Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             await InitializeAsync(db, nameof(db), progress, ct);
             return db;

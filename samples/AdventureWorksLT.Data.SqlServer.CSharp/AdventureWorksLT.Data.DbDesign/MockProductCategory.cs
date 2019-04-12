@@ -12,7 +12,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public sealed class MockProductCategory : DbMock<Db>
     {
-        public static Task<Db> CreateAsync(Db db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public static Task<Db> CreateAsync(Db db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             return new MockProductCategory().MockAsync(db, progress, ct);
         }

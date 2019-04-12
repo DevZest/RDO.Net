@@ -44,7 +44,7 @@
         public const string DbMockOf = Namespaces.Data + "DbMock`1";
         public const string TaskOf = Namespaces.System_Threading_Tasks + "Task`1";
         public const string IProgressOf = Namespaces.System + "IProgress`1";
-        public const string DbGenerationProgress = Namespaces.Data + nameof(DbGenerationProgress);
+        public const string DbInitProgress = Namespaces.Data + nameof(DbInitProgress);
         public const string CancellationToken = Namespaces.System_Threading + nameof(CancellationToken);
     }
 }

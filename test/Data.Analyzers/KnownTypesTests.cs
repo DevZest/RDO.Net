@@ -40,7 +40,7 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbMockOf));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.TaskOf));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.IProgressOf));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbGenerationProgress));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbInitProgress));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CancellationToken));
         }
     }

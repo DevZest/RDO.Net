@@ -49,7 +49,7 @@ namespace DevZest.Data.CodeAnalysis
                 return false;
 
             return Any(parameters, dbType) &&
-                Any(parameters, compilation.GetIProgressOf(compilation.GetKnownType(KnownTypes.DbGenerationProgress))) &&
+                Any(parameters, compilation.GetIProgressOf(compilation.GetKnownType(KnownTypes.DbInitProgress))) &&
                 Any(parameters, compilation.GetKnownType(KnownTypes.CancellationToken));
         }
 

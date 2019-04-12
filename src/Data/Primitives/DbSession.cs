@@ -207,7 +207,7 @@ namespace DevZest.Data.Primitives
         internal abstract Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
             where T : class, IModelReference, new();
 
-        internal DbGenerator Generator { get; set; }
+        internal DbInitializer Generator { get; set; }
 
         private bool HasGenerator
         {

@@ -58,7 +58,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 {
     public class MyMockWithoutWarning : DbMock<DbSession>
     {
-        public static Task<DbSession> CreateAsync(DbSession db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public static Task<DbSession> CreateAsync(DbSession db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             return new MyMockWithoutWarning().MockAsync(db, progress, ct);
         }
@@ -111,7 +111,7 @@ Imports DevZest.Data.Primitives
 Public Class MyMockWithoutWarning
     Inherits DbMock(Of DbSession)
 
-    Public Shared Function CreateAsync(db As DbSession, Optional progress As IProgress(Of DbGenerationProgress) = Nothing, Optional ct As CancellationToken = Nothing) As Task(Of DbSession)
+    Public Shared Function CreateAsync(db As DbSession, Optional progress As IProgress(Of DbInitProgress) = Nothing, Optional ct As CancellationToken = Nothing) As Task(Of DbSession)
         Return New MyMockWithoutWarning().MockAsync(db, progress, ct)
     End Function
 

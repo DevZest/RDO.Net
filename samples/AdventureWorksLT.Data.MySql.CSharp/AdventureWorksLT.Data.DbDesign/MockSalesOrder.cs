@@ -14,7 +14,7 @@ namespace DevZest.Samples.AdventureWorksLT
     /// parent-child relationship.</remarks>
     public sealed class MockSalesOrder : DbMock<Db>
     {
-        public static Task<Db> CreateAsync(Db db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public static Task<Db> CreateAsync(Db db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             return new MockSalesOrder().MockAsync(db, progress, ct);
         }

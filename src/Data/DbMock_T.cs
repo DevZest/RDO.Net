@@ -6,7 +6,7 @@ using System.Data;
 
 namespace DevZest.Data
 {
-    public abstract class DbMock<T> : DbGenerator, IDbGenerator<T>
+    public abstract class DbMock<T> : DbInitializer, IDbGenerator<T>
         where T : DbSession
     {
         public new T Db
@@ -14,7 +14,7 @@ namespace DevZest.Data
             get { return (T)base.Db; }
         }
 
-        public async Task<T> GenerateAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public async Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             db.VerifyNotNull(nameof(db));
 
@@ -23,7 +23,7 @@ namespace DevZest.Data
             return db;
         }
 
-        protected async Task<T> MockAsync(T db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        protected async Task<T> MockAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             db.VerifyNotNull(nameof(db));
 

@@ -1,8 +1,8 @@
 ﻿namespace DevZest.Data
 {
-    public struct DbGenerationProgress
+    public struct DbInitProgress
     {
-        public DbGenerationProgress(IDbTable dbTable, int index, int count)
+        public DbInitProgress(IDbTable dbTable, int index, int count)
         {
             DbTable = dbTable;
             Index = index;

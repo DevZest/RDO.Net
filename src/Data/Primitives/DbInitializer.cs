@@ -8,9 +8,9 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbGenerator : IProgress<DbGenerationProgress>
+    public abstract class DbInitializer : IProgress<DbInitProgress>
     {
-        internal async Task InitializeAsync(DbSession db, string paramName, IProgress<DbGenerationProgress> progress, CancellationToken ct)
+        internal async Task InitializeAsync(DbSession db, string paramName, IProgress<DbInitProgress> progress, CancellationToken ct)
         {
             Verify(db, paramName);
             Db = db;
@@ -72,14 +72,14 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private async Task CreateTablesAsync(IProgress<DbGenerationProgress> progress, CancellationToken ct)
+        private async Task CreateTablesAsync(IProgress<DbInitProgress> progress, CancellationToken ct)
         {
             for (int i = 0; i < _tables.Count; i++)
             {
                 ct.ThrowIfCancellationRequested();
                 var table = _tables[i];
                 if (progress != null)
-                    progress.Report(new DbGenerationProgress(table, i, _tables.Count));
+                    progress.Report(new DbInitProgress(table, i, _tables.Count));
                 await Db.CreateTableAsync(table.Model, false, ct);
                 var action = _pendingTables[table];
                 if (action != null)
@@ -155,12 +155,12 @@ namespace DevZest.Data.Primitives
             return name;
         }
 
-        protected virtual void Report(DbGenerationProgress progress)
+        protected virtual void Report(DbInitProgress progress)
         {
             Console.WriteLine(UserMessages.DbGenerator_ReportProgress(progress.DbTable.Name));
         }
 
-        void IProgress<DbGenerationProgress>.Report(DbGenerationProgress value)
+        void IProgress<DbInitProgress>.Report(DbInitProgress value)
         {
             Report(value);
         }
