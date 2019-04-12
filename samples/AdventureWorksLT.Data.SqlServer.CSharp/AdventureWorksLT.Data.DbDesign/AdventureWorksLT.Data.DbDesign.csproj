@@ -40,4 +40,5 @@
   </ItemGroup>
 
   <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'AdventureWorksLT' " />
 </Project>

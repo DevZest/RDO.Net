@@ -260,4 +260,5 @@
   </Target>
   -->
   <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.WPF.Samples' " />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'AdventureWorksLT' " />
 </Project>
