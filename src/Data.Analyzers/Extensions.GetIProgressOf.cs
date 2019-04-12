@@ -6,7 +6,7 @@ namespace DevZest.Data.CodeAnalysis
     {
         public static INamedTypeSymbol GetIProgressOf(this Compilation compilation, ITypeSymbol type)
         {
-            var iprogressType = compilation.GetKnownType(KnownTypes.IProgress);
+            var iprogressType = compilation.GetKnownType(KnownTypes.IProgressOf);
             return iprogressType.Construct(type);
         }
     }

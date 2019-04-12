@@ -16,7 +16,7 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.Model));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ModelOf));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.Column));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.LocalColumn));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.LocalColumnOf));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ColumnList));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.Projection));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CandidateKey));
@@ -32,14 +32,14 @@ namespace DevZest.Data.CodeAnalysis
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.ModelDesignerSpecAttribute));
 
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbSession));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbTable));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbTableOf));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.RelationshipAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes._RelationshipAttribute));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.KeyMapping));
 
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbMock));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbMockOf));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.TaskOf));
-            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.IProgress));
+            Assert.IsNotNull(compilation.GetKnownType(KnownTypes.IProgressOf));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.DbGenerationProgress));
             Assert.IsNotNull(compilation.GetKnownType(KnownTypes.CancellationToken));
         }

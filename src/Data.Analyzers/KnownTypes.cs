@@ -20,7 +20,7 @@
         public const string Model = Namespaces.Data + nameof(Model);
         public const string ModelOf = Namespaces.Data + "Model`1";
         public const string Column = Namespaces.Data + nameof(Column);
-        public const string LocalColumn = Namespaces.Data + nameof(LocalColumn) + "`1";
+        public const string LocalColumnOf = Namespaces.Data + "LocalColumn`1";
         public const string ColumnList = Namespaces.Data + nameof(ColumnList);
         public const string Projection = Namespaces.Data + nameof(Projection);
         public const string CandidateKey = Namespaces.Data + nameof(CandidateKey);
@@ -36,14 +36,14 @@
         public const string ModelDesignerSpecAttribute = Namespaces.Data_Annotations_Primitives + nameof(ModelDesignerSpecAttribute);
 
         public const string DbSession = Namespaces.Data_Primitives + nameof(DbSession);
-        public const string DbTable = Namespaces.Data + nameof(DbTable) + "`1";
+        public const string DbTableOf = Namespaces.Data + "DbTable`1";
         public const string RelationshipAttribute = Namespaces.Data_Annotations + nameof(RelationshipAttribute);
         public const string _RelationshipAttribute = Namespaces.Data_Annotations + nameof(_RelationshipAttribute);
         public const string KeyMapping = Namespaces.Data + nameof(KeyMapping);
 
-        public const string DbMock = Namespaces.Data + nameof(DbMock) + "`1";
+        public const string DbMockOf = Namespaces.Data + "DbMock`1";
         public const string TaskOf = Namespaces.System_Threading_Tasks + "Task`1";
-        public const string IProgress = Namespaces.System + nameof(IProgress) + "`1";
+        public const string IProgressOf = Namespaces.System + "IProgress`1";
         public const string DbGenerationProgress = Namespaces.Data + nameof(DbGenerationProgress);
         public const string CancellationToken = Namespaces.System_Threading + nameof(CancellationToken);
     }

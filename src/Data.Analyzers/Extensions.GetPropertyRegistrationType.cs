@@ -19,7 +19,7 @@ namespace DevZest.Data.CodeAnalysis
 
             var parentValue = parent.Value;
 
-            if (propertyType.EqualsTo(KnownTypes.LocalColumn, compilation))
+            if (propertyType.EqualsTo(KnownTypes.LocalColumnOf, compilation))
                 return PropertyRegistrationType.LocalColumn;
             else if (propertyType.IsDerivedFrom(KnownTypes.Column, compilation))
                 return parentValue == PropertyRegistrationParentType.Model ? PropertyRegistrationType.ModelColumn : PropertyRegistrationType.ProjectionColumn;

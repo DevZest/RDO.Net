@@ -23,7 +23,7 @@ namespace DevZest.Data.CodeAnalysis
             var compilation = context.Compilation;
 
             var typeSymbol = (INamedTypeSymbol)context.Symbol;
-            var dbType = typeSymbol.GetArgumentType(compilation.GetKnownType(KnownTypes.DbMock), compilation);
+            var dbType = typeSymbol.GetArgumentType(compilation.GetKnownType(KnownTypes.DbMockOf), compilation);
             if (dbType == null)
                 return;
 

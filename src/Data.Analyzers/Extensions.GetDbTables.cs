@@ -8,7 +8,7 @@ namespace DevZest.Data.CodeAnalysis
     {
         public static ImmutableArray<IPropertySymbol> GetDbTables(this INamedTypeSymbol dbType, Compilation compilation)
         {
-            var dbTable = compilation.GetKnownType(KnownTypes.DbTable);
+            var dbTable = compilation.GetKnownType(KnownTypes.DbTableOf);
             return dbType.GetMembers().OfType<IPropertySymbol>().Where(x => dbTable.Equals(x?.Type?.OriginalDefinition)).ToImmutableArray();
         }
     }
