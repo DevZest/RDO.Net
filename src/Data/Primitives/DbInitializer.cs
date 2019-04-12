@@ -8,6 +8,17 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Primitives
 {
+    public abstract class DbInitializer<T> : DbInitializer
+        where T : DbSession
+    {
+        public new T Db
+        {
+            get { return (T)base.Db; }
+        }
+
+        public abstract Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken));
+    }
+
     public abstract class DbInitializer : IProgress<DbInitProgress>
     {
         internal async Task InitializeAsync(DbSession db, string paramName, IProgress<DbInitProgress> progress, CancellationToken ct)

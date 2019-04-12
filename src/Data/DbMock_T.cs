@@ -2,19 +2,13 @@
 using System;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Data;
 
 namespace DevZest.Data
 {
-    public abstract class DbMock<T> : DbInitializer, IDbGenerator<T>
+    public abstract class DbMock<T> : DbInitializer<T>
         where T : DbSession
     {
-        public new T Db
-        {
-            get { return (T)base.Db; }
-        }
-
-        public async Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public sealed override async Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             db.VerifyNotNull(nameof(db));
 

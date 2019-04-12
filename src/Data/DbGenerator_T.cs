@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
-    public class DbGenerator<T> : DbInitializer, IDbGenerator<T>
+    public class DbGenerator<T> : DbInitializer<T>
         where T : DbSession
     {
-        public async Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public sealed override async Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             await InitializeAsync(db, nameof(db), progress, ct);
             return db;
@@ -76,11 +76,6 @@ namespace DevZest.Data
 
                 yield return property;
             }
-        }
-
-        public new T Db
-        {
-            get { return (T)base.Db; }
         }
     }
 }
