@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\AdventureWorksLT.CSharp\AdventureWorksLT\AdventureWorksLT.csproj" />
+    <ProjectReference Include="..\..\samples\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

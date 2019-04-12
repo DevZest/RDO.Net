@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "AdventureWorksLT\AdventureWorksLT.csproj", "{78A8EE9B-2014-49C9-B330-BA754470E860}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{78A8EE9B-2014-49C9-B330-BA754470E860}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FC6DEE1D-315B-4BA7-94FA-0474F4A173CD}"
 	ProjectSection(SolutionItems) = preProject
-		DevZest.Samples.AdventureWorksLT.DbDesign.props = DevZest.Samples.AdventureWorksLT.DbDesign.props
-		DevZest.Samples.AdventureWorksLT.props = DevZest.Samples.AdventureWorksLT.props
+		AdventureWorksLT.Data.DbDesign.props = AdventureWorksLT.Data.DbDesign.props
+		AdventureWorksLT.Data.props = AdventureWorksLT.Data.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbDesign", "AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.csproj", "{2F9B46A5-0689-4471-A425-F7BA93C4E4B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{2F9B46A5-0689-4471-A425-F7BA93C4E4B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

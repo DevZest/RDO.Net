@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>DevZest.Samples.AdventureWorksLT.DbDesign</AssemblyName>
+    <AssemblyName>AdventureWorksLT.Data.DbDesign</AssemblyName>
     <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
   </PropertyGroup>
 
@@ -20,9 +20,9 @@
     <StartupObject />
   </PropertyGroup>
 
-  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.MySql.Samples' " />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
 
   <ItemGroup>
-    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj" />
+    <ProjectReference Include="..\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj" />
   </ItemGroup>
 </Project>

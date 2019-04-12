@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-#if DbDsign
+#if DbDesign
 using DevZest.Data.DbDesign;
 #endif
 

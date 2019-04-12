@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>DevZest.Samples.AdventureWorksLT.DbDesign</AssemblyName>
+    <AssemblyName>AdventureWorksLT.Data.DbDesign</AssemblyName>
     <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
   </PropertyGroup>
 
@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.vbproj" />
+    <ProjectReference Include="..\AdventureWorksLT.Data\AdventureWorksLT.Data.vbproj" />
   </ItemGroup>
 
   <ItemGroup>

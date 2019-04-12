@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>DevZest.Samples.AdventureWorksLT</AssemblyName>
+    <AssemblyName>AdventureWorksLT.Data</AssemblyName>
     <OptionStrict>On</OptionStrict>
   </PropertyGroup>
 

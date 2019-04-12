@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>DevZest.Samples.AdventureWorksLT</AssemblyName>
+    <AssemblyName>AdventureWorksLT.Data</AssemblyName>
     <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
   </PropertyGroup>
 
@@ -36,5 +36,5 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.MySql.Samples' " />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.Data.Samples' " />
 </Project>

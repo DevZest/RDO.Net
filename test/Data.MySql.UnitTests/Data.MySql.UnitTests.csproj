@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\AdventureWorksLT.MySql\AdventureWorksLT\AdventureWorksLT.csproj" />
+    <ProjectReference Include="..\..\samples\AdventureWorksLT.Data.MySql.CSharp\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj" />
     <ProjectReference Include="..\..\src\Data.MySql\Data.MySql.csproj" />
   </ItemGroup>
 

@@ -222,9 +222,9 @@
       <Project>{e0491457-ba40-4f12-bf72-e63a35422b1e}</Project>
       <Name>Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AdventureWorksLT.CSharp\AdventureWorksLT\AdventureWorksLT.csproj">
-      <Project>{b2f5ac6a-f4ca-4418-a486-b3537b89810f}</Project>
-      <Name>AdventureWorksLT</Name>
+    <ProjectReference Include="..\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj">
+      <Project>{5ace1d70-12b8-44c9-9104-b21d14cb2987}</Project>
+      <Name>AdventureWorksLT.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -259,5 +259,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\AdventureWorks.SalesOrders.props" Condition=" '$(SolutionName)' == 'RDO.WPF.Samples' " />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.WPF.Samples' " />
 </Project>

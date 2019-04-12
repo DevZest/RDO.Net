@@ -10,10 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\samples\AdventureWorksLT.CSharp\AdventureWorksLT.DbDesign\LocalDb\EmptyDb.mdf" Link="EmptyDb.mdf">
+    <None Include="..\..\samples\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data.DbDesign\LocalDb\EmptyDb.mdf" Link="EmptyDb.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\samples\AdventureWorksLT.CSharp\AdventureWorksLT.DbDesign\LocalDb\EmptyDb_log.ldf" Link="EmptyDb_log.ldf">
+    <None Include="..\..\samples\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data.DbDesign\LocalDb\EmptyDb_log.ldf" Link="EmptyDb_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\AdventureWorksLT.CSharp\AdventureWorksLT.DbDesign\AdventureWorksLT.DbDesign.csproj" />
+    <ProjectReference Include="..\..\samples\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj" />
   </ItemGroup>
 
   <ItemGroup>
