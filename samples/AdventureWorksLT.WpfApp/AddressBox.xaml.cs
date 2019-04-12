@@ -1,9 +1,7 @@
 ﻿using DevZest.Data;
-using DevZest.Data.Presenters;
-using DevZest.Samples.AdventureWorksLT;
 using System;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     /// <summary>
     /// Interaction logic for AddressBox.xaml

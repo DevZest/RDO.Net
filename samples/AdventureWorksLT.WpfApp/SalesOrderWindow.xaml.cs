@@ -1,11 +1,10 @@
 ﻿using DevZest.Data;
-using DevZest.Samples.AdventureWorksLT;
 using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     /// <summary>
     /// Interaction logic for SalesOrderWindow.xaml

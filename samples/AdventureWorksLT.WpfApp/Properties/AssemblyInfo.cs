@@ -1,19 +1,17 @@
-﻿using AdventureWorks.SalesOrders;
+﻿using DevZest.Samples.AdventureWorksLT;
 using DevZest.Data.Presenters;
 using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AdventureWorks.SalesOrders")]
+[assembly: AssemblyTitle("DevZest.Samples.AdventureWorksLT")]
 [assembly: AssemblyDescription("DevZest RDO.WPF Sample Application")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AdventureWorks.SalesOrders")]
+[assembly: AssemblyProduct("DevZest.Samples.AdventureWorksLT")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     public enum SearchBoxState
     {

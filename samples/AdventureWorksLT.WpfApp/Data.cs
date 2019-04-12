@@ -1,10 +1,9 @@
 ﻿using DevZest.Data;
-using DevZest.Samples.AdventureWorksLT;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     static class Data
     {

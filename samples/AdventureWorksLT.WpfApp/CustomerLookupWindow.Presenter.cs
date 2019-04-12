@@ -1,16 +1,14 @@
 ﻿using DevZest.Data.Presenters;
-using DevZest.Samples.AdventureWorksLT;
 using DevZest.Data.Views;
 using System.Windows.Controls;
 using DevZest.Data;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
-using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     partial class CustomerLookupWindow
     {

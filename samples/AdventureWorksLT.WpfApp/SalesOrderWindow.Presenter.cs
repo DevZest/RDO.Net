@@ -1,5 +1,4 @@
-﻿using DevZest.Samples.AdventureWorksLT;
-using DevZest.Data.Presenters;
+﻿using DevZest.Data.Presenters;
 using DevZest.Data.Views;
 using DevZest.Data;
 using System.Windows;
@@ -7,7 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     partial class SalesOrderWindow
     {

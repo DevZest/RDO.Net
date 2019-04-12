@@ -1,9 +1,7 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Views;
-using DevZest.Samples.AdventureWorksLT;
-using System;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     public static class BindingFactory
     {

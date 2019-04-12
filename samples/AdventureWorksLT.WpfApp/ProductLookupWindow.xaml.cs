@@ -1,11 +1,10 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Views;
-using DevZest.Samples.AdventureWorksLT;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     /// <summary>
     /// Interaction logic for ProductLookupWindow.xaml

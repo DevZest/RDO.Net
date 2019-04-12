@@ -1,9 +1,8 @@
 ﻿using DevZest.Data.Views;
-using DevZest.Samples.AdventureWorksLT;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     /// <summary>
     /// Interaction logic for CustomerLookupWindow.xaml

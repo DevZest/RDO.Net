@@ -1,5 +1,4 @@
 ﻿using DevZest.Data;
-using DevZest.Samples.AdventureWorksLT;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,7 +10,7 @@ using DevZest.Data.Views;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     partial class MainWindow
     {

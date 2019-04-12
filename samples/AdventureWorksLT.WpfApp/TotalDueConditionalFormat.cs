@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using DevZest.Data.Presenters;
 using System.Windows;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     public sealed class TotalDueConditionalFormat : RowBindingBehavior<TextBlock>
     {

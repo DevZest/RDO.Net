@@ -3,7 +3,7 @@ using DevZest.Data.Presenters;
 using System;
 using System.Windows;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     public sealed class TotalAmtConditionalFormat : ScalarBindingBehavior<TextBlock>
     {

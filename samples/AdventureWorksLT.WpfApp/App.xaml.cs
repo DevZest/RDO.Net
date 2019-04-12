@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Xml;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     /// <summary>
     /// Interaction logic for App.xaml

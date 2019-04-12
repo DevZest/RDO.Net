@@ -7,7 +7,7 @@
     <ProjectGuid>{89595262-2443-4F2E-9789-60C7998A0A07}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdventureWorks.SalesOrders</RootNamespace>
+    <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
     <AssemblyName>AdventureWorksLT.WpfApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

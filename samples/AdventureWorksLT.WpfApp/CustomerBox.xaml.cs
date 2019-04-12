@@ -1,12 +1,7 @@
 ﻿using DevZest.Data;
-using DevZest.Data.Presenters;
-using DevZest.Samples.AdventureWorksLT;
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     /// <summary>
     /// Interaction logic for CustomerBox.xaml

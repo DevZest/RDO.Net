@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace AdventureWorks.SalesOrders
+namespace DevZest.Samples.AdventureWorksLT
 {
     /// <summary>
     /// Interaction logic for SalesOrderFooterBox.xaml
