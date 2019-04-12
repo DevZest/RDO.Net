@@ -3,18 +3,18 @@
     {
       "src": [
         {
-          "src": "../src",
+          "src": "./nuget_packages",
           "files": [ 
-            "Data/Data.csproj",
-            "Data.SqlServer/Data.SqlServer.csproj",
-            "Data.MySql/Data.MySql.csproj",
-            "Data.WPF/Data.WPF.csproj",
-            "Data.AspNetCore/Data.AspNetCore.csproj"
+            "DevZest.Data/lib/netstandard2.0/*.dll",
+            "DevZest.Data.SqlServer/lib/netstandard2.0/*.dll",
+            "DevZest.Data.MySql/lib/netstandard2.0/*.dll",
+            "DevZest.Data.Wpf/lib/net461/*.dll",
+            "DevZest.Data.AspNetCore/lib/netstandard2.0/*.dll",
+            "DevZest.Data.DbDesign/lib/netstandard2.0/*.dll"
           ]
         }
       ],
       "dest": "api",
-      "properties": { "TargetFramework": "netstandard2.0" },
       "disableGitFeatures": false,
       "disableDefaultFilter": false
     }
