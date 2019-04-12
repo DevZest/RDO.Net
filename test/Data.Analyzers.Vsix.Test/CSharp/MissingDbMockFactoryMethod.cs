@@ -14,7 +14,7 @@ namespace DevZest.Data.Analyzers.Vsix.Test.CSharp
 
     public class MyMockWithoutWarning : DbMock<DbSession>
     {
-        public static Task<DbSession> CreateAsync(DbSession db, IProgress<DbGenerationProgress> progress = null, CancellationToken ct = default(CancellationToken))
+        public static Task<DbSession> CreateAsync(DbSession db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             return new MyMockWithoutWarning().MockAsync(db, progress, ct);
         }
