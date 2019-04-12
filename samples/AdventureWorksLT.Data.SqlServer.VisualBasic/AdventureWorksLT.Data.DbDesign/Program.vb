@@ -1,7 +1,11 @@
-﻿Module Program
+﻿#If DbDesign Then
+Imports DevZest.Data.DbDesign
+#End If
+
+Module Program
     Function Main(args As String()) As Integer
 #If DbDesign Then
-        Return DevZest.Data.DbDesign.Program.Run(args)
+        Return args.RunDbDesign()
 #Else
         Return 0
 #End If
