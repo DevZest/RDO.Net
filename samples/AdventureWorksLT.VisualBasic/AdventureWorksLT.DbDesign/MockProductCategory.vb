@@ -1,7 +1,10 @@
 ﻿Imports System.Threading
 Imports DevZest.Data
-Imports DevZest.Data.DbDesign
 Imports DevZest.Data.Primitives
+
+#If DbDesign Then
+Imports DevZest.Data.DbDesign
+#End If
 
 Public Class MockProductCategory
     Inherits DbMock(Of Db)

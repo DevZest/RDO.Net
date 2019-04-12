@@ -1,9 +1,12 @@
 ﻿using DevZest.Data;
-using DevZest.Data.DbDesign;
 using DevZest.Data.Primitives;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+#if DbDsign
+using DevZest.Data.DbDesign;
+#endif
 
 namespace DevZest.Samples.AdventureWorksLT
 {
