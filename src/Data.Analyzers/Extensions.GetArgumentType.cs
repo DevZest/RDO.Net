@@ -4,12 +4,12 @@ namespace DevZest.Data.CodeAnalysis
 {
     static partial class Extensions
     {
-        public static INamedTypeSymbol GetArgumentType(this INamedTypeSymbol type, INamedTypeSymbol baseGenericType, Compilation compilation)
+        public static INamedTypeSymbol GetArgumentType(this INamedTypeSymbol type, INamedTypeSymbol baseGenericDefinition, Compilation compilation)
         {
             INamedTypeSymbol resolvedBaseGenericType = null;
             for (var currentType = type.BaseType; currentType != null; currentType = currentType.BaseType)
             {
-                if (currentType.OriginalDefinition.Equals(baseGenericType))
+                if (currentType.OriginalDefinition.Equals(baseGenericDefinition))
                 {
                     resolvedBaseGenericType = currentType;
                     break;
