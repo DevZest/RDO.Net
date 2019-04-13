@@ -28,14 +28,6 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public static async Task<DataSet<Customer>> GetCustomerLookupAsync(CancellationToken ct)
-        {
-            using (var db = new Db(App.ConnectionString))
-            {
-                return await db.Customer.ToDataSetAsync(ct);
-            }
-        }
-
         public static async Task<DataSet<Address>> GetAddressLookupAsync(int customerID, CancellationToken ct)
         {
             using (var db = new Db(App.ConnectionString))
