@@ -7,14 +7,6 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     static class Data
     {
-        public static async Task<DataSet<Product>> GetProductLookupAsync(CancellationToken ct)
-        {
-            using (var db = new Db(App.ConnectionString))
-            {
-                return await db.Product.ToDataSetAsync(ct);
-            }
-        }
-
         public static async Task UpdateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
             using (var db = new Db(App.ConnectionString))

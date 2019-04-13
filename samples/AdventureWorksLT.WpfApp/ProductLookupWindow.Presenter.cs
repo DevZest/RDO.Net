@@ -42,7 +42,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             private Task<DataSet<Product>> LoadDataAsync(CancellationToken ct)
             {
-                return Data.GetProductLookupAsync(ct);
+                return App.ExecuteAsync(db => db.Product.ToDataSetAsync(ct));
             }
 
             public int? CurrentProductID { get; private set; }
