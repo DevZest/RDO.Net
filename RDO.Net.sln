@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.IntegrationTests", "te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.UnitTests", "test\Data.UnitTests\Data.UnitTests.csproj", "{6F5206CA-4EB5-448F-88A9-A0CE545CEA72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventrureWorksLT.WpfApp", "samples\AdventureWorksLT.WpfApp\AdventrureWorksLT.WpfApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorksLT.WpfApp", "samples\AdventureWorksLT.WpfApp\AdventureWorksLT.WpfApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer", "samples\FileExplorer\FileExplorer.csproj", "{CFFCA50E-AC24-4EC2-AA89-412EFEA87B73}"
 EndProject

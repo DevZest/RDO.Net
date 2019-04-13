@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "Ad
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{FA3D8BD5-14EC-4528-8270-D8011CFC69A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventrureWorksLT.WpfApp", "AdventureWorksLT.WpfApp\AdventrureWorksLT.WpfApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorksLT.WpfApp", "AdventureWorksLT.WpfApp\AdventureWorksLT.WpfApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

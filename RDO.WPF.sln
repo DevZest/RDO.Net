@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmoothScroll", "samples\Smo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer", "samples\FileExplorer\FileExplorer.csproj", "{CFFCA50E-AC24-4EC2-AA89-412EFEA87B73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventrureWorksLT.WpfApp", "samples\AdventureWorksLT.WpfApp\AdventrureWorksLT.WpfApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorksLT.WpfApp", "samples\AdventureWorksLT.WpfApp\AdventureWorksLT.WpfApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationUI", "samples\ValidationUI\ValidationUI.csproj", "{BC34673C-0605-4062-A976-11C184D615F5}"
 EndProject
