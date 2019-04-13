@@ -29,11 +29,11 @@ namespace DevZest.Data
             return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
         }
 
-        protected DataSet<SalesOrderInfo> GetSalesOrderInfo(int salesOrderID)
+        protected async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID)
         {
             using (var db = CreateDb())
             {
-                return db.GetSalesOrderInfoAsync(salesOrderID).Result.ToDataSetAsync().Result;
+                return await db.GetSalesOrderInfoAsync(salesOrderID);
             }
         }
     }

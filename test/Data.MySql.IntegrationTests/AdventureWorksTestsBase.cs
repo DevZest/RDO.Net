@@ -29,8 +29,7 @@ namespace DevZest.Data.MySql
         {
             using (var db = CreateDb())
             {
-                var result = await db.GetSalesOrderInfoAsync(salesOrderID, ct);
-                return await result.ToDataSetAsync(ct);
+                return await db.GetSalesOrderInfoAsync(salesOrderID, ct);
             }
         }
     }

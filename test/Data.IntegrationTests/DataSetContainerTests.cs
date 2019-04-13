@@ -1,6 +1,5 @@
-﻿using DevZest.Samples.AdventureWorksLT;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
@@ -8,9 +7,9 @@ namespace DevZest.Data
     public class DataSetContainerTests : AdventureWorksTestsBase
     {
         [TestMethod]
-        public void DataSetContainer_column_computation()
+        public async Task DataSetContainer_column_computation()
         {
-            var dataSet = GetSalesOrderInfo(71774);
+            var dataSet = await GetSalesOrderInfoAsync(71774);
             var _ = dataSet._;
 
             Assert.AreNotEqual(0, _.TaxAmt[0]);

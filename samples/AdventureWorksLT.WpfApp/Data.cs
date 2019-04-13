@@ -28,35 +28,6 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public static async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct)
-        {
-            using (var db = new Db(App.ConnectionString))
-            {
-                var result = db.CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
-                {
-                    builder.From(db.SalesOrderHeader, out var o)
-                        .LeftJoin(db.Customer, o.FK_Customer, out var c)
-                        .LeftJoin(db.Address, o.FK_ShipToAddress, out var shipTo)
-                        .LeftJoin(db.Address, o.FK_BillToAddress, out var billTo)
-                        .AutoSelect()
-                        .AutoSelect(c, _.Customer)
-                        .AutoSelect(shipTo, _.ShipToAddress)
-                        .AutoSelect(billTo, _.BillToAddress)
-                        .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
-                });
-
-                await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
-                {
-                    builder.From(db.SalesOrderDetail, out var d)
-                        .LeftJoin(db.Product, d.FK_Product, out var p)
-                        .AutoSelect()
-                        .AutoSelect(p, _.Product);
-                }, ct);
-
-                return await result.ToDataSetAsync(ct);
-            }
-        }
-
         public static async Task<DataSet<Customer>> GetCustomerLookupAsync(CancellationToken ct)
         {
             using (var db = new Db(App.ConnectionString))

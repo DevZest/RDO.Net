@@ -201,7 +201,7 @@ Public Class Db
         Return result
     End Function
 
-    Public Async Function GetSalesOrderInfoAsync(salesOrderID As Integer, Optional ct As CancellationToken = Nothing) As Task(Of DbSet(Of SalesOrderInfo))
+    Public Async Function GetSalesOrderInfoAsync(salesOrderID As Integer, Optional ct As CancellationToken = Nothing) As Task(Of DataSet(Of SalesOrderInfo))
         Dim result = CreateQuery(Sub(builder As DbQueryBuilder, x As SalesOrderInfo)
                                      Dim o As SalesOrderHeader = Nothing, c As Customer = Nothing, shipTo As Address = Nothing, billTo As Address = Nothing
                                      builder.From(SalesOrderHeader, o).
@@ -219,7 +219,7 @@ Public Class Db
                                           Dim d As SalesOrderDetail = Nothing, p As Product = Nothing
                                           builder.From(SalesOrderDetail, d).LeftJoin(Product, d.FK_Product, p).AutoSelect().AutoSelect(p, x.Product)
                                       End Sub, ct)
-        Return result
+        Return Await result.ToDataSetAsync(ct)
     End Function
 
     Public Overloads Function UpdateAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task

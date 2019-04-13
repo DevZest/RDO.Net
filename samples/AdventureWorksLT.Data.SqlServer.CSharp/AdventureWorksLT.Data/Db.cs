@@ -219,7 +219,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return result;
         }
 
-        public async Task<DbSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct = default(CancellationToken))
+        public async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct = default(CancellationToken))
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
             {
@@ -242,7 +242,7 @@ namespace DevZest.Samples.AdventureWorksLT
                     .AutoSelect(p, _.Product);
             }, ct);
 
-            return result;
+            return await result.ToDataSetAsync(ct);
         }
 
         public Task UpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)

@@ -54,7 +54,7 @@ namespace DevZest.Samples.AdventureWorksLT
         private void Open(object sender, ExecutedRoutedEventArgs e)
         {
             var salesOrderID = _presenter.CurrentRow.GetValue(_.SalesOrderID).Value;
-            if (App.Execute(ct => Data.GetSalesOrderInfoAsync(salesOrderID, ct), this, out var dataSet))
+            if (App.Execute(ct => Data.ExecuteAsync(db => db.GetSalesOrderInfoAsync(salesOrderID, ct)), this, out var dataSet))
             {
                 if (dataSet.Count == 1)
                     new SalesOrderWindow().Show(dataSet, this, Refresh);
