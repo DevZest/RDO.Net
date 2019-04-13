@@ -288,9 +288,14 @@ namespace DevZest.Samples.AdventureWorksLT
             }).ToDataSetAsync(ct);
         }
 
-        public async Task<DataSet<SalesOrderHeader>> GetSalesOrderHeadersAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
+        public Task<DataSet<SalesOrderHeader>> GetSalesOrderHeadersAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
         {
-            return await GetSalesOrderHeaders(filterText, orderBy).ToDataSetAsync(ct);
+            return GetSalesOrderHeaders(filterText, orderBy).ToDataSetAsync(ct);
+        }
+
+        public Task<int> DeleteAsync(DataSet<SalesOrderHeader.Key> dataSet, CancellationToken ct)
+        {
+            return SalesOrderHeader.DeleteAsync(dataSet, (s, _) => s.Match(_), ct);
         }
     }
 }

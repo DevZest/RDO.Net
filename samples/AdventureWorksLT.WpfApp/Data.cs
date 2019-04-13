@@ -28,14 +28,6 @@ namespace DevZest.Samples.AdventureWorksLT
             }
         }
 
-        public static async Task DeleteAsync(DataSet<SalesOrderHeader.Key> dataSet, CancellationToken ct)
-        {
-            using (var db = new Db(App.ConnectionString))
-            {
-                await db.SalesOrderHeader.DeleteAsync(dataSet, (s, _) => s.Match(_), ct);
-            }
-        }
-
         public static async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct)
         {
             using (var db = new Db(App.ConnectionString))
