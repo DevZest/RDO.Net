@@ -109,10 +109,10 @@ namespace DevZest.Samples.AdventureWorksLT
             public async Task<int?> SaveToDb(CancellationToken ct)
             {
                 if (IsNew)
-                    return await Data.CreateSalesOrderAsync(DataSet, ct);
+                    return await App.ExecuteAsync(db => db.CreateSalesOrderAsync(DataSet, ct));
                 else
                 {
-                    await Data.UpdateSalesOrderAsync(DataSet, ct);
+                    await App.ExecuteAsync(db => db.UpdateSalesOrderAsync(DataSet, ct));
                     return null;
                 }
             }

@@ -308,5 +308,25 @@ namespace DevZest.Samples.AdventureWorksLT
             });
             return await result.ToDataSetAsync(ct);
         }
+
+        public async Task UpdateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
+        {
+            salesOrders._.ResetRowIdentifiers();
+            await SalesOrderHeader.UpdateAsync(salesOrders, ct);
+            await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
+            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            salesOrderDetails._.ResetRowIdentifiers();
+            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
+        }
+
+        public async Task<int?> CreateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
+        {
+            salesOrders._.ResetRowIdentifiers();
+            await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
+            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            salesOrderDetails._.ResetRowIdentifiers();
+            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
+            return salesOrders.Count > 0 ? salesOrders._.SalesOrderID[0] : null;
+        }
     }
 }

@@ -95,7 +95,6 @@
     <Compile Include="CustomerLookupWindow.xaml.cs">
       <DependentUpon>CustomerLookupWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data.cs" />
     <Compile Include="ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
     </Compile>
