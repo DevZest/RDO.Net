@@ -297,5 +297,16 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             return SalesOrderHeader.DeleteAsync(dataSet, (s, _) => s.Match(_), ct);
         }
+
+        public async Task<DataSet<Address>> GetAddressLookupAsync(int customerID, CancellationToken ct)
+        {
+            var result = CreateQuery<Address>((builder, _) =>
+            {
+                builder.From(CustomerAddress.Where(CustomerAddress._.CustomerID == customerID), out var ca)
+                    .InnerJoin(Address, ca.FK_Address, out var a)
+                    .AutoSelect();
+            });
+            return await result.ToDataSetAsync(ct);
+        }
     }
 }

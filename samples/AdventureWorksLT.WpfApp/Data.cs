@@ -7,20 +7,6 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     static class Data
     {
-        public static async Task<DataSet<Address>> GetAddressLookupAsync(int customerID, CancellationToken ct)
-        {
-            using (var db = new Db(App.ConnectionString))
-            {
-                var result = db.CreateQuery<Address>((builder, _) =>
-                {
-                    builder.From(db.CustomerAddress.Where(db.CustomerAddress._.CustomerID == customerID), out var ca)
-                        .InnerJoin(db.Address, ca.FK_Address, out var a)
-                        .AutoSelect();
-                });
-                return await result.ToDataSetAsync(ct);
-            }
-        }
-
         public static async Task<DataSet<Product>> GetProductLookupAsync(CancellationToken ct)
         {
             using (var db = new Db(App.ConnectionString))

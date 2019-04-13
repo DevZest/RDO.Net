@@ -38,7 +38,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             private Task<DataSet<Address>> LoadDataAsync(CancellationToken ct)
             {
-                return Data.GetAddressLookupAsync(CustomerID, ct);
+                return App.ExecuteAsync(db => db.GetAddressLookupAsync(CustomerID, ct));
             }
 
             public int? CurrentAddressID { get; private set; }
