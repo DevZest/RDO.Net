@@ -4,9 +4,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Markup;
-using System.Xml;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -23,6 +20,32 @@ namespace DevZest.Samples.AdventureWorksLT
             string outputFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string attachDbFilename = Path.Combine(outputFolder, mdfFilename);
             return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
+        }
+
+        private static Db CreateDb()
+        {
+            return new Db(App.ConnectionString);
+        }
+
+        public static async Task ExecuteAsync(Func<Db, Task> func)
+        {
+            using (var db = CreateDb())
+            {
+                await func(db);
+            }
+        }
+
+        public static async Task<T> ExecuteAsync<T>(Func<Db, Task<T>> func)
+        {
+            using (var db = CreateDb())
+            {
+                return await func(db);
+            }
+        }
+
+        public static bool Execute(Func<Db, CancellationToken, Task> func, Window ownerWindow, string windowTitle = null, string label = null)
+        {
+            return Execute(ct => ExecuteAsync(db => func(db, ct)), ownerWindow, windowTitle, label);
         }
 
         public static bool Execute(Func<CancellationToken, Task> func, Window ownerWindow, string windowTitle = null, string label = null)
@@ -60,6 +83,22 @@ namespace DevZest.Samples.AdventureWorksLT
             result = dialogResult.Value;
             return true;
         }
+
+        public static bool Execute<T>(Func<Db, CancellationToken, Task<T>> func, Window ownerWindow, out T result)
+        {
+            return Execute(func, ownerWindow, null, out result);
+        }
+
+        public static bool Execute<T>(Func<Db, CancellationToken, Task<T>> func, Window ownerWindow, string windowTitle, out T result)
+        {
+            return Execute(func, ownerWindow, windowTitle, null, out result);
+        }
+
+        public static bool Execute<T>(Func<Db, CancellationToken, Task<T>> func, Window ownerWindow, string windowTitle, string label, out T result)
+        {
+            return Execute(ct => ExecuteAsync(db => func(db, ct)), ownerWindow, windowTitle, label, out result);
+        }
+
 
         //private static void SaveDefaultTemplate(Type type, string fileName)
         //{

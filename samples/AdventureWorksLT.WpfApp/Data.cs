@@ -7,27 +7,6 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     static class Data
     {
-        private static Db Create()
-        {
-            return new Db(App.ConnectionString);
-        }
-
-        public static async Task ExecuteAsync(Func<Db, Task> func)
-        {
-            using (var db = Create())
-            {
-                await func(db);
-            }
-        }
-
-        public static async Task<T> ExecuteAsync<T>(Func<Db, Task<T>> func)
-        {
-            using (var db = Create())
-            {
-                return await func(db);
-            }
-        }
-
         public static async Task<DataSet<Address>> GetAddressLookupAsync(int customerID, CancellationToken ct)
         {
             using (var db = new Db(App.ConnectionString))

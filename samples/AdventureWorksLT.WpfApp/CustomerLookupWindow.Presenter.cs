@@ -44,7 +44,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             private Task<DataSet<Customer>> LoadDataAsync(CancellationToken ct)
             {
-                return Data.ExecuteAsync(db => db.Customer.ToDataSetAsync(ct));
+                return App.ExecuteAsync(db => db.Customer.ToDataSetAsync(ct));
             }
 
             public int? CurrentCustomerID { get; private set; }
