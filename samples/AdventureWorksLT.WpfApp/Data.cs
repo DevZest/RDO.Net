@@ -1,5 +1,5 @@
 ﻿using DevZest.Data;
-using System.Collections.Generic;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,11 +7,24 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     static class Data
     {
-        public static async Task<DataSet<SalesOrderHeader>> GetSalesOrderHeadersAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
+        private static Db Create()
         {
-            using (var db = new Db(App.ConnectionString))
+            return new Db(App.ConnectionString);
+        }
+
+        public static async Task ExecuteAsync(Func<Db, Task> func)
+        {
+            using (var db = Create())
             {
-                return await db.GetSalesOrderHeaders(filterText, orderBy).ToDataSetAsync(ct);
+                await func(db);
+            }
+        }
+
+        public static async Task<T> ExecuteAsync<T>(Func<Db, Task<T>> func)
+        {
+            using (var db = Create())
+            {
+                return await func(db);
             }
         }
 

@@ -287,5 +287,10 @@ namespace DevZest.Samples.AdventureWorksLT
                     .AutoSelect().OrderBy(seqNo);
             }).ToDataSetAsync(ct);
         }
+
+        public async Task<DataSet<SalesOrderHeader>> GetSalesOrderHeadersAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
+        {
+            return await GetSalesOrderHeaders(filterText, orderBy).ToDataSetAsync(ct);
+        }
     }
 }

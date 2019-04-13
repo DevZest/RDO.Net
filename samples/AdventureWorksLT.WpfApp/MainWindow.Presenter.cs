@@ -66,7 +66,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             private Task<DataSet<SalesOrderHeader>> LoadDataAsync(CancellationToken ct)
             {
-                return Data.GetSalesOrderHeadersAsync(SearchText, _orderBy, ct);
+                return Data.ExecuteAsync(db => db.GetSalesOrderHeadersAsync(SearchText, _orderBy, ct));
             }
 
             public void ShowAsync(DataView dataView)
