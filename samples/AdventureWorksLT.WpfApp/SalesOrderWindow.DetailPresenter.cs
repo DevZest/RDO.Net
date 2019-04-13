@@ -90,7 +90,7 @@ namespace DevZest.Samples.AdventureWorksLT
                     });
                 }
 
-                if (!App.Execute(ct => Data.LookupAsync(foreignKeys, ct), Window.GetWindow(View), out var lookup))
+                if (!App.Execute((db, ct) => db.LookupAsync(foreignKeys, ct), Window.GetWindow(View), out var lookup))
                     return false;
 
                 Debug.Assert(lookup.Count == data.Count);

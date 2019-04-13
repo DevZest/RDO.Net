@@ -32,13 +32,5 @@ namespace DevZest.Samples.AdventureWorksLT
                 return salesOrders.Count > 0 ? salesOrders._.SalesOrderID[0] : null;
             }
         }
-
-        public static async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> data, CancellationToken ct)
-        {
-            using (var db = new Db(App.ConnectionString))
-            {
-                return await db.LookupAsync(data, ct);
-            }
-        }
     }
 }
