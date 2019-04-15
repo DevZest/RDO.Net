@@ -13,7 +13,7 @@ namespace DevZest.Data.SqlServer
         [TestMethod]
         public void DbTable_Update_without_source()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var command = db.ProductCategory.MockUpdate(0, (builder, x) => builder.Select(_DateTime.Now(), x.ModifiedDate),
                     x => x.ModifiedDate.IsNull());
@@ -30,7 +30,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Update_from_temp_table()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var tempTable = db.MockTempTable<ProductCategory>();
                 var command = db.ProductCategory.MockUpdate(0, tempTable);
@@ -53,7 +53,7 @@ FROM
         [TestMethod]
         public void DbTable_Update_from_query()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var query = db.ProductCategory.Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategory.MockUpdate(0, query);
@@ -77,7 +77,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Update_from_simple_query()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategory.MockUpdate(0, query);
@@ -101,7 +101,7 @@ WHERE ([#ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Update_scalar()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var dataSet = DataSet<ProductCategory>.Create();
                 var index = dataSet.AddRow().Ordinal;
@@ -127,49 +127,6 @@ FROM
     [SalesLT].[ProductCategory] [ProductCategory]
     ON [@ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID]);
 ";
-                command.Verify(expectedSql);
-            }
-        }
-
-        [TestMethod]
-        public void DbTable_Update_from_DataSet_Sql11()
-        {
-            using (var db = new Db(SqlVersion.Sql11))
-            {
-                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategoriesLevel1);
-                var expectedSql =
-@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
-<root>
-  <row>
-    <col_0>1</col_0>
-    <col_1></col_1>
-    <col_2>Bikes</col_2>
-    <col_3>cfbda25c-df71-47a7-b81b-64ee161aa37c</col_3>
-    <col_4>2002-06-01 00:00:00.000</col_4>
-    <col_5>1</col_5>
-  </row>
-  <row>
-    <col_0>2</col_0>
-    <col_1></col_1>
-    <col_2>Other</col_2>
-    <col_3>c657828d-d808-4aba-91a3-af2ce02300e9</col_3>
-    <col_4>2002-06-01 00:00:00.000</col_4>
-    <col_5>2</col_5>
-  </row>
-</root>';
-
-UPDATE [ProductCategory] SET
-    [ParentProductCategoryID] = [@ProductCategory].[Xml].value('col_1[1]/text()[1]', 'INT'),
-    [Name] = [@ProductCategory].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)'),
-    [RowGuid] = [@ProductCategory].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER'),
-    [ModifiedDate] = [@ProductCategory].[Xml].value('col_4[1]/text()[1]', 'DATETIME')
-FROM
-    (@p1.nodes('/root/row') [@ProductCategory]([Xml])
-    INNER JOIN
-    [SalesLT].[ProductCategory] [ProductCategory]
-    ON [@ProductCategory].[Xml].value('col_0[1]/text()[1]', 'INT') = [ProductCategory].[ProductCategoryID]);
-";
-                var command = db.ProductCategory.MockUpdate(dataSet.Count, dataSet);
                 command.Verify(expectedSql);
             }
         }

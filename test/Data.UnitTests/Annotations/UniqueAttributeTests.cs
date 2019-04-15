@@ -39,7 +39,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void UniqueAttribute_sql_generation()
         {
-            using (var testDb = new TestDb(SqlVersion.Sql11))
+            using (var testDb = new TestDb(SqlVersion.Sql13))
             {
                 var command = testDb.GetCreateTableCommand(testDb.TestTable._, false);
                 var expectedSql =

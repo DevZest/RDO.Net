@@ -66,7 +66,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void ComputationAttribute_sql_generation()
         {
-            using (var testDb = new TestDb(SqlVersion.Sql11))
+            using (var testDb = new TestDb(SqlVersion.Sql13))
             {
                 var command = testDb.GetCreateTableCommand(testDb.Headers._, false);
                 var expectedSql =

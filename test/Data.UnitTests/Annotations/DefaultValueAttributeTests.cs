@@ -62,7 +62,7 @@ namespace DevZest.Data.Annotations
         [TestMethod]
         public void DefaultValueAttribute_sql_generation()
         {
-            using (var testDb = new TestDb(SqlVersion.Sql11))
+            using (var testDb = new TestDb(SqlVersion.Sql13))
             {
                 var command = testDb.GetCreateTableCommand(DbTable<TestModel>.Create(new TestModel(), testDb, nameof(TestDb.TestTable))._, false);
                 var expectedSql =

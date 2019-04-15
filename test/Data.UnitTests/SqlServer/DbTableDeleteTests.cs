@@ -13,7 +13,7 @@ namespace DevZest.Data.SqlServer
         [TestMethod]
         public void DbTable_Delete_without_from()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var command = db.ProductCategory.MockDelete(0, x => x.ModifiedDate.IsNull());
                 var expectedSql =
@@ -28,7 +28,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Delete_from_temp_table()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var tempTable = db.MockTempTable<ProductCategory>();
                 var command = db.ProductCategory.MockDelete(0, tempTable, (s, _) => s.Match(_));
@@ -47,7 +47,7 @@ FROM
         [TestMethod]
         public void DbTable_Delete_from_query()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var query = db.ProductCategory.Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategory.MockDelete(0, query, (s, _) => s.Match(_));
@@ -67,7 +67,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Delete_from_simple_query()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategory.MockDelete(0, query, (s, _) => s.Match(_));
@@ -87,7 +87,7 @@ WHERE ([#ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Delete_scalar()
         {
-            using (var db = new Db(SqlVersion.Sql11))
+            using (var db = new Db(SqlVersion.Sql13))
             {
                 var dataSet = DataSet<ProductCategory>.Create();
                 var index = dataSet.AddRow().Ordinal;
@@ -104,40 +104,6 @@ FROM
     INNER JOIN
     [SalesLT].[ProductCategory] [ProductCategory]
     ON [@ProductCategory].[ProductCategoryID] = [ProductCategory].[ProductCategoryID]);
-";
-                command.Verify(expectedSql);
-            }
-        }
-
-        [TestMethod]
-        public void DbTable_Delete_from_DataSet_Sql11()
-        {
-            using (var db = new Db(SqlVersion.Sql11))
-            {
-                var salesOrder = DataSet<SalesOrder>.ParseJson(Json.SalesOrder_71774);
-                var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);
-                var command = db.SalesOrderDetail.MockDelete(0, salesOrderDetails, (s, _) => s.Match(_));
-                var expectedSql =
-@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
-<root>
-  <row>
-    <col_0>71774</col_0>
-    <col_1>110562</col_1>
-    <col_2>1</col_2>
-  </row>
-  <row>
-    <col_0>71774</col_0>
-    <col_1>110563</col_1>
-    <col_2>2</col_2>
-  </row>
-</root>';
-
-DELETE [SalesOrderDetail]
-FROM
-    (@p1.nodes('/root/row') [@SalesOrderDetail]([Xml])
-    INNER JOIN
-    [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-    ON [@SalesOrderDetail].[Xml].value('col_0[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderID] AND [@SalesOrderDetail].[Xml].value('col_1[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderDetailID]);
 ";
                 command.Verify(expectedSql);
             }

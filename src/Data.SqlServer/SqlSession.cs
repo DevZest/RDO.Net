@@ -7,13 +7,9 @@ using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace DevZest.Data.SqlServer
 {
@@ -89,56 +85,6 @@ namespace DevZest.Data.SqlServer
             return model.CreateDbTable(this, dbSetName);
         }
 
-        private const string XML_ROOT_TAG_NAME = "root";
-        private const string XML_ROW_TAG_NAME = "row";
-        private const string XML_ROW_XPATH = "/" + XML_ROOT_TAG_NAME + "/" + XML_ROW_TAG_NAME;
-        private const string XML_COL_TAG_NAME = "col_{0}";
-        private const string XML_COL_TAG_XPATH = XML_COL_TAG_NAME + "[1]/text()[1]";
-
-        private static string GetColumnTagXPath(int index)
-        {
-            return string.Format(NumberFormatInfo.InvariantInfo, XML_COL_TAG_XPATH, index);
-        }
-
-        private SqlXml GetSqlXml<T>(DataSet<T> dataSet, IList<Column> columns)
-            where T : class, IModelReference, new()
-        {
-            var stream = new MemoryStream();
-            using (var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings()
-            {
-                Indent = true,
-                IndentChars = "  ",
-                Encoding = Encoding.UTF8,
-            }))
-            {
-                xmlWriter.WriteStartElement(XML_ROOT_TAG_NAME);
-
-                foreach (var row in dataSet)
-                {
-                    xmlWriter.WriteStartElement(XML_ROW_TAG_NAME);
-
-                    for (int i = 0; i < columns.Count; i++)
-                    {
-                        xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, i));
-                        xmlWriter.WriteString(columns[i].GetSqlType().GetXmlValueByOrdinal(dataSet.IndexOf(row), SqlVersion));
-                        xmlWriter.WriteEndElement();
-                    }
-
-                    // Write an extra column as the sequential id (row.Ordinal + 1) of current row
-                    xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, columns.Count));
-                    xmlWriter.WriteString((dataSet.IndexOf(row) + 1).ToString(NumberFormatInfo.InvariantInfo));
-                    xmlWriter.WriteEndElement();
-
-                    xmlWriter.WriteEndElement();
-                }
-                xmlWriter.WriteEndElement();
-                xmlWriter.Flush();
-
-                stream.Position = 0;
-                return new SqlXml(stream);
-            }
-        }
-
         internal DbQuery<KeyOutput> BuildImportKeyQuery<T>(DataSet<T> dataSet)
             where T : class, IModelReference, new()
         {
@@ -156,37 +102,7 @@ namespace DevZest.Data.SqlServer
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            if (SqlVersion >= SqlVersion.Sql13)
-                return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder);
-            else
-                return BuildXmlQuery(dataSet, targetModel, columnMappingsBuilder);
-        }
-
-
-        private DbQuery<TTarget> BuildXmlQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
-        {
-            var result = CreateQuery<TTarget>(targetModel, (builder, _) =>
-            {
-                var dataSetOrdinalColumn = new _Int32();
-                _.Model.AddSystemColumn(dataSetOrdinalColumn, "sys_dataset_ordinal");
-
-                var columnMappings = ColumnMapping.Map(dataSet._, _, columnMappingsBuilder, true);
-
-                var xml = GetSqlXml(dataSet, columnMappings.Select(x => ((DbColumnExpression)x.SourceExpression).Column).ToList());
-
-                var source = OpenXml(dataSet.Model.GetDbAlias(), xml, XML_ROW_XPATH);
-                builder.From(source, out var xmlNode);
-                for (int i = 0; i < columnMappings.Count; i++)
-                {
-                    var targetColumn = columnMappings[i].Target;
-                    builder.SelectColumn(xmlNode[GetColumnTagXPath(i), targetColumn], targetColumn);
-                }
-                builder.OrderBy(xmlNode[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
-            });
-            result.UpdateOriginalDataSource(dataSet, true);
-            return result;
+            return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder, where: null);
         }
 
         protected sealed override SqlCommand GetInsertCommand(DbSelectStatement statement)
@@ -352,7 +268,8 @@ select @mockschema;
 
         private const string SYS_DATASET_ORDINAL = "sys_dataset_ordinal";
 
-        private DbQuery<TTarget> BuildJsonQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
+        private DbQuery<TTarget> BuildJsonQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder,
+            Func<TSource, _Boolean> where)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
@@ -373,6 +290,8 @@ select @mockschema;
                     var targetColumn = columnMappings[i].Target;
                     builder.SelectColumn(sourceColumn, targetColumn);
                 }
+                if (where != null)
+                    builder.Where(where(source._));
                 builder.OrderBy(dataSetOrdinalColumn.Asc());
             });
             result.UpdateOriginalDataSource(dataSet, true);
