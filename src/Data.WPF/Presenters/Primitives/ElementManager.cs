@@ -14,7 +14,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal ElementManager(ElementManager inherit, Template template, DataSet dataSet, IReadOnlyList<Column> rowMatchColumns, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
             : base(inherit, template, dataSet, rowMatchColumns, where, orderBy)
         {
-            ContainerViewList = emptyContainerViewList ? Primitives.ContainerViewList.Empty : Primitives.ContainerViewList.Create(this);
+            ContainerViewList = emptyContainerViewList ? ContainerViewList.Empty : ContainerViewList.Create(this);
         }
 
         private static T Create<T>(Func<T> constructor)
@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters.Primitives
             containerView.Cleanup();
         }
 
-        public ContainerViewList ContainerViewList { get; private set; }
+        public ContainerViewList ContainerViewList { get; }
 
         public ContainerView CurrentContainerView { get; private set; }
 
@@ -145,9 +145,8 @@ namespace DevZest.Data.Presenters.Primitives
             var oldBlockView = oldValue.GetBlockView();
             var newBlockView = newValue.GetBlockView();
 
-            int oldIndex, newIndex;
-            var oldCollection = GetPosition(oldValue, out oldIndex);
-            var newCollection = GetPosition(newValue, out newIndex);
+            var oldCollection = GetPosition(oldValue, out int oldIndex);
+            var newCollection = GetPosition(newValue, out int newIndex);
 
             if (oldCollection == newCollection && oldIndex < newIndex)
             {
@@ -403,20 +402,22 @@ namespace DevZest.Data.Presenters.Primitives
                 scalarBindings[i].EndSetup();
         }
 
+        private bool HasElement
+        {
+            get { return Elements != null && Elements.Count > 0;  }
+        }
+
         private void RefreshView()
         {
-            if (Elements == null || Elements.Count == 0)
-            {
-                _isDirty = false;
-                return;
-            }
-
             Presenter?.OnViewRefreshing();
 
             Presenter?.View?.RefreshScalarValidation();
 
-            RefreshScalarElements();
-            RefreshContainerViews();
+            if (HasElement)
+            {
+                RefreshScalarElements();
+                RefreshContainerViews();
+            }
 
             _isDirty = false;
             Presenter?.OnViewRefreshed();

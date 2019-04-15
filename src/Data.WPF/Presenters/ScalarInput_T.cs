@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
-using DevZest.Data;
-using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {

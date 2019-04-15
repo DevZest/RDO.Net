@@ -19,15 +19,12 @@ namespace DevZest.Data.Presenters
 
         public int FlowIndex { get; private set; } = -1;
 
-        public FlushingError FlushingError { get; internal set; }
-
         private Stack<int> _flowIndexes = new Stack<int>();
 
         internal void EnterSetup(int flowIndex)
         {
             _flowIndexes.Push(FlowIndex);
             FlowIndex = flowIndex;
-            FlushingError = null;
         }
 
         internal void ExitSetup()
