@@ -62,7 +62,7 @@ namespace DevZest.Data
                 return x => x.Where(condition);
         }
 
-        public DbQuery<T> Where(_Boolean condition)
+        private DbQuery<T> Where(_Boolean condition)
         {
             T newModel;
             var queryStatement = GetSimpleQueryStatement(GetWhereQueryBuilder(condition), out newModel);

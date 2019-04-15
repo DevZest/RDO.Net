@@ -302,7 +302,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             var result = CreateQuery<Address>((builder, _) =>
             {
-                builder.From(CustomerAddress.Where(CustomerAddress._.CustomerID == customerID), out var ca)
+                builder.From(CustomerAddress.Where(x => x.CustomerID == customerID), out var ca)
                     .InnerJoin(Address, ca.FK_Address, out var a)
                     .AutoSelect();
             });
