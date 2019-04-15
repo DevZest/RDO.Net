@@ -102,7 +102,7 @@ namespace DevZest.Data.SqlServer
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
-            return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder, where: null);
+            return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder);
         }
 
         protected sealed override SqlCommand GetInsertCommand(DbSelectStatement statement)
@@ -268,8 +268,7 @@ select @mockschema;
 
         private const string SYS_DATASET_ORDINAL = "sys_dataset_ordinal";
 
-        private DbQuery<TTarget> BuildJsonQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder,
-            Func<TSource, _Boolean> where)
+        private DbQuery<TTarget> BuildJsonQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
             where TSource : class, IModelReference, new()
             where TTarget : class, IModelReference, new()
         {
@@ -290,8 +289,6 @@ select @mockschema;
                     var targetColumn = columnMappings[i].Target;
                     builder.SelectColumn(sourceColumn, targetColumn);
                 }
-                if (where != null)
-                    builder.Where(where(source._));
                 builder.OrderBy(dataSetOrdinalColumn.Asc());
             });
             result.UpdateOriginalDataSource(dataSet, true);
