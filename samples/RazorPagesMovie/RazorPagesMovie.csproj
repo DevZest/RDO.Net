@@ -19,8 +19,8 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\Data.AspNetCore\Data.AspNetCore.csproj" />
+    <ProjectReference Include="..\RazorPagesMovie.Data\RazorPagesMovie.Data.csproj" />
   </ItemGroup>
 
 

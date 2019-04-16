@@ -2,7 +2,7 @@
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
 
-namespace RazorPagesMovie.Models
+namespace RazorPagesMovie
 {
     public class Movie : Model<Movie.PK>
     {

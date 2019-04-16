@@ -64,6 +64,8 @@ Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data", "sa
 EndProject
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data.DbDesign", "samples\AdventureWorksLT.Data.SqlServer.VisualBasic\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.vbproj", "{F025C91E-6FD0-455E-93F9-BBC1BFD88382}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorPagesMovie.Data", "samples\RazorPagesMovie.Data\RazorPagesMovie.Data.csproj", "{05743646-BF59-4A56-BB96-9E34EA660E2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -170,6 +172,10 @@ Global
 		{F025C91E-6FD0-455E-93F9-BBC1BFD88382}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F025C91E-6FD0-455E-93F9-BBC1BFD88382}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F025C91E-6FD0-455E-93F9-BBC1BFD88382}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05743646-BF59-4A56-BB96-9E34EA660E2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05743646-BF59-4A56-BB96-9E34EA660E2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05743646-BF59-4A56-BB96-9E34EA660E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05743646-BF59-4A56-BB96-9E34EA660E2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -203,6 +209,7 @@ Global
 		{28918F18-5B28-46A4-8D69-3267B0A891ED} = {64D1F521-242E-419B-88F5-086F3AA54AC8}
 		{7185DD04-28E2-4736-ADF2-6B60E84852F6} = {20265DDF-5B8E-4B7D-BC0A-66C78677DA39}
 		{F025C91E-6FD0-455E-93F9-BBC1BFD88382} = {20265DDF-5B8E-4B7D-BC0A-66C78677DA39}
+		{05743646-BF59-4A56-BB96-9E34EA660E2A} = {61BAF81D-3EA2-4493-8474-CC067C4557A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {715F4075-E102-42F7-B727-98B6383A6556}

@@ -6,7 +6,6 @@ using DevZest.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using RazorPagesMovie.Models;
 
 namespace RazorPagesMovie.Pages.Movies
 {
@@ -19,7 +18,7 @@ namespace RazorPagesMovie.Pages.Movies
             _db = db;
         }
 
-        public DataSet<Movie> Movie { get; set; }
+        public DataSet<Movie> Movies { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
@@ -34,7 +33,7 @@ namespace RazorPagesMovie.Pages.Movies
             var genres = await _db.CreateAggregateQuery((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
             {
                 builder.From(_db.Movie, out var m)
-                    .Select(m.Genre, adhoc, nameof(Models.Movie.Genre))
+                    .Select(m.Genre, adhoc, nameof(Movie.Genre))
                     .GroupBy(m.Genre)
                     .OrderBy(m.Genre);
             }).ToDataSetAsync();
@@ -49,7 +48,7 @@ namespace RazorPagesMovie.Pages.Movies
             if (!string.IsNullOrEmpty(MovieGenre))
                 movies = movies.Where(x => x.Genre == MovieGenre);
 
-            Movie = await movies.ToDataSetAsync();
+            Movies = await movies.ToDataSetAsync();
         }
 
         private IEnumerable<string> GetGenres(DataSet<Adhoc> genres)

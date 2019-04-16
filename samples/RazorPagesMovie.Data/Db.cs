@@ -2,7 +2,7 @@
 using DevZest.Data.SqlServer;
 using System.Data.SqlClient;
 
-namespace RazorPagesMovie.Models
+namespace RazorPagesMovie
 {
     public class Db : SqlSession
     {

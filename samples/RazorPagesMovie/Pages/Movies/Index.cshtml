@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Index";
-    var _ = Model.Movie._;
+    var _ = Model.Movies._;
 }
 
 <h1>Index</h1>
@@ -41,7 +41,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var dataRow in Model.Movie) {
+@foreach (var dataRow in Model.Movies) {
         <tr>
             <td>
                 @_.Title[dataRow]

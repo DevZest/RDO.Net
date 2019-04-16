@@ -2,7 +2,6 @@
 using DevZest.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorPagesMovie.Models;
 
 namespace RazorPagesMovie.Pages.Movies
 {
