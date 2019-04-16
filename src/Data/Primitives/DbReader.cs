@@ -76,7 +76,7 @@ namespace DevZest.Data.Primitives
             return GetDbDataReader().ReadAsync(cancellationToken);
         }
 
-        public object this[int ordinal]
+        public virtual object this[int ordinal]
         {
             get
             {
@@ -85,73 +85,73 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public Boolean? GetBoolean(int ordinal)
+        public virtual Boolean? GetBoolean(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Boolean?(reader.GetBoolean(ordinal));
         }
 
-        public Byte? GetByte(int ordinal)
+        public virtual Byte? GetByte(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Byte?(reader.GetByte(ordinal));
         }
 
-        public Char? GetChar(int ordinal)
+        public virtual Char? GetChar(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Char?(reader.GetChar(ordinal));
         }
 
-        public DateTime? GetDateTime(int ordinal)
+        public virtual DateTime? GetDateTime(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new DateTime?(reader.GetDateTime(ordinal));
         }
 
-        public Decimal? GetDecimal(int ordinal)
+        public virtual Decimal? GetDecimal(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Decimal?(reader.GetDecimal(ordinal));
         }
 
-        public Double? GetDouble(int ordinal)
+        public virtual Double? GetDouble(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Double?(reader.GetDouble(ordinal));
         }
 
-        public Guid? GetGuid(int ordinal)
+        public virtual Guid? GetGuid(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Guid?(reader.GetGuid(ordinal));
         }
 
-        public Int16? GetInt16(int ordinal)
+        public virtual Int16? GetInt16(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Int16?(reader.GetInt16(ordinal));
         }
 
-        public Int32? GetInt32(int ordinal)
+        public virtual Int32? GetInt32(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Int32?(reader.GetInt32(ordinal));
         }
 
-        public Int64? GetInt64(int ordinal)
+        public virtual Int64? GetInt64(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Int64?(reader.GetInt64(ordinal));
         }
 
-        public Single? GetSingle(int ordinal)
+        public virtual Single? GetSingle(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : new Single?(reader.GetFloat(ordinal));
         }
 
-        public String GetString(int ordinal)
+        public virtual String GetString(int ordinal)
         {
             var reader = GetDbDataReader();
             return reader.IsDBNull(ordinal) ? null : reader.GetString(ordinal);

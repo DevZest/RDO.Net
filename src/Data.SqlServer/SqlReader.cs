@@ -48,5 +48,17 @@ namespace DevZest.Data.SqlServer
             var reader = SqlDataReader;
             return reader.IsDBNull(ordinal) ? null : reader.GetSqlXml(ordinal);
         }
+
+        public override char? GetChar(int ordinal)
+        {
+            // SqlDataReader does not support GetChar, must override to call GetChars instead.
+            var reader = SqlDataReader;
+            if (reader.IsDBNull(ordinal))
+                return null;
+
+            var result = new char[1];
+            reader.GetChars(ordinal, 0, result, 0, 1);
+            return result[0];
+        }
     }
 }

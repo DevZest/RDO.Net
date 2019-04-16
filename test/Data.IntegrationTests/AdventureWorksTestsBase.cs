@@ -10,23 +10,15 @@ namespace DevZest.Data
     {
         protected Db CreateDb()
         {
-            return new Db(GetConnectionString());
+            return new Db(App.GetConnectionString());
         }
 
         protected Db CreateDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
         {
-            return new Db(GetConnectionString(), db =>
+            return new Db(App.GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
             });
-        }
-
-        private static string GetConnectionString()
-        {
-            string mdfFilename = "AdventureWorksLT.mdf";
-            string outputFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string attachDbFilename = Path.Combine(outputFolder, mdfFilename);
-            return string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
         }
 
         protected async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID)
