@@ -79,10 +79,11 @@ namespace DevZest.Data.SqlServer
 
             private static DataSet<TestModel> GetTestModel()
             {
-                var result = DataSet<TestModel>.Create().AddRows(2);
+                var result = DataSet<TestModel>.Create().AddRows(3);
                 var _ = result._;
                 _.Id[0] = 1;
                 _.Id[1] = 2;
+                _.Id[2] = 3;
                 _.CharColumn[0] = 'C';
                 _.CharColumn[1] = 'D';
                 _.TestEnumColumn[0] = TestEnum.A;
@@ -113,6 +114,11 @@ namespace DevZest.Data.SqlServer
       ""Id"" : 2,
       ""CharColumn"" : ""D"",
       ""TestEnumColumn"" : ""B""
+   },
+   {
+      ""Id"" : 3,
+      ""CharColumn"" : null,
+      ""TestEnumColumn"" : null
    }
 ]";
                 Assert.AreEqual(expected, result.ToJsonString(true));
