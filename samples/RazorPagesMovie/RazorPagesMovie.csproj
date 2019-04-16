@@ -25,7 +25,7 @@
 
 
   <ItemGroup>
-    <None Update="App_Data\RazorPagesMovie.ldf">
+    <None Update="App_Data\RazorPagesMovie_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="App_Data\RazorPagesMovie.mdf">

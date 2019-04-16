@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using System.Reflection;
 
 namespace RazorPagesMovie
 {
     public class Startup
     {
-        private readonly static string CONTENT_ROOT_PATH = "%CONTENTROOTPATH%";
+        private readonly static string CONTENT_ROOT_PATH = "%CONTENT_ROOT_PATH%";
+        private readonly static string ASSEMBLY_LOCATION = "%ASSEMBLY_LOCATION%";
         private string _connectionString;
 
         public Startup(IConfiguration configuration)
@@ -60,6 +63,8 @@ namespace RazorPagesMovie
             _connectionString = Configuration.GetConnectionString("RazorPagesMovie");
             if (_connectionString.Contains(CONTENT_ROOT_PATH))
                 _connectionString = _connectionString.Replace(CONTENT_ROOT_PATH, env.ContentRootPath);
+            if (_connectionString.Contains(ASSEMBLY_LOCATION))
+                _connectionString = _connectionString.Replace(ASSEMBLY_LOCATION, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
         }
     }
 }
