@@ -238,7 +238,8 @@ namespace DevZest.Samples.AdventureWorksLT
                 builder.From(SalesOrderDetail, out var d)
                     .LeftJoin(Product, d.FK_Product, out var p)
                     .AutoSelect()
-                    .AutoSelect(p, _.Product);
+                    .AutoSelect(p, _.Product)
+                    .OrderBy(d.SalesOrderDetailID);
             }, ct);
 
             return await result.ToDataSetAsync(ct);

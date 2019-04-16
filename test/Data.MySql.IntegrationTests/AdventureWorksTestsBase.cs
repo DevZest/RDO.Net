@@ -9,20 +9,15 @@ namespace DevZest.Data.MySql
     {
         protected Db CreateDb()
         {
-            return new Db(GetConnectionString());
+            return new Db(App.GetConnectionString());
         }
 
         protected Db CreateDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
         {
-            return new Db(GetConnectionString(), db =>
+            return new Db(App.GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
             });
-        }
-
-        private static string GetConnectionString()
-        {
-            return "Server=127.0.0.1;Port=3306;Database=AdventureWorksLT;Uid=root;Allow User Variables=True";
         }
 
         protected async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct = default(CancellationToken))
