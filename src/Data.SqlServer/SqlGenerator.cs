@@ -55,7 +55,10 @@ namespace DevZest.Data.SqlServer
 
         private static void SetIdentityInsert(IndentedStringBuilder sqlBuilder, Model model, bool on)
         {
-            sqlBuilder.AppendLine(string.Format("SET IDENTITY_INSERT {0} {1};", model.GetDbTableClause().Name.ToQuotedIdentifier(), on ? "ON" : "OFF"));
+            var dbTableName = model.GetDbTableName();
+            var isTempTable = dbTableName.StartsWith("#");
+            if (model.GetIdentity(isTempTable) != null)
+                sqlBuilder.AppendLine(string.Format("SET IDENTITY_INSERT {0} {1};", model.GetDbTableClause().Name.ToQuotedIdentifier(), on ? "ON" : "OFF"));
         }
 
         private static void BuildInsertIntoClause(IndentedStringBuilder sqlBuilder, Model model, IReadOnlyList<ColumnMapping> select)
