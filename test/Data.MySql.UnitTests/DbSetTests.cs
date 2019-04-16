@@ -184,6 +184,169 @@ ORDER BY `Product`.`Name` ASC;
         }
 
         [TestMethod]
+        public void DbSet_Union_multiple()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.Product.Where(x => x.ProductID < _Int32.Const(720))
+                    .UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(800) & x.ProductID < _Int32.Const(900)))
+                    .UnionAll(db.Product.Where(x => x.ProductID > _Int32.Const(900)));
+                var expectedSql =
+@"((SELECT
+    `Product`.`ProductID` AS `ProductID`,
+    `Product`.`Name` AS `Name`,
+    `Product`.`ProductNumber` AS `ProductNumber`,
+    `Product`.`Color` AS `Color`,
+    `Product`.`StandardCost` AS `StandardCost`,
+    `Product`.`ListPrice` AS `ListPrice`,
+    `Product`.`Size` AS `Size`,
+    `Product`.`Weight` AS `Weight`,
+    `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+    `Product`.`ProductModelID` AS `ProductModelID`,
+    `Product`.`SellStartDate` AS `SellStartDate`,
+    `Product`.`SellEndDate` AS `SellEndDate`,
+    `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+    `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+    `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+    `Product`.`RowGuid` AS `RowGuid`,
+    `Product`.`ModifiedDate` AS `ModifiedDate`
+FROM `Product`
+WHERE (`Product`.`ProductID` < 720))
+UNION ALL
+(SELECT
+    `Product`.`ProductID` AS `ProductID`,
+    `Product`.`Name` AS `Name`,
+    `Product`.`ProductNumber` AS `ProductNumber`,
+    `Product`.`Color` AS `Color`,
+    `Product`.`StandardCost` AS `StandardCost`,
+    `Product`.`ListPrice` AS `ListPrice`,
+    `Product`.`Size` AS `Size`,
+    `Product`.`Weight` AS `Weight`,
+    `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+    `Product`.`ProductModelID` AS `ProductModelID`,
+    `Product`.`SellStartDate` AS `SellStartDate`,
+    `Product`.`SellEndDate` AS `SellEndDate`,
+    `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+    `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+    `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+    `Product`.`RowGuid` AS `RowGuid`,
+    `Product`.`ModifiedDate` AS `ModifiedDate`
+FROM `Product`
+WHERE ((`Product`.`ProductID` > 800) AND (`Product`.`ProductID` < 900))))
+UNION ALL
+(SELECT
+    `Product`.`ProductID` AS `ProductID`,
+    `Product`.`Name` AS `Name`,
+    `Product`.`ProductNumber` AS `ProductNumber`,
+    `Product`.`Color` AS `Color`,
+    `Product`.`StandardCost` AS `StandardCost`,
+    `Product`.`ListPrice` AS `ListPrice`,
+    `Product`.`Size` AS `Size`,
+    `Product`.`Weight` AS `Weight`,
+    `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+    `Product`.`ProductModelID` AS `ProductModelID`,
+    `Product`.`SellStartDate` AS `SellStartDate`,
+    `Product`.`SellEndDate` AS `SellEndDate`,
+    `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+    `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+    `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+    `Product`.`RowGuid` AS `RowGuid`,
+    `Product`.`ModifiedDate` AS `ModifiedDate`
+FROM `Product`
+WHERE (`Product`.`ProductID` > 900));
+";
+                Assert.AreEqual(expectedSql, query.ToString());
+
+                var query2 = query.OrderBy(x => x.Name.Asc());
+                expectedSql =
+@"SELECT
+    `Product`.`ProductID` AS `ProductID`,
+    `Product`.`Name` AS `Name`,
+    `Product`.`ProductNumber` AS `ProductNumber`,
+    `Product`.`Color` AS `Color`,
+    `Product`.`StandardCost` AS `StandardCost`,
+    `Product`.`ListPrice` AS `ListPrice`,
+    `Product`.`Size` AS `Size`,
+    `Product`.`Weight` AS `Weight`,
+    `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+    `Product`.`ProductModelID` AS `ProductModelID`,
+    `Product`.`SellStartDate` AS `SellStartDate`,
+    `Product`.`SellEndDate` AS `SellEndDate`,
+    `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+    `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+    `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+    `Product`.`RowGuid` AS `RowGuid`,
+    `Product`.`ModifiedDate` AS `ModifiedDate`
+FROM
+    (((SELECT
+        `Product`.`ProductID` AS `ProductID`,
+        `Product`.`Name` AS `Name`,
+        `Product`.`ProductNumber` AS `ProductNumber`,
+        `Product`.`Color` AS `Color`,
+        `Product`.`StandardCost` AS `StandardCost`,
+        `Product`.`ListPrice` AS `ListPrice`,
+        `Product`.`Size` AS `Size`,
+        `Product`.`Weight` AS `Weight`,
+        `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+        `Product`.`ProductModelID` AS `ProductModelID`,
+        `Product`.`SellStartDate` AS `SellStartDate`,
+        `Product`.`SellEndDate` AS `SellEndDate`,
+        `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+        `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+        `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+        `Product`.`RowGuid` AS `RowGuid`,
+        `Product`.`ModifiedDate` AS `ModifiedDate`
+    FROM `Product`
+    WHERE (`Product`.`ProductID` < 720))
+    UNION ALL
+    (SELECT
+        `Product`.`ProductID` AS `ProductID`,
+        `Product`.`Name` AS `Name`,
+        `Product`.`ProductNumber` AS `ProductNumber`,
+        `Product`.`Color` AS `Color`,
+        `Product`.`StandardCost` AS `StandardCost`,
+        `Product`.`ListPrice` AS `ListPrice`,
+        `Product`.`Size` AS `Size`,
+        `Product`.`Weight` AS `Weight`,
+        `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+        `Product`.`ProductModelID` AS `ProductModelID`,
+        `Product`.`SellStartDate` AS `SellStartDate`,
+        `Product`.`SellEndDate` AS `SellEndDate`,
+        `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+        `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+        `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+        `Product`.`RowGuid` AS `RowGuid`,
+        `Product`.`ModifiedDate` AS `ModifiedDate`
+    FROM `Product`
+    WHERE ((`Product`.`ProductID` > 800) AND (`Product`.`ProductID` < 900))))
+    UNION ALL
+    (SELECT
+        `Product`.`ProductID` AS `ProductID`,
+        `Product`.`Name` AS `Name`,
+        `Product`.`ProductNumber` AS `ProductNumber`,
+        `Product`.`Color` AS `Color`,
+        `Product`.`StandardCost` AS `StandardCost`,
+        `Product`.`ListPrice` AS `ListPrice`,
+        `Product`.`Size` AS `Size`,
+        `Product`.`Weight` AS `Weight`,
+        `Product`.`ProductCategoryID` AS `ProductCategoryID`,
+        `Product`.`ProductModelID` AS `ProductModelID`,
+        `Product`.`SellStartDate` AS `SellStartDate`,
+        `Product`.`SellEndDate` AS `SellEndDate`,
+        `Product`.`DiscontinuedDate` AS `DiscontinuedDate`,
+        `Product`.`ThumbNailPhoto` AS `ThumbNailPhoto`,
+        `Product`.`ThumbnailPhotoFileName` AS `ThumbnailPhotoFileName`,
+        `Product`.`RowGuid` AS `RowGuid`,
+        `Product`.`ModifiedDate` AS `ModifiedDate`
+    FROM `Product`
+    WHERE (`Product`.`ProductID` > 900))) `Product`
+ORDER BY `Product`.`Name` ASC;
+";
+                Assert.AreEqual(expectedSql, query2.ToString());
+            }
+        }
+
+        [TestMethod]
         public void DbSet_offset_fetch()
         {
             using (var db = new Db(MySqlVersion.LowestSupported))

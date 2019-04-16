@@ -316,14 +316,14 @@ namespace DevZest.Data.SqlServer
         public override void Visit(DbUnionStatement unionStatement)
         {
             VisitingQueryStatement();
-            _isUnionStatement = true;
+            _countUnionStatement++;
 
             unionStatement.Query1.Accept(this);
             SqlBuilder.AppendLine();
             SqlBuilder.AppendLine(unionStatement.Kind == DbUnionKind.Union ? "UNION" : "UNION ALL");
             unionStatement.Query2.Accept(this);
 
-            _isUnionStatement = false;
+            _countUnionStatement--;
             VisitedQueryStatement(unionStatement);
         }
 
@@ -335,7 +335,11 @@ namespace DevZest.Data.SqlServer
                 SqlBuilder.Append("(");
         }
 
-        private bool _isUnionStatement = false;
+        private int _countUnionStatement;
+        private bool IsUnionStatement
+        {
+            get { return _countUnionStatement > 0; }
+        }
 
         private void VisitedQueryStatement(DbQueryStatement query)
         {
@@ -343,7 +347,7 @@ namespace DevZest.Data.SqlServer
                 SqlBuilder.AppendLine(";");
             else
             {
-                if (_isUnionStatement)
+                if (IsUnionStatement)
                     SqlBuilder.Append(")");
                 else
                 {
