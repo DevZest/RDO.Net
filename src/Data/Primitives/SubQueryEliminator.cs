@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
@@ -72,7 +71,7 @@ namespace DevZest.Data.Primitives
             var replacedElse = @else.Accept(this);
 
             if (on != replacedOn || when != replacedWhen || then != replacedThen || @else != replacedElse)
-                return new DbCaseExpression(expression.DataType, expression.On.Accept(this), Replace(expression.When), Replace(expression.Then), expression.Else.Accept(this));
+                return new DbCaseExpression(expression.DataType, replacedOn, replacedWhen, replacedThen, replacedElse);
             else
                 return expression;
         }
