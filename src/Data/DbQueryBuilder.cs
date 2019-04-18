@@ -85,16 +85,16 @@ namespace DevZest.Data
         }
 
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
-            where T : Model<TKey>, new()
+            where T : class, IEntity<TKey>, new()
             where TKey : CandidateKey
         {
             return InnerJoin(dbSet, left, GetPrimaryKey, out model);
         }
 
-        private static T GetPrimaryKey<T>(Model<T> _)
+        private static T GetPrimaryKey<T>(IEntity<T> _)
             where T : CandidateKey
         {
-            return _.PrimaryKey;
+            return _.Model.PrimaryKey;
         }
 
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
@@ -106,7 +106,7 @@ namespace DevZest.Data
         }
 
         public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
-            where T : Model<TKey>, new()
+            where T : class, IEntity<TKey>, new()
             where TKey : CandidateKey
         {
             return LeftJoin(dbSet, left, GetPrimaryKey, out model);
@@ -122,7 +122,7 @@ namespace DevZest.Data
         }
 
         public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
-            where T : Model<TKey>, new()
+            where T : class, IEntity<TKey>, new()
             where TKey : CandidateKey
         {
             return RightJoin(dbSet, left, GetPrimaryKey, out model);
@@ -204,7 +204,7 @@ namespace DevZest.Data
         }
 
         public DbQueryBuilder CrossJoin<T>(DbSet<T> dbSet, out T model)
-            where T : Model, new()
+            where T : class, IEntity, new()
         {
             dbSet.VerifyNotNull(nameof(dbSet));
             Join(dbSet, DbJoinKind.CrossJoin, null, out model);
