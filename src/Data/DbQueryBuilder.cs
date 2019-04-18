@@ -155,7 +155,7 @@ namespace DevZest.Data
         private void Join<T>(DbSet<T> dbSet, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship, out T _)
             where T : class, IModelReference, new()
         {
-            _ = (T)Join(dbSet.Model, kind, relationship);
+            _ = (T)Join(dbSet._, kind, relationship);
         }
 
         private IModelReference Join(IModelReference _, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship)
