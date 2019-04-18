@@ -1,4 +1,4 @@
-﻿namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data
 {
     public interface IModelReference
     {
