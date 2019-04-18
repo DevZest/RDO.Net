@@ -26,8 +26,8 @@ namespace DevZest.Data
         }
 
         public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource source, TTarget target, Action<ColumnMapper, TSource, TTarget> columnMapper, bool isInsertable)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));

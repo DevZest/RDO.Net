@@ -126,7 +126,7 @@ namespace DevZest.Data.Primitives
 
 
         public Task<TReader> ExecuteReaderAsync<T>(DbSet<T> dbSet, CancellationToken ct = default(CancellationToken))
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             dbSet.VerifyNotNull(nameof(dbSet));
             return CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(ct);

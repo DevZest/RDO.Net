@@ -11,7 +11,7 @@ namespace DevZest.Data
     /// <summary>Represents an in-memory collection of data.</summary>
     /// <typeparam name="T">The type of the model.</typeparam>
     public abstract class DataSet<T> : DataSet
-        where T : class, IModelReference, new()
+        where T : class, IEntity, new()
     {
         private sealed class BaseDataSet : DataSet<T>
         {

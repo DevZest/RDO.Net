@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     internal static class DbTableInsert<T>
-        where T : class, IModelReference, new()
+        where T : class, IEntity, new()
     {
         private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, long? value)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             var model = dataSet._.Model;
             model.SuspendIdentity();
@@ -30,7 +30,7 @@ namespace DevZest.Data
         }
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, CancellationToken ct)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             var statement = target.BuildInsertStatement(source, columnMappings);
             return target.UpdateOrigin(source, await target.DbSession.InsertAsync(statement, ct));
@@ -38,7 +38,7 @@ namespace DevZest.Data
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex,
             IReadOnlyList<ColumnMapping> columnMappings, bool updateIdentity, CancellationToken ct)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             var statement = target.BuildInsertScalarStatement(source, rowIndex, columnMappings);
             var result = await target.DbSession.InsertScalarAsync(statement, updateIdentity, ct);
@@ -49,7 +49,7 @@ namespace DevZest.Data
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper,
             bool updateIdentity, CancellationToken ct)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             if (source.Count == 0)
                 return 0;

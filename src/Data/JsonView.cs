@@ -53,7 +53,7 @@ namespace DevZest.Data
     }
 
     public sealed class JsonView<T> : JsonView
-        where T : class, IModelReference, new()
+        where T : class, IEntity, new()
     {
         internal JsonView(T modelRef, JsonFilter jsonFilter)
             : base(jsonFilter)

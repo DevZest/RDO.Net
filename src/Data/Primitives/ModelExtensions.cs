@@ -31,7 +31,7 @@ namespace DevZest.Data.Primitives
         }
 
         public static DbTable<T> CreateDbTable<T>(this T modelRef, DbSession dbSession, string name)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             modelRef.VerifyNotNull(nameof(modelRef));
             dbSession.VerifyNotNull(nameof(dbSession));
@@ -91,7 +91,7 @@ namespace DevZest.Data.Primitives
         }
 
         internal static void Initialize<T>(this T _, Action<T> initializer)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             Debug.Assert(_ != null);
             if (initializer != null)
@@ -102,16 +102,16 @@ namespace DevZest.Data.Primitives
         }
 
         internal static T MakeCopy<T>(this T prototype, bool setDataSource)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             T result = new T();
             result.Model.InitializeClone(prototype.Model, setDataSource);
             return result;
         }
 
-        internal static IModelReference MakeCopy(this IModelReference prototype, bool setDataSource)
+        internal static IEntity MakeCopy(this IEntity prototype, bool setDataSource)
         {
-            var result = (IModelReference)Activator.CreateInstance(prototype.GetType());
+            var result = (IEntity)Activator.CreateInstance(prototype.GetType());
             result.Model.InitializeClone(prototype.Model, setDataSource);
             return result;
         }

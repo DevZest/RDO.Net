@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     public sealed partial class DbTable<T> : DbSet<T>, IDbTable
-        where T : class, IModelReference, new()
+        where T : class, IEntity, new()
     {
         internal static DbTable<T> Create(T modelRef, DbSession dbSession, string identifier, Action<DbTable<T>> initializer = null)
         {
@@ -228,7 +228,7 @@ namespace DevZest.Data
         }
 
         internal bool UpdateOrigin<TSource>(DataSet<TSource> origin, bool scalarInsertSuccess)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             if (scalarInsertSuccess)
                 UpdateOriginalDataSource(origin == null || origin.Count != 1 ? null : origin);
@@ -237,7 +237,7 @@ namespace DevZest.Data
         }
 
         internal void Verify<TLookup>(DbSet<TLookup> source, string paramName)
-            where TLookup : class, IModelReference, new()
+            where TLookup : class, IEntity, new()
         {
             source.VerifyNotNull(paramName);
             if (source.DbSession != DbSession)
@@ -245,13 +245,13 @@ namespace DevZest.Data
         }
 
         internal void Verify<TLookup>(DataSet<TLookup> source, string paramName)
-            where TLookup : class, IModelReference, new()
+            where TLookup : class, IEntity, new()
         {
             source.VerifyNotNull(paramName);
         }
 
         internal void Verify<TSource>(DataSet<TSource> source, string sourceParamName, int rowIndex, string rowIndexParamName)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             Verify(source, sourceParamName);
             if (rowIndex < 0 || rowIndex >= source.Count)
@@ -259,7 +259,7 @@ namespace DevZest.Data
         }
 
         internal KeyMapping Verify<TSource>(Func<TSource, T, KeyMapping> keyMapper, string paramName, TSource source)
-            where TSource : IModelReference
+            where TSource : IEntity
         {
             keyMapper.VerifyNotNull(paramName);
             var result = keyMapper(source, _);
@@ -278,7 +278,7 @@ namespace DevZest.Data
         }
 
         internal IReadOnlyList<ColumnMapping> Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, string paramName, TSource source)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             mapper.VerifyNotNull(paramName);
             var result = new ColumnMapper(source.Model, _.Model).Build(x => mapper(x, source, _));
@@ -288,13 +288,13 @@ namespace DevZest.Data
         }
 
         internal void Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, string paramName)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             mapper.VerifyNotNull(paramName);
         }
 
         private IReadOnlyList<ColumnMapping> Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, TSource source)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             var result = new ColumnMapper(source.Model, _.Model).Build(x => mapper(x, source, _));
             if (result == null || result.Count == 0)

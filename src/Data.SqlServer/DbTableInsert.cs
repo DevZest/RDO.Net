@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data.SqlServer
 {
     internal static class DbTableInsert<T>
-        where T : class, IModelReference, new()
+        where T : class, IEntity, new()
     {
         private struct IdentityOutputInsertResult
         {
@@ -24,7 +24,7 @@ namespace DevZest.Data.SqlServer
         }
 
         private static async Task<IdentityOutputInsertResult> InsertDataSetWithIdentityOutputAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, bool updateIdentity, CancellationToken ct)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             var identityOutputs = updateIdentity ? await CreateIdentityOutputsAsync(target, source.Model, ct) : null;
             var sqlSession = (SqlSession)target.DbSession;
@@ -50,7 +50,7 @@ namespace DevZest.Data.SqlServer
         }
 
         private static async Task UpdateIdentityAsync<TSource>(DbTable<T> target, DataSet<TSource> dataSet, IdentityOutputInsertResult result, CancellationToken ct)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             if (result.IdentityOutput == null || result.RowCount == 0)
                 return;
@@ -88,7 +88,7 @@ namespace DevZest.Data.SqlServer
         }
 
         private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, long? value)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             var model = dataSet._.Model;
             model.SuspendIdentity();
@@ -108,7 +108,7 @@ namespace DevZest.Data.SqlServer
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper,
             bool updateIdentity, CancellationToken ct)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             var result = await InsertDataSetWithIdentityOutputAsync(target, source, columnMapper, updateIdentity, ct);
             await UpdateIdentityAsync(target, source, result, ct);

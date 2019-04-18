@@ -13,7 +13,7 @@ namespace DevZest.Data.MySql.Helpers
         }
 
         internal static void MockSequentialKeyTempTable<T>(this DbQuery<T> dbQuery)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             var sequentialKey = new SequentialKey(dbQuery.Model);
             var dbSession = dbQuery.DbSession;

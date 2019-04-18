@@ -34,7 +34,7 @@ namespace DevZest.Data
         }
 
         public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             Verify(source, nameof(source));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
@@ -43,14 +43,14 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             Debug.Assert(source != null);
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, join);
         }
 
         internal DbSelectStatement BuildUpdateStatement<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, IReadOnlyList<ColumnMapping> join)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             Debug.Assert(source != null);
             Debug.Assert(columnMapper != null);
@@ -65,7 +65,7 @@ namespace DevZest.Data
         }
 
         public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, int rowIndex, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
@@ -81,7 +81,7 @@ namespace DevZest.Data
         }
 
         public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
@@ -93,7 +93,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             Debug.Assert(dataSet != null && dataSet._ != null);
             return BuildUpdateScalarStatement(dataSet[ordinal], columnMappings, join);

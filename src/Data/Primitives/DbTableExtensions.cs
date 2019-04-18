@@ -9,8 +9,8 @@ namespace DevZest.Data.Primitives
     {
         public static DbSelectStatement BuildInsertStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             Action<ColumnMapper, TSource, TTarget> columnMapper)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));
@@ -21,8 +21,8 @@ namespace DevZest.Data.Primitives
 
         public static DbSelectStatement BuildInsertStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             IReadOnlyList<ColumnMapping> columnMappings)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));
@@ -77,8 +77,8 @@ namespace DevZest.Data.Primitives
 
         public static DbSelectStatement BuildUpdateStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));
@@ -90,8 +90,8 @@ namespace DevZest.Data.Primitives
 
         public static DbSelectStatement BuildUpdateStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source,
             Action<ColumnMapper, TSource, TTarget> columnMapper, IReadOnlyList<ColumnMapping> join)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));
@@ -102,8 +102,8 @@ namespace DevZest.Data.Primitives
         }
 
         public static DbSelectStatement BuildDeleteStatement<TSource, TTarget>(this DbTable<TTarget> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> join)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));

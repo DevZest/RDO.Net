@@ -15,7 +15,7 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    public abstract partial class Model : ModelMember, IModels, IModelReference
+    public abstract partial class Model : ModelMember, IModels, IEntity
     {
         #region RegisterColumn
 
@@ -631,7 +631,7 @@ namespace DevZest.Data
             return result;
         }
 
-        internal Action<IModelReference> Initializer { get; set; }
+        internal Action<IEntity> Initializer { get; set; }
 
         internal void InitializeClone(Model prototype, bool setDataSource)
         {
@@ -1130,7 +1130,7 @@ namespace DevZest.Data
             get { return RootModel._suspendEditingValueCount > 0; }
         }
 
-        Model IModelReference.Model
+        Model IEntity.Model
         {
             get { return this; }
         }

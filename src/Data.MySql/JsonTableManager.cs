@@ -13,7 +13,7 @@ namespace DevZest.Data.MySql
         }
 
         public static DbSet<T> CreateJsonTable<T>(this MySqlSession mySqlSession, string json, string ordinalColumnName)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             var _ = new T();
             var model = _.Model;

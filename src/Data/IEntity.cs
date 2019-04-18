@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data
 {
-    public interface IModelReference
+    public interface IEntity
     {
         Model Model { get; }
     }

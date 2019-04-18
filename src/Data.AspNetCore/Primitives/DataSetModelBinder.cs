@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace DevZest.Data.AspNetCore.Primitives
 {
     public class DataSetModelBinder<T> : IModelBinder
-        where T : class, IModelReference, new()
+        where T : class, IEntity, new()
     {
         private readonly ILogger _logger;
 

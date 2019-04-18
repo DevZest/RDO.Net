@@ -63,25 +63,25 @@ namespace DevZest.Data.Primitives
         }
 
         public Task<DbTable<T>> CreateTempTableAsync<T>(CancellationToken ct = default(CancellationToken))
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return CreateTempTableAsync<T>(null, null, ct);
         }
 
         public Task<DbTable<T>> CreateTempTableAsync<T>(T _, CancellationToken ct = default(CancellationToken))
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return CreateTempTableAsync<T>(_, null, ct);
         }
 
         public Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer, CancellationToken ct = default(CancellationToken))
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return CreateTempTableAsync<T>(null, initializer, ct);
         }
 
         public async Task<DbTable<T>> CreateTempTableAsync<T>(T _, Action<T> initializer, CancellationToken ct = default(CancellationToken))
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             var result = CreateTempTableInstance(_, initializer);
             await CreateTableAsync(result._.Model, true, ct);
@@ -89,31 +89,31 @@ namespace DevZest.Data.Primitives
         }
 
         internal DbQuery<T> PerformCreateQuery<T>(T _, DbQueryStatement queryStatement)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return new DbQuery<T>(_, this, queryStatement);
         }
 
         public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return CreateQuery(null, null, buildQuery);
         }
 
         public DbQuery<T> CreateQuery<T>(T _, Action<DbQueryBuilder, T> buildQuery)
-           where T : class, IModelReference, new()
+           where T : class, IEntity, new()
         {
             return CreateQuery(_, null, buildQuery);
         }
 
         public DbQuery<T> CreateQuery<T>(Action<T> initializer, Action<DbQueryBuilder, T> buildQuery)
-           where T : class, IModelReference, new()
+           where T : class, IEntity, new()
         {
             return CreateQuery(null, initializer, buildQuery);
         }
 
         public DbQuery<T> CreateQuery<T>(T _, Action<T> initializer, Action<DbQueryBuilder, T> buildQuery)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             buildQuery.VerifyNotNull(nameof(buildQuery));
 
@@ -125,25 +125,25 @@ namespace DevZest.Data.Primitives
         }
 
         public DbQuery<T> CreateAggregateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return CreateAggregateQuery(null, null, buildQuery);
         }
 
         public DbQuery<T> CreateAggregateQuery<T>(T _, Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return CreateAggregateQuery(_, null, buildQuery);
         }
 
         public DbQuery<T> CreateAggregateQuery<T>(Action<T> initializer, Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return CreateAggregateQuery(null, initializer, buildQuery);
         }
 
         public DbQuery<T> CreateAggregateQuery<T>(T _, Action<T> initializer, Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             buildQuery.VerifyNotNull(nameof(buildQuery));
 
@@ -159,7 +159,7 @@ namespace DevZest.Data.Primitives
         internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
         internal DbTable<T> CreateTempTableInstance<T>(T _, Action<T> initializer)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             var modelRef = _ == null ? new T() : _.MakeCopy(false);
             modelRef.Initialize(initializer);
@@ -168,7 +168,7 @@ namespace DevZest.Data.Primitives
         }
 
         private DbTable<T> CreateTempTableInstance<T>(T _)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             var tableName = AssignTempTableName(_.Model);
             return DbTable<T>.CreateTemp(_, this, tableName);
@@ -188,24 +188,24 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
             Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new();
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new();
 
         internal abstract Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
         protected internal abstract Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new();
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new();
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
         protected internal abstract Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo, CancellationToken ct)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new();
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new();
 
         internal abstract Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
-            where T : class, IModelReference, new();
+            where T : class, IEntity, new();
 
         internal DbInitializer Generator { get; set; }
 

@@ -106,21 +106,21 @@ namespace DevZest.Data.MySql
 #endif
 
         internal DbQuery<KeyOutput> BuildImportKeyQuery<T>(DataSet<T> dataSet)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             var keyOutput = new KeyOutput(dataSet.Model);
             return BuildQuery(dataSet, keyOutput, (m, s, t) => KeyOutput.BuildKeyMappings(m, s.Model, t));
         }
 
         internal DbQuery<T> BuildImportQuery<T>(DataSet<T> dataSet)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             return BuildQuery(dataSet, dataSet._, null);
         }
 
         internal DbQuery<TTarget> BuildQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder);
         }
@@ -149,8 +149,8 @@ namespace DevZest.Data.MySql
         }
 
         internal MySqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
 
         {
             var import = BuildImportQuery(source);
@@ -159,8 +159,8 @@ namespace DevZest.Data.MySql
         }
 
         private static DbFromClause GetAutoJoinFromClause<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             if (target == null)
                 return source.GetFromClause();
@@ -194,8 +194,8 @@ namespace DevZest.Data.MySql
         }
 
         internal MySqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             var import = BuildImportQuery(source);
             var join = import.Model.PrimaryKey.UnsafeJoin(joinTo);
@@ -215,8 +215,8 @@ namespace DevZest.Data.MySql
         }
 
         internal MySqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             var keys = BuildImportKeyQuery(source);
             var columnMappings = keys._.PrimaryKey.UnsafeJoin(joinTo);
@@ -251,8 +251,8 @@ select @mockschema;
         private const string SYS_DATASET_ORDINAL = "sys_dataset_ordinal";
 
         private DbQuery<TTarget> BuildJsonQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
-            where TSource : class, IModelReference, new()
-            where TTarget : class, IModelReference, new()
+            where TSource : class, IEntity, new()
+            where TTarget : class, IEntity, new()
         {
             var result = CreateQuery<TTarget>(targetModel, (builder, _) =>
             {
@@ -278,7 +278,7 @@ select @mockschema;
         }
 
         public DbSet<T> JsonTable<T>(string json, string ordinalColumnName = null)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             if (json == null)
                 throw new ArgumentNullException(nameof(json));

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     public sealed class DbQuery<T> : DbSet<T>
-        where T : class, IModelReference, new()
+        where T : class, IEntity, new()
     {
         internal DbQuery(T modelRef, DbSession dbSession, DbQueryStatement queryStatement)
             : base(modelRef, dbSession)

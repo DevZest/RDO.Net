@@ -51,7 +51,7 @@ namespace DevZest.Data
         public DbFromClause FromClause { get; private set; }
 
         public DbQueryBuilder From<T>(DbSet<T> dbSet, out T _)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             dbSet.VerifyNotNull(nameof(dbSet));
 
@@ -98,7 +98,7 @@ namespace DevZest.Data
         }
 
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
             where TKey : CandidateKey
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.InnerJoin, out _);
@@ -114,7 +114,7 @@ namespace DevZest.Data
 
 
         public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
             where TKey : CandidateKey
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.LeftJoin, out model);
@@ -130,7 +130,7 @@ namespace DevZest.Data
 
 
         public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
             where TKey : CandidateKey
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.RightJoin, out model);
@@ -138,7 +138,7 @@ namespace DevZest.Data
         }
 
         private void Join<T, TKey>(DbSet<T> dbSet, TKey left, TKey right, DbJoinKind kind, out T _)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
             where TKey : CandidateKey
         {
             dbSet.VerifyNotNull(nameof(dbSet));
@@ -153,12 +153,12 @@ namespace DevZest.Data
         }
 
         private void Join<T>(DbSet<T> dbSet, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship, out T _)
-            where T : class, IModelReference, new()
+            where T : class, IEntity, new()
         {
             _ = (T)Join(dbSet._, kind, relationship);
         }
 
-        private IModelReference Join(IModelReference _, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship)
+        private IEntity Join(IEntity _, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship)
         {
             Debug.Assert(relationship[0].Target.ParentModel == _.Model);
 
@@ -211,7 +211,7 @@ namespace DevZest.Data
             return this;
         }
 
-        private IModelReference MakeAlias(IModelReference _)
+        private IEntity MakeAlias(IEntity _)
         {
             Debug.Assert(_ != null);
 

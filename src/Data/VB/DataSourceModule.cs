@@ -9,13 +9,13 @@ using Microsoft.VisualBasic.CompilerServices;
 public sealed class DataSourceModule
 {
     /// <exclude />
-    public static T ModelOf<T>(DataSet<T> dataSet) where T : class, IModelReference, new()
+    public static T ModelOf<T>(DataSet<T> dataSet) where T : class, IEntity, new()
     {
         return dataSet.GetModel();
     }
 
     /// <exclude />
-    public static T ModelOf<T>(DbSet<T> dbSet) where T : class, IModelReference, new()
+    public static T ModelOf<T>(DbSet<T> dbSet) where T : class, IEntity, new()
     {
         return dbSet.GetModel();
     }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     public abstract class DbSet<T> : DataSource, IDbSet
-        where T : class, IModelReference, new()
+        where T : class, IEntity, new()
     {
         internal DbSet(T modelRef, DbSession dbSession)
         {

@@ -34,7 +34,7 @@ namespace DevZest.Data
         }
 
         public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source));
@@ -49,7 +49,7 @@ namespace DevZest.Data
         }
 
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
@@ -64,7 +64,7 @@ namespace DevZest.Data
         }
 
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IModelReference, new()
+            where TSource : class, IEntity, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
@@ -76,7 +76,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> join)
-            where TLookup : class, IModelReference, new()
+            where TLookup : class, IEntity, new()
         {
             Debug.Assert(source != null && source._ != null);
             return BuildDeleteScalarStatement(source[ordinal], join);
@@ -90,7 +90,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildDeleteStatement<TLookup>(DbSet<TLookup> source, IReadOnlyList<ColumnMapping> join)
-            where TLookup : class, IModelReference, new()
+            where TLookup : class, IEntity, new()
         {
             Debug.Assert(source != null);
             Debug.Assert(join != null);

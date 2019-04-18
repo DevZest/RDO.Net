@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
-    public abstract class Projection : ModelMember, IModelReference
+    public abstract class Projection : ModelMember, IEntity
     {
         internal void Construct(Model model, Type declaringType, string name)
         {
@@ -154,7 +154,7 @@ namespace DevZest.Data
             }
         }
 
-        Model IModelReference.Model => GetModel();
+        Model IEntity.Model => GetModel();
 
         private void Add(Column column)
         {
