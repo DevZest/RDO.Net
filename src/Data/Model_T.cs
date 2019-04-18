@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace DevZest.Data
 {
-    public abstract class Model<T> : Model, IKey<T>
+    public abstract class Model<T> : Model, IEntity<T>
         where T : CandidateKey
     {
         protected Model()
@@ -22,6 +22,8 @@ namespace DevZest.Data
         {
             get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => CreatePrimaryKey()); }
         }
+
+        Model<T> IEntity<T>.Model => this;
 
         [CreateKey]
         protected abstract T CreatePrimaryKey();
@@ -58,7 +60,7 @@ namespace DevZest.Data
         public KeyMapping Match(Key<T> target)
         {
             target.VerifyNotNull(nameof(target));
-            return new KeyMapping(PrimaryKey, target.PrimaryKey);
+            return new KeyMapping(PrimaryKey, target.Model.PrimaryKey);
         }
 
         /// <summary>

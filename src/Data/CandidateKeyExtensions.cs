@@ -2,24 +2,24 @@
 {
     public static class CandidateKeyExtensions
     {
-        public static KeyMapping Match<T>(this IKey<T> source, T target)
+        public static KeyMapping Match<T>(this IEntity<T> source, T target)
             where T : CandidateKey
         {
             target.VerifyNotNull(nameof(target));
-            return new KeyMapping(source.PrimaryKey, target);
+            return new KeyMapping(source.Model.PrimaryKey, target);
         }
 
-        public static KeyMapping Match<T>(this IKey<T> source, IKey<T> target)
+        public static KeyMapping Match<T>(this IEntity<T> source, IEntity<T> target)
             where T : CandidateKey
         {
             target.VerifyNotNull(nameof(target));
-            return new KeyMapping(source.PrimaryKey, target.PrimaryKey);
+            return new KeyMapping(source.Model.PrimaryKey, target.Model.PrimaryKey);
         }
 
-        public static KeyMapping Join<T>(this T sourceKey, IKey<T> target)
+        public static KeyMapping Join<T>(this T sourceKey, IEntity<T> target)
             where T : CandidateKey
         {
-            return new KeyMapping(sourceKey, target.PrimaryKey);
+            return new KeyMapping(sourceKey, target.Model.PrimaryKey);
         }
     }
 }

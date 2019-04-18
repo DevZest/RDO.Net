@@ -1,10 +1,9 @@
 ﻿using DevZest.Data.Annotations.Primitives;
 using System.Diagnostics;
-using System.Threading;
 
 namespace DevZest.Data
 {
-    public abstract class Key<T> : Projection, IKey<T>
+    public abstract class Key<T> : Projection, IEntity<T>
         where T : CandidateKey
     {
         private sealed class ContainerModel : Model<T>
@@ -22,7 +21,7 @@ namespace DevZest.Data
 
             protected override T CreatePrimaryKey()
             {
-                return _key.PrimaryKey;
+                return _key.CreatePrimaryKey();
             }
 
             internal override bool IsProjectionContainer
@@ -34,18 +33,16 @@ namespace DevZest.Data
         [CreateKey]
         protected abstract T CreatePrimaryKey();
 
-        private T _primaryKey;
-        public T PrimaryKey
-        {
-            get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => CreatePrimaryKey()); }
-        }
+        private ContainerModel _containerModel;
+
+        public Model<T> Model => _containerModel;
 
         internal override void EnsureConstructed()
         {
             if (ParentModel == null)
             {
-                var containerModel = new ContainerModel(this);
-                Debug.Assert(ParentModel == containerModel);
+                _containerModel = new ContainerModel(this);
+                Debug.Assert(ParentModel == _containerModel);
             }
         }
     }
