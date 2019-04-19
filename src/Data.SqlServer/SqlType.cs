@@ -13,12 +13,6 @@ namespace DevZest.Data.SqlServer
     {
         private const string NULL = "NULL";
 
-        private enum ValueKind
-        {
-            TSqlLiteral,
-            XmlValue
-        }
-
         internal abstract SqlParameterInfo GetSqlParameterInfo(SqlVersion sqlVersion);
 
         internal void GenerateColumnDefinitionSql(IndentedStringBuilder sqlBuilder, string tableName, bool isTempTable, SqlVersion sqlVersion)
@@ -183,10 +177,10 @@ namespace DevZest.Data.SqlServer
 
             protected sealed override string GetTSqlLiteral(T? value, SqlVersion sqlVersion)
             {
-                return value.HasValue ? GetValue(value.GetValueOrDefault(), ValueKind.TSqlLiteral, sqlVersion) : NULL;
+                return value.HasValue ? GetLiteral(value.GetValueOrDefault(), sqlVersion) : NULL;
             }
 
-            protected abstract string GetValue(T value, ValueKind kind, SqlVersion sqlVersion);
+            protected abstract string GetLiteral(T value, SqlVersion sqlVersion);
         }
 
         private sealed class BigIntType : StructSqlType<Int64>
@@ -206,7 +200,7 @@ namespace DevZest.Data.SqlServer
                 return "BIGINT";
             }
 
-            protected override string GetValue(long value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(long value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
@@ -240,7 +234,7 @@ namespace DevZest.Data.SqlServer
                 return string.Format("DECIMAL({0}, {1})", Precision, Scale);
             }
 
-            protected override string GetValue(decimal value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(decimal value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
@@ -268,7 +262,7 @@ namespace DevZest.Data.SqlServer
                 return "BIT";
             }
 
-            protected override string GetValue(bool value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(bool value, SqlVersion sqlVersion)
             {
                 return value ? "1" : "0";
             }
@@ -296,7 +290,7 @@ namespace DevZest.Data.SqlServer
                 return "TINYINT";
             }
 
-            protected override string GetValue(byte value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(byte value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
@@ -324,7 +318,7 @@ namespace DevZest.Data.SqlServer
                 return "SMALLINT";
             }
 
-            protected override string GetValue(short value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(short value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
@@ -352,7 +346,7 @@ namespace DevZest.Data.SqlServer
                 return "INT";
             }
 
-            protected override string GetValue(int value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(int value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
@@ -380,7 +374,7 @@ namespace DevZest.Data.SqlServer
                 return "SMALLMONEY";
             }
 
-            protected override string GetValue(decimal value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(decimal value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
@@ -408,7 +402,7 @@ namespace DevZest.Data.SqlServer
                 return "MONEY";
             }
 
-            protected override string GetValue(decimal value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(decimal value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
@@ -570,10 +564,9 @@ namespace DevZest.Data.SqlServer
                 return "UNIQUEIDENTIFIER";
             }
 
-            protected override string GetValue(Guid value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(Guid value, SqlVersion sqlVersion)
             {
-                var text = value.ToString();
-                return kind == ValueKind.TSqlLiteral ? text.ToSingleQuoted() : text;
+                return value.ToString().ToSingleQuoted();
             }
         }
 
@@ -589,13 +582,12 @@ namespace DevZest.Data.SqlServer
             {
             }
 
-            protected sealed override string GetValue(DateTime value, ValueKind kind, SqlVersion sqlVersion)
+            protected sealed override string GetLiteral(DateTime value, SqlVersion sqlVersion)
             {
-                var xmlValue = GetXmlValue(value, sqlVersion);
-                return kind == ValueKind.TSqlLiteral ? xmlValue.ToSingleQuoted() : xmlValue;
+                return value.ToString(LiteralFormat, CultureInfo.InvariantCulture).ToSingleQuoted();
             }
 
-            protected abstract string GetXmlValue(DateTime value, SqlVersion sqlVersion);
+            protected abstract string LiteralFormat { get; }
         }
 
         private sealed class DateType : DateTimeTypeBase
@@ -615,10 +607,7 @@ namespace DevZest.Data.SqlServer
                 return "DATE";
             }
 
-            protected override string GetXmlValue(DateTime value, SqlVersion sqlVersion)
-            {
-                return value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-            }
+            protected override string LiteralFormat => "yyyy-MM-dd";
         }
 
         internal static SqlType Date(Column<DateTime?> dateTimeColumn)
@@ -643,10 +632,7 @@ namespace DevZest.Data.SqlServer
                 return "TIME";
             }
 
-            protected override string GetXmlValue(DateTime value, SqlVersion sqlVersion)
-            {
-                return value.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
-            }
+            protected override string LiteralFormat => "HH:mm:ss.fff";
         }
 
         internal static SqlType Time(Column<DateTime?> column)
@@ -671,10 +657,7 @@ namespace DevZest.Data.SqlServer
                 return "DATETIME";
             }
 
-            protected override string GetXmlValue(DateTime value, SqlVersion sqlVersion)
-            {
-                return value.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
-            }
+            protected override string LiteralFormat => "yyyy-MM-dd HH:mm:ss.fff";
         }
 
         internal static SqlType DateTime(Column<DateTime?> column)
@@ -699,10 +682,7 @@ namespace DevZest.Data.SqlServer
                 return "SMALLDATETIME";
             }
 
-            protected override string GetXmlValue(DateTime value, SqlVersion sqlVersion)
-            {
-                return value.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
-            }
+            protected override string LiteralFormat => "yyyy-MM-dd HH:mm:ss.fff";
         }
 
         internal static SqlType SmallDateTime(Column<DateTime?> column)
@@ -730,10 +710,7 @@ namespace DevZest.Data.SqlServer
                 return string.Format(CultureInfo.InvariantCulture, "DATETIME2({0})", Precision);
             }
 
-            protected override string GetXmlValue(DateTime value, SqlVersion sqlVersion)
-            {
-                return value.ToString("yyyy-MM-dd HH:mm:ss.fffffff", CultureInfo.InvariantCulture);
-            }
+            protected override string LiteralFormat => "yyyy-MM-dd HH:mm:ss.fffffff";
         }
 
         internal static SqlType DateTime2(Column<DateTime?> column, byte precision)
@@ -758,10 +735,10 @@ namespace DevZest.Data.SqlServer
                 return "DATETIMEOFFSET";
             }
 
-            protected override string GetValue(DateTimeOffset value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(DateTimeOffset value, SqlVersion sqlVersion)
             {
-                var xmlValue = value.ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz", CultureInfo.InvariantCulture);
-                return kind == ValueKind.TSqlLiteral ? xmlValue.ToSingleQuoted() : xmlValue;
+                var result = value.ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz", CultureInfo.InvariantCulture);
+                return result.ToSingleQuoted();
             }
         }
 
@@ -787,7 +764,7 @@ namespace DevZest.Data.SqlServer
                 return "FLOAT(24)";
             }
 
-            protected override string GetValue(float value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(float value, SqlVersion sqlVersion)
             {
                 return value.ToString("R", CultureInfo.InvariantCulture);
             }
@@ -815,7 +792,7 @@ namespace DevZest.Data.SqlServer
                 return "FLOAT(53)";
             }
 
-            protected override string GetValue(double value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(double value, SqlVersion sqlVersion)
             {
                 return value.ToString("R", CultureInfo.InvariantCulture);
             }
@@ -981,10 +958,9 @@ namespace DevZest.Data.SqlServer
                 return IsUnicode ? "NCHAR(1)" : "CHAR(1)";
             }
 
-            protected override string GetValue(char value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(char value, SqlVersion sqlVersion)
             {
-                var text = value.ToString();
-                return kind == ValueKind.TSqlLiteral ? text.ToTSqlLiteral(IsUnicode) : text;
+                return value.ToString().ToTSqlLiteral(IsUnicode);
             }
         }
 
@@ -1010,10 +986,10 @@ namespace DevZest.Data.SqlServer
                 return "TIME";
             }
 
-            protected override string GetValue(TimeSpan value, ValueKind kind, SqlVersion sqlVersion)
+            protected override string GetLiteral(TimeSpan value, SqlVersion sqlVersion)
             {
-                var xmlValue = value.ToString(@"hh\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
-                return kind == ValueKind.TSqlLiteral ? xmlValue.ToSingleQuoted() : xmlValue;
+                var result = value.ToString(@"hh\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
+                return result.ToSingleQuoted();
             }
         }
 
