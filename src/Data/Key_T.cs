@@ -37,6 +37,8 @@ namespace DevZest.Data
 
         public Model<T> Model => _containerModel;
 
+        public T PrimaryKey => Model.PrimaryKey;
+
         internal override void EnsureConstructed()
         {
             if (ParentModel == null)
