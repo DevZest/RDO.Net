@@ -86,8 +86,6 @@ namespace DevZest.Data.SqlServer
 
         internal abstract string GetTSqlLiteral(object value, SqlVersion sqlVersion);
 
-        internal abstract string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion);
-
         internal abstract Column GetColumn();
 
         internal abstract object ConvertParameterValue(object value);
@@ -158,14 +156,7 @@ namespace DevZest.Data.SqlServer
                 return value == null ? NULL : GetTSqlLiteral((T)value, sqlVersion);
             }
 
-            internal sealed override string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion)
-            {
-                return GetXmlValue(Column[ordinal], sqlVersion);
-            }
-
             protected abstract string GetTSqlLiteral(T value, SqlVersion sqlVersion);
-
-            protected abstract string GetXmlValue(T value, SqlVersion sqlVersion);
 
             internal sealed override Column GetColumn()
             {
@@ -193,11 +184,6 @@ namespace DevZest.Data.SqlServer
             protected sealed override string GetTSqlLiteral(T? value, SqlVersion sqlVersion)
             {
                 return value.HasValue ? GetValue(value.GetValueOrDefault(), ValueKind.TSqlLiteral, sqlVersion) : NULL;
-            }
-
-            protected sealed override string GetXmlValue(T? value, SqlVersion sqlVersion)
-            {
-                return value.HasValue ? GetValue(value.GetValueOrDefault(), ValueKind.XmlValue, sqlVersion) : string.Empty;
             }
 
             protected abstract string GetValue(T value, ValueKind kind, SqlVersion sqlVersion);
@@ -482,11 +468,6 @@ namespace DevZest.Data.SqlServer
             {
                 return value.ToXmlValue(sqlVersion).ToSingleQuoted();
             }
-
-            protected sealed override string GetXmlValue(Binary value, SqlVersion sqlVersion)
-            {
-                return value.ToXmlValue(sqlVersion);
-            }
         }
 
         private sealed class BinaryType : BinaryTypeBase
@@ -564,11 +545,6 @@ namespace DevZest.Data.SqlServer
             protected override string GetTSqlLiteral(Binary value, SqlVersion sqlVersion)
             {
                 return value.ToXmlValue(sqlVersion).ToSingleQuoted();
-            }
-
-            protected override string GetXmlValue(Binary value, SqlVersion sqlVersion)
-            {
-                return value.ToXmlValue(sqlVersion);
             }
         }
 
@@ -871,11 +847,6 @@ namespace DevZest.Data.SqlServer
             {
                 return value.ToTSqlLiteral(IsUnicode);
             }
-
-            protected sealed override string GetXmlValue(string value, SqlVersion sqlVersion)
-            {
-                return value;
-            }
         }
 
         private sealed class NVarCharType : StringTypeBase
@@ -1080,11 +1051,6 @@ namespace DevZest.Data.SqlServer
             {
                 return value == null ? NULL : value.Value.ToTSqlLiteral(true);
             }
-
-            protected override string GetXmlValue(System.Data.SqlTypes.SqlXml value, SqlVersion sqlVersion)
-            {
-                return value == null ? string.Empty : value.Value;
-            }
         }
 
         internal static SqlType Xml(Column<SqlXml> column)
@@ -1125,16 +1091,7 @@ namespace DevZest.Data.SqlServer
                 return dbValue.HasValue ? GetTSqlLiteral(dbValue.GetValueOrDefault(), sqlVersion) : NULL;
             }
 
-            internal sealed override string GetXmlValueByOrdinal(int ordinal, SqlVersion sqlVersion)
-            {
-                var enumValue = GetEnumColumn()[ordinal];
-                var dbValue = GetDbValue(enumValue);
-                return dbValue.HasValue ? GetXmlValue(dbValue.GetValueOrDefault(), sqlVersion) : string.Empty;
-            }
-
             protected abstract string GetTSqlLiteral(TValue value, SqlVersion sqlVersion);
-
-            protected abstract string GetXmlValue(TValue value, SqlVersion sqlVersion);
         }
 
         private sealed class CharEnumType<T> : EnumType<T?, char>
@@ -1165,11 +1122,6 @@ namespace DevZest.Data.SqlServer
             protected override char? GetDbValue(T? enumValue)
             {
                 return Column.ConvertToDbValue(enumValue);
-            }
-
-            protected override string GetXmlValue(char value, SqlVersion sqlVersion)
-            {
-                return new string(new char[] { value });
             }
 
             protected override string GetTSqlLiteral(char value, SqlVersion sqlVersion)
@@ -1216,11 +1168,6 @@ namespace DevZest.Data.SqlServer
 
             protected override string GetTSqlLiteral(byte value, SqlVersion sqlVersion)
             {
-                return GetXmlValue(value, sqlVersion);
-            }
-
-            protected override string GetXmlValue(byte value, SqlVersion sqlVersion)
-            {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
         }
@@ -1262,11 +1209,6 @@ namespace DevZest.Data.SqlServer
             }
 
             protected override string GetTSqlLiteral(Int16 value, SqlVersion sqlVersion)
-            {
-                return GetXmlValue(value, sqlVersion);
-            }
-
-            protected override string GetXmlValue(Int16 value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
@@ -1310,11 +1252,6 @@ namespace DevZest.Data.SqlServer
 
             protected override string GetTSqlLiteral(Int32 value, SqlVersion sqlVersion)
             {
-                return GetXmlValue(value, sqlVersion);
-            }
-
-            protected override string GetXmlValue(Int32 value, SqlVersion sqlVersion)
-            {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
         }
@@ -1356,11 +1293,6 @@ namespace DevZest.Data.SqlServer
             }
 
             protected override string GetTSqlLiteral(Int64 value, SqlVersion sqlVersion)
-            {
-                return GetXmlValue(value, sqlVersion);
-            }
-
-            protected override string GetXmlValue(Int64 value, SqlVersion sqlVersion)
             {
                 return value.ToString(CultureInfo.InvariantCulture);
             }
