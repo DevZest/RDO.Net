@@ -50,12 +50,12 @@ Partial Public Class Db
 
     <_Relationship>
     Private Function FK_CustomerAddress_Customer_CustomerID(x As CustomerAddress) As KeyMapping
-        Return x.FK_Customer.Join(ModelOf(Customer))
+        Return x.FK_Customer.Join(EntityOf(Customer))
     End Function
 
     <_Relationship>
     Private Function FK_CustomerAddress_Address_AddressID(x As CustomerAddress) As KeyMapping
-        Return x.FK_Address.Join(ModelOf(Address))
+        Return x.FK_Address.Join(EntityOf(Address))
     End Function
 
     Private m_ProductCategory As DbTable(Of ProductCategory)
@@ -100,12 +100,12 @@ Partial Public Class Db
 
     <_Relationship>
     Private Function FK_ProductModelProductDescription_ProductModel_ProductModelID(x As ProductModelProductDescription) As KeyMapping
-        Return x.FK_ProductModel.Join(ModelOf(ProductModel))
+        Return x.FK_ProductModel.Join(EntityOf(ProductModel))
     End Function
 
     <_Relationship>
     Private Function FK_ProductModelProductDescription_ProductDescription_ProductDescriptionID(x As ProductModelProductDescription) As KeyMapping
-        Return x.FK_ProductDescription.Join(ModelOf(ProductDescription))
+        Return x.FK_ProductDescription.Join(EntityOf(ProductDescription))
     End Function
 
     Private m_Product As DbTable(Of Product)
@@ -120,12 +120,12 @@ Partial Public Class Db
 
     <_Relationship>
     Private Function FK_Product_ProductModel_ProductModelID(x As Product) As KeyMapping
-        Return x.FK_ProductModel.Join(ModelOf(ProductModel))
+        Return x.FK_ProductModel.Join(EntityOf(ProductModel))
     End Function
 
     <_Relationship>
     Private Function FK_Product_ProductCategory_ProductCategoryID(x As Product) As KeyMapping
-        Return x.FK_ProductCategory.Join(ModelOf(ProductCategory))
+        Return x.FK_ProductCategory.Join(EntityOf(ProductCategory))
     End Function
 
     Private m_SalesOrderHeader As DbTable(Of SalesOrderHeader)
@@ -141,17 +141,17 @@ Partial Public Class Db
 
     <_Relationship>
     Private Function FK_SalesOrderHeader_Customer_CustomerID(x As SalesOrderHeader) As KeyMapping
-        Return x.FK_Customer.Join(ModelOf(Customer))
+        Return x.FK_Customer.Join(EntityOf(Customer))
     End Function
 
     <_Relationship>
     Private Function FK_SalesOrderHeader_Address_BillTo_AddressID(x As SalesOrderHeader) As KeyMapping
-        Return x.FK_BillToCustomerAddress.Join(ModelOf(CustomerAddress))
+        Return x.FK_BillToCustomerAddress.Join(EntityOf(CustomerAddress))
     End Function
 
     <_Relationship>
     Private Function FK_SalesOrderHeader_Address_ShipTo_AddressID(x As SalesOrderHeader) As KeyMapping
-        Return x.FK_ShipToCustomerAddress.Join(ModelOf(CustomerAddress))
+        Return x.FK_ShipToCustomerAddress.Join(EntityOf(CustomerAddress))
     End Function
 
     Private m_SalesOrderDetail As DbTable(Of SalesOrderDetail)
@@ -166,11 +166,11 @@ Partial Public Class Db
 
     <_Relationship>
     Private Function FK_SalesOrderDetail_SalesOrderHeader(x As SalesOrderDetail) As KeyMapping
-        Return x.FK_SalesOrderHeader.Join(ModelOf(SalesOrderHeader))
+        Return x.FK_SalesOrderHeader.Join(EntityOf(SalesOrderHeader))
     End Function
 
     <_Relationship>
     Private Function FK_SalesOrderDetail_Product(x As SalesOrderDetail) As KeyMapping
-        Return x.FK_Product.Join(ModelOf(Product))
+        Return x.FK_Product.Join(EntityOf(Product))
     End Function
 End Class

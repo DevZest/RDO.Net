@@ -57,12 +57,12 @@ Partial Class Db
     End Function
 
     Private Async Function PerformUpdateAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
-        Dim salesOrder As SalesOrder = ModelOf(salesOrders)
-        ModelOf(salesOrders).ResetRowIdentifiers()
+        Dim salesOrder As SalesOrder = EntityOf(salesOrders)
+        EntityOf(salesOrders).ResetRowIdentifiers()
         Await SalesOrderHeader.UpdateAsync(salesOrders, ct)
         Await Me.SalesOrderDetail.DeleteAsync(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader), ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
-        ModelOf(salesOrderDetails).ResetRowIdentifiers()
+        EntityOf(salesOrderDetails).ResetRowIdentifiers()
         Await Me.SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
     End Function
 
@@ -71,24 +71,25 @@ Partial Class Db
     End Function
 
     Private Async Function PerformInsertAsync(salesOrders As DataSet(Of SalesOrder), ByVal ct As CancellationToken) As Task
-        ModelOf(salesOrders).ResetRowIdentifiers()
+        EntityOf(salesOrders).ResetRowIdentifiers()
         Await SalesOrderHeader.InsertAsync(salesOrders, True, ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
-        ModelOf(salesOrderDetails).ResetRowIdentifiers()
+        EntityOf(salesOrderDetails).ResetRowIdentifiers()
         Await Me.SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
     End Function
 
     Public Async Function LookupAsync(refs As DataSet(Of Product.Ref), Optional ct As CancellationToken = Nothing) As Task(Of DataSet(Of Product.Lookup))
         Dim tempTable = Await CreateTempTableAsync(Of Product.Ref)(ct)
         Await tempTable.InsertAsync(refs, ct)
-        Return Await CreateQuery(Sub(builder As DbQueryBuilder, x As Product.Lookup)
-                                     Dim t As Product.Ref = Nothing
-                                     builder.From(tempTable, t)
-                                     Dim seqNo = t.GetModel().GetIdentity(True).Column
-                                     Debug.Assert(seqNo IsNot Nothing)
-                                     Dim p As Product = Nothing
-                                     builder.LeftJoin(Product, t.ForeignKey, p).AutoSelect().OrderBy(seqNo)
-                                 End Sub).ToDataSetAsync(ct)
+        Return Await CreateQuery(
+            Sub(builder As DbQueryBuilder, x As Product.Lookup)
+                Dim t As Product.Ref = Nothing
+                builder.From(tempTable, t)
+                Dim seqNo = t.GetModel().GetIdentity(True).Column
+                Debug.Assert(seqNo IsNot Nothing)
+                Dim p As Product = Nothing
+                builder.LeftJoin(Product, t.ForeignKey, p).AutoSelect().OrderBy(seqNo)
+            End Sub).ToDataSetAsync(ct)
     End Function
 
     Public Function DeleteSalesOrderAsync(dataSet As DataSet(Of SalesOrderHeader.Key), ct As CancellationToken) As Task(Of Integer)
@@ -108,22 +109,22 @@ Partial Class Db
     End Function
 
     Public Async Function UpdateSalesOrderAsync(salesOrders As DataSet(Of SalesOrderInfo), ct As CancellationToken) As Task
-        ModelOf(salesOrders).ResetRowIdentifiers()
+        EntityOf(salesOrders).ResetRowIdentifiers()
         Await SalesOrderHeader.UpdateAsync(salesOrders, ct)
         Await SalesOrderDetail.DeleteAsync(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader), ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
-        ModelOf(salesOrderDetails).ResetRowIdentifiers()
+        EntityOf(salesOrderDetails).ResetRowIdentifiers()
         Await SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
     End Function
 
     Public Async Function CreateSalesOrderAsync(salesOrders As DataSet(Of SalesOrderInfo), ct As CancellationToken) As Task(Of Integer?)
-        ModelOf(salesOrders).ResetRowIdentifiers()
+        EntityOf(salesOrders).ResetRowIdentifiers()
         Await SalesOrderHeader.InsertAsync(salesOrders, True, ct)
         Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
-        ModelOf(salesOrderDetails).ResetRowIdentifiers()
+        EntityOf(salesOrderDetails).ResetRowIdentifiers()
         Await SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
         If salesOrders.Count > 0 Then
-            Return ModelOf(salesOrders).SalesOrderID(0)
+            Return EntityOf(salesOrders).SalesOrderID(0)
         Else
             Return Nothing
         End If

@@ -15,7 +15,7 @@ Public Class MockProductCategory
 
     Private Shared Function MockData() As DataSet(Of ProductCategory)
         Dim result As DataSet(Of ProductCategory) = DataSet(Of ProductCategory).Create().AddRows(13)
-        Dim x As ProductCategory = ModelOf(result)
+        Dim x As ProductCategory = EntityOf(result)
         x.SuspendIdentity()
         x.ProductCategoryID(0) = 1
         x.ProductCategoryID(1) = 2

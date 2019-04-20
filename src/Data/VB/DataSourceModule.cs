@@ -1,5 +1,4 @@
 ﻿using DevZest.Data;
-using DevZest.Data.Primitives;
 using Microsoft.VisualBasic.CompilerServices;
 
 /// <summary>
@@ -9,14 +8,14 @@ using Microsoft.VisualBasic.CompilerServices;
 public sealed class DataSourceModule
 {
     /// <exclude />
-    public static T ModelOf<T>(DataSet<T> dataSet) where T : class, IEntity, new()
+    public static T EntityOf<T>(DataSet<T> dataSet) where T : class, IEntity, new()
     {
-        return dataSet.GetModel();
+        return dataSet._;
     }
 
     /// <exclude />
-    public static T ModelOf<T>(DbSet<T> dbSet) where T : class, IEntity, new()
+    public static T EntityOf<T>(DbSet<T> dbSet) where T : class, IEntity, new()
     {
-        return dbSet.GetModel();
+        return dbSet._;
     }
 }
