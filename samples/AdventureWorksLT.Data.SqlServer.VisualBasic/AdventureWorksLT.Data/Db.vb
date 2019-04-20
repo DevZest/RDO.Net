@@ -1,7 +1,6 @@
 Imports System.Data.SqlClient
-Imports System.Threading
 
-Public Class Db
+Partial Public Class Db
     Inherits SqlSession
 
     Public Sub New(connectionString As String, Optional initializer As Action(Of Db) = Nothing)
@@ -173,91 +172,5 @@ Public Class Db
     <_Relationship>
     Private Function FK_SalesOrderDetail_Product(x As SalesOrderDetail) As KeyMapping
         Return x.FK_Product.Join(ModelOf(Product))
-    End Function
-
-    Public Function GetSalesOrderHeaders(filterText As String, orderBy As IReadOnlyList(Of IColumnComparer)) As DbSet(Of SalesOrderHeader)
-        Dim result As DbSet(Of SalesOrderHeader)
-
-        If String.IsNullOrEmpty(filterText) Then
-            result = SalesOrderHeader
-        Else
-            result = SalesOrderHeader.Where(Function(__) __.SalesOrderNumber.Contains(filterText) Or __.PurchaseOrderNumber.Contains(filterText))
-        End If
-
-        If orderBy IsNot Nothing AndAlso orderBy.Count > 0 Then result = result.OrderBy(Function(x) GetOrderBy(x, orderBy))
-        Return result
-    End Function
-
-    Private Shared Function GetOrderBy(model As Model, orderBy As IReadOnlyList(Of IColumnComparer)) As ColumnSort()
-        Debug.Assert(orderBy IsNot Nothing AndAlso orderBy.Count > 0)
-        Dim result = New ColumnSort(orderBy.Count - 1) {}
-
-        For i As Integer = 0 To orderBy.Count - 1
-            Dim column = orderBy(i).GetColumn(model)
-            Dim direction = orderBy(i).Direction
-            result(i) = If(direction = SortDirection.Descending, column.Desc(), column.Asc())
-        Next
-
-        Return result
-    End Function
-
-    Public Async Function GetSalesOrderInfoAsync(salesOrderID As Integer, Optional ct As CancellationToken = Nothing) As Task(Of DataSet(Of SalesOrderInfo))
-        Dim result = CreateQuery(Sub(builder As DbQueryBuilder, x As SalesOrderInfo)
-                                     Dim o As SalesOrderHeader = Nothing, c As Customer = Nothing, shipTo As Address = Nothing, billTo As Address = Nothing
-                                     builder.From(SalesOrderHeader, o).
-                                     LeftJoin(Customer, o.FK_Customer, c).
-                                     LeftJoin(Address, o.FK_ShipToAddress, shipTo).
-                                     LeftJoin(Address, o.FK_BillToAddress, billTo).
-                                     AutoSelect().
-                                     AutoSelect(c, x.Customer).
-                                     AutoSelect(shipTo, x.ShipToAddress).
-                                     AutoSelect(billTo, x.BillToAddress).
-                                     Where(o.SalesOrderID = _Int32.Param(salesOrderID))
-                                 End Sub)
-        Await result.CreateChildAsync(Function(x) x.SalesOrderDetails,
-                                      Sub(builder As DbQueryBuilder, x As SalesOrderInfoDetail)
-                                          Dim d As SalesOrderDetail = Nothing, p As Product = Nothing
-                                          builder.From(SalesOrderDetail, d).LeftJoin(Product, d.FK_Product, p).AutoSelect().AutoSelect(p, x.Product)
-                                      End Sub, ct)
-        Return Await result.ToDataSetAsync(ct)
-    End Function
-
-    Public Overloads Function UpdateAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
-        Return ExecuteTransactionAsync(Function() PerformUpdateAsync(salesOrders, ct))
-    End Function
-
-    Private Async Function PerformUpdateAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
-        Dim salesOrder As SalesOrder = ModelOf(salesOrders)
-        ModelOf(salesOrders).ResetRowIdentifiers()
-        Await SalesOrderHeader.UpdateAsync(salesOrders, ct)
-        Await Me.SalesOrderDetail.DeleteAsync(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader), ct)
-        Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
-        ModelOf(salesOrderDetails).ResetRowIdentifiers()
-        Await Me.SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
-    End Function
-
-    Public Overloads Function InsertAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
-        Return ExecuteTransactionAsync(Function() PerformInsertAsync(salesOrders, ct))
-    End Function
-
-    Private Async Function PerformInsertAsync(salesOrders As DataSet(Of SalesOrder), ByVal ct As CancellationToken) As Task
-        ModelOf(salesOrders).ResetRowIdentifiers()
-        Await SalesOrderHeader.InsertAsync(salesOrders, True, ct)
-        Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
-        ModelOf(salesOrderDetails).ResetRowIdentifiers()
-        Await Me.SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
-    End Function
-
-    Public Async Function LookupAsync(refs As DataSet(Of Product.Ref), Optional ct As CancellationToken = Nothing) As Task(Of DataSet(Of Product.Lookup))
-        Dim tempTable = Await CreateTempTableAsync(Of Product.Ref)(ct)
-        Await tempTable.InsertAsync(refs, ct)
-        Return Await CreateQuery(Sub(builder As DbQueryBuilder, x As Product.Lookup)
-                                     Dim t As Product.Ref = Nothing
-                                     builder.From(tempTable, t)
-                                     Dim seqNo = t.GetModel().GetIdentity(True).Column
-                                     Debug.Assert(seqNo IsNot Nothing)
-                                     Dim p As Product = Nothing
-                                     builder.LeftJoin(Product, t.ForeignKey, p).AutoSelect().OrderBy(seqNo)
-                                 End Sub).ToDataSetAsync(ct)
     End Function
 End Class

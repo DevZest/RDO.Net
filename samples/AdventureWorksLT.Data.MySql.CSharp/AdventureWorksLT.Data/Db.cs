@@ -3,14 +3,10 @@ using DevZest.Data.Annotations;
 using DevZest.Data.MySql;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
-    public class Db : MySqlSession
+    public partial class Db : MySqlSession
     {
         public Db(string connectionString, Action<Db> initializer = null)
             : base(CreateMySqlConnection(connectionString))
@@ -189,103 +185,6 @@ namespace DevZest.Samples.AdventureWorksLT
         private KeyMapping FK_SalesOrderDetail_Product(SalesOrderDetail _)
         {
             return _.FK_Product.Join(Product._);
-        }
-
-        public DbSet<SalesOrderHeader> GetSalesOrderHeaders(string filterText, IReadOnlyList<IColumnComparer> orderBy)
-        {
-            DbSet<SalesOrderHeader> result;
-            if (string.IsNullOrEmpty(filterText))
-                result = SalesOrderHeader;
-            else
-                result = SalesOrderHeader.Where(_ => _.SalesOrderNumber.Contains(filterText) | _.PurchaseOrderNumber.Contains(filterText));
-
-            if (orderBy != null && orderBy.Count > 0)
-                result = result.OrderBy(_ => GetOrderBy(_, orderBy));
-
-            return result;
-        }
-
-        private static ColumnSort[] GetOrderBy(Model model, IReadOnlyList<IColumnComparer> orderBy)
-        {
-            Debug.Assert(orderBy != null && orderBy.Count > 0);
-            var result = new ColumnSort[orderBy.Count];
-            for (int i = 0; i < orderBy.Count; i++)
-            {
-                var column = orderBy[i].GetColumn(model);
-                var direction = orderBy[i].Direction;
-                result[i] = direction == SortDirection.Descending ? column.Desc() : column.Asc();
-            }
-            return result;
-        }
-
-        public async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(int salesOrderID, CancellationToken ct = default(CancellationToken))
-        {
-            var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
-            {
-                builder.From(SalesOrderHeader, out var o)
-                    .LeftJoin(Customer, o.FK_Customer, out var c)
-                    .LeftJoin(Address, o.FK_ShipToAddress, out var shipTo)
-                    .LeftJoin(Address, o.FK_BillToAddress, out var billTo)
-                    .AutoSelect()
-                    .AutoSelect(c, _.Customer)
-                    .AutoSelect(shipTo, _.ShipToAddress)
-                    .AutoSelect(billTo, _.BillToAddress)
-                    .Where(o.SalesOrderID == _Int32.Param(salesOrderID));
-            });
-
-            await result.CreateChildAsync(_ => _.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderInfoDetail _) =>
-            {
-                builder.From(SalesOrderDetail, out var d)
-                    .LeftJoin(Product, d.FK_Product, out var p)
-                    .AutoSelect()
-                    .AutoSelect(p, _.Product)
-                    .OrderBy(d.SalesOrderDetailID);
-            }, ct);
-
-            return await result.ToDataSetAsync(ct);
-        }
-
-        public Task UpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
-        {
-            return ExecuteTransactionAsync(() => PerformUpdateAsync(salesOrders, ct));
-        }
-
-        private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
-        {
-            salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.UpdateAsync(salesOrders, ct);
-            await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
-            salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
-        }
-
-        public Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
-        {
-            return ExecuteTransactionAsync(() => PerformInsertAsync(salesOrders, ct));
-        }
-
-        private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
-        {
-            salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
-            salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
-        }
-
-        public async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> refs, CancellationToken ct = default(CancellationToken))
-        {
-            var tempTable = await CreateTempTableAsync<Product.Ref>(ct);
-            await tempTable.InsertAsync(refs, ct);
-            return await CreateQuery((DbQueryBuilder builder, Product.Lookup _) =>
-            {
-                builder.From(tempTable, out var t);
-                var seqNo = t.GetModel().GetIdentity(true).Column;
-                Debug.Assert(!(seqNo is null));
-                builder.LeftJoin(Product, t.ForeignKey, out var p)
-                    .AutoSelect().OrderBy(seqNo);
-            }).ToDataSetAsync(ct);
         }
     }
 }

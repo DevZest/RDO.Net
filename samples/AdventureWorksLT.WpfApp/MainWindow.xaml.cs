@@ -83,7 +83,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 return;
 
             var keys = DataSet<SalesOrderHeader.Key>.ParseJson(_presenter.DataSet.Filter(JsonFilter.PrimaryKeyOnly).ToJsonString(_presenter.SelectedDataRows, false));
-            var success = App.Execute((db, ct) => db.DeleteAsync(keys, ct), this, caption);
+            var success = App.Execute((db, ct) => db.DeleteSalesOrderAsync(keys, ct), this, caption);
             if (success)
                 RefreshList();
         }

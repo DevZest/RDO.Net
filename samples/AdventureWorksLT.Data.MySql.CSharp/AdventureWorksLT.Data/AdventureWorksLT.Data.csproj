@@ -18,6 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data\Db.Api.cs" Link="Db.Api.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\src\Data.MySql\Data.MySql.csproj" />
   </ItemGroup>
   
