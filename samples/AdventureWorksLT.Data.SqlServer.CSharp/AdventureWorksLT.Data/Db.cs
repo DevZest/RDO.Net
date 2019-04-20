@@ -201,7 +201,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 result = SalesOrderHeader.Where(_ => _.SalesOrderNumber.Contains(filterText) | _.PurchaseOrderNumber.Contains(filterText));
 
             if (orderBy != null && orderBy.Count > 0)
-                result = result.OrderBy(GetOrderBy(result._, orderBy));
+                result = result.OrderBy(_ => GetOrderBy(_, orderBy));
 
             return result;
         }

@@ -184,7 +184,7 @@ Public Class Db
             result = SalesOrderHeader.Where(Function(__) __.SalesOrderNumber.Contains(filterText) Or __.PurchaseOrderNumber.Contains(filterText))
         End If
 
-        If orderBy IsNot Nothing AndAlso orderBy.Count > 0 Then result = result.OrderBy(GetOrderBy(ModelOf(result), orderBy))
+        If orderBy IsNot Nothing AndAlso orderBy.Count > 0 Then result = result.OrderBy(Function(x) GetOrderBy(x, orderBy))
         Return result
     End Function
 

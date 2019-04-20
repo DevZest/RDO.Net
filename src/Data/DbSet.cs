@@ -80,6 +80,17 @@ namespace DevZest.Data
             return OrderBy(offset, fetch, orderBy);
         }
 
+        public DbQuery<T> OrderBy(Func<T, ColumnSort[]> fnOrderByList)
+        {
+            return OrderBy(-1, -1, fnOrderByList);
+        }
+
+        public DbQuery<T> OrderBy(int offset, int fetch, Func<T, ColumnSort[]> fnOrderBy)
+        {
+            var orderBy = fnOrderBy == null ? Array.Empty<ColumnSort>() : fnOrderBy(_);
+            return OrderBy(offset, fetch, orderBy);
+        }
+
         private ColumnSort[] GetOrderBy(Func<T, ColumnSort>[] fnOrderBy)
         {
             var orderBy = fnOrderBy == null ? Array.Empty<ColumnSort>() : new ColumnSort[fnOrderBy.Length];
@@ -88,12 +99,7 @@ namespace DevZest.Data
             return orderBy;
         }
 
-        public DbQuery<T> OrderBy(params ColumnSort[] orderBy)
-        {
-            return OrderBy(-1, -1, orderBy);
-        }
-
-        public DbQuery<T> OrderBy(int offset, int fetch, params ColumnSort[] orderBy)
+        private DbQuery<T> OrderBy(int offset, int fetch, ColumnSort[] orderBy)
         {
             T newModel;
             var queryStatement = GetSimpleQueryStatement(GetOrderByQueryBuilder(offset, fetch, orderBy), out newModel);
