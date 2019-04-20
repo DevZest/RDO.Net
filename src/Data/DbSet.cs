@@ -114,46 +114,6 @@ namespace DevZest.Data
                 return x => x.OrderBy(offset, fetch, orderBy);
         }
 
-        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, params Func<T, ColumnSort>[] fnOrderByList)
-        {
-            return WhereOrderBy(predicate, -1, -1, fnOrderByList);
-        }
-
-        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, int offset, int fetch, params Func<T, ColumnSort>[] fnOrderBy)
-        {
-            predicate.VerifyNotNull(nameof(predicate));
-
-            var whereQueryBuilder = GetWhereQueryBuilder(predicate(_));
-            var orderByQueryBuilder = GetOrderByQueryBuilder(offset, fetch, GetOrderBy(fnOrderBy));
-            Action<DbQueryBuilder> whereOrderByQueryBuilder = x =>
-            {
-                whereQueryBuilder(x);
-                orderByQueryBuilder(x);
-            };
-            T newModel;
-            var queryStatement = GetSimpleQueryStatement(whereOrderByQueryBuilder, out newModel);
-            return DbSession.PerformCreateQuery(newModel, queryStatement);
-        }
-
-        public DbQuery<T> WhereOrderBy(_Boolean condition, params ColumnSort[] orderBy)
-        {
-            return WhereOrderBy(condition, -1, -1, orderBy);
-        }
-
-        public DbQuery<T> WhereOrderBy(_Boolean condition, int offset, int fetch, params ColumnSort[] orderBy)
-        {
-            var whereQueryBuilder = GetWhereQueryBuilder(condition);
-            var orderByQueryBuilder = GetOrderByQueryBuilder(offset, fetch, orderBy);
-            Action<DbQueryBuilder> whereOrderByQueryBuilder = x =>
-            {
-                whereQueryBuilder(x);
-                orderByQueryBuilder(x);
-            };
-            T newModel;
-            var queryStatement = GetSimpleQueryStatement(whereOrderByQueryBuilder, out newModel);
-            return DbSession.PerformCreateQuery(newModel, queryStatement);
-        }
-
         internal DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action = null)
         {
             T newModel;
