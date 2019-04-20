@@ -2,7 +2,7 @@
 using Microsoft.VisualBasic.CompilerServices;
 
 /// <summary>
-/// Provides ModelOf() operator for VB.Net because _ is not a valid identifier in VB.
+/// Provides EntityOf() operator for VB.Net because _ is not a valid identifier in VB.
 /// </summary>
 [StandardModule]
 public sealed class DataSourceModule
