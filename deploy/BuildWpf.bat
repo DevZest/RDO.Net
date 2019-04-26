@@ -12,13 +12,17 @@ SET PARAM_ADDTIONAL_LABEL="-additionalLabel %2"
 if "%2"=="" (SET PARAM_ADDTIONAL_LABEL=)
 CALL "%~dp0VerGen.%currentFolder%.bat"
 
-for /f "usebackq tokens=*" %%i in (`vswhere -version "[15.0,16.0)" -products * -requires Microsoft.Component.MSBuild -property installationPath`) do (
+for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`) do (
   set InstallDir=%%i
 )
 
 if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
   set msBuildPath="%InstallDir%\MSBuild\15.0\Bin\
   set msBuildExe="%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe"
+)
+else (
+  set msBuildPath="%InstallDir%\MSBuild\Current\Bin\
+  set msBuildExe="%InstallDir%\MSBuild\Current\Bin\MSBuild.exe"
 )
 
 echo.
