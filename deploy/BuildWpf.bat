@@ -17,14 +17,16 @@ for /f "usebackq tokens=*" %%i in (`vswhere -version "[15.0,16.0)" -products * -
 )
 
 if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
+  set msBuildPath="%InstallDir%\MSBuild\15.0\Bin\
   set msBuildExe="%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe"
 )
 
 echo.
+echo msBuildPath=%msBuildPath%
 echo msBuildExe=%msBuildExe%
 echo.
 
-call nuget restore "%~dp0Deploy.%currentFolder%.sln"
+call nuget restore "%~dp0Deploy.%currentFolder%.sln" -MSBuildPath %msBuildPath%
 call %msBuildExe% "%~dp0Deploy.%currentFolder%.sln" /t:build /p:Configuration=Release /verbosity:m
 @IF %ERRORLEVEL% NEQ 0 PAUSE
 call nuget push "%~dp0%currentFolder%\bin\release\*.nupkg" -src local
