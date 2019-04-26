@@ -335,6 +335,8 @@ END";
 
             var stringColumn = CreateColumn<_String>(model, "Column2");
             VerifyDbExpression(SqlVersion.Sql13, stringColumn.Contains(_String.Const("abc")).DbExpression, "(CHARINDEX(N'abc', [TestModel].[Column2]) > 0)");
+            VerifyDbExpression(SqlVersion.Sql13, stringColumn.Like(_String.Const("%")).DbExpression, "([TestModel].[Column2] LIKE N'%')");
+            VerifyDbExpression(SqlVersion.Sql13, stringColumn.NotLike(_String.Const("%")).DbExpression, "([TestModel].[Column2] NOT LIKE N'%')");
         }
     }
 }

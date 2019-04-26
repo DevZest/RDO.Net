@@ -142,7 +142,9 @@ namespace DevZest.Data.SqlServer
             { Data.FunctionKeys.Min, (g, e) => g.VisitFunction_Min(e) },
             { Data.FunctionKeys.Sum, (g, e) => g.VisitFunction_Sum(e) },
             { Data.FunctionKeys.Contains, (g, e) => g.VisitFunction_Contains(e) },
-            { FunctionKeys.XmlValue, (g, e) => g.VisitFunction_XmlValue(e) }
+            { FunctionKeys.XmlValue, (g, e) => g.VisitFunction_XmlValue(e) },
+            { FunctionKeys.Like, (g, e) => g.VisitFunction_Like(e) },
+            { FunctionKeys.NotLike, (g, e) => g.VisitFunction_NotLike(e) }
         };
 
         public static void RegisterFunctionHandler(FunctionKey functionKey, Action<ExpressionGenerator, DbFunctionExpression> handler)
@@ -296,6 +298,26 @@ namespace DevZest.Data.SqlServer
             var targetColumn = ((DbColumnExpression)paramList[2]).Column;
             SqlBuilder.AppendSingleQuoted(targetColumn.GetSqlType().GetDataTypeSql(SqlVersion));
             SqlBuilder.Append(")");
+        }
+
+        private void VisitFunction_Like(DbFunctionExpression e)
+        {
+            Debug.Assert(e.ParamList.Count == 2);
+            SqlBuilder.Append('(');
+            e.ParamList[0].Accept(this);
+            SqlBuilder.Append(" LIKE ");
+            e.ParamList[1].Accept(this);
+            SqlBuilder.Append(')');
+        }
+
+        private void VisitFunction_NotLike(DbFunctionExpression e)
+        {
+            Debug.Assert(e.ParamList.Count == 2);
+            SqlBuilder.Append('(');
+            e.ParamList[0].Accept(this);
+            SqlBuilder.Append(" NOT LIKE ");
+            e.ParamList[1].Accept(this);
+            SqlBuilder.Append(')');
         }
 
         private readonly List<DbParamExpression> DbParamExpressions = new List<DbParamExpression>();
