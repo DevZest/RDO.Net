@@ -12,7 +12,7 @@ SET PARAM_ADDTIONAL_LABEL="-additionalLabel %2"
 if "%2"=="" (SET PARAM_ADDTIONAL_LABEL=)
 CALL "%~dp0VerGen.%currentFolder%.bat"
 
-for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`) do (
+for /f "usebackq tokens=*" %%i in (`vswhere -version "[15.0,16.0)" -products * -requires Microsoft.Component.MSBuild -property installationPath`) do (
   set InstallDir=%%i
 )
 
