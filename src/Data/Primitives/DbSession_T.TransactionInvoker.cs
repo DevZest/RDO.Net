@@ -72,33 +72,39 @@ namespace DevZest.Data.Primitives
 
             private TTransaction InvokeBeginTransaction(Stack<TTransaction> transactions)
             {
-                Invoke(() => { Transaction = BeginTransaction(); }, x => x.OnBeginning(Connection, IsolationLevel, Transaction, this),
-                    x =>
+                Invoke(
+                    action: () =>
                     {
+                        Transaction = BeginTransaction();
                         transactions.Push(Transaction);
-                        x.OnBegan(Connection, IsolationLevel, Transaction, this);
-                    });
+                    }, 
+                    onExecuting: x => x.OnBeginning(Connection, IsolationLevel, Transaction, this),
+                    onExecuted: x => x.OnBegan(Connection, IsolationLevel, Transaction, this));
                 return Transaction;
             }
 
             private void InvokeCommit(Stack<TTransaction> transactions)
             {
-                Invoke(() => Transaction.Commit(), x => x.OnCommitting(Connection, IsolationLevel, Transaction, this),
-                    x =>
+                Invoke(
+                    action: () =>
                     {
+                        Transaction.Commit();
                         transactions.Pop();
-                        x.OnCommitted(Connection, IsolationLevel, Transaction, this);
-                    });
+                    },
+                    onExecuting: x => x.OnCommitting(Connection, IsolationLevel, Transaction, this),
+                    onExecuted: x => x.OnCommitted(Connection, IsolationLevel, Transaction, this));
             }
 
             private void InvokeRollback(Stack<TTransaction> transactions)
             {
-                Invoke(() => Transaction.Rollback(), x => x.OnRollingBack(Connection, IsolationLevel, Transaction, this),
-                    x =>
+                Invoke(
+                    action: () =>
                     {
+                        Transaction.Rollback();
                         transactions.Pop();
-                        x.OnRolledBack(Connection, IsolationLevel, Transaction, this);
-                    });
+                    },
+                    onExecuting: x => x.OnRollingBack(Connection, IsolationLevel, Transaction, this),
+                    onExecuted: x => x.OnRolledBack(Connection, IsolationLevel, Transaction, this));
             }
 
             protected abstract TTransaction BeginTransaction();
