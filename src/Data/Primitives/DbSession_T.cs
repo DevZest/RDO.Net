@@ -28,7 +28,7 @@ namespace DevZest.Data.Primitives
             return Connection;
         }
 
-        public sealed override Task OpenConnectionAsync(CancellationToken cancellationToken)
+        public sealed override Task OpenConnectionAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             return CreateConnectionInterceptorInvoker().OpenAsync(cancellationToken);
         }

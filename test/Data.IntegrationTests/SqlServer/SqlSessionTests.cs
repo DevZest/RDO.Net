@@ -11,7 +11,7 @@ namespace DevZest.Data.SqlServer
         {
             using (var db = CreateDb())
             {
-                db.OpenConnectionAsync(default(CancellationToken)).Wait();
+                db.OpenConnectionAsync().Wait();
                 db.ExecuteTransaction(() =>
                 {
                     db.GetSalesOrderInfoAsync(1).Wait();
