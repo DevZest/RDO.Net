@@ -8,7 +8,7 @@ using System.Data.Common;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class DbSession : AddonBag, IDisposable
+    public abstract partial class DbSession : AddonBag, IDisposable
     {
         #region IDisposable
 
@@ -38,8 +38,6 @@ namespace DevZest.Data.Primitives
         public abstract Task OpenConnectionAsync(CancellationToken cancellationToken = default(CancellationToken));
 
         public abstract void CloseConnection();
-
-        public abstract int TransactionCount { get; }
 
         protected internal abstract string AssignTempTableName(Model model);
 

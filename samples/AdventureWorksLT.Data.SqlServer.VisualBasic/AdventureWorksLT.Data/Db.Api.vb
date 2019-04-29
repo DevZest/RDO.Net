@@ -52,8 +52,11 @@ Partial Class Db
         Return Await result.ToDataSetAsync(ct)
     End Function
 
-    Public Overloads Function UpdateAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
-        Return ExecuteTransactionAsync(Function() PerformUpdateAsync(salesOrders, ct))
+    Public Overloads Async Function UpdateAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
+        Using transaction = BeginTransaction()
+            Await PerformUpdateAsync(salesOrders, ct)
+            Await transaction.CommitAsync()
+        End Using
     End Function
 
     Private Async Function PerformUpdateAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
@@ -66,8 +69,11 @@ Partial Class Db
         Await Me.SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
     End Function
 
-    Public Overloads Function InsertAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
-        Return ExecuteTransactionAsync(Function() PerformInsertAsync(salesOrders, ct))
+    Public Overloads Async Function InsertAsync(salesOrders As DataSet(Of SalesOrder), ct As CancellationToken) As Task
+        Using transaction = BeginTransaction()
+            Await PerformInsertAsync(salesOrders, ct)
+            Await transaction.CommitAsync(ct)
+        End Using
     End Function
 
     Private Async Function PerformInsertAsync(salesOrders As DataSet(Of SalesOrder), ByVal ct As CancellationToken) As Task

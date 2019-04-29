@@ -10,11 +10,10 @@ using DevZest.Data.Addons;
 
 namespace DevZest.Data.Primitives
 {
-    partial class DbSession<TConnection, TTransaction, TCommand, TReader>
+    partial class DbSession<TConnection, TCommand, TReader>
     {
         protected class Logger :
             IDbConnectionInterceptor<TConnection>,
-            IDbTransactionInterceptor<TConnection, TTransaction>,
             IDbReaderInterceptor<TCommand, TReader>,
             IDbNonQueryInterceptor<TCommand>
         {
@@ -72,45 +71,6 @@ namespace DevZest.Data.Primitives
                 else
                     Write(LogCategory.ConnectionClosed, DiagnosticMessages.DbLogger_ConnectionClosed(DateTimeOffset.Now));
                 Write(LogCategory.ConnectionClosed, Environment.NewLine);
-            }
-
-            public virtual void OnTransactionBeginning(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-            }
-
-            public virtual void OnTransactionBegan(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                if (invoker.Exception != null)
-                    Write(LogCategory.TransactionBegan, DiagnosticMessages.DbLogger_TransactionStartError(DateTimeOffset.Now, invoker.Exception.Message));
-                else
-                    Write(LogCategory.TransactionBegan, DiagnosticMessages.DbLogger_TransactionStarted(DateTimeOffset.Now));
-                Write(LogCategory.TransactionBegan, Environment.NewLine);
-            }
-
-            public virtual void OnTransactionCommitting(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-            }
-
-            public virtual void OnTransactionCommitted(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                if (invoker.Exception != null)
-                    Write(LogCategory.TransactionCommitted, DiagnosticMessages.DbLogger_TransactionCommitError(DateTimeOffset.Now, invoker.Exception.Message));
-                else
-                    Write(LogCategory.TransactionCommitted, DiagnosticMessages.DbLogger_TransactionCommitted(DateTimeOffset.Now));
-                Write(LogCategory.TransactionCommitted, Environment.NewLine);
-            }
-
-            public virtual void OnTransactionRollingBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-            }
-
-            public virtual void OnTransactionRolledBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                if (invoker.Exception != null)
-                    Write(LogCategory.TransactionRolledBack, DiagnosticMessages.DbLogger_TransactionRollbackError(DateTimeOffset.Now, invoker.Exception.Message));
-                else
-                    Write(LogCategory.TransactionRolledBack, DiagnosticMessages.DbLogger_TransactionRolledBack(DateTimeOffset.Now));
-                Write(LogCategory.TransactionRolledBack, Environment.NewLine);
             }
 
             protected virtual void LogCommand(TCommand command)
@@ -258,42 +218,6 @@ namespace DevZest.Data.Primitives
             void IDbConnectionInterceptor<TConnection>.OnClosed(TConnection connection, AddonInvoker invoker)
             {
                 OnConnectionClosed(connection, invoker);
-            }
-
-            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.OnBeginning(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                OnTransactionBeginning(connection, isolationLevel, transaction, invoker);
-            }
-
-            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.OnBegan(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                OnTransactionBegan(connection, isolationLevel, transaction, invoker);
-            }
-
-            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.OnCommitting(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                OnTransactionCommitting(connection, isolationLevel, transaction, invoker);
-            }
-
-            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.OnCommitted(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                OnTransactionCommitted(connection, isolationLevel, transaction, invoker);
-            }
-
-            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.OnRollingBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                OnTransactionRollingBack(connection, isolationLevel, transaction, invoker);
-            }
-
-            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-            void IDbTransactionInterceptor<TConnection, TTransaction>.OnRolledBack(TConnection connection, IsolationLevel? isolationLevel, TTransaction transaction, AddonInvoker invoker)
-            {
-                OnTransactionRolledBack(connection, isolationLevel, transaction, invoker);
             }
         }
     }

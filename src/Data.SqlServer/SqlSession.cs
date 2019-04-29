@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.SqlServer
 {
-    public abstract partial class SqlSession : DbSession<SqlConnection, SqlTransaction, SqlCommand, SqlReader>
+    public abstract partial class SqlSession : DbSession<SqlConnection, SqlCommand, SqlReader>
     {
         protected SqlSession(SqlConnection sqlConnection)
             : base(sqlConnection)
@@ -37,11 +37,6 @@ namespace DevZest.Data.SqlServer
         protected override string GetSqlString(DbQueryStatement query)
         {
             return SqlGenerator.Select(this, query).CreateCommand(null).ToTraceString();
-        }
-
-        protected sealed override TransactionInvoker CreateTransactionInvoker(IsolationLevel? isolationLevel)
-        {
-            return new SqlTransactionInterceptorInvoker(this, Connection, isolationLevel);
         }
 
         protected sealed override SqlCommand GetQueryCommand(DbQueryStatement queryStatement)

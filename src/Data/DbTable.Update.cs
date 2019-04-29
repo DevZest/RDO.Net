@@ -80,6 +80,12 @@ namespace DevZest.Data
             return UpdateAsync(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match, ct);
         }
 
+        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
+            where TSource : class, T, new()
+        {
+            return UpdateAsync(source, columnMapper, KeyMapping.Match, ct);
+        }
+
         public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> joinMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IEntity, new()
         {

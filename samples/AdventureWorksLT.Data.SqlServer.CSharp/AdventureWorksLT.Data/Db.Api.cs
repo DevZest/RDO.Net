@@ -66,9 +66,13 @@ namespace DevZest.Samples.AdventureWorksLT
             return await result.ToDataSetAsync(ct);
         }
 
-        public Task UpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        public async Task UpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
-            return ExecuteTransactionAsync(() => PerformUpdateAsync(salesOrders, ct));
+            using (var transaction = BeginTransaction())
+            {
+                await PerformUpdateAsync(salesOrders, ct);
+                await transaction.CommitAsync(ct);
+            }
         }
 
         private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
@@ -81,9 +85,13 @@ namespace DevZest.Samples.AdventureWorksLT
             await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
         }
 
-        public Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        public async Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
         {
-            return ExecuteTransactionAsync(() => PerformInsertAsync(salesOrders, ct));
+            using (var transaction = BeginTransaction())
+            {
+                await PerformInsertAsync(salesOrders, ct);
+                await transaction.CommitAsync(ct);
+            }
         }
 
         private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)

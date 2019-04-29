@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract partial class DbSession<TConnection, TTransaction, TCommand, TReader> : DbSession
+    public abstract partial class DbSession<TConnection, TCommand, TReader> : DbSession
         where TConnection : DbConnection
-        where TTransaction : DbTransaction
         where TCommand : DbCommand
         where TReader : DbReader
     {
@@ -43,57 +42,17 @@ namespace DevZest.Data.Primitives
             return new ConnectionInvoker(this, Connection);
         }
 
-        private Stack<TTransaction> _transactions = new Stack<TTransaction>();
-        public sealed override int TransactionCount
+        protected Task<int> ExecuteNonQueryAsync(TCommand command, CancellationToken ct)
         {
-            get { return _transactions.Count; }
+            if (CurrentTransaction != null)
+                return CurrentTransaction.ExecuteNonQueryAsync(command, ct);
+            else
+                return InternalExecuteNonQueryAsync(command, ct);
         }
 
-        public TTransaction CurrentTransaction
+        private Task<int> InternalExecuteNonQueryAsync(TCommand command, CancellationToken ct)
         {
-            get { return _transactions.Count > 0 ? _transactions.Peek() : null; }
-        }
-
-        public void ExecuteTransaction(Action action)
-        {
-            action.VerifyNotNull(nameof(action));
-            CreateTransactionInvoker(null).Execute(_transactions, action);
-        }
-
-        public void ExecuteTransaction(IsolationLevel isolationLevel, Action action)
-        {
-            action.VerifyNotNull(nameof(action));
-            CreateTransactionInvoker(isolationLevel).Execute(_transactions, action);
-        }
-
-        public Task ExecuteTransactionAsync(Func<Task> action)
-        {
-            action.VerifyNotNull(nameof(action));
-            return CreateTransactionInvoker(null).ExecuteAsync(_transactions, action);
-        }
-
-        public Task ExecuteTransactionAsync(Func<CancellationToken, Task> action, CancellationToken ct)
-        {
-            action.VerifyNotNull(nameof(action));
-            return CreateTransactionInvoker(null).ExecuteAsync(_transactions, action, ct);
-        }
-
-        protected abstract TransactionInvoker CreateTransactionInvoker(IsolationLevel? isolationLevel);
-
-        private NonQueryCommandInvoker PrepareNonQueryCommandInvoker(TCommand command)
-        {
-            command.Transaction = CurrentTransaction;
-            return new NonQueryCommandInvoker(this, command);
-        }
-
-        protected int ExecuteNonQuery(TCommand command)
-        {
-            return PrepareNonQueryCommandInvoker(command).Execute();
-        }
-
-        protected Task<int> ExecuteNonQueryAsync(TCommand command, CancellationToken cancellationToken)
-        {
-            return PrepareNonQueryCommandInvoker(command).ExecuteAsync(cancellationToken);
+            return new NonQueryCommandInvoker(this, command).ExecuteAsync(ct);
         }
 
         protected internal abstract TCommand GetCreateTableCommand(Model model, bool isTempTable);
@@ -103,19 +62,7 @@ namespace DevZest.Data.Primitives
             return ExecuteNonQueryAsync(GetCreateTableCommand(model, isTempTable), cancellationToken);
         }
 
-        private ReaderInvoker CreateReaderInvoker(DbQueryStatement queryStatement)
-        {
-            var command = GetQueryCommand(queryStatement);
-            return PrepareReaderInvoker(queryStatement.Model, command);
-        }
-
         protected abstract TCommand GetQueryCommand(DbQueryStatement queryStatement);
-
-        private ReaderInvoker PrepareReaderInvoker(Model model, TCommand command)
-        {
-            command.Transaction = CurrentTransaction;
-            return CreateReaderInvoker(model, command);
-        }
 
         protected abstract ReaderInvoker CreateReaderInvoker(Model model, TCommand command);
 
@@ -124,12 +71,31 @@ namespace DevZest.Data.Primitives
             return await ExecuteReaderAsync(dbSet, cancellationToken);
         }
 
-
-        public Task<TReader> ExecuteReaderAsync<T>(DbSet<T> dbSet, CancellationToken ct = default(CancellationToken))
-            where T : class, IEntity, new()
+        public Task<TReader> ExecuteReaderAsync(IDbSet dbSet, CancellationToken ct = default(CancellationToken))
         {
             dbSet.VerifyNotNull(nameof(dbSet));
-            return CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(ct);
+
+            return ExecuteReaderAsync(dbSet.QueryStatement, ct);
+        }
+
+        private Task<TReader> ExecuteReaderAsync(DbQueryStatement queryStatement, CancellationToken ct)
+        {
+            var model = queryStatement.Model;
+            var command = GetQueryCommand(queryStatement);
+            return ExecuteReaderAsync(model, command, ct);
+        }
+
+        private Task<TReader> ExecuteReaderAsync(Model model, TCommand command, CancellationToken ct)
+        {
+            if (CurrentTransaction != null)
+                return CurrentTransaction.ExecuteReaderAsync(model, command, ct);
+            else
+                return InternalExecuteReaderAsync(model, command, ct);
+        }
+
+        private Task<TReader> InternalExecuteReaderAsync(Model model, TCommand command, CancellationToken ct)
+        {
+            return CreateReaderInvoker(model, command).ExecuteAsync(ct);
         }
 
         protected virtual Logger CreateLogger()
@@ -169,7 +135,7 @@ namespace DevZest.Data.Primitives
 
         private async Task RecursiveFillDataSetAsync(IDbSet dbSet, Model dataSetModel, CancellationToken cancellationToken)
         {
-            using (var reader = await CreateReaderInvoker(dbSet.SequentialQueryStatement).ExecuteAsync(cancellationToken))
+            using (var reader = await ExecuteReaderAsync(dbSet.SequentialQueryStatement, cancellationToken))
             {
                 var columns = GetReaderColumns(dataSetModel);
                 var parentRowIdColumn = reader.Model.GetSysParentRowIdColumn(createIfNotExist: false);
@@ -254,7 +220,7 @@ namespace DevZest.Data.Primitives
 
         internal sealed override async Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken)
         {
-            using (var reader = await CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(cancellationToken))
+            using (var reader = await ExecuteReaderAsync(dbSet, cancellationToken))
             {
                 var columns = GetReaderColumns(dataSet.Model);
 

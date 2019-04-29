@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
-    partial class DbSession<TConnection, TTransaction, TCommand, TReader>
+    partial class DbSession<TConnection, TCommand, TReader>
     {
         private sealed class ConnectionInvoker : AddonInvoker<IDbConnectionInterceptor<TConnection>>
         {

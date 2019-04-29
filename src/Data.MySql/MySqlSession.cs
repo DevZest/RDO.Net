@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.MySql
 {
-    public abstract partial class MySqlSession : DbSession<MySqlConnection, MySqlTransaction, MySqlCommand, MySqlReader>
+    public abstract partial class MySqlSession : DbSession<MySqlConnection, MySqlCommand, MySqlReader>
     {
         protected MySqlSession(MySqlConnection mySqlConnection)
             : base(mySqlConnection)
@@ -58,11 +58,6 @@ namespace DevZest.Data.MySql
             return GetSqlString(query);
         }
 #endif
-
-        protected sealed override TransactionInvoker CreateTransactionInvoker(IsolationLevel? isolationLevel)
-        {
-            return new MySqlTransactionInterceptorInvoker(this, Connection, isolationLevel);
-        }
 
         protected sealed override MySqlCommand GetQueryCommand(DbQueryStatement queryStatement)
         {
