@@ -87,7 +87,6 @@ namespace DevZest.Data.MySql
 
                 PerformDispose();
                 CurrentTransaction = null;
-                _isFrozen = true;
                 _isDisposed = true;
             }
 
@@ -128,7 +127,7 @@ namespace DevZest.Data.MySql
             private void VerifyNotFrozen()
             {
                 if (_isFrozen)
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException(DiagnosticMessages.VerifyNotFrozenTransaction);
             }
 
             private void PerformDispose()

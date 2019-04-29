@@ -51,6 +51,14 @@ namespace DevZest.Data.SqlServer
             get { return GetString("VerifyIsCurrentTransaction"); }
         }
 
+        /// <summary>
+        /// No operation is allowed on committed or rollbacked transaction.
+        /// </summary>
+        public static string VerifyNotFrozenTransaction
+        {
+            get { return GetString("VerifyNotFrozenTransaction"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

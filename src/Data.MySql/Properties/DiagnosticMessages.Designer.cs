@@ -52,6 +52,14 @@ namespace DevZest.Data.MySql
         }
 
         /// <summary>
+        /// No operation is allowed on committed or rollbacked transaction.
+        /// </summary>
+        public static string VerifyNotFrozenTransaction
+        {
+            get { return GetString("VerifyNotFrozenTransaction"); }
+        }
+
+        /// <summary>
         /// Version {version} is not supported. Only version {lowestSupported} onwards are supported.
         /// </summary>
         public static string VersionNotSupported(object version, object lowestSupported)

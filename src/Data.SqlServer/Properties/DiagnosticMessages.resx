@@ -132,4 +132,7 @@
   <data name="VerifyIsCurrentTransaction" xml:space="preserve">
     <value>Operation is only allowed for current transaction.</value>
   </data>
+  <data name="VerifyNotFrozenTransaction" xml:space="preserve">
+    <value>No operation is allowed on committed or rollbacked transaction.</value>
+  </data>
 </root>

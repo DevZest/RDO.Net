@@ -180,7 +180,7 @@ namespace DevZest.Data.SqlServer
             private void VerifyNotFrozen()
             {
                 if (_isFrozen)
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException(DiagnosticMessages.VerifyNotFrozenTransaction);
             }
 
             protected abstract void Commit();
