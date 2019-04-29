@@ -14,6 +14,7 @@ namespace DevZest.Data.Primitives
     {
         protected class Logger :
             IDbConnectionInterceptor<TConnection>,
+            IDbTransactionInterceptor,
             IDbReaderInterceptor<TCommand, TReader>,
             IDbNonQueryInterceptor<TCommand>
         {
@@ -71,6 +72,45 @@ namespace DevZest.Data.Primitives
                 else
                     Write(LogCategory.ConnectionClosed, DiagnosticMessages.DbLogger_ConnectionClosed(DateTimeOffset.Now));
                 Write(LogCategory.ConnectionClosed, Environment.NewLine);
+            }
+
+            public virtual void OnTransactionBeginning(IsolationLevel? isolationLevel, string name, AddonInvoker invoker)
+            {
+            }
+
+            public virtual void OnTransactionBegan(IsolationLevel? isolationLevel, string name, AddonInvoker invoker)
+            {
+                if (invoker.Exception != null)
+                    Write(LogCategory.TransactionBegan, DiagnosticMessages.DbLogger_TransactionStartError(isolationLevel, name, DateTimeOffset.Now, invoker.Exception.Message));
+                else
+                    Write(LogCategory.TransactionBegan, DiagnosticMessages.DbLogger_TransactionStarted(isolationLevel, name, DateTimeOffset.Now));
+                Write(LogCategory.TransactionBegan, Environment.NewLine);
+            }
+
+            public virtual void OnTransactionCommitting(ITransaction transaction, AddonInvoker invoker)
+            {
+            }
+
+            public virtual void OnTransactionCommitted(ITransaction transaction, AddonInvoker invoker)
+            {
+                if (invoker.Exception != null)
+                    Write(LogCategory.TransactionCommitted, DiagnosticMessages.DbLogger_TransactionCommitError(transaction.Name, transaction.Level, DateTimeOffset.Now, invoker.Exception.Message));
+                else
+                    Write(LogCategory.TransactionCommitted, DiagnosticMessages.DbLogger_TransactionCommitted(transaction.Name, transaction.Level, DateTimeOffset.Now));
+                Write(LogCategory.TransactionCommitted, Environment.NewLine);
+            }
+
+            public virtual void OnTransactionRollingBack(ITransaction transaction, AddonInvoker invoker)
+            {
+            }
+
+            public virtual void OnTransactionRolledBack(ITransaction transaction, AddonInvoker invoker)
+            {
+                if (invoker.Exception != null)
+                    Write(LogCategory.TransactionRolledBack, DiagnosticMessages.DbLogger_TransactionRollbackError(transaction.Name, transaction.Level, DateTimeOffset.Now, invoker.Exception.Message));
+                else
+                    Write(LogCategory.TransactionRolledBack, DiagnosticMessages.DbLogger_TransactionRolledBack(transaction.Name, transaction.Level, DateTimeOffset.Now));
+                Write(LogCategory.TransactionRolledBack, Environment.NewLine);
             }
 
             protected virtual void LogCommand(TCommand command)
@@ -218,6 +258,42 @@ namespace DevZest.Data.Primitives
             void IDbConnectionInterceptor<TConnection>.OnClosed(TConnection connection, AddonInvoker invoker)
             {
                 OnConnectionClosed(connection, invoker);
+            }
+
+            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+            void IDbTransactionInterceptor.OnBeginning(IsolationLevel? isolationLevel, string name, AddonInvoker invoker)
+            {
+                OnTransactionBeginning(isolationLevel, name, invoker);
+            }
+
+            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+            void IDbTransactionInterceptor.OnBegan(IsolationLevel? isolationLevel, string name, AddonInvoker invoker)
+            {
+                OnTransactionBegan(isolationLevel, name, invoker);
+            }
+
+            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+            void IDbTransactionInterceptor.OnCommitting(ITransaction transaction, AddonInvoker invoker)
+            {
+                OnTransactionCommitting(transaction, invoker);
+            }
+
+            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+            void IDbTransactionInterceptor.OnCommitted(ITransaction transaction, AddonInvoker invoker)
+            {
+                OnTransactionCommitted(transaction, invoker);
+            }
+
+            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+            void IDbTransactionInterceptor.OnRollingBack(ITransaction transaction, AddonInvoker invoker)
+            {
+                OnTransactionRollingBack(transaction, invoker);
+            }
+
+            [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+            void IDbTransactionInterceptor.OnRolledBack(ITransaction transaction, AddonInvoker invoker)
+            {
+                OnTransactionRolledBack(transaction, invoker);
             }
         }
     }

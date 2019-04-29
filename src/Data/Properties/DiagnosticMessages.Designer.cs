@@ -204,51 +204,51 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Failed to commit transaction at {time} with error: {error}
+        /// Failed to commit transaction (Name: {name}, Level: {level}) at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_TransactionCommitError(object time, object error)
+        public static string DbLogger_TransactionCommitError(object name, object level, object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionCommitError", "time", "error"), time, error);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionCommitError", "name", "level", "time", "error"), name, level, time, error);
         }
 
         /// <summary>
-        /// Committed transaction at {time}
+        /// Committed transaction (Name: {name}, Level: {level}) at {time}
         /// </summary>
-        public static string DbLogger_TransactionCommitted(object time)
+        public static string DbLogger_TransactionCommitted(object name, object level, object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionCommitted", "time"), time);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionCommitted", "name", "level", "time"), name, level, time);
         }
 
         /// <summary>
-        /// Failed to rollback transaction at {time} with error: {error}
+        /// Failed to rollback transaction (Name: {name}, Level: {level}) at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_TransactionRollbackError(object time, object error)
+        public static string DbLogger_TransactionRollbackError(object name, object level, object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionRollbackError", "time", "error"), time, error);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionRollbackError", "name", "level", "time", "error"), name, level, time, error);
         }
 
         /// <summary>
-        /// Rolled back transaction at {time}
+        /// Rolled back transaction (Name: {name}, Level: {level}) at {time}
         /// </summary>
-        public static string DbLogger_TransactionRolledBack(object time)
+        public static string DbLogger_TransactionRolledBack(object name, object level, object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionRolledBack", "time"), time);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionRolledBack", "name", "level", "time"), name, level, time);
         }
 
         /// <summary>
-        /// Started transaction at {time}
+        /// Started transaction (Isolation: {isolation}, Name: {name}) at {time}
         /// </summary>
-        public static string DbLogger_TransactionStarted(object time)
+        public static string DbLogger_TransactionStarted(object isolation, object name, object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionStarted", "time"), time);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionStarted", "isolation", "name", "time"), isolation, name, time);
         }
 
         /// <summary>
-        /// Failed to start transaction at {time} with error: {error}
+        /// Failed to start transaction (Isolation: {isolation} Name: {name}) at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_TransactionStartError(object time, object error)
+        public static string DbLogger_TransactionStartError(object isolation, object name, object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionStartError", "time", "error"), time, error);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionStartError", "isolation", "name", "time", "error"), isolation, name, time, error);
         }
 
         /// <summary>

@@ -12,7 +12,11 @@ namespace DevZest.Data.Primitives
 
         protected abstract class Transaction : ITransaction
         {
-            protected abstract DbSession<TConnection, TCommand, TReader> GetDbSession();
+            protected internal abstract DbSession<TConnection, TCommand, TReader> GetDbSession();
+
+            public abstract string Name { get; }
+
+            public abstract int Level { get; }
 
             public abstract bool IsDisposed { get; }
 
@@ -32,13 +36,31 @@ namespace DevZest.Data.Primitives
                 return GetDbSession().InternalExecuteReaderAsync(model, command, ct);
             }
 
-            public abstract Task CommitAsync(CancellationToken ct);
+            public Task CommitAsync(CancellationToken ct)
+            {
+                return TransactionInvoker.CommitAsync(this, ct);
+            }
 
-            public abstract Task RollbackAsync(CancellationToken ct);
+            protected internal abstract Task PerformCommitAsync(CancellationToken ct);
+
+            public Task RollbackAsync(CancellationToken ct)
+            {
+                return TransactionInvoker.RollbackAsync(this, ct);
+            }
+
+            protected internal abstract Task PerformRollbackAsync(CancellationToken ct);
         }
 
-        public abstract ITransaction BeginTransaction(string name = null);
+        public ITransaction BeginTransaction(string name = null)
+        {
+            return BeginTransaction(null, name);
+        }
 
-        public abstract ITransaction BeginTransaction(IsolationLevel isolation, string name = null);
+        public ITransaction BeginTransaction(IsolationLevel? isolation, string name = null)
+        {
+            return TransactionInvoker.BeginTransaction(this, isolation, name);
+        }
+
+        protected internal abstract ITransaction PerformBeginTransaction(IsolationLevel? isolation, string name);
     }
 }

@@ -24,20 +24,16 @@ namespace DevZest.Data.MySql
 
         private sealed class SessionTransaction : Transaction
         {
-            public static SessionTransaction Create(MySqlSession mySqlSession)
+            public static SessionTransaction Create(MySqlSession mySqlSession, IsolationLevel? isolation)
             {
                 if (mySqlSession.TransactionCount == 0)
-                    return new SessionTransaction(mySqlSession, mySqlSession.Connection.BeginTransaction());
+                {
+                    var connection = mySqlSession.Connection;
+                    var transaction = isolation.HasValue ? connection.BeginTransaction(isolation.Value) : connection.BeginTransaction();
+                    return new SessionTransaction(mySqlSession, transaction);
+                }
                 else
-                    throw new InvalidOperationException();
-            }
-
-            public static SessionTransaction Create(MySqlSession sqlSession, IsolationLevel isolation)
-            {
-                if (sqlSession.TransactionCount == 0)
-                    return new SessionTransaction(sqlSession, sqlSession.Connection.BeginTransaction(isolation));
-                else
-                    throw new InvalidOperationException();
+                    throw new NotSupportedException(DiagnosticMessages.NestedTransactionNotSupported);
             }
 
             public SessionTransaction(MySqlSession mySqlSession, MySqlTransaction mySqlTransaction)
@@ -80,6 +76,10 @@ namespace DevZest.Data.MySql
                 get { return _isDisposed; }
             }
 
+            public override string Name => null;
+
+            public override int Level => 0;
+
             public sealed override void Dispose()
             {
                 if (_isDisposed)
@@ -90,7 +90,7 @@ namespace DevZest.Data.MySql
                 _isDisposed = true;
             }
 
-            public sealed override Task CommitAsync(CancellationToken ct)
+            protected sealed override Task PerformCommitAsync(CancellationToken ct)
             {
                 VerifyIsCurrent();
                 VerifyNotFrozen();
@@ -99,7 +99,7 @@ namespace DevZest.Data.MySql
                 return Task.CompletedTask;
             }
 
-            public sealed override Task RollbackAsync(CancellationToken ct)
+            protected sealed override Task PerformRollbackAsync(CancellationToken ct)
             {
                 VerifyIsCurrent();
                 VerifyNotFrozen();
@@ -139,12 +139,7 @@ namespace DevZest.Data.MySql
             }
         }
 
-        public sealed override ITransaction BeginTransaction(string name = null)
-        {
-            return SessionTransaction.Create(this);
-        }
-
-        public sealed override ITransaction BeginTransaction(IsolationLevel isolation, string name = null)
+        protected sealed override ITransaction PerformBeginTransaction(IsolationLevel? isolation, string name = null)
         {
             return SessionTransaction.Create(this, isolation);
         }

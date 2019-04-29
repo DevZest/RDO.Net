@@ -190,22 +190,22 @@
     <value>Failed to open connection asynchronously at {time} with error: {error}</value>
   </data>
   <data name="DbLogger_TransactionCommitError" xml:space="preserve">
-    <value>Failed to commit transaction at {time} with error: {error}</value>
+    <value>Failed to commit transaction (Name: {name}, Level: {level}) at {time} with error: {error}</value>
   </data>
   <data name="DbLogger_TransactionCommitted" xml:space="preserve">
-    <value>Committed transaction at {time}</value>
+    <value>Committed transaction (Name: {name}, Level: {level}) at {time}</value>
   </data>
   <data name="DbLogger_TransactionRollbackError" xml:space="preserve">
-    <value>Failed to rollback transaction at {time} with error: {error}</value>
+    <value>Failed to rollback transaction (Name: {name}, Level: {level}) at {time} with error: {error}</value>
   </data>
   <data name="DbLogger_TransactionRolledBack" xml:space="preserve">
-    <value>Rolled back transaction at {time}</value>
+    <value>Rolled back transaction (Name: {name}, Level: {level}) at {time}</value>
   </data>
   <data name="DbLogger_TransactionStarted" xml:space="preserve">
-    <value>Started transaction at {time}</value>
+    <value>Started transaction (Isolation: {isolation}, Name: {name}) at {time}</value>
   </data>
   <data name="DbLogger_TransactionStartError" xml:space="preserve">
-    <value>Failed to start transaction at {time} with error: {error}</value>
+    <value>Failed to start transaction (Isolation: {isolation} Name: {name}) at {time} with error: {error}</value>
   </data>
   <data name="DbQueryBuilder_DuplicateFrom" xml:space="preserve">
     <value>Cannot call From method multiple times.</value>

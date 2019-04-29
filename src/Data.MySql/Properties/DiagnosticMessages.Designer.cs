@@ -44,6 +44,14 @@ namespace DevZest.Data.MySql
         }
 
         /// <summary>
+        /// Nested transaction is not supported by MySQL.
+        /// </summary>
+        public static string NestedTransactionNotSupported
+        {
+            get { return GetString("NestedTransactionNotSupported"); }
+        }
+
+        /// <summary>
         /// Operation is only allowed for current transaction.
         /// </summary>
         public static string VerifyIsCurrentTransaction

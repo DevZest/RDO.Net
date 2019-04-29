@@ -29,18 +29,14 @@ namespace DevZest.Data.SqlServer
 
         private abstract class SessionTransaction : Transaction
         {
-            public static SessionTransaction Create(SqlSession sqlSession, string name)
+            public static SessionTransaction Create(SqlSession sqlSession, IsolationLevel? isolation, string name)
             {
                 if (sqlSession.TransactionCount == 0)
-                    return new Transaction(sqlSession, sqlSession.Connection.BeginTransaction(name), name);
-                else
-                    return new SavePoint(sqlSession, sqlSession.GetCurrentTransaction().SqlTransaction, name);
-            }
-
-            public static SessionTransaction Create(SqlSession sqlSession, IsolationLevel isolation, string name)
-            {
-                if (sqlSession.TransactionCount == 0)
-                    return new Transaction(sqlSession, sqlSession.Connection.BeginTransaction(isolation, name), name);
+                {
+                    var connection = sqlSession.Connection;
+                    var transaction = isolation.HasValue ? connection.BeginTransaction(isolation.Value, name) : connection.BeginTransaction(name);
+                    return new Transaction(sqlSession, transaction, name);
+                }
                 else
                     return new SavePoint(sqlSession, sqlSession.GetCurrentTransaction().SqlTransaction, name);
             }
@@ -86,8 +82,8 @@ namespace DevZest.Data.SqlServer
             {
                 SqlSession = sqlSession;
                 SqlTransaction = sqlTransaction;
-                Level = sqlSession.TransactionCount;
-                Name = GetName(name);
+                _level = sqlSession.TransactionCount;
+                _name = GetName(name);
                 Transactions.Push(this);
             }
 
@@ -123,9 +119,11 @@ namespace DevZest.Data.SqlServer
                 get { return SqlSession._transactions; }
             }
 
-            private int Level { get; }
+            private readonly int _level;
+            public sealed override int Level => _level;
 
-            private string Name { get; }
+            private readonly string _name;
+            public sealed override string Name => _name;
 
             private bool _isDisposed;
             public sealed override bool IsDisposed
@@ -143,7 +141,7 @@ namespace DevZest.Data.SqlServer
                 _isDisposed = true;
             }
 
-            public sealed override Task CommitAsync(CancellationToken ct)
+            protected sealed override Task PerformCommitAsync(CancellationToken ct)
             {
                 VerifyIsCurrent();
                 VerifyNotFrozen();
@@ -152,7 +150,7 @@ namespace DevZest.Data.SqlServer
                 return Task.CompletedTask;
             }
 
-            public sealed override Task RollbackAsync(CancellationToken ct)
+            protected sealed override Task PerformRollbackAsync(CancellationToken ct)
             {
                 VerifyIsCurrent();
                 VerifyNotFrozen();
@@ -196,12 +194,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        public sealed override ITransaction BeginTransaction(string name = null)
-        {
-            return SessionTransaction.Create(this, name);
-        }
-
-        public sealed override ITransaction BeginTransaction(IsolationLevel isolation, string name = null)
+        protected sealed override ITransaction PerformBeginTransaction(IsolationLevel? isolation, string name = null)
         {
             return SessionTransaction.Create(this, isolation, name);
         }
