@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using DevZest.Data.Primitives;
@@ -10,34 +10,45 @@ namespace DevZest.Data.MySql
 {
     partial class MySqlSession
     {
-        private readonly Stack<MySqlTransaction> _transactions = new Stack<MySqlTransaction>();
+        private SessionTransaction _currentTransaction;
 
         public sealed override int TransactionCount
         {
-            get { return _transactions.Count; }
+            get { return _currentTransaction == null ? 0 : 1; }
         }
 
         protected sealed override Transaction CurrentTransaction
         {
-            get { return _transactions.Count == 0 ? null : _transactions.Peek(); }
+            get { return _currentTransaction; }
         }
 
-        private sealed class MySqlTransaction : Transaction
+        private sealed class SessionTransaction : Transaction
         {
-            public MySqlTransaction(MySqlSession mySqlSession, string name)
+            public static SessionTransaction Create(MySqlSession mySqlSession)
             {
-                MySqlSession = mySqlSession;
-                Level = mySqlSession.TransactionCount;
-                Name = GetName(name);
-                Transactions.Push(this);
+                if (mySqlSession.TransactionCount == 0)
+                    return new SessionTransaction(mySqlSession, mySqlSession.Connection.BeginTransaction());
+                else
+                    throw new InvalidOperationException();
             }
 
-            private string GetName(string name)
+            public static SessionTransaction Create(MySqlSession sqlSession, IsolationLevel isolation)
             {
-                if (string.IsNullOrEmpty(name))
-                    name = "_SYS_XACT";
-                return string.Format("{0}_{1}", name, Level);
+                if (sqlSession.TransactionCount == 0)
+                    return new SessionTransaction(sqlSession, sqlSession.Connection.BeginTransaction(isolation));
+                else
+                    throw new InvalidOperationException();
             }
+
+            public SessionTransaction(MySqlSession mySqlSession, MySqlTransaction mySqlTransaction)
+            {
+                MySqlSession = mySqlSession;
+                MySqlTransaction = mySqlTransaction;
+                Debug.Assert(CurrentTransaction == null);
+                CurrentTransaction = this;
+            }
+
+            public MySqlTransaction MySqlTransaction { get; }
 
             private bool IsCurrent
             {
@@ -57,14 +68,11 @@ namespace DevZest.Data.MySql
                 return MySqlSession;
             }
 
-            private Stack<MySqlTransaction> Transactions
+            private SessionTransaction CurrentTransaction
             {
-                get { return MySqlSession._transactions; }
+                get { return MySqlSession._currentTransaction; }
+                set { MySqlSession._currentTransaction = value; }
             }
-
-            private int Level { get; }
-
-            private string Name { get; }
 
             private bool _isDisposed;
             public sealed override bool IsDisposed
@@ -78,55 +86,68 @@ namespace DevZest.Data.MySql
                     return;
 
                 PerformDispose();
-                Transactions.Pop();
+                CurrentTransaction = null;
+                _isFrozen = true;
                 _isDisposed = true;
             }
 
             public sealed override Task CommitAsync(CancellationToken ct)
             {
                 VerifyIsCurrent();
-                return PerformCommitAsync(ct);
+                VerifyNotFrozen();
+                MySqlTransaction.Commit();
+                _isFrozen = true;
+                return Task.CompletedTask;
             }
 
             public sealed override Task RollbackAsync(CancellationToken ct)
             {
                 VerifyIsCurrent();
-                return PerformRollbackAsync(ct);
+                VerifyNotFrozen();
+                MySqlTransaction.Rollback();
+                _isFrozen = true;
+                return Task.CompletedTask;
             }
 
             protected override Task<int> ExecuteNonQueryAsync(MySqlCommand command, CancellationToken ct)
             {
+                VerifyNotFrozen();
+                command.Transaction = MySqlTransaction;
                 return PerformExecuteNonQueryAsync(command, ct);
             }
 
             protected override Task<MySqlReader> ExecuteReaderAsync(Model model, MySqlCommand command, CancellationToken ct)
             {
+                VerifyNotFrozen();
+                command.Transaction = MySqlTransaction;
                 return PerformExecuteReaderAsync(model, command, ct);
             }
 
-            private Task PerformCommitAsync(CancellationToken ct)
-            {
-                return Task.CompletedTask;
-            }
+            private bool _isFrozen;
 
-            private Task PerformRollbackAsync(CancellationToken ct)
+            private void VerifyNotFrozen()
             {
-                return Task.CompletedTask;
+                if (_isFrozen)
+                    throw new InvalidOperationException();
             }
 
             private void PerformDispose()
             {
+                if (_isFrozen)
+                    return;
+
+                MySqlTransaction.Rollback();
             }
         }
 
         public sealed override ITransaction BeginTransaction(string name = null)
         {
-            return new MySqlTransaction(this, name);
+            return SessionTransaction.Create(this);
         }
 
         public sealed override ITransaction BeginTransaction(IsolationLevel isolation, string name = null)
         {
-            return new MySqlTransaction(this, name);
+            return SessionTransaction.Create(this, isolation);
         }
     }
 }
