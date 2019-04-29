@@ -43,6 +43,14 @@ namespace DevZest.Data.SqlServer
             return string.Format(CultureInfo.CurrentCulture, GetString("SqlVersionNotSupported", "sqlServerVersion"), sqlServerVersion);
         }
 
+        /// <summary>
+        /// Operation is only allowed for current transaction.
+        /// </summary>
+        public static string VerifyIsCurrentTransaction
+        {
+            get { return GetString("VerifyIsCurrentTransaction"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

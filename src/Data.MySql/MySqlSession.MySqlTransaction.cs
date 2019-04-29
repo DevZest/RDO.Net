@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using DevZest.Data.Primitives;
@@ -27,8 +28,15 @@ namespace DevZest.Data.MySql
             {
                 MySqlSession = mySqlSession;
                 Level = mySqlSession.TransactionCount;
-                Name = name;
+                Name = GetName(name);
                 Transactions.Push(this);
+            }
+
+            private string GetName(string name)
+            {
+                if (string.IsNullOrEmpty(name))
+                    name = "_SYS_XACT";
+                return string.Format("{0}_{1}", name, Level);
             }
 
             private bool IsCurrent
@@ -39,7 +47,7 @@ namespace DevZest.Data.MySql
             private void VerifyIsCurrent()
             {
                 if (!IsCurrent)
-                    throw new InvalidOperationException("Operation only allowed for current transaction.");
+                    throw new InvalidOperationException(DiagnosticMessages.VerifyIsCurrentTransaction);
             }
 
             private MySqlSession MySqlSession { get; }
@@ -112,6 +120,11 @@ namespace DevZest.Data.MySql
         }
 
         public sealed override ITransaction BeginTransaction(string name = null)
+        {
+            return new MySqlTransaction(this, name);
+        }
+
+        public sealed override ITransaction BeginTransaction(IsolationLevel isolation, string name = null)
         {
             return new MySqlTransaction(this, name);
         }

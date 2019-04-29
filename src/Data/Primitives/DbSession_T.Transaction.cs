@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
@@ -37,5 +38,7 @@ namespace DevZest.Data.Primitives
         }
 
         public abstract ITransaction BeginTransaction(string name = null);
+
+        public abstract ITransaction BeginTransaction(IsolationLevel isolation, string name = null);
     }
 }

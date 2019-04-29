@@ -129,6 +129,9 @@
   <data name="FunctionNotSupported" xml:space="preserve">
     <value>The function {function} is not supported.</value>
   </data>
+  <data name="VerifyIsCurrentTransaction" xml:space="preserve">
+    <value>Operation is only allowed for current transaction.</value>
+  </data>
   <data name="VersionNotSupported" xml:space="preserve">
     <value>Version {version} is not supported. Only version {lowestSupported} onwards are supported.</value>
   </data>

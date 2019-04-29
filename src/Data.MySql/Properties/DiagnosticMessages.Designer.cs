@@ -44,6 +44,14 @@ namespace DevZest.Data.MySql
         }
 
         /// <summary>
+        /// Operation is only allowed for current transaction.
+        /// </summary>
+        public static string VerifyIsCurrentTransaction
+        {
+            get { return GetString("VerifyIsCurrentTransaction"); }
+        }
+
+        /// <summary>
         /// Version {version} is not supported. Only version {lowestSupported} onwards are supported.
         /// </summary>
         public static string VersionNotSupported(object version, object lowestSupported)
