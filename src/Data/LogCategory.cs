@@ -18,6 +18,9 @@ namespace DevZest.Data
         TransactionRolledBack = 0x400,
         CommandExecuting = 0x800,
         CommandExecuted = 0x1000,
+        Command = CommandText | CommandExecuting | CommandExecuted,
+        Connection = ConnectionOpening | ConnectionOpened | ConnectionClosing | ConnectionClosed,
+        Trsansaction = TransactionBeginning | TransactionBegan | TransactionCommitting | TransactionCommitted | TransactionRollingBack | TransactionRolledBack,
         All = 0x1FFF
     }
 }
