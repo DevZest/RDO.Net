@@ -102,7 +102,7 @@ namespace DevZest.Data
             var sourceModels = sourceColumn.ScalarSourceModels;
             foreach (var model in sourceModels)
             {
-                if (model != _sourceModel)
+                if (_sourceModel != null && model != _sourceModel)
                     throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidSourceParentModelSet(model), paramName);
             }
         }

@@ -59,5 +59,23 @@ namespace DevZest.Data.MySql
                 Assert.AreEqual(count, await db.ProductCategory.Where(x => x.ModifiedDate == newModifiedDate).CountAsync());
             }
         }
+
+        [TestMethod]
+        public async Task DbTable_UpdateAsync_self_increment()
+        {
+            var log = new StringBuilder();
+            using (var db = await MockSalesOrder.CreateAsync(CreateDb(log)))
+            {
+                _Int32 salesOrderId = 1;
+                var dataSet = await db.SalesOrderHeader.Where(_ => _.SalesOrderID == salesOrderId).ToDataSetAsync();
+                Assert.AreEqual(1, dataSet.Count);
+                var revisionNumber = dataSet._.RevisionNumber[0];
+
+                await db.SalesOrderHeader.UpdateAsync((m, _) => m.Select(_.RevisionNumber + 1, _.RevisionNumber), _ => _.SalesOrderID == salesOrderId);
+                dataSet = await db.SalesOrderHeader.Where(_ => _.SalesOrderID == salesOrderId).ToDataSetAsync();
+                Assert.AreEqual(1, dataSet.Count);
+                Assert.AreEqual(revisionNumber + 1, dataSet._.RevisionNumber[0]);
+            }
+        }
     }
 }
