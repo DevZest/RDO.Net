@@ -9,6 +9,17 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
+        public Task<int> InsertAsync(CancellationToken ct = default(CancellationToken))
+        {
+            return DbTableInsert<T>.ExecuteAsync(this, Array.Empty<ColumnMapping>(), ct);
+        }
+
+        public Task<int> InsertAsync(Action<ColumnMapper, T> columnMapper, CancellationToken ct = default(CancellationToken))
+        {
+            var columnMappings = Verify(columnMapper, nameof(columnMapper));
+            return DbTableInsert<T>.ExecuteAsync(this, columnMappings, ct);
+        }
+
         public Task<int> InsertAsync<TSource>(DbSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
@@ -30,6 +41,12 @@ namespace DevZest.Data
 
             if (Kind == DataSourceKind.DbTempTable || Model.GetIdentity(false) == null)
                 throw new ArgumentException(DiagnosticMessages.DbTable_VerifyUpdateIdentity, paramName);
+        }
+
+        internal DbSelectStatement BuildInsertStatement(IReadOnlyList<ColumnMapping> columnMappings)
+        {
+            Debug.Assert(columnMappings != null);
+            return new DbSelectStatement(Model, columnMappings, null, null, null, -1, -1);
         }
 
         internal DbSelectStatement BuildInsertStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)

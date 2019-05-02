@@ -44,7 +44,7 @@ namespace DevZest.Data.SqlServer
 
             if (statement.Select == null)
                 statement.From.Accept(result);
-            else
+            else if (statement.Select.Count > 0)
                 statement.Accept(result);
 
             if (model.IsIdentitySuspended())
@@ -66,7 +66,15 @@ namespace DevZest.Data.SqlServer
             var insertList = GetInsertList(model, select);
 
             sqlBuilder.Append("INSERT INTO ");
-            sqlBuilder.AppendLine(model.GetDbTableClause().Name.ToQuotedIdentifier());
+            sqlBuilder.Append(model.GetDbTableClause().Name.ToQuotedIdentifier());
+
+            if (insertList.Count == 0)
+            {
+                sqlBuilder.AppendLine(" DEFAULT VALUES;");
+                return;
+            }
+            else
+                sqlBuilder.AppendLine();
 
             sqlBuilder.Append('(');
             for (int i = 0; i < insertList.Count; i++)
