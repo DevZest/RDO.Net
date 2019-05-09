@@ -9,8 +9,14 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public Task<int> InsertAsync(Action<long?> outputIdentity = null, CancellationToken ct = default(CancellationToken))
+        public Task<int> InsertAsync(CancellationToken ct = default(CancellationToken))
         {
+            return DbTableInsert<T>.ExecuteAsync(this, Array.Empty<ColumnMapping>(), null, ct);
+        }
+
+        public Task<int> InsertAsync(Action<long?> outputIdentity, CancellationToken ct = default(CancellationToken))
+        {
+            outputIdentity.VerifyNotNull(nameof(outputIdentity));
             return DbTableInsert<T>.ExecuteAsync(this, Array.Empty<ColumnMapping>(), outputIdentity, ct);
         }
 
