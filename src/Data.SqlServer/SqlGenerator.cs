@@ -105,7 +105,8 @@ namespace DevZest.Data.SqlServer
 
             BuildInsertIntoClause(sqlBuilder, model, statement.Select);
 
-            statement.Accept(result);
+            if (statement.Select.Count > 0)
+                statement.Accept(result);
 
             if (model.IsIdentitySuspended())
                 SetIdentityInsert(sqlBuilder, model, false);

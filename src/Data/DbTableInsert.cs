@@ -32,7 +32,8 @@ namespace DevZest.Data
         public static async Task<int> ExecuteAsync(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, CancellationToken ct)
         {
             var statement = target.BuildInsertStatement(columnMappings);
-            return target.UpdateOrigin(null, await target.DbSession.InsertAsync(statement, ct));
+            var result = await target.DbSession.InsertScalarAsync(statement, false, ct);
+            return target.UpdateOrigin(null, result.Success ? 1 : 0);
         }
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, CancellationToken ct)

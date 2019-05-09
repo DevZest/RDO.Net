@@ -76,7 +76,8 @@ namespace DevZest.Data.MySql
             var sqlBuilder = result.SqlBuilder;
 
             BuildInsertIntoClause(sqlBuilder, model, statement.Select);
-            statement.Accept(result);
+            if (statement.Select.Count > 0)
+                statement.Accept(result);
 
             return result;
         }
