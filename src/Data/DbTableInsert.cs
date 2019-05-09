@@ -29,10 +29,11 @@ namespace DevZest.Data
             dataRow.IsPrimaryKeySealed = true;
         }
 
-        public static async Task<int> ExecuteAsync(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, CancellationToken ct)
+        public static async Task<int> ExecuteAsync(DbTable<T> target, IReadOnlyList<ColumnMapping> columnMappings, Action<long?> outputIdentity, CancellationToken ct)
         {
             var statement = target.BuildInsertStatement(columnMappings);
-            var result = await target.DbSession.InsertScalarAsync(statement, false, ct);
+            var result = await target.DbSession.InsertScalarAsync(statement, outputIdentity != null, ct);
+            outputIdentity?.Invoke(result.IdentityValue);
             return target.UpdateOrigin(null, result.Success ? 1 : 0);
         }
 
