@@ -9,12 +9,23 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public Task<int> InsertAsync(Action<long?> outputIdentity = null, CancellationToken ct = default(CancellationToken))
+        public Task<int> InsertAsync(CancellationToken ct = default(CancellationToken))
+        {
+            return DbTableInsert<T>.ExecuteAsync(this, Array.Empty<ColumnMapping>(), null, ct);
+        }
+
+        public Task<int> InsertAsync(Action<long?> outputIdentity, CancellationToken ct = default(CancellationToken))
         {
             return DbTableInsert<T>.ExecuteAsync(this, Array.Empty<ColumnMapping>(), outputIdentity, ct);
         }
 
-        public Task<int> InsertAsync(Action<ColumnMapper, T> columnMapper, Action<long?> outputIdentity = null, CancellationToken ct = default(CancellationToken))
+        public Task<int> InsertAsync(Action<ColumnMapper, T> columnMapper, CancellationToken ct = default(CancellationToken))
+        {
+            var columnMappings = Verify(columnMapper, nameof(columnMapper));
+            return DbTableInsert<T>.ExecuteAsync(this, columnMappings, null, ct);
+        }
+
+        public Task<int> InsertAsync(Action<ColumnMapper, T> columnMapper, Action<long?> outputIdentity, CancellationToken ct = default(CancellationToken))
         {
             var columnMappings = Verify(columnMapper, nameof(columnMapper));
             return DbTableInsert<T>.ExecuteAsync(this, columnMappings, outputIdentity, ct);
