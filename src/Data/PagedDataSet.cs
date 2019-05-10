@@ -3,7 +3,7 @@
 namespace DevZest.Data
 {
     public sealed class PagedDataSet<T>
-        where T : Model, new()
+        where T : class, IEntity, new()
     {
         private sealed class _Model : Model
         {

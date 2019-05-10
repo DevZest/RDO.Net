@@ -4,7 +4,7 @@ using System;
 namespace DevZest.Data
 {
     public sealed class _DataSet<T> : Column<DataSet<T>>, IDataSetColumn
-        where T : Model, new()
+        where T : class, IEntity, new()
     {
         public override _String CastToString()
         {

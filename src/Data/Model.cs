@@ -944,7 +944,7 @@ namespace DevZest.Data
         }
 
         protected internal virtual DataSet<T> NewDataSetValue<T>(_DataSet<T> dataSetColumn, int rowOrdinal)
-            where T : Model, new()
+            where T : class, IEntity, new()
         {
             return DataSet<T>.Create();
         }
