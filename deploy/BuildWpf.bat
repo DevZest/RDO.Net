@@ -19,8 +19,7 @@ for /f "usebackq tokens=*" %%i in (`vswhere -latest -products * -requires Micros
 if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
   set msBuildPath="%InstallDir%\MSBuild\15.0\Bin\
   set msBuildExe="%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe"
-)
-else (
+) else (
   set msBuildPath="%InstallDir%\MSBuild\Current\Bin\
   set msBuildExe="%InstallDir%\MSBuild\Current\Bin\MSBuild.exe"
 )
