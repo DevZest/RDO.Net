@@ -346,5 +346,19 @@ AfterDataRowInserted: DataSet-0[0].
                 Assert.AreEqual(1, comparer.Compare(dataSet[0], dataSet[1]));
             }
         }
+
+        [TestMethod]
+        public void DataRow_ToJsonString()
+        {
+            var dataSet = GetDataSet(1, createChildren: false);
+            var expected =
+@"{
+   ""InheritedValue"" : null,
+   ""Id"" : 0,
+   ""ParentId"" : null,
+   ""Child"" : []
+}";
+            Assert.AreEqual(expected, dataSet[0].ToJsonString(isPretty: true));
+        }
     }
 }

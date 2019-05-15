@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -618,6 +619,11 @@ namespace DevZest.Data
             column.VerifyNotNull(paramName);
             if (column.ScalarSourceModels.Count != 1)
                 throw new ArgumentException(DiagnosticMessages.DataRow_OrderByColumnMustBeSingleSourceModel, paramName);
+        }
+
+        public string ToJsonString(bool isPretty, IJsonCustomizer customizer = null)
+        {
+            return JsonWriter.Create(customizer).Write(this).ToString(isPretty);
         }
     }
 }
