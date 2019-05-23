@@ -72,7 +72,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                 dataSetWithNull.AddRow();
                 dataSetWithNull._.Text[0] = null;
                 {
-                    var nested = dataSetWithNull[0].GetChildDataSet(dataSetWithNull._.NestedModel);
+                    var nested = dataSetWithNull._.NestedModel.GetChildDataSet(0);
                     nested.AddRow();
                     nested._.Text[0] = null;
                 }
@@ -81,7 +81,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                 dataSetWithText.AddRow();
                 dataSetWithText._.Text[0] = "outer text";
                 {
-                    var nested = dataSetWithText[0].GetChildDataSet(dataSetWithText._.NestedModel);
+                    var nested = dataSetWithText._.NestedModel.GetChildDataSet(0);
                     nested.AddRow();
                     nested._.Text[0] = "inner text";
                 }
@@ -110,13 +110,13 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                     { dataSetWithText._.Text, null,
                         new TagHelperOutputContent("Hello World1", "Hello World2", "Hello World2", "DataSet_Text") },
 
-                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull[0].GetChildDataSet(dataSetWithNull._.NestedModel)[0],
+                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull._.NestedModel.GetChildDataSet(0)[0],
                         new TagHelperOutputContent(Environment.NewLine, string.Empty, "HtmlEncode[[Text]]", "DataSet_NestedModel_0__Text") },
-                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull[0].GetChildDataSet(dataSetWithNull._.NestedModel)[0],
+                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull._.NestedModel.GetChildDataSet(0)[0],
                         new TagHelperOutputContent(Environment.NewLine, "Hello World", "Hello World", "DataSet_NestedModel_0__Text") },
-                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull[0].GetChildDataSet(dataSetWithNull._.NestedModel)[0],
+                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull._.NestedModel.GetChildDataSet(0)[0],
                         new TagHelperOutputContent(string.Empty, Environment.NewLine, Environment.NewLine, "DataSet_NestedModel_0__Text") },
-                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull[0].GetChildDataSet(dataSetWithNull._.NestedModel)[0],
+                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull._.NestedModel.GetChildDataSet(0)[0],
                         new TagHelperOutputContent(Environment.NewLine, string.Empty, "HtmlEncode[[Text]]", "DataSet_NestedModel_0__Text") },
                 };
             }

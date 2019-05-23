@@ -60,7 +60,7 @@ namespace DevZest.Data
                 Assert.AreEqual(1, dataSet._.Id[0]);
                 Assert.AreEqual(2, dataSet._.Id[1]);
                 Assert.AreEqual(0, dataSet._.Id[2]);
-                Assert.AreEqual(3, dataSet[2].GetChildDataSet(dataSet._.Child).Count);
+                Assert.AreEqual(3, dataSet._.Child.GetChildDataSet(2).Count);
                 var expectedLog =
 @"DataRowRemoving: DataSet-0[0].
 DataRowRemoving: DataSet-1[2].
@@ -137,7 +137,7 @@ AfterDataRowInserted: DataSet-0[2].
                 var log = dataSet._.StartLog(3);
                 dataSet[1].Move(-1);
                 Assert.AreEqual(1, dataSet._.Id[0]);
-                Assert.AreEqual(3, dataSet[0].GetChildDataSet(dataSet._.Child).Count);
+                Assert.AreEqual(3, dataSet._.Child.GetChildDataSet(0).Count);
                 Assert.AreEqual(0, dataSet._.Id[1]);
                 Assert.AreEqual(2, dataSet._.Id[2]);
                 var expectedLog =

@@ -5,17 +5,17 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<DataView> BindToDataView<T>(this T _, Func<DataPresenter<T>> dataPresenterCreator)
-            where T : Model, new()
+        public static RowBinding<DataView> BindToDataView<T>(this T entity, Func<DataPresenter<T>> dataPresenterCreator)
+            where T : class, IEntity, new()
         {
-            if (_ == null)
-                throw new ArgumentNullException(nameof(_));
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
             if (dataPresenterCreator == null)
                 throw new ArgumentNullException(nameof(dataPresenterCreator));
 
             return new RowBinding<DataView>(onSetup: (v, p) =>
                 {
-                    var dataSet = p.DataRow.GetChildDataSet(_);
+                    var dataSet = entity.GetChildDataSet(p.DataRow);
                     var dataPresenter = dataPresenterCreator();
                     dataPresenter.Show(v, dataSet);
                 },

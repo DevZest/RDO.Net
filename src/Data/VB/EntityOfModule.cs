@@ -5,7 +5,7 @@ using Microsoft.VisualBasic.CompilerServices;
 /// Provides EntityOf() operator for VB.Net because _ is not a valid identifier in VB.
 /// </summary>
 [StandardModule]
-public sealed class DataSourceModule
+public sealed class EntityOfModule
 {
     /// <exclude />
     public static T EntityOf<T>(DataSet<T> dataSet) where T : class, IEntity, new()

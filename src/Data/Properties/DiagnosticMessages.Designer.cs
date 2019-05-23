@@ -1131,6 +1131,14 @@ namespace DevZest.Data
             get { return GetString("JsonReader_ExpectToken_Eof"); }
         }
 
+        /// <summary>
+        /// The parent DataSet is null.
+        /// </summary>
+        public static string EntityExtensions_NullParentDataSet
+        {
+            get { return GetString("EntityExtensions_NullParentDataSet"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

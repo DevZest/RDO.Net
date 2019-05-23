@@ -24,12 +24,12 @@ namespace DevZest.Data.AspNetCore.Primitives
         {
             var result = JsonConvert.DeserializeObject<DataSet<ProductCategory>>(Json.ProductCategories, new DataSetJsonConverter());
 
-            var childModel = result._.SubCategories;
+            var child = result._.SubCategories;
             Assert.Equal(4, result.Count);
-            Assert.Equal(3, result[0].GetChildDataSet(childModel).Count);
-            Assert.Equal(14, result[1].GetChildDataSet(childModel).Count);
-            Assert.Equal(8, result[2].GetChildDataSet(childModel).Count);
-            Assert.Equal(12, result[3].GetChildDataSet(childModel).Count);
+            Assert.Equal(3, child.GetChildDataSet(0).Count);
+            Assert.Equal(14, child.GetChildDataSet(1).Count);
+            Assert.Equal(8, child.GetChildDataSet(2).Count);
+            Assert.Equal(12, child.GetChildDataSet(3).Count);
 
             Assert.Equal(Json.ProductCategories, result.ToJsonString(true));
         }

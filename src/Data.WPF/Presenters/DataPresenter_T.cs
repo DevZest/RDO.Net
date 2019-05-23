@@ -11,7 +11,7 @@ using System.Linq;
 namespace DevZest.Data.Presenters
 {
     public abstract class DataPresenter<T> : DataPresenter
-        where T : Model, new()
+        where T : class, IEntity, new()
     {
         public void Show(DataView dataView, DataSet<T> dataSet, bool resetCriteria = false)
         {
@@ -486,7 +486,7 @@ namespace DevZest.Data.Presenters
 
         protected virtual IReadOnlyList<Column> GetMatchColumns(T _)
         {
-            return _.PrimaryKey;
+            return _.Model.PrimaryKey;
         }
     }
 }

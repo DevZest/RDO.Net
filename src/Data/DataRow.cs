@@ -228,20 +228,6 @@ namespace DevZest.Data
             _childDataSets = null;
         }
 
-        /// <summary>Gets the children data set of this <see cref="DataRow"/>.</summary>
-        /// <typeparam name="T">The type of child model.</typeparam>
-        /// <param name="childModel">The child model.</param>
-        /// <returns>The children data set.</returns>
-        public DataSet<T> GetChildDataSet<T>(T childModel)
-            where T : Model, new()
-        {
-            childModel.VerifyNotNull(nameof(childModel));
-            if (childModel.ParentModel != Model)
-                throw new ArgumentException(DiagnosticMessages.DataRow_InvalidChildModel, nameof(childModel));
-
-            return this[childModel.Ordinal] as DataSet<T>;
-        }
-
         public override string ToString()
         {
             var parentDataRow = this.ParentDataRow;

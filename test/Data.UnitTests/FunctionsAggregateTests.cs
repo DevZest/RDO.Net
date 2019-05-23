@@ -109,7 +109,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(i * count, first2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -142,7 +142,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual((i + 1) * count - 1, last2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -175,7 +175,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(count - 1, count2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -208,7 +208,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(count, count2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -241,7 +241,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(count - 1, sum2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -274,7 +274,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(count - 1, sum2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -307,7 +307,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(count - 1, sum2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -340,7 +340,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(count - 1, sum2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -373,7 +373,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(count - 1, sum2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -406,7 +406,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(i * count, min2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -439,7 +439,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual((i * count).ToString(STR_PADDING), min2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -472,7 +472,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual((i + 1) * count - 1, max2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -504,7 +504,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(((i + 1) * count - 1).ToString(STR_PADDING), max2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -537,7 +537,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(2, avg2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -570,7 +570,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(2, avg2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -603,7 +603,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(2, avg2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -636,7 +636,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(2, avg2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
@@ -669,7 +669,7 @@ namespace DevZest.Data
             {
                 var dataRow = dataSet[i];
                 Assert.AreEqual(2, avg2[dataRow]);
-                var childDataSet = dataRow.GetChildDataSet(_.Child);
+                var childDataSet = _.Child.GetChildDataSet(dataRow);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];

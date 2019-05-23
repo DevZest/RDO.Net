@@ -61,7 +61,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                 dataSetWithNull.AddRow();
                 dataSetWithNull._.Text[0] = null;
                 {
-                    var nested = dataSetWithNull[0].GetChildDataSet(dataSetWithNull._.NestedModel);
+                    var nested = dataSetWithNull._.NestedModel.GetChildDataSet(0);
                     nested.AddRow();
                     nested._.Text[0] = null;
                 }
@@ -70,7 +70,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                 dataSetWithText.AddRow();
                 dataSetWithText._.Text[0] = "outer text";
                 {
-                    var nested = dataSetWithText[0].GetChildDataSet(dataSetWithText._.NestedModel);
+                    var nested = dataSetWithText._.NestedModel.GetChildDataSet(0);
                     nested.AddRow();
                     nested._.Text[0] = "inner text";
                 }
@@ -80,9 +80,9 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                     { DataSet<TestModel>.Create()._.Text, null, new NameAndId("DataSet.Text", "DataSet_Text"), Environment.NewLine },
                     { dataSetWithNull._.Text, null, new NameAndId("DataSet.Text", "DataSet_Text"), Environment.NewLine },
                     { dataSetWithText._.Text, null, new NameAndId("DataSet.Text", "DataSet_Text"), Environment.NewLine + "HtmlEncode[[outer text]]" },
-                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull[0].GetChildDataSet(dataSetWithNull._.NestedModel)[0],
+                    { dataSetWithNull._.NestedModel.Text, dataSetWithNull._.NestedModel.GetChildDataSet(0)[0],
                         new NameAndId("DataSet.NestedModel[0].Text", "DataSet_NestedModel_0__Text"), Environment.NewLine },
-                    { dataSetWithText._.NestedModel.Text, dataSetWithText[0].GetChildDataSet(dataSetWithText._.NestedModel)[0],
+                    { dataSetWithText._.NestedModel.Text, dataSetWithText._.NestedModel.GetChildDataSet(0)[0],
                         new NameAndId("DataSet.NestedModel[0].Text", "DataSet_NestedModel_0__Text"), Environment.NewLine + "HtmlEncode[[inner text]]" },
                 };
             }

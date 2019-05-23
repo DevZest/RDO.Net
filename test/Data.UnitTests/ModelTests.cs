@@ -146,7 +146,7 @@ namespace DevZest.Data
             var _ = dataSet._;
             dataSet.AddRow();
             _.Column[0] = 3;
-            var children = dataSet[0].GetChildDataSet(_.Child);
+            var children = _.Child.GetChildDataSet(0);
             children.AddRow();
             children.AddRow();
             Assert.AreEqual(3, _.Child.Column1[children[0]]);

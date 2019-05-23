@@ -537,4 +537,7 @@
   <data name="JsonReader_ExpectToken_Eof" xml:space="preserve">
     <value>JsonTokenKind.Eof is invalid for calling ExpectToken method. Call ExpectEof instead.</value>
   </data>
+  <data name="EntityExtensions_NullParentDataSet" xml:space="preserve">
+    <value>The parent DataSet is null.</value>
+  </data>
 </root>

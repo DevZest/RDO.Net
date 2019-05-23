@@ -20,12 +20,12 @@ namespace DevZest.Data.MySql
                     children = await children.CreateChildAsync(x => x.SubCategories, db.ProductCategory.OrderBy(x => x.ProductCategoryID));
 
                 var result = await productCategories.ToDataSetAsync();
-                var childModel = result._.SubCategories;
+                var subCategories = result._.SubCategories;
                 Assert.AreEqual(4, result.Count);
-                Assert.AreEqual(3, result[0].GetChildDataSet(childModel).Count);
-                Assert.AreEqual(14, result[1].GetChildDataSet(childModel).Count);
-                Assert.AreEqual(8, result[2].GetChildDataSet(childModel).Count);
-                Assert.AreEqual(12, result[3].GetChildDataSet(childModel).Count);
+                Assert.AreEqual(3, subCategories.GetChildDataSet(0).Count);
+                Assert.AreEqual(14, subCategories.GetChildDataSet(1).Count);
+                Assert.AreEqual(8, subCategories.GetChildDataSet(2).Count);
+                Assert.AreEqual(12, subCategories.GetChildDataSet(3).Count);
 
                 Assert.AreEqual(Strings.ExpectedJSON_ProductCategories.Trim(), result.ToString().Trim());
             }
@@ -43,12 +43,12 @@ namespace DevZest.Data.MySql
                     children = await children.CreateChildAsync(x => x.SubCategories, db.ProductCategory.OrderBy(x => x.ProductCategoryID));
 
                 var result = await productCategories.ToDataSetAsync();
-                var childModel = result._.SubCategories;
+                var subCategories = result._.SubCategories;
                 Assert.AreEqual(4, result.Count);
-                Assert.AreEqual(3, result[0].GetChildDataSet(childModel).Count);
-                Assert.AreEqual(14, result[1].GetChildDataSet(childModel).Count);
-                Assert.AreEqual(8, result[2].GetChildDataSet(childModel).Count);
-                Assert.AreEqual(12, result[3].GetChildDataSet(childModel).Count);
+                Assert.AreEqual(3, subCategories.GetChildDataSet(0).Count);
+                Assert.AreEqual(14, subCategories.GetChildDataSet(1).Count);
+                Assert.AreEqual(8, subCategories.GetChildDataSet(2).Count);
+                Assert.AreEqual(12, subCategories.GetChildDataSet(3).Count);
 
                 Assert.AreEqual(Strings.ExpectedJSON_ProductCategories.Trim(), result.ToString().Trim());
             }

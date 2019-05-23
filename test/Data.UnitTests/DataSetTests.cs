@@ -2,8 +2,6 @@
 using DevZest.Data.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using System.Linq;
-using DevZest.Data.Primitives;
 using DevZest.Data.Resources;
 
 namespace DevZest.Data
@@ -23,11 +21,11 @@ namespace DevZest.Data
             VerifyDataSet(dataSet, count);
             for (int i = 0; i < dataSet.Count; i++)
             {
-                var children = dataSet[i].GetChildDataSet(childModel);
+                var children = childModel.GetChildDataSet(i);
                 VerifyDataSet(children, count);
                 for (int j = 0; j < children.Count; j++)
                 {
-                    var grandChildren = children[j].GetChildDataSet(grandChildModel);
+                    var grandChildren = grandChildModel.GetChildDataSet(children[j]);
                     VerifyDataSet(grandChildren, count);
                 }
             }
@@ -84,12 +82,12 @@ namespace DevZest.Data
             var childModelRows = new List<DataRow>();
             var grandChildModelRows = new List<DataRow>();
             {
-                var children = dataSet[0].GetChildDataSet(model.Child);
+                var children = model.Child.GetChildDataSet(0);
                 foreach (var child in children)
                 {
                     childModelRows.Add(child);
 
-                    var grandChildren = child.GetChildDataSet(model.Child.Child);
+                    var grandChildren = model.Child.Child.GetChildDataSet(child);
                     foreach (var grandChild in grandChildren)
                     {
                         Assert.AreEqual(child, grandChild.ParentDataRow);
@@ -139,10 +137,10 @@ namespace DevZest.Data
 
             var childModel = result._.SubCategories;
             Assert.AreEqual(4, result.Count);
-            Assert.AreEqual(3, result[0].GetChildDataSet(childModel).Count);
-            Assert.AreEqual(14, result[1].GetChildDataSet(childModel).Count);
-            Assert.AreEqual(8, result[2].GetChildDataSet(childModel).Count);
-            Assert.AreEqual(12, result[3].GetChildDataSet(childModel).Count);
+            Assert.AreEqual(3, childModel.GetChildDataSet(0).Count);
+            Assert.AreEqual(14, childModel.GetChildDataSet(1).Count);
+            Assert.AreEqual(8, childModel.GetChildDataSet(2).Count);
+            Assert.AreEqual(12, childModel.GetChildDataSet(3).Count);
 
             Assert.AreEqual(Json.ProductCategories.Trim(), result.ToString().Trim());
         }

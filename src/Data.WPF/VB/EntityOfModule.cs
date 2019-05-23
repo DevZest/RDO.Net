@@ -6,10 +6,10 @@ using Microsoft.VisualBasic.CompilerServices;
 /// Provides ModelOf() operator for VB.Net because _ is not a valid identifier in VB.
 /// </summary>
 [StandardModule]
-public sealed class DataPresenterModule
+public sealed class EntityOfModule
 {
     /// <exclude />
-    public static T ModelOf<T>(DataPresenter<T> dataPresenter) where T : Model, new()
+    public static T ModelOf<T>(DataPresenter<T> dataPresenter) where T : class, IEntity, new()
     {
         return dataPresenter._;
     }
