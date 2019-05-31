@@ -93,9 +93,9 @@ namespace DevZest.Data
                         throw new InvalidOperationException(DiagnosticMessages.Single_NoElement);
                 }
                 var dataSet = DataSet<Adhoc>.Create(_ => _.AddColumn<T>());
-                var result = (T)dataSet._.GetColumns()[0];
-                dataSet.AddRow();
-                result.Read(dbReader, dataSet[0]);
+                var result = dataSet._.GetColumn<T>(0);
+                var dataRow = dataSet.AddRow();
+                result.Read(dbReader, dataRow);
                 if (await dbReader.ReadAsync(ct))
                     throw new InvalidOperationException(DiagnosticMessages.Single_MultipleElements);
                 return result;
