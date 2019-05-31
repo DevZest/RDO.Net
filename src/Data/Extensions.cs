@@ -83,7 +83,7 @@ namespace DevZest.Data
                     .Where(where(s));
             });
 
-            using (var dbReader = await dbSet.Where(where).ExecuteDbReaderAsync(ct))
+            using (var dbReader = await query.ExecuteDbReaderAsync(ct))
             {
                 if (!(await dbReader.ReadAsync(ct)))
                 {
