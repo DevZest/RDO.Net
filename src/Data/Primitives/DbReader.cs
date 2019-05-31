@@ -53,27 +53,13 @@ namespace DevZest.Data.Primitives
 
         public bool IsEof { get; private set; }
 
-        public bool Read()
+        public async Task<bool> ReadAsync(CancellationToken ct = default(CancellationToken))
         {
-            var result = GetDbDataReader().Read();
+            var result = await GetDbDataReader().ReadAsync(ct);
             IsBof = false;
             if (!result)
                 IsEof = true;
             return result;
-        }
-
-        public async Task<bool> ReadAsync()
-        {
-            var result = await ReadAsync(CancellationToken.None);
-            IsBof = false;
-            if (!result)
-                IsEof = true;
-            return result;
-        }
-
-        public Task<bool> ReadAsync(CancellationToken cancellationToken)
-        {
-            return GetDbDataReader().ReadAsync(cancellationToken);
         }
 
         public virtual object this[int ordinal]

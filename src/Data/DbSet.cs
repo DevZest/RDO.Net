@@ -231,5 +231,10 @@ namespace DevZest.Data
             var result = await ToDataSetAsync(ct);
             return result;
         }
+
+        public Task<DbReader> ExecuteDbReaderAsync(CancellationToken ct = default(CancellationToken))
+        {
+            return DbSession.ExecuteDbReaderAsync(this, ct);
+        }
     }
 }
