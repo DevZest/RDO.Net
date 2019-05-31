@@ -73,5 +73,11 @@ namespace DevZest.Data
         {
             return (T)Columns[index];
         }
+
+        public T GetColumn<T>()
+            where T : Column
+        {
+            return GetColumn<T>(0);
+        }
     }
 }
