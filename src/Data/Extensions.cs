@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Primitives;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,38 +49,28 @@ namespace DevZest.Data
             return new KeyMapping(sourceKey, target.Model.PrimaryKey);
         }
 
-        public static Task<T> SingleAsync<TEntity, T>(this DbSet<TEntity> dbSet,
-            Func<TEntity, _Boolean> where, Func<TEntity, T> getColumn, CancellationToken ct = default(CancellationToken))
+        public static Task<T> SingleAsync<TEntity, T>(this DbSet<TEntity> dbSet, Func<TEntity, T> getColumn, CancellationToken ct = default(CancellationToken))
             where TEntity : class, IEntity, new()
             where T : Column, IColumn<DbReader>, new()
         {
-            where.VerifyNotNull(nameof(where));
             getColumn.VerifyNotNull(nameof(getColumn));
-            return dbSet.ReadSingleAsync(where, getColumn, false, ct);
+            return dbSet.ReadSingleAsync(getColumn, false, ct);
         }
 
-        public static Task<T> SingleOrDefaultAsync<TEntity, T>(this DbSet<TEntity> dbSet,
-            Func<TEntity, _Boolean> where, Func<TEntity, T> getColumn, CancellationToken ct = default(CancellationToken))
+        public static Task<T> SingleOrDefaultAsync<TEntity, T>(this DbSet<TEntity> dbSet, Func<TEntity, T> getColumn, CancellationToken ct = default(CancellationToken))
             where TEntity : class, IEntity, new()
             where T : Column, IColumn<DbReader>, new()
         {
-            where.VerifyNotNull(nameof(where));
             getColumn.VerifyNotNull(nameof(getColumn));
-            return dbSet.ReadSingleAsync(where, getColumn, true, ct);
+            return dbSet.ReadSingleAsync(getColumn, true, ct);
         }
 
-        private static async Task<T> ReadSingleAsync<TEntity, T>(this DbSet<TEntity> dbSet,
-            Func<TEntity, _Boolean> where, Func<TEntity, T> getColumn, bool allowEmpty, CancellationToken ct)
+        private static async Task<T> ReadSingleAsync<TEntity, T>(this DbSet<TEntity> dbSet, Func<TEntity, T> getColumn, bool allowEmpty, CancellationToken ct)
             where TEntity : class, IEntity, new()
             where T : Column, IColumn<DbReader>, new()
         {
             var dbSession = dbSet.DbSession;
-            var query = dbSession.CreateQuery<Adhoc>((builder, _) =>
-            {
-                builder.From(dbSet, out var s)
-                    .Select(getColumn(s), _.AddColumn<T>())
-                    .Where(where(s));
-            });
+            var query = dbSession.CreateQuery<Adhoc>((builder, _) => builder.From(dbSet, out var s).Select(getColumn(s), _.AddColumn<T>()));
 
             using (var dbReader = await query.ExecuteDbReaderAsync(ct))
             {
