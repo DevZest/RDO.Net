@@ -82,7 +82,7 @@ namespace DevZest.Data
                     .Select(getColumn(s), _.AddColumn<T>())
                     .Where(where(s));
             });
-            var resultColumn = (T)query._.GetColumns()[0];
+
             using (var dbReader = await dbSet.Where(where).ExecuteDbReaderAsync(ct))
             {
                 if (!(await dbReader.ReadAsync(ct)))
@@ -92,7 +92,8 @@ namespace DevZest.Data
                     else
                         throw new InvalidOperationException(DiagnosticMessages.Single_NoElement);
                 }
-                var dataSet = DataSet<Adhoc>.Create(_ => _.AddColumn<T>());
+
+                var dataSet = query.MakeDataSet();
                 var result = dataSet._.GetColumn<T>(0);
                 var dataRow = dataSet.AddRow();
                 result.Read(dbReader, dataRow);
