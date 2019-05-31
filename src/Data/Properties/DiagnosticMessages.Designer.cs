@@ -1139,6 +1139,22 @@ namespace DevZest.Data
             get { return GetString("EntityExtensions_NullParentDataSet"); }
         }
 
+        /// <summary>
+        /// There are multiple elements for the required Single operation.
+        /// </summary>
+        public static string Single_MultipleElements
+        {
+            get { return GetString("Single_MultipleElements"); }
+        }
+
+        /// <summary>
+        /// There is no element for the required Single operation.
+        /// </summary>
+        public static string Single_NoElement
+        {
+            get { return GetString("Single_NoElement"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

@@ -540,4 +540,10 @@
   <data name="EntityExtensions_NullParentDataSet" xml:space="preserve">
     <value>The parent DataSet is null.</value>
   </data>
+  <data name="Single_MultipleElements" xml:space="preserve">
+    <value>There are multiple elements for the required Single operation.</value>
+  </data>
+  <data name="Single_NoElement" xml:space="preserve">
+    <value>There is no element for the required Single operation.</value>
+  </data>
 </root>
