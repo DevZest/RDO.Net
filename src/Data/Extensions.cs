@@ -94,7 +94,7 @@ namespace DevZest.Data
                 }
 
                 var dataSet = query.MakeDataSet();
-                var result = dataSet._.GetColumn<T>(0);
+                var result = dataSet._.GetColumn<T>();
                 var dataRow = dataSet.AddRow();
                 result.Read(dbReader, dataRow);
                 if (await dbReader.ReadAsync(ct))
