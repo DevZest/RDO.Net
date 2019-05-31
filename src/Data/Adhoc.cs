@@ -56,5 +56,22 @@ namespace DevZest.Data
         {
             get { return ColumnList[index]; }
         }
+
+        public new ColumnCollection Columns
+        {
+            get { return GetColumns(); }
+        }
+
+        public T GetColumn<T>(string name)
+            where T : Column
+        {
+            return (T)Columns[name];
+        }
+
+        public T GetColumn<T>(int index)
+            where T : Column
+        {
+            return (T)Columns[index];
+        }
     }
 }
