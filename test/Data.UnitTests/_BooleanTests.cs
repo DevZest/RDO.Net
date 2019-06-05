@@ -126,5 +126,53 @@ namespace DevZest.Data
             dbExpr.Verify(column1, typeof(String), typeof(Boolean?));
             expr.VerifyEval(expectedValue);
         }
+
+        [TestMethod]
+        public void _Boolean_Equal()
+        {
+            TestEqual(null, null, null);
+            TestEqual(null, true, null);
+            TestEqual(null, false, null);
+            TestEqual(true, null, null);
+            TestEqual(false, null, null);
+            TestEqual(true, true, true);
+            TestEqual(false, false, true);
+            TestEqual(true, false, false);
+            TestEqual(false, true, false);
+        }
+
+        private void TestEqual(bool? x, bool? y, bool? expectedValue)
+        {
+            _Boolean column1 = x;
+            _Boolean column2 = y;
+            var expr = column1 == column2;
+            var dbExpr = (DbBinaryExpression)expr.DbExpression;
+            dbExpr.Verify(BinaryExpressionKind.Equal, column1, column2);
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Boolean_NotEqual()
+        {
+            TestNotEqual(true, true, false);
+            TestNotEqual(false, false, false);
+            TestNotEqual(true, false, true);
+            TestNotEqual(false, true, true);
+            TestNotEqual(true, null, null);
+            TestNotEqual(false, null, null);
+            TestNotEqual(null, true, null);
+            TestNotEqual(null, false, null);
+            TestNotEqual(null, null, null);
+        }
+
+        private void TestNotEqual(bool? x, bool? y, bool? expectedValue)
+        {
+            _Boolean column1 = x;
+            _Boolean column2 = y;
+            var expr = column1 != column2;
+            var dbExpr = (DbBinaryExpression)expr.DbExpression;
+            dbExpr.Verify(BinaryExpressionKind.NotEqual, column1, column2);
+            expr.VerifyEval(expectedValue);
+        }
     }
 }

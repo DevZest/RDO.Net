@@ -249,5 +249,71 @@ namespace DevZest.Data
             x.VerifyNotNull(nameof(x));
             return x.CastToString();
         }
+
+        private sealed class EqualExpression : BinaryExpression<bool?, bool?>
+        {
+            public EqualExpression(Column<bool?> x, Column<bool?> y)
+                : base(x, y)
+            {
+            }
+
+            protected override BinaryExpressionKind Kind
+            {
+                get { return BinaryExpressionKind.Equal; }
+            }
+
+            protected override bool? EvalCore(bool? x, bool? y)
+            {
+                return x.EqualsTo(y);
+            }
+        }
+
+        public static _Boolean operator ==(_Boolean x, _Boolean y)
+        {
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
+
+            return new EqualExpression(x, y).MakeColumn<_Boolean>();
+        }
+
+        private sealed class NotEqualExpression : BinaryExpression<bool?, bool?>
+        {
+            public NotEqualExpression(Column<bool?> x, Column<bool?> y)
+                : base(x, y)
+            {
+            }
+
+            protected override BinaryExpressionKind Kind
+            {
+                get { return BinaryExpressionKind.NotEqual; }
+            }
+
+            protected override bool? EvalCore(bool? x, bool? y)
+            {
+                return !x.EqualsTo(y);
+            }
+        }
+
+        public static _Boolean operator !=(_Boolean x, _Boolean y)
+        {
+            x.VerifyNotNull(nameof(x));
+            y.VerifyNotNull(nameof(y));
+
+            return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            // override to eliminate compile warning
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            // override to eliminate compile warning
+            return base.GetHashCode();
+        }
     }
 }

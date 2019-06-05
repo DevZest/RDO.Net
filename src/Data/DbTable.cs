@@ -210,7 +210,7 @@ namespace DevZest.Data
                 return null;
 
             var whereExpr = where(_);
-            if (whereExpr == null)
+            if (object.ReferenceEquals(whereExpr, null))
                 return null;
 
             var parentModelSet = whereExpr.ScalarSourceModels;

@@ -56,7 +56,7 @@ namespace DevZest.Data
 
         private Action<DbQueryBuilder> GetWhereQueryBuilder(_Boolean condition)
         {
-            if (condition == null)
+            if (object.ReferenceEquals(condition, null))
                 return x => { };
             else
                 return x => x.Where(condition);

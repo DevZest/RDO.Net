@@ -44,7 +44,7 @@ namespace DevZest.Data.Primitives
 
         internal CaseExpression<TResult> WhenThen(_Boolean when, Column<TResult> then)
         {
-            Debug.Assert(when != null);
+            Debug.Assert(!object.ReferenceEquals(when, null));
             Debug.Assert(then != null);
             _when.Add(when);
             _then.Add(then);
