@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Linq.Expressions;
 using System.Diagnostics;
+using System.Collections.Concurrent;
 
 namespace DevZest.Data.Primitives
 {
@@ -236,8 +237,8 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private Dictionary<Type, RegistrationCollection> _registrations = new Dictionary<Type, RegistrationCollection>();
-        private Dictionary<Type, IReadOnlyList<IMounter<TTarget, TProperty>>> _resultRegistrations = new Dictionary<Type, IReadOnlyList<IMounter<TTarget, TProperty>>>();
+        private ConcurrentDictionary<Type, RegistrationCollection> _registrations = new ConcurrentDictionary<Type, RegistrationCollection>();
+        private ConcurrentDictionary<Type, IReadOnlyList<IMounter<TTarget, TProperty>>> _resultRegistrations = new ConcurrentDictionary<Type, IReadOnlyList<IMounter<TTarget, TProperty>>>();
 
         public Mounter<TDerivedTarget, TDerivedProperty> Register<TDerivedTarget, TDerivedProperty>(
             Expression<Func<TDerivedTarget, TDerivedProperty>> getter,
@@ -278,40 +279,21 @@ namespace DevZest.Data.Primitives
         private void Register(IMounter<TTarget, TProperty> item)
         {
             Type targetType = item.ParentType;
-            lock (_resultRegistrations) // ensure thread safety
-            {
-                if (_resultRegistrations.ContainsKey(targetType))
-                    throw new InvalidOperationException(DiagnosticMessages.MounterManager_RegisterAfterUse(targetType.FullName));
 
-                RegistrationCollection registrations;
-                if (!_registrations.TryGetValue(targetType, out registrations))
-                {
-                    registrations = new RegistrationCollection();
-                    _registrations.Add(targetType, registrations);
-                }
+            if (_resultRegistrations.ContainsKey(targetType))
+                throw new InvalidOperationException(DiagnosticMessages.MounterManager_RegisterAfterUse(targetType.FullName));
 
-                if (registrations.Contains(new Key(item)))
-                    throw new InvalidOperationException(DiagnosticMessages.MounterManager_RegisterDuplicate(item.DeclaringType.FullName, item.Name));
+            RegistrationCollection registrations = _registrations.GetOrAdd(targetType, x => new RegistrationCollection());
 
-                registrations.Add(item);
-            }
+            if (registrations.Contains(new Key(item)))
+                throw new InvalidOperationException(DiagnosticMessages.MounterManager_RegisterDuplicate(item.DeclaringType.FullName, item.Name));
+
+            registrations.Add(item);
         }
 
         public IReadOnlyList<IMounter<TTarget, TProperty>> GetAll(Type targetType)
         {
-            IReadOnlyList<IMounter<TTarget, TProperty>> result;
-            if (_resultRegistrations.TryGetValue(targetType, out result))
-                return result;
-
-            return SyncGetAll(targetType);
-        }
-
-        private IReadOnlyList<IMounter<TTarget, TProperty>> SyncGetAll(Type targetType)
-        {
-            lock (_resultRegistrations) // ensure thread safety
-            {
-                return GetProperties(targetType);
-            }
+            return GetProperties(targetType);
         }
 
         private static IReadOnlyList<IMounter<TTarget, TProperty>> Empty
@@ -323,19 +305,14 @@ namespace DevZest.Data.Primitives
         {
             Debug.Assert(targetType != null);
 
-            IReadOnlyList<IMounter<TTarget, TProperty>> result;
-            if (_resultRegistrations.TryGetValue(targetType, out result))
+            RuntimeHelpers.RunClassConstructor(targetType.TypeHandle);  // Ensure type initialized
+
+            IReadOnlyList<IMounter<TTarget, TProperty>> nullResult = null;
+            var result = _resultRegistrations.GetOrAdd(targetType, nullResult);
+            if (result != null)
                 return result;
 
-            System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(targetType.TypeHandle);  // Ensure type initialized
-            RegistrationCollection registrations;
-            if (_registrations.TryGetValue(targetType, out registrations))
-            {
-                _registrations.Remove(targetType);
-                result = new ReadOnlyCollection<IMounter<TTarget, TProperty>>(registrations);
-            }
-            else
-                result = Empty;
+            result = _registrations.TryRemove(targetType, out var registrations) ? new ReadOnlyCollection<IMounter<TTarget, TProperty>>(registrations) : Empty;
 
             var baseType = targetType.GetTypeInfo().BaseType;
             if (baseType != null)
@@ -345,8 +322,7 @@ namespace DevZest.Data.Primitives
                 else
                     result = GetProperties(baseType).Concat(result);
             }
-            _resultRegistrations.Add(targetType, result);
-            return result;
+            return _resultRegistrations.TryUpdate(targetType, result, nullResult) ? result : _resultRegistrations[targetType];
         }
 
         public void Mount(TTarget target)
