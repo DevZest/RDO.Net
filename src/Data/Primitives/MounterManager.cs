@@ -312,17 +312,28 @@ namespace DevZest.Data.Primitives
             if (result != null)
                 return result;
 
-            result = _registrations.TryRemove(targetType, out var registrations) ? new ReadOnlyCollection<IMounter<TTarget, TProperty>>(registrations) : Empty;
-
-            var baseType = targetType.GetTypeInfo().BaseType;
-            if (baseType != null)
+            lock (_resultRegistrations)
             {
-                if (baseType.GetTypeInfo().IsAbstract)
-                    result = result.Concat(GetProperties(baseType));
-                else
-                    result = GetProperties(baseType).Concat(result);
+                // make sure only one thread can update _resultRegistrations
+                result = _resultRegistrations[targetType];
+                if (result != null)
+                    return result;
+
+                // only one thread can get here:
+                result = _registrations.TryRemove(targetType, out var registrations) ? new ReadOnlyCollection<IMounter<TTarget, TProperty>>(registrations) : Empty;
+
+                var baseType = targetType.GetTypeInfo().BaseType;
+                if (baseType != null)
+                {
+                    if (baseType.GetTypeInfo().IsAbstract)
+                        result = result.Concat(GetProperties(baseType));
+                    else
+                        result = GetProperties(baseType).Concat(result);
+                }
+                var updated =  _resultRegistrations.TryUpdate(targetType, result, nullResult);
+                Debug.Assert(updated);
+                return result;
             }
-            return _resultRegistrations.TryUpdate(targetType, result, nullResult) ? result : _resultRegistrations[targetType];
         }
 
         public void Mount(TTarget target)
