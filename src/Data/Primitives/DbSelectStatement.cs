@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
@@ -21,7 +20,7 @@ namespace DevZest.Data.Primitives
             OrderBy = orderBy;
             Offset = offset;
             Fetch = fetch;
-            IsSimple = isSimple && offset == -1 && fetch == -1;
+            IsSimple = isSimple && From != null && offset == -1 && fetch == -1;
         }
 
         public DbSelectStatement(Model model, IReadOnlyList<ColumnMapping> select, DbFromClause from, DbExpression where, IReadOnlyList<DbExpression> groupBy, DbExpression having, IReadOnlyList<DbExpressionSort> orderBy, int offset, int fetch)

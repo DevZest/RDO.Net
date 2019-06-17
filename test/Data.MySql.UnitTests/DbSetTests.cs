@@ -7,6 +7,45 @@ namespace DevZest.Data.MySql
     public class DbSetTests
     {
         [TestMethod]
+        public void DbSet_Scalar()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var query = db.CreateQuery<SalesOrderHeader.Key>((builder, _) => builder.Select(_Int32.Const(1), _.SalesOrderID));
+                var expectedSql =
+@"SELECT 1 AS `SalesOrderID`;
+";
+                Assert.AreEqual(expectedSql, query.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void DbSet_Scalar_LeftJoin()
+        {
+            using (var db = new Db(MySqlVersion.LowestSupported))
+            {
+                var scalar = db.CreateQuery<SalesOrderHeader.Key>((builder, _) => builder.Select(_Int32.Const(1), _.SalesOrderID));
+                var query = db.CreateQuery<SalesOrderHeader.Key>((builder, _) =>
+                {
+                    builder.From(scalar, out var s)
+                    .LeftJoin(db.SalesOrderHeader, s.PrimaryKey, out var h)
+                    .Select(s.SalesOrderID, _.SalesOrderID)
+                    .Where(h.SalesOrderID.IsNotNull());
+                });
+                var expectedSql =
+@"SELECT `ContainerModel`.`SalesOrderID` AS `SalesOrderID`
+FROM
+    ((SELECT 1 AS `SalesOrderID`) `ContainerModel`
+    LEFT JOIN
+    `SalesOrderHeader`
+    ON `ContainerModel`.`SalesOrderID` = `SalesOrderHeader`.`SalesOrderID`)
+WHERE (`SalesOrderHeader`.`SalesOrderID` IS NOT NULL);
+";
+                Assert.AreEqual(expectedSql, query.ToString());
+            }
+        }
+
+        [TestMethod]
         public void DbSet_where_order_by()
         {
             using (var db = new Db(MySqlVersion.LowestSupported))
