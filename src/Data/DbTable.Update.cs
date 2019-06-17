@@ -30,19 +30,7 @@ namespace DevZest.Data
         public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return UpdateAsync(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match, ct);
-        }
-
-        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, T> columnMapper, CancellationToken ct = default(CancellationToken))
-            where TSource: class, T, new()
-        {
-            return UpdateAsync(source, (m, s, t) => columnMapper(m, t), KeyMapping.Match, ct);
-        }
-
-        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, T, new()
-        {
-            return UpdateAsync(source, columnMapper, KeyMapping.Match, ct);
+            return UpdateAsync(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
         }
 
         public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join, CancellationToken ct = default(CancellationToken))
