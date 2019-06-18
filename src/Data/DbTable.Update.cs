@@ -33,6 +33,15 @@ namespace DevZest.Data
             return UpdateAsync(source, (m, s, t) => ColumnMapper.AutoSelectUpdatable(m, s, t), KeyMapping.Match);
         }
 
+        public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, T> columnMapper, Func<TSource, T, KeyMapping> join, CancellationToken ct = default(CancellationToken))
+            where TSource : class, IEntity, new()
+        {
+            Verify(source, nameof(source));
+            var columnMappings = Verify(columnMapper, nameof(columnMapper));
+            var keyMapping = Verify(join, nameof(join), source._);
+            return DbTableUpdate<T>.ExecuteAsync(this, source, columnMappings, keyMapping.GetColumnMappings(), ct);
+        }
+
         public Task<int> UpdateAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, Func<TSource, T, KeyMapping> join, CancellationToken ct = default(CancellationToken))
             where TSource : class, IEntity, new()
         {

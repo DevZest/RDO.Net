@@ -100,10 +100,10 @@ namespace DevZest.Data
             sourceColumn.VerifyNotNull(paramName);
 
             var sourceModels = sourceColumn.ScalarSourceModels;
-            foreach (var model in sourceModels)
+            foreach (var sourceModel in sourceModels)
             {
-                if (_sourceModel != null && model != _sourceModel)
-                    throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidSourceParentModelSet(model), paramName);
+                if (sourceModel != _sourceModel && sourceModel != _targetModel)
+                    throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidSourceParentModelSet(sourceModel), paramName);
             }
         }
 
