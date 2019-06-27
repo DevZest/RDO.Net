@@ -40,6 +40,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return result;
         }
 
+        #region SalesOrderCRUD
         public async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(_Int32 salesOrderID, CancellationToken ct = default(CancellationToken))
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
@@ -103,6 +104,7 @@ namespace DevZest.Samples.AdventureWorksLT
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
         }
+        #endregion
 
         public async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> refs, CancellationToken ct = default(CancellationToken))
         {

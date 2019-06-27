@@ -5,12 +5,12 @@
         {
           "src": "../",
           "files": [ 
-            "src/Data/Data.csproj",
-            "src/Data.SqlServer/Data.SqlServer.csproj",
-            "src/Data.MySql/Data.MySql.csproj",
-            "src/Data.WPF/Data.WPF.csproj",
-            "src/Data.AspNetCore/Data.AspNetCore.csproj",
-            "docs_src/nuget_packages/DevZest.Data.DbDesign/lib/netstandard2.0/*.dll"
+            "Data/Data.csproj",
+            "Data.SqlServer/Data.SqlServer.csproj",
+            "Data.MySql/Data.MySql.csproj",
+            "Data.WPF/Data.WPF.csproj",
+            "Data.AspNetCore/Data.AspNetCore.csproj",
+            "Docs/nuget_packages/DevZest.Data.DbDesign/lib/netstandard2.0/*.dll"
           ]
         }
       ],
