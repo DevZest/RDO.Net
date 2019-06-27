@@ -11,7 +11,7 @@ The above challenges impose great burdens for developing and further changing an
 
 ## Overview
 
-RDO.Net consists of libraries and tools for .Net developers:
+RDO.Net consists of the following libraries and tools:
 
 ![image](images/RdoNetOverview.jpg)
 
