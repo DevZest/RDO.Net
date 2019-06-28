@@ -23,7 +23,7 @@ As shown above, this low-to-high customization axis usually correlates directly 
 
 Just look at what Airbnb has done to the hospitality industry. Or what Uber and Lyft have done to the transportation industry. How Spotify prompted Apple Music to advance their iTunes platform—which was itself a profound innovation to the music industry.
 
-This requires enterprise applications to be flexible, which means you can pivot when needed, and you can adapt on the fly to this fast changing world. Competitiveness is getting more and more important over the fundamental requirement of doing business - it becomes a matter of live or die.
+This requires enterprise applications to be flexible, which means you can pivot when needed, and you can adapt on the fly to this fast changing world. Competitiveness is getting more and more important over the fundamental requirement of doing business - it becomes a matter of live or die. You will be out of the "Buy" choice in the "Buy vs. Build Dilemma".
 
 ## Technology Innovation is the Rescue
 
