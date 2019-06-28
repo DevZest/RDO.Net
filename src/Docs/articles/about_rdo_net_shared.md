@@ -9,7 +9,7 @@ RDO.Net is licensed separately for its runtime and design-time tools:
 
 ## Why choose RDO.Net
 
-Enterprise application, typically backed by a relational database, has decades of history. Today's enterprise applications are unnecessarily complex and heavy, due to the following technical constraints:
+Enterprise application, typically backed by a relational database, has decades of history. Today's enterprise applications are unnecessarily complex and heavyweight, due to the following technical constraints:
 
 * [Object-Relational Mapping (ORM, O/RM, and O/R mapping tool)](https://en.wikipedia.org/wiki/Object-relational_mapping), as the core of enterprise applications, is still [The Vietnam of Computer Science](http://blogs.tedneward.com/post/the-vietnam-of-computer-science/). Particularly, these difficulties are referred to as the [object-relational impedance mismatch](https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch).
 * Database testing, still stays on principles and guidelines. No widely practical use yet. Refactoring an enterprise
