@@ -27,10 +27,10 @@ This requires enterprise applications to be flexible, which means you can pivot 
 
 ## Technology Innovation is the Rescue
 
-We have more and more requirements to build custom applications to support our business. We need to move our enterprise applications from heavyweight to lightweight and agile, with greatly reduced cost and time to deployment.
+We have more and more requirements to build custom applications to support our business. We need to move our enterprise applications from heavyweight to lightweight and agile, with greatly reduced cost and time to deployment. Enterprise applications should be:
 
 * Rapid development - direct cost and time to deployment
-* Fully testable - quality cost
+* Fully testable - quality and
 * Confident to massive changes - business flexibility (suitability)
 
 These are the design goals of RDO.Net.
