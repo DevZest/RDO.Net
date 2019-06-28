@@ -6,11 +6,11 @@
       href: rdo_net_runtime_license.md
     - name: RDO.Tools License
       href: rdo_tools_license.md
-    - name: Enterprise application, the right way
+    - name: Enterprise Application, the Right Way
       href: enterprise_application_the_right_way.md
-    - name: ORM/Data Access, the right way
+    - name: ORM/Data Access, the Right Way
       href: orm_data_access_the_right_way.md
-    - name: Data Presentation, the right way
+    - name: Data Presentation, the Right Way
       href: data_presentation_the_right_way.md
 - name: Getting Started
   href: getting_started.md
