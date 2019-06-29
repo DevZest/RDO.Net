@@ -16,11 +16,11 @@ Enterprise application, typically backed by a relational database, has decades o
 application is error prone due to lack of database testing.
 * Separation of the graphical user interface from the business logic or back-end logic (the data model), is still a challenge task. Frameworks such as [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) exists, but it's far from ideal: it will hit the wall when dealing with complex layout or complex interactivity; refactoring UI logic is still error prone, etc.
 
-The above challenges impose great burdens for developing and further changing an enterprise application. Many frameworks are trying to solve these problems however they are all far from ideal. RDO.Net is the only solution to these problems in an integral, not an after-thought way:
+The above challenges impose great burdens for developing and further changing an enterprise application. Many frameworks are trying to solve these problems however they are all far from ideal. RDO.Net is the only solution to these problems in an integral, not an after-thought way (strongly recommended reading through):
 
-* [Enterprise application, the right way](xref:enterprise_application_the_right_way)
-* [ORM/Data Access, the right way](xref:orm_data_access_the_right_way)
-* [Data Presentation, the right way](xref:data_presentation_the_right_way)
+* [Enterprise Application, the Right Way](xref:enterprise_application_the_right_way)
+* [ORM/Data Access, the Right Way](xref:orm_data_access_the_right_way)
+* [Data Presentation, the Right Way](xref:data_presentation_the_right_way)
 
 In the end, your application follows your business in a no-more-no-less basis - it adapts to your business, not vice versa:
 
