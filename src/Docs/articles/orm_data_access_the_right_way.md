@@ -21,17 +21,17 @@ Apparently, RDBMS and SQL, being a fundamental of your application, is far from 
 
 OOP, on the other hand, is modern and the mainstream of application development. It's so widely adopted by developers that many developers subconsciously believe OOP can solve all the problems. Moreover, many framework authors has the religion that any framework, if not support POCO, is not a good framework.
 
-In fact, like any technology, OOP has its limitations too. The biggest one, IMO, is: **OOP is limited to local process, it's not serialization/deserialization friendly.** Each and every object is accessed via its reference (the address pointer), and the reference, together with the object behaviors (further reference to type descriptors, vtable, etc.), is private to local process. It's just too obvious to realize this.
+In fact, like any technology, OOP has its limitations too. The biggest one, IMO, is: **OOP is limited to local process, it's not serialization/deserialization friendly.** Each and every object is accessed via its reference (the address pointer), and the reference, together with the type metadata and compiled byte code (further reference to type descriptors, vtable, etc.), is private to local process. It's just too obvious to realize this.
 
 By nature, any serialized data is value type, which means:
 
 1. To serialize/deserialize an object, a converter for the reference is needed, either implicitly or explicitly. JSON, the simplest data format for serialization/deserialization, is a great example.
 
-2. As the object complexity grows, the complexity of the converter grows respectively. Particularly, the object behaviors, are extremely difficult for the conversion - in the end, you need virtually the whole type runtime. That's why so many applications start with [Domain Drive Design](https://martinfowler.com/tags/domain%20driven%20design.html), but end up with [Anemic Domain Model](https://martinfowler.com/bliki/AnemicDomainModel.html).
+2. As the object complexity grows, the complexity of the converter grows respectively. Particularly, the type metadata and compiled byte code, are extremely difficult for the conversion - in the end, you need virtually the whole type runtime. That's why so many applications start with [Domain Drive Design](https://martinfowler.com/tags/domain%20driven%20design.html), but end up with [Anemic Domain Model](https://martinfowler.com/bliki/AnemicDomainModel.html).
 
 3. On the other hand, relational data is very complex by nature, compares to other data format such as JSON. This adds another complexity to the converter.
 
-That's the real problem of object-relational impedance mismatch, if you want to map between arbitrary objects (POCO) and relational data. Unfortunately, almost all ORMs are going down this route, none of them can survive from this.
+That's the real problem of object-relational impedance mismatch, if you want to map between arbitrary objects (POCO) and relational data. Unfortunately, almost all ORMs are following this path, none of them can survive from this.
 
 ## The Right Way
 
@@ -50,6 +50,11 @@ Without the obsession of mapping between arbitrary objects and relational data, 
 |[DbQuery](xref:DevZest.Data.DbQuery`1)              | Database query                                      |
 |[DataSet](xref:DevZest.Data.DataSet`1)              | Client side dataset                                 |
 
-Database and dataset schema is realized with concrete metadata objects, with rich set of properties, methods and events. In the end, you're writing native SQL using C#/VB.Net, 100% strongly typed - unbeatable for both code maintainability and performance!
+Database and dataset schema is realized as concrete metadata objects, with rich set of properties, methods and events. SQL, serialization/deserialization are explicitly implemented in these objects. In the end:
+
+* You're Writing native SQL using C#/VB.Net, 100% strongly typed - unbeatable for both code maintainability and performance!
+* JSON serialization/deserialization is a first class citizen - unbeatable performance because no reflection required.
+* Database testing and deployment is a first class citizen. You can easily mock part of database with testing data, generate database from clean C#/VB.Net code, or generate C#/VB.Net code from table data in database, right in Visual Studio.
+* The rich metadata can be consumed by other layer of your application, for example, data presentation.
 
 [1]: https://en.wikipedia.org/wiki/Leaky_abstraction#cite_note-1
