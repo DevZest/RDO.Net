@@ -39,22 +39,24 @@ Once we make a step back, we can get a very simple solution. ORM/Data Access is 
 
 ### Rich Metadata - Relational Data Objects
 
-Without the obsession of mapping between arbitrary objects and relational data, we can choose realizing relational schema and data into an object model:
+Without the obsession of mapping between arbitrary objects and relational data, we can choose implementing relational schema and data into a comprehensive object model:
 
-| Class                                              | Mapping To                                          |
-|----------------------------------------------------|-----------------------------------------------------|
-|[Column](xref:DevZest.Data.Column)                  | Data column                                         |
-|[IEntity](xref:DevZest.Data.IEntity), [Model](xref:DevZest.Data.Model), [Projection](xref:DevZest.Data.Projection) | Entity of database table, query or dataset |
-|[DbTable](xref:DevZest.Data.DbTable`1)              | Database table, can be permanent or temporary       |
-|[DbSession](xref:DevZest.Data.Primitives.DbSession) | Database session                                    |
-|[DbQuery](xref:DevZest.Data.DbQuery`1)              | Database query                                      |
-|[DataSet](xref:DevZest.Data.DataSet`1)              | Client side dataset                                 |
+| Class                                   | Description                                         |
+|-----------------------------------------|-----------------------------------------------------|
+|<xref:DevZest.Data.Column>               | <xref uid="DevZest.Data.Column" template="_summary.tmpl" />            |
+|<xref:DevZest.Data.Model>                | Entity of database table, query or dataset          |
+|<xref:DevZest.Data.Projection>           | Table projection                                    |
+|<xref:DevZest.Data.DbTable`1>            | Database table, can be permanent or temporary       |
+|<xref:DevZest.Data.Primitives.DbSession> | Database session                                    |
+|<xref:DevZest.Data.DbQuery`1>            | Database query                                      |
+|<xref:DevZest.Data.DataSet`1>            | Client side dataset                                 |
+|<xref:DevZest.Data.DbMock`1>             |                                                     |
 
 Database and dataset schema is realized as concrete metadata objects, with rich set of properties, methods and events. SQL, serialization/deserialization are explicitly implemented in these objects. In the end:
 
 * You're Writing native SQL using C#/VB.Net, 100% strongly typed - unbeatable for both code maintainability and performance!
 * JSON serialization/deserialization is a first class citizen - unbeatable performance because no reflection required.
 * Database testing and deployment is a first class citizen. You can easily mock part of database with testing data, generate database from clean C#/VB.Net code, or generate C#/VB.Net code from table data in database, right in Visual Studio.
-* The rich metadata can be consumed by other layer of your application, for example, data presentation.
+* The rich metadata can be consumed conveniently by other layer of your application such as data presentation.
 
 [1]: https://en.wikipedia.org/wiki/Leaky_abstraction#cite_note-1

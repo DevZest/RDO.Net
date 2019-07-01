@@ -1,3 +1,3 @@
 # Welcome to RDO.Net
 
-[!include[Welcome to RDO.Net](articles/about_rdo_net_shared.md)]
+[!include[Welcome to RDO.Net](articles/_about_rdo_net.md)]

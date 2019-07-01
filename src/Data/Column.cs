@@ -9,7 +9,7 @@ using DevZest.Data.Addons;
 namespace DevZest.Data
 {
     /// <summary>
-    /// Represents a column of <see cref="Model"/>.
+    /// Represents a data column.
     /// </summary>
     public abstract class Column : ModelMember, IColumns, IComparer<DataRow>
     {
