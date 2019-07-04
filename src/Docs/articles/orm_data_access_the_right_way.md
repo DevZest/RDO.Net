@@ -41,16 +41,11 @@ Once we make a step back, we can get a very simple solution. ORM/Data Access is 
 
 Without the obsession of mapping between arbitrary objects and relational data, we can choose implementing relational schema and data into a comprehensive object model:
 
-| Class                                   | Description                                         |
-|-----------------------------------------|-----------------------------------------------------|
-|<xref:DevZest.Data.Column>               | <xref uid="DevZest.Data.Column" template="_summary.tmpl" />            |
-|<xref:DevZest.Data.Model>                | Entity of database table, query or dataset          |
-|<xref:DevZest.Data.Projection>           | Table projection                                    |
-|<xref:DevZest.Data.DbTable`1>            | Database table, can be permanent or temporary       |
-|<xref:DevZest.Data.Primitives.DbSession> | Database session                                    |
-|<xref:DevZest.Data.DbQuery`1>            | Database query                                      |
-|<xref:DevZest.Data.DataSet`1>            | Client side dataset                                 |
-|<xref:DevZest.Data.DbMock`1>             |                                                     |
+* Common Data <xref:DevZest.Data.Column>: <xref:DevZest.Data._Binary>, <xref:DevZest.Data._Boolean>, <xref:DevZest.Data._Binary>, <xref:DevZest.Data._Byte>, <xref:DevZest.Data._ByteEnum`1>, <xref:DevZest.Data._Char>, <xref:DevZest.Data._CharEnum`1>, <xref:DevZest.Data._DataSet`1>, <xref:DevZest.Data._DateTime>, <xref:DevZest.Data._Decimal>, <xref:DevZest.Data._Double>, <xref:DevZest.Data._Guid>, <xref:DevZest.Data._Int16>, <xref:DevZest.Data._Int16Enum`1>, <xref:DevZest.Data._Int32>, <xref:DevZest.Data._Int32Enum`1>, <xref:DevZest.Data._Int64>, <xref:DevZest.Data._Int64Enum`1>, <xref:DevZest.Data._Single>, <xref:DevZest.Data._String>, <xref:DevZest.Data.LocalColumn`1>
+* SQL Server Data <xref:DevZest.Data.Column>: <xref:DevZest.Data.SqlServer._DateTimeOffset>, <xref:DevZest.Data.SqlServer._SqlXml>, <xref:DevZest.Data.SqlServer._TimeSpan>
+* Entity Classes: <xref:DevZest.Data.Model>, <xref:DevZest.Data.Model`1>, <xref:DevZest.Data.Projection>, <xref:DevZest.Data.Key`1>, <xref:DevZest.Data.Ref`1>
+* Local DataSet: <xref:DevZest.Data.DataSet`1>
+* Database: <xref:DevZest.Data.Primitives.DbSession>(<xref:DevZest.Data.SqlServer.SqlSession>, <xref:DevZest.Data.MySql.MySqlSession>, etc), <xref:DevZest.Data.DbTable`1>, <xref:DevZest.Data.DbQuery`1>, <xref:DevZest.Data.DbMock`1>
 
 Database and dataset schema is realized as concrete metadata objects, with rich set of properties, methods and events. SQL, serialization/deserialization are explicitly implemented in these objects. In the end:
 

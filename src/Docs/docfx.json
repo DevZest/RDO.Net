@@ -50,8 +50,7 @@
           "apidoc/**.md"
         ],
         "exclude": [
-          "obj/**",
-          "../docs/**"
+          "obj/**"
         ]
       }
     ],
@@ -63,7 +62,7 @@
     "fileMetadataFiles": [],
     "template": [
       "default",
-      "nuget_packages/memberpage.2.41.0/content"
+      "nuget_packages/memberpage.2.43.2/content"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",
