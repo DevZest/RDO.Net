@@ -20,9 +20,9 @@ On the other hand, data model cannot be 100% POCO. For example, `INotifyProperty
 
 In the end, your presentation layer can do little with the data model.
 
-### The Complex Controls
+### Complex Control
 
-The complex control, such as `DataGrid`, has very complex presentation logic. Since these controls are built without existing presentation layer, these logics are naturally encapsulated into the control itself - the view. This puts the presentation layer into an embarrassed status: for simple control without complex view state such as `TextBox`, it has little job to do; for complex control such as `DataGrid`, the control has done the job.
+Complex control, such as `DataGrid`, has very complex presentation logics. Since these controls are built without existing presentation layer, these logics are naturally encapsulated into the control itself - the view. This puts the presentation layer into an embarrassed status: for simple control without complex view state such as `TextBox`, it has little job to do; for complex control such as `DataGrid`, the control has done the job.
 
 In the end, your presentation layer can do little with the view too.
 
@@ -30,10 +30,10 @@ Put it together, if the presentation layer is an afterthought, there is little r
 
 ## The Right Way
 
-Thanks to <xref:orm_data_access_the_right_way#rich-metadata---relational-data-objects>, we now have foundations to build a comprehensive presentation layer into single <xref:DevZest.Data.Presenters.DataPresenter> class, mapping <xref:DevZest.Data.DataRow> into <xref:DevZest.Data.Presenters.RowPresenter>, with the following features built out of box:
+Thanks to [Rich Metadata](xref:orm_data_access_the_right_way#rich-metadata---relational-data-objects), we now have foundations to build a comprehensive presentation layer into a highly reusable and fully customizable <xref:DevZest.Data.Presenters.DataPresenter> class, mapping <xref:DevZest.Data.DataRow> into <xref:DevZest.Data.Presenters.RowPresenter>, with the following features built out of box:
 
 * Selection, sorting, filtering and hierarchical grouping.
-* Data binding to UI elements.
+* UI elements life time management and data binding.
 * Editing and validation.
 * Layout and UI virtualization.
 
@@ -42,4 +42,4 @@ Simply derive you data presenter from <xref:DevZest.Data.Presenters.DataPresente
 Will produce the following data grid UI, with foreign key lookup and paste append from clipboard implemented:
 ![image](/images/SalesOrderDetailUI.jpg)
 
-In the end, you have your presentation logic in 100% strongly typed, extremely clean code!
+In the end, you have ALL of your presentation logic in 100% strongly typed, extremely clean code!
