@@ -17,3 +17,7 @@
   items:
     - name: Manage Your Registration/Subscription
       href: manage_registration_subscription.md
+- name: Tutorial
+  items:
+    - name: Get Started
+      href: tutorial_get_started.md
