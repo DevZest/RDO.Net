@@ -14,7 +14,7 @@ Presentation logic is complex - it's responsible for overcoming the gap between 
 
 ### The POCO Obsession, Again
 
-When model is arbitrary object (POCO), hiding the model from the view is simply not possible. The presentation layer can do little about it, in many cases, it just expose the model object via aggregation, without adding any value.
+When model is arbitrary object (POCO), hiding the model from the view is simply not possible. The presentation layer can do little about it, in many cases, it just expose the model object via aggregation, without any value-added.
 
 On the other hand, data model cannot be 100% POCO. For example, `INotifyPropertyChanged` interface is mandatory for most data models, and `IDataErrorInfo` interface is required if you want to bind to custom validation error. Since these interfaces must be implemented by all data models, they must be dead simple.
 
@@ -22,7 +22,7 @@ In the end, your presentation layer can do little with the data model.
 
 ### Complex Control
 
-Complex control, such as `DataGrid`, has very complex presentation logics. Since these controls are built without existing presentation layer, these logics are naturally encapsulated into the control itself - the view. This puts the presentation layer into an embarrassed status: for simple control without complex view state such as `TextBox`, it has little job to do; for complex control such as `DataGrid`, the control has done the job.
+Complex control, such as `DataGrid`, has very complex presentation logics. Since these controls are built without existing presentation layer, these logics are naturally encapsulated into the control itself - the view. This puts the presentation layer into an embarrassed situation: for simple control without complex view state such as `TextBox`, it has little job to do; for complex control such as `DataGrid`, the control has done the job.
 
 In the end, your presentation layer can do little with the view too.
 

@@ -12,5 +12,8 @@
       href: orm_data_access_the_right_way.md
     - name: Data Presentation, the Right Way
       href: data_presentation_the_right_way.md
-- name: Getting Started
-  href: getting_started.md
+- name: Get Started
+  href: get_started.md
+  items:
+    - name: Manage Your Registration/Subscription
+      href: manage_registration_subscription.md
