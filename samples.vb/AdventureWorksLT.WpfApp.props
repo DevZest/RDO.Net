@@ -1,0 +1,11 @@
+<Project>
+  <ItemGroup>
+    <ProjectReference Remove="..\..\src\Data\Data.csproj" />
+    <ProjectReference Remove="..\..\src\Data.WPF\Data.WPF.csproj" />
+    <ProjectReference Remove="..\..\src\Data.SqlServer\Data.SqlServer.csproj" />
+
+    <PackageReference Include="DevZest.Data" Version="1.0.0-*" />
+    <PackageReference Include="DevZest.Data.WPF" Version="1.0.0-*" />
+    <PackageReference Include="DevZest.Data.SqlServer" Version="1.0.0-*" />
+  </ItemGroup>
+</Project>

@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data\Db.Api.cs" Link="Db.Api.cs" />
+    <Compile Include="..\..\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\Db.Api.cs" Link="Db.Api.cs" />
   </ItemGroup>
 
   <ItemGroup>

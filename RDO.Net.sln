@@ -18,9 +18,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Analyzers.Vsix", "test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{61BAF81D-3EA2-4493-8474-CC067C4557A0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdventureWorksLT.Data.SqlServer.CSharp", "AdventureWorksLT.Data.SqlServer.CSharp", "{BE6B9D9D-B163-41BD-9F91-2C57889A1AB2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdventureWorksLT.Data.SqlServer", "AdventureWorksLT.Data.SqlServer", "{BE6B9D9D-B163-41BD-9F91-2C57889A1AB2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdventureWorksLT.Data.SqlServer.VisualBasic", "AdventureWorksLT.Data.SqlServer.VisualBasic", "{20265DDF-5B8E-4B7D-BC0A-66C78677DA39}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdventureWorksLT.Data.SqlServer", "AdventureWorksLT.Data.SqlServer", "{20265DDF-5B8E-4B7D-BC0A-66C78677DA39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.IntegrationTests", "test\Data.IntegrationTests\Data.IntegrationTests.csproj", "{774B14F7-425F-42BF-A9BE-73200B0F4918}"
 EndProject
@@ -42,7 +42,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WPF", "src\Data.WPF\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.AspNetCore", "src\Data.AspNetCore\Data.AspNetCore.csproj", "{532C8D37-A7B5-4A80-8B2E-9C055D8261BF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdventureWorksLT.Data.MySql.CSharp", "AdventureWorksLT.Data.MySql.CSharp", "{64D1F521-242E-419B-88F5-086F3AA54AC8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdventureWorksLT.Data.MySql", "AdventureWorksLT.Data.MySql", "{64D1F521-242E-419B-88F5-086F3AA54AC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.AspNetCore.UnitTests", "test\Data.AspNetCore.UnitTests\Data.AspNetCore.UnitTests.csproj", "{F8934D4E-E492-4A3D-8E9C-D09A8DE44DA9}"
 EndProject
@@ -52,19 +52,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.MySql.UnitTests", "tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WPF.UnitTests", "test\Data.WPF.UnitTests\Data.WPF.UnitTests.csproj", "{0A97428A-730F-4939-BF41-A65AE91BB01E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{5ACE1D70-12B8-44C9-9104-B21D14CB2987}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{5ACE1D70-12B8-44C9-9104-B21D14CB2987}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "samples\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{835A281D-6920-4C18-9B37-8582AF5B2163}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "samples\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{835A281D-6920-4C18-9B37-8582AF5B2163}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.MySql.CSharp\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{3BC41456-BDA8-44F4-91A6-4DC146AB191C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.MySql\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{3BC41456-BDA8-44F4-91A6-4DC146AB191C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "samples\AdventureWorksLT.Data.MySql.CSharp\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{28918F18-5B28-46A4-8D69-3267B0A891ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "samples\AdventureWorksLT.Data.MySql\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{28918F18-5B28-46A4-8D69-3267B0A891ED}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.SqlServer.VisualBasic\AdventureWorksLT.Data\AdventureWorksLT.Data.vbproj", "{7185DD04-28E2-4736-ADF2-6B60E84852F6}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data", "samples.vb\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.vbproj", "{7185DD04-28E2-4736-ADF2-6B60E84852F6}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data.DbDesign", "samples\AdventureWorksLT.Data.SqlServer.VisualBasic\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.vbproj", "{F025C91E-6FD0-455E-93F9-BBC1BFD88382}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data.DbDesign", "samples.vb\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.vbproj", "{F025C91E-6FD0-455E-93F9-BBC1BFD88382}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorPagesMovie.Data", "samples\RazorPagesMovie.Data\RazorPagesMovie.Data.csproj", "{05743646-BF59-4A56-BB96-9E34EA660E2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorPagesMovie.Data", "samples\RazorPagesMovie.Data\RazorPagesMovie.Data.csproj", "{05743646-BF59-4A56-BB96-9E34EA660E2A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples.vb", "samples.vb", "{52F7AE23-31F3-4ED7-A9DC-547FF7508C83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -187,7 +189,7 @@ Global
 		{8FF4772B-6133-4570-814A-BF432F423B7B} = {3836F052-5EF6-4830-9632-E87F6330128E}
 		{A64BED82-9113-415E-B2A6-F9A880ABDF2B} = {89626352-7E3E-4025-BD6E-39EE22B3E5BC}
 		{BE6B9D9D-B163-41BD-9F91-2C57889A1AB2} = {61BAF81D-3EA2-4493-8474-CC067C4557A0}
-		{20265DDF-5B8E-4B7D-BC0A-66C78677DA39} = {61BAF81D-3EA2-4493-8474-CC067C4557A0}
+		{20265DDF-5B8E-4B7D-BC0A-66C78677DA39} = {52F7AE23-31F3-4ED7-A9DC-547FF7508C83}
 		{774B14F7-425F-42BF-A9BE-73200B0F4918} = {89626352-7E3E-4025-BD6E-39EE22B3E5BC}
 		{6F5206CA-4EB5-448F-88A9-A0CE545CEA72} = {89626352-7E3E-4025-BD6E-39EE22B3E5BC}
 		{89595262-2443-4F2E-9789-60C7998A0A07} = {61BAF81D-3EA2-4493-8474-CC067C4557A0}

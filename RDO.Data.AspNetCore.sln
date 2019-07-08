@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "src\Data\Data.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.SqlServer", "src\Data.SqlServer\Data.SqlServer.csproj", "{45CDB8CD-C70D-491D-A127-D7D391A848D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.SqlServer.CSharp\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{B076F10D-DE44-4DB3-9019-C28F520A4AA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{B076F10D-DE44-4DB3-9019-C28F520A4AA8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorPagesMovie.Data", "samples\RazorPagesMovie.Data\RazorPagesMovie.Data.csproj", "{477110B7-902A-4A87-8D39-34041C383F65}"
 EndProject
