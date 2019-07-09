@@ -223,6 +223,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Data\Data.csproj">
+      <Project>{e0491457-ba40-4f12-bf72-e63a35422b1e}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj">
+      <Project>{9f798262-0256-4457-89b0-71f8c8f4b1f2}</Project>
+      <Name>Data.SqlServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">
+      <Project>{13148e98-0f1a-44d3-8def-99392773af3e}</Project>
+      <Name>Data.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.vbproj">
       <Project>{c0c21aa8-e2e5-476b-b898-fea17154d1a3}</Project>
       <Name>AdventureWorksLT.Data</Name>
@@ -241,5 +253,6 @@
     <Resource Include="Images\window_background.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'RDO.WPF.Samples' " />
   <Import Project="..\$(AssemblyName).props" Condition=" '$(SolutionName)' == 'AdventureWorksLT' " />
 </Project>

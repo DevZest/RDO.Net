@@ -66,6 +66,43 @@ namespace DevZest.Samples.AdventureWorksLT
             return result.ToDataSetAsync(ct);
         }
 
+        public async Task UpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        {
+            using (var transaction = BeginTransaction())
+            {
+                await PerformUpdateAsync(salesOrders, ct);
+                await transaction.CommitAsync(ct);
+            }
+        }
+
+        private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        {
+            salesOrders._.ResetRowIdentifiers();
+            await SalesOrderHeader.UpdateAsync(salesOrders, ct);
+            await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
+            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            salesOrderDetails._.ResetRowIdentifiers();
+            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
+        }
+
+        public async Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        {
+            using (var transaction = BeginTransaction())
+            {
+                await PerformInsertAsync(salesOrders, ct);
+                await transaction.CommitAsync(ct);
+            }
+        }
+
+        private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        {
+            salesOrders._.ResetRowIdentifiers();
+            await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
+            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            salesOrderDetails._.ResetRowIdentifiers();
+            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
+        }
+
         #region SalesOrderCRUD
 
         private async Task EnsureConnectionOpenAsync(CancellationToken ct)
