@@ -10,4 +10,3 @@ using Microsoft.VisualBasic;
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
 [assembly: ComVisible(false)]
-[assembly: Embedded]

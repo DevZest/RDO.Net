@@ -234,5 +234,10 @@ namespace DevZest.Data
         {
             return DbSession.ExecuteDbReaderAsync(this, ct);
         }
+
+        public T Entity
+        {
+            get { return _; }
+        }
     }
 }

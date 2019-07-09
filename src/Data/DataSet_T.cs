@@ -310,5 +310,10 @@ namespace DevZest.Data
         {
             return new JsonView<T>(_, JsonFilter.Join(filters));
         }
+
+        public T Entity
+        {
+            get { return _; }
+        }
     }
 }

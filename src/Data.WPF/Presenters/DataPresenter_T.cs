@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using System.Linq;
 
 namespace DevZest.Data.Presenters
 {
@@ -487,6 +486,11 @@ namespace DevZest.Data.Presenters
         protected virtual IReadOnlyList<Column> GetMatchColumns(T _)
         {
             return _.Model.PrimaryKey;
+        }
+
+        public T Entity
+        {
+            get { return _; }
         }
     }
 }
