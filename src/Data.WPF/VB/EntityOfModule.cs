@@ -9,7 +9,7 @@ using Microsoft.VisualBasic.CompilerServices;
 public sealed class EntityOfModule
 {
     /// <exclude />
-    public static T ModelOf<T>(DataPresenter<T> dataPresenter) where T : class, IEntity, new()
+    public static T EntityOf<T>(DataPresenter<T> dataPresenter) where T : class, IEntity, new()
     {
         return dataPresenter._;
     }
