@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="SalesOrderHeaderBox"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:local="clr-namespace:DevZest.Samples.AdventureWorksLT"
+            xmlns:dz="http://schemas.devzest.com/data/windows"
+            mc:Ignorable="d" 
+            d:DesignHeight="300" Width="580">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style TargetType="{x:Type dz:ForeignKeyBox}">
+            <Setter Property="Margin" Value="0, 0, 5, 0" />
+        </Style>
+        <Style TargetType="DatePicker">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </UserControl.Resources>
+    <StackPanel Margin="5">
+        <StackPanel Orientation="Horizontal" Margin="0,5">
+            <DockPanel Width="200">
+                <Label Content="Customer:" Target="{x:Reference Name=_customer}" DockPanel.Dock="Top"/>
+                <dz:ForeignKeyBox x:Name="_customer">
+                    <local:CustomerBox />
+                </dz:ForeignKeyBox>
+            </DockPanel>
+            <DockPanel Width="120">
+                <Label Content="Ship To:" Target="{x:Reference Name=_shipTo}" DockPanel.Dock="Top" />
+                <dz:ForeignKeyBox x:Name="_shipTo">
+                    <local:AddressBox />
+                </dz:ForeignKeyBox>
+            </DockPanel>
+            <DockPanel Width="120">
+                <Label Content="Bill To:" Target="{x:Reference Name=_billTo}" DockPanel.Dock="Top"/>
+                <dz:ForeignKeyBox x:Name="_billTo">
+                    <local:AddressBox />
+                </dz:ForeignKeyBox>
+            </DockPanel>
+            <StackPanel Orientation="Vertical">
+                <Label Content="Order Date:" Target="{x:Reference Name=_orderDate}"/>
+                <DatePicker x:Name="_orderDate" Width="135" />
+                <Label Content="Ship Date: " Target="{x:Reference Name=_shipDate}"/>
+                <DatePicker x:Name="_shipDate" Width="135" />
+                <Label Content="Due Date: " Target="{x:Reference Name=_dueDate}"/>
+                <DatePicker x:Name="_dueDate" Width="135" />
+            </StackPanel>
+        </StackPanel>
+        <UniformGrid Columns="3">
+            <UniformGrid.Resources>
+                <Style TargetType="TextBox">
+                    <Setter Property="Margin" Value="0,0,5,0" />
+                </Style>
+            </UniformGrid.Resources>
+            <StackPanel>
+                <Label Content="_Sales Order Number:" Target="{x:Reference Name=_salesOrderNumber}" />
+                <TextBlock x:Name="_salesOrderNumber" />
+            </StackPanel>
+            <StackPanel>
+                <Label Content="_Purchase Order Number:" Target="{x:Reference Name=_purchaseOrderNumber}" />
+                <TextBox x:Name="_purchaseOrderNumber" />
+            </StackPanel>
+            <StackPanel>
+                <Label Content="_Account Number:" Target="{x:Reference Name=_accountNumber}" />
+                <TextBox x:Name="_accountNumber" />
+            </StackPanel>
+        </UniformGrid>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+            <StackPanel Margin="0,0,5,0">
+                <Label Content="Ship Method: " Target="{x:Reference Name=_shipMethod}" />
+                <TextBox x:Name="_shipMethod" Width="200" />
+            </StackPanel>
+            <StackPanel Margin="0,0,5,0">
+                <Label Content="Credit Card Appoval Code:" Target="{x:Reference Name=_creditCardApprovalCode}" />
+                <TextBox x:Name="_creditCardApprovalCode" Width="180" />
+            </StackPanel>
+            <StackPanel Margin="0,0,5,0">
+                <Label Content="Status: " Target="{x:Reference Name=_status}" />
+                <ComboBox x:Name="_status" Width="100" />
+            </StackPanel>
+            <CheckBox Margin="0,0,5,0" x:Name="_onlineOrderFlag" Content="Online" VerticalAlignment="Center" FontWeight="Bold" />
+        </StackPanel>
+        <DockPanel>
+            <Label Content="Comment: " Target="{x:Reference Name=_comment}" />
+            <TextBox x:Name="_comment" />
+        </DockPanel>
+    </StackPanel>
+</UserControl>

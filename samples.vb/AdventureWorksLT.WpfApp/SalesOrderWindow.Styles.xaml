@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:DevZest.Samples.AdventureWorksLT"
+                    xmlns:dz="http://schemas.devzest.com/data/windows">
+    <Style x:Key="{x:Static local:SalesOrderWindow+Styles.DataSheet}" TargetType="dz:DataView">
+        <Style.Resources>
+            <Style TargetType="dz:RowView">
+                <Setter Property="Background" Value="White" />
+            </Style>
+        </Style.Resources>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+    </Style>
+</ResourceDictionary>

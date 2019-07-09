@@ -1,3 +1,5 @@
+Imports DevZest.Data
+
 <CustomValidator("VAL_ProductNumber")>
 <CustomValidator("VAL_ProductName")>
 <InvisibleToDbDesigner>

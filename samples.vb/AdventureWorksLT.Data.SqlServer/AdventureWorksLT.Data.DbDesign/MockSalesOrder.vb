@@ -15,7 +15,7 @@ Public Class MockSalesOrder
 
     Private Shared Function Headers() As DataSet(Of SalesOrderHeader)
         Dim result As DataSet(Of SalesOrderHeader) = DataSet(Of SalesOrderHeader).Create().AddRows(4)
-        Dim x As SalesOrderHeader = EntityOf(result)
+        Dim x As SalesOrderHeader = result.Entity
         x.SuspendIdentity()
         x.SalesOrderID(0) = 1
         x.SalesOrderID(1) = 2
@@ -103,7 +103,7 @@ Public Class MockSalesOrder
 
     Private Shared Function Details() As DataSet(Of SalesOrderDetail)
         Dim result As DataSet(Of SalesOrderDetail) = DataSet(Of SalesOrderDetail).Create().AddRows(32)
-        Dim x As SalesOrderDetail = EntityOf(result)
+        Dim x As SalesOrderDetail = result.Entity
         x.SuspendIdentity()
         x.SalesOrderID(0) = 1
         x.SalesOrderID(1) = 1

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{C0C21AA8-E2E5-476B-B898-FEA17154D1A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.vbproj", "{C0C21AA8-E2E5-476B-B898-FEA17154D1A3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{FA3D8BD5-14EC-4528-8270-D8011CFC69A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.vbproj", "{FA3D8BD5-14EC-4528-8270-D8011CFC69A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorksLT.WpfApp", "AdventureWorksLT.WpfApp\AdventureWorksLT.WpfApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "AdventureWorksLT.WpfApp", "AdventureWorksLT.WpfApp\AdventureWorksLT.WpfApp.vbproj", "{C8FCA700-F174-4151-B392-EA29B547ECE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{FA3D8BD5-14EC-4528-8270-D8011CFC69A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA3D8BD5-14EC-4528-8270-D8011CFC69A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA3D8BD5-14EC-4528-8270-D8011CFC69A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{89595262-2443-4F2E-9789-60C7998A0A07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89595262-2443-4F2E-9789-60C7998A0A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89595262-2443-4F2E-9789-60C7998A0A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89595262-2443-4F2E-9789-60C7998A0A07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8FCA700-F174-4151-B392-EA29B547ECE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8FCA700-F174-4151-B392-EA29B547ECE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8FCA700-F174-4151-B392-EA29B547ECE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8FCA700-F174-4151-B392-EA29B547ECE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <AssemblyName>AdventureWorksLT.Data</AssemblyName>
     <OptionStrict>On</OptionStrict>
   </PropertyGroup>
@@ -18,9 +18,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="AdventureWorksLT.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="AdventureWorksLT_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -46,6 +43,15 @@
     <Import Include="DevZest.Data" />
     <Import Include="DevZest.Data.Annotations" />
     <Import Include="DevZest.Data.SqlServer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\AdventureWorksLT.Data.DbDesign\LocalDb\AdventureWorksLT.mdf" Link="AdventureWorksLT.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\AdventureWorksLT.Data.DbDesign\LocalDb\AdventureWorksLT_log.ldf" Link="AdventureWorksLT_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

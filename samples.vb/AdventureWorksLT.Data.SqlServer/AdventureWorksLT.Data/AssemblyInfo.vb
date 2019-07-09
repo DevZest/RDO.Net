@@ -7,3 +7,4 @@ Imports System.Reflection
 
 <Assembly: MessageResource(GetType(My.UserMessages))>
 
+

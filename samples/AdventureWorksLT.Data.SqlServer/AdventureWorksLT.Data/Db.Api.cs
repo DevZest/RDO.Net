@@ -1,5 +1,6 @@
 ﻿using DevZest.Data;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +41,39 @@ namespace DevZest.Samples.AdventureWorksLT
             return result;
         }
 
+        public async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> refs, CancellationToken ct = default(CancellationToken))
+        {
+            var tempTable = await CreateTempTableAsync<Product.Ref>(ct);
+            await tempTable.InsertAsync(refs, ct);
+            return await CreateQuery((DbQueryBuilder builder, Product.Lookup _) =>
+            {
+                builder.From(tempTable, out var t);
+                var seqNo = t.GetModel().GetIdentity(true).Column;
+                Debug.Assert(!(seqNo is null));
+                builder.LeftJoin(Product, t.ForeignKey, out var p)
+                    .AutoSelect().OrderBy(seqNo);
+            }).ToDataSetAsync(ct);
+        }
+
+        public Task<DataSet<Address>> GetAddressLookupAsync(_Int32 customerID, CancellationToken ct)
+        {
+            var result = CreateQuery<Address>((builder, _) =>
+            {
+                builder.From(CustomerAddress.Where(x => x.CustomerID == customerID), out var ca)
+                    .InnerJoin(Address, ca.FK_Address, out var a)
+                    .AutoSelect();
+            });
+            return result.ToDataSetAsync(ct);
+        }
+
         #region SalesOrderCRUD
+
+        private async Task EnsureConnectionOpenAsync(CancellationToken ct)
+        {
+            if (Connection.State != ConnectionState.Open)
+                await OpenConnectionAsync(ct);
+        }
+
         public async Task<DataSet<SalesOrderInfo>> GetSalesOrderInfoAsync(_Int32 salesOrderID, CancellationToken ct = default(CancellationToken))
         {
             var result = CreateQuery((DbQueryBuilder builder, SalesOrderInfo _) =>
@@ -68,56 +101,36 @@ namespace DevZest.Samples.AdventureWorksLT
             return await result.ToDataSetAsync(ct);
         }
 
-        public async Task UpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        public async Task<int?> CreateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
+            await EnsureConnectionOpenAsync(ct);
             using (var transaction = BeginTransaction())
             {
-                await PerformUpdateAsync(salesOrders, ct);
+                salesOrders._.ResetRowIdentifiers();
+                await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
+                var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+                salesOrderDetails._.ResetRowIdentifiers();
+                await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
+
                 await transaction.CommitAsync(ct);
+                return salesOrders.Count > 0 ? salesOrders._.SalesOrderID[0] : null;
             }
         }
 
-        private async Task PerformUpdateAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
+        public async Task UpdateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
         {
-            salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.UpdateAsync(salesOrders, ct);
-            await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
-            salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
-        }
-
-        public async Task InsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
-        {
+            await EnsureConnectionOpenAsync(ct);
             using (var transaction = BeginTransaction())
             {
-                await PerformInsertAsync(salesOrders, ct);
+                salesOrders._.ResetRowIdentifiers();
+                await SalesOrderHeader.UpdateAsync(salesOrders, ct);
+                await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
+                var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+                salesOrderDetails._.ResetRowIdentifiers();
+                await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
+
                 await transaction.CommitAsync(ct);
             }
-        }
-
-        private async Task PerformInsertAsync(DataSet<SalesOrder> salesOrders, CancellationToken ct)
-        {
-            salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
-            salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
-        }
-        #endregion
-
-        public async Task<DataSet<Product.Lookup>> LookupAsync(DataSet<Product.Ref> refs, CancellationToken ct = default(CancellationToken))
-        {
-            var tempTable = await CreateTempTableAsync<Product.Ref>(ct);
-            await tempTable.InsertAsync(refs, ct);
-            return await CreateQuery((DbQueryBuilder builder, Product.Lookup _) =>
-            {
-                builder.From(tempTable, out var t);
-                var seqNo = t.GetModel().GetIdentity(true).Column;
-                Debug.Assert(!(seqNo is null));
-                builder.LeftJoin(Product, t.ForeignKey, out var p)
-                    .AutoSelect().OrderBy(seqNo);
-            }).ToDataSetAsync(ct);
         }
 
         public Task<int> DeleteSalesOrderAsync(DataSet<SalesOrderHeader.Key> dataSet, CancellationToken ct)
@@ -125,35 +138,6 @@ namespace DevZest.Samples.AdventureWorksLT
             return SalesOrderHeader.DeleteAsync(dataSet, (s, _) => s.Match(_), ct);
         }
 
-        public Task<DataSet<Address>> GetAddressLookupAsync(_Int32 customerID, CancellationToken ct)
-        {
-            var result = CreateQuery<Address>((builder, _) =>
-            {
-                builder.From(CustomerAddress.Where(x => x.CustomerID == customerID), out var ca)
-                    .InnerJoin(Address, ca.FK_Address, out var a)
-                    .AutoSelect();
-            });
-            return result.ToDataSetAsync(ct);
-        }
-
-        public async Task UpdateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
-        {
-            salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.UpdateAsync(salesOrders, ct);
-            await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
-            salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
-        }
-
-        public async Task<int?> CreateSalesOrderAsync(DataSet<SalesOrderInfo> salesOrders, CancellationToken ct)
-        {
-            salesOrders._.ResetRowIdentifiers();
-            await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
-            salesOrderDetails._.ResetRowIdentifiers();
-            await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
-            return salesOrders.Count > 0 ? salesOrders._.SalesOrderID[0] : null;
-        }
+        #endregion
     }
 }

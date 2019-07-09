@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="SearchBox" x:Name="_searchBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" >
+    <Grid Margin="2" Background="White" VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <TextBox Name="_searchTextBox" BorderThickness="0" Grid.Column="0" HorizontalAlignment="Left" Height="30" KeyDown="SearchTextBox_KeyDown" VerticalContentAlignment="Center"
+                 TextWrapping="Wrap" VerticalAlignment="Center" Width="230"
+                 GotFocus="SearchBox_GotFocus"
+                 GotMouseCapture="SearchTextBox_GotMouseCapture"
+                 LostFocus="SearchTextBox_LostFocus"
+                 TextChanged="SearchTextBox_TextChanged" >
+            <TextBox.Style>
+                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                    <Style.Resources>
+                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                            <VisualBrush.Visual>
+                                <Label Content="Search" Foreground="LightGray" FontStyle="Italic" />
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Style.Resources>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=_searchBox, Path=State}" Value="Empty">
+                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <Button Grid.Column="1" VerticalAlignment="center" Width="30" Height="30" Focusable="False" Click="Button_Click" >
+            <Image Height="16" Opacity="0.6">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Source" Value="Images/search_glyph.png" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=_searchBox, Path=State}" Value="ClearSearch">
+                                <Setter Property="Source" Value="Images/search_clear.png" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Padding" Value="1"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=_searchBox, Path=State}" Value="Empty">
+                            <Setter Property="IsEnabled" Value="False" />
+                            <Setter Property="Background" Value="Transparent" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</UserControl>

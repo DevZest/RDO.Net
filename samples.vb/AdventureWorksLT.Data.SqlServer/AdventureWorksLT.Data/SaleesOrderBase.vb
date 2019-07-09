@@ -1,4 +1,6 @@
-﻿<CustomValidator("VAL_LineCount")>
+﻿Imports DevZest.Data
+
+<CustomValidator("VAL_LineCount")>
 <Computation("ComputeLineCount", ComputationMode.Aggregate)>
 <Computation("ComputeSubTotal", ComputationMode.Aggregate)>
 <InvisibleToDbDesigner>
