@@ -46,11 +46,6 @@ namespace DevZest.Samples.AdventureWorksLT
 
         private Presenter _presenter;
 
-        private DataSet<SalesOrderInfo> DataSet
-        {
-            get { return _presenter.DataSet; }
-        }
-
         private DetailPresenter CurrentRowDetailPresenter
         {
             get { return _presenter.CurrentRowDetailPresenter; }
