@@ -30,8 +30,8 @@ These NuGet packages are targeting .Net Standard 2.0.
 
 ### Supported Databases
 
-* SQL Server, Version 2016 (13) or later
-* MySQL (InnoDB), Version 8.0.4 or later
+* [DevZest.Data.SqlServer](https://www.nuget.org/packages/DevZest.Data.SqlServer/): SQL Server Version 2016 (13) or later
+* [DevZest.Data.MySql](https://www.nuget.org/packages/DevZest.Data.MySql/): MySQL (InnoDB) Version 8.0.4 or later
 
 ### Visual Studio Extension
 
