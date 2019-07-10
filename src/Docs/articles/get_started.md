@@ -28,6 +28,11 @@ The following NuGet packages are delivered:
 
 These NuGet packages are targeting .Net Standard 2.0.
 
+### Supported Databases
+
+* SQL Server, Version 2016 (13) or later
+* MySQL (InnoDB), Version 8.0.4 or later
+
 ### Visual Studio Extension
 
 The following Visual Studio extension is delivered as design time tool:
@@ -37,7 +42,7 @@ The following Visual Studio extension is delivered as design time tool:
 Supported Visual Studio:
 
 * Visual Studio 2017, All Editions, Versions 15.3 or higher
-* Visual Studio 2019, All Editions
+* Visual Studio 2019, All Editions and Versions
 
 ## RDO.Tools Activation
 
