@@ -52,7 +52,7 @@ The class can be viewed in *Model Visualizer* tool window:
 >[!Note]
 >You can show *Model Visualizer* tool window by clicking menu "*View*" -> "*Other Windows*" -> "*Model Visualizer*" in Visual Studio.
 
-### Step 2. Add ID Field
+### Step 2. Add ID field
 
 In *Model Visualizer* tool window, click the left top ![image](/images/model_visualizer_add.jpg) button, the following code snippet will be inserted:
 
@@ -100,7 +100,7 @@ Public Shared ReadOnly _ID As Mounter(Of _Int32) = RegisterColumn(Function(x As 
 
 ***
 
-### Step 3. Mark ID field as identity
+### Step 3. Annotate ID field
 
 In *Model Visualizer* tool window, right click *ID* field, then click *Identity* from context menu:
 
