@@ -80,7 +80,7 @@ Public Class ProductDescription
     End Function
 
     Private m_ProductDescriptionID As _Int32
-    <Identity(1, 1)>
+    <Identity>
     <DbColumn(Description:="Primary key for ProductDescription records.")>
     Public Property ProductDescriptionID As _Int32
         Get

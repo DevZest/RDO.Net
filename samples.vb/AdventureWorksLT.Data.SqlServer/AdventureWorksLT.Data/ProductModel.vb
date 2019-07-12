@@ -81,7 +81,7 @@ Public Class ProductModel
     End Function
 
     Private m_ProductModelID As _Int32
-    <Identity(1, 1)>
+    <Identity>
     Public Property ProductModelID As _Int32
         Get
             Return m_ProductModelID

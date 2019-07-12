@@ -93,7 +93,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return new PK(CustomerID);
         }
 
-        [Identity(1, 1)]
+        [Identity]
         [DbColumn(Description = "Primary key for Customer records.")]
         public _Int32 CustomerID { get; private set; }
 

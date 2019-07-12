@@ -72,7 +72,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return new PK(ProductCategoryID);
         }
 
-        [Identity(1, 1)]
+        [Identity]
         [DbColumn(Description = "Primary key for ProductCategory records.")]
         public _Int32 ProductCategoryID { get; private set; }
 

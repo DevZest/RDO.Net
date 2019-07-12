@@ -96,7 +96,7 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _fk_billToCustomerAddress ?? (_fk_billToCustomerAddress = new CustomerAddress.PK(CustomerID, BillToAddressID)); }
         }
 
-        [Identity(1, 1)]
+        [Identity]
         [DbColumn(Description = "Primary key.")]
         public _Int32 SalesOrderID { get; private set; }
 

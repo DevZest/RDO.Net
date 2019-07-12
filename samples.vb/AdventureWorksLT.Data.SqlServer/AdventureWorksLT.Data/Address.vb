@@ -142,7 +142,7 @@ Public Class Address
     End Function
 
     Private m_AddressID As _Int32
-    <Identity(1, 1)>
+    <Identity>
     <DbColumn(Description:="Primary key for Address records.")>
     Public Property AddressID As _Int32
         Get

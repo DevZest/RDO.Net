@@ -70,7 +70,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [DbColumn(Description = "Primary key. Foreign key to SalesOrderHeader.SalesOrderID.")]
         public _Int32 SalesOrderID { get; private set; }
 
-        [Identity(1, 1)]
+        [Identity]
         [DbColumn(Description = "Primary key. One incremental unique number per product sold.")]
         public _Int32 SalesOrderDetailID { get; private set; }
 

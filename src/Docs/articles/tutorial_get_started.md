@@ -12,13 +12,13 @@ This tutorial contains step by step information to demonstrate the basics of RDO
 
 ## Prerequisites
 
-* Visual Studio 2017 (version >= 15.3) or Visual Studio 2019 (all versions), with `.Net Desktop Development` workload installed.
+* Visual Studio 2017 (version >= 15.3) or Visual Studio 2019 (all versions), with *.Net Desktop Development* workload installed.
 * [RDO.Tools](https://marketplace.visualstudio.com/items?itemName=DevZest.Data.Tools) installed and [activated](xref:get_started#rdotools-activation).
 * [SQL Server 2016 Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2016).
 
 ## Create the Solution
 
-1. In Visual Studio, create a blank solution `Tutorial`:
+1. In Visual Studio, create a blank solution *Tutorial*:
 
 # [VS2017](#tab/vs2017)
 
@@ -32,19 +32,19 @@ This tutorial contains step by step information to demonstrate the basics of RDO
  
 2. Add projects into the solution:
 
-In Visual Studio `Solution Explorer` tool window, right click the solution `Tutorial`, then click `Add...`-> `New Project...` from the context menu, to add the following projects:
+In Visual Studio *Solution Explorer* tool window, right click the solution *Tutorial*, then click "*Add...*"-> "*New Project...*" from the context menu, to add the following projects:
 
 | Project Name        | Project Type                           |
 |---------------------|----------------------------------------|
-| `Movies`            | Class Libary (.Net Standard)           |
-| `Movies.DbDesign`   | Console App (.Net Core)                |
-| `Movies.Test`       | MSTest Project (.Net Core)             |
-| `Movies.WPF`        | WPF App (.Net Framework)               |
-| `Movies.AspNetCore` | ASP.Net Core Web Application (C# only) |
+| *Movies*            | Class Libary (.Net Standard)           |
+| *Movies.DbDesign*   | Console App (.Net Core)                |
+| *Movies.Test*       | MSTest Project (.Net Core)             |
+| *Movies.WPF*        | WPF App (.Net Framework)               |
+| *Movies.AspNetCore* | ASP.Net Core Web Application (C# only) |
 
 >[!NOTE]
 >* It's important to name the projects correctly so the namespaces will match when you copy and paste code.
->* It appears Visual Studio does not support VB.Net for ASP.Net Core Web Application. `Movies.AspNetCore` is only available in C#.
+>* It appears Visual Studio does not support VB.Net for ASP.Net Core Web Application. *Movies.AspNetCore* is only available in C#.
 
 In the end, you will have following projects created in Visual Studio:
 

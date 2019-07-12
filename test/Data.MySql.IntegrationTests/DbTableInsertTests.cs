@@ -28,7 +28,7 @@ namespace DevZest.Data.MySql
 
             public static readonly Mounter<_Int32> _Id = RegisterColumn((SimpleModel _) => _.Id);
 
-            [Identity(1, 1)]
+            [Identity]
             public _Int32 Id { get; private set; }
         }
 

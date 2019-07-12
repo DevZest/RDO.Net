@@ -118,7 +118,7 @@ Public Class SalesOrderHeader
     End Property
 
     Private m_SalesOrderID As _Int32
-    <Identity(1, 1)>
+    <Identity>
     <DbColumn(Description:="Primary key.")>
     Public Property SalesOrderID As _Int32
         Get

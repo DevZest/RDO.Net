@@ -92,7 +92,7 @@ Public Class SalesOrderDetail
     End Property
 
     Private m_SalesOrderDetailID As _Int32
-    <Identity(1, 1)>
+    <Identity>
     <DbColumn(Description:="Primary key. One incremental unique number per product sold.")>
     Public Property SalesOrderDetailID As _Int32
         Get

@@ -130,7 +130,7 @@ Public Class Product
     End Property
 
     Private m_ProductID As _Int32
-    <Identity(1, 1)>
+    <Identity>
     <DbColumn(Description:="Primary key for Product records.")>
     Public Property ProductID As _Int32
         Get

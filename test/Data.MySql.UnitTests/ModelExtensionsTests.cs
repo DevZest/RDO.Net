@@ -60,7 +60,7 @@ namespace DevZest.Data.MySql
                 return new PK(Id);
             }
 
-            [Identity(1, 1)]
+            [Identity]
             [DbColumn(Description = "Id Description")]
             public _Int32 Id { get; private set; }
 

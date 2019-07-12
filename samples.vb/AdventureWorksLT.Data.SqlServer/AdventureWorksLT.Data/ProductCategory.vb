@@ -96,7 +96,7 @@ Public Class ProductCategory
     End Function
 
     Private m_ProductCategoryID As _Int32
-    <Identity(1, 1)>
+    <Identity>
     <DbColumn(Description:="Primary key for ProductCategory records.")>
     Public Property ProductCategoryID As _Int32
         Get

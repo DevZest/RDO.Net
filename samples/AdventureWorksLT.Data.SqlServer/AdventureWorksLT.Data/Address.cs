@@ -80,7 +80,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return new PK(AddressID);
         }
 
-        [Identity(1, 1)]
+        [Identity]
         [DbColumn(Description = "Primary key for Address records.")]
         public _Int32 AddressID { get; private set; }
 

@@ -96,7 +96,7 @@ namespace DevZest.Samples.AdventureWorksLT
             get { return _fk_productModel ?? (_fk_productModel = new ProductModel.PK(ProductModelID)); }
         }
 
-        [Identity(1, 1)]
+        [Identity]
         [DbColumn(Description = "Primary key for Product records.")]
         public _Int32 ProductID { get; private set; }
 
