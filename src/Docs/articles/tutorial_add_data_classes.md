@@ -102,35 +102,11 @@ Public Shared ReadOnly _ID As Mounter(Of _Int32) = RegisterColumn(Function(x As 
 
 ### Step 3. Annotate ID field
 
-In *Model Visualizer* tool window, right click *ID* field, then click *Identity* from context menu:
+In *Model Visualizer* tool window, right click *ID* field, available annotations for current field will be displayed as context menu:
 
 ![image](/images/tutorial_add_identity.jpg)
 
-RDO.Tools will add `Identity` annotation for field `ID`:
-
-# [C#](#tab/cs)
-
-```csharp
-...
-[Identity]
-public _Int32 ID { get; private set; }
-...
-```
-
-# [VB.Net](#tab/vb)
-
-```vb
-...
-<Identity>
-Public Property ID As _Int32
-...
-```
-
-***
-
-***
-
-Now you've completed adding the identity field `ID` with only a few key strokes:
+Click *Identity*, field `ID` will be annotated with `Identity` attribute:
 
 # [C#](#tab/cs)
 
