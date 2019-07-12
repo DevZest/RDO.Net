@@ -8,6 +8,11 @@ namespace DevZest.Data.Annotations
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(Identity) }, validOnTypes: new Type[] { typeof(_Int32) })]
     public sealed class IdentityAttribute : ColumnAttribute
     {
+        public  IdentityAttribute()
+            : this(1, 1)
+        {
+        }
+
         public IdentityAttribute(int seed, int increment)
         {
             Seed = seed;
