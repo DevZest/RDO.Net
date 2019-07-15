@@ -1,7 +1,7 @@
-Imports System
+﻿Imports DevZest.Data.DbDesign
 
 Module Program
-    Sub Main(args As String())
-        Console.WriteLine("Hello World!")
-    End Sub
+    Function Main(args As String()) As Integer
+        Return args.RunDbDesign()
+    End Function
 End Module

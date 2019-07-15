@@ -23,3 +23,5 @@
       href: tutorial_get_started.md
     - name: Add Data Classes
       href: tutorial_add_data_classes.md
+    - name: Design Time Database
+      href: tutorial_db_design.md

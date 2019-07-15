@@ -280,7 +280,7 @@ The final `Movie` class:
 
 # [VB.Net](#tab/vb)
 
-[!code-csharp[Db](../../../samples.vb/Tutorial/Movies/Movie.vb)]
+[!code-vb[Db](../../../samples.vb/Tutorial/Movies/Movie.vb)]
 
 ***
 
@@ -354,6 +354,6 @@ Select *Movie* from *Model:* combo box, then click button *OK*, a `Movie` proper
 
 # [VB.Net](#tab/vb)
 
-[!code-csharp[Db](../../../samples.vb/Tutorial/Movies/Db.vb)]
+[!code-vb[Db](../../../samples.vb/Tutorial/Movies/Db.vb)]
 
 ***
