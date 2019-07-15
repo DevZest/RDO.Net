@@ -1,8 +1,8 @@
 ---
-uid: tutorial_db_design
+uid: tutorial_movies_design
 ---
 
-# Design Time Database
+# Movies.DbDesign Project
 
 In this section, we will work on *Movies.DbDesign* project to manipulate design time database.
 
@@ -10,11 +10,11 @@ In this section, we will work on *Movies.DbDesign* project to manipulate design 
 
 Before continue, make the following changes to *Movies.DbDesign* project:
 
-*Step 1*. Add project reference `Movies` to this project.
+*Step 1*. Add project reference *Movies* to this project.
 
 *Step 2*. Add NuGet Package [DevZest.Data.DbDesign](https://www.nuget.org/packages/DevZest.Data.DbDesign/) to this project.
 
-*Step 3*. Change default namespace (root namespace in Visual Basic) from `Movies.DbDesign` to `Movies`, by right clicking the project `Movies.DbDesign` in *Solution Explorer* tool window, then click *Properties* in context menu:
+*Step 3*. Change default namespace (root namespace in Visual Basic) from `Movies.DbDesign` to `Movies`, by right clicking the project *Movies.DbDesign* in *Solution Explorer* tool window, then click *Properties* in context menu:
 
 # [C#](#tab/cs)
 

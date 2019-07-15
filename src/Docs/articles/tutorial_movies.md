@@ -1,8 +1,8 @@
 ---
-uid: tutorial_add_data_classes
+uid: tutorial_movies
 ---
 
-# Add Data Classes
+# Movies Project
 
 In this section, a `Movie` model class and a `Db` database session class will be added into *Movies* project.
 

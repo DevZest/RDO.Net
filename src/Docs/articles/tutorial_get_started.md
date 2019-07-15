@@ -8,7 +8,7 @@ uid: tutorial_get_started
 
 This tutorial contains step by step information to demonstrate the basics of RDO.Net. At the end, you'll have a WPF application and an ASP.Net Core Application(C# only) that can display and manage a database of movies.
 
-[View or download sample code](https://github.com/DevZest/RDO.Tutorial)
+View or download sample code: [C#](https://github.com/DevZest/RDO.Tutorial) | [VB.Net](https://github.com/DevZest/RDO.Tutorial)
 
 ## Prerequisites
 
