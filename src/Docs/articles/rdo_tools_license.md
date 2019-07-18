@@ -14,7 +14,7 @@ IF YOU COMPLY WITH THESE LICENSE TERMS, YOU HAVE THE RIGHTS BELOW.
 
 ## INSTALLATION AND REGISTRATION
 
-a. Visual Studio Editions. RDO.Tools is licensed based on your Visual Studio Editions. It's free for Visual Studio Community Edition; A subscription is required for other editions (Professional/Enterprise). See [Pricing](https://my.devzest.com/Pricing). A license violation of Visual Studio will result in a license violation of RDO.Tools too. For example, if you don't have a license for Visual Studio Community Edition, using RDO.Tools in Visual Studio Community Edition is a license violation.
+a. Visual Studio Editions. RDO.Tools is licensed based on your Visual Studio Editions. It's free for Visual Studio Community Edition; A subscription is required for other editions (Professional/Enterprise). A license violation of Visual Studio will result in a license violation of RDO.Tools too. For example, if you don't have a license for Visual Studio Community Edition, using RDO.Tools in Visual Studio Community Edition is a license violation.
 
 b. Registration. Registration is required via https://my.devzest.com, providing your email address, name and optionally name of your organization, despite of your Visual Studio edition. You must ensure the correctness of the information for registration.
 
