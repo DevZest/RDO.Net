@@ -8,6 +8,11 @@ RDO.Net is licensed separately for its runtime and design-time tools:
 * [RDO.Tools License](xref:rdo_tools_license)
 * [RDO.Tools Pricing](https://my.devzest.com/Pricing)
 
+>[!Note]
+>Q: Is RDO.Net Runtime [Open Source Software (OSS)](https://en.wikipedia.org/wiki/The_Open_Source_Definition)?
+>
+>A: Almost but not exactly. RDO.Net Runtime License has an extra defensive term to protect the interest of our design-time tools, for the best of this framework. Most users should not be affected by this term.
+
 ## Why choose RDO.Net
 
 Enterprise application, typically backed by a relational database, has decades of history. Today's enterprise applications are unnecessarily complex and heavyweight, due to the following technical constraints:
