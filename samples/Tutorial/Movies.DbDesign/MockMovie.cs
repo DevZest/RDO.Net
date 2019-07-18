@@ -16,24 +16,29 @@ namespace Movies
 
         private static DataSet<Movie> GetMovies()
         {
-            DataSet<Movie> result = DataSet<Movie>.Create().AddRows(3);
+            DataSet<Movie> result = DataSet<Movie>.Create().AddRows(4);
             Movie _ = result._;
             _.SuspendIdentity();
             _.ID[0] = 1;
             _.ID[1] = 2;
             _.ID[2] = 3;
+            _.ID[3] = 4;
             _.Title[0] = "When Harry Met Sally";
-            _.Title[1] = "Ghostbusters 2";
-            _.Title[2] = "Rio Bravo";
+            _.Title[1] = "Ghostbusters";
+            _.Title[2] = "Ghostbusters 2";
+            _.Title[3] = "Rio Bravo";
             _.ReleaseDate[0] = Convert.ToDateTime("1989-02-12T00:00:00");
-            _.ReleaseDate[1] = Convert.ToDateTime("1986-02-23T00:00:00");
-            _.ReleaseDate[2] = Convert.ToDateTime("1959-04-15T00:00:00");
+            _.ReleaseDate[1] = Convert.ToDateTime("1984-03-13T00:00:00");
+            _.ReleaseDate[2] = Convert.ToDateTime("1986-02-23T00:00:00");
+            _.ReleaseDate[3] = Convert.ToDateTime("1959-04-15T00:00:00");
             _.Genre[0] = "Romantic Comedy";
             _.Genre[1] = "Comedy";
-            _.Genre[2] = "Western";
+            _.Genre[2] = "Comedy";
+            _.Genre[3] = "Western";
             _.Price[0] = 7.9900M;
-            _.Price[1] = 9.9900M;
-            _.Price[2] = 3.9900M;
+            _.Price[1] = 8.9900M;
+            _.Price[2] = 9.9900M;
+            _.Price[3] = 3.9900M;
             _.ResumeIdentity();
             return result;
         }

@@ -12,9 +12,9 @@ View or download sample code: [C#](https://github.com/DevZest/RDO.Tutorial) | [V
 
 ## Prerequisites
 
-* Visual Studio 2017 (version >= 15.3) or Visual Studio 2019 (all versions), with *.Net Desktop Development* workload installed.
+* Visual Studio 2017 (version >= 15.3) or Visual Studio 2019 (all versions), with *.Net desktop development* and *ASP.NET web development* workloads installed.
 * [RDO.Tools](https://marketplace.visualstudio.com/items?itemName=DevZest.Data.Tools) installed and [activated](xref:get_started#rdotools-activation).
-* [SQL Server 2016 Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2016).
+* [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms), Version 17.0 or later.
 
 ## Create the Solution
 

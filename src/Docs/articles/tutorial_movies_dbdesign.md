@@ -6,9 +6,9 @@ uid: tutorial_movies_design
 
 In this section, we will work on *Movies.DbDesign* project to manipulate design time database.
 
-## Get Started
+## Project Setup
 
-Before continue, make the following changes to *Movies.DbDesign* project:
+Make the following changes to *Movies.DbDesign* project:
 
 *Step 1*. Add project reference *Movies* to this project.
 
@@ -36,7 +36,7 @@ Before continue, make the following changes to *Movies.DbDesign* project:
 
 # [VB.Net](#tab/vb)
 
-[!code-csharp[Program](../../../samples.vb/Tutorial/Movies.DbDesign/Program.vb)]
+[!code-vb[Program](../../../samples.vb/Tutorial/Movies.DbDesign/Program.vb)]
 
 ***
 
@@ -66,7 +66,7 @@ You should have 2 files *EmptyDb.mdf* and *EmptyDb_log.ldf* created under the fo
 
 # [VB.Net](#tab/vb)
 
-[!code-csharp[_DevDb](../../../samples.vb/Tutorial/Movies.DbDesign/_DevDb.vb)]
+[!code-vb[_DevDb](../../../samples.vb/Tutorial/Movies.DbDesign/_DevDb.vb)]
 
 ***
 

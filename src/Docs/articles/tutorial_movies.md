@@ -6,9 +6,9 @@ uid: tutorial_movies
 
 In this section, a `Movie` model class and a `Db` database session class will be added into *Movies* project.
 
-## Get Started
+## Project Setup
 
-Before continue, make the following changes to *Movies* project:
+Make the following changes to *Movies* project:
 
 * Delete *Class1.cs* (or *Class1.vb* if you're using VB.Net) from the project.
 * Add NuGet Package [DevZest.Data.SqlServer](https://www.nuget.org/packages/DevZest.Data.SqlServer/) to this project.
@@ -270,9 +270,10 @@ Add following fields using steps described previously:
 
 ***
 
-***
+>[!Note]
+>Please keep in mind *Model Visualizer* is your best friend. It provides much more features which are not demonstrated in this tutorial for simplicity.
 
-The final `Movie` class:
+### The final *Movie* class:
 
 # [C#](#tab/cs)
 
@@ -286,7 +287,7 @@ The final `Movie` class:
 
 ## Add Db Class
 
-### Step 1. Add new class
+### Add new class
 
 Add new class `Db` into project *Movies*, inherits from <xref:DevZest.Data.SqlServer.SqlSession>:
 
@@ -357,3 +358,6 @@ Select *Movie* from *Model:* combo box, then click button *OK*, a `Movie` proper
 [!code-vb[Db](../../../samples.vb/Tutorial/Movies/Db.vb)]
 
 ***
+
+>[!Note]
+>Please keep in mind *Db Visualizer* is your best friend. It provides much more features which are not demonstrated in this tutorial for simplicity.

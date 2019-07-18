@@ -25,3 +25,7 @@
       href: tutorial_movies.md
     - name: Movies.DbDesign Project
       href: tutorial_movies_dbdesign.md
+    - name: Data Access and Movies.Test Project
+      href: tutorial_movies_test.md
+    - name: Movies.WPF Project
+      href: tutorial_movies_wpf.md

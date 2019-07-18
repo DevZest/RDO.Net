@@ -3,10 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dz="http://schemas.devzest.com/data/windows"
         xmlns:local="clr-namespace:Movies.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Movies.WPF" Height="300" Width="500" WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <Button Command="{x:Static local:MainWindow+Commands.New}">New</Button>
+            <Separator />
+            <Button Command="{x:Static local:MainWindow+Commands.Delete}">Delete</Button>
+            <Separator />
+            <Button Command="{x:Static local:MainWindow+Commands.Refresh}">Refresh</Button>
+            <Separator />
+            <TextBox x:Name="_textBoxSearch" Width="150" />
+            <Button Command="{x:Static local:MainWindow+Commands.Refresh}">Search</Button>
+            <Separator />
+        </ToolBar>
+        <dz:DataView x:Name="_dataView" />
+    </DockPanel>
 </Window>
