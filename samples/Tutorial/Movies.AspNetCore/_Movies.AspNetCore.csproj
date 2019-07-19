@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.48" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Data.AspNetCore\Data.AspNetCore.csproj" />
+    <ProjectReference Include="..\Movies\_Movies.csproj" />
+  </ItemGroup>
+
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="COPY /Y &quot;$(ProjectDir)..\Movies.DbDesign\LocalDb\Movies.mdf&quot; &quot;$(ProjectDir)App_Data&quot;&#xD;&#xA;COPY /Y &quot;$(ProjectDir)..\Movies.DbDesign\LocalDb\Movies_log.ldf&quot; &quot;$(ProjectDir)App_Data&quot;" />
+  </Target>
+
+</Project>
