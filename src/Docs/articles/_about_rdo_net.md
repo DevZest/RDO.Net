@@ -1,12 +1,6 @@
 Relational Data Objects for .Net (RDO.Net) is a lightweight, yet comprehensive framework to develop enterprise application in .Net platform, targeting .Net developers. It consists of the following libraries and tools:
 
-![image](/images/RdoNetOverview.jpg)
-
-RDO.Net is licensed separately for its runtime and design-time tools:
-
-* [RDO.Net Runtime License](xref:rdo_net_runtime_license)
-* [RDO.Tools License](xref:rdo_tools_license)
-* [RDO.Tools Pricing](https://my.devzest.com/Pricing)
+[!include[Introduction to RDO.Net](_about_rdo_net_overview.md)]
 
 >[!Note]
 >Q: Is RDO.Net Runtime [Open Source Software (OSS)](https://en.wikipedia.org/wiki/The_Open_Source_Definition)?

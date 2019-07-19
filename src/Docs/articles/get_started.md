@@ -6,12 +6,7 @@ uid: get_started
 
 RDO.Net is delivered as NuGet packages and Visual Studio extension:
 
-![image](/images/RdoNetOverview.jpg)
-
-RDO.Net is licensed separately for its runtime and design-time tools:
-
-* [RDO.Net Runtime License](xref:rdo_net_runtime_license)
-* [RDO.Tools License](xref:rdo_tools_license)
+[!include[Introduction to RDO.Net](_about_rdo_net_overview.md)]
 
 ## Prerequisites
 
