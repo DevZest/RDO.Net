@@ -1,0 +1,28 @@
+﻿@page "{id:int}"
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+    var _ = Model.Movie._;
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Movie</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@_.Title.DisplayName</dt>
+        <dd class="col-sm-10">@_.Title[0]</dd>
+        <dt class="col-sm-2">@_.ReleaseDate.DisplayName</dt>
+        <dd class="col-sm-10">@_.ReleaseDate[0]?.ToString("yyyy-MM-dd")</dd>
+        <dt class="col-sm-2">@_.Genre.DisplayName</dt>
+        <dd class="col-sm-10">@_.Genre[0]</dd>
+        <dt class="col-sm-2">@_.Price.DisplayName</dt>
+        <dd class="col-sm-10">@_.Price[0]?.ToString("C")</dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@_.ID[0]">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

@@ -1,3 +1,5 @@
+using DevZest.Data.AspNetCore;
+using DevZest.Data.AspNetCore.Primitives;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,9 +32,11 @@ namespace Movies.AspNetCore
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .AddDataSetMvc()    // Add DataSet MVC support
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // Inject Db
+            // Inject Db and IDataSetHtmlGenerator
             var connectionString = Configuration.GetConnectionString("Movies");
             if (Env.IsDevelopment())
             {
@@ -40,6 +44,7 @@ namespace Movies.AspNetCore
                     connectionString = connectionString.Replace(CONTENT_ROOT_PATH, Env.ContentRootPath);
             }
             services.AddScoped(serviceProvider => new Db(connectionString));
+            services.AddSingleton<IDataSetHtmlGenerator, DefaultDataSetHtmlGenerator>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
