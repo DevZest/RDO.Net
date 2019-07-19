@@ -29,3 +29,5 @@
       href: tutorial_movies_test.md
     - name: Movies.WPF Project
       href: tutorial_movies_wpf.md
+    - name: Movies.AspNetCore Project
+      href: tutorial_movies_aspnetcore.md
