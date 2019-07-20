@@ -6,7 +6,7 @@ uid: get_started
 
 RDO.Net is delivered as NuGet packages and Visual Studio extension:
 
-[!include[Introduction to RDO.Net](_about_rdo_net_overview.md)]
+[!include[Introduction to RDO.Net](../_about_rdo_net_overview.md)]
 
 ## Prerequisites
 

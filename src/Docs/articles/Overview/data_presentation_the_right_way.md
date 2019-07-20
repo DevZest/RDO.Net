@@ -38,7 +38,17 @@ Thanks to [Rich Metadata](xref:orm_data_access_the_right_way#rich-metadata---rel
 * Layout and UI virtualization.
 
 Simply derive you data presenter from <xref:DevZest.Data.Presenters.DataPresenter`1> class, and put a <xref:DevZest.Data.Views.DataView> into your view, you got all the above features immediately, without any complex control. The following code:
-[!code-csharp[Db](../../../samples/AdventureWorksLT.WpfApp/SalesOrderWindow.DetailPresenter.cs)]
+
+# [C#](#tab/cs)
+
+[!code-csharp[DetailPresenter](../../../../samples/AdventureWorksLT.WpfApp/SalesOrderWindow.DetailPresenter.cs)]
+
+# [VB.Net](#tab/vb)
+
+[!code-vb[DetailPresenter](../../../../samples.vb/AdventureWorksLT.WpfApp/SalesOrderWindow.DetailPresenter.vb)]
+
+***
+
 Will produce the following data grid UI, with foreign key lookup and paste append from clipboard implemented:
 ![image](/images/SalesOrderDetailUI.jpg)
 

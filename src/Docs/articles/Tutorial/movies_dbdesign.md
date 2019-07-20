@@ -32,11 +32,11 @@ Make the following changes to *Movies.DbDesign* project:
 
 # [C#](#tab/cs)
 
-[!code-csharp[Program](../../../samples/Tutorial/Movies.DbDesign/Program.cs)]
+[!code-csharp[Program](../../../../samples/Tutorial/Movies.DbDesign/Program.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[Program](../../../samples.vb/Tutorial/Movies.DbDesign/Program.vb)]
+[!code-vb[Program](../../../../samples.vb/Tutorial/Movies.DbDesign/Program.vb)]
 
 ***
 
@@ -62,11 +62,11 @@ You should have 2 files *EmptyDb.mdf* and *EmptyDb_log.ldf* created under the fo
 
 # [C#](#tab/cs)
 
-[!code-csharp[_DevDb](../../../samples/Tutorial/Movies.DbDesign/_DevDb.cs)]
+[!code-csharp[_DevDb](../../../../samples/Tutorial/Movies.DbDesign/_DevDb.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[_DevDb](../../../samples.vb/Tutorial/Movies.DbDesign/_DevDb.vb)]
+[!code-vb[_DevDb](../../../../samples.vb/Tutorial/Movies.DbDesign/_DevDb.vb)]
 
 ***
 
@@ -91,11 +91,11 @@ Click button *OK*, a database named *Movies* containing a table *Movie* will be 
 
 # [C#](#tab/cs)
 
-[!code-csharp[_DevDb](../../../samples/Tutorial/Movies.DbDesign/DevDb.cs)]
+[!code-csharp[DevDb](../../../../samples/Tutorial/Movies.DbDesign/DevDb.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[_DevDb](../../../samples.vb/Tutorial/Movies.DbDesign/DevDb.vb)]
+[!code-vb[DevDb](../../../../samples.vb/Tutorial/Movies.DbDesign/DevDb.vb)]
 
 ***
 
@@ -176,10 +176,10 @@ Click button *OK*, the code for data set will be generated automatically:
 
 # [C#](#tab/cs)
 
-[!code-csharp[MockMovie](../../../samples/Tutorial/Movies.DbDesign/MockMovie.cs)]
+[!code-csharp[MockMovie](../../../../samples/Tutorial/Movies.DbDesign/MockMovie.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[MockMovie](../../../samples.vb/Tutorial/Movies.DbDesign/MockMovie.vb)]
+[!code-vb[MockMovie](../../../../samples.vb/Tutorial/Movies.DbDesign/MockMovie.vb)]
 
 ***

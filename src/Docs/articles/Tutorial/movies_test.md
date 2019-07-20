@@ -12,11 +12,11 @@ Add class file *Db.Api.cs* (or *Db.Api.vb* if using VB.Net) to project *Movies*:
 
 # [C#](#tab/cs)
 
-[!code-csharp[DbApi](../../../samples/Tutorial/Movies/Db.Api.cs)]
+[!code-csharp[DbApi](../../../../samples/Tutorial/Movies/Db.Api.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[DbApi](../../../samples.vb/Tutorial/Movies/Db.Api.vb)]
+[!code-vb[DbApi](../../../../samples.vb/Tutorial/Movies/Db.Api.vb)]
 
 ***
 
@@ -58,11 +58,11 @@ Add class *DbTests.cs* (or DbTests.vb if you're using VB.Net) to project *Movies
 
 # [C#](#tab/cs)
 
-[!code-csharp[DbTests](../../../samples/Tutorial/Movies.Test/DbTests.cs)]
+[!code-csharp[DbTests](../../../../samples/Tutorial/Movies.Test/DbTests.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[DbTests](../../../samples.vb/Tutorial/Movies.Test/DbTests.vb)]
+[!code-vb[DbTests](../../../../samples.vb/Tutorial/Movies.Test/DbTests.vb)]
 
 ***
 

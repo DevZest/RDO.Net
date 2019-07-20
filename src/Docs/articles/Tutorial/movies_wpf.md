@@ -56,11 +56,11 @@ Change *App.xaml.cs*(*Application.xaml.vb* if you're using VB.Net) to:
 
 # [C#](#tab/cs)
 
-[!code-csharp[App](../../../samples/Tutorial/Movies.WPF/App.xaml.cs)]
+[!code-csharp[App](../../../../samples/Tutorial/Movies.WPF/App.xaml.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[Application](../../../samples.vb/Tutorial/Movies.WPF/Application.xaml.vb)]
+[!code-vb[Application](../../../../samples.vb/Tutorial/Movies.WPF/Application.xaml.vb)]
 
 ***
 
@@ -70,11 +70,11 @@ Add class file *MovieDetailWindow.Presenter.cs* (*MovieDetailWindow.Presenter.vb
 
 # [C#](#tab/cs)
 
-[!code-csharp[MovieDetailWindowPresenter](../../../samples/Tutorial/Movies.WPF/MovieDetailWindow.Presenter.cs)]
+[!code-csharp[MovieDetailWindowPresenter](../../../../samples/Tutorial/Movies.WPF/MovieDetailWindow.Presenter.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[MainWindowPresenter](../../../samples.vb/Tutorial/Movies.WPF/MovieDetailWindow.Presenter.vb)]
+[!code-vb[MainWindowPresenter](../../../../samples.vb/Tutorial/Movies.WPF/MovieDetailWindow.Presenter.vb)]
 
 ***
 
@@ -84,11 +84,11 @@ Add window *MovieDetailWindow.xaml* to project. Change *MovieDetailWindow.xaml* 
 
 # [C#](#tab/cs)
 
-[!code-xaml[MovieDetailWindow](../../../samples/Tutorial/Movies.WPF/MovieDetailWindow.xaml)]
+[!code-xaml[MovieDetailWindow](../../../../samples/Tutorial/Movies.WPF/MovieDetailWindow.xaml)]
 
 # [VB.Net](#tab/vb)
 
-[!code-xaml[MainWindow](../../../samples.vb/Tutorial/Movies.WPF/MovieDetailWindow.xaml)]
+[!code-xaml[MainWindow](../../../../samples.vb/Tutorial/Movies.WPF/MovieDetailWindow.xaml)]
 
 ***
 
@@ -98,11 +98,11 @@ Change code behind *MovieDetailWindow.xaml.cs* (*MovieDetailWindow.xaml.vb* if y
 
 # [C#](#tab/cs)
 
-[!code-csharp[MovieDetailWindow](../../../samples/Tutorial/Movies.WPF/MovieDetailWindow.xaml.cs)]
+[!code-csharp[MovieDetailWindow](../../../../samples/Tutorial/Movies.WPF/MovieDetailWindow.xaml.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[MovieDetailWindow](../../../samples.vb/Tutorial/Movies.WPF/MovieDetailWindow.xaml.vb)]
+[!code-vb[MovieDetailWindow](../../../../samples.vb/Tutorial/Movies.WPF/MovieDetailWindow.xaml.vb)]
 
 ***
 
@@ -112,11 +112,11 @@ Add class file *MainWindow.Presenter.cs* (*MainWindow.Presenter.vb* if you're us
 
 # [C#](#tab/cs)
 
-[!code-csharp[MainWindowPresenter](../../../samples/Tutorial/Movies.WPF/MainWindow.Presenter.cs)]
+[!code-csharp[MainWindowPresenter](../../../../samples/Tutorial/Movies.WPF/MainWindow.Presenter.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[MainWindowPresenter](../../../samples.vb/Tutorial/Movies.WPF/MainWindow.Presenter.vb)]
+[!code-vb[MainWindowPresenter](../../../../samples.vb/Tutorial/Movies.WPF/MainWindow.Presenter.vb)]
 
 ***
 
@@ -126,11 +126,11 @@ Add resource dictionary *MainWindow.Styles.xaml*:
 
 # [C#](#tab/cs)
 
-[!code-xaml[MainWindowStyles](../../../samples/Tutorial/Movies.WPF/MainWindow.Styles.xaml)]
+[!code-xaml[MainWindowStyles](../../../../samples/Tutorial/Movies.WPF/MainWindow.Styles.xaml)]
 
 # [VB.Net](#tab/vb)
 
-[!code-xaml[MainWindowStyles](../../../samples.vb/Tutorial/Movies.WPF/MainWindow.Styles.xaml)]
+[!code-xaml[MainWindowStyles](../../../../samples.vb/Tutorial/Movies.WPF/MainWindow.Styles.xaml)]
 
 ***
 
@@ -140,11 +140,11 @@ Change *MainWindow.xaml* to:
 
 # [C#](#tab/cs)
 
-[!code-xaml[MainWindow](../../../samples/Tutorial/Movies.WPF/MainWindow.xaml)]
+[!code-xaml[MainWindow](../../../../samples/Tutorial/Movies.WPF/MainWindow.xaml)]
 
 # [VB.Net](#tab/vb)
 
-[!code-xaml[MainWindow](../../../samples.vb/Tutorial/Movies.WPF/MainWindow.xaml)]
+[!code-xaml[MainWindow](../../../../samples.vb/Tutorial/Movies.WPF/MainWindow.xaml)]
 
 ***
 
@@ -154,11 +154,11 @@ Change code behind *MainWindow.xaml.cs* (*MainWindow.xaml.vb* if you're using VB
 
 # [C#](#tab/cs)
 
-[!code-csharp[MainWindow](../../../samples/Tutorial/Movies.WPF/MainWindow.xaml.cs)]
+[!code-csharp[MainWindow](../../../../samples/Tutorial/Movies.WPF/MainWindow.xaml.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[MainWindow](../../../samples.vb/Tutorial/Movies.WPF/MainWindow.xaml.vb)]
+[!code-vb[MainWindow](../../../../samples.vb/Tutorial/Movies.WPF/MainWindow.xaml.vb)]
 
 ***
 

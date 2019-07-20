@@ -277,11 +277,11 @@ Add following fields using steps described previously:
 
 # [C#](#tab/cs)
 
-[!code-csharp[Db](../../../samples/Tutorial/Movies/Movie.cs)]
+[!code-csharp[Movie](../../../../samples/Tutorial/Movies/Movie.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[Db](../../../samples.vb/Tutorial/Movies/Movie.vb)]
+[!code-vb[Movie](../../../../samples.vb/Tutorial/Movies/Movie.vb)]
 
 ***
 
@@ -351,11 +351,11 @@ Select *Movie* from *Model:* combo box, then click button *OK*, a `Movie` proper
 
 # [C#](#tab/cs)
 
-[!code-csharp[Db](../../../samples/Tutorial/Movies/Db.cs)]
+[!code-csharp[Db](../../../../samples/Tutorial/Movies/Db.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[Db](../../../samples.vb/Tutorial/Movies/Db.vb)]
+[!code-vb[Db](../../../../samples.vb/Tutorial/Movies/Db.vb)]
 
 ***
 

@@ -1,33 +1,34 @@
 - name: Overview
   items:
     - name: About RDO.Net
-      href: about_rdo_net.md
-    - name: RDO.Net Runtime License
-      href: rdo_net_runtime_license.md
-    - name: RDO.Tools License
-      href: rdo_tools_license.md
+      href: Overview/about_rdo_net.md
     - name: Enterprise Application, the Right Way
-      href: enterprise_application_the_right_way.md
+      href: Overview/enterprise_application_the_right_way.md
     - name: ORM/Data Access, the Right Way
-      href: orm_data_access_the_right_way.md
+      href: Overview/orm_data_access_the_right_way.md
     - name: Data Presentation, the Right Way
-      href: data_presentation_the_right_way.md
-- name: Get Started
-  href: get_started.md
+      href: Overview/data_presentation_the_right_way.md
+- name: Getting Started
   items:
+    - name: Get Started
+      href: GettingStarted/get_started.md
+    - name: RDO.Net Runtime License
+      href: GettingStarted/rdo_net_runtime_license.md
+    - name: RDO.Tools License
+      href: GettingStarted/rdo_tools_license.md
     - name: Manage Your Registration/Subscription
-      href: manage_registration_subscription.md
+      href: GettingStarted/manage_registration_subscription.md
 - name: Tutorial
   items:
     - name: Get Started
-      href: tutorial_get_started.md
+      href: Tutorial/get_started.md
     - name: Movies Project
-      href: tutorial_movies.md
+      href: Tutorial/movies.md
     - name: Movies.DbDesign Project
-      href: tutorial_movies_dbdesign.md
+      href: Tutorial/movies_dbdesign.md
     - name: Data Access and Movies.Test Project
-      href: tutorial_movies_test.md
+      href: Tutorial/movies_test.md
     - name: Movies.WPF Project
-      href: tutorial_movies_wpf.md
+      href: Tutorial/movies_wpf.md
     - name: Movies.AspNetCore Project
-      href: tutorial_movies_aspnetcore.md
+      href: Tutorial/movies_aspnetcore.md
