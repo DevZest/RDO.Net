@@ -41,17 +41,10 @@ Once we make a step back, we can get a very simple solution. ORM/Data Access is 
 
 Without the obsession of mapping between arbitrary objects and relational data, we can choose implementing relational schema and data into a comprehensive object model:
 
-* Common Data <xref:DevZest.Data.Column>: <xref:DevZest.Data._Binary>, <xref:DevZest.Data._Boolean>, <xref:DevZest.Data._Binary>, <xref:DevZest.Data._Byte>, <xref:DevZest.Data._ByteEnum`1>, <xref:DevZest.Data._Char>, <xref:DevZest.Data._CharEnum`1>, <xref:DevZest.Data._DataSet`1>, <xref:DevZest.Data._DateTime>, <xref:DevZest.Data._Decimal>, <xref:DevZest.Data._Double>, <xref:DevZest.Data._Guid>, <xref:DevZest.Data._Int16>, <xref:DevZest.Data._Int16Enum`1>, <xref:DevZest.Data._Int32>, <xref:DevZest.Data._Int32Enum`1>, <xref:DevZest.Data._Int64>, <xref:DevZest.Data._Int64Enum`1>, <xref:DevZest.Data._Single>, <xref:DevZest.Data._String>, <xref:DevZest.Data.LocalColumn`1>
-* SQL Server Data <xref:DevZest.Data.Column>: <xref:DevZest.Data.SqlServer._DateTimeOffset>, <xref:DevZest.Data.SqlServer._SqlXml>, <xref:DevZest.Data.SqlServer._TimeSpan>
-* Entity Classes: <xref:DevZest.Data.Model>, <xref:DevZest.Data.Model`1>, <xref:DevZest.Data.Projection>, <xref:DevZest.Data.Key`1>, <xref:DevZest.Data.Ref`1>
-* Local DataSet: <xref:DevZest.Data.DataSet`1>
-* Database: <xref:DevZest.Data.Primitives.DbSession>(<xref:DevZest.Data.SqlServer.SqlSession>, <xref:DevZest.Data.MySql.MySqlSession>, etc), <xref:DevZest.Data.DbTable`1>, <xref:DevZest.Data.DbQuery`1>, <xref:DevZest.Data.DbMock`1>
+[!include[RDO.Data Components](../_rdo_data_components.md)]
 
 Database and dataset schema is realized as concrete metadata objects, with rich set of properties, methods and events. SQL, serialization/deserialization are explicitly implemented in these objects. In the end:
 
-* You're writing native SQL using C#/VB.Net, 100% strongly typed - unbeatable for both code maintainability and performance!
-* JSON serialization/deserialization is a first class citizen - unbeatable performance because no reflection required.
-* Database testing and deployment is a first class citizen. You can easily mock part of database with testing data, generate database from clean C#/VB.Net code, or generate C#/VB.Net code from table data in database, right in Visual Studio.
-* The rich metadata can be consumed conveniently by other layer of your application such as data presentation.
+[!include[RDO.Data Components](../_rdo_data_benefits.md)]
 
 [1]: https://en.wikipedia.org/wiki/Leaky_abstraction#cite_note-1
