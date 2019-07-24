@@ -42,7 +42,7 @@ Data access:
 Plus:
 
 * [DevZest.Data.DbDesign](https://www.nuget.org/packages/DevZest.Data.DbDesign/): NuGet package for database mocking and deployment.
-* [DevZest.Data.Tools.vsix](https://marketplace.visualstudio.com/items?itemName=DevZest.Data.Tools) (aka RDO.Tools): Design time tools.
+* [DevZest.Data.Tools.vsix](https://marketplace.visualstudio.com/items?itemName=DevZest.Data.Tools) (aka RDO.Tools): Visual Studio extension design time tools.
 
 # [SQL Server](#tab/SqlServer)
 
