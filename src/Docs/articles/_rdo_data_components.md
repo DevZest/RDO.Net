@@ -35,7 +35,7 @@ Entity modeling:
 Data access:
 
 * <xref:DevZest.Data.Functions>: Functions implemented as extension methods
-* <xref:DevZest.Data.DataSet`1>: Local data access
+* <xref:DevZest.Data.DataSet`1> and <xref:DevZest.Data.DataRow>: Local data access
 * <xref:DevZest.Data.DbTable`1>: Database table
 * <xref:DevZest.Data.DbQuery`1>: Database query
 
