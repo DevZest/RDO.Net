@@ -10,7 +10,7 @@ RDO.Data is the core of RDO.Net. It helps developers to build data access layer 
 
 Using RDO.Data:
 
-[!include[RDO.Data Components](../_rdo_data_benefits.md)]
+[!include[RDO.Data Benefits](../_rdo_data_benefits.md)]
 
 ## RDO.Data Components
 

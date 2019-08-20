@@ -36,3 +36,7 @@
   items:
     - name: RDO.Data Overview
       href: ProgrammingRdoData/rdo_data_overview.md
+    - name: Entity Modeling
+      items:
+      - name: Model and Members
+        href: ProgrammingRdoData/model_and_members.md
