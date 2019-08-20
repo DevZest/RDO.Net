@@ -54,4 +54,9 @@ To add annotations for model member: In *Model Visualizer* tool window, right cl
 
 ![image](/images/tutorial_add_identity.jpg)
 
-More features of Model Visualizer tool window will be discussed later.
+The above screenshot demonstrates adding a [Identity](xref:DevZest.Data.Annotations.IdentityAttribute) annotation for the `ID` column.
+
+>[!Note]
+>Internally, RDO.Tools knows the relationship between annotations and model members so that only available annotations will be displayed. It's also smart enough to display contradictive annotations, for example, only one SQL Sever data type annotation can be applied to a given column. It's more than just saving you couple of key strokes.
+
+More features of Model Visualizer tool window will be discussed in later topics. Keep in mind Model Visualizer is a great place to start your model design, you can add EVERYTHING via Model Visualizer tool window, without remembering lots of APIs.
