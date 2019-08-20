@@ -54,4 +54,4 @@ To add annotations for model member: In *Model Visualizer* tool window, right cl
 
 ![image](/images/tutorial_add_identity.jpg)
 
-More details will be explained later.
+More features of Model Visualizer tool window will be discussed later.
