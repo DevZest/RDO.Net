@@ -4,7 +4,7 @@ You derive your class from <xref:DevZest.Data.Model> to represent schema of the 
 
 | Model Member | Description |
 |--------------|-------------|
-| Column | Property of type derived from <xref:DevZest.Data.Column`1> to represents a column of data. |
+| Column | Property of concrete type derived from <xref:DevZest.Data.Column`1> to represents a column of data. |
 | <xref:DevZest.Data.ColumnList`1> | Columns accessed via index, can be used for pivot table of data. |
 | Projection | Property of type derived from <xref:DevZest.Data.Projection> to represent lookup data from other model. |
 | Child Model | Represents hierarchical of data. |
