@@ -1,6 +1,6 @@
 # Model and Members
 
-You derive your class from <xref:DevZest.Data.Model> to represent schema of the data. It can consist the following members, as read only properties:
+Your business model is class derived from <xref:DevZest.Data.Model> or <xref:DevZest.Data.Model`1>. It can consist the following members, as read only properties:
 
 | Model Member | Description |
 |--------------|-------------|

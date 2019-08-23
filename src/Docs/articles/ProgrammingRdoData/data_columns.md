@@ -21,6 +21,15 @@ There are two kind of data columns: <xref:DevZest.Data.LocalColumn`1> and others
 | Serialization/deserialization not supported. | Support JSON serialization/deserialization out-of-box. |
 | Computation/expression initialized by delegate. | Computation/expression initialized by expression tree from operator overloading and custom functions. |
 
+## Column Id and Mounter
+
+Column can be identified by its <xref:DevZest.Data.Column.Id> property, a <xref:DevZest.Data.ColumnId> structure that contains the declaring type and name. This property is set during column mounting by calling <xref:DevZest.Data.Model.RegisterColumn*>. <xref:DevZest.Data.Model.RegisterColumn*> can return a <xref:DevZest.Data.Mounter`1> object, which can be used for subsequent <xref:DevZest.Data.Model.RegisterColumn*> calls. Calling <xref:DevZest.Data.Model.RegisterColumn*> with exiting <xref:DevZest.Data.Mounter`1> object will:
+
+* The <xref:DevZest.Data.Column.OriginalId> property will be set to the value of existing mounter. This property will be used to auto-select columns between different models.
+* The new mounter will inherit the initialization of the existing mounter, if any.
+
+You can think of calling <xref:DevZest.Data.Model.RegisterColumn*> with exiting <xref:DevZest.Data.Mounter`1> object as column inheritance. Typically, columns that will be stored in database table, should have a corresponding static <xref:DevZest.Data.Mounter`1> field, with name prefixed with underscore(_); key or projection class, by convention nested class of this model, use this <xref:DevZest.Data.Mounter`1> field to reference these table columns.
+
 ## Computation Column
 
 Computation column is a powerful feature of RDO.Data. You can define expression for data column so that its value will be calculated automatically, either locally or on the database server side. The framework tracks the calculation dependency and always synchronize the calculated result.
