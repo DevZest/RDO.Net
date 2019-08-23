@@ -182,3 +182,65 @@ The following dialog will be displayed:
 Click button 'OK', the code will be generated automatically!
 
 Class `Key`/`Ref` can be added together with `PK`, or added later separately.
+
+## Foreign Key
+
+A foreign key is a column or group of columns in a relational database table that provides a link between data in two tables. It acts as a cross-reference between tables because it references the primary key of another table, thereby establishing a link between them.
+
+Foreign key is defined as readonly model property, of type of the main model PK:
+
+# [C#](#tab/cs)
+
+```cs
+public class CustomerAddress : ...
+{
+    ...
+    private Address.PK _fk_address;
+    public Address.PK FK_Address
+    {
+        get { return _fk_address ?? (_fk_address = new Address.PK(AddressID)); }
+    }
+
+    public _Int32 AddressID { get; private set; }
+    ...
+}
+```
+
+# [VB.Net](#tab/vb)
+
+```vb
+Public Class CustomerAddress
+    ...
+    Private m_FK_Address As Address.PK
+    Public ReadOnly Property FK_Address As Address.PK
+        Get
+            If m_FK_Address Is Nothing Then
+                m_FK_Address = New Address.PK(AddressID)
+            End If
+            Return m_FK_Address
+        End Get
+    End Property
+
+    Private m_AddressID As _Int32
+    Public Property AddressID As _Int32
+        Get
+            Return m_AddressID
+        End Get
+        Private Set
+            m_AddressID = Value
+        End Set
+    End Property
+End Class
+```
+
+***
+
+Again with no surprise, you can add foreign key conveniently via Model Visualizer tool window, by clicking the left top drop down button, then click 'Add Foreign Key...':
+
+![image](/images/model_visualizer_add_fk.jpg)
+
+The following dialog will be displayed:
+
+![image](/images/model_visualizer_add_fk_dialog.jpg)
+
+Fill the primary key type and provide cross reference columns, then click button 'OK', the code will be generated automatically!
