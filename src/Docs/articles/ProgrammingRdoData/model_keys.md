@@ -171,7 +171,7 @@ The following table shows the difference between nested class `Key` and `Ref`:
 
 ## Add PK/Key/Ref
 
-You can add nested class `PK`/`Key`/`Ref` via Model Visualizer, saving you a lot of key strokes and API remembering. Just click the left top drop down button of Model Visualizer tool window, then click 'Add Primary Key...':
+You can add nested class `PK` via Model Visualizer when your class is derived from <xref:DevZest.Data.Model> (you can temporarily change your base class to <xref:DevZest.Data.Model> if it's not). This will save you a lot of key strokes and API remembering. Just click the left top drop down button of Model Visualizer tool window, then click 'Add Primary Key...':
 
 ![image](/images/model_visualizer_add_pk.jpg)
 
@@ -179,9 +179,13 @@ The following dialog will be displayed:
 
 ![image](/images/model_visualizer_add_pk_dialog.jpg)
 
-Click button 'OK', the code will be generated automatically!
+Click button 'OK', the code will be generated automatically:
 
-Class `Key`/`Ref` can be added together with `PK`, or added later separately.
+* Add nested class `Address.PK`
+* Change base class from `Model` to `Model<Address.PK>`
+* Override `CreatePrimaryKey` method
+
+Class `Key`/`Ref` can be added together with `PK` with `Key`/`Ref` checkbox selected in the dialog, or added later separately via dropdown context menu.
 
 ## Foreign Key
 
