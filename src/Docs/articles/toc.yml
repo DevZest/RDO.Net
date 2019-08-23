@@ -40,5 +40,7 @@
       href: ProgrammingRdoData/adventureworkslt_sample.md
     - name: Model and Members
       href: ProgrammingRdoData/model_and_members.md
-    - name: Data Columns
-      href: ProgrammingRdoData/data_columns.md
+    - name: Model Columns
+      href: ProgrammingRdoData/model_columns.md
+    - name: Model Keys
+      href: ProgrammingRdoData/model_keys.md
