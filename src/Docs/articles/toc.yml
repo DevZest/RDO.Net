@@ -44,3 +44,5 @@
       href: ProgrammingRdoData/model_columns.md
     - name: Model Keys
       href: ProgrammingRdoData/model_keys.md
+    - name: Model Check Constraint
+      href: ProgrammingRdoData/model_check_constraint.md
