@@ -360,4 +360,4 @@ Select *Movie* from *Model:* combo box, then click button *OK*, a `Movie` proper
 ***
 
 >[!Note]
->Please keep in mind *Db Visualizer* is your best friend. It provides much more features which are not demonstrated in this tutorial for simplicity.
+>Please keep in mind *Db Visualizer* is your best friend. It provides additional features which are not demonstrated in this tutorial for simplicity.
