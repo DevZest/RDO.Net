@@ -48,4 +48,4 @@ The following dialog will be displayed:
 
 ![image](/images/model_visualizer_add_ix_dialog.jpg)
 
-Fill the dialog form and click "OK", code of an unique constraint will be generated automatically.
+Fill the dialog form and click "OK", code of a DbIndex will be generated automatically.
