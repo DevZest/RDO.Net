@@ -82,7 +82,7 @@ You should implement the generated `ComputeXxx` method. The following are two ex
 
 ### Normal Column Computation
 
-Normal column can participate the expression directly via operator overloading and custom functions, an expression tree will be generated automatically:
+Normal column can participate the expression directly via <xref:expression_column>:
 
 # [C#](#tab/cs)
 
