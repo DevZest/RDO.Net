@@ -1,3 +1,7 @@
+---
+uid: model_column
+---
+
 # Model Column
 
 Concrete type derived from <xref:DevZest.Data.Column`1> can be used to represent column of data in the model, which is strongly typed by its type argument. The following column types are provided by the framework:
@@ -172,4 +176,4 @@ The above screenshot demonstrates adding a [Identity](xref:DevZest.Data.Annotati
 >[!Note]
 >Internally, RDO.Tools knows the relationship between annotations and column so that only available annotations will be displayed. It's also smart enough to display contradictive annotations, for example, only one SQL Sever data type annotation can be applied to a given column. It's more than just saving you couple of key strokes.
 
-You're encouraged to develop your own custom column annotation, make sure it's decorated with [ModelDesignerSpec](xref:DevZest.Data.Annotations.Primitives.ModelDesignerSpecAttribute) so that your custom annotation will be friendly to Model Visualizer.
+You're encouraged to develop your own custom column annotation, make sure it's correctly decorated with [ModelDesignerSpec](xref:DevZest.Data.Annotations.Primitives.ModelDesignerSpecAttribute) so that your it will be friendly to Model Visualizer.
