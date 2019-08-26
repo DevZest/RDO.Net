@@ -1,6 +1,8 @@
 # Db and DbTable
 
-In RDO.Data, the database is represented by a class (by convention named `Db`) which is derived from <xref:DevZest.Data.SqlServer.SqlSession> or other database provider such as <xref:DevZest.Data.MySql.MySqlSession>. Database table is readonly property of this database class, which returns type of <xref:DevZest.Data.DbTable`1>. Optionally, foreign key relationship can be enforced by a pair of <xref:DevZest.Data.Annotations.RelationshipAttribute> and <xref:DevZest.Data.Annotations._RelationshipAttribute> which decorates the source table property and a method which takes the source table model as parameter and returns <xref:DevZest.Data.KeyMapping> respectively:
+## Database permanent table
+
+In RDO.Data, the database is represented by a class (by convention named `Db`) which is derived from <xref:DevZest.Data.SqlServer.SqlSession> or other database provider such as <xref:DevZest.Data.MySql.MySqlSession>. Database permanent table is readonly property of this database class, which returns type of <xref:DevZest.Data.DbTable`1>. Optionally, foreign key relationship can be enforced by a pair of <xref:DevZest.Data.Annotations.RelationshipAttribute> and <xref:DevZest.Data.Annotations._RelationshipAttribute> which decorates the source table property and a method which takes the source table model as parameter and returns <xref:DevZest.Data.KeyMapping> respectively:
 
 # [C#](#tab/cs)
 
@@ -80,3 +82,9 @@ Click context menu item "Add Relationship...", the following dialog will be disp
 ![image](/images/db_visualizer_add_relationship_dialog.jpg)
 
 Fill the dialog form and click "OK", code of table relationship will be generated automatically.
+
+## Database temporary table
+
+A temporary table, as the name suggests, is a database table that exists temporarily on the database server during the life time of the session. Temporary tables are particularly useful when you have a large number of records in a table and you repeatedly need to interact with a small subset of those records. In such cases instead of filtering the data again and again to fetch the subset, you can filter the data once and store it in a temporary table. You can then execute your queries on that temporary table.
+
+You can create temporary tables on-the-fly via Calling <xref:DevZest.Data.Primitives.DbSession.CreateTempTableAsync*> method of your `Db` class. Once created, you can use it as the same way as permanent tables. You don't need to delete the temporary tables, it will be deleted automatically by the database providers.
