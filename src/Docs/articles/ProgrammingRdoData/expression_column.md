@@ -11,7 +11,7 @@ Concrete column class normally provide members such as static methods, operator 
 * Static methods: <xref:DevZest.Data._Int32.Param*> and <xref:DevZest.Data._Int32.Const*>;
 * Binary operator overrides: `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `==`, `!=`, `>`, `<`, `>=`, `<=`
 * Unary operator overrides: `-`(negates) and `~`(OnesComplement);
-* Type conversion, either implicitly or explicitly, to/from other types.
+* Type casting, either implicitly or explicitly, from underlying data type and other column types.
 
 You can write expression using columns in a similar way of using their underlying data types. For example, the code `UnitPrice * (_Decimal.Const(1) - UnitPriceDiscount) * OrderQty).IfNull(_Decimal.Const(0))` produce a expression column to calculate order subtotal as `UnitPrice * (1 - UnitPriceDiscount) * OrderQty`.
 
