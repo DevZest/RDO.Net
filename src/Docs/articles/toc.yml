@@ -40,8 +40,8 @@
       href: ProgrammingRdoData/adventureworkslt_sample.md
     - name: Model and Members
       href: ProgrammingRdoData/model_and_members.md
-    - name: Model Columns
-      href: ProgrammingRdoData/model_columns.md
+    - name: Model Column
+      href: ProgrammingRdoData/model_column.md
     - name: Model Keys
       href: ProgrammingRdoData/model_keys.md
     - name: Model Check Constraint

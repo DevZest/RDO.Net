@@ -1,4 +1,4 @@
-# Model Columns
+# Model Column
 
 Concrete type derived from <xref:DevZest.Data.Column`1> can be used to represent column of data in the model, which is strongly typed by its type argument. The following column types are provided by the framework:
 
