@@ -45,14 +45,14 @@ namespace DevZest.Data
     }
 
     /// <summary>Represents a list of columns.</summary>
-    /// <typeparam name="TColumn">The type of the columns.</typeparam>
+    /// <typeparam name="T">The type of the columns.</typeparam>
     /// <remarks>This class is used for model which contains variable number of columns.</remarks>
     /// <seealso cref="Model.RegisterColumnList{TModel, T}(System.Linq.Expressions.Expression{Func{TModel, ColumnList{T}}})"/>
-    public sealed class ColumnList<TColumn> : ColumnList, IReadOnlyList<TColumn>
-        where TColumn : Column
+    public sealed class ColumnList<T> : ColumnList, IReadOnlyList<T>
+        where T : Column
     {
-        List<Func<ColumnList<TColumn>, TColumn>> _constructors = new List<Func<ColumnList<TColumn>, TColumn>>();
-        List<TColumn> _columns = new List<TColumn>();
+        List<Func<ColumnList<T>, T>> _constructors = new List<Func<ColumnList<T>, T>>();
+        List<T> _columns = new List<T>();
 
         /// <inheritdoc/>
         public override int Count
@@ -66,42 +66,42 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc/>
-        public new TColumn this[int index]
+        public new T this[int index]
         {
             get { return _columns[index]; }
         }
 
-        public TColumn Add(Func<TColumn> createColumn, Action<TColumn> initializer = null)
+        public T Add(Func<T> createColumn, Action<T> initializer = null)
         {
             createColumn.VerifyNotNull(nameof(createColumn));
             VerifyDesignMode();
-            return Add(x => CreateColumn<TColumn>(createColumn, x, null, null, null, initializer));
+            return Add(x => CreateColumn<T>(createColumn, x, null, null, null, initializer));
         }
 
         /// <summary>Add a new column into this column list.</summary>
-        /// <typeparam name="T">The type of the column.</typeparam>
+        /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="initializer">The column initializer.</param>
         /// <returns>The new column added.</returns>
         /// <overloads>Add a new column into this column list.</overloads>
-        public T Add<T>(Action<T> initializer = null)
-            where T : TColumn, new()
+        public TColumn Add<TColumn>(Action<TColumn> initializer = null)
+            where TColumn : T, new()
         {
             VerifyDesignMode();
             return Add(x => CreateColumn(x, null, null, null, initializer));
         }
 
         /// <summary>Add a new column into this column list, from existing column.</summary>
-        /// <typeparam name="T">The type of the column.</typeparam>
+        /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="column">The existing column.</param>
         /// <param name="inheritColumnKey"><see langword="true"/> to inherit <see cref="ColumnId"/> from existing column, otherwise <see langword="false"/>.</param>
         /// <param name="initializer">The column initializer.</param>
         /// <returns>The new column added.</returns>
-        public T Add<T>(T column, bool inheritColumnKey = false, Action<T> initializer = null)
-            where T : TColumn, new()
+        public TColumn Add<TColumn>(TColumn column, bool inheritColumnKey = false, Action<TColumn> initializer = null)
+            where TColumn : T, new()
         {
             VerifyDesignMode();
             column.VerifyNotNull(nameof(column));
-            var baseInitializer = ColumnInitializerManager<T>.GetInitializer(column);
+            var baseInitializer = ColumnInitializerManager<TColumn>.GetInitializer(column);
             if (inheritColumnKey)
                 return Add(x => CreateColumn(x, column.OriginalDeclaringType, column.OriginalName, baseInitializer, initializer));
             else
@@ -109,14 +109,14 @@ namespace DevZest.Data
         }
 
         /// <summary>Add a new column into this column list, from existing column property.</summary>
-        /// <typeparam name="T">The type of the column.</typeparam>
+        /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="fromMounter">The existing column mounter.</param>
         /// <param name="inheritOriginalId"><see langword="true"/> to inherit <see cref="ColumnId"/> from existing column property,
         /// otherwise <see langword="false"/>.</param>
         /// <param name="initializer">The column initializer.</param>
         /// <returns>The new column added.</returns>
-        public T Add<T>(Mounter<T> fromMounter, bool inheritOriginalId = false, Action<T> initializer = null)
-            where T : TColumn, new()
+        public TColumn Add<TColumn>(Mounter<TColumn> fromMounter, bool inheritOriginalId = false, Action<TColumn> initializer = null)
+            where TColumn : T, new()
         {
             VerifyDesignMode();
             fromMounter.VerifyNotNull(nameof(fromMounter));
@@ -126,14 +126,14 @@ namespace DevZest.Data
                 return Add(x => CreateColumn(x, null, null, fromMounter.Initializer, initializer));
         }
 
-        private static T CreateColumn<T>(ColumnList<TColumn> columnList, Type originalDeclaringType, string originalName, Action<T> baseInitializer, Action<T> initializer)
-            where T : TColumn, new()
+        private static TColumn CreateColumn<TColumn>(ColumnList<T> columnList, Type originalDeclaringType, string originalName, Action<TColumn> baseInitializer, Action<TColumn> initializer)
+            where TColumn : T, new()
         {
-            return CreateColumn(() => new T(), columnList, originalDeclaringType, originalName, baseInitializer, initializer);
+            return CreateColumn(() => new TColumn(), columnList, originalDeclaringType, originalName, baseInitializer, initializer);
         }
 
-        private static T CreateColumn<T>(Func<T> create, ColumnList<TColumn> columnList, Type originalDeclaringType, string originalName, Action<T> baseInitializer, Action<T> initializer)
-            where T : TColumn
+        private static TColumn CreateColumn<TColumn>(Func<TColumn> create, ColumnList<T> columnList, Type originalDeclaringType, string originalName, Action<TColumn> baseInitializer, Action<TColumn> initializer)
+            where TColumn : T
         {
             var name = columnList.GetNewColumnName();
             if (originalDeclaringType == null)
@@ -147,8 +147,8 @@ namespace DevZest.Data
             return result;
         }
 
-        private T Add<T>(Func<ColumnList<TColumn>, T> constructor)
-            where T : TColumn
+        private TColumn Add<TColumn>(Func<ColumnList<T>, TColumn> constructor)
+            where TColumn : T
         {
             Debug.Assert(constructor != null);
 
@@ -168,7 +168,7 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>
-        public new IEnumerator<TColumn> GetEnumerator()
+        public new IEnumerator<T> GetEnumerator()
         {
             return _columns.GetEnumerator();
         }
@@ -180,7 +180,7 @@ namespace DevZest.Data
 
         internal override void Initialize(ColumnList prototype)
         {
-            var source = (ColumnList<TColumn>)prototype;
+            var source = (ColumnList<T>)prototype;
 
             foreach (var constructor in source._constructors)
             {
