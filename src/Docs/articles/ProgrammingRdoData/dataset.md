@@ -180,3 +180,15 @@ x.ResumeIdentity()
 ***
 
 You can also use <xref:DevZest.Data.DataRow> object as indexer parameter.
+
+## Identity Column
+
+An identity column is a column decorated with <xref:DevZest.Data.Annotations.IdentityAttribute>. Only one identity column allowed for each model. An identity column differs from a primary key in that its values are managed by the server and usually cannot be modified. In many cases an identity column is used as a primary key; however, this is not always the case.
+
+DataSet handles identity column specially:
+
+* If DataRow is filled from DbSet, identity values will be filled like other values.
+* When adding new DataRow into DataSet locally, a default value will be generated automatically. For example, assume identity column is defined with seed 1 and increment 1, the first default value will be 0, the next will be -1, -2, and so on.
+* Deleting DataRow will leave identity column values in gap.
+* Once new DataRow added, either from DbSet or local, identity column becomes readonly. You can temporarily suspend identity by calling [SuspendIdentity](xref:DevZest.Data.Primitives.ModelExtensions.SuspendIdentity*) and [ResumeIdentity](xref:DevZest.Data.Primitives.ModelExtensions.ResumeIdentity*) in tandem.
+* When inserting DataSet into DbTable, you can choose to update identity column with values newly generated in the database. This is implemented by database session provider.
