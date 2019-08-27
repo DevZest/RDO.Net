@@ -74,4 +74,4 @@ To use <xref:DevZest.Data.DbQueryBuilder>/<xref:DevZest.Data.DbAggregateQueryBui
 * Call `AutoSelect`/`Select` to select columns. `AutoSelect` is based on the <xref:DevZest.Data.Column.Id> and then <xref:DevZest.Data.Column.OriginalId> property value of <xref:DevZest.Data.Column> class;
 * Optionally call `Where`/`OrderBy`, or `GroupBy`/`Having` if it's an aggregate query.
 
-Query builder mimics standard SQL closely. It's straightforward if you're familiar with writing SQL. You can find more examples in `Db.Api.cs` (or `Db.Api.vb`) of the `AdventureWorksLT` sample.
+Query builder mimics standard SQL SELECT statement closely. It's straightforward if you're familiar with writing SQL. You can find more examples in `Db.Api.cs` (or `Db.Api.vb`) of the `AdventureWorksLT` sample.
