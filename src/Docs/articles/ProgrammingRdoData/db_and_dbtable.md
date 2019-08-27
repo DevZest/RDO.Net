@@ -1,13 +1,70 @@
 # Db and DbTable
 
-## Database permanent table
+## Database Session
 
-In RDO.Data, the database is represented by a class (by convention named `Db`) which is derived from <xref:DevZest.Data.SqlServer.SqlSession> or other database provider such as <xref:DevZest.Data.MySql.MySqlSession>. Database permanent table is readonly property of this database class, which returns type of <xref:DevZest.Data.DbTable`1>. Optionally, foreign key relationship can be enforced by a pair of <xref:DevZest.Data.Annotations.RelationshipAttribute> and <xref:DevZest.Data.Annotations._RelationshipAttribute> which decorates the source table property and a method which takes the source table model as parameter and returns <xref:DevZest.Data.KeyMapping> respectively:
+In RDO.Data, a database session is represented by a class which is derived from database session provider such as  <xref:DevZest.Data.SqlServer.SqlSession> or <xref:DevZest.Data.MySql.MySqlSession>. This class is normally named as `Db` by convention, with a connection string and/or database connection as constructor parameter:
 
 # [C#](#tab/cs)
 
 ```cs
 public partial class Db : SqlSession
+{
+    public Db(string connectionString, Action<Db> initializer = null)
+        : base(CreateSqlConnection(connectionString))
+    {
+        initializer?.Invoke(this);
+    }
+
+    private static SqlConnection CreateSqlConnection(string connectionString)
+    {
+        if (string.IsNullOrEmpty(connectionString))
+            throw new ArgumentNullException(nameof(connectionString));
+        return new SqlConnection(connectionString);
+    }
+
+    public Db(SqlConnection sqlConnection)
+        : base(sqlConnection)
+    {
+    }
+    ...
+}
+```
+
+# [VB.Net](#tab/vb)
+
+```vb
+Partial Public Class Db
+    Inherits SqlSession
+
+    Public Sub New(connectionString As String, Optional initializer As Action(Of Db) = Nothing)
+        MyBase.New(CreateSqlConnection(connectionString))
+        If initializer IsNot Nothing Then initializer(Me)
+    End Sub
+
+    Private Shared Function CreateSqlConnection(connectionString As String) As SqlConnection
+        If String.IsNullOrEmpty(connectionString) Then Throw New ArgumentNullException(NameOf(connectionString))
+        Return New SqlConnection(connectionString)
+    End Function
+
+    Public Sub New(ByVal sqlConnection As SqlConnection)
+        MyBase.New(sqlConnection)
+    End Sub
+    ...
+End Class
+```
+
+***
+
+The `Db` object is responsible to make connection and execute commands to the database server.
+
+## Database Permanent Table
+
+Database permanent table is readonly property of above `Db` class, with type of <xref:DevZest.Data.DbTable`1>. Optionally, foreign key relationship can be enforced by a pair of <xref:DevZest.Data.Annotations.RelationshipAttribute>/<xref:DevZest.Data.Annotations._RelationshipAttribute> and a implementation method. The following code defines two permanent tables SalesOrderHeader and SalesOrderDetail, and relationship between them:
+
+# [C#](#tab/cs)
+
+```cs
+public partial class Db : ...
 {
     ...
     private DbTable<SalesOrderHeader> _salesOrderHeader;
@@ -36,7 +93,6 @@ public partial class Db : SqlSession
 
 ```vb
 Partial Public Class Db
-    Inherits SqlSession
     ...
     Private m_SalesOrderHeader As DbTable(Of SalesOrderHeader)
     Public ReadOnly Property SalesOrderHeader As DbTable(Of SalesOrderHeader)
@@ -63,7 +119,7 @@ End Class
 
 ***
 
-The database class and tables can be manipulated via Db Visualizer tool window. You can show Db Visualizer tool window by clicking menu "View" -> "Other Windows" -> "Db Visualizer" in Visual Studio:
+The `Db` class and tables can be manipulated via Db Visualizer tool window. You can show Db Visualizer tool window by clicking menu "View" -> "Other Windows" -> "Db Visualizer" in Visual Studio:
 
 ![image](/images/db_visualizer.jpg)
 
@@ -83,8 +139,8 @@ Click context menu item "Add Relationship...", the following dialog will be disp
 
 Fill the dialog form and click "OK", code of table relationship will be generated automatically.
 
-## Database temporary table
+## Database Temporary Table
 
 A temporary table, as the name suggests, is a database table that exists temporarily on the database server during the life time of the session. Temporary tables are particularly useful when you have a large number of records in a table and you repeatedly need to interact with a small subset of those records. In such cases instead of filtering the data again and again to fetch the subset, you can filter the data once and store it in a temporary table. You can then execute your queries on that temporary table.
 
-You can create temporary tables on-the-fly via Calling <xref:DevZest.Data.Primitives.DbSession.CreateTempTableAsync*> method of your `Db` class. Once created, you can use it as the same way as permanent tables. You don't need to delete the temporary tables, it will be deleted automatically by the database providers.
+You can create temporary tables on-the-fly via Calling <xref:DevZest.Data.Primitives.DbSession.CreateTempTableAsync*> method of your `Db` class. Once created, you can use it as the same way as permanent tables. You don't need to delete the temporary tables, it will be deleted automatically by the underlying database session provider.

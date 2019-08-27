@@ -1,3 +1,7 @@
+---
+uid: model_projection
+---
+
 # Model Projection
 
 In Relational algebra, projection means collecting a subset of columns for use in operations, i.e. a projection is the list of columns selected.

@@ -58,8 +58,8 @@
       href: ProgrammingRdoData/db_and_dbtable.md
     - name: Expression Column
       href: ProgrammingRdoData/expression_column.md
-    - name: DbQuery
-      href: ProgrammingRdoData/dbquery.md
+    - name: Database Query
+      href: ProgrammingRdoData/database_query.md
     - name: DataSet
       href: ProgrammingRdoData/dataset.md
     - name: DbTable Insert

@@ -1,12 +1,24 @@
 # Model and Members
 
-Your business model is class derived from <xref:DevZest.Data.Model> or <xref:DevZest.Data.Model`1>. It can consist the following members, as read only properties:
+## Model
+
+Your business models are classes derived from <xref:DevZest.Data.Model> or <xref:DevZest.Data.Model`1>. Your model class defines data schema and other data logic which can be shared across different data sources. A model will be created and associated with one of the following <xref:DevZest.Data.DataSource> automatically:
+
+* <xref:DevZest.Data.DataSet`1>: In-memory collection of data;
+* <xref:DevZest.Data.DbTable`1>: Database table, either permanent or temporary;
+* <xref:DevZest.Data.DbQuery`1>: Database query which can be executed on database server.
+
+Your model class must have a parameterless constructor.
+
+## Model Members
+
+Your model can consist the following members, as read only properties:
 
 | Model Member | Description |
 |--------------|-------------|
-| Column | Property of concrete type derived from <xref:DevZest.Data.Column`1> to represents a column of data. |
+| Column | Property of concrete type derived from <xref:DevZest.Data.Column`1> to represents a column of data. See <xref:model_column> for more information. |
 | <xref:DevZest.Data.ColumnList`1> | Columns accessed via index, can be used for pivot table of data. |
-| Projection | Property of type derived from <xref:DevZest.Data.Projection> to represent lookup data from other model. |
+| Projection | Property of type derived from <xref:DevZest.Data.Projection> to represent lookup data from other model. See <xref:model_projection> for more information. |
 | Child Model | Represents hierarchical of data. |
 
 ## Member Registration
