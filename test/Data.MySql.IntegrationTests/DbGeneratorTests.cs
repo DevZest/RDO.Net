@@ -14,7 +14,7 @@ namespace DevZest.Data.MySql
             CreateEmptyDb();
             return new Db("Server=127.0.0.1;Port=3306;Database=EmptyDb;Uid=root;Allow User Variables=True", db =>
             {
-                db.SetLog(s => log.Append(s), logCategory);
+                db.SetLogger(s => log.Append(s), logCategory);
             });
         }
 

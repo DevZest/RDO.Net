@@ -235,11 +235,11 @@ namespace DevZest.Data.Primitives
             return foreignKeyConstraint;
         }
 
-        public void SetLog(Action<string> value)
+        public void SetLogger(Action<string> value)
         {
-            SetLog(value, LogCategory.All);
+            SetLogger(value, LogCategory.All);
         }
 
-        public abstract void SetLog(Action<string> value, LogCategory logCategory);
+        public abstract void SetLogger(Action<string> value, LogCategory logCategory);
     }
 }

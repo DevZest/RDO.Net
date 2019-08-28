@@ -16,7 +16,7 @@ namespace DevZest.Data.MySql
         {
             return new Db(App.GetConnectionString(), db =>
             {
-                db.SetLog(s => log.Append(s), logCategory);
+                db.SetLogger(s => log.Append(s), logCategory);
             });
         }
 
