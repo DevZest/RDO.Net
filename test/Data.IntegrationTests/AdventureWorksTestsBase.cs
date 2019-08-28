@@ -13,11 +13,11 @@ namespace DevZest.Data
             return new Db(App.GetConnectionString());
         }
 
-        protected Db CreateDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
+        protected Db CreateDb(StringBuilder logger, LogCategory logCategory = LogCategory.CommandText)
         {
             return new Db(App.GetConnectionString(), db =>
             {
-                db.SetLogger(s => log.Append(s), logCategory);
+                db.SetLogger(s => logger.Append(s), logCategory);
             });
         }
 

@@ -66,3 +66,5 @@
       href: ProgrammingRdoData/database_cud_operations.md
     - name: Database Transaction
       href: ProgrammingRdoData/database_transaction.md
+    - name: Database Operations Logging
+      href: ProgrammingRdoData/database_operations_logging.md
