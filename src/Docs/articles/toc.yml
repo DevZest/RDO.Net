@@ -62,11 +62,7 @@
       href: ProgrammingRdoData/database_query.md
     - name: DataSet
       href: ProgrammingRdoData/dataset.md
-    - name: DbTable Insert
-      href: ProgrammingRdoData/dbtable_insert.md
-    - name: DbTable Update
-      href: ProgrammingRdoData/dbtable_update.md
-    - name: DbTable Delete
-      href: ProgrammingRdoData/dbtable_delete.md
+    - name: Database CUD Operations
+      href: ProgrammingRdoData/database_cud_operations.md
     - name: Db Transaction
       href: ProgrammingRdoData/db_transaction.md
