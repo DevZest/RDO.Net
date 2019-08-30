@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.MySql.IntegrationTests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.MySql", "src\Data.MySql\Data.MySql.csproj", "{F11D542F-EA17-497D-9307-8C79DB694FA1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.MySql\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{AAEBA690-9138-4C89-B272-5B82DE8474B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\AdventureWorksLT.MySql\AdventureWorksLT\AdventureWorksLT.csproj", "{AAEBA690-9138-4C89-B272-5B82DE8474B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "samples\AdventureWorksLT.Data.MySql\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{C2B902E9-6D06-43E5-BF90-D6A7F9FF4186}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbInit", "samples\AdventureWorksLT.MySql\AdventureWorksLT.DbInit\AdventureWorksLT.DbInit.csproj", "{C2B902E9-6D06-43E5-BF90-D6A7F9FF4186}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

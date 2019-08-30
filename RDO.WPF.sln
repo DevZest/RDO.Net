@@ -53,11 +53,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "src\Data\Data.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.SqlServer", "src\Data.SqlServer\Data.SqlServer.csproj", "{9F798262-0256-4457-89B0-71F8C8F4B1F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{9B3EB897-4B17-4AAB-809E-DDD290BD6414}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\AdventureWorksLT.SqlServer\AdventureWorksLT\AdventureWorksLT.csproj", "{9B3EB897-4B17-4AAB-809E-DDD290BD6414}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples.vb", "samples.vb", "{AA59E1B3-AF88-4708-AACB-78BC89DA824A}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data", "samples.vb\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.vbproj", "{4F33097A-D747-434A-93C5-B2379228DF5E}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT", "samples.vb\AdventureWorksLT.SqlServer\AdventureWorksLT\AdventureWorksLT.vbproj", "{4F33097A-D747-434A-93C5-B2379228DF5E}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "AdventureWorksLT.WpfApp", "samples.vb\AdventureWorksLT.WpfApp\AdventureWorksLT.WpfApp.vbproj", "{C8FCA700-F174-4151-B392-EA29B547ECE2}"
 EndProject

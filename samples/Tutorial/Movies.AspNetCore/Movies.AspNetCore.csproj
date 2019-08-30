@@ -26,7 +26,7 @@
 
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="COPY /Y &quot;$(ProjectDir)..\Movies.DbDesign\LocalDb\Movies.mdf&quot; &quot;$(ProjectDir)App_Data&quot;&#xD;&#xA;COPY /Y &quot;$(ProjectDir)..\Movies.DbDesign\LocalDb\Movies_log.ldf&quot; &quot;$(ProjectDir)App_Data&quot;" />
+    <Exec Command="COPY /Y &quot;$(ProjectDir)..\Movies.DbInit\LocalDb\Movies.mdf&quot; &quot;$(ProjectDir)App_Data&quot;&#xD;&#xA;COPY /Y &quot;$(ProjectDir)..\Movies.DbInit\LocalDb\Movies_log.ldf&quot; &quot;$(ProjectDir)App_Data&quot;" />
   </Target>
 
 </Project>

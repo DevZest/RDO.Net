@@ -17,7 +17,7 @@ The following NuGet packages are delivered:
 * [DevZest.Data](https://www.nuget.org/packages/DevZest.Data/)
 * [DevZest.Data.SqlServer](https://www.nuget.org/packages/DevZest.Data.SqlServer/)
 * [DevZest.Data.MySql](https://www.nuget.org/packages/DevZest.Data.MySql/)
-* [DevZest.Data.DbDesign](https://www.nuget.org/packages/DevZest.Data.DbDesign/)
+* [DevZest.Data.DbInit](https://www.nuget.org/packages/DevZest.Data.DbInit/)
 * [DevZest.Data.WPF](https://www.nuget.org/packages/DevZest.Data.WPF/)
 * [DevZest.Data.AspNetCore](https://www.nuget.org/packages/DevZest.Data.AspNetCore/)
 

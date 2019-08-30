@@ -167,11 +167,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Movies.DbDesign\LocalDb\Movies.mdf">
+    <Content Include="..\Movies.DbInit\LocalDb\Movies.mdf">
       <Link>Movies.mdf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Movies.DbDesign\LocalDb\Movies_log.ldf">
+    <Content Include="..\Movies.DbInit\LocalDb\Movies_log.ldf">
       <Link>Movies_log.ldf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\Movies.DbDesign\LocalDb\EmptyDb.mdf" Link="EmptyDb.mdf">
+    <None Include="..\Movies.DbInit\LocalDb\EmptyDb.mdf" Link="EmptyDb.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\Movies.DbDesign\LocalDb\EmptyDb_log.ldf" Link="EmptyDb_log.ldf">
+    <None Include="..\Movies.DbInit\LocalDb\EmptyDb_log.ldf" Link="EmptyDb_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Movies.DbDesign\Movies.DbDesign.csproj" />
+    <ProjectReference Include="..\Movies.DbInit\Movies.DbInit.csproj" />
   </ItemGroup>
 
 </Project>

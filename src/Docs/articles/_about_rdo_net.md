@@ -37,11 +37,11 @@ In the end, your application follows your business in a no-more-no-less basis - 
 
 # [C#](#tab/cs)
 
-[!code-csharp[SalesOrderDetail](../../../samples/AdventureWorksLT.Data.SqlServer/AdventureWorksLT.Data/SalesOrderDetail.cs)]
+[!code-csharp[SalesOrderDetail](../../../samples/AdventureWorksLT.SqlServer/AdventureWorksLT/SalesOrderDetail.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[SalesOrderDetail](../../../samples.vb/AdventureWorksLT.Data.SqlServer/AdventureWorksLT.Data/SalesOrderDetail.vb)]
+[!code-vb[SalesOrderDetail](../../../samples.vb/AdventureWorksLT.SqlServer/AdventureWorksLT/SalesOrderDetail.vb)]
 
 ***
 
@@ -53,11 +53,11 @@ The code of model can be manipulated in Model Visualizer tool window in Visual S
 
 # [C#](#tab/cs)
 
-[!code-csharp[Db](../../../samples/AdventureWorksLT.Data.SqlServer/AdventureWorksLT.Data/Db.cs)]
+[!code-csharp[Db](../../../samples/AdventureWorksLT.SqlServer/AdventureWorksLT/Db.cs)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[Db](../../../samples.vb/AdventureWorksLT.Data.SqlServer/AdventureWorksLT.Data/Db.vb)]
+[!code-vb[Db](../../../samples.vb/AdventureWorksLT.SqlServer/AdventureWorksLT/Db.vb)]
 
 ***
 
@@ -69,11 +69,11 @@ The code of database can be manipulated via Db Visualizer tool window in Visual 
 
 # [C#](#tab/cs)
 
-[!code-csharp[DbApi](../../../samples/AdventureWorksLT.Data.SqlServer/AdventureWorksLT.Data/Db.Api.cs#SalesOrderCRUD)]
+[!code-csharp[DbApi](../../../samples/AdventureWorksLT.SqlServer/AdventureWorksLT/Db.Api.cs#SalesOrderCRUD)]
 
 # [VB.Net](#tab/vb)
 
-[!code-vb[DbApi](../../../samples.vb/AdventureWorksLT.Data.SqlServer/AdventureWorksLT.Data/Db.Api.SalesOrder.vb)]
+[!code-vb[DbApi](../../../samples.vb/AdventureWorksLT.SqlServer/AdventureWorksLT/Db.Api.SalesOrder.vb)]
 
 ***
 

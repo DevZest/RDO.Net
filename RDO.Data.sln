@@ -43,13 +43,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.IntegrationTests", "te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.UnitTests", "test\Data.UnitTests\Data.UnitTests.csproj", "{6F5206CA-4EB5-448F-88A9-A0CE545CEA72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data", "samples\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj", "{DD680945-BF64-4CB0-8698-A9C3AFEBCB27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT", "samples\AdventureWorksLT.SqlServer\AdventureWorksLT\AdventureWorksLT.csproj", "{DD680945-BF64-4CB0-8698-A9C3AFEBCB27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.Data.DbDesign", "samples\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj", "{9A3BF6C0-42AC-415B-9A84-E7EF941B2067}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventureWorksLT.DbInit", "samples\AdventureWorksLT.SqlServer\AdventureWorksLT.DbInit\AdventureWorksLT.DbInit.csproj", "{9A3BF6C0-42AC-415B-9A84-E7EF941B2067}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data", "samples.vb\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.vbproj", "{81E2BBF2-200B-4305-8ABC-1382AB41CBE1}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT", "samples.vb\AdventureWorksLT.SqlServer\AdventureWorksLT\AdventureWorksLT.vbproj", "{81E2BBF2-200B-4305-8ABC-1382AB41CBE1}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.Data.DbDesign", "samples.vb\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.vbproj", "{887D012F-77F3-468B-BD2C-3960B0D13407}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "AdventureWorksLT.DbInit", "samples.vb\AdventureWorksLT.SqlServer\AdventureWorksLT.DbInit\AdventureWorksLT.DbInit.vbproj", "{887D012F-77F3-468B-BD2C-3960B0D13407}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples.vb", "samples.vb", "{5B2BDB52-C60E-4B64-9D04-785B0500627A}"
 EndProject

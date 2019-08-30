@@ -24,8 +24,8 @@
       href: Tutorial/get_started.md
     - name: Movies Project
       href: Tutorial/movies.md
-    - name: Movies.DbDesign Project
-      href: Tutorial/movies_dbdesign.md
+    - name: Movies.DbInit Project
+      href: Tutorial/movies_dbinit.md
     - name: Data Access and Movies.Test Project
       href: Tutorial/movies_test.md
     - name: Movies.WPF Project
@@ -68,3 +68,5 @@
       href: ProgrammingRdoData/database_transaction.md
     - name: Database Operations Logging
       href: ProgrammingRdoData/database_operations_logging.md
+    - name: Database Initializer
+      href: ProgrammingRdoData/database_initializer.md

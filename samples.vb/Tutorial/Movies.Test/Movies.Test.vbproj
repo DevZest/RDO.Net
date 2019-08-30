@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\Movies.DbDesign\LocalDb\EmptyDb.mdf" Link="EmptyDb.mdf">
+    <None Include="..\Movies.DbInit\LocalDb\EmptyDb.mdf" Link="EmptyDb.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="..\Movies.DbDesign\LocalDb\EmptyDb_log.ldf" Link="EmptyDb_log.ldf">
+    <None Include="..\Movies.DbInit\LocalDb\EmptyDb_log.ldf" Link="EmptyDb_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Movies.DbDesign\Movies.DbDesign.vbproj" />
+    <ProjectReference Include="..\Movies.DbInit\Movies.DbInit.vbproj" />
   </ItemGroup>
 
 </Project>

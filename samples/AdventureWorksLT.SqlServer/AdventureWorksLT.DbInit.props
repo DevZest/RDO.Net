@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);DbInit</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevZest.Data.DbInit" Version="1.0.0-*" />
+  </ItemGroup>
+</Project>

@@ -235,7 +235,7 @@
       <Project>{13148e98-0f1a-44d3-8def-99392773af3e}</Project>
       <Name>Data.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.vbproj">
+    <ProjectReference Include="..\AdventureWorksLT.SqlServer\AdventureWorksLT\AdventureWorksLT.vbproj">
       <Project>{c0c21aa8-e2e5-476b-b898-fea17154d1a3}</Project>
       <Name>AdventureWorksLT.Data</Name>
     </ProjectReference>

@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies", "Movies\Movies.csproj", "{B7D91B60-FEC3-49B3-AF8E-D0DD764EE077}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.DbDesign", "Movies.DbDesign\Movies.DbDesign.csproj", "{FA07E5CC-7427-48F1-ABAE-AE938FFBB878}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.DbInit", "Movies.DbInit\Movies.DbInit.csproj", "{FA07E5CC-7427-48F1-ABAE-AE938FFBB878}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Test", "Movies.Test\Movies.Test.csproj", "{CC70A9AD-BC6E-4ADA-BBE2-300076650319}"
 EndProject

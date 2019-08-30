@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj" />
+    <ProjectReference Include="..\..\samples\AdventureWorksLT.SqlServer\AdventureWorksLT\AdventureWorksLT.csproj" />
     <ProjectReference Include="..\..\src\Data.AspNetCore\Data.AspNetCore.csproj" />
   </ItemGroup>
 

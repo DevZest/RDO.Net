@@ -125,9 +125,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\AdventureWorksLT.Data.SqlServer\AdventureWorksLT.Data\AdventureWorksLT.Data.csproj">
+    <ProjectReference Include="..\..\samples\AdventureWorksLT.SqlServer\AdventureWorksLT\AdventureWorksLT.csproj">
       <Project>{9b3eb897-4b17-4aab-809e-ddd290bd6414}</Project>
-      <Name>AdventureWorksLT.Data</Name>
+      <Name>AdventureWorksLT</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Data.SqlServer\Data.SqlServer.csproj">
       <Project>{9f798262-0256-4457-89b0-71f8c8f4b1f2}</Project>

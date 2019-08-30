@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\AdventureWorksLT.Data.MySql\AdventureWorksLT.Data.DbDesign\AdventureWorksLT.Data.DbDesign.csproj" />
+    <ProjectReference Include="..\..\samples\AdventureWorksLT.MySql\AdventureWorksLT.DbInit\AdventureWorksLT.DbInit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
