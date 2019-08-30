@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <DefineConstants>DbDesign</DefineConstants>
+    <DefineConstants>DbInit</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevZest.Data.DbDesign" Version="1.0.0-*" />
+    <PackageReference Include="DevZest.Data.DbInit" Version="1.0.0-*" />
   </ItemGroup>
 </Project>

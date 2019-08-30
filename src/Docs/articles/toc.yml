@@ -68,5 +68,5 @@
       href: ProgrammingRdoData/database_transaction.md
     - name: Database Operations Logging
       href: ProgrammingRdoData/database_operations_logging.md
-    - name: Database Initializer
-      href: ProgrammingRdoData/database_initializer.md
+    - name: Database Initialization
+      href: ProgrammingRdoData/database_initialization.md

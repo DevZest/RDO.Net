@@ -366,7 +366,7 @@ Public Class MockSalesOrder
     End Function
 
     Protected Overrides Sub Initialize()
-        Mock(Db.SalesOrderHeader, Function() Headers())
-        Mock(Db.SalesOrderDetail, Function() Details())
+        Mock(Db.SalesOrderHeader, AddressOf Headers)
+        Mock(Db.SalesOrderDetail, AddressOf Details)
     End Sub
 End Class

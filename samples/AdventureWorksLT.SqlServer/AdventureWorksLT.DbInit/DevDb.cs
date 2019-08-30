@@ -9,7 +9,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public override Db Create(string projectPath)
         {
             var dbFolder = Path.Combine(projectPath, @"LocalDb");
-            string attachDbFilename = Path.Combine(dbFolder, "AdventureWorksLT.Design.mdf");
+            string attachDbFilename = Path.Combine(dbFolder, "AdventureWorksLT.DbInit.mdf");
             var connectionString = string.Format(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=""{0}"";Integrated Security=True", attachDbFilename);
             return new Db(connectionString);
         }

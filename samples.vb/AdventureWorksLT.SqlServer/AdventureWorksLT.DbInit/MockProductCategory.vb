@@ -87,6 +87,6 @@ Public Class MockProductCategory
     End Function
 
     Protected Overrides Sub Initialize()
-        Mock(Db.ProductCategory, Function() MockData())
+        Mock(Db.ProductCategory, AddressOf MockData)
     End Sub
 End Class
