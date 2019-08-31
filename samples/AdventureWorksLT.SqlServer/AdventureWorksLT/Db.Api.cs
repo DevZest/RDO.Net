@@ -80,7 +80,7 @@ namespace DevZest.Samples.AdventureWorksLT
             salesOrders._.ResetRowIdentifiers();
             await SalesOrderHeader.UpdateAsync(salesOrders, ct);
             await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            var salesOrderDetails = salesOrders.GetChild(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
         }
@@ -98,7 +98,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             salesOrders._.ResetRowIdentifiers();
             await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            var salesOrderDetails = salesOrders.GetChild(_ => _.SalesOrderDetails);
             salesOrderDetails._.ResetRowIdentifiers();
             await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
         }
@@ -145,7 +145,7 @@ namespace DevZest.Samples.AdventureWorksLT
             {
                 salesOrders._.ResetRowIdentifiers();
                 await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
-                var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+                var salesOrderDetails = salesOrders.GetChild(_ => _.SalesOrderDetails);
                 salesOrderDetails._.ResetRowIdentifiers();
                 await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
 
@@ -162,7 +162,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 salesOrders._.ResetRowIdentifiers();
                 await SalesOrderHeader.UpdateAsync(salesOrders, ct);
                 await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
-                var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+                var salesOrderDetails = salesOrders.GetChild(_ => _.SalesOrderDetails);
                 salesOrderDetails._.ResetRowIdentifiers();
                 await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
 

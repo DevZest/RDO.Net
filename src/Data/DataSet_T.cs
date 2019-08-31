@@ -256,20 +256,21 @@ namespace DevZest.Data
             return FillAsync(dataRowOrdinal, getChildModel, sourceData, null, cancellationToken);
         }
 
-        public DataSet<TChild> Children<TChild>(Func<T, TChild> getChild, int ordinal)
-            where TChild : Model, new()
+        public DataSet<TChild> GetChild<TChild>(Func<T, TChild> getChild, int ordinal)
+            where TChild : class, IEntity, new()
         {
-            return Children(getChild, this[ordinal]);
+            return GetChild(getChild, this[ordinal]);
         }
 
-        public DataSet<TChild> Children<TChild>(Func<T, TChild> getChild, DataRow dataRow = null)
-            where TChild : Model, new()
+        public DataSet<TChild> GetChild<TChild>(Func<T, TChild> getChild, DataRow dataRow = null)
+            where TChild : class, IEntity, new()
         {
             getChild.VerifyNotNull(nameof(getChild));
-            var childModel = getChild(_);
-            if (childModel == null || childModel.ParentModel != this.Model)
+            var childEntity = getChild(_);
+            var childModel = childEntity.Model;
+            if (childEntity == null || childModel.ParentModel != this.Model)
                 throw new ArgumentException(DiagnosticMessages.DataSet_InvalidChildModelGetter, nameof(getChild));
-            return dataRow == null ? childModel.DataSet as DataSet<TChild> : childModel.GetChildDataSet(dataRow);
+            return dataRow == null ? childModel.DataSet as DataSet<TChild> : childEntity.GetChildDataSet(dataRow);
         }
 
         private Action<DataRow> GetUpdateAction(Action<T, DataRow> updateAction)

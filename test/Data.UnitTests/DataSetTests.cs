@@ -236,10 +236,10 @@ namespace DevZest.Data
             }
 
             {
-                var childMainSet = dataSet.Children(x => x.Child);
+                var childMainSet = dataSet.GetChild(x => x.Child);
                 var revisionMainSet0 = childMainSet.Revision;
 
-                var childSet = dataSet.Children(x => x.Child, 0);
+                var childSet = dataSet.GetChild(x => x.Child, 0);
                 var revisionChildSet0 = childSet.Revision;
 
                 childSet.AddRow();
@@ -261,10 +261,10 @@ namespace DevZest.Data
             var productCategories = DataSet<ProductCategory>.ParseJson(Json.MultiLevelProductCategory);
             Assert.AreEqual(Json.MultiLevelProductCategory, productCategories.ToJsonString(true));
             Assert.AreEqual(2, productCategories.Count);
-            Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 0).Count);
-            Assert.AreEqual(2, productCategories.Children(x => x.SubCategories, 1).Count);
-            Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 1).Children(x => x.SubCategories, 0).Count);
-            Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 1).Children(x => x.SubCategories, 1).Count);
+            Assert.AreEqual(3, productCategories.GetChild(x => x.SubCategories, 0).Count);
+            Assert.AreEqual(2, productCategories.GetChild(x => x.SubCategories, 1).Count);
+            Assert.AreEqual(3, productCategories.GetChild(x => x.SubCategories, 1).GetChild(x => x.SubCategories, 0).Count);
+            Assert.AreEqual(3, productCategories.GetChild(x => x.SubCategories, 1).GetChild(x => x.SubCategories, 1).Count);
         }
 
         [TestMethod]

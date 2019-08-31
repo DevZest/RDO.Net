@@ -234,7 +234,7 @@ ORDER BY `@ProductCategory`.`sys_dataset_ordinal` ASC;
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
                 var tempSalesOrderDetails = tempSalesOrders.MockCreateChild(x => x.SalesOrderDetails);
                 tempSalesOrders.MockInsert(true, salesOrders, 0);
-                var salesOrderDetails = salesOrders.Children(x => x.SalesOrderDetails, 0);
+                var salesOrderDetails = salesOrders.GetChild(x => x.SalesOrderDetails, 0);
                 var command = tempSalesOrderDetails.MockInsert(salesOrderDetails.Count, salesOrderDetails);
                 var expectedSql =
 @"SET @p1 = '[{""SalesOrderID"":71774,""SalesOrderDetailID"":110562,""OrderQty"":1,""ProductID"":836,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"",""ModifiedDate"":""2008-06-01T00:00:00""},{""SalesOrderID"":71774,""SalesOrderDetailID"":110563,""OrderQty"":1,""ProductID"":822,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""5c77f557-fdb6-43ba-90b9-9a7aec55ca32"",""ModifiedDate"":""2008-06-01T00:00:00""}]';
@@ -278,7 +278,7 @@ ORDER BY `@SalesOrderDetail`.`sys_dataset_ordinal` ASC;
                 var tempSalesOrderDetails = tempSalesOrders.MockCreateChild(x => x.SalesOrderDetails);
                 tempSalesOrders.MockInsert(true, salesOrders, 0);
                 salesOrders._.RowGuid[0] = Guid.NewGuid();  // make some change on the dataset
-                var salesOrderDetails = salesOrders.Children(x => x.SalesOrderDetails, 0);
+                var salesOrderDetails = salesOrders.GetChild(x => x.SalesOrderDetails, 0);
                 var command = tempSalesOrderDetails.MockInsert(salesOrderDetails.Count, salesOrderDetails);
                 var expectedSql =
 @"SET @p1 = '[{""SalesOrderID"":71774,""SalesOrderDetailID"":110562,""OrderQty"":1,""ProductID"":836,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"",""ModifiedDate"":""2008-06-01T00:00:00""},{""SalesOrderID"":71774,""SalesOrderDetailID"":110563,""OrderQty"":1,""ProductID"":822,""UnitPrice"":356.8980,""UnitPriceDiscount"":0,""LineTotal"":356.8980,""RowGuid"":""5c77f557-fdb6-43ba-90b9-9a7aec55ca32"",""ModifiedDate"":""2008-06-01T00:00:00""}]';

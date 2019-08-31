@@ -40,7 +40,7 @@ Partial Class Db
             salesOrders.Entity.ResetRowIdentifiers()
             Await SalesOrderHeader.UpdateAsync(salesOrders, ct)
             Await SalesOrderDetail.DeleteAsync(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader), ct)
-            Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
+            Dim salesOrderDetails = salesOrders.GetChild(Function(x) x.SalesOrderDetails)
             salesOrderDetails.Entity.ResetRowIdentifiers()
             Await SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
             Await transaction.CommitAsync(ct)
@@ -53,7 +53,7 @@ Partial Class Db
 
             salesOrders.Entity.ResetRowIdentifiers()
             Await SalesOrderHeader.InsertAsync(salesOrders, True, ct)
-            Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
+            Dim salesOrderDetails = salesOrders.GetChild(Function(x) x.SalesOrderDetails)
             salesOrderDetails.Entity.ResetRowIdentifiers()
             Await SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
             Await transaction.CommitAsync(ct)

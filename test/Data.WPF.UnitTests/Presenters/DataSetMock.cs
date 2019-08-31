@@ -45,7 +45,7 @@ namespace DevZest.Data.Presenters
 
         public static DataSet<ProductCategory> SubCategories(this DataSet<ProductCategory> dataSet, int rowIndex)
         {
-            return dataSet.Children(x => x.SubCategories, rowIndex);
+            return dataSet.GetChild(x => x.SubCategories, rowIndex);
         }
     }
 }

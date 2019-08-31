@@ -31,7 +31,7 @@ partial class Db
         {
             ...
             await SalesOrderHeader.InsertAsync(salesOrders, true, ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            var salesOrderDetails = salesOrders.GetChild(_ => _.SalesOrderDetails);
             ...
             await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
 
@@ -53,7 +53,7 @@ Partial Class Db
         Using transaction = BeginTransaction()
             ...
             Await SalesOrderHeader.InsertAsync(salesOrders, True, ct)
-            Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
+            Dim salesOrderDetails = salesOrders.GetChild(Function(x) x.SalesOrderDetails)
             ...
             Await SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
             Await transaction.CommitAsync(ct)
@@ -93,7 +93,7 @@ partial class Db
         {
             await SalesOrderHeader.UpdateAsync(salesOrders, ct);
             await SalesOrderDetail.DeleteAsync(salesOrders, (s, _) => s.Match(_.FK_SalesOrderHeader), ct);
-            var salesOrderDetails = salesOrders.Children(_ => _.SalesOrderDetails);
+            var salesOrderDetails = salesOrders.GetChild(_ => _.SalesOrderDetails);
             await SalesOrderDetail.InsertAsync(salesOrderDetails, ct);
 
             await transaction.CommitAsync(ct);
@@ -115,7 +115,7 @@ Partial Class Db
             ...
             Await SalesOrderHeader.UpdateAsync(salesOrders, ct)
             Await SalesOrderDetail.DeleteAsync(salesOrders, Function(s, x) s.Match(x.FK_SalesOrderHeader), ct)
-            Dim salesOrderDetails = salesOrders.Children(Function(x) x.SalesOrderDetails)
+            Dim salesOrderDetails = salesOrders.GetChild(Function(x) x.SalesOrderDetails)
             ...
             Await SalesOrderDetail.InsertAsync(salesOrderDetails, ct)
             Await transaction.CommitAsync(ct)

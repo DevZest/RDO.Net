@@ -11,7 +11,7 @@ namespace DevZest.Data
         public void JsonView_ToJsonString()
         {
             var salesOrderInfo = DataSet<SalesOrderInfo>.ParseJson(Json.SalesOrderInfo_71774);
-            var details = salesOrderInfo.Children(x => x.SalesOrderDetails);
+            var details = salesOrderInfo.GetChild(x => x.SalesOrderDetails);
             var jsonView = salesOrderInfo.Filter(JsonFilter.NoProjection).FilterChildren(details.Filter(JsonFilter.NoProjection));
             Assert.AreEqual(Json.SalesOrder_71774, jsonView.ToJsonString(true));
 
