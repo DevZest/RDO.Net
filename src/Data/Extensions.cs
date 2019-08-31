@@ -92,5 +92,17 @@ namespace DevZest.Data
             }
         }
 
+        internal static TChild Verify<T, TChild>(this T _, Func<T, TChild> getChildModel, string paramName)
+            where T : class, IEntity, new()
+            where TChild : Model, new()
+        {
+            getChildModel.VerifyNotNull(paramName);
+            var result = getChildModel(_);
+            if (result == null)
+                throw new ArgumentException(DiagnosticMessages.DataSource_ChildModelGetterReturnsNull, paramName);
+            if (result.ParentModel != _.Model)
+                throw new ArgumentException(DiagnosticMessages.DataSource_ChildModelGetterReturnsInvalidValue, paramName);
+            return result;
+        }
     }
 }

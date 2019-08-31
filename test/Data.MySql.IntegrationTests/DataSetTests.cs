@@ -102,7 +102,7 @@ namespace DevZest.Data.MySql
             {
                 var salesOrders = await db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
                 Assert.IsTrue(salesOrders.Count == 1);
-                await salesOrders.FillAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetail);
+                await salesOrders.FillChildAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetail);
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
             }
         }

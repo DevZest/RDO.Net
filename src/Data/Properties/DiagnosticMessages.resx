@@ -225,8 +225,8 @@
   <data name="DataRow_InvalidChildModel" xml:space="preserve">
     <value>The child model's ParentModel must be the same as this object's Model.</value>
   </data>
-  <data name="DataSet_InvalidChildModelGetter" xml:space="preserve">
-    <value>The child model returned by the getter is invalid. It cannot be null and its ParentModel must be the calling model.</value>
+  <data name="DataSource_ChildModelGetterReturnsInvalidValue" xml:space="preserve">
+    <value>The child model returned by the getter is invalid. Its ParentModel must be the calling model.</value>
   </data>
   <data name="Model_InvalidIdentityIncrement" xml:space="preserve">
     <value>The identity increment value cannot be 0.</value>
@@ -545,5 +545,8 @@
   </data>
   <data name="Single_NoElement" xml:space="preserve">
     <value>There is no element for the required Single operation.</value>
+  </data>
+  <data name="DataSource_ChildModelGetterReturnsNull" xml:space="preserve">
+    <value>The value returned by the child model getter cannot be null.</value>
   </data>
 </root>

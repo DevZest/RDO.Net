@@ -147,7 +147,7 @@ ORDER BY `Customer`.`CustomerID`;
             using (var db = await MockSalesOrder.CreateAsync(CreateDb(log)))
             {
                 var salesOrder = await db.SalesOrderHeader.ToDbQuery<SalesOrder>().Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);
-                await salesOrder.FillAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetail);
+                await salesOrder.FillChildAsync(0, _ => _.SalesOrderDetails, db.SalesOrderDetail);
                 await db.UpdateAsync(salesOrder, CancellationToken.None);
 
                 var dataSet = await db.SalesOrderDetail.Where(_ => _.SalesOrderID == 1).ToDataSetAsync(CancellationToken.None);

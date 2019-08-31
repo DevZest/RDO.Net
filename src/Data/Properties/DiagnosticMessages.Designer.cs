@@ -300,11 +300,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The child model returned by the getter is invalid. It cannot be null and its ParentModel must be the calling model.
+        /// The child model returned by the getter is invalid. Its ParentModel must be the calling model.
         /// </summary>
-        public static string DataSet_InvalidChildModelGetter
+        public static string DataSource_ChildModelGetterReturnsInvalidValue
         {
-            get { return GetString("DataSet_InvalidChildModelGetter"); }
+            get { return GetString("DataSource_ChildModelGetterReturnsInvalidValue"); }
         }
 
         /// <summary>
@@ -1153,6 +1153,14 @@ namespace DevZest.Data
         public static string Single_NoElement
         {
             get { return GetString("Single_NoElement"); }
+        }
+
+        /// <summary>
+        /// The value returned by the child model getter cannot be null.
+        /// </summary>
+        public static string DataSource_ChildModelGetterReturnsNull
+        {
+            get { return GetString("DataSource_ChildModelGetterReturnsNull"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

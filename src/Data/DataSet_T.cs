@@ -232,9 +232,7 @@ namespace DevZest.Data
             where TChild : Model, new()
         {
             var dataRow = this[dataRowOrdinal];
-            var childModel = getChildModel(this._);
-            if (childModel.ParentModel != Model)
-                throw new ArgumentException(DiagnosticMessages.DataSet_InvalidChildModelGetter, nameof(getChildModel));
+            var childModel = _.Verify(getChildModel, nameof(getChildModel));
 
             var childDataSet = (DataSet<TChild>)dataRow[childModel];
             var mappings = childModel.ParentRelationship;
@@ -244,33 +242,29 @@ namespace DevZest.Data
             return childDataSet;
         }
 
-        public Task<DataSet<TChild>> FillAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer = null)
+        public Task<DataSet<TChild>> FillChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer = null)
             where TChild : Model, new()
         {
             return FillAsync(dataRowOrdinal, getChildModel, sourceData, initializer, CancellationToken.None);
         }
 
-        public Task<DataSet<TChild>> FillAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken cancellationToken)
+        public Task<DataSet<TChild>> FillChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
             return FillAsync(dataRowOrdinal, getChildModel, sourceData, null, cancellationToken);
         }
 
-        public DataSet<TChild> GetChild<TChild>(Func<T, TChild> getChild, int ordinal)
-            where TChild : class, IEntity, new()
+        public DataSet<TChild> GetChild<TChild>(Func<T, TChild> getChildModel, int ordinal)
+            where TChild : Model, new()
         {
-            return GetChild(getChild, this[ordinal]);
+            return GetChild(getChildModel, this[ordinal]);
         }
 
-        public DataSet<TChild> GetChild<TChild>(Func<T, TChild> getChild, DataRow dataRow = null)
-            where TChild : class, IEntity, new()
+        public DataSet<TChild> GetChild<TChild>(Func<T, TChild> getChildModel, DataRow dataRow = null)
+            where TChild : Model, new()
         {
-            getChild.VerifyNotNull(nameof(getChild));
-            var childEntity = getChild(_);
-            var childModel = childEntity.Model;
-            if (childEntity == null || childModel.ParentModel != this.Model)
-                throw new ArgumentException(DiagnosticMessages.DataSet_InvalidChildModelGetter, nameof(getChild));
-            return dataRow == null ? childModel.DataSet as DataSet<TChild> : childEntity.GetChildDataSet(dataRow);
+            var childModel = _.Verify(getChildModel, nameof(getChildModel));
+            return dataRow == null ? childModel.DataSet as DataSet<TChild> : childModel.GetChildDataSet(dataRow);
         }
 
         private Action<DataRow> GetUpdateAction(Action<T, DataRow> updateAction)
