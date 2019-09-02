@@ -7,14 +7,14 @@ namespace DevZest.Data
 {
     public static class Extensions
     {
-        public static DataSet<T> GetChildDataSet<T>(this T childEntity, DataRow parentDataRow) where T : class, IEntity, new()
+        public static DataSet<T> GetChildDataSet<T>(this T childModel, DataRow parentDataRow) where T : Model, new()
         {
-            Verify(childEntity, nameof(childEntity));
+            Verify(childModel, nameof(childModel));
             parentDataRow.VerifyNotNull(nameof(parentDataRow));
-            return (DataSet<T>)parentDataRow[childEntity.Model];
+            return (DataSet<T>)parentDataRow[childModel];
         }
 
-        public static DataSet<T> GetChildDataSet<T>(this T childEntity, int parentDataRowOrdinal) where T : class, IEntity, new()
+        public static DataSet<T> GetChildDataSet<T>(this T childEntity, int parentDataRowOrdinal) where T : Model, new()
         {
             var parentDataSet = Verify(childEntity, nameof(childEntity));
             return childEntity.GetChildDataSet(parentDataSet[parentDataRowOrdinal]);

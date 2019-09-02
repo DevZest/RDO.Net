@@ -6,7 +6,7 @@ namespace DevZest.Data.Presenters
     public static partial class BindingFactory
     {
         public static RowBinding<DataView> BindToDataView<T>(this T entity, Func<DataPresenter<T>> dataPresenterCreator)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));

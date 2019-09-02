@@ -1,3 +1,7 @@
+---
+uid: model_and_members
+---
+
 # Model and Members
 
 ## Model
