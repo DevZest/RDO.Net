@@ -58,10 +58,10 @@
       href: programming_rdo_data/db_and_dbtable.md
     - name: Expression Column
       href: programming_rdo_data/expression_column.md
-    - name: Database Query
-      href: programming_rdo_data/database_query.md
     - name: DataSet
       href: programming_rdo_data/dataset.md
+    - name: Database Query
+      href: programming_rdo_data/database_query.md
     - name: Database CUD Operations
       href: programming_rdo_data/database_cud_operations.md
     - name: Hierarchical Data
