@@ -4,19 +4,25 @@ using System.Text.RegularExpressions;
 
 namespace DevZest.Data.Annotations
 {
+    /// <summary>
+    /// Validates an email address for the column.
+    /// </summary>
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class EmailAddressAttribute : ValidationColumnAttribute, ILogicalDataTypeAttribute
     {
+        /// <inheritdoc />
         public LogicalDataType LogicalDataType => LogicalDataType.EmailAddress;
 
         private static Regex s_regex = CreateRegEx();
 
+        /// <inheritdoc />
         protected override bool IsValid(Column column, DataRow dataRow)
         {
             var stringColumn = column as Column<string>;
             return stringColumn == null ? false : IsValid(stringColumn[dataRow]);
         }
 
+        /// <inheritdoc />
         protected override string DefaultMessageString
         {
             get { return UserMessages.EmailAddressAttribute; }

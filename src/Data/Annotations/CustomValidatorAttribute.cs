@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
+    /// <summary>
+    /// Specifies the custom validator declaration of the model.
+    /// </summary>
     [CrossReference(typeof(_CustomValidatorAttribute))]
     [ModelDeclarationSpec(true, typeof(CustomValidatorEntry))]
     public sealed class CustomValidatorAttribute : ModelDeclarationAttribute, IValidatorAttribute
@@ -38,12 +41,17 @@ namespace DevZest.Data.Annotations
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="CustomValidatorAttribute"/>.
+        /// </summary>
+        /// <param name="name">The name of the custom validator.</param>
         public CustomValidatorAttribute(string name)
             : base(name)
         {
         }
 
         private Func<Model, CustomValidatorEntry> _entryGetter;
+        /// <inheritdoc />
         protected override void Initialize()
         {
             var getMethod = GetPropertyGetter(typeof(CustomValidatorEntry));
@@ -58,11 +66,13 @@ namespace DevZest.Data.Annotations
             return Expression.Lambda<Func<Model, CustomValidatorEntry>>(call, paramModel).Compile();
         }
 
+        /// <inheritdoc />
         protected override ModelWireupEvent WireupEvent
         {
             get { return ModelWireupEvent.Initialized; }
         }
 
+        /// <inheritdoc />
         protected override void Wireup(Model model)
         {
             model.Validators.Add(new Validator(this, model));

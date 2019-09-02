@@ -71,14 +71,14 @@
     </None>
   </ItemGroup>
 
-  <!--<PropertyGroup>
+  <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>-->
+  </PropertyGroup>
   
   <PropertyGroup>
     <AdditionalProps Condition="Exists('..\..\..\$(AssemblyName).props')">..\..\..\$(AssemblyName).props</AdditionalProps>
     <AdditionalProps Condition="Exists('..\$(AssemblyName).props')">..\$(AssemblyName).props</AdditionalProps>
   </PropertyGroup>
-
+  
   <Import Project="$(AdditionalProps)" Condition=" '$(AdditionalProps)' != '' " />
 </Project>

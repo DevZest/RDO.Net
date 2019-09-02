@@ -5,6 +5,9 @@ using System.Globalization;
 
 namespace DevZest.Data.Annotations.Primitives
 {
+    /// <summary>
+    /// Base class for attribute which validates a column.
+    /// </summary>
     public abstract class ValidationColumnAttribute : ColumnAttribute, IValidatorAttribute
     {
         private sealed class Validator : IValidator
@@ -38,12 +41,27 @@ namespace DevZest.Data.Annotations.Primitives
             return IsValid(column, dataRow) ? null : new DataValidationError(FormatMessage(column.DisplayName), column);
         }
 
+        /// <summary>
+        /// Determines whether the specified column value is valid.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="dataRow">The data row.</param>
+        /// <returns><see langword="true" /> if data value is valid, otherwise <see langword="false" />.</returns>
         protected abstract bool IsValid(Column column, DataRow dataRow);
 
+        /// <summary>
+        /// Gets or sets the error message if validation failed.
+        /// </summary>
         public string Message { get; set; }
 
+        /// <summary>
+        /// Gets or sets the resource type for localized error messages.
+        /// </summary>
         public Type MessageResourceType { get; set; }
 
+        /// <summary>
+        /// Gets the error message string.
+        /// </summary>
         protected string MessageString
         {
             get
@@ -59,17 +77,30 @@ namespace DevZest.Data.Annotations.Primitives
             }
         }
 
+        /// <summary>
+        /// Formats the error message for specified column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>The error message.</returns>
         public string FormatMessage(Column column)
         {
             column.VerifyNotNull(nameof(column));
             return FormatMessage(column.DisplayName);
         }
 
+        /// <summary>
+        /// Formats the error message for specified column display name.
+        /// </summary>
+        /// <param name="columnDisplayName">The display name of the column.</param>
+        /// <returns>The error message.</returns>
         protected virtual string FormatMessage(string columnDisplayName)
         {
             return string.Format(CultureInfo.CurrentCulture, MessageString, columnDisplayName);
         }
 
+        /// <summary>
+        /// Gets the default error message.
+        /// </summary>
         protected abstract string DefaultMessageString { get; }
 
         private Func<string> _messageGetter;
@@ -87,6 +118,7 @@ namespace DevZest.Data.Annotations.Primitives
             }
         }
 
+        /// <inheritdoc />
         protected override void Wireup(Column column)
         {
             var model = column.ParentModel;

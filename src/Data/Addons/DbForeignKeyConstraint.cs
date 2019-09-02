@@ -52,13 +52,13 @@ namespace DevZest.Data.Addons
         /// </summary>
         public ForeignKeyRule UpdateRule { get; private set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override bool IsValidOnTable
         {
             get { return true; }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override bool IsValidOnTempTable
         {
             get { return false; }

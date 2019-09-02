@@ -4,18 +4,24 @@ using System.Linq;
 
 namespace DevZest.Data.Annotations
 {
+    /// <summary>
+    /// Specifies that a column contains values of credit card number.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     [ModelDesignerSpec(addonTypes: new Type[] { typeof(LogicalDataType) }, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class CreditCardAttribute : ValidationColumnAttribute, ILogicalDataTypeAttribute
     {
+        /// <inheritdoc />
         public LogicalDataType LogicalDataType => LogicalDataType.CreditCard;
 
+        /// <inheritdoc />
         protected override bool IsValid(Column column, DataRow dataRow)
         {
             var stringColumn = column as Column<string>;
             return stringColumn == null ? false : IsValid(stringColumn[dataRow]);
         }
 
+        /// <inheritdoc />
         protected override string DefaultMessageString
         {
             get { return UserMessages.CreditCardAttribute; }

@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace DevZest.Data.Annotations
 {
+    /// <summary>
+    /// Specifies the check constraint declaration of the model.
+    /// </summary>
     [CrossReference(typeof(_CheckConstraintAttribute))]
     [ModelDeclarationSpec(true, typeof(_Boolean))]
     public sealed class CheckConstraintAttribute : ModelDeclarationAttribute, IValidatorAttribute
@@ -46,6 +49,11 @@ namespace DevZest.Data.Annotations
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="CheckConstraintAttribute"/>, by name and error message.
+        /// </summary>
+        /// <param name="name">Name of the check constraint.</param>
+        /// <param name="message">Error message of the check constraint.</param>
         public CheckConstraintAttribute(string name, string message)
             : base(name)
         {
@@ -53,6 +61,12 @@ namespace DevZest.Data.Annotations
             Message = message;
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="CheckConstraintAttribute"/>, by name and localized error message.
+        /// </summary>
+        /// <param name="name">The name of the check constraint.</param>
+        /// <param name="messageResourceType">Resource type which contains the localized error message.</param>
+        /// <param name="message">Property name of the resource type to retrieve the error message.</param>
         public CheckConstraintAttribute(string name, Type messageResourceType, string message)
             : this(name, message)
         {
@@ -60,8 +74,14 @@ namespace DevZest.Data.Annotations
             _messageGetter = messageResourceType.ResolveStaticGetter<string>(message);
         }
 
+        /// <summary>
+        /// Gets the error message of the check constraint.
+        /// </summary>
         public string Message { get; }
 
+        /// <summary>
+        /// Gets the resource type for localized error message.
+        /// </summary>
         public Type MessageResourceType { get; }
 
         private readonly Func<string> _messageGetter;
@@ -72,6 +92,7 @@ namespace DevZest.Data.Annotations
         }
 
         private Func<Model, _Boolean> _conditionGetter;
+        /// <inheritdoc />
         protected override void Initialize()
         {
             var getMethod = GetPropertyGetter(typeof(_Boolean));
@@ -86,6 +107,7 @@ namespace DevZest.Data.Annotations
             return Expression.Lambda<Func<Model, _Boolean>>(call, paramModel).Compile();
         }
 
+        /// <inheritdoc />
         protected override ModelWireupEvent WireupEvent
         {
             get { return ModelWireupEvent.Initializing; }
@@ -96,10 +118,17 @@ namespace DevZest.Data.Annotations
             return _conditionGetter(model);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicates whether this attribute affects DataSet only.
+        /// </summary>
         public bool DataSetOnly { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name in database.
+        /// </summary>
         public string DbName { get; set; }
 
+        /// <inheritdoc />
         protected override void Wireup(Model model)
         {
             var condition = GetCondition(model);

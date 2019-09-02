@@ -3,10 +3,13 @@ using System;
 
 namespace DevZest.Data.Annotations
 {
-    /// <summary>Defines name and/or description of the column in the database.</summary>
+    /// <summary>Specifies name and/or description of the column in the database.</summary>
     [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) }, RequiresArgument = true)]
     public sealed class DbColumnAttribute : ColumnAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="DbColumnAttribute"/>.
+        /// </summary>
         public DbColumnAttribute()
         {
         }
@@ -18,9 +21,12 @@ namespace DevZest.Data.Annotations
             Name = dbColumnName;
         }
 
-        /// <summary>Gets or sets the column name for the column.</summary>
+        /// <summary>Gets or sets the name of the column in the database.</summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the description of the column in the database.
+        /// </summary>
         public string Description { get; set; }
 
         /// <inheritdoc/>

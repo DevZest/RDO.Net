@@ -57,23 +57,35 @@ namespace DevZest.Data
             get { return ColumnList[index]; }
         }
 
+        /// <summary>Gets the column collection.</summary>
         public new ColumnCollection Columns
         {
             get { return GetColumns(); }
         }
 
+        /// <summary>Gets the column by name.</summary>
+        /// <typeparam name="T">Type of the returned column.</typeparam>
+        /// <param name="name">The name of the column.</param>
+        /// <returns>The column with specified name.</returns>
         public T GetColumn<T>(string name)
             where T : Column
         {
             return (T)Columns[name];
         }
 
+        /// <summary>Gets the column by index.</summary>
+        /// <typeparam name="T">Type of the returned column.</typeparam>
+        /// <param name="index">The index of the column in <see cref="Columns"/> collection.</param>
+        /// <returns>The column with specified index.</returns>
         public T GetColumn<T>(int index)
             where T : Column
         {
             return (T)Columns[index];
         }
 
+        /// <summary>Gets the first column.</summary>
+        /// <typeparam name="T">Type of the returned column.</typeparam>
+        /// <returns>The first column in <see cref="Columns"/> collection.</returns>
         public T GetColumn<T>()
             where T : Column
         {

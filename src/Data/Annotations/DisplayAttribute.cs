@@ -3,6 +3,9 @@ using System;
 
 namespace DevZest.Data.Annotations
 {
+    /// <summary>
+    /// Specify localizable strings for column.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column) })]
     public class DisplayAttribute : ColumnAttribute
@@ -93,6 +96,7 @@ namespace DevZest.Data.Annotations
         {
         }
 
+        /// <inheritdoc />
         protected override void Wireup(Column column)
         {
             var shortNameGetter = _shortName.LocalizableValueGetter;

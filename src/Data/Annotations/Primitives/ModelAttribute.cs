@@ -8,7 +8,7 @@ using System.Reflection;
 namespace DevZest.Data.Annotations.Primitives
 {
     /// <summary>
-    /// Attribute for <see cref="Model"/> derived class, which can be wired up during <see cref="Model"/> object creation and initialization.
+    /// Base class for model level attribute, which can be wired up during <see cref="Model"/> object creation and initialization.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public abstract class ModelAttribute : Attribute
@@ -20,12 +20,25 @@ namespace DevZest.Data.Annotations.Primitives
             Initialize();
         }
 
+        /// <summary>
+        /// Gets the type of the model.
+        /// </summary>
         public Type ModelType { get; private set; }
 
+        /// <summary>
+        /// Initializes this attribute.
+        /// </summary>
         protected abstract void Initialize();
 
+        /// <summary>
+        /// Gets a value indicates when this attribute should be wired up with the model.
+        /// </summary>
         protected abstract ModelWireupEvent WireupEvent { get; }
 
+        /// <summary>
+        /// Wires up this attribute with the model.
+        /// </summary>
+        /// <param name="model">The model.</param>
         protected abstract void Wireup(Model model);
 
         private static ConcurrentDictionary<Type, IReadOnlyList<ModelAttribute>> s_attributes = new ConcurrentDictionary<Type, IReadOnlyList<ModelAttribute>>();

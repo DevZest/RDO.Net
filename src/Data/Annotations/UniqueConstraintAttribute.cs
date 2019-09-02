@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace DevZest.Data.Annotations
 {
+    /// <summary>
+    /// Specifies the unique constraint.
+    /// </summary>
     [CrossReference(typeof(_UniqueConstraintAttribute))]
     [ModelDeclarationSpec(true, typeof(ColumnSort[]))]
     public sealed class UniqueConstraintAttribute : DbIndexBaseAttribute, IValidatorAttribute
@@ -65,11 +68,20 @@ namespace DevZest.Data.Annotations
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="UniqueConstraintAttribute"/>.
+        /// </summary>
+        /// <param name="name">The name of the unique constraint.</param>
         public UniqueConstraintAttribute(string name)
             : base(name)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="UniqueConstraintAttribute"/> with error message.
+        /// </summary>
+        /// <param name="name">The name of the unique constraint.</param>
+        /// <param name="message">The error message for validation.</param>
         public UniqueConstraintAttribute(string name, string message)
             : base(name)
         {
@@ -77,6 +89,12 @@ namespace DevZest.Data.Annotations
             _message = message;
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="UniqueConstraintAttribute"/> with localized error message.
+        /// </summary>
+        /// <param name="name">The name of the unique constraint.</param>
+        /// <param name="messageResourceType">The resource type of the localized error message.</param>
+        /// <param name="message">The property to retrieve the localized error message.</param>
         public UniqueConstraintAttribute(string name, Type messageResourceType, string message)
             : base(name)
         {
@@ -85,12 +103,18 @@ namespace DevZest.Data.Annotations
         }
 
         private readonly string _message;
+        /// <summary>
+        /// Gets the error message for validation.
+        /// </summary>
         public string Message
         {
             get { return _message; }
         }
 
         private readonly Type _messageResourceType;
+        /// <summary>
+        /// Gets the resource type for localized error message.
+        /// </summary>
         public Type ResourceType
         {
             get { return _messageResourceType; }
@@ -114,6 +138,7 @@ namespace DevZest.Data.Annotations
                 return string.Format("({0})", string.Join(", ", columns.Select(x => x.DisplayName)));
         }
 
+        /// <inheritdoc />
         protected override void Wireup(Model model, string dbName, ColumnSort[] sortOrder)
         {
             model.AddDbUniqueConstraint(dbName, Description, IsCluster, sortOrder);

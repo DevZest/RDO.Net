@@ -4,6 +4,9 @@ using System.Globalization;
 
 namespace DevZest.Data.Annotations
 {
+    /// <summary>
+    /// Specifies the minimum and maximum length of characters that are allowed in a string column.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     [ModelDesignerSpec(addonTypes: null, validOnTypes: new Type[] { typeof(Column<string>) })]
     public sealed class StringLengthAttribute : ValidationColumnAttribute
@@ -35,6 +38,7 @@ namespace DevZest.Data.Annotations
             }
         }
 
+        /// <inheritdoc />
         protected override bool IsValid(Column column, DataRow dataRow)
         {
             if (column is Column<string> stringColumn)
@@ -48,6 +52,7 @@ namespace DevZest.Data.Annotations
             return value == null || (value.Length >= MinimumLength && value.Length <= MaximumLength);
         }
 
+        /// <inheritdoc />
         protected override string DefaultMessageString
         {
             get
@@ -59,6 +64,7 @@ namespace DevZest.Data.Annotations
             }
         }
 
+        /// <inheritdoc />
         protected override string FormatMessage(string columnDisplayName)
         {
             return string.Format(CultureInfo.CurrentCulture, MessageString, columnDisplayName, MaximumLength, MinimumLength);
