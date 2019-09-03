@@ -5,8 +5,15 @@ using System.Collections.Generic;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents an in-memory collection of data.
+    /// </summary>
     public abstract class DataSet : DataSource, IList<DataRow>, IReadOnlyList<DataRow>, IJsonView
     {
+        /// <summary>
+        /// Clones this DataSet.
+        /// </summary>
+        /// <returns>The cloned DataSet.</returns>
         public DataSet Clone()
         {
             return InternalClone();
@@ -22,11 +29,22 @@ namespace DevZest.Data
 
         internal abstract DataSet CreateChildDataSet(DataRow parentRow);
 
+        /// <summary>
+        /// Adds a DataRow into this DataSet.
+        /// </summary>
+        /// <param name="updateAction">The delegate to initialize the newly added DataRow.</param>
+        /// <returns>The newly added DataRow.</returns>
         public DataRow AddRow(Action<DataRow> updateAction = null)
         {
             return InsertRow(Count, updateAction);
         }
 
+        /// <summary>
+        /// Inserts a DataRow into this DataSet at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <param name="updateAction">The delegate to initialize the newly added DataRow.</param>
+        /// <returns>The newly added DataRow.</returns>
         public DataRow InsertRow(int index, Action<DataRow> updateAction = null)
         {
             var result = new DataRow();
@@ -36,15 +54,23 @@ namespace DevZest.Data
 
         internal readonly List<DataRow> _rows = new List<DataRow>();
 
+        /// <summary>
+        /// Gets the parent DataRow.
+        /// </summary>
         public abstract DataRow ParentDataRow { get; }
 
-        /// <inheritdoc cref="ICollection{T}.Count"/>
+        /// <summary>
+        /// Gets the count of data rows.
+        /// </summary>
         public int Count
         {
             get { return _rows.Count; }
         }
 
-        /// <inheritdoc cref="ICollection{T}.IsReadOnly"/>
+        /// <summary>
+        /// Gets a value indicating whether this DataSet is readonly.
+        /// </summary>
+        /// <remarks>The child base DataSet is readonly. You need to manipulate via child DataSet instead.</remarks>
         public abstract bool IsReadOnly { get; }
 
         /// <summary>Gets or sets the <see cref="DataRow"/> at specified index.</summary>
@@ -63,21 +89,39 @@ namespace DevZest.Data
             }
         }
 
-        /// <inheritdoc cref="IList{T}.IndexOf(T)"/>
+        /// <summary>
+        /// Gets the index of specified <see cref="DataRow"/> in this DataSet.
+        /// </summary>
+        /// <param name="dataRow">The specified <see cref="DataRow"/>.</param>
+        /// <returns>Index in this DataSet.</returns>
         public abstract int IndexOf(DataRow dataRow);
 
-        /// <inheritdoc cref="ICollection{T}.Contains(T)"/>
+        /// <summary>
+        /// Determines whether this DataSet contains specified <see cref="DataRow"/>.
+        /// </summary>
+        /// <param name="dataRow">The specified <see cref="DataRow"/>.</param>
+        /// <returns><see langword="true" /> if this DataSet contains specified DataRow, otherwise <see langword="false" />.</returns>
         public bool Contains(DataRow dataRow)
         {
             return IndexOf(dataRow) != -1;
         }
 
-        /// <inheritdoc cref="IList{T}.InternalInsert(int, T)"/>
+        /// <summary>
+        /// Inserts DataRow at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <param name="dataRow">The DataRow to be inserted.</param>
         public void Insert(int index, DataRow dataRow)
         {
             Insert(index, dataRow, null);
         }
 
+        /// <summary>
+        /// Inserts DataRow at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <param name="dataRow">The DataRow to be inserted.</param>
+        /// <param name="updateAction">A delegate to initialize the DataRow.</param>
         public void Insert(int index, DataRow dataRow, Action<DataRow> updateAction)
         {
             dataRow.VerifyNotNull(nameof(dataRow));
@@ -101,6 +145,11 @@ namespace DevZest.Data
 
         internal abstract void CoreInsert(int index, DataRow dataRow);
 
+        /// <summary>
+        /// Removes specified DataRow from this DataSet.
+        /// </summary>
+        /// <param name="dataRow">The specified DataRow.</param>
+        /// <returns><see langword="true" /> if DataRow removed successfully, otherwise <see langword="false"/>.</returns>
         public bool Remove(DataRow dataRow)
         {
             var index = IndexOf(dataRow);
@@ -111,7 +160,10 @@ namespace DevZest.Data
             return true;
         }
 
-        /// <inheritdoc cref="IList{T}.RemoveAt(int)"/>
+        /// <summary>
+        /// Removes DataRow at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
         public void RemoveAt(int index)
         {
             VerifyNotReadOnly();
@@ -140,16 +192,28 @@ namespace DevZest.Data
 
         internal abstract void CoreRemoveAt(int index, DataRow dataRow);
 
+        /// <summary>
+        /// Adds DataRow into this DataSet.
+        /// </summary>
+        /// <param name="dataRow">The DataRow to be added.</param>
         public void Add(DataRow dataRow)
         {
             Insert(Count, dataRow, null);
         }
 
+        /// <summary>
+        /// Adds DataRow into this DataSet.
+        /// </summary>
+        /// <param name="dataRow">The DataRow to be added.</param>
+        /// <param name="updateAction">A delegate to initialize the DataRow.</param>
         public void Add(DataRow dataRow, Action<DataRow> updateAction)
         {
             Insert(Count, dataRow, updateAction);
         }
 
+        /// <summary>
+        /// Removes all DataRows from this DataSet.
+        /// </summary>
         public void Clear()
         {
             VerifyNotReadOnly();
@@ -158,17 +222,30 @@ namespace DevZest.Data
                 OuterRemoveAt(i);
         }
 
+        /// <summary>
+        /// Copies all DataRow objects in this DataSet to an array.
+        /// </summary>
+        /// <param name="array">The target array.</param>
+        /// <param name="arrayIndex">The start index of the target array to receive DataRow objects.</param>
         public void CopyTo(DataRow[] array, int arrayIndex)
         {
             _rows.CopyTo(array, arrayIndex);
         }
 
+        /// <summary>
+        /// Returs an enumerator for this DataSet.
+        /// </summary>
+        /// <returns>The enumerator for this DataSet.</returns>
         public IEnumerator<DataRow> GetEnumerator()
         {
             foreach (var dataRow in _rows)
                 yield return dataRow;
         }
 
+        /// <summary>
+        /// Returs an enumerator for this DataSet.
+        /// </summary>
+        /// <returns>The enumerator for this DataSet.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -180,17 +257,36 @@ namespace DevZest.Data
             return ToJsonString(isPretty: true);
         }
 
+        /// <summary>
+        /// Serializes this DataSet into JSON string.
+        /// </summary>
+        /// <param name="isPretty">Specifies whether serialized JSON string should be indented.</param>
+        /// <param name="customizer">The customizer in serialization.</param>
+        /// <returns></returns>
         public string ToJsonString(bool isPretty, IJsonCustomizer customizer = null)
         {
             return JsonWriter.Create(customizer).Write(this).ToString(isPretty);
         }
 
+        /// <summary>
+        /// Serializes specified DataRow objects in this DataSet into JSON string.
+        /// </summary>
+        /// <param name="dataRows">Specifies the DataRow objects to be serialized.</param>
+        /// <param name="isPretty">Specifies whether serialized JSON string should be indented.</param>
+        /// <param name="customizer">The customizer in serialization.</param>
+        /// <returns></returns>
         public string ToJsonString(IEnumerable<DataRow> dataRows, bool isPretty, IJsonCustomizer customizer = null)
         {
             dataRows.VerifyNotNull(nameof(dataRows));
             return JsonWriter.Create(customizer).Write(this, dataRows).ToString(isPretty);
         }
 
+        /// <summary>
+        /// Validates all DataRow objects in this DataSet.
+        /// </summary>
+        /// <param name="recursive">Determines whether child DataSet should also be validated.</param>
+        /// <param name="maxErrorRows">Specifies the maxium number of rows which will contain validation error.</param>
+        /// <returns>The validation result.</returns>
         public IDataValidationResults Validate(bool recursive = true, int maxErrorRows = 100)
         {
             return Validate(DataValidationResults.Empty, this, maxErrorRows, recursive).Seal();
@@ -221,16 +317,26 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Gets the DataRow that is currently in editing mode.
+        /// </summary>
         public DataRow EditingRow
         {
             get { return Model.EditingRow; }
         }
 
+        /// <summary>
+        /// Gets the DataRow that is currently in adding mode.
+        /// </summary>
         public DataRow AddingRow
         {
             get { return Model.AddingRow; }
         }
 
+        /// <summary>
+        /// Validates the DataRow that is currently in adding mode.
+        /// </summary>
+        /// <returns></returns>
         public IDataValidationErrors ValidateAddingRow()
         {
             var addingRow = AddingRow;
@@ -239,6 +345,10 @@ namespace DevZest.Data
             return Model.Validate(addingRow).Seal();
         }
 
+        /// <summary>
+        /// Enters the adding mode.
+        /// </summary>
+        /// <returns>The new DataRow that is in adding mode.</returns>
         public DataRow BeginAdd()
         {
             VerifyNotReadOnly();
@@ -251,11 +361,20 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Commits the adding DataRow into this DataSet.
+        /// </summary>
+        /// <returns>The DataRow which is newly added into this DataSet.</returns>
         public DataRow EndAdd()
         {
             return EndAdd(Count);
         }
 
+        /// <summary>
+        /// Commits the adding DataRow into this DataSet at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <returns>The DataRow which is newly added into this DataSet.</returns>
         public DataRow EndAdd(int index)
         {
             VerifyNotReadOnly();
@@ -269,6 +388,10 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Cancels the Adding mode.
+        /// </summary>
+        /// <returns><see langword="true" /> if adding mode cancelled successfully, otherwise <see langword="false" />.</returns>
         public bool CancelAdd()
         {
             VerifyNotReadOnly();
@@ -288,6 +411,7 @@ namespace DevZest.Data
                 throw new NotSupportedException(DiagnosticMessages.DataSet_VerifyNotReadOnly);
         }
 
+        /// <inheritdoc />
         IJsonView IJsonView.GetChildView(DataSet childDataSet)
         {
             return childDataSet;
@@ -298,11 +422,19 @@ namespace DevZest.Data
             get { return null; }
         }
 
+        /// <summary>
+        /// Gets the <see cref="DataSetContainer"/> of this DataSet.
+        /// </summary>
         public DataSetContainer Container
         {
             get { return Model.DataSetContainer; }
         }
 
+        /// <summary>
+        /// Deserializes JSON string into this DataSet.
+        /// </summary>
+        /// <param name="jsonString">The JSON string.</param>
+        /// <param name="customizer">The customizer in deserialization.</param>
         public void Deserialize(string jsonString, IJsonCustomizer customizer = null)
         {
             jsonString.VerifyNotEmpty(nameof(jsonString));
