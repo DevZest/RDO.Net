@@ -34,7 +34,7 @@ namespace DevZest.Data
         public Task<int> InsertAsync<TSource>(DbSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return InsertAsync(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), ct);
+            return InsertAsync(source, (m, s, t) => m.AutoSelectInsertable(), ct);
         }
 
         public Task<int> InsertAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
@@ -91,13 +91,13 @@ namespace DevZest.Data
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return InsertAsync(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), false, ct);
+            return InsertAsync(source, (m, s, t) => m.AutoSelectInsertable(), false, ct);
         }
 
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, bool updateIdentity, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return InsertAsync(source, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), updateIdentity, ct);
+            return InsertAsync(source, (m, s, t) => m.AutoSelectInsertable(), updateIdentity, ct);
         }
 
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
@@ -122,7 +122,7 @@ namespace DevZest.Data
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
-            return InsertAsync(source, ordinal, (m, s, t) => ColumnMapper.AutoSelectInsertable(m, s, t), false, ct);
+            return InsertAsync(source, ordinal, (m, s, t) => m.AutoSelectInsertable(), false, ct);
         }
 
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))

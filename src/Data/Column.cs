@@ -40,11 +40,24 @@ namespace DevZest.Data
         /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
         public string OriginalName { get; internal set; }
 
+        /// <summary>
+        /// Gets the Id of the column.
+        /// </summary>
+        /// <remarks>Column Id contains the declaring type and name, which can uniquely identify the column.
+        /// It is used as first candidate to perform automatic column mapping.</remarks>
         public ColumnId Id
         {
             get { return new ColumnId(DeclaringType, Name); }
         }
 
+        /// <summary>
+        /// Gets the original Id of the column.
+        /// </summary>
+        /// <remarks>
+        /// Original Id is inherited from existing <see cref="Mounter{T}"/> object by calling
+        /// see cref="Model.RegisterColumn{TModel, TColumn}(System.Linq.Expressions.Expression{Func{TModel, TColumn}}, Mounter{TColumn})"/> method.
+        /// It is used as second candiate to perform automatic column mapping.
+        /// </remarks>
         public ColumnId OriginalId
         {
             get { return new ColumnId(OriginalDeclaringType, OriginalName); }
@@ -97,6 +110,9 @@ namespace DevZest.Data
         /// <summary>Gets a value indicates whether current column is expression.</summary>
         public abstract bool IsExpression { get; }
 
+        /// <summary>
+        /// Gets a value indicates whether this column is an expression and not a member of model.
+        /// </summary>
         public bool IsAbsoluteExpression
         {
             get { return ParentModel == null && IsExpression; }
@@ -154,10 +170,20 @@ namespace DevZest.Data
         /// <summary>Gets the <see cref="DbExpression"/> of this column for SQL generation.</summary>
         public abstract DbExpression DbExpression { get; }
 
+        /// <summary>
+        /// Gets the expression of this column.
+        /// </summary>
+        /// <returns>The expression.</returns>
         public abstract ColumnExpression GetExpression();
 
+        /// <summary>
+        /// Gets the database computation expression.
+        /// </summary>
         public abstract DbExpression DbComputedExpression { get; }
 
+        /// <summary>
+        /// Gets the referenced columns of the expression.
+        /// </summary>
         public abstract IColumns BaseColumns { get; }
 
         /// <summary>Gets the data type of this <see cref="Column"/>.</summary>
@@ -208,11 +234,17 @@ namespace DevZest.Data
 
         internal abstract void InitValueManager();
 
+        /// <summary>
+        /// Gets a value indicates whether this column is serializable.
+        /// </summary>
         public virtual bool IsSerializable
         {
             get { return IsDeserializable; }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this column is deserializable.
+        /// </summary>
         public abstract bool IsDeserializable { get; }
 
         /// <summary>Serializes the value at given <see cref="DataRow"/> oridinal as JSON.</summary>
@@ -293,6 +325,9 @@ namespace DevZest.Data
             return GetAddon<ColumnDefault>();
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this column is computed in database.
+        /// </summary>
         public abstract bool IsDbComputed { get; }
 
         /// <summary>Determines whether the value of given <see cref="DataRow"/> is null.</summary>
@@ -305,48 +340,67 @@ namespace DevZest.Data
         /// <returns>The created <see cref="ColumnMapping"/>.</returns>
         public abstract ColumnMapping MapFrom(Column column);
 
+        /// <summary>
+        /// Gets the data value of specified <see cref="DataRow"/>.
+        /// </summary>
+        /// <param name="dataRow">The specified <see cref="DataRow"/>.</param>
+        /// <param name="beforeEdit">Determines whether should return the value before <see cref="DataRow"/> entering edit mode.</param>
+        /// <returns>The data value.</returns>
         public abstract object GetValue(DataRow dataRow, bool beforeEdit = false);
 
+        /// <summary>
+        /// Sets the data value of specified <see cref="DataRow"/>.
+        /// </summary>
+        /// <param name="dataRow">The specified <see cref="DataRow"/>.</param>
+        /// <param name="value">The data value.</param>
+        /// <param name="beforeEdit">Determines whether should set the original value before <see cref="DataRow"/> entering edit mode.</param>
         public abstract void SetValue(DataRow dataRow, object value, bool beforeEdit = false);
 
         #region IColumnSet
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IColumns.Contains(Column column)
         {
             return column == this;
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IReadOnlyCollection<Column>.Count
         {
             get { return 1; }
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<Column> IEnumerable<Column>.GetEnumerator()
         {
             yield return this;
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IColumns.IsSealed
         {
             get { return true; }
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IColumns IColumns.Seal()
         {
             return this;
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IColumns IColumns.Add(Column value)
         {
@@ -356,6 +410,7 @@ namespace DevZest.Data
             return Columns.New(this, value);
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IColumns IColumns.Remove(Column value)
         {
@@ -366,6 +421,7 @@ namespace DevZest.Data
                 return this;
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IColumns IColumns.Clear()
         {
@@ -380,6 +436,10 @@ namespace DevZest.Data
 
         internal abstract void CopyValue(DataRow sourceDataRow, Column targetColumn, DataRow targetDataRow);
 
+        /// <summary>
+        /// Casts this column into a <see cref="_String"/> column.
+        /// </summary>
+        /// <returns></returns>
         public abstract _String CastToString();
 
         private Func<string> _displayShortNameGetter;
@@ -473,17 +533,36 @@ namespace DevZest.Data
             _displayPromptGetter = displayPromptGetter;
         }
 
+        /// <summary>
+        /// Gets a value indicates whether a default comparer exists for underlying data type.
+        /// </summary>
         public abstract bool HasDefaultComparer { get; }
 
+        /// <summary>
+        /// Compares values of two <see cref="DataRow"/> objects.
+        /// </summary>
+        /// <param name="x">The left <see cref="DataRow"/>.</param>
+        /// <param name="y">The right <see cref="DataRow"/>.</param>
+        /// <returns>0 if two values are equal, 1 if left value is greater than right value, otherwise -1.</returns>
         public int Compare(DataRow x, DataRow y)
         {
             return Compare(x, y, SortDirection.Ascending);
         }
 
+        /// <summary>
+        /// Compares values of two <see cref="DataRow"/> objects, with specified sorting order.
+        /// </summary>
+        /// <param name="x">The left <see cref="DataRow"/>.</param>
+        /// <param name="y">The right <see cref="DataRow"/>.</param>
+        /// <param name="direction">The specified sorting order.</param>
+        /// <returns>0 if two values are equal, 1 if left value is greater than right value, otherwise -1.</returns>
         public abstract int Compare(DataRow x, DataRow y, SortDirection direction);
 
         internal abstract void InitAsChild(Column parentColumn);
 
+        /// <summary>
+        /// Gets a value indicates whether this column stores concrete data values.
+        /// </summary>
         public abstract bool IsConcrete { get; }
 
         internal abstract void TryMakeConcrete();
@@ -494,9 +573,15 @@ namespace DevZest.Data
 
         internal abstract IColumnComparer ToColumnComparer(SortDirection direction);
 
+        /// <summary>
+        /// Gets a value indicates whether this column has value comparer.
+        /// </summary>
         public abstract bool HasValueComparer { get; }
 
         private string _relativeName;
+        /// <summary>
+        /// Gets the relative name of this column, which exludes the parent projection name.
+        /// </summary>
         public string RelativeName
         {
             get
@@ -511,14 +596,48 @@ namespace DevZest.Data
 
         internal abstract Column PerformTranslateTo(Model model);
 
+        /// <summary>
+        /// Gets a value indicates whether this column is readonly for specified <see cref="DataRow"/>.
+        /// </summary>
+        /// <param name="dataRow">The specified <see cref="DataRow"/>.</param>
+        /// <returns><see langword="true" /> if this column is readonly for specified <see cref="DataRow"/>, otherwise
+        /// <see langword="false"/>.</returns>
         public abstract bool IsReadOnly(DataRow dataRow);
 
+        /// <summary>
+        /// Gets the default value of the column.
+        /// </summary>
+        /// <returns>The default value.</returns>
         public abstract object GetDefaultValue();
 
-        public abstract void SetDefaultObject(object defaultValue, string name, string description);
+        /// <summary>
+        /// Sets default value for this column.
+        /// </summary>
+        /// <param name="defaultValue">The default value.</param>
+        /// <param name="name">Name of the default.</param>
+        /// <param name="description">Description of the default.</param>
+        public void SetDefaultValue(object defaultValue, string name, string description)
+        {
+            PerformSetDefaultValue(defaultValue, name, description);
+        }
 
+        internal abstract void PerformSetDefaultValue(object defaultValue, string name, string description);
+
+        /// <summary>
+        /// Calculates the hash code for specified <see cref="DataRow"/>.
+        /// </summary>
+        /// <param name="dataRow">The specified <see cref="DataRow"/>.</param>
+        /// <returns>The calculated hash code.</returns>
+        /// <remarks>This method is used to compare the equality of two <see cref="DataRow"/>'s data values.</remarks>
         public abstract int GetHashCode(DataRow dataRow);
 
+        /// <summary>
+        /// Determines whether two data values are equal.
+        /// </summary>
+        /// <param name="dataRow">The source DataRow.</param>
+        /// <param name="otherColumn">The target column.</param>
+        /// <param name="otherDataRow">The target DataRow.</param>
+        /// <returns></returns>
         public abstract bool Equals(DataRow dataRow, Column otherColumn, DataRow otherDataRow);
 
         internal void SetIdentity(Identity identity)
@@ -532,6 +651,9 @@ namespace DevZest.Data
             model.Add(identity);
         }
 
+        /// <summary>
+        /// Gets a value indicates whether values of this column must be unique.
+        /// </summary>
         public bool IsUnique
         {
             get
@@ -559,6 +681,9 @@ namespace DevZest.Data
         }
 
         private LogicalDataType _logicalDataType = LogicalDataType.Custom;
+        /// <summary>
+        /// Gets or sets the logical data type for this column.
+        /// </summary>
         public LogicalDataType LogicalDataType
         {
             get { return _logicalDataType; }
@@ -569,6 +694,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets the parent model of this column.
+        /// </summary>
         public Model Model
         {
             get { return GetParent(); }

@@ -38,6 +38,9 @@ namespace DevZest.Data
 
         internal abstract void Initialize(ColumnList sourceColumnList);
 
+        /// <summary>
+        /// Gets the name of this ColumnList.
+        /// </summary>
         public new string Name
         {
             get { return base.Name; }
@@ -71,6 +74,12 @@ namespace DevZest.Data
             get { return _columns[index]; }
         }
 
+        /// <summary>
+        /// Adds a new column into this column list.
+        /// </summary>
+        /// <param name="createColumn">The delegate to create the column.</param>
+        /// <param name="initializer">The optional initializer.</param>
+        /// <returns>The newly added column.</returns>
         public T Add(Func<T> createColumn, Action<T> initializer = null)
         {
             createColumn.VerifyNotNull(nameof(createColumn));

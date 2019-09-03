@@ -47,7 +47,7 @@ namespace DevZest.Data
                 SystemColumnCount ++;
         }
 
-        /// <summary>Gets the <see cref="Column"/> with specified <see cref="ColumnId"/>.</summary>
+        /// <summary>Gets the <see cref="Column"/> by specified <see cref="ColumnId"/>.</summary>
         /// <param name="columnKey">The <see cref="ColumnId"/> which uniquely identifies the column.</param>
         /// <returns>Column with the specified <see cref="ColumnId"/>, <see langword="null"/> if no column found.</returns>
         public Column this[ColumnId columnKey]
@@ -59,6 +59,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets the <see cref="Column"/> by specified name.
+        /// </summary>
+        /// <param name="name">The specified name.</param>
+        /// <returns>Column with the specified name, <see langword="null"/> if no column found.</returns>
         public Column this[string name]
         {
             get

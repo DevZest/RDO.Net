@@ -8,6 +8,11 @@ namespace DevZest.Data
     /// <summary>Class to build a collection of <see cref="ColumnMapping"/> objects.</summary>
     public sealed class ColumnMapper
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ColumnMapper"/>.
+        /// </summary>
+        /// <param name="sourceModel">The source model.</param>
+        /// <param name="targetModel">The target model.</param>
         public ColumnMapper(Model sourceModel, Model targetModel)
         {
             Debug.Assert(targetModel != null);
@@ -64,16 +69,29 @@ namespace DevZest.Data
             return this;
         }
 
+        /// <summary>
+        /// Automatically selects insertable columns.
+        /// </summary>
+        /// <returns>This <see cref="ColumnMapper"/> for fluent use.</returns>
         public ColumnMapper AutoSelectInsertable()
         {
             return AutoSelect(_targetModel.GetInsertableColumns());
         }
 
+        /// <summary>
+        /// Automatically selects updatable columns.
+        /// </summary>
+        /// <returns>This <see cref="ColumnMapper"/> for fluent use.</returns>
         public ColumnMapper AutoSelectUpdatable()
         {
             return AutoSelect(_targetModel.GetUpdatableColumns());
         }
 
+        /// <summary>
+        /// Automatically selects columns.
+        /// </summary>
+        /// <param name="targetColumns">The target columns.</param>
+        /// <returns>This <see cref="ColumnMapper"/> for fluent use.</returns>
         public ColumnMapper AutoSelect(IEnumerable<Column> targetColumns)
         {
             var sourceColumns = _sourceModel.Columns;
@@ -105,16 +123,6 @@ namespace DevZest.Data
                 if (sourceModel != _sourceModel && sourceModel != _targetModel)
                     throw new ArgumentException(DiagnosticMessages.ColumnMapper_InvalidSourceParentModelSet(sourceModel), paramName);
             }
-        }
-
-        public static void AutoSelectInsertable<T>(ColumnMapper columnMapper, T source, T target)
-        {
-            columnMapper.AutoSelectInsertable();
-        }
-
-        public static void AutoSelectUpdatable<T>(ColumnMapper columnMapper, T source, T target)
-        {
-            columnMapper.AutoSelectUpdatable();
         }
     }
 }

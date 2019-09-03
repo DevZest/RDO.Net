@@ -8,10 +8,17 @@ using System.Linq;
 namespace DevZest.Data
 {
     /// <summary>
-    /// Defines the mapping between source column or expression and target column.
+    /// Defines the mapping between source column and target column.
     /// </summary>
     public struct ColumnMapping
     {
+        /// <summary>
+        /// Maps between two columns.
+        /// </summary>
+        /// <typeparam name="T">The data type of the column.</typeparam>
+        /// <param name="source">The source column.</param>
+        /// <param name="target">The target column.</param>
+        /// <returns>The mapping between these two columns.</returns>
         public static ColumnMapping Map<T>(Column<T> source, Column<T> target)
         {
             source.VerifyNotNull(nameof(source));
@@ -19,12 +26,29 @@ namespace DevZest.Data
             return new ColumnMapping(source, target);
         }
 
+        /// <summary>
+        /// Maps between two columns unsafely.
+        /// </summary>
+        /// <param name="source">The source column.</param>
+        /// <param name="target">The target column.</param>
+        /// <returns>The mapping between these two columns.</returns>
+        /// <remarks>You must ensure type safety of the columns, otherwise an exception may be thrown when using returned <see cref="ColumnMapping" />.</remarks>
         public static ColumnMapping UnsafeMap(Column source, Column target)
         {
             target.VerifyNotNull(nameof(target));
             return new ColumnMapping(source, target);
         }
 
+        /// <summary>
+        /// Maps between two entities.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the source entity.</typeparam>
+        /// <typeparam name="TTarget">Type of the target entity.</typeparam>
+        /// <param name="source">The source entity.</param>
+        /// <param name="target">The target entity.</param>
+        /// <param name="columnMapper">Delegate to map between entities. If <see langword="null"/>, default value will be used to map insertable columns.</param>
+        /// <param name="isInsertable">Specifies whether the columns are insertable.</param>
+        /// <returns>A list of <see cref="ColumnMapping"/> between two entities.</returns>
         public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource source, TTarget target, Action<ColumnMapper, TSource, TTarget> columnMapper, bool isInsertable)
             where TSource : class, IEntity, new()
             where TTarget : class, IEntity, new()
@@ -146,6 +170,11 @@ namespace DevZest.Data
             return string.Format(CultureInfo.InvariantCulture, "({0}, {1})", _source, _target);
         }
 
+        /// <summary>
+        /// Copies value from source DataRow to target DataRow.
+        /// </summary>
+        /// <param name="sourceDataRow">The source DataRow.</param>
+        /// <param name="targetDataRow">The target DataRow.</param>
         public void CopyValue(DataRow sourceDataRow, DataRow targetDataRow)
         {
             Source.CopyValue(sourceDataRow, Target, targetDataRow);

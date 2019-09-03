@@ -39,10 +39,20 @@ namespace DevZest.Data.SqlServer.Helpers
             return dbTable.SqlSession().GetInsertCommand(statement);
         }
 
+        private static void AutoSelectInsertable<T>(ColumnMapper columnMapper, T source, T target)
+        {
+            columnMapper.AutoSelectInsertable();
+        }
+
+        private static void AutoSelectUpdatable<T>(ColumnMapper columnMapper, T source, T target)
+        {
+            columnMapper.AutoSelectUpdatable();
+        }
+
         public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int ordinal, bool updateIdentity = false)
             where T : Model, new()
         {
-            return MockInsert(dbTable, success, source, ordinal, ColumnMapper.AutoSelectInsertable, updateIdentity);
+            return MockInsert(dbTable, success, source, ordinal, AutoSelectInsertable, updateIdentity);
         }
 
         public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal,
@@ -69,7 +79,7 @@ namespace DevZest.Data.SqlServer.Helpers
         public static SqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> source)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable);
+            return MockInsert(dbTable, rowsAffected, source, AutoSelectInsertable);
         }
 
         public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Action<ColumnMapper, TSource, TTarget> columnMapper)
@@ -87,7 +97,7 @@ namespace DevZest.Data.SqlServer.Helpers
         public static IList<SqlCommand> MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DataSet<T> source, bool updateIdentity = false)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable, updateIdentity);
+            return MockInsert(dbTable, rowsAffected, source, AutoSelectInsertable, updateIdentity);
         }
 
         public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
@@ -139,7 +149,7 @@ namespace DevZest.Data.SqlServer.Helpers
         internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> dbSet)
             where T : Model, new()
         {
-            return MockUpdate(dbTable, rowsAffected, dbSet, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return MockUpdate(dbTable, rowsAffected, dbSet, AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> dbSet,
@@ -159,7 +169,7 @@ namespace DevZest.Data.SqlServer.Helpers
         internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int rowIndex)
             where T : Model, new()
         {
-            return MockUpdate(dbTable, success, source, rowIndex, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return MockUpdate(dbTable, success, source, rowIndex, AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int rowIndex,
@@ -180,7 +190,7 @@ namespace DevZest.Data.SqlServer.Helpers
         internal static SqlCommand MockUpdate<TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TTarget> source)
             where TTarget : Model, new()
         {
-            return MockUpdate(dbTable, rowsAffected, source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return MockUpdate(dbTable, rowsAffected, source, AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,

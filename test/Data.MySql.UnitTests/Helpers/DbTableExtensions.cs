@@ -38,10 +38,20 @@ namespace DevZest.Data.MySql.Helpers
             return dbTable.MySqlSession().InternalGetInsertCommand(statement);
         }
 
+        private static void AutoSelectInsertable<T>(ColumnMapper columnMapper, T source, T target)
+        {
+            columnMapper.AutoSelectInsertable();
+        }
+
+        private static void AutoSelectUpdatable<T>(ColumnMapper columnMapper, T source, T target)
+        {
+            columnMapper.AutoSelectUpdatable();
+        }
+
         public static MySqlCommand MockInsert<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int ordinal, bool updateIdentity = false)
             where T : Model, new()
         {
-            return MockInsert(dbTable, success, source, ordinal, ColumnMapper.AutoSelectInsertable, updateIdentity);
+            return MockInsert(dbTable, success, source, ordinal, AutoSelectInsertable, updateIdentity);
         }
 
         public static MySqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int ordinal,
@@ -68,7 +78,7 @@ namespace DevZest.Data.MySql.Helpers
         public static MySqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> source)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable);
+            return MockInsert(dbTable, rowsAffected, source, AutoSelectInsertable);
         }
 
         public static MySqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source,
@@ -87,7 +97,7 @@ namespace DevZest.Data.MySql.Helpers
         public static MySqlCommand MockInsert<T>(this DbTable<T> dbTable, int rowsAffected, DataSet<T> source)
             where T : Model, new()
         {
-            return MockInsert(dbTable, rowsAffected, source, ColumnMapper.AutoSelectInsertable);
+            return MockInsert(dbTable, rowsAffected, source, AutoSelectInsertable);
         }
 
         public static MySqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
@@ -115,7 +125,7 @@ namespace DevZest.Data.MySql.Helpers
         internal static MySqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, DbSet<T> dbSet)
             where T : Model, new()
         {
-            return MockUpdate(dbTable, rowsAffected, dbSet, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return MockUpdate(dbTable, rowsAffected, dbSet, AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static MySqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> dbSet,
@@ -135,7 +145,7 @@ namespace DevZest.Data.MySql.Helpers
         internal static MySqlCommand MockUpdate<T>(this DbTable<T> dbTable, bool success, DataSet<T> source, int rowIndex)
             where T : Model, new()
         {
-            return MockUpdate(dbTable, success, source, rowIndex, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return MockUpdate(dbTable, success, source, rowIndex, AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static MySqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> source, int rowIndex,
@@ -156,7 +166,7 @@ namespace DevZest.Data.MySql.Helpers
         internal static MySqlCommand MockUpdate<TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TTarget> source)
             where TTarget : Model, new()
         {
-            return MockUpdate(dbTable, rowsAffected, source, ColumnMapper.AutoSelectUpdatable, KeyMapping.Match);
+            return MockUpdate(dbTable, rowsAffected, source, AutoSelectUpdatable, KeyMapping.Match);
         }
 
         internal static MySqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,

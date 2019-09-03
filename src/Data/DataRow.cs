@@ -94,6 +94,9 @@ namespace DevZest.Data
         }
 
         private DataSet[] _childDataSets;
+        /// <summary>
+        /// Gets the child DataSets owned by this DataRow.
+        /// </summary>
         public IReadOnlyList<DataSet> ChildDataSets
         {
             get { return _childDataSets; }
@@ -107,9 +110,15 @@ namespace DevZest.Data
             Model = null;
         }
 
+        /// <summary>
+        /// Gets the ordinal of <see cref="BaseDataSet"/>.
+        /// </summary>
         public int Ordinal { get; private set; }
 
         private int _index;
+        /// <summary>
+        /// Gets the index of <see cref="DataSet"/>.
+        /// </summary>
         public int Index
         {
             get { return _index == -1 ? Ordinal : _index; }
@@ -118,11 +127,17 @@ namespace DevZest.Data
         /// <summary>Gets the parent <see cref="DataRow"/>.</summary>
         public DataRow ParentDataRow { get; private set; }
 
+        /// <summary>
+        /// Gets the base DataSet which contains all <see cref="DataRow"/> objects.
+        /// </summary>
         public DataSet BaseDataSet
         {
             get { return Model?.DataSet; }
         }
 
+        /// <summary>
+        /// Gets the DataSet which contains child DataSet of <see cref="ParentDataRow"/>.
+        /// </summary>
         public DataSet DataSet
         {
             get
@@ -132,11 +147,17 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this <see cref="DataRow"/> is in editing mode.
+        /// </summary>
         public bool IsEditing
         {
             get { return Model == null ? false : Model.EditingRow == this; }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this <see cref="DataRow"/> is in adding mode.
+        /// </summary>
         public bool IsAdding
         {
             get { return Model == null ? false : Model.AddingRow == this; }
@@ -200,6 +221,11 @@ namespace DevZest.Data
             _index = value;
         }
 
+        /// <summary>
+        /// Gets the child DataSet for specified child model.
+        /// </summary>
+        /// <param name="childModel">The specified child model.</param>
+        /// <returns>The child DataSet.</returns>
         public DataSet this[Model childModel]
         {
             get
@@ -211,13 +237,18 @@ namespace DevZest.Data
             }
         }
 
-        public DataSet this[int modelOrdinal]
+        /// <summary>
+        /// Gets the child DataSet for specified child model ordinal.
+        /// </summary>
+        /// <param name="childModelOrdinal">The ordinal of child model.</param>
+        /// <returns>The child DataSet.</returns>
+        public DataSet this[int childModelOrdinal]
         {
             get
             {
-                if (modelOrdinal < 0 || modelOrdinal >= _childDataSets.Length)
-                    throw new ArgumentOutOfRangeException(nameof(modelOrdinal));
-                return _childDataSets[modelOrdinal];
+                if (childModelOrdinal < 0 || childModelOrdinal >= _childDataSets.Length)
+                    throw new ArgumentOutOfRangeException(nameof(childModelOrdinal));
+                return _childDataSets[childModelOrdinal];
             }
         }
 
@@ -228,6 +259,7 @@ namespace DevZest.Data
             _childDataSets = null;
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             var parentDataRow = this.ParentDataRow;
@@ -311,6 +343,10 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Validates data values of this DataRow.
+        /// </summary>
+        /// <returns>A collection of validation errors.</returns>
         public IDataValidationErrors Validate()
         {
             if (Model == null)
@@ -318,6 +354,11 @@ namespace DevZest.Data
             return Model.Validate(this).Seal();
         }
 
+        /// <summary>
+        /// Copies data values from specified <see cref="DataRow"/>.
+        /// </summary>
+        /// <param name="from">The specified DataRow.</param>
+        /// <param name="recursive">Specifies whether child DataSet should be copied.</param>
         public void CopyValuesFrom(DataRow from, bool recursive = true)
         {
             from.VerifyNotNull(nameof(from));
@@ -357,6 +398,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Copies data values from other <see cref="DataRow"/>, for specified column mappings.
+        /// </summary>
+        /// <param name="from">The <see cref="DataRow"/> where data values will be copied from.</param>
+        /// <param name="columnMappings">The specified column mappings.</param>
         public void CopyValuesFrom(DataRow from, IReadOnlyList<ColumnMapping> columnMappings)
         {
             from.VerifyNotNull(nameof(from));
@@ -365,6 +411,10 @@ namespace DevZest.Data
                 columnMappings[i].CopyValue(from, this);
         }
 
+        /// <summary>
+        /// Moves this DataRow within current DataSet.
+        /// </summary>
+        /// <param name="offset">The offset to move this DataRow.</param>
         public void Move(int offset)
         {
             if (offset == 0)
@@ -448,6 +498,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Enters into edit mode.
+        /// </summary>
+        /// <returns></returns>
         public bool BeginEdit()
         {
             if (Model == null || Model.EditingRow != null)
@@ -457,6 +511,10 @@ namespace DevZest.Data
             return true;
         }
 
+        /// <summary>
+        /// Ends the edit mode and saves the changes.
+        /// </summary>
+        /// <returns><see langword="true" /> if ends edit successfully, otherwise <see langword="false" />.</returns>
         public bool EndEdit()
         {
             if (!IsEditing || IsAdding)
@@ -470,6 +528,10 @@ namespace DevZest.Data
             return true;
         }
 
+        /// <summary>
+        /// Cancels the edit mode.
+        /// </summary>
+        /// <returns><see langword="true" /> if edit mode cancelled successfully, otherwise <see langword="false" />.</returns>
         public bool CancelEdit()
         {
             if (Model == null || Model.EditingRow != this)
@@ -489,11 +551,17 @@ namespace DevZest.Data
         }
 
         private int _suspendValueChangedCount;
+        /// <summary>
+        /// Gets a value indicating whether value changed notification is suspended.
+        /// </summary>
         public bool IsValueChangedNotificationSuspended
         {
             get { return _suspendValueChangedCount > 0; }
         }
 
+        /// <summary>
+        /// Suspends value changed notification.
+        /// </summary>
         public void SuspendValueChangedNotification()
         {
             if (_pendingValueChangedColumns == null)
@@ -510,6 +578,9 @@ namespace DevZest.Data
             _suspendValueChangedCount++;
         }
 
+        /// <summary>
+        /// Resumes value changed notification.
+        /// </summary>
         public void ResumeValueChangedNotification()
         {
             if (_suspendValueChangedCount <= 0)
@@ -552,6 +623,9 @@ namespace DevZest.Data
                 DataSet.UpdateRevision();
         }
 
+        /// <summary>
+        /// Gets or sets a value to specify whether primary key should be sealed.
+        /// </summary>
         public bool IsPrimaryKeySealed { get; set; }
 
         private sealed class DataRowFilter<T>
@@ -576,6 +650,13 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Constructs a DataRow predicate.
+        /// </summary>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="ensureStatic"></param>
+        /// <returns></returns>
         public static Predicate<DataRow> Where<T>(Func<T, DataRow, bool> predicate, bool ensureStatic = true)
             where T : Model
         {
@@ -588,12 +669,26 @@ namespace DevZest.Data
             return new DataRowFilter<T>(predicate).ToPredicate();
         }
 
+        /// <summary>
+        /// Constructs column comparer to sort DataRow.
+        /// </summary>
+        /// <param name="column">The column to sort DataRow.</param>
+        /// <param name="direction">The sort direction.</param>
+        /// <returns>The column comparer.</returns>
         public static IColumnComparer OrderBy(Column column, SortDirection direction = SortDirection.Ascending)
         {
             VerifyOrderBy(column, nameof(column));
             return column.ToColumnComparer(direction);
         }
 
+        /// <summary>
+        /// Constructs column comparer to sort DataRow.
+        /// </summary>
+        /// <typeparam name="T">The data type of the column.</typeparam>
+        /// <param name="column">The column to sort DataRow.</param>
+        /// <param name="direction">The sort direction.</param>
+        /// <param name="valueComparer">The value comparer.</param>
+        /// <returns>The column comparer.</returns>
         public static IColumnComparer OrderBy<T>(Column<T> column, SortDirection direction = SortDirection.Ascending, IComparer<T> valueComparer = null)
         {
             VerifyOrderBy(column, nameof(column));
@@ -607,6 +702,12 @@ namespace DevZest.Data
                 throw new ArgumentException(DiagnosticMessages.DataRow_OrderByColumnMustBeSingleSourceModel, paramName);
         }
 
+        /// <summary>
+        /// Serialize this DataRow into JSON string.
+        /// </summary>
+        /// <param name="isPretty">Specifies whether serialized JSON string should be indented.</param>
+        /// <param name="customizer">The customizer which can customize the serialization.</param>
+        /// <returns></returns>
         public string ToJsonString(bool isPretty, IJsonCustomizer customizer = null)
         {
             return JsonWriter.Create(customizer).Write(this).ToString(isPretty);

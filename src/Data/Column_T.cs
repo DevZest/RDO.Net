@@ -124,6 +124,7 @@ namespace DevZest.Data
 
         private IValueManager _valueManager;
 
+        /// <inheritdoc />
         public sealed override bool IsPrimaryKey
         {
             get { return _valueManager == null ? GetIsPrimaryKey() : _valueManager.IsPrimaryKey; }
@@ -144,11 +145,13 @@ namespace DevZest.Data
         /// <value>The expression of this column.</value>
         public ColumnExpression<T> Expression { get; internal set; }
 
+        /// <inheritdoc />
         public sealed override ColumnExpression GetExpression()
         {
             return Expression;
         }
 
+        /// <inheritdoc />
         public sealed override IColumns BaseColumns
         {
             get { return IsExpression ? Expression.BaseColumns : this; }
@@ -303,23 +306,45 @@ namespace DevZest.Data
             return false;
         }
 
-        /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> ordinal.</summary>
+        /// <summary>
+        /// Gets or sets the value of this column from provided <see cref="DataRow"/> ordinal.
+        /// </summary>
         /// <param name="ordinal">The provided <see cref="DataRow"/> ordinal.</param>
         /// <returns>The value of this column from provided <see cref="DataRow"/> ordinal.</returns>
         /// <exception cref="ArgumentOutOfRangeException">The <see cref="DataRow"/> ordinal is out of range.</exception>
         /// <exception cref="InvalidOperationException">This column is readonly when setting the value.</exception>
-        /// <seealso cref="IsReadOnly(int)"/>
+        /// <seealso cref="IsReadOnly(DataRow)"/>
         public T this[int ordinal]
         {
             get { return this[null, ordinal]; }
             set { this[null, ordinal] = value; }
         }
 
-        public T this[int ordinal, bool beforeEdit]
+        /// <summary>
+        /// Gets or sets the value of this column from provided <see cref="DataRow"/> ordinal for specified editing mode.
+        /// </summary>
+        /// <param name="ordinal">The provided <see cref="DataRow"/> ordinal.</param>
+        /// <param name="beforeEdit">Specifies the editing mode.</param>
+        /// <returns>The value of this column from provided <see cref="DataRow"/> ordinal for specified editing mode.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="DataRow"/> ordinal is out of range.</exception>
+        /// <exception cref="InvalidOperationException">This column is readonly when setting the value.</exception>
+        /// <seealso cref="IsReadOnly(DataRow)"/>
+        public T this[int ordinal, bool beforeEdit = false]
         {
             get { return this[null, ordinal, beforeEdit]; }
+            set { this[null, ordinal, beforeEdit] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the value of this column from provided parent <see cref="DataRow"/> and its index for specified editing mode.
+        /// </summary>
+        /// <param name="parentDataRow">The parent <see cref="DataRow"/>. <see langword="null" /> if root DataSet.</param>
+        /// <param name="index">The index of parent <see cref="DataRow"/>; Ordinal of root DataSet if <see langword="null" />.</param>
+        /// <param name="beforeEdit">Specifies the editing mode.</param>
+        /// <returns>The value of this column from provided parent <see cref="DataRow"/> and its index for specified editing mode.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="DataRow"/> ordinal is out of range.</exception>
+        /// <exception cref="InvalidOperationException">This column is readonly when setting the value.</exception>
+        /// <seealso cref="IsReadOnly(DataRow)"/>
         public T this[DataRow parentDataRow, int index, bool beforeEdit = false]
         {
             get
@@ -401,6 +426,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc/>
         public sealed override DbExpression DbComputedExpression
         {
             get { return IsDbComputed ? Expression.GetDbExpression() : null; }
@@ -435,6 +461,7 @@ namespace DevZest.Data
         /// <returns>The column of constant expression.</returns>
         protected internal abstract Column<T> CreateConst(T value);
 
+        /// <inheritdoc/>
         public override bool IsDeserializable
         {
             get { return _valueManager == null ? false : _valueManager.IsDeserializable; }
@@ -458,13 +485,15 @@ namespace DevZest.Data
 
         /// <summary>Defines the default constant value for this column.</summary>
         /// <param name="value">The default constant value.</param>
+        /// <param name="name">The name of the default constraint.</param>
+        /// <param name="description">The description of the default constraint.</param>
         /// <remarks>To define default expression value, call <see cref="ColumnExtensions.SetDefault{T}(T, T, string, string)"/> method.</remarks>
         public void SetDefaultValue(T value, string name, string description)
         {
             AddOrUpdate(new ColumnDefault<T>(CreateConst(value), name, description));
         }
 
-        public sealed override void SetDefaultObject(object defaultValue, string name, string description)
+        internal sealed override void PerformSetDefaultValue(object defaultValue, string name, string description)
         {
             SetDefaultValue((T)defaultValue, name, description);
         }
@@ -500,6 +529,9 @@ namespace DevZest.Data
         /// <returns>The deserialized value.</returns>
         protected internal abstract T DeserializeValue(JsonValue value);
 
+        /// <summary>
+        /// Gets the default value of this column.
+        /// </summary>
         public virtual T DefaultValue
         {
             get
@@ -509,6 +541,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc />
         public sealed override object GetDefaultValue()
         {
             return DefaultValue;
@@ -560,6 +593,8 @@ namespace DevZest.Data
 
         /// <summary>Defines the computation expression for this column.</summary>
         /// <param name="computation">The computation expression.</param>
+        /// <param name="isConcrete">Specifies whether this column stores concrete computed data values.</param>
+        /// <param name="isDbComputed">Specifies wheter the computation valid on database.</param>
         public void ComputedAs(Column<T> computation, bool isConcrete = true, bool isDbComputed = true)
         {
             computation.VerifyNotNull(nameof(computation));
@@ -585,6 +620,7 @@ namespace DevZest.Data
             _isConcrete = value;
         }
 
+        /// <inheritdoc />
         public sealed override bool IsConcrete
         {
             get { return Expression == null ? true : _isConcrete == true; }
@@ -614,26 +650,36 @@ namespace DevZest.Data
         }
 
         private bool _isDbComputed;
+        /// <inheritdoc />
         public sealed override bool IsDbComputed
         {
             get { return _isDbComputed; }
         }
 
+        /// <inheritdoc />
         public sealed override ColumnMapping MapFrom(Column column)
         {
             return ColumnMapping.Map((Column<T>)column, this);
         }
 
+        /// <inheritdoc />
         public sealed override object GetValue(DataRow dataRow, bool beforeEdit = false)
         {
             return this[dataRow, beforeEdit];
         }
 
+        /// <inheritdoc />
         public sealed override void SetValue(DataRow dataRow, object value, bool beforeEdit = false)
         {
             this[dataRow, beforeEdit] = (T)value;
         }
 
+        /// <summary>
+        /// Determines wheter two values are equal
+        /// </summary>
+        /// <param name="x">The value.</param>
+        /// <param name="y">The other value.</param>
+        /// <returns><see langword="true" /> if two values are equal, otherwise <see langword="false" />.</returns>
         public virtual bool AreEqual(T x, T y)
         {
             return EqualityComparer<T>.Default.Equals(x, y);
@@ -658,11 +704,20 @@ namespace DevZest.Data
                 UpdateValue(dataRow, _editingValue);
         }
 
+        /// <inheritdoc />
         public sealed override bool HasDefaultComparer
         {
             get { return Comparer<T>.Default != null; }
         }
 
+        /// <summary>
+        /// Compares value for two <see cref="DataRow"/> for specified sorting direction and comparer.
+        /// </summary>
+        /// <param name="x">The DataRow to be compared.</param>
+        /// <param name="y">The other DataRow to compare.</param>
+        /// <param name="direction">The specified sorting direction.</param>
+        /// <param name="comparer">The custom comparer. If <see langword="null" />, default comparer will be used.</param>
+        /// <returns>0 if two values are equal, 1 if first value is greater than second, otherwise -1.</returns>
         public int Compare(DataRow x, DataRow y, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
         {
             comparer = Verify(comparer, nameof(comparer));
@@ -683,6 +738,7 @@ namespace DevZest.Data
             return comparer;
         }
 
+        /// <inheritdoc />
         public sealed override int Compare(DataRow x, DataRow y, SortDirection direction)
         {
             return Compare(x, y, direction, null);
@@ -708,6 +764,10 @@ namespace DevZest.Data
         }
 
         private IComparer<T> _valueComparer;
+        /// <summary>
+        /// Gets or sets the value comparer.
+        /// </summary>
+        /// <remarks>If not set, the default comparer will be returned.</remarks>
         public IComparer<T> ValueComparer
         {
             get { return _valueComparer ?? Comparer<T>.Default; }
@@ -719,6 +779,9 @@ namespace DevZest.Data
         }
 
         private IEqualityComparer<T> _equalityComparer;
+        /// <summary>
+        /// Gets or sets the equality comparer.
+        /// </summary>
         public IEqualityComparer<T> EqualityComparer
         {
             get { return _equalityComparer ?? EqualityComparer<T>.Default; }
@@ -729,6 +792,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc />
         public sealed override bool HasValueComparer
         {
             get { return ValueComparer != null; }
@@ -760,11 +824,13 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <inheritdoc />
         public sealed override int GetHashCode(DataRow dataRow)
         {
             return EqualityComparer.GetHashCode(this[dataRow]);
         }
 
+        /// <inheritdoc />
         public sealed override bool Equals(DataRow dataRow, Column otherColumn, DataRow otherDataRow)
         {
             if (!(otherColumn is Column<T> column))

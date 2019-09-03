@@ -120,7 +120,7 @@ namespace DevZest.Data.Annotations
         /// <inheritdoc />
         protected override void Wireup(Column column)
         {
-            column.SetDefaultObject(TypeDescriptor.GetConverter(column.DataType).ConvertFrom(_defaultValue), Name, Description);
+            column.SetDefaultValue(TypeDescriptor.GetConverter(column.DataType).ConvertFrom(_defaultValue), Name, Description);
         }
     }
 }

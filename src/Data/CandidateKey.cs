@@ -4,8 +4,15 @@ using System.Collections.ObjectModel;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents the candiate key of model.
+    /// </summary>
     public abstract class CandidateKey : ReadOnlyCollection<ColumnSort>, IReadOnlyList<Column>
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="CandidateKey"/>.
+        /// </summary>
+        /// <param name="columns">Consisted columns of this candicate key.</param>
         protected CandidateKey(params ColumnSort[] columns)
             : base(columns)
         {
@@ -34,6 +41,11 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Determines whether the specified column is part of this candidate key.
+        /// </summary>
+        /// <param name="column">The specified column.</param>
+        /// <returns><see langword="true" /> if the specified column is part of this candidate key, otherwise <see langword="false"/>.</returns>
         public bool Contains(Column column)
         {
             for (int i = 0; i < Count; i++)
@@ -50,11 +62,18 @@ namespace DevZest.Data
             get { return _parentModel; }
         }
 
+        /// <inheritdoc />
         Column IReadOnlyList<Column>.this[int index]
         {
             get { return this[index].Column; }
         }
 
+        /// <summary>
+        /// Join with target candidate key.
+        /// </summary>
+        /// <param name="target">The target candidate key.</param>
+        /// <returns>Column mappings between this candidate key and the target candidate key.</returns>
+        /// <remarks>You must ensure these two canidate key objects have identical columns, otherwise an exception will be thrown.</remarks>
         public IReadOnlyList<ColumnMapping> UnsafeJoin(CandidateKey target)
         {
             target.VerifyNotNull(nameof(target));
@@ -74,6 +93,7 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <inheritdoc />
         IEnumerator<Column> IEnumerable<Column>.GetEnumerator()
         {
             foreach (var columnSort in this)
