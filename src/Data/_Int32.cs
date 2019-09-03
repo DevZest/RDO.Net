@@ -66,7 +66,9 @@ namespace DevZest.Data
             return value.Type == JsonValueType.Null ? null : new Int32?(Convert.ToInt32(value.Text));
         }
 
-        /// <inheritdoc cref="P:DevZest.Data._Binary.Item(DevZest.Data.DbReader)"/>
+        /// <summary>Gets the value of this column from <see cref="DbReader"/>'s current row.</summary>
+        /// <param name="reader">The <see cref="DbReader"/> object.</param>
+        /// <returns>The value of this column from <see cref="DbReader"/>'s current row.</returns>
         public Int32? this[DbReader reader]
         {
             get
@@ -92,19 +94,26 @@ namespace DevZest.Data
             return !value.HasValue;
         }
 
-        /// <inheritdoc cref="_Binary.Param(Binary, _Binary)"/>
+        /// <summary>Creates a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <param name="sourceColumn">The value which will be passed to <see cref="DbParamExpression.SourceColumn"/>.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static _Int32 Param(Int32? x, _Int32 sourceColumn = null)
         {
             return new ParamExpression<Int32?>(x, sourceColumn).MakeColumn<_Int32>();
         }
 
-        /// <inheritdoc cref="_Binary.Const(Binary)"/>
+        /// <summary>Creates a column of constant expression.</summary>
+        /// <param name="x">The value of the constant expression.</param>
+        /// <returns>The column of constant expression.</returns>
         public static _Int32 Const(Int32? x)
         {
             return new ConstantExpression<Int32?>(x).MakeColumn<_Int32>();
         }
 
-        /// <inheritdoc cref="M:DevZest.Data._Binary.op_Implicit(DevZest.Data.Binary)~DevZest.Data._Binary"/>
+        /// <summary>Implicitly converts the supplied value to a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static implicit operator _Int32(Int32? x)
         {
             return Param(x);

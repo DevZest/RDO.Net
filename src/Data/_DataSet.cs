@@ -45,6 +45,7 @@ namespace DevZest.Data
             this[rowOrdinal] = (DataSet<T>)value;
         }
 
+        /// <inheritdoc />
         protected internal override Column<DataSet<T>> CreateConst(DataSet<T> value)
         {
             return Const(value);
@@ -60,13 +61,17 @@ namespace DevZest.Data
             return value == null;
         }
 
-        /// <inheritdoc cref="_Binary.Const(Binary)"/>
+        /// <summary>Creates a column of constant expression.</summary>
+        /// <param name="x">The value of the constant expression.</param>
+        /// <returns>The column of constant expression.</returns>
         public static _DataSet<T> Const(DataSet<T> x)
         {
             return new ConstantExpression<DataSet<T>>(x).MakeColumn<_DataSet<T>>();
         }
 
-        /// <inheritdoc cref="M:DevZest.Data._Binary.op_Implicit(DevZest.Data.Binary)~DevZest.Data._Binary"/>
+        /// <summary>Implicitly converts the supplied value to a column of const expression.</summary>
+        /// <param name="x">The value of the const expression.</param>
+        /// <returns>The column of const expression.</returns>
         public static implicit operator _DataSet<T>(DataSet<T> x)
         {
             return Const(x);

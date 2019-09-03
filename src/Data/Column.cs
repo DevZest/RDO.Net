@@ -82,7 +82,6 @@ namespace DevZest.Data
 
         private string _dbColumnName;
         /// <summary>Gets or sets the column name in database.</summary>
-        /// <inheritdoc cref="ModelMember.VerifyDesignMode" select="exception"/>
         public string DbColumnName
         {
             get { return _dbColumnName ?? Name; }

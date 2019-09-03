@@ -98,7 +98,6 @@ namespace DevZest.Data
         /// <summary>Gets the value of this column from <see cref="DbReader"/>'s current row.</summary>
         /// <param name="reader">The <see cref="DbReader"/> object.</param>
         /// <returns>The value of this column from <see cref="DbReader"/>'s current row.</returns>
-        /// <inheritdoc cref="Column.VerifyDbReader(DbReader)" select="exception"/>
         public Binary this[DbReader reader]
         {
             get

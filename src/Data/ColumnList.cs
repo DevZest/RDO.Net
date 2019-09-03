@@ -22,7 +22,7 @@ namespace DevZest.Data
             get { return GetColumn(index); }
         }
 
-        /// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>
+        /// <inheritdoc />
         public IEnumerator<Column> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
@@ -176,12 +176,13 @@ namespace DevZest.Data
             return string.Format("{0}_{1}", Name, _columns.Count);
         }
 
-        /// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>
+        /// <inheritdoc />
         public new IEnumerator<T> GetEnumerator()
         {
             return _columns.GetEnumerator();
         }
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _columns.GetEnumerator();
