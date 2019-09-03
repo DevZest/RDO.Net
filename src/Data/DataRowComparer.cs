@@ -6,6 +6,9 @@ using System.Runtime.CompilerServices;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Provides extension methods for DataRow comparer.
+    /// </summary>
     public static class DataRowComparer
     {
         internal static IColumnComparer Create<T>(Column<T> column, SortDirection direction, IComparer<T> comparer)
@@ -31,6 +34,12 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Adds sorting comparer to exiting DataRow comparer.
+        /// </summary>
+        /// <param name="orderBy">The existing DataRow comparer.</param>
+        /// <param name="thenBy">The sorting comparer to add.</param>
+        /// <returns>The result DataRow comparer.</returns>
         public static IComparer<DataRow> ThenBy(this IComparer<DataRow> orderBy, IComparer<DataRow> thenBy)
         {
             orderBy.VerifyNotNull(nameof(orderBy));
@@ -38,6 +47,12 @@ namespace DevZest.Data
             return new CompositeComparer(orderBy, thenBy);
         }
 
+        /// <summary>
+        /// Adds sorting comparer to exiting DataRow comparer.
+        /// </summary>
+        /// <param name="orderBy">The existing DataRow comparer.</param>
+        /// <param name="thenBy">The sorting comparer to add.</param>
+        /// <returns>The result DataRow comparer.</returns>
         public static IDataRowComparer ThenBy(this IDataRowComparer orderBy, IDataRowComparer thenBy)
         {
             orderBy.VerifyNotNull(nameof(orderBy));
@@ -47,6 +62,13 @@ namespace DevZest.Data
             return ComparerBase.Create(orderBy, thenBy);
         }
 
+        /// <summary>
+        /// Adds additional sorting column to existing DataRow comparer.
+        /// </summary>
+        /// <param name="orderBy">The existing DataRow comparer.</param>
+        /// <param name="column">The additional sorting column.</param>
+        /// <param name="direction">The sorting direction.</param>
+        /// <returns>The result DataRow comparer.</returns>
         public static IDataRowComparer ThenBy(this IDataRowComparer orderBy, Column column, SortDirection direction = SortDirection.Ascending)
         {
             orderBy.VerifyNotNull(nameof(orderBy));
@@ -56,6 +78,15 @@ namespace DevZest.Data
             return ComparerBase.Create(orderBy, thenBy);
         }
 
+        /// <summary>
+        /// Adds additional sorting column to existing DataRow comparer.
+        /// </summary>
+        /// <typeparam name="T">Data type of column.</typeparam>
+        /// <param name="orderBy">The existing DataRow comparer.</param>
+        /// <param name="column">The additional sorting column.</param>
+        /// <param name="direction">The sorting direction.</param>
+        /// <param name="comparer">Data value comparer.</param>
+        /// <returns>The result DataRow comparer.</returns>
         public static IDataRowComparer ThenBy<T>(this IDataRowComparer orderBy, Column<T> column, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
         {
             orderBy.VerifyNotNull(nameof(orderBy));
