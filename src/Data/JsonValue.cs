@@ -1,7 +1,5 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Globalization;
-using System.Text;
 
 namespace DevZest.Data
 {
@@ -125,15 +123,25 @@ namespace DevZest.Data
             Type = type;
         }
 
+        /// <summary>
+        /// Gets the text of this value.
+        /// </summary>
         public readonly string Text;
 
+        /// <summary>
+        /// Gets the type of this value.
+        /// </summary>
         public readonly JsonValueType Type;
 
+        /// <summary>
+        /// Gets a value indicates whether this JSON value is default.
+        /// </summary>
         public bool IsDefault
         {
             get { return Type == 0 && Text == null; }
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return Text;

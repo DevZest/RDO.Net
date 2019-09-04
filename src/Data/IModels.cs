@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents a set of models.
+    /// </summary>
     public interface IModels : IReadOnlyCollection<Model>
     {
         /// <summary>Gets a value indicates whether this set is sealed.</summary>
