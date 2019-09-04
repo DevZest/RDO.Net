@@ -5,6 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Contains static methods to initialize <see cref="IDataValidationErrors"/> object.
+    /// </summary>
     public static class DataValidationErrors
     {
         private class EmptyGroup : IDataValidationErrors
@@ -121,6 +124,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets an empty <see cref="IDataValidationErrors"/> object.
+        /// </summary>
         public static IDataValidationErrors Empty
         {
             get { return EmptyGroup.Singleton; }
@@ -132,6 +138,11 @@ namespace DevZest.Data
             return new ListGroup(value1, value2);
         }
 
+        /// <summary>
+        /// Creates a <see cref="IDataValidationErrors"/> object.
+        /// </summary>
+        /// <param name="values">Values contained by the result object.</param>
+        /// <returns>The created result object.</returns>
         public static IDataValidationErrors New(params DataValidationError[] values)
         {
             values.VerifyNotNull(nameof(values));

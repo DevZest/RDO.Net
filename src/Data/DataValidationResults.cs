@@ -6,6 +6,9 @@ using System.Collections;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Contains static methods to handle <see cref="IDataValidationResults"/> objects.
+    /// </summary>
     public static class DataValidationResults
     {
         private sealed class EmptyResults : IDataValidationResults
@@ -132,11 +135,21 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets an empty <see cref="IDataValidationResults"/> dictionary.
+        /// </summary>
         public static IDataValidationResults Empty
         {
             get { return EmptyResults.Singleton; }
         }
 
+        /// <summary>
+        /// Deserializes JSON string into <see cref="IDataValidationResults"/> object.
+        /// </summary>
+        /// <param name="dataSet">The DataSet which contains data for validation.</param>
+        /// <param name="json">The JSON string.</param>
+        /// <param name="customizer">The customizer for deserialization.</param>
+        /// <returns>The deserialized object.</returns>
         public static IDataValidationResults ParseJson(DataSet dataSet, string json, IJsonCustomizer customizer = null)
         {
             var jsonReader = JsonReader.Create(json, customizer);
@@ -145,6 +158,13 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Serializes <see cref="IDataValidationResults"/> dictionary into JSON string.
+        /// </summary>
+        /// <param name="validationResults">The <see cref="IDataValidationResults"/> dictionary.</param>
+        /// <param name="isPretty">Determines whether serialized JSON string should be indented.</param>
+        /// <param name="customizer">The customizer for JSON serialization.</param>
+        /// <returns>The serialized JSON string.</returns>
         public static string ToJsonString(this IDataValidationResults validationResults, bool isPretty, IJsonCustomizer customizer = null)
         {
             return JsonWriter.Create(customizer).Write(validationResults).ToString(isPretty);

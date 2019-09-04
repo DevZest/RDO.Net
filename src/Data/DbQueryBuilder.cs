@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Builds database query which can be translated to native SQL.
+    /// </summary>
     public partial class DbQueryBuilder
     {
         internal DbQueryBuilder(Model model)
@@ -48,8 +51,18 @@ namespace DevZest.Data
         SubQueryEliminator _subQueryEliminator;
         IAutoColumnSelector _autoColumnSelector;
 
+        /// <summary>
+        /// Gets the SQL FROM clause.
+        /// </summary>
         public DbFromClause FromClause { get; private set; }
 
+        /// <summary>
+        /// Constructs SQL FROM clause.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the DbSet.</typeparam>
+        /// <param name="dbSet">The first DbSet in FROM clause.</param>
+        /// <param name="_">The entity object for further SQL construction.</param>
+        /// <returns>This query builder for fluent coding.</returns>
         public DbQueryBuilder From<T>(DbSet<T> dbSet, out T _)
             where T : class, IEntity, new()
         {
@@ -84,11 +97,20 @@ namespace DevZest.Data
                 _autoColumnSelector = _autoColumnSelector.Merge(model.Columns);
         }
 
-        public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
+        /// <summary>
+        /// Constructs SQL INNER JOIN.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
+        /// <param name="dbSet">The target DbSet.</param>
+        /// <param name="left">Left side key of the join.</param>
+        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <returns>This query builder for fluent coding.</returns>
+        public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T _)
             where T : class, IEntity<TKey>, new()
             where TKey : CandidateKey
         {
-            return InnerJoin(dbSet, left, GetPrimaryKey, out model);
+            return InnerJoin(dbSet, left, GetPrimaryKey, out _);
         }
 
         private static T GetPrimaryKey<T>(IEntity<T> _)
@@ -97,6 +119,16 @@ namespace DevZest.Data
             return _.Model.PrimaryKey;
         }
 
+        /// <summary>
+        /// Constructs SQL INNER JOIN.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
+        /// <param name="dbSet">The target DbSet.</param>
+        /// <param name="left">Left side key of the join.</param>
+        /// <param name="right">The delegate to get right side key of the join.</param>
+        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <returns>This query builder for fluent coding.</returns>
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
             where T : class, IEntity, new()
             where TKey : CandidateKey
@@ -105,35 +137,73 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
+        /// <summary>
+        /// Constructs SQL LEFT JOIN.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
+        /// <param name="dbSet">The target DbSet.</param>
+        /// <param name="left">Left side key of the join.</param>
+        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <returns>This query builder for fluent coding.</returns>
+        public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T _)
             where T : class, IEntity<TKey>, new()
             where TKey : CandidateKey
         {
-            return LeftJoin(dbSet, left, GetPrimaryKey, out model);
+            return LeftJoin(dbSet, left, GetPrimaryKey, out _);
         }
 
 
-        public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
+        /// <summary>
+        /// Constructs SQL LEFT JOIN.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
+        /// <param name="dbSet">The target DbSet.</param>
+        /// <param name="left">Left side key of the join.</param>
+        /// <param name="right">The delegate to get right side key of the join.</param>
+        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <returns>This query builder for fluent coding.</returns>
+        public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
             where T : class, IEntity, new()
             where TKey : CandidateKey
         {
-            Join(dbSet, left, right(dbSet._), DbJoinKind.LeftJoin, out model);
+            Join(dbSet, left, right(dbSet._), DbJoinKind.LeftJoin, out _);
             return this;
         }
 
-        public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T model)
+        /// <summary>
+        /// Constructs SQL RIGHT JOIN.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
+        /// <param name="dbSet">The target DbSet.</param>
+        /// <param name="left">Left side key of the join.</param>
+        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <returns>This query builder for fluent coding.</returns>
+        public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T _)
             where T : class, IEntity<TKey>, new()
             where TKey : CandidateKey
         {
-            return RightJoin(dbSet, left, GetPrimaryKey, out model);
+            return RightJoin(dbSet, left, GetPrimaryKey, out _);
         }
 
 
-        public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
+        /// <summary>
+        /// Constructs SQL RIGHT JOIN.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
+        /// <param name="dbSet">The target DbSet.</param>
+        /// <param name="left">Left side key of the join.</param>
+        /// <param name="right">The delegate to get right side key of the join.</param>
+        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <returns>This query builder for fluent coding.</returns>
+        public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
             where T : class, IEntity, new()
             where TKey : CandidateKey
         {
-            Join(dbSet, left, right(dbSet._), DbJoinKind.RightJoin, out model);
+            Join(dbSet, left, right(dbSet._), DbJoinKind.RightJoin, out _);
             return this;
         }
 
@@ -203,11 +273,18 @@ namespace DevZest.Data
             return result ?? relationship;
         }
 
-        public DbQueryBuilder CrossJoin<T>(DbSet<T> dbSet, out T model)
+        /// <summary>
+        /// Constructs SQL CROSS JOIN.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <param name="dbSet">The target DbSet.</param>
+        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <returns>This query builder for fluent coding.</returns>
+        public DbQueryBuilder CrossJoin<T>(DbSet<T> dbSet, out T _)
             where T : class, IEntity, new()
         {
             dbSet.VerifyNotNull(nameof(dbSet));
-            Join(dbSet, DbJoinKind.CrossJoin, null, out model);
+            Join(dbSet, DbJoinKind.CrossJoin, null, out _);
             return this;
         }
 
@@ -237,11 +314,18 @@ namespace DevZest.Data
 
         HashSet<Column> _targetColumns = new HashSet<Column>();
         List<ColumnMapping> _selectList = new List<ColumnMapping>();
+        /// <summary>
+        /// Gets a list of selected column mappings.
+        /// </summary>
         public List<ColumnMapping> SelectList
         {
             get { return _selectList; }
         }
 
+        /// <summary>
+        /// Constructs SQL SELECT by automatically matching columns.
+        /// </summary>
+        /// <returns>This query builder for fluent coding.</returns>
         public DbQueryBuilder AutoSelect()
         {
             if (_autoColumnSelector == null)
@@ -258,6 +342,12 @@ namespace DevZest.Data
             return this;
         }
 
+        /// <summary>
+        /// Constructs SQL SELECT by automatically matching columns between specified source model and target projection.
+        /// </summary>
+        /// <param name="from">The source model.</param>
+        /// <param name="to">The target projection.</param>
+        /// <returns>This query builder for fluent coding.</returns>
         public DbQueryBuilder AutoSelect(Model from, Projection to)
         {
             to.VerifyNotNull(nameof(to));
@@ -282,6 +372,13 @@ namespace DevZest.Data
             return this;
         }
 
+        /// <summary>
+        /// Constructs SQL SELECT by matching between specified source column and target column.
+        /// </summary>
+        /// <typeparam name="T">Type of the columns.</typeparam>
+        /// <param name="from">The source column.</param>
+        /// <param name="to">The target column.</param>
+        /// <returns>This query builder for fluent coding.</returns>
         public DbQueryBuilder Select<T>(T from, T to)
             where T : Column, new()
         {
@@ -291,10 +388,18 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder Select<T>(T sourceColumn, Adhoc adhoc, string name = null)
+        /// <summary>
+        /// Constructs SQL SELECT by matching between specified source column and target new adhoc column.
+        /// </summary>
+        /// <typeparam name="T">Type of lthe column.</typeparam>
+        /// <param name="from">The source column.</param>
+        /// <param name="to">The target new adhoc model.</param>
+        /// <param name="name">Name to create the adhoc column.</param>
+        /// <returns>This query builder for fluent coding.</returns>
+        public DbQueryBuilder Select<T>(T from, Adhoc to, string name = null)
             where T : Column, new()
         {
-            return Select(sourceColumn, adhoc.AddColumn(sourceColumn, false, c => c.DbColumnName = string.IsNullOrEmpty(name) ? sourceColumn.DbColumnName : name));
+            return Select(from, to.AddColumn(from, false, c => c.DbColumnName = string.IsNullOrEmpty(name) ? from.DbColumnName : name));
         }
 
         private void VerifyTargetColumn(Column target, string paramName)
@@ -337,8 +442,16 @@ namespace DevZest.Data
 
         #region WHERE
 
+        /// <summary>
+        /// Gets the SQL WHERE expression.
+        /// </summary>
         public DbExpression WhereExpression { get; private set; }
 
+        /// <summary>
+        /// Constructs SQL WHERE.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <returns>This query builder for fluent coding.</returns>
         public DbQueryBuilder Where(_Boolean condition)
         {
             condition.VerifyNotNull(nameof(condition));
@@ -392,17 +505,38 @@ namespace DevZest.Data
 
         #region ORDER BY
 
+        /// <summary>
+        /// Gets the SQL ORDER BY list.
+        /// </summary>
         public IReadOnlyList<DbExpressionSort> OrderByList { get; private set; }
 
+        /// <summary>
+        /// Gets a value specifies how many rows to skip within the query result.
+        /// </summary>
         public int Offset { get; private set; }
 
+        /// <summary>
+        /// Gets a value specifies how many rows to return in the query result.
+        /// </summary>
         public int Fetch { get; private set; }
 
+        /// <summary>
+        /// Constructs SQL ORDER BY.
+        /// </summary>
+        /// <param name="orderByList">The order by list.</param>
+        /// <returns>This query builder for fluent coding.</returns>
         public DbQueryBuilder OrderBy(params ColumnSort[] orderByList)
         {
             return OrderBy(-1, -1, orderByList);
         }
 
+        /// <summary>
+        /// Constructs SQL ORDER BY with specified offset and fetch.
+        /// </summary>
+        /// <param name="offset">Specifies how many rows to skip within the query result.</param>
+        /// <param name="fetch">Specifies how many rows to skip within the query result.</param>
+        /// <param name="orderByList">The order by list.</param>
+        /// <returns>This query builder for fluent coding.</returns>
         public DbQueryBuilder OrderBy(int offset, int fetch, params ColumnSort[] orderByList)
         {
             orderByList.VerifyNotNull(nameof(orderByList));

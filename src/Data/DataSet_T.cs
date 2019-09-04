@@ -170,6 +170,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Create a new DataSet.
+        /// </summary>
+        /// <param name="initializer">The initializer.</param>
+        /// <returns>The newly created DataSet.</returns>
         public static DataSet<T> Create(Action<T> initializer = null)
         {
             var modelRef = new T();
@@ -182,6 +187,10 @@ namespace DevZest.Data
             return new BaseDataSet(modelRef);
         }
 
+        /// <summary>
+        /// Clones this DataSet.
+        /// </summary>
+        /// <returns>The cloned new DataSet.</returns>
         public new DataSet<T> Clone()
         {
             var modelRef = _.MakeCopy(false);
@@ -199,18 +208,34 @@ namespace DevZest.Data
             _ = model;
         }
 
+        /// <summary>
+        /// Gets the entity associated with this DataSet.
+        /// </summary>
         public T _ { get; private set; }
 
+        /// <inheritdoc />
         public sealed override Model Model
         {
             get { return _.Model; }
         }
 
+        /// <summary>
+        /// Deserializes from JSON string.
+        /// </summary>
+        /// <param name="json">The JSON string.</param>
+        /// <returns>The deserialized DataSet.</returns>
         public static DataSet<T> ParseJson(string json)
         {
             return ParseJson(null, json);
         }
 
+        /// <summary>
+        /// Deserializes from JSON string.
+        /// </summary>
+        /// <param name="initializer">The initializer.</param>
+        /// <param name="json">The JSON string.</param>
+        /// <param name="customizer">The customizer.</param>
+        /// <returns></returns>
         public static DataSet<T> ParseJson(Action<T> initializer, string json, IJsonCustomizer customizer = null)
         {
             json.VerifyNotEmpty(nameof(json));
@@ -228,7 +253,17 @@ namespace DevZest.Data
             return dbSession.PerformCreateQuery(childModel, queryStatement);
         }
 
-        public async Task<DataSet<TChild>> FillAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer, CancellationToken cancellationToken)
+        /// <summary>
+        /// Fills child DataSet from source DbSet.
+        /// </summary>
+        /// <typeparam name="TChild">Model type of child DataSet.</typeparam>
+        /// <param name="dataRowOrdinal">The ordinal of parent <see cref="DataRow"/>.</param>
+        /// <param name="getChildModel">The delegate to return child model.</param>
+        /// <param name="sourceData">The source Data.</param>
+        /// <param name="initializer">The initializer.</param>
+        /// <param name="cancellationToken">Async operation cancellation token.</param>
+        /// <returns>The child DataSet.</returns>
+        public async Task<DataSet<TChild>> FillChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
             var dataRow = this[dataRowOrdinal];
@@ -242,24 +277,56 @@ namespace DevZest.Data
             return childDataSet;
         }
 
+        /// <summary>
+        /// Fills child DataSet from source DbSet.
+        /// </summary>
+        /// <typeparam name="TChild">Model type of child DataSet.</typeparam>
+        /// <param name="dataRowOrdinal">The ordinal of parent <see cref="DataRow"/>.</param>
+        /// <param name="getChildModel">The delegate to return child model.</param>
+        /// <param name="sourceData">The source Data.</param>
+        /// <param name="initializer">The initializer.</param>
+        /// <returns>The child DataSet.</returns>
         public Task<DataSet<TChild>> FillChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer = null)
             where TChild : Model, new()
         {
-            return FillAsync(dataRowOrdinal, getChildModel, sourceData, initializer, CancellationToken.None);
+            return FillChildAsync(dataRowOrdinal, getChildModel, sourceData, initializer, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Fills child DataSet from source DbSet.
+        /// </summary>
+        /// <typeparam name="TChild">Model type of child DataSet.</typeparam>
+        /// <param name="dataRowOrdinal">The ordinal of parent <see cref="DataRow"/>.</param>
+        /// <param name="getChildModel">The delegate to return child model.</param>
+        /// <param name="sourceData">The source Data.</param>
+        /// <param name="cancellationToken">Async operation cancellation token.</param>
+        /// <returns>The child DataSet.</returns>
         public Task<DataSet<TChild>> FillChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
-            return FillAsync(dataRowOrdinal, getChildModel, sourceData, null, cancellationToken);
+            return FillChildAsync(dataRowOrdinal, getChildModel, sourceData, null, cancellationToken);
         }
 
+        /// <summary>
+        /// Gets the child DataSet.
+        /// </summary>
+        /// <typeparam name="TChild">Model type of child DataSet.</typeparam>
+        /// <param name="getChildModel">The delegate to return child model.</param>
+        /// <param name="ordinal">The ordinal of parent DataRow.</param>
+        /// <returns>The child DataSet.</returns>
         public DataSet<TChild> GetChild<TChild>(Func<T, TChild> getChildModel, int ordinal)
             where TChild : Model, new()
         {
             return GetChild(getChildModel, this[ordinal]);
         }
 
+        /// <summary>
+        /// Gets the child DataSet.
+        /// </summary>
+        /// <typeparam name="TChild">Model type of child DataSet.</typeparam>
+        /// <param name="getChildModel">The delegate to return child model.</param>
+        /// <param name="dataRow">The parent DataRow.</param>
+        /// <returns>The child DataSet.</returns>
         public DataSet<TChild> GetChild<TChild>(Func<T, TChild> getChildModel, DataRow dataRow = null)
             where TChild : Model, new()
         {
@@ -277,6 +344,12 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Inserts DataRow at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <param name="updateAction">The delegate to initialize the DataRow.</param>
+        /// <returns>The inserted DataRow.</returns>
         public DataRow Insert(int index, Action<T, DataRow> updateAction)
         {
             var result = new DataRow();
@@ -284,28 +357,52 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Adds DataRow into this DataSet.
+        /// </summary>
+        /// <param name="updateAction">The delegate to initialize the DataRow.</param>
+        /// <returns></returns>
         public DataRow AddRow(Action<T, DataRow> updateAction = null)
         {
             return Insert(Count, updateAction);
         }
 
+        /// <summary>
+        /// Ensures this DataSet is initialized.
+        /// </summary>
+        /// <returns>This DataSet for fluent coding.</returns>
+        /// <remarks>Normally DataSet will be initialized implicitly when first DataRow is added.
+        /// You can call this method explicitly when necessary.</remarks>
         public DataSet<T> EnsureInitialized()
         {
             Model.EnsureInitialized();
             return this;
         }
 
+        /// <summary>
+        /// Filters this DataSet for JSON serialization.
+        /// </summary>
+        /// <param name="filter">The JSON filter.</param>
+        /// <returns>The JSON view.</returns>
         public JsonView<T> Filter(JsonFilter filter)
         {
             filter.VerifyNotNull(nameof(filter));
             return new JsonView<T>(_, filter);
         }
 
+        /// <summary>
+        /// Filters this DataSet for JSON serialization.
+        /// </summary>
+        /// <param name="filters">The JSON filters.</param>
+        /// <returns>The JSON view.</returns>
         public JsonView<T> Filter(params JsonFilter[] filters)
         {
             return new JsonView<T>(_, JsonFilter.Join(filters));
         }
 
+        /// <summary>
+        /// Gets the entity of this DataSet.
+        /// </summary>
         public T Entity
         {
             get { return _; }

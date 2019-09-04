@@ -1,13 +1,18 @@
-﻿using DevZest.Data.Primitives;
-using System;
-using System.Diagnostics;
-
-namespace DevZest.Data
+﻿namespace DevZest.Data
 {
+    /// <summary>
+    /// Base class of <see cref="DataSet"/>, <see cref="DbQuery{T}"/> and  <see cref="DbTable{T}"/>.
+    /// </summary>
     public abstract class DataSource
     {
+        /// <summary>
+        /// Gets the model associated with this DataSource.
+        /// </summary>
         public abstract Model Model { get; }
 
+        /// <summary>
+        /// Gets the kind of this DataSource.
+        /// </summary>
         public abstract DataSourceKind Kind { get; }
 
         internal int Revision { get; private set; }

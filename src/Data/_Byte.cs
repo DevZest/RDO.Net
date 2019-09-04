@@ -22,6 +22,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc />
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
@@ -42,6 +43,7 @@ namespace DevZest.Data
             return Param(value, this);
         }
 
+        /// <inheritdoc />
         public override bool AreEqual(byte? x, byte? y)
         {
             return x == y;

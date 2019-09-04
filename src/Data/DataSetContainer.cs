@@ -4,6 +4,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Root container for DataSet and children DataSets to handle changes made to DataSet.
+    /// </summary>
     public sealed partial class DataSetContainer
     {
         private sealed class ComputationManager
@@ -270,11 +273,34 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Occurs when DataRow is inserting.
+        /// </summary>
         public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
+
+        /// <summary>
+        /// Occurs before DataRow inserted.
+        /// </summary>
         public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };
+
+        /// <summary>
+        /// Occurs after DataRow inserted.
+        /// </summary>
         public event EventHandler<DataRowEventArgs> AfterDataRowInserted = delegate { };
+
+        /// <summary>
+        /// Occurs before DataRow removed.
+        /// </summary>
         public event EventHandler<DataRowEventArgs> DataRowRemoving = delegate { };
+
+        /// <summary>
+        /// Occurs after DataRow removed.
+        /// </summary>
         public event EventHandler<DataRowRemovedEventArgs> DataRowRemoved = delegate { };
+
+        /// <summary>
+        /// Occurs when data value changed.
+        /// </summary>
         public event EventHandler<ValueChangedEventArgs> ValueChanged = delegate { };
 
         private ComputationManager _computationManager;
@@ -327,11 +353,17 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Suspends automatic computation.
+        /// </summary>
         public void SuspendComputation()
         {
             _computationManager?.SuspendComputation();
         }
 
+        /// <summary>
+        /// Resumes automatic computation.
+        /// </summary>
         public void ResumeComputation()
         {
             _computationManager?.ResumeComputation();

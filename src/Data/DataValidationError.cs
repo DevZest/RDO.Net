@@ -6,8 +6,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents a DataSet validation error.
+    /// </summary>
     public class DataValidationError : ValidationError<IColumns>, IDataValidationErrors
     {
+        /// <summary>
+        /// Initializes a new instances of <see cref="DataValidationError"/> class.
+        /// </summary>
+        /// <param name="message">The validation error message.</param>
+        /// <param name="source">The source of the validation error.</param>
         public DataValidationError(string message, IColumns source)
             : base(message, source)
         {
@@ -16,11 +24,24 @@ namespace DevZest.Data
                 throw new ArgumentException(DiagnosticMessages.ValidationError_EmptySourceColumns, nameof(source));
         }
 
+        /// <summary>
+        /// Serializes this validation error messages to JSON string.
+        /// </summary>
+        /// <param name="isPretty">Determines whether serialized JSON string should be indented.</param>
+        /// <param name="customizer">The customizer for serialization.</param>
+        /// <returns></returns>
         public string ToJsonString(bool isPretty, IJsonCustomizer customizer = null)
         {
             return JsonWriter.Create(customizer).Write(this).ToString(isPretty);
         }
 
+        /// <summary>
+        /// Deserializes JSON string into <see cref="DataValidationError"/>.
+        /// </summary>
+        /// <param name="dataSet">The DataSet which contains the data for validation.</param>
+        /// <param name="json">The JSON string.</param>
+        /// <param name="customizer">The customizer for deserialization.</param>
+        /// <returns></returns>
         public static DataValidationError ParseJson(DataSet dataSet, string json, IJsonCustomizer customizer = null)
         {
             var jsonReader = JsonReader.Create(json, customizer);
@@ -29,6 +50,7 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return ToJsonString(true);

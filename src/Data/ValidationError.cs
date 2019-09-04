@@ -5,19 +5,30 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Base class for data validation error.
+    /// </summary>
     public abstract class ValidationError : IValidationErrors
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ValidationError"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
         protected ValidationError(string message)
         {
             _message = message.VerifyNotEmpty(nameof(message));
         }
 
         private readonly string _message;
+        /// <summary>
+        /// Gets the validation error message
+        /// </summary>
         public string Message
         {
             get { return _message; }
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return Message;
