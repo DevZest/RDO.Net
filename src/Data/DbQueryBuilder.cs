@@ -409,7 +409,7 @@ namespace DevZest.Data
                 throw new ArgumentException(DiagnosticMessages.DbQueryBuilder_VerifyTargetColumn, paramName);
         }
 
-        internal void SelectCore(Column source, Column target)
+        private void SelectCore(Column source, Column target)
         {
             _targetColumns.Add(target);
 
@@ -623,6 +623,18 @@ namespace DevZest.Data
         private bool CanEliminateUnionSubQuery(IReadOnlyList<ColumnMapping> selectList)
         {
             return GetEliminatableUnionStatement(selectList) != null;
+        }
+
+        /// <summary>
+        /// Constructs SQL SELECT by matching between specified source column and target column, without type safety.
+        /// </summary>
+        /// <param name="from">The source column.</param>
+        /// <param name="to">The target column.</param>
+        /// <returns>This query builder for fluent coding.</returns>
+        public DbQueryBuilder UnsafeSelect(Column from, Column to)
+        {
+            SelectCore(from, to);
+            return this;
         }
     }
 }

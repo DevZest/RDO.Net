@@ -282,7 +282,7 @@ select @mockschema;
                 {
                     var sourceColumn = sourceColumns[columnMappings[i].Source.Ordinal];
                     var targetColumn = columnMappings[i].Target;
-                    builder.SelectColumn(sourceColumn, targetColumn);
+                    builder.UnsafeSelect(sourceColumn, targetColumn);
                 }
                 builder.OrderBy(dataSetOrdinalColumn.Asc());
             });

@@ -332,5 +332,17 @@ namespace DevZest.Data
         {
             return new DbSelectStatement(Model, selectList, from, where, GroupByList, HavingExpression, orderBy, Offset, Fetch);
         }
+
+        /// <summary>
+        /// Constructs SQL SELECT by matching between specified source column and target column, without type safety.
+        /// </summary>
+        /// <param name="from">The source column.</param>
+        /// <param name="to">The target column.</param>
+        /// <returns>This aggregate query builder for fluent coding.</returns>
+        public new DbAggregateQueryBuilder UnsafeSelect(Column from, Column to)
+        {
+            base.UnsafeSelect(from, to);
+            return this;
+        }
     }
 }
