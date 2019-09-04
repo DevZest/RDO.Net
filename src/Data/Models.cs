@@ -5,6 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Provides static method to manipulate <see cref="IModels"/> object.
+    /// </summary>
     public static class Models
     {
         private class EmptyModelSet : IModels
@@ -63,6 +66,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets an empty <see cref="IModels"/>.
+        /// </summary>
         public static IModels Empty
         {
             get { return EmptyModelSet.Singleton; }
@@ -185,6 +191,11 @@ namespace DevZest.Data
             return new HashSetModelSet(value1, value2);
         }
 
+        /// <summary>
+        /// Create a <see cref="IModels"/> object which contains specified <see cref="Model"/> values.
+        /// </summary>
+        /// <param name="values">The specified <see cref="Model"/> values.</param>
+        /// <returns>The created result.</returns>
         public static IModels New(params Model[] values)
         {
             values.VerifyNotNull(nameof(values));
@@ -242,6 +253,12 @@ namespace DevZest.Data
             return true;
         }
 
+        /// <summary>
+        /// Determines whether source model set contains any of the specified model set.
+        /// </summary>
+        /// <param name="source">The source model set.</param>
+        /// <param name="other">The specified model set.</param>
+        /// <returns><see langword="true" /> if source model set contains any of the specified model set, otherwise <see langword="false"/>.</returns>
         public static bool ContainsAny(this IModels source, IModels other)
         {
             foreach (var item in other)
@@ -403,7 +420,7 @@ namespace DevZest.Data
             }
         }
 
-        public static IModels Add(this IModels modelSet, DbFromClause dbFromClause)
+        internal static IModels Add(this IModels modelSet, DbFromClause dbFromClause)
         {
             var resolver = new SourceModelResolver(modelSet);
             dbFromClause.Accept(resolver);

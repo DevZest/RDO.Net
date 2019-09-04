@@ -3,6 +3,10 @@ using System.Threading;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents the object to mount registered class property.
+    /// </summary>
+    /// <typeparam name="T">Type of the property.</typeparam>
     public abstract class Mounter<T>
     {
         internal abstract Func<T> Constructor { get; }

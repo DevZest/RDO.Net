@@ -9,15 +9,25 @@ using System.Threading;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents model with primary key.
+    /// </summary>
+    /// <typeparam name="T">The type of primary key.</typeparam>
     public abstract class Model<T> : Model, IEntity<T>
         where T : CandidateKey
     {
+        /// <summary>
+        /// Initializes a new intance of <see cref="Model{T}"/> class.
+        /// </summary>
         protected Model()
         {
             AddDbTableConstraint(new DbPrimaryKey(this, GetDbPrimaryKeyName(), GetDbPrimaryKeyDescription(), true, () => PrimaryKey), true);
         }
 
         private T _primaryKey;
+        /// <summary>
+        /// Gets the primary key.
+        /// </summary>
         public new T PrimaryKey
         {
             get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => CreatePrimaryKey()); }
@@ -25,6 +35,10 @@ namespace DevZest.Data
 
         Model<T> IEntity<T>.Model => this;
 
+        /// <summary>
+        /// Creates the primary key.
+        /// </summary>
+        /// <returns></returns>
         [CreateKey]
         protected abstract T CreatePrimaryKey();
 
@@ -33,30 +47,53 @@ namespace DevZest.Data
             return this.PrimaryKey;
         }
 
+        /// <summary>
+        /// Gets the database primary key name.
+        /// </summary>
+        /// <returns></returns>
         protected virtual string GetDbPrimaryKeyName()
         {
             var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbPrimaryKeyAttribute>();
             return dbConstraintAttribute == null ? "PK_%" : dbConstraintAttribute.Name;
         }
 
+        /// <summary>
+        /// Gets the database primary key description.
+        /// </summary>
+        /// <returns></returns>
         protected virtual string GetDbPrimaryKeyDescription()
         {
             var dbConstraintAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<DbPrimaryKeyAttribute>();
             return dbConstraintAttribute?.Description;
         }
 
+        /// <summary>
+        /// Matches this model with specified primary key.
+        /// </summary>
+        /// <param name="target">The specified primary key.</param>
+        /// <returns>The result key mapping.</returns>
         public KeyMapping Match(T target)
         {
             target.VerifyNotNull(nameof(target));
             return new KeyMapping(PrimaryKey, target);
         }
 
+        /// <summary>
+        /// Matches this model with specified model.
+        /// </summary>
+        /// <param name="target">The specified model.</param>
+        /// <returns>The result key mapping.</returns>
         public KeyMapping Match(Model<T> target)
         {
             target.VerifyNotNull(nameof(target));
             return new KeyMapping(PrimaryKey, target.PrimaryKey);
         }
 
+        /// <summary>
+        /// Matches this model with specified key projection.
+        /// </summary>
+        /// <param name="target">The specified key projection.</param>
+        /// <returns>The result key mapping.</returns>
         public KeyMapping Match(Key<T> target)
         {
             target.VerifyNotNull(nameof(target));
