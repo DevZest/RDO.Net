@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Represents DataSet bottom-up chain in aggregate expression.
+    /// </summary>
     public struct DataSetChain
     {
         internal DataSetChain(DataSet dataSet, List<Model> modelChain, int modelChainIndex)
@@ -18,11 +21,19 @@ namespace DevZest.Data.Primitives
 
         private readonly int ModelChainIndex;
 
+        /// <summary>
+        /// Gets the row count of current DataSet.
+        /// </summary>
         public int RowCount
         {
             get { return Current == null ? 0 : Current.Count; }
         }
 
+        /// <summary>
+        /// Gets the DataRow at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <returns>The DataRow result.</returns>
         public DataRow this[int index]
         {
             get
@@ -33,11 +44,19 @@ namespace DevZest.Data.Primitives
             }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether there is next item in the chain.
+        /// </summary>
         public bool HasNext
         {
             get { return ModelChainIndex > 0; }
         }
 
+        /// <summary>
+        /// Gets next DataSet chain for specified DataRow.
+        /// </summary>
+        /// <param name="dataRow">The specified DataRow.</param>
+        /// <returns>Next DataSet chain for specified DataRow.</returns>
         public DataSetChain Next(DataRow dataRow)
         {
             if (dataRow == null || !HasNext || dataRow.Model != Current.Model)

@@ -8,17 +8,34 @@ using DevZest.Data.Annotations.Primitives;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Generic base class to initialize the database.
+    /// </summary>
+    /// <typeparam name="T">Type of database session.</typeparam>
     public abstract class DbInitializer<T> : DbInitializer
         where T : DbSession
     {
+        /// <summary>
+        /// Gets the prototype database session.
+        /// </summary>
         public new T Db
         {
             get { return (T)base.Db; }
         }
 
+        /// <summary>
+        /// Creates the database.
+        /// </summary>
+        /// <param name="db">The prototype database session object.</param>
+        /// <param name="progress">Provider for progress update.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The database session for newly created database</returns>
         public abstract Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken));
     }
 
+    /// <summary>
+    /// Base class to initialize the database.
+    /// </summary>
     public abstract class DbInitializer : IProgress<DbInitProgress>
     {
         internal async Task InitializeAsync(DbSession db, string paramName, IProgress<DbInitProgress> progress, CancellationToken ct)
@@ -50,6 +67,9 @@ namespace DevZest.Data.Primitives
                 throw new InvalidOperationException(DiagnosticMessages.DbGenerator_InitializeTwice);
         }
 
+        /// <summary>
+        /// Gets the prototype database session.
+        /// </summary>
         public DbSession Db { get; private set; }
 
         private void RemoveDependencyTables()
@@ -98,6 +118,9 @@ namespace DevZest.Data.Primitives
             }
         }
 
+        /// <summary>
+        /// Initializes the database.
+        /// </summary>
         protected abstract void Initialize();
 
         private Dictionary<IDbTable, Func<CancellationToken, Task>> _pendingTables = new Dictionary<IDbTable, Func<CancellationToken, Task>>();
@@ -166,6 +189,10 @@ namespace DevZest.Data.Primitives
             return name;
         }
 
+        /// <summary>
+        /// Reports the progress.
+        /// </summary>
+        /// <param name="progress">The database initialization progress.</param>
         protected virtual void Report(DbInitProgress progress)
         {
             Console.WriteLine(UserMessages.DbGenerator_ReportProgress(progress.DbTable.Name));

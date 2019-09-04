@@ -17,6 +17,7 @@ namespace DevZest.Data.Primitives
         /// Dispatches to the specific visit method for this node type.
         /// </summary>
         /// <param name="visitor">The vistor.</param>
+        /// <returns>The visitor result.</returns>
         public abstract T Accept<T>(DbFromClauseVisitor<T> visitor);
 
         internal virtual SubQueryEliminator SubQueryEliminator
