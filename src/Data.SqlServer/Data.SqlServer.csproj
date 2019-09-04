@@ -14,6 +14,7 @@
     <Compile Include="..\..\external\Utilities\src\Utilities\Argument.VerifyNotNull.cs" Link="Utilities\Argument.VerifyNotNull.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\NameSuffixes.GetUniqueName.cs" Link="Utilities\NameSuffixes.GetUniqueName.cs" />
     <Compile Include="..\..\external\Utilities\src\Utilities\Type.GetStaticMethodInfo.cs" Link="Utilities\Type.GetStaticMethodInfo.cs" />
+    <Compile Include="..\Data\ColumnManager.ResolveColumnDataType.cs" Link="Utilities\ColumnManager.ResolveColumnDataType.cs" />
   </ItemGroup>
 
   <ItemGroup>
