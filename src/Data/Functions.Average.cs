@@ -3,6 +3,9 @@ using System;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Provides functions for column expression.
+    /// </summary>
     public static partial class Functions
     {
         #region Average
