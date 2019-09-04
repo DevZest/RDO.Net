@@ -79,11 +79,13 @@ namespace DevZest.Data.Primitives
         /// <returns>The result.</returns>
         protected abstract TResult EvalCore(T x, T y);
 
+        /// <inheritdoc />
         protected sealed override IColumns GetBaseColumns()
         {
             return Left.BaseColumns.Union(Right.BaseColumns).Seal();
         }
 
+        /// <inheritdoc />
         protected internal sealed override ColumnExpression PerformTranslateTo(Model model)
         {
             var left = Left.TranslateTo(model);

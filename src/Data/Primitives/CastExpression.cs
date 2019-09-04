@@ -15,6 +15,7 @@ namespace DevZest.Data.Primitives
             Operand = operand;
         }
 
+        /// <inheritdoc />
         protected sealed override IColumns GetBaseColumns()
         {
             return Operand.BaseColumns;
@@ -52,6 +53,7 @@ namespace DevZest.Data.Primitives
             return new DbCastExpression(Operand.DbExpression, Operand, this.Owner);
         }
 
+        /// <inheritdoc />
         protected internal sealed override ColumnExpression PerformTranslateTo(Model model)
         {
             var operand = Operand.TranslateTo(model);

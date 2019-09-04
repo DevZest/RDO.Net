@@ -4,18 +4,32 @@ using System.Threading;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Represent column expression.
+    /// </summary>
     public abstract class ColumnExpression
     {
         internal abstract void SetOwner(Column column);
 
+        /// <summary>
+        /// Gets the owner which owns this column expression.
+        /// </summary>
+        /// <returns>The owner column.</returns>
         public abstract Column GetOwner();
 
         private IColumns _baseColumns;
+        /// <summary>
+        /// Gets the base columns to make up this expression.
+        /// </summary>
         public IColumns BaseColumns
         {
             get { return LazyInitializer.EnsureInitialized(ref _baseColumns, () => GetBaseColumns().Seal()); }
         }
 
+        /// <summary>
+        /// Gets base columns to make up this expression.
+        /// </summary>
+        /// <returns>The columns set to make up this expression.</returns>
         protected abstract IColumns GetBaseColumns();
 
         private IModels _scalarSourceModels;
@@ -54,6 +68,11 @@ namespace DevZest.Data.Primitives
         /// <returns>The <see cref="DbExpression"/> object.</returns>
         public abstract DbExpression GetDbExpression();
 
+        /// <summary>
+        /// Translates this expression for specified model.
+        /// </summary>
+        /// <param name="model">The specified model.</param>
+        /// <returns>The translated expression.</returns>
         protected internal abstract ColumnExpression PerformTranslateTo(Model model);
     }
 
@@ -63,10 +82,18 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="T">Data type of the expression.</typeparam>
     public abstract class ColumnExpression<T> : ColumnExpression
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ColumnExpression{T}"/> class.
+        /// </summary>
         protected ColumnExpression()
         {
         }
 
+        /// <summary>
+        /// Gets the value for specified DataRow.
+        /// </summary>
+        /// <param name="dataRow">The specified DataRow.</param>
+        /// <returns>The value for specified DataRow.</returns>
         public abstract T this[DataRow dataRow] { get; }
 
         private Column<T> _owner;
@@ -105,6 +132,7 @@ namespace DevZest.Data.Primitives
             Owner = (Column<T>)column;
         }
 
+        /// <inheritdoc />
         public sealed override Column GetOwner()
         {
             return Owner;

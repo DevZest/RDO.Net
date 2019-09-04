@@ -25,6 +25,7 @@ namespace DevZest.Data.Primitives
         private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
+        /// <inheritdoc />
         protected sealed override IColumns GetBaseColumns()
         {
             var result = Columns.Empty;
@@ -36,6 +37,11 @@ namespace DevZest.Data.Primitives
             return result.Seal();
         }
 
+        /// <summary>
+        /// Construct CASE WHEN expression.
+        /// </summary>
+        /// <param name="when">The condition.</param>
+        /// <returns>The result.</returns>
         public CaseWhen<TResult> When(_Boolean when)
         {
             when.VerifyNotNull(nameof(when));
@@ -113,6 +119,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
+        /// <inheritdoc />
         protected internal override ColumnExpression PerformTranslateTo(Model model)
         {
             var when = _when.TranslateToColumns(model);
