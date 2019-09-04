@@ -37,7 +37,7 @@ namespace DevZest.Data
 
         DataSet IDataSetColumn.NewValue(int ordinal)
         {
-            return ParentModel.NewDataSetValue(this, ordinal);
+            return ParentModel.CreateDataSet(this, ordinal);
         }
 
         void IDataSetColumn.Deserialize(int rowOrdinal, DataSet value)

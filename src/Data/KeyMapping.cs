@@ -1,10 +1,12 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents mapping between two keys.
+    /// </summary>
     public struct KeyMapping
     {
         internal static KeyMapping Match<TSource, TTarget>(TSource source, TTarget target)
@@ -26,17 +28,27 @@ namespace DevZest.Data
         }
 
         private readonly CandidateKey _sourceKey;
+        /// <summary>
+        /// Gets the source key of the mapping.
+        /// </summary>
         public CandidateKey SourceKey
         {
             get { return _sourceKey; }
         }
 
         private readonly CandidateKey _targetKey;
+        /// <summary>
+        /// Gets the target key of the mapping.
+        /// </summary>
         public CandidateKey TargetKey
         {
             get { return _targetKey; }
         }
 
+        /// <summary>
+        /// Gets the column mappings.
+        /// </summary>
+        /// <returns>A readonly list of <see cref="ColumnMapping"/> objects.</returns>
         public IReadOnlyList<ColumnMapping> GetColumnMappings()
         {
             if (IsEmpty)
@@ -53,16 +65,25 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this key mapping is empty.
+        /// </summary>
         public bool IsEmpty
         {
             get { return _sourceKey == null; }
         }
 
+        /// <summary>
+        /// Gets the source model.
+        /// </summary>
         public Model SourceModel
         {
             get { return _sourceKey?.ParentModel; }
         }
 
+        /// <summary>
+        /// Gets the target model.
+        /// </summary>
         public Model TargetModel
         {
             get { return _targetKey?.ParentModel; }

@@ -5,17 +5,41 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Filters DataSet JSON serialization.
+    /// </summary>
     public abstract class JsonFilter
     {
+        /// <summary>
+        /// Gets the filter which excludes all projections.
+        /// </summary>
         public static JsonFilter NoProjection { get { return NoProjectionJsonFilter.Singleton; } }
+
+        /// <summary>
+        /// Gets the filter which exclude all child DataSets.
+        /// </summary>
         public static JsonFilter NoChildDataSet { get { return NoChildDataSetJsonFilter.Singleton; } }
+
+        /// <summary>
+        /// Gets the filter which contains primary key values only.
+        /// </summary>
         public static JsonFilter PrimaryKeyOnly { get { return PrimaryKeyOnlyJsonFilter.Singleton; } }
 
+        /// <summary>
+        /// Creates a filter explicitly.
+        /// </summary>
+        /// <param name="members">The model members included for JSON serialization.</param>
+        /// <returns>The created filter.</returns>
         public static JsonFilter Explicit(params ModelMember[] members)
         {
             return new ExplicitMembersJsonFilter(Verify(members, nameof(members)));
         }
 
+        /// <summary>
+        /// Joins multiple filters into a single filter.
+        /// </summary>
+        /// <param name="filters">The multiple filters.</param>
+        /// <returns>The result single filter.</returns>
         public static JsonFilter Join(params JsonFilter[] filters)
         {
             filters.VerifyNotNull(nameof(filters));
@@ -43,6 +67,11 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Determines whether specified model member should be serialized.
+        /// </summary>
+        /// <param name="member">The specified model member.</param>
+        /// <returns><see langword="true"/> if specified model member should be serialized, otherwise <see langword="false"/>.</returns>
         protected internal abstract bool ShouldSerialize(ModelMember member);
 
         private sealed class NoProjectionJsonFilter : JsonFilter

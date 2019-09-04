@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Primitives;
 using System;
-using System.Diagnostics;
 
 namespace DevZest.Data
 {
@@ -10,13 +9,20 @@ namespace DevZest.Data
         void OnDataRowRemoving(DataRow dataRow);
     }
 
+    /// <summary>
+    /// Represents a column for local use only.
+    /// </summary>
+    /// <typeparam name="T">Data type of the column.</typeparam>
     public sealed class LocalColumn<T> : Column<T>, ILocalColumn
     {
+        /// <summary>
+        /// Internal use only, do not call this constructor in your code.
+        /// </summary>
         public LocalColumn()
         {
         }
 
-        public LocalColumn(T value)
+        internal LocalColumn(T value)
         {
             Expression = new LocalColumnExpression(dataRow => value);
         }
@@ -26,11 +32,13 @@ namespace DevZest.Data
             get { return true; }
         }
 
+        /// <inheritdoc />
         public override bool IsSerializable
         {
             get { return false; }
         }
 
+        /// <inheritdoc />
         public override bool IsDeserializable
         {
             get { return false; }
@@ -46,26 +54,31 @@ namespace DevZest.Data
             RemoveRow(dataRow);
         }
 
+        /// <inheritdoc />
         public override _String CastToString()
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
         protected override Column<T> CreateParam(T value)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
         protected internal override Column<T> CreateConst(T value)
         {
             return new LocalColumn<T>(value);
         }
 
+        /// <inheritdoc />
         protected internal override T DeserializeValue(JsonValue value)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
         protected internal override JsonValue SerializeValue(T value)
         {
             throw new NotSupportedException();
@@ -827,13 +840,25 @@ namespace DevZest.Data
             SetIsConcrete(isConcrete);
         }
 
-        public void ComputedAs(Func<DataRow, T> expression, bool isConcrete)
+        /// <summary>
+        /// Declares computation expression for this column.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
+        public void ComputedAs(Func<DataRow, T> expression, bool isConcrete = false)
         {
             VerifyExpressionAndDesignMode(expression, nameof(expression));
             SetExpression(new LocalColumnExpression(expression), isConcrete);
         }
 
-        public void ComputedAs<T1>(T1 column, Func<DataRow, T1, T> expression, bool isConcrete)
+        /// <summary>
+        /// Declares computation expression for this column, calculated from one column.
+        /// </summary>
+        /// <typeparam name="T1">Type of the dependent column.</typeparam>
+        /// <param name="column">The dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
+        public void ComputedAs<T1>(T1 column, Func<DataRow, T1, T> expression, bool isConcrete = false)
             where T1 : Column
         {
             VerifyBaseColumn(column, nameof(column));
@@ -841,7 +866,16 @@ namespace DevZest.Data
             SetExpression(new LocalColumnExpression<T1>(column, expression), isConcrete);
         }
 
-        public void ComputedAs<T1, T2>(T1 column1, T2 column2, Func<DataRow, T1, T2, T> expression, bool isConcrete)
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 2 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
+        public void ComputedAs<T1, T2>(T1 column1, T2 column2, Func<DataRow, T1, T2, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
         {
@@ -851,7 +885,18 @@ namespace DevZest.Data
             SetExpression(new LocalColumnExpression<T1, T2>(column1, column2, expression), isConcrete);
         }
 
-        public void ComputedAs<T1, T2, T3>(T1 column1, T2 column2, T3 column3, Func<DataRow, T1, T2, T3, T> expression, bool isConcrete)
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 3 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
+        public void ComputedAs<T1, T2, T3>(T1 column1, T2 column2, T3 column3, Func<DataRow, T1, T2, T3, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -863,8 +908,21 @@ namespace DevZest.Data
             SetExpression(new LocalColumnExpression<T1, T2, T3>(column1, column2, column3, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 4 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4>(T1 column1, T2 column2, T3 column3, T4 column4,
-            Func<DataRow, T1, T2, T3, T4, T> expression, bool isConcrete)
+            Func<DataRow, T1, T2, T3, T4, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -878,8 +936,23 @@ namespace DevZest.Data
             SetExpression(new LocalColumnExpression<T1, T2, T3, T4>(column1, column2, column3, column4, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 5 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <typeparam name="T5">Type of 5th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="column5">The 5th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4, T5>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5,
-            Func<DataRow, T1, T2, T3, T4, T5, T> expression, bool isConcrete)
+            Func<DataRow, T1, T2, T3, T4, T5, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -895,8 +968,25 @@ namespace DevZest.Data
             SetExpression(new LocalColumnExpression<T1, T2, T3, T4, T5>(column1, column2, column3, column4, column5, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 6 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <typeparam name="T5">Type of 5th dependent column.</typeparam>
+        /// <typeparam name="T6">Type of 6th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="column5">The 5th dependent column.</param>
+        /// <param name="column6">The 6th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4, T5, T6>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            Func<DataRow, T1, T2, T3, T4, T5, T6, T> expression, bool isConcrete)
+            Func<DataRow, T1, T2, T3, T4, T5, T6, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -914,8 +1004,27 @@ namespace DevZest.Data
             SetExpression(new LocalColumnExpression<T1, T2, T3, T4, T5, T6>(column1, column2, column3, column4, column5, column6, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 7 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <typeparam name="T5">Type of 5th dependent column.</typeparam>
+        /// <typeparam name="T6">Type of 6th dependent column.</typeparam>
+        /// <typeparam name="T7">Type of 7th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="column5">The 5th dependent column.</param>
+        /// <param name="column6">The 6th dependent column.</param>
+        /// <param name="column7">The 7th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4, T5, T6, T7>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T> expression, bool isConcrete)
+            T7 column7, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -935,8 +1044,29 @@ namespace DevZest.Data
             SetExpression(new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7>(column1, column2, column3, column4, column5, column6, column7, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 8 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <typeparam name="T5">Type of 5th dependent column.</typeparam>
+        /// <typeparam name="T6">Type of 6th dependent column.</typeparam>
+        /// <typeparam name="T7">Type of 7th dependent column.</typeparam>
+        /// <typeparam name="T8">Type of 8th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="column5">The 5th dependent column.</param>
+        /// <param name="column6">The 6th dependent column.</param>
+        /// <param name="column7">The 7th dependent column.</param>
+        /// <param name="column8">The 8th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4, T5, T6, T7, T8>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, T8 column8, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T> expression, bool isConcrete)
+            T7 column7, T8 column8, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -959,8 +1089,31 @@ namespace DevZest.Data
                 column1, column2, column3, column4, column5, column6, column7, column8, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 9 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <typeparam name="T5">Type of 5th dependent column.</typeparam>
+        /// <typeparam name="T6">Type of 6th dependent column.</typeparam>
+        /// <typeparam name="T7">Type of 7th dependent column.</typeparam>
+        /// <typeparam name="T8">Type of 8th dependent column.</typeparam>
+        /// <typeparam name="T9">Type of 9th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="column5">The 5th dependent column.</param>
+        /// <param name="column6">The 6th dependent column.</param>
+        /// <param name="column7">The 7th dependent column.</param>
+        /// <param name="column8">The 8th dependent column.</param>
+        /// <param name="column9">The 9th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4, T5, T6, T7, T8, T9>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, T8 column8, T9 column9, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T> expression, bool isConcrete)
+            T7 column7, T8 column8, T9 column9, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -985,8 +1138,33 @@ namespace DevZest.Data
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 10 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <typeparam name="T5">Type of 5th dependent column.</typeparam>
+        /// <typeparam name="T6">Type of 6th dependent column.</typeparam>
+        /// <typeparam name="T7">Type of 7th dependent column.</typeparam>
+        /// <typeparam name="T8">Type of 8th dependent column.</typeparam>
+        /// <typeparam name="T9">Type of 9th dependent column.</typeparam>
+        /// <typeparam name="T10">Type of 10th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="column5">The 5th dependent column.</param>
+        /// <param name="column6">The 6th dependent column.</param>
+        /// <param name="column7">The 7th dependent column.</param>
+        /// <param name="column8">The 8th dependent column.</param>
+        /// <param name="column9">The 9th dependent column.</param>
+        /// <param name="column10">The 10th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, T8 column8, T9 column9, T10 column10, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> expression, bool isConcrete)
+            T7 column7, T8 column8, T9 column9, T10 column10, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -1013,9 +1191,36 @@ namespace DevZest.Data
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 11 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <typeparam name="T5">Type of 5th dependent column.</typeparam>
+        /// <typeparam name="T6">Type of 6th dependent column.</typeparam>
+        /// <typeparam name="T7">Type of 7th dependent column.</typeparam>
+        /// <typeparam name="T8">Type of 8th dependent column.</typeparam>
+        /// <typeparam name="T9">Type of 9th dependent column.</typeparam>
+        /// <typeparam name="T10">Type of 10th dependent column.</typeparam>
+        /// <typeparam name="T11">Type of 11th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="column5">The 5th dependent column.</param>
+        /// <param name="column6">The 6th dependent column.</param>
+        /// <param name="column7">The 7th dependent column.</param>
+        /// <param name="column8">The 8th dependent column.</param>
+        /// <param name="column9">The 9th dependent column.</param>
+        /// <param name="column10">The 10th dependent column.</param>
+        /// <param name="column11">The 11th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
             T7 column7, T8 column8, T9 column9, T10 column10, T11 column11, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T> expression,
-            bool isConcrete)
+            bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -1044,9 +1249,38 @@ namespace DevZest.Data
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, expression), isConcrete);
         }
 
+        /// <summary>
+        /// Declares computation expression for this column, calculated from 12 columns.
+        /// </summary>
+        /// <typeparam name="T1">Type of 1st dependent column.</typeparam>
+        /// <typeparam name="T2">Type of 2nd dependent column.</typeparam>
+        /// <typeparam name="T3">Type of 3rd dependent column.</typeparam>
+        /// <typeparam name="T4">Type of 4th dependent column.</typeparam>
+        /// <typeparam name="T5">Type of 5th dependent column.</typeparam>
+        /// <typeparam name="T6">Type of 6th dependent column.</typeparam>
+        /// <typeparam name="T7">Type of 7th dependent column.</typeparam>
+        /// <typeparam name="T8">Type of 8th dependent column.</typeparam>
+        /// <typeparam name="T9">Type of 9th dependent column.</typeparam>
+        /// <typeparam name="T10">Type of 10th dependent column.</typeparam>
+        /// <typeparam name="T11">Type of 11th dependent column.</typeparam>
+        /// <typeparam name="T12">Type of 12th dependent column.</typeparam>
+        /// <param name="column1">The 1st dependent column.</param>
+        /// <param name="column2">The 2nd dependent column.</param>
+        /// <param name="column3">The 3rd dependent column.</param>
+        /// <param name="column4">The 4th dependent column.</param>
+        /// <param name="column5">The 5th dependent column.</param>
+        /// <param name="column6">The 6th dependent column.</param>
+        /// <param name="column7">The 7th dependent column.</param>
+        /// <param name="column8">The 8th dependent column.</param>
+        /// <param name="column9">The 9th dependent column.</param>
+        /// <param name="column10">The 10th dependent column.</param>
+        /// <param name="column11">The 11th dependent column.</param>
+        /// <param name="column12">The 12th dependent column.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isConcrete"><see langword="true"/> if computation result should be physically stored, otherwise <see langword="false"/>.</param>
         public void ComputedAs<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(T1 column1, T2 column2, T3 column3, T4 column4,
             T5 column5, T6 column6, T7 column7, T8 column8, T9 column9, T10 column10, T11 column11, T12 column12,
-            Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T> expression, bool isConcrete)
+            Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T> expression, bool isConcrete = false)
             where T1 : Column
             where T2 : Column
             where T3 : Column

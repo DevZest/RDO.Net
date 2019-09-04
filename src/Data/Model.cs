@@ -15,6 +15,9 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Base class of your busines model objects.
+    /// </summary>
     public abstract partial class Model : ModelMember, IModels, IEntity
     {
         #region RegisterColumn
@@ -143,6 +146,14 @@ namespace DevZest.Data
 
         internal static MounterManager<Model, Model> s_childModelManager = new MounterManager<Model, Model>();
 
+        /// <summary>
+        /// Registers a child model.
+        /// </summary>
+        /// <typeparam name="TModel">Type of the model.</typeparam>
+        /// <typeparam name="TChildModel">Type of the child model.</typeparam>
+        /// <param name="getter">The lambda expression of the child model getter.</param>
+        /// <param name="constructor">The delegate to create the child model.</param>
+        /// <returns>Mounter of the child model.</returns>
         [PropertyRegistration]
         protected static Mounter<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter, Func<TModel, TChildModel> constructor = null)
             where TModel : Model
@@ -220,6 +231,9 @@ namespace DevZest.Data
         }
 
         private List<Column> _localColumns;
+        /// <summary>
+        /// Gets local columns owned by this model.
+        /// </summary>
         protected internal IReadOnlyList<Column> LocalColumns
         {
             get
@@ -239,6 +253,11 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Creates a local column.
+        /// </summary>
+        /// <typeparam name="T">Data type of the local column.</typeparam>
+        /// <returns>The created local column.</returns>
         protected LocalColumn<T> CreateLocalColumn<T>()
         {
             VerifyDesignMode();
@@ -269,6 +288,9 @@ namespace DevZest.Data
         }
 
         private List<Projection> _projections;
+        /// <summary>
+        /// Gets the <see cref="Projection"/> objects owned by this model.
+        /// </summary>
         protected internal IReadOnlyList<Projection> Projections
         {
             get
@@ -303,6 +325,9 @@ namespace DevZest.Data
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="Model"/> class.
+        /// </summary>
         protected Model()
         {
             Columns = new ColumnCollection(this);
@@ -336,7 +361,7 @@ namespace DevZest.Data
         /// </summary>
         /// <remarks>Unlike <see cref="Column"/> and <see cref="ColumnList"/>,
         /// child models are not initialized by default. This design decision is to deal with the situation when recursive child models registered.
-        /// <see cref="EnsureInitialized"/> will be called automatically when creating the first <see cref="DataRow"/> the query builder.
+        /// <see cref="EnsureInitialized()"/> will be called automatically when creating the first <see cref="DataRow"/> the query builder.
         /// </remarks>
         public bool IsInitialized { get; private set; }
 
@@ -345,7 +370,7 @@ namespace DevZest.Data
         /// </summary>
         /// <remarks>Unlike <see cref="Column"/> and <see cref="ColumnList"/>,
         /// child models are not initialized by default. This design decision is to deal with the situation when recursive child models registered.
-        /// <see cref="EnsureInitialized"/> will be called automatically when creating the first <see cref="DataRow"/>.
+        /// <see cref="EnsureInitialized()"/> will be called automatically when creating the first <see cref="DataRow"/>.
         /// </remarks>
         protected internal void EnsureInitialized()
         {
@@ -396,6 +421,9 @@ namespace DevZest.Data
             OnConstructing();
         }
 
+        /// <summary>
+        /// Raises <see cref="Constructing"/> event.
+        /// </summary>
         protected virtual void OnConstructing()
         {
             Constructing(this, EventArgs.Empty);
@@ -407,6 +435,9 @@ namespace DevZest.Data
             OnInitializing();
         }
 
+        /// <summary>
+        /// Raises <see cref="Initializing"/> event.
+        /// </summary>
         protected virtual void OnInitializing()
         {
             Initializing(this, EventArgs.Empty);
@@ -418,6 +449,9 @@ namespace DevZest.Data
             OnChildModelsMounted();
         }
 
+        /// <summary>
+        /// Raises <see cref="ChildModelsMounted"/> event.
+        /// </summary>
         protected virtual void OnChildModelsMounted()
         {
             ChildModelsMounted(this, EventArgs.Empty);
@@ -429,6 +463,9 @@ namespace DevZest.Data
             OnChildDataSetsCreated();
         }
 
+        /// <summary>
+        /// Raises <see cref="ChildDataSetsCreated"/> event.
+        /// </summary>
         protected virtual void OnChildDataSetsCreated()
         {
             ChildDataSetsCreated(this, EventArgs.Empty);
@@ -440,6 +477,9 @@ namespace DevZest.Data
             OnInitialized();
         }
 
+        /// <summary>
+        /// Raises <see cref="Initialized"/> event.
+        /// </summary>
         protected virtual void OnInitialized()
         {
             Initialized(this, EventArgs.Empty);
@@ -462,6 +502,9 @@ namespace DevZest.Data
             return Expression.Lambda<Action<Model>>(call, paramModel).Compile();
         }
 
+        /// <summary>
+        /// Gets the columns owned by this model.
+        /// </summary>
         protected internal ColumnCollection Columns { get; private set; }
 
         internal int Add(Column column)
@@ -481,14 +524,25 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets the child models owned by this model.
+        /// </summary>
         protected internal ModelCollection ChildModels { get; private set; }
 
         private List<IValidator> _validators = new List<IValidator>();
+        /// <summary>
+        /// Gets the validators owned by this model.
+        /// </summary>
         public List<IValidator> Validators
         {
             get { return _validators; }
         }
 
+        /// <summary>
+        /// Validates specified DataRow.
+        /// </summary>
+        /// <param name="dataRow">The specified DataRow.</param>
+        /// <returns>The data validation errors.</returns>
         protected internal virtual IDataValidationErrors Validate(DataRow dataRow)
         {
             var result = DataValidationErrors.Empty;
@@ -507,6 +561,9 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Gets the primary key of this model.
+        /// </summary>
         public CandidateKey PrimaryKey
         {
             get { return GetPrimaryKeyCore(); }
@@ -517,6 +574,9 @@ namespace DevZest.Data
             return null;
         }
 
+        /// <summary>
+        /// Gets the DataSource which owns this model.
+        /// </summary>
         protected internal DataSource DataSource { get; private set; }
 
         internal void SetDataSource(DataSource dataSource)
@@ -537,6 +597,7 @@ namespace DevZest.Data
                 PerformInitializing();
         }
 
+        /// <inheritdoc />
         protected internal sealed override bool DesignMode
         {
             get
@@ -552,6 +613,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets the DataSet which owns this model.
+        /// </summary>
         public DataSet DataSet { get; private set; }
 
         private int _ordinal = -1;
@@ -692,7 +756,7 @@ namespace DevZest.Data
             this.AddOrUpdate(constraint);
         }
 
-        internal void AddIndex(DbIndex index)
+        internal void AddDbIndex(DbIndex index)
         {
             Debug.Assert(index != null);
 
@@ -705,6 +769,9 @@ namespace DevZest.Data
             this.AddOrUpdate(index);
         }
 
+        /// <summary>
+        /// Gets the database alias of this model.
+        /// </summary>
         protected internal virtual string DbAlias
         {
             get { return this.GetType().Name; }
@@ -736,6 +803,11 @@ namespace DevZest.Data
             get { return ContainsMember(memberName) ? _members[memberName] : null; }
         }
 
+        /// <summary>
+        /// Gets identity definition of the table.
+        /// </summary>
+        /// <param name="isTempTable"><see langword="true"/> for temporary table, otherwise permanent table.</param>
+        /// <returns>The identity definition.</returns>
         public Identity GetIdentity(bool isTempTable)
         {
             return (Identity)GetAddon(isTempTable ? typeof(TempTableIdentity) : typeof(Identity));
@@ -835,7 +907,17 @@ namespace DevZest.Data
             return sysParentRowId.Column;
         }
 
-        protected internal void Index(string name, string description, bool isUnique, bool isClustered, bool isValidOnTable, bool isValidOnTempTable, params ColumnSort[] orderByList)
+        /// <summary>
+        /// Adds database index.
+        /// </summary>
+        /// <param name="name">The name of the index.</param>
+        /// <param name="description">The description of the index.</param>
+        /// <param name="isUnique">Specifies whether this index is unique.</param>
+        /// <param name="isClustered">Specifies whether this index is clustered.</param>
+        /// <param name="isValidOnTable">Specifies whether this index is for permanent table.</param>
+        /// <param name="isValidOnTempTable">Specifies whether this index is for tempoary table.</param>
+        /// <param name="orderByList">The columns and sorting order to make up this index.</param>
+        protected internal void AddDbIndex(string name, string description, bool isUnique, bool isClustered, bool isValidOnTable, bool isValidOnTempTable, params ColumnSort[] orderByList)
         {
             name.VerifyNotEmpty(nameof(name));
             orderByList.VerifyNotNull(nameof(orderByList));
@@ -849,9 +931,16 @@ namespace DevZest.Data
                     throw new ArgumentException(DiagnosticMessages.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
-            AddIndex(new DbIndex(name, description, isUnique, isClustered, isValidOnTable, isValidOnTempTable, orderByList));
+            AddDbIndex(new DbIndex(name, description, isUnique, isClustered, isValidOnTable, isValidOnTempTable, orderByList));
         }
 
+        /// <summary>
+        /// Adds database unique constraint.
+        /// </summary>
+        /// <param name="name">The name of the constraint.</param>
+        /// <param name="description">The description of the constraint.</param>
+        /// <param name="isClustered">Specifies whether this unique constraint is clustered.</param>
+        /// <param name="orderByList">The columns and sorting order to make up this unique constraint.</param>
         protected internal void AddDbUniqueConstraint(string name, string description, bool isClustered, params ColumnSort[] orderByList)
         {
             orderByList.VerifyNotNull(nameof(orderByList));
@@ -868,6 +957,12 @@ namespace DevZest.Data
             AddDbTableConstraint(new DbUniqueConstraint(name, description, isClustered, orderByList), false);
         }
 
+        /// <summary>
+        /// Adds database check constraint.
+        /// </summary>
+        /// <param name="name">The name of the constraint.</param>
+        /// <param name="description">The description of the constraint.</param>
+        /// <param name="condition">The condition of this check constraint.</param>
         protected internal void AddDbCheckConstraint(string name, string description, _Boolean condition)
         {
             condition.VerifyNotNull(nameof(condition));
@@ -893,6 +988,7 @@ namespace DevZest.Data
 
         internal DbTable<SequentialKey> SequentialKeyTempTable { get; set; }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return this.GetType().Name + ": [" + string.Join(", ", Columns.Select(x => x.Name)) + "]";
@@ -943,7 +1039,14 @@ namespace DevZest.Data
             return null;
         }
 
-        protected internal virtual DataSet<T> NewDataSetValue<T>(_DataSet<T> dataSetColumn, int rowOrdinal)
+        /// <summary>
+        /// Creates a DataSet.
+        /// </summary>
+        /// <typeparam name="T">Entity type of the DataSet.</typeparam>
+        /// <param name="dataSetColumn">The DataSet column.</param>
+        /// <param name="rowOrdinal">The ordinal of DataRow.</param>
+        /// <returns></returns>
+        protected internal virtual DataSet<T> CreateDataSet<T>(_DataSet<T> dataSetColumn, int rowOrdinal)
             where T : class, IEntity, new()
         {
             return DataSet<T>.Create();
@@ -1013,16 +1116,59 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Occurs when this model is constructing.
+        /// </summary>
         public event EventHandler<EventArgs> Constructing = delegate { };
+
+        /// <summary>
+        /// Occurs when this model is initializing.
+        /// </summary>
         public event EventHandler<EventArgs> Initializing = delegate { };
+
+        /// <summary>
+        /// Occurs when child models are mounted.
+        /// </summary>
         public event EventHandler<EventArgs> ChildModelsMounted = delegate { };
+
+        /// <summary>
+        /// Occurs when child DataSets are created.
+        /// </summary>
         public event EventHandler<EventArgs> ChildDataSetsCreated = delegate { };
+
+        /// <summary>
+        /// Occurs when this model is initialized.
+        /// </summary>
         public event EventHandler<EventArgs> Initialized = delegate { };
+
+        /// <summary>
+        /// Occurs when inserting DataRow.
+        /// </summary>
         public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
+
+        /// <summary>
+        /// Occurs before DataRow inserted.
+        /// </summary>
         public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };
+
+        /// <summary>
+        /// Occurs after DataRow inserted.
+        /// </summary>
         public event EventHandler<DataRowEventArgs> AfterDataRowInserted = delegate { };
+
+        /// <summary>
+        /// Occurs when removing DataRow.
+        /// </summary>
         public event EventHandler<DataRowEventArgs> DataRowRemoving = delegate { };
+
+        /// <summary>
+        /// Occurs when DataRow is removed.
+        /// </summary>
         public event EventHandler<DataRowRemovedEventArgs> DataRowRemoved = delegate { };
+
+        /// <summary>
+        /// Ocurrs when data value is changed.
+        /// </summary>
         public event EventHandler<ValueChangedEventArgs> ValueChanged = delegate { };
 
         internal void HandlesDataRowInserted(DataRow dataRow, Action<DataRow> updateAction)
@@ -1036,22 +1182,34 @@ namespace DevZest.Data
             DataSetContainer.OnBeforeDataRowInserted(e);
             dataRow.ResumeValueChangedNotification();
             DataSetContainer.SuspendComputation();
-            OnDataRowInserted(e);
+            OnAfterDataRowInserted(e);
             DataSetContainer.OnAfterDataRowInserted(e);
             DataSetContainer.ResumeComputation();
         }
 
+        /// <summary>
+        /// Raises <see cref="DataRowInserting"/> event.
+        /// </summary>
+        /// <param name="e"></param>
         protected virtual void OnDataRowInserting(DataRowEventArgs e)
         {
             DataRowInserting(this, e);
         }
 
+        /// <summary>
+        /// Raises <see cref="BeforeDataRowInserted"/> event.
+        /// </summary>
+        /// <param name="e"></param>
         protected virtual void OnBeforeDataRowInserted(DataRowEventArgs e)
         {
             BeforeDataRowInserted(this, e);
         }
 
-        protected virtual void OnDataRowInserted(DataRowEventArgs e)
+        /// <summary>
+        /// Raises <see cref="AfterDataRowInserted"/> event.
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnAfterDataRowInserted(DataRowEventArgs e)
         {
             AfterDataRowInserted(this, e);
         }
@@ -1064,6 +1222,10 @@ namespace DevZest.Data
             DataSetContainer.OnDataRowRemoving(e);
         }
 
+        /// <summary>
+        /// Raises <see cref="DataRowRemoving"/> event.
+        /// </summary>
+        /// <param name="e"></param>
         protected virtual void OnDataRowRemoving(DataRowEventArgs e)
         {
             DataRowRemoving(this, e);
@@ -1082,6 +1244,10 @@ namespace DevZest.Data
             DataSetContainer.ResumeComputation();
         }
 
+        /// <summary>
+        /// Raises <see cref="DataRowRemoved"/> event.
+        /// </summary>
+        /// <param name="e"></param>
         protected virtual void OnDataRowRemoved(DataRowRemovedEventArgs e)
         {
             DataRowRemoved(this, e);
@@ -1102,12 +1268,19 @@ namespace DevZest.Data
             DataSetContainer.ResumeComputation();
         }
 
+        /// <summary>
+        /// Raises <see cref="ValueChanged"/> event.
+        /// </summary>
+        /// <param name="e"></param>
         protected virtual void OnValueChanged(ValueChangedEventArgs e)
         {
             ValueChanged(this, e);
         }
 
         private DataSetContainer _dataSetContainer;
+        /// <summary>
+        /// Gets the DataSet container which owns this model.
+        /// </summary>
         public DataSetContainer DataSetContainer
         {
             get { return RootModel._dataSetContainer; }
@@ -1140,46 +1313,82 @@ namespace DevZest.Data
             get { return false; }
         }
 
+        /// <summary>
+        /// Gets the name of this model.
+        /// </summary>
+        /// <returns>The name of this model.</returns>
         public string GetName()
         {
             return Name;
         }
 
+        /// <summary>
+        /// Gets the columns owned by this model.
+        /// </summary>
+        /// <returns>The columns owned by this model.</returns>
         public ColumnCollection GetColumns()
         {
             return Columns;
         }
 
+        /// <summary>
+        /// Gets the local columns owned by this model.
+        /// </summary>
+        /// <returns>The local columns owned by this model.</returns>
         public IReadOnlyList<Column> GetLocalColumns()
         {
             return LocalColumns;
         }
 
+        /// <summary>
+        /// Gets the column lists owned by this model.
+        /// </summary>
+        /// <returns>The column lists owned by this model.</returns>
         public IReadOnlyList<ColumnList> GetColumnLists()
         {
             return ColumnLists;
         }
 
+        /// <summary>
+        /// Gets the child models owned by this model.
+        /// </summary>
+        /// <returns>The child models owned by this model.</returns>
         public ModelCollection GetChildModels()
         {
             return ChildModels;
         }
 
+        /// <summary>
+        /// Gets the ordinal of this child model.
+        /// </summary>
+        /// <returns>The ordinal of this child model.</returns>
         public int GetOrdinal()
         {
             return Ordinal;
         }
 
+        /// <summary>
+        /// Gets the DataSource which owns this model.
+        /// </summary>
+        /// <returns>The DataSource which owns this model.</returns>
         public DataSource GetDataSource()
         {
             return DataSource;
         }
 
+        /// <summary>
+        /// Gets the DataSet which owns this model.
+        /// </summary>
+        /// <returns>The DataSet which owns this model.</returns>
         public DataSet GetDataSet()
         {
             return DataSet;
         }
 
+        /// <summary>
+        /// Gets the depth of this nested model.
+        /// </summary>
+        /// <returns>The depth of this nested model.</returns>
         public int GetDepth()
         {
             return Depth;

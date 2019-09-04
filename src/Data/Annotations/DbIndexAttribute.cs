@@ -21,7 +21,7 @@ namespace DevZest.Data.Annotations
         /// <inheritdoc />
         protected override void Wireup(Model model, string dbName, ColumnSort[] sortOrder)
         {
-            model.Index(dbName, Description, IsUnique, IsCluster, IsValidOnTable, IsValidOnTempTable, sortOrder);
+            model.AddDbIndex(dbName, Description, IsUnique, IsCluster, IsValidOnTable, IsValidOnTempTable, sortOrder);
         }
 
         /// <summary>
