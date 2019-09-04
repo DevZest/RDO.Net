@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents database recordset.
+    /// </summary>
+    /// <typeparam name="T">Entity type of database recordset.</typeparam>
     public abstract class DbSet<T> : DataSource, IDbSet
         where T : class, IEntity, new()
     {
@@ -18,10 +22,17 @@ namespace DevZest.Data
             _ = modelRef;
         }
 
+        /// <summary>
+        /// Gets the database session which owns this recordset.
+        /// </summary>
         public DbSession DbSession { get; private set; }
 
+        /// <summary>
+        /// Gets the entity of this database recordset.
+        /// </summary>
         public T _ { get; private set; }
 
+        /// <inheritdoc />
         public sealed override Model Model
         {
             get { return _.Model; }
@@ -48,6 +59,11 @@ namespace DevZest.Data
             get { return SequentialQueryStatement; }
         }
 
+        /// <summary>
+        /// Filters this database recordset.
+        /// </summary>
+        /// <param name="predicate">The filter condition.</param>
+        /// <returns>The query which filters this database recordset.</returns>
         public DbQuery<T> Where(Func<T, _Boolean> predicate)
         {
             predicate.VerifyNotNull(nameof(predicate));
@@ -56,7 +72,7 @@ namespace DevZest.Data
 
         private Action<DbQueryBuilder> GetWhereQueryBuilder(_Boolean condition)
         {
-            if (object.ReferenceEquals(condition, null))
+            if (condition is null)
                 return x => { };
             else
                 return x => x.Where(condition);
@@ -64,30 +80,53 @@ namespace DevZest.Data
 
         private DbQuery<T> Where(_Boolean condition)
         {
-            T newModel;
-            var queryStatement = GetSimpleQueryStatement(GetWhereQueryBuilder(condition), out newModel);
+            var queryStatement = GetSimpleQueryStatement(GetWhereQueryBuilder(condition), out T newModel);
             return DbSession.PerformCreateQuery(newModel, queryStatement);
         }
 
+        /// <summary>
+        /// Sorts this database recordset.
+        /// </summary>
+        /// <param name="fnOrderByList">The order by list to sort.</param>
+        /// <returns>The query which sorts this database recordset.</returns>
         public DbQuery<T> OrderBy(params Func<T, ColumnSort>[] fnOrderByList)
         {
             return OrderBy(-1, -1, fnOrderByList);
         }
 
-        public DbQuery<T> OrderBy(int offset, int fetch, params Func<T, ColumnSort>[] fnOrderBy)
+        /// <summary>
+        /// Sorts this database recordset.
+        /// </summary>
+        /// <param name="offset">Specifies how many rows to skip within the query result.</param>
+        /// <param name="fetch">Specifies how many rows to skip within the query result.</param>
+        /// <param name="fnOrderByList">The order by list to sort.</param>
+        /// <returns>The query which sorts this database recordset.</returns>
+        public DbQuery<T> OrderBy(int offset, int fetch, params Func<T, ColumnSort>[] fnOrderByList)
         {
-            var orderBy = GetOrderBy(fnOrderBy);
+            var orderBy = GetOrderBy(fnOrderByList);
             return OrderBy(offset, fetch, orderBy);
         }
 
+        /// <summary>
+        /// Sorts this database recordset.
+        /// </summary>
+        /// <param name="fnOrderByList">The order by list to sort.</param>
+        /// <returns>The query which sorts this database recordset.</returns>
         public DbQuery<T> OrderBy(Func<T, ColumnSort[]> fnOrderByList)
         {
             return OrderBy(-1, -1, fnOrderByList);
         }
 
-        public DbQuery<T> OrderBy(int offset, int fetch, Func<T, ColumnSort[]> fnOrderBy)
+        /// <summary>
+        /// Sorts this database recordset.
+        /// </summary>
+        /// <param name="offset">Specifies how many rows to skip within the query result.</param>
+        /// <param name="fetch">Specifies how many rows to skip within the query result.</param>
+        /// <param name="fnOrderByList">The order by list to sort.</param>
+        /// <returns>The query which sorts this database recordset.</returns>
+        public DbQuery<T> OrderBy(int offset, int fetch, Func<T, ColumnSort[]> fnOrderByList)
         {
-            var orderBy = fnOrderBy == null ? Array.Empty<ColumnSort>() : fnOrderBy(_);
+            var orderBy = fnOrderByList == null ? Array.Empty<ColumnSort>() : fnOrderByList(_);
             return OrderBy(offset, fetch, orderBy);
         }
 
@@ -101,8 +140,7 @@ namespace DevZest.Data
 
         private DbQuery<T> OrderBy(int offset, int fetch, ColumnSort[] orderBy)
         {
-            T newModel;
-            var queryStatement = GetSimpleQueryStatement(GetOrderByQueryBuilder(offset, fetch, orderBy), out newModel);
+            var queryStatement = GetSimpleQueryStatement(GetOrderByQueryBuilder(offset, fetch, orderBy), out T newModel);
             return DbSession.PerformCreateQuery(newModel, queryStatement);
         }
 
@@ -116,8 +154,7 @@ namespace DevZest.Data
 
         internal DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action = null)
         {
-            T newModel;
-            return GetSimpleQueryStatement(action, out newModel);
+            return GetSimpleQueryStatement(action, out T newModel);
         }
 
         private DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action, out T newModelProvider)
@@ -144,11 +181,22 @@ namespace DevZest.Data
             return childModel;
         }
 
+        /// <summary>
+        /// Saves this database recordset into DataSet.
+        /// </summary>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The saved DataSet.</returns>
         public Task<DataSet<T>> ToDataSetAsync(CancellationToken ct = default(CancellationToken))
         {
             return ToDataSetAsync(null, ct);
         }
 
+        /// <summary>
+        /// Saves this database recordset into DataSet.
+        /// </summary>
+        /// <param name="initializer">The entity initializer.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The saved DataSet.</returns>
         public async Task<DataSet<T>> ToDataSetAsync(Action<T> initializer, CancellationToken ct = default(CancellationToken))
         {
             var result = this.MakeDataSet(initializer);
@@ -156,16 +204,32 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Serializes this database recordset into JSON string.
+        /// </summary>
+        /// <param name="isPretty">Specifies whether serialized JSON string should be indented.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The serialized JSON string.</returns>
         public async Task<string> ToJsonStringAsync(bool isPretty, CancellationToken ct = default(CancellationToken))
         {
             return (await ToDataSetAsync(ct)).ToJsonString(isPretty);
         }
 
+        /// <summary>
+        /// Constructs a SQL UNION query.
+        /// </summary>
+        /// <param name="dbSet">The database recordset to union with.</param>
+        /// <returns>The result SQL UNION query.</returns>
         public DbQuery<T> Union(DbSet<T> dbSet)
         {
             return Union(dbSet, DbUnionKind.Union);
         }
 
+        /// <summary>
+        /// Constructs a SQL UNION ALL query.
+        /// </summary>
+        /// <param name="dbSet">The database recordset to union with.</param>
+        /// <returns>The result SQL UNION ALL query.</returns>
         public DbQuery<T> UnionAll(DbSet<T> dbSet)
         {
             return Union(dbSet, DbUnionKind.UnionAll);
@@ -185,17 +249,25 @@ namespace DevZest.Data
         {
             return DbSession.CreateAggregateQuery((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
             {
-                T m;
-                builder.From(this, out m)
+                builder.From(this, out T m)
                     .Select(this._.Model.Columns[0].CountRows(), adhoc, "Result");
             });
         }
 
+        /// <summary>
+        /// Gets the total number of records of this database recordset.
+        /// </summary>
+        /// <returns>The total number of records of this database recordset.</returns>
         public Task<int> CountAsync()
         {
             return CountAsync(CancellationToken.None);
         }
 
+        /// <summary>
+        /// Gets the total number of records of this database recordset.
+        /// </summary>
+        /// <param name="cancellationToken">The async cancellation token.</param>
+        /// <returns>The total number of records of this database recordset.</returns>
         public virtual async Task<int> CountAsync(CancellationToken cancellationToken)
         {
             var query = BuildCountQuery();
@@ -213,6 +285,11 @@ namespace DevZest.Data
             return new DbJoinClause(DbJoinKind.InnerJoin, FromClause, dbTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
         }
 
+        /// <summary>
+        /// Generates a database query.
+        /// </summary>
+        /// <typeparam name="TDerived">The derived entity class.</typeparam>
+        /// <returns>The result database query.</returns>
         public DbQuery<TDerived> ToDbQuery<TDerived>()
             where TDerived : class, T, new()
         {
@@ -229,11 +306,19 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Executes the database reader.
+        /// </summary>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The database reader.</returns>
         public Task<DbReader> ExecuteDbReaderAsync(CancellationToken ct = default(CancellationToken))
         {
             return DbSession.ExecuteDbReaderAsync(this, ct);
         }
 
+        /// <summary>
+        /// Gets the entity associated with this database recordset.
+        /// </summary>
         public T Entity
         {
             get { return _; }

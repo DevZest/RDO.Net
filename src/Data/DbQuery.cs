@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents a database query.
+    /// </summary>
+    /// <typeparam name="T">Type of entity.</typeparam>
     public sealed class DbQuery<T> : DbSet<T>
         where T : class, IEntity, new()
     {
@@ -27,6 +31,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc />
         public sealed override DataSourceKind Kind
         {
             get { return DataSourceKind.DbQuery; }
@@ -54,6 +59,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return DbSession.GetSqlString(QueryStatement);
@@ -69,24 +75,50 @@ namespace DevZest.Data
             get { return QueryStatement.SequentialKeyTempTable; }
         }
 
+        /// <inheritdoc />
         public override Task<int> CountAsync(CancellationToken ct = default(CancellationToken))
         {
             // If SequentialKeyTempTable created, return its InitialRowCount directly. This will save one database query.
             return SequentialKeyTempTable == null ? base.CountAsync(ct) : Task.FromResult(SequentialKeyTempTable.InitialRowCount);
         }
 
+        /// <summary>
+        /// Creates child query from DbSet.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child model.</typeparam>
+        /// <param name="getChildModel">The delegate to get child model.</param>
+        /// <param name="sourceData">The source DbSet.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The child query.</returns>
         public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
             return CreateChildAsync(null, getChildModel, sourceData, ct);
         }
 
+        /// <summary>
+        /// Creates child query from query builder.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child model.</typeparam>
+        /// <param name="getChildModel">The delegate to get child model.</param>
+        /// <param name="buildQuery">The query builder.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The child query.</returns>
         public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
             return CreateChildAsync(null, getChildModel, buildQuery, ct);
         }
 
+        /// <summary>
+        /// Creates child query from DbSet.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child model.</typeparam>
+        /// <param name="initializer">The child model initializer.</param>
+        /// <param name="getChildModel">The delegate to get child model.</param>
+        /// <param name="sourceData">The source DbSet.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The child query.</returns>
         public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
@@ -99,6 +131,15 @@ namespace DevZest.Data
             return DbSession.PerformCreateQuery(model, sourceData.QueryStatement.BuildQueryStatement(model, null, null));
         }
 
+        /// <summary>
+        /// Creates child query from query builder.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child model.</typeparam>
+        /// <param name="initializer">The child model initializer.</param>
+        /// <param name="getChildModel">The delegate to get child model.</param>
+        /// <param name="buildQuery">The query builder.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The child query.</returns>
         public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
@@ -113,6 +154,14 @@ namespace DevZest.Data
             return DbSession.PerformCreateQuery(childModel, queryBuilder.BuildQueryStatement(null));
         }
 
+        /// <summary>
+        /// Creates child query from aggregate query builder.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child model.</typeparam>
+        /// <param name="getChildModel">The delegate to get child model.</param>
+        /// <param name="buildQuery">The aggregate query builder.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The child query.</returns>
         public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
@@ -120,6 +169,15 @@ namespace DevZest.Data
         }
 
 
+        /// <summary>
+        /// Creates child query from aggregate query builder.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child model.</typeparam>
+        /// <param name="initializer">The child model initializer.</param>
+        /// <param name="getChildModel">The delegate to get child model.</param>
+        /// <param name="buildQuery">The aggregate query builder.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The child query.</returns>
         public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken ct = default(CancellationToken))
             where TChild : Model, new()
         {
@@ -134,6 +192,12 @@ namespace DevZest.Data
             return DbSession.PerformCreateQuery(childModel, queryBuilder.BuildQueryStatement(null));
         }
 
+        /// <summary>
+        /// Gets child query.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child model.</typeparam>
+        /// <param name="getChildModel">The delegate to get child model.</param>
+        /// <returns>The child query, <see langword="null" /> if not existed.</returns>
         public DbQuery<TChild> GetChild<TChild>(Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {

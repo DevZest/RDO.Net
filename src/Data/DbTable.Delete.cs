@@ -10,11 +10,22 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
+        /// <summary>
+        /// Deletes all records in this database table.
+        /// </summary>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync(CancellationToken ct = default(CancellationToken))
         {
             return DeleteAsync(null, ct);
         }
 
+        /// <summary>
+        /// Deletes records in this database table by condition.
+        /// </summary>
+        /// <param name="where">The condition.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync(Func<T, _Boolean> where, CancellationToken ct = default(CancellationToken))
         {
             VerifyDeletable();
@@ -27,12 +38,27 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, null, null, whereExpr, null, -1, -1);
         }
 
+        /// <summary>
+        /// Deletes records in this database table from matching database recordset.
+        /// </summary>
+        /// <typeparam name="TSource">Entity type of the source database recordset.</typeparam>
+        /// <param name="source">The matching database recordset.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
             return DeleteAsync(source, KeyMapping.Match, ct);
         }
 
+        /// <summary>
+        /// Deletes records in this database table from matching database recordset.
+        /// </summary>
+        /// <typeparam name="TSource">Entity type of the source database recordset.</typeparam>
+        /// <param name="source">The matching database recordset.</param>
+        /// <param name="keyMapper">Provides key mapping between source database recordset and this table.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IEntity, new()
         {
@@ -42,12 +68,29 @@ namespace DevZest.Data
             return DbTableDelete<T>.ExecuteAsync(this, source, columnMappings, ct);
         }
 
+        /// <summary>
+        /// Deletes from matching row in DataSet.
+        /// </summary>
+        /// <typeparam name="TSource">Entity type of the source DataSet.</typeparam>
+        /// <param name="source">The source matching DataSet.</param>
+        /// <param name="rowIndex">The row index in the DataSet.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, int rowIndex, CancellationToken ct = default(CancellationToken))
             where TSource : class, T, new()
         {
             return DeleteAsync(source, rowIndex, KeyMapping.Match, ct);
         }
 
+        /// <summary>
+        /// Deletes from matching row in DataSet.
+        /// </summary>
+        /// <typeparam name="TSource">Entity type of the source DataSet.</typeparam>
+        /// <param name="source">The source matching DataSet.</param>
+        /// <param name="rowIndex">The row index in the DataSet.</param>
+        /// <param name="keyMapper">Provides key mapping between source DataSet and this table.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IEntity, new()
         {
@@ -57,12 +100,27 @@ namespace DevZest.Data
             return DbTableDelete<T>.ExecuteAsync(this, source, rowIndex, columnMappings, ct);
         }
 
+        /// <summary>
+        /// Deletes records in this database table from matching DataSet.
+        /// </summary>
+        /// <typeparam name="TSource">Entity type of the source DataSet.</typeparam>
+        /// <param name="source">The source matching DataSet.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, CancellationToken ct)
             where TSource : class, T, new()
         {
             return DeleteAsync(source, KeyMapping.Match, ct);
         }
 
+        /// <summary>
+        /// Deletes records in this database table from matching DataSet.
+        /// </summary>
+        /// <typeparam name="TSource">Entity type of the source DataSet.</typeparam>
+        /// <param name="source">The source matching DataSet.</param>
+        /// <param name="keyMapper">Provides key mapping between source DataSet and this table.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
             where TSource : class, IEntity, new()
         {

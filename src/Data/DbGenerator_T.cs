@@ -7,15 +7,21 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Generates database with all permanent tables.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class DbGenerator<T> : DbInitializer<T>
         where T : DbSession
     {
+        /// <inheritdoc />
         public sealed override async Task<T> GenerateAsync(T db, IProgress<DbInitProgress> progress = null, CancellationToken ct = default(CancellationToken))
         {
             await InitializeAsync(db, nameof(db), progress, ct);
             return db;
         }
 
+        /// <inheritdoc />
         protected sealed override void Initialize()
         {
             InitializeData();
@@ -34,6 +40,12 @@ namespace DevZest.Data
         }
 
         private Dictionary<IDbTable, Func<CancellationToken, Task>> _actions;
+        /// <summary>
+        /// Set data for specified table.
+        /// </summary>
+        /// <typeparam name="TModel">Model type of the table.</typeparam>
+        /// <param name="dbTable">The database table.</param>
+        /// <param name="getDataSet">Delegate to return the DataSet which contains the data.</param>
         protected void SetData<TModel>(DbTable<TModel> dbTable, Func<DataSet<TModel>> getDataSet)
             where TModel : Model, new()
         {
@@ -59,6 +71,10 @@ namespace DevZest.Data
             });
         }
 
+        /// <summary>
+        /// Initializes data in tables.
+        /// </summary>
+        /// <remarks>Override this method in derived class and call <see cref="SetData{TModel}(DbTable{TModel}, Func{DataSet{TModel}})"/>.</remarks>
         protected virtual void InitializeData()
         {
         }

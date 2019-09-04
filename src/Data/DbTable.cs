@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents a database table.
+    /// </summary>
+    /// <typeparam name="T">Entity type of database table.</typeparam>
     public sealed partial class DbTable<T> : DbSet<T>, IDbTable
         where T : class, IEntity, new()
     {
@@ -27,7 +31,7 @@ namespace DevZest.Data
             return result;
         }
 
-        public static DbTable<T> MockTemp(T modelRef, DbSession dbSession, string identifier, Action<DbTable<T>> initializer = null)
+        internal static DbTable<T> MockTemp(T modelRef, DbSession dbSession, string identifier, Action<DbTable<T>> initializer = null)
         {
             return CreateTemp(modelRef, dbSession, identifier, initializer);
         }
@@ -44,20 +48,33 @@ namespace DevZest.Data
 
         internal int InitialRowCount { get; set; }
 
+        /// <summary>
+        /// Gets the identifier of this table.
+        /// </summary>
         public string Identifier { get; private set; }
 
         private string _name;
+        /// <summary>
+        /// Gets the name of this table.
+        /// </summary>
         public string Name
         {
             get { return _name ?? Identifier; }
             internal set { _name = value; }
         }
 
+        /// <summary>
+        /// Gets the description of this table.
+        /// </summary>
         public string Description { get; internal set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this DbTable object is in design mode.
+        /// </summary>
         public bool DesignMode { get; private set; } = true;
 
         private DataSourceKind _kind;
+        /// <inheritdoc />
         public override DataSourceKind Kind
         {
             get { return _kind; }
@@ -113,24 +130,45 @@ namespace DevZest.Data
             get { return LazyInitializer.EnsureInitialized(ref _fromClause, () => new DbTableClause(Model, Name)); }
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return Name;
         }
 
+        /// <summary>
+        /// Creates child tempoary table.
+        /// </summary>
+        /// <typeparam name="TChild">Child model type.</typeparam>
+        /// <param name="getChildModel">Delete to get child model.</param>
+        /// <returns>The child temporary table.</returns>
         public Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
             return CreateChildAsync(null, getChildModel);
         }
 
-
+        /// <summary>
+        /// Creates child tempoary table.
+        /// </summary>
+        /// <typeparam name="TChild">Child model type.</typeparam>
+        /// <param name="initializer">The child model initializer.</param>
+        /// <param name="getChildModel">Delete to get child model.</param>
+        /// <returns>The child temporary table.</returns>
         public Task<DbTable<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
             return CreateChildAsync(initializer, getChildModel, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Creates child tempoary table.
+        /// </summary>
+        /// <typeparam name="TChild">Child model type.</typeparam>
+        /// <param name="initializer">The child model initializer.</param>
+        /// <param name="getChildModel">Delete to get child model.</param>
+        /// <param name="cancellationToken">The async cancellation token.</param>
+        /// <returns>The child temporary table.</returns>
         public async Task<DbTable<TChild>> CreateChildAsync<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
@@ -143,6 +181,12 @@ namespace DevZest.Data
             return result;
         }
 
+        /// <summary>
+        /// Gets the child tempoary table.
+        /// </summary>
+        /// <typeparam name="TChild">Child model type.</typeparam>
+        /// <param name="getChildModel">Delete to get child model.</param>
+        /// <returns>The child temporary table.</returns>
         public DbTable<TChild> GetChild<TChild>(Func<T, TChild> getChildModel)
             where TChild : Model, new()
         {
