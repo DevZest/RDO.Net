@@ -33,13 +33,20 @@ namespace DevZest.Data
             }
         }
 
-        public static T IfNull<T>(this T x, T replaceColumn)
+        /// <summary>
+        /// Returns a specified value if the specified column value is null.
+        /// </summary>
+        /// <typeparam name="T">Type of the column.</typeparam>
+        /// <param name="x">The column.</param>
+        /// <param name="valueForNull">The specified value.</param>
+        /// <returns>The column contains the result value.</returns>
+        public static T IfNull<T>(this T x, T valueForNull)
             where T : Column, new()
         {
             x.VerifyNotNull(nameof(x));
-            replaceColumn.VerifyNotNull(nameof(replaceColumn));
+            valueForNull.VerifyNotNull(nameof(valueForNull));
 
-            return IfNullFunctionInvoker<T>.Singleton.Invoke(x, replaceColumn);
+            return IfNullFunctionInvoker<T>.Singleton.Invoke(x, valueForNull);
         }
 
         private sealed class IfNullFunctionInvoker<T> : ColumnInvoker<T, T>

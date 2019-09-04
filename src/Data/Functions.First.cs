@@ -61,6 +61,12 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets the first value in the column.
+        /// </summary>
+        /// <typeparam name="T">Type of the column.</typeparam>
+        /// <param name="x">The column.</param>
+        /// <returns>The result contains the first value.</returns>
         public static T First<T>(this T x)
             where T : Column
         {

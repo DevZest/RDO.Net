@@ -35,6 +35,12 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Determines whether column contains specified value.
+        /// </summary>
+        /// <param name="x">The column.</param>
+        /// <param name="value">The specified value.</param>
+        /// <returns>A <see cref="_Boolean"/> column which contains the result.</returns>
         public static _Boolean Contains(this _String x, _String value)
         {
             x.VerifyNotNull(nameof(x));

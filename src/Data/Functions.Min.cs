@@ -107,6 +107,12 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets the minimum value in the column.
+        /// </summary>
+        /// <typeparam name="T">Type of the column.</typeparam>
+        /// <param name="x">The column.</param>
+        /// <returns>The result contains the minimum value.</returns>
         public static T Min<T>(this T x)
             where T : Column
         {

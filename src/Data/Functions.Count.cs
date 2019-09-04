@@ -40,6 +40,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Counts number of non null values in specified column.
+        /// </summary>
+        /// <param name="x">The specified column.</param>
+        /// <returns>Number of non null values in specified column.</returns>
         public static _Int32 Count(this Column x)
         {
             return new CountFunction(x).MakeColumn<_Int32>();

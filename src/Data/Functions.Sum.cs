@@ -62,6 +62,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Calculates total value for specified column.
+        /// </summary>
+        /// <param name="x">The specified column.</param>
+        /// <returns>The column contains the total result.</returns>
         public static _Int32 Sum(this Column<Int32?> x)
         {
             x.VerifyNotNull(nameof(x));
@@ -100,6 +105,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Calculates total value for specified column.
+        /// </summary>
+        /// <param name="x">The specified column.</param>
+        /// <returns>The column contains the total result.</returns>
         public static _Int64 Sum(this Column<Int64?> x)
         {
             x.VerifyNotNull(nameof(x));
@@ -138,6 +148,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Calculates total value for specified column.
+        /// </summary>
+        /// <param name="x">The specified column.</param>
+        /// <returns>The column contains the total result.</returns>
         public static _Decimal Sum(this Column<Decimal?> x)
         {
             x.VerifyNotNull(nameof(x));
@@ -176,6 +191,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Calculates total value for specified column.
+        /// </summary>
+        /// <param name="x">The specified column.</param>
+        /// <returns>The column contains the total result.</returns>
         public static _Double Sum(this Column<Double?> x)
         {
             x.VerifyNotNull(nameof(x));
@@ -214,6 +234,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Calculates total value for specified column.
+        /// </summary>
+        /// <param name="x">The specified column.</param>
+        /// <returns>The column contains the total result.</returns>
         public static _Single Sum(this Column<Single?> x)
         {
             x.VerifyNotNull(nameof(x));

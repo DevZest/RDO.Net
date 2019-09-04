@@ -27,6 +27,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Determines whether specified column is not null value.
+        /// </summary>
+        /// <param name="x">The column.</param>
+        /// <returns>The <see cref="_Boolean"/> column which contains the result.</returns>
         public static _Boolean IsNotNull(this Column x)
         {
             x.VerifyNotNull(nameof(x));

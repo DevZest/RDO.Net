@@ -39,6 +39,11 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Counts number of rows in specified column.
+        /// </summary>
+        /// <param name="x">The specified column.</param>
+        /// <returns>Number of rows.</returns>
         public static _Int32 CountRows(this Column x)
         {
             return new CountRowsFunction(x).MakeColumn<_Int32>();
