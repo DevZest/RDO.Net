@@ -45,7 +45,7 @@ namespace DevZest.Data
         public static DataValidationError ParseJson(DataSet dataSet, string json, IJsonCustomizer customizer = null)
         {
             var jsonReader = JsonReader.Create(json, customizer);
-            var result = jsonReader.ParseValidationMessage(dataSet);
+            var result = jsonReader.ParseDataValidationError(dataSet);
             jsonReader.ExpectEof();
             return result;
         }

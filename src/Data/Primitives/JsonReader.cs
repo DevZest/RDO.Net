@@ -1,12 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Reads a JSON (RFC 4627) encoded value as a stream of tokens.
+    /// </summary>
     public abstract class JsonReader
     {
+        /// <summary>
+        /// Creates <see cref="JsonReader"/> object from JSON string.
+        /// </summary>
+        /// <param name="json">The JSON string.</param>
+        /// <param name="customizer">The customizer.</param>
+        /// <returns>The created <see cref="JsonReader"/> object.</returns>
         public static JsonReader Create(string json, IJsonCustomizer customizer)
         {
             return new StringJsonReader(json, customizer);
@@ -297,18 +305,36 @@ namespace DevZest.Data.Primitives
 
         JsonToken? _lookAhead;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="JsonReader"/> class.
+        /// </summary>
+        /// <param name="customer">The customizer.</param>
         protected JsonReader(IJsonCustomizer customer)
         {
             Customizer = Customizer;
         }
 
+        /// <summary>
+        /// Gets the customizer.
+        /// </summary>
         protected IJsonCustomizer Customizer { get; }
 
+        /// <summary>
+        /// Determines whether specified column is deserializable.
+        /// </summary>
+        /// <param name="column">The specified column.</param>
+        /// <returns><see langword="true"/> if specified column is deserializable, otherwise <see langword="false"/>.</returns>
         public bool IsDeserializable(Column column)
         {
             return Customizer == null ? column.IsDeserializable : Customizer.IsDeserializable(column);
         }
 
+        /// <summary>
+        /// Deserializes specified <see cref="JsonValue"/> into column data value.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="rowOrdinal">The ordinal of DataRow.</param>
+        /// <param name="value">The specified JsonValue.</param>
         public void Deserialize(Column column, int rowOrdinal, JsonValue value)
         {
             var jsonConverter = Customizer?.GetConverter(column);
@@ -318,6 +344,10 @@ namespace DevZest.Data.Primitives
                 column.Deserialize(rowOrdinal, value);
         }
 
+        /// <summary>
+        /// Reads current token without advancing to next token position.
+        /// </summary>
+        /// <returns>Current token.</returns>
         public JsonToken PeekToken()
         {
             if (!_lookAhead.HasValue)
@@ -326,17 +356,28 @@ namespace DevZest.Data.Primitives
             return _lookAhead.GetValueOrDefault();
         }
 
+        /// <summary>
+        /// Advances to next token position.
+        /// </summary>
         public void ConsumeToken()
         {
             Debug.Assert(_lookAhead.HasValue);
             _lookAhead = null;
         }
 
+        /// <summary>
+        /// Expects current token is Eof.
+        /// </summary>
         public virtual void ExpectEof()
         {
             InternalExpectToken(JsonTokenKind.Eof);
         }
 
+        /// <summary>
+        /// Expects current token is specified kind.
+        /// </summary>
+        /// <param name="expectedTokenKind">The token kind.</param>
+        /// <returns>Current token, or exception thrown if current token is not satisfied.</returns>
         public JsonToken ExpectToken(JsonTokenKind expectedTokenKind)
         {
             if (expectedTokenKind == JsonTokenKind.Eof)
@@ -359,6 +400,10 @@ namespace DevZest.Data.Primitives
             ExpectToken(JsonTokenKind.Comma);
         }
 
+        /// <summary>
+        /// Expects current token as specified property name.
+        /// </summary>
+        /// <param name="propertyName">The specified property name.</param>
         public void ExpectPropertyName(string propertyName)
         {
             var tokenText = ExpectToken(JsonTokenKind.PropertyName).Text;
@@ -366,10 +411,16 @@ namespace DevZest.Data.Primitives
                 throw new FormatException(DiagnosticMessages.JsonReader_InvalidObjectName(tokenText, propertyName));
         }
 
-        public string ExpectNullableStringProperty(string objectName, bool expectComma)
+        /// <summary>
+        /// Expects a named nullable string property.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="expectComma">Expects comma ahead.</param>
+        /// <returns>The string value of the property.</returns>
+        public string ExpectNullableStringProperty(string propertyName, bool expectComma)
         {
             string result;
-            ExpectPropertyName(objectName);
+            ExpectPropertyName(propertyName);
             if (PeekToken().Kind == JsonTokenKind.Null)
             {
                 ConsumeToken();
@@ -382,15 +433,25 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        public string ExpectStringProperty(string objectName, bool expectComma)
+        /// <summary>
+        /// Expects a named string property.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="expectComma">Expects comma ahead.</param>
+        /// <returns>The string value of the property.</returns>
+        public string ExpectStringProperty(string propertyName, bool expectComma)
         {
-            ExpectPropertyName(objectName);
+            ExpectPropertyName(propertyName);
             var result = ExpectToken(JsonTokenKind.String).Text;
             if (expectComma)
                 ExpectToken(JsonTokenKind.Comma);
             return result;
         }
 
+        /// <summary>
+        /// Reads next token.
+        /// </summary>
+        /// <returns>The next token.</returns>
         protected abstract JsonToken NextToken();
     }
 }

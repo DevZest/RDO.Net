@@ -3,6 +3,9 @@ using System;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Represents model that contains primary key of specified model.
+    /// </summary>
     public class KeyOutput : Model
     {
         private sealed class PK : CandidateKey
@@ -24,10 +27,17 @@ namespace DevZest.Data.Primitives
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="KeyOutput"/> class.
+        /// </summary>
         public KeyOutput()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="KeyOutput"/> class.
+        /// </summary>
+        /// <param name="model">The source model.</param>
         public KeyOutput(Model model)
         {
             model.VerifyNotNull(nameof(model));
@@ -52,16 +62,24 @@ namespace DevZest.Data.Primitives
 
         private readonly string _sourceDbAlias;
 
+        /// <inheritdoc/>
         protected virtual string DbAliasPrefix
         {
             get { return "sys_key_"; }
         }
 
+        /// <inheritdoc/>
         protected internal override string DbAlias
         {
             get { return DbAliasPrefix  + _sourceDbAlias; }
         }
 
+        /// <summary>
+        /// Builds key mappings between source model and target <see cref="KeyOutput"/> model.
+        /// </summary>
+        /// <param name="mapper">The column mapper.</param>
+        /// <param name="source">The source model.</param>
+        /// <param name="target">The target <see cref="KeyOutput"/> model.</param>
         public static void BuildKeyMappings(ColumnMapper mapper, Model source, KeyOutput target)
         {
             var sourceKey = source.PrimaryKey;

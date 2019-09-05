@@ -3,18 +3,41 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Provides extension methods to serialize/deserialize DataSet to/from JSON.
+    /// </summary>
     public static class JsonDataSet
     {
+        /// <summary>
+        /// Writes JSON for specified DataSet.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/>.</param>
+        /// <param name="dataSet">The DataSet.</param>
+        /// <returns>This <see cref="JsonWriter"/> for fluent coding.</returns>
         public static JsonWriter Write(this JsonWriter jsonWriter, DataSet dataSet)
         {
             return jsonWriter.InternalWrite(dataSet, dataSet);
         }
 
+        /// <summary>
+        /// Writes JSON for selected DataRow objects for specified DataSet.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/>.</param>
+        /// <param name="dataSet">The DataSet.</param>
+        /// <param name="dataRows">The selected DataRow objects.</param>
+        /// <returns>This <see cref="JsonWriter"/> for fluent coding.</returns>
         public static JsonWriter Write(this JsonWriter jsonWriter, DataSet dataSet, IEnumerable<DataRow> dataRows)
         {
             return jsonWriter.InternalWrite(dataSet, dataRows);
         }
 
+        /// <summary>
+        /// Writes JSON for selected DataRow objects for specified JsonView.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/>.</param>
+        /// <param name="jsonView">The JsonView.</param>
+        /// <param name="dataRows">The selected DataRow objects.</param>
+        /// <returns>This <see cref="JsonWriter"/> for fluent coding.</returns>
         public static JsonWriter Write(this JsonWriter jsonWriter, JsonView jsonView, IEnumerable<DataRow> dataRows)
         {
             return jsonWriter.InternalWrite(jsonView, dataRows);
@@ -34,6 +57,12 @@ namespace DevZest.Data.Primitives
             return jsonWriter.WriteEndArray();
         }
 
+        /// <summary>
+        /// Parses JSON into DataSet.
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/>.</param>
+        /// <param name="dataSetCreator">Delegate to create DataSet.</param>
+        /// <returns>The deserialized DataSet.</returns>
         public static DataSet Parse(this JsonReader jsonReader, Func<DataSet> dataSetCreator)
         {
             return jsonReader.Parse(dataSetCreator, isTopLevel: true);
@@ -54,6 +83,12 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
+        /// <summary>
+        /// Deserializes JSON into data values of DataSet.
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/>.</param>
+        /// <param name="dataSet">The data set.</param>
+        /// <param name="isTopLevel">A value inidicates whether DataSet is top level which should consume all JSON data.</param>
         public static void Deserialize(this JsonReader jsonReader, DataSet dataSet, bool isTopLevel)
         {
             dataSet.VerifyNotNull(nameof(dataSet));

@@ -3,13 +3,29 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Provides extension methods to serialize/deserialize DataRow to/from JSON.
+    /// </summary>
     public static class JsonDataRow
     {
+        /// <summary>
+        /// Writes JSON for specified DataRow.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/>.</param>
+        /// <param name="dataRow">The specified DataRow.</param>
+        /// <returns>This <see cref="JsonWriter"/> for fluent coding.</returns>
         public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow)
         {
             return Write(jsonWriter, dataRow.DataSet, dataRow);
         }
 
+        /// <summary>
+        /// Writes JSON for specified DataRow and JsonView.
+        /// </summary>
+        /// <param name="jsonWriter">The <see cref="JsonWriter"/>.</param>
+        /// <param name="dataRow">The DataRow.</param>
+        /// <param name="jsonView">The JsonView.</param>
+        /// <returns>This <see cref="JsonWriter"/> for fluent coding.</returns>
         public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow, JsonView jsonView)
         {
             return Write(jsonWriter, jsonView, dataRow);
@@ -146,6 +162,11 @@ namespace DevZest.Data.Primitives
             }
         }
 
+        /// <summary>
+        /// Deserializes JSON into data values of DataRow.
+        /// </summary>
+        /// <param name="jsonReader">The JsonReader.</param>
+        /// <param name="dataRow">The DataRow.</param>
         public static void Deserialize(this JsonReader jsonReader, DataRow dataRow)
         {
             var model = dataRow.Model;
