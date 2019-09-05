@@ -140,7 +140,7 @@ namespace DevZest.Data
                         throw new InvalidOperationException(DiagnosticMessages.Single_NoElement);
                 }
 
-                var dataSet = query.MakeDataSet();
+                var dataSet = query.MakeEmptyDataSet();
                 var result = dataSet._.GetColumn<T>();
                 var dataRow = dataSet.AddRow();
                 result.Read(dbReader, dataRow);

@@ -199,9 +199,16 @@ namespace DevZest.Data
         /// <returns>The saved DataSet.</returns>
         public async Task<DataSet<T>> ToDataSetAsync(Action<T> initializer, CancellationToken ct = default(CancellationToken))
         {
-            var result = this.MakeDataSet(initializer);
+            var result = MakeEmptyDataSet(initializer);
             await DbSession.RecursiveFillDataSetAsync(this, result, ct);
             return result;
+        }
+
+        internal DataSet<T> MakeEmptyDataSet(Action<T> initializer = null)
+        {
+            T modelRef = _.MakeCopy(false);
+            modelRef.Initialize(initializer);
+            return DataSet<T>.Create(modelRef);
         }
 
         /// <summary>

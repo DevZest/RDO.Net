@@ -139,11 +139,13 @@ namespace DevZest.Data.SqlServer
             where TSource : class, IEntity, new()
             where TTarget : class, IEntity, new()
         {
+            IDbSet sourceDbSet = source;
             if (target == null)
-                return source.GetFromClause();
+                return sourceDbSet.FromClause;
 
             var mappings = new ColumnMapping[] { source.Model.GetIdentity(false).Column.UnsafeMap(target.Model.GetIdentity(false).Column) };
-            return new DbJoinClause(DbJoinKind.LeftJoin, source.GetFromClause(), target.GetFromClause(), new ReadOnlyCollection<ColumnMapping>(mappings));
+            IDbSet targetDbSet = target;
+            return new DbJoinClause(DbJoinKind.LeftJoin, sourceDbSet.FromClause, targetDbSet.FromClause, new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
         private sealed class ScalarIdentityOutput : Model
