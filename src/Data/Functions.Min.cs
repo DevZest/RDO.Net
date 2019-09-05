@@ -46,7 +46,7 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class NullableMinFunction<[UnderlyingValueType]T> : AggregateFunctionExpression<Nullable<T>>
+        private sealed class NullableMinFunction<T> : AggregateFunctionExpression<Nullable<T>>
             where T : struct, IComparable<T>
         {
             public NullableMinFunction(Column<Nullable<T>> x)

@@ -45,7 +45,7 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class NullableMaxFunction<[UnderlyingValueType]T> : AggregateFunctionExpression<Nullable<T>>
+        private sealed class NullableMaxFunction<T> : AggregateFunctionExpression<Nullable<T>>
             where T : struct, IComparable<T>
         {
             public NullableMaxFunction(Column<Nullable<T>> x)
