@@ -129,8 +129,8 @@ namespace DevZest.Data
                 return DeleteAsync(source, 0, keyMapper, ct);
 
             VerifyDeletable();
-            var keyMappingTarget = Verify(keyMapper, nameof(keyMapper), source._).TargetKey;
-            return DbTableDelete<T>.ExecuteAsync(this, source, keyMappingTarget, ct);
+            var targetKey = Verify(keyMapper, nameof(keyMapper), source._).TargetKey;
+            return DbTableDelete<T>.ExecuteAsync(this, source, targetKey, ct);
         }
 
         internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> join)

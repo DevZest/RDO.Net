@@ -364,14 +364,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The reference table model is invalid. It must either be a self reference or a reference to a existing table.
-        /// </summary>
-        public static string Model_InvalidRefTableModel
-        {
-            get { return GetString("Model_InvalidRefTableModel"); }
-        }
-
-        /// <summary>
         /// The child DbSet has been created already.
         /// </summary>
         public static string DbSet_VerifyCreateChild_AlreadyCreated

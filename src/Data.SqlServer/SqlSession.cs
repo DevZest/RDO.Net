@@ -198,18 +198,18 @@ namespace DevZest.Data.SqlServer
         }
 
         protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
-            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo, CancellationToken ct)
+            Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey targetKey, CancellationToken ct)
         {
-            var command = BuildUpdateCommand(source, target, columnMapper, joinTo);
+            var command = BuildUpdateCommand(source, target, columnMapper, targetKey);
             return ExecuteNonQueryAsync(command, ct);
         }
 
-        internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey joinTo)
+        internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey targetKey)
             where TSource : class, IEntity, new()
             where TTarget : class, IEntity, new()
         {
             var import = BuildImportQuery(source);
-            var join = import.Model.PrimaryKey.UnsafeJoin(joinTo);
+            var join = import.Model.PrimaryKey.UnsafeJoin(targetKey);
             var statement = target.BuildUpdateStatement(import, columnMapper, join);
             return GetUpdateCommand(statement);
         }
@@ -219,18 +219,18 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Delete(this, statement).CreateCommand(Connection);
         }
 
-        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo, CancellationToken cancellationToken)
+        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey targetKey, CancellationToken cancellationToken)
         {
-            var command = BuildDeleteCommand(source, target, joinTo);
+            var command = BuildDeleteCommand(source, target, targetKey);
             return ExecuteNonQueryAsync(command, cancellationToken);
         }
 
-        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey joinTo)
+        internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey targetKey)
             where TSource : class, IEntity, new()
             where TTarget : class, IEntity, new()
         {
             var keys = BuildImportKeyQuery(source);
-            var columnMappings = keys._.PrimaryKey.UnsafeJoin(joinTo);
+            var columnMappings = keys._.PrimaryKey.UnsafeJoin(targetKey);
             var statement = target.BuildDeleteStatement(keys, columnMappings);
             return GetDeleteCommand(statement);
         }

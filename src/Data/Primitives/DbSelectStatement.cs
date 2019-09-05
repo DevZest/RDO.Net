@@ -4,8 +4,21 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Represents SQL SELECT statement.
+    /// </summary>
     public sealed class DbSelectStatement : DbQueryStatement
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="DbSelectStatement"/> class.
+        /// </summary>
+        /// <param name="model">The model of this query.</param>
+        /// <param name="select">The column mappings of the SELECT statement.</param>
+        /// <param name="from">The FROM clause.</param>
+        /// <param name="where">The WHERE expression.</param>
+        /// <param name="orderBy">The ORDER BY list.</param>
+        /// <param name="offset">Specifies how many rows to skip within the query result.</param>
+        /// <param name="fetch">Specifies how many rows to return in the query result.</param>
         public DbSelectStatement(Model model, IReadOnlyList<ColumnMapping> select, DbFromClause from, DbExpression where, IReadOnlyList<DbExpressionSort> orderBy, int offset, int fetch)
             : this(model, select, from, where, orderBy, offset, fetch, true)
         {
@@ -23,6 +36,18 @@ namespace DevZest.Data.Primitives
             IsSimple = isSimple && From != null && offset == -1 && fetch == -1;
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="DbSelectStatement"/> class.
+        /// </summary>
+        /// <param name="model">The model of this query.</param>
+        /// <param name="select">The column mappings of the SELECT statement.</param>
+        /// <param name="from">The FROM clause.</param>
+        /// <param name="where">The WHERE expression.</param>
+        /// <param name="groupBy">The GROUP BY list.</param>
+        /// <param name="having">The HAVING expression.</param>
+        /// <param name="orderBy">The ORDER BY list.</param>
+        /// <param name="offset">Specifies how many rows to skip within the query result.</param>
+        /// <param name="fetch">Specifies how many rows to return in the query result.</param>
         public DbSelectStatement(Model model, IReadOnlyList<ColumnMapping> select, DbFromClause from, DbExpression where, IReadOnlyList<DbExpression> groupBy, DbExpression having, IReadOnlyList<DbExpressionSort> orderBy, int offset, int fetch)
             : this(model, select, from, where, orderBy, offset, fetch, false)
         {
@@ -30,39 +55,73 @@ namespace DevZest.Data.Primitives
             Having = having;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this is an aggregate query.
+        /// </summary>
         public bool IsAggregate
         {
             get { return GroupBy != null; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this is a simple query.
+        /// </summary>
+        /// <remarks>Simple query can be merged when used as FROM.</remarks>
         public bool IsSimple { get; private set; }
 
+        /// <summary>
+        /// Gets the column mappings of the SELECT statement.
+        /// </summary>
         public IReadOnlyList<ColumnMapping> Select { get; private set; }
 
+        /// <summary>
+        /// Gets the FROM clause.
+        /// </summary>
         public DbFromClause From { get; private set; }
 
+        /// <summary>
+        /// Gets the WHERE expression.
+        /// </summary>
         public DbExpression Where { get; private set; }
 
+        /// <summary>
+        /// Gets the GROUP BY list.
+        /// </summary>
         public IReadOnlyList<DbExpression> GroupBy { get; private set; }
 
+        /// <summary>
+        /// Gets the HAVING expression.
+        /// </summary>
         public DbExpression Having { get; private set; }
 
+        /// <summary>
+        /// Gets the ORDER BY list.
+        /// </summary>
         public IReadOnlyList<DbExpressionSort> OrderBy { get; private set; }
 
+        /// <summary>
+        /// Gets a value that specifies how many rows to skip within the query result.
+        /// </summary>
         public int Offset { get; private set; }
 
+        /// <summary>
+        /// Gets avalue that specifies how many rows to return in the query result.
+        /// </summary>
         public int Fetch { get; private set; }
 
+        /// <inheritdoc/>
         public override void Accept(DbFromClauseVisitor visitor)
         {
             visitor.Visit(this);
         }
 
+        /// <inheritdoc/>
         public override T Accept<T>(DbFromClauseVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
 
+        /// <inheritdoc/>
         public override DbSelectStatement GetSequentialKeySelectStatement(SequentialKey sequentialKey)
         {
             var primaryKey = Model.PrimaryKey;
@@ -99,6 +158,7 @@ namespace DevZest.Data.Primitives
                 : base.BuildDeleteStatement(model, keyMappings);
         }
 
+        /// <inheritdoc/>
         public override DbSelectStatement BuildToTempTableStatement()
         {
             return this;

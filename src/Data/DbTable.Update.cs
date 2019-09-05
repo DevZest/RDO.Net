@@ -183,8 +183,8 @@ namespace DevZest.Data
                 return UpdateAsync(source, 0, columnMapper, keyMapper, ct);
 
             Verify(columnMapper, nameof(columnMapper));
-            var joinTo = Verify(keyMapper, nameof(keyMapper), source._).TargetKey;
-            return DbTableUpdate<T>.ExecuteAsync(this, source, columnMapper, joinTo, ct);
+            var targetKey = Verify(keyMapper, nameof(keyMapper), source._).TargetKey;
+            return DbTableUpdate<T>.ExecuteAsync(this, source, columnMapper, targetKey, ct);
         }
 
         internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> join)

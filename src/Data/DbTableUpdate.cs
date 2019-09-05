@@ -31,13 +31,13 @@ namespace DevZest.Data
             return target.UpdateOrigin<TSource>(null, await target.DbSession.UpdateAsync(statement, ct) > 0) ? 1 : 0;
         }
 
-        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey joinTo,
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CandidateKey targetKey,
             CancellationToken ct)
             where TSource : class, IEntity, new()
         {
             if (source.Count == 0)
                 return 0;
-            return await target.DbSession.UpdateAsync(source, target, columnMapper, joinTo, ct);
+            return await target.DbSession.UpdateAsync(source, target, columnMapper, targetKey, ct);
         }
     }
 }

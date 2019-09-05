@@ -1,7 +1,10 @@
-﻿using DevZest.Data.Helpers;
+﻿using DevZest.Data.Addons;
+using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.SqlServer
 {
@@ -29,7 +32,19 @@ namespace DevZest.Data.SqlServer
                 Name.SetDefaultValue("DEFAULT NAME", null, null);
                 AddDbUniqueConstraint("UQ_Temp", null, false, Unique1, Unique2.Desc());
                 AddDbCheckConstraint("CK_Temp", null, Name.IsNotNull());
-                this.AddDbTableConstraint(DbSession.CreateForeignKeyConstraint(null, null, FkRef, this, ForeignKeyRule.None, ForeignKeyRule.None), false);
+                this.AddDbTableConstraint(CreateForeignKeyConstraint(null, null, FkRef, this, ForeignKeyRule.None, ForeignKeyRule.None), false);
+            }
+
+            private static DbForeignKeyConstraint CreateForeignKeyConstraint<TKey>(string name, string description, TKey foreignKey, Model<TKey> refTableModel, ForeignKeyRule deleteRule, ForeignKeyRule updateRule)
+                where TKey : CandidateKey
+            {
+                Debug.Assert(foreignKey != null);
+                Debug.Assert(refTableModel != null);
+
+                var model = foreignKey.ParentModel;
+                var foreignKeyConstraint = new DbForeignKeyConstraint(name, description, foreignKey, refTableModel.PrimaryKey, deleteRule, updateRule);
+                Debug.Assert(!(refTableModel != model && string.IsNullOrEmpty(foreignKeyConstraint.ReferencedTableName)));
+                return foreignKeyConstraint;
             }
 
             protected sealed override PK CreatePrimaryKey()

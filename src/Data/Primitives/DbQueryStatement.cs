@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Represents SQL query statement.
+    /// </summary>
     public abstract class DbQueryStatement : DbFromClause
     {
         internal DbQueryStatement(Model model)
@@ -14,8 +17,15 @@ namespace DevZest.Data.Primitives
             Model = model;
         }
 
+        /// <summary>
+        /// Gets the model of this query.
+        /// </summary>
         public Model Model { get; private set; }
 
+        /// <summary>
+        /// Gets the temporary table which contains the sequential ids and primary key of the parent database recordset.
+        /// </summary>
+        /// <remarks>Child query/temporary table joins this table automatically to enforce parent-child relationship.</remarks>
         public DbTable<SequentialKey> SequentialKeyTempTable
         {
             get { return Model.SequentialKeyTempTable; }
@@ -35,6 +45,11 @@ namespace DevZest.Data.Primitives
             return await selectStatement.ToTempTableAsync(sequentialKey, dbSession, cancellationToken);
         }
 
+        /// <summary>
+        /// Gets the SQL SELECT statement of the sequential key table.
+        /// </summary>
+        /// <param name="sequentialKey"></param>
+        /// <returns></returns>
         public abstract DbSelectStatement GetSequentialKeySelectStatement(SequentialKey sequentialKey);
 
         internal virtual DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKey> sequentialKeys)
@@ -42,6 +57,10 @@ namespace DevZest.Data.Primitives
             return new DbQueryBuilder(model).BuildQueryStatement(this.Model, action, sequentialKeys);
         }
 
+        /// <summary>
+        /// Builds SQL statement to create temporary table.
+        /// </summary>
+        /// <returns></returns>
         public abstract DbSelectStatement BuildToTempTableStatement();
 
         private async Task<DbTable<T>> ToTempTableAsync<T>(T model, DbSession dbSession, CancellationToken cancellationToken)

@@ -249,9 +249,6 @@
   <data name="Model_EmptyColumns" xml:space="preserve">
     <value>The columns cannot be empty.</value>
   </data>
-  <data name="Model_InvalidRefTableModel" xml:space="preserve">
-    <value>The reference table model is invalid. It must either be a self reference or a reference to a existing table.</value>
-  </data>
   <data name="DbSet_VerifyCreateChild_AlreadyCreated" xml:space="preserve">
     <value>The child DbSet has been created already.</value>
   </data>

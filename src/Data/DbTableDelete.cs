@@ -29,12 +29,12 @@ namespace DevZest.Data
             return from.UpdateOrigin<TSource>(null, await from.DbSession.DeleteAsync(statement, ct) > 0) ? 1 : 0;
         }
 
-        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> from, DataSet<TSource> source, CandidateKey joinTo, CancellationToken ct)
+        public static async Task<int> ExecuteAsync<TSource>(DbTable<T> from, DataSet<TSource> source, CandidateKey targetKey, CancellationToken ct)
             where TSource : class, IEntity, new()
         {
             if (source.Count == 0)
                 return 0;
-            return await from.DbSession.DeleteAsync(source, from, joinTo, ct);
+            return await from.DbSession.DeleteAsync(source, from, targetKey, ct);
         }
     }
 }
