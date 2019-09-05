@@ -16,7 +16,7 @@ and an ASP.Net Core Application(C# only):
 
 that can display and manage a database of movies.
 
-View or download sample code: [C#](https://github.com/DevZest/RDO.Tutorial) | [VB.Net](https://github.com/DevZest/RDO.Tutorial)
+You can find the sample code under `samples/Tutorial` or `samples.vb/Tutorial/` in the source code repo.
 
 ## Prerequisites
 
@@ -44,8 +44,8 @@ In Visual Studio *Solution Explorer* tool window, right click the solution *Tuto
 
 | Project Name        | Project Type                           |
 |---------------------|----------------------------------------|
-| *Movies*            | Class Libary (.Net Standard)           |
-| *Movies.DbDesign*   | Console App (.Net Core)                |
+| *Movies*            | Class Library (.Net Standard)          |
+| *Movies.DbInit*     | Console App (.Net Core)                |
 | *Movies.Test*       | MSTest Project (.Net Core)             |
 | *Movies.WPF*        | WPF App (.Net Framework)               |
 | *Movies.AspNetCore* | ASP.Net Core Web Application (C# only) |
