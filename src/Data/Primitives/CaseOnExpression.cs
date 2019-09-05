@@ -124,7 +124,7 @@ namespace DevZest.Data.Primitives
             return result.Seal();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected internal override ColumnExpression PerformTranslateTo(Model model)
         {
             var on = _on.TranslateTo(model);

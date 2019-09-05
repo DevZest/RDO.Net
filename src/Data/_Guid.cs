@@ -21,6 +21,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
@@ -35,6 +36,7 @@ namespace DevZest.Data
             return x.CastToString();
         }
 
+        /// <inheritdoc/>
         public override bool AreEqual(Guid? x, Guid? y)
         {
             return x == y;
@@ -362,6 +364,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets a column that will return a new GUID value.
+        /// </summary>
+        /// <returns>The column.</returns>
         public static _Guid NewGuid()
         {
             return new NewGuidFunction().MakeColumn<_Guid>();

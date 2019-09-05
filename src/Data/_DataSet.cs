@@ -3,24 +3,32 @@ using System;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents column which contains DataSet as value.
+    /// </summary>
+    /// <typeparam name="T">Entity type of DataSet.</typeparam>
     public sealed class _DataSet<T> : Column<DataSet<T>>, IDataSetColumn
         where T : class, IEntity, new()
     {
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return null;
         }
 
+        /// <inheritdoc/>
         public override bool AreEqual(DataSet<T> x, DataSet<T> y)
         {
             return x == y;
         }
 
+        /// <inheritdoc/>
         protected internal override JsonValue SerializeValue(DataSet<T> value)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc/>
         protected internal override DataSet<T> DeserializeValue(JsonValue value)
         {
             throw new NotSupportedException();
@@ -51,11 +59,13 @@ namespace DevZest.Data
             return Const(value);
         }
 
+        /// <inheritdoc/>
         protected override Column<DataSet<T>> CreateParam(DataSet<T> value)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc/>
         protected internal override bool IsNull(DataSet<T> value)
         {
             return value == null;

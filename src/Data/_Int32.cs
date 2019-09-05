@@ -23,6 +23,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
@@ -37,6 +38,7 @@ namespace DevZest.Data
             return x.CastToString();
         }
 
+        /// <inheritdoc/>
         public override bool AreEqual(int? x, int? y)
         {
             return x == y;
@@ -805,6 +807,7 @@ namespace DevZest.Data
         Identity _identity;
         int _currentIdentityValue;
 
+        /// <inheritdoc/>
         public override int? DefaultValue
         {
             get
@@ -833,6 +836,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc/>
         public override bool IsIdentity
         {
             get

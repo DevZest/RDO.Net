@@ -3,34 +3,51 @@ using System;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents enum column which is stored as Int64 in database.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
     public sealed class _Int64Enum<T> : EnumColumn<T, Int64?>
         where T : struct, IConvertible
     {
+        /// <inheritdoc/>
         protected override Column<T?> CreateParam(T? value)
         {
             return Param(value, this);
         }
 
+        /// <inheritdoc/>
         protected internal override Column<T?> CreateConst(T? value)
         {
             return Const(value);
         }
 
+        /// <summary>Creates a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <param name="sourceColumn">The value which will be passed to <see cref="DbParamExpression.SourceColumn"/>.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static _Int64Enum<T> Param(T? x, _Int64Enum<T> sourceColumn = null)
         {
             return new ParamExpression<T?>(x, sourceColumn).MakeColumn<_Int64Enum<T>>();
         }
 
+        /// <summary>Creates a column of constant expression.</summary>
+        /// <param name="x">The value of the constant expression.</param>
+        /// <returns>The column of constant expression.</returns>
         public static _Int64Enum<T> Const(T? x)
         {
             return new ConstantExpression<T?>(x).MakeColumn<_Int64Enum<T>>();
         }
 
+        /// <summary>Implicitly converts the supplied value to a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static implicit operator _Int64Enum<T>(T? x)
         {
             return Param(x);
         }
 
+        /// <inheritdoc/>
         public override Int64? ConvertToDbValue(T? value)
         {
             return PerformConvert(value);
@@ -43,6 +60,7 @@ namespace DevZest.Data
             return value.Value.ToInt64(null);
         }
 
+        /// <inheritdoc/>
         public override T? ConvertToEnum(Int64? dbValue)
         {
             return PerformConvert(dbValue);
@@ -56,21 +74,27 @@ namespace DevZest.Data
                 return (T)Enum.ToObject(typeof(T), value.GetValueOrDefault());
         }
 
+        /// <inheritdoc/>
         protected override JsonValue SerializeDbValue(Int64? value)
         {
             return JsonValue.Number(value);
         }
 
+        /// <inheritdoc/>
         protected override Int64? DeserializeDbValue(JsonValue value)
         {
-            return value.Type == JsonValueType.Null ? null : new Int64?(Convert.ToByte(value.Text));
+            return value.Type == JsonValueType.Null ? null : new Int64?(Convert.ToInt64(value.Text));
         }
 
+        /// <inheritdoc/>
         protected override Int64? Read(DbReader reader)
         {
             return reader.GetInt64(Ordinal);
         }
 
+        /// <summary>Converts the supplied <see cref="_Int64Enum{T}" /> to <see cref="_String" />.</summary>
+        /// <param name="x">A <see cref="_Int64Enum{T}" /> object.</param>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
         public static explicit operator _String(_Int64Enum<T> x)
         {
             x.VerifyNotNull(nameof(x));
@@ -90,6 +114,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Converts the supplied <see cref="_Int64Enum{T}" /> to <see cref="_Int64" />.</summary>
+        /// <param name="x">A <see cref="_Int64Enum{T}" /> object.</param>
+        /// <returns>A <see cref="_Int64" /> expression which contains the result.</returns>
         public static explicit operator _Int64(_Int64Enum<T> x)
         {
             x.VerifyNotNull(nameof(x));
@@ -109,6 +136,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Converts the supplied <see cref="_Int64" /> to <see cref="_Int64Enum{T}" />.</summary>
+        /// <param name="x">A <see cref="_Int64" /> object. </param>
+        /// <returns>A <see cref="_Int64Enum{T}" /> expression which contains the result.</returns>
         public static explicit operator _Int64Enum<T>(_Int64 x)
         {
             x.VerifyNotNull(nameof(x));
@@ -133,6 +163,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Computes the bitwise AND of its <see cref="_Int64Enum{T}" /> operands.</summary>
+        /// <param name="x">A <see cref="_Int64Enum{T}" /> object. </param>
+        /// <param name="y">A <see cref="_Int64Enum{T}" /> object. </param>
+        /// <returns>A <see cref="_Int64Enum{T}" /> expression which contains the result.</returns>
         public static _Int64Enum<T> operator &(_Int64Enum<T> x, _Int64Enum<T> y)
         {
             x.VerifyNotNull(nameof(x));
@@ -158,6 +192,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Computes the bitwise OR of its <see cref="_Int64Enum{T}" /> operands.</summary>
+        /// <param name="x">A <see cref="_Int64Enum{T}" /> object. </param>
+        /// <param name="y">A <see cref="_Int64Enum{T}" /> object. </param>
+        /// <returns>A <see cref="_Int64Enum{T}" /> expression which contains the result.</returns>
         public static _Int64Enum<T> operator |(_Int64Enum<T> x, _Int64Enum<T> y)
         {
             x.VerifyNotNull(nameof(x));
@@ -183,6 +221,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Performs a logical comparison of the two <see cref="_Int64Enum{T}" /> parameters for equality.</summary>
+        /// <param name="x">A <see cref="_Int64Enum{T}" /> object.</param>
+        /// <param name="y">A <see cref="_Int64Enum{T}" /> object.</param>
+        /// <returns>The result <see cref="_Boolean" /> expression.</returns>
         public static _Boolean operator ==(_Int64Enum<T> x, _Int64Enum<T> y)
         {
             x.VerifyNotNull(nameof(x));
@@ -209,6 +251,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Performs a logical comparison of the two <see cref="_Int64Enum{T}" /> parameters for non-equality.</summary>
+        /// <param name="x">A <see cref="_Int64Enum{T}" /> object.</param>
+        /// <param name="y">A <see cref="_Int64Enum{T}" /> object.</param>
+        /// <returns>The result <see cref="_Boolean" /> expression.</returns>
         public static _Boolean operator !=(_Int64Enum<T> x, _Int64Enum<T> y)
         {
             x.VerifyNotNull(nameof(x));

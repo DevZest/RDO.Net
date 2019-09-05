@@ -22,11 +22,13 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
         }
 
+        /// <inheritdoc/>
         public override bool AreEqual(DateTime? x, DateTime? y)
         {
             return x == y;
@@ -354,6 +356,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets a column that will return the current date and time on this computer, expressed as the Coordinated Universal Time (UTC).
+        /// </summary>
+        /// <returns>The column.</returns>
         public static _DateTime UtcNow()
         {
             return new UtcNowFunction().MakeColumn<_DateTime>();
@@ -372,6 +378,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets a column that will return the current date and time on this computer, expressed as the local time.
+        /// </summary>
+        /// <returns>The column.</returns>
         public static _DateTime Now()
         {
             return new NowFunction().MakeColumn<_DateTime>();

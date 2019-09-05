@@ -14,6 +14,7 @@ namespace DevZest.Data
             return Param(value, this);
         }
 
+        /// <inheritdoc/>
         public override bool AreEqual(bool? x, bool? y)
         {
             return x == y;
@@ -245,6 +246,7 @@ namespace DevZest.Data
             }
         }
 
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
@@ -277,6 +279,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Performs a logical comparison of the two <see cref="_Boolean" /> parameters for equality.</summary>
+        /// <returns>The result <see cref="_Boolean" /> expression.</returns>
+        /// <param name="x">A <see cref="_Boolean" /> object. </param>
+        /// <param name="y">A <see cref="_Boolean" /> object. </param>
         public static _Boolean operator ==(_Boolean x, _Boolean y)
         {
             x.VerifyNotNull(nameof(x));
@@ -303,6 +309,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Performs a logical comparison of the two <see cref="_Boolean" /> parameters for non-equality.</summary>
+        /// <returns>The result <see cref="_Boolean" /> expression.</returns>
+        /// <param name="x">A <see cref="_Boolean" /> object. </param>
+        /// <param name="y">A <see cref="_Boolean" /> object. </param>
         public static _Boolean operator !=(_Boolean x, _Boolean y)
         {
             x.VerifyNotNull(nameof(x));

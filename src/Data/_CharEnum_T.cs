@@ -3,34 +3,51 @@ using System;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents enum column which is stored as char in database.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
     public sealed class _CharEnum<T> : EnumColumn<T, char?>
         where T : struct, IConvertible
     {
+        /// <inheritdoc/>
         protected override Column<T?> CreateParam(T? value)
         {
             return Param(value, this);
         }
 
+        /// <inheritdoc/>
         protected internal override Column<T?> CreateConst(T? value)
         {
             return Const(value);
         }
 
+        /// <summary>Creates a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <param name="sourceColumn">The value which will be passed to <see cref="DbParamExpression.SourceColumn"/>.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static _CharEnum<T> Param(T? x, _CharEnum<T> sourceColumn = null)
         {
             return new ParamExpression<T?>(x, sourceColumn).MakeColumn<_CharEnum<T>>();
         }
 
+        /// <summary>Creates a column of constant expression.</summary>
+        /// <param name="x">The value of the constant expression.</param>
+        /// <returns>The column of constant expression.</returns>
         public static _CharEnum<T> Const(T? x)
         {
             return new ConstantExpression<T?>(x).MakeColumn<_CharEnum<T>>();
         }
 
+        /// <summary>Implicitly converts the supplied value to a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static implicit operator _CharEnum<T>(T? x)
         {
             return Param(x);
         }
 
+        /// <inheritdoc/>
         public override char? ConvertToDbValue(T? value)
         {
             return PerformConvert(value);
@@ -43,6 +60,7 @@ namespace DevZest.Data
             return value.Value.ToChar(null);
         }
 
+        /// <inheritdoc/>
         public override T? ConvertToEnum(char? dbValue)
         {
             return PerformConvert(dbValue);
@@ -56,21 +74,27 @@ namespace DevZest.Data
                 return (T)Enum.ToObject(typeof(T), value.GetValueOrDefault());
         }
 
+        /// <inheritdoc/>
         protected override JsonValue SerializeDbValue(char? value)
         {
             return JsonValue.Char(value);
         }
 
+        /// <inheritdoc/>
         protected override char? DeserializeDbValue(JsonValue value)
         {
             return value.Type == JsonValueType.Null ? null : new char?(Convert.ToChar(value.Text));
         }
 
+        /// <inheritdoc/>
         protected override char? Read(DbReader reader)
         {
             return reader.GetChar(Ordinal);
         }
 
+        /// <summary>Converts the supplied <see cref="_CharEnum{T}" /> to <see cref="_String" />.</summary>
+        /// <param name="x">A <see cref="_CharEnum{T}" /> object.</param>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
         public static explicit operator _String(_CharEnum<T> x)
         {
             x.VerifyNotNull(nameof(x));
@@ -90,6 +114,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Converts the supplied <see cref="_CharEnum{T}" /> to <see cref="_Char" />.</summary>
+        /// <param name="x">A <see cref="_CharEnum{T}" /> object.</param>
+        /// <returns>A <see cref="_Char" /> expression which contains the result.</returns>
         public static explicit operator _Char(_CharEnum<T> x)
         {
             x.VerifyNotNull(nameof(x));
@@ -109,6 +136,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Converts the supplied <see cref="_Char" /> to <see cref="_CharEnum{T}" />.</summary>
+        /// <param name="x">A <see cref="_Char" /> object. </param>
+        /// <returns>A <see cref="_CharEnum{T}" /> expression which contains the result.</returns>
         public static explicit operator _CharEnum<T>(_Char x)
         {
             x.VerifyNotNull(nameof(x));
@@ -133,6 +163,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Performs a logical comparison of the two <see cref="_CharEnum{T}" /> parameters for equality.</summary>
+        /// <param name="x">A <see cref="_CharEnum{T}" /> object.</param>
+        /// <param name="y">A <see cref="_CharEnum{T}" /> object.</param>
+        /// <returns>The result <see cref="_Boolean" /> expression.</returns>
         public static _Boolean operator ==(_CharEnum<T> x, _CharEnum<T> y)
         {
             x.VerifyNotNull(nameof(x));
@@ -159,6 +193,10 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>Performs a logical comparison of the two <see cref="_CharEnum{T}" /> parameters for non-equality.</summary>
+        /// <param name="x">A <see cref="_CharEnum{T}" /> object.</param>
+        /// <param name="y">A <see cref="_CharEnum{T}" /> object.</param>
+        /// <returns>The result <see cref="_Boolean" /> expression.</returns>
         public static _Boolean operator !=(_CharEnum<T> x, _CharEnum<T> y)
         {
             x.VerifyNotNull(nameof(x));

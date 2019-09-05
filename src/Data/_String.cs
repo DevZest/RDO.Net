@@ -8,6 +8,7 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _String : Column<String>, IColumn<DbReader, String>
     {
+        /// <inheritdoc/>
         public override bool AreEqual(string x, string y)
         {
             return x == y;
@@ -330,6 +331,7 @@ namespace DevZest.Data
             return base.GetHashCode();
         }
 
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return this;

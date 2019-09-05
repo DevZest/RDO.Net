@@ -8,6 +8,9 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Represents a projection, which inherits subset of columns from model.
+    /// </summary>
     public abstract class Projection : ModelMember, IEntity
     {
         internal void Construct(Model model, Type declaringType, string name)
@@ -22,12 +25,20 @@ namespace DevZest.Data
             get { return string.IsNullOrEmpty(Name); }
         }
 
+        /// <summary>
+        /// Gets the owner model.
+        /// </summary>
+        /// <returns></returns>
         public Model GetModel()
         {
             EnsureConstructed();
             return ParentModel;
         }
 
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <returns></returns>
         public string GetName()
         {
             return Name;
@@ -60,9 +71,19 @@ namespace DevZest.Data
 
         private static MounterManager<Projection, Column> s_columnManager = new MounterManager<Projection, Column>();
 
+        /// <summary>
+        /// Registers a column from existing column mounter.
+        /// </summary>
+        /// <typeparam name="T">The type of projection which the column is registered on.</typeparam>
+        /// <typeparam name="TColumn">The type of the column.</typeparam>
+        /// <param name="getter">The lambda expression of the column getter.</param>
+        /// <param name="fromMounter">The existing column mounter.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="fromMounter"/> is null.</exception>
         [PropertyRegistration]
-        protected static void Register<TColumnGroup, TColumn>(Expression<Func<TColumnGroup, TColumn>> getter, Mounter<TColumn> fromMounter)
-            where TColumnGroup : Projection
+        protected static void Register<T, TColumn>(Expression<Func<T, TColumn>> getter, Mounter<TColumn> fromMounter)
+            where T : Projection
             where TColumn : Column, new()
         {
             var initializer = getter.Verify(nameof(getter));
@@ -132,6 +153,9 @@ namespace DevZest.Data
         }
 
         private ColumnCollection _columns;
+        /// <summary>
+        /// Gets the columns owned by this projection.
+        /// </summary>
         public IReadOnlyList<Column> Columns
         {
             get
@@ -143,6 +167,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets columns owned by this projection as dictionary by relative name.
+        /// </summary>
         public IReadOnlyDictionary<string, Column> ColumnsByRelativeName
         {
             get

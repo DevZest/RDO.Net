@@ -5,6 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
+    /// <summary>
+    /// Provides static methods to manipulate <see cref="IValidationErrors"/> object.
+    /// </summary>
     public static class ValidationErrors
     {
         private class EmptyGroup : IValidationErrors
@@ -120,6 +123,9 @@ namespace DevZest.Data
             }
         }
 
+        /// <summary>
+        /// Gets an empty <see cref="IValidationErrors"/> object.
+        /// </summary>
         public static IValidationErrors Empty
         {
             get { return EmptyGroup.Singleton; }
@@ -131,6 +137,11 @@ namespace DevZest.Data
             return new ListGroup(value1, value2);
         }
 
+        /// <summary>
+        /// Creates an <see cref="IValidationErrors"/> object from <see cref="ValidationError"/> objects.
+        /// </summary>
+        /// <param name="values">The <see cref="ValidationError"/> objects.</param>
+        /// <returns>The created <see cref="IValidationErrors"/> object.</returns>
         public static IValidationErrors New(params ValidationError[] values)
         {
             values.VerifyNotNull(nameof(values));
