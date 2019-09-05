@@ -8,14 +8,23 @@ using System.Globalization;
 
 namespace DevZest.Data.SqlServer
 {
+    /// <summary>
+    /// Generates T-SQL from expression.
+    /// </summary>
     public sealed class ExpressionGenerator : DbExpressionVisitor
     {
         private const string NULL = "NULL";
 
+        /// <summary>
+        /// Gets the string builder for T-SQL generation.
+        /// </summary>
         public IndentedStringBuilder SqlBuilder { get; internal set; }
 
         internal IModelAliasManager ModelAliasManager { get; set; }
 
+        /// <summary>
+        /// Gets the SQL Server version.
+        /// </summary>
         public SqlVersion SqlVersion { get; internal set; }
 
         private static readonly Dictionary<BinaryExpressionKind, string> BinaryExpressionMappers = new Dictionary<BinaryExpressionKind, string>()
@@ -37,6 +46,8 @@ namespace DevZest.Data.SqlServer
             { BinaryExpressionKind.Or, " OR " },
             { BinaryExpressionKind.Substract, " - " },
         };
+
+        /// <inheritdoc/>
         public override void Visit(DbBinaryExpression e)
         {
             SqlBuilder.Append("(");
@@ -46,6 +57,7 @@ namespace DevZest.Data.SqlServer
             SqlBuilder.Append(")");
         }
 
+        /// <inheritdoc/>
         public override void Visit(DbCaseExpression e)
         {
             SqlBuilder.Append("CASE");
@@ -76,6 +88,7 @@ namespace DevZest.Data.SqlServer
             SqlBuilder.Append("END");
         }
 
+        /// <inheritdoc/>
         public override void Visit(DbCastExpression e)
         {
             var sourceSqlType = e.SourceColumn.GetSqlType();
@@ -97,6 +110,7 @@ namespace DevZest.Data.SqlServer
             return sourceSqlType.GetSqlParameterInfo(SqlVersion).SqlDbType == targetSqlType.GetSqlParameterInfo(SqlVersion).SqlDbType;
         }
 
+        /// <inheritdoc/>
         public override void Visit(DbColumnExpression e)
         {
             var columnName = e.DbColumnName.ToQuotedIdentifier();
@@ -109,6 +123,7 @@ namespace DevZest.Data.SqlServer
                 SqlBuilder.Append(columnName);
         }
 
+        /// <inheritdoc/>
         public override void Visit(DbConstantExpression e)
         {
             GenerateConst(SqlBuilder, SqlVersion, e.Column, e.Value);
@@ -147,6 +162,11 @@ namespace DevZest.Data.SqlServer
             { FunctionKeys.NotLike, (g, e) => g.VisitFunction_NotLike(e) }
         };
 
+        /// <summary>
+        /// Registers handler to generate T-SQL for custom function.
+        /// </summary>
+        /// <param name="functionKey">The function key.</param>
+        /// <param name="handler">The handler.</param>
         public static void RegisterFunctionHandler(FunctionKey functionKey, Action<ExpressionGenerator, DbFunctionExpression> handler)
         {
             functionKey.VerifyNotNull(nameof(functionKey));
@@ -155,6 +175,7 @@ namespace DevZest.Data.SqlServer
             s_functionHandlers.Add(functionKey, handler);
         }
 
+        /// <inheritdoc/>
         public override void Visit(DbFunctionExpression e)
         {
             Action<ExpressionGenerator, DbFunctionExpression> handler;
@@ -322,11 +343,19 @@ namespace DevZest.Data.SqlServer
 
         private readonly List<DbParamExpression> DbParamExpressions = new List<DbParamExpression>();
 
+        /// <summary>
+        /// Gets the number of parameters.
+        /// </summary>
         public int ParametersCount
         {
             get { return DbParamExpressions.Count; }
         }
 
+        /// <summary>
+        /// Gets the parameter expression at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <returns>The parameter expression.</returns>
         public DbParamExpression GetDbParamExpression(int index)
         {
             return DbParamExpressions[index];
@@ -340,6 +369,7 @@ namespace DevZest.Data.SqlServer
             return columnSqlType.CreateSqlParameter(GetParamName(index), ParameterDirection.Input, dbParamExpression.Value, SqlVersion);
         }
 
+        /// <inheritdoc/>
         public override void Visit(DbParamExpression e)
         {
             int index = DbParamExpressions.IndexOf(e);
@@ -363,6 +393,8 @@ namespace DevZest.Data.SqlServer
             { DbUnaryExpressionKind.Not, "NOT " },
             { DbUnaryExpressionKind.OnesComplement, "~" }
         };
+
+        /// <inheritdoc/>
         public override void Visit(DbUnaryExpression e)
         {
             SqlBuilder.Append("(");
