@@ -139,7 +139,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append("UPDATE ");
             sqlBuilder.Append(result.ModelAliasManager[model].ToQuotedIdentifier());
             sqlBuilder.AppendLine(" SET");
-            sqlBuilder.Indent++;
+            sqlBuilder.IndentLevel++;
             for (int i = 0; i < selectList.Count; i++)
             {
                 var select = selectList[i];
@@ -150,7 +150,7 @@ namespace DevZest.Data.SqlServer
                     sqlBuilder.Append(',');
                 sqlBuilder.AppendLine();
             }
-            sqlBuilder.Indent--;
+            sqlBuilder.IndentLevel--;
 
             result.VisitingQueryStatement();
             result.GenerateFromClause(from);
@@ -232,7 +232,7 @@ namespace DevZest.Data.SqlServer
             SqlBuilder.Append("OPENJSON(");
             jsonParam.DbExpression.Accept(_expressionGenerator);
             SqlBuilder.AppendLine(") WITH (");
-            SqlBuilder.Indent++;
+            SqlBuilder.IndentLevel++;
             var columns = model.GetColumns();
             for (int i = 0; i < columns.Count; i++)
             {
@@ -244,7 +244,7 @@ namespace DevZest.Data.SqlServer
             }
             var alias = ModelAliasManager[model].ToQuotedIdentifier();
             SqlBuilder.Append(") AS ").Append(alias);
-            SqlBuilder.Indent--;
+            SqlBuilder.IndentLevel--;
             return true;
         }
 
@@ -378,7 +378,7 @@ namespace DevZest.Data.SqlServer
         {
             Debug.Assert(getSelectExpression != null);
 
-            SqlBuilder.Indent++;
+            SqlBuilder.IndentLevel++;
 
             if (count == 1)
                 SqlBuilder.Append(" ");
@@ -402,7 +402,7 @@ namespace DevZest.Data.SqlServer
                     SqlBuilder.AppendLine();
             }
 
-            SqlBuilder.Indent--;
+            SqlBuilder.IndentLevel--;
         }
 
         private void GenerateFromClause(DbFromClause from)
@@ -413,12 +413,12 @@ namespace DevZest.Data.SqlServer
             if (isDbTable)
                 SqlBuilder.Append(" ");
             else
-                SqlBuilder.AppendLine().Indent++;
+                SqlBuilder.AppendLine().IndentLevel++;
 
             from.Accept(this);
 
             if (!isDbTable)
-                SqlBuilder.Indent--;
+                SqlBuilder.IndentLevel--;
         }
 
         private void GenerateWhereClause(DbExpression where)

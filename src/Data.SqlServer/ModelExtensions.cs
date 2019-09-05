@@ -21,7 +21,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append("CREATE TABLE ");
             sqlBuilder.Append(tableName);
             sqlBuilder.AppendLine(" (");
-            sqlBuilder.Indent++;
+            sqlBuilder.IndentLevel++;
 
             var columns = model.GetColumns();
             for (int i = 0; i < columns.Count; i++)
@@ -35,7 +35,7 @@ namespace DevZest.Data.SqlServer
             if (countConstraints + countIndexes > 0)
                 sqlBuilder.AppendLine();
 
-            sqlBuilder.Indent--;
+            sqlBuilder.IndentLevel--;
             sqlBuilder.AppendLine(");");
 
             if (!isTempTable)
@@ -119,14 +119,14 @@ namespace DevZest.Data.SqlServer
 
             sqlBuilder.Append("FOREIGN KEY");
             constraint.ForeignKey.GenerateColumnList(sqlBuilder);
-            sqlBuilder.Indent++;
+            sqlBuilder.IndentLevel++;
             sqlBuilder.Append("REFERENCES ");
             sqlBuilder.Append(constraint.ReferencedTableName.ToQuotedIdentifier());
             constraint.ReferencedKey.GenerateColumnList(sqlBuilder);
             constraint.DeleteRule.GenerateForeignKeyRule(sqlBuilder, "DELETE");
             sqlBuilder.AppendLine();
             constraint.UpdateRule.GenerateForeignKeyRule(sqlBuilder, "UPDATE");
-            sqlBuilder.Indent--;
+            sqlBuilder.IndentLevel--;
         }
 
         private static void GenerateColumnList(this CandidateKey key, IndentedStringBuilder sqlBuilder)

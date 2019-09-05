@@ -69,20 +69,20 @@ namespace DevZest.Data.MySql
 
             for (var i = 0; i < e.When.Count; ++i)
             {
-                SqlBuilder.Indent++;
+                SqlBuilder.IndentLevel++;
                 SqlBuilder.Append("WHEN ");
                 e.When[i].Accept(this);
                 SqlBuilder.Append(" THEN ");
                 e.Then[i].Accept(this);
                 SqlBuilder.AppendLine();
-                SqlBuilder.Indent--;
+                SqlBuilder.IndentLevel--;
             }
 
-            SqlBuilder.Indent++;
+            SqlBuilder.IndentLevel++;
             SqlBuilder.Append("ELSE ");
             e.Else.Accept(this);
             SqlBuilder.AppendLine();
-            SqlBuilder.Indent--;
+            SqlBuilder.IndentLevel--;
 
             SqlBuilder.Append("END CASE");
         }
