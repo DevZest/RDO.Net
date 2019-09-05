@@ -11,6 +11,9 @@ using DevZest.Data.Addons;
 
 namespace DevZest.Data.SqlServer
 {
+    /// <summary>
+    /// Provides extension methods for column object.
+    /// </summary>
     public static class ColumnExtensions
     {
         private const int MIN_VARBINARY_SIZE = 1;
@@ -45,6 +48,12 @@ namespace DevZest.Data.SqlServer
             column.AddOrUpdate(sqlType);
         }
 
+        /// <summary>
+        /// Specifies SQL Server BINARY(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsSqlBinary(this _Binary column, int size)
         {
             column.VerifyNotNull(nameof(column));
@@ -55,6 +64,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server BINARY(MAX) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsSqlBinaryMax(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
@@ -62,6 +76,12 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server VARBINARY(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsSqlVarBinary(this _Binary column, int size = MAX_VARBINARY_SIZE)
         {
             column.VerifyNotNull(nameof(column));
@@ -71,6 +91,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server VARBINARY(MAX) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsSqlVarBinaryMax(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
@@ -78,6 +103,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server TIMESTAMP data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsSqlTimestamp(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
@@ -85,6 +115,13 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server DECIMAL data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="precision">The precision of the data type.</param>
+        /// <param name="scale">The scale of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Decimal AsSqlDecimal(this _Decimal column, byte precision = DEFAULT_DECIMAL_PRECISION, byte scale = DEFAULT_DECIMAL_SCALE)
         {
             column.VerifyNotNull(nameof(column));
@@ -96,6 +133,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server SMALLMONEY data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Decimal AsSqlSmallMoney(this _Decimal column)
         {
             column.VerifyNotNull(nameof(column));
@@ -103,6 +145,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server MONEY data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Decimal AsSqlMoney(this _Decimal column)
         {
             column.VerifyNotNull(nameof(column));
@@ -110,6 +157,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server DATE data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsSqlDate(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
@@ -117,6 +169,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server TIME data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsSqlTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
@@ -124,6 +181,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server SMALLDATETIME data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsSqlSmallDateTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
@@ -131,6 +193,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server DATETIME data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsSqlDateTime(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
@@ -138,6 +205,12 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server DATETIME2 data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="precision">The precision of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsSqlDateTime2(this _DateTime column, byte precision)
         {
             column.VerifyNotNull(nameof(column));
@@ -147,6 +220,12 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server NCHAR(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsSqlNChar(this _String column, int size)
         {
             column.VerifyNotNull(nameof(column));
@@ -156,6 +235,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server NCHAR(MAX) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsSqlNCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
@@ -163,6 +247,12 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server NVARCHAR(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsSqlNVarChar(this _String column, int size = MAX_NVARCHAR_SIZE)
         {
             column.VerifyNotNull(nameof(column));
@@ -172,6 +262,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server NVARCHAR(MAX) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsSqlNVarCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
@@ -179,6 +274,12 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server CHAR(1)/NCHAR(1) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="isUnicode">Specifies whether it's unicode.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static T AsSqlChar<T>(this T column, bool isUnicode)
             where T: Column<Char?>
         {
@@ -187,6 +288,12 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server CHAR(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsSqlChar(this _String column, int size)
         {
             column.VerifyNotNull(nameof(column));
@@ -196,6 +303,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server CHAR(MAX) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsSqlCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
@@ -203,6 +315,12 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server VARCHAR(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static T AsSqlVarChar<T>(this T column, int size = MAX_VARBINARY_SIZE)
             where T : Column<String>
         {
@@ -213,6 +331,11 @@ namespace DevZest.Data.SqlServer
             return column;
         }
 
+        /// <summary>
+        /// Specifies SQL Server VARCHAR(MAX) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsSqlVarCharMax(this _String column)
         {
             column.VerifyNotNull(nameof(column));
