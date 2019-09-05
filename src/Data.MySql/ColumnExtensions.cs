@@ -9,6 +9,9 @@ using MySql.Data.MySqlClient;
 
 namespace DevZest.Data.MySql
 {
+    /// <summary>
+    /// Provides extension methods for column object.
+    /// </summary>
     public static class ColumnExtensions
     {
         private const int MIN_VARBINARY_SIZE = 1;
@@ -45,6 +48,12 @@ namespace DevZest.Data.MySql
             column.AddOrUpdate(mySqlType);
         }
 
+        /// <summary>
+        /// Specifies MySQL BINARY(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsMySqlBinary(this _Binary column, int size)
         {
             column.VerifyNotNull(nameof(column));
@@ -55,6 +64,12 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL VARBINARY(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsMySqlVarBinary(this _Binary column, int size = MAX_VARBINARY_SIZE)
         {
             column.VerifyNotNull(nameof(column));
@@ -64,6 +79,13 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL DECIMAL data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="precision">The precision of the data type.</param>
+        /// <param name="scale">The scale of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Decimal AsMySqlDecimal(this _Decimal column, byte precision = DEFAULT_DECIMAL_PRECISION, byte scale = DEFAULT_DECIMAL_SCALE)
         {
             column.VerifyNotNull(nameof(column));
@@ -75,11 +97,21 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL DECIMAL(19,4) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Decimal AsMySqlMoney(this _Decimal column)
         {
             return column.AsMySqlDecimal(19, 4);
         }
 
+        /// <summary>
+        /// Specifies MySQL DATE data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsMySqlDate(this _DateTime column)
         {
             column.VerifyNotNull(nameof(column));
@@ -87,6 +119,12 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL TIME data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="precision">The precision of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsMySqlTime(this _DateTime column, int precision = 0)
         {
             column.VerifyNotNull(nameof(column));
@@ -95,6 +133,12 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL DATETIME data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="precision">The precision of the column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsMySqlDateTime(this _DateTime column, int precision = 0)
         {
             column.VerifyNotNull(nameof(column));
@@ -103,6 +147,12 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL TIMESTAMP data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="precision">The precision of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _DateTime AsMySqlTimestamp(this _DateTime column, int precision = 0)
         {
             column.VerifyNotNull(nameof(column));
@@ -117,6 +167,13 @@ namespace DevZest.Data.MySql
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
+        /// <summary>
+        /// Specifies MySQL CHAR data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="charSetName">The char set name of the data type.</param>
+        /// <param name="collationName">The collation name of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static T AsMySqlChar<T>(this T column, string charSetName = null, string collationName = null)
             where T : Column<Char?>
         {
@@ -125,6 +182,14 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL CHAR(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <param name="charSetName">The char set name of the data type.</param>
+        /// <param name="collationName">The collation name of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static T AsMySqlChar<T>(this T column, int size, string charSetName = null, string collationName = null)
             where T : Column<string>
         {
@@ -135,6 +200,14 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL VARCHAR(n) data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="size">The size of the data type.</param>
+        /// <param name="charSetName">The char set name of the data type.</param>
+        /// <param name="collationName">The collation name of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static T AsMySqlVarChar<T>(this T column, int size, string charSetName = null, string collationName = null)
             where T : Column<String>
         {
@@ -145,6 +218,11 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL JSON data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static T AsMySqlJson<T>(this T column)
             where T : Column<string>
         {
@@ -320,6 +398,11 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL TINYBLOB data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsMySqlTinyBlob(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
@@ -327,6 +410,11 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL BLOB data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsMySqlBlob(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
@@ -334,6 +422,11 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL MEDIUMBLOB data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsMySqlMediumBlob(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
@@ -341,6 +434,11 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL LONGBLOB data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _Binary AsMySqlLongBlob(this _Binary column)
         {
             column.VerifyNotNull(nameof(column));
@@ -348,6 +446,13 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL TINYTEXT data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="charSetName">The char set name of the data type.</param>
+        /// <param name="collationName">The collation name of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsMySqlTinyText(this _String column, string charSetName = null, string collationName = null)
         {
             column.VerifyNotNull(nameof(column));
@@ -355,6 +460,13 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL TEXT data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="charSetName">The char set name of the data type.</param>
+        /// <param name="collationName">The collation name of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsMySqlText(this _String column, string charSetName = null, string collationName = null)
         {
             column.VerifyNotNull(nameof(column));
@@ -362,6 +474,13 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL MEDIUMTEXT data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="charSetName">The char set name of the data type.</param>
+        /// <param name="collationName">The collation name of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsMySqlMediumText(this _String column, string charSetName = null, string collationName = null)
         {
             column.VerifyNotNull(nameof(column));
@@ -369,6 +488,13 @@ namespace DevZest.Data.MySql
             return column;
         }
 
+        /// <summary>
+        /// Specifies MySQL LONGTEXT data type for column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="charSetName">The char set name of the data type.</param>
+        /// <param name="collationName">The collation name of the data type.</param>
+        /// <returns>This column for fluent coding.</returns>
         public static _String AsMySqlLongText(this _String column, string charSetName = null, string collationName = null)
         {
             column.VerifyNotNull(nameof(column));

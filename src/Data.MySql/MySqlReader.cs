@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.MySql
 {
+    /// <summary>
+    /// Reads data from MySQL database.
+    /// </summary>
     public sealed class MySqlReader : DbReader
     {
         internal static async Task<MySqlReader> ExecuteAsync(MySqlCommand mySqlCommand, Model model, CancellationToken cancellationToken)
@@ -22,11 +25,15 @@ namespace DevZest.Data.MySql
             MySqlDataReader = mySqlDataReader;
         }
 
+        /// <inheritdoc/>
         protected override DbDataReader GetDbDataReader()
         {
             return MySqlDataReader;
         }
 
+        /// <summary>
+        /// Gets the MySQL data reader.
+        /// </summary>
         public MySqlDataReader MySqlDataReader { get; private set; }
     }
 }

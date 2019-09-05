@@ -12,14 +12,24 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.MySql
 {
+    /// <summary>
+    /// MySQL implementation of database session.
+    /// </summary>
     public abstract partial class MySqlSession : DbSession<MySqlConnection, MySqlCommand, MySqlReader>
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="MySqlSession"/>.
+        /// </summary>
+        /// <param name="mySqlConnection">The MySQL connection.</param>
         protected MySqlSession(MySqlConnection mySqlConnection)
             : base(mySqlConnection)
         {
         }
 
         private MySqlVersion _mySqlVersion;
+        /// <summary>
+        /// Gets or sets the MySQL version.
+        /// </summary>
         public MySqlVersion MySqlVersion
         {
             get
@@ -46,6 +56,7 @@ namespace DevZest.Data.MySql
 
         internal ConditionalWeakTable<DbQueryStatement, SqlGenerator> _sqlGeneratorCache = new ConditionalWeakTable<DbQueryStatement, SqlGenerator>();
 
+        /// <inheritdoc/>
         protected override string GetSqlString(DbQueryStatement query)
         {
             return SqlGenerator.Select(this, query).CreateCommand(null).ToTraceString();
@@ -59,12 +70,14 @@ namespace DevZest.Data.MySql
         }
 #endif
 
+        /// <inheritdoc/>
         protected sealed override MySqlCommand GetQueryCommand(DbQueryStatement queryStatement)
         {
             var queryGenerator = SqlGenerator.Select(this, queryStatement);
             return queryGenerator.CreateCommand(Connection);
         }
 
+        /// <inheritdoc/>
         protected sealed override ReaderInvoker CreateReaderInvoker(Model model, MySqlCommand command)
         {
             return new MySqlReaderInvoker(this, model, command);
@@ -80,11 +93,13 @@ namespace DevZest.Data.MySql
             return "#" + _tempTableNameSuffixes.GetUniqueName(model.GetDbAlias());
         }
 
+        /// <inheritdoc/>
         protected override string AssignTempTableName(Model model)
         {
             return _tempTableNamesByModel.GetValue(model, GetUniqueTempTableName);
         }
 
+        /// <inheritdoc/>
         protected sealed override MySqlCommand GetCreateTableCommand(Model model, bool isTempTable)
         {
             var sqlBuilder = new IndentedStringBuilder();
@@ -120,6 +135,7 @@ namespace DevZest.Data.MySql
             return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder);
         }
 
+        /// <inheritdoc/>
         protected sealed override MySqlCommand GetInsertCommand(DbSelectStatement statement)
         {
             return SqlGenerator.Insert(this, statement).CreateCommand(Connection);
@@ -133,6 +149,7 @@ namespace DevZest.Data.MySql
         }
 #endif
 
+        /// <inheritdoc/>
         protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity, CancellationToken ct)
         {
@@ -166,6 +183,7 @@ namespace DevZest.Data.MySql
             return new DbJoinClause(DbJoinKind.LeftJoin, sourceDbSet.FromClause, targetDbSet.FromClause, new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
+        /// <inheritdoc/>
         protected sealed override async Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken ct)
         {
             var command = GetInsertScalarCommand(statement);
@@ -178,11 +196,13 @@ namespace DevZest.Data.MySql
             return SqlGenerator.InsertScalar(this, statement).CreateCommand(Connection);
         }
 
+        /// <inheritdoc/>
         protected sealed override MySqlCommand GetUpdateCommand(DbSelectStatement statement)
         {
             return SqlGenerator.Update(this, statement).CreateCommand(Connection);
         }
 
+        /// <inheritdoc/>
         protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey targetKey, CancellationToken ct)
         {
@@ -200,11 +220,13 @@ namespace DevZest.Data.MySql
             return GetUpdateCommand(statement);
         }
 
+        /// <inheritdoc/>
         protected sealed override MySqlCommand GetDeleteCommand(DbSelectStatement statement)
         {
             return SqlGenerator.Delete(this, statement).CreateCommand(Connection);
         }
 
+        /// <inheritdoc/>
         protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey targetKey, CancellationToken cancellationToken)
         {
             var command = BuildDeleteCommand(source, target, targetKey);
@@ -221,6 +243,7 @@ namespace DevZest.Data.MySql
             return GetDeleteCommand(statement);
         }
 
+        /// <inheritdoc/>
         protected sealed override async Task<object> CreateMockDbAsync(CancellationToken ct)
         {
             if (Connection.State != ConnectionState.Open)
@@ -240,6 +263,7 @@ select @mockschema;
             return await command.ExecuteScalarAsync(ct);
         }
 
+        /// <inheritdoc/>
         protected sealed override string GetMockTableName(string tableName, object tag)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", ((string)tag).ToQuotedIdentifier(), tableName.ToQuotedIdentifier());
@@ -274,6 +298,13 @@ select @mockschema;
             return result;
         }
 
+        /// <summary>
+        /// Opens JSON string as DbSet.
+        /// </summary>
+        /// <typeparam name="T">Type of entity.</typeparam>
+        /// <param name="json">The JSON string.</param>
+        /// <param name="ordinalColumnName">The name of extra ordinal column.</param>
+        /// <returns>The result DbSet.</returns>
         public DbSet<T> JsonTable<T>(string json, string ordinalColumnName = null)
             where T : class, IEntity, new()
         {

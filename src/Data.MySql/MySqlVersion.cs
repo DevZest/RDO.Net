@@ -2,15 +2,28 @@
 
 namespace DevZest.Data.MySql
 {
+    /// <summary>
+    /// Specifies MySQL version.
+    /// </summary>
     public struct MySqlVersion
     {
         private readonly string _srcString;
 
+        /// <summary>
+        /// Gets the lowest version (8.0.4) which is supported.
+        /// </summary>
         public static MySqlVersion LowestSupported
         {
             get { return new MySqlVersion("8.0.4", 8, 0, 4); }
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="MySqlVersion"/>.
+        /// </summary>
+        /// <param name="s">The leading string.</param>
+        /// <param name="major">The major number of the version.</param>
+        /// <param name="minor">The minor number of the version.</param>
+        /// <param name="build">The build number of the version.</param>
         public MySqlVersion(string s, int major, int minor, int build)
         {
             Major = major;
@@ -19,12 +32,26 @@ namespace DevZest.Data.MySql
             _srcString = s;
         }
 
+        /// <summary>
+        /// Gets the major number of the version.
+        /// </summary>
         public int Major { get; }
 
+        /// <summary>
+        /// Gets the Minor number of the version.
+        /// </summary>
         public int Minor { get; }
 
+        /// <summary>
+        /// Gets the build number of the version.
+        /// </summary>
         public int Build { get; }
 
+        /// <summary>
+        /// Parses string into <see cref="MySqlVersion"/>.
+        /// </summary>
+        /// <param name="versionString">The input string.</param>
+        /// <returns>The result.</returns>
         public static MySqlVersion Parse(string versionString)
         {
             int start = 0;
@@ -51,14 +78,22 @@ namespace DevZest.Data.MySql
             return new MySqlVersion(versionString, major, minor, build);
         }
 
-        public bool IsAtLeast(int majorNum, int minorNum, int buildNum)
+        /// <summary>
+        /// Determines whether current version is equal or greater than specified version.
+        /// </summary>
+        /// <param name="major">The major number of the specified version.</param>
+        /// <param name="minor">The minor number of the specified version.</param>
+        /// <param name="build">The build number of the specified version.</param>
+        /// <returns><see langword="true"/> if current version is equal or greater than specified version.</returns>
+        public bool IsAtLeast(int major, int minor, int build)
         {
-            if (Major > majorNum) return true;
-            if (Major == majorNum && Minor > minorNum) return true;
-            if (Major == majorNum && Minor == minorNum && Build >= buildNum) return true;
+            if (Major > major) return true;
+            if (Major == major && Minor > minor) return true;
+            if (Major == major && Minor == minor && Build >= build) return true;
             return false;
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return _srcString;

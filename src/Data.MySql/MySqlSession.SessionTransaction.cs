@@ -12,11 +12,13 @@ namespace DevZest.Data.MySql
     {
         private SessionTransaction _currentTransaction;
 
+        /// <inheritdoc/>
         public sealed override int TransactionCount
         {
             get { return _currentTransaction == null ? 0 : 1; }
         }
 
+        /// <inheritdoc/>
         protected sealed override Transaction CurrentTransaction
         {
             get { return _currentTransaction; }
@@ -139,6 +141,7 @@ namespace DevZest.Data.MySql
             }
         }
 
+        /// <inheritdoc/>
         protected sealed override ITransaction PerformBeginTransaction(IsolationLevel? isolation, string name = null)
         {
             return SessionTransaction.Create(this, isolation);

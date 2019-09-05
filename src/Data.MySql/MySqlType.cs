@@ -8,6 +8,9 @@ using System.Globalization;
 
 namespace DevZest.Data.MySql
 {
+    /// <summary>
+    /// Represents MySQL data type.
+    /// </summary>
     public abstract class MySqlType : IAddon
     {
         private static class CastAsType
