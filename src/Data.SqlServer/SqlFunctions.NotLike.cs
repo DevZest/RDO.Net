@@ -23,6 +23,12 @@ namespace DevZest.Data.SqlServer
             }
         }
 
+        /// <summary>
+        /// Determines whether a specific character string does not match a specified pattern.
+        /// </summary>
+        /// <param name="source">The source string column.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <returns><see cref="_Boolean"/> column that contains the result.</returns>
         public static _Boolean NotLike(this _String source, _String pattern)
         {
             source.VerifyNotNull(nameof(source));

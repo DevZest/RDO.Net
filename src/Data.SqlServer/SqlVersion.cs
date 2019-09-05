@@ -2,6 +2,9 @@
 
 namespace DevZest.Data.SqlServer
 {
+    /// <summary>
+    /// Specifies SQL Server version.
+    /// </summary>
     public enum SqlVersion
     {
         /// <summary>

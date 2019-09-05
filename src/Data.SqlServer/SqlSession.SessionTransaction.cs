@@ -12,11 +12,13 @@ namespace DevZest.Data.SqlServer
     {
         private readonly Stack<SessionTransaction> _transactions = new Stack<SessionTransaction>();
 
+        /// <inheritdoc/>
         public sealed override int TransactionCount
         {
             get { return _transactions.Count; }
         }
 
+        /// <inheritdoc/>
         protected sealed override Transaction CurrentTransaction
         {
             get { return GetCurrentTransaction(); }
@@ -194,6 +196,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
+        /// <inheritdoc/>
         protected sealed override ITransaction PerformBeginTransaction(IsolationLevel? isolation, string name = null)
         {
             return SessionTransaction.Create(this, isolation, name);

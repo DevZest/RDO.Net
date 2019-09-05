@@ -13,14 +13,24 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.SqlServer
 {
+    /// <summary>
+    /// SQL Server implementation of database session.
+    /// </summary>
     public abstract partial class SqlSession : DbSession<SqlConnection, SqlCommand, SqlReader>
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="SqlSession"/>.
+        /// </summary>
+        /// <param name="sqlConnection">The SQL Server connection.</param>
         protected SqlSession(SqlConnection sqlConnection)
             : base(sqlConnection)
         {
         }
 
         private SqlVersion _sqlVersion;
+        /// <summary>
+        /// Gets or sets the SQL Server version.
+        /// </summary>
         public SqlVersion SqlVersion
         {
             get
@@ -34,17 +44,20 @@ namespace DevZest.Data.SqlServer
 
         internal ConditionalWeakTable<DbQueryStatement, SqlGenerator> _sqlGeneratorCache = new ConditionalWeakTable<DbQueryStatement, SqlGenerator>();
 
+        /// <inheritdoc/>
         protected override string GetSqlString(DbQueryStatement query)
         {
             return SqlGenerator.Select(this, query).CreateCommand(null).ToTraceString();
         }
 
+        /// <inheritdoc/>
         protected sealed override SqlCommand GetQueryCommand(DbQueryStatement queryStatement)
         {
             var queryGenerator = SqlGenerator.Select(this, queryStatement);
             return queryGenerator.CreateCommand(Connection);
         }
 
+        /// <inheritdoc/>
         protected sealed override ReaderInvoker CreateReaderInvoker(Model model, SqlCommand command)
         {
             return new SqlReaderInvoker(this, model, command);
@@ -60,11 +73,13 @@ namespace DevZest.Data.SqlServer
             return "#" + _tempTableNameSuffixes.GetUniqueName(model.GetDbAlias());
         }
 
+        /// <inheritdoc/>
         protected override string AssignTempTableName(Model model)
         {
             return _tempTableNamesByModel.GetValue(model, GetUniqueTempTableName);
         }
 
+        /// <inheritdoc/>
         protected sealed override SqlCommand GetCreateTableCommand(Model model, bool isTempTable)
         {
             var sqlBuilder = new IndentedStringBuilder();
@@ -72,6 +87,13 @@ namespace DevZest.Data.SqlServer
             return sqlBuilder.ToString().CreateSqlCommand(Connection);
         }
 
+        /// <summary>
+        /// Opens XML as DbSet.
+        /// </summary>
+        /// <param name="dbSetName">The name of the DbSet.</param>
+        /// <param name="xml">The XML.</param>
+        /// <param name="xPath">The X-Path to the XML.</param>
+        /// <returns></returns>
         public DbSet<SqlXmlNode> OpenXml(string dbSetName, SqlXml xml, string xPath)
         {
             dbSetName = "@" + dbSetName;
@@ -100,6 +122,7 @@ namespace DevZest.Data.SqlServer
             return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder);
         }
 
+        /// <inheritdoc/>
         protected sealed override SqlCommand GetInsertCommand(DbSelectStatement statement)
         {
             return GetInsertCommand(statement, null);
@@ -125,6 +148,7 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement, identityOutput);
         }
 
+        /// <inheritdoc/>
         protected sealed override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity, CancellationToken ct)
         {
             return DbTableInsert<TTarget>.ExecuteAsync(targetTable, sourceData, columnMapper, updateIdentity, ct);
@@ -176,6 +200,7 @@ namespace DevZest.Data.SqlServer
             public _Int64 IdentityValue { get; private set; }
         }
 
+        /// <inheritdoc/>
         protected sealed override async Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken ct)
         {
             var command = GetInsertScalarCommand(statement, outputIdentity, out var scopeIdentityParam);
@@ -194,11 +219,13 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.InsertScalar(this, statement, outputIdentity, out scopeIdentityParam).CreateCommand(Connection, scopeIdentityParam);
         }
 
+        /// <inheritdoc/>
         protected sealed override SqlCommand GetUpdateCommand(DbSelectStatement statement)
         {
             return SqlGenerator.Update(this, statement).CreateCommand(Connection);
         }
 
+        /// <inheritdoc/>
         protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey targetKey, CancellationToken ct)
         {
@@ -216,11 +243,13 @@ namespace DevZest.Data.SqlServer
             return GetUpdateCommand(statement);
         }
 
+        /// <inheritdoc/>
         protected sealed override SqlCommand GetDeleteCommand(DbSelectStatement statement)
         {
             return SqlGenerator.Delete(this, statement).CreateCommand(Connection);
         }
 
+        /// <inheritdoc/>
         protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey targetKey, CancellationToken cancellationToken)
         {
             var command = BuildDeleteCommand(source, target, targetKey);
@@ -237,6 +266,7 @@ namespace DevZest.Data.SqlServer
             return GetDeleteCommand(statement);
         }
 
+        /// <inheritdoc/>
         protected sealed override async Task<object> CreateMockDbAsync(CancellationToken ct)
         {
             if (Connection.State != ConnectionState.Open)
@@ -257,6 +287,7 @@ select @mockschema;
             return await sqlCommand.ExecuteScalarAsync(ct);
         }
 
+        /// <inheritdoc/>
         protected sealed override string GetMockTableName(string tableName, object tag)
         {
             var quotedTableName = string.Join(".", tableName.ParseIdentifier()).ToQuotedIdentifier();
@@ -292,6 +323,13 @@ select @mockschema;
             return result;
         }
 
+        /// <summary>
+        /// Opens JSON string as DbSet.
+        /// </summary>
+        /// <typeparam name="T">Type of entity.</typeparam>
+        /// <param name="json">The JSON string.</param>
+        /// <param name="ordinalColumnName">The name of extra ordinal column.</param>
+        /// <returns>The result DbSet.</returns>
         public DbSet<T> OpenJson<T>(string json, string ordinalColumnName = null)
             where T : class, IEntity, new()
         {

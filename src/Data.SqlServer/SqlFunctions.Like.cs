@@ -3,6 +3,9 @@ using System;
 
 namespace DevZest.Data.SqlServer
 {
+    /// <summary>
+    /// Provides SQL Server specific functions.
+    /// </summary>
     public static partial class SqlFunctions
     {
         private sealed class LikeFunction : ScalarFunctionExpression<bool?>
@@ -23,6 +26,12 @@ namespace DevZest.Data.SqlServer
             }
         }
 
+        /// <summary>
+        /// Determines whether a specific character string matches a specified pattern.
+        /// </summary>
+        /// <param name="source">The source string column.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <returns><see cref="_Boolean"/> column that contains the result.</returns>
         public static _Boolean Like(this _String source, _String pattern)
         {
             source.VerifyNotNull(nameof(source));
