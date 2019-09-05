@@ -12,6 +12,9 @@ namespace DevZest.Data.Primitives
 {
     partial class DbSession<TConnection, TCommand, TReader>
     {
+        /// <summary>
+        /// Logs records to a variety of destinations such as log files or the console.
+        /// </summary>
         protected class Logger :
             IDbConnectionInterceptor<TConnection>,
             IDbTransactionInterceptor,
@@ -43,19 +46,29 @@ namespace DevZest.Data.Primitives
 
             private readonly Stopwatch _stopwatch = new Stopwatch();
             /// <summary>
-            /// The stop watch used to time executions. This stop watch is started at the end of
-            /// <see cref="OnCommandExecuting" /> and is stopped at the beginning of the <see cref="OnCommandExecuted" />.
+            /// Gets the stop watch used to record time elapsed during executions.
             /// </summary>
             protected Stopwatch Stopwatch
             {
                 get { return _stopwatch; }
             }
 
+            /// <summary>
+            /// Writes logging message for connection opening.
+            /// </summary>
+            /// <param name="connection">The connection.</param>
+            /// <param name="inovker">The invoker.</param>
+            /// <remarks>The default implementation does nothing.</remarks>
             protected virtual void WriteConnectionOpening(TConnection connection, AddonInvoker inovker)
             {
                 Debug.Assert(ShouldLog(LogCategory.ConnectionOpening));
             }
 
+            /// <summary>
+            /// Writes logging message for connection opened.
+            /// </summary>
+            /// <param name="connection">The connection.</param>
+            /// <param name="invoker">The invoker.</param>
             protected virtual void WriteConnectionOpened(TConnection connection, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.ConnectionOpened));
@@ -68,11 +81,22 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.ConnectionOpened, Environment.NewLine);
             }
 
+            /// <summary>
+            /// Writes logging message for connection closing.
+            /// </summary>
+            /// <param name="connection">The connection.</param>
+            /// <param name="invoker">The invoker.</param>
+            /// <remarks>The default implementation does nothing.</remarks>
             protected virtual void WriteConnectionClosing(TConnection connection, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.ConnectionClosing));
             }
 
+            /// <summary>
+            /// Writes logging message for connection closed.
+            /// </summary>
+            /// <param name="connection">The connection.</param>
+            /// <param name="invoker">The invoker.</param>
             protected virtual void WriteConnectionClosed(TConnection connection, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.ConnectionClosed));
@@ -83,11 +107,24 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.ConnectionClosed, Environment.NewLine);
             }
 
+            /// <summary>
+            /// Writes logging message for transaction beginning.
+            /// </summary>
+            /// <param name="isolationLevel">The transaction isolation level.</param>
+            /// <param name="name">The name of the transaction.</param>
+            /// <param name="invoker">The invoker.</param>
+            /// <remarks>The default implementation does nothing.</remarks>
             protected virtual void WriteTransactionBeginning(IsolationLevel? isolationLevel, string name, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.TransactionBeginning));
             }
 
+            /// <summary>
+            /// Writes logging message for transaction began.
+            /// </summary>
+            /// <param name="isolationLevel">The transaction isolation level.</param>
+            /// <param name="name">The name of the transaction.</param>
+            /// <param name="invoker">The invoker.</param>
             protected virtual void WriteTransactionBegan(IsolationLevel? isolationLevel, string name, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.TransactionBegan));
@@ -98,11 +135,22 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.TransactionBegan, Environment.NewLine);
             }
 
+            /// <summary>
+            /// Writes logging message for transaction committing.
+            /// </summary>
+            /// <param name="transaction">The transation.</param>
+            /// <param name="invoker">The invoker.</param>
+            /// <remarks>The default implementation does nothing.</remarks>
             protected virtual void WriteTransactionCommitting(ITransaction transaction, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.TransactionCommitting));
             }
 
+            /// <summary>
+            /// Writes logging message for transaction committed.
+            /// </summary>
+            /// <param name="transaction">The transation.</param>
+            /// <param name="invoker">The invoker.</param>
             protected virtual void WriteTransactionCommitted(ITransaction transaction, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.TransactionCommitted));
@@ -113,11 +161,22 @@ namespace DevZest.Data.Primitives
                 Write(LogCategory.TransactionCommitted, Environment.NewLine);
             }
 
+            /// <summary>
+            /// Writes logging message for transaction rolling back.
+            /// </summary>
+            /// <param name="transaction">The transation.</param>
+            /// <param name="invoker">The invoker.</param>
+            /// <remarks>The default implementation does nothing.</remarks>
             protected virtual void WriteTransactionRollingBack(ITransaction transaction, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.TransactionRollingBack));
             }
 
+            /// <summary>
+            /// Writes logging message for transaction rolled back.
+            /// </summary>
+            /// <param name="transaction">The transation.</param>
+            /// <param name="invoker">The invoker.</param>
             protected virtual void WriteTransactionRolledBack(ITransaction transaction, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.TransactionRolledBack));
@@ -134,6 +193,10 @@ namespace DevZest.Data.Primitives
                     WriteCommand(command);
             }
 
+            /// <summary>
+            /// Writes command into logging.
+            /// </summary>
+            /// <param name="command">The command.</param>
             protected virtual void WriteCommand(TCommand command)
             {
                 Debug.Assert(ShouldLog(LogCategory.CommandText));
@@ -204,6 +267,11 @@ namespace DevZest.Data.Primitives
                     LogCommand(command);
             }
 
+            /// <summary>
+            /// Writes logging message for command executing.
+            /// </summary>
+            /// <param name="command">The command.</param>
+            /// <param name="invoker">The invoker.</param>
             protected virtual void WriteCommandExecuting(TCommand command, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.CommandExecuting));
@@ -225,6 +293,13 @@ namespace DevZest.Data.Primitives
                     WriteCommandExecuted(command, result, invoker);
             }
 
+            /// <summary>
+            /// Writes logging message for command executed.
+            /// </summary>
+            /// <typeparam name="TResult">Type of the command result.</typeparam>
+            /// <param name="command">The command.</param>
+            /// <param name="result">The command result.</param>
+            /// <param name="invoker">The invoker.</param>
             protected virtual void WriteCommandExecuted<TResult>(TCommand command, TResult result, AddonInvoker invoker)
             {
                 Debug.Assert(ShouldLog(LogCategory.CommandExecuted));
