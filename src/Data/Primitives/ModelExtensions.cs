@@ -4,19 +4,39 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Provides extension methods of <see cref="Model"/> object.
+    /// </summary>
     public static class ModelExtensions
     {
+        /// <summary>
+        /// Gets the database alias.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The database alias</returns>
         public static string GetDbAlias(this Model model)
         {
             return model.DbAlias;
         }
 
+        /// <summary>
+        /// Adds a system column into the model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="name">The name of column.</param>
+        /// <param name="initializer">The column initializer.</param>
         public static void AddSystemColumn(this Model model, Column column, string name, Action<Column> initializer = null)
         {
             model.VerifyNotNull(nameof(model));
             column.Initialize(model, model.GetType(), name, ColumnKind.SystemCustom, initializer);
         }
-
+        
+        /// <summary>
+        /// Gets database table clause.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The database table clause.</returns>
         public static DbTableClause GetDbTableClause(this Model model)
         {
             model.VerifyNotNull(nameof(model));
@@ -24,12 +44,25 @@ namespace DevZest.Data.Primitives
             return dbTable == null ? null : new DbTableClause(model, dbTable.Name);
         }
 
+        /// <summary>
+        /// Gets the system row id column.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The column which is the system row id.</returns>
         public static _Int32 GetTableRowIdColumn(this Model model)
         {
             model.VerifyNotNull(nameof(model));
             return model.Columns[new ColumnId(model.GetType(), Model.SYS_ROW_ID_COL_NAME)] as _Int32;
         }
-
+        
+        /// <summary>
+        /// Creates DbTable object.
+        /// </summary>
+        /// <typeparam name="T">Type of entity.</typeparam>
+        /// <param name="modelRef">The model reference.</param>
+        /// <param name="dbSession">The database session.</param>
+        /// <param name="name">The name of the table.</param>
+        /// <returns>The created DbTable object.</returns>
         public static DbTable<T> CreateDbTable<T>(this T modelRef, DbSession dbSession, string name)
             where T : class, IEntity, new()
         {
@@ -40,6 +73,11 @@ namespace DevZest.Data.Primitives
             return result ?? DbTable<T>.Create(modelRef, dbSession, name);
         }
 
+        /// <summary>
+        /// Gets insertable columns.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The insertable columns.</returns>
         public static IEnumerable<Column> GetInsertableColumns(this Model model)
         {
             model.VerifyNotNull(nameof(model));
@@ -62,6 +100,11 @@ namespace DevZest.Data.Primitives
             }
         }
 
+        /// <summary>
+        /// Gets updatable columns.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The updatable columns.</returns>
         public static IEnumerable<Column> GetUpdatableColumns(this Model model)
         {
             model.VerifyNotNull(nameof(model));
@@ -116,36 +159,69 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
+        /// <summary>
+        /// Gets the name of database table.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The name of database name.</returns>
         public static string GetDbTableName(this Model model)
         {
             return (model.DataSource as IDbTable)?.Name;
         }
 
+        /// <summary>
+        /// Gets the description of database table.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The description of database table.</returns>
         public static string GetDbTableDescription(this Model model)
         {
             return (model.DataSource as IDbTable)?.Description;
         }
 
+        /// <summary>
+        /// Determines whether identity column is suspended.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns><see langword="true"/> if identity column is suspended, otherwise <see langword="false"/>.</returns>
         public static bool IsIdentitySuspended(this Model model)
         {
             return model.IsIdentitySuspended;
         }
 
+        /// <summary>
+        /// Suspend identity column of the model.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public static void SuspendIdentity(this Model model)
         {
             model.SuspendIdentity();
         }
 
+        /// <summary>
+        /// Resumes identity column of the model.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public static void ResumeIdentity(this Model model)
         {
             model.ResumeIdentity();
         }
 
+        /// <summary>
+        /// Gets the parent relationship.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The parent relationship.</returns>
         public static IReadOnlyList<ColumnMapping> GetParentRelationship(this Model model)
         {
             return model.ParentRelationship;
         }
 
+        /// <summary>
+        /// Gets the owner DataSource.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The owner DataSource</returns>
         public static DataSource GetDataSource(this Model model)
         {
             return model.DataSource;
