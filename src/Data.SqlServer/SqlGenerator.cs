@@ -131,7 +131,7 @@ namespace DevZest.Data.SqlServer
             var sqlBuilder = result.SqlBuilder;
             var model = statement.Model;
             var selectList = statement.Select;
-            var from = statement.From == null ? model.GetDbTableClause() : statement.From;
+            var from = statement.From ?? model.GetDbTableClause();
             var where = statement.Where;
 
             result.ModelAliasManager = SqlServer.ModelAliasManager.Create(from);
@@ -167,7 +167,7 @@ namespace DevZest.Data.SqlServer
             var sqlBuilder = result.SqlBuilder;
             var model = statement.Model;
             var selectList = statement.Select;
-            var from = statement.From == null ? model.GetDbTableClause() : statement.From;
+            var from = statement.From ?? model.GetDbTableClause();
             var where = statement.Where;
 
             result.ModelAliasManager = SqlServer.ModelAliasManager.Create(from);
@@ -226,7 +226,7 @@ namespace DevZest.Data.SqlServer
         {
             var model = table.Model;
             var jsonParam = model.GetSourceJsonParam();
-            if (ReferenceEquals(jsonParam, null))
+            if (jsonParam is null)
                 return false;
 
             SqlBuilder.Append("OPENJSON(");

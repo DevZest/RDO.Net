@@ -87,21 +87,6 @@ namespace DevZest.Data.SqlServer
             return sqlBuilder.ToString().CreateSqlCommand(Connection);
         }
 
-        /// <summary>
-        /// Opens XML as DbSet.
-        /// </summary>
-        /// <param name="dbSetName">The name of the DbSet.</param>
-        /// <param name="xml">The XML.</param>
-        /// <param name="xPath">The X-Path to the XML.</param>
-        /// <returns></returns>
-        public DbSet<SqlXmlNode> OpenXml(string dbSetName, SqlXml xml, string xPath)
-        {
-            dbSetName = "@" + dbSetName;
-            var model = new SqlXmlNode();
-            model.Initialize(dbSetName, xml, xPath);
-            return model.CreateDbTable(this, dbSetName);
-        }
-
         internal DbQuery<KeyOutput> BuildImportKeyQuery<T>(DataSet<T> dataSet)
             where T : class, IEntity, new()
         {
@@ -336,6 +321,14 @@ select @mockschema;
             if (json == null)
                 throw new ArgumentNullException(nameof(json));
             return this.CreateJsonRowSet<T>(json, ordinalColumnName);
+        }
+
+        private DbSet<SqlXmlNode> OpenXml(string dbSetName, SqlXml xml, string xPath)
+        {
+            dbSetName = "@" + dbSetName;
+            var model = new SqlXmlNode();
+            model.Initialize(dbSetName, xml, xPath);
+            return model.CreateDbTable(this, dbSetName);
         }
     }
 }

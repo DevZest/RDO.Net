@@ -9,7 +9,7 @@ using System.Reflection;
 namespace DevZest.Data.SqlServer
 {
     [InvisibleToDbDesigner]
-    public sealed class SqlXmlNode : Model
+    internal sealed class SqlXmlNode : Model
     {
         static SqlXmlNode()
         {
