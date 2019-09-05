@@ -6,6 +6,9 @@ using System.Xml;
 
 namespace DevZest.Data.SqlServer
 {
+    /// <summary>
+    /// Represents a <see cref="SqlXml"/> column.
+    /// </summary>
     public sealed class _SqlXml : Column<SqlXml>, IColumn<SqlReader>
     {
         private sealed class CastToStringExpression : CastExpression<SqlXml, string>
@@ -21,6 +24,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
@@ -57,26 +61,31 @@ namespace DevZest.Data.SqlServer
             return new FromStringCast(x).MakeColumn<_SqlXml>();
         }
 
+        /// <inheritdoc/>
         public override bool AreEqual(SqlXml x, SqlXml y)
         {
             return x == y;
         }
 
+        /// <inheritdoc/>
         protected override Column<SqlXml> CreateConst(SqlXml value)
         {
             return Const(value);
         }
 
+        /// <inheritdoc/>
         protected override Column<SqlXml> CreateParam(SqlXml value)
         {
             return Param(value, this);
         }
 
+        /// <inheritdoc/>
         protected override bool IsNull(SqlXml value)
         {
             return value == null;
         }
 
+        /// <inheritdoc/>
         protected override JsonValue SerializeValue(SqlXml value)
         {
             if (value == null || value.IsNull)
@@ -85,20 +94,29 @@ namespace DevZest.Data.SqlServer
             return JsonValue.String(value.Value);
         }
 
-        public static SqlXml CreateSqlXml(string s)
+        /// <summary>
+        /// Create <see cref="SqlXml"/> object from string value.
+        /// </summary>
+        /// <param name="value">The string value.</param>
+        /// <returns>The created result object.</returns>
+        public static SqlXml CreateSqlXml(string value)
         {
-            using (var xmlreader = XmlReader.Create(new StringReader(s)))
+            using (var xmlreader = XmlReader.Create(new StringReader(value)))
             {
                 return new SqlXml(xmlreader);
             }
         }
 
+        /// <inheritdoc/>
         protected override SqlXml DeserializeValue(JsonValue value)
         {
             return value.Type == JsonValueType.Null ? null : CreateSqlXml(value.Text);
         }
 
-        public _SqlXml this[SqlReader reader]
+        /// <summary>Gets the value of this column from <see cref="SqlReader"/>'s current row.</summary>
+        /// <param name="reader">The <see cref="SqlReader"/> object.</param>
+        /// <returns>The value of this column from <see cref="SqlReader"/>'s current row.</returns>
+        public SqlXml this[SqlReader reader]
         {
             get
             {
@@ -112,11 +130,18 @@ namespace DevZest.Data.SqlServer
             return reader.GetSqlXml(Ordinal);
         }
 
+        /// <summary>Creates a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <param name="sourceColumn">The value which will be passed to <see cref="DbParamExpression.SourceColumn"/>.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static _SqlXml Param(SqlXml x, _SqlXml sourceColumn = null)
         {
             return new ParamExpression<SqlXml>(x, sourceColumn).MakeColumn<_SqlXml>();
         }
 
+        /// <summary>Creates a column of constant expression.</summary>
+        /// <param name="x">The value of the constant expression.</param>
+        /// <returns>The column of constant expression.</returns>
         public static _SqlXml Const(SqlXml x)
         {
             return new ConstantExpression<SqlXml>(x).MakeColumn<_SqlXml>();
@@ -127,6 +152,9 @@ namespace DevZest.Data.SqlServer
             this[dataRow] = GetValue(reader);
         }
 
+        /// <summary>Converts the supplied <see cref="SqlXml"/> to <see cref="_SqlXml" /> expression.</summary>
+        /// <returns>A new <see cref="_SqlXml" /> expression from the provided value.</returns>
+        /// <param name="x">A <see cref="SqlXml"/> value.</param>
         public static implicit operator _SqlXml(SqlXml x)
         {
             return Param(x, null);

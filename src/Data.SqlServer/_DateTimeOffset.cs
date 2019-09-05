@@ -22,6 +22,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
@@ -36,21 +37,25 @@ namespace DevZest.Data.SqlServer
             return x.CastToString();
         }
 
+        /// <inheritdoc/>
         public override bool AreEqual(DateTimeOffset? x, DateTimeOffset? y)
         {
             return x == y;
         }
 
+        /// <inheritdoc/>
         protected override Column<DateTimeOffset?> CreateParam(DateTimeOffset? value)
         {
             return Param(value, this);
         }
 
+        /// <inheritdoc/>
         protected override Column<DateTimeOffset?> CreateConst(DateTimeOffset? value)
         {
             return Const(value);
         }
 
+        /// <inheritdoc/>
         protected override JsonValue SerializeValue(DateTimeOffset? value)
         {
             if (!value.HasValue)
@@ -60,11 +65,15 @@ namespace DevZest.Data.SqlServer
             return JsonValue.String(x.ToString("o", CultureInfo.InvariantCulture));
         }
 
+        /// <inheritdoc/>
         protected override DateTimeOffset? DeserializeValue(JsonValue value)
         {
             return value.Type == JsonValueType.Null ? null : new DateTimeOffset?(DateTimeOffset.Parse(value.Text));
         }
 
+        /// <summary>Gets the value of this column from <see cref="SqlReader"/>'s current row.</summary>
+        /// <param name="reader">The <see cref="SqlReader"/> object.</param>
+        /// <returns>The value of this column from <see cref="SqlReader"/>'s current row.</returns>
         public DateTimeOffset? this[SqlReader reader]
         {
             get
@@ -84,17 +93,24 @@ namespace DevZest.Data.SqlServer
             this[dataRow] = GetValue(reader);
         }
 
-        /// <exclude />
+        /// <inheritdoc/>
         protected override bool IsNull(DateTimeOffset? value)
         {
             return !value.HasValue;
         }
 
+        /// <summary>Creates a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <param name="sourceColumn">The value which will be passed to <see cref="DbParamExpression.SourceColumn"/>.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static _DateTimeOffset Param(DateTimeOffset? x, _DateTimeOffset sourceColumn = null)
         {
             return new ParamExpression<DateTimeOffset?>(x, sourceColumn).MakeColumn<_DateTimeOffset>();
         }
 
+        /// <summary>Creates a column of constant expression.</summary>
+        /// <param name="x">The value of the constant expression.</param>
+        /// <returns>The column of constant expression.</returns>
         public static _DateTimeOffset Const(DateTimeOffset? x)
         {
             return new ConstantExpression<DateTimeOffset?>(x).MakeColumn<_DateTimeOffset>();

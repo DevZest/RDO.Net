@@ -22,6 +22,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
+        /// <inheritdoc/>
         public override _String CastToString()
         {
             return new CastToStringExpression(this).MakeColumn<_String>();
@@ -36,21 +37,25 @@ namespace DevZest.Data.SqlServer
             return x.CastToString();
         }
 
+        /// <inheritdoc/>
         public override bool AreEqual(TimeSpan? x, TimeSpan? y)
         {
             return x == y;
         }
 
+        /// <inheritdoc/>
         protected override Column<TimeSpan?> CreateParam(TimeSpan? value)
         {
             return Param(value, this);
         }
 
+        /// <inheritdoc/>
         protected override Column<TimeSpan?> CreateConst(TimeSpan? value)
         {
             return Const(value);
         }
 
+        /// <inheritdoc/>
         protected override JsonValue SerializeValue(TimeSpan? value)
         {
             if (!value.HasValue)
@@ -60,11 +65,15 @@ namespace DevZest.Data.SqlServer
             return JsonValue.String(x.ToString("c", CultureInfo.InvariantCulture));
         }
 
+        /// <inheritdoc/>
         protected override TimeSpan? DeserializeValue(JsonValue value)
         {
             return value.Type == JsonValueType.Null ? null : new TimeSpan?(TimeSpan.Parse(value.Text));
         }
 
+        /// <summary>Gets the value of this column from <see cref="SqlReader"/>'s current row.</summary>
+        /// <param name="reader">The <see cref="SqlReader"/> object.</param>
+        /// <returns>The value of this column from <see cref="SqlReader"/>'s current row.</returns>
         public TimeSpan? this[SqlReader reader]
         {
             get
@@ -84,17 +93,24 @@ namespace DevZest.Data.SqlServer
             this[dataRow] = GetValue(reader);
         }
 
-        /// <exclude />
+        /// <inheritdoc/>
         protected override bool IsNull(TimeSpan? value)
         {
             return !value.HasValue;
         }
 
+        /// <summary>Creates a column of parameter expression.</summary>
+        /// <param name="x">The value of the parameter expression.</param>
+        /// <param name="sourceColumn">The value which will be passed to <see cref="DbParamExpression.SourceColumn"/>.</param>
+        /// <returns>The column of parameter expression.</returns>
         public static _TimeSpan Param(TimeSpan? x, _TimeSpan sourceColumn = null)
         {
             return new ParamExpression<TimeSpan?>(x, sourceColumn).MakeColumn<_TimeSpan>();
         }
 
+        /// <summary>Creates a column of constant expression.</summary>
+        /// <param name="x">The value of the constant expression.</param>
+        /// <returns>The column of constant expression.</returns>
         public static _TimeSpan Const(TimeSpan? x)
         {
             return new ConstantExpression<TimeSpan?>(x).MakeColumn<_TimeSpan>();
