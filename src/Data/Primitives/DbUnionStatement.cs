@@ -1,8 +1,10 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Represents SQL UNION statement.
+    /// </summary>
     public sealed class DbUnionStatement : DbQueryStatement
     {
         internal DbUnionStatement(Model model, DbQueryStatement query1, DbQueryStatement query2, DbUnionKind kind)
@@ -16,22 +18,34 @@ namespace DevZest.Data.Primitives
             Kind = kind;
         }
 
+        /// <summary>
+        /// Gets the first query statement.
+        /// </summary>
         public DbQueryStatement Query1 { get; private set; }
 
+        /// <summary>
+        /// Gets the second query statement.
+        /// </summary>
         public DbQueryStatement Query2 { get; private set; }
 
+        /// <summary>
+        /// Gets the kind of SQL UNION.
+        /// </summary>
         public DbUnionKind Kind { get; private set; }
 
+        /// <inheritdoc/>
         public override void Accept(DbFromClauseVisitor visitor)
         {
             visitor.Visit(this);
         }
 
+        /// <inheritdoc/>
         public override T Accept<T>(DbFromClauseVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }
 
+        /// <inheritdoc/>
         public override DbSelectStatement GetSequentialKeySelectStatement(SequentialKey sequentialKey)
         {
             var primaryKey = Model.PrimaryKey;
@@ -44,6 +58,7 @@ namespace DevZest.Data.Primitives
             return new DbSelectStatement(sequentialKey, select, this, null, null, null, null, -1, -1);
         }
 
+        /// <inheritdoc/>
         public override DbSelectStatement BuildToTempTableStatement()
         {
             return new DbSelectStatement(Model, null, this, null, null, -1, -1);

@@ -17,6 +17,7 @@ namespace DevZest.Data.Primitives
         /// <summary>Gets the operand of this expression.</summary>
         public Column<T> Operand { get; private set; }
 
+        /// <inheritdoc/>
         protected sealed override IColumns GetBaseColumns()
         {
             return Operand.BaseColumns;
@@ -54,6 +55,7 @@ namespace DevZest.Data.Primitives
         /// <returns>The result.</returns>
         protected abstract T EvalCore(T x);
 
+        /// <inheritdoc/>
         protected internal sealed override ColumnExpression PerformTranslateTo(Model model)
         {
             var operand = Operand.TranslateTo(model);
