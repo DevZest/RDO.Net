@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DevZest.Data.Primitives
+﻿namespace DevZest.Data.Primitives
 {
     public enum DbUnaryExpressionKind
     {
