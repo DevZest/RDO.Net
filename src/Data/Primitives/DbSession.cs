@@ -399,11 +399,20 @@ namespace DevZest.Data.Primitives
         /// <returns>The name of the mock table.</returns>
         protected internal abstract string GetMockTableName(string tableName, object tag);
 
+        /// <summary>
+        /// Sets the logger.
+        /// </summary>
+        /// <param name="value">The delegate to receive the logging messages.</param>
         public void SetLogger(Action<string> value)
         {
             SetLogger(value, LogCategory.All);
         }
 
+        /// <summary>
+        /// Sets the logger.
+        /// </summary>
+        /// <param name="value">The delegate to receive the logging messages.</param>
+        /// <param name="logCategory">Specifies logging category.</param>
         public abstract void SetLogger(Action<string> value, LogCategory logCategory);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Addons;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Threading;
@@ -9,17 +8,30 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Primitives
 {
+    /// <summary>
+    /// Base class to implement specific database session.
+    /// </summary>
+    /// <typeparam name="TConnection">Type of ADO.Net database connection.</typeparam>
+    /// <typeparam name="TCommand">Type of ADO.Net database command.</typeparam>
+    /// <typeparam name="TReader">Type of ADO.Net database reader.</typeparam>
     public abstract partial class DbSession<TConnection, TCommand, TReader> : DbSession
         where TConnection : DbConnection
         where TCommand : DbCommand
         where TReader : DbReader
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="DbSession{TConnection, TCommand, TReader}"/> class.
+        /// </summary>
+        /// <param name="connection">The database connection.</param>
         protected DbSession(TConnection connection)
         {
             connection.VerifyNotNull(nameof(connection));
             Connection = connection;
         }
 
+        /// <summary>
+        /// Gets the database connection.
+        /// </summary>
         public new TConnection Connection { get; }
 
         internal sealed override DbConnection GetConnection()
@@ -27,11 +39,13 @@ namespace DevZest.Data.Primitives
             return Connection;
         }
 
+        /// <inheritdoc />
         public sealed override Task OpenConnectionAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             return CreateConnectionInterceptorInvoker().OpenAsync(cancellationToken);
         }
 
+        /// <inheritdoc />
         public sealed override void CloseConnection()
         {
             CreateConnectionInterceptorInvoker().Close();
@@ -42,6 +56,12 @@ namespace DevZest.Data.Primitives
             return new ConnectionInvoker(this, Connection);
         }
 
+        /// <summary>
+        /// Executes non query command.
+        /// </summary>
+        /// <param name="command">The command to be executed.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The return code returned by command execution.</returns>
         protected Task<int> ExecuteNonQueryAsync(TCommand command, CancellationToken ct)
         {
             if (CurrentTransaction != null)
@@ -55,6 +75,12 @@ namespace DevZest.Data.Primitives
             return new NonQueryCommandInvoker(this, command).ExecuteAsync(ct);
         }
 
+        /// <summary>
+        /// Gets the command to create database table.
+        /// </summary>
+        /// <param name="model">The model of the database table.</param>
+        /// <param name="isTempTable">Specifies whether to create temporary database table.</param>
+        /// <returns>The command to create database table.</returns>
         protected internal abstract TCommand GetCreateTableCommand(Model model, bool isTempTable);
 
         internal sealed override Task CreateTableAsync(Model model, bool isTempTable, CancellationToken cancellationToken)
@@ -62,8 +88,19 @@ namespace DevZest.Data.Primitives
             return ExecuteNonQueryAsync(GetCreateTableCommand(model, isTempTable), cancellationToken);
         }
 
+        /// <summary>
+        /// Gets the command for database query statement.
+        /// </summary>
+        /// <param name="queryStatement">The query statement.</param>
+        /// <returns>The command of query statement.</returns>
         protected abstract TCommand GetQueryCommand(DbQueryStatement queryStatement);
 
+        /// <summary>
+        /// Creates database reader invoker.
+        /// </summary>
+        /// <param name="model">The model of database recordset.</param>
+        /// <param name="command">The command to be executed.</param>
+        /// <returns>The database reader invoker.</returns>
         protected abstract ReaderInvoker CreateReaderInvoker(Model model, TCommand command);
 
         internal sealed override async Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
@@ -71,6 +108,12 @@ namespace DevZest.Data.Primitives
             return await ExecuteReaderAsync(dbSet, cancellationToken);
         }
 
+        /// <summary>
+        /// Executes reader on database recordset.
+        /// </summary>
+        /// <param name="dbSet">The database recordset.</param>
+        /// <param name="ct">The async cancellation token.</param>
+        /// <returns>The ADO.Net database reader.</returns>
         public Task<TReader> ExecuteReaderAsync(IDbSet dbSet, CancellationToken ct = default(CancellationToken))
         {
             dbSet.VerifyNotNull(nameof(dbSet));
@@ -98,6 +141,11 @@ namespace DevZest.Data.Primitives
             return CreateReaderInvoker(model, command).ExecuteAsync(ct);
         }
 
+        /// <summary>
+        /// Creates logger object.
+        /// </summary>
+        /// <returns>The created logger object.</returns>
+        /// <remarks>Derived class can override this method to return custom logger.</remarks>
         protected virtual Logger CreateLogger()
         {
             return new Logger();
@@ -108,6 +156,7 @@ namespace DevZest.Data.Primitives
             get { return this.GetAddon<Logger>(); }
         }
 
+        /// <inheritdoc/>
         public sealed override void SetLogger(Action<string> value, LogCategory logCategory)
         {
             var currentLogger = CurrentLogger;
@@ -144,7 +193,7 @@ namespace DevZest.Data.Primitives
 
                 while (await reader.ReadAsync(cancellationToken))
                 {
-                    var parentRowId = object.ReferenceEquals(parentRowIdColumn, null) ? 0 : parentRowIdColumn[reader].Value;
+                    var parentRowId = parentRowIdColumn is null ? 0 : parentRowIdColumn[reader].Value;
                     if (parentRowId != prevParentRowId)
                         dataSet = GetDataSet(dataSetModel, parentRowId);
                     NewDataRow(dataSet, columns, reader);
@@ -192,8 +241,7 @@ namespace DevZest.Data.Primitives
             var dataSetChildModels = dataSetModel.ChildModels;
             for (int i = 0; i < dbSetChildModels.Count; i++)
             {
-                var childDbSet = dbSetChildModels[i].DataSource as IDbSet;
-                if (childDbSet == null)
+                if (!(dbSetChildModels[i].DataSource is IDbSet childDbSet))
                     continue;
 
                 var childDataSetModel = dataSetChildModels[i];
@@ -211,9 +259,7 @@ namespace DevZest.Data.Primitives
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i] as IColumn<TReader>;
-                if (column == null)
-                    throw new NotSupportedException(DiagnosticMessages.DbSession_ColumnNotSupported(i, columns[i].Name));
-                result[i] = column;
+                result[i] = column ?? throw new NotSupportedException(DiagnosticMessages.DbSession_ColumnNotSupported(i, columns[i].Name));
             }
             return result;
         }
@@ -245,6 +291,11 @@ namespace DevZest.Data.Primitives
             return ExecuteTableEditAsync(statement, GetInsertCommand, cancellationToken);
         }
 
+        /// <summary>
+        /// Gets the command to insert data into table.
+        /// </summary>
+        /// <param name="statement">The query statement of the DbTable insert.</param>
+        /// <returns>The command.</returns>
         protected abstract TCommand GetInsertCommand(DbSelectStatement statement);
 
         internal sealed override Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken)
@@ -252,6 +303,11 @@ namespace DevZest.Data.Primitives
             return ExecuteTableEditAsync(statement, GetUpdateCommand, cancellationToken);
         }
 
+        /// <summary>
+        /// Gets the command to update table.
+        /// </summary>
+        /// <param name="statement">The query statement of the DbTable update.</param>
+        /// <returns>The command.</returns>
         protected internal abstract TCommand GetUpdateCommand(DbSelectStatement statement);
 
         internal sealed override Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken)
@@ -259,6 +315,11 @@ namespace DevZest.Data.Primitives
             return ExecuteTableEditAsync(statement, GetDeleteCommand, cancellationToken);
         }
 
+        /// <summary>
+        /// Gets the command to delete data from table
+        /// </summary>
+        /// <param name="statement">The query statement of the DbTable delete.</param>
+        /// <returns>The command.</returns>
         protected internal abstract TCommand GetDeleteCommand(DbSelectStatement statement);
     }
 }
