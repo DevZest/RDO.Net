@@ -78,3 +78,5 @@
   items:
     - name: RDO.WPF Overview
       href: programming_rdo_wpf/rdo_wpf_overview.md
+    - name: Samples
+      href: programming_rdo_wpf/samples.md
