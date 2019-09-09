@@ -4,11 +4,9 @@ uid: data_presentation_the_right_way
 
 # Data Presentation, the Right Way
 
-Separation of the graphical user interface from the business logic or back-end logic (the data model), is still a challenge task. Frameworks such as [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) introduces a new layer (the view model), trying to handle most if not all of the view's display logic:
+Separation of the graphical user interface from the business logic or back-end logic (the data model), is still a challenge task. Frameworks such as [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) introduces a new layer (the view model), trying to handle most if not all of the view's display logic.
 
-![image](/images/MVVM.jpg)
-
-Presentation logic is complex - it's responsible for overcoming the gap between computer data and human being, which IMO is the biggest challenge in computer science. To encapsulate presentation logic into a separate layer, we need to plan carefully at the very beginning. Unfortunately, existing MVVM implementations, among other similar frameworks, are built as an afterthought.
+Presentation logic is complex - it's responsible for overcoming the gap between computer and human being, which is a big (maybe biggest) challenge in computer science. To encapsulate presentation logic into a separate layer, we need to plan carefully at the very beginning. Unfortunately, existing MVVM implementations, among other similar frameworks, are built as an afterthought.
 
 ## The Anti-Patterns
 
