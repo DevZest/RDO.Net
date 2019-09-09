@@ -262,7 +262,7 @@ namespace DevZest.Data.Presenters
         /// <summary>Determines whether the current set is a proper (strict) subset of the specified collection.</summary>
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <returns><see langword="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSubsetOf(this IScalars source, IScalars other)
         {
             source.VerifyNotNull(nameof(source));
@@ -273,7 +273,7 @@ namespace DevZest.Data.Presenters
 
         /// <summary>Determines whether the current set is a proper (strict) superset of the specified collection.</summary>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <returns><see langword="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSupersetOf(this IScalars source, IScalars other)
         {
             source.VerifyNotNull(nameof(source));
@@ -285,7 +285,7 @@ namespace DevZest.Data.Presenters
         /// <summary>Determines whether the current set is a subset of a specified collection.</summary>
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <returns><see langword="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSubsetOf(this IScalars source, IScalars other)
         {
             source.VerifyNotNull(nameof(source));
@@ -297,7 +297,7 @@ namespace DevZest.Data.Presenters
         /// <summary>Determines whether the current set is a superset of a specified collection.</summary>
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <returns><see langword="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSupersetOf(this IScalars source, IScalars other)
         {
             source.VerifyNotNull(nameof(source));
@@ -309,7 +309,7 @@ namespace DevZest.Data.Presenters
         /// <summary>Determines whether the current set overlaps with the specified collection.</summary>
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
+        /// <returns><see langword="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool Overlaps(this IScalars source, IScalars other)
         {
             source.VerifyNotNull(nameof(source));
@@ -326,7 +326,7 @@ namespace DevZest.Data.Presenters
         /// <summary>Determines whether the current set and the specified collection contain the same elements.</summary>
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
-        /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
+        /// <returns><see langword="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
         public static bool SetEquals(this IScalars source, IScalars other)
         {
             source.VerifyNotNull(nameof(source));

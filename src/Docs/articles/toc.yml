@@ -74,3 +74,7 @@
       href: programming_rdo_data/database_initialization.md
     - name: DbMock for Testing
       href: programming_rdo_data/dbmock_for_testing.md
+- name: Programming RDO.WPF
+  items:
+    - name: RDO.WPF Overview
+      href: programming_rdo_wpf/rdo_wpf_overview.md
