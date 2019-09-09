@@ -39,9 +39,9 @@ Once we make a step back, we can get a very simple solution. ORM/Data Access is 
 
 ### Rich Metadata - Relational Data Objects
 
-Without the obsession of mapping between arbitrary objects and relational data, we can choose implementing relational schema and data into a comprehensive object model:
+Without the obsession of mapping between arbitrary objects and relational data, we can choose implementing relational schema and data into a comprehensive yet simple object model:
 
-[!include[RDO.Data Components](../_rdo_data_components.md)]
+![image](/images/RdoDataArchitecture.jpg)
 
 Database and dataset schema is realized as concrete metadata objects, with rich set of properties, methods and events. SQL, serialization/deserialization are explicitly implemented in these objects. In the end:
 
