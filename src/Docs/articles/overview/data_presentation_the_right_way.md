@@ -30,12 +30,9 @@ Put it together, if the presentation layer is an afterthought, there is little r
 
 ## The Right Way
 
-Thanks to [Rich Metadata](xref:orm_data_access_the_right_way#rich-metadata---relational-data-objects), we now have foundations to build a comprehensive presentation layer into a highly reusable and fully customizable <xref:DevZest.Data.Presenters.DataPresenter> class, mapping <xref:DevZest.Data.DataRow> into <xref:DevZest.Data.Presenters.RowPresenter>, with the following features built out of box:
+Thanks to [Rich Metadata](xref:orm_data_access_the_right_way#rich-metadata---relational-data-objects), we now have foundations to implement a comprehensive Model-View-Presenter (MVP) to improve the separation of concerns in presentation logic. The following is the architecture of RDO.WPF MVP:
 
-* Selection, sorting, filtering and hierarchical grouping.
-* UI elements life time management and data binding.
-* Editing and validation.
-* Layout and UI virtualization.
+[!include[Welcome to RDO.Net](../_rdo_wpf_mvp_architecture.md)]
 
 Simply derive you data presenter from <xref:DevZest.Data.Presenters.DataPresenter`1> class, and put a <xref:DevZest.Data.Views.DataView> into your view, you got all the above features immediately, without any complex control. The following code:
 
