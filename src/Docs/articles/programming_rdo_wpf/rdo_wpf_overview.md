@@ -26,9 +26,9 @@ The following is a sample of hierarchical view:
 
 These container components are bridges between view and presenter.
 
-## Using RDO.WPF
+## How to Use
 
-Using RDO.WPF is simple:
+Using RDO.WPF can be as simple as:
 
 * Add nuget package [DevZest.Data.WPF](https://www.nuget.org/packages/DevZest.Data.WPF/) into your WPF project;
 * Add a <xref:DevZest.Data.Views.DataView> control into your UI;
