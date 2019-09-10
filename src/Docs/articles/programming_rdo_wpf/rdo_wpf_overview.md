@@ -10,22 +10,6 @@ RDO.WPF is implemented as Model-View-Presenter (MVP) to improve the separation o
 
 [!include[Welcome to RDO.Net](../_rdo_wpf_mvp_architecture.md)]
 
-## Hierarchical View/Presenter
-
-As shown in the architecture diagram, the view elements are organized in hierarchical way, owned by the following container components:
-
-| View | Presenter | Description |
-|------|-----------|-------------|
-| <xref:DevZest.Data.Views.DataView> | <xref:DevZest.Data.Presenters.DataPresenter> | The root of the view, contains scalar UI elements and other container components. |
-| <xref:DevZest.Data.Views.BlockView> | <xref:DevZest.Data.Presenters.BlockPresenter> | Contains flowing <xref:DevZest.Data.Views.RowView>. This level is optional. |
-| <xref:DevZest.Data.Views.RowView> | <xref:DevZest.Data.Presenters.RowPresenter> | Contains data bindings to column UI elements. |
-
-The following is a sample of hierarchical view:
-
-![image](/images/samples_file_explorer_hierarchical_view.jpg)
-
-These container components are bridges between view and presenter.
-
 ## How to Use
 
 Using RDO.WPF can be as simple as:

@@ -80,3 +80,7 @@
       href: programming_rdo_wpf/rdo_wpf_overview.md
     - name: Samples
       href: programming_rdo_wpf/samples.md
+    - name: View Hierarchy
+      href: programming_rdo_wpf/view_hierarchy.md
+    - name: Row Presenter
+      href: programming_rdo_wpf/row_presenter.md
