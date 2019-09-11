@@ -112,7 +112,7 @@ For example, in AdventureWorkLT.WpfApp sample, there is an `AddressBox` user con
 
 [!code-xaml[AddressBox](../../../../samples/AdventureWorksLT.WpfApp/AddressBox.xaml)]
 
-The following binding factory extension method binds `Address` model to `AddressBox` target UI element:
+The following binding factory extension method binds `Address` model to `AddressBox` target UI element via [RowCompositeBinding\<T\>.AddChild](xref:DevZest.Data.Presenters.RowCompositeBinding`1.AddChild*) API:
 
 ```cs
 public static RowCompositeBinding<AddressBox> BindToAddressBox(this Address _)
