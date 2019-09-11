@@ -82,5 +82,5 @@
       href: programming_rdo_wpf/samples.md
     - name: View Hierarchy
       href: programming_rdo_wpf/view_hierarchy.md
-    - name: Row Presenter
+    - name: RowPresenter
       href: programming_rdo_wpf/row_presenter.md
