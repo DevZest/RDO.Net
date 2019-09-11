@@ -84,3 +84,5 @@
       href: programming_rdo_wpf/view_hierarchy.md
     - name: RowPresenter
       href: programming_rdo_wpf/row_presenter.md
+    - name: Data Binding
+      href: programming_rdo_wpf/data_binding.md
