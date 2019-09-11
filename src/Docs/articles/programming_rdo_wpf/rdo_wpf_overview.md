@@ -1,6 +1,6 @@
 # RDO.WPF Overview
 
-Built on top of RDO.Data, RDO.WPF can help developers to build WPF desktop applications:
+Built on top of RDO.Data, RDO.WPF is a presentation layer which can greatly help developers to build WPF desktop applications:
 
 ![image](/images/RdoWpfOverview.jpg)
 

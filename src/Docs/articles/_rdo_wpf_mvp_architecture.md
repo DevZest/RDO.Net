@@ -7,3 +7,5 @@
   * UI elements life time management and data binding.
   * Editing and validation.
   * Layout and UI virtualization.
+
+Since presenting collection of data is extensively and exclusively supported by the presenter, all the complex controls (controls derived from `System.Windows.Controls.ItemsControl` such as `ListBox` and `DataGrid`) are not necessary any more. By using RDO.WPF, your application only need to deal with simple controls such as `TextBlock` and `TextBox`, via data binding, in an unified way.
