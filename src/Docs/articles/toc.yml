@@ -82,7 +82,13 @@
       href: programming_rdo_wpf/samples.md
     - name: View Hierarchy
       href: programming_rdo_wpf/view_hierarchy.md
+    - name: View Styles
+      href: programming_rdo_wpf/view_styles.md
     - name: RowPresenter
       href: programming_rdo_wpf/row_presenter.md
     - name: Data Binding
       href: programming_rdo_wpf/data_binding.md
+    - name: DataPresenter
+      href: programming_rdo_wpf/data_presenter.md
+    - name: Validation
+      href: programming_rdo_wpf/validation.md    

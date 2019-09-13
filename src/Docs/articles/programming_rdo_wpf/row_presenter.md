@@ -17,14 +17,12 @@ These APIs can be used to provide data values as data binding source.
 
 Each <xref:DevZest.Data.Presenters.RowPresenter> object contains the following row level view states:
 
-| Property | Description |
-|----------|-------------|
-| <xref:DevZest.Data.Presenters.RowPresenter.IsSelected> | Indicates whether this row is selected. |
-| <xref:DevZest.Data.Presenters.RowPresenter.IsCurrent> | Indicates whether this row is current row. Only current row can be in editing mode. |
-| <xref:DevZest.Data.Presenters.RowPresenter.IsEditing> | Indicates whether this row is in editing mode. Editing of the row can be saved or cancelled. If this property is true, the <xref:DevZest.Data.Presenters.RowPresenter.IsCurrent> property must also be true.  |
-| <xref:DevZest.Data.Presenters.RowPresenter.IsVirtual> | Indicates whether this is a virtual row for inserting. Normally this row is displayed as an empty row at the end of the data grid. |
-| <xref:DevZest.Data.Presenters.RowPresenter.IsInserting> | Indicates whether this row is in inserting mode. If this property is true, the property of <xref:DevZest.Data.Presenters.RowPresenter.IsVirtual> and <xref:DevZest.Data.Presenters.RowPresenter.IsEditing> are also be true. |
-| <xref:DevZest.Data.Presenters.RowPresenter.IsExpanded> | Indicates whether this row is expanded with its <xref:DevZest.Data.Presenters.RowPresenter.Children>. |
+* <xref:DevZest.Data.Presenters.RowPresenter.IsSelected>: Indicates whether this row is selected.
+* <xref:DevZest.Data.Presenters.RowPresenter.IsCurrent>: Indicates whether this row is current row. Only current row can be in editing mode.
+* <xref:DevZest.Data.Presenters.RowPresenter.IsEditing>: Indicates whether this row is in editing mode. Editing of the row can be saved or cancelled. If this property is true, the <xref:DevZest.Data.Presenters.RowPresenter.IsCurrent> property must also be true.
+* <xref:DevZest.Data.Presenters.RowPresenter.IsVirtual>: Indicates whether this is a virtual row for inserting. Normally this row is displayed as an empty row at the end of the data grid.
+* <xref:DevZest.Data.Presenters.RowPresenter.IsInserting>: Indicates whether this row is in inserting mode. If this property is true, the property of <xref:DevZest.Data.Presenters.RowPresenter.IsVirtual> and <xref:DevZest.Data.Presenters.RowPresenter.IsEditing> are also be true.
+* <xref:DevZest.Data.Presenters.RowPresenter.IsExpanded>: Indicates whether this row is expanded with its <xref:DevZest.Data.Presenters.RowPresenter.Children>.
 
 These view states, together with others, can have different presentations, either via data binding or directly consumed by specific view element such as <xref:DevZest.Data.Views.RowView>. For example, the following shows the different presentations for <xref:DevZest.Data.Presenters.RowPresenter.IsSelected> property:
 

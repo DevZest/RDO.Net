@@ -1,3 +1,7 @@
+---
+uid: data_binding
+---
+
 # Data Binding
 
 Like any presentation framework, data binding plays a very important role in RDO.WPF. Data binding is represented by an object derived from <xref:DevZest.Data.Presenters.Primitives.Binding> class. There are two categories of binding objects in RDO.WPF, basic binding and composite binding:
@@ -43,6 +47,9 @@ public static RowBinding<TextBlock> BindToTextBlock(this Column source, string f
 ```
 
 You can find pre-defined binding factory extension methods in static <xref:DevZest.Data.Presenters.BindingFactory> class. You can also easily create your own if one does not exist or suit your needs.
+
+>[!Note]
+>Binding factory extension method should only handle binding between source data and target UI element. Do NOT put other presentation logic such as changing the look-and-feel of target UI element in the binding factory extension method.
 
 ## Two Way Binding
 
