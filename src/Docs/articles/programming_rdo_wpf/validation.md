@@ -82,3 +82,8 @@ Your presenter object's <xref:DevZest.Data.Presenters.BasePresenter.ScalarValida
 | Validation.FlushingFailedTemplate | Template for `FlushingFailed` status. |
 | Validation.FailedTemplate | Template for `Failed` status. |
 | Validation.ValidatingTemplate | Template for `Validating` status. |
+
+The following view components are provided specially for validation error display, as demonstrated in `ValidationUI` sample:
+
+* <xref:DevZest.Data.Views.ValidationPlaceholder>: Displays validation errors for specified <xref:DevZest.Data.Presenters.IScalars> or <xref:DevZest.Data.IColumns>.
+* <xref:DevZest.Data.Views.ValidationErrorsControl>: Displays all validation errors as list.
