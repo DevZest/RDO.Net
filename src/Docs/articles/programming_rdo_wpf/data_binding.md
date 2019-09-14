@@ -62,7 +62,7 @@ You can turn <xref:DevZest.Data.Presenters.RowBinding`1> into two way binding by
 
 The following example binds a nullable Int32 column to a `TextBox`:
 
-```cs
+```csharp
 public static RowBinding<TextBox> BindToTextBox(this Column<Int32?> source, string flushErrorDescription = null)
 {
     return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>

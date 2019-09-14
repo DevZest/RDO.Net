@@ -22,7 +22,6 @@ Here are some of the built-in column validation attributes:
 
 Column validation attributes let you specify the error message to be displayed for invalid input. For example:
 
-
 # [C#](#tab/cs)
 
 ```cs
