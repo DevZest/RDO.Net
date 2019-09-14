@@ -73,7 +73,7 @@ You can specify the following validation mode via <xref:DevZest.Data.Presenters.
 
 ## Validation Presenter and View
 
-Your presenter object's <xref:DevZest.Data.Presenters.BasePresenter.ScalarValidation> and <xref:DevZest.Data.Presenters.DataPresenter.RowValidation> property exposes all the validation logic. The validation errors will be automatically associated with the two way data binding target UI element based on the validation source (either a <xref:DevZest.Data.Presenters.IScalars> or a <xref:DevZest.Data.IColumns> object). These validation errors will then be displayed  via the following template provided by attached properties of static <xref:DevZest.Data.Presenters.Validation> class:
+Your presenter object's <xref:DevZest.Data.Presenters.BasePresenter.ScalarValidation> and <xref:DevZest.Data.Presenters.DataPresenter.RowValidation> property, together with <xref:DevZest.Data.Presenters.RowPresenter>'s <xref:DevZest.Data.Presenters.RowPresenter.VisibleValidationErrors> and <xref:DevZest.Data.Presenters.RowPresenter.HasVisibleValidationError> property, expose all the validation logic. The validation errors will be automatically associated with single view element, in the order of: 1. two way data binding target UI element, 2. RowView, 3. DataView, based on the validation source (either a <xref:DevZest.Data.Presenters.IScalars> or a <xref:DevZest.Data.IColumns> object). These validation errors will then be displayed  via the following template provided by attached properties of static <xref:DevZest.Data.Presenters.Validation> class:
 
 | Attached Property | Description |
 |-------------------|-------------|
