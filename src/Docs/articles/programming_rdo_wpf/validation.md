@@ -1,5 +1,5 @@
 ---
-uid: validation
+uid: rdo_wpf_validation
 ---
 
 # Validation
