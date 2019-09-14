@@ -33,6 +33,7 @@ You can add <xref:data_binding> objects into the template:
 * <xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.Layout*>: Defines how the layout expands with row collection. By default without calling this method, the form is columnar for current row; You can call this method to define the layout which expands vertically or horizontally, contained by <xref:DevZest.Data.Views.RowView>. Additionally you can specify `flowRepeatCount` parameter to define layout that rows will flow in <xref:DevZest.Data.Views.BlockView> first, then expand afterwards.
 * <xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.GridColumns*>/<xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.GridRows*>: Defines a flexible grid area consisting of columns and rows. Data binding objects will later be added to the template for specified grid cell or range.
 * <xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.AddBinding*>: Adds a <xref:data_binding> object into the template, by specifying grid cell or range. Data binding object is returned by calling binding factory extension method, you can further customize the target UI element by calling <xref:DevZest.Data.Presenters.BindingManager.WithStyle*> or <xref:DevZest.Data.Presenters.RowBinding`1.OverrideSetup*>/<xref:DevZest.Data.Presenters.RowBinding`1.OverrideRefresh*>/<xref:DevZest.Data.Presenters.RowBinding`1.OverrideCleanup*> methods.
+* <xref:DevZest.Data.Presenters.TemplateBuilder`1.WithInitialFocus*>: Defines the UI element that will receive the initial keyboard focus after data shown.
 
 You can define frozen columns/rows from scrolling using <xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.WithFrozenLeft*>, <xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.WithFrozenTop*>, <xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.WithFrozenRight*> and <xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.WithFrozenBottom*>. You can also define number of grid rows/columns adheres to the bottom/right most of the view if rows cannot fill the full size of the view.
 
@@ -139,7 +140,7 @@ End Class
 
 ## Consume DataPresenter
 
-Your data presenter object derived from <xref:DevZest.Data.Presenters.DataPresenter`1> class contains rich set of properties, methods and events which you can consume after shown in DataView. Keep in mind you should NEVER manipulate your view - your data presenter object is the answer to all:
+<xref:DevZest.Data.Presenters.DataPresenter`1> class contains rich set of properties, methods and events which you can consume after shown in DataView. Keep in mind you should NEVER manipulate your view - your data presenter object is the answer to all:
 
 * Show/refresh data: <xref:DevZest.Data.Presenters.DataPresenter`1.Show*>, <xref:DevZest.Data.Presenters.DataPresenter`1.ShowAsync*>, <xref:DevZest.Data.Presenters.DataPresenter`1.Refresh*>, <xref:DevZest.Data.Presenters.DataPresenter`1.RefreshAsync*>, <xref:DevZest.Data.Presenters.DataPresenter`1.ShowOrRefresh*> and <xref:DevZest.Data.Presenters.DataPresenter`1.ShowOrRefreshAsync*>.
 * Model: <xref:DevZest.Data.Presenters.DataPresenter`1._>, <xref:DevZest.Data.Presenters.DataPresenter`1.Entity>, <xref:DevZest.Data.Presenters.DataPresenter`1.DataSet> and <xref:DevZest.Data.Presenters.DataPresenter.GetSerializer*>
