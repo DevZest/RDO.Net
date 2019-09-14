@@ -88,7 +88,7 @@
       href: programming_rdo_wpf/row_presenter.md
     - name: Data Binding
       href: programming_rdo_wpf/data_binding.md
-    - name: DataPresenter
-      href: programming_rdo_wpf/data_presenter.md
+    - name: DataPresenter/SimplePresenter
+      href: programming_rdo_wpf/data_presenter_simple_presenter.md
     - name: Validation
       href: programming_rdo_wpf/validation.md    

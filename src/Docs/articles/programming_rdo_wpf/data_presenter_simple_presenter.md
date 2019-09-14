@@ -1,12 +1,27 @@
-# DataPresenter
+# DataPresenter/SimplePresenter
 
 Data presenter is your class derived from <xref:DevZest.Data.Presenters.DataPresenter`1>, which contains your presentation logic. Your data presenter class should:
 
+* Add scalar data if necessary.
 * Implement the abstract <xref:DevZest.Data.Presenters.DataPresenter`1.BuildTemplate*> method, which takes a <xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder> parameter.
 * Optionally implement service required by the view.
 * Call <xref:DevZest.Data.Presenters.DataPresenter`1.Show*> method of your presenter class to show data to the view.
 
 You can access all data and view states via your data presenter after data shown.
+
+You can also derive your presenter class from <xref:DevZest.Data.Presenters.SimplePresenter>, which is a simplified <xref:DevZest.Data.Presenters.DataPresenter`1>, contains no underlying DataSet but scalar data.
+
+## Scalar Data
+
+A <xref:DevZest.Data.Presenters.Scalar`1> object contains a single value via its <xref:DevZest.Data.Presenters.Scalar`1.Value> property, and can be used as binding source of a binding factory extension method like a column object, which returns <xref:DevZest.Data.Presenters.ScalarBinding`1> instead of <xref:DevZest.Data.Presenters.RowBinding`1>.
+
+You can create <xref:DevZest.Data.Presenters.Scalar`1> object in your presenter class, by calling <xref:DevZest.Data.Presenters.BasePresenter.NewScalar*>. You can also create linked <xref:DevZest.Data.Presenters.Scalar`1> object from existing property/field, by calling <xref:DevZest.Data.Presenters.BasePresenter.NewLinkedScalar*>, with name of the property/field, or getter and setter of the property/field.
+
+You can add validator(s) for <xref:DevZest.Data.Presenters.Scalar`1> object via <xref:DevZest.Data.Presenters.Scalar`1.AddValidator*> API.
+
+The following is an example in `ValidationUI` sample (_LoginPresenter.cs):
+
+[!code-csharp[_LoginPresenter](../../../../samples/ValidationUI/_LoginPresenter.cs)]
 
 ## Template Builder
 
@@ -38,4 +53,90 @@ To see examples of how these APIs are used, in the source code repo, open `RDO.W
 
 ## Service Implementation
 
+Some view components have customizable presentation logic. Since presentation logic should be implemented in data presenter, it is represented as <xref:DevZest.Data.Presenters.IService> derived interface, and your data presenter can implement this interface to replace the default implementation. Taking <xref:DevZest.Data.Views.ColumnHeader> as an example, it defines an `ColumnHeader.ISortService` interface to sort the data:
+
+```csharp
+public class ColumnHeader : ...
+{
+    public interface ISortService : IService
+    {
+        IReadOnlyList<IColumnComparer> OrderBy { get; set; }
+    }
+    ...
+}
+```
+
+The default implementation sorts the local <xref:DevZest.Data.Presenters.RowPresenter> objects. Your data presenter can implement this interface to reload sorted data from the server, as shown in `AdventureWorksLT.WpfApp` sample (MainWindow.Presenter.cs/MainWindow.Presenter.vb):
+
+# [C#](#tab/cs)
+
+```csharp
+partial class MainWindow
+{
+    ...
+    private class Presenter : DataPresenter<SalesOrderHeader>, ColumnHeader.ISortService
+    {
+        ...
+        private IReadOnlyList<IColumnComparer> _orderBy = new IColumnComparer[] { };
+        IReadOnlyList<IColumnComparer> ColumnHeader.ISortService.OrderBy
+        {
+            get { return _orderBy; }
+            set
+            {
+                _orderBy = value;
+                RefreshAsync();
+            }
+        }
+
+        private Task<DataSet<SalesOrderHeader>> LoadDataAsync(CancellationToken ct)
+        {
+            return App.ExecuteAsync(db => db.GetSalesOrderHeadersAsync(SearchText, _orderBy, ct));
+        }
+
+        public Task RefreshAsync()
+        {
+            return RefreshAsync(LoadDataAsync);
+        }
+        ...
+    }
+}
+```
+
+# [VB.Net](#tab/vb)
+
+```vb
+Partial Class MainWindow
+    ...
+    Private Class Presenter
+        Inherits DataPresenter(Of SalesOrderHeader)
+        Implements ColumnHeader.ISortService
+
+        ...
+        Private _orderBy As IReadOnlyList(Of IColumnComparer) = New IColumnComparer() {}
+        Overloads Property OrderBy() As IReadOnlyList(Of IColumnComparer) Implements ColumnHeader.ISortService.OrderBy
+            Get
+                Return _orderBy
+            End Get
+            Set
+                _orderBy = Value
+                RefreshAsync()
+            End Set
+        End Property
+
+        Private Function LoadDataAsync(ct As CancellationToken) As Task(Of DataSet(Of SalesOrderHeader))
+            Return App.ExecuteAsync(Function(db) db.GetSalesOrderHeadersAsync(SearchText, _orderBy, ct))
+        End Function
+
+        Public Overloads Function RefreshAsync() As Task
+            Return RefreshAsync(AddressOf LoadDataAsync)
+        End Function
+        ...
+    End Class
+End Class
+```
+
+***
+
 ## View States Access
+
+Your data presenter object derived from <xref:DevZest.Data.Presenters.DataPresenter`1> class contains rich set of properties, methods and events which you can consume after shown in DataView. Keep in mind you should NEVER manipulate your view - your data presenter object is the answer to all.

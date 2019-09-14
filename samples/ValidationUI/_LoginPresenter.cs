@@ -1,7 +1,4 @@
 ﻿using DevZest.Data.Presenters;
-using System;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace ValidationUI
 {
