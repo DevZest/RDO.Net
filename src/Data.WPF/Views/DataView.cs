@@ -11,9 +11,21 @@ using DevZest.Windows;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents a control that displays data.
+    /// </summary>
+    /// <seealso cref="DataView.Commands"/>
+    /// <seealso cref="DataView.ICommandService"/>
+    /// <seealso cref="DataView.IPasteAppendService"/>
+    /// <seealso cref="BindingFactory.BindToDataView{T}(T, Func{DataPresenter{T}})"/>
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public partial class DataView : Control, IBaseView
     {
+        /// <summary>
+        /// Gets current <see cref="DataView"/> which owns specified <see cref="DependencyObject"/>.
+        /// </summary>
+        /// <param name="target">The specified <see cref="DependencyObject"/>.</param>
+        /// <returns>The current <see cref="DataView"/>.</returns>
         public static DataView GetCurrent(DependencyObject target)
         {
             if (target == null)
@@ -24,28 +36,55 @@ namespace DevZest.Data.Views
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
             typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
 
+        /// <summary>
+        /// Identifies the <see cref="Scrollable"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ScrollableProperty = ScrollablePropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Identifies the <see cref="HorizontalScrollBarVisibility"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility),
             typeof(ScrollBarVisibility), typeof(DataView), new PropertyMetadata(ScrollBarVisibility.Auto));
 
+        /// <summary>
+        /// Identifies the <see cref="VerticalScrollBarVisibility"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility),
             typeof(ScrollBarVisibility), typeof(DataView), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
 
+        /// <summary>
+        /// Identifies the <see cref="ScrollLineHeight"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ScrollLineHeightProperty = DependencyProperty.Register(nameof(ScrollLineHeight),
             typeof(double), typeof(DataView), new FrameworkPropertyMetadata(20.0d));
 
+        /// <summary>
+        /// Identifies the <see cref="ScrollLineWidth"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
             typeof(double), typeof(DataView), new FrameworkPropertyMetadata(20.0d));
 
         private static readonly DependencyPropertyKey DataLoadStatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataLoadState), typeof(DataLoadState), typeof(DataView),
             new FrameworkPropertyMetadata(DataLoadState.Idle));
+
+        /// <summary>
+        /// Identifies the <see cref="DataLoadState"/> dependency Property.
+        /// </summary>
         public static readonly DependencyProperty DataLoadStateProperty = DataLoadStatePropertyKey.DependencyProperty;
         private static readonly DependencyPropertyKey DataLoadErrorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataLoadError), typeof(string), typeof(DataView),
             new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="DataLoadError"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty DataLoadErrorProperty = DataLoadErrorPropertyKey.DependencyProperty;
         private static readonly DependencyPropertyKey DataLoadCancellablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataLoadCancellable), typeof(bool),
             typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies the <see cref="DataLoadCancellable"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty dataLoadCancellableProperty = DataLoadCancellablePropertyKey.DependencyProperty;
 
         static DataView()
@@ -58,6 +97,9 @@ namespace DevZest.Data.Views
         }
 
         private DataPresenter _dataPresenter;
+        /// <summary>
+        /// Gets the <see cref="DataPresenter"/> which is associated with this DataView.
+        /// </summary>
         public DataPresenter DataPresenter
         {
             get { return _dataPresenter; }
@@ -132,6 +174,7 @@ namespace DevZest.Data.Views
             get { return DataPresenter == null ? null : DataPresenter.LayoutManager; }
         }
 
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -151,48 +194,72 @@ namespace DevZest.Data.Views
                 layoutManager.SetElementsPanel(panel);
         }
 
+        /// <summary>
+        /// Gets a value indicates whether displayed data is scrollable.
+        /// </summary>
         public bool Scrollable
         {
             get { return (bool)GetValue(ScrollableProperty); }
             private set { SetValue(ScrollablePropertyKey, BooleanBoxes.Box(value)); }
         }
 
+        /// <summary>
+        /// Gets or sets a value to indicate the visibility of horizontal scroll bar.
+        /// </summary>
         public ScrollBarVisibility HorizontalScrollBarVisibility
         {
             get { return (ScrollBarVisibility)GetValue(HorizontalScrollBarVisibilityProperty); }
             set { SetValue(HorizontalScrollBarVisibilityProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets a value to indicate the visibility of vertical scroll bar.
+        /// </summary>
         public ScrollBarVisibility VerticalScrollBarVisibility
         {
             get { return (ScrollBarVisibility)GetValue(VerticalScrollBarVisibilityProperty); }
             set { SetValue(VerticalScrollBarVisibilityProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the height length when scrolling a line.
+        /// </summary>
         public double ScrollLineHeight
         {
             get { return (double)GetValue(ScrollLineHeightProperty); }
             set { SetValue(ScrollLineHeightProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the width length when scrolling a line.
+        /// </summary>
         public double ScrollLineWidth
         {
             get { return (double)GetValue(ScrollLineWidthProperty); }
             set { SetValue(ScrollLineWidthProperty, value); }
         }
 
+        /// <summary>
+        /// Gets the state of data loading.
+        /// </summary>
         public DataLoadState DataLoadState
         {
             get { return (DataLoadState)GetValue(DataLoadStateProperty); }
             internal set { SetValue(DataLoadStatePropertyKey, value); }
         }
 
+        /// <summary>
+        /// Gets the error of data loading.
+        /// </summary>
         public string DataLoadError
         {
             get { return (string)GetValue(DataLoadErrorProperty); }
             internal set { SetValue(DataLoadErrorPropertyKey, value); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicates whether data loading can be cancelled.
+        /// </summary>
         public bool DataLoadCancellable
         {
             get { return (bool)GetValue(dataLoadCancellableProperty); }
@@ -206,6 +273,9 @@ namespace DevZest.Data.Views
                 this.RefreshValidation(layoutManager.GetScalarValidationInfo());
         }
 
+        /// <summary>
+        /// Gets the validation information associated with this control.
+        /// </summary>
         public ValidationInfo ValidationInfo
         {
             get

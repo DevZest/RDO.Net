@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
-using DevZest.Data.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -10,21 +9,67 @@ namespace DevZest.Data.Views
 {
     partial class DataView
     {
+        /// <summary>
+        /// Contains commands supported by <see cref="DataView"/>.
+        /// </summary>
         public abstract class Commands
         {
+            /// <summary>
+            /// Command to retry data loading.
+            /// </summary>
             public static readonly RoutedUICommand RetryDataLoad = new RoutedUICommand(UserMessages.DataViewCommands_RetryDataLoadCommandText, nameof(RetryDataLoad), typeof(Commands));
+
+            /// <summary>
+            /// Command to cancel data loading.
+            /// </summary>
             public static readonly RoutedUICommand CancelDataLoad = new RoutedUICommand(UserMessages.DataViewCommands_CancelDataLoadCommandText, nameof(CancelDataLoad), typeof(Commands));
+
+            /// <summary>
+            /// Command to toggle scalar editing mode.
+            /// </summary>
             public static readonly RoutedUICommand ToggleEditScalars = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to begin scalar editing mode.
+            /// </summary>
             public static readonly RoutedUICommand BeginEditScalars = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to cancel scalar editing mode.
+            /// </summary>
             public static readonly RoutedUICommand CancelEditScalars = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to end scalar editing mode.
+            /// </summary>
             public static readonly RoutedUICommand EndEditScalars = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to delete data.
+            /// </summary>
             public static RoutedUICommand Delete { get { return ApplicationCommands.Delete; } }
+
+            /// <summary>
+            /// Command to copy data from clipboard.
+            /// </summary>
             public static RoutedUICommand Copy { get { return ApplicationCommands.Copy; } }
+
+            /// <summary>
+            /// Command to paste append data from clipboard.
+            /// </summary>
             public static RoutedUICommand PasteAppend { get { return ApplicationCommands.Paste; } }
         }
 
+        /// <summary>
+        /// Provides implementation of command excution.
+        /// </summary>
         public interface ICommandService : IService
         {
+            /// <summary>
+            /// Gets the implementation of the commands for specified <see cref="DataView"/>.
+            /// </summary>
+            /// <param name="dataView">The specified <see cref="DataView"/>.</param>
+            /// <returns>The implementation of the commands.</returns>
             IEnumerable<CommandEntry> GetCommandEntries(DataView dataView);
         }
 
@@ -273,13 +318,21 @@ namespace DevZest.Data.Views
             }
         }
 
-        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        private ICommandService GetCommandService(DataPresenter dataPresenter)
         {
             return dataPresenter.GetService<ICommandService>();
         }
 
+        /// <summary>
+        /// Provides implementation of paste append operation.
+        /// </summary>
         public interface IPasteAppendService : IService
         {
+            /// <summary>
+            /// Verifies the data for paste append operation.
+            /// </summary>
+            /// <param name="data">The data.</param>
+            /// <returns><see langword="true"/> if data is valid for paste append operation, otherwise <see langword="false"/>.</returns>
             bool Verify(IReadOnlyList<ColumnValueBag> data);
         }
     }

@@ -9,7 +9,7 @@ Data presenter is your class derived from <xref:DevZest.Data.Presenters.DataPres
 
 You can access all data and view states via your data presenter after data shown.
 
-You can also derive your presenter class from <xref:DevZest.Data.Presenters.SimplePresenter>, which is a simplified <xref:DevZest.Data.Presenters.DataPresenter`1>, contains no underlying DataSet but scalar data.
+You can also derive your presenter class from <xref:DevZest.Data.Presenters.SimplePresenter>, which is a simplified <xref:DevZest.Data.Presenters.DataPresenter`1>, contains no underlying DataSet but scalar data. <xref:DevZest.Data.Presenters.SimplePresenter> is shown against <xref:DevZest.Data.Views.SimpleView> instead of <xref:DevZest.Data.Views.DataView>.
 
 ## Scalar Data
 
