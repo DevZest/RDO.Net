@@ -51,19 +51,17 @@ namespace DevZest.Data.Presenters
         /// Binds a nullable boolean column to <see cref="CheckBox"/>.
         /// </summary>
         /// <param name="source">The source column.</param>
-        /// <param name="displayName">The display name of the CheckBox. If null, the value of <see cref="Column.DisplayName"/> will be used.</param>
+        /// <param name="title">The title of the CheckBox. If null, the value of <see cref="Column.DisplayName"/> will be used.</param>
         /// <returns>The row binding object.</returns>
-        public static RowBinding<CheckBox> BindToCheckBox(this Column<bool?> source, string displayName = null)
+        public static RowBinding<CheckBox> BindToCheckBox(this Column<bool?> source, object title = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (string.IsNullOrEmpty(displayName))
-                displayName = source.DisplayName;
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
                     if (v.Content == null)
-                        v.Content = displayName;
+                        v.Content = title ?? source.DisplayName;
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source), onCleanup: null)
                 .WithInput(CheckBox.IsCheckedProperty, source, v => v.IsChecked);
@@ -73,19 +71,17 @@ namespace DevZest.Data.Presenters
         /// Binds a boolean column to <see cref="CheckBox"/>.
         /// </summary>
         /// <param name="source">The source column.</param>
-        /// <param name="displayName">The display name of the CheckBox. If null, the value of <see cref="Column.DisplayName"/> will be used.</param>
+        /// <param name="title">The title of the CheckBox. If null, the value of <see cref="Column.DisplayName"/> will be used.</param>
         /// <returns>The row binding object.</returns>
-        public static RowBinding<CheckBox> BindToCheckBox(this Column<bool> source, string displayName = null)
+        public static RowBinding<CheckBox> BindToCheckBox(this Column<bool> source, object title = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (string.IsNullOrEmpty(displayName))
-                displayName = source.DisplayName;
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
                     if (v.Content == null)
-                        v.Content = displayName;
+                        v.Content = title ?? source.DisplayName;
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source), onCleanup: null)
                 .WithInput(CheckBox.IsCheckedProperty, source, v => v.IsChecked == true);
@@ -97,23 +93,21 @@ namespace DevZest.Data.Presenters
         /// <typeparam name="T">The enum type.</typeparam>
         /// <param name="source">The source column.</param>
         /// <param name="enumMemberValue">The value of enum member.</param>
-        /// <param name="displayName">The display name of the CheckBox. If null, the name of enum member will be used.</param>
+        /// <param name="title">The title of the CheckBox. If null, the name of enum member will be used.</param>
         /// <returns>The row binding object.</returns>
-        public static RowBinding<CheckBox> BindToCheckBox<T>(this Column<T> source, T enumMemberValue, string displayName = null)
+        public static RowBinding<CheckBox> BindToCheckBox<T>(this Column<T> source, T enumMemberValue, object title = null)
             where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
                 throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (string.IsNullOrEmpty(displayName))
-                displayName = Enum.GetName(typeof(T), enumMemberValue);
 
             return new RowBinding<CheckBox>(
                 onSetup: (v, p) =>
                 {
                     if (v.Content == null)
-                        v.Content = displayName;
+                        v.Content = title ?? Enum.GetName(typeof(T), enumMemberValue);
                 },
                 onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(enumMemberValue),
                 onCleanup: null)
@@ -160,22 +154,20 @@ namespace DevZest.Data.Presenters
         /// <typeparam name="T">The enum type.</typeparam>
         /// <param name="source">The source column.</param>
         /// <param name="enumMemberValue">The value of enum member.</param>
-        /// <param name="displayName">The display name of the CheckBox. If null, the name of enum member will be used.</param>
+        /// <param name="title">The title of the CheckBox. If null, the name of enum member will be used.</param>
         /// <returns>The row binding object.</returns>
-        public static RowBinding<CheckBox> BindToCheckBox<T>(this Column<T?> source, T enumMemberValue, string displayName = null)
+        public static RowBinding<CheckBox> BindToCheckBox<T>(this Column<T?> source, T enumMemberValue, object title = null)
             where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
                 throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (string.IsNullOrEmpty(displayName))
-                displayName = Enum.GetName(typeof(T), enumMemberValue);
 
             return new RowBinding<CheckBox>(onRefresh: (v, p) => v.IsChecked = p.GetValue(source).HasFlag(enumMemberValue),
                 onSetup: (v, p) =>
                 {
-                    v.Content = displayName;
+                    v.Content = title ?? Enum.GetName(typeof(T), enumMemberValue);
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
                 .WithFlush(source, (r, v) =>
@@ -214,9 +206,9 @@ namespace DevZest.Data.Presenters
         /// Binds a nullable scalar data to <see cref="CheckBox"/>.
         /// </summary>
         /// <param name="source">The source scalar data.</param>
-        /// <param name="displayName">The display name of the CheckBox.</param>
+        /// <param name="title">The title of the CheckBox.</param>
         /// <returns>The scalar binding object.</returns>
-        public static ScalarBinding<CheckBox> BindToCheckBox(this Scalar<bool?> source, string displayName = null)
+        public static ScalarBinding<CheckBox> BindToCheckBox(this Scalar<bool?> source, object title = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -224,8 +216,8 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue(),
                 onSetup: v =>
                 {
-                    if (displayName != null)
-                        v.Content = displayName;
+                    if (title != null)
+                        v.Content = title;
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty))
                 .WithFlush(source, v => v.IsChecked)
@@ -236,9 +228,9 @@ namespace DevZest.Data.Presenters
         /// Binds a scalar data to <see cref="CheckBox"/>.
         /// </summary>
         /// <param name="source">The source scalar data.</param>
-        /// <param name="displayName">The display name of the CheckBox.</param>
+        /// <param name="title">The title of the CheckBox.</param>
         /// <returns>The scalar binding object.</returns>
-        public static ScalarBinding<CheckBox> BindToCheckBox(this Scalar<bool> source, string displayName = null)
+        public static ScalarBinding<CheckBox> BindToCheckBox(this Scalar<bool> source, object title = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -246,8 +238,8 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue(),
                 onSetup: v =>
                 {
-                    if (displayName != null)
-                        v.Content = displayName;
+                    if (title != null)
+                        v.Content = title;
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty))
                 .WithFlush(source, v => v.IsChecked.Value)
@@ -260,22 +252,20 @@ namespace DevZest.Data.Presenters
         /// <typeparam name="T">The enum type.</typeparam>
         /// <param name="source">The source scalar data.</param>
         /// <param name="enumMemberValue">The value of enum member.</param>
-        /// <param name="displayName">The display name of the CheckBox. If null, the name of enum member will be used.</param>
+        /// <param name="title">The title of the CheckBox. If null, the name of enum member will be used.</param>
         /// <returns>The scalar binding object.</returns>
-        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T> source, T enumMemberValue, string displayName = null)
+        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T> source, T enumMemberValue, object title = null)
             where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
                 throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (string.IsNullOrEmpty(displayName))
-                displayName = Enum.GetName(typeof(T), enumMemberValue);
 
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue().HasFlag(enumMemberValue),
                 onSetup: v =>
                 {
-                    v.Content = displayName;
+                    v.Content = title ?? Enum.GetName(typeof(T), enumMemberValue);
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
                 .WithFlush(source, v =>
@@ -296,22 +286,20 @@ namespace DevZest.Data.Presenters
         /// <typeparam name="T">The enum type.</typeparam>
         /// <param name="source">The source scalar data.</param>
         /// <param name="enumMemberValue">The value of enum member.</param>
-        /// <param name="displayName">The display name of the CheckBox. If null, the name of enum member will be used.</param>
+        /// <param name="title">The title of the CheckBox. If null, the name of enum member will be used.</param>
         /// <returns>The scalar binding object.</returns>
-        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T?> source, T enumMemberValue, string displayName = null)
+        public static ScalarBinding<CheckBox> BindToCheckBox<T>(this Scalar<T?> source, T enumMemberValue, object title = null)
             where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)
                 throw new ArgumentException(DiagnosticMessages.BindingFactory_EnumTypeRequired(nameof(T)), nameof(T));
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (string.IsNullOrEmpty(displayName))
-                displayName = Enum.GetName(typeof(T), enumMemberValue);
 
             return new ScalarBinding<CheckBox>(onRefresh: v => v.IsChecked = source.GetValue().HasFlag(enumMemberValue),
                 onSetup: v =>
                 {
-                    v.Content = displayName;
+                    v.Content = title ?? Enum.GetName(typeof(T), enumMemberValue);
                 }, onCleanup: null)
                 .BeginInput(new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty), new ExplicitTrigger<CheckBox>())
                 .WithFlush(source, v =>
