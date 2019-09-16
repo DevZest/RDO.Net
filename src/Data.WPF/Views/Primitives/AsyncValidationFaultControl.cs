@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System;
 
-namespace DevZest.Data.Views
+namespace DevZest.Data.Views.Primitives
 {
     public class AsyncValidationFaultControl : Control
     {
