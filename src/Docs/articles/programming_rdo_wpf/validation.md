@@ -43,6 +43,8 @@ public static RowBinding<TextBox> BindToTextBox(this Column<Int32?> source, stri
 
 * Model validator: As explained in <xref:model_validation>, you can define validators in your model via validation attributes and custom validators.
 
+* Scalar validator: You can use <xref:DevZest.Data.Presenters.Scalar`1.AddValidator*> API to add scalar validator, as demonstrated in `ValidationUI` sample. Additionally, you can override <xref:DevZest.Data.Presenters.BasePresenter.ValidateScalars*> method to implement custom scalar validator cross multiple scalar data.
+
 * Async validator: Validation against external source such as web requests, database calls or some other kind of actions which require significant amount of time. For example, in a user registration form, to validate whether the entered email address is already registered. You can add async validator to your data presenter via `AddAsyncValidator` API of your template builder, as demonstrated in `ValidationUI` sample:
 
 ```csharp
@@ -73,7 +75,17 @@ You can specify the following validation mode via <xref:DevZest.Data.Presenters.
 
 ## Validation Presenter and View
 
-Your presenter object's <xref:DevZest.Data.Presenters.BasePresenter.ScalarValidation> and <xref:DevZest.Data.Presenters.DataPresenter.RowValidation> property, together with <xref:DevZest.Data.Presenters.RowPresenter>'s <xref:DevZest.Data.Presenters.RowPresenter.VisibleValidationErrors> and <xref:DevZest.Data.Presenters.RowPresenter.HasVisibleValidationError> property, expose all the validation logic. The validation errors will be automatically associated with single view element, in the order of: 1. two way data binding target UI element, 2. RowView, 3. DataView, based on the validation source (either a <xref:DevZest.Data.Presenters.IScalars> or a <xref:DevZest.Data.IColumns> object). These validation errors will then be displayed  via the following template provided by attached properties of static <xref:DevZest.Data.Presenters.Validation> class:
+You can call <xref:DevZest.Data.Presenters.BasePresenter.CanSubmitInput> to determine whether data input (both scalar and row) can be submitted without any validation error. You can also try to submit data input via <xref:DevZest.Data.Presenters.BasePresenter.SubmitInput*> API.
+
+Your presenter object's <xref:DevZest.Data.Presenters.BasePresenter.ScalarValidation> and <xref:DevZest.Data.Presenters.DataPresenter.RowValidation> property, together with <xref:DevZest.Data.Presenters.RowPresenter>'s <xref:DevZest.Data.Presenters.RowPresenter.VisibleValidationErrors> and <xref:DevZest.Data.Presenters.RowPresenter.HasVisibleValidationError> property, expose the validation logic.
+
+The validation errors will be automatically associated with single input UI element in the view, based on the validation source (either a <xref:DevZest.Data.Presenters.IScalars> or a <xref:DevZest.Data.IColumns> object), matched in the order of:
+
+1. Target UI element of two way data binding;
+2. RowView (row validation only);
+3. DataView.
+
+These validation errors will then be displayed  via the following template provided by attached properties of static <xref:DevZest.Data.Presenters.Validation> class:
 
 | Attached Property | Description |
 |-------------------|-------------|

@@ -18,6 +18,9 @@ namespace DevZest.Data.Presenters
         bool IsLockedByFlushingError(UIElement element);
     }
 
+    /// <summary>
+    /// Contains scalar data validation logic.
+    /// </summary>
     public sealed class ScalarValidation : IScalarValidation
     {
         internal ScalarValidation(InputManager inputManager)

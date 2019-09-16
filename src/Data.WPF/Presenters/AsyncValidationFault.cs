@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents an error of executing async validator such as network failure which can be retried.
+    /// </summary>
     public sealed class AsyncValidationFault : ValidationError<AsyncValidator>
     {
         internal AsyncValidationFault(AsyncValidator source, Func<AsyncValidator, string> formatMessage)
