@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace DevZest.Data.Presenters
 {
     /// <summary>
-    /// Represents an error of executing async validator such as network failure which can be retried.
+    /// Represents a retryable error of async validator execution such as network failure.
     /// </summary>
     public sealed class AsyncValidationFault : ValidationError<AsyncValidator>
     {
