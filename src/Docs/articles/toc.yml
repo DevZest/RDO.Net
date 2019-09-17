@@ -102,3 +102,5 @@
           href: programming_rdo_wpf/view_components/ForeignKeyBox.md
         - name: GridHeader
           href: programming_rdo_wpf/view_components/GridHeader.md
+        - name: RowExpander
+          href: programming_rdo_wpf/view_components/RowExpander.md

@@ -7,18 +7,35 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents the control that displays a header that can expand/collapse child rows.
+    /// </summary>
     public class RowExpander : Control
     {
+        /// <summary>
+        /// Contains commands implemented by <see cref="RowExpander"/> class.
+        /// </summary>
         public abstract class Commands
         {
+            /// <summary>
+            /// Command to toggle expand state.
+            /// </summary>
             public static readonly RoutedUICommand ToggleExpand = new RoutedUICommand();
         }
 
         private static readonly DependencyPropertyKey IsExpandedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsExpanded), typeof(bool), typeof(RowExpander),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies the <see cref="IsExpanded"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty IsExpandedProperty = IsExpandedPropertyKey.DependencyProperty;
         private static readonly DependencyPropertyKey HasChildrenPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasChildren), typeof(bool), typeof(RowExpander),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies the <see cref="HasChildren"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty HasChildrenProperty = HasChildrenPropertyKey.DependencyProperty;
 
         static RowExpander()
@@ -28,6 +45,9 @@ namespace DevZest.Data.Views
             KeyboardNavigation.IsTabStopProperty.OverrideMetadata(typeof(RowExpander), new FrameworkPropertyMetadata(BooleanBoxes.False));
         }
 
+        /// <summary>
+        ///  Initializes a new instance of <see cref="RowExpander"/> class.
+        /// </summary>
         public RowExpander()
         {
             CommandBindings.Add(new CommandBinding(Commands.ToggleExpand, ExecToggleExpand, CanToggleExpand));
@@ -43,6 +63,7 @@ namespace DevZest.Data.Views
             RowPresenter.ToggleExpandState();
         }
 
+        /// <inheritdoc/>
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
@@ -66,12 +87,18 @@ namespace DevZest.Data.Views
             UpdateState();
         }
 
+        /// <summary>
+        /// Gets a value indicates whether current row is expanded. This is a dependency property.
+        /// </summary>
         public bool IsExpanded
         {
             get { return (bool)GetValue(IsExpandedProperty); }
             private set { SetValue(IsExpandedPropertyKey, BooleanBoxes.Box(value)); }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether current row has children. This is a dependency property.
+        /// </summary>
         public bool HasChildren
         {
             get { return (bool)GetValue(HasChildrenProperty); }
