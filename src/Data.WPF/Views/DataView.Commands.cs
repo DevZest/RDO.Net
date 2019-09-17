@@ -45,12 +45,12 @@ namespace DevZest.Data.Views
             public static readonly RoutedUICommand EndEditScalars = new RoutedUICommand();
 
             /// <summary>
-            /// Command to delete data.
+            /// Command to delete selected row(s).
             /// </summary>
             public static RoutedUICommand Delete { get { return ApplicationCommands.Delete; } }
 
             /// <summary>
-            /// Command to copy data from clipboard.
+            /// Command to copy selected row(s) to clipboard.
             /// </summary>
             public static RoutedUICommand Copy { get { return ApplicationCommands.Copy; } }
 

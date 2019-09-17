@@ -12,7 +12,7 @@ using DevZest.Windows;
 namespace DevZest.Data.Views
 {
     /// <summary>
-    /// Represents a control that displays data.
+    /// Represents a control that displays scalar and DataSet data.
     /// </summary>
     /// <seealso cref="DataView.Commands"/>
     /// <seealso cref="DataView.ICommandService"/>
