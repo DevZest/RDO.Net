@@ -7,6 +7,11 @@ namespace DevZest.Data.Presenters
 {
     static partial class BindingFactory
     {
+        /// <summary>
+        /// Binds <see cref="DataPresenter"/> to <see cref="GridHeader"/> to select/deselect all rows.
+        /// </summary>
+        /// <param name="dataPresenter">The DataPresenter.</param>
+        /// <returns>The scalar binding object.</returns>
         public static ScalarBinding<GridHeader> BindToGridHeader(this DataPresenter dataPresenter)
         {
             return ToSelectAll<GridHeader>(dataPresenter);
