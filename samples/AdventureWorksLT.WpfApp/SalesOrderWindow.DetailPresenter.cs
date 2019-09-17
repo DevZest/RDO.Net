@@ -39,7 +39,7 @@ namespace DevZest.Samples.AdventureWorksLT
                     .AddBinding(4, 0, _.UnitPriceDiscount.BindToColumnHeader("Discount"))
                     .AddBinding(5, 0, _.OrderQty.BindToColumnHeader("Qty"))
                     .AddBinding(6, 0, _.LineTotal.BindToColumnHeader("Total"))
-                    .AddBinding(0, 1, _.BindToRowHeader())
+                    .AddBinding(0, 1, _.BindTo<RowHeader>())
                     .AddBinding(1, 1, _.FK_Product.BindToForeignKeyBox(product, GetProductNumber).MergeIntoGridCell(product.ProductNumber.BindToTextBlock()).WithSerializableColumns(_.ProductID, product.ProductNumber))
                     .AddBinding(2, 1, product.Name.BindToTextBlock().AddToGridCell().WithSerializableColumns(product.Name))
                     .AddBinding(3, 1, _.UnitPrice.BindToTextBox().MergeIntoGridCell())

@@ -55,7 +55,7 @@ namespace DevZest.Data.Views
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
                     .AddBinding(1, 0, this.BindToTextBlock(_.Column.DisplayName))
                     .AddBinding(2, 0, this.BindToTextBlock(_.Direction.DisplayName))
-                    .AddBinding(0, 1, _.BindToRowHeader().WithStyle(RowHeader.Styles.Flat))
+                    .AddBinding(0, 1, _.BindTo<RowHeader>().WithStyle(RowHeader.Styles.Flat))
                     .AddBinding(1, 1, _.Column.BindToComboBox(ColumnHeaderSelection))
                     .AddBinding(2, 1, _.Direction.BindToComboBox(DirectionSelection));
             }
