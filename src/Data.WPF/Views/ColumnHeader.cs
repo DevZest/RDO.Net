@@ -12,6 +12,9 @@ using System.ComponentModel;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents a clickable header to identify, resize and sort column of data.
+    /// </summary>
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateNormal)]
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateMouseOver)]
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StatePressed)]
@@ -20,8 +23,14 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateSortDescending)]
     public class ColumnHeader : ButtonBase, IScalarElement
     {
+        /// <summary>
+        /// Customizable service to perform the sort operation.
+        /// </summary>
         public interface ISortService : IService
         {
+            /// <summary>
+            /// Gets or sets the list of column comparer to perform the sort operation.
+            /// </summary>
             IReadOnlyList<IColumnComparer> OrderBy { get; set; }
         }
 
@@ -58,15 +67,39 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Contains commands implemented by <see cref="ColumnHeader"/> class.
+        /// </summary>
         public abstract class Commands
         {
+            /// <summary>
+            /// Toggles sort direction for current column.
+            /// </summary>
             public static readonly RoutedUICommand ToggleSortDirection = new RoutedUICommand(nameof(ToggleSortDirection), nameof(ToggleSortDirection), typeof(Commands));
+
+            /// <summary>
+            /// Displays a dialog via context menu to sort by specifying column(s).
+            /// </summary>
             public static readonly RoutedUICommand Sort = new RoutedUICommand(UserMessages.ColumnHeaderCommands_SortCommandText, nameof(Sort), typeof(Commands));
         }
 
+        /// <summary>
+        /// Customizable service to provide command implementations.
+        /// </summary>
         public interface ICommandService : IService
         {
+            /// <summary>
+            /// Retrieves command implementations for specified <see cref="DataView"/>.
+            /// </summary>
+            /// <param name="dataView">The specified <see cref="DataView"/>.</param>
+            /// <returns>The retrieved command implementations.</returns>
             IEnumerable<CommandEntry> GetCommandEntries(DataView dataView);
+
+            /// <summary>
+            /// Retrieves command implementations for specified <see cref="ColumnHeader"/>.
+            /// </summary>
+            /// <param name="columnHeader">The specified <see cref="ColumnHeader"/>.</param>
+            /// <returns>The retrieved command implementations.</returns>
             IEnumerable<CommandEntry> GetCommandEntries(ColumnHeader columnHeader);
         }
 
@@ -216,23 +249,44 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Identifies <see cref="CanSort"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty CanSortProperty = DependencyProperty.Register(nameof(CanSort), typeof(bool),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
         private static readonly DependencyPropertyKey SortDirectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SortDirection), typeof(ListSortDirection?),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
 
+        /// <summary>
+        /// Identifies <see cref="SortDirection"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty SortDirectionProperty = SortDirectionPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Identifies <see cref="SeparatorBrush"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
 
+        /// <summary>
+        /// Identifies <see cref="SeparatorVisibility"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register(nameof(SeparatorVisibility), typeof(Visibility),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
+        /// <summary>
+        /// Identifies <see cref="ResizeGripperVisibility"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ResizeGripperVisibilityProperty = DependencyProperty.Register(nameof(ResizeGripperVisibility), typeof(Visibility),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
+        /// <summary>
+        /// Identifies IsReiszeGripper attached property (<see cref="GetIsResizeGripper(DependencyObject)"/>/<see cref="SetIsResizeGripper(DependencyObject, bool)"/>).
+        /// </summary>
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template of ColumnHeader,
+        /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
+        /// and perform the column resizing operation.</remarks>
         public static readonly DependencyProperty IsResizeGripperProperty = DependencyProperty.RegisterAttached("IsResizeGripper", typeof(bool),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
 
@@ -243,6 +297,9 @@ namespace DevZest.Data.Views
             ServiceManager.Register<ICommandService, CommandService>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="ColumnHeader"/>.
+        /// </summary>
         public ColumnHeader()
         {
             Loaded += OnLoaded;
@@ -253,49 +310,83 @@ namespace DevZest.Data.Views
             UpdateVisualState(DataPresenter);
         }
 
+        /// <summary>
+        /// Gets or sets the associated column.
+        /// </summary>
         public Column Column { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicates whether column is sortable. This is a dependency property.
+        /// </summary>
         public bool CanSort
         {
             get { return (bool)GetValue(CanSortProperty); }
             set { SetValue(CanSortProperty, BooleanBoxes.Box(value)); }
         }
 
+        /// <summary>
+        /// Gets the sort direction.
+        /// </summary>
         public ListSortDirection? SortDirection
         {
             get { return (ListSortDirection?)GetValue(SortDirectionProperty); }
             private set { SetValue(SortDirectionPropertyKey, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the brush to paint the separator. This is a dependency property.
+        /// </summary>
         public Brush SeparatorBrush
         {
             get { return (Brush)GetValue(SeparatorBrushProperty); }
             set { SetValue(SeparatorBrushProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicates the visibility of separator. This is a dependency property.
+        /// </summary>
         public Visibility SeparatorVisibility
         {
             get { return (Visibility)GetValue(SeparatorVisibilityProperty); }
             set { SetValue(SeparatorVisibilityProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicates the visibility of resize gripper. This is a dependency property.
+        /// </summary>
         public Visibility ResizeGripperVisibility
         {
             get { return (Visibility)GetValue(ResizeGripperVisibilityProperty); }
             set { SetValue(ResizeGripperVisibilityProperty, value); }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether specified object is resize gripper. This is the getter of IsResizeGripper attached property.
+        /// </summary>
+        /// <param name="obj">The specified object.</param>
+        /// <returns><see langword="true"/> if specified object is resize gripper, otherwise <see langword="false"/>.</returns>
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template of ColumnHeader,
+        /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
+        /// and perform the column resizing operation.</remarks>
         public static bool GetIsResizeGripper(DependencyObject obj)
         {
             return (bool)obj.GetValue(IsResizeGripperProperty);
         }
 
+        /// <summary>
+        /// Sets a value indicates whether specified object is resize gripper. This is the setter of IsResizeGripper attached property.
+        /// </summary>
+        /// <param name="obj">The specified object..</param>
+        /// <param name="value"><see langword="true"/> if specified object is resize gripper, otherwise <see langword="false"/>.</param>
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template of ColumnHeader,
+        /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
+        /// and perform the column resizing operation.</remarks>
         public static void SetIsResizeGripper(DependencyObject obj, bool value)
         {
             obj.SetValue(IsResizeGripperProperty, BooleanBoxes.Box(value));
         }
 
-        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        private ICommandService GetCommandService(DataPresenter dataPresenter)
         {
             return dataPresenter.GetService<ICommandService>();
         }
@@ -384,6 +475,7 @@ namespace DevZest.Data.Views
             get { return this.GetBinding()?.GridRange.ColumnSpan.EndTrack; }
         }
 
+        /// <inherited/>
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseLeftButtonDown(e);
