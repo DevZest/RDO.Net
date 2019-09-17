@@ -4,33 +4,72 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents a clickable box to display and edit foreign key data
+    /// </summary>
     public class ForeignKeyBox : ButtonBase, IRowElement
     {
+        /// <summary>
+        /// Service to perform foreign key data lookup operation.
+        /// </summary>
         public interface ILookupService : IService
         {
+            /// <summary>
+            /// Determines whether lookup operation can be performed for specified foreign key.
+            /// </summary>
+            /// <param name="foreignKey">The foreign key.</param>
+            /// <returns><see langword="true"/> if lookup operation can be performed for specified foreign key, otherwise <see langword="false"/>.</returns>
             bool CanLookup(CandidateKey foreignKey);
+
+            /// <summary>
+            /// Begins the lookup operation.
+            /// </summary>
+            /// <param name="foreignKeyBox">The <see cref="ForeignKeyBox"/>.</param>
             void BeginLookup(ForeignKeyBox foreignKeyBox);
         }
 
         private static readonly DependencyPropertyKey ValueBagPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ValueBag),
             typeof(ColumnValueBag), typeof(ForeignKeyBox), new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies <see cref="ValueBag"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ValueBagProperty = ValueBagPropertyKey.DependencyProperty;
+
         private static readonly DependencyPropertyKey CanClearValuePropertyKey = DependencyProperty.RegisterReadOnly(nameof(CanClearValue), typeof(bool),
             typeof(ForeignKeyBox), new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies <see cref="CanClearValue"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty CanClearValueProperty = CanClearValuePropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Contains commands implemented by <see cref="ForeignKeyBox"/> class.
+        /// </summary>
         public abstract class Commands
         {
             internal static readonly RoutedUICommand Lookup = new RoutedUICommand();
+
+            /// <summary>
+            /// Clears underlying foreign key data.
+            /// </summary>
             public static readonly RoutedUICommand ClearValue = new RoutedUICommand();
         }
 
+        /// <summary>
+        /// Customizable service to provide command implementations.
+        /// </summary>
         public interface ICommandService : IService
         {
+            /// <summary>
+            /// Retrieves command implementations for specified <see cref="ForeignKeyBox"/>.
+            /// </summary>
+            /// <param name="foreignKeyBox">The specified <see cref="ForeignKeyBox"/>.</param>
+            /// <returns>The retrieved command implementations.</returns>
             IEnumerable<CommandEntry> GetCommandEntries(ForeignKeyBox foreignKeyBox);
         }
 
@@ -78,6 +117,9 @@ namespace DevZest.Data.Views
             ServiceManager.Register<ICommandService, CommandService>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="ForeignKeyBox"/> class.
+        /// </summary>
         public ForeignKeyBox()
         {
             ValueBag = new ColumnValueBag();
@@ -98,6 +140,10 @@ namespace DevZest.Data.Views
             lookupService.BeginLookup(this);
         }
 
+        /// <summary>
+        /// Ends the lookup operation and updates this <see cref="ForeignKeyBox"/>.
+        /// </summary>
+        /// <param name="valueBag">The <see cref="ColumnValueBag"/> that contains foreign key and lookup data.</param>
         public void EndLookup(ColumnValueBag valueBag)
         {
             if (valueBag != null)
@@ -107,6 +153,9 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Clears the underlying foreign key and lookup data.
+        /// </summary>
         public void ClearValue()
         {
             var valueBag = ValueBag.Clone();
@@ -114,10 +163,19 @@ namespace DevZest.Data.Views
             EndLookup(valueBag);
         }
 
+        /// <summary>
+        /// Gets the foreign key column(s).
+        /// </summary>
         public CandidateKey ForeignKey { get; internal set; }
 
+        /// <summary>
+        /// Gets the lookup column(s).
+        /// </summary>
         public Projection Lookup { get; internal set; }
 
+        /// <summary>
+        /// Gets the <see cref="ColumnValueBag"/> which contains the underlying foreign key and lookup data.
+        /// </summary>
         public ColumnValueBag ValueBag
         {
             get { return (ColumnValueBag)GetValue(ValueBagProperty); }
@@ -134,6 +192,9 @@ namespace DevZest.Data.Views
             get { return RowPresenter?.DataPresenter; }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether underlying foreign key data can be cleared. This is a dependency property.
+        /// </summary>
         public bool CanClearValue
         {
             get { return (bool)GetValue(CanClearValueProperty); }
@@ -156,7 +217,7 @@ namespace DevZest.Data.Views
             return true;
         }
 
-        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        private ICommandService GetCommandService(DataPresenter dataPresenter)
         {
             return dataPresenter.GetService<ICommandService>();
         }

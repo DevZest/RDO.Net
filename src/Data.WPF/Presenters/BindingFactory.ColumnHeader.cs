@@ -10,7 +10,7 @@ namespace DevZest.Data.Presenters
         /// </summary>
         /// <param name="column">The source column.</param>
         /// <param name="title">The title of <see cref="ColumnHeader"/>. If null, value of <see cref="Column.DisplayShortName"/> will be used.</param>
-        /// <returns></returns>
+        /// <returns>The scalar binding object.</returns>
         public static ScalarBinding<ColumnHeader> BindToColumnHeader(this Column column, object title = null)
         {
             return new ScalarBinding<ColumnHeader>(

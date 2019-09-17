@@ -7,32 +7,60 @@ namespace DevZest.Data.Presenters
 {
     partial class BindingFactory
     {
-        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup>(this TKey key, TLookup lookup, Func<ColumnValueBag, TKey, string> toString)
+        /// <summary>
+        /// Binds a foreign key to <see cref="ForeignKeyBox"/>.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the foreign key.</typeparam>
+        /// <typeparam name="TLookup">The type of the lookup projection.</typeparam>
+        /// <param name="key">The foreign key.</param>
+        /// <param name="lookup">The lookup projection.</param>
+        /// <param name="titleGetter">The getter that returns title string.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup>(this TKey key, TLookup lookup, Func<ColumnValueBag, TKey, string> titleGetter)
             where TKey : CandidateKey
             where TLookup : Projection
         {
-            if (toString == null)
-                throw new ArgumentNullException(nameof(toString));
+            if (titleGetter == null)
+                throw new ArgumentNullException(nameof(titleGetter));
 
             return BindToForeignKeyBox(key, lookup, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TLookup paramExt) =>
             {
-                v.Text = toString(valueBag, paramKey);
+                v.Text = titleGetter(valueBag, paramKey);
             });
         }
 
-        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup>(this TKey key, TLookup lookup, Func<ColumnValueBag, TKey, TLookup, string> toString)
+        /// <summary>
+        /// Binds a foreign key to <see cref="ForeignKeyBox"/>.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the foreign key.</typeparam>
+        /// <typeparam name="TLookup">The type of the lookup projection.</typeparam>
+        /// <param name="key">The foreign key.</param>
+        /// <param name="lookup">The lookup projection.</param>
+        /// <param name="titleGetter">The getter that returns title string.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup>(this TKey key, TLookup lookup, Func<ColumnValueBag, TKey, TLookup, string> titleGetter)
             where TKey : CandidateKey
             where TLookup : Projection
         {
-            if (toString == null)
-                throw new ArgumentNullException(nameof(toString));
+            if (titleGetter == null)
+                throw new ArgumentNullException(nameof(titleGetter));
 
             return BindToForeignKeyBox(key, lookup, (TextBlock v, ColumnValueBag valueBag, TKey paramKey, TLookup paramExt) =>
             {
-                v.Text = toString(valueBag, paramKey, paramExt);
+                v.Text = titleGetter(valueBag, paramKey, paramExt);
             });
         }
 
+        /// <summary>
+        /// Binds a foreign key to <see cref="ForeignKeyBox"/>.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the foreign key.</typeparam>
+        /// <typeparam name="TLookup">The type of the lookup projection.</typeparam>
+        /// <typeparam name="TView">The type of the content view to display lookup data.</typeparam>
+        /// <param name="key">The foreign key.</param>
+        /// <param name="lookup">The lookup projection.</param>
+        /// <param name="refreshAction">The action to refresh the content view.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup, TView>(this TKey key, TLookup lookup, Action<TView, ColumnValueBag, TLookup> refreshAction)
             where TKey : CandidateKey
             where TLookup : Projection
@@ -61,6 +89,16 @@ namespace DevZest.Data.Presenters
                 }).WithInput(key, lookup);
         }
 
+        /// <summary>
+        /// Binds a foreign key to <see cref="ForeignKeyBox"/>.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the foreign key.</typeparam>
+        /// <typeparam name="TLookup">The type of the lookup projection.</typeparam>
+        /// <typeparam name="TView">The type of the content view to display lookup data.</typeparam>
+        /// <param name="key">The foreign key.</param>
+        /// <param name="lookup">The lookup projection.</param>
+        /// <param name="refreshAction">The action to refresh the content view.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<ForeignKeyBox> BindToForeignKeyBox<TKey, TLookup, TView>(this TKey key, TLookup lookup, Action<TView, ColumnValueBag, TKey, TLookup> refreshAction)
             where TKey : CandidateKey
             where TLookup : Projection
