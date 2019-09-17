@@ -100,3 +100,5 @@
           href: programming_rdo_wpf/view_components/DataView.md
         - name: ForeignKeyBox
           href: programming_rdo_wpf/view_components/ForeignKeyBox.md
+        - name: GridHeader
+          href: programming_rdo_wpf/view_components/GridHeader.md

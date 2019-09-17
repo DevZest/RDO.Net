@@ -6,6 +6,9 @@ using DevZest.Data.Presenters;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents a button that can select all rows.
+    /// </summary>
     public class GridHeader : ToggleButton, IScalarElement, RowSelectionWiper.ISelector
     {
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
