@@ -92,3 +92,9 @@
       href: programming_rdo_wpf/data_presenter_simple_presenter.md
     - name: Validation
       href: programming_rdo_wpf/validation.md    
+    - name: View Components
+      items:
+        - name: ColumnHeader
+          href: programming_rdo_wpf/view_components/ColumnHeader.md
+        - name: ForeignKeyBox
+          href: programming_rdo_wpf/view_components/ForeignKeyBox.md

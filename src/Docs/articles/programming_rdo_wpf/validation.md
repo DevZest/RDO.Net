@@ -12,7 +12,9 @@ For complete examples, please refer to the `ValidationUI` sample.
 
 RDO.WPF supports the following validators:
 
-* Flushing validator: Flushing validator reports data binding conversion error before model updated, for example, non-numeric characters entered for a number field. Flushing validator is implemented in <xref:data_binding> factory extension method, var `WithFlushValidator` API. For example, the following binding factory method binds a nullable Int32 column to a `TextBox`:
+### Flushing Validator
+
+Flushing validator reports data binding conversion error before model updated, for example, non-numeric characters entered for a number field. Flushing validator is implemented in <xref:data_binding> factory extension method, var `WithFlushValidator` API. For example, the following binding factory method binds a nullable Int32 column to a `TextBox`:
 
 ```csharp
 public static RowBinding<TextBox> BindToTextBox(this Column<Int32?> source, string flushErrorDescription = null)
@@ -41,11 +43,54 @@ public static RowBinding<TextBox> BindToTextBox(this Column<Int32?> source, stri
 }
 ```
 
-* Model validator: As explained in <xref:model_validation>, you can define validators in your model via validation attributes and custom validators.
+### Model Validator
 
-* Scalar validator: You can use <xref:DevZest.Data.Presenters.Scalar`1.AddValidator*> API to add scalar validator, as demonstrated in `ValidationUI` sample. Additionally, you can override <xref:DevZest.Data.Presenters.BasePresenter.ValidateScalars*> method to implement custom scalar validator cross multiple scalar data.
+As explained in <xref:model_validation>, you can define validators in your model via validation attributes and custom validators.
 
-* Async validator: Validation against external source such as web requests, database calls or some other kind of actions which require significant amount of time. For example, in a user registration form, to validate whether the entered email address is already registered. You can add async validator to your data presenter via `AddAsyncValidator` API of your template builder, as demonstrated in `ValidationUI` sample:
+### Scalar Validator
+
+You can use <xref:DevZest.Data.Presenters.Scalar`1.AddValidator*> API to add scalar validator. Additionally, you can override <xref:DevZest.Data.Presenters.BasePresenter.ValidateScalars*> method to implement custom scalar validator cross multiple scalar data. The following code in `ValidationUI` sample demonstrates scalar validators:
+
+```csharp
+internal abstract class _RegistrationPresenter : _LoginPresenter
+{
+    protected Scalar<string> _userName { get; private set; }
+    protected Scalar<string> _passwordConfirmation { get; private set; }
+    ...
+
+    protected _RegistrationPresenter()
+    {
+        _userName = NewScalar(string.Empty).AddValidator(ValidateUserNameRequired);
+        ...
+    }
+
+    private static string ValidateUserNameRequired(string value)
+    {
+        return string.IsNullOrEmpty(value) ? "Field 'User Name' is required." : null;
+    }
+
+    protected override IScalarValidationErrors ValidateScalars(IScalarValidationErrors result)
+    {
+        if (_password.GetValue() != _passwordConfirmation.GetValue())
+            result = result.Add(new ScalarValidationError("Passwords do not match.", _password.Union(_passwordConfirmation).Seal()));
+        return result.Seal();
+    }
+
+    protected Func<Task<string>> ValidateUserNameFunc
+    {
+        get { return ValidateUserName; }
+    }
+
+    private Task<string> ValidateUserName()
+    {
+        ...
+    }
+}
+```
+
+### Async Validator
+
+Validation against external source such as web requests, database calls or some other kind of actions which require significant amount of time. For example, in a user registration form, to validate whether the entered email address is already registered. You can add async validator to your data presenter via [TemplateBuilder\<T\>.AddAsyncValidator](xref:DevZest.Data.Presenters.TemplateBuilder`1.AddAsyncValidator*) or [DataPresenter.TemplateBuilder.AddAsyncValidator](xref:DevZest.Data.Presenters.DataPresenter.TemplateBuilder.AddAsyncValidator*) API, as demonstrated in `ValidationUI` sample:
 
 ```csharp
 protected override void BuildTemplate(TemplateBuilder builder)
@@ -57,9 +102,15 @@ protected override void BuildTemplate(TemplateBuilder builder)
         ...;
 }
 
+...
 protected Func<Task<string>> ValidateUserNameFunc
 {
-    get { ... }
+    get { return ValidateUserName; }
+}
+
+private Task<string> ValidateUserName()
+{
+    ...;
 }
 ```
 
@@ -77,9 +128,18 @@ You can specify the following validation mode via <xref:DevZest.Data.Presenters.
 
 You can call <xref:DevZest.Data.Presenters.BasePresenter.CanSubmitInput> to determine whether data input (both scalar and row) can be submitted without any validation error. You can also try to submit data input via <xref:DevZest.Data.Presenters.BasePresenter.SubmitInput*> API.
 
-Your presenter object's <xref:DevZest.Data.Presenters.BasePresenter.ScalarValidation> and <xref:DevZest.Data.Presenters.DataPresenter.RowValidation> property, together with <xref:DevZest.Data.Presenters.RowPresenter>'s <xref:DevZest.Data.Presenters.RowPresenter.VisibleValidationErrors> and <xref:DevZest.Data.Presenters.RowPresenter.HasVisibleValidationError> property, expose the validation logic.
+You can access validation logic via Your presenter object's <xref:DevZest.Data.Presenters.BasePresenter.ScalarValidation> and <xref:DevZest.Data.Presenters.DataPresenter.RowValidation> property. You can get validation errors that will be displayed in UI via [ScalarValidation.VisibleErrors](xref:DevZest.Data.Presenters.ScalarValidation.VisibleErrors) and [RowPresenter.VisibleValidationErrors](xref:DevZest.Data.Presenters.RowPresenter.VisibleValidationErrors).
 
-The validation errors will be automatically associated with single input UI element in the view, based on the validation source (either a <xref:DevZest.Data.Presenters.IScalars> or a <xref:DevZest.Data.IColumns> object), matched in the order of:
+Visible validation errors are represented as <xref:DevZest.Data.IValidationErrors> object, which is a collection of objects derived from <xref:DevZest.Data.ValidationError>:
+
+| Validation Error | Validator | Validation Source |
+|------------------|-----------|-------------------|
+| <xref:DevZest.Data.Presenters.FlushingError> | Flushing validator | `UIElement` |
+| <xref:DevZest.Data.DataValidationError> | Model validator/async model validator | <xref:DevZest.Data.IColumns> |
+| <xref:DevZest.Data.Presenters.ScalarValidationError> | Scalar validator/async scalar validator | <xref:DevZest.Data.Presenters.IScalars> |
+| <xref:DevZest.Data.Presenters.AsyncValidationFault> | Async validator | <xref:DevZest.Data.Presenters.AsyncValidator> |
+
+Visible validation errors will be automatically associated with an UI element in the view, based on the validation source, matched in the order of:
 
 1. Target UI element of two way data binding;
 2. RowView (row validation only);
@@ -89,11 +149,11 @@ These validation errors will then be displayed  via the following template provi
 
 | Attached Property | Description |
 |-------------------|-------------|
-| Validation.Status | A value of <xref:DevZest.Data.Presenters.ValidationStatus>. |
-| Validation.SucceededTemplate | Template for `Succeeded` status. |
-| Validation.FlushingFailedTemplate | Template for `FlushingFailed` status. |
-| Validation.FailedTemplate | Template for `Failed` status. |
-| Validation.ValidatingTemplate | Template for `Validating` status. |
+| [Validation.Status](xref:DevZest.Data.Presenters.Validation.StatusProperty) | A value of <xref:DevZest.Data.Presenters.ValidationStatus>. |
+| [Validation.SucceededTemplate](xref:DevZest.Data.Presenters.Validation.SucceededTemplateProperty) | Template for `Succeeded` status. |
+| [Validation.FailedFlushingTemplate](xref:DevZest.Data.Presenters.Validation.FailedFlushingTemplateProperty) | Template for `FailedFlushing` status. |
+| [Validation.FailedTemplate](xref:DevZest.Data.Presenters.Validation.FailedTemplateProperty) | Template for `Failed` status. |
+| [Validation.ValidatingTemplate](xref:DevZest.Data.Presenters.Validation.ValidatingTemplateProperty) | Template for `Validating` status. |
 
 The following view components are provided specially for validation error display, as demonstrated in `ValidationUI` sample:
 

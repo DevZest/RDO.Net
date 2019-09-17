@@ -25,7 +25,7 @@ namespace ValidationUI
 
         private static string ValidatePasswordConfirmationLength(string value)
         {
-            return value != null && (value.Length < 6 || value.Length > 20) ? "Field 'Password Confirmation' must be a string with minimum length of 6 and maximumn length of 20." : null;
+            return value != null && (value.Length < 6 || value.Length > 20) ? "Field 'Password Confirmation' must be a string with minimum length of 6 and maximum length of 20." : null;
         }
 
         private static string ValidateInterests(Interests value)
