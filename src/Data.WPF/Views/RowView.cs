@@ -10,21 +10,58 @@ using System.Linq;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents the container of elements for data row presentation.
+    /// </summary>
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
+        /// <summary>
+        /// Contains commands implemented by <see cref="RowView"/> class.
+        /// </summary>
         public static class Commands
         {
+            /// <summary>
+            /// Command to toggle editing mode.
+            /// </summary>
             public static readonly RoutedUICommand ToggleEdit = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to begin editing mode.
+            /// </summary>
             public static readonly RoutedUICommand BeginEdit = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to cancel editing mode.
+            /// </summary>
             public static readonly RoutedUICommand CancelEdit = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to end editing mode.
+            /// </summary>
             public static readonly RoutedUICommand EndEdit = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to expand current row.
+            /// </summary>
             public static readonly RoutedUICommand Expand = new RoutedUICommand(UserMessages.RowViewCommands_ExpandCommandText, nameof(Expand), typeof(Commands));
+
+            /// <summary>
+            /// Command to collapse current row.
+            /// </summary>
             public static readonly RoutedUICommand Collapse = new RoutedUICommand(UserMessages.RowViewCommands_CollapseCommandText, nameof(Collapse), typeof(Commands));
         }
 
+        /// <summary>
+        /// Customizable service to provide command implementations.
+        /// </summary>
         public interface ICommandService : IService
         {
+            /// <summary>
+            /// Retrieves command implementations for specified <see cref="RowView"/>.
+            /// </summary>
+            /// <param name="rowView">The specified <see cref="RowView"/>.</param>
+            /// <returns>The retrieved command implementations.</returns>
             IEnumerable<CommandEntry> GetCommandEntries(RowView rowView);
         }
 
@@ -135,24 +172,51 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Styles can be applied to <see cref="RowView"/> control.
+        /// </summary>
         public abstract class Styles
         {
+            /// <summary>
+            /// Style to enable selection by adding <see cref="RowSelector"/> into control template.
+            /// </summary>
             public static readonly StyleId Selectable = new StyleId(typeof(RowView));
         }
 
         private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(RowView),
             typeof(RowView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+
+        /// <summary>
+        /// Identifies the Current attached readonly property (<see cref="GetCurrent(DependencyObject)"/>).
+        /// </summary>
         public static readonly DependencyProperty CurrentProperty = CurrentPropertyKey.DependencyProperty;
 
-        public static RowView GetCurrent(DependencyObject target)
+        /// <summary>
+        /// Gets the <see cref="RowView"/> which contains the specified element. This is the getter of Current attached property.
+        /// </summary>
+        /// <param name="element">The specified element.</param>
+        /// <returns><see cref="RowView"/> which contains the specified element. <see langword="null"/> if the specified element is not contained
+        /// by any <see cref="RowView"/>.</returns>
+        public static RowView GetCurrent(DependencyObject element)
         {
-            if (target == null)
-                throw new ArgumentNullException(nameof(target));
-            return (RowView)target.GetValue(CurrentProperty);
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            return (RowView)element.GetValue(CurrentProperty);
         }
 
+        /// <summary>
+        /// Occurs when the <see cref="RowView"/> is setting up.
+        /// </summary>
         public event EventHandler<EventArgs> SettingUp = delegate { };
+
+        /// <summary>
+        /// Occurs when the <see cref="RowView"/> is refreshing.
+        /// </summary>
         public event EventHandler<EventArgs> Refreshing = delegate { };
+
+        /// <summary>
+        /// Occurs when the <see cref="RowView"/> is cleaning up.
+        /// </summary>
         public event EventHandler<EventArgs> CleaningUp = delegate { };
 
         static RowView()
@@ -162,12 +226,19 @@ namespace DevZest.Data.Views
             ServiceManager.Register<ICommandService, CommandService>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RowView"/> class.
+        /// </summary>
         public RowView()
         {
             SetValue(CurrentPropertyKey, this);
         }
 
         private RowPresenter _rowPresenter;
+
+        /// <summary>
+        /// Gets the row presenter.
+        /// </summary>
         public RowPresenter RowPresenter
         {
             get { return _rowPresenter; }
@@ -178,6 +249,7 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <inheritdoc/>
         public sealed override int ContainerOrdinal
         {
             get { return RowPresenter == null ? -1 : RowPresenter.Index / RowPresenter.ElementManager.FlowRepeatCount; }
@@ -243,6 +315,9 @@ namespace DevZest.Data.Views
             Setup(elementManager.Rows[containerOrdinal]);
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this <see cref="RowView"/> has setup.
+        /// </summary>
         public bool HasSetup { get; private set; }
 
         internal void Setup(RowPresenter rowPresenter)
@@ -287,6 +362,7 @@ namespace DevZest.Data.Views
             HasSetup = false;
         }
 
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -400,6 +476,7 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnIsKeyboardFocusWithinChanged(e);
@@ -415,11 +492,17 @@ namespace DevZest.Data.Views
             get { return RowPresenter.Index % RowPresenter.ElementManager.FlowRepeatCount; }
         }
 
+        /// <summary>
+        /// Gets the data presenter.
+        /// </summary>
         public DataPresenter DataPresenter
         {
             get { return RowPresenter == null ? null : RowPresenter.DataPresenter; }
         }
 
+        /// <summary>
+        /// Gets the validation info.
+        /// </summary>
         public ValidationInfo ValidationInfo
         {
             get
@@ -429,7 +512,12 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Gets the active input element which has keyboard focus.
+        /// </summary>
         public IInputElement ActiveInputElement { get; private set; }
+
+        /// <inheritdoc/>
         protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
         {
             base.OnGotKeyboardFocus(e);
