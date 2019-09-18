@@ -11,7 +11,9 @@
 
 ## Usage
 
-Put the <xref:DevZest.Data.Views.RowHeader> inside a <xref:DevZest.Data.Views.RowView>, it will be wired up and work automatically. You can add <xref:DevZest.Data.Views.RowHeader> via row binding by calling <xref:DevZest.Data.Presenters.BindingFactory.BindTo*> API, as demonstrated in `AdventureWorksLT.WpfApp` sample:
+Put the <xref:DevZest.Data.Views.RowHeader> inside a <xref:DevZest.Data.Views.RowView>, it will be wired up and work automatically.
+
+You can add <xref:DevZest.Data.Views.RowHeader> via row binding by calling <xref:DevZest.Data.Presenters.BindingFactory.BindTo*> API, as demonstrated in `AdventureWorksLT.WpfApp` sample:
 
 # [C#](#tab/cs)
 
@@ -39,7 +41,7 @@ End Sub
 
 ***
 
-You can also add <xref:DevZest.Data.Views.RowHeader> via composite row binding:
+You can also add <xref:DevZest.Data.Views.RowHeader> via composite row binding.
 
 ## Resizing Implementation
 

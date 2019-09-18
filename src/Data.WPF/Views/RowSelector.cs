@@ -8,6 +8,9 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents the control that can perform row selection operation.
+    /// </summary>
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateNormal)]
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateDisabled)]
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateMouseOver)]
@@ -78,8 +81,12 @@ namespace DevZest.Data.Views
             }
         }
 
-        public static readonly DependencyPropertyKey IsActivePropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsActive), typeof(bool?), typeof(RowSelector),
+        private static readonly DependencyPropertyKey IsActivePropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsActive), typeof(bool?), typeof(RowSelector),
             new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="IsActive"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty IsActiveProperty = IsActivePropertyKey.DependencyProperty;
 
         static RowSelector()
@@ -89,10 +96,16 @@ namespace DevZest.Data.Views
             ServiceManager.Register<CurrentRowSynchronizer, CurrentRowSynchronizer>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RowSelector"/> class.
+        /// </summary>
         public RowSelector()
         {
         }
 
+        /// <summary>
+        /// Gets a value indicates whether current row is active.
+        /// </summary>
         public bool? IsActive
         {
             get { return (bool?)GetValue(IsActiveProperty); }
@@ -212,6 +225,7 @@ namespace DevZest.Data.Views
             return DataPresenter != null && DataPresenter.CurrentRow != null && DataPresenter.CurrentRow.View != null && DataPresenter.CurrentRow.View.IsKeyboardFocusWithin;
         }
 
+        /// <inheritdoc/>
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
@@ -221,6 +235,7 @@ namespace DevZest.Data.Views
                 UpdateVisualState();
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (!e.Handled)
@@ -228,6 +243,7 @@ namespace DevZest.Data.Views
             base.OnMouseLeftButtonDown(e);
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             if (!e.Handled)

@@ -8,29 +8,107 @@ namespace DevZest.Data.Views
 {
     partial class RowSelector
     {
+        /// <summary>
+        /// Contains commands implemented by <see cref="RowSelector"/> class.
+        /// </summary>
         public static class Commands
         {
+            /// <summary>
+            /// Command to move current row up.
+            /// </summary>
             public static RoutedUICommand MoveUp { get { return ComponentCommands.MoveUp; } }
+
+            /// <summary>
+            /// Command to move current row down.
+            /// </summary>
             public static RoutedUICommand MoveDown { get { return ComponentCommands.MoveDown; } }
+
+            /// <summary>
+            /// Command to move current row left.
+            /// </summary>
             public static RoutedUICommand MoveLeft { get { return ComponentCommands.MoveLeft; } }
+
+            /// <summary>
+            /// Command to move current row right.
+            /// </summary>
             public static RoutedUICommand MoveRight { get { return ComponentCommands.MoveRight; } }
+
+            /// <summary>
+            /// Command to move current row to one page up.
+            /// </summary>
             public static RoutedUICommand MoveToPageUp { get { return ComponentCommands.MoveToPageUp; } }
+
+            /// <summary>
+            /// Command to move current row to one page down.
+            /// </summary>
             public static RoutedUICommand MoveToPageDown { get { return ComponentCommands.MoveToPageDown; } }
+
+            /// <summary>
+            /// Command to move current row to the first row.
+            /// </summary>
             public static RoutedUICommand MoveToHome { get { return ComponentCommands.MoveToHome; } }
+
+            /// <summary>
+            /// Command to move current row to the last row.
+            /// </summary>
             public static RoutedUICommand MoveToEnd { get { return ComponentCommands.MoveToEnd; } }
+
+            /// <summary>
+            /// Command to select multiple consecutive rows up.
+            /// </summary>
             public static RoutedUICommand SelectExtendedUp { get { return ComponentCommands.ExtendSelectionUp; } }
+
+            /// <summary>
+            /// Command to select multiple consecutive rows down.
+            /// </summary>
             public static RoutedUICommand SelectExtendedDown { get { return ComponentCommands.ExtendSelectionDown; } }
+
+            /// <summary>
+            /// Command to select multiple consecutive rows left.
+            /// </summary>
             public static RoutedUICommand SelectExtendedLeft { get { return ComponentCommands.ExtendSelectionLeft; } }
+
+            /// <summary>
+            /// Command to select multiple consecutive rows right.
+            /// </summary>
             public static RoutedUICommand SelectExtendedRight { get { return ComponentCommands.ExtendSelectionRight; } }
+
+            /// <summary>
+            /// Command to select multiple consecutive rows to the first row.
+            /// </summary>
             public static readonly RoutedUICommand SelectExtendedHome = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to select multiple consecutive rows to the last row.
+            /// </summary>
             public static readonly RoutedUICommand SelectExtendedEnd = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to select multiple consecutive rows to one page up.
+            /// </summary>
             public static readonly RoutedUICommand SelectExtendedPageUp = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to select multiple consecutive rows to one page down.
+            /// </summary>
             public static readonly RoutedUICommand SelectExtendedPageDown = new RoutedUICommand();
+
+            /// <summary>
+            /// Command to toggle the selection mode of current row.
+            /// </summary>
             public static readonly RoutedUICommand ToggleSelection = new RoutedUICommand();
         }
 
+        /// <summary>
+        /// Customizable service to provide command implementations.
+        /// </summary>
         public interface ICommandService : IService
         {
+            /// <summary>
+            /// Retrieves command implementations for specified <see cref="RowSelector"/>.
+            /// </summary>
+            /// <param name="rowSelector">The specified <see cref="RowSelector"/>.</param>
+            /// <returns>The retrieved command implementations.</returns>
             IEnumerable<CommandEntry> GetCommandEntries(RowSelector rowSelector);
         }
 

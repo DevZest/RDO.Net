@@ -10,7 +10,9 @@
 
 ## Usage
 
-Put the <xref:DevZest.Data.Views.RowExpander> inside a <xref:DevZest.Data.Views.RowView>, it will be wired up and work automatically, as demonstrated in `FileExplorer` sample:
+Put the <xref:DevZest.Data.Views.RowExpander> inside a <xref:DevZest.Data.Views.RowView>, it will be wired up and work automatically.
+
+You can add <xref:DevZest.Data.Views.RowExpander> via composite row binding, as demonstrated in `FileExplorer` sample:
 
 ```xaml
 ...

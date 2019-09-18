@@ -106,3 +106,5 @@
           href: programming_rdo_wpf/view_components/RowExpander.md
         - name: RowHeader
           href: programming_rdo_wpf/view_components/RowHeader.md
+        - name: RowSelector
+          href: programming_rdo_wpf/view_components/RowSelector.md
