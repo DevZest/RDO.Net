@@ -40,6 +40,10 @@ namespace DevZest.Data.Views
         }
 
         private static readonly DependencyPropertyKey ItemsCountPropertyKey;
+
+        /// <summary>
+        /// Identifies the <see cref="ItemsCount"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ItemsCountProperty;
 
         static ValidationErrorsControl()
@@ -49,6 +53,9 @@ namespace DevZest.Data.Views
             ItemsCountProperty = ItemsCountPropertyKey.DependencyProperty;
         }
 
+        /// <summary>
+        /// Gets the items count.
+        /// </summary>
         public int ItemsCount
         {
             get { return (int)GetValue(ItemsCountProperty); }
@@ -61,6 +68,7 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
             base.OnItemsChanged(e);

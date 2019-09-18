@@ -1,7 +1,5 @@
-﻿using DevZest.Data.Presenters.Primitives;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -10,6 +8,11 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
+        /// <summary>
+        /// Binds row validation errors to <see cref="ValidationErrorsControl"/>.
+        /// </summary>
+        /// <param name="source">The source model.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<ValidationErrorsControl> BindToValidationErrorsControl(this Model source)
         {
             return new RowBinding<ValidationErrorsControl>(
@@ -22,6 +25,12 @@ namespace DevZest.Data.Presenters
                 onSetup: null, onCleanup: null);
         }
 
+        /// <summary>
+        /// Binds row input validation errors to <see cref="ValidationErrorsControl"/>.
+        /// </summary>
+        /// <typeparam name="T">The element type of row input.</typeparam>
+        /// <param name="source">The source row input.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<ValidationErrorsControl> BindToValidationErrorsControl<T>(this RowInput<T> source)
             where T : UIElement, new()
         {
@@ -67,6 +76,11 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
+        /// <summary>
+        /// Binds all scalar validation errors to <see cref="ValidationErrorsControl"/>.
+        /// </summary>
+        /// <param name="source">The source presenter.</param>
+        /// <returns>The scalar binding object.</returns>
         public static ScalarBinding<ValidationErrorsControl> BindToValidationErrorsControl(this BasePresenter source)
         {
             return new ScalarBinding<ValidationErrorsControl>(
@@ -79,6 +93,12 @@ namespace DevZest.Data.Presenters
                 onSetup: null, onCleanup: null);
         }
 
+        /// <summary>
+        /// Binds scalar input validation errors to <see cref="ValidationErrorsControl"/>.
+        /// </summary>
+        /// <typeparam name="T">The element type of scalar input.</typeparam>
+        /// <param name="source">The source scalar input.</param>
+        /// <returns>The scalar binding object.</returns>
         public static ScalarBinding<ValidationErrorsControl> BindToValidationErrorsControl<T>(this ScalarInput<T> source)
             where T : UIElement, new()
         {
