@@ -1,8 +1,5 @@
-﻿using DevZest.Data.Presenters;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,21 +7,14 @@ using System.Windows.Data;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents a control to display validation errors.
+    /// </summary>
     public class ValidationErrorsControl : ItemsControl
     {
-        internal static class TemplateIds
-        {
-            public static readonly TemplateId Failed = new TemplateId(typeof(ValidationErrorsControl));
-        }
-
-        public static class Templates
-        {
-            public static ControlTemplate Failed
-            {
-                get { return TemplateIds.Failed.GetOrLoad(); }
-            }
-        }
-
+        /// <summary>
+        /// Gets a converter to convert items count to bullet visibility.
+        /// </summary>
         public static IValueConverter ItemsCountToBulletVisibilityConverter
         {
             get { return _ItemsCountToBulletVisibilityConverter.Singleton; }
