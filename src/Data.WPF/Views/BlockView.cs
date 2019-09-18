@@ -9,18 +9,31 @@ using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents the container for flowing <see cref="RowView"/>.
+    /// </summary>
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockViewPanel))]
     public class BlockView : ContainerView, IReadOnlyList<RowPresenter>
     {
         private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(BlockView),
             typeof(BlockView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+
+        /// <summary>
+        /// Identifies the Current attached readonly property (<see cref="GetCurrent(DependencyObject)"/>).
+        /// </summary>
         public static readonly DependencyProperty CurrentProperty = CurrentPropertyKey.DependencyProperty;
 
-        public static BlockView GetCurrent(DependencyObject target)
+        /// <summary>
+        /// Gets the <see cref="BlockView"/> which contains the specified element. This is the getter of Current attached property.
+        /// </summary>
+        /// <param name="element">The specified element.</param>
+        /// <returns><see cref="BlockView"/> which contains the specified element. <see langword="null"/> if the specified element is not contained
+        /// by any <see cref="BlockView"/>.</returns>
+        public static BlockView GetCurrent(DependencyObject element)
         {
-            if (target == null)
-                throw new ArgumentNullException(nameof(target));
-            return (BlockView)target.GetValue(CurrentProperty);
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            return (BlockView)element.GetValue(CurrentProperty);
         }
 
         static BlockView()
@@ -29,11 +42,17 @@ namespace DevZest.Data.Views
             FocusableProperty.OverrideMetadata(typeof(BlockView), new FrameworkPropertyMetadata(BooleanBoxes.False));
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="BlockView"/> class.
+        /// </summary>
         public BlockView()
         {
             SetValue(CurrentPropertyKey, this);
         }
 
+        /// <summary>
+        /// Gets the data presenter.
+        /// </summary>
         public DataPresenter DataPresenter
         {
             get { return _elementManager.DataPresenter; }
@@ -59,6 +78,7 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -148,17 +168,23 @@ namespace DevZest.Data.Views
         }
 
         private int _ordinal = -1;
+        /// <summary>
+        /// Gets the ordinal of this <see cref="BlockView"/>.
+        /// </summary>
         public int Ordinal
         {
             get { return _ordinal; }
         }
 
-
+        /// <inheritdoc/>
         public sealed override int ContainerOrdinal
         {
             get { return _ordinal; }
         }
 
+        /// <summary>
+        /// Gets the count of contained <see cref="RowView"/> objects.
+        /// </summary>
         public int Count
         {
             get
@@ -173,6 +199,11 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Gets the row presenter at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <returns>The result row presenter.</returns>
         public RowPresenter this[int index]
         {
             get
@@ -184,6 +215,7 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <inheritdoc/>
         public IEnumerator<RowPresenter> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
@@ -298,6 +330,9 @@ namespace DevZest.Data.Views
             blockBinding.Refresh(element);
         }
 
+        /// <summary>
+        /// Called when this element is refreshing. Provided for derived class, no default implementation.
+        /// </summary>
         protected virtual void OnRefresh()
         {
         }
