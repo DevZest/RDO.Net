@@ -197,8 +197,8 @@ namespace DevZest.Data.Presenters
 
             public IEnumerable GetErrors(string propertyName)
             {
-                /// Workaround: <param name="propertyName"/> will be passed in twice, as null and <see cref="string.Empty"/> respectively.
-                /// We need to ignore one of them, otherwise duplicated results will be returned.
+                // Workaround: <param name="propertyName"/> will be passed in twice, as null and <see cref="string.Empty"/> respectively.
+                // We need to ignore one of them, otherwise duplicated results will be returned.
                 return propertyName == null ? null : _messages;
             }
         }

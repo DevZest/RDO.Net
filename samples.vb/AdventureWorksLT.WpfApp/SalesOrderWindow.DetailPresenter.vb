@@ -36,7 +36,7 @@ Partial Class SalesOrderWindow
                 .AddBinding(4, 0, e.UnitPriceDiscount.BindToColumnHeader("Discount")) _
                 .AddBinding(5, 0, e.OrderQty.BindToColumnHeader("Qty")) _
                 .AddBinding(6, 0, e.LineTotal.BindToColumnHeader("Total")) _
-                .AddBinding(0, 1, e.BindToRowHeader()) _
+                .AddBinding(0, 1, e.BindTo(Of RowHeader)()) _
                 .AddBinding(1, 1, e.FK_Product.BindToForeignKeyBox(product, AddressOf GetProductNumber).MergeIntoGridCell(product.ProductNumber.BindToTextBlock()).WithSerializableColumns(e.ProductID, product.ProductNumber)) _
                 .AddBinding(2, 1, product.Name.BindToTextBlock().AddToGridCell().WithSerializableColumns(product.Name)) _
                 .AddBinding(3, 1, e.UnitPrice.BindToTextBox().MergeIntoGridCell()) _
