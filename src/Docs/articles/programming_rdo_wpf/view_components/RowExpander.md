@@ -25,3 +25,5 @@ Put the <xref:DevZest.Data.Views.RowExpander> inside a <xref:DevZest.Data.Views.
 </StackPanel>
 ...
 ```
+
+You can also add <xref:DevZest.Data.Views.RowExpander> via row binding by calling <xref:DevZest.Data.Presenters.BindingFactory.BindTo*> API.

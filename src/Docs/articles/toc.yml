@@ -104,3 +104,5 @@
           href: programming_rdo_wpf/view_components/GridHeader.md
         - name: RowExpander
           href: programming_rdo_wpf/view_components/RowExpander.md
+        - name: RowHeader
+          href: programming_rdo_wpf/view_components/RowHeader.md

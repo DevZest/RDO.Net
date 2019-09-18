@@ -10,6 +10,9 @@ using System;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents the control displayed as row header that can perform row selection and grid row resizing operation.
+    /// </summary>
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateNormal)]
     [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateMouseOver)]
     [TemplateVisualState(GroupName = VisualStates.GroupSelection, Name = VisualStates.StateSelected)]
@@ -22,24 +25,49 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewEditingRow)]
     public class RowHeader : ButtonBase, IRowElement, RowSelectionWiper.ISelector
     {
+        /// <summary>
+        /// Styles can be applied to <see cref="RowHeader"/> control.
+        /// </summary>
         public abstract class Styles
         {
+            /// <summary>
+            /// Style to display <see cref="RowHeader"/> as flat.
+            /// </summary>
             public static readonly StyleId Flat = new StyleId(typeof(RowHeader));
         }
 
         private static readonly DependencyPropertyKey IsSelectedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelected), typeof(bool),
             typeof(RowHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies the <see cref="IsSelected"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty IsSelectedProperty = IsSelectedPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Identifies the <see cref="SeparatorBrush"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(RowHeader), new FrameworkPropertyMetadata(null));
 
+        /// <summary>
+        /// Identifies the <see cref="SeparatorVisibility"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register(nameof(SeparatorVisibility), typeof(Visibility),
             typeof(RowHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
+        /// <summary>
+        /// Identifies the attached property.
+        /// </summary>
         public static readonly DependencyProperty ResizeGripperVisibilityProperty = DependencyProperty.Register(nameof(ResizeGripperVisibility), typeof(Visibility),
             typeof(RowHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
+        /// <summary>
+        /// Identifies IsReiszeGripper attached property (<see cref="GetIsResizeGripper(DependencyObject)"/>/<see cref="SetIsResizeGripper(DependencyObject, bool)"/>).
+        /// </summary>
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template,
+        /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
+        /// and perform the column resizing operation.</remarks>
         public static readonly DependencyProperty IsResizeGripperProperty = DependencyProperty.RegisterAttached("IsResizeGripper", typeof(bool),
             typeof(RowHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
 
@@ -48,6 +76,9 @@ namespace DevZest.Data.Views
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowHeader), new FrameworkPropertyMetadata(typeof(RowHeader)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RowHeader"/> class.
+        /// </summary>
         public RowHeader()
         {
             Loaded += OnLoaded;
@@ -59,35 +90,63 @@ namespace DevZest.Data.Views
             UpdateVisualStates(rowPresenter);
         }
 
+        /// <summary>
+        /// Gets a value indicates whether current row is selected.
+        /// </summary>
         public bool IsSelected
         {
             get { return (bool)GetValue(IsSelectedProperty); }
             private set { SetValue(IsSelectedPropertyKey, BooleanBoxes.Box(value)); }
         }
 
+        /// <summary>
+        /// Gets or sets the brush to paint the separator. This is a dependency property.
+        /// </summary>
         public Brush SeparatorBrush
         {
             get { return (Brush)GetValue(SeparatorBrushProperty); }
             set { SetValue(SeparatorBrushProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicates the visibility of separator. This is a dependency property.
+        /// </summary>
         public Visibility SeparatorVisibility
         {
             get { return (Visibility)GetValue(SeparatorVisibilityProperty); }
             set { SetValue(SeparatorVisibilityProperty, value); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicates the visibility of resize gripper. This is a dependency property.
+        /// </summary>
         public Visibility ResizeGripperVisibility
         {
             get { return (Visibility)GetValue(ResizeGripperVisibilityProperty); }
             set { SetValue(ResizeGripperVisibilityProperty, value); }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether specified object is resize gripper. This is the getter of IsResizeGripper attached property.
+        /// </summary>
+        /// <param name="obj">The specified object.</param>
+        /// <returns><see langword="true"/> if specified object is resize gripper, otherwise <see langword="false"/>.</returns>
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template,
+        /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
+        /// and perform the column resizing operation.</remarks>
         public static bool GetIsResizeGripper(DependencyObject obj)
         {
             return (bool)obj.GetValue(IsResizeGripperProperty);
         }
 
+        /// <summary>
+        /// Sets a value indicates whether specified object is resize gripper. This is the setter of IsResizeGripper attached property.
+        /// </summary>
+        /// <param name="obj">The specified object..</param>
+        /// <param name="value"><see langword="true"/> if specified object is resize gripper, otherwise <see langword="false"/>.</param>
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template,
+        /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
+        /// and perform the column resizing operation.</remarks>
         public static void SetIsResizeGripper(DependencyObject obj, bool value)
         {
             obj.SetValue(IsResizeGripperProperty, BooleanBoxes.Box(value));
@@ -149,6 +208,7 @@ namespace DevZest.Data.Views
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateRegularRow);
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (!e.Handled)
@@ -156,6 +216,7 @@ namespace DevZest.Data.Views
             base.OnMouseLeftButtonDown(e);
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             if (!e.Handled)
@@ -250,6 +311,7 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseLeftButtonDown(e);

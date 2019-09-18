@@ -284,7 +284,7 @@ namespace DevZest.Data.Views
         /// <summary>
         /// Identifies IsReiszeGripper attached property (<see cref="GetIsResizeGripper(DependencyObject)"/>/<see cref="SetIsResizeGripper(DependencyObject, bool)"/>).
         /// </summary>
-        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template of ColumnHeader,
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template,
         /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
         /// and perform the column resizing operation.</remarks>
         public static readonly DependencyProperty IsResizeGripperProperty = DependencyProperty.RegisterAttached("IsResizeGripper", typeof(bool),
@@ -365,7 +365,7 @@ namespace DevZest.Data.Views
         /// </summary>
         /// <param name="obj">The specified object.</param>
         /// <returns><see langword="true"/> if specified object is resize gripper, otherwise <see langword="false"/>.</returns>
-        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template of ColumnHeader,
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template,
         /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
         /// and perform the column resizing operation.</remarks>
         public static bool GetIsResizeGripper(DependencyObject obj)
@@ -378,7 +378,7 @@ namespace DevZest.Data.Views
         /// </summary>
         /// <param name="obj">The specified object..</param>
         /// <param name="value"><see langword="true"/> if specified object is resize gripper, otherwise <see langword="false"/>.</param>
-        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template of ColumnHeader,
+        /// <remarks>Resizing is implemented via IsResizeGripper attached property. In the control template,
         /// an <see cref="UIElement"/> with this attached property value set to <see langword="true"/> will detect the mouse drag-and-drop
         /// and perform the column resizing operation.</remarks>
         public static void SetIsResizeGripper(DependencyObject obj, bool value)
