@@ -11,6 +11,9 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents the placeholder to display validation error.
+    /// </summary>
     public class ValidationPlaceholder : Control, IRowElement, IScalarElement
     {
         private sealed class MouseTracker
@@ -103,8 +106,12 @@ namespace DevZest.Data.Views
         }
 
 
-        private static readonly DependencyPropertyKey IsActivePropertyKey = DependencyProperty.RegisterAttachedReadOnly("IsActive", typeof(bool), typeof(ValidationPlaceholder),
+        private static readonly DependencyPropertyKey IsActivePropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsActive), typeof(bool), typeof(ValidationPlaceholder),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies the <see cref="IsActive"/> property.
+        /// </summary>
         public static readonly DependencyProperty IsActiveProperty = IsActivePropertyKey.DependencyProperty;
 
         static ValidationPlaceholder()
@@ -112,14 +119,13 @@ namespace DevZest.Data.Views
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ValidationPlaceholder), new FrameworkPropertyMetadata(typeof(ValidationPlaceholder)));
         }
 
-        public static bool GetIsActive(DependencyObject element)
+        /// <summary>
+        /// Gets a value indicates whether this control is active (either mouse over or has keyboard focus within). This is a dependency property.
+        /// </summary>
+        public bool IsActive
         {
-            return (bool)element.GetValue(IsActiveProperty);
-        }
-
-        private static void SetIsActive(DependencyObject element, bool value)
-        {
-            element.SetValue(IsActivePropertyKey, BooleanBoxes.Box(value));
+            get { return (bool)GetValue(IsActiveProperty); }
+            private set { SetValue(IsActivePropertyKey, BooleanBoxes.Box(value)); }
         }
 
         private static readonly ConditionalWeakTable<BasePresenter, MouseTracker> s_mouseTrackers = new ConditionalWeakTable<BasePresenter, MouseTracker>();
@@ -136,7 +142,7 @@ namespace DevZest.Data.Views
 
         private void CoerceIsActive()
         {
-            SetIsActive(this, GetIsActive());
+            IsActive = GetIsActive();
         }
 
         private bool GetIsActive()
