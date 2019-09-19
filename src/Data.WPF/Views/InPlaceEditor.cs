@@ -353,7 +353,7 @@ namespace DevZest.Data.Views
             private set { SetValue(IsScalarEditingPropertyKey, BooleanBoxes.Box(value)); }
         }
 
-        private IEditingPolicy Presenter
+        private IEditingPolicy EditingPolicy
         {
             get { return GetEditingPolicy(this) ?? DataPresenter.GetService<IEditingPolicyService>(); }
         }
@@ -382,7 +382,7 @@ namespace DevZest.Data.Views
                 {
                     if (setup)
                     {
-                        if (Presenter.QueryEditorElementFocus(this))
+                        if (EditingPolicy.QueryEditorElementFocus(this))
                             EditorElement.Focus();
                     }
 
@@ -544,7 +544,7 @@ namespace DevZest.Data.Views
                 return;
 
             if (this.GetBinding() != null)  // binding can be null when removed from UIElementCollection.
-                IsEditing = Presenter.QueryEditingMode(this);
+                IsEditing = EditingPolicy.QueryEditingMode(this);
         }
 
         void IRowElement.Setup(RowPresenter p)
