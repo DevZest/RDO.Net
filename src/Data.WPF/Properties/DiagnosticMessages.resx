@@ -207,14 +207,14 @@
   <data name="GridTrack_Resize_InvalidStarLength" xml:space="preserve">
     <value>Star length is invalid in {orientation} orientation layout.</value>
   </data>
-  <data name="InPlaceEditor_EditingRowBindingNotColumn" xml:space="preserve">
+  <data name="InPlaceEditor_EditorRowBindingNotColumn" xml:space="preserve">
     <value>The Input.Columns property is not a single Column.</value>
   </data>
-  <data name="InPlaceEditor_EditingScalarBindingNotScalar" xml:space="preserve">
+  <data name="InPlaceEditor_EditorScalarBindingNotScalar" xml:space="preserve">
     <value>The Input.Scalars property is not a single Scalar.</value>
   </data>
-  <data name="InPlaceEditor_VerifyEditingBinding" xml:space="preserve">
-    <value>The editing binding is invalid. The Input property must not be null.</value>
+  <data name="InPlaceEditor_VerifyEditorBinding" xml:space="preserve">
+    <value>The editor binding is invalid. The Input property must not be null.</value>
   </data>
   <data name="Input_TriggerAlreadyInitialized" xml:space="preserve">
     <value>The trigger has already been initialized with another Input.</value>

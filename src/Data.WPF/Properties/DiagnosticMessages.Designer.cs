@@ -254,25 +254,25 @@ namespace DevZest.Data
         /// <summary>
         /// The Input.Columns property is not a single Column.
         /// </summary>
-        public static string InPlaceEditor_EditingRowBindingNotColumn
+        public static string InPlaceEditor_EditorRowBindingNotColumn
         {
-            get { return GetString("InPlaceEditor_EditingRowBindingNotColumn"); }
+            get { return GetString("InPlaceEditor_EditorRowBindingNotColumn"); }
         }
 
         /// <summary>
         /// The Input.Scalars property is not a single Scalar.
         /// </summary>
-        public static string InPlaceEditor_EditingScalarBindingNotScalar
+        public static string InPlaceEditor_EditorScalarBindingNotScalar
         {
-            get { return GetString("InPlaceEditor_EditingScalarBindingNotScalar"); }
+            get { return GetString("InPlaceEditor_EditorScalarBindingNotScalar"); }
         }
 
         /// <summary>
-        /// The editing binding is invalid. The Input property must not be null.
+        /// The editor binding is invalid. The Input property must not be null.
         /// </summary>
-        public static string InPlaceEditor_VerifyEditingBinding
+        public static string InPlaceEditor_VerifyEditorBinding
         {
-            get { return GetString("InPlaceEditor_VerifyEditingBinding"); }
+            get { return GetString("InPlaceEditor_VerifyEditorBinding"); }
         }
 
         /// <summary>

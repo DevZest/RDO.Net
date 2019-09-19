@@ -13,7 +13,7 @@ using DevZest.Windows;
 namespace DevZest.Data.Views
 {
     /// <summary>
-    /// Represents a container of both inert and editing elements that can perform in-place editing operation.
+    /// Represents a container that switches between inert and editor elements based on editing mode.
     /// </summary>
     public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement, IContainerElement
     {
@@ -246,12 +246,29 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Defines the editing policy.
+        /// </summary>
         public interface IEditingPolicy
         {
+            /// <summary>
+            /// Queries whether specified <see cref="InPlaceEditor"/> is in editing mode.
+            /// </summary>
+            /// <param name="inPlaceEditor">The specified <see cref="InPlaceEditor"/>.</param>
+            /// <returns><see langword="true"/> if sepcified <see cref="InPlaceEditor"/> is in editing mode, otherwise <see langword="false"/>.</returns>
             bool QueryEditingMode(InPlaceEditor inPlaceEditor);
+
+            /// <summary>
+            /// Queries whether the editor element of specified <see cref="InPlaceEditor"/> should have keyboard focus.
+            /// </summary>
+            /// <param name="inPlaceEditor">The specified <see cref="InPlaceEditor"/>.</param>
+            /// <returns><see langword="true"/> if the editor element of specified <see cref="InPlaceEditor"/> should have keyboard focus, otherwise <see langword="false"/>.</returns>
             bool QueryEditorElementFocus(InPlaceEditor inPlaceEditor);
         }
 
+        /// <summary>
+        /// Customizable service to define the editing policy.
+        /// </summary>
         public interface IEditingPolicyService : IEditingPolicy, IService
         {
         }
@@ -287,9 +304,21 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Customizable service to initialize the child.
+        /// </summary>
         public interface IChildInitializer : IService
         {
+            /// <summary>
+            /// Initializes the editor element.
+            /// </summary>
+            /// <param name="inPlaceEditor"></param>
             void InitializeEditorElement(InPlaceEditor inPlaceEditor);
+
+            /// <summary>
+            /// Initializes the inert element.
+            /// </summary>
+            /// <param name="inPlaceEditor"></param>
             void InitializeInertElement(InPlaceEditor inPlaceEditor);
         }
 
@@ -315,20 +344,41 @@ namespace DevZest.Data.Views
 
         private static readonly DependencyPropertyKey IsRowEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsRowEditing), typeof(bool), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies the <see cref="IsRowEditing"/> dependency property key.
+        /// </summary>
         public static readonly DependencyProperty IsRowEditingProperty = IsRowEditingPropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey IsScalarEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsScalarEditing), typeof(bool), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies the <see cref="IsScalarEditing"/> dependency property key.
+        /// </summary>
         public static readonly DependencyProperty IsScalarEditingProperty = IsScalarEditingPropertyKey.DependencyProperty;
 
-        private static readonly DependencyProperty EditingPolicyProperty = DependencyProperty.RegisterAttached("EditingPolicy", typeof(IEditingPolicy), typeof(InPlaceEditor),
+        /// <summary>
+        /// Identifies the EditingPolicy attached property (<see cref="GetEditingPolicy(DependencyObject)"/>/<see cref="SetEditingPolicy(DependencyObject, IEditingPolicy)"/>).
+        /// </summary>
+        public static readonly DependencyProperty EditingPolicyProperty = DependencyProperty.RegisterAttached("EditingPolicy", typeof(IEditingPolicy), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
+        /// <summary>
+        /// Gets a value as the editing policy of specified dependency object. This is the getter of EditingPolicy attached property.
+        /// </summary>
+        /// <param name="obj">The specified dependency objecct.</param>
+        /// <returns>The result editing policy.</returns>
         public static IEditingPolicy GetEditingPolicy(DependencyObject obj)
         {
             return (IEditingPolicy)obj.GetValue(EditingPolicyProperty);
         }
 
+        /// <summary>
+        /// Sets the value as the editing policy of specified dependency object. This is the setter of EditingPolicy attached property.
+        /// </summary>
+        /// <param name="obj">The specified dependency object.</param>
+        /// <param name="value">The value.</param>
         public static void SetEditingPolicy(DependencyObject obj, IEditingPolicy value)
         {
             obj.SetValue(EditingPolicyProperty, value);
@@ -341,12 +391,18 @@ namespace DevZest.Data.Views
             ServiceManager.Register<IChildInitializer, ChildInitializer>();
         }
 
+        /// <summary>
+        /// Gets a value indicates whether the row is in editing mode. This is a dependency property.
+        /// </summary>
         public bool IsRowEditing
         {
             get { return (bool)GetValue(IsRowEditingProperty); }
             private set { SetValue(IsRowEditingPropertyKey, BooleanBoxes.Box(value)); }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether scalar data is in editing mode. This is a dependency property.
+        /// </summary>
         public bool IsScalarEditing
         {
             get { return (bool)GetValue(IsScalarEditingProperty); }
@@ -360,6 +416,10 @@ namespace DevZest.Data.Views
 
         private bool _isEditing;
         private IInputElement _elementToRestoreFocus;
+
+        /// <summary>
+        /// Gets a value indicates whether is in editing mode.
+        /// </summary>
         public bool IsEditing
         {
             get { return _isEditing; }
@@ -438,6 +498,9 @@ namespace DevZest.Data.Views
         }
 
         private UIElement _inertElement;
+        /// <summary>
+        /// Gets the inert element for non-editing mode.
+        /// </summary>
         public UIElement InertElement
         {
             get { return _inertElement;  }
@@ -467,6 +530,9 @@ namespace DevZest.Data.Views
         }
 
         private UIElement _editorElement;
+        /// <summary>
+        /// Gets the editor element for editing mode.
+        /// </summary>
         public UIElement EditorElement
         {
             get { return _editorElement; }
@@ -481,11 +547,15 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Gets the child of this <see cref="InPlaceEditor"/>, either <see cref="InertElement"/> or <see cref="EditorElement"/>.
+        /// </summary>
         public UIElement Child
         {
             get { return IsEditing ? EditorElement : InertElement; }
         }
 
+        /// <inheritdoc/>
         protected override Visual GetVisualChild(int index)
         {
             if (index < 0 || index >= VisualChildrenCount)
@@ -494,6 +564,7 @@ namespace DevZest.Data.Views
             return Child;
         }
 
+        /// <inheritdoc/>
         protected override IEnumerator LogicalChildren
         {
             get
@@ -503,11 +574,13 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <inheritdoc/>
         protected override int VisualChildrenCount
         {
             get { return Child == null ? 0 : 1; }
         }
 
+        /// <inheritdoc/>
         protected override Size MeasureOverride(Size constraint)
         {
             UIElement child = Child;
@@ -519,6 +592,7 @@ namespace DevZest.Data.Views
             return default(Size);
         }
 
+        /// <inheritdoc/>
         protected override Size ArrangeOverride(Size arrangeSize)
         {
             UIElement child = Child;
@@ -537,6 +611,7 @@ namespace DevZest.Data.Views
             get { return DataView?.DataPresenter; }
         }
 
+        /// <inheritdoc/>
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);

@@ -7,48 +7,70 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<InPlaceEditor> MergeIntoInPlaceEditor<T>(this RowBinding<T> editingRowBinding, string format = null, IFormatProvider formatProvider = null)
+        /// <summary>
+        /// Merges editor row binding into <see cref="InPlaceEditor"/>, with inert element displays as string.
+        /// </summary>
+        /// <typeparam name="T">The element type of the editor row binding.</typeparam>
+        /// <param name="editorRowBinding">The editor row binding.</param>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The row binding object of <see cref="InPlaceEditor"/>.</returns>
+        public static RowBinding<InPlaceEditor> MergeIntoInPlaceEditor<T>(this RowBinding<T> editorRowBinding, string format = null, IFormatProvider formatProvider = null)
             where T : UIElement, new()
         {
-            var rowInput = VerifyEditingBinding(editingRowBinding, nameof(editingRowBinding));
-            var column = rowInput.Target as Column;
-            if (column == null)
-                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingRowBindingNotColumn, nameof(rowInput));
+            var rowInput = VerifyEditorBinding(editorRowBinding, nameof(editorRowBinding));
+            if (!(rowInput.Target is Column column))
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditorRowBindingNotColumn, nameof(rowInput));
             var inertRowBinding = column.BindToTextBlock(format, formatProvider);
             return MergeIntoInPlaceEditor(rowInput, inertRowBinding);
         }
 
-        public static RowBinding<InPlaceEditor> MergeIntoInPlaceEditor<T>(this RowBinding<T> editingRowBinding, Func<RowPresenter, string> format, IFormatProvider formatProvider = null)
+        /// <summary>
+        /// Merges editor row binding into <see cref="InPlaceEditor"/>, with inert element displays as string.
+        /// </summary>
+        /// <typeparam name="T">The element type of the editor row binding.</typeparam>
+        /// <param name="editorRowBinding">The editor row binding.</param>
+        /// <param name="format">A delegate to return composite format string from <see cref="RowPresenter"/>.</param>
+        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The row binding object of <see cref="InPlaceEditor"/>.</returns>
+        public static RowBinding<InPlaceEditor> MergeIntoInPlaceEditor<T>(this RowBinding<T> editorRowBinding, Func<RowPresenter, string> format, IFormatProvider formatProvider = null)
             where T : UIElement, new()
         {
             if (format == null)
                 throw new ArgumentNullException(nameof(format));
 
-            var rowInput = VerifyEditingBinding(editingRowBinding, nameof(editingRowBinding));
-            var column = rowInput.Target as Column;
-            if (column == null)
-                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingRowBindingNotColumn, nameof(rowInput));
+            var rowInput = VerifyEditorBinding(editorRowBinding, nameof(editorRowBinding));
+            if (!(rowInput.Target is Column column))
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditorRowBindingNotColumn, nameof(rowInput));
             var inertRowBinding = column.BindToTextBlock(format, formatProvider);
             return MergeIntoInPlaceEditor(rowInput, inertRowBinding);
         }
 
-        public static RowBinding<InPlaceEditor> MergeIntoInPlaceEditor<TEditing, TInert>(this RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
-            where TEditing : UIElement, new()
+        /// <summary>
+        /// Merges editor row binding into <see cref="InPlaceEditor"/>, with inert row binding.
+        /// </summary>
+        /// <typeparam name="TEditor">The element type of the editor row binding.</typeparam>
+        /// <typeparam name="TInert">The element type of the inert row binding.</typeparam>
+        /// <param name="editorRowBinding">The editor row binding.</param>
+        /// <param name="inertRowBinding">The inert row binding.</param>
+        /// <returns>The row binding object of <see cref="InPlaceEditor"/>.</returns>
+        public static RowBinding<InPlaceEditor> MergeIntoInPlaceEditor<TEditor, TInert>(this RowBinding<TEditor> editorRowBinding, RowBinding<TInert> inertRowBinding)
+            where TEditor : UIElement, new()
             where TInert : UIElement, new()
         {
-            var rowInput = VerifyEditingBinding(editingRowBinding, nameof(editingRowBinding));
+            var rowInput = VerifyEditorBinding(editorRowBinding, nameof(editorRowBinding));
             inertRowBinding.VerifyNotNull(nameof(inertRowBinding));
             return MergeIntoInPlaceEditor(rowInput, inertRowBinding);
         }
 
-        private static RowInput<T> VerifyEditingBinding<T>(RowBinding<T> editingRowBinding, string paramName)
+        private static RowInput<T> VerifyEditorBinding<T>(RowBinding<T> editorRowBinding, string paramName)
             where T : UIElement, new()
         {
-            if (editingRowBinding == null)
+            if (editorRowBinding == null)
                 throw new ArgumentNullException(paramName);
-            var rowInput = editingRowBinding.Input;
+            var rowInput = editorRowBinding.Input;
             if (rowInput == null)
-                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_VerifyEditingBinding, paramName);
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_VerifyEditorBinding, paramName);
             return rowInput;
         }
 
@@ -61,34 +83,49 @@ namespace DevZest.Data.Presenters
             return InPlaceEditor.AddToInPlaceEditor(rowInput, inertRowBinding);
         }
 
-        public static ScalarBinding<InPlaceEditor> MergeIntoInPlaceEditor<T>(this ScalarBinding<T> editingScalarBinding, string format = null, IFormatProvider formatProvider = null)
+        /// <summary>
+        /// Merges editor scalar binding into <see cref="InPlaceEditor"/>, with inert element displays as string.
+        /// </summary>
+        /// <typeparam name="T">The element type of editor scalar binding.</typeparam>
+        /// <param name="editorScalarBinding">The editor scalar binding.</param>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The scalar binding object of <see cref="InPlaceEditor"/>.</returns>
+        public static ScalarBinding<InPlaceEditor> MergeIntoInPlaceEditor<T>(this ScalarBinding<T> editorScalarBinding, string format = null, IFormatProvider formatProvider = null)
             where T : UIElement, new()
         {
-            var scalarInput = VerifyEditingBinding(editingScalarBinding, nameof(editingScalarBinding));
-            var scalar = scalarInput.Target as Scalar;
-            if (scalar == null)
-                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditingScalarBindingNotScalar, nameof(editingScalarBinding));
+            var scalarInput = VerifyEditorBinding(editorScalarBinding, nameof(editorScalarBinding));
+            if (!(scalarInput.Target is Scalar scalar))
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_EditorScalarBindingNotScalar, nameof(editorScalarBinding));
             var inertScalarBinding = scalar.BindToTextBlock(format, formatProvider);
             return MergeIntoInPlaceEditor(scalarInput, inertScalarBinding);
         }
 
-        public static ScalarBinding<InPlaceEditor> MergeIntoInPlaceEditor<TEditing, TInert>(this ScalarBinding<TEditing> editingScalarBinding, ScalarBinding<TInert> inertScalarBinding)
-            where TEditing : UIElement, new()
+        /// <summary>
+        /// Merges editor scalar binding into <see cref="InPlaceEditor"/>, with inert scalar binding.
+        /// </summary>
+        /// <typeparam name="TEditor">The element type of editor scalar binding.</typeparam>
+        /// <typeparam name="TInert">The element type of inert scalar binding.</typeparam>
+        /// <param name="editorScalarBinding">The editor scalar binding.</param>
+        /// <param name="inertScalarBinding">The inert scacalr binding.</param>
+        /// <returns>The scalar binding object of <see cref="InPlaceEditor"/>.</returns>
+        public static ScalarBinding<InPlaceEditor> MergeIntoInPlaceEditor<TEditor, TInert>(this ScalarBinding<TEditor> editorScalarBinding, ScalarBinding<TInert> inertScalarBinding)
+            where TEditor : UIElement, new()
             where TInert : UIElement, new()
         {
-            var scalarInput = VerifyEditingBinding(editingScalarBinding, nameof(editingScalarBinding));
+            var scalarInput = VerifyEditorBinding(editorScalarBinding, nameof(editorScalarBinding));
             inertScalarBinding.VerifyNotNull(nameof(inertScalarBinding));
             return MergeIntoInPlaceEditor(scalarInput, inertScalarBinding);
         }
 
-        private static ScalarInput<T> VerifyEditingBinding<T>(ScalarBinding<T> editingScalarBinding, string paramName)
+        private static ScalarInput<T> VerifyEditorBinding<T>(ScalarBinding<T> editorScalarBinding, string paramName)
             where T : UIElement, new()
         {
-            if (editingScalarBinding == null)
+            if (editorScalarBinding == null)
                 throw new ArgumentNullException(paramName);
-            var scalarInput = editingScalarBinding.Input;
+            var scalarInput = editorScalarBinding.Input;
             if (scalarInput == null)
-                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_VerifyEditingBinding, paramName);
+                throw new ArgumentException(DiagnosticMessages.InPlaceEditor_VerifyEditorBinding, paramName);
             return scalarInput;
         }
 
