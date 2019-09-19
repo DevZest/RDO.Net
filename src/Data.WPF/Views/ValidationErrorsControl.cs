@@ -8,7 +8,7 @@ using System.Windows.Data;
 namespace DevZest.Data.Views
 {
     /// <summary>
-    /// Represents a control to display validation errors.
+    /// Represents a control to display validation errors list.
     /// </summary>
     public class ValidationErrorsControl : ItemsControl
     {

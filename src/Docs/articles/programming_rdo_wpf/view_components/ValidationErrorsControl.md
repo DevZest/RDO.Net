@@ -1,12 +1,16 @@
+---
+uid: ValidationErrorsControl
+---
+
 # ValidationErrorsControl
 
-<xref:DevZest.Data.Views.ValidationErrorsControl> represents a control to display validation errors, as demonstrated in `ValidationUI` sample:
+<xref:DevZest.Data.Views.ValidationErrorsControl> represents a control to display validation errors list, as demonstrated in `ValidationUI` sample:
 
 ![image](/images/ValidationErrorsControl.jpg)
 
 ## Features
 
-* Displays the validation errors from different sources.
+* Displays the validation errors list.
 
 ## Usage
 

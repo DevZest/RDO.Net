@@ -12,7 +12,7 @@ using System.Windows.Media;
 namespace DevZest.Data.Views
 {
     /// <summary>
-    /// Represents the placeholder to display validation error.
+    /// Represents the placeholder to display validation error from specified sources.
     /// </summary>
     public class ValidationPlaceholder : Control, IRowElement, IScalarElement
     {

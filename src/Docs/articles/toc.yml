@@ -114,3 +114,5 @@
           href: programming_rdo_wpf/view_components/RowView.md
         - name: ValidationErrorsControl
           href: programming_rdo_wpf/view_components/ValidationErrorsControl.md
+        - name: ValidationPlaceholder
+          href: programming_rdo_wpf/view_components/ValidationPlaceholder.md

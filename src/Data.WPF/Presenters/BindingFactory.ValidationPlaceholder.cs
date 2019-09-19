@@ -9,7 +9,13 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
-        public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IColumns source, params RowBinding[] containingBindings)
+        /// <summary>
+        /// Binds <see cref="IColumns"/> to <see cref="ValidationPlaceholder"/>.
+        /// </summary>
+        /// <param name="source">The source <see cref="IColumns"/>.</param>
+        /// <param name="bindings">The bindings to determine whether the <see cref="ValidationPlaceholder"/> is active.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IColumns source, params RowBinding[] bindings)
         {
             source.VerifyNotNull(nameof(source));
 
@@ -17,11 +23,11 @@ namespace DevZest.Data.Presenters
 
             var result = new RowBinding<ValidationPlaceholder>(onSetup: (v, p) =>
             {
-                if (containingBindings != null && containingBindings.Length > 0)
+                if (bindings != null && bindings.Length > 0)
                 {
-                    var containingElements = new UIElement[containingBindings.Length];
+                    var containingElements = new UIElement[bindings.Length];
                     for (int i = 0; i < containingElements.Length; i++)
-                        containingElements[i] = containingBindings[i].GetSettingUpElement();
+                        containingElements[i] = bindings[i].GetSettingUpElement();
                     v.Setup(containingElements);
                 }
             }, onRefresh: null, onCleanup: (v, p) =>
@@ -34,6 +40,11 @@ namespace DevZest.Data.Presenters
             return input.EndInput();
         }
 
+        /// <summary>
+        /// Binds collection of <see cref="RowBinding"/> to <see cref="ValidationPlaceholder"/>.
+        /// </summary>
+        /// <param name="source">The source bindings.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<RowBinding> source)
         {
             source.VerifyNotNull(nameof(source));
@@ -81,6 +92,11 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
+        /// <summary>
+        /// Binds collection of <see cref="ScalarBinding"/> to <see cref="ValidationPlaceholder"/>.
+        /// </summary>
+        /// <param name="source">The source bindings.</param>
+        /// <returns>The scalar binding object.</returns>
         public static ScalarBinding<ValidationPlaceholder> BindToValidationPlaceholder(this IReadOnlyList<ScalarBinding> source)
         {
             source.VerifyNotNull(nameof(source));

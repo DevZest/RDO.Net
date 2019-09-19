@@ -157,5 +157,5 @@ These validation errors will then be displayed  via the following template provi
 
 The following view components are provided specially for validation error display, as demonstrated in `ValidationUI` sample:
 
-* <xref:DevZest.Data.Views.ValidationPlaceholder>: Displays validation errors for specified <xref:DevZest.Data.Presenters.IScalars> or <xref:DevZest.Data.IColumns>.
-* <xref:DevZest.Data.Views.ValidationErrorsControl>: Displays all validation errors as list.
+* <xref:ValidationPlaceholder>: Displays validation error from specified sources.
+* <xref:ValidationErrorsControl>: Displays validation errors list.
