@@ -12,14 +12,25 @@ using DevZest.Windows;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents a container of both inert and editing elements that can perform in-place editing operation.
+    /// </summary>
     public class InPlaceEditor : FrameworkElement, IScalarElement, IRowElement, IContainerElement
     {
+        /// <summary>
+        /// Customizable service to provide command implementations.
+        /// </summary>
         public interface ICommandService : IService
         {
+            /// <summary>
+            /// Retrieves command implementations for specified <see cref="InPlaceEditor"/>.
+            /// </summary>
+            /// <param name="inPlaceEditor">The specified <see cref="InPlaceEditor"/>.</param>
+            /// <returns>The retrieved command implementations.</returns>
             IEnumerable<CommandEntry> GetCommandEntries(InPlaceEditor inPlaceEditor);
         }
 
-        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        private ICommandService GetCommandService(DataPresenter dataPresenter)
         {
             return dataPresenter.GetService<ICommandService>();
         }
@@ -235,21 +246,21 @@ namespace DevZest.Data.Views
             }
         }
 
-        public interface IPresenter
+        public interface IEditingPolicy
         {
             bool QueryEditingMode(InPlaceEditor inPlaceEditor);
             bool QueryEditorElementFocus(InPlaceEditor inPlaceEditor);
         }
 
-        public interface IPresenterService : IPresenter, IService
+        public interface IEditingPolicyService : IEditingPolicy, IService
         {
         }
 
-        private sealed class PresenterService : IPresenterService
+        private sealed class EditingPolicyService : IEditingPolicyService
         {
-            public static PresenterService Singleton = new PresenterService();
+            public static EditingPolicyService Singleton = new EditingPolicyService();
 
-            private PresenterService()
+            private EditingPolicyService()
             {
             }
 
@@ -310,23 +321,23 @@ namespace DevZest.Data.Views
             new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty IsScalarEditingProperty = IsScalarEditingPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty PresenterProperty = DependencyProperty.RegisterAttached("Presenter", typeof(IPresenter), typeof(InPlaceEditor),
+        private static readonly DependencyProperty EditingPolicyProperty = DependencyProperty.RegisterAttached("EditingPolicy", typeof(IEditingPolicy), typeof(InPlaceEditor),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
-        public static IPresenter GetPresenter(DependencyObject obj)
+        public static IEditingPolicy GetEditingPolicy(DependencyObject obj)
         {
-            return (IPresenter)obj.GetValue(PresenterProperty);
+            return (IEditingPolicy)obj.GetValue(EditingPolicyProperty);
         }
 
-        public static void SetPresenter(DependencyObject obj, IPresenter value)
+        public static void SetEditingPolicy(DependencyObject obj, IEditingPolicy value)
         {
-            obj.SetValue(PresenterProperty, value);
+            obj.SetValue(EditingPolicyProperty, value);
         }
 
         static InPlaceEditor()
         {
             FocusableProperty.OverrideMetadata(typeof(InPlaceEditor), new FrameworkPropertyMetadata(BooleanBoxes.True));
-            ServiceManager.Register<IPresenterService, PresenterService>(() => PresenterService.Singleton);
+            ServiceManager.Register<IEditingPolicyService, EditingPolicyService>(() => EditingPolicyService.Singleton);
             ServiceManager.Register<IChildInitializer, ChildInitializer>();
         }
 
@@ -342,9 +353,9 @@ namespace DevZest.Data.Views
             private set { SetValue(IsScalarEditingPropertyKey, BooleanBoxes.Box(value)); }
         }
 
-        private IPresenter Presenter
+        private IEditingPolicy Presenter
         {
-            get { return GetPresenter(this) ?? DataPresenter.GetService<IPresenterService>(); }
+            get { return GetEditingPolicy(this) ?? DataPresenter.GetService<IEditingPolicyService>(); }
         }
 
         private bool _isEditing;

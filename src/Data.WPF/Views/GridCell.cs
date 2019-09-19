@@ -11,16 +11,16 @@ namespace DevZest.Data.Views
 {
     public partial class GridCell : Control, IRowElement
     {
-        public static InPlaceEditor.IPresenter InPlaceEditorPresenter
+        public static InPlaceEditor.IEditingPolicy InPlaceEditingPolicy
         {
-            get { return EditorPresenter.Singleton; }
+            get { return EditingPolicy.Singleton; }
         }
 
-        private sealed class EditorPresenter : InPlaceEditor.IPresenter
+        private sealed class EditingPolicy : InPlaceEditor.IEditingPolicy
         {
-            public static EditorPresenter Singleton = new EditorPresenter();
+            public static EditingPolicy Singleton = new EditingPolicy();
 
-            private EditorPresenter()
+            private EditingPolicy()
             {
             }
 
@@ -172,6 +172,7 @@ namespace DevZest.Data.Views
             get { return this.GetRowPresenter()?.DataPresenter; }
         }
 
+        /// <inheritdoc/>
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnIsKeyboardFocusedChanged(e);
@@ -221,6 +222,7 @@ namespace DevZest.Data.Views
             return DataPresenter?.GetService<Presenter>();
         }
 
+        /// <inheritdoc/>
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
@@ -269,6 +271,7 @@ namespace DevZest.Data.Views
             this.CleanupCommandEntries();
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
@@ -276,6 +279,7 @@ namespace DevZest.Data.Views
                 Focus();
         }
 
+        /// <inheritdoc/>
         protected override void OnPreviewTextInput(TextCompositionEventArgs e)
         {
             base.OnPreviewTextInput(e);

@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:DevZest.Data.Views">
     
     <Style TargetType="{x:Type local:GridCell}">
-        <Setter Property="local:InPlaceEditor.Presenter" Value="{x:Static local:GridCell.InPlaceEditorPresenter}" />
+        <Setter Property="local:InPlaceEditor.EditingPolicy" Value="{x:Static local:GridCell.InPlaceEditingPolicy}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:GridCell}">
