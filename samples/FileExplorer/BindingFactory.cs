@@ -35,7 +35,7 @@ namespace FileExplorer
             var textBoxBinding = _.DisplayName.BindToTextBox();
             var textBlockBinding = _.DisplayName.BindToTextBlock();
 
-            return new RowCompositeBinding<LargeIconListItemView>((e, r) => Refresh(e, _, r))
+            return new RowCompositeBinding<LargeIconListItemView>((v, p) => Refresh(v, _, p))
                 .AddChild(textBoxBinding.MergeIntoInPlaceEditor(textBlockBinding), v => v.InPlaceEditor);
         }
     }
