@@ -8,39 +8,152 @@ namespace DevZest.Data.Views
 {
     partial class GridCell
     {
+        /// <summary>
+        /// Contains commands supported by <see cref="GridCell"/>.
+        /// </summary>
         public abstract class Commands
         {
+            /// <summary>
+            /// Command to toggle between selection and editing mode.
+            /// </summary>
             public static RoutedCommand ToggleMode { get; private set; } = new RoutedCommand(nameof(ToggleMode), typeof(GridCell));
+
+            /// <summary>
+            /// Command to exit editing mode.
+            /// </summary>
             public static RoutedCommand ExitEditMode { get; private set; } = new RoutedCommand(nameof(ExitEditMode), typeof(GridCell));
+
+            /// <summary>
+            /// Command to active the grid cell.
+            /// </summary>
             public static RoutedCommand Activate { get; private set; } = new RoutedCommand(nameof(Activate), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select consecutive grid cells.
+            /// </summary>
             public static RoutedCommand SelectTo { get; private set; } = new RoutedCommand(nameof(SelectTo), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select all grid cells.
+            /// </summary>
             public static RoutedCommand SelectAll { get { return ApplicationCommands.SelectAll; } }
+
+            /// <summary>
+            /// Command to copy content of selected grid cells to clipboard.
+            /// </summary>
             public static RoutedCommand Copy { get { return ApplicationCommands.Copy; } }
 
+            /// <summary>
+            /// Command to select grid cell of left.
+            /// </summary>
             public static RoutedCommand SelectLeft { get { return ComponentCommands.MoveLeft; } }
+
+            /// <summary>
+            /// Command to select grid cell of right.
+            /// </summary>
             public static RoutedCommand SelectRight { get { return ComponentCommands.MoveRight; } }
+
+            /// <summary>
+            /// Command to select grid cell of up.
+            /// </summary>
             public static RoutedCommand SelectUp { get { return ComponentCommands.MoveUp; } }
+
+            /// <summary>
+            /// Command to select grid cell of down.
+            /// </summary>
             public static RoutedCommand SelectDown { get { return ComponentCommands.MoveDown; } }
+
+            /// <summary>
+            /// Command to select grid cell of page up.
+            /// </summary>
             public static RoutedCommand SelectPageUp { get { return ComponentCommands.MoveToPageUp; } }
+
+            /// <summary>
+            /// Command to select grid cell of page down.
+            /// </summary>
             public static RoutedCommand SelectPageDown { get { return ComponentCommands.MoveToPageDown; } }
+
+            /// <summary>
+            /// Command to select grid cell of row home.
+            /// </summary>
             public static RoutedCommand SelectRowHome { get; private set; } = new RoutedCommand(nameof(SelectRowHome), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select grid cell of row end.
+            /// </summary>
             public static RoutedCommand SelectRowEnd { get; private set; } = new RoutedCommand(nameof(SelectRowEnd), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select grid cell of home.
+            /// </summary>
             public static RoutedCommand SelectHome { get { return ComponentCommands.MoveToHome; } }
+
+            /// <summary>
+            /// Command to select grid cell of end.
+            /// </summary>
             public static RoutedCommand SelectEnd { get { return ComponentCommands.MoveToEnd; } }
+
+            /// <summary>
+            /// Command to select consecutive grid cells to left.
+            /// </summary>
             public static RoutedCommand SelectToLeft { get { return ComponentCommands.ExtendSelectionLeft; } }
+
+            /// <summary>
+            /// Command to select consecutive grid cells to right.
+            /// </summary>
             public static RoutedCommand SelectToRight { get { return ComponentCommands.ExtendSelectionRight; } }
+
+            /// <summary>
+            /// Command to select consecutive grid cells to up.
+            /// </summary>
             public static RoutedCommand SelectToUp { get { return ComponentCommands.ExtendSelectionUp; } }
+
+            /// <summary>
+            /// Command to select consecutive grid cells to down.
+            /// </summary>
             public static RoutedCommand SelectToDown { get { return ComponentCommands.ExtendSelectionDown; } }
+
+            /// <summary>
+            /// Command to select consecutive grid cells to page up.
+            /// </summary>
             public static RoutedCommand SelectToPageUp { get; private set; } = new RoutedCommand(nameof(SelectToPageUp), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select consecutive grid cells to page down.
+            /// </summary>
             public static RoutedCommand SelectToPageDown { get; private set; } = new RoutedCommand(nameof(SelectToPageDown), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select consecutive grid cells to row home.
+            /// </summary>
             public static RoutedCommand SelectToRowHome { get; private set; } = new RoutedCommand(nameof(SelectToRowHome), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select consecutive grid cells to row end.
+            /// </summary>
             public static RoutedCommand SelectToRowEnd { get; private set; } = new RoutedCommand(nameof(SelectToRowEnd), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select consecutive grid cells to home.
+            /// </summary>
             public static RoutedCommand SelectToHome { get; private set; } = new RoutedCommand(nameof(SelectToHome), typeof(GridCell));
+
+            /// <summary>
+            /// Command to select consecutive grid cells to end.
+            /// </summary>
             public static RoutedCommand SelectToEnd { get; private set; } = new RoutedCommand(nameof(SelectToEnd), typeof(GridCell));
         }
 
+        /// <summary>
+        /// Provides implementation of command excution.
+        /// </summary>
         public interface ICommandService : IService
         {
+            /// <summary>
+            /// Retrieves the implementation of the commands for specified <see cref="GridCell"/>.
+            /// </summary>
+            /// <param name="gridCell">The specified <see cref="GridCell"/>.</param>
+            /// <returns>The implementation of the commands.</returns>
             IEnumerable<CommandEntry> GetCommandEntries(GridCell gridCell);
         }
 

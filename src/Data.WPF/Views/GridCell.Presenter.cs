@@ -11,7 +11,7 @@ namespace DevZest.Data.Views
 {
     partial class GridCell
     {
-        public sealed class Presenter : IService
+        private sealed class Presenter : IService
         {
             public DataPresenter DataPresenter { get; private set; }
 

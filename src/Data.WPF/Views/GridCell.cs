@@ -167,6 +167,9 @@ namespace DevZest.Data.Views
             return (GridCellMode?)element.GetValue(ModeProperty);
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this is the current <see cref="GridCell"/>.
+        /// </summary>
         public bool IsCurrent
         {
             get { return (bool)GetValue(IsCurrentProperty); }
@@ -214,7 +217,7 @@ namespace DevZest.Data.Views
             Refresh(GetPresenter());
         }
 
-        public void Refresh()
+        private void Refresh()
         {
             var presenter = GetPresenter();
             if (presenter != null)
