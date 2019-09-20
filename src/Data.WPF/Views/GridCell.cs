@@ -33,7 +33,7 @@ namespace DevZest.Data.Views
 
             public bool QueryEditingMode(InPlaceEditor inPlaceEditor)
             {
-                return GetMode(inPlaceEditor) == GridCellMode.Edit || GetPreviewMode(inPlaceEditor) == GridCellMode.Edit;
+                return GetMode(inPlaceEditor) == GridCellMode.Edit;
             }
 
             public bool QueryEditorElementFocus(InPlaceEditor inPlaceEditor)
@@ -57,14 +57,6 @@ namespace DevZest.Data.Views
         /// Identifies the Mode attached readonly property (<see cref="GetMode(UIElement)"/>).
         /// </summary>
         public static readonly DependencyProperty ModeProperty = ModePropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey PreviewModePropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(PreviewMode), typeof(GridCellMode?), typeof(GridCell),
-            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
-
-        /// <summary>
-        /// Identifies the PreviewMode attached readonly property (<see cref="GetPreviewMode(UIElement)"/>).
-        /// </summary>
-        public static readonly DependencyProperty PreviewModeProperty = PreviewModePropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCurrent), typeof(bool), typeof(GridCell),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
@@ -175,23 +167,6 @@ namespace DevZest.Data.Views
             return (GridCellMode?)element.GetValue(ModeProperty);
         }
 
-        public GridCellMode? PreviewMode
-        {
-            get { return (GridCellMode?)GetValue(PreviewModeProperty); }
-            private set
-            {
-                if (value == null)
-                    ClearValue(PreviewModePropertyKey);
-                else
-                    SetValue(PreviewModePropertyKey, ModeBoxes.Box(value.GetValueOrDefault()));
-            }
-        }
-
-        public static GridCellMode? GetPreviewMode(UIElement element)
-        {
-            return (GridCellMode?)element.GetValue(PreviewModeProperty);
-        }
-
         public bool IsCurrent
         {
             get { return (bool)GetValue(IsCurrentProperty); }
@@ -251,32 +226,11 @@ namespace DevZest.Data.Views
             IsCurrent = p.IsCurrent(this);
             Mode = GetMode(p);
             CoerceValue(FocusableProperty);
-            RefreshPreviewMode(p);
         }
 
         private Presenter GetPresenter()
         {
             return DataPresenter?.GetService<Presenter>();
-        }
-
-        /// <inheritdoc/>
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-            if (e.Property == IsMouseOverProperty)
-            {
-                var p = GetPresenter();
-                if (p != null)
-                    RefreshPreviewMode(p);
-            }
-        }
-
-        private void RefreshPreviewMode(Presenter p)
-        {
-            if (Focusable && IsMouseOver)
-                PreviewMode = p.Mode == GridCellMode.Edit ? GridCellMode.Edit : GridCellMode.Select;
-            else
-                PreviewMode = null;
         }
 
         private GridCellMode? GetMode(Presenter p)
