@@ -499,7 +499,7 @@ namespace DevZest.Data.Views
             }
         }
 
-        protected virtual ICommandService GetCommandService(DataPresenter dataPresenter)
+        private ICommandService GetCommandService(DataPresenter dataPresenter)
         {
             return dataPresenter.GetService<ICommandService>();
         }

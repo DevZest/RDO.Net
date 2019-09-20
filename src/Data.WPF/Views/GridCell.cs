@@ -9,8 +9,15 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents the container of single child element that can perform either selection or editing operation.
+    /// </summary>
     public partial class GridCell : Control, IRowElement
     {
+        /// <summary>
+        /// Gets the default in-place editing policy.
+        /// </summary>
+        /// <remarks>This is the default value of <see cref="GridCell"/>'s InPlaceEditor.EditingPolicy attached property.</remarks>
         public static InPlaceEditor.IEditingPolicy InPlaceEditingPolicy
         {
             get { return EditingPolicy.Singleton; }
@@ -37,18 +44,34 @@ namespace DevZest.Data.Views
 
         private static readonly DependencyPropertyKey ChildPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Child), typeof(UIElement), typeof(GridCell),
             new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the <see cref="Child"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ChildProperty = ChildPropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey ModePropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(Mode), typeof(GridCellMode?), typeof(GridCell),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+
+        /// <summary>
+        /// Identifies the Mode attached readonly property (<see cref="GetMode(UIElement)"/>).
+        /// </summary>
         public static readonly DependencyProperty ModeProperty = ModePropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey PreviewModePropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(PreviewMode), typeof(GridCellMode?), typeof(GridCell),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+
+        /// <summary>
+        /// Identifies the PreviewMode attached readonly property (<see cref="GetPreviewMode(UIElement)"/>).
+        /// </summary>
         public static readonly DependencyProperty PreviewModeProperty = PreviewModePropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly(nameof(IsCurrent), typeof(bool), typeof(GridCell),
+        private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCurrent), typeof(bool), typeof(GridCell),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        /// <summary>
+        /// Identifies the <see cref="IsCurrent"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty IsCurrentProperty = IsCurrentPropertyKey.DependencyProperty;
 
         static GridCell()
@@ -84,6 +107,9 @@ namespace DevZest.Data.Views
             return true;
         }
 
+        /// <summary>
+        /// Gets a value indicates whether child element is editable.
+        /// </summary>
         public bool IsEditable
         {
             get
@@ -96,6 +122,9 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Gets the contained child element. This is a dependency property.
+        /// </summary>
         public UIElement Child
         {
             get { return (UIElement)GetValue(ChildProperty); }
@@ -121,6 +150,9 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Gets the operation that the <see cref="GridCell"/> can perform.
+        /// </summary>
         public GridCellMode? Mode
         {
             get { return (GridCellMode?)GetValue(ModeProperty); }
@@ -133,6 +165,11 @@ namespace DevZest.Data.Views
             }
         }
 
+        /// <summary>
+        /// Gets the grid cell mode for specified element. This is the getter of Mode attached property.
+        /// </summary>
+        /// <param name="element">The specified element.</param>
+        /// <returns>The grid cell mode.</returns>
         public static GridCellMode? GetMode(UIElement element)
         {
             return (GridCellMode?)element.GetValue(ModeProperty);
