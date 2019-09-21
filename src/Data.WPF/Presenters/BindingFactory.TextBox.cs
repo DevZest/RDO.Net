@@ -15,6 +15,11 @@ namespace DevZest.Data.Presenters
             return string.IsNullOrEmpty(value) ? DiagnosticMessages.BindingFactory_InvalidInput(type) : value;
         }
 
+        /// <summary>
+        /// Binds string column to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source string column.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<TextBox> BindToTextBox(this Column<string> source)
         {
             return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>
@@ -24,7 +29,13 @@ namespace DevZest.Data.Presenters
             }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, source, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
         }
 
-        public static RowBinding<TextBox> BindToTextBox(this Column<Int16?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Int16"/> column to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullable <see cref="Int16"/> column.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBox> BindToTextBox(this Column<Int16?> source, string flushErrorMessage = null)
         {
             return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>
             {
@@ -36,7 +47,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int16 result;
-                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
+                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int16));
             })
             .WithFlush(source, v =>
             {
@@ -48,7 +59,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> BindToTextBox(this Column<Int32?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Int32"/> column to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullable <see cref="Int32"/> column.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBox> BindToTextBox(this Column<Int32?> source, string flushErrorMessage = null)
         {
             return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>
             {
@@ -61,7 +78,7 @@ namespace DevZest.Data.Presenters
                     return null;
                 Int32 result;
                 return Int32.TryParse(v.Text, out result) ? null
-                : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
+                : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int32));
             })
             .WithFlush(source, v =>
             {
@@ -73,7 +90,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> BindToTextBox(this Column<Int64?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Int64"/> column to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullable <see cref="Int64"/> column.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBox> BindToTextBox(this Column<Int64?> source, string flushErrorMessage = null)
         {
             return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>
             {
@@ -85,7 +108,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int64 result;
-                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
+                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int64));
             })
             .WithFlush(source, v =>
             {
@@ -97,7 +120,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> BindToTextBox(this Column<Single?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Single"/> column to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullable <see cref="Single"/> column.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBox> BindToTextBox(this Column<Single?> source, string flushErrorMessage = null)
         {
             return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>
             {
@@ -109,7 +138,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Single result;
-                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
+                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Single));
             })
             .WithFlush(source, v =>
             {
@@ -121,7 +150,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> BindToTextBox(this Column<Double?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Double"/> column to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullable <see cref="Double"/> column.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBox> BindToTextBox(this Column<Double?> source, string flushErrorMessage = null)
         {
             return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>
             {
@@ -133,7 +168,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Double result;
-                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
+                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Double));
             })
             .WithFlush(source, v =>
             {
@@ -145,7 +180,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> BindToTextBox(this Column<Decimal?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Decimal"/> column to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullable <see cref="Decimal"/> column.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBox> BindToTextBox(this Column<Decimal?> source, string flushErrorMessage = null)
         {
             return new RowBinding<TextBox>(onSetup: (v, p) => v.Setup(), onCleanup: (v, p) => v.Cleanup(), onRefresh: (v, p) =>
             {
@@ -157,7 +198,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Decimal result;
-                return Decimal.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
+                return Decimal.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Double));
             })
             .WithFlush(source, v =>
             {
@@ -169,6 +210,11 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
+        /// <summary>
+        /// Binds string scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source string scalar data.</param>
+        /// <returns>The scalar binding object.</returns>
         public static ScalarBinding<TextBox> BindToTextBox(this Scalar<String> source)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
@@ -178,7 +224,13 @@ namespace DevZest.Data.Presenters
             }).WithInput(TextBox.TextProperty, TextBox.LostFocusEvent, source, v => v.Text);
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int16?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Int16"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullabled <see cref="Int16"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int16?> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -190,7 +242,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int16 result;
-                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
+                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int16));
             })
             .WithFlush(source, v =>
             {
@@ -202,7 +254,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int32?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Int32"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullabled <see cref="Int32"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int32?> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -214,7 +272,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int32 result;
-                return Int32.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
+                return Int32.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int32));
             })
             .WithFlush(source, v =>
             {
@@ -226,7 +284,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int64?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Int64"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullabled <see cref="Int64"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int64?> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -238,7 +302,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int64 result;
-                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
+                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int64));
             })
             .WithFlush(source, v =>
             {
@@ -250,7 +314,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Single?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Single"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullabled <see cref="Single"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Single?> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -262,7 +332,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Single result;
-                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
+                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Single));
             })
             .WithFlush(source, v =>
             {
@@ -274,7 +344,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Double?> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds nullable <see cref="Double"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source nullabled <see cref="Double"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Double?> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -286,7 +362,7 @@ namespace DevZest.Data.Presenters
                 if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Double result;
-                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
+                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Double));
             })
             .WithFlush(source, v =>
             {
@@ -298,7 +374,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int16> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds <see cref="Int16"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source <see cref="Int16"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int16> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -308,7 +390,7 @@ namespace DevZest.Data.Presenters
             .WithFlushingValidator(v =>
             {
                 Int16 result;
-                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
+                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int16));
             })
             .WithFlush(source, v =>
             {
@@ -317,7 +399,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int32> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds <see cref="Int32"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source <see cref="Int32"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int32> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -327,7 +415,7 @@ namespace DevZest.Data.Presenters
             .WithFlushingValidator(v =>
             {
                 Int32 result;
-                return Int32.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
+                return Int32.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int32));
             })
             .WithFlush(source, v =>
             {
@@ -336,7 +424,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int64> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds <see cref="Int64"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source <see cref="Int64"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Int64> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -346,7 +440,7 @@ namespace DevZest.Data.Presenters
             .WithFlushingValidator(v =>
             {
                 Int64 result;
-                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
+                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Int64));
             })
             .WithFlush(source, v =>
             {
@@ -355,7 +449,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Single> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds <see cref="Single"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source <see cref="Single"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Single> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -365,7 +465,7 @@ namespace DevZest.Data.Presenters
             .WithFlushingValidator(v =>
             {
                 Single result;
-                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
+                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Single));
             })
             .WithFlush(source, v =>
             {
@@ -374,7 +474,13 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Double> source, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds <see cref="Double"/> scalar data to <see cref="TextBox"/>.
+        /// </summary>
+        /// <param name="source">The source <see cref="Double"/> scalar data.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBox> BindToTextBox(this Scalar<Double> source, string flushErrorMessage = null)
         {
             return new ScalarBinding<TextBox>(onSetup: v => v.Setup(), onCleanup: v => v.Cleanup(), onRefresh: v =>
             {
@@ -384,7 +490,7 @@ namespace DevZest.Data.Presenters
             .WithFlushingValidator(v =>
             {
                 Double result;
-                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
+                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorMessage, typeof(Double));
             })
             .WithFlush(source, v =>
             {
@@ -393,12 +499,27 @@ namespace DevZest.Data.Presenters
             .EndInput();
         }
 
-        public static RowBinding<TextBox> BindToTextBox(this Column source, IValueConverter converter, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds column to <see cref="TextBox"/> with specified value converter.
+        /// </summary>
+        /// <param name="source">The source column.</param>
+        /// <param name="converter">The value converter.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBox> BindToTextBox(this Column source, IValueConverter converter, string flushErrorMessage = null)
         {
-            return BindToTextBox(source, converter, CultureInfo.CurrentCulture, flushErrorDescription);
+            return BindToTextBox(source, converter, CultureInfo.CurrentCulture, flushErrorMessage);
         }
 
-        public static RowBinding<TextBox> BindToTextBox(this Column source, IValueConverter converter, CultureInfo cultureInfo, string flushErrorDescription = null)
+        /// <summary>
+        /// Binds column to <see cref="TextBox"/> with specified value converter and culture info.
+        /// </summary>
+        /// <param name="source">The source column.</param>
+        /// <param name="converter">The value converter.</param>
+        /// <param name="cultureInfo">The culture info.</param>
+        /// <param name="flushErrorMessage">The conversion error message when flushing data from binding to source model.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBox> BindToTextBox(this Column source, IValueConverter converter, CultureInfo cultureInfo, string flushErrorMessage = null)
         {
             source.VerifyNotNull(nameof(source));
             converter.VerifyNotNull(nameof(converter));
@@ -415,7 +536,7 @@ namespace DevZest.Data.Presenters
                 {
                     var result = converter.ConvertBack(v.Text, source.DataType, null, cultureInfo);
                     if (result == DependencyProperty.UnsetValue)
-                        return GetInvalidInputErrorMessage(flushErrorDescription, source.DataType);
+                        return GetInvalidInputErrorMessage(flushErrorMessage, source.DataType);
                 }
                 catch (Exception ex)
                 {

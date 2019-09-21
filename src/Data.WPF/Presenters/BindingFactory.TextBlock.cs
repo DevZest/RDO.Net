@@ -7,6 +7,13 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
+        /// <summary>
+        /// Binds column to <see cref="TextBlock"/>.
+        /// </summary>
+        /// <param name="source">The source column.</param>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<TextBlock> BindToTextBlock(this Column source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
@@ -18,7 +25,13 @@ namespace DevZest.Data.Presenters
                     v.Text = p[source]?.ToString(format, formatProvider);
                 });
         }
-
+        /// <summary>
+        /// Binds column to <see cref="TextBlock"/>.
+        /// </summary>
+        /// <param name="source">The source column.</param>
+        /// <param name="format">A delegate to return composite format string.</param>
+        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<TextBlock> BindToTextBlock(this Column source, Func<RowPresenter, string> format, IFormatProvider formatProvider = null)
         {
             if (source == null)
@@ -34,6 +47,12 @@ namespace DevZest.Data.Presenters
                 });
         }
 
+        /// <summary>
+        /// Binds text to <see cref="TextBlock"/> as row binding.
+        /// </summary>
+        /// <param name="_">The model.</param>
+        /// <param name="text">The text.</param>
+        /// <returns>The row binding object.</returns>
         public static RowBinding<TextBlock> BindToTextBlock(this Model _, string text)
         {
             return new RowBinding<TextBlock>(
@@ -45,7 +64,15 @@ namespace DevZest.Data.Presenters
                 onCleanup: null);
         }
 
-        public static RowBinding<TextBlock> BindToTextBlockHyperlink(this Column source, ICommand command, string format = null, IFormatProvider formatProvider = null)
+        /// <summary>
+        /// Binds column to hyperlink <see cref="TextBlock"/>.
+        /// </summary>
+        /// <param name="source">The source column.</param>
+        /// <param name="command">The command.</param>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The row binding object.</returns>
+        public static RowBinding<TextBlock> BindToHyperlink(this Column source, ICommand command, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -71,6 +98,14 @@ namespace DevZest.Data.Presenters
                 });
         }
 
+        /// <summary>
+        /// Binds function to <see cref="TextBlock"/>.
+        /// </summary>
+        /// <typeparam name="T">The function return type.</typeparam>
+        /// <param name="source">The source function that returns a value.</param>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The scalar binding object.</returns>
         public static ScalarBinding<TextBlock> BindToTextBlock<T>(this Func<T> source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
@@ -83,7 +118,13 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static ScalarBinding<TextBlock> BindToTextBlock(this DataPresenter dataPresenter, string text)
+        /// <summary>
+        /// Binds the text to <see cref="TextBlock"/> as scalar binding.
+        /// </summary>
+        /// <param name="presenter">The presenter.</param>
+        /// <param name="text">The text.</param>
+        /// <returns>The scalar binding object.</returns>
+        public static ScalarBinding<TextBlock> BindToTextBlock(this BasePresenter presenter, string text)
         {
             return new ScalarBinding<TextBlock>(
                 onSetup: v =>
@@ -94,6 +135,13 @@ namespace DevZest.Data.Presenters
                 onCleanup: null);
         }
 
+        /// <summary>
+        /// Binds scalar data to <see cref="TextBlock"/>.
+        /// </summary>
+        /// <param name="source">The source scalar data.</param>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The scalar binding object.</returns>
         public static ScalarBinding<TextBlock> BindToTextBlock(this Scalar source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)

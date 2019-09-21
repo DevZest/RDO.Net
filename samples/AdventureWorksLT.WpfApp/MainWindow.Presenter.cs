@@ -108,7 +108,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 .AddBinding(8, 0, _.TaxAmt.BindToColumnHeader("Tax Amt"))
                 .AddBinding(9, 0, _.TotalDue.BindToColumnHeader("Total Due"))
                 .AddBinding(0, 1, _.BindToCheckBox().WithStyle(Styles.CheckBox))
-                .AddBinding(1, 1, _.SalesOrderID.BindToTextBlockHyperlink(ApplicationCommands.Open).WithStyle(Styles.LeftAlignedTextBlock))
+                .AddBinding(1, 1, _.SalesOrderID.BindToHyperlink(ApplicationCommands.Open).WithStyle(Styles.LeftAlignedTextBlock))
                 .AddBinding(2, 1, _.SalesOrderNumber.BindToTextBlock().WithStyle(Styles.LeftAlignedTextBlock))
                 .AddBinding(3, 1, _.DueDate.BindToTextBlock("{0:d}").WithStyle(Styles.RightAlignedTextBlock))
                 .AddBinding(4, 1, _.ShipDate.BindToTextBlock("{0:d}").WithStyle(Styles.RightAlignedTextBlock))

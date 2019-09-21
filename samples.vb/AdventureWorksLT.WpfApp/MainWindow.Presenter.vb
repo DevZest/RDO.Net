@@ -99,7 +99,7 @@ Partial Class MainWindow
                 .AddBinding(8, 0, e.TaxAmt.BindToColumnHeader("Tax Amt")) _
                 .AddBinding(9, 0, e.TotalDue.BindToColumnHeader("Total Due")) _
                 .AddBinding(0, 1, e.BindToCheckBox().WithStyle(Styles.CheckBox)) _
-                .AddBinding(1, 1, e.SalesOrderID.BindToTextBlockHyperlink(ApplicationCommands.Open).WithStyle(Styles.LeftAlignedTextBlock)) _
+                .AddBinding(1, 1, e.SalesOrderID.BindToHyperlink(ApplicationCommands.Open).WithStyle(Styles.LeftAlignedTextBlock)) _
                 .AddBinding(2, 1, e.SalesOrderNumber.BindToTextBlock().WithStyle(Styles.LeftAlignedTextBlock)) _
                 .AddBinding(3, 1, e.DueDate.BindToTextBlock("{0:d}").WithStyle(Styles.RightAlignedTextBlock)) _
                 .AddBinding(4, 1, e.ShipDate.BindToTextBlock("{0:d}").WithStyle(Styles.RightAlignedTextBlock)) _
