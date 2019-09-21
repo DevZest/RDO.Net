@@ -7,8 +7,17 @@ using System.ComponentModel;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Provides extension methods to setup binding object.
+    /// </summary>
     public static class BindingManager
     {
+        /// <summary>
+        /// Adheres binding to frozen left layout grid column(s) to prevent it from scrolling outside the viewport.
+        /// </summary>
+        /// <typeparam name="T">The type of the binding.</typeparam>
+        /// <param name="binding">The binding.</param>
+        /// <returns>The binding for fluent coding.</returns>
         [DefaultValue(false)]
         public static T AdhereToFrozenLeft<T>(this T binding)
             where T : Binding
@@ -18,6 +27,12 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
+        /// <summary>
+        /// Adheres binding to frozen right layout grid column(s) to prevent it from scrolling outside the viewport.
+        /// </summary>
+        /// <typeparam name="T">The type of the binding.</typeparam>
+        /// <param name="binding">The binding.</param>
+        /// <returns>The binding for fluent coding.</returns>
         [DefaultValue(false)]
         public static T AdhereToFrozenTop<T>(this T binding)
             where T : Binding
@@ -27,6 +42,12 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
+        /// <summary>
+        /// Adheres binding to frozen top layout grid row(s) to prevent it from scrolling outside the viewport.
+        /// </summary>
+        /// <typeparam name="T">The type of the binding.</typeparam>
+        /// <param name="binding">The binding.</param>
+        /// <returns>The binding for fluent coding.</returns>
         [DefaultValue(false)]
         public static T AdhereToFrozenRight<T>(this T binding)
             where T : Binding
@@ -36,6 +57,12 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
+        /// <summary>
+        /// Adheres binding to frozen bottom layout grid row(s) to prevent it from scrolling outside the viewport.
+        /// </summary>
+        /// <typeparam name="T">The type of the binding.</typeparam>
+        /// <param name="binding">The binding.</param>
+        /// <returns>The binding for fluent coding.</returns>
         [DefaultValue(false)]
         public static T AdhereToFrozenBottom<T>(this T binding)
             where T : Binding
@@ -45,6 +72,13 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
+        /// <summary>
+        /// Sets style for binding.
+        /// </summary>
+        /// <typeparam name="T">The type of the binding.</typeparam>
+        /// <param name="binding">The binding.</param>
+        /// <param name="value">The style.</param>
+        /// <returns>The binding for fluent coding.</returns>
         public static T WithStyle<T>(this T binding, Style value)
             where T : Binding
         {
@@ -53,6 +87,13 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
+        /// <summary>
+        /// Sets style for binding.
+        /// </summary>
+        /// <typeparam name="T">The type of the binding.</typeparam>
+        /// <param name="binding">The binding.</param>
+        /// <param name="value">The style id.</param>
+        /// <returns>The binding for fluent coding.</returns>
         public static T WithStyle<T>(this T binding, StyleId value)
             where T : Binding
         {
