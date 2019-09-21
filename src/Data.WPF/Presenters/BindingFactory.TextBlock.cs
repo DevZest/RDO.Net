@@ -53,8 +53,10 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBlock>(
                 onSetup: (v, p) =>
                 {
-                    var hyperlink = new Hyperlink(new Run());
-                    hyperlink.Command = command;
+                    var hyperlink = new Hyperlink(new Run())
+                    {
+                        Command = command
+                    };
                     v.Inlines.Add(hyperlink);
                 },
                 onRefresh: (v, p) =>

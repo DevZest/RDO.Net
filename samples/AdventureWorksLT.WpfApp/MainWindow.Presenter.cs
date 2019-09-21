@@ -117,7 +117,7 @@ namespace DevZest.Samples.AdventureWorksLT
                 .AddBinding(7, 1, _.SubTotal.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock))
                 .AddBinding(8, 1, _.TaxAmt.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock))
                 .AddBinding(9, 1, _.TotalDue.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock).AddBehavior(new TotalDueConditionalFormat(_.TotalDue)))
-                .AddBinding(2, 2, 8, 2, "Total: ".BindToLabel().WithStyle(Styles.Label).AdhereToFrozenRight(true))
+                .AddBinding(2, 2, 8, 2, "Total: ".BindToLabel().WithStyle(Styles.Label).AdhereToFrozenRight())
                 .AddBinding(9, 2, CalcTotalAmtFunc.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock).AddBehavior(new TotalAmtConditionalFormat(CalcTotalAmtFunc)))
                 .AddBehavior(new RowViewAlternation());
             }
