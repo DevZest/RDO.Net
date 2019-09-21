@@ -383,28 +383,28 @@ namespace DevZest.Data.Presenters.Primitives
         private void Arrange(UIElement element, Binding binding, Rect rect, Thickness frozenClip)
         {
             var left = frozenClip.Left;
-            if (binding.FrozenLeftShrink && left > 0 && !double.IsPositiveInfinity(left))
+            if (binding.AdheresToFrozenLeft && left > 0 && !double.IsPositiveInfinity(left))
             {
                 rect = new Rect(rect.Left + frozenClip.Left, rect.Top, Math.Max(0, rect.Width - frozenClip.Left), rect.Height);
                 frozenClip = new Thickness(0, frozenClip.Top, frozenClip.Right, frozenClip.Bottom);
             }
 
             var top = frozenClip.Top;
-            if (binding.FrozenTopShrink && top > 0 && !double.IsPositiveInfinity(top))
+            if (binding.AdheresToFrozenTop && top > 0 && !double.IsPositiveInfinity(top))
             {
                 rect = new Rect(rect.Left, rect.Top + frozenClip.Top, rect.Width, Math.Max(0, rect.Height - frozenClip.Top));
                 frozenClip = new Thickness(frozenClip.Left, 0, frozenClip.Right, frozenClip.Bottom);
             }
 
             var right = frozenClip.Right;
-            if (binding.FrozenRightShrink && right > 0 && !double.IsPositiveInfinity(right))
+            if (binding.AdheresToFrozenRight && right > 0 && !double.IsPositiveInfinity(right))
             {
                 rect = new Rect(rect.Left, rect.Top + frozenClip.Top, Math.Max(0, rect.Width - frozenClip.Right), rect.Height);
                 frozenClip = new Thickness(frozenClip.Left, frozenClip.Top, 0, frozenClip.Bottom);
             }
 
             var bottom = frozenClip.Bottom;
-            if (binding.FrozenBottomShrink && bottom > 0 && !double.IsPositiveInfinity(bottom))
+            if (binding.AdheresToFrozenBottom && bottom > 0 && !double.IsPositiveInfinity(bottom))
             {
                 rect = new Rect(rect.Left, rect.Top + frozenClip.Top, rect.Width, Math.Max(0, rect.Height - frozenClip.Bottom));
                 frozenClip = new Thickness(frozenClip.Left, frozenClip.Top, frozenClip.Right, 0);

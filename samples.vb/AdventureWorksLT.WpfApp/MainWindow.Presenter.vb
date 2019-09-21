@@ -108,7 +108,7 @@ Partial Class MainWindow
                 .AddBinding(7, 1, e.SubTotal.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock)) _
                 .AddBinding(8, 1, e.TaxAmt.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock)) _
                 .AddBinding(9, 1, e.TotalDue.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock).AddBehavior(New TotalDueConditionalFormat(e.TotalDue))) _
-                .AddBinding(2, 2, 8, 2, "Total: ".BindToLabel().WithStyle(Styles.Label).WithFrozenRightShrink(True)) _
+                .AddBinding(2, 2, 8, 2, "Total: ".BindToLabel().WithStyle(Styles.Label).AdhereToFrozenRight(True)) _
                 .AddBinding(9, 2, CalcTotalAmtFunc.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock).AddBehavior(New TotalAmtConditionalFormat(CalcTotalAmtFunc))) _
                 .AddBehavior(New RowViewAlternation())
         End Sub

@@ -177,16 +177,16 @@ namespace DevZest.Data.Presenters.Primitives
         internal abstract void Cleanup(UIElement element);
 
         [DefaultValue(false)]
-        public bool FrozenLeftShrink { get; internal set; }
+        public bool AdheresToFrozenLeft { get; internal set; }
 
         [DefaultValue(false)]
-        public bool FrozenTopShrink { get; internal set; }
+        public bool AdheresToFrozenTop { get; internal set; }
 
         [DefaultValue(false)]
-        public bool FrozenRightShrink { get; internal set; }
+        public bool AdheresToFrozenRight { get; internal set; }
 
         [DefaultValue(false)]
-        public bool FrozenBottomShrink { get; internal set; }
+        public bool AdheresToFrozenBottom { get; internal set; }
 
         public abstract Type ViewType { get; }
     }

@@ -10,38 +10,38 @@ namespace DevZest.Data.Presenters
     public static class BindingManager
     {
         [DefaultValue(false)]
-        public static T WithFrozenLeftShrink<T>(this T binding, bool value)
+        public static T AdhereToFrozenLeft<T>(this T binding, bool value)
             where T : Binding
         {
             binding.VerifyNotSealed();
-            binding.FrozenLeftShrink = value;
+            binding.AdheresToFrozenLeft = value;
             return binding;
         }
 
         [DefaultValue(false)]
-        public static T WithFrozenTopShrink<T>(this T binding, bool value)
+        public static T AdhereToFrozenTop<T>(this T binding, bool value)
             where T : Binding
         {
             binding.VerifyNotSealed();
-            binding.FrozenTopShrink = value;
+            binding.AdheresToFrozenTop = value;
             return binding;
         }
 
         [DefaultValue(false)]
-        public static T WithFrozenRightShrink<T>(this T binding, bool value)
+        public static T AdhereToFrozenRight<T>(this T binding, bool value)
             where T : Binding
         {
             binding.VerifyNotSealed();
-            binding.FrozenRightShrink = value;
+            binding.AdheresToFrozenRight = value;
             return binding;
         }
 
         [DefaultValue(false)]
-        public static T WithFrozenBottomShrink<T>(this T binding, bool value)
+        public static T AdhereToFrozenBottom<T>(this T binding, bool value)
             where T : Binding
         {
             binding.VerifyNotSealed();
-            binding.FrozenBottomShrink = value;
+            binding.AdheresToFrozenBottom = value;
             return binding;
         }
 
