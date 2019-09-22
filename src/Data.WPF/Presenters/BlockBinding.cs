@@ -10,6 +10,9 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Base class for block level data binding.
+    /// </summary>
     public abstract class BlockBinding : Binding, IConcatList<BlockBinding>
     {
         #region IConcatList<BlockBinding>
@@ -60,8 +63,12 @@ namespace DevZest.Data.Presenters
         }
         #endregion
 
+        /// <summary>
+        /// Gets the parent block binding.
+        /// </summary>
         public BlockBinding Parent { get; private set; }
 
+        /// <inheritdoc/>
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
@@ -105,6 +112,11 @@ namespace DevZest.Data.Presenters
 
         internal abstract UIElement GetChild(UIElement parent, int index);
 
+        /// <summary>
+        /// Gets the target UI element at specified block ordinal.
+        /// </summary>
+        /// <param name="blockOrdinal">The specified block ordinal.</param>
+        /// <returns>The target UI element at specified block ordinal.</returns>
         public UIElement this[int blockOrdinal]
         {
             get
