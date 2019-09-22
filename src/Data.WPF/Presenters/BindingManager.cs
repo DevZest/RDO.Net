@@ -102,6 +102,15 @@ namespace DevZest.Data.Presenters
             return binding.WithStyle<T>(value.GetOrLoad());
         }
 
+        /// <summary>
+        /// Sets the number of order to calculate layout auto sizing.
+        /// </summary>
+        /// <typeparam name="T">The type of binding.</typeparam>
+        /// <param name="binding">The binding.</param>
+        /// <param name="value">The vlaue.</param>
+        /// <returns>The binding for fluent coding.</returns>
+        /// <remarks>By default, layout auto sizing is calculated based on order of bindings being added. You can
+        /// change the order to fine tune the layout auto sizing calculation.</remarks>
         public static T WithAutoSizeOrder<T>(this T binding, int value)
             where T : Binding
         {
@@ -110,6 +119,13 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
+        /// <summary>
+        /// Sets the waiver for layout auto sizing calculation.
+        /// </summary>
+        /// <typeparam name="T">The type of binding.</typeparam>
+        /// <param name="binding">The binding.</param>
+        /// <param name="value">The vlaue.</param>
+        /// <returns>The binding for fluent coding.</returns>
         public static T WithAutoSizeWaiver<T>(this T binding, AutoSizeWaiver value)
             where T : Binding
         {
@@ -130,6 +146,11 @@ namespace DevZest.Data.Presenters
         private static readonly DependencyProperty BindingProperty = DependencyProperty.RegisterAttached(nameof(Binding),
             typeof(Binding), typeof(BindingManager), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Gets the binding that associated with specified UI element.
+        /// </summary>
+        /// <param name="element">The specified UI element.</param>
+        /// <returns>The binding that associated with specified UI element.</returns>
         public static Binding GetBinding(this UIElement element)
         {
             return (Binding)element.GetValue(BindingProperty);
@@ -161,6 +182,12 @@ namespace DevZest.Data.Presenters
         private static readonly DependencyProperty BlockViewProperty = DependencyProperty.RegisterAttached(nameof(BlockView),
             typeof(BlockView), typeof(BindingManager), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Gets <see cref="BlockView"/> of specified block binding target UI element.
+        /// </summary>
+        /// <param name="element">The specified block binding target UI element.</param>
+        /// <returns>The <see cref="BlockView"/> of specified block binding target UI element, <see langword="null"/> if element
+        /// is not block binding target.</returns>
         public static BlockView GetBlockView(this UIElement element)
         {
             return (BlockView)element.GetValue(BlockViewProperty);
@@ -177,6 +204,12 @@ namespace DevZest.Data.Presenters
         private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
             typeof(RowPresenter), typeof(BindingManager), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Gets <see cref="RowPresenter"/> of specified row binding target UI element.
+        /// </summary>
+        /// <param name="element">The specified row binding target UI element.</param>
+        /// <returns>The <see cref="RowPresenter"/> of specified row binding target UI element, <see langword="null"/> if
+        /// element is not row binding target.</returns>
         public static RowPresenter GetRowPresenter(this UIElement element)
         {
             return (RowPresenter)element.GetValue(RowPresenterProperty);
@@ -224,6 +257,13 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentException(DiagnosticMessages.Binding_InvalidCompositeView, paramName);
         }
 
+        /// <summary>
+        /// Adds behavior to row binding.
+        /// </summary>
+        /// <typeparam name="T">Element type of row binding.</typeparam>
+        /// <param name="rowBinding">The row binding.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <returns>The row binding for fluent coding.</returns>
         public static RowBinding<T> AddBehavior<T>(this RowBinding<T> rowBinding, IRowBindingBehavior<T> behavior)
             where T : UIElement, new()
         {
@@ -233,6 +273,13 @@ namespace DevZest.Data.Presenters
             return rowBinding;
         }
 
+        /// <summary>
+        /// Adds behavior to scalar binding.
+        /// </summary>
+        /// <typeparam name="T">Element type of row binding.</typeparam>
+        /// <param name="scalarBinding">The scalar binding.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <returns>The scalar binding for fluent coding.</returns>
         public static ScalarBinding<T> AddBehavior<T>(this ScalarBinding<T> scalarBinding, IScalarBindingBehavior<T> behavior)
             where T : UIElement, new()
         {
@@ -242,6 +289,13 @@ namespace DevZest.Data.Presenters
             return scalarBinding;
         }
 
+        /// <summary>
+        /// Adds behavior to block binding.
+        /// </summary>
+        /// <typeparam name="T">Element type of row binding.</typeparam>
+        /// <param name="blockBinding">The block binding.</param>
+        /// <param name="behavior">The behavior.</param>
+        /// <returns>The block binding for fluent coding.</returns>
         public static BlockBinding<T> AddBehavior<T>(this BlockBinding<T> blockBinding, IBlockBindingBehavior<T> behavior)
             where T : UIElement, new()
         {
@@ -257,12 +311,25 @@ namespace DevZest.Data.Presenters
             return AttachedScalarBinding.GetAttachedScalarBinding(element) != null;
         }
 
+        /// <summary>
+        /// Gets attached scalar binding for specified element.
+        /// </summary>
+        /// <param name="element">The specified element.</param>
+        /// <returns>The result attached scalar binding. <see langword="null"/> if specified element is
+        /// not attached scalar binding target.</returns>
         public static ScalarBinding GetAttachedScalarBinding(this UIElement element)
         {
             element.VerifyNotNull(nameof(element));
             return AttachedScalarBinding.GetAttachedScalarBinding(element);
         }
 
+        /// <summary>
+        /// Sets the serializabled columns for the row binding.
+        /// </summary>
+        /// <typeparam name="T">The type of row biniding.</typeparam>
+        /// <param name="rowBinding">The row binding.</param>
+        /// <param name="columns">The serializable columns.</param>
+        /// <returns>The row binding for fluent coding.</returns>
         public static T WithSerializableColumns<T>(this T rowBinding, params Column[] columns)
             where T : RowBinding
         {
