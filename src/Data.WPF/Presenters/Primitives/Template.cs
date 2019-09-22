@@ -641,7 +641,7 @@ namespace DevZest.Data.Presenters.Primitives
             where T : UIElement, new()
         {
             element.VerifyNotNull(nameof(element));
-            if (element.GetAttachedTo() != null)
+            if (element.IsAttachedToScalarBinding())
                 throw new ArgumentException(DiagnosticMessages.Template_ElementAttachedAlready, nameof(element));
             scalarBinding.VerifyNotNull(nameof(scalarBinding));
             if (scalarBinding.IsSealed)

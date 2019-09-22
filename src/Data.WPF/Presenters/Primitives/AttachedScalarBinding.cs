@@ -12,7 +12,7 @@ namespace DevZest.Data.Presenters.Primitives
             where T : UIElement, new()
         {
             Debug.Assert(template != null);
-            Debug.Assert(element != null && element.GetAttachedTo() == null);
+            Debug.Assert(element != null && !element.IsAttachedToScalarBinding());
             Debug.Assert(baseBinding != null && !baseBinding.IsSealed);
             return new TypedAttachedScalarBinding<T>(template, element, baseBinding);
         }

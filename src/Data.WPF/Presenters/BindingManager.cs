@@ -251,10 +251,16 @@ namespace DevZest.Data.Presenters
             return blockBinding;
         }
 
-        public static Template GetAttachedTo(this UIElement element)
+        internal static bool IsAttachedToScalarBinding(this UIElement element)
         {
             element.VerifyNotNull(nameof(element));
-            return AttachedScalarBinding.GetAttachedScalarBinding(element)?.Template;
+            return AttachedScalarBinding.GetAttachedScalarBinding(element) != null;
+        }
+
+        public static ScalarBinding GetAttachedScalarBinding(this UIElement element)
+        {
+            element.VerifyNotNull(nameof(element));
+            return AttachedScalarBinding.GetAttachedScalarBinding(element);
         }
 
         public static T WithSerializableColumns<T>(this T rowBinding, params Column[] columns)
