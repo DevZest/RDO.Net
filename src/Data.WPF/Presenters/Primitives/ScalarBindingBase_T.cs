@@ -51,7 +51,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal override void BeginSetup(int startOffset, UIElement[] elements)
         {
-            Debug.Assert(FlowRepeatable);
+            Debug.Assert(RepeatsWhenFlow);
             _settingUpStartOffset = startOffset;
             _settingUpElements = elements == null ? Create(startOffset) : Cast(elements);
         }
@@ -71,7 +71,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public T GetSettingUpElement(int flowIndex)
         {
-            if (FlowRepeatable)
+            if (RepeatsWhenFlow)
             {
                 if (SettingUpElements == null)
                     return null;

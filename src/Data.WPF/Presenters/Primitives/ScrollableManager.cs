@@ -349,7 +349,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private bool ShouldStretchCross(ScalarBinding scalarBinding)
         {
-            if (FlowRepeatCount > 1 && !scalarBinding.FlowRepeatable)
+            if (FlowRepeatCount > 1 && !scalarBinding.RepeatsWhenFlow)
             {
                 var rowSpan = GridTracksCross.GetGridSpan(Template.RowRange);
                 var scalarBindingSpan = GridTracksCross.GetGridSpan(scalarBinding.GridRange);

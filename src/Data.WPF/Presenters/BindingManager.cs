@@ -134,6 +134,12 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
+        /// <summary>
+        /// The scalar binding should repeat when flowing with block or row.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="scalarBinding">The scalar binding.</param>
+        /// <returns>The scalar binding for fluent coding.</returns>
         public static T RepeatWhenFlow<T>(this T scalarBinding)
             where T : ScalarBinding
         {
