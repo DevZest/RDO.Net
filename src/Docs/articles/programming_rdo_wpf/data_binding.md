@@ -133,3 +133,11 @@ public static RowCompositeBinding<AddressBox> BindToAddressBox(this Address _)
         .AddChild(_.PostalCode.BindToTextBlock(), v => v._postalCode);
 }
 ```
+
+## Attached Scalar Binding
+
+In addition, you can add attached scalar binding to your presenter to bind scalar data to existing UI element outside DataView, as demonstrated in the paste-append window:
+
+![image](/images/attached_scalar_binding_sample.jpg)
+
+You can add attached scalar binding to your presenter template via <xref:DevZest.Data.Presenters.TemplateBuilder`1.AddBinding*> API.
