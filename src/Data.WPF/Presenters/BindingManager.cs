@@ -240,14 +240,14 @@ namespace DevZest.Data.Presenters
                 element.SetValue(RowPresenterProperty, value);
         }
 
-        internal static Action<TElement, TPresenter> Override<TElement, TPresenter>(this Action<TElement, TPresenter> action, Action<TElement, TPresenter> overrideAction)
+        internal static Action<TView, TPresenter> Apply<TView, TPresenter>(this Action<TView, TPresenter> baseAction, Action<TView, TPresenter> applyAction)
         {
-            if (action == null)
-                action = (e, sp) => { };
-            return (e, sp) =>
+            if (baseAction == null)
+                baseAction = (v, p) => { };
+            return (v, p) =>
             {
-                action(e, sp);
-                overrideAction(e, sp);
+                baseAction(v, p);
+                applyAction(v, p);
             };
         }
 

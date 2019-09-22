@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Presenters.Primitives;
-using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -181,27 +180,27 @@ namespace DevZest.Data.Presenters
             get { return (T)base[flowIndex]; }
         }
 
-        public ScalarBinding<T> OverrideSetup(Action<T, ScalarPresenter> overrideSetup)
+        public ScalarBinding<T> ApplySetup(Action<T, ScalarPresenter> setup)
         {
-            if (overrideSetup == null)
-                throw new ArgumentNullException(nameof(overrideSetup));
-            _onSetup = _onSetup.Override(overrideSetup);
+            if (setup == null)
+                throw new ArgumentNullException(nameof(setup));
+            _onSetup = _onSetup.Apply(setup);
             return this;
         }
 
-        public ScalarBinding<T> OverrideRefresh(Action<T, ScalarPresenter> overrideRefresh)
+        public ScalarBinding<T> ApplyRefresh(Action<T, ScalarPresenter> refresh)
         {
-            if (overrideRefresh == null)
-                throw new ArgumentNullException(nameof(overrideRefresh));
-            _onRefresh = _onRefresh.Override(overrideRefresh);
+            if (refresh == null)
+                throw new ArgumentNullException(nameof(refresh));
+            _onRefresh = _onRefresh.Apply(refresh);
             return this;
         }
 
-        public ScalarBinding<T> OverrideCleanup(Action<T, ScalarPresenter> overrideCleanup)
+        public ScalarBinding<T> ApplyCleanup(Action<T, ScalarPresenter> cleanup)
         {
-            if (overrideCleanup == null)
-                throw new ArgumentNullException(nameof(overrideCleanup));
-            _onCleanup = _onRefresh.Override(overrideCleanup);
+            if (cleanup == null)
+                throw new ArgumentNullException(nameof(cleanup));
+            _onCleanup = _onCleanup.Apply(cleanup);
             return this;
         }
 

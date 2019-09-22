@@ -4,18 +4,31 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Collections.Generic;
-using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents block level data binding.
+    /// </summary>
+    /// <typeparam name="T">Type of target UI element.</typeparam>
     public sealed class BlockBinding<T> : BlockBindingBase<T>
         where T : UIElement, new()
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="BlockBinding{T}"/> class.
+        /// </summary>
+        /// <param name="onRefresh">Delegate to refresh the binding.</param>
         public BlockBinding(Action<T, BlockPresenter> onRefresh)
         {
             _onRefresh = onRefresh;
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="BlockBinding{T}"/> class.
+        /// </summary>
+        /// <param name="onRefresh">Delegate to refresh the binding.</param>
+        /// <param name="onSetup">Delegate to setup the binding.</param>
+        /// <param name="onCleanup">Delegate to cleanup the binding.</param>
         public BlockBinding(Action<T, BlockPresenter> onRefresh,
             Action<T, BlockPresenter> onSetup,
             Action<T, BlockPresenter> onCleanup)
@@ -92,31 +105,49 @@ namespace DevZest.Data.Presenters
             element.SetBlockView(null);
         }
 
-        public BlockBinding<T> OverrideSetup(Action<T, BlockPresenter> overrideSetup)
+        /// <summary>
+        /// Applies additional setup logic.
+        /// </summary>
+        /// <param name="setup">Delegate to setup the binding.</param>
+        /// <returns></returns>
+        public BlockBinding<T> ApplySetup(Action<T, BlockPresenter> setup)
         {
-            if (overrideSetup == null)
-                throw new ArgumentNullException(nameof(overrideSetup));
-            _onSetup = _onSetup.Override(overrideSetup);
+            if (setup == null)
+                throw new ArgumentNullException(nameof(setup));
+            _onSetup = _onSetup.Apply(setup);
             return this;
         }
 
-        public BlockBinding<T> OverrideRefresh(Action<T, BlockPresenter> overrideRefresh)
+        /// <summary>
+        /// Applies additional refresh logic.
+        /// </summary>
+        /// <param name="refresh">Delegate to refresh the binding.</param>
+        /// <returns></returns>
+        public BlockBinding<T> ApplyRefresh(Action<T, BlockPresenter> refresh)
         {
-            if (overrideRefresh == null)
-                throw new ArgumentNullException(nameof(overrideRefresh));
-            _onRefresh = _onRefresh.Override(overrideRefresh);
+            if (refresh == null)
+                throw new ArgumentNullException(nameof(refresh));
+            _onRefresh = _onRefresh.Apply(refresh);
             return this;
         }
 
-        public BlockBinding<T> OverrideCleanup(Action<T, BlockPresenter> overrideCleanup)
+        /// <summary>
+        /// Applies additional cleanup logic
+        /// </summary>
+        /// <param name="cleanup"></param>
+        /// <returns></returns>
+        public BlockBinding<T> ApplyCleanup(Action<T, BlockPresenter> cleanup)
         {
-            if (overrideCleanup == null)
-                throw new ArgumentNullException(nameof(overrideCleanup));
-            _onCleanup = _onRefresh.Override(overrideCleanup);
+            if (cleanup == null)
+                throw new ArgumentNullException(nameof(cleanup));
+            _onCleanup = _onCleanup.Apply(cleanup);
             return this;
         }
 
         private List<IBlockBindingBehavior<T>> _behaviors;
+        /// <summary>
+        /// Gets the behaviors added into this binding.
+        /// </summary>
         public IReadOnlyList<IBlockBindingBehavior<T>> Behaviors
         {
             get

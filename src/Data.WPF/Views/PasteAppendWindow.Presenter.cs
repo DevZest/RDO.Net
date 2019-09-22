@@ -205,7 +205,7 @@ namespace DevZest.Data.Views
                 {
                     var textBlockGrayOut = new TextBlockGrayOut(_columnMappings[i]);
                     var textColumn = textColumns[i];
-                    var gridCellBinding = textColumn.BindToTextBlock().OverrideRefresh(textBlockGrayOut.Refresh).AddToGridCell();
+                    var gridCellBinding = textColumn.BindToTextBlock().ApplyRefresh(textBlockGrayOut.Refresh).AddToGridCell();
                     builder.AddBinding(i, 2, textColumn.BindToValidationPlaceholder(gridCellBinding));
                     builder.AddBinding(i, 2, gridCellBinding);
                     builder.GridLineY(new GridPoint(i + 1, 2), 1);

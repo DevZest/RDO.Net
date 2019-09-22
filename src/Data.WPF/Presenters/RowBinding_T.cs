@@ -178,27 +178,27 @@ namespace DevZest.Data.Presenters
             return WithInput(new RoutedEventTrigger<T>(routedEvent), column, getValue);
         }
 
-        public RowBinding<T> OverrideSetup(Action<T, RowPresenter> overrideSetup)
+        public RowBinding<T> ApplySetup(Action<T, RowPresenter> setup)
         {
-            if (overrideSetup == null)
-                throw new ArgumentNullException(nameof(overrideSetup));
-            _onSetup = _onSetup.Override(overrideSetup);
+            if (setup == null)
+                throw new ArgumentNullException(nameof(setup));
+            _onSetup = _onSetup.Apply(setup);
             return this;
         }
 
-        public RowBinding<T> OverrideRefresh(Action<T, RowPresenter> overrideRefresh)
+        public RowBinding<T> ApplyRefresh(Action<T, RowPresenter> refresh)
         {
-            if (overrideRefresh == null)
-                throw new ArgumentNullException(nameof(overrideRefresh));
-            _onRefresh = _onRefresh.Override(overrideRefresh);
+            if (refresh == null)
+                throw new ArgumentNullException(nameof(refresh));
+            _onRefresh = _onRefresh.Apply(refresh);
             return this;
         }
 
-        public RowBinding<T> OverrideCleanup(Action<T, RowPresenter> overrideCleanup)
+        public RowBinding<T> ApplyCleanup(Action<T, RowPresenter> cleanup)
         {
-            if (overrideCleanup == null)
-                throw new ArgumentNullException(nameof(overrideCleanup));
-            _onCleanup = _onRefresh.Override(overrideCleanup);
+            if (cleanup == null)
+                throw new ArgumentNullException(nameof(cleanup));
+            _onCleanup = _onCleanup.Apply(cleanup);
             return this;
         }
 
