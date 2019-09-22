@@ -32,7 +32,7 @@ namespace DevZest.Data.Presenters
     }
 
     /// <summary>
-    /// Base class to dynamically affect the look-and-feel of block binding target UI element.
+    /// Base class of behavior to dynamically affect the look-and-feel of block binding target UI element.
     /// </summary>
     /// <typeparam name="T">Type of target UI element.</typeparam>
     public abstract class BlockBindingBehavior<T> : IBlockBindingBehavior<T>
