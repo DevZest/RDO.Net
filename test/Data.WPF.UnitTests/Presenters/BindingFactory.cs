@@ -113,7 +113,7 @@ namespace DevZest.Data.Presenters
                         v.Target = target.GetSettingUpElement(p);
                 },
                 onRefresh: null,
-                onCleanup: null).WithFlowRepeatable(true);
+                onCleanup: null).RepeatWhenFlow();
         }
 
     }

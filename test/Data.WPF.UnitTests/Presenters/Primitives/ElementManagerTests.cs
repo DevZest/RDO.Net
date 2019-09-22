@@ -21,7 +21,7 @@ namespace DevZest.Data.Presenters.Primitives
                 columnHeader1 = _.Name.AsScalarTextBlock();
                 blockHeader = _.AsBlockHeader();
                 textBlock = _.Name.BindToTextBlock();
-                columnHeader2 = _.Name.AsScalarTextBlock().WithFlowRepeatable(true);
+                columnHeader2 = _.Name.AsScalarTextBlock().RepeatWhenFlow();
                 builder.GridColumns("100", "100")
                     .GridRows("100", "100", "100")
                     .Layout(Orientation.Vertical, 0)

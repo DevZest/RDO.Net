@@ -134,12 +134,11 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
-        [DefaultValue(false)]
-        public static T WithFlowRepeatable<T>(this T scalarBinding, bool value)
+        public static T RepeatWhenFlow<T>(this T scalarBinding)
             where T : ScalarBinding
         {
             scalarBinding.VerifyNotSealed();
-            scalarBinding.FlowRepeatable = value;
+            scalarBinding.FlowRepeatable = true;
             return scalarBinding;
         }
 

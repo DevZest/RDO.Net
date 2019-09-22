@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters
             ScalarBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                textBlock = _.Name.AsScalarTextBlock().WithFlowRepeatable(true);
+                textBlock = _.Name.AsScalarTextBlock().RepeatWhenFlow();
                 label = _.Name.AsFlowRepeatableScalarLabel(textBlock);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100", "100").GridRows("100", "100")

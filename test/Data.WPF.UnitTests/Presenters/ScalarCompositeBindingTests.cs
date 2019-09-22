@@ -49,7 +49,7 @@ namespace DevZest.Data.Presenters
             {
                 textBlock = _.Name.AsScalarTextBlock();
                 label = _.Name.AsFlowRepeatableScalarLabel(textBlock);
-                pane = new ScalarCompositeBinding<XamlPane>().WithFlowRepeatable(true)
+                pane = new ScalarCompositeBinding<XamlPane>().RepeatWhenFlow()
                     .AddChild(label, v => v.Label).AddChild(textBlock, v => v.TextBlock);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")

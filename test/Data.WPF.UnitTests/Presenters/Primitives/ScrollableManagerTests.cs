@@ -241,7 +241,7 @@ namespace DevZest.Data.Presenters.Primitives
                     .AddBinding(1, 0, _.ScalarPlaceholder())
                     .AddBinding(0, 1, _.ScalarPlaceholder())
                     .AddBinding(1, 1, _.RowPlaceholder())
-                    .AddBinding(1, 2, _.ScalarPlaceholder().WithFlowRepeatable(true));
+                    .AddBinding(1, 2, _.ScalarPlaceholder().RepeatWhenFlow());
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
