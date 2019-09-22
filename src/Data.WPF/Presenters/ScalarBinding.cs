@@ -89,15 +89,15 @@ namespace DevZest.Data.Presenters
             get { return Template.ScalarPresenter; }
         }
 
-        private bool _flowRepeatable;
+        private bool _repeatsWhenFlow;
         [DefaultValue(false)]
-        public bool FlowRepeatable
+        public bool RepeatsWhenFlow
         {
-            get { return Parent != null ? Parent.FlowRepeatable : _flowRepeatable; }
+            get { return Parent != null ? Parent.RepeatsWhenFlow : _repeatsWhenFlow; }
             set
             {
                 VerifyNotSealed();
-                _flowRepeatable = value;
+                _repeatsWhenFlow = value;
             }
         }
 
@@ -108,7 +108,7 @@ namespace DevZest.Data.Presenters
             if (GridRange.IntersectsWith(rowRange))
                 throw new InvalidOperationException(DiagnosticMessages.ScalarBinding_IntersectsWithRowRange(Ordinal));
 
-            if (!FlowRepeatable)
+            if (!RepeatsWhenFlow)
                 return;
 
             if (Template.Flowable(Orientation.Horizontal))
@@ -132,7 +132,7 @@ namespace DevZest.Data.Presenters
 
         public int FlowRepeatCount
         {
-            get { return Parent != null ? Parent.FlowRepeatCount : (FlowRepeatable ? ElementManager.FlowRepeatCount : 1); }
+            get { return Parent != null ? Parent.FlowRepeatCount : (RepeatsWhenFlow ? ElementManager.FlowRepeatCount : 1); }
         }
 
         internal abstract UIElement GetChild(UIElement parent, int index);

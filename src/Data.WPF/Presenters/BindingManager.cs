@@ -138,7 +138,7 @@ namespace DevZest.Data.Presenters
             where T : ScalarBinding
         {
             scalarBinding.VerifyNotSealed();
-            scalarBinding.FlowRepeatable = true;
+            scalarBinding.RepeatsWhenFlow = true;
             return scalarBinding;
         }
 

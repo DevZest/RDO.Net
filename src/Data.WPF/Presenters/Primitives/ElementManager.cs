@@ -389,7 +389,7 @@ namespace DevZest.Data.Presenters.Primitives
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 var scalarBinding = scalarBindings[i];
-                if (scalarBinding.FlowRepeatable)
+                if (scalarBinding.RepeatsWhenFlow)
                     scalarBinding.BeginSetup(startOffset, null);
                 else if (startOffset == 0)
                     scalarBinding.BeginSetup(null);
@@ -458,7 +458,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var scalarBinding = scalarBindings[i];
                 scalarBinding.CumulativeFlowRepeatCountDelta = 0;
-                int count = scalarBinding.FlowRepeatable ? FlowRepeatCount : 1;
+                int count = scalarBinding.RepeatsWhenFlow ? FlowRepeatCount : 1;
                 RemoveScalarElementsAfter(scalarBinding, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
@@ -526,7 +526,7 @@ namespace DevZest.Data.Presenters.Primitives
                 var scalarBinding = scalarBindings[i];
 
                 var prevCumulativeFlowRepeatCountDelta = i == 0 ? 0 : scalarBindings[i - 1].CumulativeFlowRepeatCountDelta;
-                if (!scalarBinding.FlowRepeatable)
+                if (!scalarBinding.RepeatsWhenFlow)
                 {
                     scalarBinding.CumulativeFlowRepeatCountDelta = prevCumulativeFlowRepeatCountDelta + (FlowRepeatCount - 1);
                     continue;
