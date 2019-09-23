@@ -8,7 +8,7 @@ namespace DevZest.Data.Views.Primitives
     [CustomValidator(nameof(VAL_ColumnRequired))]
     [CustomValidator(nameof(VAL_DuplicateColumn))]
     [CustomValidator(nameof(VAL_Direction))]
-    public class Sorting : Model
+    internal class Sorting : Model
     {
         public static DataSet<Sorting> Convert(Model model, IReadOnlyList<IColumnComparer> orderBy)
         {
