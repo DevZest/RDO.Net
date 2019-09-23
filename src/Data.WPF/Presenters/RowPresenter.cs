@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
@@ -8,8 +7,14 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Contains presentation logic of <see cref="DataRow"/>.
+    /// </summary>
     public sealed class RowPresenter : ElementPresenter
     {
+        /// <summary>
+        /// Occurs when data value changed.
+        /// </summary>
         public event EventHandler<ValueChangedEventArgs> ValueChanged = delegate { };
 
         internal RowPresenter(RowMapper rowMapper, DataRow dataRow)
@@ -101,12 +106,16 @@ namespace DevZest.Data.Presenters
             get { return !IsVirtual && Template.IsRecursive; }
         }
 
+        /// <inheritdoc/>
         public sealed override Template Template
         {
             get { return _rowMapper?.Template; }
         }
 
         private DataRow _dataRow;
+        /// <summary>
+        /// Gets the <see cref="DataRow"/>.
+        /// </summary>
         public DataRow DataRow
         {
             get { return _dataRow; }
@@ -120,21 +129,33 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this row is virtual for inserting.
+        /// </summary>
         public bool IsVirtual
         {
             get { return RowManager == null ? false : (RowManager.VirtualRow == this || RowManager.InsertingRow == this); }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this row is in editing mode.
+        /// </summary>
         public bool IsEditing
         {
             get { return RowManager == null ? false : (RowManager.CurrentRow == this && RowManager.IsEditing); }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this row is in inserting mode.
+        /// </summary>
         public bool IsInserting
         {
             get { return IsVirtual && IsEditing; }
         }
 
+        /// <summary>
+        /// Gets the parent row presenter.
+        /// </summary>
         public RowPresenter Parent { get; internal set; }
 
         internal bool IsDescendantOf(RowPresenter rowPresenter)
@@ -152,6 +173,9 @@ namespace DevZest.Data.Presenters
 
         private List<RowPresenter> _children;
 
+        /// <summary>
+        /// Gets the child row presenters.
+        /// </summary>
         public IReadOnlyList<RowPresenter> Children
         {
             get
@@ -189,6 +213,9 @@ namespace DevZest.Data.Presenters
 
         internal int RawIndex { get; set; }
 
+        /// <summary>
+        /// Gets the index.
+        /// </summary>
         public int Index
         {
             get
@@ -211,11 +238,17 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the depth of recursive row.
+        /// </summary>
         public int Depth
         {
             get { return Parent == null ? 0 : RowMapper.GetDepth(Parent.DataRow) + 1; }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether child row exists.
+        /// </summary>
         public bool HasChildren
         {
             get
@@ -231,6 +264,9 @@ namespace DevZest.Data.Presenters
         }
 
         private bool _isExpanded = false;
+        /// <summary>
+        /// Gets a value indicates whether this row is expanded to display child rows.
+        /// </summary>
         public bool IsExpanded
         {
             get { return _isExpanded; }
@@ -241,6 +277,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Toggles the expand state to display/hide child rows.
+        /// </summary>
         public void ToggleExpandState()
         {
             var dataPresenter = DataPresenter;
@@ -278,11 +317,17 @@ namespace DevZest.Data.Presenters
             IsExpanded = false;
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this row is current row.
+        /// </summary>
         public bool IsCurrent
         {
             get { return RowManager.CurrentRow == this; }
         }
 
+        /// <summary>
+        /// Gets or sets the value indicates whether this row is selected.
+        /// </summary>
         public bool IsSelected
         {
             get { return RowManager.IsSelected(this); }
@@ -299,6 +344,13 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the data value for specified column.
+        /// </summary>
+        /// <typeparam name="T">Data type of the column.</typeparam>
+        /// <param name="column">The column.</param>
+        /// <param name="beforeEdit">Indicates whether should get value before editing.</param>
+        /// <returns>The data value.</returns>
         public T GetValue<T>(Column<T> column, bool beforeEdit = false)
         {
             if (Depth > 0)
@@ -328,6 +380,11 @@ namespace DevZest.Data.Presenters
             return column;
         }
 
+        /// <summary>
+        /// Gets or sets the data value for specified column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>The data value.</returns>
         public object this[Column column]
         {
             get { return this[column, false]; }
@@ -345,6 +402,12 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the data value for specified column.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="beforeEdit">Indicates whether should get value before editing.</param>
+        /// <returns>The data value.</returns>
         public object this[Column column, bool beforeEdit]
         {
             get
@@ -354,6 +417,11 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Determines whether data value of specified column is null.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns><see langword="true"/> if data value of specified column is null, otherwise <see langword="false"/>.</returns>
         public bool IsNull(Column column)
         {
             column = VerifyColumn(column, nameof(column));
@@ -378,6 +446,9 @@ namespace DevZest.Data.Presenters
                 throw new InvalidOperationException(DiagnosticMessages.RowPresenter_VerifyIsCurrent);
         }
 
+        /// <summary>
+        /// Begins the editing mode.
+        /// </summary>
         public void BeginEdit()
         {
             if (IsEditing)
@@ -393,6 +464,12 @@ namespace DevZest.Data.Presenters
             elementManager?.ResumeInvalidateView();
         }
 
+        /// <summary>
+        /// Begins the editing mode and change the data value for specified column.
+        /// </summary>
+        /// <typeparam name="T">The data type of column.</typeparam>
+        /// <param name="column">The column.</param>
+        /// <param name="value">The data value.</param>
         public void EditValue<T>(Column<T> column, T value)
         {
             column = (Column<T>)VerifyColumn(column, nameof(column));
@@ -406,6 +483,9 @@ namespace DevZest.Data.Presenters
             elementManager?.ResumeInvalidateView();
         }
 
+        /// <summary>
+        /// Cancels the editing mode.
+        /// </summary>
         public void CancelEdit()
         {
             if (!IsEditing)
@@ -417,6 +497,11 @@ namespace DevZest.Data.Presenters
             elementManager?.ResumeInvalidateView();
         }
 
+        /// <summary>
+        /// Ends the editing mode.
+        /// </summary>
+        /// <param name="staysOnInserting">Indicates whether should stay on inserting.</param>
+        /// <returns>The row presenter.</returns>
         public RowPresenter EndEdit(bool staysOnInserting = true)
         {
             if (!IsEditing)
@@ -434,6 +519,10 @@ namespace DevZest.Data.Presenters
             return DataPresenter == null ? true : DataPresenter.ConfirmEndEdit();
         }
 
+        /// <summary>
+        /// Begins inserting child row before specified child row.
+        /// </summary>
+        /// <param name="child">The specified child row, <see langword="null"/> if insert as first child row.</param>
         public void BeginInsertBefore(RowPresenter child = null)
         {
             VerifyInsert(child);
@@ -443,6 +532,10 @@ namespace DevZest.Data.Presenters
             elementManager?.ResumeInvalidateView();
         }
 
+        /// <summary>
+        /// Begins inserting child row after specified child row.
+        /// </summary>
+        /// <param name="child">The specified child row, <see langword="null"/> if insert as last child row.</param>
         public void BeginInsertAfter(RowPresenter child = null)
         {
             VerifyInsert(child);
@@ -464,11 +557,17 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the DataSet.
+        /// </summary>
         public DataSet DataSet
         {
             get { return Parent == null ? RowManager.DataSet : Parent.DataRow[Template.RecursiveModelOrdinal]; }
         }
 
+        /// <summary>
+        /// Deletes this row.
+        /// </summary>
         public void Delete()
         {
             VerifyNotDisposed();
@@ -478,6 +577,9 @@ namespace DevZest.Data.Presenters
             DataRow.DataSet.Remove(DataRow);
         }
 
+        /// <summary>
+        /// Gets the row view.
+        /// </summary>
         public RowView View { get; internal set; }
 
         internal RowBindingCollection RowBindings
