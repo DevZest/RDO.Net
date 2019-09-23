@@ -4,11 +4,18 @@ using System.Reflection;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Specifies the root namespace to resolve resource by id.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
     public class ResourceIdRelativeToAttribute : Attribute
     {
         private string _relativeTo;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="ResourceIdRelativeToAttribute"/>.
+        /// </summary>
+        /// <param name="type">Any type in the root namespace.</param>
         public ResourceIdRelativeToAttribute(Type type)
         {
             if (type == null)
@@ -16,6 +23,10 @@ namespace DevZest.Data.Presenters
             _relativeTo = type.Namespace;
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="ResourceIdRelativeToAttribute"/>.
+        /// </summary>
+        /// <param name="relativeTo">The root namespace that the resource relative to.</param>
         public ResourceIdRelativeToAttribute(string relativeTo)
         {
             if (relativeTo == null)

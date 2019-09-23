@@ -6,6 +6,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Manipulates collection of row async validators.
+    /// </summary>
     public static class RowAsyncValidators
     {
         private sealed class EmptyRowAsyncValidators : IRowAsyncValidators
@@ -140,6 +143,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the empty collection of row async validators.
+        /// </summary>
         public static IRowAsyncValidators Empty
         {
             get { return EmptyRowAsyncValidators.Singleton; }
@@ -151,6 +157,11 @@ namespace DevZest.Data.Presenters
             return new KeyedRowAsyncValidators(value1, value2);
         }
 
+        /// <summary>
+        /// Creates a collection of row async validators.
+        /// </summary>
+        /// <param name="values">The validators.</param>
+        /// <returns>The collection of row async validators.</returns>
         public static IRowAsyncValidators New(params RowAsyncValidator[] values)
         {
             if (values == null)

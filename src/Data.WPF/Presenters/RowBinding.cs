@@ -72,14 +72,21 @@ namespace DevZest.Data.Presenters
         /// </summary>
         public abstract IReadOnlyList<RowBinding> ChildBindings { get; }
 
+        /// <summary>
+        /// Gets the row level input.
+        /// </summary>
         public abstract Input<RowBinding, IColumns> RowInput { get; }
 
+        /// <inheritdoc/>
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
         }
 
         private IReadOnlyList<Column> _serializableColumns;
+        /// <summary>
+        /// Gets lthe serializable columns.
+        /// </summary>
         public IReadOnlyList<Column> SerializableColumns
         {
             get
@@ -98,6 +105,10 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the input target columns.
+        /// </summary>
+        /// <returns>The input target columns.</returns>
         public IEnumerable<Column> GetInputTargetColumns()
         {
             var rowInputTarget = RowInput?.Target;
@@ -134,6 +145,11 @@ namespace DevZest.Data.Presenters
 
         internal abstract UIElement GetChild(UIElement parent, int index);
 
+        /// <summary>
+        /// Gets the view element for specified <see cref="RowPresenter"/>.
+        /// </summary>
+        /// <param name="rowPresenter">The specified <see cref="RowPresenter"/>.</param>
+        /// <returns>The view element.</returns>
         public UIElement this[RowPresenter rowPresenter]
         {
             get
@@ -157,6 +173,9 @@ namespace DevZest.Data.Presenters
 
         internal abstract void BeginSetup(UIElement value);
 
+        /// <summary>
+        /// Gets a value indicates whether this binding is editable.
+        /// </summary>
         public bool IsEditable
         {
             get { return RowInput != null || ChildBindings.Any(x =>  x.IsEditable); }

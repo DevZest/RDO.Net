@@ -2,13 +2,15 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents row level async validator.
+    /// </summary>
     public abstract class RowAsyncValidator : AsyncValidator<IDataValidationErrors>, IRowAsyncValidators
     {
         internal static RowAsyncValidator Create(string displayName, IColumns sourceColumns, Func<DataRow, Task<string>> validator)
@@ -71,6 +73,9 @@ namespace DevZest.Data.Presenters
         }
 
         private readonly IColumns _sourceColumns;
+        /// <summary>
+        /// Gets the source columns of the validator.
+        /// </summary>
         public IColumns SourceColumns
         {
             get { return _sourceColumns; }
@@ -86,6 +91,7 @@ namespace DevZest.Data.Presenters
             get { return DataValidationErrors.Empty; }
         }
 
+        /// <inheritdoc/>
         public override void Run()
         {
             if (CurrentRow == null)

@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Presenters.Primitives;
-using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,14 +6,28 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents strongly typed row level data binding.
+    /// </summary>
+    /// <typeparam name="T">The type of view element.</typeparam>
     public sealed class RowBinding<T> : RowBindingBase<T>
         where T : UIElement, new()
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="RowBinding{T}"/> class.
+        /// </summary>
+        /// <param name="onRefresh">The delegate to refresh the binding.</param>
         public RowBinding(Action<T, RowPresenter> onRefresh)
         {
             _onRefresh = onRefresh;
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RowBinding{T}"/> class.
+        /// </summary>
+        /// <param name="onRefresh">The delegate to refresh the binding.</param>
+        /// <param name="onSetup">The delegate to setup the binding.</param>
+        /// <param name="onCleanup">The delegate to cleanup the binding.</param>
         public RowBinding(Action<T, RowPresenter> onRefresh, Action<T, RowPresenter> onSetup, Action<T, RowPresenter> onCleanup)
             : this(onRefresh)
         {
@@ -22,13 +35,18 @@ namespace DevZest.Data.Presenters
             _onCleanup = onCleanup;
         }
 
+        /// <inheritdoc/>
         public override IReadOnlyList<RowBinding> ChildBindings
         {
             get { return Array.Empty<RowBinding>(); }
         }
 
+        /// <summary>
+        /// Gets the input.
+        /// </summary>
         public RowInput<T> Input { get; internal set; }
 
+        /// <inheritdoc/>
         public override Input<RowBinding, IColumns> RowInput
         {
             get { return Input; }
@@ -67,6 +85,7 @@ namespace DevZest.Data.Presenters
         }
 
         private bool _isRefreshing;
+        /// <inheritdoc/>
         public override bool IsRefreshing
         {
             get { return _isRefreshing; }
@@ -119,65 +138,157 @@ namespace DevZest.Data.Presenters
             Cleanup(e, rowPresenter);
         }
 
-        public RowInput<T> BeginInput(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger = null)
+        /// <summary>
+        /// Begins input implementation.
+        /// </summary>
+        /// <param name="flushingTrigger">The flushing trigger.</param>
+        /// <param name="progressiveFlushingTrigger">The progressive flushing trigger.</param>
+        /// <returns>The row input.</returns>
+        public RowInput<T> BeginInput(Trigger<T> flushingTrigger, Trigger<T> progressiveFlushingTrigger = null)
         {
             VerifyNotSealed();
             if (Input != null)
                 throw new InvalidOperationException(DiagnosticMessages.TwoWayBinding_InputAlreadyExists);
 
-            return Input = new RowInput<T>(this, flushTrigger, progressiveFlushTrigger);
+            return Input = new RowInput<T>(this, flushingTrigger, progressiveFlushingTrigger);
         }
 
-        public RowInput<T> BeginInput(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushRoutedEvent = null)
+        /// <summary>
+        /// Begins input implementation.
+        /// </summary>
+        /// <param name="dependencyProperty">The dependency property for flushing.</param>
+        /// <param name="progressiveFlushingRoutedEvent">The routed event for progressive flushing.</param>
+        /// <returns>The row input.</returns>
+        public RowInput<T> BeginInput(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushingRoutedEvent = null)
         {
-            return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty), progressiveFlushRoutedEvent == null ? null : new RoutedEventTrigger<T>(progressiveFlushRoutedEvent));
+            return BeginInput(new PropertyChangedTrigger<T>(dependencyProperty), progressiveFlushingRoutedEvent == null ? null : new RoutedEventTrigger<T>(progressiveFlushingRoutedEvent));
         }
 
-        public RowInput<T> BeginInput(RoutedEvent routedEvent, RoutedEvent progressiveFlushRoutedEvent = null)
+        /// <summary>
+        /// Begins input implementation.
+        /// </summary>
+        /// <param name="routedEvent">The routed event for flushing.</param>
+        /// <param name="progressiveFlushingRoutedEvent">The routed event for progressive flushing.</param>
+        /// <returns>The row input.</returns>
+        public RowInput<T> BeginInput(RoutedEvent routedEvent, RoutedEvent progressiveFlushingRoutedEvent = null)
         {
-            return BeginInput(new RoutedEventTrigger<T>(routedEvent), progressiveFlushRoutedEvent == null ? null : new RoutedEventTrigger<T>(progressiveFlushRoutedEvent));
+            return BeginInput(new RoutedEventTrigger<T>(routedEvent), progressiveFlushingRoutedEvent == null ? null : new RoutedEventTrigger<T>(progressiveFlushingRoutedEvent));
         }
 
-        public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger, Column<TData> column, Func<T, TData> getValue)
+        /// <summary>
+        /// Sets input implementation from specified column.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="flushingTrigger">The flushing trigger.</param>
+        /// <param name="progressiveFlushingTrigger">The progressive flushing trigger.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to get data value from view element.</param>
+        /// <returns>This row binding for fluent coding.</returns>
+        public RowBinding<T> WithInput<TData>(Trigger<T> flushingTrigger, Trigger<T> progressiveFlushingTrigger, Column<TData> column, Func<T, TData> getValue)
         {
-            return BeginInput(flushTrigger, progressiveFlushTrigger).WithFlush(column, getValue).EndInput();
+            return BeginInput(flushingTrigger, progressiveFlushingTrigger).WithFlush(column, getValue).EndInput();
         }
 
-        public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Trigger<T> progressiveFlushTrigger, Column<TData> column, Func<RowPresenter, T, TData> getValue)
+        /// <summary>
+        /// Sets input implementation from specified column.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="flushingTrigger">The flushing trigger.</param>
+        /// <param name="progressiveFlushingTrigger">The progressive flushing trigger.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to get data value from view element.</param>
+        /// <returns>This row binding for fluent coding.</returns>
+        public RowBinding<T> WithInput<TData>(Trigger<T> flushingTrigger, Trigger<T> progressiveFlushingTrigger, Column<TData> column, Func<RowPresenter, T, TData> getValue)
         {
-            return BeginInput(flushTrigger, progressiveFlushTrigger).WithFlush(column, getValue).EndInput();
+            return BeginInput(flushingTrigger, progressiveFlushingTrigger).WithFlush(column, getValue).EndInput();
         }
 
-        public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
+        /// <summary>
+        /// Sets input implementation with specified column.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="flushingTrigger">The flushing trigger.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to get data value from view element.</param>
+        /// <returns>This row binding for fluent coding.</returns>
+        public RowBinding<T> WithInput<TData>(Trigger<T> flushingTrigger, Column<TData> column, Func<T, TData> getValue)
         {
-            return BeginInput(flushTrigger).WithFlush(column, getValue).EndInput();
+            return BeginInput(flushingTrigger).WithFlush(column, getValue).EndInput();
         }
 
-        public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushRoutedEvent, Column<TData> column, Func<T, TData> getValue)
+        /// <summary>
+        /// Sets input implementation with specified column.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="dependencyProperty">The dependency property for flushing.</param>
+        /// <param name="progressiveFlushingRoutedEvent">The routed event for progressive flushing.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to get data value from view element.</param>
+        /// <returns>This row binding for fluent coding.</returns>
+        public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushingRoutedEvent, Column<TData> column, Func<T, TData> getValue)
         {
-            return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), new RoutedEventTrigger<T>(progressiveFlushRoutedEvent), column, getValue);
+            return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), new RoutedEventTrigger<T>(progressiveFlushingRoutedEvent), column, getValue);
         }
 
-        public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushRoutedEvent, Column<TData> column, Func<RowPresenter, T, TData> getValue)
+        /// <summary>
+        /// Sets input implementation with specified column.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="dependencyProperty">The dependency property for flushing.</param>
+        /// <param name="progressiveFlushingRoutedEvent">The routed event for progressive flushing.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to get data value from view element.</param>
+        /// <returns>This row binding for fluent coding.</returns>
+        public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, RoutedEvent progressiveFlushingRoutedEvent, Column<TData> column, Func<RowPresenter, T, TData> getValue)
         {
-            return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), new RoutedEventTrigger<T>(progressiveFlushRoutedEvent), column, getValue);
+            return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), new RoutedEventTrigger<T>(progressiveFlushingRoutedEvent), column, getValue);
         }
 
+        /// <summary>
+        /// Sets input implementation with specified column.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="dependencyProperty">The dependency property for flushing.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to get data value from view element.</param>
+        /// <returns>This row binding for fluent coding.</returns>
         public RowBinding<T> WithInput<TData>(DependencyProperty dependencyProperty, Column<TData> column, Func<T, TData> getValue)
         {
             return WithInput(new PropertyChangedTrigger<T>(dependencyProperty), column, getValue);
         }
 
-        public RowBinding<T> WithInput<TData>(RoutedEvent routedEvent, RoutedEvent progressiveFlushRoutedEvent, Column<TData> column, Func<T, TData> getValue)
+        /// <summary>
+        /// Sets input implementation with specified column.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="routedEvent">The routed event for flushing.</param>
+        /// <param name="progressiveFlushingRoutedEvent">The routed event for progressive flushing.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to get data value from view element.</param>
+        /// <returns>This row binding for fluent coding.</returns>
+        public RowBinding<T> WithInput<TData>(RoutedEvent routedEvent, RoutedEvent progressiveFlushingRoutedEvent, Column<TData> column, Func<T, TData> getValue)
         {
-            return WithInput(new RoutedEventTrigger<T>(routedEvent), new RoutedEventTrigger<T>(progressiveFlushRoutedEvent), column, getValue);
+            return WithInput(new RoutedEventTrigger<T>(routedEvent), new RoutedEventTrigger<T>(progressiveFlushingRoutedEvent), column, getValue);
         }
 
+        /// <summary>
+        /// Sets input implementation with specified column.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="routedEvent">The routed event for flushing.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to get data value from view element.</param>
+        /// <returns>This row binding for fluent coding.</returns>
         public RowBinding<T> WithInput<TData>(RoutedEvent routedEvent, Column<TData> column, Func<T, TData> getValue)
         {
             return WithInput(new RoutedEventTrigger<T>(routedEvent), column, getValue);
         }
 
+        /// <summary>
+        /// Applies delegate to setup this binding.
+        /// </summary>
+        /// <param name="setup">The delegate to setup this binding.</param>
+        /// <returns>This row binding for fluent coding.</returns>
         public RowBinding<T> ApplySetup(Action<T, RowPresenter> setup)
         {
             if (setup == null)
@@ -186,6 +297,11 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
+        /// <summary>
+        /// Applies delegate to refresh this binding.
+        /// </summary>
+        /// <param name="refresh">The delegate to refresh this binding.</param>
+        /// <returns>This row binding for fluent coding.</returns>
         public RowBinding<T> ApplyRefresh(Action<T, RowPresenter> refresh)
         {
             if (refresh == null)
@@ -194,6 +310,11 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
+        /// <summary>
+        /// Applies delegate to cleanup this binding.
+        /// </summary>
+        /// <param name="cleanup">The delegate to cleanup this binding.</param>
+        /// <returns>This row binding for fluent coding.</returns>
         public RowBinding<T> ApplyCleanup(Action<T, RowPresenter> cleanup)
         {
             if (cleanup == null)
@@ -203,6 +324,9 @@ namespace DevZest.Data.Presenters
         }
 
         private List<IRowBindingBehavior<T>> _behaviors;
+        /// <summary>
+        /// Gets the row binding behaviors.
+        /// </summary>
         public IReadOnlyList<IRowBindingBehavior<T>> Behaviors
         {
             get
