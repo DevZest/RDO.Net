@@ -6,6 +6,10 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents the handler of row level two way data binding flushing from view to presenter.
+    /// </summary>
+    /// <typeparam name="T">The type of view element.</typeparam>
     public class RowInput<T> : Input<T, RowBinding, IColumns>
         where T : UIElement, new()
     {
@@ -15,8 +19,12 @@ namespace DevZest.Data.Presenters
             RowBinding = rowBinding;
         }
 
+        /// <summary>
+        /// Gets the row binding.
+        /// </summary>
         public RowBinding<T> RowBinding { get; private set; }
 
+        /// <inheritdoc/>
         public sealed override RowBinding Binding
         {
             get { return RowBinding; }
@@ -34,6 +42,7 @@ namespace DevZest.Data.Presenters
             _rowValidation = rowValidation;
         }
 
+        /// <inheritdoc/>
         public override FlushingError GetFlushingError(UIElement element)
         {
             return RowValidation.GetFlushingError(element);
@@ -50,6 +59,7 @@ namespace DevZest.Data.Presenters
         }
 
         private IColumns _target = Columns.Empty;
+        /// <inheritdoc/>
         public override IColumns Target
         {
             get { return _target; }
@@ -62,12 +72,24 @@ namespace DevZest.Data.Presenters
             get { return InputManager.CurrentRow; }
         }
 
+        /// <summary>
+        /// Sets flushing validator.
+        /// </summary>
+        /// <param name="flushingValidaitor">The flushing validator.</param>
+        /// <returns>This row input for fluent coding.</returns>
         public RowInput<T> WithFlushingValidator(Func<T, string> flushingValidaitor)
         {
             SetFlushingValidator(flushingValidaitor);
             return this;
         }
 
+        /// <summary>
+        /// Setup the flushing operation.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to return data value.</param>
+        /// <returns>This row input for fluent coding.</returns>
         public RowInput<T> WithFlush<TData>(Column<TData> column, Func<T, TData> getValue)
         {
             if (column == null)
@@ -88,6 +110,13 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
+        /// <summary>
+        /// Setup the flushing operation.
+        /// </summary>
+        /// <typeparam name="TData">Data type of column.</typeparam>
+        /// <param name="column">The column.</param>
+        /// <param name="getValue">The delegate to return data value.</param>
+        /// <returns>This row input for fluent coding.</returns>
         public RowInput<T> WithFlush<TData>(Column<TData> column, Func<RowPresenter, T, TData> getValue)
         {
             if (column == null)
@@ -108,16 +137,28 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public RowInput<T> WithFlush(Column column, Func<RowPresenter, T, bool> flushFunc)
+        /// <summary>
+        /// Setup the flushing operation.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="flush">The delegate to flush input.</param>
+        /// <returns>This row input for fluent coding.</returns>
+        public RowInput<T> WithFlush(Column column, Func<RowPresenter, T, bool> flush)
         {
             column.VerifyNotNull(nameof(column));
-            flushFunc.VerifyNotNull(nameof(flushFunc));
+            flush.VerifyNotNull(nameof(flush));
             VerifyNotSealed();
             _target = _target.Union(column);
-            _flushFuncs.Add(flushFunc);
+            _flushFuncs.Add(flush);
             return this;
         }
 
+        /// <summary>
+        /// Setup the flushing operation.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="valueBagGetter">The delegate to get column value bag.</param>
+        /// <returns>This row input for fluent coding.</returns>
         public RowInput<T> WithFlush(Column column, Func<T, ColumnValueBag> valueBagGetter)
         {
             if (column == null)
@@ -175,6 +216,11 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
+        /// <summary>
+        /// Gets the flushing error.
+        /// </summary>
+        /// <param name="rowPresenter">The row presenter.</param>
+        /// <returns>The flushing error.</returns>
         public FlushingError GetFlushingError(RowPresenter rowPresenter)
         {
             RowBinding rowBinding = RowBinding;
@@ -182,12 +228,22 @@ namespace DevZest.Data.Presenters
             return element != null ? GetFlushingError(element) : null;
         }
 
+        /// <summary>
+        /// Get the validation info.
+        /// </summary>
+        /// <param name="rowPresenter">The row presenter.</param>
+        /// <returns>The validation info.</returns>
         public ValidationInfo GetValidationInfo(RowPresenter rowPresenter)
         {
             rowPresenter.VerifyNotNull(nameof(rowPresenter));
             return RowValidation.GetInfo(rowPresenter, this);
         }
 
+        /// <summary>
+        /// Determines whether validation error exists for specified row presenter.
+        /// </summary>
+        /// <param name="rowPresenter">The row presenter.</param>
+        /// <returns><see langword="true"/> if validation error exists, otherwise <see langword="false"/>.</returns>
         public bool HasValidationError(RowPresenter rowPresenter)
         {
             rowPresenter.VerifyNotNull(nameof(rowPresenter));
@@ -201,6 +257,10 @@ namespace DevZest.Data.Presenters
             element.RefreshValidation(GetValidationInfo(rowPresenter));
         }
 
+        /// <summary>
+        /// Ends the input implementation.
+        /// </summary>
+        /// <returns>The row binding for fluent coding.</returns>
         public RowBinding<T> EndInput()
         {
             _target = _target.Seal();

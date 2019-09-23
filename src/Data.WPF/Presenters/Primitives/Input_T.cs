@@ -5,7 +5,7 @@ using System.Windows;
 namespace DevZest.Data.Presenters.Primitives
 {
     /// <summary>
-    /// Represents the input to handle two way data binding.
+    /// Represents the handler of two way data binding flushing from view to presenter.
     /// </summary>
     /// <typeparam name="TBinding">Type of two way binding.</typeparam>
     /// <typeparam name="TTarget">Type of input target.</typeparam>
@@ -36,7 +36,7 @@ namespace DevZest.Data.Presenters.Primitives
     }
 
     /// <summary>
-    /// Represents the strongly typed input to handle two way data binding.
+    /// Represents the strongly typed handler of two way data binding flushing from view to presenter.
     /// </summary>
     /// <typeparam name="T">Type of view element.</typeparam>
     /// <typeparam name="TBinding">Type of two way binding.</typeparam>
