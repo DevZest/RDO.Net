@@ -23,7 +23,7 @@ namespace DevZest.Data.Presenters
             if (dataPresenter == null)
                 throw new ArgumentNullException(nameof(dataPresenter));
 
-            var trigger = new PropertyChangedTrigger<T>(ToggleButton.IsCheckedProperty).WithExecuteAction(v =>
+            var trigger = new PropertyChangedTrigger<T>(ToggleButton.IsCheckedProperty).WithAction(v =>
             {
                 var binding = (TwoWayBinding)v.GetBinding();
                 if (binding.IsRefreshing)

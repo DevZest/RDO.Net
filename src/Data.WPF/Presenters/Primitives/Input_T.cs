@@ -28,18 +28,18 @@ namespace DevZest.Data.Presenters.Primitives
                 throw new ArgumentNullException(nameof(flushingTrigger));
             VerifyNotInitialized(flushingTrigger, nameof(flushingTrigger));
             _flushingTrigger = flushingTrigger;
-            _flushingTrigger.ExecuteAction = Flush;
+            _flushingTrigger.Action = Flush;
 
             if (progressiveFlushingTrigger != null)
             {
                 _progressiveFlushingTrigger = progressiveFlushingTrigger;
-                _progressiveFlushingTrigger.ExecuteAction = ProgressiveFlush;
+                _progressiveFlushingTrigger.Action = ProgressiveFlush;
             }
         }
 
         private void VerifyNotInitialized(Trigger<T> trigger, string paramName)
         {
-            if (trigger.ExecuteAction != null)
+            if (trigger.Action != null)
                 throw new ArgumentException(DiagnosticMessages.Input_TriggerAlreadyInitialized, paramName);
         }
 

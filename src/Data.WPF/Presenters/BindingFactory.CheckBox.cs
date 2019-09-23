@@ -27,7 +27,7 @@ namespace DevZest.Data.Presenters
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var trigger = new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty).WithExecuteAction(v =>
+            var trigger = new PropertyChangedTrigger<CheckBox>(CheckBox.IsCheckedProperty).WithAction(v =>
             {
                 var binding = (TwoWayBinding)v.GetBinding();
                 if (binding.IsRefreshing)
