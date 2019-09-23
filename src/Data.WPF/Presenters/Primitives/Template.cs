@@ -11,6 +11,9 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents the presenter template.
+    /// </summary>
     public sealed partial class Template
     {
         internal Template()
@@ -46,18 +49,30 @@ namespace DevZest.Data.Presenters.Primitives
             get { return RowManager as ScrollableManager; }
         }
 
+        /// <summary>
+        /// Gets the presenter.
+        /// </summary>
         public BasePresenter Presenter
         {
             get { return LayoutManager == null ? null : LayoutManager.Presenter; }
         }
 
+        /// <summary>
+        /// Gets the data presenter.
+        /// </summary>
         public DataPresenter DataPresenter
         {
             get { return Presenter as DataPresenter; }
         }
 
+        /// <summary>
+        /// Gets the layout orientation.
+        /// </summary>
         public Orientation? Orientation { get; private set; }
 
+        /// <summary>
+        /// Gets the block level flow repeat count.
+        /// </summary>
         public int FlowRepeatCount { get; private set; } = 1;
 
         internal ContainerKind ContainerKind
@@ -74,6 +89,9 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal GridColumnCollection InternalGridColumns { get; private set; }
 
+        /// <summary>
+        /// Gets the grid columns.
+        /// </summary>
         public ReadOnlyCollection<GridColumn> GridColumns
         {
             get { return InternalGridColumns; }
@@ -81,6 +99,9 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal GridRowCollection InternalGridRows { get; private set; }
 
+        /// <summary>
+        /// Gets the grid rows.
+        /// </summary>
         public ReadOnlyCollection<GridRow> GridRows
         {
             get { return InternalGridRows; }
@@ -88,24 +109,39 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal readonly RecapBindingCollection<ScalarBinding> InternalScalarBindings = new RecapBindingCollection<ScalarBinding>();
 
+        /// <summary>
+        /// Gets the scalar bindings.
+        /// </summary>
         public IReadOnlyList<ScalarBinding> ScalarBindings
         {
             get { return InternalScalarBindings; }
         }
 
         internal readonly RecapBindingCollection<BlockBinding> InternalBlockBindings = new RecapBindingCollection<BlockBinding>();
+        
+        /// <summary>
+        /// Gets the block bindings.
+        /// </summary>
         public IReadOnlyList<BlockBinding> BlockBindings
         {
             get { return InternalBlockBindings; }
         }
 
         internal RowBindingCollection InternalRowBindings = new RowBindingCollection();
+
+        /// <summary>
+        /// Gets the row bindings.
+        /// </summary>
         public IReadOnlyList<RowBinding> RowBindings
         {
             get { return InternalRowBindings; }
         }
 
         private GridRange? _rowRange;
+
+        /// <summary>
+        /// Gets the row range.
+        /// </summary>
         public GridRange RowRange
         {
             get
@@ -125,6 +161,9 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
+        /// <summary>
+        /// Gets the container view range.
+        /// </summary>
         public GridRange ContainerRange
         {
             get { return RowRange.Union(InternalBlockBindings.Range); }
@@ -269,11 +308,21 @@ namespace DevZest.Data.Presenters.Primitives
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
+        /// <summary>
+        /// Returns the grid range contains all grid columns and rows.
+        /// </summary>
+        /// <returns>The result grid range.</returns>
         public GridRange Range()
         {
             return GridColumns.Count == 0 || GridRows.Count == 0 ? new GridRange() : Range(0, 0, GridColumns.Count - 1, GridRows.Count - 1);
         }
 
+        /// <summary>
+        /// Returns the grid range at specified column and row.
+        /// </summary>
+        /// <param name="column">Index of grid column.</param>
+        /// <param name="row">Index of grid row.</param>
+        /// <returns>The result grid range.</returns>
         public GridRange Range(int column, int row)
         {
             VerifyGridColumn(column, nameof(column));
@@ -281,6 +330,14 @@ namespace DevZest.Data.Presenters.Primitives
             return new GridRange(GridColumns[column], GridRows[row]);
         }
 
+        /// <summary>
+        /// Returns the grid range at specified left/right grid column and top/bottom grid row.
+        /// </summary>
+        /// <param name="left">Index of left grid column.</param>
+        /// <param name="top">Index of top grid row.</param>
+        /// <param name="right">Index of right grid column.</param>
+        /// <param name="bottom">Index of bottom grid row.</param>
+        /// <returns>The result grid range.</returns>
         public GridRange Range(int left, int top, int right, int bottom)
         {
             VerifyGridColumn(left, nameof(left));
@@ -294,11 +351,20 @@ namespace DevZest.Data.Presenters.Primitives
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
+        /// <summary>
+        /// Gets the placement of virtual row.
+        /// </summary>
         [DefaultValue(VirtualRowPlacement.Explicit)]
         public VirtualRowPlacement VirtualRowPlacement { get; internal set; } = VirtualRowPlacement.Explicit;
 
+        /// <summary>
+        /// Gets the child model ordinal to present data as recursive.
+        /// </summary>
         public int RecursiveModelOrdinal { get; internal set; } = -1;
 
+        /// <summary>
+        /// Gets a value indicates whether data should be presented as recursive.
+        /// </summary>
         public bool IsRecursive
         {
             get { return RecursiveModelOrdinal >= 0; }
@@ -470,22 +536,40 @@ namespace DevZest.Data.Presenters.Primitives
             return FlowRepeatCount > 0 ? FlowRepeatCount : Math.Max(1, (int)(availableLength / gridTracks.TotalAbsoluteLength));
         }
 
+        /// <summary>
+        /// Gets the number of frozen left grid columns from scrolling.
+        /// </summary>
         [DefaultValue(0)]
         public int FrozenLeft { get; internal set; }
 
+        /// <summary>
+        /// Gets the number of frozen top grid rows from scrolling.
+        /// </summary>
         [DefaultValue(0)]
         public int FrozenTop { get; internal set; }
 
+        /// <summary>
+        /// Gets the number of frozen right grid columns from scrolling.
+        /// </summary>
         [DefaultValue(0)]
         public int FrozenRight { get; internal set; }
 
+        /// <summary>
+        /// Gets the number of frozen bottom grid rows from scrolling.
+        /// </summary>
         [DefaultValue(0)]
         public int FrozenBottom { get; internal set; }
 
+        /// <summary>
+        /// Gets number of grid tracks stretching to end of view port.
+        /// </summary>
         [DefaultValue(0)]
         public int Stretches { get; internal set; }
 
         private readonly List<GridLine> _gridLines = new List<GridLine>();
+        /// <summary>
+        /// Gets the grid lines should be rendered.
+        /// </summary>
         public IReadOnlyList<GridLine> GridLines
         {
             get { return _gridLines; }
@@ -497,12 +581,21 @@ namespace DevZest.Data.Presenters.Primitives
             _gridLines.Add(gridLine);
         }
 
+        /// <summary>
+        /// Gets the row validation mode.
+        /// </summary>
         [DefaultValue(ValidationMode.Progressive)]
         public ValidationMode RowValidationMode { get; internal set; } = ValidationMode.Progressive;
 
+        /// <summary>
+        /// Gets the scalar validation mode.
+        /// </summary>
         [DefaultValue(ValidationMode.Progressive)]
         public ValidationMode ScalarValidationMode { get; internal set; } = ValidationMode.Progressive;
 
+        /// <summary>
+        /// Gets the row selection mode.
+        /// </summary>
         [DefaultValue(SelectionMode.Extended)]
         public SelectionMode SelectionMode { get; internal set; } = SelectionMode.Extended;
 
@@ -515,6 +608,9 @@ namespace DevZest.Data.Presenters.Primitives
             _scalarAsyncValidators = _scalarAsyncValidators.Add(validator);
         }
 
+        /// <summary>
+        /// Gets the scalar async validators.
+        /// </summary>
         public IScalarAsyncValidators ScalarAsyncValidators
         {
             get { return IsSealed ? _scalarAsyncValidators : null; }
@@ -529,6 +625,9 @@ namespace DevZest.Data.Presenters.Primitives
             _rowAsyncValidators = _rowAsyncValidators.Add(validator);
         }
 
+        /// <summary>
+        /// Gets the row async validators.
+        /// </summary>
         public IRowAsyncValidators RowAsyncValidators
         {
             get { return IsSealed ? _rowAsyncValidators : null; }
@@ -557,6 +656,9 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private List<BlockViewBehavior> _blockViewBehaviors;
+        /// <summary>
+        /// Gets the block view behaviors.
+        /// </summary>
         public IReadOnlyList<BlockViewBehavior> BlockViewBehaviors
         {
             get
@@ -577,6 +679,10 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         internal List<RowViewBehavior> _rowViewBehaviors;
+
+        /// <summary>
+        /// Gets the row view behaviors.
+        /// </summary>
         public IReadOnlyList<RowViewBehavior> RowViewBehaviors
         {
             get
@@ -607,6 +713,10 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private bool _initialFocusFlag = true;
+
+        /// <summary>
+        /// Gets the operation to set initial keyboard focus.
+        /// </summary>
         public InitialFocus InitialFocus { get; internal set; } = InitialFocus.First;
 
         internal void ResetInitialFocus()
@@ -623,10 +733,16 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether deleting row(s) is allowed.
+        /// </summary>
         [DefaultValue(false)]
         public bool AllowsDelete { get; internal set; }
 
         private List<AttachedScalarBinding> _attachedScalarBindings;
+        /// <summary>
+        /// Gets the attached scalar bindings.
+        /// </summary>
         public IReadOnlyList<ScalarBinding> AttachedScalarBindings
         {
             get
