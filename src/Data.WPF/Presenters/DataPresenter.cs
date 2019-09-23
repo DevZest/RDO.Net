@@ -79,10 +79,10 @@ namespace DevZest.Data.Presenters
         }
 
         /// <summary>
-        /// Applies condition and comparer to filter and sort the rows.
+        /// Applies filtering condition and sorting comparer.
         /// </summary>
-        /// <param name="where">The condition to filter the rows.</param>
-        /// <param name="orderBy">The comparer to sort the rows.</param>
+        /// <param name="where">The filtering condition.</param>
+        /// <param name="orderBy">The sorting comparer.</param>
         public virtual void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             RequireLayoutManager();

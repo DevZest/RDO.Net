@@ -330,7 +330,7 @@ namespace DevZest.Data.Presenters
         }
 
         /// <summary>
-        /// Determines whether data input (both scalar and row) can be submitted without any validation error.
+        /// Determines whether data input can be submitted without any validation error.
         /// </summary>
         public bool CanSubmitInput
         {
