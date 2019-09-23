@@ -9,9 +9,18 @@ using System.Windows.Threading;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Base class to contain presentation logic for scalar data and strongly typed DataSet.
+    /// </summary>
     public abstract class DataPresenter<T> : DataPresenter
         where T : class, IEntity, new()
     {
+        /// <summary>
+        /// Shows DataSet to DataView.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="dataSet">The DataSet.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
         public void Show(DataView dataView, DataSet<T> dataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
@@ -20,6 +29,13 @@ namespace DevZest.Data.Presenters
                 Show(dataView, dataSet, Where, OrderBy);
         }
 
+        /// <summary>
+        /// Shows DataSet to DataView, with specified filter condition and sorting comparer.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="dataSet">The DataSet.</param>
+        /// <param name="where">The filtering condition.</param>
+        /// <param name="orderBy">The sorting comparer.</param>
         public void Show(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             if (dataView == null)
@@ -62,6 +78,13 @@ namespace DevZest.Data.Presenters
             dataView.OnDataLoaded();
         }
 
+        /// <summary>
+        /// Shows data to DataView asynchronously.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="getDataSet">The delegate to load data asynchronouly.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
+        /// <returns>The async task.</returns>
         public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
@@ -70,6 +93,14 @@ namespace DevZest.Data.Presenters
                 return ShowAsync(dataView, getDataSet, _ => Where, _ => OrderBy);
         }
 
+        /// <summary>
+        /// Shows data to DataView asynchronously, with specified filtering condition and sorting comparer.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="getDataSet">The delegate to load data asynchronouly.</param>
+        /// <param name="getWhere">The delegate to return filtering condition.</param>
+        /// <param name="getOrderBy">The delegate to return sorting comparer.</param>
+        /// <returns>The async task.</returns>
         public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (dataView == null)
@@ -82,6 +113,13 @@ namespace DevZest.Data.Presenters
             return _dataLoader.ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
         }
 
+        /// <summary>
+        /// Shows data to DataView asynchronously.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="getDataSet">The delegate to load data asynchronouly.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
+        /// <returns>The async task.</returns>
         public Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
@@ -90,6 +128,14 @@ namespace DevZest.Data.Presenters
                 return ShowAsync(dataView, getDataSet, _ => Where, _ => OrderBy);
         }
 
+        /// <summary>
+        /// Shows data to DataView asynchronously, with specified filter condition and sorting comparer.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="getDataSet">The delegate to load data asynchronouly.</param>
+        /// <param name="getWhere">The delegate to return filtering condition.</param>
+        /// <param name="getOrderBy">The delegate to return sorting comparer.</param>
+        /// <returns>The async task.</returns>
         public Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (dataView == null)
@@ -341,8 +387,12 @@ namespace DevZest.Data.Presenters
             _dataLoader.Cancel();
         }
 
+        /// <summary>
+        /// Gets the underlying DataSet.
+        /// </summary>
         public new DataSet<T> DataSet { get; private set; }
 
+        /// <inheritdoc/>
         public sealed override void DetachView()
         {
             if (_dataLoader != null)
@@ -361,13 +411,26 @@ namespace DevZest.Data.Presenters
             get { return _layoutManager; }
         }
 
+        /// <summary>
+        /// Builds the template of this data presenter.
+        /// </summary>
+        /// <param name="builder">The template builder.</param>
         protected abstract void BuildTemplate(TemplateBuilder builder);
 
+        /// <summary>
+        /// Gets the entity of the DataSet.
+        /// </summary>
+        /// <remarks>In VB.Net, use <see cref="Entity"/> property instead because <see cref="_"/> is a VB.Net reserved keyword and is not supported.</remarks>
         public T _
         {
             get { return DataSet == null ? null : DataSet._; }
         }
 
+        /// <summary>
+        /// Refresh by reloading DataSet.
+        /// </summary>
+        /// <param name="dataSet">The DataSet to reload.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
         public void Refresh(DataSet<T> dataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
@@ -376,6 +439,12 @@ namespace DevZest.Data.Presenters
                 Refresh(dataSet, Where, OrderBy);
         }
 
+        /// <summary>
+        /// Refresh by reloading DataSet, with specified filtering condition and sorting comparer.
+        /// </summary>
+        /// <param name="dataSet">The DataSet to reload.</param>
+        /// <param name="where">The filtering condition.</param>
+        /// <param name="orderBy">The sorting comparer.</param>
         public void Refresh(DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             if (dataSet == null)
@@ -397,6 +466,12 @@ namespace DevZest.Data.Presenters
             Mount(View, dataSet, where, orderBy, isReload ? MountMode.Reload : MountMode.Refresh);
         }
 
+        /// <summary>
+        /// Refresh by reloading DataSet asynchronously.
+        /// </summary>
+        /// <param name="getDataSet">The delegate to reload DataSet asynchronously.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
+        /// <returns>The async task.</returns>
         public Task RefreshAsync(Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
@@ -405,6 +480,13 @@ namespace DevZest.Data.Presenters
                 return RefreshAsync(getDataSet, _ => Where, _ => OrderBy);
         }
 
+        /// <summary>
+        /// Refresh by reloading DataSet asynchronously, with specified filtering condition and sorting comparer.
+        /// </summary>
+        /// <param name="getDataSet">The delegate to reload DataSet asynchronously.</param>
+        /// <param name="getWhere">The delegate to return filtering condition.</param>
+        /// <param name="getOrderBy">The delegate to return sorting comparer.</param>
+        /// <returns>The async task.</returns>
         public Task RefreshAsync(Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (getDataSet == null)
@@ -416,6 +498,12 @@ namespace DevZest.Data.Presenters
             return _dataLoader.RefreshAsync(getDataSet, getWhere, getOrderBy);
         }
 
+        /// <summary>
+        /// Refresh by reloading DataSet asynchronously.
+        /// </summary>
+        /// <param name="getDataSet">The delegate to reload DataSet asynchronously.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
+        /// <returns>The async task.</returns>
         public Task RefreshAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
@@ -424,6 +512,13 @@ namespace DevZest.Data.Presenters
                 return RefreshAsync(getDataSet, _ => Where, _ => OrderBy);
         }
 
+        /// <summary>
+        /// Refresh by reloading DataSet asynchronously, with specified filtering condition and sorting comparer.
+        /// </summary>
+        /// <param name="getDataSet">The delegate to reload DataSet asynchronously.</param>
+        /// <param name="getWhere">The delegate to return filtering condition.</param>
+        /// <param name="getOrderBy">The delegate to return sorting comparer.</param>
+        /// <returns>The async task.</returns>
         public Task RefreshAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (getDataSet == null)
@@ -435,6 +530,12 @@ namespace DevZest.Data.Presenters
             return _dataLoader.RefreshAsync(getDataSet, getWhere, getOrderBy);
         }
 
+        /// <summary>
+        /// Show or refresh the DataSet to DataView.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="dataSet">The DataSet.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
         public void ShowOrRefresh(DataView dataView, DataSet<T> dataSet, bool resetCriteria = false)
         {
             if (LayoutManager == null)
@@ -443,6 +544,13 @@ namespace DevZest.Data.Presenters
                 Refresh(dataSet, resetCriteria);
         }
 
+        /// <summary>
+        /// Show or refresh the DataSet to DataView, with specified filtering contition and sorting comparer.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="dataSet">The DataSet.</param>
+        /// <param name="where">The filtering condition.</param>
+        /// <param name="orderBy">The sorting comparer.</param>
         public void ShowOrRefresh(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             if (LayoutManager == null)
@@ -451,6 +559,13 @@ namespace DevZest.Data.Presenters
                 Refresh(dataSet, where, orderBy);
         }
 
+        /// <summary>
+        /// Show or refresh the DataSet to DataView asynchronously.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="getDataSet">The delegate to load DataSet asynchronously.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
+        /// <remarks>The async task.</remarks>
         public Task ShowOrRefreshAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (LayoutManager == null)
@@ -459,6 +574,14 @@ namespace DevZest.Data.Presenters
                 return RefreshAsync(getDataSet, resetCriteria);
         }
 
+        /// <summary>
+        /// Show or refresh the DataSet to DataView asynchronously, with specified filtering condition and sorting comparer.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="getDataSet">The delegate to load DataSet asynchronously.</param>
+        /// <param name="getWhere">The delegate to return filtering condition.</param>
+        /// <param name="getOrderBy">The delegate to return sorting comparer.</param>
+        /// <returns>The async task.</returns>
         public Task ShowOrRefreshAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (LayoutManager == null)
@@ -467,6 +590,13 @@ namespace DevZest.Data.Presenters
                 return RefreshAsync(getDataSet, getWhere, getOrderBy);
         }
 
+        /// <summary>
+        /// Show or refresh the DataSet to DataView asynchronously.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="getDataSet">The delegate to load DataSet asynchronously.</param>
+        /// <param name="resetCriteria">Indicates whether filtering and sorting criteria should be reseted.</param>
+        /// <remarks>The async task.</remarks>
         public Task ShowOrRefreshAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (LayoutManager == null)
@@ -475,6 +605,14 @@ namespace DevZest.Data.Presenters
                 return RefreshAsync(getDataSet, resetCriteria);
         }
 
+        /// <summary>
+        /// Show or refresh the DataSet to DataView asynchronously, with specified filtering condition and sorting comparer.
+        /// </summary>
+        /// <param name="dataView">The DataView which renders the data.</param>
+        /// <param name="getDataSet">The delegate to load DataSet asynchronously.</param>
+        /// <param name="getWhere">The delegate to return filtering condition.</param>
+        /// <param name="getOrderBy">The delegate to return sorting comparer.</param>
+        /// <returns>The async task.</returns>
         public Task ShowOrRefreshAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (LayoutManager == null)
@@ -483,11 +621,21 @@ namespace DevZest.Data.Presenters
                 return RefreshAsync(getDataSet, getWhere, getOrderBy);
         }
 
+        /// <summary>
+        /// Gets columns which contains values that can match row uniquely.
+        /// </summary>
+        /// <param name="_">The entity.</param>
+        /// <returns>The columns which contains values that can match row uniquely.</returns>
+        /// <remarks>The default implementation returns the primary key.</remarks>
         protected virtual IReadOnlyList<Column> GetMatchColumns(T _)
         {
             return _.Model.PrimaryKey;
         }
 
+        /// <summary>
+        /// Gets the entity of DataSet.
+        /// </summary>
+        /// <remarks>This property is provided for VB.Net because <see cref="_"/> is a VB.Net reserved keyword and is not supported.</remarks>
         public T Entity
         {
             get { return _; }
