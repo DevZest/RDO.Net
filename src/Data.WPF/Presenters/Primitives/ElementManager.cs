@@ -556,11 +556,10 @@ namespace DevZest.Data.Presenters.Primitives
         /// NOTE: Besides the direct calling chain in <see cref="OnFocused(RowView)"/>, there is another calling chain to <see cref="SetCurrentRowFromView"/>:
         /// <see cref="OnFocused(RowView)"/> -->
         /// <see cref="CanChangeCurrentRow"/> -->
-        /// <see cref="RowManager.EndEdit"/> -->
-        /// <see cref="RowManager.CommitEdit"/> -->
-        /// <see cref="RowManager.EditHandler.EndEdit(RowManager)"/> -->
-        /// <see cref="RowManager.EditHandler.InsertHandler.CommitEdit(RowManager)"/> -->
-        /// <see cref="DataSet.EndAdd"/> -->
+        /// <see cref="RowManager.EndEdit(bool)"/> -->
+        /// <see cref="RowManager.EditHandler.CommitEdit(RowManager, bool)"/> -->
+        /// ...
+        /// <see cref="DataSet.EndAdd()"/> -->
         /// ... -->
         /// <see cref="OnRowsChanged"/>
         /// ALSO NOTE: During this calling chain, <see cref="CurrentRow"/> is directly set to <see cref="_focusTo"/>, by using the flag <see cref="_currentRowChangedByInsertSuspended"/>.
