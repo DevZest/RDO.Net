@@ -13,7 +13,7 @@ namespace DevZest.Data.Presenters
     public static class BindingManager
     {
         /// <summary>
-        /// Adheres binding to frozen left layout grid column(s) to prevent it from scrolling outside the viewport.
+        /// Adheres binding to frozen left layout grid column(s) so that it won't scroll outside the scrollable area.
         /// </summary>
         /// <typeparam name="T">The type of the binding.</typeparam>
         /// <param name="binding">The binding.</param>
@@ -28,7 +28,7 @@ namespace DevZest.Data.Presenters
         }
 
         /// <summary>
-        /// Adheres binding to frozen right layout grid column(s) to prevent it from scrolling outside the viewport.
+        /// Adheres binding to frozen right layout grid column(s) so that it won't scroll outside the scrollable area.
         /// </summary>
         /// <typeparam name="T">The type of the binding.</typeparam>
         /// <param name="binding">The binding.</param>
@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters
         }
 
         /// <summary>
-        /// Adheres binding to frozen top layout grid row(s) to prevent it from scrolling outside the viewport.
+        /// Adheres binding to frozen top layout grid row(s) so that it won't scroll outside the scrollable area.
         /// </summary>
         /// <typeparam name="T">The type of the binding.</typeparam>
         /// <param name="binding">The binding.</param>
@@ -58,7 +58,7 @@ namespace DevZest.Data.Presenters
         }
 
         /// <summary>
-        /// Adheres binding to frozen bottom layout grid row(s) to prevent it from scrolling outside the viewport.
+        /// Adheres binding to frozen bottom layout grid row(s) so that it won't scroll outside the scrollable area.
         /// </summary>
         /// <typeparam name="T">The type of the binding.</typeparam>
         /// <param name="binding">The binding.</param>

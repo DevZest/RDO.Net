@@ -5,13 +5,23 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents a data binding.
+    /// </summary>
     public abstract partial class Binding
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="Binding"/> class.
+        /// </summary>
         protected Binding()
         {
         }
 
         private Template _template;
+
+        /// <summary>
+        /// Gets the <see cref="Template"/> associated with this binding.
+        /// </summary>
         public virtual Template Template
         {
             get { return ParentBinding != null ? ParentBinding.Template : _template; }
@@ -19,16 +29,29 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private GridRange _gridRange;
+
+        /// <summary>
+        /// Gets the <see cref="GridRange"/> to render the target view element.
+        /// </summary>
         public GridRange GridRange
         {
             get { return ParentBinding != null ? ParentBinding.GridRange : _gridRange; }
             private set { _gridRange = value; }
         }
 
+        /// <summary>
+        /// Gets the ordinal of this binding.
+        /// </summary>
         public int Ordinal { get; internal set; } = -1;
 
+        /// <summary>
+        /// Gets the parent binding.
+        /// </summary>
         public abstract Binding ParentBinding { get; }
 
+        /// <summary>
+        /// Gets a value indicates whether this binding is sealed and no further changes allowed.
+        /// </summary>
         public bool IsSealed
         {
             get { return (ParentBinding != null && ParentBinding.IsSealed) || (Template != null && Template.IsSealed); }
@@ -63,6 +86,9 @@ namespace DevZest.Data.Presenters.Primitives
             Ordinal = ordinal;
         }
 
+        /// <summary>
+        /// Gets the style that will be applied to target view element.
+        /// </summary>
         public Style Style { get; internal set; }
 
         internal void OnCreated(UIElement element)
@@ -83,8 +109,14 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract void VerifyRowRange(GridRange rowRange);
 
+        /// <summary>
+        /// Gets the number of order to calculate layout auto sizing.
+        /// </summary>
         public int AutoSizeOrder { get; internal set; }
 
+        /// <summary>
+        /// Gets the waiver for layout auto sizing calculation.
+        /// </summary>
         public AutoSizeWaiver AutoSizeWaiver { get; internal set; }
 
         internal virtual AutoSizeWaiver CoercedAutoSizeWaiver
@@ -176,18 +208,33 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract void Cleanup(UIElement element);
 
+        /// <summary>
+        /// Gets a value indicates whether this binding adheres to frozen left layout grid column(s) so that it won't scroll outside the scrollable area.
+        /// </summary>
         [DefaultValue(false)]
         public bool AdheresToFrozenLeft { get; internal set; }
 
+        /// <summary>
+        /// Gets a value indicates whether this binding adheres to frozen top layout grid row(s) so that it won't scroll outside the scrollable area.
+        /// </summary>
         [DefaultValue(false)]
         public bool AdheresToFrozenTop { get; internal set; }
 
+        /// <summary>
+        /// Gets a value indicates whether this binding adheres to frozen right layout grid column(s) so that it won't scroll outside the scrollable area.
+        /// </summary>
         [DefaultValue(false)]
         public bool AdheresToFrozenRight { get; internal set; }
 
+        /// <summary>
+        /// Gets a value indicates whether this binding adheres to frozen bottom layout grid row(s) so that it won't scroll outside the scrollable area.
+        /// </summary>
         [DefaultValue(false)]
         public bool AdheresToFrozenBottom { get; internal set; }
 
+        /// <summary>
+        /// Gets the type of view element.
+        /// </summary>
         public abstract Type ViewType { get; }
     }
 }

@@ -4,9 +4,17 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents validator with strongly typed result that will be executed asynchronously.
+    /// </summary>
+    /// <typeparam name="T">Type of validation results.</typeparam>
     public abstract class AsyncValidator<T> : AsyncValidator
         where T : class
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="AsyncValidator"/> class.
+        /// </summary>
+        /// <param name="displayName">The display name of this async validator, used in <see cref="AsyncValidationFault"/> error message.</param>
         protected AsyncValidator(string displayName)
             : base(displayName)
         {
@@ -16,6 +24,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private Task<T> _awaitingTask;
 
+        /// <inheritdoc/>
         public override async void Run()
         {
             if (Status == AsyncValidatorStatus.Running)
@@ -39,6 +48,9 @@ namespace DevZest.Data.Presenters.Primitives
         internal abstract T EmptyResult { get; }
 
         private T _results;
+        /// <summary>
+        /// Gets the validation results.
+        /// </summary>
         public T Results
         {
             get { return _results ?? EmptyResult; }
