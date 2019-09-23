@@ -5,7 +5,7 @@ namespace DevZest.Data.Views.Primitives
     /// <summary>
     /// Interaction logic for LoadingAnimation.xaml
     /// </summary>
-    public partial class LoadingAnimation : UserControl
+    internal partial class LoadingAnimation : UserControl
     {
         public LoadingAnimation()
         {
