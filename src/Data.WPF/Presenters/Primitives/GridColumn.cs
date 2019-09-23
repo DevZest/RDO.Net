@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents the column of flexible grid layout.
+    /// </summary>
     public sealed class GridColumn : GridTrack, IConcatList<GridColumn>
     {
         #region IConcatList<GridColumn>
@@ -57,16 +59,25 @@ namespace DevZest.Data.Presenters.Primitives
         {
         }
 
+        /// <summary>
+        /// Gets the width of the grid column.
+        /// </summary>
         public GridLength Width
         {
             get { return Length; }
         }
 
+        /// <summary>
+        /// Gets the minimum width of the grid column.
+        /// </summary>
         public double MinWidth
         {
             get { return MinLength; }
         }
 
+        /// <summary>
+        /// Gets the maximum width of the grid column.
+        /// </summary>
         public double MaxWidth
         {
             get { return MaxLength; }

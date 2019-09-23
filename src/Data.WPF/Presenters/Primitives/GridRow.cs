@@ -5,6 +5,9 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents the row of flexible grid layout.
+    /// </summary>
     public sealed class GridRow : GridTrack, IConcatList<GridRow>
     {
         #region IConcatList<GridRow>
@@ -55,16 +58,25 @@ namespace DevZest.Data.Presenters.Primitives
         {
         }
 
+        /// <summary>
+        /// Gets the height of the grid row.
+        /// </summary>
         public GridLength Height
         {
             get { return Length; }
         }
 
+        /// <summary>
+        /// Gets the minimum height of the grid row.
+        /// </summary>
         public double MinHeight
         {
             get { return MinLength; }
         }
 
+        /// <summary>
+        /// Gets the maximum height of the grid row.
+        /// </summary>
         public double MaxHeight
         {
             get { return MaxLength; }

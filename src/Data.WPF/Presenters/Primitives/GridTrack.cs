@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Base class of <see cref="GridColumn"/> and <see cref="GridRow"/>.
+    /// </summary>
     public abstract class GridTrack
     {
         internal GridTrack(IGridTrackCollection owner, int ordinal, GridLengthParser.Result result)
@@ -35,12 +36,18 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _ordinal; }
         }
 
+        /// <summary>
+        /// Gets the orientation.
+        /// </summary>
         public Orientation Orientation
         {
             get { return Owner.Orientation; }
         }
 
         private GridLength _length;
+        /// <summary>
+        /// Gets the grid length.
+        /// </summary>
         public GridLength Length
         {
             get { return _length; }
@@ -63,6 +70,10 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
+        /// <summary>
+        /// Resizes this grid track.
+        /// </summary>
+        /// <param name="value">The new length.</param>
         public void Resize(GridLength value)
         {
             if (Orientation == Template?.Orientation && value.IsStar)
@@ -85,8 +96,14 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.LayoutManager; }
         }
 
+        /// <summary>
+        /// Gets the minimum length of this grid track.
+        /// </summary>
         public double MinLength { get; private set; }
 
+        /// <summary>
+        /// Gets the maximum length of this grid track.
+        /// </summary>
         public double MaxLength { get; private set; }
 
         internal bool IsAutoLength
@@ -104,6 +121,9 @@ namespace DevZest.Data.Presenters.Primitives
         /// </remarks>
         private double _measuredValue;
 
+        /// <summary>
+        /// Gets the measured length.
+        /// </summary>
         public double MeasuredLength
         {
             get { return VariantByContainer ? double.NaN : _measuredValue; }

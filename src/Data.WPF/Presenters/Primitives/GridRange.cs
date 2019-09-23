@@ -2,10 +2,12 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents a range of grid cells.
+    /// </summary>
     public struct GridRange
     {
         internal GridRange(GridColumn left, GridRow top)
@@ -25,9 +27,24 @@ namespace DevZest.Data.Presenters.Primitives
             Bottom = bottom;
         }
 
+        /// <summary>
+        /// Gets the left grid column.
+        /// </summary>
         public readonly GridColumn Left;
+
+        /// <summary>
+        /// Gets the top grid row.
+        /// </summary>
         public readonly GridRow Top;
+
+        /// <summary>
+        /// Gets the right grid column.
+        /// </summary>
         public readonly GridColumn Right;
+
+        /// <summary>
+        /// Gets the bottom grid row.
+        /// </summary>
         public readonly GridRow Bottom;
 
         internal Template Template
@@ -35,11 +52,19 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Left == null ? null : Left.Template; }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this <see cref="GridRange"/> is empty.
+        /// </summary>
         public bool IsEmpty
         {
             get { return Template == null; }
         }
 
+        /// <summary>
+        /// Determines whether this <see cref="GridRange"/> contains other <see cref="GridRange"/>.
+        /// </summary>
+        /// <param name="gridRange">The other <see cref="GridRange"/>.</param>
+        /// <returns><see langword="true"/> if this <see cref="GridRange"/> contains other <see cref="GridRange"/>, otherwise <see langword="false"/>.</returns>
         public bool Contains(GridRange gridRange)
         {
             if (IsEmpty || Template != gridRange.Template)
@@ -48,6 +73,11 @@ namespace DevZest.Data.Presenters.Primitives
                 && Top.Ordinal <= gridRange.Top.Ordinal && Bottom.Ordinal >= gridRange.Bottom.Ordinal;
         }
 
+        /// <summary>
+        /// Determines whether this <see cref="GridRange"/> contains specified <see cref="GridColumn"/>.
+        /// </summary>
+        /// <param name="gridColumn">The specified <see cref="GridColumn"/>.</param>
+        /// <returns><see langword="true"/> if this <see cref="GridRange"/> contains specified <see cref="GridColumn"/>, otherwise <see langword="false"/>.</returns>
         public bool Contains(GridColumn gridColumn)
         {
             if (IsEmpty || Template != gridColumn.Template)
@@ -56,6 +86,11 @@ namespace DevZest.Data.Presenters.Primitives
             return Contains(Left, Right, gridColumn);
         }
 
+        /// <summary>
+        /// Determines whether this <see cref="GridRange"/> contains specified <see cref="GridRow"/>.
+        /// </summary>
+        /// <param name="gridRow">The specified <see cref="GridRow"/>.</param>
+        /// <returns><see langword="true"/> if this <see cref="GridRange"/> contains specified <see cref="GridRow"/>, otherwise <see langword="false"/>.</returns>
         public bool Contains(GridRow gridRow)
         {
             if (IsEmpty || Template != gridRow.Template)
@@ -64,6 +99,11 @@ namespace DevZest.Data.Presenters.Primitives
             return Contains(Top, Bottom, gridRow);
         }
 
+        /// <summary>
+        /// Determines whether this <see cref="GridRange"/> intersects other <see cref="GridRange"/>.
+        /// </summary>
+        /// <param name="gridRange">The other <see cref="GridRange"/>.</param>
+        /// <returns><see langword="true"/> if this <see cref="GridRange"/> intersects other <see cref="GridRange"/>, otherwise <see langword="false"/>.</returns>
         public bool IntersectsWith(GridRange gridRange)
         {
             if (IsEmpty || Template != gridRange.Template)
@@ -75,6 +115,11 @@ namespace DevZest.Data.Presenters.Primitives
                 && gridRange.Bottom.Ordinal >= this.Top.Ordinal;
         }
 
+        /// <summary>
+        /// Creates a new range defined as the union of this and the specified range.
+        /// </summary>
+        /// <param name="gridRange">The specified range.</param>
+        /// <returns>The new range.</returns>
         public GridRange Union(GridRange gridRange)
         {
             if (gridRange.IsEmpty)
@@ -135,6 +180,7 @@ namespace DevZest.Data.Presenters.Primitives
             return IsEmpty ? 0 : Template.InternalGridRows.GetMeasuredLength(RowSpan, predict);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "[({0},{1}),({2},{3})]",
