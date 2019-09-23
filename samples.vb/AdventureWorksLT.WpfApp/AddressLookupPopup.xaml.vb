@@ -45,7 +45,7 @@ Public Class AddressLookupPopup
     End Sub
 
     Private Sub SelectCurrent(sender As Object, e As ExecutedRoutedEventArgs)
-        _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(FK, Lookup))
+        _foreignKeyBox.EndLookup(_presenter.CurrentRow.MakeValueBag(FK, Lookup))
         IsOpen = False
     End Sub
 

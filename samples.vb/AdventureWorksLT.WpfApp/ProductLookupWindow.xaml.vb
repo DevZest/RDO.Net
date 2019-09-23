@@ -89,7 +89,7 @@ Public Class ProductLookupWindow
 
     Private Sub SelectCurrent(sender As Object, e As ExecutedRoutedEventArgs)
         If Not Nullable.Equals(_presenter.CurrentProductID, CurrentRow.GetValue(Product.ProductID)) Then
-            _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(PK, Lookup))
+            _foreignKeyBox.EndLookup(CurrentRow.MakeValueBag(PK, Lookup))
         End If
         Close()
     End Sub

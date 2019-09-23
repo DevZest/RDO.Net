@@ -77,7 +77,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             if (_presenter.CurrentCustomerID != CurrentRow.GetValue(_.CustomerID))
             {
-                _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(FK, Lookup));
+                _foreignKeyBox.EndLookup(CurrentRow.MakeValueBag(FK, Lookup));
                 _shipToAddressBox.ClearValue();
                 _billToAddressBox.ClearValue();
             }

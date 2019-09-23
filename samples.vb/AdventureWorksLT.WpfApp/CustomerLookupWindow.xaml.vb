@@ -89,7 +89,7 @@ Public Class CustomerLookupWindow
 
     Private Sub SelectCurrent(sender As Object, e As ExecutedRoutedEventArgs)
         If Not Nullable.Equals(_presenter.CurrentCustomerID, CurrentRow.GetValue(Customer.CustomerID)) Then
-            _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(FK, Lookup))
+            _foreignKeyBox.EndLookup(CurrentRow.MakeValueBag(FK, Lookup))
             _shipToAddressBox.ClearValue()
             _billToAddressBox.ClearValue()
         End If

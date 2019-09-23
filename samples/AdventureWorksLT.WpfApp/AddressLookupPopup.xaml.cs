@@ -53,7 +53,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
-            _foreignKeyBox.EndLookup(_presenter.CurrentRow.AutoSelect(FK, Lookup));
+            _foreignKeyBox.EndLookup(_presenter.CurrentRow.MakeValueBag(FK, Lookup));
             IsOpen = false;
         }
 

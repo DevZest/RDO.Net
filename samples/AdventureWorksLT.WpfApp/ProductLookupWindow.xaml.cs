@@ -70,7 +70,7 @@ namespace DevZest.Samples.AdventureWorksLT
         private void SelectCurrent(object sender, ExecutedRoutedEventArgs e)
         {
             if (_presenter.CurrentProductID != CurrentRow.GetValue(_.ProductID))
-                _foreignKeyBox.EndLookup(CurrentRow.AutoSelect(PK, Lookup));
+                _foreignKeyBox.EndLookup(CurrentRow.MakeValueBag(PK, Lookup));
             Close();
         }
 

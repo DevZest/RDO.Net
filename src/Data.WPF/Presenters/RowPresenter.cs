@@ -587,7 +587,12 @@ namespace DevZest.Data.Presenters
             get { return Template.InternalRowBindings; }
         }
 
-        public void SetValue(ColumnValueBag valueBag, Column column)
+        /// <summary>
+        /// Sets column value in <see cref="ColumnValueBag"/>.
+        /// </summary>
+        /// <param name="valueBag">The <see cref="ColumnValueBag"/>.</param>
+        /// <param name="column">The column.</param>
+        public void SetValueBag(ColumnValueBag valueBag, Column column)
         {
             if (valueBag == null)
                 throw new ArgumentNullException(nameof(valueBag));
@@ -598,6 +603,12 @@ namespace DevZest.Data.Presenters
                 valueBag[column] = column.GetDefaultValue();
         }
 
+        /// <summary>
+        /// Sets key and lookup values in <see cref="ColumnValueBag"/>.
+        /// </summary>
+        /// <param name="valueBag">The <see cref="ColumnValueBag"/>.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="lookup">The lookup projection.</param>
         public void SetValueBag(ColumnValueBag valueBag, CandidateKey key, Projection lookup)
         {
             if (valueBag == null)
@@ -608,18 +619,24 @@ namespace DevZest.Data.Presenters
             for (int i = 0; i < key.Count; i++)
             {
                 var column = key[i].Column;
-                SetValue(valueBag, column);
+                SetValueBag(valueBag, column);
             }
 
             if (lookup != null)
             {
                 var columns = lookup.Columns;
                 for (int i = 0; i < columns.Count; i++)
-                    SetValue(valueBag, columns[i]);
+                    SetValueBag(valueBag, columns[i]);
             }
         }
 
-        public ColumnValueBag AutoSelect(CandidateKey key, Projection lookup)
+        /// <summary>
+        /// Creates column value bag with specified key and lookup.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="lookup">The lookup projection.</param>
+        /// <returns>The created <see cref="ColumnValueBag"/>.</returns>
+        public ColumnValueBag MakeValueBag(CandidateKey key, Projection lookup)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
@@ -631,6 +648,10 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
+        /// <summary>
+        /// Performs validation operation.
+        /// </summary>
+        /// <param name="invalidateView">Indicates whether view should be invalidated.</param>
         public void Validate(bool invalidateView = true)
         {
             var rowValidation = InputManager.RowValidation;
@@ -639,29 +660,50 @@ namespace DevZest.Data.Presenters
                 InputManager.InvalidateView();
         }
 
+        /// <summary>
+        /// Gets the validation info for specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>The result validation info.</returns>
         public ValidationInfo GetValidationInfo(Input<RowBinding, IColumns> input)
         {
             input.VerifyNotNull(nameof(input));
             return InputManager.GetValidationInfo(this, input);
         }
 
+        /// <summary>
+        /// Determines whether validation error exists for specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns><see langword="true"/> if validation error exists, otherwise <see langword="false"/>.</returns>
         public bool HasValidationError(Input<RowBinding, IColumns> input)
         {
             input.VerifyNotNull(nameof(input));
             return InputManager.HasValidationError(this, input);
         }
 
+        /// <summary>
+        /// Determines whether specified input is validating.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns><see langword="true"/> if input is validating, otherwise <see langword="false"/>.</returns>
         public bool IsValidating(Input<RowBinding, IColumns> input)
         {
             input.VerifyNotNull(nameof(input));
             return InputManager.IsValidating(this, input);
         }
 
+        /// <summary>
+        /// Gets the visible validation errors.
+        /// </summary>
         public IValidationErrors VisibleValidationErrors
         {
             get { return InputManager.GetVisibleValidationErrors(this); }
         }
 
+        /// <summary>
+        /// Gets the value indicates whether visible validation error exists.
+        /// </summary>
         public bool HasVisibleValidationError
         {
             get { return InputManager.HasVisibleValidationError(this); }
@@ -720,6 +762,7 @@ namespace DevZest.Data.Presenters
             return _rowMapper == null || !_rowMapper.CanMatchRow || DataRow == null || DataRow.IsAdding ? null : RowMatch.GetHashCode(MatchColumns, DataRow);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return Index.ToString();
@@ -730,6 +773,11 @@ namespace DevZest.Data.Presenters
             get { return RowMapper as ScrollableManager; }
         }
 
+        /// <summary>
+        /// Resizes the layout grid track.
+        /// </summary>
+        /// <param name="gridTrack">The layout grid track.</param>
+        /// <param name="length">The resized length.</param>
         public void Resize(GridTrack gridTrack, GridLength length)
         {
             gridTrack.VerifyNotNull(nameof(gridTrack));
@@ -747,6 +795,11 @@ namespace DevZest.Data.Presenters
             scrollableManager.Resize(this, gridTrack, length);
         }
 
+        /// <summary>
+        /// Gets the length for layout grid track.
+        /// </summary>
+        /// <param name="gridTrack"></param>
+        /// <returns></returns>
         public GridLength GetLength(GridTrack gridTrack)
         {
             gridTrack.VerifyNotNull(nameof(gridTrack));
@@ -762,6 +815,11 @@ namespace DevZest.Data.Presenters
             return scrollableManager.GetLength(gridTrack, this);
         }
 
+        /// <summary>
+        /// Gets the measured length of layout grid track.
+        /// </summary>
+        /// <param name="gridTrack">The layout grid track.</param>
+        /// <returns>the measured length.</returns>
         public double? GetMeasuredLength(GridTrack gridTrack)
         {
             gridTrack.VerifyNotNull(nameof(gridTrack));
