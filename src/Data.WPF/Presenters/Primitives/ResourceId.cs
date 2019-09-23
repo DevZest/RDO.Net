@@ -1,10 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents Id used to load resource.
+    /// </summary>
+    /// <typeparam name="T">The type of the resource.</typeparam>
     public abstract class ResourceId<T>
         where T : class
     {
@@ -15,6 +18,10 @@ namespace DevZest.Data.Presenters.Primitives
             var currentApp = Application.Current;
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="ResourceId{T}"/> class.
+        /// </summary>
+        /// <param name="type">The type that will be used to resolve the resource URI.</param>
         protected ResourceId(Type type)
         {
             if (type == null)
@@ -24,6 +31,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         private readonly string _uriString;
         private T _loadedResource;
+
+        /// <summary>
+        /// Gets or loads the resource.
+        /// </summary>
+        /// <param name="throwsExceptionIfFailed">Indicates whether throws exception when loading resource failed.</param>
+        /// <returns>The resource.</returns>
         public T GetOrLoad(bool throwsExceptionIfFailed = true)
         {
             return _loadedResource ?? (_loadedResource = LoadResource(throwsExceptionIfFailed));
@@ -42,6 +55,9 @@ namespace DevZest.Data.Presenters.Primitives
             return string.Format(CultureInfo.InvariantCulture, "pack://application:,,,/{0};component/{1}{2}.{3}.xaml", type.Assembly.GetName().Name, GetPath(type), type.Name, UriSuffix);
         }
 
+        /// <summary>
+        /// Gets the URI suffix.
+        /// </summary>
         protected abstract string UriSuffix { get; }
 
         private static string GetPath(Type type)
