@@ -6,12 +6,23 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents block level composite data binding.
+    /// </summary>
+    /// <typeparam name="T">Type of target UI element.</typeparam>
     public sealed class BlockCompositeBinding<T> : BlockBindingBase<T>
         where T : UIElement, new()
     {
         private List<BlockBinding> _childBindings = new List<BlockBinding>();
         private List<Func<T, UIElement>> _childGetters = new List<Func<T, UIElement>>();
 
+        /// <summary>
+        /// Adds child binding.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child binding target UI element.</typeparam>
+        /// <param name="childBinding">The child binding.</param>
+        /// <param name="childGetter">The getter to return child UI element.</param>
+        /// <returns>This composite binding for fluent coding.</returns>
         public BlockCompositeBinding<T> AddChild<TChild>(BlockBinding<TChild> childBinding, Func<T, TChild> childGetter)
             where TChild : UIElement, new()
         {
@@ -27,7 +38,9 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-
+        /// <summary>
+        /// Gets collection of child bindings.
+        /// </summary>
         public IReadOnlyList<Binding> ChildBindings
         {
             get { return _childBindings; }

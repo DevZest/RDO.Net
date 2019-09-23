@@ -8,6 +8,9 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Base class for row level data binding.
+    /// </summary>
     public abstract class RowBinding : TwoWayBinding, IConcatList<RowBinding>
     {
         #region IConcatList<RowBinding>
@@ -59,8 +62,14 @@ namespace DevZest.Data.Presenters
 
         #endregion
 
+        /// <summary>
+        /// Gets the parent row binding.
+        /// </summary>
         public RowBinding Parent { get; private set; }
 
+        /// <summary>
+        /// Gets the child bindings.
+        /// </summary>
         public abstract IReadOnlyList<RowBinding> ChildBindings { get; }
 
         public abstract Input<RowBinding, IColumns> RowInput { get; }
