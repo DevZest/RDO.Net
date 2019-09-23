@@ -11,7 +11,7 @@ namespace DevZest.Data.Views
     /// Represents a button that can select/deselect all rows.
     /// </summary>
     /// <remarks>Use this control together with <see cref="RowHeader"/>. Alternatively you can use a <see cref="CheckBox"/> via data binding.</remarks>
-    public class GridHeader : ToggleButton, IScalarElement, RowSelectionWiper.ISelector
+    public class GridHeader : ToggleButton, IScalarElement, RowSelection.ISelector
     {
         /// <summary>
         /// Identifies <see cref="SeparatorBrush"/> dependency property.
@@ -51,7 +51,7 @@ namespace DevZest.Data.Views
         void IScalarElement.Setup(ScalarPresenter scalarPresenter)
         {
             var dataPresenter = scalarPresenter.DataPresenter;
-            RowSelectionWiper.EnsureSetup(dataPresenter);
+            RowSelection.EnsureSetup(dataPresenter);
         }
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)

@@ -23,7 +23,7 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewRow)]
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewCurrentRow)]
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewEditingRow)]
-    public class RowHeader : ButtonBase, IRowElement, RowSelectionWiper.ISelector
+    public class RowHeader : ButtonBase, IRowElement, RowSelection.ISelector
     {
         /// <summary>
         /// Styles can be applied to <see cref="RowHeader"/> control.
@@ -155,7 +155,7 @@ namespace DevZest.Data.Views
         void IRowElement.Setup(RowPresenter p)
         {
             var dataPresenter = p.DataPresenter;
-            RowSelectionWiper.EnsureSetup(dataPresenter);
+            RowSelection.EnsureSetup(dataPresenter);
         }
 
         void IRowElement.Refresh(RowPresenter p)

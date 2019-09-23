@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public static class RowSelectionWiper
+    public static class RowSelection
     {
         public interface ISelector
         {
