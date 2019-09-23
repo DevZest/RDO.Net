@@ -7,10 +7,24 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents the model of tabular text DataSet.
+    /// </summary>
     public sealed class TabularText : Model
     {
+        /// <summary>
+        /// Gets the quotation mark char '"'.
+        /// </summary>
         public const char QuotationMark = '"';
+
+        /// <summary>
+        /// Gets the comma delimiter char ','.
+        /// </summary>
         public const char CommaDelimiter = ',';
+
+        /// <summary>
+        /// Gets the tab delimiter char '\t'.
+        /// </summary>
         public const char TabDelimiter = '\t';
 
         internal static void Format(string s, StringBuilder output, char delimiter)
@@ -55,11 +69,18 @@ namespace DevZest.Data.Presenters.Primitives
             return escaped;
         }
 
+        /// <summary>
+        /// Gets a value indicates whether tabular text DataSet can be pasted from clipboard.
+        /// </summary>
         public static bool CanPasteFromClipboard
         {
             get { return Clipboard.ContainsData(DataFormats.CommaSeparatedValue) || Clipboard.ContainsText(); }
         }
 
+        /// <summary>
+        /// Pastes data from clipboard.
+        /// </summary>
+        /// <returns>The tabular text DataSet.</returns>
         public static DataSet<TabularText> PasteFromClipboard()
         {
             var csv = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
@@ -73,6 +94,12 @@ namespace DevZest.Data.Presenters.Primitives
             return null;
         }
 
+        /// <summary>
+        /// Parses string into tabular text DataSet.
+        /// </summary>
+        /// <param name="s">The string.</param>
+        /// <param name="delimiter">The delimiter char.</param>
+        /// <returns>The result tabular text DataSet.</returns>
         public static DataSet<TabularText> Parse(string s, char delimiter)
         {
             s.VerifyNotNull(nameof(s));
@@ -82,6 +109,12 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
+        /// <summary>
+        /// Parses text from text reader into tabular text DataSet.
+        /// </summary>
+        /// <param name="reader">The text reader.</param>
+        /// <param name="delimiter">The delimiter char.</param>
+        /// <returns>The result tabular text DataSet.</returns>
         public static DataSet<TabularText> Parse(TextReader reader, char delimiter)
         {
             reader.VerifyNotNull(nameof(reader));
@@ -121,6 +154,9 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private readonly List<LocalColumn<string>> _textColumns = new List<LocalColumn<string>>();
+        /// <summary>
+        /// Gets the text columns.
+        /// </summary>
         public IReadOnlyList<Column<string>> TextColumns
         {
             get { return _textColumns; }

@@ -5,9 +5,18 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Base class for strongly typed scalar binding.
+    /// </summary>
+    /// <typeparam name="T">Type of view element.</typeparam>
     public abstract class ScalarBindingBase<T> : ScalarBinding
         where T : UIElement, new()
     {
+        /// <summary>
+        /// Gets the view element for specified flow index..
+        /// </summary>
+        /// <param name="flowIndex">The specified flow index.</param>
+        /// <returns>The result view element.</returns>
         public new T this[int flowIndex]
         {
             get { return (T)base[flowIndex]; }
@@ -69,6 +78,11 @@ namespace DevZest.Data.Presenters.Primitives
             SettingUpElement = element == null ? Create() : (T)element;
         }
 
+        /// <summary>
+        /// Gets the view element currently being setup at specified flow index.
+        /// </summary>
+        /// <param name="flowIndex">The flow index.</param>
+        /// <returns>The view element.</returns>
         public T GetSettingUpElement(int flowIndex)
         {
             if (RepeatsWhenFlow)
@@ -84,6 +98,11 @@ namespace DevZest.Data.Presenters.Primitives
                 return SettingUpElement;
         }
 
+        /// <summary>
+        /// Gets the view element currently being setup for specified scalar presenter.
+        /// </summary>
+        /// <param name="scalarPresenter">The scalar presenter.</param>
+        /// <returns>The view element.</returns>
         public T GetSettingUpElement(ScalarPresenter scalarPresenter)
         {
             if (scalarPresenter == null)
@@ -108,6 +127,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract void PerformSetup(T element, ScalarPresenter scalarPresenter);
 
+        /// <inheritdoc/>
         public sealed override Type ViewType
         {
             get { return typeof(T); }

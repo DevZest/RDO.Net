@@ -1,21 +1,38 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents selection of rows that can be copied to system clipboard.
+    /// </summary>
     public struct SerializableSelection
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="SerializableSelection"/>.
+        /// </summary>
+        /// <param name="rows">The selection of rows.</param>
+        /// <param name="columnSerializers">The column serializers.</param>
         public SerializableSelection(IReadOnlyList<RowPresenter> rows, IReadOnlyList<ColumnSerializer> columnSerializers)
         {
             Rows = rows.VerifyNotNull(nameof(rows)).VerifyNoNullItem(nameof(rows));
             ColumnSerializers = columnSerializers.VerifyNotNull(nameof(columnSerializers)).VerifyNoNullItem(nameof(columnSerializers));
         }
 
+        /// <summary>
+        /// Gets the selection of rows.
+        /// </summary>
         public readonly IReadOnlyList<RowPresenter> Rows;
+
+        /// <summary>
+        /// Gets the column serializers.
+        /// </summary>
         public readonly IReadOnlyList<ColumnSerializer> ColumnSerializers;
 
+        /// <summary>
+        /// Gets a value indicates whether this serializable selection is empty.
+        /// </summary>
         public bool IsEmpty
         {
             get { return IsEmptyList(Rows) || IsEmptyList(ColumnSerializers); }
@@ -26,11 +43,19 @@ namespace DevZest.Data.Presenters.Primitives
             return list == null || list.Count == 0;
         }
 
+        /// <summary>
+        /// Gets a value indicates whether the selection of rows can be copied to system clipboard.
+        /// </summary>
         public bool CanCopyToClipboard
         {
             get { return !IsEmpty; }
         }
 
+        /// <summary>
+        /// Copyies data to clipboard.
+        /// </summary>
+        /// <param name="includeColumnNames">Indicates whether column names should be included.</param>
+        /// <param name="copy">Indicates whether the data object should be left on the clipboard when the application exits.</param>
         public void CopyToClipboard(bool includeColumnNames, bool copy)
         {
             if (!CanCopyToClipboard)

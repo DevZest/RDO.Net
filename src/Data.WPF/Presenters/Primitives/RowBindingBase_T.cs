@@ -7,7 +7,7 @@ namespace DevZest.Data.Presenters.Primitives
     /// <summary>
     /// Base class for strongly typed row binding.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Type of view element.</typeparam>
     public abstract class RowBindingBase<T> : RowBinding
         where T : UIElement, new()
     {

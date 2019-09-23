@@ -8,8 +8,14 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Provides service to coordinate multiple <see cref="RowSelection.ISelector"/> instances.
+    /// </summary>
     public static class RowSelection
     {
+        /// <summary>
+        /// Identifies view element as row selector.
+        /// </summary>
         public interface ISelector
         {
         }
@@ -97,6 +103,10 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
+        /// <summary>
+        /// Ensures row selection service properly setup.
+        /// </summary>
+        /// <param name="dataPresenter">The data presenter.</param>
         public static void EnsureSetup(DataPresenter dataPresenter)
         {
             if (!ServiceManager.IsRegistered<FocusTracker>())
