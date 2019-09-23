@@ -5,6 +5,10 @@ using System;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Base class for strongly type block binding.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class BlockBindingBase<T> : BlockBinding
         where T : UIElement, new()
     {
@@ -15,6 +19,9 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
+        /// <summary>
+        /// Gets the view element that is setting up.
+        /// </summary>
         public T SettingUpElement { get; private set; }
 
         internal sealed override UIElement GetSettingUpElement()
@@ -42,11 +49,17 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract void PerformSetup(BlockView blockView);
 
+        /// <summary>
+        /// Gets the view element at specified block ordinal.
+        /// </summary>
+        /// <param name="blockOrdinal">The specified block ordinal.</param>
+        /// <returns>The view element.</returns>
         public new T this[int blockOrdinal]
         {
             get { return (T)base[blockOrdinal]; }
         }
 
+        /// <inheritdoc/>
         public sealed override Type ViewType
         {
             get { return typeof(T); }

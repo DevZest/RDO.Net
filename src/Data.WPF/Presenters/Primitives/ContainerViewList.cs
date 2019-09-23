@@ -7,6 +7,9 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents a list of <see cref="ContainerView"/> objects.
+    /// </summary>
     public abstract class ContainerViewList : IReadOnlyList<ContainerView>
     {
         internal static ContainerViewList Empty
@@ -180,10 +183,22 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
+        /// <summary>
+        /// Gets the <see cref="ContainerView"/> at specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <returns>The result <see cref="ContainerView"/>.</returns>
         public abstract ContainerView this[int index] { get; }
 
+        /// <summary>
+        /// Gets the count of <see cref="ContainerView"/> objects.
+        /// </summary>
         public abstract int Count { get; }
 
+        /// <summary>
+        /// Gets the enumerator of this collection.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<ContainerView> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
@@ -195,7 +210,16 @@ namespace DevZest.Data.Presenters.Primitives
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Gets the maxium count.
+        /// </summary>
         public abstract int MaxCount { get; }
+
+        /// <summary>
+        /// Gets the index of <see cref="ContainerView"/> for specified ordinal.
+        /// </summary>
+        /// <param name="ordinal">The ordinal.</param>
+        /// <returns>The index.</returns>
         public int IndexOf(int ordinal)
         {
             Debug.Assert(ordinal >= 0 && ordinal < MaxCount);
@@ -209,11 +233,17 @@ namespace DevZest.Data.Presenters.Primitives
             return -1;
         }
 
+        /// <summary>
+        /// Gets the first <see cref="ContainerView"/>.
+        /// </summary>
         public ContainerView First
         {
             get { return Count == 0 ? null : this[0]; }
         }
 
+        /// <summary>
+        /// Gets the last <see cref="ContainerView"/>.
+        /// </summary>
         public ContainerView Last
         {
             get { return Count == 0 ? null : this[Count - 1]; }
@@ -236,6 +266,11 @@ namespace DevZest.Data.Presenters.Primitives
             return First != null && ordinal >= First.ContainerOrdinal && ordinal <= Last.ContainerOrdinal;
         }
 
+        /// <summary>
+        /// Gets the <see cref="ContainerView"/> at specified ordinal.
+        /// </summary>
+        /// <param name="ordinal">The ordinal.</param>
+        /// <returns>The result <see cref="ContainerView"/>.</returns>
         public ContainerView GetContainerView(int ordinal)
         {
             return IsRealized(ordinal) ? this[ordinal - First.ContainerOrdinal] : null;
