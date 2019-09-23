@@ -2,10 +2,10 @@
 
 namespace DevZest.Data
 {
-    /// <summary>Represents set of Column(s), which is specially optimized for singleton set and immutability.</summary>
+    /// <summary>Represents set of Column(s), which is specially optimized for single item set and immutability.</summary>
     /// <remarks>
     /// <para><see cref="Column"/> class implements <see cref="IColumns"/>, so a <see cref="Column"/> instance can represent both
-    /// the column itself and a singleton set of columns. This can improve performance by avoiding object creation.</para>
+    /// the column itself and a single item set of column. This can improve performance by avoiding object creation.</para>
     /// <para><see cref="IColumns"/> can be sealed as immutable, any change to <see cref="IColumns"/> may or may not
     /// create a new <see cref="IColumns"/> instance. Consumer of <see cref="IColumns"/> should always assume it's immutable.</para>
     /// <para>Static class <see cref="Columns"/> is provided to manipulate <see cref="IColumns"/>.</para>
