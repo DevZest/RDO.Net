@@ -2,17 +2,27 @@
 using System.Windows;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents row level composite data binding.
+    /// </summary>
+    /// <typeparam name="T">The type of view element.</typeparam>
     public sealed class RowCompositeBinding<T> : RowBindingBase<T>
         where T : UIElement, new()
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="RowCompositeBinding{T}"/> class.
+        /// </summary>
         public RowCompositeBinding()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RowCompositeBinding{T}"/> class.
+        /// </summary>
+        /// <param name="onRefresh">The delegate to refresh the binding.</param>
         public RowCompositeBinding(Action<T, RowPresenter> onRefresh)
         {
             _onRefresh = onRefresh;
@@ -21,16 +31,25 @@ namespace DevZest.Data.Presenters
         private List<RowBinding> _childBindings = new List<RowBinding>();
         private List<Func<T, UIElement>> _childGetters = new List<Func<T, UIElement>>();
 
+        /// <inheritdoc/>
         public override IReadOnlyList<RowBinding> ChildBindings
         {
             get { return _childBindings; }
         }
 
+        /// <inheritdoc/>
         public override Input<RowBinding, IColumns> RowInput
         {
             get { return null; }
         }
 
+        /// <summary>
+        /// Adds child binding.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child view element.</typeparam>
+        /// <param name="childBinding">The child binding.</param>
+        /// <param name="childGetter">Getter to return child view element.</param>
+        /// <returns>This row composite binding for fluent coding.</returns>
         public RowCompositeBinding<T> AddChild<TChild>(RowBindingBase<TChild> childBinding, Func<T, TChild> childGetter)
             where TChild : UIElement, new()
         {
@@ -81,6 +100,7 @@ namespace DevZest.Data.Presenters
         }
 
         private bool _isRefreshing;
+        /// <inheritdoc/>
         public override bool IsRefreshing
         {
             get { return _isRefreshing; }

@@ -18,6 +18,9 @@ namespace DevZest.Data.Presenters
         bool IsLockedByFlushingError(UIElement element);
     }
 
+    /// <summary>
+    /// Contains row level validation logic.
+    /// </summary>
     public sealed class RowValidation : IRowValidation
     {
         internal RowValidation(InputManager inputManager)
@@ -54,6 +57,9 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.Template; }
         }
 
+        /// <summary>
+        /// Gets the async validators.
+        /// </summary>
         public IRowAsyncValidators AsyncValidators
         {
             get { return Template.RowAsyncValidators; }
@@ -75,6 +81,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the flushing errors.
+        /// </summary>
         public IReadOnlyList<FlushingError> FlushingErrors
         {
             get
@@ -102,6 +111,9 @@ namespace DevZest.Data.Presenters
             get { return _asyncErrorsByRow ?? (_asyncErrorsByRow = new Dictionary<RowPresenter, IDataValidationErrors>()); }
         }
 
+        /// <summary>
+        /// Gets the validaiton errors.
+        /// </summary>
         public IReadOnlyDictionary<RowPresenter, IDataValidationErrors> Errors
         {
             get { return ErrorsByRow; }
@@ -268,11 +280,20 @@ namespace DevZest.Data.Presenters
             ClearAsyncErrors(rowPresenter);
         }
 
+        /// <summary>
+        /// Getsl the validation mode.
+        /// </summary>
         public ValidationMode Mode
         {
             get { return Template.RowValidationMode; }
         }
 
+        /// <summary>
+        /// Determines whether validation error is visible.
+        /// </summary>
+        /// <param name="rowPresenter">The <see cref="RowPresenter"/>.</param>
+        /// <param name="columns">The columns.</param>
+        /// <returns><see langword="true"/> if validation error is visible, otherwise <see langword="false"/>.</returns>
         public bool IsVisible(RowPresenter rowPresenter, IColumns columns)
         {
             rowPresenter.VerifyNotNull(nameof(rowPresenter));
@@ -305,6 +326,10 @@ namespace DevZest.Data.Presenters
             return Columns.Empty;
         }
 
+        /// <summary>
+        /// Performs validaiton operation.
+        /// </summary>
+        /// <param name="errorLimit">The validation error limit.</param>
         public void Validate(int errorLimit = 1)
         {
             if (errorLimit < 1)
@@ -511,6 +536,10 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
+        /// <summary>
+        /// Sets the async validation errors.
+        /// </summary>
+        /// <param name="validationResults">The validation results.</param>
         public void SetAsyncErrors(IDataValidationResults validationResults)
         {
             if (_asyncErrorsByRow != null)
@@ -583,6 +612,9 @@ namespace DevZest.Data.Presenters
         }
 
         private Input<RowBinding, IColumns>[] _inputs;
+        /// <summary>
+        /// Gets the input objects.
+        /// </summary>
         public IReadOnlyList<Input<RowBinding, IColumns>> Inputs
         {
             get { return _inputs; }
@@ -684,6 +716,9 @@ namespace DevZest.Data.Presenters
             return false;
         }
 
+        /// <summary>
+        /// Gets a value indicates whether any async validator is running.
+        /// </summary>
         public bool IsValidating
         {
             get { return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running); }
