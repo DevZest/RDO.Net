@@ -338,7 +338,7 @@ namespace DevZest.Data.Presenters
         }
 
         /// <summary>
-        /// Tries to submit data input (both scalar and row).
+        /// Tries to submit data input with validation.
         /// </summary>
         /// <param name="focusToErrorInput">A value indicates whether the UI element with validation error should have keyboard focus.</param>
         /// <returns><see langword="true"/> if data input submitted sccessfully, otherwise <see langword="false"/>.</returns>
