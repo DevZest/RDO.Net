@@ -4,12 +4,29 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
+    /// <summary>
+    /// Represents the input to handle two way data binding.
+    /// </summary>
+    /// <typeparam name="TBinding">Type of two way binding.</typeparam>
+    /// <typeparam name="TTarget">Type of input target.</typeparam>
     public abstract class Input<TBinding, TTarget>
         where TBinding : TwoWayBinding
     {
+        /// <summary>
+        /// Gets the binding.
+        /// </summary>
         public abstract TBinding Binding { get; }
+
+        /// <summary>
+        /// Gets the input target.
+        /// </summary>
         public abstract TTarget Target { get; }
+
+        /// <summary>
+        /// Gets the index of this input.
+        /// </summary>
         public int Index { get; internal set; } = -1;
+
         internal abstract bool IsPrecedingOf(Input<TBinding, TTarget> input);
 
         internal bool IsPlaceholder
@@ -18,6 +35,12 @@ namespace DevZest.Data.Presenters.Primitives
         }
     }
 
+    /// <summary>
+    /// Represents the strongly typed input to handle two way data binding.
+    /// </summary>
+    /// <typeparam name="T">Type of view element.</typeparam>
+    /// <typeparam name="TBinding">Type of two way binding.</typeparam>
+    /// <typeparam name="TTarget">Type of input target.</typeparam>
     public abstract class Input<T, TBinding, TTarget> : Input<TBinding, TTarget>
         where T : UIElement, new()
         where TBinding : TwoWayBinding
@@ -84,6 +107,11 @@ namespace DevZest.Data.Presenters.Primitives
                 _progressiveFlushingTrigger.Detach(element);
         }
 
+        /// <summary>
+        /// Gets the flushing error for specified view element.
+        /// </summary>
+        /// <param name="element">The view element.</param>
+        /// <returns>The flushing error, or <see langword="null"/> if there is no error.</returns>
         public abstract FlushingError GetFlushingError(UIElement element);
 
         internal abstract void SetFlushingError(UIElement element, string flushingErrorMessage);
@@ -104,6 +132,9 @@ namespace DevZest.Data.Presenters.Primitives
                 : flushingError == null || flushingError.Message != flushingErrorMessage;
         }
 
+        /// <summary>
+        /// Gets a value indicates whether flushing operation is being performed.
+        /// </summary>
         public bool IsFlushing { get; private set; }
 
         internal virtual void Flush(T element)

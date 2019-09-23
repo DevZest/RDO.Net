@@ -152,7 +152,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (!endEdit)
                 return null;
 
-            /// <see cref="CurrentRow"/> does not always be the currently editing row after editing, see comments on <see cref="ElementManager.OnFocused(RowView)"/>.
+            /// <see cref="ElementManager.CurrentRow"/> does not always be the currently editing row after editing, see comments on <see cref="ElementManager.OnFocused(RowView)"/>.
             var rowAfterEditing = base.EndEdit(staysOnInserting);
             RowValidation.ExitEdit(rowAfterEditing);
             return rowAfterEditing;
