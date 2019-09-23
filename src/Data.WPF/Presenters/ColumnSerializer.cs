@@ -1,18 +1,33 @@
-﻿using DevZest.Data.Presenters.Primitives;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Base class to serialize/deserialize value of data column.
+    /// </summary>
     public abstract class ColumnSerializer
     {
+        /// <summary>
+        /// Creates default column serializer for specified column.
+        /// </summary>
+        /// <param name="column">The specified column.</param>
+        /// <returns>The default column serializer for specified column.</returns>
         public static ColumnSerializer Create(Column column)
         {
             column.VerifyNotNull(nameof(column));
             return new DefaultColumnSerializer(column);
         }
 
+        /// <summary>
+        /// Creates customm column serializer for specified column.
+        /// </summary>
+        /// <typeparam name="T">The data type of the column.</typeparam>
+        /// <param name="column">The specified column.</param>
+        /// <param name="serializer">The delegate to serialize the column.</param>
+        /// <param name="deserializer">The delegate to deserialize the column.</param>
+        /// <returns>The customm column serializer for specified column.</returns>
         public static ColumnSerializer Create<T>(Column<T> column, Func<T, string> serializer, Func<string, T> deserializer)
         {
             column.VerifyNotNull(nameof(column));
@@ -85,10 +100,23 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the column.
+        /// </summary>
         public abstract Column Column { get; }
 
+        /// <summary>
+        /// Deserializes string into column.
+        /// </summary>
+        /// <param name="value">The value of the string.</param>
+        /// <param name="columnValueBag">The <see cref="ColumnValueBag"/> that will contain the column and deserialized value.</param>
         public abstract void Deserialize(string value, ColumnValueBag columnValueBag);
 
+        /// <summary>
+        /// Serializes colummn into string.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
         public abstract string Serialize(RowPresenter row);
     }
 }
