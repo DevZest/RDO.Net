@@ -17,6 +17,9 @@ using System.Reflection;
 
 namespace DevZest.Data.AspNetCore.Primitives
 {
+    /// <summary>
+    /// The default implementation of <see cref="IDataSetHtmlGenerator"/>.
+    /// </summary>
     public class DefaultDataSetHtmlGenerator : IDataSetHtmlGenerator
     {
         // See: (http://www.w3.org/TR/html5/forms.html#the-input-element)
@@ -64,6 +67,11 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         private readonly DataSetValidationHtmlAttributeProvider _validationAttributeProvider;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="DefaultDataSetHtmlGenerator"/>.
+        /// </summary>
+        /// <param name="optionsAccessor">The options accessor.</param>
+        /// <param name="validationAttributeProvider">The <see cref="DataSetValidationHtmlAttributeProvider"/>.</param>
         public DefaultDataSetHtmlGenerator(IOptions<MvcViewOptions> optionsAccessor, DataSetValidationHtmlAttributeProvider validationAttributeProvider)
         {
             if (optionsAccessor == null)
@@ -137,8 +145,8 @@ namespace DevZest.Data.AspNetCore.Primitives
         /// </summary>
         /// <param name="viewContext">A <see cref="ViewContext"/> instance for the current scope.</param>
         /// <param name="tagBuilder">A <see cref="TagBuilder"/> instance.</param>
-        /// <param name="modelExplorer">The <see cref="ModelExplorer"/> for the <paramref name="expression"/>.</param>
-        /// <param name="expression">Expression name, relative to the current model.</param>
+        /// <param name="fullHtmlFieldName">The full HTML field name.</param>
+        /// <param name="column">The column.</param>
         protected virtual void AddValidationAttributes(ViewContext viewContext, TagBuilder tagBuilder, string fullHtmlFieldName, Column column)
         {
             _validationAttributeProvider.AddAndTrackValidationAttributes(viewContext, fullHtmlFieldName, column, tagBuilder.Attributes);
@@ -225,6 +233,20 @@ namespace DevZest.Data.AspNetCore.Primitives
                 htmlAttributes: htmlAttributeDictionary);
         }
 
+        /// <summary>
+        /// Generates &lt;input...&gt; element.
+        /// </summary>
+        /// <param name="viewContext">The view context.</param>
+        /// <param name="inputType">The input type.</param>
+        /// <param name="fullHtmlFieldName">The full html field name.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="value">The data value.</param>
+        /// <param name="isChecked">Indicates whether this input is checked.</param>
+        /// <param name="setId">Indicates whether id should be set.</param>
+        /// <param name="isExplicitValue">Indicates whether this value is explicit.</param>
+        /// <param name="format">The string format.</param>
+        /// <param name="htmlAttributes">The HTML attributes dictionary.</param>
+        /// <returns>The tag builder.</returns>
         protected virtual TagBuilder GenerateInput(ViewContext viewContext, InputType inputType,
             string fullHtmlFieldName, Column column,
             object value,
@@ -396,6 +418,7 @@ namespace DevZest.Data.AspNetCore.Primitives
                 htmlAttributes: htmlAttributeDictionary);
         }
 
+        /// <inheritdoc />
         public virtual TagBuilder GenerateRadioButton(ViewContext viewContext, string fullHtmlFieldName, Column column, object value, bool? isChecked, object htmlAttributes)
         {
             if (viewContext == null)

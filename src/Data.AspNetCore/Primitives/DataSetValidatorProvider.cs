@@ -5,8 +5,12 @@ using System.Linq;
 
 namespace DevZest.Data.AspNetCore.Primitives
 {
+    /// <summary>
+    /// Creates DataSet validator.
+    /// </summary>
     public class DataSetValidatorProvider : IMetadataBasedModelValidatorProvider
     {
+        /// <inheritdoc/>
         public void CreateValidators(ModelValidatorProviderContext context)
         {
             var modelMetadata = context.ModelMetadata;
@@ -24,6 +28,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             }
         }
 
+        /// <inheritdoc/>
         public bool HasValidators(Type modelType, IList<object> validatorMetadata)
         {
             return modelType.IsDataSet();

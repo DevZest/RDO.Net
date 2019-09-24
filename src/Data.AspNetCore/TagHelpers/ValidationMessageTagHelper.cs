@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data.AspNetCore.TagHelpers
 {
     /// <summary>
-    /// <see cref="ITagHelper"/> implementation targeting any HTML element with an <c>asp-validation-for</c>
+    /// <see cref="ITagHelper"/> implementation targeting any HTML element with an <c>dataset-validation-for</c>
     /// attribute.
     /// </summary>
     [HtmlTargetElement("span", Attributes = ValidationForAttributeName + "," + ColumnAttributeName)]
@@ -27,9 +27,11 @@ namespace DevZest.Data.AspNetCore.TagHelpers
         {
         }
 
+        /// <inheritdoc/>
         [HtmlAttributeName(ValidationForAttributeName)]
         public override ModelExpression DataSetFor { get => base.DataSetFor; set => base.DataSetFor = value; }
 
+        /// <inheritdoc/>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             // Ensure Generator does not throw due to empty "fullName" if user provided data-valmsg-for attribute.

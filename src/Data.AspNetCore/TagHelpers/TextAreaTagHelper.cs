@@ -5,6 +5,9 @@ using System;
 
 namespace DevZest.Data.AspNetCore.TagHelpers
 {
+    /// <summary>
+    /// <see cref="ITagHelper"/> implementation targeting &lt;textarea&gt; elements with <c>dataset-*</c> attributes.
+    /// </summary>
     [HtmlTargetElement("textarea", Attributes = DataSetAttributes)]
     public class TextAreaTagHelper : DataSetTagHelperBase
     {
@@ -32,7 +35,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                 Column,
                 DataValue,
                 rows: 0,
-                columns: 0,
+                cols: 0,
                 htmlAttributes: null);
 
             if (tagBuilder != null)

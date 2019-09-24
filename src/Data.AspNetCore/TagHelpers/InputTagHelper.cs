@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using DevZest.Data.AspNetCore.Primitives;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +10,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace DevZest.Data.AspNetCore.TagHelpers
 {
+    /// <summary>
+    /// <see cref="ITagHelper"/> implementation targeting &lt;input&gt; elements with <c>dataset-*</c> attributes.
+    /// </summary>
     [HtmlTargetElement("input", Attributes = DataSetAttributes, TagStructure = TagStructure.WithoutEndTag)]
     public class InputTagHelper : DataSetTagHelperBase
     {
@@ -60,6 +62,10 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                 { "time", @"{0:HH\:mm\:ss.fff}" },
             };
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="InputTagHelper"/> class.
+        /// </summary>
+        /// <param name="generator">The DataSet HTML generator.</param>
         public InputTagHelper(IDataSetHtmlGenerator generator)
             : base(generator)
         {
@@ -98,12 +104,10 @@ namespace DevZest.Data.AspNetCore.TagHelpers
         public string Value { get; set; }
 
         /// <summary>
-        /// Gets an &lt;input&gt; element's "type" attribute value based on the given <paramref name="modelExplorer"/>
-        /// or <see cref="InputType"/>.
+        /// Gets an &lt;input&gt; element's "type" attribute value based on the given <paramref name="column"/>.
         /// </summary>
-        /// <param name="modelExplorer">The <see cref="ModelExplorer"/> to use.</param>
-        /// <param name="inputTypeHint">When this method returns, contains the string, often the name of a
-        /// <see cref="ModelMetadata.ModelType"/> base class, used to determine this method's return value.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="inputTypeHint">When this method returns, contains the string, used to determine this method's return value.</param>
         /// <returns>An &lt;input&gt; element's "type" attribute value.</returns>
         protected string GetInputType(Column column, out string inputTypeHint)
         {
@@ -187,6 +191,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             return format;
         }
 
+        /// <inheritdoc/>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             // Pass through attributes that are also well-known HTML attributes. Must be done prior to any copying

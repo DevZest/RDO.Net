@@ -5,8 +5,12 @@ using System;
 
 namespace DevZest.Data.AspNetCore.Primitives
 {
+    /// <summary>
+    /// Creates <see cref="DataSetModelBinder{T}"/> instance.
+    /// </summary>
     public class DataSetModelBinderProvider : IModelBinderProvider
     {
+        /// <inheritdoc/>
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
             if (context == null)

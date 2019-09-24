@@ -125,7 +125,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             var column = dataSet._.GetColumns()[columnName];
 
             // Act
-            var tagBuilder = generator.GenerateTextArea(viewContext, nameof(dataSet), column, dataValue: null, rows: 1, columns: 1, htmlAttributes: null);
+            var tagBuilder = generator.GenerateTextArea(viewContext, nameof(dataSet), column, dataValue: null, rows: 1, cols: 1, htmlAttributes: null);
 
             // Assert
             var attribute = Assert.Single(tagBuilder.Attributes, a => a.Key == "maxlength");

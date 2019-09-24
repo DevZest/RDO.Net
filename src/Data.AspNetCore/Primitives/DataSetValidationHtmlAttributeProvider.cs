@@ -27,7 +27,7 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         /// <summary>
         /// Adds validation-related HTML attributes to the <paramref name="attributes" /> if client validation is
-        /// enabled and validation attributes have not yet been added for this <paramref name="expression"/> in the
+        /// enabled and validation attributes have not yet been added for this <paramref name="column"/> in the
         /// current &lt;form&gt;.
         /// </summary>
         /// <param name="viewContext">A <see cref="ViewContext"/> instance for the current scope.</param>
@@ -39,7 +39,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         /// to an HTML document or response.
         /// </param>
         /// <remarks>
-        /// Tracks the <paramref name="fullHtmlFieldName"/> in the current <see cref="FormContext"/> to avoid generating
+        /// Tracks the <paramref name="fullHtmlFieldName"/> in the current <see cref="ViewContext"/> to avoid generating
         /// duplicate validation attributes. That is, validation attributes are added only if no previous call has
         /// added them for a field with this name in the &lt;form&gt;.
         /// </remarks>

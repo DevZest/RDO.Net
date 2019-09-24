@@ -5,13 +5,18 @@ using System.Reflection;
 
 namespace DevZest.Data.AspNetCore.Primitives
 {
+    /// <summary>
+    /// Converts <see cref="DataSet"/> into JSON.
+    /// </summary>
     public class DataSetJsonConverter : JsonConverter
     {
+        /// <inheritdoc/>
         public override bool CanConvert(Type objectType)
         {
             return objectType.IsDataSet();
         }
 
+        /// <inheritdoc/>
         public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, JsonSerializer serializer)
         {
             var dataSet = value as DataSet;
@@ -25,6 +30,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             jsonWriter.Write(dataSet);
         }
 
+        /// <inheritdoc/>
         public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var jsonReader = new JsonReaderAdapter(reader, null);

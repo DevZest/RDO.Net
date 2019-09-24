@@ -13,11 +13,19 @@ using Microsoft.Extensions.Logging;
 
 namespace DevZest.Data.AspNetCore.Primitives
 {
+    /// <summary>
+    /// Represents the model binder that provides mapping between request data and DataSet.
+    /// </summary>
+    /// <typeparam name="T">The entity type of DataSet.</typeparam>
     public class DataSetModelBinder<T> : IModelBinder
         where T : class, IEntity, new()
     {
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="DataSetModelBinder{T}"/>.
+        /// </summary>
+        /// <param name="loggerFactory">The logger factory.</param>
         public DataSetModelBinder(ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null)
@@ -26,6 +34,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             _logger = loggerFactory.CreateLogger<DataSetModelBinder<T>>();
         }
 
+        /// <inheritdoc/>
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var valueProvider = bindingContext.ValueProvider;
@@ -44,6 +53,11 @@ namespace DevZest.Data.AspNetCore.Primitives
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Creates DataSet.
+        /// </summary>
+        /// <param name="bindingContext">The binding context.</param>
+        /// <returns></returns>
         protected virtual DataSet<T> CreateDataSet(ModelBindingContext bindingContext)
         {
             return DataSet<T>.Create();
