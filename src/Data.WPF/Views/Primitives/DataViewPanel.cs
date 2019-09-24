@@ -10,6 +10,9 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Views.Primitives
 {
+    /// <summary>
+    /// Represents the panel of <see cref="DataView"/>.
+    /// </summary>
     public sealed class DataViewPanel : FrameworkElement, IScrollInfo
     {
         private class GridLineLayer : UIElement
@@ -253,6 +256,9 @@ namespace DevZest.Data.Views.Primitives
             ClipToBoundsProperty.OverrideMetadata(typeof(DataViewPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="DataViewPanel"/> class.
+        /// </summary>
         public DataViewPanel()
         {
             _gridLineLayer = new GridLineLayer(this);
@@ -299,11 +305,13 @@ namespace DevZest.Data.Views.Primitives
             }
         }
 
+        /// <inheritdoc/>
         protected override int VisualChildrenCount
         {
             get { return Elements.Count + 1; }
         }
 
+        /// <inheritdoc/>
         protected override Visual GetVisualChild(int index)
         {
             if (index < 0 || index >= VisualChildrenCount)
@@ -312,6 +320,7 @@ namespace DevZest.Data.Views.Primitives
             return index == VisualChildrenCount - 1 ? _gridLineLayer : Elements[index];
         }
 
+        /// <inheritdoc/>
         protected override Size MeasureOverride(Size availableSize)
         {
             var layoutManager = LayoutManager;
@@ -321,6 +330,7 @@ namespace DevZest.Data.Views.Primitives
             return result;
         }
 
+        /// <inheritdoc/>
         protected override Size ArrangeOverride(Size finalSize)
         {
             var layoutManager = LayoutManager;

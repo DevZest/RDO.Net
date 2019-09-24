@@ -7,8 +7,14 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Views.Primitives
 {
+    /// <summary>
+    /// Represents panel of <see cref="RowView"/>.
+    /// </summary>
     public class RowViewPanel : FrameworkElement
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="RowViewPanel"/> class.
+        /// </summary>
         public RowViewPanel()
         {
         }
@@ -20,11 +26,7 @@ namespace DevZest.Data.Views.Primitives
 
         private RowPresenter RowPresenter
         {
-            get
-            {
-                var rowView = RowView;
-                return rowView == null ? null : rowView.RowPresenter;
-            }
+            get { return RowView?.RowPresenter; }
         }
 
         private LayoutManager LayoutManager
@@ -48,11 +50,13 @@ namespace DevZest.Data.Views.Primitives
             }
         }
 
+        /// <inheritdoc/>
         protected override int VisualChildrenCount
         {
             get { return Elements.Count; }
         }
 
+        /// <inheritdoc/>
         protected override Visual GetVisualChild(int index)
         {
             if (index < 0 || index >= VisualChildrenCount)
@@ -61,6 +65,7 @@ namespace DevZest.Data.Views.Primitives
             return Elements[index];
         }
 
+        /// <inheritdoc/>
         protected override Size MeasureOverride(Size availableSize)
         {
             var layoutManager = LayoutManager;
@@ -74,6 +79,7 @@ namespace DevZest.Data.Views.Primitives
             return base.MeasureOverride(availableSize);
         }
 
+        /// <inheritdoc/>
         protected override Size ArrangeOverride(Size finalSize)
         {
             var layoutManager = LayoutManager;
