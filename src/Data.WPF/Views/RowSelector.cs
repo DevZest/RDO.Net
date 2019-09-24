@@ -92,8 +92,8 @@ namespace DevZest.Data.Views
         static RowSelector()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowSelector), new FrameworkPropertyMetadata(typeof(RowSelector)));
-            Service.Register<ICommandService, CommandService>();
-            Service.Register<CurrentRowSynchronizer, CurrentRowSynchronizer>();
+            ServiceManager.Register<ICommandService, CommandService>();
+            ServiceManager.Register<CurrentRowSynchronizer, CurrentRowSynchronizer>();
         }
 
         /// <summary>

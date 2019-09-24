@@ -109,8 +109,8 @@ namespace DevZest.Data.Presenters.Primitives
         /// <param name="dataPresenter">The data presenter.</param>
         public static void EnsureSetup(DataPresenter dataPresenter)
         {
-            if (!Service.IsRegistered<FocusTracker>())
-                Service.Register<FocusTracker, FocusTracker>();
+            if (!ServiceManager.IsRegistered<FocusTracker>())
+                ServiceManager.Register<FocusTracker, FocusTracker>();
             var service = dataPresenter.GetRegisteredService<FocusTracker>();
             Debug.Assert(service != null);
         }

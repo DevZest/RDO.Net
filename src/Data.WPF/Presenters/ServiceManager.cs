@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
-    public static class Service
+    public static class ServiceManager
     {
         private static Dictionary<Type, Func<IService>> _serviceProviders = new Dictionary<Type, Func<IService>>();
         private static ConditionalWeakTable<DataPresenter, ConcurrentDictionary<Type, IService>> _services = new ConditionalWeakTable<DataPresenter, ConcurrentDictionary<Type, IService>>();

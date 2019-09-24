@@ -223,7 +223,7 @@ namespace DevZest.Data.Views
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(typeof(RowView)));
             FocusableProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
-            Service.Register<ICommandService, CommandService>();
+            ServiceManager.Register<ICommandService, CommandService>();
         }
 
         /// <summary>
