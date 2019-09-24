@@ -5,6 +5,9 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Views
 {
+    /// <summary>
+    /// Represents a control that displays scalar data.
+    /// </summary>
     public class SimpleView : ContentControl, IBaseView
     {
         static SimpleView()
@@ -12,6 +15,9 @@ namespace DevZest.Data.Views
             FocusableProperty.OverrideMetadata(typeof(SimpleView), new FrameworkPropertyMetadata(BooleanBoxes.False));
         }
 
+        /// <summary>
+        /// Gets the presenter.
+        /// </summary>
         public SimplePresenter Presenter { get; private set; }
 
         BasePresenter IBaseView.Presenter
@@ -32,6 +38,7 @@ namespace DevZest.Data.Views
                 this.RefreshValidation(layoutManager.GetScalarValidationInfo());
         }
 
+        /// <inheritdoc/>
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             base.OnGotFocus(e);

@@ -8,6 +8,9 @@ using System.Windows.Data;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Provides validation related attached properties and utility methods.
+    /// </summary>
     public static class Validation
     {
         internal static class TemplateIds
@@ -17,7 +20,7 @@ namespace DevZest.Data.Presenters
             public static readonly TemplateId Succeeded = new TemplateId(typeof(Validation));
         }
 
-        public static class Templates
+        internal static class Templates
         {
             public static ControlTemplate Failed
             {
@@ -37,24 +40,45 @@ namespace DevZest.Data.Presenters
 
         private static readonly DependencyPropertyKey StatusPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Status",
             typeof(ValidationStatus?), typeof(Validation), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnStatusChanged)));
+
+        /// <summary>
+        /// Identifies the Status readonly attached property (<see cref="GetStatus(DependencyObject)"/>).
+        /// </summary>
         public static readonly DependencyProperty StatusProperty = StatusPropertyKey.DependencyProperty;
 
+        /// <summary>
+        /// Identifies the FailedFlushingTemplate attached property (<see cref="GetFailedFlushingTemplate(DependencyObject)"/>/<see cref="SetFailedFlushingTemplate(DependencyObject, ControlTemplate)"/>).
+        /// </summary>
         public static readonly DependencyProperty FailedFlushingTemplateProperty = DependencyProperty.RegisterAttached("FailedFlushingTemplate",
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(TemplateIds.Failed.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnFailedFlushingTemplateChanged)));
 
+        /// <summary>
+        /// Identifies the FailedTemplate attached property (<see cref="GetFailedTemplate(DependencyObject)"/>/<see cref="SetFailedTemplate(DependencyObject, ControlTemplate)"/>).
+        /// </summary>
         public static readonly DependencyProperty FailedTemplateProperty = DependencyProperty.RegisterAttached("FailedTemplate",
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(TemplateIds.Failed.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnFailedTemplateChanged)));
 
+        /// <summary>
+        /// Identifies the ValidatinigTemplate attached property (<see cref="GetValidatingTemplate(DependencyObject)"/>/<see cref="SetValidatingTemplate(DependencyObject, ControlTemplate)"/>).
+        /// </summary>
         public static readonly DependencyProperty ValidatingTemplateProperty = DependencyProperty.RegisterAttached("ValidatingTemplate",
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(TemplateIds.Validating.GetOrLoad(false),
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnValidatingTemplateChanged)));
 
+        /// <summary>
+        /// Identifies the SucceededTemplate attached property (<see cref="GetSucceededTemplate(DependencyObject)"/>/<see cref="SetSucceededTemplate(DependencyObject, ControlTemplate)"/>).
+        /// </summary>
         public static readonly DependencyProperty SucceededTemplateProperty = DependencyProperty.RegisterAttached("SucceededTemplate",
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(null,
                 FrameworkPropertyMetadataOptions.NotDataBindable | FrameworkPropertyMetadataOptions.Inherits, new PropertyChangedCallback(OnSucceededTemplateChanged)));
 
+        /// <summary>
+        /// Gets validation status for specified view element. This is the getter of Status attached property.
+        /// </summary>
+        /// <param name="element">The view element.</param>
+        /// <returns>The validation status.</returns>
         public static ValidationStatus? GetStatus(this DependencyObject element)
         {
             return (ValidationStatus?)element.GetValue(StatusProperty);
@@ -68,41 +92,89 @@ namespace DevZest.Data.Presenters
                 element.SetValue(StatusPropertyKey, value);
         }
 
+        /// <summary>
+        /// Gets the control template for specified view element with <see cref="ValidationStatus.FailedFlushing"/> status.
+        /// This is the getter of FailedFlushingTemplate attached property.
+        /// </summary>
+        /// <param name="element">The view element</param>
+        /// <returns>The control template.</returns>
         public static ControlTemplate GetFailedFlushingTemplate(this DependencyObject element)
         {
             return (ControlTemplate)element.GetValue(FailedFlushingTemplateProperty);
         }
 
+        /// <summary>
+        /// Sets the control template for specified view element with <see cref="ValidationStatus.FailedFlushing"/> status.
+        /// This is the setter of FailedFlushingTemplate attached property.
+        /// </summary>
+        /// <param name="element">The view element</param>
+        /// <param name="value">The control template.</param>
         public static void SetFailedFlushingTemplate(this DependencyObject element, ControlTemplate value)
         {
             element.SetValue(FailedFlushingTemplateProperty, value);
         }
 
+        /// <summary>
+        /// Gets the control template for specified view element with <see cref="ValidationStatus.Failed"/> status.
+        /// This is the getter of FailedTemplate attached property.
+        /// </summary>
+        /// <param name="element">The view element</param>
+        /// <returns>The control template.</returns>
         public static ControlTemplate GetFailedTemplate(this DependencyObject element)
         {
             return (ControlTemplate)element.GetValue(FailedTemplateProperty);
         }
 
+        /// <summary>
+        /// Sets the control template for specified view element with <see cref="ValidationStatus.Failed"/> status.
+        /// This is the setter of FailedTemplate attached property.
+        /// </summary>
+        /// <param name="element">The view element</param>
+        /// <param name="value">The control template.</param>
         public static void SetFailedTemplate(this DependencyObject element, ControlTemplate value)
         {
             element.SetValue(FailedTemplateProperty, value);
         }
 
+        /// <summary>
+        /// Gets the control template for specified view element with <see cref="ValidationStatus.Validating"/> status.
+        /// This is the getter of ValidatingTemplate attached property.
+        /// </summary>
+        /// <param name="element">The view element</param>
+        /// <returns>The control template.</returns>
         public static ControlTemplate GetValidatingTemplate(this DependencyObject element)
         {
             return (ControlTemplate)element.GetValue(ValidatingTemplateProperty);
         }
 
+        /// <summary>
+        /// Sets the control template for specified view element with <see cref="ValidationStatus.Validating"/> status.
+        /// This is the setter of ValidatingTemplate attached property.
+        /// </summary>
+        /// <param name="element">The view element</param>
+        /// <param name="value">The control template.</param>
         public static void SetValidatingTemplate(this DependencyObject element, ControlTemplate value)
         {
             element.SetValue(ValidatingTemplateProperty, value);
         }
 
+        /// <summary>
+        /// Gets the control template for specified view element with <see cref="ValidationStatus.Succeeded"/> status.
+        /// This is the getter of SucceededTemplate attached property.
+        /// </summary>
+        /// <param name="element">The view element</param>
+        /// <returns>The control template.</returns>
         public static ControlTemplate GetSucceededTemplate(this DependencyObject element)
         {
             return (ControlTemplate)element.GetValue(SucceededTemplateProperty);
         }
 
+        /// <summary>
+        /// Sets the control template for specified view element with <see cref="ValidationStatus.Succeeded"/> status.
+        /// This is the setter of SucceededTemplate attached property.
+        /// </summary>
+        /// <param name="element">The view element</param>
+        /// <param name="value">The control template.</param>
         public static void SetSucceededTemplate(this DependencyObject element, ControlTemplate value)
         {
             element.SetValue(SucceededTemplateProperty, value);

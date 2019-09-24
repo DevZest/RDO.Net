@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents the validation errors and status.
+    /// </summary>
     public struct ValidationInfo
     {
         private sealed class DummyMessage : ValidationError
@@ -53,6 +56,9 @@ namespace DevZest.Data.Presenters
         }
 
         private readonly IValidationErrors _messages;
+        /// <summary>
+        /// Gets the validation errors.
+        /// </summary>
         public IValidationErrors Errors
         {
             get
@@ -68,6 +74,9 @@ namespace DevZest.Data.Presenters
             get { return _messages; }
         }
 
+        /// <summary>
+        /// Gets the validation status.
+        /// </summary>
         public ValidationStatus? Status
         {
             get
