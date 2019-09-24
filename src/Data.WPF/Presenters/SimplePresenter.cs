@@ -5,12 +5,18 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Base class to contain presentation logic for scalar data only.
+    /// </summary>
     public abstract class SimplePresenter : BasePresenter
     {
         private sealed class DummyModel : Model
         {
         }
 
+        /// <summary>
+        /// Supports building template of simple presenter.
+        /// </summary>
         protected sealed class TemplateBuilder : TemplateBuilder<TemplateBuilder>
         {
             internal TemplateBuilder(Template template)
@@ -19,6 +25,10 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Shows data to SimpleView.
+        /// </summary>
+        /// <param name="view">The SimpleView which renders the data.</param>
         public void Show(SimpleView view)
         {
             if (view == null)
@@ -67,12 +77,16 @@ namespace DevZest.Data.Presenters
             get { return _layoutManager; }
         }
 
+        /// <inheritdoc/>
         public override void DetachView()
         {
             base.DetachView();
             _layoutManager = null;  // This must be called after base.DetachView()
         }
 
+        /// <summary>
+        /// Gets the simple view.
+        /// </summary>
         public new SimpleView View { get; private set; }
 
         internal override IBaseView GetView()
@@ -85,6 +99,10 @@ namespace DevZest.Data.Presenters
             View = (SimpleView)value;
         }
 
+        /// <summary>
+        /// Builds the template of this simple presenter.
+        /// </summary>
+        /// <param name="builder">The template builder.</param>
         protected abstract void BuildTemplate(TemplateBuilder builder);
     }
 }
