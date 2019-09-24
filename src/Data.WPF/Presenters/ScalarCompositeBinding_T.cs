@@ -6,12 +6,23 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents scalar composite data binding.
+    /// </summary>
+    /// <typeparam name="T">The type of view element.</typeparam>
     public sealed class ScalarCompositeBinding<T> : ScalarBindingBase<T>
         where T : UIElement, new()
     {
         private List<ScalarBinding> _childBindings = new List<ScalarBinding>();
         private List<Func<T, UIElement>> _childGetters = new List<Func<T, UIElement>>();
 
+        /// <summary>
+        /// Adds child binding.
+        /// </summary>
+        /// <typeparam name="TChild">Type of child view element.</typeparam>
+        /// <param name="childBinding">The child binding.</param>
+        /// <param name="childGetter">Getter to return child view element.</param>
+        /// <returns>This scalar composite binding for fluent coding.</returns>
         public ScalarCompositeBinding<T> AddChild<TChild>(ScalarBinding<TChild> childBinding, Func<T, TChild> childGetter)
             where TChild : UIElement, new()
         {
@@ -27,11 +38,13 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
+        /// <inheritdoc/>
         public override IReadOnlyList<ScalarBinding> ChildBindings
         {
             get { return _childBindings; }
         }
 
+        /// <inheritdoc/>
         public override Input<ScalarBinding, IScalars> ScalarInput
         {
             get { return null; }
@@ -104,6 +117,7 @@ namespace DevZest.Data.Presenters
         }
 
         private bool _isRefreshing;
+        /// <inheritdoc/>
         public override bool IsRefreshing
         {
             get { return _isRefreshing; }

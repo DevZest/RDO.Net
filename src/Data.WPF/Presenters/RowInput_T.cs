@@ -75,11 +75,11 @@ namespace DevZest.Data.Presenters
         /// <summary>
         /// Sets flushing validator.
         /// </summary>
-        /// <param name="flushingValidaitor">The flushing validator.</param>
+        /// <param name="flushingValidator">The flushing validator.</param>
         /// <returns>This row input for fluent coding.</returns>
-        public RowInput<T> WithFlushingValidator(Func<T, string> flushingValidaitor)
+        public RowInput<T> WithFlushingValidator(Func<T, string> flushingValidator)
         {
-            SetFlushingValidator(flushingValidaitor);
+            SetFlushingValidator(flushingValidator);
             return this;
         }
 

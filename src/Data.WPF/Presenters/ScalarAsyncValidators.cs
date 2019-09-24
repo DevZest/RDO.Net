@@ -6,6 +6,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Manipulates collection of scalar async validators.
+    /// </summary>
     public static class ScalarAsyncValidators
     {
         private sealed class EmptyScalarAsyncValidators : IScalarAsyncValidators
@@ -140,6 +143,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the empty collection of scalar async validators.
+        /// </summary>
         public static IScalarAsyncValidators Empty
         {
             get { return EmptyScalarAsyncValidators.Singleton; }
@@ -151,6 +157,11 @@ namespace DevZest.Data.Presenters
             return new KeyedScalarAsyncValidators(value1, value2);
         }
 
+        /// <summary>
+        /// Creates a collection of scalar async validators.
+        /// </summary>
+        /// <param name="values">The validators.</param>
+        /// <returns>The collection of scalar async validators.</returns>
         public static IScalarAsyncValidators New(params ScalarAsyncValidator[] values)
         {
             if (values == null)

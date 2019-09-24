@@ -4,6 +4,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents scalar data that can be used as data binding source.
+    /// </summary>
     public abstract class Scalar<T> : Scalar
     {
         internal static Scalar<T> Create(ScalarContainer container, int ordinal, IEqualityComparer<T> equalityComparer, T value)
@@ -16,7 +19,7 @@ namespace DevZest.Data.Presenters
             return new LinkedScalar(container, ordinal, equalityComparer, getter, setter);
         }
 
-        protected Scalar(ScalarContainer container, int ordinal, IEqualityComparer<T> equalityComparer)
+        internal Scalar(ScalarContainer container, int ordinal, IEqualityComparer<T> equalityComparer)
             : base(container, ordinal)
         {
             if (equalityComparer == null)
@@ -25,31 +28,52 @@ namespace DevZest.Data.Presenters
         }
 
         private readonly IEqualityComparer<T> _equalityComparer;
+        /// <summary>
+        /// Gets the equality comparer.
+        /// </summary>
         public IEqualityComparer<T> EqualityComparer
         {
             get { return _equalityComparer; }
         }
 
+        /// <summary>
+        /// Gets or sets the data value.
+        /// </summary>
         public T Value
         {
             get { return GetValue(); }
             set { SetValue(value); }
         }
 
+        /// <summary>
+        /// Gets the data value.
+        /// </summary>
+        /// <param name="beforeEdit">Indicates whether should get data value before edit.</param>
+        /// <returns>The data value.</returns>
         public new T GetValue(bool beforeEdit = false)
         {
             return PerformGetValue(beforeEdit);
         }
 
-        protected abstract T PerformGetValue(bool beforeEdit);
+        internal abstract T PerformGetValue(bool beforeEdit);
 
+        /// <summary>
+        /// Sets the data value.
+        /// </summary>
+        /// <param name="value">The data value.</param>
+        /// <param name="beforeEdit">Indicates whether should get data value before edit.</param>
         public bool SetValue(T value, bool beforeEdit = false)
         {
             return PerformSetValue(value, beforeEdit);
         }
 
-        protected abstract bool PerformSetValue(T value, bool beforeEdit);
+        internal abstract bool PerformSetValue(T value, bool beforeEdit);
 
+        /// <summary>
+        /// Tries to edit data value.
+        /// </summary>
+        /// <param name="value">The data value.</param>
+        /// <returns><see langword="true"/> if editing value operation completed successfully, otherwise <see langword="false"/>.</returns>
         public bool EditValue(T value)
         {
             return Container.Edit(this, value);
@@ -66,6 +90,11 @@ namespace DevZest.Data.Presenters
         }
 
         private List<Func<T, string>> _validators;
+        /// <summary>
+        /// Adds validator.
+        /// </summary>
+        /// <param name="validator">The validator.</param>
+        /// <returns>This scalar data for fluent coding.</returns>
         public Scalar<T> AddValidator(Func<T, string> validator)
         {
             if (validator == null)
@@ -105,12 +134,12 @@ namespace DevZest.Data.Presenters
             private T _value;
             private T _editingValue;
 
-            protected override T PerformGetValue(bool beforeEdit)
+            internal override T PerformGetValue(bool beforeEdit)
             {
                 return IsEditing && !beforeEdit ? _editingValue : _value;
             }
 
-            protected override bool PerformSetValue(T value, bool beforeEdit)
+            internal override bool PerformSetValue(T value, bool beforeEdit)
             {
                 if (IsEditing && !beforeEdit)
                     return Assign(ref _editingValue, value);
@@ -160,12 +189,12 @@ namespace DevZest.Data.Presenters
             private readonly Func<T> _getter;
             private readonly Action<T> _setter;
 
-            protected override T PerformGetValue(bool beforeEdit)
+            internal override T PerformGetValue(bool beforeEdit)
             {
                 return _getter();
             }
 
-            protected override bool PerformSetValue(T value, bool beforeEdit)
+            internal override bool PerformSetValue(T value, bool beforeEdit)
             {
                 var oldValue = _getter();
                 if (EqualityComparer.Equals(oldValue, value))

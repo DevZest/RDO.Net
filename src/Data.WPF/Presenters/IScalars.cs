@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Presenters
 {
-    /// <summary>Represents set of Scalar(s), which is specially optimized for singleton set.</summary>
+    /// <summary>Represents set of Scalar(s), which is specially optimized for single-item and immutable set.</summary>
     public interface IScalars : IReadOnlyCollection<Scalar>
     {
         /// <summary>Gets a value indicates whether this set is sealed.</summary>

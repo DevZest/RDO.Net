@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents async validator for scalar data.
+    /// </summary>
     public abstract class ScalarAsyncValidator : AsyncValidator<IScalarValidationErrors>, IScalarAsyncValidators
     {
         internal static ScalarAsyncValidator Create(string displayName, IScalars sourceScalars, Func<Task<string>> validator)
@@ -70,6 +73,9 @@ namespace DevZest.Data.Presenters
         }
 
         private readonly IScalars _sourceScalars;
+        /// <summary>
+        /// Gets the source scalar data.
+        /// </summary>
         public IScalars SourceScalars
         {
             get { return _sourceScalars; }

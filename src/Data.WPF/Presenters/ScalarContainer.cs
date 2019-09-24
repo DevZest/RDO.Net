@@ -5,6 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents the container for scalar data.
+    /// </summary>
     public sealed class ScalarContainer : ReadOnlyCollection<Scalar>
     {
         internal interface IOwner
@@ -30,6 +33,9 @@ namespace DevZest.Data.Presenters
         private readonly IOwner _owner;
 
         private bool _isEditing;
+        /// <summary>
+        /// Gets the value indicates whether scalar data is in editing mode.
+        /// </summary>
         public bool IsEditing
         {
             get { return _isEditing; }
@@ -41,6 +47,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Begins scalar editing mode.
+        /// </summary>
         public void BeginEdit()
         {
             if (IsEditing)
@@ -54,6 +63,9 @@ namespace DevZest.Data.Presenters
             _owner.ResumeInvalidateView();
         }
 
+        /// <summary>
+        /// Cancels scalar editing mode.
+        /// </summary>
         public void CancelEdit()
         {
             if (!IsEditing)
@@ -67,6 +79,10 @@ namespace DevZest.Data.Presenters
             _owner.ResumeInvalidateView();
         }
 
+        /// <summary>
+        /// Ends scalar editing mode.
+        /// </summary>
+        /// <returns><see langword="true"/> if scalar editing mode ended successfully, otherwise <see langword="false"/>.</returns>
         public bool EndEdit()
         {
             if (!IsEditing)
@@ -107,16 +123,25 @@ namespace DevZest.Data.Presenters
         private int _suspendValueChangedCount;
         private IScalars _pendingValueChangedScalars = Scalars.Empty;
 
+        /// <summary>
+        /// Gets the value indicates whether vlaue changed notification is suspended.
+        /// </summary>
         public bool IsValueChangedNotificationSuspended
         {
             get { return _suspendValueChangedCount > 0; }
         }
 
+        /// <summary>
+        /// Suspends value changed notification.
+        /// </summary>
         public void SuspendValueChangedNotification()
         {
             _suspendValueChangedCount++;
         }
 
+        /// <summary>
+        /// Resumes value changed notification.
+        /// </summary>
         public void ResumeValueChangedNotification()
         {
             if (_suspendValueChangedCount <= 0)

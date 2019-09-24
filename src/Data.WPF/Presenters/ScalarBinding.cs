@@ -10,6 +10,9 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Base class for scalar data binding.
+    /// </summary>
     public abstract class ScalarBinding : TwoWayBinding, IConcatList<ScalarBinding>
     {
         #region IConcatList<ScalarBinding>
@@ -61,8 +64,12 @@ namespace DevZest.Data.Presenters
 
         #endregion
 
+        /// <summary>
+        /// Gets the parent scalar binding.
+        /// </summary>
         public ScalarBinding Parent { get; private set; }
 
+        /// <inheritdoc/>
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
@@ -74,8 +81,14 @@ namespace DevZest.Data.Presenters
             Ordinal = ordinal;
         }
 
+        /// <summary>
+        /// Gets the child bindings.
+        /// </summary>
         public abstract IReadOnlyList<ScalarBinding> ChildBindings { get; }
 
+        /// <summary>
+        /// Gets the scalar input.
+        /// </summary>
         public abstract Input<ScalarBinding, IScalars> ScalarInput { get; }
 
         internal abstract void BeginSetup(int startOffset, UIElement[] elements);
@@ -90,6 +103,9 @@ namespace DevZest.Data.Presenters
         }
 
         private bool _repeatsWhenFlow;
+        /// <summary>
+        /// Gets or sets the value indicates whether this binding should repeat when flow.
+        /// </summary>
         [DefaultValue(false)]
         public bool RepeatsWhenFlow
         {
@@ -130,6 +146,9 @@ namespace DevZest.Data.Presenters
             get { return Template.ElementManager; }
         }
 
+        /// <summary>
+        /// Gets the flow repeat count.
+        /// </summary>
         public int FlowRepeatCount
         {
             get { return Parent != null ? Parent.FlowRepeatCount : (RepeatsWhenFlow ? ElementManager.FlowRepeatCount : 1); }
@@ -137,6 +156,11 @@ namespace DevZest.Data.Presenters
 
         internal abstract UIElement GetChild(UIElement parent, int index);
 
+        /// <summary>
+        /// Gets the view element at specified flow index.
+        /// </summary>
+        /// <param name="flowIndex">The flow index.</param>
+        /// <returns>The view element.</returns>
         public UIElement this[int flowIndex]
         {
             get
@@ -212,6 +236,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether this binding is editable.
+        /// </summary>
         public bool IsEditable
         {
             get { return ScalarInput != null || ChildBindings.Any(x => x.IsEditable); }

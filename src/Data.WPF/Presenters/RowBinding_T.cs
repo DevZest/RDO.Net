@@ -42,7 +42,7 @@ namespace DevZest.Data.Presenters
         }
 
         /// <summary>
-        /// Gets the input.
+        /// Gets the input that handles flushing from view to presenter.
         /// </summary>
         public RowInput<T> Input { get; internal set; }
 

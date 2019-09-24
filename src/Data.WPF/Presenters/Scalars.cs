@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Manipulates collection scalar data.
+    /// </summary>
     public static class Scalars
     {
         private class EmptyScalars : IScalars
@@ -191,6 +194,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the empty collection of scalar data.
+        /// </summary>
         public static IScalars Empty
         {
             get { return EmptyScalars.Singleton; }
@@ -202,6 +208,11 @@ namespace DevZest.Data.Presenters
             return new HashSetScalars(value1, value2);
         }
 
+        /// <summary>
+        /// Creates a collection of scalar data.
+        /// </summary>
+        /// <param name="values">The scalar data.</param>
+        /// <returns>The collection of scalar data.</returns>
         public static IScalars New(params Scalar[] values)
         {
             values.VerifyNotNull(nameof(values));
@@ -272,6 +283,7 @@ namespace DevZest.Data.Presenters
         }
 
         /// <summary>Determines whether the current set is a proper (strict) superset of the specified collection.</summary>
+        /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns><see langword="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSupersetOf(this IScalars source, IScalars other)
