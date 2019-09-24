@@ -5,6 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Manipulates collection of scalar validation errors.
+    /// </summary>
     public static class ScalarValidationErrors
     {
         private class EmptyGroup : IScalarValidationErrors
@@ -120,6 +123,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the empty collection of scalar validation errors.
+        /// </summary>
         public static IScalarValidationErrors Empty
         {
             get { return EmptyGroup.Singleton; }
@@ -131,6 +137,11 @@ namespace DevZest.Data.Presenters
             return new ListGroup(value1, value2);
         }
 
+        /// <summary>
+        /// Creates a collection of scalar validation errors.
+        /// </summary>
+        /// <param name="values">The scalar validation errors.</param>
+        /// <returns>The collection of scalar validation errors.</returns>
         public static IScalarValidationErrors New(params ScalarValidationError[] values)
         {
             values.VerifyNotNull(nameof(values));
@@ -144,14 +155,20 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        public static IScalarValidationErrors Add(this IScalarValidationErrors result, IScalarValidationErrors messages)
+        /// <summary>
+        /// Combines two <see cref="IScalarValidationErrors"/>.
+        /// </summary>
+        /// <param name="source">The source <see cref="IScalarValidationErrors"/>.</param>
+        /// <param name="other">The other <see cref="IScalarValidationErrors"/>.</param>
+        /// <returns>The result <see cref="IScalarValidationErrors"/>.</returns>
+        public static IScalarValidationErrors Add(this IScalarValidationErrors source, IScalarValidationErrors other)
         {
-            messages.VerifyNotNull(nameof(messages));
+            other.VerifyNotNull(nameof(other));
 
-            for (int i = 0; i < messages.Count; i++)
-                result = result.Add(messages.VerifyNotNull(i, nameof(messages)));
+            for (int i = 0; i < other.Count; i++)
+                source = source.Add(other.VerifyNotNull(i, nameof(other)));
 
-            return result;
+            return source;
         }
     }
 }

@@ -5,8 +5,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
+    /// <summary>
+    /// Represents scalar data validation error.
+    /// </summary>
     public sealed class ScalarValidationError : ValidationError<IScalars>, IScalarValidationErrors
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ScalarValidationError"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="source">The error source.</param>
         public ScalarValidationError(string message, IScalars source)
             : base(message, source)
         {

@@ -63,6 +63,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the flushing errors.
+        /// </summary>
         public IReadOnlyList<FlushingError> FlushingErrors
         {
             get
@@ -92,6 +95,9 @@ namespace DevZest.Data.Presenters
         private IScalarValidationErrors _errors = ScalarValidationErrors.Empty;
         private IScalarValidationErrors _asyncErrors = ScalarValidationErrors.Empty;
 
+        /// <summary>
+        /// Gets the validaiton errors.
+        /// </summary>
         public IReadOnlyList<ScalarValidationError> Errors
         {
             get { return _errors; }
@@ -242,6 +248,9 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
+        /// <summary>
+        /// Performs validaiton operation.
+        /// </summary>
         public void Validate()
         {
             Validate(true);
@@ -360,11 +369,19 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the validation mode.
+        /// </summary>
         public ValidationMode Mode
         {
             get { return Template.ScalarValidationMode; }
         }
 
+        /// <summary>
+        /// Determines whether validation error is visible.
+        /// </summary>
+        /// <param name="scalars">The scalar data.</param>
+        /// <returns><see langword="true"/> if validation error is visible, otherwise <see langword="false"/>.</returns>
         public bool IsVisible(IScalars scalars)
         {
             if (scalars == null || scalars.Count == 0)
@@ -373,6 +390,9 @@ namespace DevZest.Data.Presenters
             return _showAll || _progress == null ? true : _progress.IsSupersetOf(scalars);
         }
 
+        /// <summary>
+        /// Gets the async validators.
+        /// </summary>
         public IScalarAsyncValidators AsyncValidators
         {
             get { return Template.ScalarAsyncValidators; }
@@ -424,6 +444,9 @@ namespace DevZest.Data.Presenters
         }
 
         private Input<ScalarBinding, IScalars>[] _inputs;
+        /// <summary>
+        /// Gets the input objects.
+        /// </summary>
         public IReadOnlyList<Input<ScalarBinding, IScalars>> Inputs
         {
             get
@@ -474,6 +497,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets the visible validation errors.
+        /// </summary>
         public IValidationErrors VisibleErrors
         {
             get
@@ -545,6 +571,9 @@ namespace DevZest.Data.Presenters
             return GetFlushingError(element) != null;
         }
 
+        /// <summary>
+        /// Gets the value indicates whether any visible validation error exists.
+        /// </summary>
         public bool HasVisibleError
         {
             get
@@ -562,6 +591,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        /// <summary>
+        /// Gets a value indicates whether any async validator is running.
+        /// </summary>
         public bool IsValidating
         {
             get { return AsyncValidators.Any(x => x.Status == AsyncValidatorStatus.Running); }
@@ -614,6 +646,10 @@ namespace DevZest.Data.Presenters
                 asyncValidator.Reset();
         }
 
+        /// <summary>
+        /// Sets the async validation errors.
+        /// </summary>
+        /// <param name="value">The validation errors.</param>
         public void SetAsyncErrors(IScalarValidationErrors value)
         {
             _asyncErrors = value.Seal();
