@@ -7,8 +7,17 @@ using System;
 
 namespace DevZest.Data.AspNetCore
 {
+    /// <summary>
+    /// Provides extension method for <see cref="IMvcBuilder"/>.
+    /// </summary>
     public static class MvcBuilderExtensions
     {
+        /// <summary>
+        /// Adds DataSet MVC support.
+        /// </summary>
+        /// <param name="mvcBuilder">The <see cref="IMvcBuilder"/>.</param>
+        /// <param name="configurationExpression">Delegate to configure with <see cref="DataSetMvcConfiguration"/>.</param>
+        /// <returns>The <see cref="IMvcBuilder"/> for fluent coding.</returns>
         public static IMvcBuilder AddDataSetMvc(this IMvcBuilder mvcBuilder, Action<DataSetMvcConfiguration> configurationExpression = null)
         {
             var expr = configurationExpression ?? delegate { };

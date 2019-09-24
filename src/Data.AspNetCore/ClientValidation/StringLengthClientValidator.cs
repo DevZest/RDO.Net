@@ -5,8 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevZest.Data.AspNetCore.ClientValidation
 {
+    /// <summary>
+    /// Represents client validator for <see cref="StringLengthAttribute"/>.
+    /// </summary>
     public class StringLengthClientValidator : DataSetClientValidatorBase<StringLengthAttribute>
     {
+        /// <inheritdoc/>
         protected override void AddValidation(StringLengthAttribute validatorAttribute, ActionContext actionContext, Column column, IDictionary<string, string> attributes)
         {
             MergeAttribute(attributes, "data-val", "true");

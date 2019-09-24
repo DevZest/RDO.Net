@@ -102,6 +102,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         /// Adds a maxlength attribute to the <paramref name="tagBuilder" />.
         /// </summary>
         /// <param name="tagBuilder">A <see cref="TagBuilder"/> instance.</param>
+        /// <param name="column">The column.</param>
         protected virtual void AddMaxLengthAttribute(TagBuilder tagBuilder, Column column)
         {
             int? maxLengthValue = GetMaxLengthValue(column);

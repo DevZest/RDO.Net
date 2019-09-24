@@ -9,16 +9,15 @@ namespace DevZest.Data.AspNetCore.TagHelpers
     public class TextAreaTagHelper : DataSetTagHelperBase
     {
         /// <summary>
-        /// Creates a new <see cref="TextAreaTagHelper"/>.
+        /// Creates a new instance of <see cref="TextAreaTagHelper"/>.
         /// </summary>
-        /// <param name="generator">The <see cref="IHtmlGenerator"/>.</param>
+        /// <param name="generator">The <see cref="IDataSetHtmlGenerator"/>.</param>
         public TextAreaTagHelper(IDataSetHtmlGenerator generator)
             : base(generator)
         {
         }
 
         /// <inheritdoc />
-        /// <remarks>Does nothing if <see cref="For"/> is <c>null</c>.</remarks>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

@@ -24,7 +24,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
         /// <summary>
         /// Creates a new <see cref="SelectTagHelper"/>.
         /// </summary>
-        /// <param name="generator">The <see cref="IHtmlGenerator"/>.</param>
+        /// <param name="generator">The <see cref="IDataSetHtmlGenerator"/>.</param>
         public SelectTagHelper(IDataSetHtmlGenerator generator)
             : base(generator)
         {
@@ -56,7 +56,6 @@ namespace DevZest.Data.AspNetCore.TagHelpers
         }
 
         /// <inheritdoc />
-        /// <remarks>Does nothing if <see cref="For"/> is <c>null</c>.</remarks>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
