@@ -127,7 +127,7 @@
     <Compile Include="Presenters\ScalarValidationError.cs" />
     <Compile Include="Presenters\ScalarValidationErrors.cs" />
     <Compile Include="Presenters\ScalarValidation.cs" />
-    <Compile Include="Presenters\ServiceManager.cs" />
+    <Compile Include="Presenters\Service.cs" />
     <Compile Include="Presenters\TemplateId.cs" />
     <Compile Include="Presenters\ValidationInfo.cs" />
     <Compile Include="Properties\Resources.cs">

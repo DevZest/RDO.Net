@@ -25,7 +25,7 @@ namespace DevZest.Data.Views
         {
             public static void EnsureInitialized(DataPresenter dataPresenter)
             {
-                var service = ServiceManager.GetService<CurrentRowSynchronizer>(dataPresenter);
+                var service = dataPresenter.GetRegisteredService<CurrentRowSynchronizer>();
                 Debug.Assert(service != null);
             }
 
@@ -92,8 +92,8 @@ namespace DevZest.Data.Views
         static RowSelector()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowSelector), new FrameworkPropertyMetadata(typeof(RowSelector)));
-            ServiceManager.Register<ICommandService, CommandService>();
-            ServiceManager.Register<CurrentRowSynchronizer, CurrentRowSynchronizer>();
+            Service.Register<ICommandService, CommandService>();
+            Service.Register<CurrentRowSynchronizer, CurrentRowSynchronizer>();
         }
 
         /// <summary>

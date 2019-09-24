@@ -572,7 +572,7 @@ namespace DevZest.Data.Presenters
         public virtual T GetService<T>(bool autoCreate = true)
             where T : class, IService
         {
-            return (this is T) ? (T)((object)this) : ServiceManager.GetService<T>(this, autoCreate);
+            return (this is T) ? (T)((object)this) : this.GetRegisteredService<T>(autoCreate);
         }
 
         /// <summary>

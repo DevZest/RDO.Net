@@ -293,8 +293,8 @@ namespace DevZest.Data.Views
         static ColumnHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ColumnHeader), new FrameworkPropertyMetadata(typeof(ColumnHeader)));
-            ServiceManager.Register<ISortService, SortService>();
-            ServiceManager.Register<ICommandService, CommandService>();
+            Service.Register<ISortService, SortService>();
+            Service.Register<ICommandService, CommandService>();
         }
 
         /// <summary>

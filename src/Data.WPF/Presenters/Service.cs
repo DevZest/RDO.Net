@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
-    public static class ServiceManager
+    public static class Service
     {
         private static Dictionary<Type, Func<IService>> _serviceProviders = new Dictionary<Type, Func<IService>>();
         private static ConditionalWeakTable<DataPresenter, ConcurrentDictionary<Type, IService>> _services = new ConditionalWeakTable<DataPresenter, ConcurrentDictionary<Type, IService>>();
@@ -39,7 +39,7 @@ namespace DevZest.Data.Presenters
             return _serviceProviders.ContainsKey(typeof(TService));
         }
 
-        public static T GetService<T>(DataPresenter dataPresenter, bool autoCreate = true)
+        public static T GetRegisteredService<T>(this DataPresenter dataPresenter, bool autoCreate = true)
             where T : class, IService
         {
             if (dataPresenter == null)

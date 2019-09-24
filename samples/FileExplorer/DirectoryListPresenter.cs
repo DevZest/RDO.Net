@@ -130,7 +130,7 @@ namespace FileExplorer
 
         IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
         {
-            var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
+            var baseService = this.GetRegisteredService<DataView.ICommandService>();
             foreach (var entry in baseService.GetCommandEntries(dataView))
                 yield return entry;
             yield return DirectoryListCommands.Refresh.Bind(ExecRefresh);
@@ -199,7 +199,7 @@ namespace FileExplorer
 
         IEnumerable<CommandEntry> RowSelector.ICommandService.GetCommandEntries(RowSelector rowSelector)
         {
-            var baseService = ServiceManager.GetService<RowSelector.ICommandService>(this);
+            var baseService = this.GetRegisteredService<RowSelector.ICommandService>();
             foreach (var entry in baseService.GetCommandEntries(rowSelector))
                 yield return entry;
             yield return DirectoryListCommands.Start.Bind(ExecStart, CanExecStart, new MouseGesture(MouseAction.LeftDoubleClick), new KeyGesture(Key.Enter));

@@ -89,7 +89,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
             IEnumerable<CommandEntry> RowView.ICommandService.GetCommandEntries(RowView rowView)
             {
-                var baseService = ServiceManager.GetService<RowView.ICommandService>(this);
+                var baseService = this.GetRegisteredService<RowView.ICommandService>();
                 foreach (var entry in baseService.GetCommandEntries(rowView))
                     yield return entry;
                 yield return Commands.SelectCurrent.Bind(new KeyGesture(System.Windows.Input.Key.Enter), new MouseGesture(MouseAction.LeftDoubleClick));

@@ -93,7 +93,7 @@ namespace DevZest.Data.Views
             FocusableProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
             KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
             KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
-            ServiceManager.Register<ICommandService, CommandService>();
+            Service.Register<ICommandService, CommandService>();
         }
 
         private DataPresenter _dataPresenter;

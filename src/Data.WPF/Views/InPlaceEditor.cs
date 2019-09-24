@@ -387,8 +387,8 @@ namespace DevZest.Data.Views
         static InPlaceEditor()
         {
             FocusableProperty.OverrideMetadata(typeof(InPlaceEditor), new FrameworkPropertyMetadata(BooleanBoxes.True));
-            ServiceManager.Register<IEditingPolicyService, EditingPolicyService>(() => EditingPolicyService.Singleton);
-            ServiceManager.Register<IChildInitializer, ChildInitializer>();
+            Service.Register<IEditingPolicyService, EditingPolicyService>(() => EditingPolicyService.Singleton);
+            Service.Register<IChildInitializer, ChildInitializer>();
         }
 
         /// <summary>

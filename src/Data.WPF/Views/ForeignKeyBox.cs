@@ -114,7 +114,7 @@ namespace DevZest.Data.Views
         static ForeignKeyBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ForeignKeyBox), new FrameworkPropertyMetadata(typeof(ForeignKeyBox)));
-            ServiceManager.Register<ICommandService, CommandService>();
+            Service.Register<ICommandService, CommandService>();
         }
 
         /// <summary>

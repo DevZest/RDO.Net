@@ -75,7 +75,7 @@ Partial Class AddressLookupPopup
         End Sub
 
         Iterator Function GetCommandEntries(rowView As RowView) As IEnumerable(Of CommandEntry) Implements RowView.ICommandService.GetCommandEntries
-            Dim baseService = ServiceManager.GetService(Of RowView.ICommandService)(Me)
+            Dim baseService = Me.GetRegisteredService(Of RowView.ICommandService)()
             For Each entry In baseService.GetCommandEntries(rowView)
                 Yield entry
             Next

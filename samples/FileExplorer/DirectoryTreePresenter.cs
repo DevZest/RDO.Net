@@ -74,7 +74,7 @@ namespace FileExplorer
 
         IEnumerable<CommandEntry> DataView.ICommandService.GetCommandEntries(DataView dataView)
         {
-            var baseService = ServiceManager.GetService<DataView.ICommandService>(this);
+            var baseService = this.GetRegisteredService<DataView.ICommandService>();
             foreach (var entry in baseService.GetCommandEntries(dataView))
                 yield return entry;
             yield return DirectoryTreeCommands.Refresh.Bind(ExecRefresh);

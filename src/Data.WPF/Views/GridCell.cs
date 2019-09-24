@@ -71,8 +71,8 @@ namespace DevZest.Data.Views
             DefaultStyleKeyProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(typeof(GridCell)));
             FocusableProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(null, CoerceFocusable));
             KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(GridCell), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
-            ServiceManager.Register<Presenter, Presenter>();
-            ServiceManager.Register<ICommandService, CommandService>();
+            Service.Register<Presenter, Presenter>();
+            Service.Register<ICommandService, CommandService>();
         }
 
         private static object CoerceFocusable(DependencyObject d, Object baseValue)
