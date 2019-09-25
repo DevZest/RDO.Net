@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -9,7 +7,7 @@ using DevZest.Data.AspNetCore.Primitives;
 namespace DevZest.Data.AspNetCore.TagHelpers
 {
     /// <summary>
-    /// <see cref="ITagHelper"/> implementation targeting &lt;label&gt; elements with an <c>rdo-for</c> and <c>rdo-column</c> attribute.
+    /// <see cref="ITagHelper"/> implementation targeting &lt;label&gt; elements with an <c>dataset-*</c> attribute.
     /// </summary>
     [HtmlTargetElement("label", Attributes = DataSetAttributes)]
     public class LabelTagHelper : DataSetTagHelperBase

@@ -11,8 +11,8 @@ using System.Linq;
 namespace DevZest.Data.AspNetCore.TagHelpers
 {
     /// <summary>
-    /// <see cref="ITagHelper"/> implementation targeting &lt;select&gt; elements with <c>asp-for</c> and/or
-    /// <c>asp-items</c> attribute(s).
+    /// <see cref="ITagHelper"/> implementation targeting &lt;select&gt; elements with <c>dataset-*</c> and/or
+    /// <c>dataset-items</c> attribute(s).
     /// </summary>
     [HtmlTargetElement("select", Attributes = DataSetAttributes + "," + ItemsAttributeName)]
     public class SelectTagHelper : DataSetTagHelperBase
