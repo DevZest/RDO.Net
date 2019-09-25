@@ -124,3 +124,5 @@
   items:
     - name: RDO.AspNetCore Overview
       href: programming_rdo_asp_net_core/rdo_asp_net_core_overview.md
+    - name: Get Started
+      href: programming_rdo_asp_net_core/get_started.md
