@@ -1,3 +1,3 @@
-Relational Data Objects for .Net (RDO.Net) is a lightweight, yet comprehensive framework to develop enterprise application in .Net platform, targeting .Net developers. It consists of the following libraries and tools:
+RDO.Net (Relational Data Objects for .Net) is a revolutionary framework to develop enterprise applications in .Net platform, consists of the following libraries and tools:
 
 ![image](/images/RdoNetOverview.jpg)
