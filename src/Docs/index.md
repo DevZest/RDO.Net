@@ -1,3 +1,5 @@
 # Welcome to RDO.Net
 
-[!include[Welcome to RDO.Net](articles/_about_rdo_net.md)]
+[!include[RDO.Net Summary](articles/_rdo_net_summary.md)]
+
+[Read full documentation...](xref:about_rdo_net)
