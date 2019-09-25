@@ -23,13 +23,17 @@ namespace DevZest.Data.AspNetCore
             var expr = configurationExpression ?? delegate { };
             var config = new DataSetMvcConfiguration();
 
-            mvcBuilder.AddMvcOptions(options => {
-                options.ModelValidatorProviders.Add(new DataSetValidatorProvider());
-                options.ModelBinderProviders.Insert(0, new DataSetModelBinderProvider());
+            mvcBuilder
+                .AddMvcOptions(options => {
+                    options.ModelValidatorProviders.Add(new DataSetValidatorProvider());
+                    options.ModelBinderProviders.Insert(0, new DataSetModelBinderProvider());
 
-                config.AddClientValidators(options.ModelBindingMessageProvider);
-                expr(config);
-            });
+                    config.AddClientValidators(options.ModelBindingMessageProvider);
+                    expr(config);
+                })
+                .AddJsonOptions(options => {
+                    options.SerializerSettings.Converters.Add(new DataSetJsonConverter());
+                });
 
             var services = mvcBuilder.Services;
             services.AddSingleton(config);

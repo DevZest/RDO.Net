@@ -13,7 +13,12 @@ Razor Pages and MVC are very similar in terms of data presentation. The key diff
 
 Blazor, on the other hand, relies on [WebAssembly](https://webassembly.org/) (abbreviated wasm), with .Net runtime hosted in the browser. Despite it's still in beta phase, the real challenge is DOM: DOM is not designed for interactive UI, so the complex UI logic cannot be handled, or at least elegantly, either.
 
-At this moment, RDO.Net fully supports Razor Pages server-side development, with data binding, validation and tag helpers, provided as NuGet package [DevZest.Data.AspNetCore](https://www.nuget.org/packages/DevZest.Data.AspNetCore/).
+At this moment, RDO.Net provides DataSet support for Razor Pages server-side development, as NuGet package [DevZest.Data.AspNetCore](https://www.nuget.org/packages/DevZest.Data.AspNetCore/):
+
+* DataSet JSON serialization/deserialization;
+* DataSet model binding;
+* DataSet tag helpers;
+* DataSet validation.
 
 In the future, when WebAssembly becomes mature and popular, with an additional layer of non-DOM based (canvas based, for example) simple UI components, the data presentation described previously can be ported to client-side web development.
 

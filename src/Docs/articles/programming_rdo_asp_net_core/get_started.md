@@ -2,9 +2,10 @@
 
 Currently RDO.AspNetCore is provided as NuGet package [DevZest.Data.AspNetCore] to support:
 
+* DataSet JSON serialization/deserialization;
 * DataSet model binding;
-* DataSet validation;
-* DataSet tag helpers.
+* DataSet tag helpers;
+* DataSet validation.
 
 This NuGet package is targeting ASP.Net Core Version 2.2.
 
