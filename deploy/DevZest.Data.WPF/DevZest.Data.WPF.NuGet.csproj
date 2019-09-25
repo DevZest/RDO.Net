@@ -11,10 +11,10 @@
   <PropertyGroup>
     <PackageId>DevZest.Data.WPF</PackageId>
     <Authors>Weifen Luo | DevZest</Authors>
-    <PackageLicenseUrl>http://www.devzest.com</PackageLicenseUrl>
-    <PackageProjectUrl>http://www.devzest.com</PackageProjectUrl>
-    <PackageIconUrl>http://www.devzest.com</PackageIconUrl>
-    <RepositoryUrl>http://www.devzest.com</RepositoryUrl>
+    <PackageProjectUrl>https://rdo.devzest.com</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DevZest/RDO.Net</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Description>MVP Framework to build RDO.Data based WPF applications.</Description>
     <PackageReleaseNotes></PackageReleaseNotes>
@@ -41,7 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\LICENSE.txt" Pack="true" PackagePath="" Visible="false" />
     <None Include="$(OutputPath)\DevZest.Data.WPF.dll" Pack="true" PackagePath="lib/net461" Visible="false" />
     <None Include="$(OutputPath)\DevZest.Data.WPF.pdb" Pack="true" PackagePath="lib/net461" Visible="false" />
+    <None Include="$(OutputPath)\DevZest.Data.WPF.xml" Pack="true" PackagePath="lib/net461" Visible="false" />
   </ItemGroup>
 </Project>
