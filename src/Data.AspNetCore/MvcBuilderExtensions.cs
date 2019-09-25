@@ -34,6 +34,7 @@ namespace DevZest.Data.AspNetCore
             var services = mvcBuilder.Services;
             services.AddSingleton(config);
             services.TryAddSingleton<DataSetValidationHtmlAttributeProvider, DefaultDataSetValidationHtmlAttributeProvider>();
+            services.TryAddSingleton<IDataSetHtmlGenerator, DefaultDataSetHtmlGenerator>();
 
             return mvcBuilder;
         }

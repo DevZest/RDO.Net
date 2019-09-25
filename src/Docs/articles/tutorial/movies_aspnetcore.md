@@ -34,7 +34,7 @@ Build project *Movies.AspNetCore*, you should have two files *Movies.mdf* and *M
 
 ## Configure Services
 
-Change *Startup.cs* to add DataSet MVC support and inject `Db`/`IDataSetHtmlGenerator`:
+Change *Startup.cs* to add DataSet MVC support:
 
 [!code-csharp[startup](../../../../samples/Tutorial/Movies.AspNetCore/Startup.cs)]
 

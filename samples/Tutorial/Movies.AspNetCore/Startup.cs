@@ -1,5 +1,4 @@
 using DevZest.Data.AspNetCore;
-using DevZest.Data.AspNetCore.Primitives;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +43,6 @@ namespace Movies.AspNetCore
                     connectionString = connectionString.Replace(CONTENT_ROOT_PATH, Env.ContentRootPath);
             }
             services.AddScoped(serviceProvider => new Db(connectionString));
-            services.AddSingleton<IDataSetHtmlGenerator, DefaultDataSetHtmlGenerator>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
