@@ -5,9 +5,6 @@
   <PropertyGroup>
     <PackageId>DevZest.Data</PackageId>
     <PackageTags>RDO.NET;ADO.NET</PackageTags>
-    <PackageProjectUrl>http://www.devzest.com</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>http://www.devzest.com</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

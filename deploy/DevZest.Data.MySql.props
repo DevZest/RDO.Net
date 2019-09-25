@@ -5,9 +5,6 @@
   <PropertyGroup>
     <PackageId>DevZest.Data.MySql</PackageId>
     <PackageTags>RDO.NET;ADO.NET;MySQL</PackageTags>
-    <PackageProjectUrl>http://www.devzest.com</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>http://www.devzest.com</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

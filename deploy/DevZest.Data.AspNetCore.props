@@ -5,9 +5,6 @@
   <PropertyGroup>
     <PackageId>DevZest.Data.AspNetCore</PackageId>
     <PackageTags>RDO.NET;ASP.NET Core</PackageTags>
-    <PackageProjectUrl>http://www.devzest.com</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>http://www.devzest.com</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

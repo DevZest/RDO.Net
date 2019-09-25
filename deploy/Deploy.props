@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageProjectUrl>https://rdo.devzest.com</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DevZest/RDO.Net</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DefineConstants>$(DefineConstants);DEPLOY</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SignAssembly>true</SignAssembly>
