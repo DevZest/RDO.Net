@@ -17,4 +17,12 @@
   <ItemGroup>
     <PackageReference Include="DevZest.Data" Version="$(PackageVersion)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="..\Data\ColumnManager.ResolveColumnDataType.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\DevZest.Data\ColumnManager.ResolveColumnDataType.cs" Link="Utilities\ColumnManager.ResolveColumnDataType.cs" />
+  </ItemGroup>
 </Project>
