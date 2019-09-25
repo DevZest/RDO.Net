@@ -8,7 +8,7 @@ RDO.Data is the core of RDO.Net. It helps developers to build data access layer 
 
 ![image](/images/RdoDataOverview.jpg)
 
-Building on top of [ADO.Net](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/), RDO.Data separates data access from data manipulation into discrete components that can be used separately or in tandem:
+Building on top of [ADO.Net](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/), RDO.Data separates data access from data manipulation into discrete components, with Visual Studio tool support:
 
 ![image](/images/RdoDataArchitecture.jpg)
 

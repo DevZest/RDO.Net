@@ -120,3 +120,7 @@
           href: programming_rdo_wpf/view_components/ValidationErrorsControl.md
         - name: ValidationPlaceholder
           href: programming_rdo_wpf/view_components/ValidationPlaceholder.md
+- name: Programming RDO.AspNetCore
+  items:
+    - name: RDO.AspNetCore Overview
+      href: programming_rdo_asp_net_core/rdo_asp_net_core_overview.md
