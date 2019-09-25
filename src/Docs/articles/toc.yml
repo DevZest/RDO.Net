@@ -130,3 +130,5 @@
       href: programming_rdo_asp_net_core/dataset_model_binding.md
     - name: DataSet Tag Helpers
       href: programming_rdo_asp_net_core/dataset_tag_helpers.md
+    - name: DataSet Validation
+      href: programming_rdo_asp_net_core/dataset_validation.md
