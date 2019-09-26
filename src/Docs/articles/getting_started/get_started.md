@@ -32,7 +32,7 @@ These NuGet packages are targeting .Net Standard 2.0.
 
 The following Visual Studio extension is delivered as design time tool:
 
-* [DevZest.Data.Tools.vsix](https://marketplace.visualstudio.com/items?itemName=DevZest.Data.Tools) (aka RDO.Tools)
+* [DevZest.Data.Tools.vsix](https://marketplace.visualstudio.com/items?itemName=DevZest.rdotools) (aka RDO.Tools)
 
 Supported Visual Studio:
 
