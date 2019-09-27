@@ -34,6 +34,10 @@ In the end, your application follows your business in a no-more-no-less basis - 
 
 ## A Taste of RDO.Net
 
+A fully featured sample application, [AdventureWorksLT](https://github.com/DevZest/AdventureWorksLT), is provided to demonstrate the use of RDO.Net:
+
+![image](/images/samples_adventureworkslt.wpfapp.jpg)
+
 ### The Model
 
 # [C#](#tab/cs)
