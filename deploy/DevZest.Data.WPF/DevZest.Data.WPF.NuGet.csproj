@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE.txt" Pack="true" PackagePath="" Visible="false" />
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="" Visible="false" />
     <None Include="$(OutputPath)\DevZest.Data.WPF.dll" Pack="true" PackagePath="lib/net461" Visible="false" />
     <None Include="$(OutputPath)\DevZest.Data.WPF.pdb" Pack="true" PackagePath="lib/net461" Visible="false" />
     <None Include="$(OutputPath)\DevZest.Data.WPF.xml" Pack="true" PackagePath="lib/net461" Visible="false" />
