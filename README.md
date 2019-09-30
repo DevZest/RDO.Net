@@ -609,4 +609,6 @@ The code for testing data is generated from database:
 
 ![image](https://www.codeproject.com/KB/dotnet/5246942/SalesOrderDetailMockDb.jpg)
 
-## **[Excited? Let's get started!](https://rdo.devzest.com/articles/getting_started/get_started.html)**
+## Excited?
+
+[Let's get started!](https://rdo.devzest.com/articles/getting_started/get_started.html)
