@@ -1,6 +1,6 @@
 # Welcome to RDO.Net
 
-[RDO.Net](https://rdo.devzest.com/articles/overview/about_rdo_net.html) (Relational Data Objects for .Net) is a revolutionary framework to develop enterprise applications in .Net platform, consists of the following libraries and tools:
+[RDO.Net](https://rdo.devzest.com/articles/overview/about_rdo_net.html) (Relational Data Objects for .Net) is a framework to handle data in .Net platform, consists of the following libraries and tools:
 
 ![image](https://rdo.devzest.com/images/RdoNetOverview.jpg)
 
