@@ -19,16 +19,16 @@ The above challenges impose great burdens for developing and further changing an
 
 In the end, your application follows your business in a no-more-no-less basis - it adapts to your business, not vice versa:
 
-* Your application is 100% strongly typed from database to GUI, with extremely clean code in C#/VB.Net. No fancy HQL, XAML or any other DSL - traditional problems are solved in a traditional way.
-* Your data access is unbeatable for both performance and maintainability because you're writing native SQL using C#/VB.Net.
-* A revolutionary one-for-all, fully customizable data presenter is provided to handle view states including layout, data binding and data validation, all in clean C#/VB.Net code. Most complex controls such as ListBox, TreeView, DataGrid are eliminated. You have the greatest control over your UI because you're dealing with basic control such as label and text box directly.
-* JSON serialization/deserialization is a first class citizen - unbeatable performance because no reflection required.
-* Database testing and deployment is a first class citizen. You can easily mock part of database with testing data, generate database from clean C#/VB.Net code, or generate C#/VB.Net code from table data in database, right in Visual Studio.
-* And much more with a extremely lightweight runtime - you only need to add several dlls into your application, only hundreds or even tens of KBs in size!
+* Your application is 100% strongly typed from database to GUI, with clean code in C#/VB.Net. No fancy HQL, XAML or any other DSL - traditional problems are solved in a traditional way.
+* Your data access is best balanced for both performance and maintainability because you're writing native SQL using C#/VB.Net.
+* A one-for-all, fully customizable data presenter is provided to handle view states including layout, data binding and data validation, all in clean C#/VB.Net code. Most complex controls such as ListBox, TreeView, DataGrid are eliminated. You have the greatest control over your UI because you're dealing with basic control such as label and text box directly.
+* JSON serialization/deserialization is a first class citizen - better performance because no reflection required.
+* Database testing and deployment is a first class citizen. You can easily mock part of database with testing data, perform two way conversion between DataSet C#/VB.Net code and the database, right in Visual Studio. C#/VB.Net code is everything you need to commit in your source control repo.
+* And much more with a lightweight runtime - you only need to add several dlls into your application, only hundreds or even tens of KBs in size!
 
 ## A Taste of RDO.Net
 
-A fully featured sample application, [AdventureWorksLT](https://github.com/DevZest/AdventureWorksLT), is provided to demonstrate the use of RDO.Net:
+A fully featured sample application, [AdventureWorksLT](https://github.com/DevZest/AdventureWorksLT), together with others, is provided to demonstrate the use of RDO.Net:
 
 ![image](/images/samples_adventureworkslt.wpfapp.jpg)
 
