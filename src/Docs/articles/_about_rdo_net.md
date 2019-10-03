@@ -7,9 +7,8 @@
 Enterprise application, typically backed by a relational database, has decades of history. Today's enterprise applications are unnecessarily complex and heavyweight, due to the following technical constraints:
 
 * [Object-Relational Mapping (ORM, O/RM, and O/R mapping tool)](https://en.wikipedia.org/wiki/Object-relational_mapping), as the core of enterprise applications, is still [The Vietnam of Computer Science](http://blogs.tedneward.com/post/the-vietnam-of-computer-science/). Particularly, these difficulties are referred to as the [object-relational impedance mismatch](https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch).
-* Database testing, still stays on principles and guidelines. No widely practical use yet. Refactoring an enterprise
-application is time consuming and error prone.
-* Separation of the graphical user interface from the business logic or back-end logic (the data model), is still a challenge task. Frameworks such as [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) exists, but it's far from ideal: it will hit the wall when dealing with complex layout or complex interactivity; refactoring UI logic is still error prone, etc.
+* Database testing, still stays on principles and guidelines. No widely practical use yet. Refactoring or changing an enterprise application is time consuming and error prone.
+* Existing data presentation solutions are far from ideal. Taking [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) for example: it can be overkill for simple UI; in bigger cases, it can be hard to design the ViewModel up front in order to get the right amount of generality. Refactoring or changing data presentation code is time consuming and error prone.
 
 The above challenges impose great burdens for developing and further changing an enterprise application. Many frameworks are trying to solve these problems however they are all far from ideal. RDO.Net is the only solution to these problems in an integral, not an after-thought way (strongly recommended reading through):
 
@@ -19,12 +18,11 @@ The above challenges impose great burdens for developing and further changing an
 
 In the end, your application follows your business in a no-more-no-less basis - it adapts to your business, not vice versa:
 
-* Your application is 100% strongly typed from database to GUI, with clean code in C#/VB.Net. No fancy HQL, XAML or any other DSL - traditional problems are solved in a traditional way.
-* Your data access is best balanced for both performance and maintainability because you're writing native SQL using C#/VB.Net.
-* A one-for-all, fully customizable data presenter is provided to handle view states including layout, data binding and data validation, all in clean C#/VB.Net code. Most complex controls such as ListBox, TreeView, DataGrid are eliminated. You have the greatest control over your UI because you're dealing with basic control such as label and text box directly.
-* JSON serialization/deserialization is a first class citizen - better performance because no reflection required.
-* Database testing and deployment is a first class citizen. You can easily mock part of database with testing data, perform two way conversion between DataSet C#/VB.Net code and the database, right in Visual Studio. C#/VB.Net code is everything you need to commit in your source control repo.
-* And much more with a lightweight runtime - you only need to add several dlls into your application, only hundreds or even tens of KBs in size!
+* Your application is 100% strongly typed from database to GUI, all in clean C#/VB.Net code. Refactoring or changing your code is much easier than ever before.
+* Your data access is best balanced for both programmability and performance. Rich set of data objects such as `Model`, `Db`, `DbTable`, `DbQuery` and `DataSet` are provided, no more [object-relational impedance mismatch](https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch).
+* Data access testing is a first class citizen which can be performed easily. Data is the core of your application, now you can build much more robust data access layer.
+* A one-for-all, fully customizable data presenter is provided to handle presentation logic including layout, data binding and data validation, all consumed in clean C#/VB.Net code (no XAML needed). You don't need complex controls such as `ListBox`, `TreeView`, `DataGrid` any more. You UI code is greatly simplified because you can reuse all the presentation logic.
+* And much more with a lightweight runtime - you only need to add several dlls into your application, size ranged from tens to several hundereds KBs.
 
 ## A Taste of RDO.Net
 
