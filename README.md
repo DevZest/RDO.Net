@@ -8,8 +8,8 @@
 
 RDO.Net is licensed separately for its runtime (blue) and design-time tools (purple), much like .Net Core and Visual Studio.
 
-* [RDO.Net Runtime License](https://rdo.devzest.com/articles/getting_started/rdo_net_runtime_license.html): Open source in this repo under MIT license.
-* [RDO.Tools License](https://rdo.devzest.com/articles/getting_started/rdo_tools_license.html)/[Pricing](https://my.devzest.com/Pricing): Free as long as you're using Visual Studio Community Edition.
+* [RDO.Net Runtime License](https://rdo.devzest.com/articles/additional_info/rdo_net_runtime_license.html): Open source in this repo under MIT license.
+* [RDO.Tools License](https://rdo.devzest.com/articles/additional_info/rdo_tools_license.html)/[Pricing](https://my.devzest.com/Pricing): Free as long as you're using Visual Studio Community Edition.
 
 ## Why RDO.Net
 
@@ -609,6 +609,6 @@ The code for testing data is generated from database:
 
 ![image](https://www.codeproject.com/KB/dotnet/5246942/SalesOrderDetailMockDb.jpg)
 
-## Excited?
+## Getting Started
 
-[Let's get started!](https://rdo.devzest.com/articles/getting_started/get_started.html)
+It's highly recommended to start with our [step by step tutorial](https://rdo.devzest.com/articles/tutorial/get_started.html).
