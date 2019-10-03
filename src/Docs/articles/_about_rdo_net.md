@@ -187,3 +187,7 @@ End Class
 Testing data code is generated from database:
 
 ![image](/images/SalesOrderDetailMockDb.jpg)
+
+## Getting Started
+
+It's highly recommended to start with our [step by step tutorial](xref:tutorial_get_started).
