@@ -30,8 +30,7 @@ This requires enterprise applications to be flexible, which means you can pivot 
 We have more and more requirements to build custom applications to support our business. We need to move our enterprise applications from heavyweight to lightweight and agile, with greatly reduced cost and time to deployment. Enterprise applications should be:
 
 * Rapid development - direct cost and time to deployment
-* Fully testable - quality and
-* Confident to massive changes - business flexibility (suitability)
+* Easy refactoring and changing - suitability of software to customer needs
 
 These are the design goals of RDO.Net.
 
@@ -39,10 +38,7 @@ These are the design goals of RDO.Net.
 
 For decades, the following challenges exist in enterprise application development, or more broadly speaking, in computer science:
 
-* [Object-Relational Mapping (ORM, O/RM, and O/R mapping tool)](https://en.wikipedia.org/wiki/Object-relational_mapping), is still [The Vietnam of Computer Science](http://blogs.tedneward.com/post/the-vietnam-of-computer-science/). Particularly, these difficulties are referred to as the [object-relational impedance mismatch](https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch).
-* Database testing, still stays on principles and guidelines. No widely practical use yet. Refactoring an enterprise
-application is error prone due to lack of database testing.
-* Separation of the graphical user interface from the business logic or back-end logic (the data model), is still a challenge task. Frameworks such as [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel) exists, but it's far from ideal: it will hit the wall when dealing with complex layout or complex interactivity; refactoring UI logic is still error prone, etc.
+[!include[Enterprise Application Problems](../_enterprise_application_problems.md)]
 
 These are the problems that RDO.Net gonna to solve.
 
