@@ -59,7 +59,7 @@ namespace Movies.WPF
                 .AddBinding(3, 0, _.Genre.BindToColumnHeader())
                 .AddBinding(4, 0, _.Price.BindToColumnHeader())
                 .AddBinding(0, 1, _.BindToCheckBox().WithStyle(Styles.CheckBox))
-                .AddBinding(1, 1, _.Title.BindToTextBlockHyperlink(Commands.Open).WithStyle(Styles.LeftAlignedTextBlock))
+                .AddBinding(1, 1, _.Title.BindToHyperlink(Commands.Open).WithStyle(Styles.LeftAlignedTextBlock))
                 .AddBinding(2, 1, _.ReleaseDate.BindToTextBlock("{0:d}").WithStyle(Styles.RightAlignedTextBlock))
                 .AddBinding(3, 1, _.Genre.BindToTextBlock().WithStyle(Styles.LeftAlignedTextBlock))
                 .AddBinding(4, 1, _.Price.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock));

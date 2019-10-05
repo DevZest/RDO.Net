@@ -163,7 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevZest.Data.WPF">
-      <Version>1.0.0-beta-20190712</Version>
+      <Version>1.0.0-*</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

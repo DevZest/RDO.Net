@@ -49,7 +49,7 @@ Partial Class MainWindow
                 .AddBinding(3, 0, Entity.Genre.BindToColumnHeader()) _
                 .AddBinding(4, 0, Entity.Price.BindToColumnHeader()) _
                 .AddBinding(0, 1, Entity.BindToCheckBox().WithStyle(Styles.CheckBox)) _
-                .AddBinding(1, 1, Entity.Title.BindToTextBlockHyperlink(Commands.Open).WithStyle(Styles.LeftAlignedTextBlock)) _
+                .AddBinding(1, 1, Entity.Title.BindToHyperlink(Commands.Open).WithStyle(Styles.LeftAlignedTextBlock)) _
                 .AddBinding(2, 1, Entity.ReleaseDate.BindToTextBlock("{0:d}").WithStyle(Styles.RightAlignedTextBlock)) _
                 .AddBinding(3, 1, Entity.Genre.BindToTextBlock().WithStyle(Styles.LeftAlignedTextBlock)) _
                 .AddBinding(4, 1, Entity.Price.BindToTextBlock("{0:C}").WithStyle(Styles.RightAlignedTextBlock))
