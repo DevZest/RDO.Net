@@ -4,14 +4,12 @@ uid: rdo_data_overview
 
 # RDO.Data Overview
 
-RDO.Data is the core of RDO.Net. It helps developers to build data access layer of the applications:
+RDO.Data is the core of RDO.Net. It helps developers to build data and business layer of the your applications:
 
 ![image](/images/RdoDataOverview.jpg)
 
-Building on top of [ADO.Net](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/), RDO.Data separates data access from data manipulation into discrete components, with Visual Studio tool support:
+## RDO.Data Architecture
 
-![image](/images/RdoDataArchitecture.jpg)
+Building on top of [ADO.Net](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/), RDO.Data implements relational schema and data into a comprehensive yet simple object model:
 
-Using RDO.Data:
-
-[!include[RDO.Data Benefits](../_rdo_data_benefits.md)]
+[!include[RDO.Data Overview](../_rdo_data_overview.md)]

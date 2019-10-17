@@ -2,12 +2,12 @@
   items:
     - name: About RDO.Net
       href: overview/about_rdo_net.md
-    - name: Enterprise Application, the Right Way
-      href: overview/enterprise_application_the_right_way.md
-    - name: ORM/Data Access, the Right Way
-      href: overview/orm_data_access_the_right_way.md
-    - name: Data Presentation, the Right Way
-      href: overview/data_presentation_the_right_way.md
+    - name: Enterprise Application, the Direction
+      href: overview/enterprise_application_the_direction.md
+    - name: Data and Business Layer, the New Way
+      href: overview/data_and_business_layer_the_new_way.md
+    - name: Presentation Layer, the New Way
+      href: overview/presentation_layer_the_new_way.md
 - name: Tutorial
   items:
     - name: Get Started

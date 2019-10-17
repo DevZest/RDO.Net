@@ -1,8 +1,8 @@
 ---
-uid: enterprise_application_the_right_way
+uid: enterprise_application_the_direction
 ---
 
-# Enterprise Application, the Right Way
+# Enterprise Application, the Direction
 
 ## Buy vs. Build Dilemma
 

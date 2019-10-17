@@ -8,17 +8,17 @@ Enterprise application, typically backed by a relational database, has decades o
 
 [!include[Enterprise Application Problems](_enterprise_application_problems.md)]
 
-The above challenges impose great burdens for developing and further changing an enterprise application. Many frameworks are trying to solve these problems however they are all far from ideal. RDO.Net is the only solution to these problems in an integral, not an after-thought way (strongly recommended reading through):
+The above challenges impose great burdens for developing and further changing an enterprise application. Many frameworks are trying to solve these problems however they are all far from ideal. RDO.Net is the first solution to these problems in an integral, not an after-thought way (strongly recommended reading through):
 
-* <xref:enterprise_application_the_right_way>
-* <xref:orm_data_access_the_right_way>
-* <xref:data_presentation_the_right_way>
+* <xref:enterprise_application_the_direction>
+* <xref:data_and_business_layer_the_new_way>
+* <xref:presentation_layer_the_new_way>
 
 In the end, your application follows your business in a no-more-no-less basis - it adapts to your business, not vice versa:
 
 * Your application is 100% strongly typed from database to GUI, all in clean C#/VB.Net code. Refactoring or changing your code is much easier than ever before.
-* Your data access is best balanced for both programmability and performance. Rich set of data objects such as `Model`, `Db`, `DbTable`, `DbQuery` and `DataSet` are provided, no more [object-relational impedance mismatch](https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch).
-* Data access testing is a first class citizen which can be performed easily. Data is the core of your application, now you can build much more robust data access layer.
+* Your data and business layer is best balanced for both programmability and performance. Rich set of data objects such as `Model`, `Db`, `DbTable`, `DbQuery` and `DataSet` are provided, no more [object-relational impedance mismatch](https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch).
+* Data and business layer testing is a first class citizen which can be performed easily - your application can be much more robust and adaptive to change.
 * A one-for-all, fully customizable data presenter is provided to handle presentation logic including layout, data binding and data validation, all consumed in clean C#/VB.Net code (no XAML needed). You don't need complex controls such as `ListBox`, `TreeView`, `DataGrid` any more. You UI code is greatly simplified because you can reuse all the presentation logic.
 * And much more with a lightweight runtime - you only need to add several dlls into your application, size ranged from tens to several hundereds KBs.
 
@@ -60,7 +60,7 @@ The code of database can be manipulated via Db Visualizer tool window in Visual 
 
 ![image](/images/AdventureWorksLTDbVisualizer.jpg)
 
-### Data Access (CRUD)
+### Data and Business Layer
 
 # [C#](#tab/cs)
 

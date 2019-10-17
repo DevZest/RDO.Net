@@ -16,7 +16,7 @@ Concrete type derived from <xref:DevZest.Data.Column`1> can be used to represent
 
 ## LocalColumn vs. Others
 
-There are two kind of data columns: <xref:DevZest.Data.LocalColumn`1> and others prefixed with '_'(underscore). As mentioned earlier in <xref:orm_data_access_the_right_way>, it's not feasible to map between relational data and arbitrary objects. <xref:DevZest.Data.LocalColumn`1> is provided as a fallback mechanism for local used data only. The following table compares these two:
+There are two kind of data columns: <xref:DevZest.Data.LocalColumn`1> and others prefixed with '_'(underscore). <xref:DevZest.Data.LocalColumn`1> is provided as a fallback mechanism for local used data only. The following table compares these two:
 
 | LocalColumn | Others |
 |-------------|--------|
