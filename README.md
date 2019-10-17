@@ -403,7 +403,7 @@ The code of database can be manipulated via Db Visualizer tool window in Visual 
 
 ![image](https://rdo.devzest.com/images/AdventureWorksLTDbVisualizer.jpg)
 
-## Data Access (CRUD)
+## Data and Business Layer
 
 ```csharp
 private async Task EnsureConnectionOpenAsync(CancellationToken ct)
