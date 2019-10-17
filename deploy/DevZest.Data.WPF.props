@@ -1,16 +1,15 @@
 <Project>
-  <Import Project="Sync.DevZest.Data.WPF\PackageReference.props" />
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);DEPLOY</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+    <PackageId>DevZest.Data.WPF</PackageId>
+    <PackageTags>RDO.NET;Data Presentation;WPF</PackageTags>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <Compile Include="AssemblyVersion.cs" />
     <ProjectReference Remove="..\Data\Data.csproj" />
-    <None Include="packages.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevZest.Data" Version="$(PackageVersion)" />
   </ItemGroup>
 </Project>

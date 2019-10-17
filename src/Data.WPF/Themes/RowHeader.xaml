@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mwt="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
-    xmlns:local="clr-namespace:DevZest.Data.Views">
+    xmlns:local="clr-namespace:DevZest.Data.Views"
+    xmlns:primitives="clr-namespace:DevZest.Data.Views.Primitives">
 
     <Style TargetType="local:RowHeader">
         <Style.Resources>
@@ -79,7 +79,7 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Grid>
-                            <mwt:DataGridHeaderBorder IsHovered="{TemplateBinding IsMouseOver}"
+                            <primitives:GridHeaderBorder IsHovered="{TemplateBinding IsMouseOver}"
                                                   IsPressed="{TemplateBinding IsPressed}"
                                                   IsSelected="{TemplateBinding IsSelected}"
                                                   Orientation="Horizontal"
@@ -90,7 +90,7 @@
                                                   BorderBrush="{TemplateBinding BorderBrush}"
                                                   Background="{TemplateBinding Background}">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="IndicatorContent" />
-                            </mwt:DataGridHeaderBorder>
+                            </primitives:GridHeaderBorder>
                             <Border local:RowHeader.IsResizeGripper="True" Visibility="{TemplateBinding ResizeGripperVisibility}"
                                 VerticalAlignment="Bottom" Height="4" Background="Transparent" Cursor="SizeNS" />
                         </Grid>

@@ -1,9 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <PackageVersion>$PACKAGE_VERSION$</PackageVersion>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DevZest.Data" Version="$(PackageVersion)" />
-  </ItemGroup>
-</Project>

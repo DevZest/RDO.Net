@@ -1,1 +1,0 @@
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "%~dp0VerGen.ps1" %PARAM_VERSION% %PARAM_ADDTIONAL_LABEL% -files AssemblyVersion.cs, packages.config, PackageReference.props, NuGet.props

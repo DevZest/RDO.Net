@@ -8,10 +8,10 @@ call ..\Build.bat %1 %2
 cd "%~dp0DevZest.Data.SqlServer"
 call ..\Build.bat %1 %2
 
-cd "%~dp0DevZest.Data.WPF"
-call ..\BuildWpf.bat %1 %2
-
 cd "%~dp0DevZest.Data.MySql"
+call ..\Build.bat %1 %2
+
+cd "%~dp0DevZest.Data.WPF"
 call ..\Build.bat %1 %2
 
 cd "%~dp0DevZest.Data.AspNetCore"
