@@ -26,7 +26,7 @@ In the end, your presentation layer can do little with the view too.
 
 Put it together, if the presentation layer is an afterthought, there is little room left for implementation, especially at abstraction level.
 
-## The New Old Way
+## The New Way
 
 Thanks to RDO.Data, which provides a rich set of data objects and the separation of model of data, we now have the foundation to implement a comprehensive Model-View-Presenter (MVP) pattern. The following is the architecture of RDO.WPF MVP:
 
