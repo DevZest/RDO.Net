@@ -21,9 +21,9 @@ Enterprise application, typically backed by a relational database, has decades o
 
 The above challenges impose great burdens for developing and further changing an enterprise application. Many frameworks are trying to solve these problems however they are all far from ideal. RDO.Net is the only solution to these problems in an integral, not an after-thought way (strongly recommended reading through):
 
-* [Enterprise Application, the Right Way](https://rdo.devzest.com/articles/overview/enterprise_application_the_right_way.html)
-* [ORM/Data Access, the Right Way](https://rdo.devzest.com/articles/overview/orm_data_access_the_right_way.html)
-* [Data Presentation, the Right Way](https://rdo.devzest.com/articles/overview/data_presentation_the_right_way.html)
+* [Enterprise Application, the Direction](https://rdo.devzest.com/articles/overview/enterprise_application_the_direction.html)
+* [Data and Business Layer, the New Way](https://rdo.devzest.com/articles/overview/data_and_business_layer_the_new_way.html)
+* [Presentation Layer, the New Way](https://rdo.devzest.com/articles/overview/presentation_layer_the_new_way.html)
 
 In the end, your application follows your business in a no-more-no-less basis - it adapts to your business, not vice versa:
 
