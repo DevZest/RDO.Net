@@ -1,4 +1,5 @@
 <Project>
+  <Import Project="Deploy.props" />
 
   <PropertyGroup>
     <PackageId>DevZest.Data.WPF</PackageId>
