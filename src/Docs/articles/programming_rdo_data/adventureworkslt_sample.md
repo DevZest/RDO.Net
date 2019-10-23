@@ -4,15 +4,15 @@ The best way to learn RDO.Data is to learn by example. In the source code repo, 
 
 | Project | Description |
 |---------|-------------|
-| `AdventureWorksLT.Data` | Data Access Layer of the application. |
+| `AdventureWorksLT` | Data and Business Layer of the application. |
 | `AdventureWorksLT.DbDesign` | Database mocking and deployment. |
 | `AdventureWorksLT.WpfApp` | UI Layer of the application in WPF. |
 
-It's a typical fully featured LOB application based on the well known `AdventureWorksLT` SQL Server sample database. The data access layer (`AdventureWorksLT.Data` project), consists of the following components:
+It's a typical fully featured LOB application based on the well known `AdventureWorksLT` SQL Server sample database. The data and business layer (`AdventureWorksLT.Data` project), consists of the following components:
 
 ## Business Models
 
-The following are business models in `AdventureWorksLT.Data` project:
+The following are business models in `AdventureWorksLT` project:
 
 | Models | Description |
 |--------|-------------|
