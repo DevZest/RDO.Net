@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="DevZest.Data.Tools.60df604b-4181-417e-a57f-3a3886563336" Version="$VERSION$" Language="en-US" Publisher="DevZest" />
+        <Identity Id="DevZest.Data.Tools" Version="$VERSION$" Language="en-US" Publisher="DevZest" />
         <DisplayName>DevZest.Data.Tools</DisplayName>
         <Description xml:space="preserve">DevZest Data Tools</Description>
     </Metadata>

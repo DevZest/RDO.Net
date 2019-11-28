@@ -8,6 +8,6 @@
       Roslyn version before 2.7.0 has a nasty bug: a extra whitespace is generated for typeof() expression, which breaks the unit tests.
     -->
     <VsixRoslynPackageVersion>2.7.0</VsixRoslynPackageVersion>
-    <VsixRdoPackageVersion>1.0.0-rc-*</VsixRdoPackageVersion>
+    <VsixRdoPackageVersion>1.0.0</VsixRdoPackageVersion>
   </PropertyGroup>
 </Project>

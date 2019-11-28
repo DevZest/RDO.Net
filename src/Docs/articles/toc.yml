@@ -9,7 +9,7 @@
     - name: Presentation Layer, the New Way
       href: overview/presentation_layer_the_new_way.md
     - name: Specifications
-      href: additional_info/specifications.md
+      href: overview/specifications.md
 - name: Tutorial
   items:
     - name: Get Started

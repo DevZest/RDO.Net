@@ -21,7 +21,7 @@ You can find the sample code under `samples/Tutorial` or `samples.vb/Tutorial/` 
 ## Prerequisites
 
 * Visual Studio 2017 (version >= 15.3) or Visual Studio 2019, with *.Net desktop development* and *ASP.NET web development* workloads installed.
-* [RDO.Tools](https://marketplace.visualstudio.com/items?itemName=DevZest.rdotools) installed and [activated](xref:rdo_tools_activation). Free if you're using Visual Studio community edition.
+* [DevZest.Data.Tools.vsix](https://marketplace.visualstudio.com/items?itemName=DevZest.RdoTools) installed.
 * [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms) (version >= 17.0).
 
 ## Create the Solution
