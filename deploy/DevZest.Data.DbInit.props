@@ -9,7 +9,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Remove="..\Data\Data.csproj" />
+    <ProjectReference Remove="..\..\src\Data\Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
