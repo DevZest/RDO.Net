@@ -8,6 +8,8 @@
       href: overview/data_and_business_layer_the_new_way.md
     - name: Presentation Layer, the New Way
       href: overview/presentation_layer_the_new_way.md
+    - name: Specifications
+      href: additional_info/specifications.md
 - name: Tutorial
   items:
     - name: Get Started
@@ -122,15 +124,3 @@
       href: programming_rdo_asp_net_core/dataset_tag_helpers.md
     - name: DataSet Validation
       href: programming_rdo_asp_net_core/dataset_validation.md
-- name: Additional Info
-  items:
-    - name: Specifications
-      href: additional_info/specifications.md
-    - name: RDO.Net Runtime License
-      href: additional_info/rdo_net_runtime_license.md
-    - name: RDO.Tools License
-      href: additional_info/rdo_tools_license.md
-    - name: RDO.Tools Activation
-      href: additional_info/rdo_tools_activation.md
-    - name: Manage Your Registration/Subscription
-      href: additional_info/manage_registration_subscription.md

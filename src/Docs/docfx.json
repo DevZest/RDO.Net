@@ -9,8 +9,8 @@
             "Data.SqlServer/Data.SqlServer.csproj",
             "Data.MySql/Data.MySql.csproj",
             "Data.AspNetCore/Data.AspNetCore.csproj",
-            "Data.WPF/Data.WPF.Doc.csproj",
-            "Docs/nuget_packages/DevZest.Data.DbInit/lib/netstandard2.0/*.dll"
+            "Data.DbInit/Data.DbInit.csproj",
+            "Data.WPF/Data.WPF.Doc.csproj"
           ]
         }
       ],

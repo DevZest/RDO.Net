@@ -1,7 +1,5 @@
 [!include[Welcome to RDO.Net](_rdo_net_summary.md)]
 
-[!include[RDO.Net License](_rdo_net_license.md)]
-
 ## Why RDO.Net
 
 Enterprise application, typically backed by a relational database, has decades of history. Today's enterprise applications are unnecessarily complex and heavyweight, due to the following technical constraints:
