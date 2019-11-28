@@ -4,3 +4,4 @@ DevZest.Data.Analyzers
 DevZest.Data.WPF
 DevZest.Data.MySql
 DevZest.Data.AspNetCore
+DevZest.Data.DbInit

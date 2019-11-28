@@ -1,0 +1,18 @@
+<Project>
+
+  <Import Project="Deploy.props" />
+  
+  <PropertyGroup>
+    <PackageId>DevZest.Data.DbInit</PackageId>
+    <PackageTags>RDO.NET;RDO.Tools</PackageTags>
+    <PackageProjectUrl>http://www.devzest.com</PackageProjectUrl>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Remove="..\Data\Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevZest.Data" Version="$(PackageVersion)" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>DevZest.Data.CodeAnalysis</AssemblyName>
+    <RootNamespace>DevZest.Data.CodeAnalysis</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\src\Data.Analyzers\CSharp\Extensions.GetKeyConstructorArguments.cs" Link="CSharp\Extensions.GetKeyConstructorArguments.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.BaseTypeEqualsTo.cs" Link="Extensions.BaseTypeEqualsTo.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.EqualsTo.cs" Link="Extensions.EqualsTo.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetArgumentType.cs" Link="Extensions.GetArgumentType.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetAttribute.cs" Link="Extensions.GetAttribute.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetAttributeTargets.cs" Link="Extensions.GetAttributeTargets.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetCrossReferenceAttributeType.cs" Link="Extensions.GetCrossReferenceAttributeType.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetIProgressOf.cs" Link="Extensions.GetIProgressOf.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetKeyConstructorParams.cs" Link="Extensions.GetKeyConstructorParams.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetKnownType.cs" Link="Extensions.GetKnownType.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetLocation.cs" Link="Extensions.GetLocation.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetModelDesignerSpec.cs" Link="Extensions.GetModelDesignerSpec.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetModelType.cs" Link="Extensions.GetModelType.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetPropertyRegistrationType.cs" Link="Extensions.GetPropertyRegistrationType.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetSingleConstructor.cs" Link="Extensions.GetSingleConstructor.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetStringArgument.cs" Link="Extensions.GetStringArgument.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.GetTaskOf.cs" Link="Extensions.GetTaskOf.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.HasAttribute.cs" Link="Extensions.HasAttribute.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.IndexOfParametersByName.cs" Link="Extensions.IndexOfParametersByName.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\Extensions.IsDerivedFrom.cs" Link="Extensions.IsDerivedFrom.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\KnownTypes.cs" Link="KnownTypes.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\PropertyRegistrationType.cs" Link="PropertyRegistrationType.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\VisualBasic\Extensions.GetKeyConstructorArguments.cs" Link="VisualBasic\Extensions.GetKeyConstructorArguments.cs" />
+    <Compile Include="..\..\src\Data.Analyzers\DiagnosticIds.cs" Link="DiagnosticIds.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevZest.Data" Version="$(VsixRdoPackageVersion)" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(VsixRoslynPackageVersion)" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="$(VsixRoslynPackageVersion)" />
+    <Compile Update="DiagnosticMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DiagnosticMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="UserMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserMessages.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="DiagnosticMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DiagnosticMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="UserMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AdditionalProps Condition="Exists('..\$(AssemblyName).props')">..\$(AssemblyName).props</AdditionalProps>
+  </PropertyGroup>
+  <Import Project="$(AdditionalProps)" Condition=" '$(AdditionalProps)' != '' " />
+</Project>

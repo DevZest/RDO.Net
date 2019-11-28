@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ButtonText_Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="ButtonText_Cancel" xml:space="preserve">
+    <value>_Cancel</value>
+  </data>
+  <data name="ButtonText_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ButtonText_OK" xml:space="preserve">
+    <value>_OK</value>
+  </data>
+  <data name="ButtonText_Refresh" xml:space="preserve">
+    <value>_Refresh</value>
+  </data>
+  <data name="CheckConstraintWindow_Title" xml:space="preserve">
+    <value>Add Check Constraint</value>
+  </data>
+  <data name="ComputationWindow_Mode_Aggregate" xml:space="preserve">
+    <value>Aggregate</value>
+  </data>
+  <data name="ComputationWindow_Mode_Inherit" xml:space="preserve">
+    <value>Inherit</value>
+  </data>
+  <data name="ComputationWindow_Title" xml:space="preserve">
+    <value>Add Computation</value>
+  </data>
+  <data name="ConsoleWindow_OperationCancelled" xml:space="preserve">
+    <value>The operation is cancelled.</value>
+  </data>
+  <data name="ConsoleWindow_OperationFaulted" xml:space="preserve">
+    <value>An error occurred when running the operation:</value>
+  </data>
+  <data name="CustomValidatorWindow_Title" xml:space="preserve">
+    <value>Add Custom Validator</value>
+  </data>
+  <data name="DataSetGenWindow_Title" xml:space="preserve">
+    <value>Generate DataSet(s)</value>
+  </data>
+  <data name="DbGenWindow_Description" xml:space="preserve">
+    <value>Generate database without any data.</value>
+  </data>
+  <data name="DbInitProjectRunner_BuildingProject" xml:space="preserve">
+    <value>Building project {0}...</value>
+  </data>
+  <data name="DbInitProjectRunner_BuildingProjectFailed" xml:space="preserve">
+    <value>Building project {0} failed.</value>
+  </data>
+  <data name="DbInitProjectRunner_BuildingProjectSucceeded" xml:space="preserve">
+    <value>Building project {0} completed successfully.</value>
+  </data>
+  <data name="DbInitProjectRunner_ConsoleAppNetCore" xml:space="preserve">
+    <value>Console App (.NET Core)</value>
+  </data>
+  <data name="DbInitProjectRunner_ConsoleAppNetFramework" xml:space="preserve">
+    <value>Console App (.NET Framework)</value>
+  </data>
+  <data name="DbInitProjectRunner_OperationFailed" xml:space="preserve">
+    <value>Operation failed with exit code {0}.</value>
+  </data>
+  <data name="DbInitProjectRunner_OperationSucceeded" xml:space="preserve">
+    <value>Operation completed successfully.</value>
+  </data>
+  <data name="DbInitProjectRunner_ProjectNotSupported" xml:space="preserve">
+    <value>Project {0} is not supported. Supported project types are: {1}.</value>
+  </data>
+  <data name="DbInitProjectRunner_StartingProcess" xml:space="preserve">
+    <value>Starting process: {0} {1}</value>
+  </data>
+  <data name="DbInitProjectRunner_VerifyingProject" xml:space="preserve">
+    <value>Verifying project {0}...</value>
+  </data>
+  <data name="DbTableWindow_Title" xml:space="preserve">
+    <value>Add DbTable</value>
+  </data>
+  <data name="DbVisualizer_Caption" xml:space="preserve">
+    <value>Db Visualizer</value>
+  </data>
+  <data name="ForeignKeyWindow_Label_FkName" xml:space="preserve">
+    <value>FK Name:</value>
+  </data>
+  <data name="ForeignKeyWindow_Label_FkType" xml:space="preserve">
+    <value>FK Type:</value>
+  </data>
+  <data name="ForeignKeyWindow_Title" xml:space="preserve">
+    <value>Add Foreign Key</value>
+  </data>
+  <data name="IndexWindow_CheckBox_Table" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="IndexWindow_CheckBox_TempTable" xml:space="preserve">
+    <value>Temp Table</value>
+  </data>
+  <data name="IndexWindow_CheckBox_Unique" xml:space="preserve">
+    <value>Unique</value>
+  </data>
+  <data name="IndexWindow_Title" xml:space="preserve">
+    <value>Add Index</value>
+  </data>
+  <data name="Label_DbName" xml:space="preserve">
+    <value>D_bName:</value>
+  </data>
+  <data name="Label_DeleteRule" xml:space="preserve">
+    <value>DeleteRule:</value>
+  </data>
+  <data name="Label_Description" xml:space="preserve">
+    <value>_Description:</value>
+  </data>
+  <data name="Label_ForeignKey" xml:space="preserve">
+    <value>_Foreign Key:</value>
+  </data>
+  <data name="Label_Mode" xml:space="preserve">
+    <value>_Mode:</value>
+  </data>
+  <data name="Label_Model" xml:space="preserve">
+    <value>_Model:</value>
+  </data>
+  <data name="Label_Name" xml:space="preserve">
+    <value>_Name:</value>
+  </data>
+  <data name="Label_RefTable" xml:space="preserve">
+    <value>_Referenced Table:</value>
+  </data>
+  <data name="Label_ShowDbLog" xml:space="preserve">
+    <value>Show Db Log</value>
+  </data>
+  <data name="Label_TypeName" xml:space="preserve">
+    <value>_Type Name:</value>
+  </data>
+  <data name="Label_UpdateRule" xml:space="preserve">
+    <value>UpdateRule:</value>
+  </data>
+  <data name="LicenseWindow_Title" xml:space="preserve">
+    <value>RDO.Tools License</value>
+  </data>
+  <data name="MessageView_Label" xml:space="preserve">
+    <value>Message:</value>
+  </data>
+  <data name="MessageView_MissingMessageResourceAttribute" xml:space="preserve">
+    <value>(Missing MessageResource attribute)</value>
+  </data>
+  <data name="MessageView_ValueIsRequired" xml:space="preserve">
+    <value>Value is required.</value>
+  </data>
+  <data name="ModelPresenter_ModelNameFormat" xml:space="preserve">
+    <value>Model '{0}'</value>
+  </data>
+  <data name="ModelVisualizer_AddKey" xml:space="preserve">
+    <value>Add Key</value>
+  </data>
+  <data name="ModelVisualizer_AddRef" xml:space="preserve">
+    <value>Add Ref</value>
+  </data>
+  <data name="ModelVisualizer_Caption" xml:space="preserve">
+    <value>Model Visualizer</value>
+  </data>
+  <data name="PrimaryKeyWindow_Label_Key" xml:space="preserve">
+    <value>_Key:</value>
+  </data>
+  <data name="PrimaryKeyWindow_Label_Ref" xml:space="preserve">
+    <value>_Ref:</value>
+  </data>
+  <data name="PrimaryKeyWindow_Title" xml:space="preserve">
+    <value>Add Primary Key</value>
+  </data>
+  <data name="ProjectionWindow_SortBySelection" xml:space="preserve">
+    <value>Sort By Selection</value>
+  </data>
+  <data name="ProjectionWindow_Title" xml:space="preserve">
+    <value>Add Projection</value>
+  </data>
+  <data name="RelationshipWindow_Title" xml:space="preserve">
+    <value>Add Relationship</value>
+  </data>
+  <data name="SortDirection_Asc" xml:space="preserve">
+    <value>Ascending</value>
+  </data>
+  <data name="SortDirection_Desc" xml:space="preserve">
+    <value>Descending</value>
+  </data>
+  <data name="Title_DbInitInput" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="Title_GenerateDb" xml:space="preserve">
+    <value>Generate Db</value>
+  </data>
+  <data name="UniqueConstraintWindow_Title" xml:space="preserve">
+    <value>Add Unique Constraint</value>
+  </data>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>Field is required</value>
+  </data>
+</root>

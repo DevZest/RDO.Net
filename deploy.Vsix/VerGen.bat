@@ -1,0 +1,1 @@
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "%~dp0VerGen.ps1" %PARAM_VERSION% %PARAM_PROJECT%

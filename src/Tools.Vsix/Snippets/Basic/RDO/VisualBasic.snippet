@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+
+  <CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>rdopropr</Title>
+			<Author>DevZest</Author>
+			<Description>Code snippet for a registable property with a public 'get' accessor and a private 'set' accessor.</Description>
+			<Shortcut>rdopropr</Shortcut>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+        <Literal>
+          <ID>propertyName</ID>
+          <ToolTip>Replace with the name of the property.</ToolTip>
+          <Default>MyProperty</Default>
+        </Literal>
+        <Literal>
+					<ID>propertyType</ID>
+					<ToolTip>Replace with the type of the property.</ToolTip>
+					<Default>_String</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="VB" Kind="method decl">
+				<![CDATA[
+          Private m_$propertyName$ As $propertyType$
+          Public Property $propertyName$ As $propertyType$
+              Get
+                Return m_$propertyName$
+              End Get
+              Private Set
+                  m_$propertyName$ = Value
+              End Set
+          End Property
+          ]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+  
+</CodeSnippets>

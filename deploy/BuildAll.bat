@@ -16,3 +16,6 @@ call ..\Build.bat %1 %2
 
 cd "%~dp0DevZest.Data.AspNetCore"
 call ..\Build.bat %1 %2
+
+cd "%~dp0DevZest.Data.DbInit"
+call ..\Build.bat %1 %2

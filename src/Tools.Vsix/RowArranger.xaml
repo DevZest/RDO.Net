@@ -1,0 +1,39 @@
+﻿<StackPanel x:Class="DevZest.Data.Tools.RowArranger"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DevZest.Data.Tools"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="80"
+            Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0">
+    <StackPanel.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="5,3" />
+        </Style>
+        <Style TargetType="Polygon">
+            <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}}, Path=Foreground}" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.3" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.3" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </StackPanel.Resources>
+    <Button Command="{x:Static local:RowArrangerDialogWindow.MoveUp}">
+        <Polygon Points="5,0 10,5 0,5" Fill="Black" />
+    </Button>
+    <Button Command="{x:Static local:RowArrangerDialogWindow.MoveDown}">
+        <Polygon Points="0,0 10,0, 5,5" />
+    </Button>
+    <Button Command="{x:Static local:RowArrangerDialogWindow.Delete}">
+        <Image Width="12" Source="/DevZest.Data.Tools;component/Icons/Delete.ico" />
+    </Button>
+</StackPanel>

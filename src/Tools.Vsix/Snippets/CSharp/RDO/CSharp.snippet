@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+
+  <CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>rdopropr</Title>
+			<Author>DevZest</Author>
+			<Description>Code snippet for an automatically implemented registable property with a public 'get' accessor and a private 'set' accessor.</Description>
+			<Shortcut>rdopropr</Shortcut>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>propertyType</ID>
+					<ToolTip>Replace with the type of the property.</ToolTip>
+					<Default>_String</Default>
+				</Literal>
+				<Literal>
+					<ID>propertyName</ID>
+					<ToolTip>Replace with the name of the property.</ToolTip>
+					<Default>MyProperty</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="CSharp" Kind="method decl">
+				<![CDATA[public $propertyType$ $propertyName$ { get; private set; }]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+
+</CodeSnippets>

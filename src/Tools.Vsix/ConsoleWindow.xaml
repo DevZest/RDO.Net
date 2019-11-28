@@ -1,0 +1,31 @@
+﻿<vs:DialogWindow x:Class="DevZest.Data.Tools.ConsoleWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:DevZest.Data.Tools"
+    xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+    mc:Ignorable="d"
+    WindowStartupLocation="CenterScreen"
+    Width="600" Height="350" >
+    <vs:DialogWindow.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="5,3" />
+        </Style>
+    </vs:DialogWindow.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <local:LogControl x:Name="_output" Margin="5" BorderBrush="Gray" />
+        <Grid Grid.Row="1" Margin="5">
+            <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <vs:DialogButton x:Name="_buttonBack" Content="{x:Static local:UserMessages.ButtonText_Back}" IsDefault="True" Margin="5" Click="ButtonBack_Click" />
+                <vs:DialogButton x:Name="_buttonClose" Content="{x:Static local:UserMessages.ButtonText_Close}" IsCancel="True" Margin="5" />
+            </UniformGrid>
+            <vs:DialogButton x:Name="_buttonCancel" Content="{x:Static local:UserMessages.ButtonText_Cancel}" Margin="5" Click="ButtonCancel_Click"
+                Width="90" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+        </Grid>
+    </Grid>
+</vs:DialogWindow>

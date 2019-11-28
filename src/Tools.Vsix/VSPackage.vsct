@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--  This is the file that defines the actual layout and type of the commands.
+        It is divided in different sections (e.g. command definition, command
+        placement, ...), with each defining a specific set of properties.
+        See the comment before each section for more details about how to
+        use it. -->
+
+  <!--  The VSCT compiler (the tool that translates this file into the binary
+        format that VisualStudio will consume) has the ability to run a preprocessor
+        on the vsct file; this preprocessor is (usually) the C++ preprocessor, so
+        it is possible to define includes and macros with the same syntax used
+        in C++ files. Using this ability of the compiler here, we include some files
+        defining some of the constants that we will use inside the file. -->
+
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h" />
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h" />
+
+  <!--The Commands section is where commands, menus, and menu groups are defined.
+      This section uses a Guid to identify the package that provides the command defined inside it. -->
+  <Commands package="guidVSPackage">
+    <!-- Inside this section we have different sub-sections: one for the menus, another
+    for the menu groups, one for the buttons (the actual commands), one for the combos
+    and the last one for the bitmaps used. Each element is identified by a command id that
+    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually
+    called "command set" and is used to group different command inside a logically related
+    group; your package should define its own command set in order to avoid collisions
+    with command ids defined by other packages. -->
+
+    <Menus>
+      <Menu guid="guidModelVisualizer" id="Toolbar" type="ToolWindowToolbar">
+        <CommandFlag>DefaultDocked</CommandFlag>
+        <Strings>
+          <ButtonText />
+          <CommandName />
+        </Strings>
+      </Menu>
+    
+      <Menu guid="guidModelVisualizer" id="AddNodeMenu" type="MenuController" priority="0x0001" toolbarPriorityInBand="0x0001">
+        <Parent guid="guidModelVisualizer" id="ToolbarGroup" />
+        <Strings>
+            <ButtonText />
+        </Strings>
+      </Menu>
+    
+      <Menus>
+         <Menu guid="guidModelVisualizer" id="ContextMenu" type="Context">
+            <Strings>
+               <MenuText></MenuText>
+               <ButtonText></ButtonText>
+            </Strings>
+         </Menu>
+      </Menus>
+
+      <Menu guid="guidDbVisualizer" id="Toolbar" type="ToolWindowToolbar">
+        <CommandFlag>DefaultDocked</CommandFlag>
+        <Strings>
+          <ButtonText />
+          <CommandName />
+        </Strings>
+      </Menu>
+      <Menu guid="guidDbVisualizer" id="ContextMenu" type="Context">
+        <Strings>
+            <MenuText></MenuText>
+            <ButtonText></ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <Group guid="guidModelVisualizer" id="ToolbarGroup" priority="0x0000">
+        <Parent guid="guidModelVisualizer" id="Toolbar" />
+      </Group>
+      <Group guid="guidModelVisualizer" id="AddNodeGroup" priority="0x0001">
+        <Parent guid="guidModelVisualizer" id="AddNodeMenu" />
+      </Group>
+      <Group guid="guidModelVisualizer" id="ContextMenuGroup" priority="0x0002">
+        <Parent guid="guidModelVisualizer" id="ContextMenu" />
+      </Group>
+
+      <Group guid="guidDbVisualizer" id="ToolbarGroup" priority="0x0000">
+        <Parent guid="guidDbVisualizer" id="Toolbar" />
+      </Group>
+      <Group guid="guidDbVisualizer" id="ContextMenuGroup" priority="0x0001">
+        <Parent guid="guidDbVisualizer" id="ContextMenu" />
+      </Group>
+      <Group guid="guidCodeEditorContextMenu" id="MenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+      </Group>
+    </Groups>
+    <!--Buttons section. -->
+    <!--This section defines the elements the user can interact with, like a menu command or a button
+        or combo box in a toolbar. -->
+    <Buttons>
+      <!--To define a menu group you have to specify its ID, the parent menu and its display priority.
+          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
+          the CommandFlag node.
+          You can add more than one CommandFlag node e.g.:
+              <CommandFlag>DefaultInvisible</CommandFlag>
+              <CommandFlag>DynamicVisibility</CommandFlag>
+          If you do not want an image next to your command, remove the Icon node /> -->
+      <Button guid="guidModelVisualizer" id="cmdidShow" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+        <Icon guid="guidModelVisualizerIcons" id="Window" />
+        <Strings>
+          <ButtonText>Model Visualizer</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddRegistableProperty" priority="0x0210" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddRegistableProperty" />
+        <CommandFlag>NoShowOnMenuController</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <!-- Become the permanent anchor item for the menu controller -->  
+        <CommandFlag>FixMenuController</CommandFlag>
+        <Strings>
+          <ButtonText>Add Registable Property</ButtonText>
+        </Strings>
+      </Button>
+        
+      <Button guid="guidModelVisualizer" id="cmdidAddPrimaryKey" priority="0x0220" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddPrimaryKey"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Primary Key...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddKey" priority="0x0230" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddKey"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Key...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddRef" priority="0x0240" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddRef"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Ref...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddComputation" priority="0x0245" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddComputation"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Computation...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddForeignKey" priority="0x0250" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddForeignKey"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Foreign Key...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddCheckConstraint" priority="0x0260" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddCheckConstraint"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Check Constaint...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddUniqueConstraint" priority="0x0265" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddUniqueConstraint"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Unique Constraint...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddCustomValidator" priority="0x0268" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddCustomValidator"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Custom Validator...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddIndex" priority="0x0270" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddIndex"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Index...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidAddProjection" priority="0x0280" type="Button">
+        <Parent guid="guidModelVisualizer" id="AddNodeGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="AddProjection"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>
+          <ButtonText>Add Projection...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidGotoSource" priority="0x0310" type="Button">
+        <Parent guid="guidModelVisualizer" id="ToolbarGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="GotoSource" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>Pict</CommandFlag>
+        <Strings>
+          <ButtonText>Go to source code</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidModelVisualizer" id="cmdidRefresh" priority="0x0320" type="Button">
+        <Parent guid="guidModelVisualizer" id="ToolbarGroup" />
+        <Icon guid="guidModelVisualizerIcons" id="Refresh" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>Pict</CommandFlag>
+        <Strings>
+          <ButtonText>Refresh</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidModelVisualizer" id="cmdidContextMenuStart" priority="0x9000" >  
+        <Parent guid="guidModelVisualizer" id="ContextMenuGroup" />  
+        <CommandFlag>DynamicItemStart</CommandFlag>  
+        <CommandFlag>DynamicVisibility</CommandFlag>  
+        <CommandFlag>TextChanges</CommandFlag>  
+        <!-- This text does not appear. -->  
+        <Strings>  
+          <ButtonText>Placeholder</ButtonText>  
+        </Strings>  
+      </Button>
+
+
+      <Button guid="guidDbVisualizer" id="cmdidShow" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+        <Icon guid="guidDbVisualizerIcons" id="Window" />
+        <Strings>
+          <ButtonText>Db Visualizer</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidDbVisualizer" id="cmdidAddTable" priority="0x0210" type="Button">
+        <Parent guid="guidDbVisualizer" id="ToolbarGroup" />
+        <Icon guid="guidDbVisualizerIcons" id="AddTable" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>Pict</CommandFlag>
+        <Strings>
+          <ButtonText>Add Table...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidDbVisualizer" id="cmdidGotoSource" priority="0x0230" type="Button">
+        <Parent guid="guidDbVisualizer" id="ToolbarGroup" />
+        <Icon guid="guidDbVisualizerIcons" id="GotoSource" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>Pict</CommandFlag>
+        <Strings>
+          <ButtonText>Go to source code</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidDbVisualizer" id="cmdidRefresh" priority="0x0240" type="Button">
+        <Parent guid="guidDbVisualizer" id="ToolbarGroup" />
+        <Icon guid="guidDbVisualizerIcons" id="Refresh" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>Pict</CommandFlag>
+        <Strings>
+          <ButtonText>Refresh</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidDbVisualizer" id="cmdidAddRelationship" priority="0x0220" type="Button" >  
+        <Parent guid="guidDbVisualizer" id="ContextMenuGroup" />
+        <Icon guid="guidDbVisualizerIcons" id="AddRelationship" />
+        <CommandFlag>IconAndText</CommandFlag>
+        <Strings>  
+          <ButtonText>Add Relationship...</ButtonText>  
+        </Strings>  
+      </Button>
+
+      <Button guid="guidCodeEditorContextMenu" id="cmdidDbGen" priority="0x0010" type="Button">
+        <Parent guid="guidCodeEditorContextMenu" id="MenuGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Generate Db...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidCodeEditorContextMenu" id="cmdidDataSetGen" priority="0x0020" type="Button">
+        <Parent guid="guidCodeEditorContextMenu" id="MenuGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Generate DataSet(s)...</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+    
+    <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
+    <Bitmaps>
+      <!--  The bitmap id is defined in a way that is a little bit different from the others:
+            the declaration starts with a guid for the bitmap strip, then there is the resource id of the
+            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
+            inside a button definition. An important aspect of this declaration is that the element id
+            must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
+      <Bitmap guid="guidModelVisualizerIcons" href="Icons\ModelVisualizerIcons.png"
+              usedList="Window, AddRegistableProperty, AddPrimaryKey, AddKey, AddRef, AddComputation, AddForeignKey, AddCheckConstraint, AddUniqueConstraint, AddCustomValidator, AddIndex, AddProjection, GotoSource, Refresh" />
+
+      <Bitmap guid="guidDbVisualizerIcons" href="Icons\DbVisualizerIcons.png"
+        usedList="Window, AddTable, AddRelationship, GotoSource, Refresh" />
+    </Bitmaps>
+  </Commands>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidVSPackage" value="{69fd4743-5823-4911-bc25-f05519fdc383}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidModelVisualizer" value="{60d853cd-eccf-48c0-aa8a-ec7f7c5e030c}">
+      <IDSymbol name="ToolbarGroup" value="0x0010" />
+      <IDSymbol name="AddNodeMenu" value="0x0020"/>
+      <IDSymbol name="AddNodeButton" value="0x0030"/>
+      <IDSymbol name="AddNodeGroup" value="0x0040"/>
+      <IDSymbol name="ContextMenuGroup" value="0x0050"/>
+      <IDSymbol name="Toolbar" value="0x0100" />
+      <IDSymbol name="ContextMenu" value ="0x0105" />
+      <IDSymbol name="cmdidShow" value="0x0110" />
+      <IDSymbol name="cmdidAddRegistableProperty" value="0x0210" />
+      <IDSymbol name="cmdidAddPrimaryKey" value="0x0220" />
+      <IDSymbol name="cmdidAddKey" value="0x0230" />
+      <IDSymbol name="cmdidAddRef" value="0x0240" />
+      <IDSymbol name="cmdidAddComputation" value="0x0245"/>
+      <IDSymbol name="cmdidAddForeignKey" value="0x0250"/>
+      <IDSymbol name="cmdidAddCheckConstraint" value="0x0260"/>
+      <IDSymbol name="cmdidAddUniqueConstraint" value="0x265"/>
+      <IDSymbol name="cmdidAddCustomValidator" value="0x268"/>
+      <IDSymbol name="cmdidAddIndex" value="0x0270" />
+      <IDSymbol name="cmdidAddProjection" value="0x0280" />
+      <IDSymbol name="cmdidGotoSource" value="0x0310"/>
+      <IDSymbol name="cmdidRefresh" value="0x0320"/>
+      
+      <IDSymbol name="cmdidContextMenuStart" value="0x9000" />
+      <!-- NOTE: The above command expands at run time to some number of ids.  
+       Do not to place command ids after it (e.g. 0x9001, 0x9002).-->
+    </GuidSymbol>
+
+    <GuidSymbol name="guidModelVisualizerIcons" value="{0a804e4c-0b87-4577-afad-e3b150fd606c}">
+      <IDSymbol name="Window" value="1" />
+      <IDSymbol name="AddRegistableProperty" value="2" />
+      <IDSymbol name="AddPrimaryKey" value="3"/>
+      <IDSymbol name="AddKey" value="4"/>
+      <IDSymbol name="AddRef" value="5"/>
+      <IDSymbol name="AddComputation" value="6"/>
+      <IDSymbol name="AddForeignKey" value="7"/>
+      <IDSymbol name="AddCheckConstraint" value="8"/>
+      <IDSymbol name="AddUniqueConstraint" value="9"/>
+      <IDSymbol name="AddCustomValidator" value="10"/>
+      <IDSymbol name="AddIndex" value="11" />
+      <IDSymbol name="AddProjection" value="12"/>
+      <IDSymbol name="GotoSource" value="13" />
+      <IDSymbol name="Refresh" value="14" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidDbVisualizer" value="{810E8186-6D2A-471C-9F0F-0644919459BF}">
+      <IDSymbol name="ToolbarGroup" value="0x0010" />
+      <IDSymbol name="ContextMenuGroup" value="0x0050"/>
+      <IDSymbol name="Toolbar" value="0x0100" />
+      <IDSymbol name="ContextMenu" value ="0x0105" />
+      <IDSymbol name="cmdidShow" value="0x0110" />
+      <IDSymbol name="cmdidAddTable" value="0x210"/>
+      <IDSymbol name="cmdidAddRelationship" value="0x220"/>
+      <IDSymbol name="cmdidGotoSource" value="0x230"/>
+      <IDSymbol name="cmdidRefresh" value="0x240"/>
+    </GuidSymbol>
+
+    <GuidSymbol name="guidDbVisualizerIcons" value="{9D95E4FF-BE26-4D0B-B389-118AE80CC6DA}">
+      <IDSymbol name="Window" value="1"/>
+      <IDSymbol name="AddTable" value="2"/>
+      <IDSymbol name="AddRelationship" value="3"/>
+      <IDSymbol name="GotoSource" value="4"/>
+      <IDSymbol name="Refresh" value="5"/>
+    </GuidSymbol>
+
+    <GuidSymbol name="guidCodeEditorContextMenu" value="{A7148E7D-4058-4B22-B4A9-F4A7598DEEAB}">
+      <IDSymbol name="MenuGroup" value="4128" />
+      <IDSymbol name="cmdidDbGen" value="0x0010" />
+      <IDSymbol name="cmdidDataSetGen" value="0x0020" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidLoadContext" value="{01783248-9BC2-4AD0-BA1D-F5E17EF7AB72}" />
+  </Symbols>
+</CommandTable>

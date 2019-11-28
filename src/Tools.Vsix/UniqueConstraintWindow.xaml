@@ -1,0 +1,54 @@
+﻿<local:IndexWindowBase x:Class="DevZest.Data.Tools.UniqueConstraintWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:DevZest.Data.Tools"
+    xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+    xmlns:dz="http://schemas.devzest.com/data/windows"
+    mc:Ignorable="d"
+    Title="{x:Static local:UserMessages.UniqueConstraintWindow_Title}"
+    WindowStartupLocation="CenterScreen"
+    Width="400" Height="400" >
+    <local:IndexWindowBase.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="5,3" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </local:IndexWindowBase.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <local:RowArranger />
+        <dz:DataView x:Name="_dataView" Margin="5" Grid.Row="1" BorderBrush="Gray" BorderThickness="1" />
+        <Grid Grid.Row="2" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Target="{Binding ElementName=_textBoxName}" Content="{x:Static local:UserMessages.Label_Name}" />
+            <TextBox x:Name="_textBoxName" Grid.Column="1"/>
+            <Label Target="{Binding ElementName=_textBoxDescription}" Grid.Row ="1" Content="{x:Static local:UserMessages.Label_Description}" />
+            <TextBox x:Name="_textBoxDescription" Grid.Row="1" Grid.Column="1"/>
+            <Label Target="{Binding ElementName=_textBoxDbName}" Grid.Row ="2" Content="{x:Static local:UserMessages.Label_DbName}" />
+            <TextBox x:Name="_textBoxDbName" Grid.Row="2" Grid.Column="1"/>
+        </Grid>
+        <local:MessageView x:Name="_messageView" Grid.Row="3" Margin="5,0" />
+        <UniformGrid Grid.Row="4" Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <vs:DialogButton Content="{x:Static local:UserMessages.ButtonText_OK}" IsDefault="True" Margin="5" Command="{x:Static local:CommonDialogWindow.Apply}" />
+            <vs:DialogButton Content="{x:Static local:UserMessages.ButtonText_Cancel}" IsCancel="True" Margin="5" />
+        </UniformGrid>
+    </Grid>
+</local:IndexWindowBase>

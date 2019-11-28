@@ -1,0 +1,39 @@
+﻿<local:DbInitWindowBase x:Class="DevZest.Data.Tools.DataSetGenWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:DevZest.Data.Tools"
+    xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+    xmlns:dz="http://schemas.devzest.com/data/windows"
+    mc:Ignorable="d"
+    Title="{x:Static local:UserMessages.DataSetGenWindow_Title}"
+    WindowStartupLocation="CenterScreen"
+    Width="500" Height="300" >
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Target="{Binding ElementName=_comboBoxDbSessionProvider}" Content="_DbSessionProvider:" />
+            <ComboBox Grid.Column="1" x:Name="_comboBoxDbSessionProvider" Margin="5,0,0,0" />
+        </Grid>
+        <dz:DataView x:Name="_dataView" Margin="5" Grid.Row="1" BorderBrush="Gray" BorderThickness="1" />
+        <Grid Grid.Row="2">
+            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" x:Name="_checkBoxShowDbLog" Content="{x:Static local:UserMessages.Label_ShowDbLog}" />
+            <UniformGrid Width="180" Columns="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="2">
+                <vs:DialogButton Content="{x:Static local:UserMessages.ButtonText_OK}" IsDefault="True" Margin="5" Command="{x:Static local:CommonDialogWindow.Apply}" />
+                <vs:DialogButton Content="{x:Static local:UserMessages.ButtonText_Cancel}" IsCancel="True" Margin="5" />
+            </UniformGrid>
+        </Grid>
+    </Grid>
+</local:DbInitWindowBase>

@@ -2,5 +2,12 @@
 
   <PropertyGroup>
     <RoslynPackageVersion>2.3.2</RoslynPackageVersion>
+    <!--
+      Mapping between Roslyn package version and Visual Studio version:
+      https://docs.microsoft.com/en-us/visualstudio/extensibility/roslyn-version-support?view=vs-2017
+      Roslyn version before 2.7.0 has a nasty bug: a extra whitespace is generated for typeof() expression, which breaks the unit tests.
+    -->
+    <VsixRoslynPackageVersion>2.7.0</VsixRoslynPackageVersion>
+    <VsixRdoPackageVersion>1.0.0-rc-*</VsixRdoPackageVersion>
   </PropertyGroup>
 </Project>
