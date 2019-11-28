@@ -1,15 +1,8 @@
 # Welcome to RDO.Net
 
-[RDO.Net](https://rdo.devzest.com/articles/overview/about_rdo_net.html) (Relational Data Objects for .Net) is a framework to handle data in .Net platform, consists of the following libraries and tools:
+[RDO.Net](https://rdo.devzest.com/articles/overview/about_rdo_net.html) (Relational Data Objects for .Net) is an open source framework under MIT license to handle data in .Net platform, consists of the following libraries and tools:
 
-![image](https://rdo.devzest.com/images/RdoNetOverview.jpg)
-
-## License
-
-RDO.Net is licensed separately for its runtime (blue) and design-time tools (purple), much like .Net Core and Visual Studio.
-
-* [RDO.Net Runtime License](https://rdo.devzest.com/articles/additional_info/rdo_net_runtime_license.html): Open source in this repo under MIT license.
-* [RDO.Tools License](https://rdo.devzest.com/articles/additional_info/rdo_tools_license.html)/[Pricing](https://my.devzest.com/Pricing): Free as long as you're using Visual Studio Community Edition.
+![image](https://rdo.devzest.com/images/RdoNetOverview2.jpg)
 
 ## Why RDO.Net
 
