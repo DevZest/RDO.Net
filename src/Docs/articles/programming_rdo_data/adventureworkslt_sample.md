@@ -1,12 +1,13 @@
 # AdventureWorksLT Sample
 
-The best way to learn RDO.Data is to learn by example. In the source code repo, under `Samples` (or `Samples.vb` for Visual Basic), open `AdventureWorksLT.sln` in Visual Studio, there are 3 projects out there:
+The best way to learn RDO.Data is to learn by example. The [AdventureWorkLT sample](https://github.com/DevZest/AdventureWorksLT), is provided to demonstrate most of RDO.Net:
 
 | Project | Description |
 |---------|-------------|
 | `AdventureWorksLT` | Data and Business Layer of the application. |
-| `AdventureWorksLT.DbDesign` | Database mocking and deployment. |
+| `AdventureWorksLT.DbInit` | Database mocking and deployment. |
 | `AdventureWorksLT.WpfApp` | UI Layer of the application in WPF. |
+| `AdventureWorksLT.Test` | Data logic tests. |
 
 It's a typical fully featured LOB application based on the well known `AdventureWorksLT` SQL Server sample database. The data and business layer (`AdventureWorksLT` project), consists of the following components:
 
@@ -83,3 +84,5 @@ Database query and update, are implemented as instance method of `Db` partial cl
 * <xref:DevZest.Data.DbTable`1> has <xref:DevZest.Data.DbTable`1.InsertAsync*>, <xref:DevZest.Data.DbTable`1.DeleteAsync*> and <xref:DevZest.Data.DbTable`1.UpdateAsync*> methods to update data from database server. All operations are truly set based.
 
 The above query and update operations will generate SQL Abstract Syntax Tree (AST) and further be translated into native SQL by database provider, with very little overhead. It has best balance of code maintainability and performance.
+
+You can find tests for query and update operations in `AdventureWorksLT.Test` project.
