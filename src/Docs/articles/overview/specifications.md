@@ -13,7 +13,7 @@ The following NuGet packages are delivered:
 * [DevZest.Data.MySql](https://www.nuget.org/packages/DevZest.Data.MySql/): .Net Standard 2.0/.Net Framework 4.6.1
 * [DevZest.Data.DbInit](https://www.nuget.org/packages/DevZest.Data.DbInit/): .Net Standard 2.0/.Net Framework 4.6.1
 * [DevZest.Data.WPF](https://www.nuget.org/packages/DevZest.Data.WPF/): .Net Core 3.0/.Net Framework 4.6.1
-* [DevZest.Data.AspNetCore](https://www.nuget.org/packages/DevZest.Data.AspNetCore/): .Net Standard 2.0/.Net Framework 4.6.1
+* [DevZest.Data.AspNetCore](https://www.nuget.org/packages/DevZest.Data.AspNetCore/): ASP.Net Core 3.1
 
 ## Supported Databases
 
