@@ -1,5 +1,6 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using DevZest.Data.Primitives;
 
 namespace DevZest.Data.AspNetCore.Primitives
@@ -7,7 +8,7 @@ namespace DevZest.Data.AspNetCore.Primitives
     /// <summary>
     /// Converts <see cref="DataRow"/> into JSON.
     /// </summary>
-    public class DataRowJsonConverter : JsonConverter
+    public class DataRowJsonConverter : JsonConverter<DataRow>
     {
         /// <inheritdoc/>
         public override bool CanConvert(Type objectType)
@@ -16,21 +17,20 @@ namespace DevZest.Data.AspNetCore.Primitives
         }
 
         /// <inheritdoc/>
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, DataRow value, JsonSerializerOptions options)
         {
-            var dataRow = value as DataRow;
-            if (dataRow == null)
+            if (value == null)
             {
-                writer.WriteNull();
+                writer.WriteNullValue();
                 return;
             }
 
             var jsonWriter = new JsonWriterAdapter(writer, null);
-            jsonWriter.Write(dataRow);
+            jsonWriter.Write(value);
         }
 
         /// <inheritdoc/>
-        public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override DataRow Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             throw new NotSupportedException();
         }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace DevZest.Data.AspNetCore.TagHelpers
@@ -17,6 +16,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
     public class InputTagHelper : DataSetTagHelperBase
     {
         private const string FormatAttributeName = "dataset-format";
+        private const string IEnumerableOfIFormFileName = "IEnumerable`" + nameof(IFormFile);
 
         // Mapping from datatype names and data annotation hints to values for the <input/> element's "type" attribute.
         private static readonly Dictionary<string, string> _defaultInputTypes =
@@ -49,7 +49,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
                 { nameof(Decimal), InputType.Text.ToString().ToLowerInvariant() },
                 { nameof(String), InputType.Text.ToString().ToLowerInvariant() },
                 { nameof(IFormFile), "file" },
-                { TemplateRenderer.IEnumerableOfIFormFileName, "file" },
+                { IEnumerableOfIFormFileName, "file" },
             };
 
         // Mapping from <input/> element's type to RFC 3339 date and time formats.
@@ -343,7 +343,7 @@ namespace DevZest.Data.AspNetCore.TagHelpers
             if (string.Equals(inputType, "file") &&
                 string.Equals(
                     inputTypeHint,
-                    TemplateRenderer.IEnumerableOfIFormFileName,
+                    IEnumerableOfIFormFileName,
                     StringComparison.OrdinalIgnoreCase))
             {
                 htmlAttributes["multiple"] = "multiple";

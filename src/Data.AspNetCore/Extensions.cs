@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,6 +30,9 @@ namespace DevZest.Data.AspNetCore
 
         public static bool IsDataSet(this Type type)
         {
+            if (type == typeof(DataSet))
+                return true;
+
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(DataSet<>))
                 return true;
 

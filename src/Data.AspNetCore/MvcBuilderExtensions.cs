@@ -32,7 +32,7 @@ namespace DevZest.Data.AspNetCore
                     expr(config);
                 })
                 .AddJsonOptions(options => {
-                    options.SerializerSettings.Converters.Add(new DataSetJsonConverter());
+                    options.JsonSerializerOptions.Converters.Add(new DataSetJsonConverter());
                 });
 
             var services = mvcBuilder.Services;

@@ -69,7 +69,7 @@ namespace DevZest.Data.AspNetCore
         public static IDataSetHtmlGenerator GetDataSetHtmlGenerator(Action<DataSetMvcConfiguration> configurationExpression = null)
         {
             var mvcViewOptionsAccessor = new Mock<IOptions<MvcViewOptions>>();
-            mvcViewOptionsAccessor.SetupGet(accessor => accessor.Value).Returns(new MvcViewOptions() { AllowRenderingMaxLengthAttribute = true });
+            mvcViewOptionsAccessor.SetupGet(accessor => accessor.Value).Returns(new MvcViewOptions());
 
             var config = new DataSetMvcConfiguration();
             config.AddClientValidators(new DefaultModelBindingMessageProvider());

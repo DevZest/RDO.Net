@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.DataAnnotations.Internal;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Localization;
@@ -101,46 +99,6 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding
                   Options.Create(new MvcOptions()))
         {
             _detailsProvider = detailsProvider;
-        }
-
-        public IMetadataBuilder ForType(Type type)
-        {
-            var key = ModelMetadataIdentity.ForType(type);
-
-            var builder = new MetadataBuilder(key);
-            _detailsProvider.Builders.Add(builder);
-            return builder;
-        }
-
-        public IMetadataBuilder ForType<TModel>()
-        {
-            return ForType(typeof(TModel));
-        }
-
-        public IMetadataBuilder ForProperty(Type containerType, string propertyName)
-        {
-            var property = containerType.GetRuntimeProperty(propertyName);
-            Assert.NotNull(property);
-
-            var key = ModelMetadataIdentity.ForProperty(property.PropertyType, propertyName, containerType);
-
-            var builder = new MetadataBuilder(key);
-            _detailsProvider.Builders.Add(builder);
-            return builder;
-        }
-
-        public IMetadataBuilder ForParameter(ParameterInfo parameter)
-        {
-            var key = ModelMetadataIdentity.ForParameter(parameter);
-            var builder = new MetadataBuilder(key);
-            _detailsProvider.Builders.Add(builder);
-
-            return builder;
-        }
-
-        public IMetadataBuilder ForProperty<TContainer>(string propertyName)
-        {
-            return ForProperty(typeof(TContainer), propertyName);
         }
 
         private class TestModelMetadataDetailsProvider :

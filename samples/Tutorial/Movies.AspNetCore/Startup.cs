@@ -2,9 +2,9 @@ using DevZest.Data.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Movies.AspNetCore
 {
@@ -12,7 +12,7 @@ namespace Movies.AspNetCore
     {
         private const string CONTENT_ROOT_PATH = "%CONTENTROOTPATH%";
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             Env = env;
@@ -20,7 +20,7 @@ namespace Movies.AspNetCore
 
         public IConfiguration Configuration { get; }
 
-        public IHostingEnvironment Env { get; }
+        public IWebHostEnvironment Env { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -31,9 +31,8 @@ namespace Movies.AspNetCore
             });
 
 
-            services.AddMvc()
-                .AddDataSetMvc()    // Add DataSet MVC support
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(option => option.EnableEndpointRouting = false)
+                .AddDataSetMvc();    // Add DataSet MVC support
 
             // Inject Db and IDataSetHtmlGenerator
             var connectionString = Configuration.GetConnectionString("Movies");
@@ -45,7 +44,7 @@ namespace Movies.AspNetCore
             services.AddScoped(serviceProvider => new Db(connectionString));
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

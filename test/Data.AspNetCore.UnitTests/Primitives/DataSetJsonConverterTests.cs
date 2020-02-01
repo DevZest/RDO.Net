@@ -1,28 +1,33 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.IO;
 using Xunit;
+using System.Text;
 
 namespace DevZest.Data.AspNetCore.Primitives
 {
     public class DataSetJsonConverterTests
     {
+        private static JsonSerializerOptions s_serializerOptions;
+
+        static DataSetJsonConverterTests()
+        {
+            s_serializerOptions = new JsonSerializerOptions();
+            s_serializerOptions.Converters.Add(new DataSetJsonConverter());
+        }
+
         [Fact]
         public void Serialize()
         {
             var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
-            var converter = new DataSetJsonConverter();
-            StringWriter sw = new StringWriter();
-            JsonTextWriter jsonWriter = new JsonTextWriter(sw);
-            jsonWriter.Formatting = Formatting.None;
-            converter.WriteJson(jsonWriter, dataSet, new JsonSerializer());
-            Assert.Equal(dataSet.ToJsonString(false), sw.ToString());
+            var jsonString = JsonSerializer.Serialize(dataSet, typeof(DataSet), s_serializerOptions);
+            Assert.Equal(dataSet.ToJsonString(false), jsonString);
         }
 
         [Fact]
         public void Deserialize()
         {
-            var result = JsonConvert.DeserializeObject<DataSet<ProductCategory>>(Json.ProductCategories, new DataSetJsonConverter());
+            var result = JsonSerializer.Deserialize<DataSet<ProductCategory>>(Json.ProductCategories, s_serializerOptions);
 
             var child = result._.SubCategories;
             Assert.Equal(4, result.Count);

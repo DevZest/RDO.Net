@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Internal;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections;
@@ -82,7 +80,7 @@ namespace DevZest.Data.AspNetCore.Primitives
             // Underscores are fine characters in id's.
             IdAttributeDotReplacement = optionsAccessor.Value.HtmlHelperOptions.IdAttributeDotReplacement;
 
-            AllowRenderingMaxLengthAttribute = optionsAccessor.Value.AllowRenderingMaxLengthAttribute;
+            AllowRenderingMaxLengthAttribute = true;
         }
 
         /// <inheritdoc />
