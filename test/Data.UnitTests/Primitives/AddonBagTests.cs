@@ -23,63 +23,63 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private class Unfreezable : AddonBag
+        private class Unsealable : AddonBag
         {
         }
 
-        private class Freezable : AddonBag, IDesignable
+        private class Sealable : AddonBag, ISealable
         {
 
-            private bool _designMode = true;
-            public bool DesignMode
+            private bool _sealable = false;
+            public bool IsSealed
             {
-                get { return _designMode; }
+                get { return _sealable; }
             }
 
-            public void Freeze()
+            public void Seal()
             {
-                _designMode = false;
+                _sealable = true;
             }
         }
 
         [TestMethod]
-        public void AddonBag_unfreezable()
+        public void AddonBag_unsealable()
         {
-            var unfreezable = new Unfreezable();
+            var unsealaable = new Unsealable();
 
-            Assert.IsNull(unfreezable.GetAddon<IAddon1>());
-            Assert.IsNull(unfreezable.GetAddon<IAddon2>());
+            Assert.IsNull(unsealaable.GetAddon<IAddon1>());
+            Assert.IsNull(unsealaable.GetAddon<IAddon2>());
             var addon = new Addon();
-            unfreezable.AddOrUpdate(addon);
-            Assert.AreEqual(addon, unfreezable.GetAddon<IAddon1>());
-            Assert.AreEqual(addon, unfreezable.GetAddon<IAddon2>());
+            unsealaable.AddOrUpdate(addon);
+            Assert.AreEqual(addon, unsealaable.GetAddon<IAddon1>());
+            Assert.AreEqual(addon, unsealaable.GetAddon<IAddon2>());
 
             addon = new Addon();
-            unfreezable.AddOrUpdate(addon);
-            Assert.AreEqual(addon, unfreezable.GetAddon<IAddon1>());
-            Assert.AreEqual(addon, unfreezable.GetAddon<IAddon2>());
+            unsealaable.AddOrUpdate(addon);
+            Assert.AreEqual(addon, unsealaable.GetAddon<IAddon1>());
+            Assert.AreEqual(addon, unsealaable.GetAddon<IAddon2>());
         }
 
         [TestMethod]
-        public void AddonBag_freezable()
+        public void AddonBag_sealable()
         {
-            var freezable = new Freezable();
+            var sealable = new Sealable();
 
             var addon = new Addon();
-            freezable.AddOrUpdate(addon);
-            Assert.AreEqual(addon, freezable.GetAddon<IAddon1>());
-            Assert.AreEqual(addon, freezable.GetAddon<IAddon2>());
+            sealable.AddOrUpdate(addon);
+            Assert.AreEqual(addon, sealable.GetAddon<IAddon1>());
+            Assert.AreEqual(addon, sealable.GetAddon<IAddon2>());
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void AddonBag_freezable_throws_exception_changing_after_frozen()
+        public void sealable_throws_exception_changing_after_sealed()
         {
-            var freezable = new Freezable();
+            var sealable = new Sealable();
 
-            freezable.Freeze();
+            sealable.Seal();
             var addon = new Addon();
-            freezable.AddOrUpdate(addon);
+            sealable.AddOrUpdate(addon);
         }
     }
 }

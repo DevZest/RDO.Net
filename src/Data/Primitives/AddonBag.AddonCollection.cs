@@ -42,19 +42,19 @@ namespace DevZest.Data.Primitives
 
             public AddonCollection(AddonBag addonBag)
             {
-                _designable = addonBag as IDesignable;
+                _sealable = addonBag as ISealable;
             }
 
-            private IDesignable _designable;
-            private bool IsFrozen
+            private ISealable _sealable;
+            private bool IsSealed
             {
-                get { return _allowFrozenChange ? false : (_designable == null ? false : !_designable.DesignMode); }
+                get { return _allowSealedChange ? false : (_sealable == null ? false : _sealable.IsSealed); }
             }
 
-            bool _allowFrozenChange;
-            internal void AllowFrozenChange(bool value)
+            bool _allowSealedChange;
+            internal void AllowSealedChange(bool value)
             {
-                _allowFrozenChange = value;
+                _allowSealedChange = value;
             }
 
             protected override object GetKeyForItem(IAddon item)
@@ -86,7 +86,7 @@ namespace DevZest.Data.Primitives
 
             private void OnItemChanging(IAddon item)
             {
-                if (IsFrozen)
+                if (IsSealed)
                     throw new InvalidOperationException(DiagnosticMessages.Common_VerifyDesignMode);
 
                 var type = item.GetType();

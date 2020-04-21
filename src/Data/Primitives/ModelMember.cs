@@ -5,7 +5,7 @@ namespace DevZest.Data.Primitives
     /// <summary>
     /// Base class for member properties which can be registered with <see cref="Model"/> derived class.
     /// </summary>
-    public abstract class ModelMember : AddonBag, IDesignable
+    public abstract class ModelMember : AddonBag, ISealable
     {
         internal ModelMember()
         {
@@ -69,9 +69,9 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        bool IDesignable.DesignMode
+        bool ISealable.IsSealed
         {
-            get { return DesignMode; }
+            get { return !DesignMode; }
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace DevZest.Data.Primitives
 {
-    internal interface IDesignable
+    internal interface ISealable
     {
-        bool DesignMode { get; }
+        bool IsSealed { get; }
     }
 }

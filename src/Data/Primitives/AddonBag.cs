@@ -79,9 +79,9 @@ namespace DevZest.Data.Primitives
 
         internal void BrutalRemoveAddon(object key)
         {
-            _addons.AllowFrozenChange(true);
+            _addons.AllowSealedChange(true);
             RemoveAddon(key);
-            _addons.AllowFrozenChange(false);
+            _addons.AllowSealedChange(false);
         }
     }
 }
