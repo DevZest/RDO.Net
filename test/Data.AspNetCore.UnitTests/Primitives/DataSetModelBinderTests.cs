@@ -93,7 +93,7 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         // Provides the ability to easily mock + call each of these APIs
         public class TestableDataSetModelBinder<T> : DataSetModelBinder<T>
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             public TestableDataSetModelBinder()
                 : base(NullLoggerFactory.Instance)

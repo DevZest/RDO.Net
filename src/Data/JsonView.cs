@@ -83,15 +83,15 @@ namespace DevZest.Data
     /// </summary>
     /// <typeparam name="T">Type of Entity.</typeparam>
     public sealed class JsonView<T> : JsonView
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
-        internal JsonView(T entity, JsonFilter jsonFilter)
+        internal JsonView(T model, JsonFilter jsonFilter)
             : base(jsonFilter)
         {
-            Debug.Assert(entity != null);
+            Debug.Assert(model != null);
             Debug.Assert(jsonFilter != null);
-            _ = entity;
-            _children = new JsonView[_.Model.ChildModels.Count];
+            _ = model;
+            _children = new JsonView[_.ChildModels.Count];
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace DevZest.Data
         public T _ { get; private set; }
 
         /// <inheritdoc />
-        public override Model Model { get { return _.Model; } }
+        public override Model Model { get { return _; } }
 
         private readonly JsonView[] _children;
         /// <inheritdoc/>

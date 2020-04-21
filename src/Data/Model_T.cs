@@ -13,7 +13,7 @@ namespace DevZest.Data
     /// Represents model with primary key.
     /// </summary>
     /// <typeparam name="T">The type of primary key.</typeparam>
-    public abstract class Model<T> : Model, IEntity<T>
+    public abstract class Model<T> : Model
         where T : CandidateKey
     {
         /// <summary>
@@ -32,8 +32,6 @@ namespace DevZest.Data
         {
             get { return LazyInitializer.EnsureInitialized(ref _primaryKey, () => CreatePrimaryKey()); }
         }
-
-        Model<T> IEntity<T>.Model => this;
 
         /// <summary>
         /// Creates the primary key.
@@ -97,7 +95,7 @@ namespace DevZest.Data
         public KeyMapping Match(Key<T> target)
         {
             target.VerifyNotNull(nameof(target));
-            return new KeyMapping(PrimaryKey, target.Model.PrimaryKey);
+            return new KeyMapping(PrimaryKey, target.PrimaryKey);
         }
 
         /// <summary>
@@ -132,7 +130,7 @@ namespace DevZest.Data
             TChildModel result = constructor(parentModel);
             var parentRelationship = relationshipGetter(result).UnsafeJoin(parentModel.PrimaryKey);
             var parentMappings = AppendColumnMappings(parentRelationship, null, result, parentModel);
-            result.Construct(parentModel, mounter.DeclaringType, mounter.Name, parentRelationship, parentMappings);
+            result.ConstructChildModel(parentModel, mounter.DeclaringType, mounter.Name, parentRelationship, parentMappings);
             return result;
         }
 

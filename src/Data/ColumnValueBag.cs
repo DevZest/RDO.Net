@@ -200,7 +200,9 @@ namespace DevZest.Data
 
             var result = 0;
             var keyColumns = projection.Columns;
-            var valueColumns = dataRow.Model.Columns;
+            var valueColumns = GetValueColumns(projection, dataRow.Model);
+            if (valueColumns == null)
+                return result;
             for (int i = 0; i < keyColumns.Count; i++)
             {
                 var keyColumn = keyColumns[i];
@@ -215,6 +217,20 @@ namespace DevZest.Data
             }
 
             return result;
+        }
+
+        private static ColumnCollection GetValueColumns(Projection projection, Model model)
+        {
+            return ResolveProjection(projection, model)?.Columns;
+        }
+
+        private static Model ResolveProjection(Model projection, Model model)
+        {
+            if (string.IsNullOrEmpty(projection.Namespace))
+                return model;
+
+            var resolvedParent = ResolveProjection(projection.ParentModel, model);
+            return resolvedParent == null ? null : resolvedParent[projection.Name] as Projection;
         }
 
         /// <summary>

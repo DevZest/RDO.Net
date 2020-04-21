@@ -14,7 +14,7 @@ Partial Class ProductLookupWindow
         End Sub
 
         Protected Overrides Sub BuildTemplate(builder As TemplateBuilder)
-            Dim e = Entity
+            Dim e = Model
             builder.GridColumns("Auto", "*", "Auto") _
                 .GridRows("Auto", "20") _
                 .RowView(Of RowView)(RowView.Styles.Selectable) _
@@ -90,7 +90,7 @@ Partial Class ProductLookupWindow
                 If String.IsNullOrEmpty(Value) Then
                     Where = Nothing
                 Else
-                    Where = Function(dataRow) Entity.ProductNumber(dataRow).Contains(Value) OrElse Entity.Name(dataRow).Contains(Value)
+                    Where = Function(dataRow) Model.ProductNumber(dataRow).Contains(Value) OrElse Model.Name(dataRow).Contains(Value)
                 End If
                 SelectCurrent()
             End Set

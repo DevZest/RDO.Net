@@ -13,8 +13,6 @@ namespace DevZest.Data
         Local,
         /// <summary>The column is a item of <see cref="ColumnListItem"/>.</summary>
         ColumnListItem,
-        /// <summary>The column is a member of <see cref="Projection"/>.</summary>
-        ProjectionMember,
         /// <summary>sys_parent_row_id column of sequential key temp table (internal use only).</summary>
         SystemParentRowId,
         /// <summary>sys_row_id column of sequential key temp table (internal use only).</summary>

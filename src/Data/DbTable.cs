@@ -13,7 +13,7 @@ namespace DevZest.Data
     /// </summary>
     /// <typeparam name="T">Entity type of database table.</typeparam>
     public sealed partial class DbTable<T> : DbSet<T>, IDbTable
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         internal static DbTable<T> Create(T modelRef, DbSession dbSession, string identifier, Action<DbTable<T>> initializer = null)
         {
@@ -36,14 +36,14 @@ namespace DevZest.Data
             return CreateTemp(modelRef, dbSession, identifier, initializer);
         }
 
-        private DbTable(T modelRef, DbSession dbSession, string identifier, DataSourceKind kind)
-            : base(modelRef, dbSession)
+        private DbTable(T model, DbSession dbSession, string identifier, DataSourceKind kind)
+            : base(model, dbSession)
         {
             Debug.Assert(!string.IsNullOrEmpty(identifier));
 
             Identifier = identifier;
             _kind = kind;
-            modelRef.Model.SetDataSource(this);
+            model.SetDataSource(this);
         }
 
         internal int InitialRowCount { get; set; }
@@ -258,7 +258,7 @@ namespace DevZest.Data
                 return null;
 
             var parentModelSet = whereExpr.ScalarSourceModels;
-            if (parentModelSet.Count == 0 || (parentModelSet.Count == 1 && parentModelSet.Contains(_.Model)))
+            if (parentModelSet.Count == 0 || (parentModelSet.Count == 1 && parentModelSet.Contains(_)))
                 return whereExpr.DbExpression;
 
             throw new ArgumentException(DiagnosticMessages.DbTable_VerifyWhere, nameof(where));
@@ -272,7 +272,7 @@ namespace DevZest.Data
         }
 
         internal bool UpdateOrigin<TSource>(DataSet<TSource> origin, bool scalarInsertSuccess)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             if (scalarInsertSuccess)
                 UpdateOriginalDataSource(origin == null || origin.Count != 1 ? null : origin);
@@ -281,7 +281,7 @@ namespace DevZest.Data
         }
 
         internal void Verify<TLookup>(DbSet<TLookup> source, string paramName)
-            where TLookup : class, IEntity, new()
+            where TLookup : Model, new()
         {
             source.VerifyNotNull(paramName);
             if (source.DbSession != DbSession)
@@ -289,13 +289,13 @@ namespace DevZest.Data
         }
 
         internal void Verify<TLookup>(DataSet<TLookup> source, string paramName)
-            where TLookup : class, IEntity, new()
+            where TLookup : Model, new()
         {
             source.VerifyNotNull(paramName);
         }
 
         internal void Verify<TSource>(DataSet<TSource> source, string sourceParamName, int rowIndex, string rowIndexParamName)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             Verify(source, sourceParamName);
             if (rowIndex < 0 || rowIndex >= source.Count)
@@ -303,11 +303,11 @@ namespace DevZest.Data
         }
 
         internal KeyMapping Verify<TSource>(Func<TSource, T, KeyMapping> keyMapper, string paramName, TSource source)
-            where TSource : IEntity
+            where TSource : Model
         {
             keyMapper.VerifyNotNull(paramName);
             var result = keyMapper(source, _);
-            if (result.IsEmpty || result.SourceModel != source.Model || result.TargetModel != _.Model)
+            if (result.IsEmpty || result.SourceModel != source || result.TargetModel != _)
                 throw new ArgumentException(DiagnosticMessages.DbTable_InvalidReturnedKeyMapping, paramName);
             return result;
         }
@@ -315,32 +315,32 @@ namespace DevZest.Data
         internal IReadOnlyList<ColumnMapping> Verify(Action<ColumnMapper, T> mapper, string paramName)
         {
             mapper.VerifyNotNull(paramName);
-            var result = new ColumnMapper(null, _.Model).Build(x => mapper(x, _));
+            var result = new ColumnMapper(null, _).Build(x => mapper(x, _));
             if (result == null || result.Count == 0)
                 throw new ArgumentException(DiagnosticMessages.DbTable_EmptyColumnMapperResult, paramName);
             return result;
         }
 
         internal IReadOnlyList<ColumnMapping> Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, string paramName, TSource source)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             mapper.VerifyNotNull(paramName);
-            var result = new ColumnMapper(source.Model, _.Model).Build(x => mapper(x, source, _));
+            var result = new ColumnMapper(source, _).Build(x => mapper(x, source, _));
             if (result == null || result.Count == 0)
                 throw new ArgumentException(DiagnosticMessages.DbTable_EmptyColumnMapperResult, paramName);
             return result;
         }
 
         internal void Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, string paramName)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             mapper.VerifyNotNull(paramName);
         }
 
         private IReadOnlyList<ColumnMapping> Verify<TSource>(Action<ColumnMapper, TSource, T> mapper, TSource source)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
-            var result = new ColumnMapper(source.Model, _.Model).Build(x => mapper(x, source, _));
+            var result = new ColumnMapper(source, _).Build(x => mapper(x, source, _));
             if (result == null || result.Count == 0)
                 throw new InvalidOperationException(DiagnosticMessages.DbTable_EmptyColumnMapperResult);
             return result;

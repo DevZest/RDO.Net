@@ -13,18 +13,17 @@ namespace DevZest.Data.SqlServer
         }
 
         public static DbSet<T> CreateJsonRowSet<T>(this SqlSession sqlSession, string json, string ordinalColumnName)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             var _ = new T();
-            var model = _.Model;
             if (!string.IsNullOrEmpty(ordinalColumnName))
             {
                 var dataSetOrdinalColumn = new _Int32();
-                model.AddSystemColumn(dataSetOrdinalColumn, ordinalColumnName);
+                _.AddSystemColumn(dataSetOrdinalColumn, ordinalColumnName);
             }
             var sourceJsonParam = _String.Param(json).AsSqlNVarCharMax();
-            s_jsonRowSets.Add(model, sourceJsonParam);
-            return _.CreateDbTable(sqlSession, ModelAliasManager.GetDbAlias(model));
+            s_jsonRowSets.Add(_, sourceJsonParam);
+            return _.CreateDbTable(sqlSession, ModelAliasManager.GetDbAlias(_));
         }
     }
 }

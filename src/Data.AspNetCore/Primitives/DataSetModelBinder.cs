@@ -18,7 +18,7 @@ namespace DevZest.Data.AspNetCore.Primitives
     /// </summary>
     /// <typeparam name="T">The entity type of DataSet.</typeparam>
     public class DataSetModelBinder<T> : IModelBinder
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         private readonly ILogger _logger;
 

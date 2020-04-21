@@ -33,12 +33,12 @@ namespace DevZest.Data.SqlServer
                     .Where(h.SalesOrderID.IsNotNull());
                 });
                 var expectedSql =
-@"SELECT [ContainerModel].[SalesOrderID] AS [SalesOrderID]
+@"SELECT [Key].[SalesOrderID] AS [SalesOrderID]
 FROM
-    ((SELECT 1 AS [SalesOrderID]) [ContainerModel]
+    ((SELECT 1 AS [SalesOrderID]) [Key]
     LEFT JOIN
     [SalesLT].[SalesOrderHeader] [SalesOrderHeader]
-    ON [ContainerModel].[SalesOrderID] = [SalesOrderHeader].[SalesOrderID])
+    ON [Key].[SalesOrderID] = [SalesOrderHeader].[SalesOrderID])
 WHERE ([SalesOrderHeader].[SalesOrderID] IS NOT NULL);
 ";
                 Assert.AreEqual(expectedSql, query.ToString());

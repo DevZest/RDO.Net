@@ -17,7 +17,7 @@ namespace DevZest.Data.DbInit
         /// <param name="count">Number of rows to add.</param>
         /// <returns>The same dataset for fluent coding.</returns>
         public static DataSet<T> AddRows<T>(this DataSet<T> dataSet, int count)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             for (int i = 0; i < count; i++)
                 dataSet.AddRow();

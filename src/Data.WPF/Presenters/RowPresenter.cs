@@ -367,7 +367,7 @@ namespace DevZest.Data.Presenters
             if (column == null)
                 throw new ArgumentNullException(paramName);
 
-            if (column.GetParent() != RowMapper.DataSet.Model)
+            if (column.OwnerModel != RowMapper.DataSet.Model)
                 throw new ArgumentException(DiagnosticMessages.RowPresenter_VerifyColumn, paramName);
 
             if (Depth > 0)
@@ -624,7 +624,7 @@ namespace DevZest.Data.Presenters
 
             if (lookup != null)
             {
-                var columns = lookup.Columns;
+                var columns = lookup.GetColumns();
                 for (int i = 0; i < columns.Count; i++)
                     SetValueBag(valueBag, columns[i]);
             }

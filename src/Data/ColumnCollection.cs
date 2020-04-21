@@ -10,11 +10,11 @@ namespace DevZest.Data
     /// <summary>Represents a collection of <see cref="Column"/> objects contained by <see cref="Model"/>.</summary>
     public sealed class ColumnCollection : ReadOnlyCollection<Column>, IAutoColumnSelector
     {
-        private class InnerCollection : KeyedCollection<ColumnId, Column>
+        private class InnerCollection : KeyedCollection<string, Column>
         {
-            protected override ColumnId GetKeyForItem(Column item)
+            protected override string GetKeyForItem(Column item)
             {
-                return item.Id;
+                return item.FullName;
             }
         }
 
@@ -38,9 +38,8 @@ namespace DevZest.Data
             Debug.Assert(Model.DesignMode);
 
             var columns = Columns;
-            var modelId = item.Id;
-            if (columns.Contains(modelId))
-                throw new InvalidOperationException(DiagnosticMessages.ColumnCollection_DuplicateModelId(modelId.DeclaringType, modelId.Name));
+            if (columns.Contains(item.FullName))
+                throw new InvalidOperationException(DiagnosticMessages.ColumnCollection_DuplicateModelId(item.DeclaringType, item.FullName));
 
             columns.Add(item);
             if (item.IsSystem)
@@ -48,28 +47,30 @@ namespace DevZest.Data
         }
 
         /// <summary>Gets the <see cref="Column"/> by specified <see cref="ColumnId"/>.</summary>
-        /// <param name="columnKey">The <see cref="ColumnId"/> which uniquely identifies the column.</param>
+        /// <param name="columnId">The <see cref="ColumnId"/> which uniquely identifies the column.</param>
         /// <returns>Column with the specified <see cref="ColumnId"/>, <see langword="null"/> if no column found.</returns>
-        public Column this[ColumnId columnKey]
+        public Column this[ColumnId columnId]
         {
             get
             {
-                var columns = Columns;
-                return columns.Contains(columnKey) ? columns[columnKey] : null;
+                var result = this[columnId.Name];
+                return result != null && result.DeclaringType == columnId.DeclaringType ? result : null;
             }
         }
 
         /// <summary>
         /// Gets the <see cref="Column"/> by specified name.
         /// </summary>
-        /// <param name="name">The specified name.</param>
+        /// <param name="columnFullName">The specified name.</param>
         /// <returns>Column with the specified name, <see langword="null"/> if no column found.</returns>
-        public Column this[string name]
+        public Column this[string columnFullName]
         {
             get
             {
-                name.VerifyNotEmpty(nameof(name));
-                return Model[name] as Column;
+                columnFullName.VerifyNotEmpty(nameof(columnFullName));
+
+                var columns = Columns;
+                return columns.Contains(columnFullName) ? columns[columnFullName] : null;
             }
         }
 

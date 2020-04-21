@@ -14,7 +14,7 @@ Partial Class SalesOrderWindow
         Private ReadOnly _ownerWindow As Window
 
         Protected Overrides Sub BuildTemplate(builder As TemplateBuilder)
-            Dim e = Entity
+            Dim e = Model
             Dim product = e.Product
             builder.GridRows("Auto", "20") _
                 .GridColumns("20", "*", "*", "Auto", "Auto", "Auto", "Auto") _
@@ -50,7 +50,7 @@ Partial Class SalesOrderWindow
         End Function
 
         Private Function CanLookup(foreignKey As CandidateKey) As Boolean Implements ForeignKeyBox.ILookupService.CanLookup
-            If foreignKey Is Entity.FK_Product Then
+            If foreignKey Is Model.FK_Product Then
                 Return True
             Else
                 Return False
@@ -58,9 +58,9 @@ Partial Class SalesOrderWindow
         End Function
 
         Private Sub BeginLookup(foreignKeyBox As ForeignKeyBox) Implements ForeignKeyBox.ILookupService.BeginLookup
-            If foreignKeyBox.ForeignKey Is Entity.FK_Product Then
+            If foreignKeyBox.ForeignKey Is Model.FK_Product Then
                 Dim dialogWindow = New ProductLookupWindow()
-                dialogWindow.Show(_ownerWindow, foreignKeyBox, CurrentRow.GetValue(Entity.ProductID))
+                dialogWindow.Show(_ownerWindow, foreignKeyBox, CurrentRow.GetValue(Model.ProductID))
             Else
                 Throw New NotSupportedException()
             End If
@@ -74,7 +74,7 @@ Partial Class SalesOrderWindow
             Dim foreignKeys = DevZest.Data.DataSet(Of Product.Ref).Create()
             For i = 0 To data.Count
                 Dim valueBag = data(i)
-                Dim productId = If(valueBag.ContainsKey(Entity.ProductID), valueBag(Entity.ProductID), Nothing)
+                Dim productId = If(valueBag.ContainsKey(Model.ProductID), valueBag(Model.ProductID), Nothing)
                 foreignKeys.AddRow(Sub(e, dataRow) e.ProductID.SetValue(dataRow, productId))
             Next
 
@@ -84,7 +84,7 @@ Partial Class SalesOrderWindow
             End If
 
             Debug.Assert(lookup.Count = data.Count)
-            Dim product = Entity.Product
+            Dim product = Model.Product
             For i = 0 To lookup.Count
                 data(i).SetValue(product.Name, lookup.Entity.Name(i))
                 data(i).SetValue(product.ProductNumber, lookup.Entity.ProductNumber(i))

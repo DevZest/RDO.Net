@@ -83,7 +83,7 @@ Public Class CustomerLookupWindow
 
     Private ReadOnly Property Customer() As Customer
         Get
-            Return _presenter.Entity
+            Return _presenter.Model
         End Get
     End Property
 

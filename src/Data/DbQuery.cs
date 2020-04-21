@@ -8,9 +8,9 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a database query.
     /// </summary>
-    /// <typeparam name="T">Type of entity.</typeparam>
+    /// <typeparam name="T">Type of model.</typeparam>
     public sealed class DbQuery<T> : DbSet<T>
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         internal DbQuery(T modelRef, DbSession dbSession, DbQueryStatement queryStatement)
             : base(modelRef, dbSession)

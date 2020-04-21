@@ -60,7 +60,7 @@ namespace DevZest.Data
         /// <summary>Gets the column collection.</summary>
         public new ColumnCollection Columns
         {
-            get { return GetColumns(); }
+            get { return base.Columns; }
         }
 
         /// <summary>Gets the column by name.</summary>

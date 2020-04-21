@@ -23,9 +23,9 @@ Partial Class SalesOrderWindow
         Private _subFormBinding As RowBinding(Of DataView)
 
         Protected Overrides Sub BuildTemplate(builder As TemplateBuilder)
-            _subFormBinding = Entity.SalesOrderDetails.BindToDataView(Function() New DetailPresenter(_ownerWindow)).WithStyle(Styles.DataSheet)
-            Dim lineCountValidation = Entity.LineCount.BindToValidationPlaceholder(_subFormBinding)
-            Dim e = Entity
+            _subFormBinding = Model.SalesOrderDetails.BindToDataView(Function() New DetailPresenter(_ownerWindow)).WithStyle(Styles.DataSheet)
+            Dim lineCountValidation = Model.LineCount.BindToValidationPlaceholder(_subFormBinding)
+            Dim e = Model
             builder.GridRows("Auto", "*", "Auto") _
                 .GridColumns("580") _
                 .AddBinding(0, 0, e.BindToSalesOrderHeaderBox(IsNew, _shipToAddressBinding, _billToAddressBinding)) _
@@ -41,11 +41,11 @@ Partial Class SalesOrderWindow
         End Property
 
         Function CanLookup(foreignKey As CandidateKey) As Boolean Implements ForeignKeyBox.ILookupService.CanLookup
-            If foreignKey Is Entity.FK_Customer Then
+            If foreignKey Is Model.FK_Customer Then
                 Return True
-            ElseIf foreignKey Is Entity.FK_BillToAddress Then
+            ElseIf foreignKey Is Model.FK_BillToAddress Then
                 Return True
-            ElseIf foreignKey Is Entity.FK_ShipToAddress Then
+            ElseIf foreignKey Is Model.FK_ShipToAddress Then
                 Return True
             Else
                 Return False
@@ -53,10 +53,10 @@ Partial Class SalesOrderWindow
         End Function
 
         Sub BeginLookup(foreignKeyBox As ForeignKeyBox) Implements ForeignKeyBox.ILookupService.BeginLookup
-            If foreignKeyBox.ForeignKey Is Entity.FK_Customer Then
+            If foreignKeyBox.ForeignKey Is Model.FK_Customer Then
                 Dim dialogWindow As New CustomerLookupWindow()
-                dialogWindow.Show(_ownerWindow, foreignKeyBox, CurrentRow.GetValue(Entity.CustomerID), _shipToAddressBinding(CurrentRow), _billToAddressBinding(CurrentRow))
-            ElseIf foreignKeyBox.ForeignKey Is Entity.FK_ShipToAddress OrElse foreignKeyBox.ForeignKey Is Entity.FK_BillToAddress Then
+                dialogWindow.Show(_ownerWindow, foreignKeyBox, CurrentRow.GetValue(Model.CustomerID), _shipToAddressBinding(CurrentRow), _billToAddressBinding(CurrentRow))
+            ElseIf foreignKeyBox.ForeignKey Is Model.FK_ShipToAddress OrElse foreignKeyBox.ForeignKey Is Model.FK_BillToAddress Then
                 BeginLookupAddress(foreignKeyBox)
             Else
                 Throw New NotSupportedException()
@@ -68,9 +68,9 @@ Partial Class SalesOrderWindow
             If _addressLookupPopup.FK Is foreignKey Then
                 _addressLookupPopup.IsOpen = False
             Else
-                Dim customerID = CurrentRow.GetValue(Entity.CustomerID)
+                Dim customerID = CurrentRow.GetValue(Model.CustomerID)
                 If customerID.HasValue Then
-                    Dim addressID = If(foreignKeyBox.ForeignKey Is Entity.FK_ShipToAddress, Entity.ShipToAddressID, Entity.BillToAddressID)
+                    Dim addressID = If(foreignKeyBox.ForeignKey Is Model.FK_ShipToAddress, Model.ShipToAddressID, Model.BillToAddressID)
                     _addressLookupPopup.Show(foreignKeyBox, CurrentRow.GetValue(addressID), customerID.Value)
                 End If
             End If
@@ -78,7 +78,7 @@ Partial Class SalesOrderWindow
 
         Public ReadOnly Property SalesOrderId() As Integer
             Get
-                Return Entity.SalesOrderID(0).Value
+                Return Model.SalesOrderID(0).Value
             End Get
         End Property
 

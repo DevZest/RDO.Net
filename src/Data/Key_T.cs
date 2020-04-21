@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Annotations.Primitives;
-using System.Diagnostics;
+using System;
+using System.Linq.Expressions;
 
 namespace DevZest.Data
 {
@@ -7,59 +8,26 @@ namespace DevZest.Data
     /// Represents model projection which contains primary key columns only, with unique constraint enforced.
     /// </summary>
     /// <typeparam name="T">Type of the primary key.</typeparam>
-    public abstract class Key<T> : Projection, IEntity<T>
+    public abstract class Key<T> : Model<T>
         where T : CandidateKey
     {
-        private sealed class ContainerModel : Model<T>
+        /// <summary>
+        /// Registers a column from existing column mounter.
+        /// </summary>
+        /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
+        /// <typeparam name="TColumn">The type of the column.</typeparam>
+        /// <param name="getter">The lambda expression of the column getter.</param>
+        /// <param name="fromMounter">The existing column mounter.</param>
+        /// <returns>Mounter of the column.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="fromMounter"/> is null.</exception>
+        [PropertyRegistration]
+        protected static void Register<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Mounter<TColumn> fromMounter)
+            where TModel : Model
+            where TColumn : Column, new()
         {
-            public ContainerModel(Key<T> key)
-            {
-                Debug.Assert(key != null);
-                Debug.Assert(key.ParentModel == null);
-                key.Construct(this, GetType(), string.Empty);
-                Add(key);
-                _key = key;
-            }
-
-            private readonly Key<T> _key;
-
-            protected override T CreatePrimaryKey()
-            {
-                return _key.CreatePrimaryKey();
-            }
-
-            internal override bool IsProjectionContainer
-            {
-                get { return true; }
-            }
-        }
-
-        /// <summary>
-        /// Creates the primary key.
-        /// </summary>
-        /// <returns>The created primary key.</returns>
-        [CreateKey]
-        protected abstract T CreatePrimaryKey();
-
-        private ContainerModel _containerModel;
-
-        /// <summary>
-        /// Gets the associated model.
-        /// </summary>
-        public Model<T> Model => _containerModel;
-
-        /// <summary>
-        /// Gets the primary key.
-        /// </summary>
-        public T PrimaryKey => Model.PrimaryKey;
-
-        internal override void EnsureConstructed()
-        {
-            if (ParentModel == null)
-            {
-                _containerModel = new ContainerModel(this);
-                Debug.Assert(ParentModel == _containerModel);
-            }
+            RegisterColumn(getter, fromMounter);
         }
     }
 }

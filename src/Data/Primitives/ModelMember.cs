@@ -11,30 +11,30 @@ namespace DevZest.Data.Primitives
         {
         }
 
-        internal Model ParentModel { get; set; }
+        internal Model Parent { get; set; }
 
         /// <summary>
         /// Gets the parent model.
         /// </summary>
         public Model GetParent()
         {
-            return ParentModel;
+            return Parent;
         }
 
         /// <summary>Gets the type which declares this member.</summary>
-        /// <remarks>The <see cref="DeclaringType"/> can differ from type of <see cref="ParentModel"/> when the member
-        /// is registered as attached.</remarks>
+        /// <remarks>The <see cref="DeclaringType"/> can differ from type of <see cref="Parent"/> when the member
+        /// is registered in base type of <see cref="Parent"/>.</remarks>
         internal Type DeclaringType { get; set; }
 
         internal string Name { get; set; }
 
-        internal virtual void ConstructModelMember(Model parentModel, Type declaringType, string name)
+        internal virtual void ConstructModelMember(Model parent, Type declaringType, string name)
         {
-            ParentModel = parentModel;
+            Parent = parent;
             DeclaringType = declaringType;
             Name = name;
             if (!IsLocal)
-                ParentModel.AddMember(this);
+                Parent.AddMember(this);
         }
 
         internal virtual bool IsLocal
@@ -49,8 +49,8 @@ namespace DevZest.Data.Primitives
         {
             get
             {
-                var parentModel = ParentModel;
-                return parentModel == null ? true : parentModel.DesignMode;
+                var parent = Parent;
+                return parent == null ? true : parent.DesignMode;
             }
         }
 

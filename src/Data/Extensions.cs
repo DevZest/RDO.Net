@@ -37,10 +37,10 @@ namespace DevZest.Data
             return childModel.GetChildDataSet(parentDataSet[parentDataRowOrdinal]);
         }
 
-        private static DataSet Verify<T>(T childEntity, string paramName) where T : class, IEntity, new()
+        private static DataSet Verify<T>(T childModel, string paramName) where T : Model, new()
         {
-            childEntity.VerifyNotNull(paramName);
-            var parentDataSet = childEntity?.Model?.ParentModel?.DataSet;
+            childModel.VerifyNotNull(paramName);
+            var parentDataSet = childModel?.ParentModel?.DataSet;
             if (parentDataSet == null)
                 throw new ArgumentException(DiagnosticMessages.EntityExtensions_NullParentDataSet, paramName);
             return parentDataSet;
@@ -53,11 +53,11 @@ namespace DevZest.Data
         /// <param name="source">The source entity.</param>
         /// <param name="target">The target key.</param>
         /// <returns>The result key mapping.</returns>
-        public static KeyMapping Match<T>(this IEntity<T> source, T target)
+        public static KeyMapping Match<T>(this Model<T> source, T target)
             where T : CandidateKey
         {
             target.VerifyNotNull(nameof(target));
-            return new KeyMapping(source.Model.PrimaryKey, target);
+            return new KeyMapping(source.PrimaryKey, target);
         }
 
         /// <summary>
@@ -67,11 +67,11 @@ namespace DevZest.Data
         /// <param name="source">The source entity.</param>
         /// <param name="target">The target entity.</param>
         /// <returns>The result key mapping.</returns>
-        public static KeyMapping Match<T>(this IEntity<T> source, IEntity<T> target)
+        public static KeyMapping Match<T>(this Model<T> source, Model<T> target)
             where T : CandidateKey
         {
             target.VerifyNotNull(nameof(target));
-            return new KeyMapping(source.Model.PrimaryKey, target.Model.PrimaryKey);
+            return new KeyMapping(source.PrimaryKey, target.PrimaryKey);
         }
 
         /// <summary>
@@ -81,10 +81,10 @@ namespace DevZest.Data
         /// <param name="sourceKey">The source key.</param>
         /// <param name="target">The target entity.</param>
         /// <returns>The result key mapping.</returns>
-        public static KeyMapping Join<T>(this T sourceKey, IEntity<T> target)
+        public static KeyMapping Join<T>(this T sourceKey, Model<T> target)
             where T : CandidateKey
         {
-            return new KeyMapping(sourceKey, target.Model.PrimaryKey);
+            return new KeyMapping(sourceKey, target.PrimaryKey);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>The only value.</returns>
         public static Task<T> SingleAsync<TEntity, T>(this DbSet<TEntity> dbSet, Func<TEntity, T> getColumn, CancellationToken ct = default(CancellationToken))
-            where TEntity : class, IEntity, new()
+            where TEntity : Model, new()
             where T : Column, IColumn<DbReader>, new()
         {
             getColumn.VerifyNotNull(nameof(getColumn));
@@ -116,7 +116,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>The only or default value.</returns>
         public static Task<T> SingleOrDefaultAsync<TEntity, T>(this DbSet<TEntity> dbSet, Func<TEntity, T> getColumn, CancellationToken ct = default(CancellationToken))
-            where TEntity : class, IEntity, new()
+            where TEntity : Model, new()
             where T : Column, IColumn<DbReader>, new()
         {
             getColumn.VerifyNotNull(nameof(getColumn));
@@ -124,7 +124,7 @@ namespace DevZest.Data
         }
 
         private static async Task<T> ReadSingleAsync<TEntity, T>(this DbSet<TEntity> dbSet, Func<TEntity, T> getColumn, bool allowEmpty, CancellationToken ct)
-            where TEntity : class, IEntity, new()
+            where TEntity : Model, new()
             where T : Column, IColumn<DbReader>, new()
         {
             var dbSession = dbSet.DbSession;
@@ -151,14 +151,14 @@ namespace DevZest.Data
         }
 
         internal static TChild Verify<T, TChild>(this T _, Func<T, TChild> getChildModel, string paramName)
-            where T : class, IEntity, new()
+            where T : Model, new()
             where TChild : Model, new()
         {
             getChildModel.VerifyNotNull(paramName);
             var result = getChildModel(_);
             if (result == null)
                 throw new ArgumentException(DiagnosticMessages.DataSource_ChildModelGetterReturnsNull, paramName);
-            if (result.ParentModel != _.Model)
+            if (result.ParentModel != _)
                 throw new ArgumentException(DiagnosticMessages.DataSource_ChildModelGetterReturnsInvalidValue, paramName);
             return result;
         }

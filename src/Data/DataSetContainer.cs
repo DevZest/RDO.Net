@@ -371,10 +371,6 @@ namespace DevZest.Data
 
         internal void OnDataRowInserting(DataRowEventArgs e)
         {
-            var dataRow = e.DataRow;
-            var localColumns = dataRow.Model.LocalColumns;
-            for (int i = 0; i < localColumns.Count; i++)
-                ((ILocalColumn)localColumns[i]).OnDataRowInserting(dataRow);
             DataRowInserting(this, e);
         }
 
@@ -399,10 +395,6 @@ namespace DevZest.Data
 
         internal void OnDataRowRemoving(DataRowEventArgs e)
         {
-            var dataRow = e.DataRow;
-            var localColumns = dataRow.Model.LocalColumns;
-            for (int i = 0; i < localColumns.Count; i++)
-                ((ILocalColumn)localColumns[i]).OnDataRowRemoving(dataRow);
             DataRowRemoving(this, e);
         }
 

@@ -46,7 +46,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, CancellationToken ct = default(CancellationToken))
-            where TSource : class, T, new()
+            where TSource : T, new()
         {
             return DeleteAsync(source, KeyMapping.Match, ct);
         }
@@ -60,7 +60,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DbSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source));
@@ -92,7 +92,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, int rowIndex, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             VerifyDeletable();
             Verify(source, nameof(source), rowIndex, nameof(rowIndex));
@@ -122,7 +122,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records deleted.</returns>
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> source, Func<TSource, T, KeyMapping> keyMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
@@ -134,7 +134,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildDeleteScalarStatement<TLookup>(DataSet<TLookup> source, int ordinal, IReadOnlyList<ColumnMapping> join)
-            where TLookup : class, IEntity, new()
+            where TLookup : Model, new()
         {
             Debug.Assert(source != null && source._ != null);
             return BuildDeleteScalarStatement(source[ordinal], join);
@@ -148,7 +148,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildDeleteStatement<TLookup>(DbSet<TLookup> source, IReadOnlyList<ColumnMapping> join)
-            where TLookup : class, IEntity, new()
+            where TLookup : Model, new()
         {
             Debug.Assert(source != null);
             Debug.Assert(join != null);

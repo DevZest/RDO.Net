@@ -33,11 +33,15 @@ namespace DevZest.Data.Primitives
 
         internal static JsonWriter Write(this JsonWriter jsonWriter, IJsonView jsonView, DataRow dataRow)
         {
+            return jsonWriter.Write(jsonView, dataRow, dataRow.Model);
+        }
+
+        private static JsonWriter Write(this JsonWriter jsonWriter, IJsonView jsonView, DataRow dataRow, Model model)
+        {
             jsonWriter.WriteStartObject();
 
             var jsonFilter = jsonView.Filter;
-            var _ = dataRow.Model;
-            var columns = _.Columns;
+            var columns = model.Columns;
             int count = 0;
             for (int i = 0; i < columns.Count; i++)
             {
@@ -45,7 +49,7 @@ namespace DevZest.Data.Primitives
                 if (!jsonWriter.IsSerializable(column))
                     continue;
 
-                if (column.Kind == ColumnKind.ColumnListItem || column.Kind == ColumnKind.ProjectionMember)
+                if (column.Kind == ColumnKind.ColumnListItem)
                     continue;
 
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))
@@ -57,8 +61,9 @@ namespace DevZest.Data.Primitives
                 jsonWriter.Write(dataRow, column);
                 count++;
             }
-            var columnLists = dataRow.Model.ColumnLists;
-            for (int i =0; i < columnLists.Count; i++)
+
+            var columnLists = model.ColumnLists;
+            for (int i = 0; i < columnLists.Count; i++)
             {
                 var columnList = columnLists[i];
                 if (jsonFilter != null && !jsonFilter.ShouldSerialize(columnList))
@@ -71,7 +76,7 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
-            var projections = dataRow.Model.Projections;
+            var projections = model.Projections;
             for (int i = 0; i < projections.Count; i++)
             {
                 var projection = projections[i];
@@ -79,27 +84,33 @@ namespace DevZest.Data.Primitives
                 {
                     if (count > 0)
                         jsonWriter.WriteComma();
-                    jsonWriter.Write(dataRow, projection, jsonFilter);
+                    Debug.Assert(!string.IsNullOrEmpty(projection.Name));
+                    jsonWriter.WritePropertyName(projection.Name);
+                    jsonWriter.Write(jsonView, dataRow, projection);
                     count++;
                 }
             }
 
-            var childDataSets = dataRow.ChildDataSets;
-            for (int i = 0; i < childDataSets.Count; i++)
+            if (string.IsNullOrEmpty(model.Namespace))  // for child models, make sure it's not projection.
             {
-                var dataSet = childDataSets[i];
-                if (jsonFilter != null && !jsonFilter.ShouldSerialize(dataSet.Model))
-                    continue;
+                var childDataSets = dataRow.ChildDataSets;
+                for (int i = 0; i < childDataSets.Count; i++)
+                {
+                    var dataSet = childDataSets[i];
+                    if (jsonFilter != null && !jsonFilter.ShouldSerialize(dataSet.Model))
+                        continue;
 
-                if (count > 0)
-                    jsonWriter.WriteComma();
-                var childJsonView = jsonView.GetChildView(dataSet);
-                jsonWriter.WritePropertyName(dataSet.Model.Name).InternalWrite(childJsonView, dataSet);
-                count++;
+                    if (count > 0)
+                        jsonWriter.WriteComma();
+                    var childJsonView = jsonView.GetChildView(dataSet);
+                    jsonWriter.WritePropertyName(dataSet.Model.Name).InternalWrite(childJsonView, dataSet);
+                    count++;
+                }
             }
 
             return jsonWriter.WriteEndObject();
         }
+
 
         private static void Write(this JsonWriter jsonWriter, DataRow dataRow, ColumnList columnList, JsonFilter jsonFilter)
         {
@@ -127,41 +138,6 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteValue(jsonWriter.Serialize(column, dataRow.Ordinal));
         }
 
-        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, Projection projection, JsonFilter jsonFilter)
-        {
-            if (string.IsNullOrEmpty(projection.Name))
-                jsonWriter.WriteMembers(dataRow, projection, jsonFilter);
-            else
-                jsonWriter.WriteObject(dataRow, projection, jsonFilter);
-        }
-
-        private static void WriteObject(this JsonWriter jsonWriter, DataRow dataRow, Projection projection, JsonFilter jsonFilter)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(projection.Name));
-            jsonWriter.WritePropertyName(projection.Name);
-            jsonWriter.WriteStartObject();
-            jsonWriter.WriteMembers(dataRow, projection, jsonFilter);
-            jsonWriter.WriteEndObject();
-        }
-
-        private static void WriteMembers(this JsonWriter jsonWriter, DataRow dataRow, Projection projection, JsonFilter jsonFilter)
-        {
-            var count = 0;
-            var columns = projection.Columns;
-            for (int i = 0; i < columns.Count; i++)
-            {
-                var column = columns[i];
-                if (jsonFilter != null && !jsonFilter.ShouldSerialize(column))
-                    continue;
-
-                if (count > 0)
-                    jsonWriter.WriteComma();
-                jsonWriter.WritePropertyName(column.RelativeName);
-                jsonWriter.Write(dataRow, column);
-                count++;
-            }
-        }
-
         /// <summary>
         /// Deserializes JSON into data values of DataRow.
         /// </summary>
@@ -169,38 +145,32 @@ namespace DevZest.Data.Primitives
         /// <param name="dataRow">The DataRow.</param>
         public static void Deserialize(this JsonReader jsonReader, DataRow dataRow)
         {
-            var model = dataRow.Model;
-            if (model.IsProjectionContainer)
-            {
-                Debug.Assert(model.Projections.Count == 1);
-                var projection = model.Projections[0];
-                jsonReader.Deserialize(projection, dataRow);
-                return;
-            }
+            jsonReader.Deserialize(dataRow, dataRow.Model);
+        }
 
+        private static void Deserialize(this JsonReader jsonReader, DataRow dataRow, Model model)
+        {
             jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
 
             var token = jsonReader.PeekToken();
             if (token.Kind == JsonTokenKind.PropertyName)
             {
                 jsonReader.ConsumeToken();
-                jsonReader.Deserialize(dataRow, token.Text);
+                jsonReader.Deserialize(dataRow, model, token.Text);
 
                 while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonReader.ConsumeToken();
                     token = jsonReader.ExpectToken(JsonTokenKind.PropertyName);
-                    jsonReader.Deserialize(dataRow, token.Text);
+                    jsonReader.Deserialize(dataRow, model, token.Text);
                 }
             }
 
             jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
         }
 
-        private static void Deserialize(this JsonReader jsonReader, DataRow dataRow, string memberName)
+        private static void Deserialize(this JsonReader jsonReader, DataRow dataRow, Model model, string memberName)
         {
-            var model = dataRow.Model;
-
             var member = model[memberName];
             if (member == null)
                 throw new FormatException(DiagnosticMessages.JsonReader_InvalidModelMember(memberName, model.GetType().FullName));
@@ -208,39 +178,15 @@ namespace DevZest.Data.Primitives
                 jsonReader.Deserialize(column, dataRow.Ordinal);
             else if (member is ColumnList columnList)
                 jsonReader.Deserialize(columnList, dataRow.Ordinal);
-            else if (member is Projection projection)
-                jsonReader.Deserialize(projection, dataRow);
-            else if (member is Model childModel)
-                jsonReader.Deserialize(dataRow[childModel], isTopLevel:false);
+            else if (member is Model projectionOrChildModel)
+            {
+                if (string.IsNullOrEmpty(projectionOrChildModel.Namespace)) // child model
+                    jsonReader.Deserialize(dataRow[projectionOrChildModel], isTopLevel: false);
+                else
+                    jsonReader.Deserialize(dataRow, projectionOrChildModel);
+            }
             else
                 throw new FormatException(DiagnosticMessages.JsonReader_InvalidModelMember(memberName, model.GetType().FullName));
-        }
-
-        private static void Deserialize(this JsonReader jsonReader, Projection projection, DataRow dataRow)
-        {
-            jsonReader.ExpectToken(JsonTokenKind.CurlyOpen);
-            var token = jsonReader.PeekToken();
-            if (token.Kind == JsonTokenKind.PropertyName)
-            {
-                jsonReader.ConsumeToken();
-                jsonReader.Deserialize(projection, token.Text, dataRow);
-
-                while (jsonReader.PeekToken().Kind == JsonTokenKind.Comma)
-                {
-                    jsonReader.ConsumeToken();
-                    token = jsonReader.ExpectToken(JsonTokenKind.PropertyName);
-                    jsonReader.Deserialize(projection, token.Text, dataRow);
-                }
-            }
-            jsonReader.ExpectToken(JsonTokenKind.CurlyClose);
-        }
-
-        private static void Deserialize(this JsonReader jsonReader, Projection projection, string memberName, DataRow dataRow)
-        {
-            if (projection.ColumnsByRelativeName.ContainsKey(memberName))
-                jsonReader.Deserialize(projection.ColumnsByRelativeName[memberName], dataRow.Ordinal);
-            else
-                throw new FormatException(DiagnosticMessages.JsonReader_InvalidColumnGroupMember(memberName, projection.Name));
         }
 
         private static void Deserialize(this JsonReader jsonReader, Column column, int ordinal)

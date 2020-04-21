@@ -23,14 +23,14 @@ Partial Class CustomerLookupWindow
                 .GridLineY(New GridPoint(2, 1), 1) _
                 .GridLineY(New GridPoint(3, 1), 1) _
                 .WithSelectionMode(SelectionMode.[Single]) _
-                .AddBinding(0, 0, Entity.CompanyName.BindToColumnHeader("Company Name")) _
-                .AddBinding(1, 0, Entity.ContactPerson.BindToColumnHeader("Contact Person")) _
-                .AddBinding(2, 0, Entity.Phone.BindToColumnHeader("Phone")) _
-                .AddBinding(3, 0, Entity.EmailAddress.BindToColumnHeader("Email Address")) _
-                .AddBinding(0, 1, Entity.CompanyName.BindToTextBlock()) _
-                .AddBinding(1, 1, Entity.ContactPerson.BindToTextBlock()) _
-                .AddBinding(2, 1, Entity.Phone.BindToTextBlock()) _
-                .AddBinding(3, 1, Entity.EmailAddress.BindToTextBlock())
+                .AddBinding(0, 0, Model.CompanyName.BindToColumnHeader("Company Name")) _
+                .AddBinding(1, 0, Model.ContactPerson.BindToColumnHeader("Contact Person")) _
+                .AddBinding(2, 0, Model.Phone.BindToColumnHeader("Phone")) _
+                .AddBinding(3, 0, Model.EmailAddress.BindToColumnHeader("Email Address")) _
+                .AddBinding(0, 1, Model.CompanyName.BindToTextBlock()) _
+                .AddBinding(1, 1, Model.ContactPerson.BindToTextBlock()) _
+                .AddBinding(2, 1, Model.Phone.BindToTextBlock()) _
+                .AddBinding(3, 1, Model.EmailAddress.BindToTextBlock())
         End Sub
 
         Private Function LoadDataAsync(ct As CancellationToken) As Task(Of DataSet(Of Customer))
@@ -88,10 +88,10 @@ Partial Class CustomerLookupWindow
                 If String.IsNullOrEmpty(Value) Then
                     Where = Nothing
                 Else
-                    Where = Function(dataRow) Entity.CompanyName(dataRow).Contains(Value) _
-                        OrElse Entity.ContactPerson(dataRow).Contains(Value) _
-                        OrElse Entity.Phone(dataRow).Contains(Value) _
-                        OrElse Entity.EmailAddress(dataRow).Contains(Value)
+                    Where = Function(dataRow) Model.CompanyName(dataRow).Contains(Value) _
+                        OrElse Model.ContactPerson(dataRow).Contains(Value) _
+                        OrElse Model.Phone(dataRow).Contains(Value) _
+                        OrElse Model.EmailAddress(dataRow).Contains(Value)
                 End If
                 SelectCurrent()
             End Set

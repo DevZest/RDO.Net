@@ -40,7 +40,7 @@ namespace DevZest.Data
                 Debug.Assert(column.IsExpression && column.IsConcrete);
                 var result = new ComputationValueManager(column);
                 var expression = column.Expression;
-                var dataSet = column.ParentModel.DataSet;
+                var dataSet = column.OwnerModel.DataSet;
                 foreach (var dataRow in dataSet)
                     result.Add(expression[dataRow]);
                 return result;
@@ -90,12 +90,6 @@ namespace DevZest.Data
             }
 
             private Column<T> _column;
-
-            private Model Model
-            {
-                get { return _column.ParentModel; }
-            }
-
 
             public abstract bool IsPrimaryKey { get; }
 
@@ -170,7 +164,7 @@ namespace DevZest.Data
         {
             get
             {
-                if (ParentModel == null && Expression != null)
+                if (OwnerModel == null && Expression != null)
                     return Expression[dataRow];
                 var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow), true);
                 return InternalGetValue(dataRow, translatedDataRow, beforeEdit);
@@ -189,14 +183,14 @@ namespace DevZest.Data
 
         private T InternalGetBeforeEditValue(DataRow dataRow, DataRow translatedDataRow)
         {
-            ParentModel.SuspendEditingValue();
+            OwnerModel.SuspendEditingValue();
             try
             {
                 return InternalGetValue(dataRow, translatedDataRow);
             }
             finally
             {
-                ParentModel.ResumeEditingValue();
+                OwnerModel.ResumeEditingValue();
             }
         }
 
@@ -204,7 +198,7 @@ namespace DevZest.Data
         {
             if (_valueManager == null)
                 return Expression[dataRow];
-            else if (translatedDataRow == ParentModel.EditingRow && !ParentModel.IsEditingValueSuspended)
+            else if (translatedDataRow == OwnerModel.EditingRow && !OwnerModel.IsEditingValueSuspended)
                 return Expression != null ? Expression[dataRow] : _editingValue;    // resolve to expression when it is a concrete computation column.
             else
                 return _valueManager[translatedDataRow.Ordinal];
@@ -233,7 +227,7 @@ namespace DevZest.Data
             if (!areEqual)
             {
                 _editingValue = value;
-                ParentModel.EditingRow.OnValueChanged(this);
+                OwnerModel.EditingRow.OnValueChanged(this);
             }
         }
 
@@ -251,10 +245,10 @@ namespace DevZest.Data
         private DataRow VerifyDataRow(DataRow dataRow, string paramName, bool allowTranslate)
         {
             dataRow.VerifyNotNull(paramName);
-            if (ParentModel == null)
+            if (OwnerModel == null)
                 throw new ArgumentException(DiagnosticMessages.Column_InvalidDataRow, paramName);
 
-            if (dataRow == ParentModel.EditingRow)
+            if (dataRow == OwnerModel.EditingRow)
                 return dataRow;
 
             if (allowTranslate)
@@ -266,7 +260,7 @@ namespace DevZest.Data
             }
             else
             {
-                if (dataRow.Model != ParentModel)
+                if (dataRow.Model != OwnerModel)
                     throw new ArgumentException(DiagnosticMessages.Column_InvalidDataRow, paramName);
                 return dataRow;
             }
@@ -274,13 +268,13 @@ namespace DevZest.Data
 
         private DataRow Translate(DataRow dataRow)
         {
-            Debug.Assert(ParentModel != null);
+            Debug.Assert(OwnerModel != null);
 
             // If current model is ancestor of DataRow model, returns the ancestor DataRow.
             // This allows direct reference of ancestor column as expression.
             for (var result = dataRow; result != null; result = result.ParentDataRow)
             {
-                if (result.Model == ParentModel)
+                if (result.Model == OwnerModel)
                     return result;
             }
             return null;
@@ -383,7 +377,8 @@ namespace DevZest.Data
 
         private static DataSet GetDataSet(Model parentModel, DataRow parentDataRow)
         {
-            return parentDataRow == null ? parentModel.DataSet : parentDataRow[parentModel];
+            var ownerModel = parentModel.OwnerModel;
+            return parentDataRow == null ? ownerModel.DataSet : parentDataRow[ownerModel];
         }
 
         internal sealed override void InsertRow(DataRow dataRow)
@@ -392,7 +387,7 @@ namespace DevZest.Data
                 InsertRow(dataRow, DefaultValue);
         }
 
-        internal void InsertRow(DataRow dataRow, T value)
+        private void InsertRow(DataRow dataRow, T value)
         {
             Debug.Assert(_valueManager != null);
             _valueManager.Insert(dataRow.Ordinal, value);

@@ -77,7 +77,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records inserted into this database table.</returns>
         public Task<int> InsertAsync<TSource>(DbSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             Verify(source, nameof(source));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
@@ -100,7 +100,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildInsertStatement<TSource>(DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             var sourceModel = source._;
             return source.QueryStatement.BuildInsertStatement(Model, columnMappings, ShouldJoinParent(source));
@@ -163,7 +163,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records inserted into this database table.</returns>
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             return InsertAsync(source, columnMapper, false, ct);
         }
@@ -178,7 +178,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records inserted into this database table.</returns>
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             Verify(source, nameof(source));
             if (source.Count == 1)
@@ -199,7 +199,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records inserted into this database table.</returns>
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, CancellationToken ct = default(CancellationToken))
-            where TSource : class, T, new()
+            where TSource : T, new()
         {
             return InsertAsync(source, ordinal, (m, s, t) => m.AutoSelectInsertable(), false, ct);
         }
@@ -214,7 +214,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records inserted into this database table.</returns>
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMapper, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             return InsertAsync(source, ordinal, columnMapper, false, ct);
         }
@@ -230,7 +230,7 @@ namespace DevZest.Data
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of records inserted into this database table.</returns>
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, int ordinal, Action<ColumnMapper, TSource, T> columnMapper, bool updateIdentity, CancellationToken ct = default(CancellationToken))
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             Verify(source, nameof(source), ordinal, nameof(ordinal));
             var columnMappings = Verify(columnMapper, nameof(columnMapper), source._);
@@ -240,7 +240,7 @@ namespace DevZest.Data
         }
 
         internal DbSelectStatement BuildInsertScalarStatement<TSource>(DataSet<TSource> dataSet, int rowOrdinal, IReadOnlyList<ColumnMapping> columnMappings)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             var sourceModel = dataSet._;
             var parentMappings = ShouldJoinParent(dataSet) ? this.Model.GetParentRelationship(columnMappings) : null;

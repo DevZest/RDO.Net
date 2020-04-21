@@ -42,25 +42,25 @@ namespace DevZest.Data
         /// <summary>
         /// Maps between two entities.
         /// </summary>
-        /// <typeparam name="TSource">Type of the source entity.</typeparam>
-        /// <typeparam name="TTarget">Type of the target entity.</typeparam>
-        /// <param name="source">The source entity.</param>
-        /// <param name="target">The target entity.</param>
+        /// <typeparam name="TSource">Type of the source model.</typeparam>
+        /// <typeparam name="TTarget">Type of the target model.</typeparam>
+        /// <param name="source">The source model.</param>
+        /// <param name="target">The target model.</param>
         /// <param name="columnMapper">Delegate to map between entities. If <see langword="null"/>, default value will be used to map insertable columns.</param>
         /// <param name="isInsertable">Specifies whether the columns are insertable.</param>
         /// <returns>A list of <see cref="ColumnMapping"/> between two entities.</returns>
         public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource source, TTarget target, Action<ColumnMapper, TSource, TTarget> columnMapper, bool isInsertable)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new()
+            where TSource : Model, new()
+            where TTarget : Model, new()
         {
             target.VerifyNotNull(nameof(target));
             source.VerifyNotNull(nameof(source));
 
             if (columnMapper == null)
-                return GetColumnMappings(source.Model, target.Model, isInsertable);
+                return GetColumnMappings(source, target, isInsertable);
 
-            var result = new ColumnMapper(source.Model, target.Model).Build(builder => columnMapper(builder, source, target));
-            var columns = isInsertable ? target.Model.GetInsertableColumns() : target.Model.GetUpdatableColumns();
+            var result = new ColumnMapper(source, target).Build(builder => columnMapper(builder, source, target));
+            var columns = isInsertable ? target.GetInsertableColumns() : target.GetUpdatableColumns();
             var targetModelIds = new HashSet<ColumnId>(columns.Select(x => x.Id));
             foreach (var resultItem in result)
             {

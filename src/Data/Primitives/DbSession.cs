@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Threading;
-using DevZest.Data.Addons;
 using System.Runtime.CompilerServices;
 using DevZest.Data.Annotations.Primitives;
 using System.Data.Common;
@@ -106,24 +105,24 @@ namespace DevZest.Data.Primitives
         /// <summary>
         /// Creates temporary database table.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
+        /// <typeparam name="T">Type of the model.</typeparam>
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>The created temporary table.</returns>
         public Task<DbTable<T>> CreateTempTableAsync<T>(CancellationToken ct = default(CancellationToken))
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return CreateTempTableAsync<T>(null, null, ct);
         }
 
         /// <summary>
-        /// Create temporary database table for specified entity.
+        /// Create temporary database table for specified model.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="_">The specified entity.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="_">The specified model.</param>
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>The created temporary table.</returns>
         public Task<DbTable<T>> CreateTempTableAsync<T>(T _, CancellationToken ct = default(CancellationToken))
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return CreateTempTableAsync<T>(_, null, ct);
         }
@@ -131,34 +130,34 @@ namespace DevZest.Data.Primitives
         /// <summary>
         /// Creates temporary database table.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="initializer">The entity initializer.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="initializer">The model initializer.</param>
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>The created temporary table.</returns>
         public Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer, CancellationToken ct = default(CancellationToken))
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return CreateTempTableAsync<T>(null, initializer, ct);
         }
 
         /// <summary>
-        /// Create temporary database table for specified entity.
+        /// Create temporary database table for specified model.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="_">The specified entity.</param>
-        /// <param name="initializer">The entity initializer.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="_">The specified model.</param>
+        /// <param name="initializer">The model initializer.</param>
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>The created temporary table.</returns>
         public async Task<DbTable<T>> CreateTempTableAsync<T>(T _, Action<T> initializer, CancellationToken ct = default(CancellationToken))
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             var result = CreateTempTableInstance(_, initializer);
-            await CreateTableAsync(result._.Model, true, ct);
+            await CreateTableAsync(result._, true, ct);
             return result;
         }
 
         internal DbQuery<T> PerformCreateQuery<T>(T _, DbQueryStatement queryStatement)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return new DbQuery<T>(_, this, queryStatement);
         }
@@ -166,24 +165,24 @@ namespace DevZest.Data.Primitives
         /// <summary>
         /// Creates database query.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
+        /// <typeparam name="T">Type of the model.</typeparam>
         /// <param name="buildQuery">The query builder.</param>
         /// <returns>The created database query.</returns>
         public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return CreateQuery(null, null, buildQuery);
         }
 
         /// <summary>
-        /// Creates database query for specified entity.
+        /// Creates database query for specified model.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="_">The specified entity.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="_">The specified model.</param>
         /// <param name="buildQuery">The query builder.</param>
         /// <returns>The created database query.</returns>
         public DbQuery<T> CreateQuery<T>(T _, Action<DbQueryBuilder, T> buildQuery)
-           where T : class, IEntity, new()
+           where T : Model, new()
         {
             return CreateQuery(_, null, buildQuery);
         }
@@ -191,57 +190,57 @@ namespace DevZest.Data.Primitives
         /// <summary>
         /// Creates database query.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="initializer">The entity initializer.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="initializer">The model initializer.</param>
         /// <param name="buildQuery">The query builder.</param>
         /// <returns>The created database query.</returns>
         public DbQuery<T> CreateQuery<T>(Action<T> initializer, Action<DbQueryBuilder, T> buildQuery)
-           where T : class, IEntity, new()
+           where T : Model, new()
         {
             return CreateQuery(null, initializer, buildQuery);
         }
 
         /// <summary>
-        /// Creates database query for specified entity.
+        /// Creates database query for specified model.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="_">The specified entity.</param>
-        /// <param name="initializer">The entity initializer.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="_">The specified model.</param>
+        /// <param name="initializer">The model initializer.</param>
         /// <param name="buildQuery">The query builder.</param>
         /// <returns>The created database query.</returns>
         public DbQuery<T> CreateQuery<T>(T _, Action<T> initializer, Action<DbQueryBuilder, T> buildQuery)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             buildQuery.VerifyNotNull(nameof(buildQuery));
 
-            var modelRef = _ == null ? new T() : (_.Model.DataSource == null ? _ : _.MakeCopy(false));
-            modelRef.Initialize(initializer);
-            var builder = new DbQueryBuilder(modelRef.Model);
-            buildQuery(builder, modelRef);
-            return PerformCreateQuery(modelRef, builder.BuildQueryStatement(null));
+            var model = _ == null ? new T() : (_.DataSource == null ? _ : _.MakeCopy(false));
+            model.Initialize(initializer);
+            var builder = new DbQueryBuilder(model);
+            buildQuery(builder, model);
+            return PerformCreateQuery(model, builder.BuildQueryStatement(null));
         }
 
         /// <summary>
         /// Creates aggregate database query.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
+        /// <typeparam name="T">Type of the model.</typeparam>
         /// <param name="buildQuery">The aggregate query builder.</param>
         /// <returns>The created database query.</returns>
         public DbQuery<T> CreateAggregateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return CreateAggregateQuery(null, null, buildQuery);
         }
 
         /// <summary>
-        /// Creates aggregate database query for specified entity.
+        /// Creates aggregate database query for specified model.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="_">The specified entity.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="_">The specified model.</param>
         /// <param name="buildQuery">The aggregate query builder.</param>
         /// <returns>The created database query.</returns>
         public DbQuery<T> CreateAggregateQuery<T>(T _, Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return CreateAggregateQuery(_, null, buildQuery);
         }
@@ -249,34 +248,34 @@ namespace DevZest.Data.Primitives
         /// <summary>
         /// Creates aggregate database query.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="initializer">The entity initializer.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="initializer">The model initializer.</param>
         /// <param name="buildQuery">The aggregate query builder.</param>
         /// <returns>The created database query.</returns>
         public DbQuery<T> CreateAggregateQuery<T>(Action<T> initializer, Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return CreateAggregateQuery(null, initializer, buildQuery);
         }
 
         /// <summary>
-        /// Creates aggregate database query for specified entity.
+        /// Creates aggregate database query for specified model.
         /// </summary>
-        /// <typeparam name="T">Type of the entity.</typeparam>
-        /// <param name="_">The specified entity.</param>
-        /// <param name="initializer">The entity initializer.</param>
+        /// <typeparam name="T">Type of the model.</typeparam>
+        /// <param name="_">The specified model.</param>
+        /// <param name="initializer">The model initializer.</param>
         /// <param name="buildQuery">The aggregate query builder.</param>
         /// <returns>The created database query.</returns>
         public DbQuery<T> CreateAggregateQuery<T>(T _, Action<T> initializer, Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             buildQuery.VerifyNotNull(nameof(buildQuery));
 
-            var modelRef = _ == null ? new T() : (_.Model.DataSource == null ? _ : _.MakeCopy(false));
-            modelRef.Initialize(initializer);
-            var builder = new DbAggregateQueryBuilder(modelRef.Model);
-            buildQuery(builder, modelRef);
-            return PerformCreateQuery(modelRef, builder.BuildQueryStatement(null));
+            var model = _ == null ? new T() : (_.DataSource == null ? _ : _.MakeCopy(false));
+            model.Initialize(initializer);
+            var builder = new DbAggregateQueryBuilder(model);
+            buildQuery(builder, model);
+            return PerformCreateQuery(model, builder.BuildQueryStatement(null));
         }
 
         internal abstract Task RecursiveFillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
@@ -284,18 +283,18 @@ namespace DevZest.Data.Primitives
         internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
         internal DbTable<T> CreateTempTableInstance<T>(T _, Action<T> initializer)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
-            var modelRef = _ == null ? new T() : _.MakeCopy(false);
-            modelRef.Initialize(initializer);
-            modelRef.Model.AddTempTableIdentity();
-            return CreateTempTableInstance(modelRef);
+            var model = _ == null ? new T() : _.MakeCopy(false);
+            model.Initialize(initializer);
+            model.AddTempTableIdentity();
+            return CreateTempTableInstance(model);
         }
 
         private DbTable<T> CreateTempTableInstance<T>(T _)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
-            var tableName = AssignTempTableName(_.Model);
+            var tableName = AssignTempTableName(_);
             return DbTable<T>.CreateTemp(_, this, tableName);
         }
 
@@ -321,8 +320,8 @@ namespace DevZest.Data.Primitives
         /// <summary>
         /// Executes query to insert DataSet data into table.
         /// </summary>
-        /// <typeparam name="TSource">Entity type of source DataSet.</typeparam>
-        /// <typeparam name="TTarget">Entity type of target table.</typeparam>
+        /// <typeparam name="TSource">Model type of source DataSet.</typeparam>
+        /// <typeparam name="TTarget">Model type of target table.</typeparam>
         /// <param name="sourceData">The source DataSet.</param>
         /// <param name="targetTable">The target database table.</param>
         /// <param name="columnMapper">Provides column mappings between source DataSet and target database table.</param>
@@ -331,16 +330,16 @@ namespace DevZest.Data.Primitives
         /// <returns>Number of rows inserted.</returns>
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
             Action<ColumnMapper, TSource, TTarget> columnMapper, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new();
+            where TSource : Model, new()
+            where TTarget : Model, new();
 
         internal abstract Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes query to update database table from DataSet.
         /// </summary>
-        /// <typeparam name="TSource">Entity type of source DataSet.</typeparam>
-        /// <typeparam name="TTarget">Entity type of target database table.</typeparam>
+        /// <typeparam name="TSource">Model type of source DataSet.</typeparam>
+        /// <typeparam name="TTarget">Model type of target database table.</typeparam>
         /// <param name="source">The source DataSet.</param>
         /// <param name="target">The target database table.</param>
         /// <param name="columnMapper">Provides column mappings between source DataSet and target database table.</param>
@@ -349,27 +348,27 @@ namespace DevZest.Data.Primitives
         /// <returns>Number of rows updated.</returns>
         protected internal abstract Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey targetKey, CancellationToken ct)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new();
+            where TSource : Model, new()
+            where TTarget : Model, new();
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes query to delete database table data from DataSet.
         /// </summary>
-        /// <typeparam name="TSource">Entity type of source DataSet.</typeparam>
-        /// <typeparam name="TTarget">Entity type of target database table.</typeparam>
+        /// <typeparam name="TSource">Model type of source DataSet.</typeparam>
+        /// <typeparam name="TTarget">Model type of target database table.</typeparam>
         /// <param name="source">The source DataSet.</param>
         /// <param name="target">The target database table.</param>
         /// <param name="targetKey">The key of target database table.</param>
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>Number of rows deleted.</returns>
         protected internal abstract Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey targetKey, CancellationToken ct)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new();
+            where TSource : Model, new()
+            where TTarget : Model, new();
 
         internal abstract Task<DbReader> ExecuteDbReaderAsync<T>(DbSet<T> dbSet, CancellationToken cancellationToken)
-            where T : class, IEntity, new();
+            where T : Model, new();
 
         internal DbInitializer Generator { get; set; }
 

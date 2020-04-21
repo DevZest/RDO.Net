@@ -254,7 +254,7 @@ namespace DevZest.Data.Primitives
 
         private static IList<IColumn<TReader>> GetReaderColumns(Model model)
         {
-            var columns = model.Columns;
+            var columns = model.AllColumns;
             var result = new IColumn<TReader>[columns.Count];
             for (int i = 0; i < columns.Count; i++)
             {

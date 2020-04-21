@@ -133,7 +133,7 @@ namespace DevZest.Data.Presenters
                 rowInput.WithFlush(columnSort.Column, v => v.ValueBag);
             if (lookup != null)
             {
-                foreach (var column in lookup.Columns)
+                foreach (var column in lookup.GetColumns())
                 {
                     if (column.IsExpression)
                         continue;

@@ -83,7 +83,7 @@ Public Class ProductLookupWindow
 
     Private ReadOnly Property Product() As Product
         Get
-            Return _presenter.Entity
+            Return _presenter.Model
         End Get
     End Property
 

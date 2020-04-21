@@ -34,7 +34,7 @@ namespace DevZest.Data
 
         private ColumnCollection Columns
         {
-            get { return Model.Columns; }
+            get { return Model.AllColumns; }
         }
 
         private DataRow CurrentRow

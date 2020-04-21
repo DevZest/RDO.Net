@@ -45,6 +45,22 @@ namespace DevZest.Data
         {
             get { return base.Name; }
         }
+
+        /// <summary>
+        /// Gets the parent model of this <see cref="ColumnList"/>.
+        /// </summary>
+        public Model ParentModel
+        {
+            get { return Parent; }
+        }
+
+        /// <summary>
+        /// Gets the owner model of this <see cref="ColumnList"/>.
+        /// </summary>
+        public Model OwnerModel
+        {
+            get { return ParentModel?.OwnerModel; }
+        }
     }
 
     /// <summary>Represents a list of columns.</summary>

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     internal static class DbTableInsert<T>
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, long? value)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
-            var model = dataSet._.Model;
+            var model = dataSet._;
             model.SuspendIdentity();
             dataRow.IsPrimaryKeySealed = false;
             var identityColumn = model.GetIdentity(false).Column;
@@ -38,7 +38,7 @@ namespace DevZest.Data
         }
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DbSet<TSource> source, IReadOnlyList<ColumnMapping> columnMappings, CancellationToken ct)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             var statement = target.BuildInsertStatement(source, columnMappings);
             return target.UpdateOrigin(source, await target.DbSession.InsertAsync(statement, ct));
@@ -46,7 +46,7 @@ namespace DevZest.Data
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, int rowIndex,
             IReadOnlyList<ColumnMapping> columnMappings, bool updateIdentity, CancellationToken ct)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             var statement = target.BuildInsertScalarStatement(source, rowIndex, columnMappings);
             var result = await target.DbSession.InsertScalarAsync(statement, updateIdentity, ct);
@@ -57,7 +57,7 @@ namespace DevZest.Data
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> target, DataSet<TSource> source, Action<ColumnMapper, TSource, T> columnMapper,
             bool updateIdentity, CancellationToken ct)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             if (source.Count == 0)
                 return 0;

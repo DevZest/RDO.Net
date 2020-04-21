@@ -69,7 +69,7 @@ Partial Class MainWindow
 
     Private ReadOnly Property Entity() As SalesOrderHeader
         Get
-            Return _presenter.Entity
+            Return _presenter.Model
         End Get
     End Property
 

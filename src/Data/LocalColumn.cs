@@ -3,17 +3,11 @@ using System;
 
 namespace DevZest.Data
 {
-    internal interface ILocalColumn
-    {
-        void OnDataRowInserting(DataRow dataRow);
-        void OnDataRowRemoving(DataRow dataRow);
-    }
-
     /// <summary>
     /// Represents a column for local use only.
     /// </summary>
     /// <typeparam name="T">Data type of the column.</typeparam>
-    public sealed class LocalColumn<T> : Column<T>, ILocalColumn
+    public sealed class LocalColumn<T> : Column<T>
     {
         /// <summary>
         /// Internal use only, do not call this constructor in your code.
@@ -42,16 +36,6 @@ namespace DevZest.Data
         public override bool IsDeserializable
         {
             get { return false; }
-        }
-
-        void ILocalColumn.OnDataRowInserting(DataRow dataRow)
-        {
-            InsertRow(dataRow);
-        }
-
-        void ILocalColumn.OnDataRowRemoving(DataRow dataRow)
-        {
-            RemoveRow(dataRow);
         }
 
         /// <inheritdoc />

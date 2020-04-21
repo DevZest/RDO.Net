@@ -13,18 +13,17 @@ namespace DevZest.Data.MySql
         }
 
         public static DbSet<T> CreateJsonTable<T>(this MySqlSession mySqlSession, string json, string ordinalColumnName)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             var _ = new T();
-            var model = _.Model;
             if (!string.IsNullOrEmpty(ordinalColumnName))
             {
                 var dataSetOrdinalColumn = new _Int32().AsJsonOrdinality();
-                model.AddSystemColumn(dataSetOrdinalColumn, ordinalColumnName);
+                _.AddSystemColumn(dataSetOrdinalColumn, ordinalColumnName);
             }
             var sourceJsonParam = _String.Param(json).AsMySqlJson();
-            s_jsonRowSets.Add(model, sourceJsonParam);
-            return _.CreateDbTable(mySqlSession, ModelAliasManager.GetDbAlias(model));
+            s_jsonRowSets.Add(_, sourceJsonParam);
+            return _.CreateDbTable(mySqlSession, ModelAliasManager.GetDbAlias(_));
         }
     }
 }

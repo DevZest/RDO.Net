@@ -20,7 +20,7 @@ namespace DevZest.Data.AspNetCore.ClientValidation
         /// <param name="attributes">The HTML attributes dictionary.</param>
         public void AddValidation(ActionContext actionContext, Column column, IDictionary<string, string> attributes)
         {
-            var validators = column.GetParent().Validators;
+            var validators = column.GetParent().GetValidators();
             for (int i = 0; i < validators.Count; i++)
                 AddValidation(validators[i], actionContext, column, attributes);
         }

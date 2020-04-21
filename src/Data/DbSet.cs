@@ -13,7 +13,7 @@ namespace DevZest.Data
     /// </summary>
     /// <typeparam name="T">Entity type of database recordset.</typeparam>
     public abstract class DbSet<T> : DataSource, IDbSet
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         internal DbSet(T modelRef, DbSession dbSession)
         {
@@ -28,14 +28,14 @@ namespace DevZest.Data
         public DbSession DbSession { get; private set; }
 
         /// <summary>
-        /// Gets the entity of this database recordset.
+        /// Gets the model of this database recordset.
         /// </summary>
         public T _ { get; private set; }
 
         /// <inheritdoc />
         public sealed override Model Model
         {
-            get { return _.Model; }
+            get { return _; }
         }
 
         internal abstract DbQueryStatement QueryStatement { get; }
@@ -157,11 +157,11 @@ namespace DevZest.Data
             return GetSimpleQueryStatement(action, out T newModel);
         }
 
-        private DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action, out T newModelProvider)
+        private DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action, out T newModel)
         {
-            var oldModelProvider = _;
-            newModelProvider = oldModelProvider.MakeCopy(false);
-            return new DbQueryBuilder(newModelProvider.Model).BuildQueryStatement(oldModelProvider.Model, action, null);
+            var oldModel = _;
+            newModel = oldModel.MakeCopy(false);
+            return new DbQueryBuilder(newModel).BuildQueryStatement(oldModel, action, null);
         }
 
         internal TChild VerifyCreateChild<TChild>(Action<TChild> initializer, Func<T, TChild> getChildModel)
@@ -170,7 +170,7 @@ namespace DevZest.Data
             if (Kind == DataSourceKind.DbTable)
                 throw new InvalidOperationException(DiagnosticMessages.DbSet_VerifyCreateChild_InvalidDataSourceKind);
 
-            _.Model.EnsureInitialized();
+            _.EnsureInitialized();
 
             var childModel = _.Verify(getChildModel, nameof(getChildModel));
 
@@ -194,7 +194,7 @@ namespace DevZest.Data
         /// <summary>
         /// Saves this database recordset into DataSet.
         /// </summary>
-        /// <param name="initializer">The entity initializer.</param>
+        /// <param name="initializer">The model initializer.</param>
         /// <param name="ct">The async cancellation token.</param>
         /// <returns>The saved DataSet.</returns>
         public async Task<DataSet<T>> ToDataSetAsync(Action<T> initializer, CancellationToken ct = default(CancellationToken))
@@ -246,10 +246,10 @@ namespace DevZest.Data
         {
             dbSet.VerifyNotNull(nameof(dbSet));
 
-            var modelRef = _.MakeCopy(false);
+            var model = _.MakeCopy(false);
             var queryStatement1 = this.GetSimpleQueryStatement();
             var queryStatement2 = dbSet.GetSimpleQueryStatement();
-            return new DbQuery<T>(modelRef, DbSession, new DbUnionStatement(modelRef.Model, queryStatement1, queryStatement2, kind));
+            return new DbQuery<T>(model, DbSession, new DbUnionStatement(model, queryStatement1, queryStatement2, kind));
         }
 
         private DbQuery<Adhoc> BuildCountQuery()
@@ -257,7 +257,7 @@ namespace DevZest.Data
             return DbSession.CreateAggregateQuery((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
             {
                 builder.From(this, out T m)
-                    .Select(this._.Model.Columns[0].CountRows(), adhoc, "Result");
+                    .Select(this._.Columns[0].CountRows(), adhoc, "Result");
             });
         }
 
@@ -295,7 +295,7 @@ namespace DevZest.Data
         /// <summary>
         /// Generates a database query.
         /// </summary>
-        /// <typeparam name="TDerived">The derived entity class.</typeparam>
+        /// <typeparam name="TDerived">The derived model class.</typeparam>
         /// <returns>The result database query.</returns>
         public DbQuery<TDerived> ToDbQuery<TDerived>()
             where TDerived : class, T, new()
@@ -321,14 +321,6 @@ namespace DevZest.Data
         public Task<DbReader> ExecuteDbReaderAsync(CancellationToken ct = default(CancellationToken))
         {
             return DbSession.ExecuteDbReaderAsync(this, ct);
-        }
-
-        /// <summary>
-        /// Gets the entity associated with this database recordset.
-        /// </summary>
-        public T Entity
-        {
-            get { return _; }
         }
     }
 }

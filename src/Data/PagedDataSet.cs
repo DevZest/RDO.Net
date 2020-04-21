@@ -7,7 +7,7 @@ namespace DevZest.Data
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public sealed class PagedDataSet<T>
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         private sealed class _Model : Model
         {

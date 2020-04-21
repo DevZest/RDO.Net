@@ -39,7 +39,7 @@ Partial Class Db
             Sub(builder As DbQueryBuilder, x As Product.Lookup)
                 Dim t As Product.Ref = Nothing
                 builder.From(tempTable, t)
-                Dim seqNo = t.GetModel().GetIdentity(True).Column
+                Dim seqNo = t.GetIdentity(True).Column
                 Debug.Assert(seqNo IsNot Nothing)
                 Dim p As Product = Nothing
                 builder.LeftJoin(Product, t.ForeignKey, p).AutoSelect().OrderBy(seqNo)

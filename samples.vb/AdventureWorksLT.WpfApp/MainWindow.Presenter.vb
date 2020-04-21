@@ -24,7 +24,7 @@ Partial Class MainWindow
         End Sub
 
         Private Function CalcTotalAmt() As Decimal?
-            Return Rows.Sum(Function(x) x.GetValue(Entity.TotalDue))
+            Return Rows.Sum(Function(x) x.GetValue(Model.TotalDue))
         End Function
 
         Private ReadOnly Property CalcTotalAmtFunc() As Func(Of Decimal?)
@@ -68,7 +68,7 @@ Partial Class MainWindow
         End Function
 
         Protected Overrides Sub BuildTemplate(builder As TemplateBuilder)
-            Dim e = Entity
+            Dim e = Model
             builder.GridColumns("20", "50", "70", "70", "75", "60", "100", "70", "70", "75") _
                 .GridRows("Auto", "Auto", "Auto") _
                 .Layout(Orientation.Vertical) _

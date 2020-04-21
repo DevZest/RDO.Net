@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,14 +10,14 @@ namespace DevZest.Data
     /// <summary>Represents an in-memory collection of data.</summary>
     /// <typeparam name="T">The type of the model.</typeparam>
     public abstract class DataSet<T> : DataSet
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         private sealed class BaseDataSet : DataSet<T>
         {
-            public BaseDataSet(T modelRef)
-                : base(modelRef)
+            public BaseDataSet(T model)
+                : base(model)
             {
-                modelRef.Model.SetDataSource(this);
+                model.SetDataSource(this);
             }
 
             internal override DataSet CreateChildDataSet(DataRow parentRow)
@@ -177,9 +176,9 @@ namespace DevZest.Data
         /// <returns>The newly created DataSet.</returns>
         public static DataSet<T> Create(Action<T> initializer = null)
         {
-            var modelRef = new T();
-            modelRef.Initialize(initializer);
-            return Create(modelRef);
+            var model = new T();
+            model.Initialize(initializer);
+            return Create(model);
         }
 
         internal static DataSet<T> Create(T modelRef)
@@ -209,14 +208,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Gets the entity associated with this DataSet.
+        /// Gets the model associated with this DataSet.
         /// </summary>
         public T _ { get; private set; }
 
         /// <inheritdoc />
         public sealed override Model Model
         {
-            get { return _.Model; }
+            get { return _; }
         }
 
         /// <summary>
@@ -401,7 +400,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Gets the entity of this DataSet.
+        /// Gets the model of this DataSet.
         /// </summary>
         public T Entity
         {

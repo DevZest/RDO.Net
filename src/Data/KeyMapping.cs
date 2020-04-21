@@ -11,9 +11,9 @@ namespace DevZest.Data
     {
         internal static KeyMapping Match<TSource, TTarget>(TSource source, TTarget target)
             where TSource : TTarget
-            where TTarget : IEntity
+            where TTarget : Model
         {
-            return new KeyMapping(source.Model.PrimaryKey, target.Model.PrimaryKey);
+            return new KeyMapping(source.PrimaryKey, target.PrimaryKey);
         }
 
         internal KeyMapping(CandidateKey sourceKey, CandidateKey targetKey)

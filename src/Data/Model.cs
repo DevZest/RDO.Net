@@ -18,7 +18,7 @@ namespace DevZest.Data
     /// <summary>
     /// Base class of your busines model objects.
     /// </summary>
-    public abstract partial class Model : ModelMember, IModels, IEntity
+    public abstract partial class Model : ModelMember, IModels
     {
         #region RegisterColumn
 
@@ -142,6 +142,81 @@ namespace DevZest.Data
 
         #endregion
 
+        #region RegisterProjection
+
+        static MounterManager<Model, Projection> s_projectionManager = new MounterManager<Model, Projection>();
+
+        /// <summary>Registers a new <see cref="Projection"/>.</summary>
+        /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
+        /// <typeparam name="TProjection">The type of the <see cref="Projection"/>.</typeparam>
+        /// <param name="getter">The lambda expression of the <see cref="Projection"/> getter.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
+        [PropertyRegistration]
+        protected static void RegisterProjection<TModel, TProjection>(Expression<Func<TModel, TProjection>> getter)
+            where TModel : Model
+            where TProjection : Projection, new()
+        {
+            getter.VerifyNotNull(nameof(getter));
+            s_projectionManager.Register(getter, mounter => CreateProjection(mounter));
+        }
+
+        private List<Projection> _projections;
+        /// <summary>
+        /// Gets the <see cref="Projection"/> objects created by this model.
+        /// </summary>
+        protected internal IReadOnlyList<Projection> Projections
+        {
+            get
+            {
+                if (_projections == null)
+                    return Array.Empty<Projection>();
+                else
+                    return _projections;
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Projection"/> objects created by this model.
+        /// </summary>
+        /// <returns>The <see cref="Projection"/> objects created by this model.</returns>
+        public IReadOnlyList<Projection> GetProjections()
+        {
+            return Projections;
+        }
+
+        private void Add(Projection projection)
+        {
+            Debug.Assert(projection != null);
+            if (_projections == null)
+                _projections = new List<Projection>();
+            _projections.Add(projection);
+        }
+
+        private static TProjection CreateProjection<TModel, TProjection>(Mounter<TModel, TProjection> mounter)
+            where TModel : Model
+            where TProjection : Projection, new()
+        {
+            var parent = mounter.Parent;
+            var result = new TProjection();
+            result.ConstructChildProjection(parent, mounter.DeclaringType, mounter.Name);
+            result.ColumnOrdinalOffset = parent.OwnerModel.TotalColumnCount;
+            parent.Add(result);
+            return result;
+        }
+
+        private void ConstructChildProjection(Model parentModel, Type declaringType, string name)
+        {
+            this.ConstructModelMember(parentModel, declaringType, name);
+            _ownerModel = parentModel.OwnerModel;
+            Depth = ParentModel.Depth;
+            Namespace = name.GetFullName(parentModel.Namespace);
+        }
+
+        internal string Namespace { get; private set; }
+
+        #endregion
+
         #region RegisterChildModel
 
         internal static MounterManager<Model, Model> s_childModelManager = new MounterManager<Model, Model>();
@@ -171,18 +246,21 @@ namespace DevZest.Data
         {
             var parentModel = mounter.Parent;
             TChildModel result = constructor(parentModel);
-            result.Construct(parentModel, mounter.DeclaringType, mounter.Name);
+            result.ConstructChildModel(parentModel, mounter.DeclaringType, mounter.Name);
             return result;
         }
 
-        internal void Construct(Model parentModel, Type declaringType, string name)
+        internal void ConstructChildModel(Model parentModel, Type declaringType, string name)
         {
-            Construct(parentModel, declaringType, name, Array.Empty<ColumnMapping>(), Array.Empty<ColumnMapping>());
+            ConstructChildModel(parentModel, declaringType, name, Array.Empty<ColumnMapping>(), Array.Empty<ColumnMapping>());
         }
 
-        internal void Construct(Model parentModel, Type declaringType, string name, IReadOnlyList<ColumnMapping> parentRelationship, IReadOnlyList<ColumnMapping> parentMappings)
+        internal void ConstructChildModel(Model parentModel, Type declaringType, string name, IReadOnlyList<ColumnMapping> parentRelationship, IReadOnlyList<ColumnMapping> parentMappings)
         {
             this.ConstructModelMember(parentModel, declaringType, name);
+
+            ParentModel.ChildModels.Add(this);
+            Depth = ParentModel.Depth + 1;
 
             Debug.Assert(parentMappings != null);
             Debug.Assert(parentRelationship != null);
@@ -268,63 +346,6 @@ namespace DevZest.Data
 
         #endregion
 
-        #region RegisterProjection
-
-        static MounterManager<Model, Projection> s_projectonManager = new MounterManager<Model, Projection>();
-
-        /// <summary>Registers a new <see cref="Projection"/>.</summary>
-        /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
-        /// <typeparam name="TProjection">The type of the <see cref="Projection"/>.</typeparam>
-        /// <param name="getter">The lambda expression of the <see cref="Projection"/> getter.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        [PropertyRegistration]
-        protected static void RegisterProjection<TModel, TProjection>(Expression<Func<TModel, TProjection>> getter)
-            where TModel : Model
-            where TProjection : Projection, new()
-        {
-            getter.VerifyNotNull(nameof(getter));
-            s_projectonManager.Register(getter, mounter => CreateProjection(mounter));
-        }
-
-        private List<Projection> _projections;
-        /// <summary>
-        /// Gets the <see cref="Projection"/> objects owned by this model.
-        /// </summary>
-        protected internal IReadOnlyList<Projection> Projections
-        {
-            get
-            {
-                if (_projections == null)
-                    return Array.Empty<Projection>();
-                else
-                    return _projections;
-            }
-        }
-
-        internal void Add(Projection projection)
-        {
-            Debug.Assert(projection != null);
-            if (_projections == null)
-                _projections = new List<Projection>();
-            _projections.Add(projection);
-        }
-
-
-        private static TProjection CreateProjection<TModel, TProjection>(Mounter<TModel, TProjection> mounter)
-            where TModel : Model
-            where TProjection : Projection, new()
-        {
-            var result = new TProjection();
-            var parent = mounter.Parent;
-            result.Construct(parent, mounter.DeclaringType, mounter.Name);
-            parent.Add(result);
-            return result;
-        }
-
-
-        #endregion
-
         /// <summary>
         /// Initializes a new instance of <see cref="Model"/> class.
         /// </summary>
@@ -334,7 +355,7 @@ namespace DevZest.Data
             ChildModels = new ModelCollection(this);
 
             s_columnManager.Mount(this);
-            s_projectonManager.Mount(this);
+            s_projectionManager.Mount(this);
             s_localColumnManager.Mount(this);
             s_columnListManager.Mount(this);
             PerformConstructing();
@@ -343,8 +364,6 @@ namespace DevZest.Data
         internal override void ConstructModelMember(Model parentModel, Type declaringType, string name)
         {
             base.ConstructModelMember(parentModel, declaringType, name);
-            ParentModel.ChildModels.Add(this);
-            Depth = ParentModel.Depth + 1;
             _rootModel = ParentModel.RootModel;
         }
 
@@ -354,6 +373,17 @@ namespace DevZest.Data
         internal Model RootModel
         {
             get { return _rootModel ?? this; }
+        }
+
+        internal Model ParentModel
+        {
+            get { return Parent; }
+        }
+
+        private Model _ownerModel;
+        internal Model OwnerModel
+        {
+            get { return _ownerModel ?? this; }
         }
 
         /// <summary>
@@ -401,12 +431,18 @@ namespace DevZest.Data
                 }
                 PerformChildDataSetsCreated();
                 DataSetContainer.MergeComputations(this);
-                InitValueManager(Columns);
-                InitValueManager(LocalColumns);
             }
-
+            InitColumnValueManager();
             IsInitialized = true;
             PerformInitialized();
+        }
+
+        private void InitColumnValueManager()
+        {
+            InitValueManager(Columns);
+            InitValueManager(LocalColumns);
+            foreach (var projection in Projections)
+                projection.InitColumnValueManager();
         }
 
         private static void InitValueManager(IReadOnlyList<Column> columns)
@@ -503,7 +539,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Gets the columns owned by this model.
+        /// Gets the columns created by this <see cref="Model"/>.
         /// </summary>
         protected internal ColumnCollection Columns { get; private set; }
 
@@ -524,18 +560,24 @@ namespace DevZest.Data
             }
         }
 
-        /// <summary>
-        /// Gets the child models owned by this model.
-        /// </summary>
-        protected internal ModelCollection ChildModels { get; private set; }
+        internal ModelCollection ChildModels { get; private set; }
 
-        private List<IValidator> _validators = new List<IValidator>();
+        /// <summary>
+        /// Gets the child models created by this <see cref="Model"/>.
+        /// </summary>
+        /// <returns></returns>
+        public ModelCollection GetChildModels()
+        {
+            return ChildModels;
+        }
+
+        private List<IValidator> _validators;
         /// <summary>
         /// Gets the validators owned by this model.
         /// </summary>
-        public List<IValidator> Validators
+        protected internal List<IValidator> Validators
         {
-            get { return _validators; }
+            get { return _validators ?? (_validators = new List<IValidator>()); }
         }
 
         /// <summary>
@@ -695,7 +737,7 @@ namespace DevZest.Data
             return result;
         }
 
-        internal Action<IEntity> Initializer { get; set; }
+        internal Action<Model> Initializer { get; set; }
 
         internal void InitializeClone(Model prototype, bool setDataSource)
         {
@@ -1047,7 +1089,7 @@ namespace DevZest.Data
         /// <param name="rowOrdinal">The ordinal of DataRow.</param>
         /// <returns></returns>
         protected internal virtual DataSet<T> CreateDataSet<T>(_DataSet<T> dataSetColumn, int rowOrdinal)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return DataSet<T>.Create();
         }
@@ -1303,16 +1345,6 @@ namespace DevZest.Data
             get { return RootModel._suspendEditingValueCount > 0; }
         }
 
-        Model IEntity.Model
-        {
-            get { return this; }
-        }
-
-        internal virtual bool IsProjectionContainer
-        {
-            get { return false; }
-        }
-
         /// <summary>
         /// Gets the name of this model.
         /// </summary>
@@ -1323,9 +1355,9 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Gets the columns owned by this model.
+        /// Gets the columns created by this model.
         /// </summary>
-        /// <returns>The columns owned by this model.</returns>
+        /// <returns>The columns created by this model.</returns>
         public ColumnCollection GetColumns()
         {
             return Columns;
@@ -1347,15 +1379,6 @@ namespace DevZest.Data
         public IReadOnlyList<ColumnList> GetColumnLists()
         {
             return ColumnLists;
-        }
-
-        /// <summary>
-        /// Gets the child models owned by this model.
-        /// </summary>
-        /// <returns>The child models owned by this model.</returns>
-        public ModelCollection GetChildModels()
-        {
-            return ChildModels;
         }
 
         /// <summary>
@@ -1392,6 +1415,85 @@ namespace DevZest.Data
         public int GetDepth()
         {
             return Depth;
+        }
+
+        internal void Insert(DataRow dataRow)
+        {
+            foreach (var column in Columns)
+                column.InsertRow(dataRow);
+
+            foreach (var column in LocalColumns)
+                column.InsertRow(dataRow);
+
+            foreach (var projection in Projections)
+                projection.Insert(dataRow);
+        }
+
+        internal void Remove(DataRow dataRow)
+        {
+            foreach (var column in Columns)
+                column.RemoveRow(dataRow);
+
+            foreach (var column in LocalColumns)
+                column.RemoveRow(dataRow);
+
+            foreach (var projection in Projections)
+                projection.Remove(dataRow);
+        }
+
+        /// <summary>
+        /// Gets the total column count, including recursive projection(s).
+        /// </summary>
+        internal int TotalColumnCount
+        {
+            get
+            {
+                var result = Columns.Count;
+                for (int i = 0; i < Projections.Count; i++)
+                    result += Projections[i].TotalColumnCount;
+                return result;
+            }
+        }
+
+        internal int ColumnOrdinalOffset { get; private set; }
+
+        private ColumnCollection _allColumns;
+        internal ColumnCollection AllColumns
+        {
+            get
+            {
+                if (Projections.Count == 0)
+                    return Columns;
+
+                return _allColumns ?? (_allColumns = GetAllColumns());
+            }
+        }
+
+        private ColumnCollection GetAllColumns()
+        {
+            var result = new ColumnCollection(this);
+            AddAllColumns(result);
+            return result;
+        }
+
+        private void AddAllColumns(ColumnCollection result)
+        {
+            var columns = Columns;
+            for (int i = 0; i < columns.Count - columns.SystemColumnCount; i++) // make sure system column(s) at tail
+                AddToAllColumns(result, columns[i]);
+
+            foreach (var projection in Projections)
+                projection.AddAllColumns(result);
+
+            for (int i = columns.Count - columns.SystemColumnCount; i < columns.Count; i++) // add system column(s)
+                AddToAllColumns(result, columns[i]);
+        }
+
+        private static void AddToAllColumns(ColumnCollection columns, Column item)
+        {
+            if (item.Ordinal != columns.Count)
+                Debug.Assert(item.Ordinal == columns.Count);
+            columns.Add(item);
         }
     }
 }

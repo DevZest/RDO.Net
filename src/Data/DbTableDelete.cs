@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DevZest.Data
 {
     internal static class DbTableDelete<T>
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         public static async Task<int> ExecuteAsync(DbTable<T> from, Func<T, _Boolean> where, CancellationToken ct)
         {
@@ -16,21 +16,21 @@ namespace DevZest.Data
         }
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> from, DbSet<TSource> source, IReadOnlyList<ColumnMapping> join, CancellationToken ct)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             var statement = from.BuildDeleteStatement(source, join);
             return from.UpdateOrigin(null, await from.DbSession.DeleteAsync(statement, ct));
         }
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> from, DataSet<TSource> source, int rowIndex, IReadOnlyList<ColumnMapping> join, CancellationToken ct)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             var statement = from.BuildDeleteScalarStatement(source, rowIndex, join);
             return from.UpdateOrigin<TSource>(null, await from.DbSession.DeleteAsync(statement, ct) > 0) ? 1 : 0;
         }
 
         public static async Task<int> ExecuteAsync<TSource>(DbTable<T> from, DataSet<TSource> source, CandidateKey targetKey, CancellationToken ct)
-            where TSource : class, IEntity, new()
+            where TSource : Model, new()
         {
             if (source.Count == 0)
                 return 0;

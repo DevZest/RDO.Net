@@ -58,19 +58,19 @@ namespace DevZest.Data.Primitives
         /// <summary>
         /// Creates DbTable object.
         /// </summary>
-        /// <typeparam name="T">Type of entity.</typeparam>
-        /// <param name="modelRef">The model reference.</param>
+        /// <typeparam name="T">Type of model.</typeparam>
+        /// <param name="model">The model reference.</param>
         /// <param name="dbSession">The database session.</param>
         /// <param name="name">The name of the table.</param>
         /// <returns>The created DbTable object.</returns>
-        public static DbTable<T> CreateDbTable<T>(this T modelRef, DbSession dbSession, string name)
-            where T : class, IEntity, new()
+        public static DbTable<T> CreateDbTable<T>(this T model, DbSession dbSession, string name)
+            where T : Model, new()
         {
-            modelRef.VerifyNotNull(nameof(modelRef));
+            model.VerifyNotNull(nameof(model));
             dbSession.VerifyNotNull(nameof(dbSession));
             name.VerifyNotNull(nameof(name));
-            var result = modelRef.Model.DataSource as DbTable<T>;
-            return result ?? DbTable<T>.Create(modelRef, dbSession, name);
+            var result = model.DataSource as DbTable<T>;
+            return result ?? DbTable<T>.Create(model, dbSession, name);
         }
 
         /// <summary>
@@ -134,28 +134,28 @@ namespace DevZest.Data.Primitives
         }
 
         internal static void Initialize<T>(this T _, Action<T> initializer)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             Debug.Assert(_ != null);
             if (initializer != null)
             {
-                _.Model.Initializer = r => initializer((T)r);
+                _.Initializer = r => initializer((T)r);
                 initializer(_);
             }
         }
 
         internal static T MakeCopy<T>(this T prototype, bool setDataSource)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             T result = new T();
-            result.Model.InitializeClone(prototype.Model, setDataSource);
+            result.InitializeClone(prototype, setDataSource);
             return result;
         }
 
-        internal static IEntity MakeCopy(this IEntity prototype, bool setDataSource)
+        internal static Model MakeCopy(this Model prototype, bool setDataSource)
         {
-            var result = (IEntity)Activator.CreateInstance(prototype.GetType());
-            result.Model.InitializeClone(prototype.Model, setDataSource);
+            var result = (Model)Activator.CreateInstance(prototype.GetType());
+            result.InitializeClone(prototype, setDataSource);
             return result;
         }
 
@@ -225,6 +225,25 @@ namespace DevZest.Data.Primitives
         public static DataSource GetDataSource(this Model model)
         {
             return model.DataSource;
+        }
+
+        /// <summary>
+        /// Gets the all columns owned by this <see cref="Model"/>, including recursive child projection(s).
+        /// </summary>
+        /// <returns>All columns owned by this <see cref="Model"/>.</returns>
+        public static IEnumerable<Column> GetAllColumns(this Model model)
+        {
+            return model.AllColumns;
+        }
+
+        /// <summary>
+        /// Gets the validators for specified <see cref="Model"/>.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>The vlidators.</returns>
+        public static List<IValidator> GetValidators(this Model model)
+        {
+            return model.Validators;
         }
     }
 }

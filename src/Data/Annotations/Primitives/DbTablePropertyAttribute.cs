@@ -28,7 +28,7 @@ namespace DevZest.Data.Annotations.Primitives
         /// <summary>
         /// Wireup this attribute with the <see cref="DbTable{T}"/> property value..
         /// </summary>
-        /// <typeparam name="T">The entity type of the DbTable.</typeparam>
+        /// <typeparam name="T">The model type of the DbTable.</typeparam>
         /// <param name="dbTable">The <see cref="DbTable{T}"/> property value.</param>
         protected abstract void Wireup<T>(DbTable<T> dbTable) where T : Model, new();
 
@@ -52,10 +52,10 @@ namespace DevZest.Data.Annotations.Primitives
         }
 
         /// <summary>
-        /// Gets the entity type for specified DbTable property.
+        /// Gets the model type for specified DbTable property.
         /// </summary>
         /// <param name="propertyInfo">The specified DbTable property.</param>
-        /// <returns>The entity type of the DbTable property.</returns>
+        /// <returns>The model type of the DbTable property.</returns>
         protected static Type GetEntityType(PropertyInfo propertyInfo)
         {
             var tableType = propertyInfo.PropertyType;

@@ -48,7 +48,7 @@ namespace DevZest.Samples.AdventureWorksLT
             return await CreateQuery((DbQueryBuilder builder, Product.Lookup _) =>
             {
                 builder.From(tempTable, out var t);
-                var seqNo = t.GetModel().GetIdentity(true).Column;
+                var seqNo = t.GetIdentity(true).Column;
                 Debug.Assert(!(seqNo is null));
                 builder.LeftJoin(Product, t.ForeignKey, out var p)
                     .AutoSelect().OrderBy(seqNo);

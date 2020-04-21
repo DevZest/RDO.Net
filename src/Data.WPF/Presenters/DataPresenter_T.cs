@@ -13,7 +13,7 @@ namespace DevZest.Data.Presenters
     /// Base class to contain presentation logic for scalar data and strongly typed DataSet.
     /// </summary>
     public abstract class DataPresenter<T> : DataPresenter
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         /// <summary>
         /// Shows DataSet to DataView.
@@ -420,7 +420,7 @@ namespace DevZest.Data.Presenters
         /// <summary>
         /// Gets the entity of the DataSet.
         /// </summary>
-        /// <remarks>In VB.Net, use <see cref="Entity"/> property instead because <see cref="_"/> is a VB.Net reserved keyword and is not supported.</remarks>
+        /// <remarks>In VB.Net, use <see cref="Model"/> property instead because <see cref="_"/> is a VB.Net reserved keyword and is not supported.</remarks>
         public T _
         {
             get { return DataSet == null ? null : DataSet._; }
@@ -629,14 +629,14 @@ namespace DevZest.Data.Presenters
         /// <remarks>The default implementation returns the primary key.</remarks>
         protected virtual IReadOnlyList<Column> GetMatchColumns(T _)
         {
-            return _.Model.PrimaryKey;
+            return _.PrimaryKey;
         }
 
         /// <summary>
-        /// Gets the entity of DataSet.
+        /// Gets the model of DataPresenter.
         /// </summary>
         /// <remarks>This property is provided for VB.Net because <see cref="_"/> is a VB.Net reserved keyword and is not supported.</remarks>
-        public T Entity
+        public T Model
         {
             get { return _; }
         }

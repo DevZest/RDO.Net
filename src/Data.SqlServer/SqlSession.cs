@@ -88,21 +88,21 @@ namespace DevZest.Data.SqlServer
         }
 
         internal DbQuery<KeyOutput> BuildImportKeyQuery<T>(DataSet<T> dataSet)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             var keyOutput = new KeyOutput(dataSet.Model);
-            return BuildQuery(dataSet, keyOutput, (m, s, t) => KeyOutput.BuildKeyMappings(m, s.Model, t));
+            return BuildQuery(dataSet, keyOutput, (m, s, t) => KeyOutput.BuildKeyMappings(m, s, t));
         }
 
         internal DbQuery<T> BuildImportQuery<T>(DataSet<T> dataSet)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             return BuildQuery(dataSet, dataSet._, null);
         }
 
         internal DbQuery<TTarget> BuildQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new()
+            where TSource : Model, new()
+            where TTarget : Model, new()
         {
             return BuildJsonQuery(dataSet, targetModel, columnMappingsBuilder);
         }
@@ -115,8 +115,8 @@ namespace DevZest.Data.SqlServer
 
         internal async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, IDbTable identityOutputs, CancellationToken ct)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new()
+            where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var command = BuildInsertCommand(source, target, columnMapper, identityOutputs);
             return await ExecuteNonQueryAsync(command, ct);
@@ -124,8 +124,8 @@ namespace DevZest.Data.SqlServer
 
         internal SqlCommand BuildInsertCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target,
             Action<ColumnMapper, TSource, TTarget> columnMapper, IDbTable identityOutput)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new()
+            where TSource : Model, new()
+            where TTarget : Model, new()
 
         {
             var import = BuildImportQuery(source);
@@ -145,8 +145,8 @@ namespace DevZest.Data.SqlServer
         }
 
         private static DbFromClause GetAutoJoinFromClause<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new()
+            where TSource : Model, new()
+            where TTarget : Model, new()
         {
             IDbSet sourceDbSet = source;
             if (target == null)
@@ -219,8 +219,8 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildUpdateCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, Action<ColumnMapper, TSource, TTarget> columnMapper, CandidateKey targetKey)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new()
+            where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var import = BuildImportQuery(source);
             var join = import.Model.PrimaryKey.UnsafeJoin(targetKey);
@@ -242,8 +242,8 @@ namespace DevZest.Data.SqlServer
         }
 
         internal SqlCommand BuildDeleteCommand<TSource, TTarget>(DataSet<TSource> source, DbTable<TTarget> target, CandidateKey targetKey)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new()
+            where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var keys = BuildImportKeyQuery(source);
             var columnMappings = keys._.PrimaryKey.UnsafeJoin(targetKey);
@@ -282,10 +282,10 @@ select @mockschema;
         private const string SYS_DATASET_ORDINAL = "sys_dataset_ordinal";
 
         private DbQuery<TTarget> BuildJsonQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMapper, TSource, TTarget> columnMappingsBuilder)
-            where TSource : class, IEntity, new()
-            where TTarget : class, IEntity, new()
+            where TSource : Model, new()
+            where TTarget : Model, new()
         {
-            var result = CreateQuery<TTarget>(targetModel, (builder, _) =>
+            var result = CreateQuery(targetModel, (Action<DbQueryBuilder, TTarget>)((builder, _) =>
             {
 
                 var columnMappings = ColumnMapping.Map(dataSet._, _, columnMappingsBuilder, true);
@@ -300,10 +300,10 @@ select @mockschema;
                 {
                     var sourceColumn = sourceColumns[columnMappings[i].Source.Ordinal];
                     var targetColumn = columnMappings[i].Target;
-                    builder.UnsafeSelect(sourceColumn, targetColumn);
+                    builder.UnsafeSelect((Column)sourceColumn, targetColumn);
                 }
                 builder.OrderBy(dataSetOrdinalColumn.Asc());
-            });
+            }));
             result.UpdateOriginalDataSource(dataSet, true);
             return result;
         }
@@ -316,7 +316,7 @@ select @mockschema;
         /// <param name="ordinalColumnName">The name of extra ordinal column.</param>
         /// <returns>The result DbSet.</returns>
         public DbSet<T> OpenJson<T>(string json, string ordinalColumnName = null)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             if (json == null)
                 throw new ArgumentNullException(nameof(json));

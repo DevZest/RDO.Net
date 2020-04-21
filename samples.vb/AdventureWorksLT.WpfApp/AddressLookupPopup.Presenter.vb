@@ -27,7 +27,7 @@ Partial Class AddressLookupPopup
                 .RowView(Of RowView)(RowView.Styles.Selectable) _
                 .Layout(Orientation.Vertical) _
                 .WithSelectionMode(SelectionMode.Single) _
-                .AddBinding(0, 0, Entity.BindToAddressBox())
+                .AddBinding(0, 0, Model.BindToAddressBox())
         End Sub
 
         Private Function LoadDataAsync(ct As CancellationToken) As Task(Of DataSet(Of Address))

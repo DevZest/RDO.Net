@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Annotations;
+using DevZest.Data.Primitives;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -119,7 +120,7 @@ namespace DevZest.Data.AspNetCore.Primitives
 
         private static int? GetMaxLengthValue(Column column)
         {
-            var validators = column.GetParent().Validators;
+            var validators = column.GetParent().GetValidators();
 
             for (int i = 0; i < validators.Count; i++)
             {

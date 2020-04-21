@@ -25,8 +25,8 @@ namespace DevZest.Data
             if (sysRowId != null && sysRowId.Ordinal < query.Select.Count)
                 Model.GetSysRowIdColumn(createIfNotExist: true);
 
-            var columns = Model.Columns;
-            var sourceColumns = sourceModel.Columns;
+            var columns = Model.AllColumns;
+            var sourceColumns = sourceModel.AllColumns;
 
             Debug.Assert(columns.Count <= sourceColumns.Count);
             Debug.Assert(columns.Count <= query.Select.Count);
@@ -135,7 +135,7 @@ namespace DevZest.Data
             var sequentialKeyModel = sequentialKeys.Model;
 
             var sysRowId = Model.GetSysRowIdColumn(createIfNotExist: true);
-            var relationship = ResolveRelationship(Model.PrimaryKey.UnsafeJoin(sequentialKeyModel.PrimaryKey), sequentialKeyModel);
+            var relationship = ResolveRelationship(Model.PrimaryKey.UnsafeJoin((CandidateKey)sequentialKeyModel.PrimaryKey), (Model)sequentialKeyModel);
             Join(sequentialKeyModel, DbJoinKind.InnerJoin, relationship);
             var result = sequentialKeyModel.GetIdentity(true);
             Debug.Assert(!ReferenceEquals(result.Int32Column, null));
@@ -188,7 +188,9 @@ namespace DevZest.Data
 
         private IReadOnlyList<ColumnMapping> NormalizeSelectList()
         {
-            var result = new ColumnMapping[Model.Columns.Count];
+            var result = new ColumnMapping[Model.TotalColumnCount];
+
+            var allColumns = Model.AllColumns;
 
             foreach (var selectItem in SelectList)
                 result[selectItem.Target.Ordinal] = selectItem;
@@ -196,7 +198,7 @@ namespace DevZest.Data
             for (int i = 0; i < result.Length; i++)
             {
                 if (result[i].Target == null)
-                    result[i] = new ColumnMapping(DbConstantExpression.Null, Model.Columns[i]);
+                    result[i] = new ColumnMapping(DbConstantExpression.Null, Model.AllColumns[i]);
             }
 
             return result;

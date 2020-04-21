@@ -46,12 +46,12 @@ namespace DevZest.Data
         /// <summary>
         /// Constructs SQL FROM clause.
         /// </summary>
-        /// <typeparam name="T">Entity type of the DbSet.</typeparam>
+        /// <typeparam name="T">Model type of the DbSet.</typeparam>
         /// <param name="dbSet">The first DbSet in FROM clause.</param>
-        /// <param name="_">The entity object for further SQL construction.</param>
+        /// <param name="_">The model object for further SQL construction.</param>
         /// <returns>This aggregate query builder for fluent coding.</returns>
         public new DbAggregateQueryBuilder From<T>(DbSet<T> dbSet, out T _)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             base.From(dbSet, out _);
             return this;
@@ -60,14 +60,14 @@ namespace DevZest.Data
         /// <summary>
         /// Constructs SQL INNER JOIN.
         /// </summary>
-        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="T">Model type of the target DbSet.</typeparam>
         /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
         /// <param name="dbSet">The target DbSet.</param>
         /// <param name="left">Left side key of the join.</param>
-        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <param name="_">The model object of the target DbSet for further SQL construction.</param>
         /// <returns>This aggregate query builder for fluent coding.</returns>
         public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T _)
-            where T : class, IEntity<TKey>, new()
+            where T : Model<TKey>, new()
             where TKey : CandidateKey
         {
             base.InnerJoin(dbSet, left, out _);
@@ -77,15 +77,15 @@ namespace DevZest.Data
         /// <summary>
         /// Constructs SQL INNER JOIN.
         /// </summary>
-        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="T">Model type of the target DbSet.</typeparam>
         /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
         /// <param name="dbSet">The target DbSet.</param>
         /// <param name="left">Left side key of the join.</param>
         /// <param name="right">The delegate to get right side key of the join.</param>
-        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <param name="_">The model object of the target DbSet for further SQL construction.</param>
         /// <returns>This aggregate query builder for fluent coding.</returns>
         public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
-            where T : class, IEntity, new()
+            where T : Model, new()
             where TKey : CandidateKey
         {
             base.InnerJoin(dbSet, left, right, out _);
@@ -95,14 +95,14 @@ namespace DevZest.Data
         /// <summary>
         /// Constructs SQL LEFT JOIN.
         /// </summary>
-        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="T">Model type of the target DbSet.</typeparam>
         /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
         /// <param name="dbSet">The target DbSet.</param>
         /// <param name="left">Left side key of the join.</param>
-        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <param name="_">The model object of the target DbSet for further SQL construction.</param>
         /// <returns>This aggregate query builder for fluent coding.</returns>
         public new DbAggregateQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T _)
-            where T : class, IEntity<TKey>, new()
+            where T : Model<TKey>, new()
             where TKey : CandidateKey
         {
             base.LeftJoin(dbSet, left, out _);
@@ -112,15 +112,15 @@ namespace DevZest.Data
         /// <summary>
         /// Constructs SQL LEFT JOIN.
         /// </summary>
-        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="T">Model type of the target DbSet.</typeparam>
         /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
         /// <param name="dbSet">The target DbSet.</param>
         /// <param name="left">Left side key of the join.</param>
         /// <param name="right">The delegate to get right side key of the join.</param>
-        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <param name="_">The model object of the target DbSet for further SQL construction.</param>
         /// <returns>This aggregate query builder for fluent coding.</returns>
         public new DbAggregateQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
-            where T : class, IEntity, new()
+            where T : Model, new()
             where TKey : CandidateKey
         {
             base.LeftJoin(dbSet, left, right, out _);
@@ -130,14 +130,14 @@ namespace DevZest.Data
         /// <summary>
         /// Constructs SQL RIGHT JOIN.
         /// </summary>
-        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="T">Model type of the target DbSet.</typeparam>
         /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
         /// <param name="dbSet">The target DbSet.</param>
         /// <param name="left">Left side key of the join.</param>
-        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <param name="_">The model object of the target DbSet for further SQL construction.</param>
         /// <returns>This aggregate query builder for fluent coding.</returns>
         public new DbAggregateQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, out T _)
-            where T : class, IEntity<TKey>, new()
+            where T : Model<TKey>, new()
             where TKey : CandidateKey
         {
             base.RightJoin(dbSet, left, out _);
@@ -148,15 +148,15 @@ namespace DevZest.Data
         /// <summary>
         /// Constructs SQL RIGHT JOIN.
         /// </summary>
-        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="T">Model type of the target DbSet.</typeparam>
         /// <typeparam name="TKey">Type of the candidate key to join.</typeparam>
         /// <param name="dbSet">The target DbSet.</param>
         /// <param name="left">Left side key of the join.</param>
         /// <param name="right">The delegate to get right side key of the join.</param>
-        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <param name="_">The model object of the target DbSet for further SQL construction.</param>
         /// <returns>This aggregate query builder for fluent coding.</returns>
         public new DbAggregateQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T _)
-            where T : class, IEntity, new()
+            where T : Model, new()
             where TKey : CandidateKey
         {
             base.RightJoin(dbSet, left, right, out _);
@@ -166,12 +166,12 @@ namespace DevZest.Data
         /// <summary>
         /// Constructs SQL RIGHT JOIN.
         /// </summary>
-        /// <typeparam name="T">Entity type of the target DbSet.</typeparam>
+        /// <typeparam name="T">Model type of the target DbSet.</typeparam>
         /// <param name="dbSet">The target DbSet.</param>
-        /// <param name="_">The entity object of the target DbSet for further SQL construction.</param>
+        /// <param name="_">The model object of the target DbSet for further SQL construction.</param>
         /// <returns>This aggregate query builder for fluent coding.</returns>
         public new DbAggregateQueryBuilder CrossJoin<T>(DbSet<T> dbSet, out T _)
-            where T : class, IEntity, new()
+            where T : Model, new()
         {
             base.CrossJoin(dbSet, out _);
             return this;

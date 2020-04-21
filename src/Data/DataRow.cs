@@ -31,7 +31,7 @@ namespace DevZest.Data
                     for (int i = 0; i < originChildModels.Count; i++)
                     {
                         var childBackupModel = new BackupModel();
-                        childBackupModel.Construct(this, this.GetType(), "ChildModel" + i.ToString(CultureInfo.InvariantCulture));
+                        childBackupModel.ConstructChildModel(this, this.GetType(), "ChildModel" + i.ToString(CultureInfo.InvariantCulture));
                         childBackupModel.Initialize(originChildModels[i]);
                     }
                 }
@@ -192,18 +192,14 @@ namespace DevZest.Data
             for (int i = 0; i < childModels.Count; i++)
                 _childDataSets[i] = childModels[i].DataSet.CreateChildDataSet(this);
 
-            var columns = model.Columns;
-            foreach (var column in columns)
-                column.InsertRow(this);
+            model.Insert(this);
         }
 
         internal void DisposeByBaseDataSet()
         {
             ClearChildren();
 
-            var columns = Model.Columns;
-            foreach (var column in columns)
-                column.RemoveRow(this);
+            Model.Remove(this);
 
             Model = null;
             Ordinal = -1;

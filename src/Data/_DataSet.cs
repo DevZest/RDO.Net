@@ -8,7 +8,7 @@ namespace DevZest.Data
     /// </summary>
     /// <typeparam name="T">Entity type of DataSet.</typeparam>
     public sealed class _DataSet<T> : Column<DataSet<T>>, IDataSetColumn
-        where T : class, IEntity, new()
+        where T : Model, new()
     {
         /// <inheritdoc/>
         public override _String CastToString()

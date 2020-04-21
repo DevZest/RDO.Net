@@ -35,10 +35,35 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Gets the namespace of the <see cref="Column"/>.
+        /// </summary>
+        public string Namespace
+        {
+            get { return ParentModel?.Namespace; }
+        }
+
+        /// <summary>
+        /// Gets the full name of the <see cref="Column"/>, including <see cref="Namespace"/> if this column is a <see cref="Projection"/>.
+        /// </summary>
+        public string FullName
+        {
+            get
+            {
+                var @namespace = Namespace;
+                return string.IsNullOrEmpty(@namespace) ? Name : $"{@namespace}.{Name}";
+            }
+        }
+
+        /// <summary>
         /// Gets the original name of this <see cref="Column"/>.
         /// </summary>
         /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
         public string OriginalName { get; internal set; }
+
+        private Type OwnerModelType
+        {
+            get { return ParentModel?.OwnerModel.GetType(); }
+        }
 
         /// <summary>
         /// Gets the Id of the column.
@@ -47,7 +72,7 @@ namespace DevZest.Data
         /// It is used as first candidate to perform automatic column mapping.</remarks>
         public ColumnId Id
         {
-            get { return new ColumnId(DeclaringType, Name); }
+            get { return new ColumnId(OwnerModelType ?? DeclaringType, FullName); }
         }
 
         /// <summary>
@@ -78,7 +103,32 @@ namespace DevZest.Data
 
         /// <summary>Gets the zero-based position of the column in the <see cref="Model.Columns"/> collection.</summary>
         /// <remarks>If the column is not added to any <see cref="Model"/>, -1 is returned.</remarks>
-        public int Ordinal { get; internal set; } = -1;
+        public int Index { get; private set; } = -1;
+
+        /// <summary>Gets the zero-based position of the column for all columns by owner model, including recursive projection(s).</summary>
+        /// <remarks>If the column is not added to any <see cref="Model"/>, -1 is returned.</remarks>
+        public int Ordinal
+        {
+            get
+            {
+                if (ParentModel == null)
+                    return Index;
+
+                if (ParentModel == OwnerModel)
+                {
+                    if (!IsSystem)
+                        return Index;
+
+                    // system column is at tail of the collection.
+                    var columns = ParentModel.Columns;
+                    Debug.Assert(columns.SystemColumnCount > 0);
+                    return Index + ParentModel.TotalColumnCount - columns.Count;
+                }
+
+                Debug.Assert(!IsSystem);
+                return ParentModel.ColumnOrdinalOffset + Index;
+            }
+        }
 
         private string _dbColumnName;
         /// <summary>Gets or sets the column name in database.</summary>
@@ -146,12 +196,12 @@ namespace DevZest.Data
             ConstructModelMember(parentModel, declaringType, name);
             Kind = kind;
             if (OriginalDeclaringType == null)
-                OriginalDeclaringType = declaringType;
+                OriginalDeclaringType = DeclaringType;
             if (string.IsNullOrEmpty(OriginalName))
                 OriginalName = name;
 
             _initializer = initializer;
-            Ordinal = ParentModel.Add(this);
+            Index = ParentModel.Add(this);
 
             _initializer?.Invoke(this);
         }
@@ -195,7 +245,7 @@ namespace DevZest.Data
         /// <inheritdoc/>
         public override string ToString()
         {
-            return IsExpression ? "[Expression]" : Name;
+            return IsExpression ? "[Expression]" : FullName;
         }
 
         /// <summary>Gets the set of <see cref="Model"/> objects directly combined this <see cref="Column"/>.</summary>
@@ -577,22 +627,6 @@ namespace DevZest.Data
         /// </summary>
         public abstract bool HasValueComparer { get; }
 
-        private string _relativeName;
-        /// <summary>
-        /// Gets the relative name of this column, which exludes the parent projection name.
-        /// </summary>
-        public string RelativeName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(Name))
-                    return Name;
-                if (_relativeName == null)
-                    _relativeName = Name.LastPart('.');
-                return _relativeName;
-            }
-        }
-
         internal abstract Column PerformTranslateTo(Model model);
 
         /// <summary>
@@ -696,9 +730,17 @@ namespace DevZest.Data
         /// <summary>
         /// Gets the parent model of this column.
         /// </summary>
-        public Model Model
+        public Model ParentModel
         {
-            get { return GetParent(); }
+            get { return Parent; }
+        }
+
+        /// <summary>
+        /// Gets the owner model of this column.
+        /// </summary>
+        public Model OwnerModel
+        {
+            get { return ParentModel?.OwnerModel; }
         }
     }
 }
