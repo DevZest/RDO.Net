@@ -24,7 +24,7 @@ namespace DevZest.Data
         /// Gets the original owner type of this <see cref="Column"/>.
         /// </summary>
         /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
-        public Type OriginalDeclaringType { get; internal set; }
+        public Type OriginalDeclaringType { get; private set; }
 
         /// <summary>
         /// Gets the name of the <see cref="Column"/>.
@@ -58,7 +58,7 @@ namespace DevZest.Data
         /// Gets the original name of this <see cref="Column"/>.
         /// </summary>
         /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
-        public string OriginalName { get; internal set; }
+        public string OriginalName { get; private set; }
 
         private Type OwnerModelType
         {
