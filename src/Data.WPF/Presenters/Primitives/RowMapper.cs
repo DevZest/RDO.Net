@@ -67,11 +67,6 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _dataSet; }
         }
 
-        private Model RootModel
-        {
-            get { return DataSet.Model; }
-        }
-
         public Predicate<DataRow> Where { get; private set; }
 
         private bool IsQuery
