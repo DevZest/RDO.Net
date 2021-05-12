@@ -492,25 +492,6 @@ namespace DevZest.Data.Presenters.Primitives
             row.OnValueChanged(e);
         }
 
-        private IEnumerable<DataRow> GetDataRows()
-        {
-            return IsRecursive ? GetDataRowsRecursively(DataSet) : DataSet;
-        }
-
-        private IEnumerable<DataRow> GetDataRowsRecursively(DataSet dataSet)
-        {
-            Debug.Assert(IsRecursive);
-            foreach (var dataRow in dataSet)
-                yield return dataRow;
-
-            var childDataSet = GetChildDataSet(dataSet);
-            if (childDataSet != null)
-            {
-                foreach (var childDataRow in GetDataRowsRecursively(childDataSet))
-                    yield return childDataRow;
-            }
-        }
-
         private readonly IReadOnlyList<Column> _rowMatchColumns;
         private readonly Dictionary<RowMatch, RowPresenter> _rowMatches;
         internal IReadOnlyList<Column> RowMatchColumns
