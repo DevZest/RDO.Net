@@ -58,11 +58,6 @@ namespace DevZest.Data.Presenters
                 Input.Flush((T)element);
         }
 
-        private IColumns Columns
-        {
-            get { return Input == null ? Data.Columns.Empty : Input.Target; }
-        }
-
         internal sealed override void PerformSetup(RowPresenter rowPresenter)
         {
             Setup(SettingUpElement, rowPresenter);

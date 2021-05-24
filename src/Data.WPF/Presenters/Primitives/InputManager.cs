@@ -273,26 +273,6 @@ namespace DevZest.Data.Presenters.Primitives
             return element.Focus();
         }
 
-        private IReadOnlyList<FlushingError> ScalarFlushingErrors
-        {
-            get { return _scalarValidation == null ? Array.Empty<FlushingError>() : _scalarValidation.FlushingErrors; }
-        }
-
-        private IReadOnlyList<FlushingError> RowFlushingErrors
-        {
-            get { return _rowValidation == null ? Array.Empty<FlushingError>() : _rowValidation.FlushingErrors; }
-        }
-
-        private IReadOnlyList<ScalarValidationError> ScalarValidationErrors
-        {
-            get { return _scalarValidation == null ? Array.Empty<ScalarValidationError>() : _scalarValidation.Errors; }
-        }
-
-        private IReadOnlyDictionary<RowPresenter, IDataValidationErrors> RowValidationErrors
-        {
-            get { return _rowValidation == null ? EmptyRowValidationResults.Singleton : _rowValidation.Errors; }
-        }
-
         public bool CanSubmitInput
         {
             get
