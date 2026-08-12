@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
 using System;
 using DevZest.Data.Primitives;

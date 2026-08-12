@@ -1,7 +1,7 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace DevZest.Data.Annotations
 {

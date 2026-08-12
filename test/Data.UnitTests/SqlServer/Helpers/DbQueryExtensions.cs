@@ -1,6 +1,6 @@
 ﻿using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace DevZest.Data.SqlServer.Helpers
 {

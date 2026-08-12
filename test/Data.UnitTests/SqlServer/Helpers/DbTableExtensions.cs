@@ -1,7 +1,7 @@
 ﻿using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 
 namespace DevZest.Data.SqlServer.Helpers

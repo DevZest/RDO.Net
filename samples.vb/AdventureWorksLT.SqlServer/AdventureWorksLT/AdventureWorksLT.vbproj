@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>DevZest.Samples.AdventureWorksLT</RootNamespace>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <AssemblyName>AdventureWorksLT</AssemblyName>
     <OptionStrict>On</OptionStrict>
   </PropertyGroup>

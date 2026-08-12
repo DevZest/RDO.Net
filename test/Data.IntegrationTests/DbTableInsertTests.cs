@@ -3,7 +3,7 @@ using DevZest.Data.SqlServer;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;

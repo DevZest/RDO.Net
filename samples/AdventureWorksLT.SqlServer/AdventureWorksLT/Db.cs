@@ -2,7 +2,7 @@
 using DevZest.Data.Annotations;
 using DevZest.Data.SqlServer;
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace DevZest.Samples.AdventureWorksLT
 {

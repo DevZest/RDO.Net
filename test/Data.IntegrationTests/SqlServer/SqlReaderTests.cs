@@ -2,7 +2,7 @@
 using DevZest.Data.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
