@@ -1,6 +1,6 @@
 ﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace Movies
 {
