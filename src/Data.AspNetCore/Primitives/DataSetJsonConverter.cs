@@ -16,7 +16,7 @@ namespace DevZest.Data.AspNetCore.Primitives
     {
         private ref struct JsonTokenizer
         {
-            public JsonTokenizer(ref Utf8JsonReader jsonReader)
+            public JsonTokenizer()
             {
                 _states = new Stack<State>();
                 _tokens = new Queue<JsonToken>(2);
@@ -189,7 +189,7 @@ namespace DevZest.Data.AspNetCore.Primitives
         /// <inheritdoc/>
         public override DataSet Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var jsonTokenizer = new JsonTokenizer(ref reader);
+            var jsonTokenizer = new JsonTokenizer();
             var tokens = jsonTokenizer.GetTokens(ref reader);
             var jsonReader = new JsonReaderAdapter(tokens, null);
             var dataSet = CreateDataSet(typeToConvert);
